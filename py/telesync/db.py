@@ -1,0 +1,165 @@
+from typing import Union, Tuple, List, Optional, Any, Dict
+import requests
+from requests.auth import HTTPBasicAuth
+from .api import marshal, unmarshal
+
+
+def _new_stmt(query: str, params: List) -> Dict:
+    if not isinstance(query, str):
+        raise ValueError(f'query must be str; got {type(query)}')
+    for param in params:
+        if param is not None and not isinstance(param, (int, float, str)):
+            raise ValueError(f'SQL parameter must be one of int, float, str or None; got {type(param)}')
+    return dict(query=query, params=None if len(params) == 0 else params)
+
+
+def _new_exec_request(database: str, statements: List[Dict]) -> Dict:
+    if not isinstance(database, str):
+        raise ValueError(f'database must be str; got {type(database)}')
+    return dict(database=database, statements=statements)
+
+
+def _new_db_request(exec: Optional[Dict] = None) -> Dict:
+    return dict(exec=exec)
+
+
+class TeleError(Exception):
+    """
+    Represents a remote exception thrown by the TeleDB database server.
+    """
+    pass
+
+
+class TeleDB:
+    """
+    Represents a TeleDB database client.
+    """
+
+    def __init__(self, host: str, port: int, key_id: str, key_secret: str):
+        """
+        Create a new client instance.
+
+        :param host: database host
+        :param port: database port
+        :param key_id: access key id
+        :param key_secret: access key secret
+        """
+        self._url = f'http://{host}:{port}'
+        session = requests.Session()
+        session.headers.update({'Content-type': 'application/json'})
+        session.auth = (key_id, key_secret)
+        self._session = session
+
+    def __getitem__(self, name: str):
+        """
+        Returns a connector to a database with the given name.
+
+        :param name: the database name
+        :return: a connector instance
+        """
+        return _DB(self, name)
+
+    def _call(self, req: dict) -> dict:
+        data = marshal(req)
+        print(data)
+        res = self._session.post(self._url, data=data)
+        if res.status_code != 200:
+            raise TeleError(f'Request failed (code={res.status_code}): {res.text}')
+        print(res.text)
+        return unmarshal(res.text)
+
+
+class _DB:
+    """
+    Represents a database connector.
+    """
+
+    def __init__(self, db: TeleDB, name: str):
+        self._db = db
+        self._name = name
+
+    def query(self, sql: str, *params) -> Tuple[Optional[List[List]], Optional[str]]:
+        """
+        Execute a single SQL statement. Parameters are optional.
+
+        Returns a (result, error) tuple, where result is a 2-dimensional list in
+        row-major order, and error is a string error message, if any.
+        The result will be None if the error is not None.
+        Therefore, always check if there is an error before attempting to use the result.
+
+        :param sql: SQL statement
+        :param params: Parameters to the SQL statement, one of str, int, float or None
+        :return: A (result, error) tuple
+
+        :Example:
+
+        result, err = db.query(sql)
+        if err:
+            print(error)
+            return
+        print(result)
+
+        result, error = db.query('CREATE TABLE student(name TEXT, age INTEGER)')
+        result, error = db.query('INSERT INTO student VALUES ("Alice", 18)')
+        result, error = db.query('INSERT INTO student VALUES (?, ?)', "Bob", 19)
+        result, error = db.query('SELECT name, age FROM student WHERE age > 17')
+        result, error = db.query('SELECT name, age FROM student WHERE age > ?', 17)
+        """
+        r, err = self.exec((sql, *params))
+        if err:
+            return None, err
+        return r[0], None
+
+    def exec(self, *args) -> Tuple[Optional[List[List[List]]], Optional[str]]:
+        """
+        Execute multiple SQL statements.
+
+        Returns a (results, error) tuple, where results is a list of results from each statement,
+        and error is a string error message, if any.
+        The results will be None if the error is not None.
+        Therefore, always check if there is an error before attempting to use the results.
+
+        :param args: SQL statements
+        :return: a (results, error) tuple
+
+        :Example:
+
+        results, error = db.query(
+            'CREATE TABLE student(name TEXT, age INTEGER)',
+            'INSERT INTO student VALUES ("Alice", 18)',
+            ('INSERT INTO student VALUES (?, ?)', "Bob", 19),
+            'SELECT name, age FROM student WHERE age > 17',
+            ('SELECT name, age FROM student WHERE age > ?', 17),
+        )
+        if err:
+            print(error)
+            return
+        print(results)
+
+        """
+        args = list(args)
+
+        if len(args) == 0:
+            raise ValueError('Want at least one SQL query, got none')
+
+        statements: List[Dict] = []
+        for arg in args:
+            if isinstance(arg, str):
+                arg = [arg]
+            elif isinstance(arg, tuple):
+                arg = list(arg)
+            elif isinstance(arg, list):
+                pass
+            else:
+                raise ValueError('Want SQL string or statement tuple')
+
+            if len(arg) == 0:
+                raise ValueError('Want statement, got empty tuple/list')
+            statements.append(_new_stmt(arg[0], arg[1:]))
+
+        req = _new_db_request(exec=_new_exec_request(self._name, statements))
+        res = self._db._call(req)
+        result, err = res.get('result'), res.get('error')
+        if err:
+            return None, err
+        return result.get('results'), None
