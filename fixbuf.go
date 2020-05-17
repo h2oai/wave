@@ -53,5 +53,5 @@ func (b *FixBuf) geti(i int) (Cur, bool) {
 }
 
 func (b *FixBuf) dump() interface{} {
-	return FixBufD{"f", b.t.f, b.tups}
+	return BufD{F: &FixBufD{b.t.f, b.tups}}
 }

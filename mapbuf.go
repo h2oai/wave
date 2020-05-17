@@ -38,5 +38,5 @@ func (b *MapBuf) get(k string) (Cur, bool) {
 }
 
 func (b *MapBuf) dump() interface{} {
-	return MapBufD{"m", b.t.f, b.tups}
+	return BufD{M: &MapBufD{b.t.f, b.tups}}
 }

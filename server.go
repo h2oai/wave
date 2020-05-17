@@ -112,7 +112,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 
 			data := page.marshal()
-			if page == nil {
+			if data == nil {
 				echo(Log{"t": "cache_miss"})
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return

@@ -36,6 +36,11 @@ type Datum = S | F | B | Dict<any> | any[] | BufD
 interface CardD {
   d: Dict<Datum>
 }
+interface BufD {
+  __c__: CycBufD
+  __f__: FixBufD
+  __m__: MapBufD
+}
 interface MapBufD {
   t: 'm'
   f: S[]
@@ -52,7 +57,6 @@ interface CycBufD {
   d: Array<Tup | null>
   i: U
 }
-type BufD = MapBufD | FixBufD | CycBufD
 
 export interface Data {
   list(): Rec[]
@@ -389,12 +393,12 @@ const
     return null
   },
   unbuf = (s: any): Buf | null => {
-    const x = s as BufD
-    switch (x.t) {
-      case 'f': return newFixBuf(newType(x.f), x.d)
-      case 'c': return newCycBuf(newType(x.f), x.d, x.i)
-      case 'm': return newMapBuf(newType(x.f), x.d)
-    }
+    const
+      { __c__: c, __f__: f, __m__: m } = s as BufD
+    if (c) return newCycBuf(newType(c.f), c.d, c.i)
+    if (f) return newFixBuf(newType(f.f), f.d)
+    if (m) return newMapBuf(newType(m.f), m.d)
+    return null
   },
   newCard = (key: S, x: Dict<any>, load: (x: any) => Buf | null): C => {
     const

@@ -30,21 +30,20 @@ def run_tests():
 def make_card(**props):
     d = {}
     for k, v in props.items():
-        # mega hack to avoid cluttering call sites
-        if isinstance(v, dict) and 't' in v and 'f' in v and 'd' in v and 3 <= len(v) <= 4:
+        if isinstance(v, dict) and len(v) == 1 and ('__c__' in v or '__f__' in v or '__m__' in v):
             d['#' + k] = v
         else:
             d[k] = v
     return dict(d=d)
 
 
-def make_map_buf(fields, data): return dict(t='m', f=fields, d=data)
+def make_map_buf(fields, data): return {'__m__': dict(f=fields, d=data)}
 
 
-def make_fix_buf(fields, data): return dict(t='f', f=fields, d=data)
+def make_fix_buf(fields, data): return {'__f__': dict(f=fields, d=data)}
 
 
-def make_cyc_buf(fields, data, i): return dict(t='c', f=fields, d=data, i=i)
+def make_cyc_buf(fields, data, i): return {'__c__': dict(f=fields, d=data, i=i)}
 
 
 def make_page(**cards) -> dict: return dict(p=dict(c=cards), c=None, d=None)

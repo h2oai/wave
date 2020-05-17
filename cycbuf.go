@@ -32,5 +32,5 @@ func (b *CycBuf) get(_ string) (Cur, bool) { // no random access; ignore key
 }
 
 func (b *CycBuf) dump() interface{} {
-	return CycBufD{"c", b.b.t.f, b.b.tups, b.i}
+	return BufD{C: &CycBufD{b.b.t.f, b.b.tups, b.i}}
 }

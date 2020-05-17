@@ -22,23 +22,26 @@ type CardD struct {
 	D interface{} `json:"d"` // data
 }
 
+type BufD struct {
+	C *CycBufD `json:"__c__,omitempty"`
+	F *FixBufD `json:"__f__,omitempty"`
+	M *MapBufD `json:"__m__,omitempty"`
+}
+
 // MapBufD represents the marshaled data for a MapBuf.
 type MapBufD struct {
-	T string                   `json:"t"` // type=m
 	F []string                 `json:"f"` // fields
 	D map[string][]interface{} `json:"d"` // tuples
 }
 
 // FixBufD represents the marshaled data for a FixBuf.
 type FixBufD struct {
-	T string          `json:"t"` // type=f
 	F []string        `json:"f"` // fields
 	D [][]interface{} `json:"d"` // tuples
 }
 
 // CycBufD represents the marshaled data for a CycBuf.
 type CycBufD struct {
-	T string          `json:"t"` // type=c
 	F []string        `json:"f"` // fields
 	D [][]interface{} `json:"d"` // tuples
 	I int             `json:"i"` // index
