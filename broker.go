@@ -2,7 +2,6 @@ package telesync
 
 import (
 	"bytes"
-	"encoding/json"
 	"log"
 	"sync"
 )
@@ -58,7 +57,7 @@ func newBroker(site *Site) *Broker {
 	return &Broker{
 		site,
 		make(map[string]map[*Client]interface{}),
-		make(chan Pub),
+		make(chan Pub, 1024),
 		make(chan Sub),
 		make(chan *Client),
 		make(map[string]*Service),
@@ -127,16 +126,14 @@ func (b *Broker) route(url string, data []byte) {
 	service.route(data)
 }
 
-// patch patches site data and broadcasts changes to clients.
+// patch broadcasts changes to clients and patches site data.
 func (b *Broker) patch(url string, data []byte) {
-	log.Println(string(data)) // XXX url for serialization
-	var ops OpsD
-	if err := json.Unmarshal(data, &ops); err != nil { // TODO speed up
-		echo(Log{"t": "site patch json unmarshal", "error": err.Error()})
-		return
-	}
-	b.site.exec(url, ops)
 	b.publish <- Pub{url, data}
+	// Write AOF entry with patch marker "*" as-is to log file.
+	// FIXME bufio.Scanner.Scan() is not reliable if line length > 65536 chars,
+	// so reading back in is unreliable.
+	log.Println("*", url, string(data))
+	b.site.patch(url, data)
 }
 
 // run starts i/o between the broker and clients.

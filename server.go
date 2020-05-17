@@ -1,13 +1,17 @@
 package telesync
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
 	"strings"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -26,7 +30,7 @@ type Log map[string]string
 
 func echo(m Log) {
 	if j, err := json.Marshal(m); err == nil {
-		log.Println(`{"c":`, string(j), `}`)
+		log.Println("#", string(j))
 	}
 }
 
@@ -146,33 +150,95 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Server represents a HTTP server.
-type Server struct {
+var (
+	logSep = []byte(" ")
+)
+
+func initSite(site *Site, aofPath string) {
+	file, err := os.Open(aofPath)
+	if err != nil {
+		log.Fatalf("failed opening AOF file: %v", err)
+		return
+	}
+	defer file.Close()
+
+	startTime := time.Now()
+	line, used := 0, 0
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() { // FIXME not reliable if line length > 65536 chars
+		line++
+		data := scanner.Bytes()
+		tokens := bytes.SplitN(data, logSep, 4) // "date time marker entry"
+		if len(tokens) < 4 {
+			log.Printf("warning: line %d has < 4 log tokens, skipped\n", line)
+			continue
+		}
+
+		marker, entry := tokens[2], tokens[3]
+		if len(marker) > 0 && marker[0] == '*' { // patch
+			tokens = bytes.SplitN(entry, logSep, 2) // "url data"
+			if len(tokens) < 2 {
+				log.Printf("warning: line %d has < 2 patch tokens, skipped\n", line)
+				continue
+			}
+			url, data := tokens[0], tokens[1]
+			site.patch(string(url), data)
+			used++
+		}
+	}
+
+	log.Printf("init: %d lines read, %d lines used, %s\n", line, used, time.Since(startTime))
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// ServerConf represents Server configuration options.
+type ServerConf struct {
+	Listen          string
+	WebRoot         string
+	AccessKeyID     string
+	AccessKeySecret string
+	Init            string
+	Compact         string
 }
 
 // Run runs the HTTP server.
-func (s *Server) Run(port, www, username, password string) {
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+func Run(conf ServerConf) {
+	accessKeyHash, err := bcrypt.GenerateFromPassword([]byte(conf.AccessKeySecret), bcrypt.DefaultCost)
 	if err != nil {
 		echo(Log{"t": "users_init", "error": err.Error()})
 		return
 	}
 
-	users := map[string][]byte{username: passwordHash}
+	// FIXME RBAC
+	users := map[string][]byte{conf.AccessKeyID: accessKeyHash}
 
 	site := newSite()
+
+	if len(conf.Init) > 0 {
+		initSite(site, conf.Init)
+	}
+
+	if len(conf.Compact) > 0 {
+		// XXX
+		log.Fatalln("compaction not implemented")
+		return
+	}
+
 	hub := newBroker(site)
 	go hub.run()
 
 	http.Handle("/ws", newSocketServer(hub))
-	http.Handle("/", newWebServer(site, hub, users, www))
+	http.Handle("/", newWebServer(site, hub, users, conf.WebRoot))
 
 	for _, line := range strings.Split(logo, "\n") {
-		echo(Log{"t": "init", "!": line})
+		log.Println("#", line)
 	}
-	echo(Log{"t": "listen", "port": port, "www": www})
+	echo(Log{"t": "listen", "address": conf.Listen, "webroot": conf.WebRoot})
 
-	if err := http.ListenAndServe(port, nil); err != nil {
+	if err := http.ListenAndServe(conf.Listen, nil); err != nil {
 		echo(Log{"t": "listen", "error": err.Error()})
 	}
 }

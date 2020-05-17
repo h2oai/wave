@@ -1,6 +1,7 @@
 package telesync
 
 import (
+	"encoding/json"
 	"strings"
 	"sync"
 )
@@ -47,6 +48,15 @@ func (site *Site) del(url string) {
 	site.Lock()
 	delete(site.pages, url)
 	site.Unlock()
+}
+
+func (site *Site) patch(url string, data []byte) {
+	var ops OpsD
+	if err := json.Unmarshal(data, &ops); err != nil { // TODO speed up
+		echo(Log{"t": "site patch json unmarshal", "error": err.Error()})
+		return
+	}
+	site.exec(url, ops)
 }
 
 func (site *Site) exec(url string, ops OpsD) {

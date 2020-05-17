@@ -8,12 +8,12 @@ import (
 
 func main() {
 	var (
-		port string
+		listen string
 	)
 
-	flag.StringVar(&port, "port", ":55554", "listen on this port")
+	flag.StringVar(&listen, "listen", ":55554", "listen on this address")
 
 	flag.Parse()
 
-	telesync.NewDS().Run(port)
+	telesync.NewDS().Run(listen)
 }
