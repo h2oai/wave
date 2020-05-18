@@ -22,6 +22,14 @@ func (p *Page) read() []byte {
 	return p.cache
 }
 
+func (p *Page) dump() *PageD {
+	c := make(map[string]CardD)
+	for k, v := range p.cards {
+		c[k] = v.dump()
+	}
+	return &PageD{c}
+}
+
 func (p *Page) marshal() []byte {
 	if cache := p.read(); cache != nil {
 		return cache
@@ -30,16 +38,19 @@ func (p *Page) marshal() []byte {
 	p.Lock()
 	defer p.Unlock()
 
-	c := make(map[string]CardD)
-	for k, v := range p.cards {
-		c[k] = v.dump()
-	}
-
-	cache, err := json.Marshal(OpsD{P: PageD{c}})
+	cache, err := json.Marshal(OpsD{P: p.dump()})
 	if err != nil {
 		echo(Log{"t": "page_marshal", "error": err.Error()})
 		return nil
 	}
-	p.cache = cache
+	p.cache = cache // invalidated by site exec() under write-lock
 	return cache
+}
+
+func loadPage(ns *Namespace, d *PageD) *Page {
+	cards := make(map[string]*Card)
+	for k, v := range d.C {
+		cards[k] = loadCard(ns, v.D)
+	}
+	return &Page{cards: cards}
 }

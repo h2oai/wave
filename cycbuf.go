@@ -34,3 +34,26 @@ func (b *CycBuf) get(_ string) (Cur, bool) { // no random access; ignore key
 func (b *CycBuf) dump() interface{} {
 	return BufD{C: &CycBufD{b.b.t.f, b.b.tups, b.i}}
 }
+
+func loadCycBuf(d map[string]interface{}) interface{} {
+	if ifields, ok := d["f"]; ok {
+		if fields := loadFields(ifields); fields != nil {
+			if ii, ok := d["i"]; ok {
+				if i, ok := ii.(float64); ok {
+					if idata, ok := d["d"]; ok {
+						data := loadRecords(idata)
+						if data == nil {
+							return nil // FIXME log
+						}
+						index := int(i)
+						if index < 0 || index >= len(data) {
+							return nil // FIXME log
+						}
+						return &CycBuf{&FixBuf{newType(fields), data}, index}
+					}
+				}
+			}
+		}
+	}
+	return nil
+}

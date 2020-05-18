@@ -133,7 +133,9 @@ func (b *Broker) patch(url string, data []byte) {
 	// FIXME bufio.Scanner.Scan() is not reliable if line length > 65536 chars,
 	// so reading back in is unreliable.
 	log.Println("*", url, string(data))
-	b.site.patch(url, data)
+	if err := b.site.patch(url, data); err != nil {
+		echo(Log{"t": "broker_patch", "error": err.Error()})
+	}
 }
 
 // run starts i/o between the broker and clients.

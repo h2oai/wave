@@ -2,6 +2,7 @@ package telesync
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"sync"
 )
@@ -50,13 +51,24 @@ func (site *Site) del(url string) {
 	site.Unlock()
 }
 
-func (site *Site) patch(url string, data []byte) {
+func (site *Site) set(url string, data []byte) error {
+	var ops OpsD
+	if err := json.Unmarshal(data, &ops); err != nil {
+		return fmt.Errorf("failed unmarshaling data: %v", err)
+	}
+	if ops.P != nil {
+		site.pages[url] = loadPage(site.ns, ops.P)
+	}
+	return nil
+}
+
+func (site *Site) patch(url string, data []byte) error {
 	var ops OpsD
 	if err := json.Unmarshal(data, &ops); err != nil { // TODO speed up
-		echo(Log{"t": "site patch json unmarshal", "error": err.Error()})
-		return
+		return fmt.Errorf("failed unmarshaling data: %v", err)
 	}
 	site.exec(url, ops)
+	return nil
 }
 
 func (site *Site) exec(url string, ops OpsD) {

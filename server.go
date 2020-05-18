@@ -113,7 +113,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 			data := page.marshal()
 			if data == nil {
-				echo(Log{"t": "cache_miss"})
+				echo(Log{"t": "cache_miss", "url": url})
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return
 			}
@@ -157,8 +157,7 @@ var (
 func initSite(site *Site, aofPath string) {
 	file, err := os.Open(aofPath)
 	if err != nil {
-		log.Fatalf("failed opening AOF file: %v", err)
-		return
+		log.Fatalln("#", "failed opening AOF file:", err)
 	}
 	defer file.Close()
 
@@ -170,27 +169,47 @@ func initSite(site *Site, aofPath string) {
 		data := scanner.Bytes()
 		tokens := bytes.SplitN(data, logSep, 4) // "date time marker entry"
 		if len(tokens) < 4 {
-			log.Printf("warning: line %d has < 4 log tokens, skipped\n", line)
+			log.Println("#", "warning: want (date, time, marker, entry); skipped line", line)
 			continue
 		}
 
 		marker, entry := tokens[2], tokens[3]
-		if len(marker) > 0 && marker[0] == '*' { // patch
+		if len(marker) > 0 {
+			mark := marker[0]
+			if mark == '#' { // comment
+				continue
+			}
 			tokens = bytes.SplitN(entry, logSep, 2) // "url data"
 			if len(tokens) < 2 {
-				log.Printf("warning: line %d has < 2 patch tokens, skipped\n", line)
+				log.Println("#", "warning: want (url, data); skipped line", line)
 				continue
 			}
 			url, data := tokens[0], tokens[1]
-			site.patch(string(url), data)
-			used++
+			switch mark {
+			case '*': // patch existing page
+				site.patch(string(url), data)
+				used++
+			case '=': // compacted page; overwrite
+				site.set(string(url), data)
+				used++
+			default:
+				log.Println("#", "warning: bad marker", marker, "on line", line)
+			}
 		}
 	}
 
-	log.Printf("init: %d lines read, %d lines used, %s\n", line, used, time.Since(startTime))
+	log.Printf("# init: %d lines read, %d lines used, %s\n", line, used, time.Since(startTime))
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		log.Fatalln("#", "failed scanning AOF file:", err)
+	}
+}
+
+func compactSite(aofPath string) {
+	site := newSite()
+	initSite(site, aofPath)
+	for url, page := range site.pages {
+		log.Println("=", url, string(page.marshal()))
 	}
 }
 
@@ -215,16 +234,14 @@ func Run(conf ServerConf) {
 	// FIXME RBAC
 	users := map[string][]byte{conf.AccessKeyID: accessKeyHash}
 
-	site := newSite()
-
-	if len(conf.Init) > 0 {
-		initSite(site, conf.Init)
+	if len(conf.Compact) > 0 {
+		compactSite(conf.Compact)
+		return
 	}
 
-	if len(conf.Compact) > 0 {
-		// XXX
-		log.Fatalln("compaction not implemented")
-		return
+	site := newSite()
+	if len(conf.Init) > 0 {
+		initSite(site, conf.Init)
 	}
 
 	hub := newBroker(site)

@@ -2,9 +2,9 @@ package telesync
 
 // OpsD represents a set of changes to be applied to a Page.
 type OpsD struct {
-	P PageD                  `json:"p"` // page
-	C map[string]interface{} `json:"c"` // comment
-	D [][]interface{}        `json:"d"` // deltas
+	P *PageD                 `json:"p,omitempty"` // page
+	C map[string]interface{} `json:"c,omitempty"` // comment
+	D [][]interface{}        `json:"d,omitempty"` // deltas
 	// Delta operations:
 	// put := ["foo", props map]
 	// set := ["foo.bar", value interface{}]

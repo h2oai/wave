@@ -55,3 +55,33 @@ func (b *FixBuf) geti(i int) (Cur, bool) {
 func (b *FixBuf) dump() interface{} {
 	return BufD{F: &FixBufD{b.t.f, b.tups}}
 }
+
+func loadRecords(ixs interface{}) [][]interface{} {
+	if xs, ok := ixs.([]interface{}); ok {
+		data := make([][]interface{}, len(xs)) // PERF avoid allocation
+		for i, ix := range xs {
+			if x, ok := ix.([]interface{}); ok {
+				data[i] = x
+			} else {
+				return nil // FIXME log
+			}
+		}
+		return data
+	}
+	return nil
+}
+
+func loadFixBuf(d map[string]interface{}) interface{} {
+	if ifields, ok := d["f"]; ok {
+		if fields := loadFields(ifields); fields != nil {
+			if idata, ok := d["d"]; ok {
+				data := loadRecords(idata)
+				if data == nil {
+					return nil // FIXME log
+				}
+				return &FixBuf{newType(fields), data}
+			}
+		}
+	}
+	return nil
+}

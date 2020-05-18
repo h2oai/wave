@@ -94,35 +94,6 @@ func (c *Card) set(ks []string, v interface{}) {
 	}
 }
 
-func (c *Card) dump() CardD {
-	m := make(map[string]interface{})
-	for k, iv := range c.data {
-		if v, ok := iv.(Buf); ok {
-			m["#"+k] = v.dump()
-		} else {
-			m[k] = dump(iv)
-		}
-	}
-	return CardD{m}
-}
-
-func dump(ix interface{}) interface{} {
-	switch x := ix.(type) {
-	case map[string]interface{}:
-		m := make(map[string]interface{})
-		for k, v := range x {
-			m[k] = dump(v)
-		}
-		return m
-	case []interface{}:
-		s := make([]interface{}, len(x))
-		for i, v := range x {
-			s[i] = dump(v)
-		}
-	}
-	return ix
-}
-
 func set(ix interface{}, k string, v interface{}) {
 	switch x := ix.(type) {
 	case Buf:
@@ -164,4 +135,85 @@ func get(ix interface{}, k string) interface{} {
 		}
 	}
 	return nil
+}
+
+func (c *Card) dump() CardD {
+	data := make(map[string]interface{})
+	for k, iv := range c.data {
+		if v, ok := iv.(Buf); ok {
+			data["#"+k] = v.dump()
+		} else {
+			data[k] = deepClone(iv)
+		}
+	}
+	return CardD{data}
+}
+
+func deepClone(ix interface{}) interface{} {
+	switch x := ix.(type) {
+	case map[string]interface{}:
+		m := make(map[string]interface{})
+		for k, v := range x {
+			m[k] = deepClone(v)
+		}
+		return m
+	case []interface{}:
+		s := make([]interface{}, len(x))
+		for i, v := range x {
+			s[i] = deepClone(v)
+		}
+		return s
+	}
+	return ix
+}
+
+func loadFields(ixs interface{}) []string {
+	if xs, ok := ixs.([]interface{}); ok {
+		ss := make([]string, len(xs))
+		for i, ix := range xs {
+			if s, ok := ix.(string); ok {
+				ss[i] = s
+			} else {
+				return nil // FIXME log
+			}
+		}
+		return ss
+	}
+	return nil
+}
+
+func loadCard(ns *Namespace, propsd interface{}) *Card {
+	data := make(map[string]interface{})
+	if props, ok := propsd.(map[string]interface{}); ok {
+		for key, value := range props {
+			if len(key) > 0 && strings.HasPrefix(key, "#") {
+				if bufd, ok := value.(map[string]interface{}); ok {
+					if len(bufd) == 1 {
+						var buf interface{}
+						if cycbufd, ok := bufd["__c__"]; ok {
+							if cycbuf, ok := cycbufd.(map[string]interface{}); ok {
+								buf = loadCycBuf(cycbuf)
+							}
+						}
+						if fixbufd, ok := bufd["__f__"]; ok {
+							if fixbuf, ok := fixbufd.(map[string]interface{}); ok {
+								buf = loadFixBuf(fixbuf)
+							}
+						}
+						if mapbufd, ok := bufd["__m__"]; ok {
+							if mapbuf, ok := mapbufd.(map[string]interface{}); ok {
+								buf = loadMapBuf(mapbuf)
+							}
+						}
+						if buf != nil {
+							data[strings.TrimPrefix(key, "#")] = buf
+						}
+					}
+				}
+				continue // #key entries make it to the map only if unmarshaled correctly
+			}
+			data[key] = value
+		}
+	}
+	return &Card{data}
 }
