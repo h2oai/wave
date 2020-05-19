@@ -1,6 +1,7 @@
-from typing import Union, Tuple, List, Optional, Any, Dict
+from typing import Tuple, List, Optional, Dict
+
 import requests
-from requests.auth import HTTPBasicAuth
+
 from .api import marshal, unmarshal
 
 
@@ -13,10 +14,10 @@ def _new_stmt(query: str, params: List) -> Dict:
     return dict(query=query, params=None if len(params) == 0 else params)
 
 
-def _new_exec_request(database: str, statements: List[Dict]) -> Dict:
+def _new_exec_request(database: str, statements: List[Dict], atomic: bool) -> Dict:
     if not isinstance(database, str):
         raise ValueError(f'database must be str; got {type(database)}')
-    return dict(database=database, statements=statements)
+    return dict(database=database, statements=statements, atomic=atomic)
 
 
 def _new_db_request(exec: Optional[Dict] = None) -> Dict:
@@ -78,7 +79,7 @@ class _DB:
         self._db = db
         self._name = name
 
-    def query(self, sql: str, *params) -> Tuple[Optional[List[List]], Optional[str]]:
+    def exec(self, sql: str, *params) -> Tuple[Optional[List[List]], Optional[str]]:
         """
         Execute a single SQL statement. Parameters are optional.
 
@@ -93,24 +94,24 @@ class _DB:
 
         :Example:
 
-        result, err = db.query(sql)
+        result, err = db.exec(sql)
         if err:
             print(error)
             return
         print(result)
 
-        result, error = db.query('CREATE TABLE student(name TEXT, age INTEGER)')
-        result, error = db.query('INSERT INTO student VALUES ("Alice", 18)')
-        result, error = db.query('INSERT INTO student VALUES (?, ?)', "Bob", 19)
-        result, error = db.query('SELECT name, age FROM student WHERE age > 17')
-        result, error = db.query('SELECT name, age FROM student WHERE age > ?', 17)
+        result, error = db.exec('CREATE TABLE student(name TEXT, age INTEGER)')
+        result, error = db.exec('INSERT INTO student VALUES ("Alice", 18)')
+        result, error = db.exec('INSERT INTO student VALUES (?, ?)', "Bob", 19)
+        result, error = db.exec('SELECT name, age FROM student WHERE age > 17')
+        result, error = db.exec('SELECT name, age FROM student WHERE age > ?', 17)
         """
-        r, err = self.exec((sql, *params))
+        r, err = self._exec([(sql, *params)])
         if err:
             return None, err
         return r[0], None
 
-    def exec(self, *args) -> Tuple[Optional[List[List[List]]], Optional[str]]:
+    def exec_many(self, *args) -> Tuple[Optional[List[List[List]]], Optional[str]]:
         """
         Execute multiple SQL statements.
 
@@ -124,7 +125,7 @@ class _DB:
 
         :Example:
 
-        results, error = db.query(
+        results, error = db.exec_many(
             'CREATE TABLE student(name TEXT, age INTEGER)',
             'INSERT INTO student VALUES ("Alice", 18)',
             ('INSERT INTO student VALUES (?, ?)', "Bob", 19),
@@ -137,8 +138,15 @@ class _DB:
         print(results)
 
         """
-        args = list(args)
+        return self._exec(list(args))
 
+    def exec_atomic(self, *args) -> Tuple[Optional[List[List[List]]], Optional[str]]:
+        """
+        Same as exec_may(), but use a transaction. Rollback if any statement fails.
+        """
+        return self._exec(list(args), atomic=True)
+
+    def _exec(self, args: list, atomic=False) -> Tuple[Optional[List[List[List]]], Optional[str]]:
         if len(args) == 0:
             raise ValueError('Want at least one SQL query, got none')
 
@@ -157,7 +165,7 @@ class _DB:
                 raise ValueError('Want statement, got empty tuple/list')
             statements.append(_new_stmt(arg[0], arg[1:]))
 
-        req = _new_db_request(exec=_new_exec_request(self._name, statements))
+        req = _new_db_request(exec=_new_exec_request(self._name, statements, atomic))
         res = self._db._call(req)
         result, err = res.get('result'), res.get('error')
         if err:

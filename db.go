@@ -39,17 +39,14 @@ const dbLogo = `
 // (theoretically 140TB), SQLite supports unlimited read concurrency, and is
 // almost always a better solution than a client/server SQL database engine.
 //
-// Concurrency can also improved by sharding, in which case DS can be made
+// Concurrency can also improved by sharding, in which case TeleDB can be made
 // to use separate SQLite database files for each shard. Depending on the use case,
 // clients might choose to have a separate shard per subject, so that the
 // server can handle hundreds or thousands of simultaneous connections, but
 // each shard is only used by one connection.
 //
-// Sharding is automatic, and DS will use the database name specified
+// Sharding is automatic, and TeleDB will use the database name specified
 // in each request to initialize new shards if missing.
-//
-// Requests the server are always handled in batches, and transactions are
-// automatically enabled for requests containing more than one query per batch.
 //
 // JSON1, RTREE, FTS5, GEOPOLY, STAT4, and SOUNDEX extensions are built in.
 //
@@ -94,6 +91,7 @@ type DBReply struct {
 type ExecRequest struct {
 	Database   string `json:"database"`
 	Statements []Stmt `json:"statements"`
+	Atomic     bool   `json:"atomic"`
 }
 
 // ExecReply is the reply from Exec().
@@ -175,7 +173,7 @@ func (ds *DS) exec(req ExecRequest) (ExecReply, error) {
 	if err != nil {
 		return ExecReply{}, err
 	}
-	results, err := db.exec(req.Statements)
+	results, err := db.exec(req.Statements, req.Atomic)
 	return ExecReply{results}, err
 }
 
@@ -308,7 +306,7 @@ func scan(s *sqlite3.Stmt, i int) (v interface{}, ok bool, err error) {
 	return
 }
 
-func (db *DB) exec(stmts []Stmt) ([][][]interface{}, error) {
+func (db *DB) exec(stmts []Stmt, atomic bool) ([][][]interface{}, error) {
 	k := len(stmts)
 	if k == 0 {
 		return nil, nil
@@ -320,9 +318,7 @@ func (db *DB) exec(stmts []Stmt) ([][][]interface{}, error) {
 	}
 	defer conn.Close()
 
-	tx := k > 1
-
-	if tx {
+	if atomic {
 		if err := conn.Begin(); err != nil {
 			return nil, fmt.Errorf("failed to begin transaction: %v", err)
 		}
@@ -333,7 +329,7 @@ func (db *DB) exec(stmts []Stmt) ([][][]interface{}, error) {
 	for i, stmt := range stmts {
 		result, err := db.query(conn, stmt.Query, stmt.Params)
 		if err != nil {
-			if tx {
+			if atomic {
 				if err2 := conn.Rollback(); err2 != nil {
 					return nil, fmt.Errorf("%v; additionally, rolling back transaction failed: %v", err, err2)
 				}
@@ -343,7 +339,7 @@ func (db *DB) exec(stmts []Stmt) ([][][]interface{}, error) {
 		results[i] = result
 	}
 
-	if tx {
+	if atomic {
 		if err := conn.Commit(); err != nil {
 			return nil, fmt.Errorf("failed to commit transaction: %v", err)
 		}

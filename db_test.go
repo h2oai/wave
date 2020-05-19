@@ -70,7 +70,7 @@ func TestQuerying(t *testing.T) {
 			}
 		}
 
-		reply := ds.process(DBRequest{Exec: &ExecRequest{testDatabaseName, stmts}})
+		reply := ds.process(DBRequest{Exec: &ExecRequest{testDatabaseName, stmts, true}})
 		t.Log("batch", stmts)
 		if len(reply.Error) > 0 {
 			t.Error(reply.Error)
