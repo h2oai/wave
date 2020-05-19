@@ -52,36 +52,18 @@ func (b *FixBuf) geti(i int) (Cur, bool) {
 	return Cur{}, false
 }
 
-func (b *FixBuf) dump() interface{} {
-	return BufD{F: &FixBufD{b.t.f, b.tups}}
+func (b *FixBuf) dump() BufD {
+	return BufD{F: &FixBufD{b.t.f, b.tups, len(b.tups)}}
 }
 
-func loadRecords(ixs interface{}) [][]interface{} {
-	if xs, ok := ixs.([]interface{}); ok {
-		data := make([][]interface{}, len(xs)) // PERF avoid allocation
-		for i, ix := range xs {
-			if x, ok := ix.([]interface{}); ok {
-				data[i] = x
-			} else {
-				return nil // FIXME log
-			}
+func loadFixBuf(ns *Namespace, b *FixBufD) *FixBuf {
+	t := ns.make(b.F)
+	if len(b.D) == 0 {
+		n := b.N
+		if n <= 0 {
+			n = 10
 		}
-		return data
+		return newFixBuf(t, n)
 	}
-	return nil
-}
-
-func loadFixBuf(d map[string]interface{}) interface{} {
-	if ifields, ok := d["f"]; ok {
-		if fields := loadFields(ifields); fields != nil {
-			if idata, ok := d["d"]; ok {
-				data := loadRecords(idata)
-				if data == nil {
-					return nil // FIXME log
-				}
-				return &FixBuf{newType(fields), data}
-			}
-		}
-	}
-	return nil
+	return &FixBuf{t, b.D}
 }

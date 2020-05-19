@@ -2,6 +2,7 @@ package telesync
 
 import (
 	"encoding/json"
+	"strings"
 	"sync"
 )
 
@@ -20,6 +21,18 @@ func (p *Page) read() []byte {
 	p.RLock()
 	defer p.RUnlock()
 	return p.cache
+}
+
+func (p *Page) set(k string, v interface{}) {
+	ks := strings.Split(k, keySeparator) // PERF avoid allocation
+	if len(ks) == 1 {
+		delete(p.cards, k)
+		return
+	}
+
+	if card, ok := p.cards[ks[0]]; ok {
+		card.set(ks[1:], v)
+	}
 }
 
 func (p *Page) dump() *PageD {
@@ -50,7 +63,7 @@ func (p *Page) marshal() []byte {
 func loadPage(ns *Namespace, d *PageD) *Page {
 	cards := make(map[string]*Card)
 	for k, v := range d.C {
-		cards[k] = loadCard(ns, v.D)
+		cards[k] = loadCard(ns, v)
 	}
 	return &Page{cards: cards}
 }

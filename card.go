@@ -14,7 +14,20 @@ type Buf interface {
 	// set record at key k
 	set(k string, v interface{})
 	// dump contents
-	dump() interface{}
+	dump() BufD
+}
+
+func loadBuf(ns *Namespace, b BufD) Buf {
+	if b.C != nil {
+		return loadCycBuf(ns, b.C)
+	}
+	if b.F != nil {
+		return loadFixBuf(ns, b.F)
+	}
+	if b.M != nil {
+		return loadMapBuf(ns, b.M)
+	}
+	return nil
 }
 
 // Card represents an item on a Page, and holds attributes and data for rendering views.
@@ -22,47 +35,20 @@ type Card struct {
 	data map[string]interface{}
 }
 
-func newBuf(t Typ, n int) Buf {
-	if len(t.f) > 0 {
-		if n > 0 {
-			return newFixBuf(t, n)
-		} else if n < 0 {
-			return newCycBuf(t, -n, 0)
-		} else {
-			return newMapBuf(t)
-		}
-	}
-	return nil
-}
-
-func debuf(ns *Namespace, s interface{}) Buf {
-	if spec, ok := s.(string); ok {
-		// fix: "10 foo bar baz"
-		// var: "0 foo bar baz"
-		// cyc: "-25 foo bar baz"
-		fields := strings.Fields(spec)
-		if len(fields) > 1 {
-			if n, err := strconv.Atoi(fields[0]); err == nil {
-				return newBuf(ns.make(fields[1:]), n)
-			}
-		}
-	}
-	return nil
-}
-
-func newCard(ns *Namespace, ix interface{}) *Card {
+func loadCard(ns *Namespace, c CardD) *Card {
 	card := &Card{make(map[string]interface{})}
-	if x, ok := ix.(map[string]interface{}); ok {
-		ks := make([]string, 1)
-		for k, v := range x {
-			if len(k) > 0 && strings.HasPrefix(k, "#") {
-				if b := debuf(ns, v); b != nil {
-					k, v = strings.TrimPrefix(k, "#"), b
+	ks := make([]string, 1) // to avoid allocation during card.set() below
+	for k, v := range c.D {
+		if len(k) > 0 && strings.HasPrefix(k, "#") {
+			if f, ok := v.(float64); ok {
+				i := int(f)
+				if i >= 0 && i < len(c.B) {
+					k, v = strings.TrimPrefix(k, "#"), loadBuf(ns, c.B[i])
 				}
 			}
-			ks[0] = k
-			card.set(ks, v)
 		}
+		ks[0] = k
+		card.set(ks, v)
 	}
 	return card
 }
@@ -71,7 +57,7 @@ func (c *Card) set(ks []string, v interface{}) {
 	switch len(ks) {
 	case 0: // should not get here; outer interpreter loop will clobber this card.
 		return
-	case 1:
+	case 1: // .foo = bar
 		p := ks[0]
 		if ib, ok := c.data[p]; ok { // TODO can optimize by duplicating all bufs in a card.bufs map
 			if b, ok := ib.(Buf); ok { // avoid clobbering buffers; overwrite instead.
@@ -84,7 +70,7 @@ func (c *Card) set(ks []string, v interface{}) {
 		} else {
 			c.data[p] = v
 		}
-	default:
+	default: // .foo.bar.baz = qux
 		var x interface{} = c.data
 		p := ks[len(ks)-1]
 		for _, k := range ks[:len(ks)-1] {
@@ -139,14 +125,16 @@ func get(ix interface{}, k string) interface{} {
 
 func (c *Card) dump() CardD {
 	data := make(map[string]interface{})
+	var bufs []BufD
 	for k, iv := range c.data {
 		if v, ok := iv.(Buf); ok {
-			data["#"+k] = v.dump()
+			data["#"+k] = len(bufs)
+			bufs = append(bufs, v.dump())
 		} else {
 			data[k] = deepClone(iv)
 		}
 	}
-	return CardD{data}
+	return CardD{data, bufs}
 }
 
 func deepClone(ix interface{}) interface{} {
@@ -165,55 +153,4 @@ func deepClone(ix interface{}) interface{} {
 		return s
 	}
 	return ix
-}
-
-func loadFields(ixs interface{}) []string {
-	if xs, ok := ixs.([]interface{}); ok {
-		ss := make([]string, len(xs))
-		for i, ix := range xs {
-			if s, ok := ix.(string); ok {
-				ss[i] = s
-			} else {
-				return nil // FIXME log
-			}
-		}
-		return ss
-	}
-	return nil
-}
-
-func loadCard(ns *Namespace, propsd interface{}) *Card {
-	data := make(map[string]interface{})
-	if props, ok := propsd.(map[string]interface{}); ok {
-		for key, value := range props {
-			if len(key) > 0 && strings.HasPrefix(key, "#") {
-				if bufd, ok := value.(map[string]interface{}); ok {
-					if len(bufd) == 1 {
-						var buf interface{}
-						if cycbufd, ok := bufd["__c__"]; ok {
-							if cycbuf, ok := cycbufd.(map[string]interface{}); ok {
-								buf = loadCycBuf(cycbuf)
-							}
-						}
-						if fixbufd, ok := bufd["__f__"]; ok {
-							if fixbuf, ok := fixbufd.(map[string]interface{}); ok {
-								buf = loadFixBuf(fixbuf)
-							}
-						}
-						if mapbufd, ok := bufd["__m__"]; ok {
-							if mapbuf, ok := mapbufd.(map[string]interface{}); ok {
-								buf = loadMapBuf(mapbuf)
-							}
-						}
-						if buf != nil {
-							data[strings.TrimPrefix(key, "#")] = buf
-						}
-					}
-				}
-				continue // #key entries make it to the map only if unmarshaled correctly
-			}
-			data[key] = value
-		}
-	}
-	return &Card{data}
 }

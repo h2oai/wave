@@ -29,24 +29,26 @@ def run_tests():
 
 def make_card(**props):
     d = {}
+    b = []
     for k, v in props.items():
         if isinstance(v, dict) and len(v) == 1 and ('__c__' in v or '__f__' in v or '__m__' in v):
-            d['#' + k] = v
+            d['#' + k] = len(b)
+            b.append(v)
         else:
             d[k] = v
-    return dict(d=d)
+    return dict(d=d, b=b) if len(b) else dict(d=d)
 
 
 def make_map_buf(fields, data): return {'__m__': dict(f=fields, d=data)}
 
 
-def make_fix_buf(fields, data): return {'__f__': dict(f=fields, d=data)}
+def make_fix_buf(fields, data): return {'__f__': dict(f=fields, d=data, n=len(data))}
 
 
-def make_cyc_buf(fields, data, i): return {'__c__': dict(f=fields, d=data, i=i)}
+def make_cyc_buf(fields, data, i): return {'__c__': dict(f=fields, d=data, i=i, n=len(data))}
 
 
-def make_page(**cards) -> dict: return dict(p=dict(c=cards), c=None, d=None)
+def make_page(**cards) -> dict: return dict(p=dict(c=cards))
 
 
 def dump_for_comparison(x: dict): return json.dumps(x, indent=2, sort_keys=True).splitlines(keepends=True)
@@ -102,6 +104,27 @@ def test_new_card_with_cyc_buf(page: Page):
     page.add(dict(key='card1', data=Data(fields=sample_fields, size=-3)))
     page.save()
     expect(page.load(), make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[None] * 3, i=0))))
+
+
+@test
+def test_load_card_with_map_buf(page: Page):
+    page.add(dict(key='card1', data=Data(fields=sample_fields, data=dict(foo=[1, 2, 3]))))
+    page.save()
+    expect(page.load(), make_page(card1=make_card(data=make_map_buf(fields=sample_fields, data=dict(foo=[1, 2, 3])))))
+
+
+@test
+def test_load_card_with_fix_buf(page: Page):
+    page.add(dict(key='card1', data=Data(fields=sample_fields, data=[[1, 2, 3]])))
+    page.save()
+    expect(page.load(), make_page(card1=make_card(data=make_fix_buf(fields=sample_fields, data=[[1, 2, 3]]))))
+
+
+@test
+def test_load_card_with_cyc_buf(page: Page):
+    page.add(dict(key='card1', data=Data(fields=sample_fields, data=[[1, 2, 3]], size=-10)))
+    page.save()
+    expect(page.load(), make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[[1, 2, 3]], i=0))))
 
 
 @test

@@ -101,6 +101,17 @@ PAGE = '__page__'
 KEY = '__key__'
 
 
+def _set_op(o, k, v):
+    guard_key(k)
+    k = getattr(o, KEY) + _key_sep + str(k)
+    if isinstance(v, Data):
+        op = v.dump()
+        op['k'] = k
+    else:
+        op = dict(k=k, v=v)
+    return op
+
+
 class Ref:
     def __init__(self, page: 'Page', key: str):
         self.__dict__[PAGE] = page
@@ -111,20 +122,18 @@ class Ref:
         return Ref(getattr(self, PAGE), getattr(self, KEY) + _key_sep + key)
 
     def __setattr__(self, key, value):
-        guard_key(key)
-        getattr(self, PAGE)._track((getattr(self, KEY) + _key_sep + key, value))
+        getattr(self, PAGE)._track(_set_op(self, key, value))
 
     def __getitem__(self, key):
         guard_key(key)
         return Ref(getattr(self, PAGE), getattr(self, KEY) + _key_sep + str(key))
 
     def __setitem__(self, key, value):
-        guard_key(key)
-        getattr(self, PAGE)._track((getattr(self, KEY) + _key_sep + str(key), value))
+        getattr(self, PAGE)._track(_set_op(self, key, value))
 
 
 class Data:
-    def __init__(self, fields: Union[str, tuple, list], size: int = 0):
+    def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
         if _is_str(fields):
             fields = fields.split()
         elif not _is_list(fields):
@@ -134,13 +143,40 @@ class Data:
         for field in fields:
             if not _is_str(field):
                 raise ValueError('field must be str')
+
+        self.fields = fields
+
+        if data:
+            if not isinstance(data, (list, dict)):
+                raise ValueError('data must be list or dict')
+
+        self.data = data
+
         if not _is_int(size):
             raise ValueError('size must be int')
-        self.fields = fields
+
         self.size = size
 
     def dump(self):
-        return f"{str(self.size)} {' '.join(self.fields)}"
+        f = self.fields
+        d = self.data
+        n = self.size
+        if d:
+            if isinstance(d, dict):
+                return {'__m__': dict(f=f, d=d)}
+            else:
+                if n < 0:
+                    return {'__c__': dict(f=f, d=d)}
+                else:
+                    return {'__f__': dict(f=f, d=d)}
+        else:
+            if n == 0:
+                return {'__m__': dict(f=f)}
+            else:
+                if n < 0:
+                    return {'__c__': dict(f=f, n=-n)}
+                else:
+                    return {'__f__': dict(f=f, n=n)}
 
 
 class Page:
@@ -170,19 +206,25 @@ class Page:
         del props['key']
 
         data = []
+        bufs = []
         for k, v in props.items():
             if isinstance(v, Data):
-                data.append((k, v.dump()))
+                data.append((k, len(bufs)))
+                bufs.append(v.dump())
 
         for k, v in data:
             del props[k]
             props[f'#{k}'] = v
 
-        self._track((key, props))
+        if len(bufs) > 0:
+            self._track(dict(k=key, d=props, b=bufs))
+        else:
+            self._track(dict(k=key, d=props))
+
         return Ref(self, key)
 
-    def _track(self, change: tuple):
-        self._changes.append(change)
+    def _track(self, op: dict):
+        self._changes.append(op)
 
     def _diff(self):
         if len(self._changes) == 0:
@@ -195,7 +237,7 @@ class Page:
         return self.site.load(self.url)
 
     def drop(self):
-        self._track(tuple())
+        self._track({})
 
     def save(self):
         p = self._diff()
@@ -221,7 +263,7 @@ class Page:
         return Ref(self, key)
 
     def __delitem__(self, key: str):
-        self._track((key,))
+        self._track(dict(k=key))
 
 
 class BasicAuthClient:

@@ -20,14 +20,21 @@ interface Eventer {
   emit(): void
 }
 
-type Delta = [S, any] | [S] | []
 
-interface Message {
+interface OpsD {
   p?: PageD // init
-  d?: Delta[] // deltas
+  d?: OpD[] // deltas
   e?: S // error
 }
-
+interface OpD {
+  k?: S
+  v?: any
+  __c__?: CycBufD
+  __f__?: FixBufD
+  __m__?: MapBufD
+  d?: Dict<Datum>
+  b?: BufD[]
+}
 type Tup = any[]
 interface PageD {
   c: Dict<CardD>
@@ -35,6 +42,7 @@ interface PageD {
 type Datum = S | F | B | Dict<any> | any[] | BufD
 interface CardD {
   d: Dict<Datum>
+  b?: BufD[]
 }
 interface BufD {
   __c__: CycBufD
@@ -42,19 +50,18 @@ interface BufD {
   __m__: MapBufD
 }
 interface MapBufD {
-  t: 'm'
   f: S[]
   d: Dict<Tup>
 }
 interface FixBufD {
-  t: 'f'
   f: S[]
   d: Array<Tup | null>
+  n: U
 }
 interface CycBufD {
-  t: 'c'
   f: S[]
   d: Array<Tup | null>
+  n: U
   i: U
 }
 
@@ -65,10 +72,12 @@ export interface Data {
 export interface Page {
   key: S
   changedB: Box<B>
-  add(c: C): void
+  add(k: S, c: C): void
   get(k: S): C | undefined
+  set(k: S, v: any): void
   list(): C[]
   drop(k: S): void
+  sync(): void
 }
 
 interface Cur {
@@ -370,51 +379,42 @@ const
     for (let i = 0; i < n; i++) xs[i] = null
     return xs
   },
-  newBuf = (t: Typ, n: U): Buf | null => {
-    if (t.f.length) {
-      return (n > 0)
-        ? newFixBuf(t, newTups(n))
-        : (n < 0)
-          ? newCycBuf(t, newTups(-n), 0)
-          : newMapBuf(t, {})
-    }
+  loadCycBuf = (b: CycBufD): CycBuf => {
+    const t = newType(b.f)
+    return b.d && b.d.length
+      ? newCycBuf(t, b.d, b.i)
+      : newCycBuf(t, newTups(b.n <= 0 ? 10 : b.n), 0)
+  },
+  loadFixBuf = (b: FixBufD): FixBuf => {
+    const t = newType(b.f)
+    return newFixBuf(t, b.d && b.d.length ? b.d : newTups(b.n <= 0 ? 10 : b.n))
+  },
+  loadMapBuf = (b: MapBufD): MapBuf => {
+    const t = newType(b.f)
+    return newMapBuf(t, b.d || {})
+  },
+  loadBuf = (b: BufD): DataBuf | null => {
+    if (b.__c__) return loadCycBuf(b.__c__)
+    if (b.__f__) return loadFixBuf(b.__f__)
+    if (b.__m__) return loadMapBuf(b.__m__)
     return null
   },
-  debuf = (s: any): Buf | null => {
-    if (typeof s === 'string') {
-      const fields = s.trim().split(/\s+/g)
-      if (fields.length > 1) {
-        const n = parseI(fields[0])
-        if (!isNaN(n)) {
-          return newBuf(newType(fields.slice(1)), n)
-        }
-      }
-    }
-    return null
-  },
-  unbuf = (s: any): Buf | null => {
-    const
-      { __c__: c, __f__: f, __m__: m } = s as BufD
-    if (c) return newCycBuf(newType(c.f), c.d, c.i)
-    if (f) return newFixBuf(newType(f.f), f.d)
-    if (m) return newMapBuf(newType(m.f), m.d)
-    return null
-  },
-  newCard = (key: S, x: Dict<any>, load: (x: any) => Buf | null): C => {
+  loadCard = (key: S, c: CardD): C => {
     const
       data: Dict<any> = {},
       changed = newEvent(),
-      ctor = (x: Dict<any>) => {
-        for (let k in x) {
-          let v = x[k]
-          if (v != null && k.length > 0 && k[0] === '#') {
-            const b = load(v)
-            if (b) {
+      ctor = (c: CardD) => {
+        const { d, b } = c
+        for (let k in d) {
+          let v = d[k]
+          if (b && k.length > 0 && k[0] === '#') {
+            const buf = loadBuf(b[v as U])
+            if (buf) {
               k = k.substr(1)
-              v = b
+              v = buf
             }
           }
-          if (load === debuf) set([k], v); else data[k] = v
+          set([k], v)
         }
       },
       set = (ks: S[], v: any) => {
@@ -441,7 +441,7 @@ const
             }
         }
       }
-    ctor(x)
+    ctor(c)
     return { id: xid(), key, data, changed, set }
   },
   gset = (x: any, k: S, v: any) => {
@@ -467,68 +467,71 @@ const
     return null
   },
   newPage = (): Page => {
+    let dirty = false, dirties: Dict<B> = {}
+
     const
       key = xid(),
       cards: Dict<C> = {},
       changedB = box<B>(),
-      add = (card: C) => cards[card.key] = card,
+      add = (k: S, card: C) => {
+        cards[k] = card
+        dirty = true
+      },
       get = (k: S): C | undefined => cards[k],
       list = (): C[] => valuesOf(cards),
-      drop = (k: S) => delete cards[k]
+      drop = (k: S) => delete cards[k],
+      set = (k: S, v: any) => {
+        const ks = k.split(/\s+/g)
+        if (ks.length === 1) {
+          delete cards[k]
+          dirty = true
+          return
+        }
+        const c = cards[ks[0]]
+        if (c) {
+          c.set(ks.slice(1), v)
+          dirties[ks[0]] = true
+        }
+      },
+      sync = () => {
+        if (dirty) {
+          changedB(true)
+        } else {
+          for (const k in dirties) {
+            const c = cards[k]
+            if (c) c.changed.emit()
+          }
+        }
+      }
 
-    return { key, changedB, add, get, list, drop }
+    return { key, changedB, add, get, set, list, drop, sync }
   },
   load = ({ c }: PageD): Page => {
     const page = newPage()
-    for (const k in c) page.add(newCard(k, c[k].d, unbuf))
+    for (const k in c) page.add(k, loadCard(k, c[k]))
     return page
   },
-  exec = (page: Page | null, ops: Delta[]): Page | null => {
-    let isPageDirty = false
-    const dirtyCards: Dict<B> = {}
+  exec = (page: Page | null, ops: OpD[]): Page | null => {
     for (const op of ops) {
-      switch (op.length) {
-        case 0:
-          page = newPage()
-          break
-        case 1:
-          if (page) {
-            const k = op[0]
-            page.drop(k)
-            isPageDirty = true
+      if (op.k && op.k.length > 0) {
+        if (page) {
+          if (op.__c__) {
+            page.set(op.k, loadCycBuf(op.__c__))
+          } else if (op.__f__) {
+            page.set(op.k, loadFixBuf(op.__f__))
+          } else if (op.__m__) {
+            page.set(op.k, loadMapBuf(op.__m__))
+          } else if (op.d) {
+            page.add(op.k, loadCard(op.k, { d: op.d, b: op.b || [] }))
+          } else {
+            page.set(op.k, op.v)
           }
-          break
-        case 2:
-          if (page) {
-            const [k, v] = op
-            if (k.length > 0) {
-              const ks = k.split(/\s+/g)
-              if (ks.length === 1) {
-                page.add(newCard(k, v, debuf))
-                isPageDirty = true
-              } else if (ks.length > 1) {
-                const c = page.get(ks[0])
-                if (c) {
-                  c.set(ks.slice(1), v)
-                  dirtyCards[ks[0]] = true
-                }
-              }
-            }
-          }
-          break
-      }
-    } // end loop
-
-    if (page) {
-      if (isPageDirty) {
-        page.changedB(true)
-      } else {
-        for (const k in dirtyCards) {
-          const b = page.get(k)
-          if (b) b.changed.emit()
         }
+      } else { // drop page
+        page = newPage()
       }
     }
+    if (page) page.sync()
     return page
   }
 
@@ -573,7 +576,7 @@ const
       if (!e.data.length) return
       for (const line of e.data.split('\n')) {
         try {
-          const msg = JSON.parse(line) as Message
+          const msg = JSON.parse(line) as OpsD
           if (msg.d) {
             const newPage = exec(currentPage, msg.d)
             if (currentPage !== newPage) {

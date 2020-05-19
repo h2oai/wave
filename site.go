@@ -3,7 +3,6 @@ package telesync
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 	"sync"
 )
 
@@ -75,30 +74,23 @@ func (site *Site) exec(url string, ops OpsD) {
 	page := site.get(url)
 	page.Lock()
 	for _, op := range ops.D {
-		switch len(op) {
-		case 0: // []
+		if len(op.K) > 0 {
+			if op.C != nil {
+				page.set(op.K, loadCycBuf(site.ns, op.C))
+			} else if op.F != nil {
+				page.set(op.K, loadFixBuf(site.ns, op.F))
+			} else if op.M != nil {
+				page.set(op.K, loadMapBuf(site.ns, op.M))
+			} else if op.D != nil {
+				page.cards[op.K] = loadCard(site.ns, CardD{op.D, op.B})
+			} else {
+				page.set(op.K, op.V)
+			}
+		} else { // drop page
 			site.del(url)
 			page.Unlock()
 			page = site.get(url)
 			page.Lock()
-		case 1:
-			if k, ok := op[0].(string); ok { // ["foo"]
-				delete(page.cards, k)
-			}
-		case 2:
-			ik, v := op[0], op[1]
-			if k, ok := ik.(string); ok {
-				if len(k) > 0 {
-					ks := strings.Split(k, keySeparator)
-					if len(ks) == 1 { // ["foo", map[string]interface{}]
-						page.cards[k] = newCard(site.ns, v)
-					} else if len(ks) > 1 { // ["foo.bar", interface{}]
-						if card, ok := page.cards[ks[0]]; ok {
-							card.set(ks[1:], v)
-						}
-					}
-				}
-			}
 		}
 	}
 	page.cache = nil // will be re-cached on next call to site.get(url)
