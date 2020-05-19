@@ -1,2 +1,6 @@
-# telesync - Python driver for H2O Q realtime apps
+# telesync
+
+Python driver for H2O Q / Telesync realtime apps
+
+
 

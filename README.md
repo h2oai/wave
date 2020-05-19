@@ -1,14 +1,7 @@
 
-```
-   __       __                          
-  / /____  / /__  _______  ______  _____
- / __/ _ \/ / _ \/ ___/ / / / __ \/ ___/
-/ /_/  __/ /  __(__  ) /_/ / / / / /__  
-\__/\___/_/\___/____/\__, /_/ /_/\___/  
-                    /____/              
-```
+![telesync](assets/telesync.png)
 
-Q Realtime App SDK
+Telesync: Q's Realtime App SDK
 
 - Realtime cache module
 - Development server

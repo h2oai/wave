@@ -1,10 +1,13 @@
 all: ## Build telesync wheel
 	./venv/bin/python3 setup.py bdist_wheel
 
+publish: ## Publish package to PyPI
+	./venv/bin/python -m twine upload dist/*
+
 setup: ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install -U pip
-	./venv/bin/python -m pip install wheel requests websockets faker
+	./venv/bin/python -m pip install setuptools wheel twine requests websockets faker
 
 .PHONY: docs
 docs: ## Build API docs
