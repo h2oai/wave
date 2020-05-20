@@ -91,7 +91,7 @@ interface Buf {
   get(k: S): Cur | null
 }
 export interface Card<T> {
-  key: S
+  name: S
   data: T
   changed: Eventer
 }
@@ -442,7 +442,7 @@ const
         }
       }
     ctor(c)
-    return { id: xid(), key, data, changed, set }
+    return { id: xid(), name: key, data, changed, set }
   },
   gset = (x: any, k: S, v: any) => {
     if (x == null) return

@@ -19,7 +19,7 @@ export const
   Repeat = ({ view, props, data }: { view: S | any, props: any, data: any }) => {
     const items = decode<Rec[]>(data).map((r, i) => {
       const card: Card<any> = {
-        key: xid(),
+        name: xid(),
         data: { ...decode<Rec>(props), view, data: r },
         changed: newEvent(),
       }

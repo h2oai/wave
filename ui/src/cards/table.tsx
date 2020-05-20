@@ -64,7 +64,7 @@ class View extends React.Component<Card<State>, State> {
             return <td><Format data={data} format={value} /></td>
           } else {
             const card: Card<any> = {
-              key: xid(),
+              name: xid(),
               data: { ...props, view, data },
               changed: newEvent(),
             }
