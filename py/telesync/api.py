@@ -163,20 +163,20 @@ class Data:
         n = self.size
         if d:
             if isinstance(d, dict):
-                return {'__m__': dict(f=f, d=d)}
+                return dict(m=dict(f=f, d=d))
             else:
                 if n < 0:
-                    return {'__c__': dict(f=f, d=d)}
+                    return dict(c=dict(f=f, d=d))
                 else:
-                    return {'__f__': dict(f=f, d=d)}
+                    return dict(f=dict(f=f, d=d))
         else:
             if n == 0:
-                return {'__m__': dict(f=f)}
+                return dict(m=dict(f=f))
             else:
                 if n < 0:
-                    return {'__c__': dict(f=f, n=-n)}
+                    return dict(c=dict(f=f, n=-n))
                 else:
-                    return {'__f__': dict(f=f, n=n)}
+                    return dict(f=dict(f=f, n=n))
 
 
 class Page:

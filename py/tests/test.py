@@ -31,9 +31,14 @@ def make_card(**props):
     d = {}
     b = []
     for k, v in props.items():
+        # HACK
         if isinstance(v, dict) and len(v) == 1 and ('__c__' in v or '__f__' in v or '__m__' in v):
             d['#' + k] = len(b)
-            b.append(v)
+            buf = dict()
+            for k2, v2 in v.items():
+                buf[k2[2]] = v2
+                break
+            b.append(buf)
         else:
             d[k] = v
     return dict(d=d, b=b) if len(b) else dict(d=d)

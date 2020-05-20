@@ -29,9 +29,9 @@ interface OpsD {
 interface OpD {
   k?: S
   v?: any
-  __c__?: CycBufD
-  __f__?: FixBufD
-  __m__?: MapBufD
+  c?: CycBufD
+  f?: FixBufD
+  m?: MapBufD
   d?: Dict<Datum>
   b?: BufD[]
 }
@@ -45,9 +45,9 @@ interface CardD {
   b?: BufD[]
 }
 interface BufD {
-  __c__: CycBufD
-  __f__: FixBufD
-  __m__: MapBufD
+  c: CycBufD
+  f: FixBufD
+  m: MapBufD
 }
 interface MapBufD {
   f: S[]
@@ -398,9 +398,9 @@ const
     return newMapBuf(t, b.d || {})
   },
   loadBuf = (b: BufD): DataBuf | null => {
-    if (b.__c__) return loadCycBuf(b.__c__)
-    if (b.__f__) return loadFixBuf(b.__f__)
-    if (b.__m__) return loadMapBuf(b.__m__)
+    if (b.c) return loadCycBuf(b.c)
+    if (b.f) return loadFixBuf(b.f)
+    if (b.m) return loadMapBuf(b.m)
     return null
   },
   loadCard = (key: S, c: CardD): C => {
@@ -519,12 +519,12 @@ const
     for (const op of ops) {
       if (op.k && op.k.length > 0) {
         if (page) {
-          if (op.__c__) {
-            page.set(op.k, loadCycBuf(op.__c__))
-          } else if (op.__f__) {
-            page.set(op.k, loadFixBuf(op.__f__))
-          } else if (op.__m__) {
-            page.set(op.k, loadMapBuf(op.__m__))
+          if (op.c) {
+            page.set(op.k, loadCycBuf(op.c))
+          } else if (op.f) {
+            page.set(op.k, loadFixBuf(op.f))
+          } else if (op.m) {
+            page.set(op.k, loadMapBuf(op.m))
           } else if (op.d) {
             page.add(op.k, loadCard(op.k, { d: op.d, b: op.b || [] }))
           } else {

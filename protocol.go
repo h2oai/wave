@@ -10,13 +10,13 @@ type OpsD struct {
 // OpD represents a delta operation (effector)
 // Discriminated union; valid combos: K, set:KV|KC|KF|KM, put:KD|KDB
 type OpD struct {
-	K string                 `json:"k,omitempty"`     // key; ""=drop page
-	V interface{}            `json:"v,omitempty"`     // value
-	C *CycBufD               `json:"__c__,omitempty"` // value
-	F *FixBufD               `json:"__f__,omitempty"` // value
-	M *MapBufD               `json:"__m__,omitempty"` // value
-	D map[string]interface{} `json:"d,omitempty"`     // card data
-	B []BufD                 `json:"b,omitempty"`     // card buffers
+	K string                 `json:"k,omitempty"` // key; ""=drop page
+	V interface{}            `json:"v,omitempty"` // value
+	C *CycBufD               `json:"c,omitempty"` // value
+	F *FixBufD               `json:"f,omitempty"` // value
+	M *MapBufD               `json:"m,omitempty"` // value
+	D map[string]interface{} `json:"d,omitempty"` // card data
+	B []BufD                 `json:"b,omitempty"` // card buffers
 }
 
 // PageD represents the marshaled data for a Page.
@@ -32,9 +32,9 @@ type CardD struct {
 
 // BufD represents the marshaled data for a buffer. This is a discriminated union.
 type BufD struct {
-	C *CycBufD `json:"__c__,omitempty"`
-	F *FixBufD `json:"__f__,omitempty"`
-	M *MapBufD `json:"__m__,omitempty"`
+	C *CycBufD `json:"c,omitempty"`
+	F *FixBufD `json:"f,omitempty"`
+	M *MapBufD `json:"m,omitempty"`
 }
 
 // MapBufD represents the marshaled data for a MapBuf.
