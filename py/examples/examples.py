@@ -43,7 +43,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
             view='card1',
             box=f'{i} 1 1 1',
             title=fake.cryptocurrency_name(),
-            value=f'${{val:.2f}}',
+            value=f'${val:.2f}',
         ))
         simples.append((f, c))
 

@@ -774,6 +774,20 @@ def create_annotation_page(site: Site):
     page.save()
 
 
+def create_pixel_art_page(site: Site):
+    page = site['/pixel_art']
+    page.drop()
+
+    v = page.add(dict(
+        key='pixel_art1',
+        view='pixel_art',
+        box='7 1 4 6',
+        title='Art',
+        data=Data('color', 16*16),
+    ))
+    page.save()
+
+
 def create_site(site: Site):
     create_point_page(site)
     create_line_page(site)
@@ -782,6 +796,7 @@ def create_site(site: Site):
     create_polygon_page(site)
     create_label_page(site)
     create_annotation_page(site)
+    create_pixel_art_page(site)
 
 
 def main():
