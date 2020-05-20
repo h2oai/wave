@@ -219,7 +219,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
         ))
         large_pbs.append((f, c))
 
-    page.save()
+    page.sync()
 
     while update_freq > 0:
         time.sleep(update_freq)
@@ -281,7 +281,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
             c.data.bar = pc * 100
             c.progress = pc
 
-        page.save()
+        page.sync()
 
 
 def create_template_page(site: Site, update_freq=0.0):
@@ -296,7 +296,7 @@ def create_template_page(site: Site, update_freq=0.0):
         template='{{product}} costs {{price}}!',
         data=static(dict(product='Coffee', price='$3.45')),
     ))
-    page.save()
+    page.sync()
 
 
 def create_lists_page(site: Site, update_freq=0.0):
@@ -365,7 +365,7 @@ def create_lists_page(site: Site, update_freq=0.0):
         [fake.cryptocurrency_name(), fake.cryptocurrency_code(), random.randint(100, 1000), random.randint(10, 100)] for
         i in range(15)]
 
-    page.save()
+    page.sync()
 
 
 def create_site(site: Site):

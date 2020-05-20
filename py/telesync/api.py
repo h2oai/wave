@@ -239,7 +239,7 @@ class Page:
     def drop(self):
         self._track({})
 
-    def save(self):
+    def sync(self):
         p = self._diff()
         if p:
             self.site._save(self.url, p)

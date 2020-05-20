@@ -686,7 +686,7 @@ def create_point_page(site: Site):
     create_point_sizes('point_sizes', page, '1 6 4 5')
     create_point_custom('point_custom', page, '5 6 4 5')
 
-    page.save()
+    page.sync()
 
 
 def create_line_page(site: Site):
@@ -703,7 +703,7 @@ def create_line_page(site: Site):
     create_path_smooth('path_smooth', page, '5 7 4 3')
     create_path_point('path_point', page, '9 7 4 3')
 
-    page.save()
+    page.sync()
 
 
 def create_area_page(site: Site):
@@ -720,7 +720,7 @@ def create_area_page(site: Site):
     create_area_stacked('area_stacked', page, '5 7 4 3')
     create_area_range('area_range', page, '9 7 4 3')
 
-    page.save()
+    page.sync()
 
 
 def create_interval_page(site: Site):
@@ -738,7 +738,7 @@ def create_interval_page(site: Site):
     create_interval_theta('interval_theta', page, '7 7 3 4')
     create_interval_polar_stacked('interval_polar_stacked', page, '10 7 3 4')
 
-    page.save()
+    page.sync()
 
 
 def create_polygon_page(site: Site):
@@ -748,7 +748,7 @@ def create_polygon_page(site: Site):
     create_polygon('polygon', page, '1 1 6 5')
     create_point_map('point_map', page, '7 1 6 5')
 
-    page.save()
+    page.sync()
 
 
 def create_label_page(site: Site):
@@ -760,7 +760,7 @@ def create_label_page(site: Site):
     create_line_labels_no_overlap('no_overlap', page, '1 6 6 5')
     create_interval_labels('custom', page, '7 6 6 5')
 
-    page.save()
+    page.sync()
 
 
 def create_annotation_page(site: Site):
@@ -771,7 +771,7 @@ def create_annotation_page(site: Site):
     create_line_annotation('line', page, '7 1 6 5')
     create_interval_annotation('interval', page, '7 6 6 5')
 
-    page.save()
+    page.sync()
 
 
 def create_pixel_art_page(site: Site):
@@ -781,11 +781,11 @@ def create_pixel_art_page(site: Site):
     v = page.add(dict(
         key='pixel_art1',
         view='pixel_art',
-        box='7 1 4 6',
+        box='1 1 4 6',
         title='Art',
         data=Data('color', 16*16),
     ))
-    page.save()
+    page.sync()
 
 
 def create_site(site: Site):
