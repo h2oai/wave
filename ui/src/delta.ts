@@ -309,14 +309,14 @@ const
         }
         return null
       },
-      list = (): Rec[] => {
-        const xs: Rec[] = []
-        for (const tup of tups) if (tup) xs.push(t.make(tup))
+      list = (): (Rec | null)[] => {
+        const xs: (Rec | null)[] = []
+        for (const tup of tups) xs.push(tup ? t.make(tup) : null)
         return xs
       }
     return { __buf__: true, n, put, set, seti, get, geti, list }
   },
-  newCycBuf = (t: Typ, tups: Array<Tup | null>, i: U): CycBuf => {
+  newCycBuf = (t: Typ, tups: (Tup | null)[], i: U): CycBuf => {
     const
       n = tups.length,
       b = newFixBuf(t, tups),
