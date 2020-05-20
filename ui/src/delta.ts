@@ -55,18 +55,18 @@ interface MapBufD {
 }
 interface FixBufD {
   f: S[]
-  d: Array<Tup | null>
+  d: (Tup | null)[]
   n: U
 }
 interface CycBufD {
   f: S[]
-  d: Array<Tup | null>
+  d: (Tup | null)[]
   n: U
   i: U
 }
 
 export interface Data {
-  list(): Rec[]
+  list(): (Rec | null)[]
 }
 
 export interface Page {
@@ -124,6 +124,10 @@ export const
     if (!/^-{0,1}\d+$/.test(s)) return NaN
     return parseInt(s, 10)
   },
+  parseU = (s: S): U => {
+    const i = parseI(s)
+    return isNaN(i) || i < 0 ? NaN : i
+  },
   dict = <T extends {}>(kvs: [S, T][]): Dict<T> => {
     const d: Dict<T> = {}
     for (const [k, v] of kvs) d[k] = v
@@ -131,7 +135,7 @@ export const
   },
   newEvent = (): Eventer => {
     const
-      fs: Array<Handler> = [],
+      fs: Handler[] = [],
       on = (f: Handler) => fs.push(f),
       off = (f?: Handler) => {
         if (f) {
@@ -277,7 +281,7 @@ const
       }
     return { __cur__: true, get, set }
   },
-  newFixBuf = (t: Typ, tups: Array<Tup | null>): FixBuf => {
+  newFixBuf = (t: Typ, tups: (Tup | null)[]): FixBuf => {
     const
       n = tups.length,
       put = (xs: any) => {
@@ -535,10 +539,57 @@ const
     return page
   }
 
-export interface Socket {
-  current: WebSocket | null
+//
+// In-browser API
+//
+
+export interface PageRef {
+  get(key: S): Ref
+  set(key: S, value: any): void
+  del(key: S): void
+  drop(): void
+  sync(): void
 }
-export const socket: Socket = { current: null }
+
+export interface Ref {
+  get(key: S): Ref
+  set(key: S, value: any): void
+}
+
+export interface Socket {
+  path: S
+  current: WebSocket | null
+  page(): PageRef
+}
+
+const keyseq = (...keys: S[]): S => keys.join(' ')
+
+export const socket: Socket = {
+  current: null,
+  path: window.location.pathname,
+  page: (path?: S): PageRef => {
+    path = path || socket.path
+    const
+      changes: OpD[] = [],
+      ref = (k: S): Ref => {
+        const
+          get = (key: S): Ref => ref(`${k}.${key}`),
+          set = (key: S, value: any) => changes.push({ k: keyseq(k, key), v: value })
+        return { get, set }
+      },
+      get = (key: S) => ref(key),
+      set = (key: S, value: any) => changes.push({ k: keyseq(key), v: value }),
+      del = (key: S) => changes.push({ k: key }),
+      drop = () => changes.push({}),
+      sync = () => {
+        const sock = socket.current
+        if (!sock) return
+        const opsd: OpsD = { d: changes }
+        sock.send(`* ${path} ${JSON.stringify(opsd)}`)
+      }
+    return { get, set, del, drop, sync }
+  }
+}
 
 export enum SockEventType { Message, Data }
 export type SockEvent = SockMessage | SockData
@@ -562,7 +613,7 @@ const
       socket.current = sock
       handle({ t: SockEventType.Message, type: SockMessageType.Info, message: 'Connected' })
       backoff = 1
-      sock.send(`+ ${window.location.pathname} `) // protocol: t<sep>addr<sep>data
+      sock.send(`+ ${socket.path} `) // protocol: t<sep>addr<sep>data
     }
     sock.onclose = function () {
       socket.current = null
@@ -601,3 +652,4 @@ const
   }
 
 export const connect = (path: S, handle: SockHandler) => reconnect(toSocketAddress(path), handle)
+
