@@ -5,7 +5,7 @@ import { Card, Rec, decode } from '../delta';
 import { cards, Format } from '../grid';
 import { getTheme } from '../theme';
 import Handlebars from 'handlebars'
-
+import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -34,31 +34,28 @@ const defaults: State = {
   title: ''
 }
 
-class View extends React.Component<Card<State>, State> {
-  template: HandlebarsTemplateDelegate<any> | null = null
-  onChanged = () => this.setState({ ...this.props.data })
-  constructor(props: Card<State>) {
-    super(props)
-    this.state = { ...props.data }
-    props.changed.on(this.onChanged)
-    this.template = Handlebars.compile(this.state.template)
-  }
-  render() {
+const
+  View = bond(({ state, changed }: Card<State>) => {
     const
-      s = theme.merge(defaults, this.state),
-      data = decode(s.data),
-      html = this.template ? { __html: this.template(data) } : undefined
-    return s.title
-      ? (
-        <div className={css.titledCard}>
-          <div className={css.title}><Format data={data} format={s.title} /></div>
-          <div dangerouslySetInnerHTML={html}></div>
-        </div>
-      )
-      : (
-        <div className={css.untitledCard} dangerouslySetInnerHTML={html} />
-      )
-  }
-}
+      template = Handlebars.compile(state.template),
+      render = () => {
+        const
+          s = theme.merge(defaults, state),
+          data = decode(s.data),
+          html = { __html: template(data) }
+        return s.title
+          ? (
+            <div className={css.titledCard}>
+              <div className={css.title}><Format data={data} format={s.title} /></div>
+              <div dangerouslySetInnerHTML={html}></div>
+            </div>
+          )
+          : (
+            <div className={css.untitledCard} dangerouslySetInnerHTML={html} />
+          )
+
+      }
+    return { render, changed }
+  })
 
 cards.register('template', View)

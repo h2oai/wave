@@ -6,6 +6,7 @@ import { B, Card, decode, Dict, F, Rec, S, V } from '../delta';
 import { cards } from '../grid';
 import { Fmt, parseFormat } from '../intl';
 import { getTheme } from '../theme';
+import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -559,55 +560,53 @@ const defaults: State = {
   title: 'Untitled',
 }
 
-class View extends React.Component<Card<State>, State> {
-  el = React.createRef<HTMLDivElement>()
-  chart: Chart | null = null
-  vis: Vis | null = null
-  onChanged = () => this.setState({ ...this.props.data })
-  constructor(props: Card<State>) {
-    super(props)
-    this.state = { ...props.data }
-    props.changed.on(this.onChanged)
-  }
-  componentDidMount() {
-    const el = this.el.current
-    if (!el) return
+const
+  View = bond(({ state, changed }: Card<State>) => {
+    let
+      currentChart: Chart | null = null,
+      currentVis: Vis | null = null
     const
-      s = this.state,
-      raw_data = decode(s.data) as any[],
-      raw_marks = decode(s.vis) as Mark[],
-      marks = raw_marks.map(refactorMark),
-      vis: Vis = { marks: marks },
-      // spaceT = spaceTypeOf(raw_marks, marks),
-      data = refactorData(raw_data, vis.marks),
-      chart = makeChart(el, vis.marks)
-    this.vis = vis
-    if (chart) {
-      this.chart = chart
-      chart.data(data)
-      chart.render()
-    }
-  }
-  componentDidUpdate() {
-    const el = this.el.current, { chart, vis } = this
-    if (!el || !chart || !vis) return
-    const
-      s = this.state,
-      raw_data = decode(s.data) as any[],
-      data = refactorData(raw_data, vis.marks)
-    chart.changeData(data)
-  }
-  render() {
-    const
-      s = { ...defaults, ...this.state } as Opts
-    return (
-      <div className={css.card}>
-        <div className={css.title}>{s.title}</div>
-        <div className={css.plot} ref={this.el} />
-      </div>
-    )
-  }
-}
+      container = React.createRef<HTMLDivElement>(),
+      init = () => {
+        const el = container.current
+        if (!el) return
+        const
+          s = state,
+          raw_data = decode(s.data) as any[],
+          raw_marks = decode(s.vis) as Mark[],
+          marks = raw_marks.map(refactorMark),
+          vis: Vis = { marks: marks },
+          // spaceT = spaceTypeOf(raw_marks, marks),
+          data = refactorData(raw_data, vis.marks),
+          chart = makeChart(el, vis.marks)
+        currentVis = vis
+        if (chart) {
+          currentChart = chart
+          chart.data(data)
+          chart.render()
+        }
+      },
+      update = () => {
+        const el = container.current
+        if (!el || !currentChart || !currentVis) return
+        const
+          s = state,
+          raw_data = decode(s.data) as any[],
+          data = refactorData(raw_data, currentVis.marks)
+        currentChart.changeData(data)
+      },
+      render = () => {
+        const
+          s = { ...defaults, ...state } as Opts
+        return (
+          <div className={css.card}>
+            <div className={css.title}>{s.title}</div>
+            <div className={css.plot} ref={container} />
+          </div>
+        )
+      }
+    return { init, update, render, changed }
+  })
 
 cards.register('plot', View)
 

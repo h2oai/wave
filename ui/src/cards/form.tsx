@@ -69,31 +69,28 @@ const
   }
 
 
-class View extends React.Component<Card<State>, State> {
-  onChanged = () => this.setState({ ...this.props.data })
-  constructor(props: Card<State>) {
-    super(props)
-    this.state = { ...props.data }
-    props.changed.on(this.onChanged)
-  }
-  render() {
+const
+  View = bond(({ state, changed }: Card<State>) => {
     const
-      s = theme.merge(defaults, this.state),
-      items = decode<UIComponent[]>(s.items), // XXX ugly
-      args = decode(s.args),
-      submit = () => {
-        const sock = socket.current
-        if (!sock) return
-        sock.send(`@ ${s.url} ${JSON.stringify(args)}`)
-      },
-      fields = items.map((c, i) => <XField key={i} component={c} args={args} submit={submit} />)
+      render = () => {
+        const
+          s = theme.merge(defaults, state),
+          items = decode<UIComponent[]>(s.items), // XXX ugly
+          args = decode(s.args),
+          submit = () => {
+            const sock = socket.current
+            if (!sock) return
+            sock.send(`@ ${s.url} ${JSON.stringify(args)}`)
+          },
+          fields = items.map((c, i) => <XField key={i} component={c} args={args} submit={submit} />)
 
-    return (
-      <div className={css.card}>
-        {fields}
-      </div>)
-  }
-}
+        return (
+          <div className={css.card}>
+            {fields}
+          </div>)
+      }
+    return { render, changed }
+  })
 
 cards.register('form', View)
 

@@ -5,6 +5,7 @@ import { cards, Format, grid } from '../grid';
 import { MicroBars } from './microbars';
 import { MicroArea } from './microline';
 import { getTheme } from '../theme';
+import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -70,58 +71,56 @@ const defaults: State = {
   plot_curve: 'linear',
 }
 
-class View extends React.Component<Card<State>, State> {
-  onChanged = () => this.setState({ ...this.props.data })
-  constructor(props: Card<State>) {
-    super(props)
-    this.state = { ...props.data }
-    props.changed.on(this.onChanged)
-  }
-  render() {
-    const
-      s = theme.merge(defaults, this.state),
-      data = decode(s.data),
-      plot = s.plot_type === 'area'
-        ? (
-          <MicroArea
-            width={plotWidth}
-            height={plotHeight}
-            data={decode(s.plot_data)}
-            value={s.plot_value}
-            color={s.plot_color}
-            zeroValue={s.plot_zero_value}
-            curve={s.plot_curve}
-          />
-        ) : (
-          <MicroBars
-            width={plotWidth}
-            height={plotHeight}
-            data={decode(s.plot_data)}
-            category={s.plot_category}
-            value={s.plot_value}
-            color={s.plot_color}
-            zeroValue={s.plot_zero_value}
-          />
-        )
 
-    return (
-      <div className={css.card}>
-        <div className={css.left}>{plot}</div>
-        <div className={css.right}>
-          <div className={css.title}>
-            <Format data={data} format={s.title} />
-          </div>
-          <div className={css.values}>
-            <div className={css.value}>
-              <Format data={data} format={s.value} />
+const
+  View = bond(({ state, changed }: Card<State>) => {
+    const
+      render = () => {
+        const
+          s = theme.merge(defaults, state),
+          data = decode(s.data),
+          plot = s.plot_type === 'area'
+            ? (
+              <MicroArea
+                width={plotWidth}
+                height={plotHeight}
+                data={decode(s.plot_data)}
+                value={s.plot_value}
+                color={s.plot_color}
+                zeroValue={s.plot_zero_value}
+                curve={s.plot_curve}
+              />
+            ) : (
+              <MicroBars
+                width={plotWidth}
+                height={plotHeight}
+                data={decode(s.plot_data)}
+                category={s.plot_category}
+                value={s.plot_value}
+                color={s.plot_color}
+                zeroValue={s.plot_zero_value}
+              />
+            )
+
+        return (
+          <div className={css.card}>
+            <div className={css.left}>{plot}</div>
+            <div className={css.right}>
+              <div className={css.title}>
+                <Format data={data} format={s.title} />
+              </div>
+              <div className={css.values}>
+                <div className={css.value}>
+                  <Format data={data} format={s.value} />
+                </div>
+                <div className={css.aux_value}>
+                  <Format data={data} format={s.aux_value} />
+                </div>
+              </div>
             </div>
-            <div className={css.aux_value}>
-              <Format data={data} format={s.aux_value} />
-            </div>
-          </div>
-        </div>
-      </div>)
-  }
-}
+          </div>)
+      }
+    return { render, changed }
+  })
 
 cards.register('card2', View)

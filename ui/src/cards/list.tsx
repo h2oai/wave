@@ -3,6 +3,7 @@ import { stylesheet } from 'typestyle';
 import { Card, Data, Rec, S } from '../delta';
 import { cards, Repeat } from '../grid';
 import { getTheme } from '../theme';
+import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -40,25 +41,22 @@ const defaults: State = {
   title: 'Untitled',
 }
 
-class View extends React.Component<Card<State>, State> {
-  onChanged = () => this.setState({ ...this.props.data })
-  constructor(props: Card<State>) {
-    super(props)
-    this.state = { ...props.data }
-    props.changed.on(this.onChanged)
-  }
-  render() {
+const
+  View = bond(({ state, changed }: Card<State>) => {
     const
-      s = { ...defaults, ...this.state } as Opts
-    return (
-      <div className={css.card}>
-        <div className={css.title}>{s.title}</div>
-        <div className={css.body}>
-          <Repeat view={s.item_view} props={s.item_props} data={s.data} />
-        </div>
-      </div>
-    )
-  }
-}
+      render = () => {
+        const
+          s = { ...defaults, ...state } as Opts
+        return (
+          <div className={css.card}>
+            <div className={css.title}>{s.title}</div>
+            <div className={css.body}>
+              <Repeat view={s.item_view} props={s.item_props} data={s.data} />
+            </div>
+          </div>
+        )
+      }
+    return { render, changed }
+  })
 
 cards.register('list', View)

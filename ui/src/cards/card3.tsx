@@ -3,6 +3,7 @@ import { stylesheet } from 'typestyle';
 import { Card, Rec } from '../delta';
 import { cards, Format } from '../grid';
 import { getTheme } from '../theme';
+import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -48,34 +49,31 @@ const defaults: State = {
   caption: 'No description available',
 }
 
-class View extends React.Component<Card<State>, State> {
-  onChanged = () => this.setState({ ...this.props.data })
-  constructor(props: Card<State>) {
-    super(props)
-    this.state = { ...props.data }
-    props.changed.on(this.onChanged)
-  }
-  render() {
-    const s = theme.merge(defaults, this.state)
-    return (
-      <div className={css.card}>
-        <div className={css.title}>
-          <Format data={s.data} format={s.title} />
-        </div>
-        <div className={css.values}>
-          <div className={css.value}>
-            <Format data={s.data} defaultValue={s.value} format={s.value} />
+const
+  View = bond(({ state, changed }: Card<State>) => {
+    const
+      render = () => {
+        const s = theme.merge(defaults, state)
+        return (
+          <div className={css.card}>
+            <div className={css.title}>
+              <Format data={s.data} format={s.title} />
+            </div>
+            <div className={css.values}>
+              <div className={css.value}>
+                <Format data={s.data} defaultValue={s.value} format={s.value} />
+              </div>
+              <div className={css.aux_value}>
+                <Format data={s.data} format={s.aux_value} />
+              </div>
+            </div>
+            <div className={css.caption}>
+              <Format data={s.data} format={s.caption} />
+            </div>
           </div>
-          <div className={css.aux_value}>
-            <Format data={s.data} format={s.aux_value} />
-          </div>
-        </div>
-        <div className={css.caption}>
-          <Format data={s.data} format={s.caption} />
-        </div>
-      </div>
-    )
-  }
-}
+        )
+      }
+    return { render, changed }
+  })
 
 cards.register('card3', View)

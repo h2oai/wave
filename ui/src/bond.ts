@@ -4,6 +4,7 @@ import { boxed, Disposable, on } from './dataflow';
 interface Renderable {
   render(): JSX.Element
   init?(): void
+  update?(): void
   dispose?(): void
 }
 
@@ -20,7 +21,7 @@ export default function bond<TProps, TState extends Renderable>(ctor: (props: TP
         arrows: Disposable[] = []
 
       Object.keys(model).forEach(k => {
-        if (k === 'render' || k === 'dispose' || k === 'init') return
+        if (k === 'render' || k === 'dispose' || k === 'init' || k === 'update') return
         const v = (model as any)[k]
         if (boxed(v)) arrows.push(on(v, _ => self.setState({})))
       })
@@ -29,14 +30,17 @@ export default function bond<TProps, TState extends Renderable>(ctor: (props: TP
       this.arrows = arrows
       this.state = {}
     }
-    public componentDidMount() {
+    componentDidMount() {
       if (this.model.init) this.model.init()
     }
-    public componentWillUnmount() {
+    componentDidUpdate() {
+      if (this.model.update) this.model.update()
+    }
+    componentWillUnmount() {
       if (this.model.dispose) this.model.dispose()
       for (const a of this.arrows) a.dispose()
     }
-    public render() {
+    render() {
       return this.model.render()
     }
   }

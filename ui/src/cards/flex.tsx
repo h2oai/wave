@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Data, Dict, Rec, S } from '../delta';
 import { cards, Repeat } from '../grid';
+import bond from '../bond';
 
 interface Opts {
   title: S
@@ -63,21 +64,19 @@ const
   }
 
 
-class View extends React.Component<Card<State>, State> {
-  onChanged = () => this.setState({ ...this.props.data })
-  constructor(props: Card<State>) {
-    super(props)
-    this.state = { ...props.data }
-    props.changed.on(this.onChanged)
-  }
-  render() {
-    const s = { ...defaults, ...this.state } as Opts
-    return (
-      <div style={toFlexStyle(s)}>
-        <Repeat view={s.item_view} props={s.item_props} data={s.data} />
-      </div>
-    )
-  }
-}
+const
+  View = bond(({ state, changed }: Card<State>) => {
+    const
+      render = () => {
+        // FIXME theme.merge()
+        const s = { ...defaults, ...state } as Opts
+        return (
+          <div style={toFlexStyle(s)}>
+            <Repeat view={s.item_view} props={s.item_props} data={s.data} />
+          </div>
+        )
+      }
+    return { render, changed }
+  })
 
 cards.register('flex', View)

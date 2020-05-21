@@ -12,15 +12,6 @@ export type Prim = S | F | B | null // primitive
 export interface Dict<T> { [key: string]: T } // generic object
 export type Rec = Dict<Prim>
 
-
-type Handler = () => void
-interface Eventer {
-  on(f: Handler): void
-  off(f?: Handler): void
-  emit(): void
-}
-
-
 interface OpsD {
   p?: PageD // init
   d?: OpD[] // deltas
@@ -71,7 +62,7 @@ export interface Data {
 
 export interface Page {
   key: S
-  changedB: Box<B>
+  changed: Box<B>
   add(k: S, c: C): void
   get(k: S): C | undefined
   set(k: S, v: any): void
@@ -92,8 +83,8 @@ interface Buf {
 }
 export interface Card<T> {
   name: S
-  data: T
-  changed: Eventer
+  state: T
+  changed: Box<B>
 }
 export interface C extends Card<Dict<any>> {
   id: S
@@ -132,21 +123,6 @@ export const
     const d: Dict<T> = {}
     for (const [k, v] of kvs) d[k] = v
     return d
-  },
-  newEvent = (): Eventer => {
-    const
-      fs: Handler[] = [],
-      on = (f: Handler) => fs.push(f),
-      off = (f?: Handler) => {
-        if (f) {
-          const i = fs.indexOf(f)
-          if (i >= 0) fs.splice(i, 1)
-        } else {
-          fs.length = 0
-        }
-      },
-      emit = () => { for (const f of fs) f() }
-    return { on, off, emit }
   },
   decode = <T extends {}>(data: any): T =>
     (typeof data === 'string')
@@ -406,7 +382,7 @@ const
   loadCard = (key: S, c: CardD): C => {
     const
       data: Dict<any> = {},
-      changed = newEvent(),
+      changed = box<B>(),
       ctor = (c: CardD) => {
         const { d, b } = c
         for (let k in d) {
@@ -446,7 +422,7 @@ const
         }
       }
     ctor(c)
-    return { id: xid(), name: key, data, changed, set }
+    return { id: xid(), name: key, state: data, changed, set }
   },
   gset = (x: any, k: S, v: any) => {
     if (x == null) return
@@ -476,7 +452,7 @@ const
     const
       key = xid(),
       cards: Dict<C> = {},
-      changedB = box<B>(),
+      changed = box<B>(),
       add = (k: S, card: C) => {
         cards[k] = card
         dirty = true
@@ -499,16 +475,16 @@ const
       },
       sync = () => {
         if (dirty) {
-          changedB(true)
+          changed(true)
         } else {
           for (const k in dirties) {
             const c = cards[k]
-            if (c) c.changed.emit()
+            if (c) c.changed(true)
           }
         }
       }
 
-    return { key, changedB, add, get, set, list, drop, sync }
+    return { key, changed, add, get, set, list, drop, sync }
   },
   load = ({ c }: PageD): Page => {
     const page = newPage()

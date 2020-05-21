@@ -1,6 +1,7 @@
 import React from 'react';
-import { decode, newEvent, xid, Card, Dict, F, parseI, Rec, S, U } from './delta';
+import { decode, xid, Card, Dict, F, parseI, Rec, S, U, B } from './delta';
 import { format, isFormatExpr } from './intl';
+import { box } from './dataflow';
 
 export const
   Format = ({ data, defaultValue: v, format: f }: { data?: Rec, defaultValue?: any, format?: S }) => {
@@ -13,15 +14,15 @@ export const
         : null
   },
   CardView = ({ card }: { card: Card<any> }) => {
-    let Tag = cards.lookup(card.data.view)
+    let Tag = cards.lookup(card.state.view)
     return <Tag {...card} />
   },
   Repeat = ({ view, props, data }: { view: S | any, props: any, data: any }) => {
     const items = decode<Rec[]>(data).map((r, i) => {
       const card: Card<any> = {
         name: xid(),
-        data: { ...decode<Rec>(props), view, data: r },
-        changed: newEvent(),
+        state: { ...decode<Rec>(props), view, data: r },
+        changed: box<B>(),
       }
       return <CardView key={i} card={card} />
     })

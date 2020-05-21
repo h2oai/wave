@@ -1,25 +1,17 @@
 import React from 'react';
 import { Card } from '../delta';
 import { cards } from '../grid';
+import bond from '../bond';
 
-interface State {
-  value?: string
-}
+const
+  View = bond(({ state, changed }: Card<{}>) => {
+    const
+      render = () => (
+        <div>
+          <pre>{JSON.stringify(state, null, 2)}</pre>
+        </div>
+      )
+    return { render, changed }
+  })
 
-class NoneCard extends React.Component<Card<State>, State> {
-  onChanged = () => this.setState({ ...this.props.data })
-  constructor(props: Card<State>) {
-    super(props)
-    this.state = { ...this.props.data }
-    props.changed.on(this.onChanged)
-  }
-  render() {
-    return (
-      <div>
-        <pre>{JSON.stringify(this.state, null, 2)}</pre>
-      </div>
-    )
-  }
-}
-
-cards.register('', NoneCard)
+cards.register('', View)
