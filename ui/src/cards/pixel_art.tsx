@@ -46,7 +46,7 @@ const
 
   }
 
-interface Opts {
+interface State {
   title: S
   data: Rec
 }
@@ -55,9 +55,7 @@ interface Pixel {
   color: S
 }
 
-type State = Partial<Opts>
-
-const defaults: State = {
+const defaults: Partial<State> = {
   title: 'Untitled',
 }
 

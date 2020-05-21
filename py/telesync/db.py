@@ -24,7 +24,7 @@ def _new_db_request(exec: Optional[Dict] = None) -> Dict:
     return dict(exec=exec)
 
 
-class TeleError(Exception):
+class TeleDBError(Exception):
     """
     Represents a remote exception thrown by the TeleDB database server.
     """
@@ -65,7 +65,7 @@ class TeleDB:
         print(data)
         res = self._session.post(self._url, data=data)
         if res.status_code != 200:
-            raise TeleError(f'Request failed (code={res.status_code}): {res.text}')
+            raise TeleDBError(f'Request failed (code={res.status_code}): {res.text}')
         print(res.text)
         return unmarshal(res.text)
 

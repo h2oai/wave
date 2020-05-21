@@ -28,16 +28,14 @@ const
     }
   })
 
-interface Opts {
+interface State {
   title: S
   item_view: S
   item_props: S | Rec
   data: S | Data
 }
 
-type State = Partial<Opts>
-
-const defaults: State = {
+const defaults: Partial<State> = {
   title: 'Untitled',
 }
 
@@ -46,7 +44,7 @@ const
     const
       render = () => {
         const
-          s = { ...defaults, ...state } as Opts
+          s = { ...defaults, ...state } as State
         return (
           <div className={css.card}>
             <div className={css.title}>{s.title}</div>

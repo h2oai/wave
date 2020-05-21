@@ -22,15 +22,13 @@ const
     },
   })
 
-interface Opts {
+interface State {
   title: string
   template: string
   data: Rec
 }
 
-type State = Partial<Opts>
-
-const defaults: State = {
+const defaults: Partial<State> = {
   title: ''
 }
 

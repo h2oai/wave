@@ -32,15 +32,13 @@ const
     }
   })
 
-interface Opts {
+interface State {
   title: S
   cells: S | Data
   data: S | Data
 }
 
-type State = Partial<Opts>
-
-const defaults: State = {
+const defaults: Partial<State> = {
   title: 'Untitled',
 }
 
@@ -48,7 +46,7 @@ const
   View = bond(({ state, changed }: Card<State>) => {
     const
       render = () => {
-        const s = { ...defaults, ...state } as Opts
+        const s = { ...defaults, ...state } as State
         let cells = decode<any[]>(state.cells)
 
         if (!Array.isArray(cells)) cells = [{ title: 'Data' }]

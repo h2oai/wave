@@ -47,7 +47,7 @@ const
     }
   })
 
-interface Opts {
+interface State {
   title: S
   value: S
   aux_value: S
@@ -61,16 +61,14 @@ interface Opts {
   plot_curve: S
 }
 
-type State = Partial<Opts>
 
-const defaults: State = {
+const defaults: Partial<State> = {
   title: 'Untitled',
   plot_type: 'area',
   plot_data: '',
   plot_color: theme.colors.gray,
   plot_curve: 'linear',
 }
-
 
 const
   View = bond(({ state, changed }: Card<State>) => {

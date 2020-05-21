@@ -34,7 +34,7 @@ const
     }
   })
 
-interface Opts {
+interface State {
   title: string
   value: string
   aux_value: string
@@ -42,9 +42,7 @@ interface Opts {
   data: Rec
 }
 
-type State = Partial<Opts>
-
-const defaults: State = {
+const defaults: Partial<State> = {
   title: 'Untitled',
   caption: 'No description available',
 }

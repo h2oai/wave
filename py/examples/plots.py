@@ -1,4 +1,4 @@
-from telesync import Site, Data, static, plot
+from telesync import Site, tupleset, atomic, plot
 from synth import FakeTimeSeries, FakeScatter, FakeMultiTimeSeries, FakeCategoricalSeries, FakeMultiCategoricalSeries, \
     FakeSeries
 import random
@@ -12,8 +12,8 @@ def create_point(key, page, box):
         view='plot',
         box=box,
         title='Point',
-        data=Data('price performance', n),
-        vis=static(plot(mark='point', x='=price', y='=performance'))
+        data=tupleset('price performance', n),
+        vis=atomic(plot(mark='point', x='=price', y='=performance'))
     ))
     v.data = [f.next() for i in range(n)]
 
@@ -26,8 +26,8 @@ def create_point_sizes(key, page, box):
         view='plot',
         box=box,
         title='Point, sized',
-        data=Data('price performance discount', n),
-        vis=static(plot(mark='point', x='=price', y='=performance', size='=discount'))
+        data=tupleset('price performance discount', n),
+        vis=atomic(plot(mark='point', x='=price', y='=performance', size='=discount'))
     ))
     v.data = [(x, y, random.randint(1, 10)) for x, y in [f.next() for i in range(n)]]
 
@@ -40,8 +40,8 @@ def create_point_custom(key, page, box):
         view='plot',
         box=box,
         title='Point, custom',
-        data=Data('price performance discount', n),
-        vis=static(plot(mark='point', x='=price', y='=performance', size='=discount', size_range='4 30',
+        data=tupleset('price performance discount', n),
+        vis=atomic(plot(mark='point', x='=price', y='=performance', size='=discount', size_range='4 30',
                         fill_color='#eb4559', stroke_color='#eb4559', stroke_size=1, fill_opacity=0.3,
                         stroke_opacity=1))
     ))
@@ -60,8 +60,8 @@ def create_point_groups(key, page, box):
         view='plot',
         box=box,
         title='Point, groups',
-        data=Data('product price performance', n * 3),
-        vis=static(plot(mark='point', x='=price', y='=performance', color='=product', shape='circle'))
+        data=tupleset('product price performance', n * 3),
+        vis=atomic(plot(mark='point', x='=price', y='=performance', color='=product', shape='circle'))
     ))
     v.data = create_fake_row('G1', f1, n) + create_fake_row('G2', f1, n) + create_fake_row('G3', f1, n)
 
@@ -74,8 +74,8 @@ def create_point_shapes(key, page, box):
         view='plot',
         box=box,
         title='Point, shapes',
-        data=Data('product price performance', n * 2),
-        vis=static(plot(mark='point', x='=price', y='=performance', shape='=product', shape_range='circle square'))
+        data=tupleset('product price performance', n * 2),
+        vis=atomic(plot(mark='point', x='=price', y='=performance', shape='=product', shape_range='circle square'))
     ))
     v.data = create_fake_row('G1', f1, n) + create_fake_row('G2', f1, n)
 
@@ -88,8 +88,8 @@ def create_line(key, page, box):
         view='plot',
         box=box,
         title='Line',
-        data=Data('date price', n),
-        vis=static(plot(mark='line', x_scale='time', x='=date', y='=price', y_min=0))
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='line', x_scale='time', x='=date', y='=price', y_min=0))
     ))
     v.data = [(t, x) for t, x, dx in [f.next() for i in range(n)]]
 
@@ -102,8 +102,8 @@ def create_line_smooth(key, page, box):
         view='plot',
         box=box,
         title='Line, smooth',
-        data=Data('date price', n),
-        vis=static(plot(mark='line', x_scale='time', x='=date', y='=price', curve='smooth', y_min=0))
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='line', x_scale='time', x='=date', y='=price', curve='smooth', y_min=0))
     ))
     v.data = [(t, x) for t, x, dx in [f.next() for i in range(n)]]
 
@@ -116,8 +116,8 @@ def create_line_groups(key, page, box):
         view='plot',
         box=box,
         title='Line, groups',
-        data=Data('product date price', n * 5),
-        vis=static(plot(mark='line', x_scale='time', x='=date', y='=price', color='=product', y_min=0))
+        data=tupleset('product date price', n * 5),
+        vis=atomic(plot(mark='line', x_scale='time', x='=date', y='=price', color='=product', y_min=0))
     ))
 
     v.data = [(g, t, x) for x in [f.next() for i in range(n)] for g, t, x, dx in x]
@@ -131,8 +131,8 @@ def create_step(key, page, box):
         view='plot',
         box=box,
         title='Line, step',
-        data=Data('date price', n),
-        vis=static(plot(mark='line', x_scale='time', x='=date', y='=price', curve='step', y_min=0))
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='line', x_scale='time', x='=date', y='=price', curve='step', y_min=0))
     ))
 
     v.data = [(t, x) for t, x, dx in [f.next() for i in range(n)]]
@@ -146,8 +146,8 @@ def create_step_before(key, page, box):
         view='plot',
         box=box,
         title='Line, step-left',
-        data=Data('date price', n),
-        vis=static(plot(mark='line', x_scale='time', x='=date', y='=price', curve='step-before', y_min=0))
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='line', x_scale='time', x='=date', y='=price', curve='step-before', y_min=0))
     ))
     v.data = [(t, x) for t, x, dx in [f.next() for i in range(n)]]
 
@@ -160,8 +160,8 @@ def create_step_after(key, page, box):
         view='plot',
         box=box,
         title='Line, step-right',
-        data=Data('date price', n),
-        vis=static(plot(mark='line', x_scale='time', x='=date', y='=price', curve='step-after', y_min=0))
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='line', x_scale='time', x='=date', y='=price', curve='step-after', y_min=0))
     ))
     v.data = [(t, x) for t, x, dx in [f.next() for i in range(n)]]
 
@@ -174,8 +174,8 @@ def create_path(key, page, box):
         view='plot',
         box=box,
         title='Path',
-        data=Data('profit sales', n),
-        vis=static(plot(mark='path', x='=profit', y='=sales'))
+        data=tupleset('profit sales', n),
+        vis=atomic(plot(mark='path', x='=profit', y='=sales'))
     ))
     v.data = [(x, y) for x, y in [f.next() for i in range(n)]]
 
@@ -188,8 +188,8 @@ def create_path_point(key, page, box):
         view='plot',
         box=box,
         title='Path + Point',
-        data=Data('profit sales', n),
-        vis=static(
+        data=tupleset('profit sales', n),
+        vis=atomic(
             plot(mark='path', x='=profit', y='=sales') +
             plot(mark='point', x='=profit', y='=sales'),
         )
@@ -205,8 +205,8 @@ def create_path_smooth(key, page, box):
         view='plot',
         box=box,
         title='Path, smooth',
-        data=Data('profit sales', n),
-        vis=static(plot(mark='path', x='=profit', y='=sales', curve='smooth'))
+        data=tupleset('profit sales', n),
+        vis=atomic(plot(mark='path', x='=profit', y='=sales', curve='smooth'))
     ))
     v.data = [(x, y) for x, y in [f.next() for i in range(n)]]
 
@@ -219,8 +219,8 @@ def create_area(key, page, box):
         view='plot',
         box=box,
         title='Area',
-        data=Data('date price', n),
-        vis=static(plot(mark='area', x_scale='time', x='=date', y='=price', y_min=0))
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='area', x_scale='time', x='=date', y='=price', y_min=0))
     ))
     v.data = [(t, x) for t, x, dx in [f.next() for i in range(n)]]
 
@@ -233,8 +233,8 @@ def create_area_smooth(key, page, box):
         view='plot',
         box=box,
         title='Area, smooth',
-        data=Data('date price', n),
-        vis=static(plot(mark='area', x_scale='time', x='=date', y='=price', curve='smooth', y_min=0))
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='area', x_scale='time', x='=date', y='=price', curve='smooth', y_min=0))
     ))
     v.data = [(t, x) for t, x, dx in [f.next() for i in range(n)]]
 
@@ -247,8 +247,8 @@ def create_area_groups(key, page, box):
         view='plot',
         box=box,
         title='Area, groups',
-        data=Data('product date price', n * 5),
-        vis=static(plot(mark='area', x_scale='time', x='=date', y='=price', color='=product', y_min=0))
+        data=tupleset('product date price', n * 5),
+        vis=atomic(plot(mark='area', x_scale='time', x='=date', y='=price', color='=product', y_min=0))
     ))
 
     v.data = [(g, t, x) for x in [f.next() for i in range(n)] for g, t, x, dx in x]
@@ -262,8 +262,8 @@ def create_area_line(key, page, box):
         view='plot',
         box=box,
         title='Area + Line',
-        data=Data('date price', n),
-        vis=static(
+        data=tupleset('date price', n),
+        vis=atomic(
             plot(mark='area', x_scale='time', x='=date', y='=price', y_min=0) +
             plot(mark='line', x='=date', y='=price')
         )
@@ -279,8 +279,8 @@ def create_area_line_smooth(key, page, box):
         view='plot',
         box=box,
         title='Area + Line, smooth',
-        data=Data('date price', n),
-        vis=static(
+        data=tupleset('date price', n),
+        vis=atomic(
             plot(mark='area', x_scale='time', x='=date', y='=price', curve='smooth', y_min=0) +
             plot(mark='line', x='=date', y='=price', curve='smooth')
         )
@@ -296,8 +296,8 @@ def create_area_line_groups(key, page, box):
         view='plot',
         box=box,
         title='Area + Line, groups',
-        data=Data('product date price', n * 5),
-        vis=static(
+        data=tupleset('product date price', n * 5),
+        vis=atomic(
             plot(mark='area', x_scale='time', x='=date', y='=price', color='=product', y_min=0) +
             plot(mark='line', x='=date', y='=price', color='=product')
         )
@@ -314,8 +314,8 @@ def create_area_negative(key, page, box):
         view='plot',
         box=box,
         title='Area, negative values',
-        data=Data('date price', n),
-        vis=static(plot(mark='area', x_scale='time', x='=date', y='=price'))
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='area', x_scale='time', x='=date', y='=price'))
     ))
     v.data = [(t, x) for t, x, dx in [f.next() for i in range(n)]]
 
@@ -328,8 +328,8 @@ def create_area_stacked(key, page, box):
         view='plot',
         box=box,
         title='Area, stacked',
-        data=Data('product date price', n * 5),
-        vis=static(plot(mark='area', x_scale='time', x='=date', y='=price', color='=product', stack='auto', y_min=0))
+        data=tupleset('product date price', n * 5),
+        vis=atomic(plot(mark='area', x_scale='time', x='=date', y='=price', color='=product', stack='auto', y_min=0))
     ))
 
     v.data = [(g, t, x) for x in [f.next() for i in range(n)] for g, t, x, dx in x]
@@ -343,8 +343,8 @@ def create_area_range(key, page, box):
         view='plot',
         box=box,
         title='Area, range',
-        data=Data('date low high', n),
-        vis=static(plot(mark='area', x_scale='time', x='=date', y0='=low', y='=high'))
+        data=tupleset('date low high', n),
+        vis=atomic(plot(mark='area', x_scale='time', x='=date', y0='=low', y='=high'))
     ))
     v.data = [(t, x - random.randint(3, 8), x + random.randint(3, 8)) for t, x, dx in [f.next() for i in range(n)]]
 
@@ -357,8 +357,8 @@ def create_interval(key, page, box):
         view='plot',
         box=box,
         title='Interval',
-        data=Data('product price', n),
-        vis=static(plot(mark='interval', x='=product', y='=price', y_min=0))
+        data=tupleset('product price', n),
+        vis=atomic(plot(mark='interval', x='=product', y='=price', y_min=0))
     ))
     v.data = [(c, x) for c, x, dx in [f.next() for i in range(n)]]
 
@@ -371,8 +371,8 @@ def create_histogram(key, page, box):
         view='plot',
         box=box,
         title='Histogram',
-        data=Data('lo hi price', n),
-        vis=static(plot(mark='interval', y='=price', x1='=lo', x2='=hi', y_min=0))
+        data=tupleset('lo hi price', n),
+        vis=atomic(plot(mark='interval', y='=price', x1='=lo', x2='=hi', y_min=0))
     ))
     v.data = [(i * 10, i * 10 + 10, x) for i, (c, x, dx) in enumerate([f.next() for i in range(n)])]
 
@@ -385,8 +385,8 @@ def create_interval_range(key, page, box):
         view='plot',
         box=box,
         title='Interval, range',
-        data=Data('product low high', n),
-        vis=static(plot(mark='interval', x='=product', y0='=low', y='=high'))
+        data=tupleset('product low high', n),
+        vis=atomic(plot(mark='interval', x='=product', y0='=low', y='=high'))
     ))
     v.data = [(c, x - random.randint(3, 10), x + random.randint(3, 10)) for c, x, dx in [f.next() for i in range(n)]]
 
@@ -400,8 +400,8 @@ def create_interval_groups(key, page, box):
         view='plot',
         box=box,
         title='Intervals, groups',
-        data=Data('country product price', n * k),
-        vis=static(plot(mark='interval', x='=product', y='=price', color='=country', dodge='auto', y_min=0))
+        data=tupleset('country product price', n * k),
+        vis=atomic(plot(mark='interval', x='=product', y='=price', color='=country', dodge='auto', y_min=0))
     ))
 
     v.data = [(g, t, x) for x in [f.next() for i in range(n)] for g, t, x, dx in x]
@@ -416,8 +416,8 @@ def create_interval_stacked(key, page, box):
         view='plot',
         box=box,
         title='Intervals, stacked',
-        data=Data('country product price', n * k),
-        vis=static(plot(mark='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0))
+        data=tupleset('country product price', n * k),
+        vis=atomic(plot(mark='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0))
     ))
 
     v.data = [(g, t, x) for x in [f.next() for i in range(n)] for g, t, x, dx in x]
@@ -432,8 +432,8 @@ def create_interval_polar_stacked(key, page, box):
         view='plot',
         box=box,
         title='Intervals, polar, stacked',
-        data=Data('country product price', n * k),
-        vis=static(
+        data=tupleset('country product price', n * k),
+        vis=atomic(
             plot(coord='polar', mark='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0))
     ))
 
@@ -450,8 +450,8 @@ def create_interval_stacked_grouped(key, page, box):
         view='plot',
         box=box,
         title='Intervals, stacked and dodged',
-        data=Data('category country product price', n * k * 2),
-        vis=static(
+        data=tupleset('category country product price', n * k * 2),
+        vis=atomic(
             plot(mark='interval', x='=product', y='=price', color='=country', stack='auto', dodge='=category', y_min=0))
     ))
 
@@ -468,8 +468,8 @@ def create_interval_helix(key, page, box):
         view='plot',
         box=box,
         title='Interval, helix',
-        data=Data('product price', n),
-        vis=static(plot(coord='helix', mark='interval', x='=product', y='=price', y_min=0))
+        data=tupleset('product price', n),
+        vis=atomic(plot(coord='helix', mark='interval', x='=product', y='=price', y_min=0))
     ))
     v.data = [(c, x) for c, x, dx in [f.next() for i in range(n)]]
 
@@ -482,8 +482,8 @@ def create_interval_polar(key, page, box):
         view='plot',
         box=box,
         title='Interval, polar',
-        data=Data('product price', n),
-        vis=static(plot(coord='polar', mark='interval', x='=product', y='=price', y_min=0))
+        data=tupleset('product price', n),
+        vis=atomic(plot(coord='polar', mark='interval', x='=product', y='=price', y_min=0))
     ))
     v.data = [(c, x) for c, x, dx in [f.next() for i in range(n)]]
 
@@ -497,8 +497,8 @@ def create_interval_theta(key, page, box):
         view='plot',
         box=box,
         title='Intervals, theta, stacked',
-        data=Data('country product price', n * k),
-        vis=static(
+        data=tupleset('country product price', n * k),
+        vis=atomic(
             plot(coord='theta', mark='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0))
     ))
     v.data = [(g, t, x) for x in [f.next() for i in range(n)] for g, t, x, dx in x]
@@ -512,8 +512,8 @@ def create_polygon(key, page, box):
         view='plot',
         box=box,
         title='Heatmap',
-        data=Data('country product profit', k1 * k2),
-        vis=static(
+        data=tupleset('country product profit', k1 * k2),
+        vis=atomic(
             plot(mark='polygon', x='=country', y='=product', color='=profit', color_range='#fee8c8 #fdbb84 #e34a33'))
     ))
     data = []
@@ -532,8 +532,8 @@ def create_point_map(key, page, box):
         view='plot',
         box=box,
         title='Points, size-encoded',
-        data=Data('country product profit', k1 * k2),
-        vis=static(plot(mark='point', x='=country', y='=product', size='=profit', shape='circle'))
+        data=tupleset('country product profit', k1 * k2),
+        vis=atomic(plot(mark='point', x='=country', y='=product', size='=profit', shape='circle'))
     ))
     data = []
     for i in range(k1):
@@ -551,8 +551,8 @@ def create_line_labels(key, page, box):
         view='plot',
         box=box,
         title='Labels',
-        data=Data('date price', n),
-        vis=static(plot(mark='line', x_scale='time', x='=date', y='=price', y_min=0,
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='line', x_scale='time', x='=date', y='=price', y_min=0,
                         label='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'))
     ))
     v.data = [(t, x) for t, x, dx in [f.next() for i in range(n)]]
@@ -566,8 +566,8 @@ def create_line_labels_stroked(key, page, box):
         view='plot',
         box=box,
         title='Labels, less messy',
-        data=Data('date price', n),
-        vis=static(plot(mark='line', x_scale='time', x='=date', y='=price', y_min=0,
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='line', x_scale='time', x='=date', y='=price', y_min=0,
                         label='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}',
                         label_fill_color='rgba(0,0,0,0.65)', label_stroke_color='#fff', label_stroke_size=2))
     ))
@@ -582,8 +582,8 @@ def create_line_labels_no_overlap(key, page, box):
         view='plot',
         box=box,
         title='Remove overlapping labels',
-        data=Data('date price', n),
-        vis=static(plot(mark='line', x_scale='time', x='=date', y='=price', y_min=0,
+        data=tupleset('date price', n),
+        vis=atomic(plot(mark='line', x_scale='time', x='=date', y='=price', y_min=0,
                         label='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}',
                         label_overlap='hide'))
     ))
@@ -598,8 +598,8 @@ def create_interval_labels(key, page, box):
         view='plot',
         box=box,
         title='Label Customization',
-        data=Data('product price', n),
-        vis=static(
+        data=tupleset('product price', n),
+        vis=atomic(
             plot(mark='interval', x='=product',
                  y='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}', y_min=0,
                  color='#333333',
@@ -618,8 +618,8 @@ def create_point_annotation(key, page, box):
         view='plot',
         box=box,
         title='Numeric-Numeric',
-        data=Data('price performance', n),
-        vis=static(
+        data=tupleset('price performance', n),
+        vis=atomic(
             plot(mark='point', x='=price', y='=performance', x_min=0, x_max=100, y_min=0, y_max=100) +
             plot(x=50, y=50, label='point') +
             plot(x=40, label='vertical line') +
@@ -640,8 +640,8 @@ def create_line_annotation(key, page, box):
         view='plot',
         box=box,
         title='Time-Numeric',
-        data=Data('date price', n),
-        vis=static(
+        data=tupleset('date price', n),
+        vis=atomic(
             plot(mark='line', x_scale='time', x='=date', y='=price', y_min=0, y_max=100) +
             plot(x=50, y=50, label='point') +
             plot(x='2010-05-15T19:59:21.000000Z', label='vertical line') +
@@ -663,8 +663,8 @@ def create_interval_annotation(key, page, box):
         view='plot',
         box=box,
         title='Categorical-Numeric',
-        data=Data('product price', n),
-        vis=static(
+        data=tupleset('product price', n),
+        vis=atomic(
             plot(mark='interval', x='=product', y='=price', y_min=0, y_max=100) +
             plot(x='C10', y=80, label='point') +
             plot(x='C13', label='vertical line') +
@@ -783,7 +783,7 @@ def create_pixel_art_page(site: Site):
         view='pixel_art',
         box='1 1 4 6',
         title='Art',
-        data=Data('color', 16*16),
+        data=tupleset('color', 16 * 16),
     ))
     page.sync()
 

@@ -34,7 +34,7 @@ const
     },
   })
 
-interface Opts {
+interface State {
   rect: Rect
   title: string
   value: string
@@ -48,9 +48,9 @@ interface Opts {
   plot_curve: S
 }
 
-type State = Partial<Opts>
 
-const defaults: State = {
+
+const defaults: Partial<State> = {
   title: 'Untitled',
   plot_type: 'area',
   plot_data: '',

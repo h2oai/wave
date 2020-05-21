@@ -104,7 +104,7 @@ KEY = '__key__'
 def _set_op(o, k, v):
     guard_key(k)
     k = getattr(o, KEY) + _key_sep + str(k)
-    if isinstance(v, Data):
+    if isinstance(v, _Data):
         op = v.dump()
         op['k'] = k
     else:
@@ -132,29 +132,31 @@ class Ref:
         getattr(self, PAGE)._track(_set_op(self, key, value))
 
 
-class Data:
+def tupleset(fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
+    if _is_str(fields):
+        fields = fields.split()
+    elif not _is_list(fields):
+        raise ValueError('fields must be tuple or list')
+    if len(fields) == 0:
+        raise ValueError('fields is empty')
+    for field in fields:
+        if not _is_str(field):
+            raise ValueError('field must be str')
+
+    if data:
+        if not isinstance(data, (list, dict)):
+            raise ValueError('data must be list or dict')
+
+    if not _is_int(size):
+        raise ValueError('size must be int')
+
+    return _Data(fields, size, data)
+
+
+class _Data:
     def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
-        if _is_str(fields):
-            fields = fields.split()
-        elif not _is_list(fields):
-            raise ValueError('fields must be tuple or list')
-        if len(fields) == 0:
-            raise ValueError('fields is empty')
-        for field in fields:
-            if not _is_str(field):
-                raise ValueError('field must be str')
-
         self.fields = fields
-
-        if data:
-            if not isinstance(data, (list, dict)):
-                raise ValueError('data must be list or dict')
-
         self.data = data
-
-        if not _is_int(size):
-            raise ValueError('size must be int')
-
         self.size = size
 
     def dump(self):
@@ -208,7 +210,7 @@ class Page:
         data = []
         bufs = []
         for k, v in props.items():
-            if isinstance(v, Data):
+            if isinstance(v, _Data):
                 data.append((k, len(bufs)))
                 bufs.append(v.dump())
 
@@ -319,7 +321,7 @@ def marshal(d: dict): return json.dumps(d, allow_nan=False, separators=(',', ':'
 def unmarshal(s: str): return json.loads(s)
 
 
-def static(data: Union[dict, list, tuple] = None,
+def atomic(data: Union[dict, list, tuple] = None,
            fields: Union[str, Iterable[str]] = None,
            rows: Iterable[Iterable] = None,
            columns: Iterable[Iterable] = None):

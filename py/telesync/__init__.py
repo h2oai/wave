@@ -1,3 +1,3 @@
-from .api import Site, Page, Data, static, serve, Q
-from .db import TeleError, TeleDB
+from .api import Site, Page, tupleset, atomic, serve, Q
+from .db import TeleDBError, TeleDB
 from .plot import plot

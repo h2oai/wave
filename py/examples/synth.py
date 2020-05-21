@@ -1,6 +1,5 @@
 import random
 import datetime
-from telesync import static
 
 
 class FakeSeries:
@@ -17,7 +16,7 @@ class FakeSeries:
         if not self.min <= x <= self.max:
             x = self.start
         self.x = x
-        dx = 0 if x0 is 0 else 100.0 * (x - x0) / x0
+        dx = 0 if x0 == 0 else 100.0 * (x - x0) / x0
         return x, dx
 
 

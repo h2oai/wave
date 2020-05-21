@@ -32,16 +32,14 @@ const
     }
   })
 
-interface Opts {
+interface State {
   url: ''
   method: S
   args: ArgDict
   items: UIComponent[]
 }
 
-type State = Partial<Opts>
-
-const defaults: State = {
+const defaults: Partial<State> = {
   url: '',
   method: '',
   args: {},
