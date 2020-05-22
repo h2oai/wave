@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, Data, Dict, Rec, S } from '../delta';
-import { cards, Repeat } from '../grid';
 import bond from '../bond';
+import { Card, Dict, Rec, S, TupleSet } from '../delta';
+import { cards, Repeat } from '../grid';
 
 interface State {
   title: S
@@ -11,7 +11,7 @@ interface State {
   justify: 'start' | 'end' | 'center' | 'between' | 'around'
   align: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
   wrap: 'start' | 'end' | 'center' | 'between' | 'around' | 'stretch'
-  data: S | Data
+  data: TupleSet
 }
 
 const

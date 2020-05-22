@@ -1,9 +1,9 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { Card, Data, Rec, S } from '../delta';
+import bond from '../bond';
+import { Card, Rec, S, TupleSet } from '../delta';
 import { cards, Repeat } from '../grid';
 import { getTheme } from '../theme';
-import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -31,8 +31,8 @@ const
 interface State {
   title: S
   item_view: S
-  item_props: S | Rec
-  data: S | Data
+  item_props: Rec
+  data: TupleSet
 }
 
 const defaults: Partial<State> = {

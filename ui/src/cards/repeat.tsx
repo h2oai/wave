@@ -1,13 +1,13 @@
 import React from 'react';
-import { Card, Data, Rec, S } from '../delta';
-import { cards, Repeat } from '../grid';
 import bond from '../bond';
+import { Card, Rec, S, TupleSet } from '../delta';
+import { cards, Repeat } from '../grid';
 
 interface State {
   title: S
   item_view: S
-  item_props: S | Rec
-  data: S | Data
+  item_props: Rec
+  data: TupleSet
 }
 
 const defaults: Partial<State> = {

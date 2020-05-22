@@ -8,9 +8,16 @@ export type S = string
 export type D = Date
 export type V = F | S | D
 export type Prim = S | F | B | null // primitive
+export interface Size { width: U, height: U }
+export interface Rect extends Size { left: U, top: U }
 
 export interface Dict<T> { [key: string]: T } // generic object
-export type Rec = Dict<Prim>
+
+export type Rec = Dict<Prim> // Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type.
+
+export interface TupleSet {
+  list(): (Rec | null)[]
+}
 
 interface OpsD {
   p?: PageD // init
@@ -56,10 +63,6 @@ interface CycBufD {
   i: U
 }
 
-export interface Data {
-  list(): (Rec | null)[]
-}
-
 export interface Page {
   key: S
   changed: Box<B>
@@ -85,6 +88,7 @@ export interface Card<T> {
   name: S
   state: T
   changed: Box<B>
+  size?: Size
 }
 export interface C extends Card<Dict<any>> {
   id: S
@@ -97,7 +101,7 @@ interface Typ {
   make(t: Tup): Rec
 }
 
-interface DataBuf extends Data, Buf {
+interface DataBuf extends TupleSet, Buf {
   __buf__: true
 }
 interface FixBuf extends DataBuf {
@@ -214,7 +218,7 @@ const
     return true
   },
   isBuf = (x: any): x is Buf => x != null && x.__buf__ === true,
-  isData = (x: any): x is Data => isBuf(x),
+  isData = (x: any): x is TupleSet => isBuf(x),
   isCur = (x: any): x is Cur => x != null && x.__cur__ === true,
   reverseIndex = (xs: S[]): Dict<U> => {
     const m: Dict<U> = {}

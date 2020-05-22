@@ -1,9 +1,9 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
+import bond from '../bond';
 import { Card, decode, Rec, S } from '../delta';
 import { cards, Format } from '../grid';
 import { getTheme } from '../theme';
-import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -40,7 +40,7 @@ interface State {
   caption: S
   value: S
   aux_value: S
-  data: S | Rec
+  data: Rec
 }
 
 const defaults: Partial<State> = {

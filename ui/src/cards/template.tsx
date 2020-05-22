@@ -1,11 +1,11 @@
 
+import Handlebars from 'handlebars';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { Card, Rec, decode } from '../delta';
+import bond from '../bond';
+import { Card, decode, Rec, S } from '../delta';
 import { cards, Format } from '../grid';
 import { getTheme } from '../theme';
-import Handlebars from 'handlebars'
-import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -23,8 +23,8 @@ const
   })
 
 interface State {
-  title: string
-  template: string
+  title: S
+  template: S
   data: Rec
 }
 

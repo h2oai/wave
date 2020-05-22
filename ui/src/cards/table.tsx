@@ -1,10 +1,10 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { Card, Data, decode, Rec, S, xid, B } from '../delta';
-import { cards, CardView, Format } from '../grid';
-import { getTheme } from '../theme';
 import bond from '../bond';
 import { box } from '../dataflow';
+import { B, Card, decode, Rec, S, TupleSet, xid } from '../delta';
+import { cards, CardView, Format } from '../grid';
+import { getTheme } from '../theme';
 
 const
   theme = getTheme(),
@@ -34,8 +34,8 @@ const
 
 interface State {
   title: S
-  cells: S | Data
-  data: S | Data
+  cells: TupleSet
+  data: TupleSet
 }
 
 const defaults: Partial<State> = {

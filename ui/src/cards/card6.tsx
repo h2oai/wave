@@ -1,11 +1,11 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { Card, Data, decode, F, Rec, S } from '../delta';
-import { cards, Format, Rect, grid } from '../grid';
+import bond from '../bond';
+import { Card, decode, F, Rec, S, TupleSet } from '../delta';
+import { cards, Format, grid } from '../grid';
+import { getTheme } from '../theme';
 import { MicroBars } from './microbars';
 import { MicroArea } from './microline';
-import { getTheme } from '../theme';
-import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -36,13 +36,12 @@ const
   })
 
 interface State {
-  rect: Rect
   title: S
   value: S
   aux_value: S
-  data: S | Rec
+  data: Rec
   plot_type: 'area' | 'interval'
-  plot_data: S | Data
+  plot_data: TupleSet
   plot_color: S
   plot_category: S
   plot_value: S
@@ -53,18 +52,17 @@ interface State {
 const defaults: Partial<State> = {
   title: 'Untitled',
   plot_type: 'area',
-  plot_data: '',
   plot_color: theme.colors.gray,
   plot_curve: 'linear',
 }
 
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state, changed, size }: Card<State>) => {
     const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          plotWidth = s.rect.width,
+          plotWidth = size ? size.width : grid.unitWidth,
           data = decode(s.data),
           plot = s.plot_type === 'area'
             ? (

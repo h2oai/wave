@@ -1,7 +1,7 @@
 import React from 'react';
+import bond from '../bond';
 import { Card } from '../delta';
 import { cards } from '../grid';
-import bond from '../bond';
 
 const
   View = bond(({ state, changed }: Card<{}>) => {

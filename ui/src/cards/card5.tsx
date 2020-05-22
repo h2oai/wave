@@ -1,10 +1,10 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
+import bond from '../bond';
 import { Card, decode, F, Rec, S } from '../delta';
 import { cards, Format, grid } from '../grid';
-import { ProgressArc } from './progress_arc';
 import { getTheme } from '../theme';
-import bond from '../bond';
+import { ProgressArc } from './progress_arc';
 
 const
   theme = getTheme(),
@@ -47,7 +47,7 @@ interface State {
   aux_value: S
   progress: F
   plot_color: S
-  data: S | Rec
+  data: Rec
 }
 
 const defaults: Partial<State> = {

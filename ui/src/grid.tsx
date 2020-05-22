@@ -1,7 +1,7 @@
 import React from 'react';
-import { decode, xid, Card, Dict, F, parseI, Rec, S, U, B } from './delta';
-import { format, isFormatExpr } from './intl';
 import { box } from './dataflow';
+import { B, Card, decode, Dict, F, parseI, Rec, Rect, S, U, xid } from './delta';
+import { format, isFormatExpr } from './intl';
 
 export const
   Format = ({ data, defaultValue: v, format: f }: { data?: Rec, defaultValue?: any, format?: S }) => {
@@ -41,7 +41,6 @@ const
 export const cards = newCardRegistry()
 
 type Size = [U, U]
-export interface Rect { left: U, top: U, width: U, height: U }
 
 const
   newGrid = (uw: U, uh: U, cols: U, rows: U, gap: U) => {

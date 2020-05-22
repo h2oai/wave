@@ -33,7 +33,7 @@ export const PageView = bond(({ page }: { page: Page }) => {
       const
         children = page.list().map(c => {
           const box = grid.place(c.state.box), { left, top, width, height } = box
-          c.state.rect = box
+          c.size = { width: box.width, height: box.height }
           return (
             <div key={c.id} className={css.slot} style={{ width, height, transform: `translate(${left}px,${top}px)` }}>
               <CardView card={c} />

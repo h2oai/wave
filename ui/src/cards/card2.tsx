@@ -1,11 +1,11 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { Card, Data, decode, F, Rec, S } from '../delta';
+import bond from '../bond';
+import { Card, decode, F, Rec, S, TupleSet } from '../delta';
 import { cards, Format, grid } from '../grid';
+import { getTheme } from '../theme';
 import { MicroBars } from './microbars';
 import { MicroArea } from './microline';
-import { getTheme } from '../theme';
-import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -51,9 +51,9 @@ interface State {
   title: S
   value: S
   aux_value: S
-  data: S | Rec
+  data: Rec
   plot_type: 'area' | 'interval'
-  plot_data: S | Data
+  plot_data: TupleSet
   plot_color: S
   plot_category: S
   plot_value: S
@@ -65,7 +65,6 @@ interface State {
 const defaults: Partial<State> = {
   title: 'Untitled',
   plot_type: 'area',
-  plot_data: '',
   plot_color: theme.colors.gray,
   plot_curve: 'linear',
 }

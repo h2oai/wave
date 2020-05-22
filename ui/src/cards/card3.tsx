@@ -1,9 +1,9 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { Card, Rec } from '../delta';
+import bond from '../bond';
+import { Card, Rec, S } from '../delta';
 import { cards, Format } from '../grid';
 import { getTheme } from '../theme';
-import bond from '../bond';
 
 const
   theme = getTheme(),
@@ -35,10 +35,10 @@ const
   })
 
 interface State {
-  title: string
-  value: string
-  aux_value: string
-  caption: string
+  title: S
+  value: S
+  aux_value: S
+  caption: S
   data: Rec
 }
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
+import bond from '../bond';
 import { Card, decode, Rec, S, socket, U } from '../delta';
 import { cards } from '../grid';
 import { getTheme } from '../theme';
-import bond from '../bond';
 
 const
   pixelSize = 20,
