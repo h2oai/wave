@@ -23,8 +23,11 @@ const
   })
 
 interface State {
+  /** The title for this card.*/
   title: S
+  /** The Mustache template.*/
   template: S
+  /** Data for the Mustache template */
   data: Rec
 }
 

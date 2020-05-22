@@ -10,6 +10,7 @@ import * as ts from 'typescript'
 enum MemberT { Enum, Singular, Repeated }
 interface MemberBase {
   readonly name: string
+  readonly comment: string
   readonly optional: boolean
 }
 interface EnumMember extends MemberBase {
@@ -52,7 +53,8 @@ const
                     m = member as ts.PropertySignature,
                     optional = m.questionToken ? true : false,
                     memberName = m.name.getText(),
-                    memberType = m.type
+                    memberType = m.type,
+                    comment = (m as any).jsDoc?.map((c: any) => c?.comment).join('\n') || '' // FIXME Undocumented API
 
                   if (!memberType) throw new Error(`want type declared on ${component}.${typename}.${memberName}: ${m.getText()}`)
 
@@ -66,7 +68,7 @@ const
                           case ts.SyntaxKind.TypeReference:
                             {
                               const t = elementType as ts.TypeReferenceNode
-                              return { t: MemberT.Repeated, name: memberName, type: t.getText(), optional }
+                              return { t: MemberT.Repeated, name: memberName, type: t.getText(), optional, comment }
                             }
                           default:
                             throw new Error(`unsupported element type on ${component}.${typename}.${memberName}: ${m.getText()}`)
@@ -75,7 +77,7 @@ const
                     case ts.SyntaxKind.TypeReference:
                       {
                         const t = memberType as ts.TypeReferenceNode
-                        return { t: MemberT.Singular, name: memberName, type: t.getText(), optional }
+                        return { t: MemberT.Singular, name: memberName, type: t.getText(), optional, comment }
                       }
                     case ts.SyntaxKind.UnionType:
                       {
@@ -93,7 +95,7 @@ const
                             }
                             throw new Error(`unsupported union type on ${component}.${typename}.${memberName}: ${m.getText()}`)
                           })
-                        return { t: MemberT.Enum, name: memberName, values, optional }
+                        return { t: MemberT.Enum, name: memberName, values, optional, comment }
                       }
                     default:
                       throw new Error(`unsupported type on ${component}.${typename}.${memberName}: ${m.getText()}`)
