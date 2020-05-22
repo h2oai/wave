@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import bond from '../bond';
-import { Card, decode, S, socket, xid } from '../delta';
+import { Card, decode, S, socket, xid, Rec } from '../delta';
 import { cards } from '../grid';
 import { getTheme } from '../theme';
 
@@ -33,9 +33,9 @@ const
   })
 
 interface State {
-  url: ''
+  url: S
   method: S
-  args: ArgDict
+  args: Rec
   items: UIComponent[]
 }
 
@@ -46,10 +46,8 @@ const defaults: Partial<State> = {
   items: []
 }
 
-export interface ArgDict { [key: string]: any }
-
 const
-  XButton = bond(({ args, button: m, submit }: { args: ArgDict, button: UIButton, submit: () => void }) => {
+  XButton = bond(({ args, button: m, submit }: { args: Rec, button: UIButton, submit: () => void }) => {
     args[m.name] = false
     const
       render = () => {
@@ -61,7 +59,7 @@ const
       }
     return { render }
   }),
-  XField = ({ component: c, args, submit }: { component: UIComponent, args: ArgDict, submit: () => void }) => {
+  XField = ({ component: c, args, submit }: { component: UIComponent, args: Rec, submit: () => void }) => {
     if (c.button) return <XButton key={xid()} args={args} button={c.button} submit={submit} />
     return <div />
   }

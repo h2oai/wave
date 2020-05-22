@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import React from 'react';
-import { F, S, U } from '../delta';
-import { grid } from '../grid';
+import { F, S, U } from '../../delta';
+import { grid } from '../../grid';
 
 interface Props {
   width: U

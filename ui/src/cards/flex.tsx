@@ -6,7 +6,7 @@ import { cards, Repeat } from '../grid';
 interface State {
   title: S
   item_view: S
-  item_props: S | Rec
+  item_props: Rec
   direction: 'horizontal' | 'vertical'
   justify: 'start' | 'end' | 'center' | 'between' | 'around'
   align: 'start' | 'end' | 'center' | 'baseline' | 'stretch'

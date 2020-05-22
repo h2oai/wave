@@ -4,8 +4,8 @@ import bond from '../bond';
 import { Card, decode, F, Rec, S, TupleSet } from '../delta';
 import { cards, Format, grid } from '../grid';
 import { getTheme } from '../theme';
-import { MicroBars } from './microbars';
-import { MicroArea } from './microline';
+import { MicroBars } from './parts/microbars';
+import { MicroArea } from './parts/microline';
 
 const
   theme = getTheme(),
