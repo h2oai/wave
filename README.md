@@ -1,5 +1,6 @@
-
-![telesync](assets/telesync.png)
+<div align="center">
+<img width="175" src="assets/telesync.png"/>
+</div>
 
 Telesync: Q's Realtime App SDK
 
