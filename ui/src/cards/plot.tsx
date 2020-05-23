@@ -3,7 +3,7 @@ import { AdjustOption, AnnotationPosition, ArcOption, CoordinateOption, DataMark
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import bond from '../bond';
-import { B, Card, decode, Dict, F, Rec, S, V } from '../delta';
+import { B, Card, decode, Dict, F, Rec, S, V, parseU, parseI } from '../delta';
 import { cards } from '../grid';
 import { Fmt, parseFormat } from '../intl';
 import { getTheme } from '../theme';
@@ -27,95 +27,95 @@ type AnnotationOption = ArcOption | LineOption | TextOption | RegionOption | Dat
 
 enum SpaceT { CC, DD, TT, CD, DC, TC, CT, TD, DT }
 
+interface Mark {
+  coord?: S
+  mark?: S // XXX annotate
+  x?: V
+  x0?: V
+  x1?: V
+  x2?: V
+  x_min?: F
+  x_max?: F
+  x_nice?: B
+  x_scale?: S // XXX annotate
+  x_title?: S
+  y?: V
+  y0?: V
+  y1?: V
+  y2?: V
+  y_min?: F
+  y_max?: F
+  y_nice?: B
+  y_scale?: S // XXX annotate
+  y_title?: S
+  color?: S
+  color_range?: S
+  shape?: S
+  shape_range?: S
+  size?: F
+  size_range?: S
+  stack?: S
+  dodge?: S
+  curve?: 'none' | 'smooth' | 'step-before' | 'step' | 'step-after'
+  fill_color?: S
+  fill_opacity?: F
+  stroke_color?: S
+  stroke_opacity?: F
+  stroke_size?: F
+  stroke_dash?: S
+  label?: S
+  label_offset?: F
+  label_offset_x?: F
+  label_offset_y?: F
+  label_rotation?: S
+  label_position?: S  // 'top' | 'bottom' | 'middle' | 'left' | 'right';
+  label_overlap?: S // 'hide' | 'overlap' | 'constrain'
+  label_fill_color?: S
+  label_fill_opacity?: F
+  label_stroke_color?: S
+  label_stroke_opacity?: F
+  label_stroke_size?: F
+  label_font_size?: F
+  label_font_weight?: S
+  label_line_height?: F
+  label_align?: S
+  ref_stroke_color?: S
+  ref_stroke_opacity?: F
+  ref_stroke_size?: F
+  ref_stroke_dash?: S
+}
+
+interface MarkExt extends Mark {
+  x_field?: S
+  x_format?: Fmt
+  x0_field?: S
+  x0_format?: Fmt
+  x1_field?: S
+  x1_format?: Fmt
+  x2_field?: S
+  x2_format?: Fmt
+  y_field?: S
+  y_format?: Fmt
+  y0_field?: S
+  y0_format?: Fmt
+  y1_field?: S
+  y1_format?: Fmt
+  y2_field?: S
+  y2_format?: Fmt
+  color_field?: S
+  color_format?: Fmt
+  shape_field?: S
+  shape_format?: Fmt
+  size_format?: Fmt
+  size_field?: S
+  dodge_field?: S
+  label_field?: S
+  label_format?: Fmt
+}
+
 export interface Vis {
   marks: Mark[]
 }
-
-type Mark = Partial<{
-  coord: S
-  mark: S // XXX annotate
-  x: V
-  x0: V
-  x1: V
-  x2: V
-  x_min: F
-  x_max: F
-  x_nice: B
-  x_scale: S // XXX annotate
-  x_title: S
-  y: V
-  y0: V
-  y1: V
-  y2: V
-  y_min: F
-  y_max: F
-  y_nice: B
-  y_scale: S // XXX annotate
-  y_title: S
-  color: S
-  color_range: S
-  shape: S
-  shape_range: S
-  size: F
-  size_range: S
-  stack: S
-  dodge: S
-  curve: 'none' | 'smooth' | 'step-before' | 'step' | 'step-after'
-  fill_color: S
-  fill_opacity: F
-  stroke_color: S
-  stroke_opacity: F
-  stroke_size: F
-  stroke_dash: S
-  label: S
-  label_offset: F
-  label_offset_x: F
-  label_offset_y: F
-  label_rotation: F | S
-  label_position: S  // 'top' | 'bottom' | 'middle' | 'left' | 'right';
-  label_overlap: S // 'hide' | 'overlap' | 'constrain'
-  label_fill_color: S
-  label_fill_opacity: F
-  label_stroke_color: S
-  label_stroke_opacity: F
-  label_stroke_size: F
-  label_font_size: F
-  label_font_weight: F | S
-  label_line_height: F
-  label_align: S
-  ref_stroke_color: S
-  ref_stroke_opacity: F
-  ref_stroke_size: F
-  ref_stroke_dash: S
-
-  // Derived attributes; not public
-
-  x_field: S
-  x_format: Fmt
-  x0_field: S
-  x0_format: Fmt
-  x1_field: S
-  x1_format: Fmt
-  x2_field: S
-  x2_format: Fmt
-  y_field: S
-  y_format: Fmt
-  y0_field: S
-  y0_format: Fmt
-  y1_field: S
-  y1_format: Fmt
-  y2_field: S
-  y2_format: Fmt
-  color_field: S
-  color_format: Fmt
-  shape_field: S
-  shape_format: Fmt
-  size_format: Fmt
-  size_field: S
-  dodge_field: S
-  label_field: S
-  label_format: Fmt
-}>
 
 registerInteraction('drag-move', {
   start: [{ trigger: 'plot:mousedown', action: 'scale-translate:start' }],
@@ -147,7 +147,6 @@ const
   isF = (x: any): x is number => typeof x === 'number',
   isB = (x: any): x is boolean => typeof x === 'boolean',
   isS = (x: any): x is string => typeof x === 'string',
-  isSF = (x: any): x is string | number => isS(x) || isF(x),
   split = (s: S) => s.trim().split(/\s+/g),
   parseInts = (s: S) => split(s).map(s => parseInt(s, 10)),
   convertToDates = (ds: any[], f: S) => {
@@ -192,7 +191,7 @@ const
     }
     return ''
   },
-  refactorMark = (mark: Mark): Mark => {
+  refactorMark = (mark: Mark): MarkExt => {
     // if any fields are passed in as format expressions, separate them out into _field and _format
     const m = mark as any
     for (const [plainAttr, fieldAttr, formatAttr] of formattables) {
@@ -209,7 +208,7 @@ const
     }
     return mark
   },
-  refactorData = (ds: any[], marks: Mark[]): any[] => {
+  refactorData = (ds: any[], marks: MarkExt[]): any[] => {
     for (const m of marks) {
       if (m.x_scale === 'time') {
         for (const { x_field, x0_field } of marks) {
@@ -351,7 +350,7 @@ const
     label_field, label_format, label_offset, label_offset_x, label_offset_y, label_rotation, label_position, label_overlap,
     label_fill_color, label_fill_opacity, label_stroke_color, label_stroke_opacity, label_stroke_size,
     label_font_size, label_font_weight, label_line_height, label_align,
-  }: Mark): GeometryOption => {
+  }: MarkExt): GeometryOption => {
     const o: GeometryOption = {}
     if (isS(type)) o.type = type
 
@@ -404,9 +403,12 @@ const
       if (isF(label_offset_x)) c.offsetX = label_offset_x
       if (isF(label_offset_y)) c.offsetY = label_offset_y
       if (isS(label_rotation)) {
-        c.autoRotate = label_rotation === 'none' ? false : true
-      } else if (isF(label_rotation)) {
-        c.rotate = label_rotation * Math.PI / 180
+        const i_label_rotation = parseI(label_rotation)
+        if (isNaN(i_label_rotation)) {
+          c.autoRotate = label_rotation === 'none' ? false : true
+        } else {
+          c.rotate = i_label_rotation * Math.PI / 180
+        }
       }
       switch (label_position) {
         case 'top': case 'bottom': case 'middle': case 'left': case 'right': c.position = label_position as any
@@ -446,7 +448,7 @@ const
     if (isS(stroke_dash)) s.lineDash = parseInts(stroke_dash)
     return Object.keys(s).length ? s : undefined
   },
-  makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S | F, line_height?: F, align?: S): Dict<any> | undefined => {
+  makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S, line_height?: F, align?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
     if (isS(fill_color)) s.fill = fill_color
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
@@ -454,12 +456,15 @@ const
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isF(font_size)) s.fontSize = font_size
-    if (isSF(font_weight)) s.fontWeight = font_weight
+    if (isS(font_weight)) {
+      const u_font_weight = parseU(font_weight)
+      s.fontWeight = isNaN(u_font_weight) ? font_weight : u_font_weight
+    }
     if (isF(line_height)) s.lineHeight = line_height
     if (isS(align)) s.textAlign = align
     return Object.keys(s).length ? s : undefined
   },
-  makeScales = (marks: Mark[]): Record<S, ScaleOption> => {
+  makeScales = (marks: MarkExt[]): Record<S, ScaleOption> => {
     const o: Record<S, ScaleOption> = {}
 
     for (const m of marks) {
