@@ -6,3 +6,6 @@ setup:
 
 run:
 	node build/telegen.js ../../ui/src/cards ../../py/telesync/cards.py
+
+clean:
+	rm -rf build node_modules

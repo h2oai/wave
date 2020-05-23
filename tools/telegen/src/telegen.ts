@@ -41,6 +41,8 @@ interface Protocol {
   readonly files: File[]
 }
 
+enum Declaration { Forward, Declared }
+
 const
   collectTypes = (component: string, file: File, sourceFile: ts.SourceFile) => {
     ts.forEachChild(sourceFile, (node) => {
@@ -145,7 +147,7 @@ const
     const
       lines: string[] = [],
       p = (line: string) => lines.push(line),
-      generatedTypes: Dict<boolean> = {},
+      declarations: Dict<Declaration> = {},
       knownTypes = ((): Dict<Type> => {
         const d: Dict<Type> = {}
         for (const file of protocol.files) {
@@ -155,10 +157,14 @@ const
         }
         return d
       })(),
+      maybeForwardDeclare = (t: string): string => {
+        const d = declarations[t]
+        return d === Declaration.Forward ? `'${t}'` : t
+      },
       mapPyType = (t: string): string => {
         const pt = pyTypeMappings[t]
         if (pt) return pt
-        if (knownTypes[t]) return t
+        if (knownTypes[t]) return maybeForwardDeclare(t)
         throw new Error(`cannot map type ${t} to Python`)
       },
       genPyType = (m: Member): string => {
@@ -185,7 +191,9 @@ const
         return null
       },
       genPyClass = (type: Type) => {
-        if (generatedTypes[type.name]) return
+        if (declarations[type.name] === Declaration.Declared || declarations[type.name] === Declaration.Forward) return
+
+        declarations[type.name] = Declaration.Forward
 
         // generate member types first so that we don't have to forward-declare.
         for (const m of type.members) {
@@ -258,7 +266,8 @@ const
         }
         p(`        )`)
         p('')
-        generatedTypes[type.name] = true
+
+        declarations[type.name] = Declaration.Declared
       },
       generate = (): string => {
         p('from typing import Any, Optional, Union, Dict, List as Repeated')
