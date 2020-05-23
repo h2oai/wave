@@ -813,6 +813,503 @@ class Card9:
         )
 
 
+class HeadingCell:
+    def __init__(
+            self,
+            level: int,
+            content: str,
+    ):
+        self.level = level
+        self.content = content
+
+    def dump(self) -> Dict:
+        if self.level is None:
+            raise ValueError('HeadingCell.level is required.')
+        if self.content is None:
+            raise ValueError('HeadingCell.content is required.')
+        return dict(
+            level=self.level,
+            content=self.content,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'HeadingCell':
+        __d_level: Any = __d.get('level')
+        if __d_level is None:
+            raise ValueError('HeadingCell.level is required.')
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('HeadingCell.content is required.')
+        level: int = __d_level
+        content: str = __d_content
+        return HeadingCell(
+            level,
+            content,
+        )
+
+
+class MarkdownCell:
+    def __init__(
+            self,
+            content: str,
+    ):
+        self.content = content
+
+    def dump(self) -> Dict:
+        if self.content is None:
+            raise ValueError('MarkdownCell.content is required.')
+        return dict(
+            content=self.content,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'MarkdownCell':
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('MarkdownCell.content is required.')
+        content: str = __d_content
+        return MarkdownCell(
+            content,
+        )
+
+
+class FrameCell:
+    def __init__(
+            self,
+            source: str,
+            width: str,
+            height: str,
+    ):
+        self.source = source
+        self.width = width
+        self.height = height
+
+    def dump(self) -> Dict:
+        if self.source is None:
+            raise ValueError('FrameCell.source is required.')
+        if self.width is None:
+            raise ValueError('FrameCell.width is required.')
+        if self.height is None:
+            raise ValueError('FrameCell.height is required.')
+        return dict(
+            source=self.source,
+            width=self.width,
+            height=self.height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'FrameCell':
+        __d_source: Any = __d.get('source')
+        if __d_source is None:
+            raise ValueError('FrameCell.source is required.')
+        __d_width: Any = __d.get('width')
+        if __d_width is None:
+            raise ValueError('FrameCell.width is required.')
+        __d_height: Any = __d.get('height')
+        if __d_height is None:
+            raise ValueError('FrameCell.height is required.')
+        source: str = __d_source
+        width: str = __d_width
+        height: str = __d_height
+        return FrameCell(
+            source,
+            width,
+            height,
+        )
+
+
+class DataCell:
+    def __init__(
+            self,
+            content: str,
+    ):
+        self.content = content
+
+    def dump(self) -> Dict:
+        if self.content is None:
+            raise ValueError('DataCell.content is required.')
+        return dict(
+            content=self.content,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'DataCell':
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('DataCell.content is required.')
+        content: str = __d_content
+        return DataCell(
+            content,
+        )
+
+
+class DataSource:
+    def __init__(
+            self,
+            t: str,
+            id: int,
+    ):
+        self.t = t
+        self.id = id
+
+    def dump(self) -> Dict:
+        if self.t is None:
+            raise ValueError('DataSource.t is required.')
+        if self.t not in ('Table', 'View'):
+            raise ValueError(f'Invalid value "{self.t}" for DataSource.t.')
+        if self.id is None:
+            raise ValueError('DataSource.id is required.')
+        return dict(
+            t=self.t,
+            id=self.id,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'DataSource':
+        __d_t: Any = __d.get('t')
+        if __d_t is None:
+            raise ValueError('DataSource.t is required.')
+        __d_id: Any = __d.get('id')
+        if __d_id is None:
+            raise ValueError('DataSource.id is required.')
+        t: str = __d_t
+        id: int = __d_id
+        return DataSource(
+            t,
+            id,
+        )
+
+
+class Query:
+    def __init__(
+            self,
+            sql: str,
+            sources: Repeated[DataSource],
+    ):
+        self.sql = sql
+        self.sources = sources
+
+    def dump(self) -> Dict:
+        if self.sql is None:
+            raise ValueError('Query.sql is required.')
+        if self.sources is None:
+            raise ValueError('Query.sources is required.')
+        return dict(
+            sql=self.sql,
+            sources=[__e.dump() for __e in self.sources],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Query':
+        __d_sql: Any = __d.get('sql')
+        if __d_sql is None:
+            raise ValueError('Query.sql is required.')
+        __d_sources: Any = __d.get('sources')
+        if __d_sources is None:
+            raise ValueError('Query.sources is required.')
+        sql: str = __d_sql
+        sources: Repeated[DataSource] = [DataSource.load(__e) for __e in __d_sources]
+        return Query(
+            sql,
+            sources,
+        )
+
+
+class VegaCell:
+    def __init__(
+            self,
+            specification: str,
+            query: Query,
+    ):
+        self.specification = specification
+        self.query = query
+
+    def dump(self) -> Dict:
+        if self.specification is None:
+            raise ValueError('VegaCell.specification is required.')
+        if self.query is None:
+            raise ValueError('VegaCell.query is required.')
+        return dict(
+            specification=self.specification,
+            query=self.query.dump(),
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'VegaCell':
+        __d_specification: Any = __d.get('specification')
+        if __d_specification is None:
+            raise ValueError('VegaCell.specification is required.')
+        __d_query: Any = __d.get('query')
+        if __d_query is None:
+            raise ValueError('VegaCell.query is required.')
+        specification: str = __d_specification
+        query: Query = Query.load(__d_query)
+        return VegaCell(
+            specification,
+            query,
+        )
+
+
+class Cell:
+    def __init__(
+            self,
+            heading: Optional[HeadingCell] = None,
+            markdown: Optional[MarkdownCell] = None,
+            frame: Optional[FrameCell] = None,
+            data: Optional[DataCell] = None,
+            vega: Optional[VegaCell] = None,
+    ):
+        self.heading = heading
+        self.markdown = markdown
+        self.frame = frame
+        self.data = data
+        self.vega = vega
+
+    def dump(self) -> Dict:
+        return dict(
+            heading=self.heading.dump(),
+            markdown=self.markdown.dump(),
+            frame=self.frame.dump(),
+            data=self.data.dump(),
+            vega=self.vega.dump(),
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Cell':
+        __d_heading: Any = __d.get('heading')
+        __d_markdown: Any = __d.get('markdown')
+        __d_frame: Any = __d.get('frame')
+        __d_data: Any = __d.get('data')
+        __d_vega: Any = __d.get('vega')
+        heading: Optional[HeadingCell] = HeadingCell.load(__d_heading)
+        markdown: Optional[MarkdownCell] = MarkdownCell.load(__d_markdown)
+        frame: Optional[FrameCell] = FrameCell.load(__d_frame)
+        data: Optional[DataCell] = DataCell.load(__d_data)
+        vega: Optional[VegaCell] = VegaCell.load(__d_vega)
+        return Cell(
+            heading,
+            markdown,
+            frame,
+            data,
+            vega,
+        )
+
+
+class Command:
+    def __init__(
+            self,
+            action: str,
+            icon: str,
+            label: str,
+            caption: str,
+            data: str,
+    ):
+        self.action = action
+        self.icon = icon
+        self.label = label
+        self.caption = caption
+        self.data = data
+
+    def dump(self) -> Dict:
+        if self.action is None:
+            raise ValueError('Command.action is required.')
+        if self.icon is None:
+            raise ValueError('Command.icon is required.')
+        if self.label is None:
+            raise ValueError('Command.label is required.')
+        if self.caption is None:
+            raise ValueError('Command.caption is required.')
+        if self.data is None:
+            raise ValueError('Command.data is required.')
+        return dict(
+            action=self.action,
+            icon=self.icon,
+            label=self.label,
+            caption=self.caption,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Command':
+        __d_action: Any = __d.get('action')
+        if __d_action is None:
+            raise ValueError('Command.action is required.')
+        __d_icon: Any = __d.get('icon')
+        if __d_icon is None:
+            raise ValueError('Command.icon is required.')
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('Command.label is required.')
+        __d_caption: Any = __d.get('caption')
+        if __d_caption is None:
+            raise ValueError('Command.caption is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('Command.data is required.')
+        action: str = __d_action
+        icon: str = __d_icon
+        label: str = __d_label
+        caption: str = __d_caption
+        data: str = __d_data
+        return Command(
+            action,
+            icon,
+            label,
+            caption,
+            data,
+        )
+
+
+class DashboardPanel:
+    def __init__(
+            self,
+            cells: Repeated[Cell],
+            size: str,
+            commands: Repeated[Command],
+            data: str,
+    ):
+        self.cells = cells
+        self.size = size
+        self.commands = commands
+        self.data = data
+
+    def dump(self) -> Dict:
+        if self.cells is None:
+            raise ValueError('DashboardPanel.cells is required.')
+        if self.size is None:
+            raise ValueError('DashboardPanel.size is required.')
+        if self.commands is None:
+            raise ValueError('DashboardPanel.commands is required.')
+        if self.data is None:
+            raise ValueError('DashboardPanel.data is required.')
+        return dict(
+            cells=[__e.dump() for __e in self.cells],
+            size=self.size,
+            commands=[__e.dump() for __e in self.commands],
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'DashboardPanel':
+        __d_cells: Any = __d.get('cells')
+        if __d_cells is None:
+            raise ValueError('DashboardPanel.cells is required.')
+        __d_size: Any = __d.get('size')
+        if __d_size is None:
+            raise ValueError('DashboardPanel.size is required.')
+        __d_commands: Any = __d.get('commands')
+        if __d_commands is None:
+            raise ValueError('DashboardPanel.commands is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('DashboardPanel.data is required.')
+        cells: Repeated[Cell] = [Cell.load(__e) for __e in __d_cells]
+        size: str = __d_size
+        commands: Repeated[Command] = [Command.load(__e) for __e in __d_commands]
+        data: str = __d_data
+        return DashboardPanel(
+            cells,
+            size,
+            commands,
+            data,
+        )
+
+
+class DashboardRow:
+    def __init__(
+            self,
+            panels: Repeated[DashboardPanel],
+            size: str,
+    ):
+        self.panels = panels
+        self.size = size
+
+    def dump(self) -> Dict:
+        if self.panels is None:
+            raise ValueError('DashboardRow.panels is required.')
+        if self.size is None:
+            raise ValueError('DashboardRow.size is required.')
+        return dict(
+            panels=[__e.dump() for __e in self.panels],
+            size=self.size,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'DashboardRow':
+        __d_panels: Any = __d.get('panels')
+        if __d_panels is None:
+            raise ValueError('DashboardRow.panels is required.')
+        __d_size: Any = __d.get('size')
+        if __d_size is None:
+            raise ValueError('DashboardRow.size is required.')
+        panels: Repeated[DashboardPanel] = [DashboardPanel.load(__e) for __e in __d_panels]
+        size: str = __d_size
+        return DashboardRow(
+            panels,
+            size,
+        )
+
+
+class DashboardPage:
+    def __init__(
+            self,
+            title: str,
+            rows: Repeated[DashboardRow],
+    ):
+        self.title = title
+        self.rows = rows
+
+    def dump(self) -> Dict:
+        if self.title is None:
+            raise ValueError('DashboardPage.title is required.')
+        if self.rows is None:
+            raise ValueError('DashboardPage.rows is required.')
+        return dict(
+            title=self.title,
+            rows=[__e.dump() for __e in self.rows],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'DashboardPage':
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('DashboardPage.title is required.')
+        __d_rows: Any = __d.get('rows')
+        if __d_rows is None:
+            raise ValueError('DashboardPage.rows is required.')
+        title: str = __d_title
+        rows: Repeated[DashboardRow] = [DashboardRow.load(__e) for __e in __d_rows]
+        return DashboardPage(
+            title,
+            rows,
+        )
+
+
+class Dashboard:
+    def __init__(
+            self,
+            pages: Repeated[DashboardPage],
+    ):
+        self.pages = pages
+
+    def dump(self) -> Dict:
+        if self.pages is None:
+            raise ValueError('Dashboard.pages is required.')
+        return dict(
+            pages=[__e.dump() for __e in self.pages],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Dashboard':
+        __d_pages: Any = __d.get('pages')
+        if __d_pages is None:
+            raise ValueError('Dashboard.pages is required.')
+        pages: Repeated[DashboardPage] = [DashboardPage.load(__e) for __e in __d_pages]
+        return Dashboard(
+            pages,
+        )
+
+
 class Flex:
     def __init__(
             self,
@@ -2721,6 +3218,51 @@ class FormExpander:
         )
 
 
+class NotebookSection:
+    def __init__(
+            self,
+            cells: Repeated[Cell],
+            commands: Repeated[Command],
+            data: str,
+    ):
+        self.cells = cells
+        self.commands = commands
+        self.data = data
+
+    def dump(self) -> Dict:
+        if self.cells is None:
+            raise ValueError('NotebookSection.cells is required.')
+        if self.commands is None:
+            raise ValueError('NotebookSection.commands is required.')
+        if self.data is None:
+            raise ValueError('NotebookSection.data is required.')
+        return dict(
+            cells=[__e.dump() for __e in self.cells],
+            commands=[__e.dump() for __e in self.commands],
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'NotebookSection':
+        __d_cells: Any = __d.get('cells')
+        if __d_cells is None:
+            raise ValueError('NotebookSection.cells is required.')
+        __d_commands: Any = __d.get('commands')
+        if __d_commands is None:
+            raise ValueError('NotebookSection.commands is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('NotebookSection.data is required.')
+        cells: Repeated[Cell] = [Cell.load(__e) for __e in __d_cells]
+        commands: Repeated[Command] = [Command.load(__e) for __e in __d_commands]
+        data: str = __d_data
+        return NotebookSection(
+            cells,
+            commands,
+            data,
+        )
+
+
 class FormComponent:
     def __init__(
             self,
@@ -2747,6 +3289,7 @@ class FormComponent:
             tabs: Optional[FormTabs] = None,
             button: Optional[FormButton] = None,
             expander: Optional[FormExpander] = None,
+            section: Optional[NotebookSection] = None,
     ):
         self.text = text
         self.label = label
@@ -2771,6 +3314,7 @@ class FormComponent:
         self.tabs = tabs
         self.button = button
         self.expander = expander
+        self.section = section
 
     def dump(self) -> Dict:
         return dict(
@@ -2797,6 +3341,7 @@ class FormComponent:
             tabs=self.tabs.dump(),
             button=self.button.dump(),
             expander=self.expander.dump(),
+            section=self.section.dump(),
         )
 
     @staticmethod
@@ -2824,6 +3369,7 @@ class FormComponent:
         __d_tabs: Any = __d.get('tabs')
         __d_button: Any = __d.get('button')
         __d_expander: Any = __d.get('expander')
+        __d_section: Any = __d.get('section')
         text: Optional[FormText] = FormText.load(__d_text)
         label: Optional[FormLabel] = FormLabel.load(__d_label)
         separator: Optional[FormSeparator] = FormSeparator.load(__d_separator)
@@ -2847,6 +3393,7 @@ class FormComponent:
         tabs: Optional[FormTabs] = FormTabs.load(__d_tabs)
         button: Optional[FormButton] = FormButton.load(__d_button)
         expander: Optional[FormExpander] = FormExpander.load(__d_expander)
+        section: Optional[NotebookSection] = NotebookSection.load(__d_section)
         return FormComponent(
             text,
             label,
@@ -2871,6 +3418,7 @@ class FormComponent:
             tabs,
             button,
             expander,
+            section,
         )
 
 
@@ -3046,6 +3594,31 @@ class ListItem1:
             value,
             aux_value,
             data,
+        )
+
+
+class Notebook:
+    def __init__(
+            self,
+            sections: Repeated[NotebookSection],
+    ):
+        self.sections = sections
+
+    def dump(self) -> Dict:
+        if self.sections is None:
+            raise ValueError('Notebook.sections is required.')
+        return dict(
+            sections=[__e.dump() for __e in self.sections],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Notebook':
+        __d_sections: Any = __d.get('sections')
+        if __d_sections is None:
+            raise ValueError('Notebook.sections is required.')
+        sections: Repeated[NotebookSection] = [NotebookSection.load(__e) for __e in __d_sections]
+        return Notebook(
+            sections,
         )
 
 

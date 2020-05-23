@@ -1,4 +1,5 @@
 import { S, B, F, Rec } from "../delta";
+import { Section } from './notebook'
 
 export interface Text {
   size: S
@@ -245,6 +246,7 @@ export interface Component {
   tabs?: Tabs
   button?: Button
   expander?: Expander
+  section?: Section
 }
 
 export interface State {
