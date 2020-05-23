@@ -4,7 +4,7 @@ import bond from '../bond';
 import { Card, decode, F, Rec, S } from '../delta';
 import { cards, Format, grid } from '../grid';
 import { getTheme } from '../theme';
-import { ProgressArc } from './progress_arc';
+import { ProgressArc } from './parts/progress_arc';
 
 const
   theme = getTheme(),

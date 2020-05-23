@@ -4,7 +4,7 @@ import bond from '../bond';
 import { Card, decode, F, Rec, S } from '../delta';
 import { cards, Format } from '../grid';
 import { getTheme } from '../theme';
-import { ProgressBar } from './progress_bar';
+import { ProgressBar } from './parts/progress_bar';
 
 const
   theme = getTheme(),
