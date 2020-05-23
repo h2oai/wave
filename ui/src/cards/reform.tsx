@@ -1,19 +1,10 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import bond from '../bond';
-import { Card, decode, S, socket, xid, Rec } from '../delta';
+import { Card, decode, Rec, socket, xid } from '../delta';
 import { cards } from '../grid';
 import { getTheme } from '../theme';
-
-
-interface UIComponent {
-  button?: UIButton
-}
-
-interface UIButton {
-  name: S
-  label: S
-}
+import * as Form from './form';
 
 const
   theme = getTheme(),
@@ -32,14 +23,7 @@ const
     }
   })
 
-interface State {
-  url: S
-  method: S
-  args: Rec
-  items: UIComponent[]
-}
-
-const defaults: Partial<State> = {
+const defaults: Partial<Form.State> = {
   url: '',
   method: '',
   args: {},
@@ -47,7 +31,7 @@ const defaults: Partial<State> = {
 }
 
 const
-  XButton = bond(({ args, button: m, submit }: { args: Rec, button: UIButton, submit: () => void }) => {
+  XButton = bond(({ args, button: m, submit }: { args: Rec, button: Form.Button, submit: () => void }) => {
     args[m.name] = false
     const
       render = () => {
@@ -59,19 +43,19 @@ const
       }
     return { render }
   }),
-  XField = ({ component: c, args, submit }: { component: UIComponent, args: Rec, submit: () => void }) => {
+  XField = ({ component: c, args, submit }: { component: Form.Component, args: Rec, submit: () => void }) => {
     if (c.button) return <XButton key={xid()} args={args} button={c.button} submit={submit} />
     return <div />
   }
 
 
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state, changed }: Card<Form.State>) => {
     const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          items = decode<UIComponent[]>(s.items), // XXX ugly
+          items = decode<Form.Component[]>(s.items), // XXX ugly
           args = decode(s.args),
           submit = () => {
             const sock = socket.current
