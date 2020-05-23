@@ -1,13 +1,35 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import * as util from 'util'
-import * as ts from 'typescript'
-
-export interface Dict<T> { [key: string]: T } // generic object
-
+//
+// Telegen
+// =======
+//
+// This tool scans the /cards directory for interface definitions and generates
+// the corresponding definitions in the target language.
+//
+// The translation is done is two passes.
+//
+// In the first pass, the tools scans and collects all interface definitions.
+// In the second pass, all interfaces named "State" and their corresponding
+// dependencies exported to the target language.
+//
+// By convention, the interface named "State" is assigned the name of the card,
+// and all the dependency interfaces are prefixed with the name of the card.
+//
+// There is one exception: these conventions do not apply to interfaces in the
+// files named "shared.*". Those interfaces are exported as-is.
+//
+// WARNING: The compiler API is not fully documented, and this tool makes use
+// of undocumented JSDoc features. Might break at any time.
+//
 // References:
 // https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API
 // https://ts-ast-viewer.com/
+
+import * as fs from 'fs'
+import * as path from 'path'
+import * as ts from 'typescript'
+import * as util from 'util'
+
+export interface Dict<T> { [key: string]: T } // generic object
 
 enum MemberT { Enum, Singular, Repeated }
 interface MemberBase {
@@ -143,7 +165,7 @@ const
     Rec: 'dict',
     TupleSet: 'TupleSet', // special-cased during packing, Go allocation and unpacking.
   },
-  newPyGen = (protocol: Protocol) => {
+  translateToPython = (protocol: Protocol) => {
     const
       lines: string[] = [],
       p = (line: string) => lines.push(line),
@@ -161,28 +183,28 @@ const
         const d = declarations[t]
         return d === Declaration.Forward ? `'${t}'` : t
       },
-      mapPyType = (t: string): string => {
+      mapType = (t: string): string => {
         const pt = pyTypeMappings[t]
         if (pt) return pt
         if (knownTypes[t]) return maybeForwardDeclare(t)
         throw new Error(`cannot map type ${t} to Python`)
       },
-      genPyType = (m: Member): string => {
+      genType = (m: Member): string => {
         switch (m.t) {
           case MemberT.Enum:
             return 'str'
           case MemberT.Singular:
-            return mapPyType(m.typeName)
+            return mapType(m.typeName)
           case MemberT.Repeated:
-            return `Repeated[${mapPyType(m.typeName)}]`
+            return `Repeated[${mapType(m.typeName)}]`
         }
       },
-      genPyOptType = (m: Member): string => {
-        const t = genPyType(m)
+      genOptType = (m: Member): string => {
+        const t = genType(m)
         return m.optional ? `Optional[${t}]` : t
       },
-      genPySig = (m: Member): string => `${m.name}: ${genPyOptType(m)}`,
-      getPySigWithDefault = (m: Member): string => genPySig(m) + (m.optional ? ' = None' : ''),
+      genSig = (m: Member): string => `${m.name}: ${genOptType(m)}`,
+      getSigWithDefault = (m: Member): string => genSig(m) + (m.optional ? ' = None' : ''),
       getKnownTypeOf = (m: Member): Type | null => {
         switch (m.t) {
           case MemberT.Singular: return knownTypes[m.typeName] || null
@@ -190,7 +212,7 @@ const
         }
         return null
       },
-      genPyClass = (type: Type) => {
+      genClass = (type: Type) => {
         if (declarations[type.name] === Declaration.Declared || declarations[type.name] === Declaration.Forward) return
 
         declarations[type.name] = Declaration.Forward
@@ -198,7 +220,7 @@ const
         // generate member types first so that we don't have to forward-declare.
         for (const m of type.members) {
           const memberType = getKnownTypeOf(m)
-          if (memberType) genPyClass(memberType)
+          if (memberType) genClass(memberType)
         }
 
         console.log(`Generating ${type.name}...`)
@@ -207,7 +229,7 @@ const
         p(`    def __init__(`)
         p(`            self,`)
         for (const m of type.members) {
-          p(`            ${getPySigWithDefault(m)},`)
+          p(`            ${getSigWithDefault(m)},`)
         }
         p(`    ):`)
         for (const m of type.members) {
@@ -252,12 +274,12 @@ const
           const memberType = getKnownTypeOf(m)
           if (memberType) {
             if (m.t === MemberT.Repeated) {
-              p(`        ${genPySig(m)} = [${memberType.name}.load(__e) for __e in __d_${m.name}]`)
+              p(`        ${genSig(m)} = [${memberType.name}.load(__e) for __e in __d_${m.name}]`)
             } else {
-              p(`        ${genPySig(m)} = ${memberType.name}.load(__d_${m.name})`)
+              p(`        ${genSig(m)} = ${memberType.name}.load(__d_${m.name})`)
             }
           } else {
-            p(`        ${genPySig(m)} = __d_${m.name}`)
+            p(`        ${genSig(m)} = __d_${m.name}`)
           }
         }
         p(`        return ${type.name}(`)
@@ -275,20 +297,21 @@ const
         p('')
         for (const file of protocol.files) {
           for (const type of file.types) {
-            if (type.isRoot) {
-              genPyClass(type)
+            if (type.isRoot) { // Only export root types (State interface) and their dependencies.
+              genClass(type)
             }
           }
         }
         return lines.join('\n')
       }
-    return { generate }
+    return generate()
   },
   titlecase = (s: string) => s.replace(/_/g, ' ').replace(/\b./g, s => s.toUpperCase()).replace(/\s+/g, ''),
   scopeNames = (protocol: Protocol) => {
     const scopedNames: Dict<string> = {}
     for (const file of protocol.files) {
-      const scope = titlecase(file.name)
+      // Types in shared.ts don't get a scope prefix.
+      const scope = file.name === 'shared' ? '' : titlecase(file.name)
       for (const type of file.types) {
         const scopedName = type.isRoot ? scope : scope + type.name
         type.name = scopedNames[type.name] = scopedName
@@ -320,7 +343,7 @@ const
     processDir(protocol, cardsDir)
     scopeNames(protocol)
     console.log(util.inspect(protocol, { depth: null }))
-    fs.writeFileSync(pyCardsFilepath, newPyGen(protocol).generate(), 'utf8')
+    fs.writeFileSync(pyCardsFilepath, translateToPython(protocol), 'utf8')
   }
 
 main(process.argv[2], process.argv[3])
