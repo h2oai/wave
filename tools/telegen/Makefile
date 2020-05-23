@@ -5,4 +5,4 @@ setup:
 	npm ci
 
 run:
-	node build/telegen.js ../../ui/src/cards
+	node build/telegen.js ../../ui/src/cards ../../py/telesync/cards.py
