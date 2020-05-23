@@ -2,7 +2,7 @@ from typing import Tuple, List, Optional, Dict
 
 import requests
 
-from .api import marshal, unmarshal
+from .core import marshal, unmarshal
 
 
 def _new_stmt(query: str, params: List) -> Dict:

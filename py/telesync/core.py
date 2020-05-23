@@ -104,7 +104,7 @@ KEY = '__key__'
 def _set_op(o, k, v):
     guard_key(k)
     k = getattr(o, KEY) + _key_sep + str(k)
-    if isinstance(v, _Data):
+    if isinstance(v, TupleSet):
         op = v.dump()
         op['k'] = k
     else:
@@ -150,10 +150,10 @@ def tupleset(fields: Union[str, tuple, list], size: int = 0, data: Optional[Unio
     if not _is_int(size):
         raise ValueError('size must be int')
 
-    return _Data(fields, size, data)
+    return TupleSet(fields, size, data)
 
 
-class _Data:
+class TupleSet:
     def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
         self.fields = fields
         self.data = data
@@ -210,7 +210,7 @@ class Page:
         data = []
         bufs = []
         for k, v in props.items():
-            if isinstance(v, _Data):
+            if isinstance(v, TupleSet):
                 data.append((k, len(bufs)))
                 bufs.append(v.dump())
 
