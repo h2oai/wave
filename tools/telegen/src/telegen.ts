@@ -26,7 +26,7 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import * as ts from 'typescript'
+import ts from 'typescript'
 import * as util from 'util'
 
 export interface Dict<T> { [key: string]: T } // generic object
@@ -53,7 +53,7 @@ type Member = EnumMember | SingularMember | RepeatedMember
 interface Type {
   name: string
   readonly members: Member[]
-  readonly isRoot: boolean
+  readonly card: string | null
 }
 interface File {
   readonly name: string
@@ -65,7 +65,16 @@ interface Protocol {
 
 enum Declaration { Forward, Declared }
 
+const codeGenErrorT = 'CodeGenError'
+class CodeGenError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = codeGenErrorT
+  }
+}
+
 const
+  reservedWords = ['view', 'box'],
   collectTypes = (component: string, file: File, sourceFile: ts.SourceFile) => {
     ts.forEachChild(sourceFile, (node) => {
       switch (node.kind) {
@@ -73,6 +82,7 @@ const
           const
             n = node as ts.InterfaceDeclaration,
             typename = n.name.getText(),
+            card = typename === 'State' ? file.name : null,
             members = n.members.map((member): Member => {
               switch (member.kind) {
                 case ts.SyntaxKind.PropertySignature:
@@ -83,7 +93,9 @@ const
                     memberType = m.type,
                     comment = (m as any).jsDoc?.map((c: any) => c?.comment).join('\n') || '' // FIXME Undocumented API
 
-                  if (!memberType) throw new Error(`want type declared on ${component}.${typename}.${memberName}: ${m.getText()}`)
+                  for (const w of reservedWords) if (memberName === w) throw new CodeGenError(`${component}.${typename}.${memberName}: "${w}" is a reserved name`)
+
+                  if (!memberType) throw new CodeGenError(`want type declared on ${component}.${typename}.${memberName}: ${m.getText()}`)
 
                   switch (memberType.kind) {
                     case ts.SyntaxKind.ArrayType:
@@ -98,7 +110,7 @@ const
                               return { t: MemberT.Repeated, name: memberName, typeName: t.getText(), optional, comment }
                             }
                           default:
-                            throw new Error(`unsupported element type on ${component}.${typename}.${memberName}: ${m.getText()}`)
+                            throw new CodeGenError(`unsupported element type on ${component}.${typename}.${memberName}: ${m.getText()}`)
                         }
                       }
                     case ts.SyntaxKind.TypeReference:
@@ -120,17 +132,19 @@ const
                                   }
                                 }
                             }
-                            throw new Error(`unsupported union type on ${component}.${typename}.${memberName}: ${m.getText()}`)
+                            throw new CodeGenError(`unsupported union type on ${component}.${typename}.${memberName}: ${m.getText()}`)
                           })
                         return { t: MemberT.Enum, name: memberName, values, optional, comment }
                       }
                     default:
-                      throw new Error(`unsupported type on ${component}.${typename}.${memberName}: ${m.getText()}`)
+                      throw new CodeGenError(`unsupported type on ${component}.${typename}.${memberName}: ${m.getText()}`)
                   }
               }
-              throw new Error(`unsupported member kind on ${component}.${typename}`)
+              throw new CodeGenError(`unsupported member kind on ${component}.${typename}`)
             })
-          file.types.push({ name: typename, members, isRoot: typename === 'State' })
+          // All cards must have a box defined.
+          if (card) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', optional: false, comment: '' })
+          file.types.push({ name: typename, members, card })
       }
     })
   },
@@ -187,7 +201,7 @@ const
         const pt = pyTypeMappings[t]
         if (pt) return pt
         if (knownTypes[t]) return maybeForwardDeclare(t)
-        throw new Error(`cannot map type ${t} to Python`)
+        throw new CodeGenError(`cannot map type ${t} to Python`)
       },
       genType = (m: Member): string => {
         switch (m.t) {
@@ -248,6 +262,9 @@ const
           }
         }
         p(`        return dict(`)
+        if (type.card) {
+          p(`            view='${type.card}',`)
+        }
         for (const m of type.members) { // pack
           if (getKnownTypeOf(m)) {
             if (m.t === MemberT.Repeated) {
@@ -297,7 +314,7 @@ const
         p('')
         for (const file of protocol.files) {
           for (const type of file.types) {
-            if (type.isRoot) { // Only export root types (State interface) and their dependencies.
+            if (type.card) { // Only export root types (State interface) and their dependencies.
               genClass(type)
             }
           }
@@ -313,7 +330,7 @@ const
       // Types in shared.ts don't get a scope prefix.
       const scope = file.name === 'shared' ? '' : titlecase(file.name)
       for (const type of file.types) {
-        const scopedName = type.isRoot ? scope : scope + type.name
+        const scopedName = type.card ? scope : scope + type.name
         type.name = scopedNames[type.name] = scopedName
       }
     }
@@ -346,4 +363,12 @@ const
     fs.writeFileSync(pyCardsFilepath, translateToPython(protocol), 'utf8')
   }
 
-main(process.argv[2], process.argv[3])
+try {
+  main(process.argv[2], process.argv[3])
+} catch (e) {
+  if (e.name === codeGenErrorT) {
+    console.log(`Error: code generation failed: ${e.message}`)
+    process.exit(1)
+  }
+  throw e
+}

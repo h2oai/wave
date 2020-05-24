@@ -195,7 +195,7 @@ class Page:
             props = card
         elif hasattr(card, 'dump') and callable(card.dump):
             props = card.dump()
-        if props is None:
+        if not isinstance(props, dict):
             raise ValueError('card must be dict or implement .dump() -> dict')
 
         key = props.get('key', None)

@@ -25,7 +25,7 @@ const
 interface State {
   title: S
   value: S
-  data: Rec
+  data?: Rec
 }
 
 const defaults: Partial<State> = {

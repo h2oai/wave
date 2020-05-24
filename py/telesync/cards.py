@@ -5,22 +5,26 @@ from .core import TupleSet
 class Card1:
     def __init__(
             self,
+            box: str,
             title: str,
             value: str,
-            data: dict,
+            data: Optional[dict] = None,
     ):
+        self.box = box
         self.title = title
         self.value = value
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Card1.box is required.')
         if self.title is None:
             raise ValueError('Card1.title is required.')
         if self.value is None:
             raise ValueError('Card1.value is required.')
-        if self.data is None:
-            raise ValueError('Card1.data is required.')
         return dict(
+            view='card1',
+            box=self.box,
             title=self.title,
             value=self.value,
             data=self.data,
@@ -28,6 +32,9 @@ class Card1:
 
     @staticmethod
     def load(__d: Dict) -> 'Card1':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Card1.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Card1.title is required.')
@@ -35,12 +42,12 @@ class Card1:
         if __d_value is None:
             raise ValueError('Card1.value is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Card1.data is required.')
+        box: str = __d_box
         title: str = __d_title
         value: str = __d_value
-        data: dict = __d_data
+        data: Optional[dict] = __d_data
         return Card1(
+            box,
             title,
             value,
             data,
@@ -50,6 +57,7 @@ class Card1:
 class Card2:
     def __init__(
             self,
+            box: str,
             title: str,
             value: str,
             aux_value: str,
@@ -62,6 +70,7 @@ class Card2:
             plot_zero_value: float,
             plot_curve: str,
     ):
+        self.box = box
         self.title = title
         self.value = value
         self.aux_value = aux_value
@@ -75,6 +84,8 @@ class Card2:
         self.plot_curve = plot_curve
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Card2.box is required.')
         if self.title is None:
             raise ValueError('Card2.title is required.')
         if self.value is None:
@@ -100,6 +111,8 @@ class Card2:
         if self.plot_curve is None:
             raise ValueError('Card2.plot_curve is required.')
         return dict(
+            view='card2',
+            box=self.box,
             title=self.title,
             value=self.value,
             aux_value=self.aux_value,
@@ -115,6 +128,9 @@ class Card2:
 
     @staticmethod
     def load(__d: Dict) -> 'Card2':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Card2.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Card2.title is required.')
@@ -148,6 +164,7 @@ class Card2:
         __d_plot_curve: Any = __d.get('plot_curve')
         if __d_plot_curve is None:
             raise ValueError('Card2.plot_curve is required.')
+        box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
@@ -160,6 +177,7 @@ class Card2:
         plot_zero_value: float = __d_plot_zero_value
         plot_curve: str = __d_plot_curve
         return Card2(
+            box,
             title,
             value,
             aux_value,
@@ -177,12 +195,14 @@ class Card2:
 class Card3:
     def __init__(
             self,
+            box: str,
             title: str,
             value: str,
             aux_value: str,
             caption: str,
             data: dict,
     ):
+        self.box = box
         self.title = title
         self.value = value
         self.aux_value = aux_value
@@ -190,6 +210,8 @@ class Card3:
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Card3.box is required.')
         if self.title is None:
             raise ValueError('Card3.title is required.')
         if self.value is None:
@@ -201,6 +223,8 @@ class Card3:
         if self.data is None:
             raise ValueError('Card3.data is required.')
         return dict(
+            view='card3',
+            box=self.box,
             title=self.title,
             value=self.value,
             aux_value=self.aux_value,
@@ -210,6 +234,9 @@ class Card3:
 
     @staticmethod
     def load(__d: Dict) -> 'Card3':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Card3.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Card3.title is required.')
@@ -225,12 +252,14 @@ class Card3:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card3.data is required.')
+        box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
         caption: str = __d_caption
         data: dict = __d_data
         return Card3(
+            box,
             title,
             value,
             aux_value,
@@ -242,6 +271,7 @@ class Card3:
 class Card4:
     def __init__(
             self,
+            box: str,
             title: str,
             value: str,
             aux_value: str,
@@ -249,6 +279,7 @@ class Card4:
             plot_color: str,
             data: dict,
     ):
+        self.box = box
         self.title = title
         self.value = value
         self.aux_value = aux_value
@@ -257,6 +288,8 @@ class Card4:
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Card4.box is required.')
         if self.title is None:
             raise ValueError('Card4.title is required.')
         if self.value is None:
@@ -270,6 +303,8 @@ class Card4:
         if self.data is None:
             raise ValueError('Card4.data is required.')
         return dict(
+            view='card4',
+            box=self.box,
             title=self.title,
             value=self.value,
             aux_value=self.aux_value,
@@ -280,6 +315,9 @@ class Card4:
 
     @staticmethod
     def load(__d: Dict) -> 'Card4':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Card4.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Card4.title is required.')
@@ -298,6 +336,7 @@ class Card4:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card4.data is required.')
+        box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
@@ -305,6 +344,7 @@ class Card4:
         plot_color: str = __d_plot_color
         data: dict = __d_data
         return Card4(
+            box,
             title,
             value,
             aux_value,
@@ -317,6 +357,7 @@ class Card4:
 class Card5:
     def __init__(
             self,
+            box: str,
             title: str,
             value: str,
             aux_value: str,
@@ -324,6 +365,7 @@ class Card5:
             plot_color: str,
             data: dict,
     ):
+        self.box = box
         self.title = title
         self.value = value
         self.aux_value = aux_value
@@ -332,6 +374,8 @@ class Card5:
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Card5.box is required.')
         if self.title is None:
             raise ValueError('Card5.title is required.')
         if self.value is None:
@@ -345,6 +389,8 @@ class Card5:
         if self.data is None:
             raise ValueError('Card5.data is required.')
         return dict(
+            view='card5',
+            box=self.box,
             title=self.title,
             value=self.value,
             aux_value=self.aux_value,
@@ -355,6 +401,9 @@ class Card5:
 
     @staticmethod
     def load(__d: Dict) -> 'Card5':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Card5.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Card5.title is required.')
@@ -373,6 +422,7 @@ class Card5:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card5.data is required.')
+        box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
@@ -380,6 +430,7 @@ class Card5:
         plot_color: str = __d_plot_color
         data: dict = __d_data
         return Card5(
+            box,
             title,
             value,
             aux_value,
@@ -392,6 +443,7 @@ class Card5:
 class Card6:
     def __init__(
             self,
+            box: str,
             title: str,
             value: str,
             aux_value: str,
@@ -404,6 +456,7 @@ class Card6:
             plot_zero_value: float,
             plot_curve: str,
     ):
+        self.box = box
         self.title = title
         self.value = value
         self.aux_value = aux_value
@@ -417,6 +470,8 @@ class Card6:
         self.plot_curve = plot_curve
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Card6.box is required.')
         if self.title is None:
             raise ValueError('Card6.title is required.')
         if self.value is None:
@@ -442,6 +497,8 @@ class Card6:
         if self.plot_curve is None:
             raise ValueError('Card6.plot_curve is required.')
         return dict(
+            view='card6',
+            box=self.box,
             title=self.title,
             value=self.value,
             aux_value=self.aux_value,
@@ -457,6 +514,9 @@ class Card6:
 
     @staticmethod
     def load(__d: Dict) -> 'Card6':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Card6.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Card6.title is required.')
@@ -490,6 +550,7 @@ class Card6:
         __d_plot_curve: Any = __d.get('plot_curve')
         if __d_plot_curve is None:
             raise ValueError('Card6.plot_curve is required.')
+        box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
@@ -502,6 +563,7 @@ class Card6:
         plot_zero_value: float = __d_plot_zero_value
         plot_curve: str = __d_plot_curve
         return Card6(
+            box,
             title,
             value,
             aux_value,
@@ -519,6 +581,7 @@ class Card6:
 class Card7:
     def __init__(
             self,
+            box: str,
             title: str,
             value: str,
             data: dict,
@@ -530,6 +593,7 @@ class Card7:
             plot_zero_value: float,
             plot_curve: str,
     ):
+        self.box = box
         self.title = title
         self.value = value
         self.data = data
@@ -542,6 +606,8 @@ class Card7:
         self.plot_curve = plot_curve
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Card7.box is required.')
         if self.title is None:
             raise ValueError('Card7.title is required.')
         if self.value is None:
@@ -565,6 +631,8 @@ class Card7:
         if self.plot_curve is None:
             raise ValueError('Card7.plot_curve is required.')
         return dict(
+            view='card7',
+            box=self.box,
             title=self.title,
             value=self.value,
             data=self.data,
@@ -579,6 +647,9 @@ class Card7:
 
     @staticmethod
     def load(__d: Dict) -> 'Card7':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Card7.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Card7.title is required.')
@@ -609,6 +680,7 @@ class Card7:
         __d_plot_curve: Any = __d.get('plot_curve')
         if __d_plot_curve is None:
             raise ValueError('Card7.plot_curve is required.')
+        box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         data: dict = __d_data
@@ -620,6 +692,7 @@ class Card7:
         plot_zero_value: float = __d_plot_zero_value
         plot_curve: str = __d_plot_curve
         return Card7(
+            box,
             title,
             value,
             data,
@@ -636,6 +709,7 @@ class Card7:
 class Card8:
     def __init__(
             self,
+            box: str,
             title: str,
             value: str,
             aux_value: str,
@@ -643,6 +717,7 @@ class Card8:
             plot_color: str,
             data: dict,
     ):
+        self.box = box
         self.title = title
         self.value = value
         self.aux_value = aux_value
@@ -651,6 +726,8 @@ class Card8:
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Card8.box is required.')
         if self.title is None:
             raise ValueError('Card8.title is required.')
         if self.value is None:
@@ -664,6 +741,8 @@ class Card8:
         if self.data is None:
             raise ValueError('Card8.data is required.')
         return dict(
+            view='card8',
+            box=self.box,
             title=self.title,
             value=self.value,
             aux_value=self.aux_value,
@@ -674,6 +753,9 @@ class Card8:
 
     @staticmethod
     def load(__d: Dict) -> 'Card8':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Card8.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Card8.title is required.')
@@ -692,6 +774,7 @@ class Card8:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card8.data is required.')
+        box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
@@ -699,6 +782,7 @@ class Card8:
         plot_color: str = __d_plot_color
         data: dict = __d_data
         return Card8(
+            box,
             title,
             value,
             aux_value,
@@ -711,6 +795,7 @@ class Card8:
 class Card9:
     def __init__(
             self,
+            box: str,
             title: str,
             caption: str,
             value: str,
@@ -721,6 +806,7 @@ class Card9:
             plot_color: str,
             data: dict,
     ):
+        self.box = box
         self.title = title
         self.caption = caption
         self.value = value
@@ -732,6 +818,8 @@ class Card9:
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Card9.box is required.')
         if self.title is None:
             raise ValueError('Card9.title is required.')
         if self.caption is None:
@@ -751,6 +839,8 @@ class Card9:
         if self.data is None:
             raise ValueError('Card9.data is required.')
         return dict(
+            view='card9',
+            box=self.box,
             title=self.title,
             caption=self.caption,
             value=self.value,
@@ -764,6 +854,9 @@ class Card9:
 
     @staticmethod
     def load(__d: Dict) -> 'Card9':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Card9.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Card9.title is required.')
@@ -791,6 +884,7 @@ class Card9:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card9.data is required.')
+        box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
         value: str = __d_value
@@ -801,6 +895,7 @@ class Card9:
         plot_color: str = __d_plot_color
         data: dict = __d_data
         return Card9(
+            box,
             title,
             caption,
             value,
@@ -1288,24 +1383,35 @@ class DashboardPage:
 class Dashboard:
     def __init__(
             self,
+            box: str,
             pages: Repeated[DashboardPage],
     ):
+        self.box = box
         self.pages = pages
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Dashboard.box is required.')
         if self.pages is None:
             raise ValueError('Dashboard.pages is required.')
         return dict(
+            view='dashboard',
+            box=self.box,
             pages=[__e.dump() for __e in self.pages],
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Dashboard':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Dashboard.box is required.')
         __d_pages: Any = __d.get('pages')
         if __d_pages is None:
             raise ValueError('Dashboard.pages is required.')
+        box: str = __d_box
         pages: Repeated[DashboardPage] = [DashboardPage.load(__e) for __e in __d_pages]
         return Dashboard(
+            box,
             pages,
         )
 
@@ -1313,6 +1419,7 @@ class Dashboard:
 class Flex:
     def __init__(
             self,
+            box: str,
             title: str,
             item_view: str,
             item_props: dict,
@@ -1322,6 +1429,7 @@ class Flex:
             wrap: str,
             data: TupleSet,
     ):
+        self.box = box
         self.title = title
         self.item_view = item_view
         self.item_props = item_props
@@ -1332,6 +1440,8 @@ class Flex:
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Flex.box is required.')
         if self.title is None:
             raise ValueError('Flex.title is required.')
         if self.item_view is None:
@@ -1357,6 +1467,8 @@ class Flex:
         if self.data is None:
             raise ValueError('Flex.data is required.')
         return dict(
+            view='flex',
+            box=self.box,
             title=self.title,
             item_view=self.item_view,
             item_props=self.item_props,
@@ -1369,6 +1481,9 @@ class Flex:
 
     @staticmethod
     def load(__d: Dict) -> 'Flex':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Flex.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Flex.title is required.')
@@ -1393,6 +1508,7 @@ class Flex:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Flex.data is required.')
+        box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
         item_props: dict = __d_item_props
@@ -1402,6 +1518,7 @@ class Flex:
         wrap: str = __d_wrap
         data: TupleSet = __d_data
         return Flex(
+            box,
             title,
             item_view,
             item_props,
@@ -3425,17 +3542,21 @@ class FormComponent:
 class Form:
     def __init__(
             self,
+            box: str,
             url: str,
             method: str,
             args: dict,
             items: Repeated[FormComponent],
     ):
+        self.box = box
         self.url = url
         self.method = method
         self.args = args
         self.items = items
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Form.box is required.')
         if self.url is None:
             raise ValueError('Form.url is required.')
         if self.method is None:
@@ -3445,6 +3566,8 @@ class Form:
         if self.items is None:
             raise ValueError('Form.items is required.')
         return dict(
+            view='form',
+            box=self.box,
             url=self.url,
             method=self.method,
             args=self.args,
@@ -3453,6 +3576,9 @@ class Form:
 
     @staticmethod
     def load(__d: Dict) -> 'Form':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Form.box is required.')
         __d_url: Any = __d.get('url')
         if __d_url is None:
             raise ValueError('Form.url is required.')
@@ -3465,11 +3591,13 @@ class Form:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('Form.items is required.')
+        box: str = __d_box
         url: str = __d_url
         method: str = __d_method
         args: dict = __d_args
         items: Repeated[FormComponent] = [FormComponent.load(__e) for __e in __d_items]
         return Form(
+            box,
             url,
             method,
             args,
@@ -3480,17 +3608,21 @@ class Form:
 class List:
     def __init__(
             self,
+            box: str,
             title: str,
             item_view: str,
             item_props: dict,
             data: TupleSet,
     ):
+        self.box = box
         self.title = title
         self.item_view = item_view
         self.item_props = item_props
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('List.box is required.')
         if self.title is None:
             raise ValueError('List.title is required.')
         if self.item_view is None:
@@ -3500,6 +3632,8 @@ class List:
         if self.data is None:
             raise ValueError('List.data is required.')
         return dict(
+            view='list',
+            box=self.box,
             title=self.title,
             item_view=self.item_view,
             item_props=self.item_props,
@@ -3508,6 +3642,9 @@ class List:
 
     @staticmethod
     def load(__d: Dict) -> 'List':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('List.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('List.title is required.')
@@ -3520,11 +3657,13 @@ class List:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('List.data is required.')
+        box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
         item_props: dict = __d_item_props
         data: TupleSet = __d_data
         return List(
+            box,
             title,
             item_view,
             item_props,
@@ -3535,12 +3674,14 @@ class List:
 class ListItem1:
     def __init__(
             self,
+            box: str,
             title: str,
             caption: str,
             value: str,
             aux_value: str,
             data: dict,
     ):
+        self.box = box
         self.title = title
         self.caption = caption
         self.value = value
@@ -3548,6 +3689,8 @@ class ListItem1:
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('ListItem1.box is required.')
         if self.title is None:
             raise ValueError('ListItem1.title is required.')
         if self.caption is None:
@@ -3559,6 +3702,8 @@ class ListItem1:
         if self.data is None:
             raise ValueError('ListItem1.data is required.')
         return dict(
+            view='list_item1',
+            box=self.box,
             title=self.title,
             caption=self.caption,
             value=self.value,
@@ -3568,6 +3713,9 @@ class ListItem1:
 
     @staticmethod
     def load(__d: Dict) -> 'ListItem1':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('ListItem1.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('ListItem1.title is required.')
@@ -3583,12 +3731,14 @@ class ListItem1:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('ListItem1.data is required.')
+        box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
         value: str = __d_value
         aux_value: str = __d_aux_value
         data: dict = __d_data
         return ListItem1(
+            box,
             title,
             caption,
             value,
@@ -3600,24 +3750,35 @@ class ListItem1:
 class Notebook:
     def __init__(
             self,
+            box: str,
             sections: Repeated[NotebookSection],
     ):
+        self.box = box
         self.sections = sections
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Notebook.box is required.')
         if self.sections is None:
             raise ValueError('Notebook.sections is required.')
         return dict(
+            view='notebook',
+            box=self.box,
             sections=[__e.dump() for __e in self.sections],
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Notebook':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Notebook.box is required.')
         __d_sections: Any = __d.get('sections')
         if __d_sections is None:
             raise ValueError('Notebook.sections is required.')
+        box: str = __d_box
         sections: Repeated[NotebookSection] = [NotebookSection.load(__e) for __e in __d_sections]
         return Notebook(
+            box,
             sections,
         )
 
@@ -3625,33 +3786,44 @@ class Notebook:
 class PixelArt:
     def __init__(
             self,
+            box: str,
             title: str,
             data: dict,
     ):
+        self.box = box
         self.title = title
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('PixelArt.box is required.')
         if self.title is None:
             raise ValueError('PixelArt.title is required.')
         if self.data is None:
             raise ValueError('PixelArt.data is required.')
         return dict(
+            view='pixel_art',
+            box=self.box,
             title=self.title,
             data=self.data,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'PixelArt':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('PixelArt.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('PixelArt.title is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('PixelArt.data is required.')
+        box: str = __d_box
         title: str = __d_title
         data: dict = __d_data
         return PixelArt(
+            box,
             title,
             data,
         )
@@ -4030,15 +4202,19 @@ class PlotVis:
 class Plot:
     def __init__(
             self,
+            box: str,
             title: str,
             data: dict,
             vis: PlotVis,
     ):
+        self.box = box
         self.title = title
         self.data = data
         self.vis = vis
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Plot.box is required.')
         if self.title is None:
             raise ValueError('Plot.title is required.')
         if self.data is None:
@@ -4046,6 +4222,8 @@ class Plot:
         if self.vis is None:
             raise ValueError('Plot.vis is required.')
         return dict(
+            view='plot',
+            box=self.box,
             title=self.title,
             data=self.data,
             vis=self.vis.dump(),
@@ -4053,6 +4231,9 @@ class Plot:
 
     @staticmethod
     def load(__d: Dict) -> 'Plot':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Plot.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Plot.title is required.')
@@ -4062,10 +4243,12 @@ class Plot:
         __d_vis: Any = __d.get('vis')
         if __d_vis is None:
             raise ValueError('Plot.vis is required.')
+        box: str = __d_box
         title: str = __d_title
         data: dict = __d_data
         vis: PlotVis = PlotVis.load(__d_vis)
         return Plot(
+            box,
             title,
             data,
             vis,
@@ -4075,17 +4258,21 @@ class Plot:
 class Repeat:
     def __init__(
             self,
+            box: str,
             title: str,
             item_view: str,
             item_props: dict,
             data: TupleSet,
     ):
+        self.box = box
         self.title = title
         self.item_view = item_view
         self.item_props = item_props
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Repeat.box is required.')
         if self.title is None:
             raise ValueError('Repeat.title is required.')
         if self.item_view is None:
@@ -4095,6 +4282,8 @@ class Repeat:
         if self.data is None:
             raise ValueError('Repeat.data is required.')
         return dict(
+            view='repeat',
+            box=self.box,
             title=self.title,
             item_view=self.item_view,
             item_props=self.item_props,
@@ -4103,6 +4292,9 @@ class Repeat:
 
     @staticmethod
     def load(__d: Dict) -> 'Repeat':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Repeat.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Repeat.title is required.')
@@ -4115,11 +4307,13 @@ class Repeat:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Repeat.data is required.')
+        box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
         item_props: dict = __d_item_props
         data: TupleSet = __d_data
         return Repeat(
+            box,
             title,
             item_view,
             item_props,
@@ -4130,15 +4324,19 @@ class Repeat:
 class Table:
     def __init__(
             self,
+            box: str,
             title: str,
             cells: TupleSet,
             data: TupleSet,
     ):
+        self.box = box
         self.title = title
         self.cells = cells
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Table.box is required.')
         if self.title is None:
             raise ValueError('Table.title is required.')
         if self.cells is None:
@@ -4146,6 +4344,8 @@ class Table:
         if self.data is None:
             raise ValueError('Table.data is required.')
         return dict(
+            view='table',
+            box=self.box,
             title=self.title,
             cells=self.cells,
             data=self.data,
@@ -4153,6 +4353,9 @@ class Table:
 
     @staticmethod
     def load(__d: Dict) -> 'Table':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Table.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Table.title is required.')
@@ -4162,10 +4365,12 @@ class Table:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Table.data is required.')
+        box: str = __d_box
         title: str = __d_title
         cells: TupleSet = __d_cells
         data: TupleSet = __d_data
         return Table(
+            box,
             title,
             cells,
             data,
@@ -4175,15 +4380,19 @@ class Table:
 class Template:
     def __init__(
             self,
+            box: str,
             title: str,
             template: str,
             data: dict,
     ):
+        self.box = box
         self.title = title
         self.template = template
         self.data = data
 
     def dump(self) -> Dict:
+        if self.box is None:
+            raise ValueError('Template.box is required.')
         if self.title is None:
             raise ValueError('Template.title is required.')
         if self.template is None:
@@ -4191,6 +4400,8 @@ class Template:
         if self.data is None:
             raise ValueError('Template.data is required.')
         return dict(
+            view='template',
+            box=self.box,
             title=self.title,
             template=self.template,
             data=self.data,
@@ -4198,6 +4409,9 @@ class Template:
 
     @staticmethod
     def load(__d: Dict) -> 'Template':
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Template.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Template.title is required.')
@@ -4207,10 +4421,12 @@ class Template:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Template.data is required.')
+        box: str = __d_box
         title: str = __d_title
         template: str = __d_template
         data: dict = __d_data
         return Template(
+            box,
             title,
             template,
             data,
