@@ -24,7 +24,6 @@ const
 
 const defaults: Partial<Form.State> = {
   url: '',
-  method: '',
   args: {},
   items: []
 }

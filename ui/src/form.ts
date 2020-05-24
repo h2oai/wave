@@ -251,7 +251,6 @@ export interface Component {
 
 export interface State {
   url: S
-  method: S
   args: Rec
   items: Component[]
 }

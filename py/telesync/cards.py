@@ -1162,11 +1162,11 @@ class Cell:
 
     def dump(self) -> Dict:
         return dict(
-            heading=self.heading.dump(),
-            markdown=self.markdown.dump(),
-            frame=self.frame.dump(),
-            data=self.data.dump(),
-            vega=self.vega.dump(),
+            heading=None if self.heading is None else self.heading.dump(),
+            markdown=None if self.markdown is None else self.markdown.dump(),
+            frame=None if self.frame is None else self.frame.dump(),
+            data=None if self.data is None else self.data.dump(),
+            vega=None if self.vega is None else self.vega.dump(),
         )
 
     @staticmethod
@@ -1176,11 +1176,11 @@ class Cell:
         __d_frame: Any = __d.get('frame')
         __d_data: Any = __d.get('data')
         __d_vega: Any = __d.get('vega')
-        heading: Optional[HeadingCell] = HeadingCell.load(__d_heading)
-        markdown: Optional[MarkdownCell] = MarkdownCell.load(__d_markdown)
-        frame: Optional[FrameCell] = FrameCell.load(__d_frame)
-        data: Optional[DataCell] = DataCell.load(__d_data)
-        vega: Optional[VegaCell] = VegaCell.load(__d_vega)
+        heading: Optional[HeadingCell] = HeadingCell.load(__d_heading) if __d_heading else None
+        markdown: Optional[MarkdownCell] = MarkdownCell.load(__d_markdown) if __d_markdown else None
+        frame: Optional[FrameCell] = FrameCell.load(__d_frame) if __d_frame else None
+        data: Optional[DataCell] = DataCell.load(__d_data) if __d_data else None
+        vega: Optional[VegaCell] = VegaCell.load(__d_vega) if __d_vega else None
         return Cell(
             heading,
             markdown,
@@ -3435,30 +3435,30 @@ class FormComponent:
 
     def dump(self) -> Dict:
         return dict(
-            text=self.text.dump(),
-            label=self.label.dump(),
-            separator=self.separator.dump(),
-            progress=self.progress.dump(),
-            message_bar=self.message_bar.dump(),
-            textbox=self.textbox.dump(),
-            checkbox=self.checkbox.dump(),
-            toggle=self.toggle.dump(),
-            choice_group=self.choice_group.dump(),
-            checklist=self.checklist.dump(),
-            dropdown=self.dropdown.dump(),
-            combobox=self.combobox.dump(),
-            slider=self.slider.dump(),
-            spinbox=self.spinbox.dump(),
-            date_picker=self.date_picker.dump(),
-            color_picker=self.color_picker.dump(),
-            buttons=self.buttons.dump(),
-            file_upload=self.file_upload.dump(),
-            table=self.table.dump(),
-            link=self.link.dump(),
-            tabs=self.tabs.dump(),
-            button=self.button.dump(),
-            expander=self.expander.dump(),
-            section=self.section.dump(),
+            text=None if self.text is None else self.text.dump(),
+            label=None if self.label is None else self.label.dump(),
+            separator=None if self.separator is None else self.separator.dump(),
+            progress=None if self.progress is None else self.progress.dump(),
+            message_bar=None if self.message_bar is None else self.message_bar.dump(),
+            textbox=None if self.textbox is None else self.textbox.dump(),
+            checkbox=None if self.checkbox is None else self.checkbox.dump(),
+            toggle=None if self.toggle is None else self.toggle.dump(),
+            choice_group=None if self.choice_group is None else self.choice_group.dump(),
+            checklist=None if self.checklist is None else self.checklist.dump(),
+            dropdown=None if self.dropdown is None else self.dropdown.dump(),
+            combobox=None if self.combobox is None else self.combobox.dump(),
+            slider=None if self.slider is None else self.slider.dump(),
+            spinbox=None if self.spinbox is None else self.spinbox.dump(),
+            date_picker=None if self.date_picker is None else self.date_picker.dump(),
+            color_picker=None if self.color_picker is None else self.color_picker.dump(),
+            buttons=None if self.buttons is None else self.buttons.dump(),
+            file_upload=None if self.file_upload is None else self.file_upload.dump(),
+            table=None if self.table is None else self.table.dump(),
+            link=None if self.link is None else self.link.dump(),
+            tabs=None if self.tabs is None else self.tabs.dump(),
+            button=None if self.button is None else self.button.dump(),
+            expander=None if self.expander is None else self.expander.dump(),
+            section=None if self.section is None else self.section.dump(),
         )
 
     @staticmethod
@@ -3487,30 +3487,30 @@ class FormComponent:
         __d_button: Any = __d.get('button')
         __d_expander: Any = __d.get('expander')
         __d_section: Any = __d.get('section')
-        text: Optional[FormText] = FormText.load(__d_text)
-        label: Optional[FormLabel] = FormLabel.load(__d_label)
-        separator: Optional[FormSeparator] = FormSeparator.load(__d_separator)
-        progress: Optional[FormProgress] = FormProgress.load(__d_progress)
-        message_bar: Optional[FormMessageBar] = FormMessageBar.load(__d_message_bar)
-        textbox: Optional[FormTextbox] = FormTextbox.load(__d_textbox)
-        checkbox: Optional[FormCheckbox] = FormCheckbox.load(__d_checkbox)
-        toggle: Optional[FormToggle] = FormToggle.load(__d_toggle)
-        choice_group: Optional[FormChoiceGroup] = FormChoiceGroup.load(__d_choice_group)
-        checklist: Optional[FormChecklist] = FormChecklist.load(__d_checklist)
-        dropdown: Optional[FormDropdown] = FormDropdown.load(__d_dropdown)
-        combobox: Optional[FormCombobox] = FormCombobox.load(__d_combobox)
-        slider: Optional[FormSlider] = FormSlider.load(__d_slider)
-        spinbox: Optional[FormSpinbox] = FormSpinbox.load(__d_spinbox)
-        date_picker: Optional[FormDatePicker] = FormDatePicker.load(__d_date_picker)
-        color_picker: Optional[FormColorPicker] = FormColorPicker.load(__d_color_picker)
-        buttons: Optional[FormButtons] = FormButtons.load(__d_buttons)
-        file_upload: Optional[FormFileUpload] = FormFileUpload.load(__d_file_upload)
-        table: Optional[FormTable] = FormTable.load(__d_table)
-        link: Optional[FormLink] = FormLink.load(__d_link)
-        tabs: Optional[FormTabs] = FormTabs.load(__d_tabs)
-        button: Optional[FormButton] = FormButton.load(__d_button)
-        expander: Optional[FormExpander] = FormExpander.load(__d_expander)
-        section: Optional[NotebookSection] = NotebookSection.load(__d_section)
+        text: Optional[FormText] = FormText.load(__d_text) if __d_text else None
+        label: Optional[FormLabel] = FormLabel.load(__d_label) if __d_label else None
+        separator: Optional[FormSeparator] = FormSeparator.load(__d_separator) if __d_separator else None
+        progress: Optional[FormProgress] = FormProgress.load(__d_progress) if __d_progress else None
+        message_bar: Optional[FormMessageBar] = FormMessageBar.load(__d_message_bar) if __d_message_bar else None
+        textbox: Optional[FormTextbox] = FormTextbox.load(__d_textbox) if __d_textbox else None
+        checkbox: Optional[FormCheckbox] = FormCheckbox.load(__d_checkbox) if __d_checkbox else None
+        toggle: Optional[FormToggle] = FormToggle.load(__d_toggle) if __d_toggle else None
+        choice_group: Optional[FormChoiceGroup] = FormChoiceGroup.load(__d_choice_group) if __d_choice_group else None
+        checklist: Optional[FormChecklist] = FormChecklist.load(__d_checklist) if __d_checklist else None
+        dropdown: Optional[FormDropdown] = FormDropdown.load(__d_dropdown) if __d_dropdown else None
+        combobox: Optional[FormCombobox] = FormCombobox.load(__d_combobox) if __d_combobox else None
+        slider: Optional[FormSlider] = FormSlider.load(__d_slider) if __d_slider else None
+        spinbox: Optional[FormSpinbox] = FormSpinbox.load(__d_spinbox) if __d_spinbox else None
+        date_picker: Optional[FormDatePicker] = FormDatePicker.load(__d_date_picker) if __d_date_picker else None
+        color_picker: Optional[FormColorPicker] = FormColorPicker.load(__d_color_picker) if __d_color_picker else None
+        buttons: Optional[FormButtons] = FormButtons.load(__d_buttons) if __d_buttons else None
+        file_upload: Optional[FormFileUpload] = FormFileUpload.load(__d_file_upload) if __d_file_upload else None
+        table: Optional[FormTable] = FormTable.load(__d_table) if __d_table else None
+        link: Optional[FormLink] = FormLink.load(__d_link) if __d_link else None
+        tabs: Optional[FormTabs] = FormTabs.load(__d_tabs) if __d_tabs else None
+        button: Optional[FormButton] = FormButton.load(__d_button) if __d_button else None
+        expander: Optional[FormExpander] = FormExpander.load(__d_expander) if __d_expander else None
+        section: Optional[NotebookSection] = NotebookSection.load(__d_section) if __d_section else None
         return FormComponent(
             text,
             label,
@@ -3544,13 +3544,11 @@ class Form:
             self,
             box: str,
             url: str,
-            method: str,
             args: dict,
             items: Repeated[FormComponent],
     ):
         self.box = box
         self.url = url
-        self.method = method
         self.args = args
         self.items = items
 
@@ -3559,8 +3557,6 @@ class Form:
             raise ValueError('Form.box is required.')
         if self.url is None:
             raise ValueError('Form.url is required.')
-        if self.method is None:
-            raise ValueError('Form.method is required.')
         if self.args is None:
             raise ValueError('Form.args is required.')
         if self.items is None:
@@ -3569,7 +3565,6 @@ class Form:
             view='form',
             box=self.box,
             url=self.url,
-            method=self.method,
             args=self.args,
             items=[__e.dump() for __e in self.items],
         )
@@ -3582,9 +3577,6 @@ class Form:
         __d_url: Any = __d.get('url')
         if __d_url is None:
             raise ValueError('Form.url is required.')
-        __d_method: Any = __d.get('method')
-        if __d_method is None:
-            raise ValueError('Form.method is required.')
         __d_args: Any = __d.get('args')
         if __d_args is None:
             raise ValueError('Form.args is required.')
@@ -3593,13 +3585,11 @@ class Form:
             raise ValueError('Form.items is required.')
         box: str = __d_box
         url: str = __d_url
-        method: str = __d_method
         args: dict = __d_args
         items: Repeated[FormComponent] = [FormComponent.load(__e) for __e in __d_items]
         return Form(
             box,
             url,
-            method,
             args,
             items,
         )

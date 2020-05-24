@@ -276,9 +276,17 @@ const
         for (const m of type.members) { // pack
           if (getKnownTypeOf(m)) {
             if (m.t === MemberT.Repeated) {
-              p(`            ${m.name}=[__e.dump() for __e in self.${m.name}],`)
+              if (m.optional) {
+                p(`            ${m.name}=None if self.${m.name} is None else [__e.dump() for __e in self.${m.name}],`)
+              } else {
+                p(`            ${m.name}=[__e.dump() for __e in self.${m.name}],`)
+              }
             } else {
-              p(`            ${m.name}=self.${m.name}.dump(),`)
+              if (m.optional) {
+                p(`            ${m.name}=None if self.${m.name} is None else self.${m.name}.dump(),`)
+              } else {
+                p(`            ${m.name}=self.${m.name}.dump(),`)
+              }
             }
           } else {
             p(`            ${m.name}=self.${m.name},`)
@@ -299,9 +307,17 @@ const
           const memberType = getKnownTypeOf(m)
           if (memberType) {
             if (m.t === MemberT.Repeated) {
-              p(`        ${genSig(m)} = [${memberType.name}.load(__e) for __e in __d_${m.name}]`)
+              if (m.optional) {
+                p(`        ${genSig(m)} = [${memberType.name}.load(__e) for __e in __d_${m.name}] if __d_${m.name} else None`)
+              } else {
+                p(`        ${genSig(m)} = [${memberType.name}.load(__e) for __e in __d_${m.name}]`)
+              }
             } else {
-              p(`        ${genSig(m)} = ${memberType.name}.load(__d_${m.name})`)
+              if (m.optional) {
+                p(`        ${genSig(m)} = ${memberType.name}.load(__d_${m.name}) if __d_${m.name} else None`)
+              } else {
+                p(`        ${genSig(m)} = ${memberType.name}.load(__d_${m.name})`)
+              }
             }
           } else {
             p(`        ${genSig(m)} = __d_${m.name}`)
