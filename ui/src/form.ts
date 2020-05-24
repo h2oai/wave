@@ -1,4 +1,4 @@
-import { B, F, Rec, S } from "../telesync";
+import { B, F, Rec, S } from "./telesync";
 import { Section } from './notebook';
 
 export interface Text {

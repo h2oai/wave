@@ -1,8 +1,8 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { cards } from '../grid';
-import { bond, Card, decode, Rec, S, socket, U } from '../telesync';
-import { getTheme } from '../theme';
+import { cards } from './grid';
+import { bond, Card, decode, Rec, S, socket, U } from './telesync';
+import { getTheme } from './theme';
 
 const
   pixelSize = 20,

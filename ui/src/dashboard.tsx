@@ -1,16 +1,27 @@
 import React from 'react';
-import { cards } from '../grid';
-import { bond, Card, S } from '../telesync';
+import { cards } from './grid';
+import { bond, Card, S } from './telesync';
 import { Cell, Command } from './shared';
 
-export interface Section {
+interface Panel {
   cells: Cell[]
+  size: S
   commands: Command[]
   data: S
 }
 
+interface Row {
+  panels: Panel[]
+  size: S
+}
+
+interface Page {
+  title: S
+  rows: Row[]
+}
+
 interface State {
-  sections: Section[]
+  pages: Page[]
 }
 
 const
@@ -19,4 +30,4 @@ const
     return { render, changed }
   })
 
-cards.register('notebook', View)
+cards.register('dashboard', View)

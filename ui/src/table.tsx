@@ -1,8 +1,8 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { B, Card, decode, Rec, S, TupleSet, xid, box, bond } from '../telesync';
-import { cards, CardView, Format } from '../grid';
-import { getTheme } from '../theme';
+import { B, Card, decode, Rec, S, TupleSet, xid, box, bond } from './telesync';
+import { cards, CardView, Format } from './grid';
+import { getTheme } from './theme';
 
 const
   theme = getTheme(),

@@ -1,55 +1,41 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { cards, Format, grid } from '../grid';
-import { bond, Card, decode, F, Rec, S, TupleSet } from '../telesync';
-import { getTheme } from '../theme';
+import { cards, Format, grid } from './grid';
+import { bond, Card, decode, F, Rec, S, TupleSet } from './telesync';
+import { getTheme } from './theme';
 import { MicroBars } from './parts/microbars';
 import { MicroArea } from './parts/microline';
 
 const
   theme = getTheme(),
-  plotWidth = grid.unitWidth - grid.gap,
-  plotHeight = grid.unitInnerHeight,
+  plotHeight = grid.unitInnerHeight - 10,
   css = stylesheet({
     card: {
       display: 'flex',
-    },
-    left: {
-      width: plotWidth,
-      height: grid.unitInnerHeight,
-      marginRight: grid.gap,
-    },
-    right: {
-      flexGrow: 1,
-      display: 'flex',
       flexDirection: 'column',
-      // justifyContent: 'space-between',
+    },
+    titleBar: {
+      display: 'flex',
+      justifyContent: 'space-between',
     },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
-    values: {
-      display: 'flex',
-      alignItems: 'baseline',
-    },
     value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
+      ...theme.font.s12,
     },
-    aux_value: {
-      flexGrow: 1,
-      ...theme.font.s13,
-      color: theme.colors.text7,
-      marginLeft: 5,
-      marginBottom: 3,
-    }
+    plot: {
+      position: 'absolute',
+      left: -grid.gap,
+      bottom: -grid.gap,
+      height: plotHeight,
+    },
   })
 
 interface State {
   title: S
   value: S
-  aux_value: S
   data: Rec
   plot_type: 'area' | 'interval'
   plot_data: TupleSet
@@ -61,6 +47,7 @@ interface State {
 }
 
 
+
 const defaults: Partial<State> = {
   title: 'Untitled',
   plot_type: 'area',
@@ -69,11 +56,12 @@ const defaults: Partial<State> = {
 }
 
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state, changed, size }: Card<State>) => {
     const
       render = () => {
         const
           s = theme.merge(defaults, state),
+          plotWidth = size ? size.width : grid.unitWidth,
           data = decode(s.data),
           plot = s.plot_type === 'area'
             ? (
@@ -97,26 +85,20 @@ const
                 zeroValue={s.plot_zero_value}
               />
             )
-
         return (
           <div className={css.card}>
-            <div className={css.left}>{plot}</div>
-            <div className={css.right}>
+            <div className={css.titleBar}>
               <div className={css.title}>
                 <Format data={data} format={s.title} />
               </div>
-              <div className={css.values}>
-                <div className={css.value}>
-                  <Format data={data} format={s.value} />
-                </div>
-                <div className={css.aux_value}>
-                  <Format data={data} format={s.aux_value} />
-                </div>
+              <div className={css.value}>
+                <Format data={data} format={s.value} />
               </div>
             </div>
+            <div className={css.plot}>{plot}</div>
           </div>)
       }
     return { render, changed }
   })
 
-cards.register('card2', View)
+cards.register('card7', View)

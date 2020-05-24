@@ -1,7 +1,7 @@
 // Types in this files ("shared.ts") are special-cased in telegen 
 // and are not prefixed with the filename when exported.
 
-import { S, U } from "../telesync";
+import { S, U } from "./telesync";
 
 // TODO These are for backward compatibility, and need to be dealt with.
 

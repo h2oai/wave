@@ -2,9 +2,9 @@
 import Handlebars from 'handlebars';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { bond, Card, decode, Rec, S } from '../telesync';
-import { cards, Format } from '../grid';
-import { getTheme } from '../theme';
+import { bond, Card, decode, Rec, S } from './telesync';
+import { cards, Format } from './grid';
+import { getTheme } from './theme';
 
 const
   theme = getTheme(),

@@ -1,6 +1,6 @@
 import React from 'react';
-import { bond, Card } from '../telesync';
-import { cards } from '../grid';
+import { bond, Card } from './telesync';
+import { cards } from './grid';
 
 const
   View = bond(({ state, changed }: Card<{}>) => {

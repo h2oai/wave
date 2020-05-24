@@ -75,6 +75,11 @@ class CodeGenError extends Error {
 
 const
   reservedWords = ['view', 'box'],
+  toLookup = (xs: string[]): Dict<boolean> => {
+    const d: Dict<boolean> = {}
+    for (const x of xs) d[x] = true
+    return d
+  },
   collectTypes = (component: string, file: File, sourceFile: ts.SourceFile) => {
     ts.forEachChild(sourceFile, (node) => {
       switch (node.kind) {
@@ -163,8 +168,11 @@ const
     protocol.files.push(file)
   },
   processDir = (protocol: Protocol, dirpath: string) => {
-    const filenames = fs.readdirSync(dirpath)
+    const
+      ignored = toLookup(fs.readFileSync(path.join(dirpath, '.telegen'), 'utf8').split('\n').map(x => x.trim())),
+      filenames = fs.readdirSync(dirpath)
     for (const filename of filenames) {
+      if (ignored[filename]) continue
       const filepath = path.join(dirpath, filename)
       if (fs.statSync(filepath).isFile()) processFile(protocol, filepath)
     }

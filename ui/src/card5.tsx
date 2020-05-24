@@ -1,8 +1,8 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { cards, Format, grid } from '../grid';
-import { bond, Card, decode, F, Rec, S } from '../telesync';
-import { getTheme } from '../theme';
+import { cards, Format, grid } from './grid';
+import { bond, Card, decode, F, Rec, S } from './telesync';
+import { getTheme } from './theme';
 import { ProgressArc } from './parts/progress_arc';
 
 const
