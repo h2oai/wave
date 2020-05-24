@@ -1,7 +1,6 @@
 import React from 'react';
-import bond from '../bond';
-import { Card, S } from '../delta';
 import { cards } from '../grid';
+import { bond, Card, S } from '../telesync';
 import { Cell, Command } from './shared';
 
 interface Panel {

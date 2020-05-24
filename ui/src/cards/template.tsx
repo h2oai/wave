@@ -2,8 +2,7 @@
 import Handlebars from 'handlebars';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import bond from '../bond';
-import { Card, decode, Rec, S } from '../delta';
+import { bond, Card, decode, Rec, S } from '../telesync';
 import { cards, Format } from '../grid';
 import { getTheme } from '../theme';
 

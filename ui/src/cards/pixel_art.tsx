@@ -1,8 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import bond from '../bond';
-import { Card, decode, Rec, S, socket, U } from '../delta';
 import { cards } from '../grid';
+import { bond, Card, decode, Rec, S, socket, U } from '../telesync';
 import { getTheme } from '../theme';
 
 const

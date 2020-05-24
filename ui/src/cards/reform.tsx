@@ -1,8 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import bond from '../bond';
-import { Card, decode, Rec, socket, xid } from '../delta';
 import { cards } from '../grid';
+import { bond, Card, decode, Rec, socket, xid } from '../telesync';
 import { getTheme } from '../theme';
 import * as Form from './form';
 

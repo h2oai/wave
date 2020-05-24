@@ -1,8 +1,8 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { connect, F, Page, S, SockEvent, SockEventType, SockMessageType } from './delta';
 import { grid } from './grid';
 import { PageView } from './page';
+import { connect, F, Page, S, SockEvent, SockEventType, SockMessageType } from './telesync';
 import { getTheme } from './theme';
 
 const

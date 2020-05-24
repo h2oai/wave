@@ -1,7 +1,6 @@
 import React from 'react';
-import bond from '../bond';
-import { Card, Dict, Rec, S, TupleSet } from '../delta';
 import { cards, Repeat } from '../grid';
+import { bond, Card, Dict, Rec, S, TupleSet } from '../telesync';
 
 interface State {
   title: S

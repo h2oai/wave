@@ -1,6 +1,6 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { F, S, U } from '../../delta';
+import { F, S, U } from '../../telesync';
 
 const css = stylesheet({
   body: {

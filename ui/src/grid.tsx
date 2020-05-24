@@ -1,6 +1,5 @@
 import React from 'react';
-import { box } from './dataflow';
-import { B, Card, decode, Dict, F, parseI, Rec, Rect, S, U, xid } from './delta';
+import { box, B, Card, decode, Dict, F, parseI, Rec, Rect, S, U, xid } from './telesync';
 import { format, isFormatExpr } from './intl';
 
 export const

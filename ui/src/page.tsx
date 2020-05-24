@@ -1,8 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import bond from './bond';
-import { Page } from './delta';
 import { CardView, grid } from './grid';
+import { bond, Page } from './telesync';
 import { getTheme } from './theme';
 
 // interface PageViewProps { page: Page }

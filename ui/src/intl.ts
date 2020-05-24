@@ -1,6 +1,6 @@
 import Handlebars from 'handlebars';
 import { createIntl, createIntlCache } from 'react-intl';
-import { B, S } from './delta';
+import { B, S } from './telesync';
 
 Handlebars.registerHelper('intl', (v: any, { hash: opts }: any) => {
   opts = kvToOpts(opts)

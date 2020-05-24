@@ -1,5 +1,5 @@
-import { S, B, F, Rec } from "../delta";
-import { Section } from './notebook'
+import { B, F, Rec, S } from "../telesync";
+import { Section } from './notebook';
 
 export interface Text {
   size: S

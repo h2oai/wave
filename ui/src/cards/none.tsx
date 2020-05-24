@@ -1,6 +1,5 @@
 import React from 'react';
-import bond from '../bond';
-import { Card } from '../delta';
+import { bond, Card } from '../telesync';
 import { cards } from '../grid';
 
 const

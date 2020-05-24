@@ -1,8 +1,6 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import bond from '../bond';
-import { box } from '../dataflow';
-import { B, Card, decode, Rec, S, TupleSet, xid } from '../delta';
+import { B, Card, decode, Rec, S, TupleSet, xid, box, bond } from '../telesync';
 import { cards, CardView, Format } from '../grid';
 import { getTheme } from '../theme';
 

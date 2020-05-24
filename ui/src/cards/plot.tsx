@@ -2,10 +2,9 @@ import { Chart, registerInteraction } from '@antv/g2';
 import { AdjustOption, AnnotationPosition, ArcOption, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import bond from '../bond';
-import { B, Card, decode, Dict, F, Rec, S, V, parseU, parseI } from '../delta';
 import { cards } from '../grid';
 import { Fmt, parseFormat } from '../intl';
+import { B, bond, Card, decode, Dict, F, parseI, parseU, Rec, S, V } from '../telesync';
 import { getTheme } from '../theme';
 
 const

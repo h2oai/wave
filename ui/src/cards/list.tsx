@@ -1,8 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import bond from '../bond';
-import { Card, Rec, S, TupleSet } from '../delta';
 import { cards, Repeat } from '../grid';
+import { bond, Card, Rec, S, TupleSet } from '../telesync';
 import { getTheme } from '../theme';
 
 const
