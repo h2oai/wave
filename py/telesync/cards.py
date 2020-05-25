@@ -1176,11 +1176,11 @@ class Cell:
         __d_frame: Any = __d.get('frame')
         __d_data: Any = __d.get('data')
         __d_vega: Any = __d.get('vega')
-        heading: Optional[HeadingCell] = HeadingCell.load(__d_heading) if __d_heading else None
-        markdown: Optional[MarkdownCell] = MarkdownCell.load(__d_markdown) if __d_markdown else None
-        frame: Optional[FrameCell] = FrameCell.load(__d_frame) if __d_frame else None
-        data: Optional[DataCell] = DataCell.load(__d_data) if __d_data else None
-        vega: Optional[VegaCell] = VegaCell.load(__d_vega) if __d_vega else None
+        heading: Optional[HeadingCell] = None if __d_heading is None else HeadingCell.load(__d_heading)
+        markdown: Optional[MarkdownCell] = None if __d_markdown is None else MarkdownCell.load(__d_markdown)
+        frame: Optional[FrameCell] = None if __d_frame is None else FrameCell.load(__d_frame)
+        data: Optional[DataCell] = None if __d_data is None else DataCell.load(__d_data)
+        vega: Optional[VegaCell] = None if __d_vega is None else VegaCell.load(__d_vega)
         return Cell(
             heading,
             markdown,
@@ -3487,30 +3487,30 @@ class FormComponent:
         __d_button: Any = __d.get('button')
         __d_expander: Any = __d.get('expander')
         __d_section: Any = __d.get('section')
-        text: Optional[FormText] = FormText.load(__d_text) if __d_text else None
-        label: Optional[FormLabel] = FormLabel.load(__d_label) if __d_label else None
-        separator: Optional[FormSeparator] = FormSeparator.load(__d_separator) if __d_separator else None
-        progress: Optional[FormProgress] = FormProgress.load(__d_progress) if __d_progress else None
-        message_bar: Optional[FormMessageBar] = FormMessageBar.load(__d_message_bar) if __d_message_bar else None
-        textbox: Optional[FormTextbox] = FormTextbox.load(__d_textbox) if __d_textbox else None
-        checkbox: Optional[FormCheckbox] = FormCheckbox.load(__d_checkbox) if __d_checkbox else None
-        toggle: Optional[FormToggle] = FormToggle.load(__d_toggle) if __d_toggle else None
-        choice_group: Optional[FormChoiceGroup] = FormChoiceGroup.load(__d_choice_group) if __d_choice_group else None
-        checklist: Optional[FormChecklist] = FormChecklist.load(__d_checklist) if __d_checklist else None
-        dropdown: Optional[FormDropdown] = FormDropdown.load(__d_dropdown) if __d_dropdown else None
-        combobox: Optional[FormCombobox] = FormCombobox.load(__d_combobox) if __d_combobox else None
-        slider: Optional[FormSlider] = FormSlider.load(__d_slider) if __d_slider else None
-        spinbox: Optional[FormSpinbox] = FormSpinbox.load(__d_spinbox) if __d_spinbox else None
-        date_picker: Optional[FormDatePicker] = FormDatePicker.load(__d_date_picker) if __d_date_picker else None
-        color_picker: Optional[FormColorPicker] = FormColorPicker.load(__d_color_picker) if __d_color_picker else None
-        buttons: Optional[FormButtons] = FormButtons.load(__d_buttons) if __d_buttons else None
-        file_upload: Optional[FormFileUpload] = FormFileUpload.load(__d_file_upload) if __d_file_upload else None
-        table: Optional[FormTable] = FormTable.load(__d_table) if __d_table else None
-        link: Optional[FormLink] = FormLink.load(__d_link) if __d_link else None
-        tabs: Optional[FormTabs] = FormTabs.load(__d_tabs) if __d_tabs else None
-        button: Optional[FormButton] = FormButton.load(__d_button) if __d_button else None
-        expander: Optional[FormExpander] = FormExpander.load(__d_expander) if __d_expander else None
-        section: Optional[NotebookSection] = NotebookSection.load(__d_section) if __d_section else None
+        text: Optional[FormText] = None if __d_text is None else FormText.load(__d_text)
+        label: Optional[FormLabel] = None if __d_label is None else FormLabel.load(__d_label)
+        separator: Optional[FormSeparator] = None if __d_separator is None else FormSeparator.load(__d_separator)
+        progress: Optional[FormProgress] = None if __d_progress is None else FormProgress.load(__d_progress)
+        message_bar: Optional[FormMessageBar] = None if __d_message_bar is None else FormMessageBar.load(__d_message_bar)
+        textbox: Optional[FormTextbox] = None if __d_textbox is None else FormTextbox.load(__d_textbox)
+        checkbox: Optional[FormCheckbox] = None if __d_checkbox is None else FormCheckbox.load(__d_checkbox)
+        toggle: Optional[FormToggle] = None if __d_toggle is None else FormToggle.load(__d_toggle)
+        choice_group: Optional[FormChoiceGroup] = None if __d_choice_group is None else FormChoiceGroup.load(__d_choice_group)
+        checklist: Optional[FormChecklist] = None if __d_checklist is None else FormChecklist.load(__d_checklist)
+        dropdown: Optional[FormDropdown] = None if __d_dropdown is None else FormDropdown.load(__d_dropdown)
+        combobox: Optional[FormCombobox] = None if __d_combobox is None else FormCombobox.load(__d_combobox)
+        slider: Optional[FormSlider] = None if __d_slider is None else FormSlider.load(__d_slider)
+        spinbox: Optional[FormSpinbox] = None if __d_spinbox is None else FormSpinbox.load(__d_spinbox)
+        date_picker: Optional[FormDatePicker] = None if __d_date_picker is None else FormDatePicker.load(__d_date_picker)
+        color_picker: Optional[FormColorPicker] = None if __d_color_picker is None else FormColorPicker.load(__d_color_picker)
+        buttons: Optional[FormButtons] = None if __d_buttons is None else FormButtons.load(__d_buttons)
+        file_upload: Optional[FormFileUpload] = None if __d_file_upload is None else FormFileUpload.load(__d_file_upload)
+        table: Optional[FormTable] = None if __d_table is None else FormTable.load(__d_table)
+        link: Optional[FormLink] = None if __d_link is None else FormLink.load(__d_link)
+        tabs: Optional[FormTabs] = None if __d_tabs is None else FormTabs.load(__d_tabs)
+        button: Optional[FormButton] = None if __d_button is None else FormButton.load(__d_button)
+        expander: Optional[FormExpander] = None if __d_expander is None else FormExpander.load(__d_expander)
+        section: Optional[NotebookSection] = None if __d_section is None else NotebookSection.load(__d_section)
         return FormComponent(
             text,
             label,
@@ -3586,7 +3586,7 @@ class Form:
         box: str = __d_box
         url: str = __d_url
         args: dict = __d_args
-        items: Union[Repeated[FormComponent], str] = [FormComponent.load(__e) for __e in __d_items]
+        items: Union[Repeated[FormComponent], str] = __d_items if isinstance(__d_items, str) else [FormComponent.load(__e) for __e in __d_items]
         return Form(
             box,
             url,

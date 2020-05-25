@@ -338,18 +338,14 @@ const
         for (const m of type.members) {
           const memberType = getKnownTypeOf(m)
           if (memberType) {
-            if (m.t === MemberT.Repeated) {
-              if (m.optional) {
-                p(`        ${genSig(m)} = [${memberType.name}.load(__e) for __e in __d_${m.name}] if __d_${m.name} else None`)
-              } else {
-                p(`        ${genSig(m)} = [${memberType.name}.load(__e) for __e in __d_${m.name}]`)
-              }
-            } else {
-              if (m.optional) {
-                p(`        ${genSig(m)} = ${memberType.name}.load(__d_${m.name}) if __d_${m.name} else None`)
-              } else {
-                p(`        ${genSig(m)} = ${memberType.name}.load(__d_${m.name})`)
-              }
+            if (m.t === MemberT.Repeated || m.t === MemberT.Singular) {
+              let code = m.t === MemberT.Repeated
+                ? `[${memberType.name}.load(__e) for __e in __d_${m.name}]`
+                : `${memberType.name}.load(__d_${m.name})`
+              if (m.optional) code = `None if __d_${m.name} is None else ` + code
+              // TODO this should call unpack(__d_foo) if str
+              if (m.packed) code = `__d_${m.name} if isinstance(__d_${m.name}, str) else ` + code
+              p(`        ${genSig(m)} = ${code}`)
             }
           } else {
             p(`        ${genSig(m)} = __d_${m.name}`)
