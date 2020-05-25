@@ -178,6 +178,7 @@ export interface Rect extends Size { left: U, top: U }
 export interface Dict<T> { [key: string]: T } // generic object
 
 export type Rec = Dict<Prim> // Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type.
+export type Packed<T> = T | S
 
 export interface TupleSet {
   list(): (Rec | null)[]

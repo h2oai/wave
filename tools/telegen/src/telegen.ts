@@ -2,14 +2,13 @@
 // Telegen
 // =======
 //
-// This tool scans the /cards directory for interface definitions and generates
-// the corresponding definitions in the target language.
+// This tool scans the Typescript src directory for interface definitions and 
+// generates the corresponding definitions in the target language.
 //
-// The translation is done is two passes.
-//
-// In the first pass, the tools scans and collects all interface definitions.
-// In the second pass, all interfaces named "State" and their corresponding
-// dependencies exported to the target language.
+// The translation is done is two passes:
+// - In the first pass, the tools scans and collects all interface definitions.
+// - In the second pass, all interfaces named "State" and their corresponding
+//   dependencies exported to the target language.
 //
 // By convention, the interface named "State" is assigned the name of the card,
 // and all the dependency interfaces are prefixed with the name of the card.
@@ -30,6 +29,7 @@ import ts from 'typescript'
 import * as util from 'util'
 
 export interface Dict<T> { [key: string]: T } // generic object
+const packedT = 'Packed' // name of marker parametric type to indicate if an attributed could be packed.
 
 enum MemberT { Enum, Singular, Repeated }
 interface MemberBase {
@@ -44,10 +44,12 @@ interface EnumMember extends MemberBase {
 interface SingularMember extends MemberBase {
   readonly t: MemberT.Singular
   typeName: string
+  readonly packed: boolean
 }
 interface RepeatedMember extends MemberBase {
   readonly t: MemberT.Repeated
   typeName: string
+  readonly packed: boolean
 }
 type Member = EnumMember | SingularMember | RepeatedMember
 interface Type {
@@ -80,6 +82,93 @@ const
     for (const x of xs) d[x] = true
     return d
   },
+  collectSingularType = (type: ts.TypeNode): string | null => {
+    if (type.kind === ts.SyntaxKind.TypeReference) {
+      const t = type as ts.TypeReferenceNode
+      return t.typeName.getText()
+    }
+    return null
+  },
+  collectPackedType = (type: ts.TypeNode): ts.TypeNode | null => {
+    if (type.kind === ts.SyntaxKind.TypeReference) {
+      const t = type as ts.TypeReferenceNode
+      if (t.typeArguments && t.typeName.getText() === packedT) {
+        return t.typeArguments[0]
+      }
+    }
+    return null
+  },
+  collectRepeatedType = (type: ts.TypeNode): string | null => {
+    if (type.kind === ts.SyntaxKind.ArrayType) {
+      const
+        t = type as ts.ArrayTypeNode,
+        et = collectSingularType(t.elementType)
+      if (et) return et
+    }
+    return null
+  },
+  collectEnumType = (type: ts.TypeNode): string[] | null => {
+    if (type.kind === ts.SyntaxKind.UnionType) {
+      const
+        t = type as ts.UnionTypeNode,
+        values = t.types.map((t): string => {
+          switch (t.kind) {
+            case ts.SyntaxKind.LiteralType:
+              {
+                const l = t as ts.LiteralTypeNode
+                if (l.literal.kind === ts.SyntaxKind.StringLiteral) {
+                  return (l.literal as ts.StringLiteral).text
+                }
+              }
+          }
+          throw new CodeGenError(`unsupported union type: ${t.getText()}`)
+        })
+      return values
+    }
+    return null
+  },
+  collectMember = (component: string, typename: string, member: ts.TypeElement): Member => {
+    if (member.kind === ts.SyntaxKind.PropertySignature) {
+      const
+        m = member as ts.PropertySignature,
+        optional = m.questionToken ? true : false,
+        memberName = m.name.getText(),
+        memberType = m.type,
+        comment = (m as any).jsDoc?.map((c: any) => c?.comment).join('\n') || '' // FIXME Undocumented API
+
+      for (const w of reservedWords) if (memberName === w) throw new CodeGenError(`${component}.${typename}.${memberName}: "${w}" is a reserved name`)
+
+      if (!memberType) throw new CodeGenError(`want type declared on ${component}.${typename}.${memberName}: ${m.getText()}`)
+
+      let tt: string | null = null
+      const pt = collectPackedType(memberType)
+      if (pt) {
+        tt = collectRepeatedType(pt)
+        if (tt) {
+          return { t: MemberT.Repeated, name: memberName, typeName: tt, optional, comment, packed: true }
+        }
+        tt = collectSingularType(pt)
+        if (tt) {
+          return { t: MemberT.Singular, name: memberName, typeName: tt, optional, comment, packed: true }
+        }
+      }
+
+
+      tt = collectRepeatedType(memberType)
+      if (tt) {
+        return { t: MemberT.Repeated, name: memberName, typeName: tt, optional, comment, packed: false }
+      }
+      tt = collectSingularType(memberType)
+      if (tt) {
+        return { t: MemberT.Singular, name: memberName, typeName: tt, optional, comment, packed: false }
+      }
+      const values = collectEnumType(memberType)
+      if (values) {
+        return { t: MemberT.Enum, name: memberName, values, optional, comment }
+      }
+    }
+    throw new CodeGenError(`unsupported member kind on ${component}.${typename}`)
+  },
   collectTypes = (component: string, file: File, sourceFile: ts.SourceFile) => {
     ts.forEachChild(sourceFile, (node) => {
       switch (node.kind) {
@@ -88,67 +177,9 @@ const
             n = node as ts.InterfaceDeclaration,
             typename = n.name.getText(),
             card = typename === 'State' ? file.name : null,
-            members = n.members.map((member): Member => {
-              switch (member.kind) {
-                case ts.SyntaxKind.PropertySignature:
-                  const
-                    m = member as ts.PropertySignature,
-                    optional = m.questionToken ? true : false,
-                    memberName = m.name.getText(),
-                    memberType = m.type,
-                    comment = (m as any).jsDoc?.map((c: any) => c?.comment).join('\n') || '' // FIXME Undocumented API
-
-                  for (const w of reservedWords) if (memberName === w) throw new CodeGenError(`${component}.${typename}.${memberName}: "${w}" is a reserved name`)
-
-                  if (!memberType) throw new CodeGenError(`want type declared on ${component}.${typename}.${memberName}: ${m.getText()}`)
-
-                  switch (memberType.kind) {
-                    case ts.SyntaxKind.ArrayType:
-                      {
-                        const
-                          t = memberType as ts.ArrayTypeNode,
-                          elementType = t.elementType
-                        switch (elementType.kind) {
-                          case ts.SyntaxKind.TypeReference:
-                            {
-                              const t = elementType as ts.TypeReferenceNode
-                              return { t: MemberT.Repeated, name: memberName, typeName: t.getText(), optional, comment }
-                            }
-                          default:
-                            throw new CodeGenError(`unsupported element type on ${component}.${typename}.${memberName}: ${m.getText()}`)
-                        }
-                      }
-                    case ts.SyntaxKind.TypeReference:
-                      {
-                        const t = memberType as ts.TypeReferenceNode
-                        return { t: MemberT.Singular, name: memberName, typeName: t.getText(), optional, comment }
-                      }
-                    case ts.SyntaxKind.UnionType:
-                      {
-                        const
-                          t = memberType as ts.UnionTypeNode,
-                          values = t.types.map((t): string => {
-                            switch (t.kind) {
-                              case ts.SyntaxKind.LiteralType:
-                                {
-                                  const l = t as ts.LiteralTypeNode
-                                  if (l.literal.kind === ts.SyntaxKind.StringLiteral) {
-                                    return (l.literal as ts.StringLiteral).text
-                                  }
-                                }
-                            }
-                            throw new CodeGenError(`unsupported union type on ${component}.${typename}.${memberName}: ${m.getText()}`)
-                          })
-                        return { t: MemberT.Enum, name: memberName, values, optional, comment }
-                      }
-                    default:
-                      throw new CodeGenError(`unsupported type on ${component}.${typename}.${memberName}: ${m.getText()}`)
-                  }
-              }
-              throw new CodeGenError(`unsupported member kind on ${component}.${typename}`)
-            })
+            members = n.members.map(m => collectMember(component, typename, m))
           // All cards must have a box defined.
-          if (card) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', optional: false, comment: '' })
+          if (card) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', optional: false, comment: '', packed: false })
           file.types.push({ name: typename, members, card })
       }
     })

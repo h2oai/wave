@@ -1,4 +1,4 @@
-import { B, F, Rec, S } from "./telesync";
+import { B, F, Rec, S, Packed } from "./telesync";
 import { Section } from './notebook';
 
 export interface Text {
@@ -252,5 +252,5 @@ export interface Component {
 export interface State {
   url: S
   args: Rec
-  items: Component[]
+  items: Packed<Component[]>
 }
