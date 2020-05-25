@@ -329,26 +329,28 @@ const
         p(`    @staticmethod`)
         p(`    def load(__d: Dict) -> '${type.name}':`)
         for (const m of type.members) {
-          p(`        __d_${m.name}: Any = __d.get('${m.name}')`)
+          const rval = `__d_${m.name}`
+          p(`        ${rval}: Any = __d.get('${m.name}')`)
           if (!m.optional) {
-            p(`        if __d_${m.name} is None:`)
+            p(`        if ${rval} is None:`)
             p(`            raise ValueError('${type.name}.${m.name} is required.')`)
           }
         }
         for (const m of type.members) {
+          const rval = `__d_${m.name}`
           const memberType = getKnownTypeOf(m)
           if (memberType) {
             if (m.t === MemberT.Repeated || m.t === MemberT.Singular) {
               let code = m.t === MemberT.Repeated
-                ? `[${memberType.name}.load(__e) for __e in __d_${m.name}]`
-                : `${memberType.name}.load(__d_${m.name})`
-              if (m.optional) code = `None if __d_${m.name} is None else ` + code
+                ? `[${memberType.name}.load(__e) for __e in ${rval}]`
+                : `${memberType.name}.load(${rval})`
+              if (m.optional) code = `None if ${rval} is None else ` + code
               // TODO this should call unpack(__d_foo) if str
-              if (m.packed) code = `__d_${m.name} if isinstance(__d_${m.name}, str) else ` + code
+              if (m.packed) code = `${rval} if isinstance(${rval}, str) else ` + code
               p(`        ${genSig(m)} = ${code}`)
             }
           } else {
-            p(`        ${genSig(m)} = __d_${m.name}`)
+            p(`        ${genSig(m)} = ${rval}`)
           }
         }
         p(`        return ${type.name}(`)
