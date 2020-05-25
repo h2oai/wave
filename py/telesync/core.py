@@ -112,6 +112,25 @@ def _set_op(o, k, v):
     return op
 
 
+def _can_dump(x: Any):
+    return hasattr(x, 'dump') and callable(x.dump)
+
+
+def _dump(xs: Any):
+    if isinstance(xs, (list, tuple)):
+        return [_dump(x) for x in xs]
+    elif isinstance(xs, dict):
+        return {k: _dump(v) for k, v in xs.items()}
+    elif _can_dump(xs):
+        d = dict()
+        for k, v in xs.dump().items():
+            if v is not None:
+                d[k] = v
+        return d
+    else:
+        return xs
+
+
 class Ref:
     def __init__(self, page: 'Page', key: str):
         self.__dict__[PAGE] = page
@@ -121,36 +140,15 @@ class Ref:
         guard_key(key)
         return Ref(getattr(self, PAGE), getattr(self, KEY) + _key_sep + key)
 
-    def __setattr__(self, key, value):
-        getattr(self, PAGE)._track(_set_op(self, key, value))
-
     def __getitem__(self, key):
         guard_key(key)
         return Ref(getattr(self, PAGE), getattr(self, KEY) + _key_sep + str(key))
 
+    def __setattr__(self, key, value):
+        getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
+
     def __setitem__(self, key, value):
-        getattr(self, PAGE)._track(_set_op(self, key, value))
-
-
-def tupleset(fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
-    if _is_str(fields):
-        fields = fields.split()
-    elif not _is_list(fields):
-        raise ValueError('fields must be tuple or list')
-    if len(fields) == 0:
-        raise ValueError('fields is empty')
-    for field in fields:
-        if not _is_str(field):
-            raise ValueError('field must be str')
-
-    if data:
-        if not isinstance(data, (list, dict)):
-            raise ValueError('data must be list or dict')
-
-    if not _is_int(size):
-        raise ValueError('size must be int')
-
-    return TupleSet(fields, size, data)
+        getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
 
 
 class TupleSet:
@@ -181,6 +179,27 @@ class TupleSet:
                     return dict(f=dict(f=f, n=n))
 
 
+def tupleset(fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None) -> TupleSet:
+    if _is_str(fields):
+        fields = fields.split()
+    elif not _is_list(fields):
+        raise ValueError('fields must be tuple or list')
+    if len(fields) == 0:
+        raise ValueError('fields is empty')
+    for field in fields:
+        if not _is_str(field):
+            raise ValueError('field must be str')
+
+    if data:
+        if not isinstance(data, (list, dict)):
+            raise ValueError('data must be list or dict')
+
+    if not _is_int(size):
+        raise ValueError('size must be int')
+
+    return TupleSet(fields, size, data)
+
+
 class Page:
     def __init__(self, site: 'Site', url: str):
         self.site = site
@@ -188,24 +207,21 @@ class Page:
         self.url = url
         self._changes = []
 
-    def add(self, card: any) -> Ref:
-        props: Optional[dict] = None
-
-        if isinstance(card, dict):
-            props = card
-        elif hasattr(card, 'dump') and callable(card.dump):
-            props = card.dump()
-        if not isinstance(props, dict):
-            raise ValueError('card must be dict or implement .dump() -> dict')
-
-        key = props.get('key', None)
+    def add(self, key: str, card: any) -> Ref:
         if key is None:
             raise ValueError('card must have a key')
 
         if not _is_str(key):
             raise ValueError('key must be str')
 
-        del props['key']
+        props: Optional[dict] = None
+
+        if isinstance(card, dict):
+            props = card
+        elif _can_dump(card):
+            props = _dump(card)
+        if not isinstance(props, dict):
+            raise ValueError('card must be dict or implement .dump() -> dict')
 
         data = []
         bufs = []
@@ -258,6 +274,9 @@ class Page:
     async def poll(self) -> 'Q':
         await self.push()
         return await self.pull()
+
+    def __setitem__(self, key, card):
+        self.add(key, card)
 
     def __getitem__(self, key: str) -> Ref:
         if not _is_str(key):

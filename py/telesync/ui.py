@@ -336,7 +336,7 @@ def toggle(
     in an immediate action.
     Use a toggle for binary operations that take effect right after the user flips the Toggle.
     For example, use a Toggle to turn services or hardware components on or off.
-    In other words, if a physical switch would work for the action, a Toggle is probably the best control to use.
+    In other words, if a physical switch would work for the action, a Toggle is probably the best component to use.
 
     :param name: An identifying name for this component.
     :param label: Text to be displayed alongside the component.
@@ -410,7 +410,7 @@ def choice_group(
         choices = []
     if len(choices) < 1:
         raise ValueError('Choice Group must contain at least one choice.')
-    if value is '':
+    if value == '':
         value = choices[0].name
     return g.FormComponent(choice_group=g.FormChoiceGroup(
         name=name,
@@ -1058,7 +1058,7 @@ def tab(name: str, label: str = '', icon: str = '') -> g.FormTab:
 
 def expander(name: str, label: str = '', expanded: bool = False, *items: g.FormComponent) -> g.FormComponent:
     """
-    Creates a new expander.  Expanders can be used to show/hide a group of related controls.
+    Creates a new expander.  Expanders can be used to show/hide a group of related components.
 
     :param name: An identifying name for this component.
     :param label: The text displayed on the expander.
@@ -1073,11 +1073,10 @@ def expander(name: str, label: str = '', expanded: bool = False, *items: g.FormC
 #     return dict(button=dict(name=name, label=label))
 #
 
-def form(name: str, box: str, url: str, items: list) -> dict:
-    return dict(
-        key=name,
-        view='form',
+def form(box: str, url: str, items: List[g.FormComponent]) -> g.Form:
+    return g.Form(
         box=box,
         url=url,
+        args={},  # TODO needs special handling
         items=items,
     )
