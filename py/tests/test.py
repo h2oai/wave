@@ -78,63 +78,63 @@ sample_fields = ['a', 'b', 'c']
 
 @test
 def test_new_empty_card(page: Page):
-    page.add(dict(key='card1'))
+    page['card1'] = dict()
     page.sync()
     expect(page.load(), make_page(card1=make_card()))
 
 
 @test
 def test_new_card_with_props(page: Page):
-    page.add(dict(key='card1', s="foo", i=42, f=4.2, bt=True, bf=False, n=None))
+    page['card1'] = dict(s="foo", i=42, f=4.2, bt=True, bf=False, n=None)
     page.sync()
     expect(page.load(), make_page(card1=make_card(s="foo", i=42, f=4.2, bt=True, bf=False)))
 
 
 @test
 def test_new_card_with_map_buf(page: Page):
-    page.add(dict(key='card1', data=tupleset(fields=sample_fields)))
+    page['card1'] = dict(data=tupleset(fields=sample_fields))
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_map_buf(fields=sample_fields, data={}))))
 
 
 @test
 def test_new_card_with_fix_buf(page: Page):
-    page.add(dict(key='card1', data=tupleset(fields=sample_fields, size=3)))
+    page['card1'] = dict(data=tupleset(fields=sample_fields, size=3))
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_fix_buf(fields=sample_fields, data=[None] * 3))))
 
 
 @test
 def test_new_card_with_cyc_buf(page: Page):
-    page.add(dict(key='card1', data=tupleset(fields=sample_fields, size=-3)))
+    page['card1'] = dict(data=tupleset(fields=sample_fields, size=-3))
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[None] * 3, i=0))))
 
 
 @test
 def test_load_card_with_map_buf(page: Page):
-    page.add(dict(key='card1', data=tupleset(fields=sample_fields, data=dict(foo=[1, 2, 3]))))
+    page['card1'] = dict(data=tupleset(fields=sample_fields, data=dict(foo=[1, 2, 3])))
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_map_buf(fields=sample_fields, data=dict(foo=[1, 2, 3])))))
 
 
 @test
 def test_load_card_with_fix_buf(page: Page):
-    page.add(dict(key='card1', data=tupleset(fields=sample_fields, data=[[1, 2, 3]])))
+    page['card1'] = dict(data=tupleset(fields=sample_fields, data=[[1, 2, 3]]))
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_fix_buf(fields=sample_fields, data=[[1, 2, 3]]))))
 
 
 @test
 def test_load_card_with_cyc_buf(page: Page):
-    page.add(dict(key='card1', data=tupleset(fields=sample_fields, data=[[1, 2, 3]], size=-10)))
+    page['card1'] = dict(data=tupleset(fields=sample_fields, data=[[1, 2, 3]], size=-10))
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[[1, 2, 3]], i=0))))
 
 
 @test
 def test_prop_set(page: Page):
-    page.add(dict(key='card1'))
+    page['card1'] = dict()
     page.sync()
 
     c = page['card1']
@@ -155,7 +155,7 @@ def test_prop_set(page: Page):
 
 @test
 def test_map_prop_set(page: Page):
-    page.add(dict(key='card1', m=dict(s="foo")))
+    page['card1'] = dict(m=dict(s="foo"))
     page.sync()
 
     c = page['card1']
@@ -171,7 +171,7 @@ def test_map_prop_set(page: Page):
 
 @test
 def test_map_prop_set_deep(page: Page):
-    page.add(dict(key='card1', m=dict(m=dict(m=dict(s="foo")))))
+    page['card1'] = dict(m=dict(m=dict(m=dict(s="foo"))))
     page.sync()
 
     c = page['card1']
@@ -186,7 +186,7 @@ def test_map_prop_set_deep(page: Page):
 
 @test
 def test_array_prop_set(page: Page):
-    page.add(dict(key='card1', a=[1, 2, 3]))
+    page['card1'] = dict(a=[1, 2, 3])
     page.sync()
 
     c = page['card1']
@@ -200,7 +200,7 @@ def test_array_prop_set(page: Page):
 
 @test
 def test_array_prop_set_deep(page: Page):
-    page.add(dict(key='card1', a=[[[[42]]]]))
+    page['card1'] = dict(a=[[[[42]]]])
     page.sync()
 
     c = page['card1']
@@ -215,7 +215,7 @@ def test_array_prop_set_deep(page: Page):
 
 @test
 def test_map_buf_init(page: Page):
-    c = page.add(dict(key='card1', data=tupleset(fields=sample_fields)))
+    c = page.add('card1', dict(data=tupleset(fields=sample_fields)))
     c.data = dict(foo=[1, 2, 3], bar=[4, 5, 6], baz=[7, 8, 9])
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_map_buf(fields=sample_fields, data=dict(
@@ -227,7 +227,7 @@ def test_map_buf_init(page: Page):
 
 @test
 def test_map_buf_write(page: Page):
-    c = page.add(dict(key='card1', data=tupleset(fields=sample_fields)))
+    c = page.add('card1', dict(data=tupleset(fields=sample_fields)))
     c.data.foo = [1, 2, 3]
     c.data.bar = [4, 5, 6]
     c.data.baz = [7, 8, 9]
@@ -265,7 +265,7 @@ def test_map_buf_write(page: Page):
 
 @test
 def test_fix_buf_init(page: Page):
-    c = page.add(dict(key='card1', data=tupleset(fields=sample_fields, size=3)))
+    c = page.add('card1', dict(data=tupleset(fields=sample_fields, size=3)))
     c.data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_fix_buf(
@@ -276,7 +276,7 @@ def test_fix_buf_init(page: Page):
 
 @test
 def test_fix_buf_write(page: Page):
-    c = page.add(dict(key='card1', data=tupleset(fields=sample_fields, size=3)))
+    c = page.add('card1', dict(data=tupleset(fields=sample_fields, size=3)))
     c.data[0] = [1, 2, 3]
     c.data[1] = [4, 5, 6]
     c.data[2] = [7, 8, 9]
@@ -310,7 +310,7 @@ def test_fix_buf_write(page: Page):
 
 @test
 def test_cyc_buf_init(page: Page):
-    c = page.add(dict(key='card1', data=tupleset(fields=sample_fields, size=-3)))
+    c = page.add('card1', dict(data=tupleset(fields=sample_fields, size=-3)))
     c.data = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]  # insert 4 instead of 3; should circle back
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_cyc_buf(
@@ -322,7 +322,7 @@ def test_cyc_buf_init(page: Page):
 
 @test
 def test_cyc_buf_write(page: Page):
-    c = page.add(dict(key='card1', data=tupleset(fields=sample_fields, size=-3)))
+    c = page.add('card1', dict(data=tupleset(fields=sample_fields, size=-3)))
     c.data[0] = [1, 2, 3]
     c.data[1] = [4, 5, 6]
     c.data[2] = [7, 8, 9]
