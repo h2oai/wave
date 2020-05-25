@@ -252,8 +252,14 @@ const
             return `Repeated[${mapType(m.typeName)}]`
         }
       },
+      genPackedType = (m: Member): string => {
+        if ((m.t === MemberT.Repeated || m.t === MemberT.Singular) && m.packed) {
+          return `Union[${genType(m)}, str]`
+        }
+        return genType(m)
+      },
       genOptType = (m: Member): string => {
-        const t = genType(m)
+        const t = genPackedType(m)
         return m.optional ? `Optional[${t}]` : t
       },
       genSig = (m: Member): string => `${m.name}: ${genOptType(m)}`,
@@ -306,18 +312,13 @@ const
         }
         for (const m of type.members) { // pack
           if (getKnownTypeOf(m)) {
-            if (m.t === MemberT.Repeated) {
-              if (m.optional) {
-                p(`            ${m.name}=None if self.${m.name} is None else [__e.dump() for __e in self.${m.name}],`)
-              } else {
-                p(`            ${m.name}=[__e.dump() for __e in self.${m.name}],`)
-              }
-            } else {
-              if (m.optional) {
-                p(`            ${m.name}=None if self.${m.name} is None else self.${m.name}.dump(),`)
-              } else {
-                p(`            ${m.name}=self.${m.name}.dump(),`)
-              }
+            if (m.t === MemberT.Repeated || m.t === MemberT.Singular) {
+              let code = m.t === MemberT.Repeated
+                ? `[__e.dump() for __e in self.${m.name}]`
+                : `self.${m.name}.dump()`
+              if (m.packed) code = `self.${m.name} if isinstance(self.${m.name}, str) else ` + code
+              if (m.optional) code = `None if self.${m.name} is None else ` + code
+              p(`            ${m.name}=${code},`)
             }
           } else {
             p(`            ${m.name}=self.${m.name},`)

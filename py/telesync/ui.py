@@ -1073,7 +1073,7 @@ def expander(name: str, label: str = '', expanded: bool = False, *items: g.FormC
 #     return dict(button=dict(name=name, label=label))
 #
 
-def form(box: str, url: str, items: List[g.FormComponent]) -> g.Form:
+def form(box: str, url: str, items: Union[List[g.FormComponent], str]) -> g.Form:
     return g.Form(
         box=box,
         url=url,

@@ -3545,7 +3545,7 @@ class Form:
             box: str,
             url: str,
             args: dict,
-            items: Repeated[FormComponent],
+            items: Union[Repeated[FormComponent], str],
     ):
         self.box = box
         self.url = url
@@ -3566,7 +3566,7 @@ class Form:
             box=self.box,
             url=self.url,
             args=self.args,
-            items=[__e.dump() for __e in self.items],
+            items=self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
         )
 
     @staticmethod
@@ -3586,7 +3586,7 @@ class Form:
         box: str = __d_box
         url: str = __d_url
         args: dict = __d_args
-        items: Repeated[FormComponent] = [FormComponent.load(__e) for __e in __d_items]
+        items: Union[Repeated[FormComponent], str] = [FormComponent.load(__e) for __e in __d_items]
         return Form(
             box,
             url,
