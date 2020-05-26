@@ -9,6 +9,11 @@ import { getTheme } from './theme';
 const
   theme = getTheme(),
   css = stylesheet({
+    grid: {
+      width: grid.innerWidth,
+      height: grid.innerHeight,
+      transform: `translate(${grid.gap}px,${grid.gap}px)`,
+    },
     slot: {
       position: 'absolute',
       backgroundColor: theme.colors.card,
@@ -25,7 +30,7 @@ const
     }
   })
 
-export const PageView = bond(({ page }: { page: Page }) => {
+export const GridLayout = bond(({ page }: { page: Page }) => {
   const
     { changed: changedB } = page,
     render = () => {
@@ -40,7 +45,7 @@ export const PageView = bond(({ page }: { page: Page }) => {
           )
         })
       return (
-        <div className="grid" style={{ width: 0, height: 0, transform: `translate(${grid.gap}px,${grid.gap}px)` }}>
+        <div className={css.grid}>
           {children}
         </div>
       )

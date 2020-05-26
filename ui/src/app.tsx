@@ -1,18 +1,15 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { grid } from './grid';
-import { PageView } from './page';
-import { connect, F, Page, S, SockEvent, SockEventType, SockMessageType } from './telesync';
+import { GridLayout } from './grid_layout';
+import { connect, Page, S, SockEvent, SockEventType, SockMessageType } from './telesync';
 import { getTheme } from './theme';
 
 const
-  autoscale = false,
   theme = getTheme(),
   css = stylesheet({
-    page: {
+    app: {
       position: 'absolute',
       left: 0, top: 0, right: 0, bottom: 0,
-      // display: 'flex', justifyContent: 'center',
       backgroundColor: theme.colors.page,
       color: theme.colors.text,
     }
@@ -20,9 +17,7 @@ const
 class App extends React.Component<{}, {
   page?: Page
   error?: S
-  scale: F
 }>{
-  onResize = () => this.setState({ scale: grid.rescale() })
   onSocket = (e: SockEvent) => {
     switch (e.t) {
       case SockEventType.Data:
@@ -39,17 +34,13 @@ class App extends React.Component<{}, {
   }
   constructor(props: {}) {
     super(props)
-    this.state = { scale: grid.rescale() }
-  }
-  componentWillUnmount() {
-    if (autoscale) window.removeEventListener('resize', this.onResize)
+    this.state = {}
   }
   async componentDidMount() {
-    if (autoscale) window.addEventListener('resize', this.onResize)
     connect('/ws', this.onSocket)
   }
   render() {
-    const { page, error, scale } = this.state
+    const { page, error } = this.state
     if (error) {
       return <div>{error}</div>
     }
@@ -57,20 +48,9 @@ class App extends React.Component<{}, {
       return <div>Loading...</div>
     }
 
-    const scaling = autoscale ? {
-      transform: `scale(${scale},${scale})`,
-      transformOrigin: `50% top`,
-    } : null
-
     return (
-      <div className={css.page}>
-        <div style={{
-          position: 'absolute',
-          width: grid.width,
-          ...scaling,
-        }}>
-          <PageView key={page.key} page={page} />
-        </div>
+      <div className={css.app}>
+        <GridLayout key={page.key} page={page} />
       </div>
     )
 
