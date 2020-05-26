@@ -1,6 +1,6 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { GridLayout } from './grid_layout';
+import { GridLayout } from './grid';
 import { bond, box, connect, Page, SockEvent, SockEventType, SockMessageType, S } from './telesync';
 import { getTheme } from './theme';
 
@@ -12,6 +12,8 @@ const
       left: 0, top: 0, right: 0, bottom: 0,
       backgroundColor: theme.colors.page,
       color: theme.colors.text,
+      display: 'flex',
+      justifyContent: 'center'
     }
   })
 
@@ -43,6 +45,7 @@ const
         if (error) return <div>{error}</div>
         // TODO prettier loading section
         if (!page) return <div>Loading...</div>
+
         return (
           <div className={css.app}>
             <GridLayout key={page.key} page={page} />
