@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { GridLayout } from './grid_layout';
-import { connect, Page, S, SockEvent, SockEventType, SockMessageType } from './telesync';
+import { bond, box, connect, Page, SockEvent, SockEventType, SockMessageType, S } from './telesync';
 import { getTheme } from './theme';
 
 const
@@ -14,47 +14,42 @@ const
       color: theme.colors.text,
     }
   })
-class App extends React.Component<{}, {
-  page?: Page
-  error?: S
-}>{
-  onSocket = (e: SockEvent) => {
-    switch (e.t) {
-      case SockEventType.Data:
-        this.setState({ page: e.page, error: '' })
-        break
-      case SockEventType.Message:
-        if (e.type === SockMessageType.Err) {
-          this.setState({ error: e.message })
-        } else {
-          console.log(e)
+
+
+const
+  App = bond(() => {
+    const
+      contentB = box<{ page?: Page, error?: S }>({}),
+      onSocket = (e: SockEvent) => {
+        switch (e.t) {
+          case SockEventType.Data:
+            contentB({ page: e.page })
+            break
+          case SockEventType.Message:
+            if (e.type === SockMessageType.Err) {
+              contentB({ error: e.message })
+            } else {
+              console.log(e)
+            }
+            break
         }
-        break
-    }
-  }
-  constructor(props: {}) {
-    super(props)
-    this.state = {}
-  }
-  async componentDidMount() {
-    connect('/ws', this.onSocket)
-  }
-  render() {
-    const { page, error } = this.state
-    if (error) {
-      return <div>{error}</div>
-    }
-    if (!page) {
-      return <div>Loading...</div>
-    }
-
-    return (
-      <div className={css.app}>
-        <GridLayout key={page.key} page={page} />
-      </div>
-    )
-
-  }
-}
+      },
+      init = () => {
+        connect('/ws', onSocket)
+      },
+      render = () => {
+        const { page, error } = contentB()
+        // TODO prettier error section
+        if (error) return <div>{error}</div>
+        // TODO prettier loading section
+        if (!page) return <div>Loading...</div>
+        return (
+          <div className={css.app}>
+            <GridLayout key={page.key} page={page} />
+          </div>
+        )
+      }
+    return { init, render, contentB }
+  })
 
 export default App
