@@ -26,7 +26,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import ts from 'typescript'
-import * as util from 'util'
 
 export interface Dict<T> { [key: string]: T } // generic object
 const packedT = 'Packed' // name of marker parametric type to indicate if an attributed could be packed.
@@ -419,11 +418,11 @@ const
       }
     }
   },
-  main = (cardsDir: string, pyCardsFilepath: string) => {
+  main = (typescriptSrcDir: string, pyCardsFilepath: string) => {
     const protocol: Protocol = { files: [] }
-    processDir(protocol, cardsDir)
+    processDir(protocol, typescriptSrcDir)
     scopeNames(protocol)
-    console.log(util.inspect(protocol, { depth: null }))
+    // console.log(JSON.stringify(protocol, null, 2))
     fs.writeFileSync(pyCardsFilepath, translateToPython(protocol), 'utf8')
   }
 
