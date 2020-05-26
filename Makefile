@@ -7,11 +7,13 @@ all: clean setup build ## Setup and build everything
 setup: ## Set up development dependencies
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
+	cd tools/telegen && $(MAKE) setup build
 
 clean: ## Clean
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
-	rm -f telesync
+	cd tools/telegen && $(MAKE) clean
+	rm -f telesync teledb
 
 .PHONY: build
 build: build-ui build-py build-server ## Build everything
@@ -36,6 +38,9 @@ build-server: ## Build server
 
 run: ## Run server
 	go run cmd/telesync/main.go
+
+generate: ## Generate driver bindings
+	cd tools/telegen && $(MAKE) run
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
