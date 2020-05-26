@@ -113,21 +113,21 @@ def test_new_card_with_cyc_buf(page: Page):
 
 @test
 def test_load_card_with_map_buf(page: Page):
-    page['card1'] = dict(data=tupleset(fields=sample_fields, data=dict(foo=[1, 2, 3])))
+    page['card1'] = dict(data=tupleset(fields=sample_fields, rows=dict(foo=[1, 2, 3])))
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_map_buf(fields=sample_fields, data=dict(foo=[1, 2, 3])))))
 
 
 @test
 def test_load_card_with_fix_buf(page: Page):
-    page['card1'] = dict(data=tupleset(fields=sample_fields, data=[[1, 2, 3]]))
+    page['card1'] = dict(data=tupleset(fields=sample_fields, rows=[[1, 2, 3]]))
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_fix_buf(fields=sample_fields, data=[[1, 2, 3]]))))
 
 
 @test
 def test_load_card_with_cyc_buf(page: Page):
-    page['card1'] = dict(data=tupleset(fields=sample_fields, data=[[1, 2, 3]], size=-10))
+    page['card1'] = dict(data=tupleset(fields=sample_fields, rows=[[1, 2, 3]], size=-10))
     page.sync()
     expect(page.load(), make_page(card1=make_card(data=make_cyc_buf(fields=sample_fields, data=[[1, 2, 3]], i=0))))
 

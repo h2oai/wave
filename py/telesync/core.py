@@ -145,9 +145,13 @@ class Ref:
         return Ref(getattr(self, PAGE), getattr(self, KEY) + _key_sep + str(key))
 
     def __setattr__(self, key, value):
+        if isinstance(value, TupleSet):
+            raise ValueError('TupleSets cannot be used in assignments.')
         getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
 
     def __setitem__(self, key, value):
+        if isinstance(value, TupleSet):
+            raise ValueError('TupleSets cannot be used in assignments.')
         getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
 
 
@@ -179,25 +183,30 @@ class TupleSet:
                     return dict(f=dict(f=f, n=n))
 
 
-def tupleset(fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None) -> TupleSet:
+def tupleset(fields: Union[str, tuple, list], size: int = 0, rows: Optional[Union[dict, list]] = None) -> TupleSet:
     if _is_str(fields):
+        fields = fields.strip()
+        if fields == '':
+            raise ValueError('fields is empty')
         fields = fields.split()
-    elif not _is_list(fields):
+    if not _is_list(fields):
         raise ValueError('fields must be tuple or list')
     if len(fields) == 0:
         raise ValueError('fields is empty')
     for field in fields:
         if not _is_str(field):
             raise ValueError('field must be str')
+        if field == '':
+            raise ValueError('field cannot be empty str')
 
-    if data:
-        if not isinstance(data, (list, dict)):
+    if rows:
+        if not isinstance(rows, (list, dict)):
             raise ValueError('data must be list or dict')
 
     if not _is_int(size):
         raise ValueError('size must be int')
 
-    return TupleSet(fields, size, data)
+    return TupleSet(fields, size, rows)
 
 
 class Page:
