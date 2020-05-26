@@ -309,51 +309,57 @@ const
     if (data === '') return data
     const [t, d] = decodeType(data)
     switch (t) {
-      case 'json':
+      case 'data':
         try {
           return JSON.parse(d)
         } catch (e) {
           console.error(e)
         }
         break
-      case 'data':
+      case 'rows':
         try {
-          const { f: fields, r: rows, c: columns } = JSON.parse(d)
+          const [fields, rows] = JSON.parse(d)
           if (!Array.isArray(fields)) return data
-
+          if (!Array.isArray(rows)) return data
           const w = fields.length // width
-          if (Array.isArray(rows)) {
-            const recs: Rec[] = []
-            for (const r of rows) {
-              if (!Array.isArray(r)) continue
-              if (r.length !== w) continue
-              const rec: Rec = {}
-              for (let j = 0; j < w; j++) {
-                const f = fields[j], v = r[j]
-                rec[f] = v
-              }
-              recs.push(rec)
+          const recs: Rec[] = []
+          for (const r of rows) {
+            if (!Array.isArray(r)) continue
+            if (r.length !== w) continue
+            const rec: Rec = {}
+            for (let j = 0; j < w; j++) {
+              const f = fields[j], v = r[j]
+              rec[f] = v
             }
-            return recs
-          } else if (Array.isArray(columns)) {
-            if (columns.length !== w) return data
-            if (columns.length === 0) return data
-            const n = columns[0].length
-            const recs = new Array<Rec>(n)
-            for (let i = 0; i < n; i++) {
-              const rec: Rec = {}
-              for (let j = 0; j < w; j++) {
-                const f = fields[j], v = columns[j][i]
-                rec[f] = v
-              }
-              recs[i] = rec
-            }
-            return recs
+            recs.push(rec)
           }
+          return recs
         } catch (e) {
           console.error(e)
         }
-
+        break
+      case 'cols':
+        try {
+          const [fields, columns] = JSON.parse(d)
+          if (!Array.isArray(fields)) return data
+          if (!Array.isArray(columns)) return data
+          if (columns.length !== w) return data
+          if (columns.length === 0) return data
+          const n = columns[0].length
+          const recs = new Array<Rec>(n)
+          for (let i = 0; i < n; i++) {
+            const rec: Rec = {}
+            for (let j = 0; j < w; j++) {
+              const f = fields[j], v = columns[j][i]
+              rec[f] = v
+            }
+            recs[i] = rec
+          }
+          return recs
+        } catch (e) {
+          console.error(e)
+        }
+        break
     }
     return data
   }

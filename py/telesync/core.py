@@ -15,24 +15,24 @@ _key_sep = ' '
 _content_type_json = {'Content-type': 'application/json'}
 
 
-def _is_int(x: any) -> bool: return isinstance(x, int)
+def _is_int(x: Any) -> bool: return isinstance(x, int)
 
 
-def _is_str(x: any) -> bool: return isinstance(x, str)
+def _is_str(x: Any) -> bool: return isinstance(x, str)
 
 
-def _is_list(x: any) -> bool: return isinstance(x, (list, tuple))
+def _is_list(x: Any) -> bool: return isinstance(x, (list, tuple))
 
 
-def _is_primitive(x: any) -> bool: return x is None or isinstance(x, (bool, str, int, float))
+def _is_primitive(x: Any) -> bool: return x is None or isinstance(x, (bool, str, int, float))
 
 
-def _guard_primitive(x: any):
+def _guard_primitive(x: Any):
     if not _is_primitive(x):
         raise ValueError('value must be a primitive')
 
 
-def _are_primitives(xs: any) -> bool:
+def _are_primitives(xs: Any) -> bool:
     if xs is None:
         return True
     if not _is_list(xs):
@@ -43,12 +43,12 @@ def _are_primitives(xs: any) -> bool:
     return True
 
 
-def _guard_primitive_list(xs: any):
+def _guard_primitive_list(xs: Any):
     if not _are_primitives(xs):
         raise ValueError('value must be a primitive list or tuple')
 
 
-def _guard_primitive_dict_values(d: Dict[str, any]):
+def _guard_primitive_dict_values(d: Dict[str, Any]):
     if d:
         for x in d.values():
             _guard_primitive(x)
@@ -183,7 +183,13 @@ class TupleSet:
                     return dict(f=dict(f=f, n=n))
 
 
-def tupleset(fields: Union[str, tuple, list], size: int = 0, rows: Optional[Union[dict, list]] = None) -> TupleSet:
+def tupleset(
+        fields: Union[str, tuple, list],
+        size: int = 0,
+        rows: Optional[Union[dict, list]] = None,
+        columns: Optional[Union[dict, list]] = None,
+        pack=False,
+) -> Union[TupleSet, str]:
     if _is_str(fields):
         fields = fields.strip()
         if fields == '':
@@ -199,9 +205,22 @@ def tupleset(fields: Union[str, tuple, list], size: int = 0, rows: Optional[Unio
         if field == '':
             raise ValueError('field cannot be empty str')
 
+    if pack:
+        if rows:
+            if not isinstance(rows, list):
+                # TODO validate if 2d
+                raise ValueError('rows must be a list')
+            return 'rows:' + marshal((fields, rows))
+        if columns:
+            if not isinstance(columns, list):
+                # TODO validate if 2d
+                raise ValueError('columns must be a list')
+            return 'cols:' + marshal((fields, columns))
+        raise ValueError('either rows or columns must be provided if pack=True')
+
     if rows:
         if not isinstance(rows, (list, dict)):
-            raise ValueError('data must be list or dict')
+            raise ValueError('rows must be list or dict')
 
     if not _is_int(size):
         raise ValueError('size must be int')
@@ -216,7 +235,7 @@ class Page:
         self.url = url
         self._changes = []
 
-    def add(self, key: str, card: any) -> Ref:
+    def add(self, key: str, card: Any) -> Ref:
         if key is None:
             raise ValueError('card must have a key')
 
@@ -301,7 +320,7 @@ class BasicAuthClient:
         self._address = f'http://{host}:{port}'
         self._auth = HTTPBasicAuth(username, password)
 
-    def patch(self, url: str, data: any):
+    def patch(self, url: str, data: Any):
         res = requests.patch(f'{self._address}{url}', data=data, headers=_content_type_json, auth=self._auth)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
@@ -339,37 +358,17 @@ class Site:
         return Page(self, url)
 
 
-def _kv(key: str, index: str, value: any):
+def _kv(key: str, index: str, value: Any):
     return dict(k=key, v=value) if index is None or index == '' else dict(k=key, i=index, v=value)
 
 
-def marshal(d: dict): return json.dumps(d, allow_nan=False, separators=(',', ':'))
+def marshal(d: Any): return json.dumps(d, allow_nan=False, separators=(',', ':'))
 
 
 def unmarshal(s: str): return json.loads(s)
 
 
-def atomic(data: Union[dict, list, tuple] = None,
-           fields: Union[str, Iterable[str]] = None,
-           rows: Iterable[Iterable] = None,
-           columns: Iterable[Iterable] = None):
-    if data and isinstance(data, (dict, list, tuple)):
-        return 'json:' + marshal(data)
-
-    if _is_str(fields):
-        fields = fields.split()
-
-    if _is_list(rows):
-        if not _is_list(fields):
-            raise ValueError('Expected list of fields, got none.')
-        return 'data:' + marshal(dict(f=fields, r=rows))
-
-    if _is_list(columns):
-        if not _is_list(fields):
-            raise ValueError('Expected list of fields, got none.')
-        return 'data:' + marshal(dict(f=fields, c=columns))
-
-    raise ValueError('Expected one of data or rows or columns, got none.')
+def atomic(data: Any): return 'data:' + marshal(data)
 
 
 def _session_for(sessions: dict, session_id: str):
