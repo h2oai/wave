@@ -1,5 +1,14 @@
+#
+# THIS FILE IS GENERATED; DO NOT EDIT
+#
+
 from typing import Any, Optional, Union, Dict, List as Repeated
 from .core import Data
+
+Value = Union[str, float, int]
+PackedRecord = Union[dict, str]
+PackedRecords = Union[Repeated[dict], str]
+PackedData = Union[Data, str]
 
 
 class Card1:
@@ -8,7 +17,7 @@ class Card1:
             box: str,
             title: str,
             value: str,
-            data: Optional[Any] = None,
+            data: Optional[PackedRecord] = None,
     ):
         self.box = box
         self.title = title
@@ -45,7 +54,7 @@ class Card1:
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
-        data: Optional[Any] = __d_data
+        data: Optional[PackedRecord] = __d_data
         return Card1(
             box,
             title,
@@ -61,9 +70,9 @@ class Card2:
             title: str,
             value: str,
             aux_value: str,
-            data: Any,
+            data: PackedRecord,
             plot_type: str,
-            plot_data: Data,
+            plot_data: PackedData,
             plot_color: str,
             plot_category: str,
             plot_value: str,
@@ -168,9 +177,9 @@ class Card2:
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         plot_type: str = __d_plot_type
-        plot_data: Data = __d_plot_data
+        plot_data: PackedData = __d_plot_data
         plot_color: str = __d_plot_color
         plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
@@ -200,7 +209,7 @@ class Card3:
             value: str,
             aux_value: str,
             caption: str,
-            data: Any,
+            data: PackedRecord,
     ):
         self.box = box
         self.title = title
@@ -257,7 +266,7 @@ class Card3:
         value: str = __d_value
         aux_value: str = __d_aux_value
         caption: str = __d_caption
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         return Card3(
             box,
             title,
@@ -277,7 +286,7 @@ class Card4:
             aux_value: str,
             progress: float,
             plot_color: str,
-            data: Any,
+            data: PackedRecord,
     ):
         self.box = box
         self.title = title
@@ -342,7 +351,7 @@ class Card4:
         aux_value: str = __d_aux_value
         progress: float = __d_progress
         plot_color: str = __d_plot_color
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         return Card4(
             box,
             title,
@@ -363,7 +372,7 @@ class Card5:
             aux_value: str,
             progress: float,
             plot_color: str,
-            data: Any,
+            data: PackedRecord,
     ):
         self.box = box
         self.title = title
@@ -428,7 +437,7 @@ class Card5:
         aux_value: str = __d_aux_value
         progress: float = __d_progress
         plot_color: str = __d_plot_color
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         return Card5(
             box,
             title,
@@ -447,9 +456,9 @@ class Card6:
             title: str,
             value: str,
             aux_value: str,
-            data: Any,
+            data: PackedRecord,
             plot_type: str,
-            plot_data: Data,
+            plot_data: PackedData,
             plot_color: str,
             plot_category: str,
             plot_value: str,
@@ -554,9 +563,9 @@ class Card6:
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         plot_type: str = __d_plot_type
-        plot_data: Data = __d_plot_data
+        plot_data: PackedData = __d_plot_data
         plot_color: str = __d_plot_color
         plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
@@ -584,9 +593,9 @@ class Card7:
             box: str,
             title: str,
             value: str,
-            data: Any,
+            data: PackedRecord,
             plot_type: str,
-            plot_data: Data,
+            plot_data: PackedData,
             plot_color: str,
             plot_category: str,
             plot_value: str,
@@ -683,9 +692,9 @@ class Card7:
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         plot_type: str = __d_plot_type
-        plot_data: Data = __d_plot_data
+        plot_data: PackedData = __d_plot_data
         plot_color: str = __d_plot_color
         plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
@@ -715,7 +724,7 @@ class Card8:
             aux_value: str,
             progress: float,
             plot_color: str,
-            data: Any,
+            data: PackedRecord,
     ):
         self.box = box
         self.title = title
@@ -780,7 +789,7 @@ class Card8:
         aux_value: str = __d_aux_value
         progress: float = __d_progress
         plot_color: str = __d_plot_color
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         return Card8(
             box,
             title,
@@ -804,7 +813,7 @@ class Card9:
             aux_value_caption: str,
             progress: float,
             plot_color: str,
-            data: Any,
+            data: PackedRecord,
     ):
         self.box = box
         self.title = title
@@ -893,7 +902,7 @@ class Card9:
         aux_value_caption: str = __d_aux_value_caption
         progress: float = __d_progress
         plot_color: str = __d_plot_color
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         return Card9(
             box,
             title,
@@ -1422,12 +1431,12 @@ class Flex:
             box: str,
             title: str,
             item_view: str,
-            item_props: Any,
+            item_props: PackedRecord,
             direction: str,
             justify: str,
             align: str,
             wrap: str,
-            data: Data,
+            data: PackedData,
     ):
         self.box = box
         self.title = title
@@ -1511,12 +1520,12 @@ class Flex:
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
-        item_props: Any = __d_item_props
+        item_props: PackedRecord = __d_item_props
         direction: str = __d_direction
         justify: str = __d_justify
         align: str = __d_align
         wrap: str = __d_wrap
-        data: Data = __d_data
+        data: PackedData = __d_data
         return Flex(
             box,
             title,
@@ -3544,7 +3553,7 @@ class Form:
             self,
             box: str,
             url: str,
-            args: Any,
+            args: PackedRecord,
             items: Union[Repeated[FormComponent], str],
     ):
         self.box = box
@@ -3585,7 +3594,7 @@ class Form:
             raise ValueError('Form.items is required.')
         box: str = __d_box
         url: str = __d_url
-        args: Any = __d_args
+        args: PackedRecord = __d_args
         items: Union[Repeated[FormComponent], str] = __d_items if isinstance(__d_items, str) else [FormComponent.load(__e) for __e in __d_items]
         return Form(
             box,
@@ -3601,8 +3610,8 @@ class List:
             box: str,
             title: str,
             item_view: str,
-            item_props: Any,
-            data: Data,
+            item_props: PackedRecord,
+            data: PackedData,
     ):
         self.box = box
         self.title = title
@@ -3650,8 +3659,8 @@ class List:
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
-        item_props: Any = __d_item_props
-        data: Data = __d_data
+        item_props: PackedRecord = __d_item_props
+        data: PackedData = __d_data
         return List(
             box,
             title,
@@ -3669,7 +3678,7 @@ class ListItem1:
             caption: str,
             value: str,
             aux_value: str,
-            data: Any,
+            data: PackedRecord,
     ):
         self.box = box
         self.title = title
@@ -3726,7 +3735,7 @@ class ListItem1:
         caption: str = __d_caption
         value: str = __d_value
         aux_value: str = __d_aux_value
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         return ListItem1(
             box,
             title,
@@ -3778,7 +3787,7 @@ class PixelArt:
             self,
             box: str,
             title: str,
-            data: Any,
+            data: PackedRecord,
     ):
         self.box = box
         self.title = title
@@ -3811,7 +3820,7 @@ class PixelArt:
             raise ValueError('PixelArt.data is required.')
         box: str = __d_box
         title: str = __d_title
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         return PixelArt(
             box,
             title,
@@ -3824,19 +3833,19 @@ class PlotMark:
             self,
             coord: Optional[str] = None,
             mark: Optional[str] = None,
-            x: Optional[Union[str, float, int]] = None,
-            x0: Optional[Union[str, float, int]] = None,
-            x1: Optional[Union[str, float, int]] = None,
-            x2: Optional[Union[str, float, int]] = None,
+            x: Optional[Value] = None,
+            x0: Optional[Value] = None,
+            x1: Optional[Value] = None,
+            x2: Optional[Value] = None,
             x_min: Optional[float] = None,
             x_max: Optional[float] = None,
             x_nice: Optional[bool] = None,
             x_scale: Optional[str] = None,
             x_title: Optional[str] = None,
-            y: Optional[Union[str, float, int]] = None,
-            y0: Optional[Union[str, float, int]] = None,
-            y1: Optional[Union[str, float, int]] = None,
-            y2: Optional[Union[str, float, int]] = None,
+            y: Optional[Value] = None,
+            y0: Optional[Value] = None,
+            y1: Optional[Value] = None,
+            y2: Optional[Value] = None,
             y_min: Optional[float] = None,
             y_max: Optional[float] = None,
             y_nice: Optional[bool] = None,
@@ -4052,19 +4061,19 @@ class PlotMark:
         __d_ref_stroke_dash: Any = __d.get('ref_stroke_dash')
         coord: Optional[str] = __d_coord
         mark: Optional[str] = __d_mark
-        x: Optional[Union[str, float, int]] = __d_x
-        x0: Optional[Union[str, float, int]] = __d_x0
-        x1: Optional[Union[str, float, int]] = __d_x1
-        x2: Optional[Union[str, float, int]] = __d_x2
+        x: Optional[Value] = __d_x
+        x0: Optional[Value] = __d_x0
+        x1: Optional[Value] = __d_x1
+        x2: Optional[Value] = __d_x2
         x_min: Optional[float] = __d_x_min
         x_max: Optional[float] = __d_x_max
         x_nice: Optional[bool] = __d_x_nice
         x_scale: Optional[str] = __d_x_scale
         x_title: Optional[str] = __d_x_title
-        y: Optional[Union[str, float, int]] = __d_y
-        y0: Optional[Union[str, float, int]] = __d_y0
-        y1: Optional[Union[str, float, int]] = __d_y1
-        y2: Optional[Union[str, float, int]] = __d_y2
+        y: Optional[Value] = __d_y
+        y0: Optional[Value] = __d_y0
+        y1: Optional[Value] = __d_y1
+        y2: Optional[Value] = __d_y2
         y_min: Optional[float] = __d_y_min
         y_max: Optional[float] = __d_y_max
         y_nice: Optional[bool] = __d_y_nice
@@ -4194,7 +4203,7 @@ class Plot:
             self,
             box: str,
             title: str,
-            data: Any,
+            data: PackedRecord,
             vis: PlotVis,
     ):
         self.box = box
@@ -4235,7 +4244,7 @@ class Plot:
             raise ValueError('Plot.vis is required.')
         box: str = __d_box
         title: str = __d_title
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         vis: PlotVis = PlotVis.load(__d_vis)
         return Plot(
             box,
@@ -4251,8 +4260,8 @@ class Repeat:
             box: str,
             title: str,
             item_view: str,
-            item_props: Any,
-            data: Data,
+            item_props: PackedRecord,
+            data: PackedData,
     ):
         self.box = box
         self.title = title
@@ -4300,8 +4309,8 @@ class Repeat:
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
-        item_props: Any = __d_item_props
-        data: Data = __d_data
+        item_props: PackedRecord = __d_item_props
+        data: PackedData = __d_data
         return Repeat(
             box,
             title,
@@ -4316,8 +4325,8 @@ class Table:
             self,
             box: str,
             title: str,
-            cells: Data,
-            data: Data,
+            cells: PackedData,
+            data: PackedData,
     ):
         self.box = box
         self.title = title
@@ -4357,8 +4366,8 @@ class Table:
             raise ValueError('Table.data is required.')
         box: str = __d_box
         title: str = __d_title
-        cells: Data = __d_cells
-        data: Data = __d_data
+        cells: PackedData = __d_cells
+        data: PackedData = __d_data
         return Table(
             box,
             title,
@@ -4373,7 +4382,7 @@ class Template:
             box: str,
             title: str,
             template: str,
-            data: Any,
+            data: PackedRecord,
     ):
         self.box = box
         self.title = title
@@ -4414,7 +4423,7 @@ class Template:
         box: str = __d_box
         title: str = __d_title
         template: str = __d_template
-        data: Any = __d_data
+        data: PackedRecord = __d_data
         return Template(
             box,
             title,

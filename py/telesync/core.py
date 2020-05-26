@@ -146,12 +146,12 @@ class Ref:
 
     def __setattr__(self, key, value):
         if isinstance(value, Data):
-            raise ValueError('TupleSets cannot be used in assignments.')
+            raise ValueError('Data instances cannot be used in assignments.')
         getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
 
     def __setitem__(self, key, value):
         if isinstance(value, Data):
-            raise ValueError('TupleSets cannot be used in assignments.')
+            raise ValueError('Data instances cannot be used in assignments.')
         getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
 
 
@@ -368,7 +368,7 @@ def marshal(d: Any): return json.dumps(d, allow_nan=False, separators=(',', ':')
 def unmarshal(s: str): return json.loads(s)
 
 
-def pack(data: Any): return 'data:' + marshal(data)
+def pack(data: Any): return 'data:' + marshal(_dump(data))
 
 
 def _session_for(sessions: dict, session_id: str):

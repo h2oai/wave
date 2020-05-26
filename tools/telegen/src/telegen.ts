@@ -214,9 +214,10 @@ const
     I: 'int',
     U: 'int',
     B: 'bool',
-    V: 'Union[str, float, int]',
-    Rec: 'Any',
-    Data: 'Data', // special-cased during packing, Go allocation and unpacking.
+    V: 'Value',
+    Rec: 'PackedRecord',
+    Recs: 'PackedRecords',
+    Data: 'PackedData',
   },
   translateToPython = (protocol: Protocol) => {
     const
@@ -363,8 +364,17 @@ const
         declarations[type.name] = Declaration.Declared
       },
       generate = (): string => {
+        p('#')
+        p('# THIS FILE IS GENERATED; DO NOT EDIT')
+        p('#')
+        p('')
         p('from typing import Any, Optional, Union, Dict, List as Repeated')
         p('from .core import Data')
+        p('')
+        p('Value = Union[str, float, int]')
+        p('PackedRecord = Union[dict, str]')
+        p('PackedRecords = Union[Repeated[dict], str]')
+        p('PackedData = Union[Data, str]') // special-cased during packing, Go allocation and unpacking.
         p('')
         for (const file of protocol.files) {
           for (const type of file.types) {
