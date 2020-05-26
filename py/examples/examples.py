@@ -38,8 +38,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(1, 7):
         f = FakePercent()
         val, pc = f.next()
-        c = page.add(dict(
-            key=f'a{i}',
+        c = page.add(f'a{i}', dict(
             view='card1',
             box=f'{i} 1 1 1',
             title=fake.cryptocurrency_name(),
@@ -51,8 +50,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(1, 7):
         f = FakeCategoricalSeries()
         cat, val, pc = f.next()
-        c = page.add(dict(
-            key=f'aa{i}',
+        c = page.add(f'aa{i}', dict(
             view='card7',
             box=f'{6 + i} 1 1 1',
             title=fake.cryptocurrency_code(),
@@ -71,8 +69,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(1, 13, 2):
         f = FakeCategoricalSeries()
         cat, val, pc = f.next()
-        c = page.add(dict(
-            key=f'b{i}',
+        c = page.add(f'b{i}', dict(
             view='card2',
             box=f'{i} 2 2 1',
             title=fake.cryptocurrency_name(),
@@ -92,8 +89,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(1, 13, 2):
         f = FakeCategoricalSeries()
         cat, val, pc = f.next()
-        c = page.add(dict(
-            key=f'c{i}',
+        c = page.add(f'c{i}', dict(
             view='card2',
             box=f'{i} 3 2 1',
             title=fake.cryptocurrency_name(),
@@ -113,8 +109,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(1, 13):
         f = FakePercent()
         val, pc = f.next()
-        c = page.add(dict(
-            key=f'd{i}',
+        c = page.add(f'd{i}', dict(
             view='card5',
             box=f'{i} 4 1 2',
             title=fake.cryptocurrency_name(),
@@ -130,8 +125,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(1, 13):
         f = FakeCategoricalSeries()
         cat, val, pc = f.next()
-        c = page.add(dict(
-            key=f'e{i}',
+        c = page.add(f'e{i}', dict(
             view='card6',
             box=f'{i} 6 1 2',
             title=fake.cryptocurrency_name(),
@@ -152,8 +146,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(1, 7, 2):
         f = FakePercent()
         val, pc = f.next()
-        c = page.add(dict(
-            key=f'f{i}',
+        c = page.add(f'f{i}', dict(
             view='card4',
             box=f'{i} 8 2 1',
             title=fake.cryptocurrency_name(),
@@ -169,8 +162,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(7, 13, 2):
         f = FakePercent()
         val, pc = f.next()
-        c = page.add(dict(
-            key=f'f{i}',
+        c = page.add(f'f{i}', dict(
             view='card8',
             box=f'{i} 8 2 1',
             title=fake.cryptocurrency_name(),
@@ -186,8 +178,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(1, 7, 2):
         f = FakePercent()
         val, pc = f.next()
-        c = page.add(dict(
-            key=f'g{i}',
+        c = page.add(f'g{i}', dict(
             fields=('foo', 'bar'),
             view='card3',
             box=f'{i} 9 2 2',
@@ -203,8 +194,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
     for i in range(7, 13, 2):
         f = FakePercent()
         val, pc = f.next()
-        c = page.add(dict(
-            key=f'g{i}',
+        c = page.add(f'g{i}', dict(
             view='card9',
             box=f'{i} 9 2 2',
             title=fake.cryptocurrency_name(),
@@ -288,8 +278,7 @@ def create_template_page(site: Site, update_freq=0.0):
     url = '/demo/template'
     page = site[url]
     page.drop()
-    c = page.add(dict(
-        key='template_example',
+    c = page.add('template_example', dict(
         view='template',
         box=f'1 1 12 10',
         # title='Template Example',
@@ -305,8 +294,7 @@ def create_lists_page(site: Site, update_freq=0.0):
     page.drop()
 
     # list
-    c = page.add(dict(
-        key='list',
+    c = page.add('list', dict(
         box='1 1 2 4',
         view='list',
         item_view='list_item1',
@@ -319,8 +307,7 @@ def create_lists_page(site: Site, update_freq=0.0):
         i in range(15)]
 
     # simple repeater
-    c = page.add(dict(
-        key='repeat',
+    c = page.add('repeat', dict(
         box='3 1 2 4',
         view='repeat',
         item_view='list_item1',
@@ -332,8 +319,7 @@ def create_lists_page(site: Site, update_freq=0.0):
         i in range(15)]
 
     # flex layout
-    c = page.add(dict(
-        key='flex',
+    c = page.add('flex', dict(
         box='5 1 1 1',
         view='flex',
         direction='horizontal',
@@ -348,8 +334,7 @@ def create_lists_page(site: Site, update_freq=0.0):
     c.data = [[fake.cryptocurrency_code(), random.randint(0, 1)] for i in range(10)]
 
     # table
-    c = page.add(dict(
-        key='table',
+    c = page.add('table', dict(
         box='6 1 3 4',
         title='Currency Trades',
         view='table',

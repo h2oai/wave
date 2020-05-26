@@ -7,8 +7,7 @@ import random
 def create_point(key, page, box):
     n = 50
     f = FakeScatter()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Point',
@@ -21,8 +20,7 @@ def create_point(key, page, box):
 def create_point_sizes(key, page, box):
     n = 40
     f = FakeScatter()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Point, sized',
@@ -35,8 +33,7 @@ def create_point_sizes(key, page, box):
 def create_point_custom(key, page, box):
     n = 40
     f = FakeScatter()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Point, custom',
@@ -55,8 +52,7 @@ def create_fake_row(g, f, n):
 def create_point_groups(key, page, box):
     n = 30
     f1, f2, f3 = FakeScatter(), FakeScatter(), FakeScatter()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Point, groups',
@@ -69,8 +65,7 @@ def create_point_groups(key, page, box):
 def create_point_shapes(key, page, box):
     n = 30
     f1, f2 = FakeScatter(), FakeScatter()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Point, shapes',
@@ -83,8 +78,7 @@ def create_point_shapes(key, page, box):
 def create_line(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Line',
@@ -97,8 +91,7 @@ def create_line(key, page, box):
 def create_line_smooth(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Line, smooth',
@@ -111,8 +104,7 @@ def create_line_smooth(key, page, box):
 def create_line_groups(key, page, box):
     n = 50
     f = FakeMultiTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Line, groups',
@@ -126,8 +118,7 @@ def create_line_groups(key, page, box):
 def create_step(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Line, step',
@@ -141,8 +132,7 @@ def create_step(key, page, box):
 def create_step_before(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Line, step-left',
@@ -155,8 +145,7 @@ def create_step_before(key, page, box):
 def create_step_after(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Line, step-right',
@@ -169,8 +158,7 @@ def create_step_after(key, page, box):
 def create_path(key, page, box):
     n = 50
     f = FakeScatter()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Path',
@@ -183,8 +171,7 @@ def create_path(key, page, box):
 def create_path_point(key, page, box):
     n = 50
     f = FakeScatter()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Path + Point',
@@ -200,8 +187,7 @@ def create_path_point(key, page, box):
 def create_path_smooth(key, page, box):
     n = 50
     f = FakeScatter()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Path, smooth',
@@ -214,8 +200,7 @@ def create_path_smooth(key, page, box):
 def create_area(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Area',
@@ -228,8 +213,7 @@ def create_area(key, page, box):
 def create_area_smooth(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Area, smooth',
@@ -242,8 +226,7 @@ def create_area_smooth(key, page, box):
 def create_area_groups(key, page, box):
     n = 50
     f = FakeMultiTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Area, groups',
@@ -257,8 +240,7 @@ def create_area_groups(key, page, box):
 def create_area_line(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Area + Line',
@@ -274,8 +256,7 @@ def create_area_line(key, page, box):
 def create_area_line_smooth(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Area + Line, smooth',
@@ -291,8 +272,7 @@ def create_area_line_smooth(key, page, box):
 def create_area_line_groups(key, page, box):
     n = 50
     f = FakeMultiTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Area + Line, groups',
@@ -309,8 +289,7 @@ def create_area_line_groups(key, page, box):
 def create_area_negative(key, page, box):
     n = 50
     f = FakeTimeSeries(min=-50, max=50, start=0)
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Area, negative values',
@@ -323,8 +302,7 @@ def create_area_negative(key, page, box):
 def create_area_stacked(key, page, box):
     n = 50
     f = FakeMultiTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Area, stacked',
@@ -338,8 +316,7 @@ def create_area_stacked(key, page, box):
 def create_area_range(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Area, range',
@@ -352,8 +329,7 @@ def create_area_range(key, page, box):
 def create_interval(key, page, box):
     n = 20
     f = FakeCategoricalSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Interval',
@@ -366,8 +342,7 @@ def create_interval(key, page, box):
 def create_histogram(key, page, box):
     n = 10
     f = FakeCategoricalSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Histogram',
@@ -380,8 +355,7 @@ def create_histogram(key, page, box):
 def create_interval_range(key, page, box):
     n = 20
     f = FakeCategoricalSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Interval, range',
@@ -395,8 +369,7 @@ def create_interval_groups(key, page, box):
     n = 10
     k = 3
     f = FakeMultiCategoricalSeries(groups=k)
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Intervals, groups',
@@ -411,8 +384,7 @@ def create_interval_stacked(key, page, box):
     n = 10
     k = 5
     f = FakeMultiCategoricalSeries(groups=k)
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Intervals, stacked',
@@ -427,8 +399,7 @@ def create_interval_polar_stacked(key, page, box):
     n = 10
     k = 5
     f = FakeMultiCategoricalSeries(groups=k)
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Intervals, polar, stacked',
@@ -445,8 +416,7 @@ def create_interval_stacked_grouped(key, page, box):
     k = 5
     f1 = FakeMultiCategoricalSeries(groups=k)
     f2 = FakeMultiCategoricalSeries(groups=k)
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Intervals, stacked and dodged',
@@ -463,8 +433,7 @@ def create_interval_stacked_grouped(key, page, box):
 def create_interval_helix(key, page, box):
     n = 200
     f = FakeCategoricalSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Interval, helix',
@@ -477,8 +446,7 @@ def create_interval_helix(key, page, box):
 def create_interval_polar(key, page, box):
     n = 24
     f = FakeCategoricalSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Interval, polar',
@@ -492,8 +460,7 @@ def create_interval_theta(key, page, box):
     n = 10
     k = 5
     f = FakeMultiCategoricalSeries(groups=k)
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Intervals, theta, stacked',
@@ -507,8 +474,7 @@ def create_interval_theta(key, page, box):
 def create_polygon(key, page, box):
     k1, k2 = 20, 10
     f = FakeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Heatmap',
@@ -527,8 +493,7 @@ def create_polygon(key, page, box):
 def create_point_map(key, page, box):
     k1, k2 = 20, 10
     f = FakeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Points, size-encoded',
@@ -546,8 +511,7 @@ def create_point_map(key, page, box):
 def create_line_labels(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Labels',
@@ -561,8 +525,7 @@ def create_line_labels(key, page, box):
 def create_line_labels_stroked(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Labels, less messy',
@@ -577,8 +540,7 @@ def create_line_labels_stroked(key, page, box):
 def create_line_labels_no_overlap(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Remove overlapping labels',
@@ -593,8 +555,7 @@ def create_line_labels_no_overlap(key, page, box):
 def create_interval_labels(key, page, box):
     n = 20
     f = FakeCategoricalSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Label Customization',
@@ -613,8 +574,7 @@ def create_interval_labels(key, page, box):
 def create_point_annotation(key, page, box):
     n = 50
     f = FakeScatter()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Numeric-Numeric',
@@ -635,8 +595,7 @@ def create_point_annotation(key, page, box):
 def create_line_annotation(key, page, box):
     n = 50
     f = FakeTimeSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Time-Numeric',
@@ -658,8 +617,7 @@ def create_line_annotation(key, page, box):
 def create_interval_annotation(key, page, box):
     n = 20
     f = FakeCategoricalSeries()
-    v = page.add(dict(
-        key=key,
+    v = page.add(key, dict(
         view='plot',
         box=box,
         title='Categorical-Numeric',
@@ -778,8 +736,7 @@ def create_pixel_art_page(site: Site):
     page = site['/pixel_art']
     page.drop()
 
-    v = page.add(dict(
-        key='pixel_art1',
+    v = page.add('pixel_art1', dict(
         view='pixel_art',
         box='1 1 4 6',
         title='Art',
