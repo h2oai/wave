@@ -1,12 +1,12 @@
 import React from 'react';
 import { cards, Repeat } from './grid';
-import { bond, Card, Rec, S, TupleSet } from './telesync';
+import { bond, Card, Rec, S, Data } from './telesync';
 
 interface State {
   title: S
   item_view: S
   item_props: Rec
-  data: TupleSet
+  data: Data
 }
 
 const defaults: Partial<State> = {

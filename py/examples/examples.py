@@ -1,7 +1,7 @@
 from faker import Faker
 import time
 import random
-from telesync import Site, tupleset, atomic
+from telesync import Site, data, pack
 from synth import FakePercent, FakeCategoricalSeries
 
 fake = Faker()
@@ -59,7 +59,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
             plot_category='foo',
             plot_value='qux',
             plot_color=next_color(),
-            plot_data=tupleset('foo qux', -15),
+            plot_data=data('foo qux', -15),
             plot_zero_value=0,
             plot_curve=next_curve(),
         ))
@@ -79,7 +79,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
             plot_category='foo',
             plot_value='qux',
             plot_color=next_color(),
-            plot_data=tupleset('foo qux', -15),
+            plot_data=data('foo qux', -15),
             plot_zero_value=0,
             plot_curve=next_curve(),
         ))
@@ -100,7 +100,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
             plot_category='foo',
             plot_value='qux',
             plot_color=next_color(),
-            plot_data=tupleset('foo qux', -25),
+            plot_data=data('foo qux', -25),
             plot_zero_value=0
         ))
         bars.append((f, c))
@@ -136,7 +136,7 @@ def create_widgets_page(site: Site, update_freq=0.0):
             plot_category='foo',
             plot_value='qux',
             plot_color=next_color(),
-            plot_data=tupleset('foo qux', -15),
+            plot_data=data('foo qux', -15),
             plot_zero_value=0,
             plot_curve=next_curve(),
         ))
@@ -283,7 +283,7 @@ def create_template_page(site: Site, update_freq=0.0):
         box=f'1 1 12 10',
         # title='Template Example',
         template='{{product}} costs {{price}}!',
-        data=atomic(dict(product='Coffee', price='$3.45')),
+        data=pack(dict(product='Coffee', price='$3.45')),
     ))
     page.sync()
 
@@ -298,9 +298,9 @@ def create_lists_page(site: Site, update_freq=0.0):
         box='1 1 2 4',
         view='list',
         item_view='list_item1',
-        item_props=atomic(dict(title='=code', caption='=currency', value='=trades', aux_value='=returns')),
+        item_props=pack(dict(title='=code', caption='=currency', value='=trades', aux_value='=returns')),
         title='Exchange Rates',
-        data=tupleset('currency code trades returns', -15),
+        data=data('currency code trades returns', -15),
     ))
     c.data = [
         [fake.cryptocurrency_name(), fake.cryptocurrency_code(), random.randint(100, 1000), random.randint(10, 100)] for
@@ -311,8 +311,8 @@ def create_lists_page(site: Site, update_freq=0.0):
         box='3 1 2 4',
         view='repeat',
         item_view='list_item1',
-        item_props=atomic(dict(title='=code', caption='=currency', value='=trades', aux_value='=returns')),
-        data=tupleset('currency code trades returns', -15),
+        item_props=pack(dict(title='=code', caption='=currency', value='=trades', aux_value='=returns')),
+        data=data('currency code trades returns', -15),
     ))
     c.data = [
         [fake.cryptocurrency_name(), fake.cryptocurrency_code(), random.randint(100, 1000), random.randint(10, 100)] for
@@ -326,10 +326,10 @@ def create_lists_page(site: Site, update_freq=0.0):
         justify='between',
         wrap='between',
         item_view='template',
-        item_props=atomic(dict(
+        item_props=pack(dict(
             template='<div style="width:15px; height:15px; border-radius: 50%; background-color:{{#if loss}}red{{else}}green{{/if}}" title="{{code}}"/>'
         )),
-        data=tupleset('code loss', -10),
+        data=data('code loss', -10),
     ))
     c.data = [[fake.cryptocurrency_code(), random.randint(0, 1)] for i in range(10)]
 
@@ -338,13 +338,13 @@ def create_lists_page(site: Site, update_freq=0.0):
         box='6 1 3 4',
         title='Currency Trades',
         view='table',
-        cells=atomic([
+        cells=pack([
             dict(title='Currency', value='=currency'),
             dict(title='Trades',
                  view='list_item1',
                  props=dict(title='=code', caption='1 hour ago', value='=trades', aux_value='=returns')),
         ]),
-        data=tupleset('currency code trades returns', -15),
+        data=data('currency code trades returns', -15),
     ))
     c.data = [
         [fake.cryptocurrency_name(), fake.cryptocurrency_code(), random.randint(100, 1000), random.randint(10, 100)] for

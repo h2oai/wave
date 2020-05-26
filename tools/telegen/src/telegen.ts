@@ -215,8 +215,8 @@ const
     U: 'int',
     B: 'bool',
     V: 'Union[str, float, int]',
-    Rec: 'dict',
-    TupleSet: 'TupleSet', // special-cased during packing, Go allocation and unpacking.
+    Rec: 'Any',
+    Data: 'Data', // special-cased during packing, Go allocation and unpacking.
   },
   translateToPython = (protocol: Protocol) => {
     const
@@ -364,7 +364,7 @@ const
       },
       generate = (): string => {
         p('from typing import Any, Optional, Union, Dict, List as Repeated')
-        p('from .core import TupleSet')
+        p('from .core import Data')
         p('')
         for (const file of protocol.files) {
           for (const type of file.types) {

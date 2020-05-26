@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards, Format, grid } from './grid';
-import { bond, Card, decode, F, Rec, S, TupleSet } from './telesync';
+import { bond, Card, decode, F, Rec, S, Data } from './telesync';
 import { getTheme } from './theme';
 import { MicroBars } from './parts/microbars';
 import { MicroArea } from './parts/microline';
@@ -52,7 +52,7 @@ interface State {
   aux_value: S
   data: Rec
   plot_type: 'area' | 'interval'
-  plot_data: TupleSet
+  plot_data: Data
   plot_color: S
   plot_category: S
   plot_value: S

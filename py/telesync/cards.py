@@ -1,5 +1,5 @@
 from typing import Any, Optional, Union, Dict, List as Repeated
-from .core import TupleSet
+from .core import Data
 
 
 class Card1:
@@ -8,7 +8,7 @@ class Card1:
             box: str,
             title: str,
             value: str,
-            data: Optional[dict] = None,
+            data: Optional[Any] = None,
     ):
         self.box = box
         self.title = title
@@ -45,7 +45,7 @@ class Card1:
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
-        data: Optional[dict] = __d_data
+        data: Optional[Any] = __d_data
         return Card1(
             box,
             title,
@@ -61,9 +61,9 @@ class Card2:
             title: str,
             value: str,
             aux_value: str,
-            data: dict,
+            data: Any,
             plot_type: str,
-            plot_data: TupleSet,
+            plot_data: Data,
             plot_color: str,
             plot_category: str,
             plot_value: str,
@@ -168,9 +168,9 @@ class Card2:
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
-        data: dict = __d_data
+        data: Any = __d_data
         plot_type: str = __d_plot_type
-        plot_data: TupleSet = __d_plot_data
+        plot_data: Data = __d_plot_data
         plot_color: str = __d_plot_color
         plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
@@ -200,7 +200,7 @@ class Card3:
             value: str,
             aux_value: str,
             caption: str,
-            data: dict,
+            data: Any,
     ):
         self.box = box
         self.title = title
@@ -257,7 +257,7 @@ class Card3:
         value: str = __d_value
         aux_value: str = __d_aux_value
         caption: str = __d_caption
-        data: dict = __d_data
+        data: Any = __d_data
         return Card3(
             box,
             title,
@@ -277,7 +277,7 @@ class Card4:
             aux_value: str,
             progress: float,
             plot_color: str,
-            data: dict,
+            data: Any,
     ):
         self.box = box
         self.title = title
@@ -342,7 +342,7 @@ class Card4:
         aux_value: str = __d_aux_value
         progress: float = __d_progress
         plot_color: str = __d_plot_color
-        data: dict = __d_data
+        data: Any = __d_data
         return Card4(
             box,
             title,
@@ -363,7 +363,7 @@ class Card5:
             aux_value: str,
             progress: float,
             plot_color: str,
-            data: dict,
+            data: Any,
     ):
         self.box = box
         self.title = title
@@ -428,7 +428,7 @@ class Card5:
         aux_value: str = __d_aux_value
         progress: float = __d_progress
         plot_color: str = __d_plot_color
-        data: dict = __d_data
+        data: Any = __d_data
         return Card5(
             box,
             title,
@@ -447,9 +447,9 @@ class Card6:
             title: str,
             value: str,
             aux_value: str,
-            data: dict,
+            data: Any,
             plot_type: str,
-            plot_data: TupleSet,
+            plot_data: Data,
             plot_color: str,
             plot_category: str,
             plot_value: str,
@@ -554,9 +554,9 @@ class Card6:
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
-        data: dict = __d_data
+        data: Any = __d_data
         plot_type: str = __d_plot_type
-        plot_data: TupleSet = __d_plot_data
+        plot_data: Data = __d_plot_data
         plot_color: str = __d_plot_color
         plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
@@ -584,9 +584,9 @@ class Card7:
             box: str,
             title: str,
             value: str,
-            data: dict,
+            data: Any,
             plot_type: str,
-            plot_data: TupleSet,
+            plot_data: Data,
             plot_color: str,
             plot_category: str,
             plot_value: str,
@@ -683,9 +683,9 @@ class Card7:
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
-        data: dict = __d_data
+        data: Any = __d_data
         plot_type: str = __d_plot_type
-        plot_data: TupleSet = __d_plot_data
+        plot_data: Data = __d_plot_data
         plot_color: str = __d_plot_color
         plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
@@ -715,7 +715,7 @@ class Card8:
             aux_value: str,
             progress: float,
             plot_color: str,
-            data: dict,
+            data: Any,
     ):
         self.box = box
         self.title = title
@@ -780,7 +780,7 @@ class Card8:
         aux_value: str = __d_aux_value
         progress: float = __d_progress
         plot_color: str = __d_plot_color
-        data: dict = __d_data
+        data: Any = __d_data
         return Card8(
             box,
             title,
@@ -804,7 +804,7 @@ class Card9:
             aux_value_caption: str,
             progress: float,
             plot_color: str,
-            data: dict,
+            data: Any,
     ):
         self.box = box
         self.title = title
@@ -893,7 +893,7 @@ class Card9:
         aux_value_caption: str = __d_aux_value_caption
         progress: float = __d_progress
         plot_color: str = __d_plot_color
-        data: dict = __d_data
+        data: Any = __d_data
         return Card9(
             box,
             title,
@@ -1422,12 +1422,12 @@ class Flex:
             box: str,
             title: str,
             item_view: str,
-            item_props: dict,
+            item_props: Any,
             direction: str,
             justify: str,
             align: str,
             wrap: str,
-            data: TupleSet,
+            data: Data,
     ):
         self.box = box
         self.title = title
@@ -1511,12 +1511,12 @@ class Flex:
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
-        item_props: dict = __d_item_props
+        item_props: Any = __d_item_props
         direction: str = __d_direction
         justify: str = __d_justify
         align: str = __d_align
         wrap: str = __d_wrap
-        data: TupleSet = __d_data
+        data: Data = __d_data
         return Flex(
             box,
             title,
@@ -3544,7 +3544,7 @@ class Form:
             self,
             box: str,
             url: str,
-            args: dict,
+            args: Any,
             items: Union[Repeated[FormComponent], str],
     ):
         self.box = box
@@ -3585,7 +3585,7 @@ class Form:
             raise ValueError('Form.items is required.')
         box: str = __d_box
         url: str = __d_url
-        args: dict = __d_args
+        args: Any = __d_args
         items: Union[Repeated[FormComponent], str] = __d_items if isinstance(__d_items, str) else [FormComponent.load(__e) for __e in __d_items]
         return Form(
             box,
@@ -3601,8 +3601,8 @@ class List:
             box: str,
             title: str,
             item_view: str,
-            item_props: dict,
-            data: TupleSet,
+            item_props: Any,
+            data: Data,
     ):
         self.box = box
         self.title = title
@@ -3650,8 +3650,8 @@ class List:
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
-        item_props: dict = __d_item_props
-        data: TupleSet = __d_data
+        item_props: Any = __d_item_props
+        data: Data = __d_data
         return List(
             box,
             title,
@@ -3669,7 +3669,7 @@ class ListItem1:
             caption: str,
             value: str,
             aux_value: str,
-            data: dict,
+            data: Any,
     ):
         self.box = box
         self.title = title
@@ -3726,7 +3726,7 @@ class ListItem1:
         caption: str = __d_caption
         value: str = __d_value
         aux_value: str = __d_aux_value
-        data: dict = __d_data
+        data: Any = __d_data
         return ListItem1(
             box,
             title,
@@ -3778,7 +3778,7 @@ class PixelArt:
             self,
             box: str,
             title: str,
-            data: dict,
+            data: Any,
     ):
         self.box = box
         self.title = title
@@ -3811,7 +3811,7 @@ class PixelArt:
             raise ValueError('PixelArt.data is required.')
         box: str = __d_box
         title: str = __d_title
-        data: dict = __d_data
+        data: Any = __d_data
         return PixelArt(
             box,
             title,
@@ -4194,7 +4194,7 @@ class Plot:
             self,
             box: str,
             title: str,
-            data: dict,
+            data: Any,
             vis: PlotVis,
     ):
         self.box = box
@@ -4235,7 +4235,7 @@ class Plot:
             raise ValueError('Plot.vis is required.')
         box: str = __d_box
         title: str = __d_title
-        data: dict = __d_data
+        data: Any = __d_data
         vis: PlotVis = PlotVis.load(__d_vis)
         return Plot(
             box,
@@ -4251,8 +4251,8 @@ class Repeat:
             box: str,
             title: str,
             item_view: str,
-            item_props: dict,
-            data: TupleSet,
+            item_props: Any,
+            data: Data,
     ):
         self.box = box
         self.title = title
@@ -4300,8 +4300,8 @@ class Repeat:
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
-        item_props: dict = __d_item_props
-        data: TupleSet = __d_data
+        item_props: Any = __d_item_props
+        data: Data = __d_data
         return Repeat(
             box,
             title,
@@ -4316,8 +4316,8 @@ class Table:
             self,
             box: str,
             title: str,
-            cells: TupleSet,
-            data: TupleSet,
+            cells: Data,
+            data: Data,
     ):
         self.box = box
         self.title = title
@@ -4357,8 +4357,8 @@ class Table:
             raise ValueError('Table.data is required.')
         box: str = __d_box
         title: str = __d_title
-        cells: TupleSet = __d_cells
-        data: TupleSet = __d_data
+        cells: Data = __d_cells
+        data: Data = __d_data
         return Table(
             box,
             title,
@@ -4373,7 +4373,7 @@ class Template:
             box: str,
             title: str,
             template: str,
-            data: dict,
+            data: Any,
     ):
         self.box = box
         self.title = title
@@ -4414,7 +4414,7 @@ class Template:
         box: str = __d_box
         title: str = __d_title
         template: str = __d_template
-        data: dict = __d_data
+        data: Any = __d_data
         return Template(
             box,
             title,

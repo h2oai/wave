@@ -1,6 +1,6 @@
 import React from 'react';
 import { cards, Repeat } from './grid';
-import { bond, Card, Dict, Rec, S, TupleSet } from './telesync';
+import { bond, Card, Dict, Rec, S, Data } from './telesync';
 
 interface State {
   title: S
@@ -10,7 +10,7 @@ interface State {
   justify: 'start' | 'end' | 'center' | 'between' | 'around'
   align: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
   wrap: 'start' | 'end' | 'center' | 'between' | 'around' | 'stretch'
-  data: TupleSet
+  data: Data
 }
 
 const

@@ -1,4 +1,4 @@
-from telesync import Q, serve, atomic, ui
+from telesync import Q, serve, pack, ui
 
 count = 0
 
@@ -8,7 +8,7 @@ async def main(q: Q):
     if 'increment' in q.args:
         count += 1
 
-    fields = atomic([ui.button(name='increment', label=f'Count={count}')])
+    fields = pack([ui.button(name='increment', label=f'Count={count}')])
 
     if count > 0:
         form = q.page['a_form']

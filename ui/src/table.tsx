@@ -1,6 +1,6 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { B, Card, decode, Rec, S, TupleSet, xid, box, bond } from './telesync';
+import { B, Card, decode, Rec, S, Data, xid, box, bond } from './telesync';
 import { cards, CardView, Format } from './grid';
 import { getTheme } from './theme';
 
@@ -32,8 +32,8 @@ const
 
 interface State {
   title: S
-  cells: TupleSet
-  data: TupleSet
+  cells: Data
+  data: Data
 }
 
 const defaults: Partial<State> = {

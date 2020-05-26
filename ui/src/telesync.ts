@@ -180,7 +180,7 @@ export interface Dict<T> { [key: string]: T } // generic object
 export type Rec = Dict<Prim> // Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type.
 export type Packed<T> = T | S
 
-export interface TupleSet {
+export interface Data {
   list(): (Rec | null)[]
 }
 
@@ -266,7 +266,7 @@ interface Typ {
   make(t: Tup): Rec
 }
 
-interface DataBuf extends TupleSet, Buf {
+interface DataBuf extends Data, Buf {
   __buf__: true
 }
 interface FixBuf extends DataBuf {
@@ -343,6 +343,7 @@ const
           const [fields, columns] = JSON.parse(d)
           if (!Array.isArray(fields)) return data
           if (!Array.isArray(columns)) return data
+          const w = fields.length // width
           if (columns.length !== w) return data
           if (columns.length === 0) return data
           const n = columns[0].length
@@ -389,7 +390,7 @@ const
     return true
   },
   isBuf = (x: any): x is Buf => x != null && x.__buf__ === true,
-  isData = (x: any): x is TupleSet => isBuf(x),
+  isData = (x: any): x is Data => isBuf(x),
   isCur = (x: any): x is Cur => x != null && x.__cur__ === true,
   reverseIndex = (xs: S[]): Dict<U> => {
     const m: Dict<U> = {}

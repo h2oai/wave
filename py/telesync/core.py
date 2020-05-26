@@ -104,7 +104,7 @@ KEY = '__key__'
 def _set_op(o, k, v):
     guard_key(k)
     k = getattr(o, KEY) + _key_sep + str(k)
-    if isinstance(v, TupleSet):
+    if isinstance(v, Data):
         op = v.dump()
         op['k'] = k
     else:
@@ -145,17 +145,17 @@ class Ref:
         return Ref(getattr(self, PAGE), getattr(self, KEY) + _key_sep + str(key))
 
     def __setattr__(self, key, value):
-        if isinstance(value, TupleSet):
+        if isinstance(value, Data):
             raise ValueError('TupleSets cannot be used in assignments.')
         getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
 
     def __setitem__(self, key, value):
-        if isinstance(value, TupleSet):
+        if isinstance(value, Data):
             raise ValueError('TupleSets cannot be used in assignments.')
         getattr(self, PAGE)._track(_set_op(self, key, _dump(value)))
 
 
-class TupleSet:
+class Data:
     def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
         self.fields = fields
         self.data = data
@@ -183,13 +183,13 @@ class TupleSet:
                     return dict(f=dict(f=f, n=n))
 
 
-def tupleset(
+def data(
         fields: Union[str, tuple, list],
         size: int = 0,
         rows: Optional[Union[dict, list]] = None,
         columns: Optional[Union[dict, list]] = None,
         pack=False,
-) -> Union[TupleSet, str]:
+) -> Union[Data, str]:
     if _is_str(fields):
         fields = fields.strip()
         if fields == '':
@@ -225,7 +225,7 @@ def tupleset(
     if not _is_int(size):
         raise ValueError('size must be int')
 
-    return TupleSet(fields, size, rows)
+    return Data(fields, size, rows)
 
 
 class Page:
@@ -254,7 +254,7 @@ class Page:
         data = []
         bufs = []
         for k, v in props.items():
-            if isinstance(v, TupleSet):
+            if isinstance(v, Data):
                 data.append((k, len(bufs)))
                 bufs.append(v.dump())
 
@@ -368,7 +368,7 @@ def marshal(d: Any): return json.dumps(d, allow_nan=False, separators=(',', ':')
 def unmarshal(s: str): return json.loads(s)
 
 
-def atomic(data: Any): return 'data:' + marshal(data)
+def pack(data: Any): return 'data:' + marshal(data)
 
 
 def _session_for(sessions: dict, session_id: str):
