@@ -2,7 +2,7 @@
 import Handlebars from 'handlebars';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { bond, Card, decode, Rec, S } from './telesync';
+import { bond, Card, unpack, Rec, S } from './telesync';
 import { cards, Format } from './grid';
 import { getTheme } from './theme';
 
@@ -41,7 +41,7 @@ const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          data = decode(s.data),
+          data = unpack(s.data),
           html = { __html: template(data) }
         return s.title
           ? (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { B, Card, decode, Rec, S, Data, xid, box, bond } from './telesync';
+import { B, Card, unpack, Rec, S, Data, xid, box, bond } from './telesync';
 import { cards, CardView, Format } from './grid';
 import { getTheme } from './theme';
 
@@ -45,14 +45,14 @@ const
     const
       render = () => {
         const s = { ...defaults, ...state } as State
-        let cells = decode<any[]>(state.cells)
+        let cells = unpack<any[]>(state.cells)
 
         if (!Array.isArray(cells)) cells = [{ title: 'Data' }]
 
         const
           ths = cells.map((cell, i) => (<th key={i}>{cell.title}</th>)),
-          columns = cells.map(({ view, props, value }) => ({ view, props: decode<Rec>(props), value })),
-          trs = decode<Rec[]>(s.data).map((data, i) => {
+          columns = cells.map(({ view, props, value }) => ({ view, props: unpack<Rec>(props), value })),
+          trs = unpack<Rec[]>(s.data).map((data, i) => {
             const tds = columns.map(({ view, props, value }, j) => {
               if (value != null) {
                 return <td><Format data={data} format={value} /></td>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards, Format } from './grid';
-import { bond, Card, decode, Rec, S } from './telesync';
+import { bond, Card, unpack, Rec, S } from './telesync';
 import { getTheme } from './theme';
 
 const
@@ -37,7 +37,7 @@ const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          data = decode(s.data)
+          data = unpack(s.data)
         return (
           <div className={css.card}>
             <div className={css.title}>

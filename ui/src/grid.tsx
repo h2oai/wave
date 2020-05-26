@@ -1,5 +1,5 @@
 import React from 'react';
-import { box, B, Card, decode, Dict, F, parseI, Rec, Rect, S, U, xid } from './telesync';
+import { box, B, Card, unpack, Dict, F, parseI, Rec, Rect, S, U, xid } from './telesync';
 import { format, isFormatExpr } from './intl';
 
 export const
@@ -17,10 +17,10 @@ export const
     return <Tag {...card} />
   },
   Repeat = ({ view, props, data }: { view: S | any, props: any, data: any }) => {
-    const items = decode<Rec[]>(data).map((r, i) => {
+    const items = unpack<Rec[]>(data).map((r, i) => {
       const card: Card<any> = {
         name: xid(),
-        state: { ...decode<Rec>(props), view, data: r },
+        state: { ...unpack<Rec>(props), view, data: r },
         changed: box<B>(),
       }
       return <CardView key={i} card={card} />

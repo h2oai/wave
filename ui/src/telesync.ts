@@ -293,7 +293,7 @@ export const
     for (const [k, v] of kvs) d[k] = v
     return d
   },
-  decode = <T extends {}>(data: any): T =>
+  unpack = <T extends {}>(data: any): T =>
     (typeof data === 'string')
       ? decodeString(data)
       : (isData(data))

@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards } from './grid';
-import { bond, Card, decode, Rec, S, socket, U } from './telesync';
+import { bond, Card, unpack, Rec, S, socket, U } from './telesync';
 import { getTheme } from './theme';
 
 const
@@ -70,7 +70,7 @@ const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          data = decode<(Pixel | null)[]>(s.data),
+          data = unpack<(Pixel | null)[]>(s.data),
           swatches = palette.map((c, i) => (
             <div
               key={i}

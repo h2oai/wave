@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards, Format, grid } from './grid';
-import { bond, Card, decode, F, Rec, S } from './telesync';
+import { bond, Card, unpack, F, Rec, S } from './telesync';
 import { getTheme } from './theme';
 import { ProgressArc } from './parts/progress_arc';
 
@@ -59,7 +59,7 @@ const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          data = decode(s.data)
+          data = unpack(s.data)
 
         return (
           <div className={css.card}>

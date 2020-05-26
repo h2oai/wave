@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards } from './grid';
-import { bond, Card, decode, Rec, socket, xid } from './telesync';
+import { bond, Card, unpack, Rec, socket, xid } from './telesync';
 import { getTheme } from './theme';
 import * as Form from './form';
 
@@ -53,8 +53,8 @@ const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          items = decode<Form.Component[]>(s.items), // XXX ugly
-          args = decode(s.args),
+          items = unpack<Form.Component[]>(s.items), // XXX ugly
+          args = unpack(s.args),
           submit = () => {
             const sock = socket.current
             if (!sock) return

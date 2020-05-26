@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards, Format, grid } from './grid';
-import { bond, Card, decode, F, Rec, S, Data } from './telesync';
+import { bond, Card, unpack, F, Rec, S, Data } from './telesync';
 import { getTheme } from './theme';
 import { MicroBars } from './parts/microbars';
 import { MicroArea } from './parts/microline';
@@ -74,13 +74,13 @@ const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          data = decode(s.data),
+          data = unpack(s.data),
           plot = s.plot_type === 'area'
             ? (
               <MicroArea
                 width={plotWidth}
                 height={plotHeight}
-                data={decode(s.plot_data)}
+                data={unpack(s.plot_data)}
                 value={s.plot_value}
                 color={s.plot_color}
                 zeroValue={s.plot_zero_value}
@@ -90,7 +90,7 @@ const
               <MicroBars
                 width={plotWidth}
                 height={plotHeight}
-                data={decode(s.plot_data)}
+                data={unpack(s.plot_data)}
                 category={s.plot_category}
                 value={s.plot_value}
                 color={s.plot_color}

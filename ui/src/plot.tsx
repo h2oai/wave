@@ -4,7 +4,7 @@ import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards } from './grid';
 import { Fmt, parseFormat } from './intl';
-import { B, bond, Card, decode, Dict, F, parseI, parseU, Rec, S, V } from './telesync';
+import { B, bond, Card, unpack, Dict, F, parseI, parseU, Rec, S, V } from './telesync';
 import { getTheme } from './theme';
 
 const
@@ -574,8 +574,8 @@ const
         if (!el) return
         const
           s = state,
-          raw_data = decode(s.data) as any[],
-          raw_marks = decode(s.vis) as Mark[],
+          raw_data = unpack(s.data) as any[],
+          raw_marks = unpack(s.vis) as Mark[],
           marks = raw_marks.map(refactorMark),
           vis: Vis = { marks: marks },
           // spaceT = spaceTypeOf(raw_marks, marks),
@@ -593,7 +593,7 @@ const
         if (!el || !currentChart || !currentVis) return
         const
           s = state,
-          raw_data = decode(s.data) as any[],
+          raw_data = unpack(s.data) as any[],
           data = refactorData(raw_data, currentVis.marks)
         currentChart.changeData(data)
       },
