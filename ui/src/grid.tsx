@@ -71,12 +71,12 @@ const
         if (w > 0) {
           slot.width = w * uw + (w - 1) * gap
         } else {
-          slot.right = -w * (uw + gap)
+          slot.right = -(w + 1) * (uw + gap)
         }
         if (h > 0) {
           slot.height = h * uh + (h - 1) * gap
         } else {
-          slot.bottom = -h * (uh + gap)
+          slot.bottom = -(h + 1) * (uh + gap)
         }
         return slot
       },
