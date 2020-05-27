@@ -80,7 +80,7 @@ class Card2:
     :param value: No documentation available.
     :param aux_value: No documentation available.
     :param data: No documentation available.
-    :param plot_type: No documentation available.
+    :param plot_type: No documentation available. One of 'area', 'interval'.
     :param plot_data: No documentation available.
     :param plot_color: No documentation available.
     :param plot_category: No documentation available.
@@ -518,7 +518,7 @@ class Card6:
     :param value: No documentation available.
     :param aux_value: No documentation available.
     :param data: No documentation available.
-    :param plot_type: No documentation available.
+    :param plot_type: No documentation available. One of 'area', 'interval'.
     :param plot_data: No documentation available.
     :param plot_color: No documentation available.
     :param plot_category: No documentation available.
@@ -672,7 +672,7 @@ class Card7:
     :param title: No documentation available.
     :param value: No documentation available.
     :param data: No documentation available.
-    :param plot_type: No documentation available.
+    :param plot_type: No documentation available. One of 'area', 'interval'.
     :param plot_data: No documentation available.
     :param plot_color: No documentation available.
     :param plot_category: No documentation available.
@@ -1198,7 +1198,7 @@ class DataCell:
 class DataSource:
     """No documentation available.
 
-    :param t: No documentation available.
+    :param t: No documentation available. One of 'Table', 'View'.
     :param id: No documentation available.
     """
     def __init__(
@@ -1651,10 +1651,10 @@ class Flex:
     :param title: No documentation available.
     :param item_view: No documentation available.
     :param item_props: No documentation available.
-    :param direction: No documentation available.
-    :param justify: No documentation available.
-    :param align: No documentation available.
-    :param wrap: No documentation available.
+    :param direction: No documentation available. One of 'horizontal', 'vertical'.
+    :param justify: No documentation available. One of 'start', 'end', 'center', 'between', 'around'.
+    :param align: No documentation available. One of 'start', 'end', 'center', 'baseline', 'stretch'.
+    :param wrap: No documentation available. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
     :param data: No documentation available.
     """
     def __init__(
@@ -4449,7 +4449,7 @@ class PlotMark:
     :param size_range: No documentation available.
     :param stack: No documentation available.
     :param dodge: No documentation available.
-    :param curve: No documentation available.
+    :param curve: No documentation available. One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
     :param fill_color: No documentation available.
     :param fill_opacity: No documentation available.
     :param stroke_color: No documentation available.

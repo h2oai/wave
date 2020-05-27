@@ -166,7 +166,6 @@ const
         }
       }
 
-
       tt = collectRepeatedType(memberType)
       if (tt) {
         return { t: MemberT.Repeated, name: memberName, typeName: tt, optional, comments, packed: false }
@@ -306,7 +305,9 @@ const
         p(`    """` + (type.comments.length ? type.comments.join('\n    ') : noComment))
         p(``)
         for (const m of type.members) {
-          p(`    :param ${m.name}: ` + (m.comments.length ? m.comments.join(' ') : noComment))
+          p(`    :param ${m.name}: `
+            + (m.comments.length ? m.comments.join(' ') : noComment)
+            + (m.t === MemberT.Enum ? ` One of ${m.values.map(v => `'${v}'`).join(', ')}.` : ''))
         }
         p(`    """`)
         p(`    def __init__(`)
