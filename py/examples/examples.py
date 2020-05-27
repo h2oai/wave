@@ -282,7 +282,7 @@ def create_template_page(site: Site, update_freq=0.0):
         view='template',
         box=f'1 1 12 10',
         # title='Template Example',
-        template='{{product}} costs {{price}}!',
+        html='{{product}} costs {{price}}!',
         data=pack(dict(product='Coffee', price='$3.45')),
     ))
     page.sync()

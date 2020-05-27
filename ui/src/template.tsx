@@ -21,32 +21,28 @@ const
     },
   })
 
+/** Render dynamic content using a HTML template.*/
 interface State {
   /** The title for this card.*/
   title: S
-  /** The Mustache template.*/
-  template: S
-  /** Data for the Mustache template */
-  data: Rec
-}
-
-const defaults: Partial<State> = {
-  title: ''
+  /** The Handlebars template. https://handlebarsjs.com/guide/ */
+  html: S
+  /** Data for the Handlebars template */
+  data?: Rec
 }
 
 const
   View = bond(({ state, changed }: Card<State>) => {
     const
-      template = Handlebars.compile(state.template),
+      template = Handlebars.compile(state.html),
       render = () => {
         const
-          s = theme.merge(defaults, state),
-          data = unpack(s.data),
+          data = unpack(state.data || {}),
           html = { __html: template(data) }
-        return s.title
+        return state.title
           ? (
             <div className={css.titledCard}>
-              <div className={css.title}><Format data={data} format={s.title} /></div>
+              <div className={css.title}><Format data={data} format={state.title} /></div>
               <div dangerouslySetInnerHTML={html}></div>
             </div>
           )
