@@ -12,6 +12,13 @@ PackedData = Union[Data, str]
 
 
 class Card1:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -25,6 +32,7 @@ class Card1:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Card1.box is required.')
         if self.title is None:
@@ -41,6 +49,7 @@ class Card1:
 
     @staticmethod
     def load(__d: Dict) -> 'Card1':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Card1.box is required.')
@@ -64,6 +73,21 @@ class Card1:
 
 
 class Card2:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param data: No documentation available.
+    :param plot_type: No documentation available.
+    :param plot_data: No documentation available.
+    :param plot_color: No documentation available.
+    :param plot_category: No documentation available.
+    :param plot_value: No documentation available.
+    :param plot_zero_value: No documentation available.
+    :param plot_curve: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -93,6 +117,7 @@ class Card2:
         self.plot_curve = plot_curve
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Card2.box is required.')
         if self.title is None:
@@ -137,6 +162,7 @@ class Card2:
 
     @staticmethod
     def load(__d: Dict) -> 'Card2':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Card2.box is required.')
@@ -202,6 +228,15 @@ class Card2:
 
 
 class Card3:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param caption: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -219,6 +254,7 @@ class Card3:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Card3.box is required.')
         if self.title is None:
@@ -243,6 +279,7 @@ class Card3:
 
     @staticmethod
     def load(__d: Dict) -> 'Card3':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Card3.box is required.')
@@ -278,6 +315,16 @@ class Card3:
 
 
 class Card4:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -297,6 +344,7 @@ class Card4:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Card4.box is required.')
         if self.title is None:
@@ -324,6 +372,7 @@ class Card4:
 
     @staticmethod
     def load(__d: Dict) -> 'Card4':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Card4.box is required.')
@@ -364,6 +413,16 @@ class Card4:
 
 
 class Card5:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -383,6 +442,7 @@ class Card5:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Card5.box is required.')
         if self.title is None:
@@ -410,6 +470,7 @@ class Card5:
 
     @staticmethod
     def load(__d: Dict) -> 'Card5':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Card5.box is required.')
@@ -450,6 +511,21 @@ class Card5:
 
 
 class Card6:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param data: No documentation available.
+    :param plot_type: No documentation available.
+    :param plot_data: No documentation available.
+    :param plot_color: No documentation available.
+    :param plot_category: No documentation available.
+    :param plot_value: No documentation available.
+    :param plot_zero_value: No documentation available.
+    :param plot_curve: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -479,6 +555,7 @@ class Card6:
         self.plot_curve = plot_curve
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Card6.box is required.')
         if self.title is None:
@@ -523,6 +600,7 @@ class Card6:
 
     @staticmethod
     def load(__d: Dict) -> 'Card6':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Card6.box is required.')
@@ -588,6 +666,20 @@ class Card6:
 
 
 class Card7:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param data: No documentation available.
+    :param plot_type: No documentation available.
+    :param plot_data: No documentation available.
+    :param plot_color: No documentation available.
+    :param plot_category: No documentation available.
+    :param plot_value: No documentation available.
+    :param plot_zero_value: No documentation available.
+    :param plot_curve: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -615,6 +707,7 @@ class Card7:
         self.plot_curve = plot_curve
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Card7.box is required.')
         if self.title is None:
@@ -656,6 +749,7 @@ class Card7:
 
     @staticmethod
     def load(__d: Dict) -> 'Card7':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Card7.box is required.')
@@ -716,6 +810,16 @@ class Card7:
 
 
 class Card8:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -735,6 +839,7 @@ class Card8:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Card8.box is required.')
         if self.title is None:
@@ -762,6 +867,7 @@ class Card8:
 
     @staticmethod
     def load(__d: Dict) -> 'Card8':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Card8.box is required.')
@@ -802,6 +908,19 @@ class Card8:
 
 
 class Card9:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param caption: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param value_caption: No documentation available.
+    :param aux_value_caption: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -827,6 +946,7 @@ class Card9:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Card9.box is required.')
         if self.title is None:
@@ -863,6 +983,7 @@ class Card9:
 
     @staticmethod
     def load(__d: Dict) -> 'Card9':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Card9.box is required.')
@@ -918,6 +1039,11 @@ class Card9:
 
 
 class HeadingCell:
+    """No documentation available.
+
+    :param level: No documentation available.
+    :param content: No documentation available.
+    """
     def __init__(
             self,
             level: int,
@@ -927,6 +1053,7 @@ class HeadingCell:
         self.content = content
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.level is None:
             raise ValueError('HeadingCell.level is required.')
         if self.content is None:
@@ -938,6 +1065,7 @@ class HeadingCell:
 
     @staticmethod
     def load(__d: Dict) -> 'HeadingCell':
+        """Creates an instance of this class using the contents of a dict."""
         __d_level: Any = __d.get('level')
         if __d_level is None:
             raise ValueError('HeadingCell.level is required.')
@@ -953,6 +1081,10 @@ class HeadingCell:
 
 
 class MarkdownCell:
+    """No documentation available.
+
+    :param content: No documentation available.
+    """
     def __init__(
             self,
             content: str,
@@ -960,6 +1092,7 @@ class MarkdownCell:
         self.content = content
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.content is None:
             raise ValueError('MarkdownCell.content is required.')
         return dict(
@@ -968,6 +1101,7 @@ class MarkdownCell:
 
     @staticmethod
     def load(__d: Dict) -> 'MarkdownCell':
+        """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('MarkdownCell.content is required.')
@@ -978,6 +1112,12 @@ class MarkdownCell:
 
 
 class FrameCell:
+    """No documentation available.
+
+    :param source: No documentation available.
+    :param width: No documentation available.
+    :param height: No documentation available.
+    """
     def __init__(
             self,
             source: str,
@@ -989,6 +1129,7 @@ class FrameCell:
         self.height = height
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.source is None:
             raise ValueError('FrameCell.source is required.')
         if self.width is None:
@@ -1003,6 +1144,7 @@ class FrameCell:
 
     @staticmethod
     def load(__d: Dict) -> 'FrameCell':
+        """Creates an instance of this class using the contents of a dict."""
         __d_source: Any = __d.get('source')
         if __d_source is None:
             raise ValueError('FrameCell.source is required.')
@@ -1023,6 +1165,10 @@ class FrameCell:
 
 
 class DataCell:
+    """No documentation available.
+
+    :param content: No documentation available.
+    """
     def __init__(
             self,
             content: str,
@@ -1030,6 +1176,7 @@ class DataCell:
         self.content = content
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.content is None:
             raise ValueError('DataCell.content is required.')
         return dict(
@@ -1038,6 +1185,7 @@ class DataCell:
 
     @staticmethod
     def load(__d: Dict) -> 'DataCell':
+        """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('DataCell.content is required.')
@@ -1048,6 +1196,11 @@ class DataCell:
 
 
 class DataSource:
+    """No documentation available.
+
+    :param t: No documentation available.
+    :param id: No documentation available.
+    """
     def __init__(
             self,
             t: str,
@@ -1057,6 +1210,7 @@ class DataSource:
         self.id = id
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.t is None:
             raise ValueError('DataSource.t is required.')
         if self.t not in ('Table', 'View'):
@@ -1070,6 +1224,7 @@ class DataSource:
 
     @staticmethod
     def load(__d: Dict) -> 'DataSource':
+        """Creates an instance of this class using the contents of a dict."""
         __d_t: Any = __d.get('t')
         if __d_t is None:
             raise ValueError('DataSource.t is required.')
@@ -1085,6 +1240,11 @@ class DataSource:
 
 
 class Query:
+    """No documentation available.
+
+    :param sql: No documentation available.
+    :param sources: No documentation available.
+    """
     def __init__(
             self,
             sql: str,
@@ -1094,6 +1254,7 @@ class Query:
         self.sources = sources
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.sql is None:
             raise ValueError('Query.sql is required.')
         if self.sources is None:
@@ -1105,6 +1266,7 @@ class Query:
 
     @staticmethod
     def load(__d: Dict) -> 'Query':
+        """Creates an instance of this class using the contents of a dict."""
         __d_sql: Any = __d.get('sql')
         if __d_sql is None:
             raise ValueError('Query.sql is required.')
@@ -1120,6 +1282,11 @@ class Query:
 
 
 class VegaCell:
+    """No documentation available.
+
+    :param specification: No documentation available.
+    :param query: No documentation available.
+    """
     def __init__(
             self,
             specification: str,
@@ -1129,6 +1296,7 @@ class VegaCell:
         self.query = query
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.specification is None:
             raise ValueError('VegaCell.specification is required.')
         if self.query is None:
@@ -1140,6 +1308,7 @@ class VegaCell:
 
     @staticmethod
     def load(__d: Dict) -> 'VegaCell':
+        """Creates an instance of this class using the contents of a dict."""
         __d_specification: Any = __d.get('specification')
         if __d_specification is None:
             raise ValueError('VegaCell.specification is required.')
@@ -1155,6 +1324,14 @@ class VegaCell:
 
 
 class Cell:
+    """No documentation available.
+
+    :param heading: No documentation available.
+    :param markdown: No documentation available.
+    :param frame: No documentation available.
+    :param data: No documentation available.
+    :param vega: No documentation available.
+    """
     def __init__(
             self,
             heading: Optional[HeadingCell] = None,
@@ -1170,6 +1347,7 @@ class Cell:
         self.vega = vega
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         return dict(
             heading=None if self.heading is None else self.heading.dump(),
             markdown=None if self.markdown is None else self.markdown.dump(),
@@ -1180,6 +1358,7 @@ class Cell:
 
     @staticmethod
     def load(__d: Dict) -> 'Cell':
+        """Creates an instance of this class using the contents of a dict."""
         __d_heading: Any = __d.get('heading')
         __d_markdown: Any = __d.get('markdown')
         __d_frame: Any = __d.get('frame')
@@ -1200,6 +1379,14 @@ class Cell:
 
 
 class Command:
+    """No documentation available.
+
+    :param action: No documentation available.
+    :param icon: No documentation available.
+    :param label: No documentation available.
+    :param caption: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             action: str,
@@ -1215,6 +1402,7 @@ class Command:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.action is None:
             raise ValueError('Command.action is required.')
         if self.icon is None:
@@ -1235,6 +1423,7 @@ class Command:
 
     @staticmethod
     def load(__d: Dict) -> 'Command':
+        """Creates an instance of this class using the contents of a dict."""
         __d_action: Any = __d.get('action')
         if __d_action is None:
             raise ValueError('Command.action is required.')
@@ -1265,6 +1454,13 @@ class Command:
 
 
 class DashboardPanel:
+    """No documentation available.
+
+    :param cells: No documentation available.
+    :param size: No documentation available.
+    :param commands: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             cells: Repeated[Cell],
@@ -1278,6 +1474,7 @@ class DashboardPanel:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.cells is None:
             raise ValueError('DashboardPanel.cells is required.')
         if self.size is None:
@@ -1295,6 +1492,7 @@ class DashboardPanel:
 
     @staticmethod
     def load(__d: Dict) -> 'DashboardPanel':
+        """Creates an instance of this class using the contents of a dict."""
         __d_cells: Any = __d.get('cells')
         if __d_cells is None:
             raise ValueError('DashboardPanel.cells is required.')
@@ -1320,6 +1518,11 @@ class DashboardPanel:
 
 
 class DashboardRow:
+    """No documentation available.
+
+    :param panels: No documentation available.
+    :param size: No documentation available.
+    """
     def __init__(
             self,
             panels: Repeated[DashboardPanel],
@@ -1329,6 +1532,7 @@ class DashboardRow:
         self.size = size
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.panels is None:
             raise ValueError('DashboardRow.panels is required.')
         if self.size is None:
@@ -1340,6 +1544,7 @@ class DashboardRow:
 
     @staticmethod
     def load(__d: Dict) -> 'DashboardRow':
+        """Creates an instance of this class using the contents of a dict."""
         __d_panels: Any = __d.get('panels')
         if __d_panels is None:
             raise ValueError('DashboardRow.panels is required.')
@@ -1355,6 +1560,11 @@ class DashboardRow:
 
 
 class DashboardPage:
+    """No documentation available.
+
+    :param title: No documentation available.
+    :param rows: No documentation available.
+    """
     def __init__(
             self,
             title: str,
@@ -1364,6 +1574,7 @@ class DashboardPage:
         self.rows = rows
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.title is None:
             raise ValueError('DashboardPage.title is required.')
         if self.rows is None:
@@ -1375,6 +1586,7 @@ class DashboardPage:
 
     @staticmethod
     def load(__d: Dict) -> 'DashboardPage':
+        """Creates an instance of this class using the contents of a dict."""
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('DashboardPage.title is required.')
@@ -1390,6 +1602,11 @@ class DashboardPage:
 
 
 class Dashboard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param pages: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -1399,6 +1616,7 @@ class Dashboard:
         self.pages = pages
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Dashboard.box is required.')
         if self.pages is None:
@@ -1411,6 +1629,7 @@ class Dashboard:
 
     @staticmethod
     def load(__d: Dict) -> 'Dashboard':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Dashboard.box is required.')
@@ -1426,6 +1645,18 @@ class Dashboard:
 
 
 class Flex:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param item_view: No documentation available.
+    :param item_props: No documentation available.
+    :param direction: No documentation available.
+    :param justify: No documentation available.
+    :param align: No documentation available.
+    :param wrap: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -1449,6 +1680,7 @@ class Flex:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Flex.box is required.')
         if self.title is None:
@@ -1490,6 +1722,7 @@ class Flex:
 
     @staticmethod
     def load(__d: Dict) -> 'Flex':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Flex.box is required.')
@@ -1540,6 +1773,12 @@ class Flex:
 
 
 class FormText:
+    """No documentation available.
+
+    :param size: No documentation available.
+    :param text: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             size: str,
@@ -1551,6 +1790,7 @@ class FormText:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.size is None:
             raise ValueError('FormText.size is required.')
         if self.text is None:
@@ -1565,6 +1805,7 @@ class FormText:
 
     @staticmethod
     def load(__d: Dict) -> 'FormText':
+        """Creates an instance of this class using the contents of a dict."""
         __d_size: Any = __d.get('size')
         if __d_size is None:
             raise ValueError('FormText.size is required.')
@@ -1585,6 +1826,13 @@ class FormText:
 
 
 class FormLabel:
+    """No documentation available.
+
+    :param label: No documentation available.
+    :param required: No documentation available.
+    :param disabled: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             label: str,
@@ -1598,6 +1846,7 @@ class FormLabel:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.label is None:
             raise ValueError('FormLabel.label is required.')
         if self.required is None:
@@ -1615,6 +1864,7 @@ class FormLabel:
 
     @staticmethod
     def load(__d: Dict) -> 'FormLabel':
+        """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('FormLabel.label is required.')
@@ -1640,6 +1890,10 @@ class FormLabel:
 
 
 class FormSeparator:
+    """No documentation available.
+
+    :param label: No documentation available.
+    """
     def __init__(
             self,
             label: str,
@@ -1647,6 +1901,7 @@ class FormSeparator:
         self.label = label
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.label is None:
             raise ValueError('FormSeparator.label is required.')
         return dict(
@@ -1655,6 +1910,7 @@ class FormSeparator:
 
     @staticmethod
     def load(__d: Dict) -> 'FormSeparator':
+        """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('FormSeparator.label is required.')
@@ -1665,6 +1921,13 @@ class FormSeparator:
 
 
 class FormProgress:
+    """No documentation available.
+
+    :param label: No documentation available.
+    :param caption: No documentation available.
+    :param value: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             label: str,
@@ -1678,6 +1941,7 @@ class FormProgress:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.label is None:
             raise ValueError('FormProgress.label is required.')
         if self.caption is None:
@@ -1695,6 +1959,7 @@ class FormProgress:
 
     @staticmethod
     def load(__d: Dict) -> 'FormProgress':
+        """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('FormProgress.label is required.')
@@ -1720,6 +1985,11 @@ class FormProgress:
 
 
 class FormMessageBar:
+    """No documentation available.
+
+    :param type: No documentation available.
+    :param text: No documentation available.
+    """
     def __init__(
             self,
             type: str,
@@ -1729,6 +1999,7 @@ class FormMessageBar:
         self.text = text
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.type is None:
             raise ValueError('FormMessageBar.type is required.')
         if self.text is None:
@@ -1740,6 +2011,7 @@ class FormMessageBar:
 
     @staticmethod
     def load(__d: Dict) -> 'FormMessageBar':
+        """Creates an instance of this class using the contents of a dict."""
         __d_type: Any = __d.get('type')
         if __d_type is None:
             raise ValueError('FormMessageBar.type is required.')
@@ -1755,6 +2027,24 @@ class FormMessageBar:
 
 
 class FormTextbox:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param placeholder: No documentation available.
+    :param mask: No documentation available.
+    :param icon: No documentation available.
+    :param prefix: No documentation available.
+    :param suffix: No documentation available.
+    :param value: No documentation available.
+    :param error: No documentation available.
+    :param required: No documentation available.
+    :param disabled: No documentation available.
+    :param readonly: No documentation available.
+    :param multiline: No documentation available.
+    :param password: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -1790,6 +2080,7 @@ class FormTextbox:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormTextbox.name is required.')
         if self.label is None:
@@ -1840,6 +2131,7 @@ class FormTextbox:
 
     @staticmethod
     def load(__d: Dict) -> 'FormTextbox':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormTextbox.name is required.')
@@ -1920,6 +2212,16 @@ class FormTextbox:
 
 
 class FormCheckbox:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param value: No documentation available.
+    :param indeterminate: No documentation available.
+    :param disabled: No documentation available.
+    :param trigger: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -1939,6 +2241,7 @@ class FormCheckbox:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormCheckbox.name is required.')
         if self.label is None:
@@ -1965,6 +2268,7 @@ class FormCheckbox:
 
     @staticmethod
     def load(__d: Dict) -> 'FormCheckbox':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormCheckbox.name is required.')
@@ -2005,6 +2309,15 @@ class FormCheckbox:
 
 
 class FormToggle:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param value: No documentation available.
+    :param disabled: No documentation available.
+    :param trigger: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2022,6 +2335,7 @@ class FormToggle:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormToggle.name is required.')
         if self.label is None:
@@ -2045,6 +2359,7 @@ class FormToggle:
 
     @staticmethod
     def load(__d: Dict) -> 'FormToggle':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormToggle.name is required.')
@@ -2080,6 +2395,12 @@ class FormToggle:
 
 
 class FormChoice:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param disabled: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2091,6 +2412,7 @@ class FormChoice:
         self.disabled = disabled
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormChoice.name is required.')
         if self.label is None:
@@ -2105,6 +2427,7 @@ class FormChoice:
 
     @staticmethod
     def load(__d: Dict) -> 'FormChoice':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormChoice.name is required.')
@@ -2125,6 +2448,16 @@ class FormChoice:
 
 
 class FormChoiceGroup:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param value: No documentation available.
+    :param choices: No documentation available.
+    :param required: No documentation available.
+    :param trigger: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2144,6 +2477,7 @@ class FormChoiceGroup:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormChoiceGroup.name is required.')
         if self.label is None:
@@ -2170,6 +2504,7 @@ class FormChoiceGroup:
 
     @staticmethod
     def load(__d: Dict) -> 'FormChoiceGroup':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormChoiceGroup.name is required.')
@@ -2210,6 +2545,14 @@ class FormChoiceGroup:
 
 
 class FormChecklist:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param values: No documentation available.
+    :param choices: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2225,6 +2568,7 @@ class FormChecklist:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormChecklist.name is required.')
         if self.label is None:
@@ -2245,6 +2589,7 @@ class FormChecklist:
 
     @staticmethod
     def load(__d: Dict) -> 'FormChecklist':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormChecklist.name is required.')
@@ -2275,6 +2620,20 @@ class FormChecklist:
 
 
 class FormDropdown:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param placeholder: No documentation available.
+    :param multiple: No documentation available.
+    :param value: No documentation available.
+    :param values: No documentation available.
+    :param choices: No documentation available.
+    :param required: No documentation available.
+    :param disabled: No documentation available.
+    :param trigger: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2302,6 +2661,7 @@ class FormDropdown:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormDropdown.name is required.')
         if self.label is None:
@@ -2340,6 +2700,7 @@ class FormDropdown:
 
     @staticmethod
     def load(__d: Dict) -> 'FormDropdown':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormDropdown.name is required.')
@@ -2400,6 +2761,17 @@ class FormDropdown:
 
 
 class FormCombobox:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param placeholder: No documentation available.
+    :param value: No documentation available.
+    :param choices: No documentation available.
+    :param error: No documentation available.
+    :param disabled: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2421,6 +2793,7 @@ class FormCombobox:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormCombobox.name is required.')
         if self.label is None:
@@ -2450,6 +2823,7 @@ class FormCombobox:
 
     @staticmethod
     def load(__d: Dict) -> 'FormCombobox':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormCombobox.name is required.')
@@ -2495,6 +2869,18 @@ class FormCombobox:
 
 
 class FormSlider:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param min: No documentation available.
+    :param max: No documentation available.
+    :param step: No documentation available.
+    :param value: No documentation available.
+    :param disabled: No documentation available.
+    :param trigger: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2518,6 +2904,7 @@ class FormSlider:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormSlider.name is required.')
         if self.label is None:
@@ -2550,6 +2937,7 @@ class FormSlider:
 
     @staticmethod
     def load(__d: Dict) -> 'FormSlider':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormSlider.name is required.')
@@ -2600,6 +2988,17 @@ class FormSlider:
 
 
 class FormSpinbox:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param min: No documentation available.
+    :param max: No documentation available.
+    :param step: No documentation available.
+    :param value: No documentation available.
+    :param disabled: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2621,6 +3020,7 @@ class FormSpinbox:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormSpinbox.name is required.')
         if self.label is None:
@@ -2650,6 +3050,7 @@ class FormSpinbox:
 
     @staticmethod
     def load(__d: Dict) -> 'FormSpinbox':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormSpinbox.name is required.')
@@ -2695,6 +3096,15 @@ class FormSpinbox:
 
 
 class FormDatePicker:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param placeholder: No documentation available.
+    :param value: No documentation available.
+    :param disabled: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2712,6 +3122,7 @@ class FormDatePicker:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormDatePicker.name is required.')
         if self.label is None:
@@ -2735,6 +3146,7 @@ class FormDatePicker:
 
     @staticmethod
     def load(__d: Dict) -> 'FormDatePicker':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormDatePicker.name is required.')
@@ -2770,6 +3182,14 @@ class FormDatePicker:
 
 
 class FormColorPicker:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param value: No documentation available.
+    :param choices: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2785,6 +3205,7 @@ class FormColorPicker:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormColorPicker.name is required.')
         if self.label is None:
@@ -2805,6 +3226,7 @@ class FormColorPicker:
 
     @staticmethod
     def load(__d: Dict) -> 'FormColorPicker':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormColorPicker.name is required.')
@@ -2835,6 +3257,16 @@ class FormColorPicker:
 
 
 class FormButton:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param caption: No documentation available.
+    :param primary: No documentation available.
+    :param disabled: No documentation available.
+    :param link: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2854,6 +3286,7 @@ class FormButton:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormButton.name is required.')
         if self.label is None:
@@ -2880,6 +3313,7 @@ class FormButton:
 
     @staticmethod
     def load(__d: Dict) -> 'FormButton':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormButton.name is required.')
@@ -2920,6 +3354,10 @@ class FormButton:
 
 
 class FormButtons:
+    """No documentation available.
+
+    :param buttons: No documentation available.
+    """
     def __init__(
             self,
             buttons: Repeated[FormButton],
@@ -2927,6 +3365,7 @@ class FormButtons:
         self.buttons = buttons
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.buttons is None:
             raise ValueError('FormButtons.buttons is required.')
         return dict(
@@ -2935,6 +3374,7 @@ class FormButtons:
 
     @staticmethod
     def load(__d: Dict) -> 'FormButtons':
+        """Creates an instance of this class using the contents of a dict."""
         __d_buttons: Any = __d.get('buttons')
         if __d_buttons is None:
             raise ValueError('FormButtons.buttons is required.')
@@ -2945,6 +3385,13 @@ class FormButtons:
 
 
 class FormFileUpload:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param multiple: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -2958,6 +3405,7 @@ class FormFileUpload:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormFileUpload.name is required.')
         if self.label is None:
@@ -2975,6 +3423,7 @@ class FormFileUpload:
 
     @staticmethod
     def load(__d: Dict) -> 'FormFileUpload':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormFileUpload.name is required.')
@@ -3000,6 +3449,11 @@ class FormFileUpload:
 
 
 class FormTableColumn:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -3009,6 +3463,7 @@ class FormTableColumn:
         self.label = label
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormTableColumn.name is required.')
         if self.label is None:
@@ -3020,6 +3475,7 @@ class FormTableColumn:
 
     @staticmethod
     def load(__d: Dict) -> 'FormTableColumn':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormTableColumn.name is required.')
@@ -3035,6 +3491,11 @@ class FormTableColumn:
 
 
 class FormTableRow:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param cells: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -3044,6 +3505,7 @@ class FormTableRow:
         self.cells = cells
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormTableRow.name is required.')
         if self.cells is None:
@@ -3055,6 +3517,7 @@ class FormTableRow:
 
     @staticmethod
     def load(__d: Dict) -> 'FormTableRow':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormTableRow.name is required.')
@@ -3070,6 +3533,14 @@ class FormTableRow:
 
 
 class FormTable:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param columns: No documentation available.
+    :param rows: No documentation available.
+    :param multiple: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -3085,6 +3556,7 @@ class FormTable:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormTable.name is required.')
         if self.columns is None:
@@ -3105,6 +3577,7 @@ class FormTable:
 
     @staticmethod
     def load(__d: Dict) -> 'FormTable':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormTable.name is required.')
@@ -3135,6 +3608,14 @@ class FormTable:
 
 
 class FormLink:
+    """No documentation available.
+
+    :param label: No documentation available.
+    :param path: No documentation available.
+    :param disabled: No documentation available.
+    :param button: No documentation available.
+    :param tooltip: No documentation available.
+    """
     def __init__(
             self,
             label: str,
@@ -3150,6 +3631,7 @@ class FormLink:
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.label is None:
             raise ValueError('FormLink.label is required.')
         if self.path is None:
@@ -3170,6 +3652,7 @@ class FormLink:
 
     @staticmethod
     def load(__d: Dict) -> 'FormLink':
+        """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('FormLink.label is required.')
@@ -3200,6 +3683,12 @@ class FormLink:
 
 
 class FormTab:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param icon: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -3211,6 +3700,7 @@ class FormTab:
         self.icon = icon
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormTab.name is required.')
         if self.label is None:
@@ -3225,6 +3715,7 @@ class FormTab:
 
     @staticmethod
     def load(__d: Dict) -> 'FormTab':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormTab.name is required.')
@@ -3245,6 +3736,12 @@ class FormTab:
 
 
 class FormTabs:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param value: No documentation available.
+    :param items: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -3256,6 +3753,7 @@ class FormTabs:
         self.items = items
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormTabs.name is required.')
         if self.value is None:
@@ -3270,6 +3768,7 @@ class FormTabs:
 
     @staticmethod
     def load(__d: Dict) -> 'FormTabs':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormTabs.name is required.')
@@ -3290,6 +3789,13 @@ class FormTabs:
 
 
 class FormExpander:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    :param expanded: No documentation available.
+    :param items: No documentation available.
+    """
     def __init__(
             self,
             name: str,
@@ -3303,6 +3809,7 @@ class FormExpander:
         self.items = items
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FormExpander.name is required.')
         if self.label is None:
@@ -3320,6 +3827,7 @@ class FormExpander:
 
     @staticmethod
     def load(__d: Dict) -> 'FormExpander':
+        """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('FormExpander.name is required.')
@@ -3345,6 +3853,12 @@ class FormExpander:
 
 
 class NotebookSection:
+    """No documentation available.
+
+    :param cells: No documentation available.
+    :param commands: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             cells: Repeated[Cell],
@@ -3356,6 +3870,7 @@ class NotebookSection:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.cells is None:
             raise ValueError('NotebookSection.cells is required.')
         if self.commands is None:
@@ -3370,6 +3885,7 @@ class NotebookSection:
 
     @staticmethod
     def load(__d: Dict) -> 'NotebookSection':
+        """Creates an instance of this class using the contents of a dict."""
         __d_cells: Any = __d.get('cells')
         if __d_cells is None:
             raise ValueError('NotebookSection.cells is required.')
@@ -3390,6 +3906,33 @@ class NotebookSection:
 
 
 class FormComponent:
+    """No documentation available.
+
+    :param text: No documentation available.
+    :param label: No documentation available.
+    :param separator: No documentation available.
+    :param progress: No documentation available.
+    :param message_bar: No documentation available.
+    :param textbox: No documentation available.
+    :param checkbox: No documentation available.
+    :param toggle: No documentation available.
+    :param choice_group: No documentation available.
+    :param checklist: No documentation available.
+    :param dropdown: No documentation available.
+    :param combobox: No documentation available.
+    :param slider: No documentation available.
+    :param spinbox: No documentation available.
+    :param date_picker: No documentation available.
+    :param color_picker: No documentation available.
+    :param buttons: No documentation available.
+    :param file_upload: No documentation available.
+    :param table: No documentation available.
+    :param link: No documentation available.
+    :param tabs: No documentation available.
+    :param button: No documentation available.
+    :param expander: No documentation available.
+    :param section: No documentation available.
+    """
     def __init__(
             self,
             text: Optional[FormText] = None,
@@ -3443,6 +3986,7 @@ class FormComponent:
         self.section = section
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         return dict(
             text=None if self.text is None else self.text.dump(),
             label=None if self.label is None else self.label.dump(),
@@ -3472,6 +4016,7 @@ class FormComponent:
 
     @staticmethod
     def load(__d: Dict) -> 'FormComponent':
+        """Creates an instance of this class using the contents of a dict."""
         __d_text: Any = __d.get('text')
         __d_label: Any = __d.get('label')
         __d_separator: Any = __d.get('separator')
@@ -3549,6 +4094,13 @@ class FormComponent:
 
 
 class Form:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param url: No documentation available.
+    :param args: No documentation available.
+    :param items: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -3562,6 +4114,7 @@ class Form:
         self.items = items
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Form.box is required.')
         if self.url is None:
@@ -3580,6 +4133,7 @@ class Form:
 
     @staticmethod
     def load(__d: Dict) -> 'Form':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Form.box is required.')
@@ -3605,6 +4159,14 @@ class Form:
 
 
 class List:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param item_view: No documentation available.
+    :param item_props: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -3620,6 +4182,7 @@ class List:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('List.box is required.')
         if self.title is None:
@@ -3641,6 +4204,7 @@ class List:
 
     @staticmethod
     def load(__d: Dict) -> 'List':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('List.box is required.')
@@ -3671,6 +4235,15 @@ class List:
 
 
 class ListItem1:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param caption: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -3688,6 +4261,7 @@ class ListItem1:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('ListItem1.box is required.')
         if self.title is None:
@@ -3712,6 +4286,7 @@ class ListItem1:
 
     @staticmethod
     def load(__d: Dict) -> 'ListItem1':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('ListItem1.box is required.')
@@ -3747,6 +4322,11 @@ class ListItem1:
 
 
 class Notebook:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param sections: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -3756,6 +4336,7 @@ class Notebook:
         self.sections = sections
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Notebook.box is required.')
         if self.sections is None:
@@ -3768,6 +4349,7 @@ class Notebook:
 
     @staticmethod
     def load(__d: Dict) -> 'Notebook':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Notebook.box is required.')
@@ -3783,6 +4365,12 @@ class Notebook:
 
 
 class PixelArt:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -3794,6 +4382,7 @@ class PixelArt:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('PixelArt.box is required.')
         if self.title is None:
@@ -3809,6 +4398,7 @@ class PixelArt:
 
     @staticmethod
     def load(__d: Dict) -> 'PixelArt':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('PixelArt.box is required.')
@@ -3829,6 +4419,64 @@ class PixelArt:
 
 
 class PlotMark:
+    """No documentation available.
+
+    :param coord: No documentation available.
+    :param mark: No documentation available.
+    :param x: No documentation available.
+    :param x0: No documentation available.
+    :param x1: No documentation available.
+    :param x2: No documentation available.
+    :param x_min: No documentation available.
+    :param x_max: No documentation available.
+    :param x_nice: No documentation available.
+    :param x_scale: No documentation available.
+    :param x_title: No documentation available.
+    :param y: No documentation available.
+    :param y0: No documentation available.
+    :param y1: No documentation available.
+    :param y2: No documentation available.
+    :param y_min: No documentation available.
+    :param y_max: No documentation available.
+    :param y_nice: No documentation available.
+    :param y_scale: No documentation available.
+    :param y_title: No documentation available.
+    :param color: No documentation available.
+    :param color_range: No documentation available.
+    :param shape: No documentation available.
+    :param shape_range: No documentation available.
+    :param size: No documentation available.
+    :param size_range: No documentation available.
+    :param stack: No documentation available.
+    :param dodge: No documentation available.
+    :param curve: No documentation available.
+    :param fill_color: No documentation available.
+    :param fill_opacity: No documentation available.
+    :param stroke_color: No documentation available.
+    :param stroke_opacity: No documentation available.
+    :param stroke_size: No documentation available.
+    :param stroke_dash: No documentation available.
+    :param label: No documentation available.
+    :param label_offset: No documentation available.
+    :param label_offset_x: No documentation available.
+    :param label_offset_y: No documentation available.
+    :param label_rotation: No documentation available.
+    :param label_position: No documentation available.
+    :param label_overlap: No documentation available.
+    :param label_fill_color: No documentation available.
+    :param label_fill_opacity: No documentation available.
+    :param label_stroke_color: No documentation available.
+    :param label_stroke_opacity: No documentation available.
+    :param label_stroke_size: No documentation available.
+    :param label_font_size: No documentation available.
+    :param label_font_weight: No documentation available.
+    :param label_line_height: No documentation available.
+    :param label_align: No documentation available.
+    :param ref_stroke_color: No documentation available.
+    :param ref_stroke_opacity: No documentation available.
+    :param ref_stroke_size: No documentation available.
+    :param ref_stroke_dash: No documentation available.
+    """
     def __init__(
             self,
             coord: Optional[str] = None,
@@ -3944,6 +4592,7 @@ class PlotMark:
         self.ref_stroke_dash = ref_stroke_dash
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         return dict(
             coord=self.coord,
             mark=self.mark,
@@ -4004,6 +4653,7 @@ class PlotMark:
 
     @staticmethod
     def load(__d: Dict) -> 'PlotMark':
+        """Creates an instance of this class using the contents of a dict."""
         __d_coord: Any = __d.get('coord')
         __d_mark: Any = __d.get('mark')
         __d_x: Any = __d.get('x')
@@ -4174,6 +4824,10 @@ class PlotMark:
 
 
 class PlotVis:
+    """No documentation available.
+
+    :param marks: No documentation available.
+    """
     def __init__(
             self,
             marks: Repeated[PlotMark],
@@ -4181,6 +4835,7 @@ class PlotVis:
         self.marks = marks
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.marks is None:
             raise ValueError('PlotVis.marks is required.')
         return dict(
@@ -4189,6 +4844,7 @@ class PlotVis:
 
     @staticmethod
     def load(__d: Dict) -> 'PlotVis':
+        """Creates an instance of this class using the contents of a dict."""
         __d_marks: Any = __d.get('marks')
         if __d_marks is None:
             raise ValueError('PlotVis.marks is required.')
@@ -4199,6 +4855,13 @@ class PlotVis:
 
 
 class Plot:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param data: No documentation available.
+    :param vis: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -4212,6 +4875,7 @@ class Plot:
         self.vis = vis
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Plot.box is required.')
         if self.title is None:
@@ -4230,6 +4894,7 @@ class Plot:
 
     @staticmethod
     def load(__d: Dict) -> 'Plot':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Plot.box is required.')
@@ -4255,6 +4920,14 @@ class Plot:
 
 
 class Repeat:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param item_view: No documentation available.
+    :param item_props: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -4270,6 +4943,7 @@ class Repeat:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Repeat.box is required.')
         if self.title is None:
@@ -4291,6 +4965,7 @@ class Repeat:
 
     @staticmethod
     def load(__d: Dict) -> 'Repeat':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Repeat.box is required.')
@@ -4321,6 +4996,13 @@ class Repeat:
 
 
 class Table:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param cells: No documentation available.
+    :param data: No documentation available.
+    """
     def __init__(
             self,
             box: str,
@@ -4334,6 +5016,7 @@ class Table:
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Table.box is required.')
         if self.title is None:
@@ -4352,6 +5035,7 @@ class Table:
 
     @staticmethod
     def load(__d: Dict) -> 'Table':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Table.box is required.')
@@ -4377,56 +5061,61 @@ class Table:
 
 
 class Template:
+    """Render dynamic content using a HTML template.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: The title for this card.
+    :param html: The Handlebars template. https://handlebarsjs.com/guide/
+    :param data: Data for the Handlebars template
+    """
     def __init__(
             self,
             box: str,
             title: str,
-            template: str,
-            data: PackedRecord,
+            html: str,
+            data: Optional[PackedRecord] = None,
     ):
         self.box = box
         self.title = title
-        self.template = template
+        self.html = html
         self.data = data
 
     def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Template.box is required.')
         if self.title is None:
             raise ValueError('Template.title is required.')
-        if self.template is None:
-            raise ValueError('Template.template is required.')
-        if self.data is None:
-            raise ValueError('Template.data is required.')
+        if self.html is None:
+            raise ValueError('Template.html is required.')
         return dict(
             view='template',
             box=self.box,
             title=self.title,
-            template=self.template,
+            html=self.html,
             data=self.data,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Template':
+        """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Template.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Template.title is required.')
-        __d_template: Any = __d.get('template')
-        if __d_template is None:
-            raise ValueError('Template.template is required.')
+        __d_html: Any = __d.get('html')
+        if __d_html is None:
+            raise ValueError('Template.html is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Template.data is required.')
         box: str = __d_box
         title: str = __d_title
-        template: str = __d_template
-        data: PackedRecord = __d_data
+        html: str = __d_html
+        data: Optional[PackedRecord] = __d_data
         return Template(
             box,
             title,
-            template,
+            html,
             data,
         )

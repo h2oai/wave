@@ -33,7 +33,7 @@ const packedT = 'Packed' // name of marker parametric type to indicate if an att
 enum MemberT { Enum, Singular, Repeated }
 interface MemberBase {
   readonly name: string
-  readonly comment: string
+  readonly comments: string[]
   readonly optional: boolean
 }
 interface EnumMember extends MemberBase {
@@ -53,6 +53,7 @@ interface RepeatedMember extends MemberBase {
 type Member = EnumMember | SingularMember | RepeatedMember
 interface Type {
   name: string
+  readonly comments: string[]
   readonly members: Member[]
   readonly card: string | null
 }
@@ -74,8 +75,16 @@ class CodeGenError extends Error {
   }
 }
 
+let warnings = 0
+
 const
+  warn = (s: string) => {
+    console.warn(`Warning: ${s}`)
+    warnings++
+  },
   reservedWords = ['view', 'box'],
+  boxComment = 'A string indicating how to place this component on the page.',
+  noComment = 'No documentation available.',
   toLookup = (xs: string[]): Dict<boolean> => {
     const d: Dict<boolean> = {}
     for (const x of xs) d[x] = true
@@ -126,6 +135,9 @@ const
     }
     return null
   },
+  collectComments = (node: any): string[] => {
+    return (node as any).jsDoc?.map((c: any) => c?.comment) || [] // FIXME Undocumented API
+  },
   collectMember = (component: string, typename: string, member: ts.TypeElement): Member => {
     if (member.kind === ts.SyntaxKind.PropertySignature) {
       const
@@ -133,37 +145,39 @@ const
         optional = m.questionToken ? true : false,
         memberName = m.name.getText(),
         memberType = m.type,
-        comment = (m as any).jsDoc?.map((c: any) => c?.comment).join('\n') || '' // FIXME Undocumented API
+        comments = collectComments(m)
 
       for (const w of reservedWords) if (memberName === w) throw new CodeGenError(`${component}.${typename}.${memberName}: "${w}" is a reserved name`)
 
       if (!memberType) throw new CodeGenError(`want type declared on ${component}.${typename}.${memberName}: ${m.getText()}`)
+
+      if (!comments.length) warn(`Doc missing on member ${component}.${typename}.${memberName}.`)
 
       let tt: string | null = null
       const pt = collectPackedType(memberType)
       if (pt) {
         tt = collectRepeatedType(pt)
         if (tt) {
-          return { t: MemberT.Repeated, name: memberName, typeName: tt, optional, comment, packed: true }
+          return { t: MemberT.Repeated, name: memberName, typeName: tt, optional, comments, packed: true }
         }
         tt = collectSingularType(pt)
         if (tt) {
-          return { t: MemberT.Singular, name: memberName, typeName: tt, optional, comment, packed: true }
+          return { t: MemberT.Singular, name: memberName, typeName: tt, optional, comments, packed: true }
         }
       }
 
 
       tt = collectRepeatedType(memberType)
       if (tt) {
-        return { t: MemberT.Repeated, name: memberName, typeName: tt, optional, comment, packed: false }
+        return { t: MemberT.Repeated, name: memberName, typeName: tt, optional, comments, packed: false }
       }
       tt = collectSingularType(memberType)
       if (tt) {
-        return { t: MemberT.Singular, name: memberName, typeName: tt, optional, comment, packed: false }
+        return { t: MemberT.Singular, name: memberName, typeName: tt, optional, comments, packed: false }
       }
       const values = collectEnumType(memberType)
       if (values) {
-        return { t: MemberT.Enum, name: memberName, values, optional, comment }
+        return { t: MemberT.Enum, name: memberName, values, optional, comments }
       }
     }
     throw new CodeGenError(`unsupported member kind on ${component}.${typename}`)
@@ -176,10 +190,14 @@ const
             n = node as ts.InterfaceDeclaration,
             typename = n.name.getText(),
             card = typename === 'State' ? file.name : null,
-            members = n.members.map(m => collectMember(component, typename, m))
+            members = n.members.map(m => collectMember(component, typename, m)),
+            comments = collectComments(n)
+
+          if (!comments.length) warn(`Doc missing on type ${component}.${typename}.`)
+
           // All cards must have a box defined.
-          if (card) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', optional: false, comment: '', packed: false })
-          file.types.push({ name: typename, members, card })
+          if (card) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', optional: false, comments: [boxComment], packed: false })
+          file.types.push({ name: typename, comments, members, card })
       }
     })
   },
@@ -285,6 +303,12 @@ const
         console.log(`Generating ${type.name}...`)
         p('')
         p(`class ${type.name}:`)
+        p(`    """` + (type.comments.length ? type.comments.join('\n    ') : noComment))
+        p(``)
+        for (const m of type.members) {
+          p(`    :param ${m.name}: ` + (m.comments.length ? m.comments.join(' ') : noComment))
+        }
+        p(`    """`)
         p(`    def __init__(`)
         p(`            self,`)
         for (const m of type.members) {
@@ -296,6 +320,7 @@ const
         }
         p('')
         p(`    def dump(self) -> Dict:`)
+        p(`        """Returns the contents of this object as a dict."""`)
         for (const m of type.members) { // guard
           if (!m.optional) {
             p(`        if self.${m.name} is None:`)
@@ -328,6 +353,7 @@ const
         p('')
         p(`    @staticmethod`)
         p(`    def load(__d: Dict) -> '${type.name}':`)
+        p(`        """Creates an instance of this class using the contents of a dict."""`)
         for (const m of type.members) {
           const rval = `__d_${m.name}`
           p(`        ${rval}: Any = __d.get('${m.name}')`)
@@ -428,9 +454,10 @@ const
 
 try {
   main(process.argv[2], process.argv[3])
+  console.log(`Success! Code generation complete. ${warnings} warnings.`)
 } catch (e) {
   if (e.name === codeGenErrorT) {
-    console.log(`Error: code generation failed: ${e.message}`)
+    console.log(`***Error: code generation failed: ${e.message}***`)
     process.exit(1)
   }
   throw e
