@@ -1,3 +1,4 @@
+import os
 import signal
 import pickle
 import asyncio
@@ -340,7 +341,22 @@ class BasicAuthClient:
 
 
 class Site:
-    def __init__(self, host: str, port: int, access_key_id: str, access_key_secret: str):
+    def __init__(
+            self,
+            host: Optional[str] = None,
+            port: Optional[int] = None,
+            access_key_id: Optional[str] = None,
+            access_key_secret: Optional[str] = None,
+    ):
+        if host is None:
+            host = os.environ.get('TELESYNC_HOST', 'localhost')
+        if port is None:
+            port = int(os.environ.get('TELESYNC_PORT', '55555'))
+        if access_key_id is None:
+            access_key_id = os.environ.get('TELESYNC_ACCESS_KEY_ID', 'access_key_id')
+        if access_key_secret is None:
+            access_key_secret = os.environ.get('TELESYNC_ACCESS_KEY_SECRET', 'access_key_secret')
+
         self._client = BasicAuthClient(host, port, access_key_id, access_key_secret)
         self._ws: Optional[websockets.WebSocketServerProtocol] = None
 
