@@ -42,8 +42,8 @@ export const
 const
   newCardRegistry = () => {
     const
-      m: Dict<any> = {},
-      register = (name: S, ctor: any) => m[name] = ctor,
+      m: Dict<typeof React.Component> = {},
+      register = (name: S, ctor: typeof React.Component) => m[name] = ctor,
       lookup = (name: S) => m[name] || m['']
     return { register, lookup }
   }

@@ -122,7 +122,7 @@ interface Renderable {
   dispose?(): void
 }
 
-export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) => TState) {
+export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) => TState): typeof React.Component {
   return class extends React.Component<TProps> {
     private readonly model: TState
     private readonly arrows: Disposable[]
