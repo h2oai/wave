@@ -282,7 +282,7 @@ def create_template_page(site: Site, update_freq=0.0):
         view='template',
         box=f'1 1 12 10',
         # title='Template Example',
-        html='{{product}} costs {{price}}!',
+        content='{{product}} costs {{price}}!',
         data=pack(dict(product='Coffee', price='$3.45')),
     ))
     page.sync()
@@ -359,4 +359,4 @@ def create_site(site: Site):
     create_widgets_page(site, update_freq=0.25)
 
 
-create_site(Site('localhost', 55555, 'admin', 'admin'))
+create_site(Site())

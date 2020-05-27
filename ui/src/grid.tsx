@@ -14,14 +14,18 @@ interface Slot {
 }
 
 export const
-  Format = ({ data, defaultValue: v, format: f }: { data?: Rec, defaultValue?: any, format?: S }) => {
-    return (f !== undefined && f !== null)
-      ? isFormatExpr(f)
-        ? <>{format(f.substr(1), data)}</>
-        : <>{f}</>
-      : (v !== undefined && v !== null)
-        ? <>{v}</>
+  substitute = (formatString?: S, data?: Rec, defaultValue: any = null) => {
+    return (formatString !== undefined && formatString !== null)
+      ? isFormatExpr(formatString)
+        ? format(formatString.substr(1), data)
+        : formatString
+      : (defaultValue !== undefined && defaultValue !== null)
+        ? defaultValue
         : null
+  },
+  Format = ({ data, defaultValue: v, format: f }: { data?: Rec, defaultValue?: any, format?: S }) => {
+    const x = substitute(f, data, v)
+    return x === null ? x : <>{x}</>
   },
   CardView = ({ card }: { card: Card<any> }) => {
     let Tag = cards.lookup(card.state.view)

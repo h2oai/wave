@@ -757,7 +757,7 @@ def create_site(site: Site):
 
 
 def main():
-    site = Site('localhost', 55555, 'admin', 'admin')
+    site = Site()
     create_site(site)
     # while True:
     #     time.sleep(0.5)

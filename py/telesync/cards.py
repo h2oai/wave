@@ -4321,6 +4321,121 @@ class ListItem1:
         )
 
 
+class Markdown:
+    """Render Markdown content.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: The title for this card.
+    :param content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
+    :param data: Additional data for the card.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            content: str,
+            data: Optional[PackedRecord] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.content = content
+        self.data = data
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('Markdown.box is required.')
+        if self.title is None:
+            raise ValueError('Markdown.title is required.')
+        if self.content is None:
+            raise ValueError('Markdown.content is required.')
+        return dict(
+            view='markdown',
+            box=self.box,
+            title=self.title,
+            content=self.content,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Markdown':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Markdown.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('Markdown.title is required.')
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('Markdown.content is required.')
+        __d_data: Any = __d.get('data')
+        box: str = __d_box
+        title: str = __d_title
+        content: str = __d_content
+        data: Optional[PackedRecord] = __d_data
+        return Markdown(
+            box,
+            title,
+            content,
+            data,
+        )
+
+
+class Markup:
+    """Render HTML content.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: The title for this card.
+    :param content: The HTML content.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            content: str,
+    ):
+        self.box = box
+        self.title = title
+        self.content = content
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('Markup.box is required.')
+        if self.title is None:
+            raise ValueError('Markup.title is required.')
+        if self.content is None:
+            raise ValueError('Markup.content is required.')
+        return dict(
+            view='markup',
+            box=self.box,
+            title=self.title,
+            content=self.content,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Markup':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Markup.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('Markup.title is required.')
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('Markup.content is required.')
+        box: str = __d_box
+        title: str = __d_title
+        content: str = __d_content
+        return Markup(
+            box,
+            title,
+            content,
+        )
+
+
 class Notebook:
     """No documentation available.
 
@@ -5065,19 +5180,19 @@ class Template:
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title for this card.
-    :param html: The Handlebars template. https://handlebarsjs.com/guide/
+    :param content: The Handlebars template. https://handlebarsjs.com/guide/
     :param data: Data for the Handlebars template
     """
     def __init__(
             self,
             box: str,
             title: str,
-            html: str,
+            content: str,
             data: Optional[PackedRecord] = None,
     ):
         self.box = box
         self.title = title
-        self.html = html
+        self.content = content
         self.data = data
 
     def dump(self) -> Dict:
@@ -5086,13 +5201,13 @@ class Template:
             raise ValueError('Template.box is required.')
         if self.title is None:
             raise ValueError('Template.title is required.')
-        if self.html is None:
-            raise ValueError('Template.html is required.')
+        if self.content is None:
+            raise ValueError('Template.content is required.')
         return dict(
             view='template',
             box=self.box,
             title=self.title,
-            html=self.html,
+            content=self.content,
             data=self.data,
         )
 
@@ -5105,17 +5220,17 @@ class Template:
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Template.title is required.')
-        __d_html: Any = __d.get('html')
-        if __d_html is None:
-            raise ValueError('Template.html is required.')
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('Template.content is required.')
         __d_data: Any = __d.get('data')
         box: str = __d_box
         title: str = __d_title
-        html: str = __d_html
+        content: str = __d_content
         data: Optional[PackedRecord] = __d_data
         return Template(
             box,
             title,
-            html,
+            content,
             data,
         )
