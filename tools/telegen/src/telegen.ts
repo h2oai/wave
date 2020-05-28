@@ -30,25 +30,30 @@ import ts from 'typescript'
 export interface Dict<T> { [key: string]: T } // generic object
 const packedT = 'Packed' // name of marker parametric type to indicate if an attributed could be packed.
 
+interface OneOf {
+  name: string
+  type: Type
+}
+
 enum MemberT { Enum, Singular, Repeated }
 interface MemberBase {
   readonly name: string
   readonly comments: string[]
-  readonly optional: boolean
+  readonly isOptional: boolean
 }
 interface EnumMember extends MemberBase {
   readonly t: MemberT.Enum
   readonly values: string[]
 }
-interface SingularMember extends MemberBase {
-  readonly t: MemberT.Singular
+interface PackableMember extends MemberBase {
   typeName: string
-  readonly packed: boolean
+  readonly isPacked: boolean
 }
-interface RepeatedMember extends MemberBase {
+interface SingularMember extends PackableMember {
+  readonly t: MemberT.Singular
+}
+interface RepeatedMember extends PackableMember {
   readonly t: MemberT.Repeated
-  typeName: string
-  readonly packed: boolean
 }
 type Member = EnumMember | SingularMember | RepeatedMember
 interface Type {
@@ -56,6 +61,8 @@ interface Type {
   readonly comments: string[]
   readonly members: Member[]
   readonly card: string | null
+  readonly isUnion: boolean
+  oneOf?: OneOf
 }
 interface File {
   readonly name: string
@@ -78,6 +85,8 @@ class CodeGenError extends Error {
 let warnings = 0
 
 const
+  titlecase = (s: string) => s.replace(/_/g, ' ').replace(/\b./g, s => s.toUpperCase()).replace(/\s+/g, ''),
+  snakeCase = (s: string) => s.replace(/[A-Z]/g, s => '_' + s.toLowerCase()).substr(1),
   warn = (s: string) => {
     console.warn(`Warning: ${s}`)
     warnings++
@@ -151,32 +160,36 @@ const
 
       if (!memberType) throw new CodeGenError(`want type declared on ${component}.${typename}.${memberName}: ${m.getText()}`)
 
-      if (!comments.length) warn(`Doc missing on member ${component}.${typename}.${memberName}.`)
+      if (!comments.length) {
+        warn(`Doc missing on member ${component}.${typename}.${memberName}.`)
+        comments.push(noComment)
+      }
 
       let tt: string | null = null
       const pt = collectPackedType(memberType)
       if (pt) {
         tt = collectRepeatedType(pt)
         if (tt) {
-          return { t: MemberT.Repeated, name: memberName, typeName: tt, optional, comments, packed: true }
+          return { t: MemberT.Repeated, name: memberName, typeName: tt, isOptional: optional, comments, isPacked: true }
         }
         tt = collectSingularType(pt)
         if (tt) {
-          return { t: MemberT.Singular, name: memberName, typeName: tt, optional, comments, packed: true }
+          return { t: MemberT.Singular, name: memberName, typeName: tt, isOptional: optional, comments, isPacked: true }
         }
       }
 
       tt = collectRepeatedType(memberType)
       if (tt) {
-        return { t: MemberT.Repeated, name: memberName, typeName: tt, optional, comments, packed: false }
+        return { t: MemberT.Repeated, name: memberName, typeName: tt, isOptional: optional, comments, isPacked: false }
       }
       tt = collectSingularType(memberType)
       if (tt) {
-        return { t: MemberT.Singular, name: memberName, typeName: tt, optional, comments, packed: false }
+        return { t: MemberT.Singular, name: memberName, typeName: tt, isOptional: optional, comments, isPacked: false }
       }
       const values = collectEnumType(memberType)
       if (values) {
-        return { t: MemberT.Enum, name: memberName, values, optional, comments }
+        comments.push(`One of ${values.map(v => `'${v}'`).join(', ')}.`)
+        return { t: MemberT.Enum, name: memberName, values, isOptional: optional, comments }
       }
     }
     throw new CodeGenError(`unsupported member kind on ${component}.${typename}`)
@@ -192,11 +205,22 @@ const
             members = n.members.map(m => collectMember(component, typename, m)),
             comments = collectComments(n)
 
-          if (!comments.length) warn(`Doc missing on type ${component}.${typename}.`)
+          if (!comments.length) {
+            comments.push(noComment)
+            warn(`Doc missing on type ${component}.${typename}.`)
+          }
 
           // All cards must have a box defined.
-          if (card) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', optional: false, comments: [boxComment], packed: false })
-          file.types.push({ name: typename, comments, members, card })
+          if (card) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], isPacked: false })
+          const
+            isUnion = !members.filter(m => !m.isOptional).length, // all members are optional?
+            type = { name: typename, comments, members, card, isUnion }
+          file.types.push(type)
+          if (isUnion) members.forEach(m => {
+            if (m.t === MemberT.Repeated || m.t === MemberT.Singular) {
+              // m.type.oneOf = { name: m.name, type }
+            }
+          })
       }
     })
   },
@@ -235,11 +259,13 @@ const
     Recs: 'PackedRecords',
     Data: 'PackedData',
   },
-  translateToPython = (protocol: Protocol) => {
+  tranlateToPy = (protocol: Protocol): [string, string] => {
     const
       lines: string[] = [],
       p = (line: string) => lines.push(line),
-      declarations: Dict<Declaration> = {},
+      flush = (): string => { const s = lines.join('\n'); lines.length = 0; return s },
+      classes: Dict<Declaration> = {},
+      apis: Dict<boolean> = {},
       knownTypes = ((): Dict<Type> => {
         const d: Dict<Type> = {}
         for (const file of protocol.files) {
@@ -250,7 +276,7 @@ const
         return d
       })(),
       maybeForwardDeclare = (t: string): string => {
-        const d = declarations[t]
+        const d = classes[t]
         return d === Declaration.Forward ? `'${t}'` : t
       },
       mapType = (t: string): string => {
@@ -266,21 +292,21 @@ const
           case MemberT.Singular:
             return mapType(m.typeName)
           case MemberT.Repeated:
-            return `Repeated[${mapType(m.typeName)}]`
+            return `List[${mapType(m.typeName)}]`
         }
       },
       genPackedType = (m: Member): string => {
-        if ((m.t === MemberT.Repeated || m.t === MemberT.Singular) && m.packed) {
+        if ((m.t === MemberT.Repeated || m.t === MemberT.Singular) && m.isPacked) {
           return `Union[${genType(m)}, str]`
         }
         return genType(m)
       },
       genOptType = (m: Member): string => {
         const t = genPackedType(m)
-        return m.optional ? `Optional[${t}]` : t
+        return m.isOptional ? `Optional[${t}]` : t
       },
       genSig = (m: Member): string => `${m.name}: ${genOptType(m)}`,
-      getSigWithDefault = (m: Member): string => genSig(m) + (m.optional ? ' = None' : ''),
+      getSigWithDefault = (m: Member): string => genSig(m) + (m.isOptional ? ' = None' : ''),
       getKnownTypeOf = (m: Member): Type | null => {
         switch (m.t) {
           case MemberT.Singular: return knownTypes[m.typeName] || null
@@ -289,9 +315,9 @@ const
         return null
       },
       genClass = (type: Type) => {
-        if (declarations[type.name] === Declaration.Declared || declarations[type.name] === Declaration.Forward) return
+        if (classes[type.name] === Declaration.Declared || classes[type.name] === Declaration.Forward) return
 
-        declarations[type.name] = Declaration.Forward
+        classes[type.name] = Declaration.Forward
 
         // generate member types first so that we don't have to forward-declare.
         for (const m of type.members) {
@@ -302,12 +328,10 @@ const
         console.log(`Generating ${type.name}...`)
         p('')
         p(`class ${type.name}:`)
-        p(`    """` + (type.comments.length ? type.comments.join('\n    ') : noComment))
+        p(`    """` + type.comments.join('\n    '))
         p(``)
         for (const m of type.members) {
-          p(`    :param ${m.name}: `
-            + (m.comments.length ? m.comments.join(' ') : noComment)
-            + (m.t === MemberT.Enum ? ` One of ${m.values.map(v => `'${v}'`).join(', ')}.` : ''))
+          p(`    :param ${m.name}: ` + m.comments.join(' '))
         }
         p(`    """`)
         p(`    def __init__(`)
@@ -323,7 +347,7 @@ const
         p(`    def dump(self) -> Dict:`)
         p(`        """Returns the contents of this object as a dict."""`)
         for (const m of type.members) { // guard
-          if (!m.optional) {
+          if (!m.isOptional) {
             p(`        if self.${m.name} is None:`)
             p(`            raise ValueError('${type.name}.${m.name} is required.')`)
             if (m.t === MemberT.Enum) {
@@ -342,8 +366,8 @@ const
               let code = m.t === MemberT.Repeated
                 ? `[__e.dump() for __e in self.${m.name}]`
                 : `self.${m.name}.dump()`
-              if (m.packed) code = `self.${m.name} if isinstance(self.${m.name}, str) else ` + code
-              if (m.optional) code = `None if self.${m.name} is None else ` + code
+              if (m.isPacked) code = `self.${m.name} if isinstance(self.${m.name}, str) else ` + code
+              if (m.isOptional) code = `None if self.${m.name} is None else ` + code
               p(`            ${m.name}=${code},`)
             }
           } else {
@@ -358,7 +382,7 @@ const
         for (const m of type.members) {
           const rval = `__d_${m.name}`
           p(`        ${rval}: Any = __d.get('${m.name}')`)
-          if (!m.optional) {
+          if (!m.isOptional) {
             p(`        if ${rval} is None:`)
             p(`            raise ValueError('${type.name}.${m.name} is required.')`)
           }
@@ -371,9 +395,9 @@ const
               let code = m.t === MemberT.Repeated
                 ? `[${memberType.name}.load(__e) for __e in ${rval}]`
                 : `${memberType.name}.load(${rval})`
-              if (m.optional) code = `None if ${rval} is None else ` + code
+              if (m.isOptional) code = `None if ${rval} is None else ` + code
               // TODO this should call unpack(__d_foo) if str
-              if (m.packed) code = `${rval} if isinstance(${rval}, str) else ` + code
+              if (m.isPacked) code = `${rval} if isinstance(${rval}, str) else ` + code
               p(`        ${genSig(m)} = ${code}`)
             }
           } else {
@@ -387,19 +411,19 @@ const
         p(`        )`)
         p('')
 
-        declarations[type.name] = Declaration.Declared
+        classes[type.name] = Declaration.Declared
       },
-      generate = (): string => {
+      genClasses = (): string => {
         p('#')
         p('# THIS FILE IS GENERATED; DO NOT EDIT')
         p('#')
         p('')
-        p('from typing import Any, Optional, Union, Dict, List as Repeated')
+        p('from typing import Any, Optional, Union, Dict, List')
         p('from .core import Data')
         p('')
         p('Value = Union[str, float, int]')
         p('PackedRecord = Union[dict, str]')
-        p('PackedRecords = Union[Repeated[dict], str]')
+        p('PackedRecords = Union[List[dict], str]')
         p('PackedData = Union[Data, str]') // special-cased during packing, Go allocation and unpacking.
         p('')
         p('')
@@ -412,11 +436,61 @@ const
             }
           }
         }
-        return lines.join('\n')
+        return flush()
+      },
+      genAPI = (type: Type) => {
+        if (apis[type.name]) return
+        apis[type.name] = true
+
+        for (const m of type.members) {
+          const memberType = getKnownTypeOf(m)
+          if (memberType) genAPI(memberType)
+        }
+
+        p('')
+        p(`def ${snakeCase(type.name)}(`)
+        for (const m of type.members) {
+          p(`        ${getSigWithDefault(m)},`)
+        }
+        p(`) -> ${type.name}:`)
+        p(`    """` + type.comments.join('\n    '))
+        p(``)
+        for (const m of type.members) {
+          p(`    :param ${m.name}: ` + m.comments.join(' '))
+        }
+        p(`    """`)
+        p(`    return ${type.name}(`)
+        for (const m of type.members) {
+          p(`        ${m.name},`)
+        }
+        p(`    )`)
+        p('')
+
+      },
+      genAPIs = (): string => {
+        p('#')
+        p('# THIS FILE IS GENERATED; DO NOT EDIT')
+        p('#')
+        p('')
+        p('from typing import Optional, Union, List')
+        p('from .cards import Value, PackedRecord, PackedRecords, PackedData')
+
+        const classNames = Object.keys(classes).sort().join(', \\\n    ')
+        p(`from .cards import \\`)
+        p(`    ${classNames}`)
+        p('')
+
+        for (const file of protocol.files) {
+          for (const type of file.types) {
+            if (type.card) {
+              genAPI(type)
+            }
+          }
+        }
+        return flush()
       }
-    return generate()
+    return [genClasses(), genAPIs()]
   },
-  titlecase = (s: string) => s.replace(/_/g, ' ').replace(/\b./g, s => s.toUpperCase()).replace(/\s+/g, ''),
   scopeNames = (protocol: Protocol) => {
     const scopedNames: Dict<string> = {}
     for (const file of protocol.files) {
@@ -448,12 +522,14 @@ const
       }
     }
   },
-  main = (typescriptSrcDir: string, pyCardsFilepath: string) => {
+  main = (typescriptSrcDir: string, pyOutDir: string) => {
     const protocol: Protocol = { files: [] }
     processDir(protocol, typescriptSrcDir)
     scopeNames(protocol)
     // console.log(JSON.stringify(protocol, null, 2))
-    fs.writeFileSync(pyCardsFilepath, translateToPython(protocol), 'utf8')
+    const [classes, api] = tranlateToPy(protocol)
+    fs.writeFileSync(path.join(pyOutDir, 'cards.py'), classes, 'utf8')
+    fs.writeFileSync(path.join(pyOutDir, 'api.py'), api, 'utf8')
   }
 
 try {
