@@ -1,12 +1,264 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import * as Form from './form';
-import { Button, Buttons, Checkbox, Checklist, ChoiceGroup, ColorPicker, Combobox, Component, DatePicker, Dropdown, Expander, FileUpload, Label, Link, MessageBar, Progress, Separator, Slider, Spinbox, Table, Tabs, Text, Textbox, Toggle } from './form';
 import { cards } from './grid';
 import { Markdown, MarkdownInline } from './markdown';
-import { B, bond, box, Box, Card, Dict, on, Rec, S, socket, U, unpack } from './telesync';
+import { B, F, Packed, bond, box, Box, Card, Dict, on, Rec, S, socket, U, unpack } from './telesync';
 import { border, getTheme, padding, pc, px } from './theme';
+
+interface Text {
+  size: S
+  text: S
+  tooltip: S
+}
+
+interface Separator {
+  label: S
+}
+
+interface Label {
+  label: S
+  required: B
+  disabled: B
+  tooltip: S
+}
+
+interface Progress {
+  label: S
+  caption: S
+  value: F
+  tooltip: S
+}
+
+interface MessageBar {
+  type: S
+  text: S
+}
+
+interface Textbox {
+  name: S
+  label: S
+  placeholder: S
+  mask: S
+  icon: S
+  prefix: S
+  suffix: S
+  value: S
+  error: S
+  required: B
+  disabled: B
+  readonly: B
+  multiline: B
+  password: B
+  tooltip: S
+}
+
+interface Checkbox {
+  name: S
+  label: S
+  value: B
+  indeterminate: B
+  disabled: B
+  trigger: B
+  tooltip: S
+}
+
+interface Toggle {
+  name: S
+  label: S
+  value: B
+  disabled: B
+  trigger: B
+  tooltip: S
+}
+
+interface Choice {
+  name: S
+  label: S
+  disabled: B
+}
+
+interface ChoiceGroup {
+  name: S
+  label: S
+  value: S
+  choices: Choice[]
+  required: B
+  trigger: B
+  tooltip: S
+}
+
+interface Checklist {
+  name: S
+  label: S
+  values: S[]
+  choices: Choice[]
+  tooltip: S
+}
+
+interface Dropdown {
+  name: S
+  label: S
+  placeholder: S
+  multiple: B
+  value: S
+  values: S[]
+  choices: Choice[]
+  required: B
+  disabled: B
+  trigger: B
+  tooltip: S
+}
+
+interface Combobox {
+  name: S
+  label: S
+  placeholder: S
+  value: S
+  choices: S[]
+  error: S
+  disabled: B
+  tooltip: S
+}
+
+interface Slider {
+  name: S
+  label: S
+  min: F
+  max: F
+  step: F
+  value: F
+  disabled: B
+  trigger: B
+  tooltip: S
+}
+
+interface Spinbox {
+  name: S
+  label: S
+  min: F
+  max: F
+  step: F
+  value: F
+  disabled: B
+  tooltip: S
+}
+
+interface DatePicker {
+  name: S
+  label: S
+  placeholder: S
+  value: S
+  disabled: B
+  tooltip: S
+}
+
+interface ColorPicker {
+  name: S
+  label: S
+  value: S
+  choices: S[]
+  tooltip: S
+}
+
+interface Button {
+  name: S
+  label: S
+  caption: S
+  primary: B
+  disabled: B
+  link: B
+  tooltip: S
+}
+
+interface Buttons {
+  buttons: Button[]
+}
+
+interface FileUpload {
+  name: S
+  label: S
+  multiple: B
+  tooltip: S
+}
+
+interface TableColumn {
+  name: S
+  label: S
+}
+
+interface TableRow {
+  name: S
+  cells: S[]
+}
+
+interface Table {
+  name: S
+  columns: TableColumn[]
+  rows: TableRow[]
+  multiple: B
+  tooltip: S
+}
+
+interface Link {
+  label: S
+  path: S
+  disabled: B
+  button: B
+  tooltip: S
+}
+
+interface Tab {
+  name: S
+  label: S
+  icon: S
+}
+
+interface Tabs {
+  name: S
+  value: S
+  items: Tab[]
+}
+
+interface Expander {
+  name: S
+  label: S
+  expanded: B
+  items: Component[]
+}
+
+interface Component {
+  text?: Text
+  label?: Label
+  separator?: Separator
+  progress?: Progress
+  message_bar?: MessageBar
+  textbox?: Textbox
+  checkbox?: Checkbox
+  toggle?: Toggle
+  choice_group?: ChoiceGroup
+  checklist?: Checklist
+  dropdown?: Dropdown
+  combobox?: Combobox
+  slider?: Slider
+  spinbox?: Spinbox
+  date_picker?: DatePicker
+  color_picker?: ColorPicker
+  buttons?: Buttons
+  file_upload?: FileUpload
+  table?: Table
+  link?: Link
+  tabs?: Tabs
+  button?: Button
+  expander?: Expander
+}
+
+interface State {
+  url: S
+  args: Rec
+  items: Packed<Component[]>
+}
+
 
 const
   theme = getTheme(),
@@ -96,14 +348,14 @@ const
     }
   })
 
-const defaults: Partial<Form.State> = {
+const defaults: Partial<State> = {
   url: '',
   args: {},
   items: []
 }
 
 // const
-//   XButton = bond(({ args, button: m, submit }: { args: Rec, button: Form.Button, submit: () => void }) => {
+//   XButton = bond(({ args, button: m, submit }: { args: Rec, button: Button, submit: () => void }) => {
 //     args[m.name] = false
 //     const
 //       render = () => {
@@ -115,7 +367,7 @@ const defaults: Partial<Form.State> = {
 //       }
 //     return { render }
 //   }),
-//   XField = ({ component: c, args, submit }: { component: Form.Component, args: Rec, submit: () => void }) => {
+//   XField = ({ component: c, args, submit }: { component: Component, args: Rec, submit: () => void }) => {
 //     if (c.button) return <XButton key={xid()} args={args} button={c.button} submit={submit} />
 //     return <div />
 //   }
@@ -875,12 +1127,12 @@ const
     // TODO gap 10px between fields
     return <>{fields}</>
   },
-  View = bond(({ state, changed }: Card<Form.State>) => {
+  View = bond(({ state, changed }: Card<State>) => {
     const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          items = unpack<Form.Component[]>(s.items), // XXX ugly
+          items = unpack<Component[]>(s.items), // XXX ugly
           args = unpack(s.args),
           submit = () => {
             const sock = socket.current
