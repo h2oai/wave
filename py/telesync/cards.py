@@ -3852,59 +3852,6 @@ class FormExpander:
         )
 
 
-class NotebookSection:
-    """No documentation available.
-
-    :param cells: No documentation available.
-    :param commands: No documentation available.
-    :param data: No documentation available.
-    """
-    def __init__(
-            self,
-            cells: Repeated[Cell],
-            commands: Repeated[Command],
-            data: str,
-    ):
-        self.cells = cells
-        self.commands = commands
-        self.data = data
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.cells is None:
-            raise ValueError('NotebookSection.cells is required.')
-        if self.commands is None:
-            raise ValueError('NotebookSection.commands is required.')
-        if self.data is None:
-            raise ValueError('NotebookSection.data is required.')
-        return dict(
-            cells=[__e.dump() for __e in self.cells],
-            commands=[__e.dump() for __e in self.commands],
-            data=self.data,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'NotebookSection':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_cells: Any = __d.get('cells')
-        if __d_cells is None:
-            raise ValueError('NotebookSection.cells is required.')
-        __d_commands: Any = __d.get('commands')
-        if __d_commands is None:
-            raise ValueError('NotebookSection.commands is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('NotebookSection.data is required.')
-        cells: Repeated[Cell] = [Cell.load(__e) for __e in __d_cells]
-        commands: Repeated[Command] = [Command.load(__e) for __e in __d_commands]
-        data: str = __d_data
-        return NotebookSection(
-            cells,
-            commands,
-            data,
-        )
-
-
 class FormComponent:
     """No documentation available.
 
@@ -3931,7 +3878,6 @@ class FormComponent:
     :param tabs: No documentation available.
     :param button: No documentation available.
     :param expander: No documentation available.
-    :param section: No documentation available.
     """
     def __init__(
             self,
@@ -3958,7 +3904,6 @@ class FormComponent:
             tabs: Optional[FormTabs] = None,
             button: Optional[FormButton] = None,
             expander: Optional[FormExpander] = None,
-            section: Optional[NotebookSection] = None,
     ):
         self.text = text
         self.label = label
@@ -3983,7 +3928,6 @@ class FormComponent:
         self.tabs = tabs
         self.button = button
         self.expander = expander
-        self.section = section
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4011,7 +3955,6 @@ class FormComponent:
             tabs=None if self.tabs is None else self.tabs.dump(),
             button=None if self.button is None else self.button.dump(),
             expander=None if self.expander is None else self.expander.dump(),
-            section=None if self.section is None else self.section.dump(),
         )
 
     @staticmethod
@@ -4040,7 +3983,6 @@ class FormComponent:
         __d_tabs: Any = __d.get('tabs')
         __d_button: Any = __d.get('button')
         __d_expander: Any = __d.get('expander')
-        __d_section: Any = __d.get('section')
         text: Optional[FormText] = None if __d_text is None else FormText.load(__d_text)
         label: Optional[FormLabel] = None if __d_label is None else FormLabel.load(__d_label)
         separator: Optional[FormSeparator] = None if __d_separator is None else FormSeparator.load(__d_separator)
@@ -4064,7 +4006,6 @@ class FormComponent:
         tabs: Optional[FormTabs] = None if __d_tabs is None else FormTabs.load(__d_tabs)
         button: Optional[FormButton] = None if __d_button is None else FormButton.load(__d_button)
         expander: Optional[FormExpander] = None if __d_expander is None else FormExpander.load(__d_expander)
-        section: Optional[NotebookSection] = None if __d_section is None else NotebookSection.load(__d_section)
         return FormComponent(
             text,
             label,
@@ -4089,7 +4030,6 @@ class FormComponent:
             tabs,
             button,
             expander,
-            section,
         )
 
 
@@ -4433,6 +4373,59 @@ class Markup:
             box,
             title,
             content,
+        )
+
+
+class NotebookSection:
+    """No documentation available.
+
+    :param cells: No documentation available.
+    :param commands: No documentation available.
+    :param data: No documentation available.
+    """
+    def __init__(
+            self,
+            cells: Repeated[Cell],
+            commands: Repeated[Command],
+            data: str,
+    ):
+        self.cells = cells
+        self.commands = commands
+        self.data = data
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.cells is None:
+            raise ValueError('NotebookSection.cells is required.')
+        if self.commands is None:
+            raise ValueError('NotebookSection.commands is required.')
+        if self.data is None:
+            raise ValueError('NotebookSection.data is required.')
+        return dict(
+            cells=[__e.dump() for __e in self.cells],
+            commands=[__e.dump() for __e in self.commands],
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'NotebookSection':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_cells: Any = __d.get('cells')
+        if __d_cells is None:
+            raise ValueError('NotebookSection.cells is required.')
+        __d_commands: Any = __d.get('commands')
+        if __d_commands is None:
+            raise ValueError('NotebookSection.commands is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('NotebookSection.data is required.')
+        cells: Repeated[Cell] = [Cell.load(__e) for __e in __d_cells]
+        commands: Repeated[Command] = [Command.load(__e) for __e in __d_commands]
+        data: str = __d_data
+        return NotebookSection(
+            cells,
+            commands,
+            data,
         )
 
 
