@@ -1,5 +1,4 @@
-import { B, F, Rec, S, Packed } from "./telesync";
-import { Section } from './notebook';
+import { B, F, Packed, Rec, S } from "./telesync";
 
 export interface Text {
   size: S
@@ -246,7 +245,6 @@ export interface Component {
   tabs?: Tabs
   button?: Button
   expander?: Expander
-  section?: Section
 }
 
 export interface State {

@@ -1,5 +1,5 @@
 import { NestedCSSProperties } from "typestyle/lib/types";
-import { Dict, F, S, U } from "./telesync";
+import { Dict, I, F, S, U } from "./telesync";
 
 interface RGB { r: U, g: U, b: U }
 interface Palette {
@@ -39,8 +39,23 @@ interface Tones {
   text9: S
 }
 
+export const
+  px = (x: I) => `${x}px`,
+  pc = (x: F) => `${x}%`,
+  rem = (x: F) => `${x}rem`,
+  clas = (...names: string[]) => names.join(' '),
+  quint = (prop: string) => `${prop} 600ms cubic-bezier(0.23, 1, 0.32, 1)`, // https://easings.net/#easeOutQuint
+  border = (thickness: U, color: string) => `${thickness}px solid ${color}`,
+  dotted = (thickness: U, color: string) => `${thickness}px dotted ${color}`,
+  dashed = (thickness: U, color: string) => `${thickness}px dashed ${color}`,
+  hairline = border(1, '#ececec'),
+  padding = (...t: I[]) => t.map(px).join(' '),
+  paddingRem = (...t: F[]) => t.map(rem).join(' '),
+  margin = padding,
+  rgba = (r: U, g: U, b: U, a: F) => `rgba(${r},${g},${b},${a.toFixed(1)})`,
+  gray = (b: U) => { const h = b.toString(16); return `#${h}${h}${h}` }
+
 const
-  rgba = (r: U, g: U, b: U, a: F): S => `rgba(${r},${g},${b},${a})`,
   black: RGB = { r: 0, g: 0, b: 0 },
   rgb = (hex: S): RGB => {
     const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
