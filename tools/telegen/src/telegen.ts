@@ -87,6 +87,10 @@ const
     console.warn(`Warning: ${s}`)
     warnings++
   },
+  die = (s: string) => {
+    console.log(s)
+    process.exit(1)
+  },
   reservedWords = ['view', 'box'],
   boxComment = 'A string indicating how to place this component on the page.',
   noComment = 'No documentation available.',
@@ -508,8 +512,13 @@ const
       if (type.isUnion) {
         for (const m of type.members) {
           if (m.t == MemberT.Singular || m.t === MemberT.Repeated) {
-            const memberType = types[m.typeName]
-            if (memberType) memberType.oneOf = { name: m.name, type }
+            const mt = types[m.typeName]
+            if (mt) {
+              if (mt.oneOf) {
+                die(`Union type member ${type.name}.${mt.name} is already used in ${mt.oneOf.type.name}.${mt.oneOf.name}`)
+              }
+              mt.oneOf = { name: m.name, type }
+            }
           }
         }
       }
@@ -525,13 +534,13 @@ const
     fs.writeFileSync(path.join(pyOutDir, 'api.py'), api, 'utf8')
   }
 
+
 try {
   main(process.argv[2], process.argv[3])
   console.log(`Success! Code generation complete. ${warnings} warnings.`)
 } catch (e) {
   if (e.name === codeGenErrorT) {
-    console.log(`***Error: code generation failed: ${e.message}***`)
-    process.exit(1)
+    die(`***Error: code generation failed: ${e.message}***`)
   }
   throw e
 }
