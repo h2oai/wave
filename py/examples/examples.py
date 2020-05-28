@@ -294,9 +294,9 @@ def create_lists_page(site: Site, update_freq=0.0):
     page.drop()
 
     # list
-    c = page.add('list', dict(
+    c = page.add('basic_list', dict(
         box='1 1 2 4',
-        view='list',
+        view='basic_list',
         item_view='list_item1',
         item_props=pack(dict(title='=code', caption='=currency', value='=trades', aux_value='=returns')),
         title='Exchange Rates',

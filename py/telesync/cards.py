@@ -2,16 +2,92 @@
 # THIS FILE IS GENERATED; DO NOT EDIT
 #
 
-from typing import Any, Optional, Union, Dict, List as Repeated
+from typing import Any, Optional, Union, Dict, List
 from .core import Data
 
 Value = Union[str, float, int]
 PackedRecord = Union[dict, str]
-PackedRecords = Union[Repeated[dict], str]
+PackedRecords = Union[List[dict], str]
 PackedData = Union[Data, str]
 
 
 def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}
+
+
+class BasicList:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param item_view: No documentation available.
+    :param item_props: No documentation available.
+    :param data: No documentation available.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            item_view: str,
+            item_props: PackedRecord,
+            data: PackedData,
+    ):
+        self.box = box
+        self.title = title
+        self.item_view = item_view
+        self.item_props = item_props
+        self.data = data
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('BasicList.box is required.')
+        if self.title is None:
+            raise ValueError('BasicList.title is required.')
+        if self.item_view is None:
+            raise ValueError('BasicList.item_view is required.')
+        if self.item_props is None:
+            raise ValueError('BasicList.item_props is required.')
+        if self.data is None:
+            raise ValueError('BasicList.data is required.')
+        return _dump(
+            view='basic_list',
+            box=self.box,
+            title=self.title,
+            item_view=self.item_view,
+            item_props=self.item_props,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'BasicList':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('BasicList.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('BasicList.title is required.')
+        __d_item_view: Any = __d.get('item_view')
+        if __d_item_view is None:
+            raise ValueError('BasicList.item_view is required.')
+        __d_item_props: Any = __d.get('item_props')
+        if __d_item_props is None:
+            raise ValueError('BasicList.item_props is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('BasicList.data is required.')
+        box: str = __d_box
+        title: str = __d_title
+        item_view: str = __d_item_view
+        item_props: PackedRecord = __d_item_props
+        data: PackedData = __d_data
+        return BasicList(
+            box,
+            title,
+            item_view,
+            item_props,
+            data,
+        )
 
 
 class Card1:
@@ -1251,7 +1327,7 @@ class Query:
     def __init__(
             self,
             sql: str,
-            sources: Repeated[DataSource],
+            sources: List[DataSource],
     ):
         self.sql = sql
         self.sources = sources
@@ -1277,7 +1353,7 @@ class Query:
         if __d_sources is None:
             raise ValueError('Query.sources is required.')
         sql: str = __d_sql
-        sources: Repeated[DataSource] = [DataSource.load(__e) for __e in __d_sources]
+        sources: List[DataSource] = [DataSource.load(__e) for __e in __d_sources]
         return Query(
             sql,
             sources,
@@ -1466,9 +1542,9 @@ class DashboardPanel:
     """
     def __init__(
             self,
-            cells: Repeated[Cell],
+            cells: List[Cell],
             size: str,
-            commands: Repeated[Command],
+            commands: List[Command],
             data: str,
     ):
         self.cells = cells
@@ -1508,9 +1584,9 @@ class DashboardPanel:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('DashboardPanel.data is required.')
-        cells: Repeated[Cell] = [Cell.load(__e) for __e in __d_cells]
+        cells: List[Cell] = [Cell.load(__e) for __e in __d_cells]
         size: str = __d_size
-        commands: Repeated[Command] = [Command.load(__e) for __e in __d_commands]
+        commands: List[Command] = [Command.load(__e) for __e in __d_commands]
         data: str = __d_data
         return DashboardPanel(
             cells,
@@ -1528,7 +1604,7 @@ class DashboardRow:
     """
     def __init__(
             self,
-            panels: Repeated[DashboardPanel],
+            panels: List[DashboardPanel],
             size: str,
     ):
         self.panels = panels
@@ -1554,7 +1630,7 @@ class DashboardRow:
         __d_size: Any = __d.get('size')
         if __d_size is None:
             raise ValueError('DashboardRow.size is required.')
-        panels: Repeated[DashboardPanel] = [DashboardPanel.load(__e) for __e in __d_panels]
+        panels: List[DashboardPanel] = [DashboardPanel.load(__e) for __e in __d_panels]
         size: str = __d_size
         return DashboardRow(
             panels,
@@ -1571,7 +1647,7 @@ class DashboardPage:
     def __init__(
             self,
             title: str,
-            rows: Repeated[DashboardRow],
+            rows: List[DashboardRow],
     ):
         self.title = title
         self.rows = rows
@@ -1597,7 +1673,7 @@ class DashboardPage:
         if __d_rows is None:
             raise ValueError('DashboardPage.rows is required.')
         title: str = __d_title
-        rows: Repeated[DashboardRow] = [DashboardRow.load(__e) for __e in __d_rows]
+        rows: List[DashboardRow] = [DashboardRow.load(__e) for __e in __d_rows]
         return DashboardPage(
             title,
             rows,
@@ -1613,7 +1689,7 @@ class Dashboard:
     def __init__(
             self,
             box: str,
-            pages: Repeated[DashboardPage],
+            pages: List[DashboardPage],
     ):
         self.box = box
         self.pages = pages
@@ -1640,7 +1716,7 @@ class Dashboard:
         if __d_pages is None:
             raise ValueError('Dashboard.pages is required.')
         box: str = __d_box
-        pages: Repeated[DashboardPage] = [DashboardPage.load(__e) for __e in __d_pages]
+        pages: List[DashboardPage] = [DashboardPage.load(__e) for __e in __d_pages]
         return Dashboard(
             box,
             pages,
@@ -2466,7 +2542,7 @@ class FormChoiceGroup:
             name: str,
             label: str,
             value: str,
-            choices: Repeated[FormChoice],
+            choices: List[FormChoice],
             required: bool,
             trigger: bool,
             tooltip: str,
@@ -2532,7 +2608,7 @@ class FormChoiceGroup:
         name: str = __d_name
         label: str = __d_label
         value: str = __d_value
-        choices: Repeated[FormChoice] = [FormChoice.load(__e) for __e in __d_choices]
+        choices: List[FormChoice] = [FormChoice.load(__e) for __e in __d_choices]
         required: bool = __d_required
         trigger: bool = __d_trigger
         tooltip: str = __d_tooltip
@@ -2560,8 +2636,8 @@ class FormChecklist:
             self,
             name: str,
             label: str,
-            values: Repeated[str],
-            choices: Repeated[FormChoice],
+            values: List[str],
+            choices: List[FormChoice],
             tooltip: str,
     ):
         self.name = name
@@ -2610,8 +2686,8 @@ class FormChecklist:
             raise ValueError('FormChecklist.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
-        values: Repeated[str] = __d_values
-        choices: Repeated[FormChoice] = [FormChoice.load(__e) for __e in __d_choices]
+        values: List[str] = __d_values
+        choices: List[FormChoice] = [FormChoice.load(__e) for __e in __d_choices]
         tooltip: str = __d_tooltip
         return FormChecklist(
             name,
@@ -2644,8 +2720,8 @@ class FormDropdown:
             placeholder: str,
             multiple: bool,
             value: str,
-            values: Repeated[str],
-            choices: Repeated[FormChoice],
+            values: List[str],
+            choices: List[FormChoice],
             required: bool,
             disabled: bool,
             trigger: bool,
@@ -2742,8 +2818,8 @@ class FormDropdown:
         placeholder: str = __d_placeholder
         multiple: bool = __d_multiple
         value: str = __d_value
-        values: Repeated[str] = __d_values
-        choices: Repeated[FormChoice] = [FormChoice.load(__e) for __e in __d_choices]
+        values: List[str] = __d_values
+        choices: List[FormChoice] = [FormChoice.load(__e) for __e in __d_choices]
         required: bool = __d_required
         disabled: bool = __d_disabled
         trigger: bool = __d_trigger
@@ -2781,7 +2857,7 @@ class FormCombobox:
             label: str,
             placeholder: str,
             value: str,
-            choices: Repeated[str],
+            choices: List[str],
             error: str,
             disabled: bool,
             tooltip: str,
@@ -2855,7 +2931,7 @@ class FormCombobox:
         label: str = __d_label
         placeholder: str = __d_placeholder
         value: str = __d_value
-        choices: Repeated[str] = __d_choices
+        choices: List[str] = __d_choices
         error: str = __d_error
         disabled: bool = __d_disabled
         tooltip: str = __d_tooltip
@@ -3198,7 +3274,7 @@ class FormColorPicker:
             name: str,
             label: str,
             value: str,
-            choices: Repeated[str],
+            choices: List[str],
             tooltip: str,
     ):
         self.name = name
@@ -3248,7 +3324,7 @@ class FormColorPicker:
         name: str = __d_name
         label: str = __d_label
         value: str = __d_value
-        choices: Repeated[str] = __d_choices
+        choices: List[str] = __d_choices
         tooltip: str = __d_tooltip
         return FormColorPicker(
             name,
@@ -3363,7 +3439,7 @@ class FormButtons:
     """
     def __init__(
             self,
-            buttons: Repeated[FormButton],
+            buttons: List[FormButton],
     ):
         self.buttons = buttons
 
@@ -3381,7 +3457,7 @@ class FormButtons:
         __d_buttons: Any = __d.get('buttons')
         if __d_buttons is None:
             raise ValueError('FormButtons.buttons is required.')
-        buttons: Repeated[FormButton] = [FormButton.load(__e) for __e in __d_buttons]
+        buttons: List[FormButton] = [FormButton.load(__e) for __e in __d_buttons]
         return FormButtons(
             buttons,
         )
@@ -3502,7 +3578,7 @@ class FormTableRow:
     def __init__(
             self,
             name: str,
-            cells: Repeated[str],
+            cells: List[str],
     ):
         self.name = name
         self.cells = cells
@@ -3528,7 +3604,7 @@ class FormTableRow:
         if __d_cells is None:
             raise ValueError('FormTableRow.cells is required.')
         name: str = __d_name
-        cells: Repeated[str] = __d_cells
+        cells: List[str] = __d_cells
         return FormTableRow(
             name,
             cells,
@@ -3547,8 +3623,8 @@ class FormTable:
     def __init__(
             self,
             name: str,
-            columns: Repeated[FormTableColumn],
-            rows: Repeated[FormTableRow],
+            columns: List[FormTableColumn],
+            rows: List[FormTableRow],
             multiple: bool,
             tooltip: str,
     ):
@@ -3597,8 +3673,8 @@ class FormTable:
         if __d_tooltip is None:
             raise ValueError('FormTable.tooltip is required.')
         name: str = __d_name
-        columns: Repeated[FormTableColumn] = [FormTableColumn.load(__e) for __e in __d_columns]
-        rows: Repeated[FormTableRow] = [FormTableRow.load(__e) for __e in __d_rows]
+        columns: List[FormTableColumn] = [FormTableColumn.load(__e) for __e in __d_columns]
+        rows: List[FormTableRow] = [FormTableRow.load(__e) for __e in __d_rows]
         multiple: bool = __d_multiple
         tooltip: str = __d_tooltip
         return FormTable(
@@ -3749,7 +3825,7 @@ class FormTabs:
             self,
             name: str,
             value: str,
-            items: Repeated[FormTab],
+            items: List[FormTab],
     ):
         self.name = name
         self.value = value
@@ -3783,7 +3859,7 @@ class FormTabs:
             raise ValueError('FormTabs.items is required.')
         name: str = __d_name
         value: str = __d_value
-        items: Repeated[FormTab] = [FormTab.load(__e) for __e in __d_items]
+        items: List[FormTab] = [FormTab.load(__e) for __e in __d_items]
         return FormTabs(
             name,
             value,
@@ -3804,7 +3880,7 @@ class FormExpander:
             name: str,
             label: str,
             expanded: bool,
-            items: Repeated['FormComponent'],
+            items: List['FormComponent'],
     ):
         self.name = name
         self.label = label
@@ -3846,7 +3922,7 @@ class FormExpander:
         name: str = __d_name
         label: str = __d_label
         expanded: bool = __d_expanded
-        items: Repeated['FormComponent'] = [FormComponent.load(__e) for __e in __d_items]
+        items: List['FormComponent'] = [FormComponent.load(__e) for __e in __d_items]
         return FormExpander(
             name,
             label,
@@ -3906,7 +3982,7 @@ class FormNavGroup:
     def __init__(
             self,
             label: str,
-            items: Repeated[FormNavItem],
+            items: List[FormNavItem],
     ):
         self.label = label
         self.items = items
@@ -3932,7 +4008,7 @@ class FormNavGroup:
         if __d_items is None:
             raise ValueError('FormNavGroup.items is required.')
         label: str = __d_label
-        items: Repeated[FormNavItem] = [FormNavItem.load(__e) for __e in __d_items]
+        items: List[FormNavItem] = [FormNavItem.load(__e) for __e in __d_items]
         return FormNavGroup(
             label,
             items,
@@ -3948,7 +4024,7 @@ class FormNav:
     def __init__(
             self,
             name: str,
-            items: Repeated[FormNavGroup],
+            items: List[FormNavGroup],
     ):
         self.name = name
         self.items = items
@@ -3974,7 +4050,7 @@ class FormNav:
         if __d_items is None:
             raise ValueError('FormNav.items is required.')
         name: str = __d_name
-        items: Repeated[FormNavGroup] = [FormNavGroup.load(__e) for __e in __d_items]
+        items: List[FormNavGroup] = [FormNavGroup.load(__e) for __e in __d_items]
         return FormNav(
             name,
             items,
@@ -4182,7 +4258,7 @@ class Form:
             box: str,
             url: str,
             args: PackedRecord,
-            items: Union[Repeated[FormComponent], str],
+            items: Union[List[FormComponent], str],
     ):
         self.box = box
         self.url = url
@@ -4225,88 +4301,12 @@ class Form:
         box: str = __d_box
         url: str = __d_url
         args: PackedRecord = __d_args
-        items: Union[Repeated[FormComponent], str] = __d_items if isinstance(__d_items, str) else [FormComponent.load(__e) for __e in __d_items]
+        items: Union[List[FormComponent], str] = __d_items if isinstance(__d_items, str) else [FormComponent.load(__e) for __e in __d_items]
         return Form(
             box,
             url,
             args,
             items,
-        )
-
-
-class List:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param item_view: No documentation available.
-    :param item_props: No documentation available.
-    :param data: No documentation available.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            item_view: str,
-            item_props: PackedRecord,
-            data: PackedData,
-    ):
-        self.box = box
-        self.title = title
-        self.item_view = item_view
-        self.item_props = item_props
-        self.data = data
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('List.box is required.')
-        if self.title is None:
-            raise ValueError('List.title is required.')
-        if self.item_view is None:
-            raise ValueError('List.item_view is required.')
-        if self.item_props is None:
-            raise ValueError('List.item_props is required.')
-        if self.data is None:
-            raise ValueError('List.data is required.')
-        return _dump(
-            view='list',
-            box=self.box,
-            title=self.title,
-            item_view=self.item_view,
-            item_props=self.item_props,
-            data=self.data,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'List':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('List.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('List.title is required.')
-        __d_item_view: Any = __d.get('item_view')
-        if __d_item_view is None:
-            raise ValueError('List.item_view is required.')
-        __d_item_props: Any = __d.get('item_props')
-        if __d_item_props is None:
-            raise ValueError('List.item_props is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('List.data is required.')
-        box: str = __d_box
-        title: str = __d_title
-        item_view: str = __d_item_view
-        item_props: PackedRecord = __d_item_props
-        data: PackedData = __d_data
-        return List(
-            box,
-            title,
-            item_view,
-            item_props,
-            data,
         )
 
 
@@ -4521,8 +4521,8 @@ class NotebookSection:
     """
     def __init__(
             self,
-            cells: Repeated[Cell],
-            commands: Repeated[Command],
+            cells: List[Cell],
+            commands: List[Command],
             data: str,
     ):
         self.cells = cells
@@ -4555,8 +4555,8 @@ class NotebookSection:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('NotebookSection.data is required.')
-        cells: Repeated[Cell] = [Cell.load(__e) for __e in __d_cells]
-        commands: Repeated[Command] = [Command.load(__e) for __e in __d_commands]
+        cells: List[Cell] = [Cell.load(__e) for __e in __d_cells]
+        commands: List[Command] = [Command.load(__e) for __e in __d_commands]
         data: str = __d_data
         return NotebookSection(
             cells,
@@ -4574,7 +4574,7 @@ class Notebook:
     def __init__(
             self,
             box: str,
-            sections: Repeated[NotebookSection],
+            sections: List[NotebookSection],
     ):
         self.box = box
         self.sections = sections
@@ -4601,7 +4601,7 @@ class Notebook:
         if __d_sections is None:
             raise ValueError('Notebook.sections is required.')
         box: str = __d_box
-        sections: Repeated[NotebookSection] = [NotebookSection.load(__e) for __e in __d_sections]
+        sections: List[NotebookSection] = [NotebookSection.load(__e) for __e in __d_sections]
         return Notebook(
             box,
             sections,
@@ -5074,7 +5074,7 @@ class PlotVis:
     """
     def __init__(
             self,
-            marks: Repeated[PlotMark],
+            marks: List[PlotMark],
     ):
         self.marks = marks
 
@@ -5092,7 +5092,7 @@ class PlotVis:
         __d_marks: Any = __d.get('marks')
         if __d_marks is None:
             raise ValueError('PlotVis.marks is required.')
-        marks: Repeated[PlotMark] = [PlotMark.load(__e) for __e in __d_marks]
+        marks: List[PlotMark] = [PlotMark.load(__e) for __e in __d_marks]
         return PlotVis(
             marks,
         )
