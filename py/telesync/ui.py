@@ -3,7 +3,7 @@ from typing import List, Union
 import telesync.cards as g
 
 
-def text(content: str, size: str = '', tooltip: str = '') -> g.FormComponent:
+def text(content: str, size: str = '', tooltip: str = '') -> g.Component:
     """
     Create text content.
 
@@ -14,10 +14,10 @@ def text(content: str, size: str = '', tooltip: str = '') -> g.FormComponent:
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A text instance.
     """
-    return g.FormComponent(text=g.FormText(size=size, text=content, tooltip=tooltip))
+    return g.Component(text=g.Text(size=size, text=content, tooltip=tooltip))
 
 
-def text_xl(content: str, tooltip: str = '') -> g.FormComponent:
+def text_xl(content: str, tooltip: str = '') -> g.Component:
     """
     Create extra large sized text content.
 
@@ -28,7 +28,7 @@ def text_xl(content: str, tooltip: str = '') -> g.FormComponent:
     return text(content=content, size='xl', tooltip=tooltip)
 
 
-def text_l(content: str, tooltip: str = '') -> g.FormComponent:
+def text_l(content: str, tooltip: str = '') -> g.Component:
     """
     Create large sized text content.
 
@@ -39,7 +39,7 @@ def text_l(content: str, tooltip: str = '') -> g.FormComponent:
     return text(content=content, size='l', tooltip=tooltip)
 
 
-def text_m(content: str, tooltip: str = '') -> g.FormComponent:
+def text_m(content: str, tooltip: str = '') -> g.Component:
     """
     Create medium sized text content.
 
@@ -50,7 +50,7 @@ def text_m(content: str, tooltip: str = '') -> g.FormComponent:
     return text(content=content, size='m', tooltip=tooltip)
 
 
-def text_s(content: str, tooltip: str = '') -> g.FormComponent:
+def text_s(content: str, tooltip: str = '') -> g.Component:
     """
     Create small sized text content.
 
@@ -61,7 +61,7 @@ def text_s(content: str, tooltip: str = '') -> g.FormComponent:
     return text(content=content, size='s', tooltip=tooltip)
 
 
-def text_xs(content: str, tooltip: str = '') -> g.FormComponent:
+def text_xs(content: str, tooltip: str = '') -> g.Component:
     """
     Create extra small sized text content.
 
@@ -77,7 +77,7 @@ def label(
         required: bool = False,
         disabled: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a label.
 
@@ -92,7 +92,7 @@ def label(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A label instance.
     """
-    return g.FormComponent(label=g.FormLabel(
+    return g.Component(label=g.Label(
         label=label,
         required=required,
         disabled=disabled,
@@ -102,7 +102,7 @@ def label(
 
 def separator(
         label: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a separator.
 
@@ -111,7 +111,7 @@ def separator(
     :param label: The text displayed on the separator.
     :return: A separator instance.
     """
-    return g.FormComponent(separator=g.FormSeparator(
+    return g.Component(separator=g.Separator(
         label=label,
     ))
 
@@ -121,7 +121,7 @@ def progress(
         caption: str = 'Please wait...',
         value: float = -1,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a progress bar.
 
@@ -150,7 +150,7 @@ def progress(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A progress bar instance.
     """
-    return g.FormComponent(progress=g.FormProgress(
+    return g.Component(progress=g.Progress(
         label=label,
         caption=caption,
         value=value,
@@ -161,7 +161,7 @@ def progress(
 def message_bar(
         type: str = 'info',
         text: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a message bar.
 
@@ -173,7 +173,7 @@ def message_bar(
     :param text: The text displayed on the message bar.
     :return: A message bar instance.
     """
-    return g.FormComponent(message_bar=g.FormMessageBar(
+    return g.Component(message_bar=g.MessageBar(
         type=type,
         text=text,
     ))
@@ -195,7 +195,7 @@ def textbox(
         multiline: bool = False,
         password: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a text box.
 
@@ -223,7 +223,7 @@ def textbox(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A text box instance.
     """
-    return g.FormComponent(textbox=g.FormTextbox(
+    return g.Component(textbox=g.Textbox(
         name=name,
         label=label,
         placeholder=placeholder,
@@ -250,7 +250,7 @@ def checkbox(
         disabled: bool = False,
         trigger: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a checkbox.
 
@@ -276,7 +276,7 @@ def checkbox(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A checkbox instance.
     """
-    return g.FormComponent(checkbox=g.FormCheckbox(
+    return g.Component(checkbox=g.Checkbox(
         name=name,
         label=label,
         value=value,
@@ -291,9 +291,9 @@ def checklist(
         name: str,
         label: str = '',
         values: List[str] = None,
-        choices: List[g.FormChoice] = None,
+        choices: List[g.Choice] = None,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a set of checkboxes.
 
@@ -311,7 +311,7 @@ def checklist(
         choices = []
     if values is None:
         values = []
-    return g.FormComponent(checklist=g.FormChecklist(
+    return g.Component(checklist=g.Checklist(
         name=name,
         label=label,
         values=values,
@@ -327,7 +327,7 @@ def toggle(
         disabled: bool = False,
         trigger: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a toggle.
 
@@ -346,7 +346,7 @@ def toggle(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A toggle instance.
     """
-    return g.FormComponent(toggle=g.FormToggle(
+    return g.Component(toggle=g.Toggle(
         name=name,
         label=label,
         value=value,
@@ -360,7 +360,7 @@ def choice(
         name: str,
         label: str = '',
         disabled: bool = False,
-) -> g.FormChoice:
+) -> g.Choice:
     """
     Create a choice for a checklist, choice group or dropdown.
 
@@ -369,7 +369,7 @@ def choice(
     :param disabled: True if the checkbox is disabled.
     :return: A choice instance.
     """
-    return g.FormChoice(
+    return g.Choice(
         name=name,
         label=label,
         disabled=disabled,
@@ -380,10 +380,10 @@ def choice_group(
         name: str,
         label: str = '',
         value: str = '',
-        choices: List[g.FormChoice] = None,
+        choices: List[g.Choice] = None,
         required: bool = False,
         trigger: bool = False, tooltip: str = ''
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a choice group.
 
@@ -412,7 +412,7 @@ def choice_group(
         raise ValueError('Choice Group must contain at least one choice.')
     if value == '':
         value = choices[0].name
-    return g.FormComponent(choice_group=g.FormChoiceGroup(
+    return g.Component(choice_group=g.ChoiceGroup(
         name=name,
         label=label,
         value=value,
@@ -429,12 +429,12 @@ def dropdown(
         placeholder: str = '',
         value: str = '',
         values: List[str] = None,
-        choices: List[g.FormChoice] = None,
+        choices: List[g.Choice] = None,
         required: bool = False,
         disabled: bool = False,
         trigger: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a dropdown.
 
@@ -465,7 +465,7 @@ def dropdown(
     if len(choices) < 1:
         raise ValueError('Dropdown must contain at least one choice.')
     multiple = values is not None
-    return g.FormComponent(dropdown=g.FormDropdown(
+    return g.Component(dropdown=g.Dropdown(
         name=name,
         label=label,
         placeholder=placeholder,
@@ -489,7 +489,7 @@ def combobox(
         error: str = '',
         disabled: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a combobox.
 
@@ -513,7 +513,7 @@ def combobox(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A combobox instance.
     """
-    return g.FormComponent(combobox=g.FormCombobox(
+    return g.Component(combobox=g.Combobox(
         name=name,
         label=label,
         placeholder=placeholder,
@@ -535,7 +535,7 @@ def slider(
         disabled: bool = False,
         trigger: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a slider.
 
@@ -563,7 +563,7 @@ def slider(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A slider instance.
     """
-    return g.FormComponent(slider=g.FormSlider(
+    return g.Component(slider=g.Slider(
         name=name,
         label=label,
         min=min,
@@ -585,7 +585,7 @@ def spinbox(
         value: float = 0,
         disabled: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a spinbox.
 
@@ -602,7 +602,7 @@ def spinbox(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A spinbox instance.
     """
-    return g.FormComponent(spinbox=g.FormSpinbox(
+    return g.Component(spinbox=g.Spinbox(
         name=name,
         label=label,
         min=min,
@@ -621,7 +621,7 @@ def date_picker(
         value: str = '',
         disabled: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a date picker.
 
@@ -636,7 +636,7 @@ def date_picker(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A date picker instance.
     """
-    return g.FormComponent(date_picker=g.FormDatePicker(
+    return g.Component(date_picker=g.DatePicker(
         name=name,
         label=label,
         placeholder=placeholder,
@@ -652,7 +652,7 @@ def color_picker(
         value: str = '',
         choices: List[str] = None,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a color picker.
 
@@ -669,7 +669,7 @@ def color_picker(
     """
     if choices is None:
         choices = []
-    return g.FormComponent(color_picker=g.FormColorPicker(
+    return g.Component(color_picker=g.ColorPicker(
         name=name,
         label=label,
         value=value,
@@ -683,7 +683,7 @@ def file_upload(
         label: str,
         multiple: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a file upload component.
 
@@ -695,7 +695,7 @@ def file_upload(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return:
     """
-    return g.FormComponent(file_upload=g.FormFileUpload(
+    return g.Component(file_upload=g.FileUpload(
         name=name,
         label=label,
         multiple=multiple,
@@ -711,7 +711,7 @@ def button(
         disabled: bool = False,
         link: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a button.
 
@@ -740,7 +740,7 @@ def button(
     :return: A button component instance.
     """
 
-    return g.FormComponent(button=g.FormButton(
+    return g.Component(button=g.Button(
         name=name,
         label=label,
         caption=caption,
@@ -751,7 +751,7 @@ def button(
     ))
 
 
-def buttons(*items: Union[g.FormComponent, g.FormButton]) -> g.FormComponent:
+def buttons(*items: Union[g.Component, g.Button]) -> g.Component:
     """
     Create a set of buttons to be layed out horizontally.
 
@@ -760,7 +760,7 @@ def buttons(*items: Union[g.FormComponent, g.FormButton]) -> g.FormComponent:
     """
 
     raw_buttons = [x.button for x in items]
-    return g.FormComponent(buttons=g.FormButtons(buttons=raw_buttons))
+    return g.Component(buttons=g.Buttons(buttons=raw_buttons))
 
 
 def link(
@@ -769,7 +769,7 @@ def link(
         disabled: bool = False,
         button: bool = False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create a hyperlink.
 
@@ -786,10 +786,10 @@ def link(
 
     """
 
-    return g.FormComponent(link=g.FormLink(label=label, path=path, disabled=disabled, button=button, tooltip=tooltip))
+    return g.Component(link=g.Link(label=label, path=path, disabled=disabled, button=button, tooltip=tooltip))
 
 
-def table_column(name: str, label: str) -> g.FormTableColumn:
+def table_column(name: str, label: str) -> g.TableColumn:
     """
     Create a table column. See :func:`~h2o_q.ui.table`.
 
@@ -797,10 +797,10 @@ def table_column(name: str, label: str) -> g.FormTableColumn:
     :param label: The text displayed on the column header.
     :return: A column instance.
     """
-    return g.FormTableColumn(name=name, label=label)
+    return g.TableColumn(name=name, label=label)
 
 
-def table_row(name: str, cells=List[str]) -> g.FormTableRow:
+def table_row(name: str, cells=List[str]) -> g.TableRow:
     """
     Create a table row. See :func:`~h2o_q.ui.table`.
 
@@ -808,16 +808,16 @@ def table_row(name: str, cells=List[str]) -> g.FormTableRow:
     :param cells: The cells in this row (displayed left to right).
     :return: A row instance.
     """
-    return g.FormTableRow(name=name, cells=cells)
+    return g.TableRow(name=name, cells=cells)
 
 
 def table(
         name: str,
-        columns: List[g.FormTableColumn],
-        rows: List[g.FormTableRow],
+        columns: List[g.TableColumn],
+        rows: List[g.TableRow],
         multiple=False,
         tooltip: str = '',
-) -> g.FormComponent:
+) -> g.Component:
     """
     Create an interactive table.
 
@@ -842,7 +842,7 @@ def table(
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     :return: A table instance.
     """
-    return g.FormComponent(table=g.FormTable(
+    return g.Component(table=g.Table(
         name=name,
         columns=columns,
         rows=rows,
@@ -851,7 +851,7 @@ def table(
     ))
 
 
-def fragment(section: g.NotebookSection) -> g.FormComponent:
+def fragment(section: g.NotebookSection) -> g.Component:
     """
     Create a notebook fragment.
 
@@ -862,7 +862,7 @@ def fragment(section: g.NotebookSection) -> g.FormComponent:
     :param section: The notebook section to display in the fragment.
     :return: A fragment instance.
     """
-    return g.FormComponent(section=section)
+    return g.Component(section=section)
 
 
 def command(action: str, label: str, caption: str = '', data: str = '', icon: str = '') -> g.Command:
@@ -1029,7 +1029,7 @@ def vega_cell(specification: str, query: g.Query) -> g.Cell:
     return g.Cell(vega=g.VegaCell(specification=specification, query=query))
 
 
-def tabs(name: str, value: str = '', *items: g.FormTab) -> g.FormComponent:
+def tabs(name: str, value: str = '', *items: g.Tab) -> g.Component:
     """
     Create a tab bar.  When the selected tab changes, the form is submitted
     and ```q.args.tabs_name``` is set to the new tab name selected.
@@ -1039,10 +1039,10 @@ def tabs(name: str, value: str = '', *items: g.FormTab) -> g.FormComponent:
     :param items: The tab instances.
     :return: A tab set instance.
     """
-    return g.FormComponent(tabs=g.FormTabs(name=name, value=value, items=list(items)))
+    return g.Component(tabs=g.Tabs(name=name, value=value, items=list(items)))
 
 
-def tab(name: str, label: str = '', icon: str = '') -> g.FormTab:
+def tab(name: str, label: str = '', icon: str = '') -> g.Tab:
     """
     Creates a new tab entry within the tab widget.  Tabs themselves do not have content,
     and the ```q.args.tabs_name``` should be checked to include the appropriate content
@@ -1053,10 +1053,10 @@ def tab(name: str, label: str = '', icon: str = '') -> g.FormTab:
     :param icon: Icon displayed in the far right end of the text field.
     :return: A tab instance.
     """
-    return g.FormTab(name=name, label=label, icon=icon)
+    return g.Tab(name=name, label=label, icon=icon)
 
 
-def expander(name: str, label: str = '', expanded: bool = False, *items: g.FormComponent) -> g.FormComponent:
+def expander(name: str, label: str = '', expanded: bool = False, *items: g.Component) -> g.Component:
     """
     Creates a new expander.  Expanders can be used to show/hide a group of related components.
 
@@ -1066,14 +1066,14 @@ def expander(name: str, label: str = '', expanded: bool = False, *items: g.FormC
     :param items: List of components to be hideable by the expander.
     :return: A expander instance.
     """
-    return g.FormComponent(expander=g.FormExpander(name=name, label=label, expanded=expanded, items=list(items)))
+    return g.Component(expander=g.Expander(name=name, label=label, expanded=expanded, items=list(items)))
 
 
 # def button(name: str, label='') -> dict:
 #     return dict(button=dict(name=name, label=label))
 #
 
-def form(box: str, url: str, items: Union[List[g.FormComponent], str]) -> g.Form:
+def form(box: str, url: str, items: Union[List[g.Component], str]) -> g.Form:
     return g.Form(
         box=box,
         url=url,
