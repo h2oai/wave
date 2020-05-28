@@ -177,7 +177,7 @@ export interface Rect extends Size { left: U, top: U }
 
 export interface Dict<T> { [key: string]: T } // generic object
 
-export type Rec = Dict<Prim|Prim[]> // Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type.
+export type Rec = Dict<Prim | Prim[]> // Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type.
 export type Recs = Rec[]
 export type Packed<T> = T | S
 
@@ -299,7 +299,8 @@ export const
       ? decodeString(data)
       : (isData(data))
         ? data.list()
-        : data
+        : data,
+  iff = (x: S) => x && x.length ? x : undefined
 
 const
   decodeType = (d: S): [S, S] => {
