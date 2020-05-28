@@ -6,8 +6,9 @@ publish: ## Publish package to PyPI
 
 setup: ## Install dependencies
 	python3 -m venv venv
-	./venv/bin/python -m pip install -U pip
+	./venv/bin/python -m pip install --upgrade pip
 	./venv/bin/python -m pip install setuptools wheel twine requests websockets faker
+	./venv/bin/python -m pip install --editable telesync
 
 .PHONY: docs
 docs: ## Build API docs

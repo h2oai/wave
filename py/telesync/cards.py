@@ -3852,6 +3852,132 @@ class FormExpander:
         )
 
 
+class FormNavItem:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+    ):
+        self.name = name
+        self.label = label
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('FormNavItem.name is required.')
+        if self.label is None:
+            raise ValueError('FormNavItem.label is required.')
+        return dict(
+            name=self.name,
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'FormNavItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('FormNavItem.name is required.')
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('FormNavItem.label is required.')
+        name: str = __d_name
+        label: str = __d_label
+        return FormNavItem(
+            name,
+            label,
+        )
+
+
+class FormNavGroup:
+    """No documentation available.
+
+    :param label: No documentation available.
+    :param items: No documentation available.
+    """
+    def __init__(
+            self,
+            label: str,
+            items: Repeated[FormNavItem],
+    ):
+        self.label = label
+        self.items = items
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('FormNavGroup.label is required.')
+        if self.items is None:
+            raise ValueError('FormNavGroup.items is required.')
+        return dict(
+            label=self.label,
+            items=[__e.dump() for __e in self.items],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'FormNavGroup':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('FormNavGroup.label is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('FormNavGroup.items is required.')
+        label: str = __d_label
+        items: Repeated[FormNavItem] = [FormNavItem.load(__e) for __e in __d_items]
+        return FormNavGroup(
+            label,
+            items,
+        )
+
+
+class FormNav:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param items: No documentation available.
+    """
+    def __init__(
+            self,
+            name: str,
+            items: Repeated[FormNavGroup],
+    ):
+        self.name = name
+        self.items = items
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('FormNav.name is required.')
+        if self.items is None:
+            raise ValueError('FormNav.items is required.')
+        return dict(
+            name=self.name,
+            items=[__e.dump() for __e in self.items],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'FormNav':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('FormNav.name is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('FormNav.items is required.')
+        name: str = __d_name
+        items: Repeated[FormNavGroup] = [FormNavGroup.load(__e) for __e in __d_items]
+        return FormNav(
+            name,
+            items,
+        )
+
+
 class FormComponent:
     """No documentation available.
 
@@ -3878,6 +4004,7 @@ class FormComponent:
     :param tabs: No documentation available.
     :param button: No documentation available.
     :param expander: No documentation available.
+    :param nav: No documentation available.
     """
     def __init__(
             self,
@@ -3904,6 +4031,7 @@ class FormComponent:
             tabs: Optional[FormTabs] = None,
             button: Optional[FormButton] = None,
             expander: Optional[FormExpander] = None,
+            nav: Optional[FormNav] = None,
     ):
         self.text = text
         self.label = label
@@ -3928,6 +4056,7 @@ class FormComponent:
         self.tabs = tabs
         self.button = button
         self.expander = expander
+        self.nav = nav
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3955,6 +4084,7 @@ class FormComponent:
             tabs=None if self.tabs is None else self.tabs.dump(),
             button=None if self.button is None else self.button.dump(),
             expander=None if self.expander is None else self.expander.dump(),
+            nav=None if self.nav is None else self.nav.dump(),
         )
 
     @staticmethod
@@ -3983,6 +4113,7 @@ class FormComponent:
         __d_tabs: Any = __d.get('tabs')
         __d_button: Any = __d.get('button')
         __d_expander: Any = __d.get('expander')
+        __d_nav: Any = __d.get('nav')
         text: Optional[FormText] = None if __d_text is None else FormText.load(__d_text)
         label: Optional[FormLabel] = None if __d_label is None else FormLabel.load(__d_label)
         separator: Optional[FormSeparator] = None if __d_separator is None else FormSeparator.load(__d_separator)
@@ -4006,6 +4137,7 @@ class FormComponent:
         tabs: Optional[FormTabs] = None if __d_tabs is None else FormTabs.load(__d_tabs)
         button: Optional[FormButton] = None if __d_button is None else FormButton.load(__d_button)
         expander: Optional[FormExpander] = None if __d_expander is None else FormExpander.load(__d_expander)
+        nav: Optional[FormNav] = None if __d_nav is None else FormNav.load(__d_nav)
         return FormComponent(
             text,
             label,
@@ -4030,6 +4162,7 @@ class FormComponent:
             tabs,
             button,
             expander,
+            nav,
         )
 
 

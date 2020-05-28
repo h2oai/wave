@@ -227,6 +227,21 @@ interface Expander {
   items: Component[]
 }
 
+interface NavItem {
+  name: S
+  label: S
+}
+
+interface NavGroup {
+  label: S
+  items: NavItem[]
+}
+
+interface Nav {
+  name: S
+  items: NavGroup[]
+}
+
 interface Component {
   text?: Text
   label?: Label
@@ -251,6 +266,7 @@ interface Component {
   tabs?: Tabs
   button?: Button
   expander?: Expander
+  nav?: Nav
 }
 
 interface State {
@@ -1021,6 +1037,27 @@ const
       }
     return { render }
   }),
+  XNav = bond(({ args, model: m, submit }: { args: Rec, model: Nav, submit: () => void }) => {
+    args[m.name] = null
+    const
+      onLinkClick = (_ev?: React.MouseEvent<HTMLElement>, item?: Fluent.INavLink) => {
+        if (!item) return
+        args[m.name] = item.key || null
+        submit()
+      },
+      render = () => {
+        const groups = m.items.map((g): Fluent.INavLinkGroup => ({
+          name: g.label,
+          links: g.items.map((i): Fluent.INavLink => ({
+            key: i.name,
+            name: i.label,
+            url: '#'
+          }))
+        }))
+        return <Fluent.Nav groups={groups} onLinkClick={onLinkClick} />
+      }
+    return { render }
+  }),
   XTabs = bond(({ args, model: m, submit }: { args: Rec, model: Tabs, submit: () => void }) => {
     const
       render = () => {
@@ -1120,6 +1157,7 @@ const
     if (c.tabs) return <XTabs args={args} model={c.tabs} submit={submit} />
     if (c.button) return <XToolTip content={c.button.tooltip} showIcon={false} expand={false}><XStandAloneButton args={args} model={c.button} submit={submit} /></XToolTip>
     if (c.expander) return <XExpander args={args} model={c.expander} submit={submit} />
+    if (c.nav) return <XNav args={args} model={c.nav} submit={submit} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   },
   Fields = ({ args, items, submit }: { args: Rec, items: Component[], submit: () => void }) => {
