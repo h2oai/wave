@@ -54,18 +54,20 @@ interface RepeatedMember extends PackableMember {
 type Member = EnumMember | SingularMember | RepeatedMember
 interface Type {
   readonly name: string
+  readonly file: string
   readonly comments: string[]
   readonly members: Member[]
   readonly isRoot: boolean
   readonly isUnion: boolean
   oneOf?: OneOf
 }
+interface Protocol {
+  readonly lookup: Dict<Type>
+  readonly types: Type[]
+}
 interface File {
   readonly name: string
   readonly types: Type[]
-}
-interface Protocol {
-  readonly files: File[]
 }
 
 enum Declaration { Forward, Declared }
@@ -86,10 +88,6 @@ const
   warn = (s: string) => {
     console.warn(`Warning: ${s}`)
     warnings++
-  },
-  die = (s: string) => {
-    console.log(s)
-    process.exit(1)
   },
   reservedWords = ['view', 'box'],
   boxComment = 'A string indicating how to place this component on the page.',
@@ -214,11 +212,11 @@ const
           // All cards must have a box defined.
           if (isRoot) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], isPacked: false })
           const isUnion = !members.filter(m => !m.isOptional).length // all members are optional?
-          file.types.push({ name: typeName, comments, members, isRoot, isUnion })
+          file.types.push({ name: typeName, file: file.name, comments, members, isRoot, isUnion })
       }
     })
   },
-  processFile = (protocol: Protocol, filepath: string) => {
+  processFile = (files: File[], filepath: string) => {
     console.log(`Parsing ${filepath}`)
     const
       component = path.parse(filepath).name,
@@ -230,16 +228,16 @@ const
         true
       )
     collectTypes(component, file, sourceFile)
-    protocol.files.push(file)
+    files.push(file)
   },
-  processDir = (protocol: Protocol, dirpath: string) => {
+  processDir = (files: File[], dirpath: string) => {
     const
       ignored = toLookup(fs.readFileSync(path.join(dirpath, '.telegen'), 'utf8').split('\n').map(x => x.trim())),
       filenames = fs.readdirSync(dirpath)
     for (const filename of filenames) {
       if (ignored[filename]) continue
       const filepath = path.join(dirpath, filename)
-      if (fs.statSync(filepath).isFile()) processFile(protocol, filepath)
+      if (fs.statSync(filepath).isFile()) processFile(files, filepath)
     }
   },
   pyTypeMappings: Dict<string> = {
@@ -262,10 +260,8 @@ const
       apis: Dict<boolean> = {},
       knownTypes = ((): Dict<Type> => {
         const d: Dict<Type> = {}
-        for (const file of protocol.files) {
-          for (const type of file.types) {
-            d[type.name] = type
-          }
+        for (const type of protocol.types) {
+          d[type.name] = type
         }
         return d
       })(),
@@ -423,11 +419,9 @@ const
         p('')
         p('def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}')
         p('')
-        for (const file of protocol.files) {
-          for (const type of file.types) {
-            if (type.isRoot) { // Only export root types (State interface) and their dependencies.
-              genClass(type)
-            }
+        for (const type of protocol.types) {
+          if (type.isRoot) { // Only export root types (State interface) and their dependencies.
+            genClass(type)
           }
         }
         return flush()
@@ -486,36 +480,42 @@ const
         p(`    ${classNames}`)
         p('')
 
-        for (const file of protocol.files) {
-          for (const type of file.types) {
-            if (type.isRoot) {
-              genAPI(type)
-            }
+        for (const type of protocol.types) {
+          if (type.isRoot) {
+            genAPI(type)
           }
         }
         return flush()
       }
     return [genClasses(), genAPIs()]
   },
-  markUnionTypes = (protocol: Protocol) => {
+  makeProtocol = (files: File[]): Protocol => {
     // Build type lookup
-    const types: Dict<Type> = {}
-    for (const file of protocol.files) {
+    const
+      types: Type[] = [],
+      lookup: Dict<Type> = {}
+
+    for (const file of files) {
       for (const type of file.types) {
-        types[type.name] = type
+        const existing = lookup[type.name]
+        if (existing) {
+          throw new CodeGenError(`Type ${file.name}.${type.name} already declared as ${existing.file}.${type.name}`)
+        }
+        lookup[type.name] = type
+        types.push(type)
       }
     }
 
     // Mark union members
-    for (const typeName in types) {
-      const type = types[typeName]
+    for (const typeName in lookup) {
+      const type = lookup[typeName]
       if (type.isUnion) {
         for (const m of type.members) {
           if (m.t == MemberT.Singular || m.t === MemberT.Repeated) {
-            const mt = types[m.typeName]
+            const mt = lookup[m.typeName]
             if (mt) {
               if (mt.oneOf) {
-                die(`Union type member ${type.name}.${mt.name} is already used in ${mt.oneOf.type.name}.${mt.oneOf.name}`)
+                throw new CodeGenError(`Union type member ${type.name}.${mt.name} is already used in ${mt.oneOf.type.name}.${mt.oneOf.name}`)
               }
               mt.oneOf = { name: m.name, type }
             }
@@ -523,12 +523,14 @@ const
         }
       }
     }
+
+    return { types, lookup }
   },
   main = (typescriptSrcDir: string, pyOutDir: string) => {
-    const protocol: Protocol = { files: [] }
-    processDir(protocol, typescriptSrcDir)
+    const files: File[] = []
+    processDir(files, typescriptSrcDir)
     // console.log(JSON.stringify(protocol, null, 2))
-    markUnionTypes(protocol)
+    const protocol = makeProtocol(files)
     const [classes, api] = tranlateToPy(protocol)
     fs.writeFileSync(path.join(pyOutDir, 'cards.py'), classes, 'utf8')
     fs.writeFileSync(path.join(pyOutDir, 'api.py'), api, 'utf8')
@@ -540,7 +542,8 @@ try {
   console.log(`Success! Code generation complete. ${warnings} warnings.`)
 } catch (e) {
   if (e.name === codeGenErrorT) {
-    die(`***Error: code generation failed: ${e.message}***`)
+    console.log(`***Error: code generation failed: ${e.message}***`)
+    process.exit(1)
   }
   throw e
 }
