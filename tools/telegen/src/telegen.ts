@@ -209,15 +209,8 @@ const
 
           // All cards must have a box defined.
           if (isRoot) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], isPacked: false })
-          const
-            isUnion = !members.filter(m => !m.isOptional).length, // all members are optional?
-            type: Type = { name: typeName, comments, members, isRoot, isUnion }
-          file.types.push(type)
-          if (isUnion) members.forEach(m => {
-            if (m.t === MemberT.Repeated || m.t === MemberT.Singular) {
-              // m.type.oneOf = { name: m.name, type }
-            }
-          })
+          const isUnion = !members.filter(m => !m.isOptional).length // all members are optional?
+          file.types.push({ name: typeName, comments, members, isRoot, isUnion })
       }
     })
   },
@@ -449,18 +442,30 @@ const
         for (const m of type.members) {
           p(`        ${getSigWithDefault(m)},`)
         }
-        p(`) -> ${type.name}:`)
+        if (type.oneOf) {
+          p(`) -> ${type.oneOf.type.name}:`)
+        } else {
+          p(`) -> ${type.name}:`)
+        }
         p(`    """` + type.comments.join('\n    '))
         p(``)
         for (const m of type.members) {
           p(`    :param ${m.name}: ` + m.comments.join(' '))
         }
         p(`    """`)
-        p(`    return ${type.name}(`)
+        if (type.oneOf) {
+          p(`    return ${type.oneOf.type.name}(${type.oneOf.name}=${type.name}(`)
+        } else {
+          p(`    return ${type.name}(`)
+        }
         for (const m of type.members) {
           p(`        ${m.name},`)
         }
-        p(`    )`)
+        if (type.oneOf) {
+          p(`    ))`)
+        } else {
+          p(`    )`)
+        }
         p('')
 
       },
@@ -488,10 +493,33 @@ const
       }
     return [genClasses(), genAPIs()]
   },
+  markUnionTypes = (protocol: Protocol) => {
+    // Build type lookup
+    const types: Dict<Type> = {}
+    for (const file of protocol.files) {
+      for (const type of file.types) {
+        types[type.name] = type
+      }
+    }
+
+    // Mark union members
+    for (const typeName in types) {
+      const type = types[typeName]
+      if (type.isUnion) {
+        for (const m of type.members) {
+          if (m.t == MemberT.Singular || m.t === MemberT.Repeated) {
+            const memberType = types[m.typeName]
+            if (memberType) memberType.oneOf = { name: m.name, type }
+          }
+        }
+      }
+    }
+  },
   main = (typescriptSrcDir: string, pyOutDir: string) => {
     const protocol: Protocol = { files: [] }
     processDir(protocol, typescriptSrcDir)
     // console.log(JSON.stringify(protocol, null, 2))
+    markUnionTypes(protocol)
     const [classes, api] = tranlateToPy(protocol)
     fs.writeFileSync(path.join(pyOutDir, 'cards.py'), classes, 'utf8')
     fs.writeFileSync(path.join(pyOutDir, 'api.py'), api, 'utf8')

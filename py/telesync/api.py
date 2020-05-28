@@ -408,58 +408,58 @@ def card9(
 def heading_cell(
         level: int,
         content: str,
-) -> HeadingCell:
+) -> Cell:
     """No documentation available.
 
     :param level: No documentation available.
     :param content: No documentation available.
     """
-    return HeadingCell(
+    return Cell(heading=HeadingCell(
         level,
         content,
-    )
+    ))
 
 
 def markdown_cell(
         content: str,
-) -> MarkdownCell:
+) -> Cell:
     """No documentation available.
 
     :param content: No documentation available.
     """
-    return MarkdownCell(
+    return Cell(markdown=MarkdownCell(
         content,
-    )
+    ))
 
 
 def frame_cell(
         source: str,
         width: str,
         height: str,
-) -> FrameCell:
+) -> Cell:
     """No documentation available.
 
     :param source: No documentation available.
     :param width: No documentation available.
     :param height: No documentation available.
     """
-    return FrameCell(
+    return Cell(frame=FrameCell(
         source,
         width,
         height,
-    )
+    ))
 
 
 def data_cell(
         content: str,
-) -> DataCell:
+) -> Cell:
     """No documentation available.
 
     :param content: No documentation available.
     """
-    return DataCell(
+    return Cell(data=DataCell(
         content,
-    )
+    ))
 
 
 def data_source(
@@ -495,16 +495,16 @@ def query(
 def vega_cell(
         specification: str,
         query: Query,
-) -> VegaCell:
+) -> Cell:
     """No documentation available.
 
     :param specification: No documentation available.
     :param query: No documentation available.
     """
-    return VegaCell(
+    return Cell(vega=VegaCell(
         specification,
         query,
-    )
+    ))
 
 
 def cell(
@@ -661,18 +661,18 @@ def text(
         size: str,
         text: str,
         tooltip: str,
-) -> Text:
+) -> Component:
     """No documentation available.
 
     :param size: No documentation available.
     :param text: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Text(
+    return Component(text=Text(
         size,
         text,
         tooltip,
-    )
+    ))
 
 
 def label(
@@ -680,7 +680,7 @@ def label(
         required: bool,
         disabled: bool,
         tooltip: str,
-) -> Label:
+) -> Component:
     """No documentation available.
 
     :param label: No documentation available.
@@ -688,24 +688,24 @@ def label(
     :param disabled: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Label(
+    return Component(label=Label(
         label,
         required,
         disabled,
         tooltip,
-    )
+    ))
 
 
 def separator(
         label: str,
-) -> Separator:
+) -> Component:
     """No documentation available.
 
     :param label: No documentation available.
     """
-    return Separator(
+    return Component(separator=Separator(
         label,
-    )
+    ))
 
 
 def progress(
@@ -713,7 +713,7 @@ def progress(
         caption: str,
         value: float,
         tooltip: str,
-) -> Progress:
+) -> Component:
     """No documentation available.
 
     :param label: No documentation available.
@@ -721,27 +721,27 @@ def progress(
     :param value: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Progress(
+    return Component(progress=Progress(
         label,
         caption,
         value,
         tooltip,
-    )
+    ))
 
 
 def message_bar(
         type: str,
         text: str,
-) -> MessageBar:
+) -> Component:
     """No documentation available.
 
     :param type: No documentation available.
     :param text: No documentation available.
     """
-    return MessageBar(
+    return Component(message_bar=MessageBar(
         type,
         text,
-    )
+    ))
 
 
 def textbox(
@@ -760,7 +760,7 @@ def textbox(
         multiline: bool,
         password: bool,
         tooltip: str,
-) -> Textbox:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -779,7 +779,7 @@ def textbox(
     :param password: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Textbox(
+    return Component(textbox=Textbox(
         name,
         label,
         placeholder,
@@ -795,7 +795,7 @@ def textbox(
         multiline,
         password,
         tooltip,
-    )
+    ))
 
 
 def checkbox(
@@ -806,7 +806,7 @@ def checkbox(
         disabled: bool,
         trigger: bool,
         tooltip: str,
-) -> Checkbox:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -817,7 +817,7 @@ def checkbox(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Checkbox(
+    return Component(checkbox=Checkbox(
         name,
         label,
         value,
@@ -825,7 +825,7 @@ def checkbox(
         disabled,
         trigger,
         tooltip,
-    )
+    ))
 
 
 def toggle(
@@ -835,7 +835,7 @@ def toggle(
         disabled: bool,
         trigger: bool,
         tooltip: str,
-) -> Toggle:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -845,14 +845,14 @@ def toggle(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Toggle(
+    return Component(toggle=Toggle(
         name,
         label,
         value,
         disabled,
         trigger,
         tooltip,
-    )
+    ))
 
 
 def choice(
@@ -881,7 +881,7 @@ def choice_group(
         required: bool,
         trigger: bool,
         tooltip: str,
-) -> ChoiceGroup:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -892,7 +892,7 @@ def choice_group(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return ChoiceGroup(
+    return Component(choice_group=ChoiceGroup(
         name,
         label,
         value,
@@ -900,7 +900,7 @@ def choice_group(
         required,
         trigger,
         tooltip,
-    )
+    ))
 
 
 def checklist(
@@ -909,7 +909,7 @@ def checklist(
         values: List[str],
         choices: List[Choice],
         tooltip: str,
-) -> Checklist:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -918,13 +918,13 @@ def checklist(
     :param choices: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Checklist(
+    return Component(checklist=Checklist(
         name,
         label,
         values,
         choices,
         tooltip,
-    )
+    ))
 
 
 def dropdown(
@@ -939,7 +939,7 @@ def dropdown(
         disabled: bool,
         trigger: bool,
         tooltip: str,
-) -> Dropdown:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -954,7 +954,7 @@ def dropdown(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Dropdown(
+    return Component(dropdown=Dropdown(
         name,
         label,
         placeholder,
@@ -966,7 +966,7 @@ def dropdown(
         disabled,
         trigger,
         tooltip,
-    )
+    ))
 
 
 def combobox(
@@ -978,7 +978,7 @@ def combobox(
         error: str,
         disabled: bool,
         tooltip: str,
-) -> Combobox:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -990,7 +990,7 @@ def combobox(
     :param disabled: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Combobox(
+    return Component(combobox=Combobox(
         name,
         label,
         placeholder,
@@ -999,7 +999,7 @@ def combobox(
         error,
         disabled,
         tooltip,
-    )
+    ))
 
 
 def slider(
@@ -1012,7 +1012,7 @@ def slider(
         disabled: bool,
         trigger: bool,
         tooltip: str,
-) -> Slider:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1025,7 +1025,7 @@ def slider(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Slider(
+    return Component(slider=Slider(
         name,
         label,
         min,
@@ -1035,7 +1035,7 @@ def slider(
         disabled,
         trigger,
         tooltip,
-    )
+    ))
 
 
 def spinbox(
@@ -1047,7 +1047,7 @@ def spinbox(
         value: float,
         disabled: bool,
         tooltip: str,
-) -> Spinbox:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1059,7 +1059,7 @@ def spinbox(
     :param disabled: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Spinbox(
+    return Component(spinbox=Spinbox(
         name,
         label,
         min,
@@ -1068,7 +1068,7 @@ def spinbox(
         value,
         disabled,
         tooltip,
-    )
+    ))
 
 
 def date_picker(
@@ -1078,7 +1078,7 @@ def date_picker(
         value: str,
         disabled: bool,
         tooltip: str,
-) -> DatePicker:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1088,14 +1088,14 @@ def date_picker(
     :param disabled: No documentation available.
     :param tooltip: No documentation available.
     """
-    return DatePicker(
+    return Component(date_picker=DatePicker(
         name,
         label,
         placeholder,
         value,
         disabled,
         tooltip,
-    )
+    ))
 
 
 def color_picker(
@@ -1104,7 +1104,7 @@ def color_picker(
         value: str,
         choices: List[str],
         tooltip: str,
-) -> ColorPicker:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1113,13 +1113,13 @@ def color_picker(
     :param choices: No documentation available.
     :param tooltip: No documentation available.
     """
-    return ColorPicker(
+    return Component(color_picker=ColorPicker(
         name,
         label,
         value,
         choices,
         tooltip,
-    )
+    ))
 
 
 def button(
@@ -1130,7 +1130,7 @@ def button(
         disabled: bool,
         link: bool,
         tooltip: str,
-) -> Button:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1141,7 +1141,7 @@ def button(
     :param link: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Button(
+    return Component(button=Button(
         name,
         label,
         caption,
@@ -1149,19 +1149,19 @@ def button(
         disabled,
         link,
         tooltip,
-    )
+    ))
 
 
 def buttons(
         buttons: List[Button],
-) -> Buttons:
+) -> Component:
     """No documentation available.
 
     :param buttons: No documentation available.
     """
-    return Buttons(
+    return Component(buttons=Buttons(
         buttons,
-    )
+    ))
 
 
 def file_upload(
@@ -1169,7 +1169,7 @@ def file_upload(
         label: str,
         multiple: bool,
         tooltip: str,
-) -> FileUpload:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1177,12 +1177,12 @@ def file_upload(
     :param multiple: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FileUpload(
+    return Component(file_upload=FileUpload(
         name,
         label,
         multiple,
         tooltip,
-    )
+    ))
 
 
 def table(
@@ -1190,7 +1190,7 @@ def table(
         title: str,
         cells: PackedData,
         data: PackedData,
-) -> Table:
+) -> Component:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -1198,12 +1198,12 @@ def table(
     :param cells: No documentation available.
     :param data: No documentation available.
     """
-    return Table(
+    return Component(table=Table(
         box,
         title,
         cells,
         data,
-    )
+    ))
 
 
 def link(
@@ -1212,7 +1212,7 @@ def link(
         disabled: bool,
         button: bool,
         tooltip: str,
-) -> Link:
+) -> Component:
     """No documentation available.
 
     :param label: No documentation available.
@@ -1221,13 +1221,13 @@ def link(
     :param button: No documentation available.
     :param tooltip: No documentation available.
     """
-    return Link(
+    return Component(link=Link(
         label,
         path,
         disabled,
         button,
         tooltip,
-    )
+    ))
 
 
 def tab(
@@ -1252,18 +1252,18 @@ def tabs(
         name: str,
         value: str,
         items: List[Tab],
-) -> Tabs:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
     :param value: No documentation available.
     :param items: No documentation available.
     """
-    return Tabs(
+    return Component(tabs=Tabs(
         name,
         value,
         items,
-    )
+    ))
 
 
 def expander(
@@ -1271,7 +1271,7 @@ def expander(
         label: str,
         expanded: bool,
         items: List[Component],
-) -> Expander:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1279,12 +1279,12 @@ def expander(
     :param expanded: No documentation available.
     :param items: No documentation available.
     """
-    return Expander(
+    return Component(expander=Expander(
         name,
         label,
         expanded,
         items,
-    )
+    ))
 
 
 def nav_item(
@@ -1320,16 +1320,16 @@ def nav_group(
 def nav(
         name: str,
         items: List[NavGroup],
-) -> Nav:
+) -> Component:
     """No documentation available.
 
     :param name: No documentation available.
     :param items: No documentation available.
     """
-    return Nav(
+    return Component(nav=Nav(
         name,
         items,
-    )
+    ))
 
 
 def component(
