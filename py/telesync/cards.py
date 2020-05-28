@@ -3527,68 +3527,162 @@ class FileUpload:
         )
 
 
-class Table:
+class TableColumn:
     """No documentation available.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param cells: No documentation available.
-    :param data: No documentation available.
+    :param name: No documentation available.
+    :param label: No documentation available.
     """
     def __init__(
             self,
-            box: str,
-            title: str,
-            cells: PackedData,
-            data: PackedData,
+            name: str,
+            label: str,
     ):
-        self.box = box
-        self.title = title
-        self.cells = cells
-        self.data = data
+        self.name = name
+        self.label = label
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Table.box is required.')
-        if self.title is None:
-            raise ValueError('Table.title is required.')
-        if self.cells is None:
-            raise ValueError('Table.cells is required.')
-        if self.data is None:
-            raise ValueError('Table.data is required.')
+        if self.name is None:
+            raise ValueError('TableColumn.name is required.')
+        if self.label is None:
+            raise ValueError('TableColumn.label is required.')
         return _dump(
-            view='table',
-            box=self.box,
-            title=self.title,
+            name=self.name,
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TableColumn':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('TableColumn.name is required.')
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('TableColumn.label is required.')
+        name: str = __d_name
+        label: str = __d_label
+        return TableColumn(
+            name,
+            label,
+        )
+
+
+class TableRow:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param cells: No documentation available.
+    """
+    def __init__(
+            self,
+            name: str,
+            cells: List[str],
+    ):
+        self.name = name
+        self.cells = cells
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('TableRow.name is required.')
+        if self.cells is None:
+            raise ValueError('TableRow.cells is required.')
+        return _dump(
+            name=self.name,
             cells=self.cells,
-            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TableRow':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('TableRow.name is required.')
+        __d_cells: Any = __d.get('cells')
+        if __d_cells is None:
+            raise ValueError('TableRow.cells is required.')
+        name: str = __d_name
+        cells: List[str] = __d_cells
+        return TableRow(
+            name,
+            cells,
+        )
+
+
+class Table:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param columns: No documentation available.
+    :param rows: No documentation available.
+    :param multiple: No documentation available.
+    :param tooltip: No documentation available.
+    """
+    def __init__(
+            self,
+            name: str,
+            columns: List[TableColumn],
+            rows: List[TableRow],
+            multiple: bool,
+            tooltip: str,
+    ):
+        self.name = name
+        self.columns = columns
+        self.rows = rows
+        self.multiple = multiple
+        self.tooltip = tooltip
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('Table.name is required.')
+        if self.columns is None:
+            raise ValueError('Table.columns is required.')
+        if self.rows is None:
+            raise ValueError('Table.rows is required.')
+        if self.multiple is None:
+            raise ValueError('Table.multiple is required.')
+        if self.tooltip is None:
+            raise ValueError('Table.tooltip is required.')
+        return _dump(
+            name=self.name,
+            columns=[__e.dump() for __e in self.columns],
+            rows=[__e.dump() for __e in self.rows],
+            multiple=self.multiple,
+            tooltip=self.tooltip,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Table':
         """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Table.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Table.title is required.')
-        __d_cells: Any = __d.get('cells')
-        if __d_cells is None:
-            raise ValueError('Table.cells is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Table.data is required.')
-        box: str = __d_box
-        title: str = __d_title
-        cells: PackedData = __d_cells
-        data: PackedData = __d_data
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('Table.name is required.')
+        __d_columns: Any = __d.get('columns')
+        if __d_columns is None:
+            raise ValueError('Table.columns is required.')
+        __d_rows: Any = __d.get('rows')
+        if __d_rows is None:
+            raise ValueError('Table.rows is required.')
+        __d_multiple: Any = __d.get('multiple')
+        if __d_multiple is None:
+            raise ValueError('Table.multiple is required.')
+        __d_tooltip: Any = __d.get('tooltip')
+        if __d_tooltip is None:
+            raise ValueError('Table.tooltip is required.')
+        name: str = __d_name
+        columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
+        rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
+        multiple: bool = __d_multiple
+        tooltip: str = __d_tooltip
         return Table(
-            box,
-            title,
-            cells,
-            data,
+            name,
+            columns,
+            rows,
+            multiple,
+            tooltip,
         )
 
 
@@ -4213,6 +4307,71 @@ class Form:
             url,
             args,
             items,
+        )
+
+
+class Grid:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param cells: No documentation available.
+    :param data: No documentation available.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            cells: PackedData,
+            data: PackedData,
+    ):
+        self.box = box
+        self.title = title
+        self.cells = cells
+        self.data = data
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('Grid.box is required.')
+        if self.title is None:
+            raise ValueError('Grid.title is required.')
+        if self.cells is None:
+            raise ValueError('Grid.cells is required.')
+        if self.data is None:
+            raise ValueError('Grid.data is required.')
+        return _dump(
+            view='grid',
+            box=self.box,
+            title=self.title,
+            cells=self.cells,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Grid':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Grid.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('Grid.title is required.')
+        __d_cells: Any = __d.get('cells')
+        if __d_cells is None:
+            raise ValueError('Grid.cells is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('Grid.data is required.')
+        box: str = __d_box
+        title: str = __d_title
+        cells: PackedData = __d_cells
+        data: PackedData = __d_data
+        return Grid(
+            box,
+            title,
+            cells,
+            data,
         )
 
 

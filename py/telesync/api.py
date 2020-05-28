@@ -39,6 +39,7 @@ from .cards import \
     Flex, \
     Form, \
     FrameCell, \
+    Grid, \
     HeadingCell, \
     Label, \
     Link, \
@@ -63,6 +64,8 @@ from .cards import \
     Spinbox, \
     Tab, \
     Table, \
+    TableColumn, \
+    TableRow, \
     Tabs, \
     Template, \
     Text, \
@@ -1185,24 +1188,57 @@ def file_upload(
     ))
 
 
+def table_column(
+        name: str,
+        label: str,
+) -> TableColumn:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    """
+    return TableColumn(
+        name,
+        label,
+    )
+
+
+def table_row(
+        name: str,
+        cells: List[str],
+) -> TableRow:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param cells: No documentation available.
+    """
+    return TableRow(
+        name,
+        cells,
+    )
+
+
 def table(
-        box: str,
-        title: str,
-        cells: PackedData,
-        data: PackedData,
+        name: str,
+        columns: List[TableColumn],
+        rows: List[TableRow],
+        multiple: bool,
+        tooltip: str,
 ) -> Component:
     """No documentation available.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param cells: No documentation available.
-    :param data: No documentation available.
+    :param name: No documentation available.
+    :param columns: No documentation available.
+    :param rows: No documentation available.
+    :param multiple: No documentation available.
+    :param tooltip: No documentation available.
     """
     return Component(table=Table(
-        box,
-        title,
-        cells,
-        data,
+        name,
+        columns,
+        rows,
+        multiple,
+        tooltip,
     ))
 
 
@@ -1431,6 +1467,27 @@ def form(
         url,
         args,
         items,
+    )
+
+
+def grid(
+        box: str,
+        title: str,
+        cells: PackedData,
+        data: PackedData,
+) -> Grid:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param cells: No documentation available.
+    :param data: No documentation available.
+    """
+    return Grid(
+        box,
+        title,
+        cells,
+        data,
     )
 
 
