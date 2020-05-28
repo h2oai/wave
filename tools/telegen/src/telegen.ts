@@ -10,11 +10,7 @@
 // - In the second pass, all interfaces named "State" and their corresponding
 //   dependencies exported to the target language.
 //
-// By convention, the interface named "State" is assigned the name of the card,
-// and all the dependency interfaces are prefixed with the name of the card.
-//
-// There is one exception: these conventions do not apply to interfaces in the
-// files named "shared.*". Those interfaces are exported as-is.
+// By convention, the interface named "State" is assigned the name of the card.
 //
 // WARNING: The compiler API is not fully documented, and this tool makes use
 // of undocumented JSDoc features. Might break at any time.
@@ -46,7 +42,7 @@ interface EnumMember extends MemberBase {
   readonly values: string[]
 }
 interface PackableMember extends MemberBase {
-  typeName: string
+  readonly typeName: string
   readonly isPacked: boolean
 }
 interface SingularMember extends PackableMember {
@@ -57,10 +53,10 @@ interface RepeatedMember extends PackableMember {
 }
 type Member = EnumMember | SingularMember | RepeatedMember
 interface Type {
-  name: string
+  readonly name: string
   readonly comments: string[]
   readonly members: Member[]
-  readonly card: string | null
+  readonly isRoot: boolean
   readonly isUnion: boolean
   oneOf?: OneOf
 }
@@ -200,21 +196,22 @@ const
         case ts.SyntaxKind.InterfaceDeclaration:
           const
             n = node as ts.InterfaceDeclaration,
-            typename = n.name.getText(),
-            card = typename === 'State' ? file.name : null,
-            members = n.members.map(m => collectMember(component, typename, m)),
+            nodeName = n.name.getText(),
+            isRoot = nodeName === 'State',
+            typeName = isRoot ? titlecase(file.name) : nodeName,
+            members = n.members.map(m => collectMember(component, typeName, m)),
             comments = collectComments(n)
 
           if (!comments.length) {
             comments.push(noComment)
-            warn(`Doc missing on type ${component}.${typename}.`)
+            warn(`Doc missing on type ${component}.${typeName}.`)
           }
 
           // All cards must have a box defined.
-          if (card) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], isPacked: false })
+          if (isRoot) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], isPacked: false })
           const
             isUnion = !members.filter(m => !m.isOptional).length, // all members are optional?
-            type = { name: typename, comments, members, card, isUnion }
+            type: Type = { name: typeName, comments, members, isRoot, isUnion }
           file.types.push(type)
           if (isUnion) members.forEach(m => {
             if (m.t === MemberT.Repeated || m.t === MemberT.Singular) {
@@ -357,8 +354,8 @@ const
           }
         }
         p(`        return _dump(`)
-        if (type.card) {
-          p(`            view='${type.card}',`)
+        if (type.isRoot) {
+          p(`            view='${snakeCase(type.name)}',`)
         }
         for (const m of type.members) { // pack
           if (getKnownTypeOf(m)) {
@@ -431,7 +428,7 @@ const
         p('')
         for (const file of protocol.files) {
           for (const type of file.types) {
-            if (type.card) { // Only export root types (State interface) and their dependencies.
+            if (type.isRoot) { // Only export root types (State interface) and their dependencies.
               genClass(type)
             }
           }
@@ -482,7 +479,7 @@ const
 
         for (const file of protocol.files) {
           for (const type of file.types) {
-            if (type.card) {
+            if (type.isRoot) {
               genAPI(type)
             }
           }
@@ -491,41 +488,9 @@ const
       }
     return [genClasses(), genAPIs()]
   },
-  scopeNames = (protocol: Protocol) => {
-    const scopedNames: Dict<string> = {}
-    for (const file of protocol.files) {
-      // Types in shared.ts don't get a scope prefix.
-      const scope = file.name === 'shared' ? '' : titlecase(file.name)
-      for (const type of file.types) {
-        const scopedName = type.card ? scope : scope + type.name
-        type.name = scopedNames[type.name] = scopedName
-      }
-    }
-    for (const file of protocol.files) {
-      for (const type of file.types) {
-        for (const m of type.members) {
-          switch (m.t) {
-            case MemberT.Singular:
-              {
-                const scopedName = scopedNames[m.typeName]
-                if (scopedName) m.typeName = scopedName
-              }
-              break
-            case MemberT.Repeated:
-              {
-                const scopedName = scopedNames[m.typeName]
-                if (scopedName) m.typeName = scopedName
-              }
-              break
-          }
-        }
-      }
-    }
-  },
   main = (typescriptSrcDir: string, pyOutDir: string) => {
     const protocol: Protocol = { files: [] }
     processDir(protocol, typescriptSrcDir)
-    scopeNames(protocol)
     // console.log(JSON.stringify(protocol, null, 2))
     const [classes, api] = tranlateToPy(protocol)
     fs.writeFileSync(path.join(pyOutDir, 'cards.py'), classes, 'utf8')

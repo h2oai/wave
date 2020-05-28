@@ -3,25 +3,25 @@ import { cards } from './grid';
 import { bond, Card, S } from './telesync';
 import { Cell, Command } from './shared';
 
-interface Panel {
+interface DashboardPanel {
   cells: Cell[]
   size: S
   commands: Command[]
   data: S
 }
 
-interface Row {
-  panels: Panel[]
+interface DashboardRow {
+  panels: DashboardPanel[]
   size: S
 }
 
-interface Page {
+interface DashboardPage {
   title: S
-  rows: Row[]
+  rows: DashboardRow[]
 }
 
 interface State {
-  pages: Page[]
+  pages: DashboardPage[]
 }
 
 const

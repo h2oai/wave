@@ -1851,7 +1851,7 @@ class Flex:
         )
 
 
-class FormText:
+class Text:
     """No documentation available.
 
     :param size: No documentation available.
@@ -1871,11 +1871,11 @@ class FormText:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.size is None:
-            raise ValueError('FormText.size is required.')
+            raise ValueError('Text.size is required.')
         if self.text is None:
-            raise ValueError('FormText.text is required.')
+            raise ValueError('Text.text is required.')
         if self.tooltip is None:
-            raise ValueError('FormText.tooltip is required.')
+            raise ValueError('Text.tooltip is required.')
         return _dump(
             size=self.size,
             text=self.text,
@@ -1883,28 +1883,28 @@ class FormText:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormText':
+    def load(__d: Dict) -> 'Text':
         """Creates an instance of this class using the contents of a dict."""
         __d_size: Any = __d.get('size')
         if __d_size is None:
-            raise ValueError('FormText.size is required.')
+            raise ValueError('Text.size is required.')
         __d_text: Any = __d.get('text')
         if __d_text is None:
-            raise ValueError('FormText.text is required.')
+            raise ValueError('Text.text is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormText.tooltip is required.')
+            raise ValueError('Text.tooltip is required.')
         size: str = __d_size
         text: str = __d_text
         tooltip: str = __d_tooltip
-        return FormText(
+        return Text(
             size,
             text,
             tooltip,
         )
 
 
-class FormLabel:
+class Label:
     """No documentation available.
 
     :param label: No documentation available.
@@ -1927,13 +1927,13 @@ class FormLabel:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.label is None:
-            raise ValueError('FormLabel.label is required.')
+            raise ValueError('Label.label is required.')
         if self.required is None:
-            raise ValueError('FormLabel.required is required.')
+            raise ValueError('Label.required is required.')
         if self.disabled is None:
-            raise ValueError('FormLabel.disabled is required.')
+            raise ValueError('Label.disabled is required.')
         if self.tooltip is None:
-            raise ValueError('FormLabel.tooltip is required.')
+            raise ValueError('Label.tooltip is required.')
         return _dump(
             label=self.label,
             required=self.required,
@@ -1942,25 +1942,25 @@ class FormLabel:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormLabel':
+    def load(__d: Dict) -> 'Label':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormLabel.label is required.')
+            raise ValueError('Label.label is required.')
         __d_required: Any = __d.get('required')
         if __d_required is None:
-            raise ValueError('FormLabel.required is required.')
+            raise ValueError('Label.required is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormLabel.disabled is required.')
+            raise ValueError('Label.disabled is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormLabel.tooltip is required.')
+            raise ValueError('Label.tooltip is required.')
         label: str = __d_label
         required: bool = __d_required
         disabled: bool = __d_disabled
         tooltip: str = __d_tooltip
-        return FormLabel(
+        return Label(
             label,
             required,
             disabled,
@@ -1968,7 +1968,7 @@ class FormLabel:
         )
 
 
-class FormSeparator:
+class Separator:
     """No documentation available.
 
     :param label: No documentation available.
@@ -1982,24 +1982,24 @@ class FormSeparator:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.label is None:
-            raise ValueError('FormSeparator.label is required.')
+            raise ValueError('Separator.label is required.')
         return _dump(
             label=self.label,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormSeparator':
+    def load(__d: Dict) -> 'Separator':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormSeparator.label is required.')
+            raise ValueError('Separator.label is required.')
         label: str = __d_label
-        return FormSeparator(
+        return Separator(
             label,
         )
 
 
-class FormProgress:
+class Progress:
     """No documentation available.
 
     :param label: No documentation available.
@@ -2022,13 +2022,13 @@ class FormProgress:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.label is None:
-            raise ValueError('FormProgress.label is required.')
+            raise ValueError('Progress.label is required.')
         if self.caption is None:
-            raise ValueError('FormProgress.caption is required.')
+            raise ValueError('Progress.caption is required.')
         if self.value is None:
-            raise ValueError('FormProgress.value is required.')
+            raise ValueError('Progress.value is required.')
         if self.tooltip is None:
-            raise ValueError('FormProgress.tooltip is required.')
+            raise ValueError('Progress.tooltip is required.')
         return _dump(
             label=self.label,
             caption=self.caption,
@@ -2037,25 +2037,25 @@ class FormProgress:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormProgress':
+    def load(__d: Dict) -> 'Progress':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormProgress.label is required.')
+            raise ValueError('Progress.label is required.')
         __d_caption: Any = __d.get('caption')
         if __d_caption is None:
-            raise ValueError('FormProgress.caption is required.')
+            raise ValueError('Progress.caption is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormProgress.value is required.')
+            raise ValueError('Progress.value is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormProgress.tooltip is required.')
+            raise ValueError('Progress.tooltip is required.')
         label: str = __d_label
         caption: str = __d_caption
         value: float = __d_value
         tooltip: str = __d_tooltip
-        return FormProgress(
+        return Progress(
             label,
             caption,
             value,
@@ -2063,7 +2063,7 @@ class FormProgress:
         )
 
 
-class FormMessageBar:
+class MessageBar:
     """No documentation available.
 
     :param type: No documentation available.
@@ -2080,32 +2080,32 @@ class FormMessageBar:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.type is None:
-            raise ValueError('FormMessageBar.type is required.')
+            raise ValueError('MessageBar.type is required.')
         if self.text is None:
-            raise ValueError('FormMessageBar.text is required.')
+            raise ValueError('MessageBar.text is required.')
         return _dump(
             type=self.type,
             text=self.text,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormMessageBar':
+    def load(__d: Dict) -> 'MessageBar':
         """Creates an instance of this class using the contents of a dict."""
         __d_type: Any = __d.get('type')
         if __d_type is None:
-            raise ValueError('FormMessageBar.type is required.')
+            raise ValueError('MessageBar.type is required.')
         __d_text: Any = __d.get('text')
         if __d_text is None:
-            raise ValueError('FormMessageBar.text is required.')
+            raise ValueError('MessageBar.text is required.')
         type: str = __d_type
         text: str = __d_text
-        return FormMessageBar(
+        return MessageBar(
             type,
             text,
         )
 
 
-class FormTextbox:
+class Textbox:
     """No documentation available.
 
     :param name: No documentation available.
@@ -2161,35 +2161,35 @@ class FormTextbox:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormTextbox.name is required.')
+            raise ValueError('Textbox.name is required.')
         if self.label is None:
-            raise ValueError('FormTextbox.label is required.')
+            raise ValueError('Textbox.label is required.')
         if self.placeholder is None:
-            raise ValueError('FormTextbox.placeholder is required.')
+            raise ValueError('Textbox.placeholder is required.')
         if self.mask is None:
-            raise ValueError('FormTextbox.mask is required.')
+            raise ValueError('Textbox.mask is required.')
         if self.icon is None:
-            raise ValueError('FormTextbox.icon is required.')
+            raise ValueError('Textbox.icon is required.')
         if self.prefix is None:
-            raise ValueError('FormTextbox.prefix is required.')
+            raise ValueError('Textbox.prefix is required.')
         if self.suffix is None:
-            raise ValueError('FormTextbox.suffix is required.')
+            raise ValueError('Textbox.suffix is required.')
         if self.value is None:
-            raise ValueError('FormTextbox.value is required.')
+            raise ValueError('Textbox.value is required.')
         if self.error is None:
-            raise ValueError('FormTextbox.error is required.')
+            raise ValueError('Textbox.error is required.')
         if self.required is None:
-            raise ValueError('FormTextbox.required is required.')
+            raise ValueError('Textbox.required is required.')
         if self.disabled is None:
-            raise ValueError('FormTextbox.disabled is required.')
+            raise ValueError('Textbox.disabled is required.')
         if self.readonly is None:
-            raise ValueError('FormTextbox.readonly is required.')
+            raise ValueError('Textbox.readonly is required.')
         if self.multiline is None:
-            raise ValueError('FormTextbox.multiline is required.')
+            raise ValueError('Textbox.multiline is required.')
         if self.password is None:
-            raise ValueError('FormTextbox.password is required.')
+            raise ValueError('Textbox.password is required.')
         if self.tooltip is None:
-            raise ValueError('FormTextbox.tooltip is required.')
+            raise ValueError('Textbox.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2209,53 +2209,53 @@ class FormTextbox:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormTextbox':
+    def load(__d: Dict) -> 'Textbox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormTextbox.name is required.')
+            raise ValueError('Textbox.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormTextbox.label is required.')
+            raise ValueError('Textbox.label is required.')
         __d_placeholder: Any = __d.get('placeholder')
         if __d_placeholder is None:
-            raise ValueError('FormTextbox.placeholder is required.')
+            raise ValueError('Textbox.placeholder is required.')
         __d_mask: Any = __d.get('mask')
         if __d_mask is None:
-            raise ValueError('FormTextbox.mask is required.')
+            raise ValueError('Textbox.mask is required.')
         __d_icon: Any = __d.get('icon')
         if __d_icon is None:
-            raise ValueError('FormTextbox.icon is required.')
+            raise ValueError('Textbox.icon is required.')
         __d_prefix: Any = __d.get('prefix')
         if __d_prefix is None:
-            raise ValueError('FormTextbox.prefix is required.')
+            raise ValueError('Textbox.prefix is required.')
         __d_suffix: Any = __d.get('suffix')
         if __d_suffix is None:
-            raise ValueError('FormTextbox.suffix is required.')
+            raise ValueError('Textbox.suffix is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormTextbox.value is required.')
+            raise ValueError('Textbox.value is required.')
         __d_error: Any = __d.get('error')
         if __d_error is None:
-            raise ValueError('FormTextbox.error is required.')
+            raise ValueError('Textbox.error is required.')
         __d_required: Any = __d.get('required')
         if __d_required is None:
-            raise ValueError('FormTextbox.required is required.')
+            raise ValueError('Textbox.required is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormTextbox.disabled is required.')
+            raise ValueError('Textbox.disabled is required.')
         __d_readonly: Any = __d.get('readonly')
         if __d_readonly is None:
-            raise ValueError('FormTextbox.readonly is required.')
+            raise ValueError('Textbox.readonly is required.')
         __d_multiline: Any = __d.get('multiline')
         if __d_multiline is None:
-            raise ValueError('FormTextbox.multiline is required.')
+            raise ValueError('Textbox.multiline is required.')
         __d_password: Any = __d.get('password')
         if __d_password is None:
-            raise ValueError('FormTextbox.password is required.')
+            raise ValueError('Textbox.password is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormTextbox.tooltip is required.')
+            raise ValueError('Textbox.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         placeholder: str = __d_placeholder
@@ -2271,7 +2271,7 @@ class FormTextbox:
         multiline: bool = __d_multiline
         password: bool = __d_password
         tooltip: str = __d_tooltip
-        return FormTextbox(
+        return Textbox(
             name,
             label,
             placeholder,
@@ -2290,7 +2290,7 @@ class FormTextbox:
         )
 
 
-class FormCheckbox:
+class Checkbox:
     """No documentation available.
 
     :param name: No documentation available.
@@ -2322,19 +2322,19 @@ class FormCheckbox:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormCheckbox.name is required.')
+            raise ValueError('Checkbox.name is required.')
         if self.label is None:
-            raise ValueError('FormCheckbox.label is required.')
+            raise ValueError('Checkbox.label is required.')
         if self.value is None:
-            raise ValueError('FormCheckbox.value is required.')
+            raise ValueError('Checkbox.value is required.')
         if self.indeterminate is None:
-            raise ValueError('FormCheckbox.indeterminate is required.')
+            raise ValueError('Checkbox.indeterminate is required.')
         if self.disabled is None:
-            raise ValueError('FormCheckbox.disabled is required.')
+            raise ValueError('Checkbox.disabled is required.')
         if self.trigger is None:
-            raise ValueError('FormCheckbox.trigger is required.')
+            raise ValueError('Checkbox.trigger is required.')
         if self.tooltip is None:
-            raise ValueError('FormCheckbox.tooltip is required.')
+            raise ValueError('Checkbox.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2346,29 +2346,29 @@ class FormCheckbox:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormCheckbox':
+    def load(__d: Dict) -> 'Checkbox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormCheckbox.name is required.')
+            raise ValueError('Checkbox.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormCheckbox.label is required.')
+            raise ValueError('Checkbox.label is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormCheckbox.value is required.')
+            raise ValueError('Checkbox.value is required.')
         __d_indeterminate: Any = __d.get('indeterminate')
         if __d_indeterminate is None:
-            raise ValueError('FormCheckbox.indeterminate is required.')
+            raise ValueError('Checkbox.indeterminate is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormCheckbox.disabled is required.')
+            raise ValueError('Checkbox.disabled is required.')
         __d_trigger: Any = __d.get('trigger')
         if __d_trigger is None:
-            raise ValueError('FormCheckbox.trigger is required.')
+            raise ValueError('Checkbox.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormCheckbox.tooltip is required.')
+            raise ValueError('Checkbox.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         value: bool = __d_value
@@ -2376,7 +2376,7 @@ class FormCheckbox:
         disabled: bool = __d_disabled
         trigger: bool = __d_trigger
         tooltip: str = __d_tooltip
-        return FormCheckbox(
+        return Checkbox(
             name,
             label,
             value,
@@ -2387,7 +2387,7 @@ class FormCheckbox:
         )
 
 
-class FormToggle:
+class Toggle:
     """No documentation available.
 
     :param name: No documentation available.
@@ -2416,17 +2416,17 @@ class FormToggle:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormToggle.name is required.')
+            raise ValueError('Toggle.name is required.')
         if self.label is None:
-            raise ValueError('FormToggle.label is required.')
+            raise ValueError('Toggle.label is required.')
         if self.value is None:
-            raise ValueError('FormToggle.value is required.')
+            raise ValueError('Toggle.value is required.')
         if self.disabled is None:
-            raise ValueError('FormToggle.disabled is required.')
+            raise ValueError('Toggle.disabled is required.')
         if self.trigger is None:
-            raise ValueError('FormToggle.trigger is required.')
+            raise ValueError('Toggle.trigger is required.')
         if self.tooltip is None:
-            raise ValueError('FormToggle.tooltip is required.')
+            raise ValueError('Toggle.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2437,33 +2437,33 @@ class FormToggle:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormToggle':
+    def load(__d: Dict) -> 'Toggle':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormToggle.name is required.')
+            raise ValueError('Toggle.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormToggle.label is required.')
+            raise ValueError('Toggle.label is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormToggle.value is required.')
+            raise ValueError('Toggle.value is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormToggle.disabled is required.')
+            raise ValueError('Toggle.disabled is required.')
         __d_trigger: Any = __d.get('trigger')
         if __d_trigger is None:
-            raise ValueError('FormToggle.trigger is required.')
+            raise ValueError('Toggle.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormToggle.tooltip is required.')
+            raise ValueError('Toggle.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         value: bool = __d_value
         disabled: bool = __d_disabled
         trigger: bool = __d_trigger
         tooltip: str = __d_tooltip
-        return FormToggle(
+        return Toggle(
             name,
             label,
             value,
@@ -2473,7 +2473,7 @@ class FormToggle:
         )
 
 
-class FormChoice:
+class Choice:
     """No documentation available.
 
     :param name: No documentation available.
@@ -2493,11 +2493,11 @@ class FormChoice:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormChoice.name is required.')
+            raise ValueError('Choice.name is required.')
         if self.label is None:
-            raise ValueError('FormChoice.label is required.')
+            raise ValueError('Choice.label is required.')
         if self.disabled is None:
-            raise ValueError('FormChoice.disabled is required.')
+            raise ValueError('Choice.disabled is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2505,28 +2505,28 @@ class FormChoice:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormChoice':
+    def load(__d: Dict) -> 'Choice':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormChoice.name is required.')
+            raise ValueError('Choice.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormChoice.label is required.')
+            raise ValueError('Choice.label is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormChoice.disabled is required.')
+            raise ValueError('Choice.disabled is required.')
         name: str = __d_name
         label: str = __d_label
         disabled: bool = __d_disabled
-        return FormChoice(
+        return Choice(
             name,
             label,
             disabled,
         )
 
 
-class FormChoiceGroup:
+class ChoiceGroup:
     """No documentation available.
 
     :param name: No documentation available.
@@ -2542,7 +2542,7 @@ class FormChoiceGroup:
             name: str,
             label: str,
             value: str,
-            choices: List[FormChoice],
+            choices: List[Choice],
             required: bool,
             trigger: bool,
             tooltip: str,
@@ -2558,19 +2558,19 @@ class FormChoiceGroup:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormChoiceGroup.name is required.')
+            raise ValueError('ChoiceGroup.name is required.')
         if self.label is None:
-            raise ValueError('FormChoiceGroup.label is required.')
+            raise ValueError('ChoiceGroup.label is required.')
         if self.value is None:
-            raise ValueError('FormChoiceGroup.value is required.')
+            raise ValueError('ChoiceGroup.value is required.')
         if self.choices is None:
-            raise ValueError('FormChoiceGroup.choices is required.')
+            raise ValueError('ChoiceGroup.choices is required.')
         if self.required is None:
-            raise ValueError('FormChoiceGroup.required is required.')
+            raise ValueError('ChoiceGroup.required is required.')
         if self.trigger is None:
-            raise ValueError('FormChoiceGroup.trigger is required.')
+            raise ValueError('ChoiceGroup.trigger is required.')
         if self.tooltip is None:
-            raise ValueError('FormChoiceGroup.tooltip is required.')
+            raise ValueError('ChoiceGroup.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2582,37 +2582,37 @@ class FormChoiceGroup:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormChoiceGroup':
+    def load(__d: Dict) -> 'ChoiceGroup':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormChoiceGroup.name is required.')
+            raise ValueError('ChoiceGroup.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormChoiceGroup.label is required.')
+            raise ValueError('ChoiceGroup.label is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormChoiceGroup.value is required.')
+            raise ValueError('ChoiceGroup.value is required.')
         __d_choices: Any = __d.get('choices')
         if __d_choices is None:
-            raise ValueError('FormChoiceGroup.choices is required.')
+            raise ValueError('ChoiceGroup.choices is required.')
         __d_required: Any = __d.get('required')
         if __d_required is None:
-            raise ValueError('FormChoiceGroup.required is required.')
+            raise ValueError('ChoiceGroup.required is required.')
         __d_trigger: Any = __d.get('trigger')
         if __d_trigger is None:
-            raise ValueError('FormChoiceGroup.trigger is required.')
+            raise ValueError('ChoiceGroup.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormChoiceGroup.tooltip is required.')
+            raise ValueError('ChoiceGroup.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         value: str = __d_value
-        choices: List[FormChoice] = [FormChoice.load(__e) for __e in __d_choices]
+        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
         required: bool = __d_required
         trigger: bool = __d_trigger
         tooltip: str = __d_tooltip
-        return FormChoiceGroup(
+        return ChoiceGroup(
             name,
             label,
             value,
@@ -2623,7 +2623,7 @@ class FormChoiceGroup:
         )
 
 
-class FormChecklist:
+class Checklist:
     """No documentation available.
 
     :param name: No documentation available.
@@ -2637,7 +2637,7 @@ class FormChecklist:
             name: str,
             label: str,
             values: List[str],
-            choices: List[FormChoice],
+            choices: List[Choice],
             tooltip: str,
     ):
         self.name = name
@@ -2649,15 +2649,15 @@ class FormChecklist:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormChecklist.name is required.')
+            raise ValueError('Checklist.name is required.')
         if self.label is None:
-            raise ValueError('FormChecklist.label is required.')
+            raise ValueError('Checklist.label is required.')
         if self.values is None:
-            raise ValueError('FormChecklist.values is required.')
+            raise ValueError('Checklist.values is required.')
         if self.choices is None:
-            raise ValueError('FormChecklist.choices is required.')
+            raise ValueError('Checklist.choices is required.')
         if self.tooltip is None:
-            raise ValueError('FormChecklist.tooltip is required.')
+            raise ValueError('Checklist.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2667,29 +2667,29 @@ class FormChecklist:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormChecklist':
+    def load(__d: Dict) -> 'Checklist':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormChecklist.name is required.')
+            raise ValueError('Checklist.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormChecklist.label is required.')
+            raise ValueError('Checklist.label is required.')
         __d_values: Any = __d.get('values')
         if __d_values is None:
-            raise ValueError('FormChecklist.values is required.')
+            raise ValueError('Checklist.values is required.')
         __d_choices: Any = __d.get('choices')
         if __d_choices is None:
-            raise ValueError('FormChecklist.choices is required.')
+            raise ValueError('Checklist.choices is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormChecklist.tooltip is required.')
+            raise ValueError('Checklist.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         values: List[str] = __d_values
-        choices: List[FormChoice] = [FormChoice.load(__e) for __e in __d_choices]
+        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
         tooltip: str = __d_tooltip
-        return FormChecklist(
+        return Checklist(
             name,
             label,
             values,
@@ -2698,7 +2698,7 @@ class FormChecklist:
         )
 
 
-class FormDropdown:
+class Dropdown:
     """No documentation available.
 
     :param name: No documentation available.
@@ -2721,7 +2721,7 @@ class FormDropdown:
             multiple: bool,
             value: str,
             values: List[str],
-            choices: List[FormChoice],
+            choices: List[Choice],
             required: bool,
             disabled: bool,
             trigger: bool,
@@ -2742,27 +2742,27 @@ class FormDropdown:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormDropdown.name is required.')
+            raise ValueError('Dropdown.name is required.')
         if self.label is None:
-            raise ValueError('FormDropdown.label is required.')
+            raise ValueError('Dropdown.label is required.')
         if self.placeholder is None:
-            raise ValueError('FormDropdown.placeholder is required.')
+            raise ValueError('Dropdown.placeholder is required.')
         if self.multiple is None:
-            raise ValueError('FormDropdown.multiple is required.')
+            raise ValueError('Dropdown.multiple is required.')
         if self.value is None:
-            raise ValueError('FormDropdown.value is required.')
+            raise ValueError('Dropdown.value is required.')
         if self.values is None:
-            raise ValueError('FormDropdown.values is required.')
+            raise ValueError('Dropdown.values is required.')
         if self.choices is None:
-            raise ValueError('FormDropdown.choices is required.')
+            raise ValueError('Dropdown.choices is required.')
         if self.required is None:
-            raise ValueError('FormDropdown.required is required.')
+            raise ValueError('Dropdown.required is required.')
         if self.disabled is None:
-            raise ValueError('FormDropdown.disabled is required.')
+            raise ValueError('Dropdown.disabled is required.')
         if self.trigger is None:
-            raise ValueError('FormDropdown.trigger is required.')
+            raise ValueError('Dropdown.trigger is required.')
         if self.tooltip is None:
-            raise ValueError('FormDropdown.tooltip is required.')
+            raise ValueError('Dropdown.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2778,53 +2778,53 @@ class FormDropdown:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormDropdown':
+    def load(__d: Dict) -> 'Dropdown':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormDropdown.name is required.')
+            raise ValueError('Dropdown.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormDropdown.label is required.')
+            raise ValueError('Dropdown.label is required.')
         __d_placeholder: Any = __d.get('placeholder')
         if __d_placeholder is None:
-            raise ValueError('FormDropdown.placeholder is required.')
+            raise ValueError('Dropdown.placeholder is required.')
         __d_multiple: Any = __d.get('multiple')
         if __d_multiple is None:
-            raise ValueError('FormDropdown.multiple is required.')
+            raise ValueError('Dropdown.multiple is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormDropdown.value is required.')
+            raise ValueError('Dropdown.value is required.')
         __d_values: Any = __d.get('values')
         if __d_values is None:
-            raise ValueError('FormDropdown.values is required.')
+            raise ValueError('Dropdown.values is required.')
         __d_choices: Any = __d.get('choices')
         if __d_choices is None:
-            raise ValueError('FormDropdown.choices is required.')
+            raise ValueError('Dropdown.choices is required.')
         __d_required: Any = __d.get('required')
         if __d_required is None:
-            raise ValueError('FormDropdown.required is required.')
+            raise ValueError('Dropdown.required is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormDropdown.disabled is required.')
+            raise ValueError('Dropdown.disabled is required.')
         __d_trigger: Any = __d.get('trigger')
         if __d_trigger is None:
-            raise ValueError('FormDropdown.trigger is required.')
+            raise ValueError('Dropdown.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormDropdown.tooltip is required.')
+            raise ValueError('Dropdown.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         placeholder: str = __d_placeholder
         multiple: bool = __d_multiple
         value: str = __d_value
         values: List[str] = __d_values
-        choices: List[FormChoice] = [FormChoice.load(__e) for __e in __d_choices]
+        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
         required: bool = __d_required
         disabled: bool = __d_disabled
         trigger: bool = __d_trigger
         tooltip: str = __d_tooltip
-        return FormDropdown(
+        return Dropdown(
             name,
             label,
             placeholder,
@@ -2839,7 +2839,7 @@ class FormDropdown:
         )
 
 
-class FormCombobox:
+class Combobox:
     """No documentation available.
 
     :param name: No documentation available.
@@ -2874,21 +2874,21 @@ class FormCombobox:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormCombobox.name is required.')
+            raise ValueError('Combobox.name is required.')
         if self.label is None:
-            raise ValueError('FormCombobox.label is required.')
+            raise ValueError('Combobox.label is required.')
         if self.placeholder is None:
-            raise ValueError('FormCombobox.placeholder is required.')
+            raise ValueError('Combobox.placeholder is required.')
         if self.value is None:
-            raise ValueError('FormCombobox.value is required.')
+            raise ValueError('Combobox.value is required.')
         if self.choices is None:
-            raise ValueError('FormCombobox.choices is required.')
+            raise ValueError('Combobox.choices is required.')
         if self.error is None:
-            raise ValueError('FormCombobox.error is required.')
+            raise ValueError('Combobox.error is required.')
         if self.disabled is None:
-            raise ValueError('FormCombobox.disabled is required.')
+            raise ValueError('Combobox.disabled is required.')
         if self.tooltip is None:
-            raise ValueError('FormCombobox.tooltip is required.')
+            raise ValueError('Combobox.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2901,32 +2901,32 @@ class FormCombobox:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormCombobox':
+    def load(__d: Dict) -> 'Combobox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormCombobox.name is required.')
+            raise ValueError('Combobox.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormCombobox.label is required.')
+            raise ValueError('Combobox.label is required.')
         __d_placeholder: Any = __d.get('placeholder')
         if __d_placeholder is None:
-            raise ValueError('FormCombobox.placeholder is required.')
+            raise ValueError('Combobox.placeholder is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormCombobox.value is required.')
+            raise ValueError('Combobox.value is required.')
         __d_choices: Any = __d.get('choices')
         if __d_choices is None:
-            raise ValueError('FormCombobox.choices is required.')
+            raise ValueError('Combobox.choices is required.')
         __d_error: Any = __d.get('error')
         if __d_error is None:
-            raise ValueError('FormCombobox.error is required.')
+            raise ValueError('Combobox.error is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormCombobox.disabled is required.')
+            raise ValueError('Combobox.disabled is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormCombobox.tooltip is required.')
+            raise ValueError('Combobox.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         placeholder: str = __d_placeholder
@@ -2935,7 +2935,7 @@ class FormCombobox:
         error: str = __d_error
         disabled: bool = __d_disabled
         tooltip: str = __d_tooltip
-        return FormCombobox(
+        return Combobox(
             name,
             label,
             placeholder,
@@ -2947,7 +2947,7 @@ class FormCombobox:
         )
 
 
-class FormSlider:
+class Slider:
     """No documentation available.
 
     :param name: No documentation available.
@@ -2985,23 +2985,23 @@ class FormSlider:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormSlider.name is required.')
+            raise ValueError('Slider.name is required.')
         if self.label is None:
-            raise ValueError('FormSlider.label is required.')
+            raise ValueError('Slider.label is required.')
         if self.min is None:
-            raise ValueError('FormSlider.min is required.')
+            raise ValueError('Slider.min is required.')
         if self.max is None:
-            raise ValueError('FormSlider.max is required.')
+            raise ValueError('Slider.max is required.')
         if self.step is None:
-            raise ValueError('FormSlider.step is required.')
+            raise ValueError('Slider.step is required.')
         if self.value is None:
-            raise ValueError('FormSlider.value is required.')
+            raise ValueError('Slider.value is required.')
         if self.disabled is None:
-            raise ValueError('FormSlider.disabled is required.')
+            raise ValueError('Slider.disabled is required.')
         if self.trigger is None:
-            raise ValueError('FormSlider.trigger is required.')
+            raise ValueError('Slider.trigger is required.')
         if self.tooltip is None:
-            raise ValueError('FormSlider.tooltip is required.')
+            raise ValueError('Slider.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3015,35 +3015,35 @@ class FormSlider:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormSlider':
+    def load(__d: Dict) -> 'Slider':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormSlider.name is required.')
+            raise ValueError('Slider.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormSlider.label is required.')
+            raise ValueError('Slider.label is required.')
         __d_min: Any = __d.get('min')
         if __d_min is None:
-            raise ValueError('FormSlider.min is required.')
+            raise ValueError('Slider.min is required.')
         __d_max: Any = __d.get('max')
         if __d_max is None:
-            raise ValueError('FormSlider.max is required.')
+            raise ValueError('Slider.max is required.')
         __d_step: Any = __d.get('step')
         if __d_step is None:
-            raise ValueError('FormSlider.step is required.')
+            raise ValueError('Slider.step is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormSlider.value is required.')
+            raise ValueError('Slider.value is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormSlider.disabled is required.')
+            raise ValueError('Slider.disabled is required.')
         __d_trigger: Any = __d.get('trigger')
         if __d_trigger is None:
-            raise ValueError('FormSlider.trigger is required.')
+            raise ValueError('Slider.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormSlider.tooltip is required.')
+            raise ValueError('Slider.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         min: float = __d_min
@@ -3053,7 +3053,7 @@ class FormSlider:
         disabled: bool = __d_disabled
         trigger: bool = __d_trigger
         tooltip: str = __d_tooltip
-        return FormSlider(
+        return Slider(
             name,
             label,
             min,
@@ -3066,7 +3066,7 @@ class FormSlider:
         )
 
 
-class FormSpinbox:
+class Spinbox:
     """No documentation available.
 
     :param name: No documentation available.
@@ -3101,21 +3101,21 @@ class FormSpinbox:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormSpinbox.name is required.')
+            raise ValueError('Spinbox.name is required.')
         if self.label is None:
-            raise ValueError('FormSpinbox.label is required.')
+            raise ValueError('Spinbox.label is required.')
         if self.min is None:
-            raise ValueError('FormSpinbox.min is required.')
+            raise ValueError('Spinbox.min is required.')
         if self.max is None:
-            raise ValueError('FormSpinbox.max is required.')
+            raise ValueError('Spinbox.max is required.')
         if self.step is None:
-            raise ValueError('FormSpinbox.step is required.')
+            raise ValueError('Spinbox.step is required.')
         if self.value is None:
-            raise ValueError('FormSpinbox.value is required.')
+            raise ValueError('Spinbox.value is required.')
         if self.disabled is None:
-            raise ValueError('FormSpinbox.disabled is required.')
+            raise ValueError('Spinbox.disabled is required.')
         if self.tooltip is None:
-            raise ValueError('FormSpinbox.tooltip is required.')
+            raise ValueError('Spinbox.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3128,32 +3128,32 @@ class FormSpinbox:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormSpinbox':
+    def load(__d: Dict) -> 'Spinbox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormSpinbox.name is required.')
+            raise ValueError('Spinbox.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormSpinbox.label is required.')
+            raise ValueError('Spinbox.label is required.')
         __d_min: Any = __d.get('min')
         if __d_min is None:
-            raise ValueError('FormSpinbox.min is required.')
+            raise ValueError('Spinbox.min is required.')
         __d_max: Any = __d.get('max')
         if __d_max is None:
-            raise ValueError('FormSpinbox.max is required.')
+            raise ValueError('Spinbox.max is required.')
         __d_step: Any = __d.get('step')
         if __d_step is None:
-            raise ValueError('FormSpinbox.step is required.')
+            raise ValueError('Spinbox.step is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormSpinbox.value is required.')
+            raise ValueError('Spinbox.value is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormSpinbox.disabled is required.')
+            raise ValueError('Spinbox.disabled is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormSpinbox.tooltip is required.')
+            raise ValueError('Spinbox.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         min: float = __d_min
@@ -3162,7 +3162,7 @@ class FormSpinbox:
         value: float = __d_value
         disabled: bool = __d_disabled
         tooltip: str = __d_tooltip
-        return FormSpinbox(
+        return Spinbox(
             name,
             label,
             min,
@@ -3174,7 +3174,7 @@ class FormSpinbox:
         )
 
 
-class FormDatePicker:
+class DatePicker:
     """No documentation available.
 
     :param name: No documentation available.
@@ -3203,17 +3203,17 @@ class FormDatePicker:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormDatePicker.name is required.')
+            raise ValueError('DatePicker.name is required.')
         if self.label is None:
-            raise ValueError('FormDatePicker.label is required.')
+            raise ValueError('DatePicker.label is required.')
         if self.placeholder is None:
-            raise ValueError('FormDatePicker.placeholder is required.')
+            raise ValueError('DatePicker.placeholder is required.')
         if self.value is None:
-            raise ValueError('FormDatePicker.value is required.')
+            raise ValueError('DatePicker.value is required.')
         if self.disabled is None:
-            raise ValueError('FormDatePicker.disabled is required.')
+            raise ValueError('DatePicker.disabled is required.')
         if self.tooltip is None:
-            raise ValueError('FormDatePicker.tooltip is required.')
+            raise ValueError('DatePicker.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3224,33 +3224,33 @@ class FormDatePicker:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormDatePicker':
+    def load(__d: Dict) -> 'DatePicker':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormDatePicker.name is required.')
+            raise ValueError('DatePicker.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormDatePicker.label is required.')
+            raise ValueError('DatePicker.label is required.')
         __d_placeholder: Any = __d.get('placeholder')
         if __d_placeholder is None:
-            raise ValueError('FormDatePicker.placeholder is required.')
+            raise ValueError('DatePicker.placeholder is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormDatePicker.value is required.')
+            raise ValueError('DatePicker.value is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormDatePicker.disabled is required.')
+            raise ValueError('DatePicker.disabled is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormDatePicker.tooltip is required.')
+            raise ValueError('DatePicker.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         placeholder: str = __d_placeholder
         value: str = __d_value
         disabled: bool = __d_disabled
         tooltip: str = __d_tooltip
-        return FormDatePicker(
+        return DatePicker(
             name,
             label,
             placeholder,
@@ -3260,7 +3260,7 @@ class FormDatePicker:
         )
 
 
-class FormColorPicker:
+class ColorPicker:
     """No documentation available.
 
     :param name: No documentation available.
@@ -3286,15 +3286,15 @@ class FormColorPicker:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormColorPicker.name is required.')
+            raise ValueError('ColorPicker.name is required.')
         if self.label is None:
-            raise ValueError('FormColorPicker.label is required.')
+            raise ValueError('ColorPicker.label is required.')
         if self.value is None:
-            raise ValueError('FormColorPicker.value is required.')
+            raise ValueError('ColorPicker.value is required.')
         if self.choices is None:
-            raise ValueError('FormColorPicker.choices is required.')
+            raise ValueError('ColorPicker.choices is required.')
         if self.tooltip is None:
-            raise ValueError('FormColorPicker.tooltip is required.')
+            raise ValueError('ColorPicker.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3304,29 +3304,29 @@ class FormColorPicker:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormColorPicker':
+    def load(__d: Dict) -> 'ColorPicker':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormColorPicker.name is required.')
+            raise ValueError('ColorPicker.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormColorPicker.label is required.')
+            raise ValueError('ColorPicker.label is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormColorPicker.value is required.')
+            raise ValueError('ColorPicker.value is required.')
         __d_choices: Any = __d.get('choices')
         if __d_choices is None:
-            raise ValueError('FormColorPicker.choices is required.')
+            raise ValueError('ColorPicker.choices is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormColorPicker.tooltip is required.')
+            raise ValueError('ColorPicker.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         value: str = __d_value
         choices: List[str] = __d_choices
         tooltip: str = __d_tooltip
-        return FormColorPicker(
+        return ColorPicker(
             name,
             label,
             value,
@@ -3335,7 +3335,7 @@ class FormColorPicker:
         )
 
 
-class FormButton:
+class Button:
     """No documentation available.
 
     :param name: No documentation available.
@@ -3367,19 +3367,19 @@ class FormButton:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormButton.name is required.')
+            raise ValueError('Button.name is required.')
         if self.label is None:
-            raise ValueError('FormButton.label is required.')
+            raise ValueError('Button.label is required.')
         if self.caption is None:
-            raise ValueError('FormButton.caption is required.')
+            raise ValueError('Button.caption is required.')
         if self.primary is None:
-            raise ValueError('FormButton.primary is required.')
+            raise ValueError('Button.primary is required.')
         if self.disabled is None:
-            raise ValueError('FormButton.disabled is required.')
+            raise ValueError('Button.disabled is required.')
         if self.link is None:
-            raise ValueError('FormButton.link is required.')
+            raise ValueError('Button.link is required.')
         if self.tooltip is None:
-            raise ValueError('FormButton.tooltip is required.')
+            raise ValueError('Button.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3391,29 +3391,29 @@ class FormButton:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormButton':
+    def load(__d: Dict) -> 'Button':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormButton.name is required.')
+            raise ValueError('Button.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormButton.label is required.')
+            raise ValueError('Button.label is required.')
         __d_caption: Any = __d.get('caption')
         if __d_caption is None:
-            raise ValueError('FormButton.caption is required.')
+            raise ValueError('Button.caption is required.')
         __d_primary: Any = __d.get('primary')
         if __d_primary is None:
-            raise ValueError('FormButton.primary is required.')
+            raise ValueError('Button.primary is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormButton.disabled is required.')
+            raise ValueError('Button.disabled is required.')
         __d_link: Any = __d.get('link')
         if __d_link is None:
-            raise ValueError('FormButton.link is required.')
+            raise ValueError('Button.link is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormButton.tooltip is required.')
+            raise ValueError('Button.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         caption: str = __d_caption
@@ -3421,7 +3421,7 @@ class FormButton:
         disabled: bool = __d_disabled
         link: bool = __d_link
         tooltip: str = __d_tooltip
-        return FormButton(
+        return Button(
             name,
             label,
             caption,
@@ -3432,38 +3432,38 @@ class FormButton:
         )
 
 
-class FormButtons:
+class Buttons:
     """No documentation available.
 
     :param buttons: No documentation available.
     """
     def __init__(
             self,
-            buttons: List[FormButton],
+            buttons: List[Button],
     ):
         self.buttons = buttons
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.buttons is None:
-            raise ValueError('FormButtons.buttons is required.')
+            raise ValueError('Buttons.buttons is required.')
         return _dump(
             buttons=[__e.dump() for __e in self.buttons],
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormButtons':
+    def load(__d: Dict) -> 'Buttons':
         """Creates an instance of this class using the contents of a dict."""
         __d_buttons: Any = __d.get('buttons')
         if __d_buttons is None:
-            raise ValueError('FormButtons.buttons is required.')
-        buttons: List[FormButton] = [FormButton.load(__e) for __e in __d_buttons]
-        return FormButtons(
+            raise ValueError('Buttons.buttons is required.')
+        buttons: List[Button] = [Button.load(__e) for __e in __d_buttons]
+        return Buttons(
             buttons,
         )
 
 
-class FormFileUpload:
+class FileUpload:
     """No documentation available.
 
     :param name: No documentation available.
@@ -3486,13 +3486,13 @@ class FormFileUpload:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormFileUpload.name is required.')
+            raise ValueError('FileUpload.name is required.')
         if self.label is None:
-            raise ValueError('FormFileUpload.label is required.')
+            raise ValueError('FileUpload.label is required.')
         if self.multiple is None:
-            raise ValueError('FormFileUpload.multiple is required.')
+            raise ValueError('FileUpload.multiple is required.')
         if self.tooltip is None:
-            raise ValueError('FormFileUpload.tooltip is required.')
+            raise ValueError('FileUpload.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3501,25 +3501,25 @@ class FormFileUpload:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormFileUpload':
+    def load(__d: Dict) -> 'FileUpload':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormFileUpload.name is required.')
+            raise ValueError('FileUpload.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormFileUpload.label is required.')
+            raise ValueError('FileUpload.label is required.')
         __d_multiple: Any = __d.get('multiple')
         if __d_multiple is None:
-            raise ValueError('FormFileUpload.multiple is required.')
+            raise ValueError('FileUpload.multiple is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormFileUpload.tooltip is required.')
+            raise ValueError('FileUpload.tooltip is required.')
         name: str = __d_name
         label: str = __d_label
         multiple: bool = __d_multiple
         tooltip: str = __d_tooltip
-        return FormFileUpload(
+        return FileUpload(
             name,
             label,
             multiple,
@@ -3527,166 +3527,72 @@ class FormFileUpload:
         )
 
 
-class FormTableColumn:
+class Table:
     """No documentation available.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    """
-    def __init__(
-            self,
-            name: str,
-            label: str,
-    ):
-        self.name = name
-        self.label = label
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('FormTableColumn.name is required.')
-        if self.label is None:
-            raise ValueError('FormTableColumn.label is required.')
-        return _dump(
-            name=self.name,
-            label=self.label,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'FormTableColumn':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('FormTableColumn.name is required.')
-        __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('FormTableColumn.label is required.')
-        name: str = __d_name
-        label: str = __d_label
-        return FormTableColumn(
-            name,
-            label,
-        )
-
-
-class FormTableRow:
-    """No documentation available.
-
-    :param name: No documentation available.
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
     :param cells: No documentation available.
+    :param data: No documentation available.
     """
     def __init__(
             self,
-            name: str,
-            cells: List[str],
+            box: str,
+            title: str,
+            cells: PackedData,
+            data: PackedData,
     ):
-        self.name = name
+        self.box = box
+        self.title = title
         self.cells = cells
+        self.data = data
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('FormTableRow.name is required.')
+        if self.box is None:
+            raise ValueError('Table.box is required.')
+        if self.title is None:
+            raise ValueError('Table.title is required.')
         if self.cells is None:
-            raise ValueError('FormTableRow.cells is required.')
+            raise ValueError('Table.cells is required.')
+        if self.data is None:
+            raise ValueError('Table.data is required.')
         return _dump(
-            name=self.name,
+            view='table',
+            box=self.box,
+            title=self.title,
             cells=self.cells,
+            data=self.data,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormTableRow':
+    def load(__d: Dict) -> 'Table':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('FormTableRow.name is required.')
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Table.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('Table.title is required.')
         __d_cells: Any = __d.get('cells')
         if __d_cells is None:
-            raise ValueError('FormTableRow.cells is required.')
-        name: str = __d_name
-        cells: List[str] = __d_cells
-        return FormTableRow(
-            name,
+            raise ValueError('Table.cells is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('Table.data is required.')
+        box: str = __d_box
+        title: str = __d_title
+        cells: PackedData = __d_cells
+        data: PackedData = __d_data
+        return Table(
+            box,
+            title,
             cells,
+            data,
         )
 
 
-class FormTable:
-    """No documentation available.
-
-    :param name: No documentation available.
-    :param columns: No documentation available.
-    :param rows: No documentation available.
-    :param multiple: No documentation available.
-    :param tooltip: No documentation available.
-    """
-    def __init__(
-            self,
-            name: str,
-            columns: List[FormTableColumn],
-            rows: List[FormTableRow],
-            multiple: bool,
-            tooltip: str,
-    ):
-        self.name = name
-        self.columns = columns
-        self.rows = rows
-        self.multiple = multiple
-        self.tooltip = tooltip
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('FormTable.name is required.')
-        if self.columns is None:
-            raise ValueError('FormTable.columns is required.')
-        if self.rows is None:
-            raise ValueError('FormTable.rows is required.')
-        if self.multiple is None:
-            raise ValueError('FormTable.multiple is required.')
-        if self.tooltip is None:
-            raise ValueError('FormTable.tooltip is required.')
-        return _dump(
-            name=self.name,
-            columns=[__e.dump() for __e in self.columns],
-            rows=[__e.dump() for __e in self.rows],
-            multiple=self.multiple,
-            tooltip=self.tooltip,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'FormTable':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('FormTable.name is required.')
-        __d_columns: Any = __d.get('columns')
-        if __d_columns is None:
-            raise ValueError('FormTable.columns is required.')
-        __d_rows: Any = __d.get('rows')
-        if __d_rows is None:
-            raise ValueError('FormTable.rows is required.')
-        __d_multiple: Any = __d.get('multiple')
-        if __d_multiple is None:
-            raise ValueError('FormTable.multiple is required.')
-        __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('FormTable.tooltip is required.')
-        name: str = __d_name
-        columns: List[FormTableColumn] = [FormTableColumn.load(__e) for __e in __d_columns]
-        rows: List[FormTableRow] = [FormTableRow.load(__e) for __e in __d_rows]
-        multiple: bool = __d_multiple
-        tooltip: str = __d_tooltip
-        return FormTable(
-            name,
-            columns,
-            rows,
-            multiple,
-            tooltip,
-        )
-
-
-class FormLink:
+class Link:
     """No documentation available.
 
     :param label: No documentation available.
@@ -3712,15 +3618,15 @@ class FormLink:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.label is None:
-            raise ValueError('FormLink.label is required.')
+            raise ValueError('Link.label is required.')
         if self.path is None:
-            raise ValueError('FormLink.path is required.')
+            raise ValueError('Link.path is required.')
         if self.disabled is None:
-            raise ValueError('FormLink.disabled is required.')
+            raise ValueError('Link.disabled is required.')
         if self.button is None:
-            raise ValueError('FormLink.button is required.')
+            raise ValueError('Link.button is required.')
         if self.tooltip is None:
-            raise ValueError('FormLink.tooltip is required.')
+            raise ValueError('Link.tooltip is required.')
         return _dump(
             label=self.label,
             path=self.path,
@@ -3730,29 +3636,29 @@ class FormLink:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormLink':
+    def load(__d: Dict) -> 'Link':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormLink.label is required.')
+            raise ValueError('Link.label is required.')
         __d_path: Any = __d.get('path')
         if __d_path is None:
-            raise ValueError('FormLink.path is required.')
+            raise ValueError('Link.path is required.')
         __d_disabled: Any = __d.get('disabled')
         if __d_disabled is None:
-            raise ValueError('FormLink.disabled is required.')
+            raise ValueError('Link.disabled is required.')
         __d_button: Any = __d.get('button')
         if __d_button is None:
-            raise ValueError('FormLink.button is required.')
+            raise ValueError('Link.button is required.')
         __d_tooltip: Any = __d.get('tooltip')
         if __d_tooltip is None:
-            raise ValueError('FormLink.tooltip is required.')
+            raise ValueError('Link.tooltip is required.')
         label: str = __d_label
         path: str = __d_path
         disabled: bool = __d_disabled
         button: bool = __d_button
         tooltip: str = __d_tooltip
-        return FormLink(
+        return Link(
             label,
             path,
             disabled,
@@ -3761,7 +3667,7 @@ class FormLink:
         )
 
 
-class FormTab:
+class Tab:
     """No documentation available.
 
     :param name: No documentation available.
@@ -3781,11 +3687,11 @@ class FormTab:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormTab.name is required.')
+            raise ValueError('Tab.name is required.')
         if self.label is None:
-            raise ValueError('FormTab.label is required.')
+            raise ValueError('Tab.label is required.')
         if self.icon is None:
-            raise ValueError('FormTab.icon is required.')
+            raise ValueError('Tab.icon is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3793,28 +3699,28 @@ class FormTab:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormTab':
+    def load(__d: Dict) -> 'Tab':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormTab.name is required.')
+            raise ValueError('Tab.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormTab.label is required.')
+            raise ValueError('Tab.label is required.')
         __d_icon: Any = __d.get('icon')
         if __d_icon is None:
-            raise ValueError('FormTab.icon is required.')
+            raise ValueError('Tab.icon is required.')
         name: str = __d_name
         label: str = __d_label
         icon: str = __d_icon
-        return FormTab(
+        return Tab(
             name,
             label,
             icon,
         )
 
 
-class FormTabs:
+class Tabs:
     """No documentation available.
 
     :param name: No documentation available.
@@ -3825,7 +3731,7 @@ class FormTabs:
             self,
             name: str,
             value: str,
-            items: List[FormTab],
+            items: List[Tab],
     ):
         self.name = name
         self.value = value
@@ -3834,11 +3740,11 @@ class FormTabs:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormTabs.name is required.')
+            raise ValueError('Tabs.name is required.')
         if self.value is None:
-            raise ValueError('FormTabs.value is required.')
+            raise ValueError('Tabs.value is required.')
         if self.items is None:
-            raise ValueError('FormTabs.items is required.')
+            raise ValueError('Tabs.items is required.')
         return _dump(
             name=self.name,
             value=self.value,
@@ -3846,28 +3752,28 @@ class FormTabs:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormTabs':
+    def load(__d: Dict) -> 'Tabs':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormTabs.name is required.')
+            raise ValueError('Tabs.name is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('FormTabs.value is required.')
+            raise ValueError('Tabs.value is required.')
         __d_items: Any = __d.get('items')
         if __d_items is None:
-            raise ValueError('FormTabs.items is required.')
+            raise ValueError('Tabs.items is required.')
         name: str = __d_name
         value: str = __d_value
-        items: List[FormTab] = [FormTab.load(__e) for __e in __d_items]
-        return FormTabs(
+        items: List[Tab] = [Tab.load(__e) for __e in __d_items]
+        return Tabs(
             name,
             value,
             items,
         )
 
 
-class FormExpander:
+class Expander:
     """No documentation available.
 
     :param name: No documentation available.
@@ -3880,7 +3786,7 @@ class FormExpander:
             name: str,
             label: str,
             expanded: bool,
-            items: List['FormComponent'],
+            items: List['Component'],
     ):
         self.name = name
         self.label = label
@@ -3890,13 +3796,13 @@ class FormExpander:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormExpander.name is required.')
+            raise ValueError('Expander.name is required.')
         if self.label is None:
-            raise ValueError('FormExpander.label is required.')
+            raise ValueError('Expander.label is required.')
         if self.expanded is None:
-            raise ValueError('FormExpander.expanded is required.')
+            raise ValueError('Expander.expanded is required.')
         if self.items is None:
-            raise ValueError('FormExpander.items is required.')
+            raise ValueError('Expander.items is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3905,25 +3811,25 @@ class FormExpander:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormExpander':
+    def load(__d: Dict) -> 'Expander':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormExpander.name is required.')
+            raise ValueError('Expander.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormExpander.label is required.')
+            raise ValueError('Expander.label is required.')
         __d_expanded: Any = __d.get('expanded')
         if __d_expanded is None:
-            raise ValueError('FormExpander.expanded is required.')
+            raise ValueError('Expander.expanded is required.')
         __d_items: Any = __d.get('items')
         if __d_items is None:
-            raise ValueError('FormExpander.items is required.')
+            raise ValueError('Expander.items is required.')
         name: str = __d_name
         label: str = __d_label
         expanded: bool = __d_expanded
-        items: List['FormComponent'] = [FormComponent.load(__e) for __e in __d_items]
-        return FormExpander(
+        items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        return Expander(
             name,
             label,
             expanded,
@@ -3931,7 +3837,7 @@ class FormExpander:
         )
 
 
-class FormNavItem:
+class NavItem:
     """No documentation available.
 
     :param name: No documentation available.
@@ -3948,32 +3854,32 @@ class FormNavItem:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormNavItem.name is required.')
+            raise ValueError('NavItem.name is required.')
         if self.label is None:
-            raise ValueError('FormNavItem.label is required.')
+            raise ValueError('NavItem.label is required.')
         return _dump(
             name=self.name,
             label=self.label,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormNavItem':
+    def load(__d: Dict) -> 'NavItem':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormNavItem.name is required.')
+            raise ValueError('NavItem.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormNavItem.label is required.')
+            raise ValueError('NavItem.label is required.')
         name: str = __d_name
         label: str = __d_label
-        return FormNavItem(
+        return NavItem(
             name,
             label,
         )
 
 
-class FormNavGroup:
+class NavGroup:
     """No documentation available.
 
     :param label: No documentation available.
@@ -3982,7 +3888,7 @@ class FormNavGroup:
     def __init__(
             self,
             label: str,
-            items: List[FormNavItem],
+            items: List[NavItem],
     ):
         self.label = label
         self.items = items
@@ -3990,32 +3896,32 @@ class FormNavGroup:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.label is None:
-            raise ValueError('FormNavGroup.label is required.')
+            raise ValueError('NavGroup.label is required.')
         if self.items is None:
-            raise ValueError('FormNavGroup.items is required.')
+            raise ValueError('NavGroup.items is required.')
         return _dump(
             label=self.label,
             items=[__e.dump() for __e in self.items],
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormNavGroup':
+    def load(__d: Dict) -> 'NavGroup':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('FormNavGroup.label is required.')
+            raise ValueError('NavGroup.label is required.')
         __d_items: Any = __d.get('items')
         if __d_items is None:
-            raise ValueError('FormNavGroup.items is required.')
+            raise ValueError('NavGroup.items is required.')
         label: str = __d_label
-        items: List[FormNavItem] = [FormNavItem.load(__e) for __e in __d_items]
-        return FormNavGroup(
+        items: List[NavItem] = [NavItem.load(__e) for __e in __d_items]
+        return NavGroup(
             label,
             items,
         )
 
 
-class FormNav:
+class Nav:
     """No documentation available.
 
     :param name: No documentation available.
@@ -4024,7 +3930,7 @@ class FormNav:
     def __init__(
             self,
             name: str,
-            items: List[FormNavGroup],
+            items: List[NavGroup],
     ):
         self.name = name
         self.items = items
@@ -4032,32 +3938,32 @@ class FormNav:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('FormNav.name is required.')
+            raise ValueError('Nav.name is required.')
         if self.items is None:
-            raise ValueError('FormNav.items is required.')
+            raise ValueError('Nav.items is required.')
         return _dump(
             name=self.name,
             items=[__e.dump() for __e in self.items],
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormNav':
+    def load(__d: Dict) -> 'Nav':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('FormNav.name is required.')
+            raise ValueError('Nav.name is required.')
         __d_items: Any = __d.get('items')
         if __d_items is None:
-            raise ValueError('FormNav.items is required.')
+            raise ValueError('Nav.items is required.')
         name: str = __d_name
-        items: List[FormNavGroup] = [FormNavGroup.load(__e) for __e in __d_items]
-        return FormNav(
+        items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
+        return Nav(
             name,
             items,
         )
 
 
-class FormComponent:
+class Component:
     """No documentation available.
 
     :param text: No documentation available.
@@ -4087,30 +3993,30 @@ class FormComponent:
     """
     def __init__(
             self,
-            text: Optional[FormText] = None,
-            label: Optional[FormLabel] = None,
-            separator: Optional[FormSeparator] = None,
-            progress: Optional[FormProgress] = None,
-            message_bar: Optional[FormMessageBar] = None,
-            textbox: Optional[FormTextbox] = None,
-            checkbox: Optional[FormCheckbox] = None,
-            toggle: Optional[FormToggle] = None,
-            choice_group: Optional[FormChoiceGroup] = None,
-            checklist: Optional[FormChecklist] = None,
-            dropdown: Optional[FormDropdown] = None,
-            combobox: Optional[FormCombobox] = None,
-            slider: Optional[FormSlider] = None,
-            spinbox: Optional[FormSpinbox] = None,
-            date_picker: Optional[FormDatePicker] = None,
-            color_picker: Optional[FormColorPicker] = None,
-            buttons: Optional[FormButtons] = None,
-            file_upload: Optional[FormFileUpload] = None,
-            table: Optional[FormTable] = None,
-            link: Optional[FormLink] = None,
-            tabs: Optional[FormTabs] = None,
-            button: Optional[FormButton] = None,
-            expander: Optional[FormExpander] = None,
-            nav: Optional[FormNav] = None,
+            text: Optional[Text] = None,
+            label: Optional[Label] = None,
+            separator: Optional[Separator] = None,
+            progress: Optional[Progress] = None,
+            message_bar: Optional[MessageBar] = None,
+            textbox: Optional[Textbox] = None,
+            checkbox: Optional[Checkbox] = None,
+            toggle: Optional[Toggle] = None,
+            choice_group: Optional[ChoiceGroup] = None,
+            checklist: Optional[Checklist] = None,
+            dropdown: Optional[Dropdown] = None,
+            combobox: Optional[Combobox] = None,
+            slider: Optional[Slider] = None,
+            spinbox: Optional[Spinbox] = None,
+            date_picker: Optional[DatePicker] = None,
+            color_picker: Optional[ColorPicker] = None,
+            buttons: Optional[Buttons] = None,
+            file_upload: Optional[FileUpload] = None,
+            table: Optional[Table] = None,
+            link: Optional[Link] = None,
+            tabs: Optional[Tabs] = None,
+            button: Optional[Button] = None,
+            expander: Optional[Expander] = None,
+            nav: Optional[Nav] = None,
     ):
         self.text = text
         self.label = label
@@ -4167,7 +4073,7 @@ class FormComponent:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'FormComponent':
+    def load(__d: Dict) -> 'Component':
         """Creates an instance of this class using the contents of a dict."""
         __d_text: Any = __d.get('text')
         __d_label: Any = __d.get('label')
@@ -4193,31 +4099,31 @@ class FormComponent:
         __d_button: Any = __d.get('button')
         __d_expander: Any = __d.get('expander')
         __d_nav: Any = __d.get('nav')
-        text: Optional[FormText] = None if __d_text is None else FormText.load(__d_text)
-        label: Optional[FormLabel] = None if __d_label is None else FormLabel.load(__d_label)
-        separator: Optional[FormSeparator] = None if __d_separator is None else FormSeparator.load(__d_separator)
-        progress: Optional[FormProgress] = None if __d_progress is None else FormProgress.load(__d_progress)
-        message_bar: Optional[FormMessageBar] = None if __d_message_bar is None else FormMessageBar.load(__d_message_bar)
-        textbox: Optional[FormTextbox] = None if __d_textbox is None else FormTextbox.load(__d_textbox)
-        checkbox: Optional[FormCheckbox] = None if __d_checkbox is None else FormCheckbox.load(__d_checkbox)
-        toggle: Optional[FormToggle] = None if __d_toggle is None else FormToggle.load(__d_toggle)
-        choice_group: Optional[FormChoiceGroup] = None if __d_choice_group is None else FormChoiceGroup.load(__d_choice_group)
-        checklist: Optional[FormChecklist] = None if __d_checklist is None else FormChecklist.load(__d_checklist)
-        dropdown: Optional[FormDropdown] = None if __d_dropdown is None else FormDropdown.load(__d_dropdown)
-        combobox: Optional[FormCombobox] = None if __d_combobox is None else FormCombobox.load(__d_combobox)
-        slider: Optional[FormSlider] = None if __d_slider is None else FormSlider.load(__d_slider)
-        spinbox: Optional[FormSpinbox] = None if __d_spinbox is None else FormSpinbox.load(__d_spinbox)
-        date_picker: Optional[FormDatePicker] = None if __d_date_picker is None else FormDatePicker.load(__d_date_picker)
-        color_picker: Optional[FormColorPicker] = None if __d_color_picker is None else FormColorPicker.load(__d_color_picker)
-        buttons: Optional[FormButtons] = None if __d_buttons is None else FormButtons.load(__d_buttons)
-        file_upload: Optional[FormFileUpload] = None if __d_file_upload is None else FormFileUpload.load(__d_file_upload)
-        table: Optional[FormTable] = None if __d_table is None else FormTable.load(__d_table)
-        link: Optional[FormLink] = None if __d_link is None else FormLink.load(__d_link)
-        tabs: Optional[FormTabs] = None if __d_tabs is None else FormTabs.load(__d_tabs)
-        button: Optional[FormButton] = None if __d_button is None else FormButton.load(__d_button)
-        expander: Optional[FormExpander] = None if __d_expander is None else FormExpander.load(__d_expander)
-        nav: Optional[FormNav] = None if __d_nav is None else FormNav.load(__d_nav)
-        return FormComponent(
+        text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
+        label: Optional[Label] = None if __d_label is None else Label.load(__d_label)
+        separator: Optional[Separator] = None if __d_separator is None else Separator.load(__d_separator)
+        progress: Optional[Progress] = None if __d_progress is None else Progress.load(__d_progress)
+        message_bar: Optional[MessageBar] = None if __d_message_bar is None else MessageBar.load(__d_message_bar)
+        textbox: Optional[Textbox] = None if __d_textbox is None else Textbox.load(__d_textbox)
+        checkbox: Optional[Checkbox] = None if __d_checkbox is None else Checkbox.load(__d_checkbox)
+        toggle: Optional[Toggle] = None if __d_toggle is None else Toggle.load(__d_toggle)
+        choice_group: Optional[ChoiceGroup] = None if __d_choice_group is None else ChoiceGroup.load(__d_choice_group)
+        checklist: Optional[Checklist] = None if __d_checklist is None else Checklist.load(__d_checklist)
+        dropdown: Optional[Dropdown] = None if __d_dropdown is None else Dropdown.load(__d_dropdown)
+        combobox: Optional[Combobox] = None if __d_combobox is None else Combobox.load(__d_combobox)
+        slider: Optional[Slider] = None if __d_slider is None else Slider.load(__d_slider)
+        spinbox: Optional[Spinbox] = None if __d_spinbox is None else Spinbox.load(__d_spinbox)
+        date_picker: Optional[DatePicker] = None if __d_date_picker is None else DatePicker.load(__d_date_picker)
+        color_picker: Optional[ColorPicker] = None if __d_color_picker is None else ColorPicker.load(__d_color_picker)
+        buttons: Optional[Buttons] = None if __d_buttons is None else Buttons.load(__d_buttons)
+        file_upload: Optional[FileUpload] = None if __d_file_upload is None else FileUpload.load(__d_file_upload)
+        table: Optional[Table] = None if __d_table is None else Table.load(__d_table)
+        link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
+        tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
+        button: Optional[Button] = None if __d_button is None else Button.load(__d_button)
+        expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
+        nav: Optional[Nav] = None if __d_nav is None else Nav.load(__d_nav)
+        return Component(
             text,
             label,
             separator,
@@ -4258,7 +4164,7 @@ class Form:
             box: str,
             url: str,
             args: PackedRecord,
-            items: Union[List[FormComponent], str],
+            items: Union[List[Component], str],
     ):
         self.box = box
         self.url = url
@@ -4301,7 +4207,7 @@ class Form:
         box: str = __d_box
         url: str = __d_url
         args: PackedRecord = __d_args
-        items: Union[List[FormComponent], str] = __d_items if isinstance(__d_items, str) else [FormComponent.load(__e) for __e in __d_items]
+        items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
         return Form(
             box,
             url,
@@ -4662,7 +4568,7 @@ class PixelArt:
         )
 
 
-class PlotMark:
+class Mark:
     """No documentation available.
 
     :param coord: No documentation available.
@@ -4896,7 +4802,7 @@ class PlotMark:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'PlotMark':
+    def load(__d: Dict) -> 'Mark':
         """Creates an instance of this class using the contents of a dict."""
         __d_coord: Any = __d.get('coord')
         __d_mark: Any = __d.get('mark')
@@ -5008,7 +4914,7 @@ class PlotMark:
         ref_stroke_opacity: Optional[float] = __d_ref_stroke_opacity
         ref_stroke_size: Optional[float] = __d_ref_stroke_size
         ref_stroke_dash: Optional[str] = __d_ref_stroke_dash
-        return PlotMark(
+        return Mark(
             coord,
             mark,
             x,
@@ -5067,33 +4973,33 @@ class PlotMark:
         )
 
 
-class PlotVis:
+class Vis:
     """No documentation available.
 
     :param marks: No documentation available.
     """
     def __init__(
             self,
-            marks: List[PlotMark],
+            marks: List[Mark],
     ):
         self.marks = marks
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.marks is None:
-            raise ValueError('PlotVis.marks is required.')
+            raise ValueError('Vis.marks is required.')
         return _dump(
             marks=[__e.dump() for __e in self.marks],
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'PlotVis':
+    def load(__d: Dict) -> 'Vis':
         """Creates an instance of this class using the contents of a dict."""
         __d_marks: Any = __d.get('marks')
         if __d_marks is None:
-            raise ValueError('PlotVis.marks is required.')
-        marks: List[PlotMark] = [PlotMark.load(__e) for __e in __d_marks]
-        return PlotVis(
+            raise ValueError('Vis.marks is required.')
+        marks: List[Mark] = [Mark.load(__e) for __e in __d_marks]
+        return Vis(
             marks,
         )
 
@@ -5111,7 +5017,7 @@ class Plot:
             box: str,
             title: str,
             data: PackedRecord,
-            vis: PlotVis,
+            vis: Vis,
     ):
         self.box = box
         self.title = title
@@ -5154,7 +5060,7 @@ class Plot:
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
-        vis: PlotVis = PlotVis.load(__d_vis)
+        vis: Vis = Vis.load(__d_vis)
         return Plot(
             box,
             title,
@@ -5235,71 +5141,6 @@ class Repeat:
             title,
             item_view,
             item_props,
-            data,
-        )
-
-
-class Table:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param cells: No documentation available.
-    :param data: No documentation available.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            cells: PackedData,
-            data: PackedData,
-    ):
-        self.box = box
-        self.title = title
-        self.cells = cells
-        self.data = data
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Table.box is required.')
-        if self.title is None:
-            raise ValueError('Table.title is required.')
-        if self.cells is None:
-            raise ValueError('Table.cells is required.')
-        if self.data is None:
-            raise ValueError('Table.data is required.')
-        return _dump(
-            view='table',
-            box=self.box,
-            title=self.title,
-            cells=self.cells,
-            data=self.data,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Table':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Table.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Table.title is required.')
-        __d_cells: Any = __d.get('cells')
-        if __d_cells is None:
-            raise ValueError('Table.cells is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Table.data is required.')
-        box: str = __d_box
-        title: str = __d_title
-        cells: PackedData = __d_cells
-        data: PackedData = __d_data
-        return Table(
-            box,
-            title,
-            cells,
             data,
         )
 

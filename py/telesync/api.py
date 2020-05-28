@@ -6,6 +6,8 @@ from typing import Optional, Union, List
 from .cards import Value, PackedRecord, PackedRecords, PackedData
 from .cards import \
     BasicList, \
+    Button, \
+    Buttons, \
     Card1, \
     Card2, \
     Card3, \
@@ -16,63 +18,58 @@ from .cards import \
     Card8, \
     Card9, \
     Cell, \
+    Checkbox, \
+    Checklist, \
+    Choice, \
+    ChoiceGroup, \
+    ColorPicker, \
+    Combobox, \
     Command, \
+    Component, \
     Dashboard, \
     DashboardPage, \
     DashboardPanel, \
     DashboardRow, \
     DataCell, \
     DataSource, \
+    DatePicker, \
+    Dropdown, \
+    Expander, \
+    FileUpload, \
     Flex, \
     Form, \
-    FormButton, \
-    FormButtons, \
-    FormCheckbox, \
-    FormChecklist, \
-    FormChoice, \
-    FormChoiceGroup, \
-    FormColorPicker, \
-    FormCombobox, \
-    FormComponent, \
-    FormDatePicker, \
-    FormDropdown, \
-    FormExpander, \
-    FormFileUpload, \
-    FormLabel, \
-    FormLink, \
-    FormMessageBar, \
-    FormNav, \
-    FormNavGroup, \
-    FormNavItem, \
-    FormProgress, \
-    FormSeparator, \
-    FormSlider, \
-    FormSpinbox, \
-    FormTab, \
-    FormTable, \
-    FormTableColumn, \
-    FormTableRow, \
-    FormTabs, \
-    FormText, \
-    FormTextbox, \
-    FormToggle, \
     FrameCell, \
     HeadingCell, \
+    Label, \
+    Link, \
     ListItem1, \
+    Mark, \
     Markdown, \
     MarkdownCell, \
     Markup, \
+    MessageBar, \
+    Nav, \
+    NavGroup, \
+    NavItem, \
     Notebook, \
     NotebookSection, \
     PixelArt, \
     Plot, \
-    PlotMark, \
-    PlotVis, \
+    Progress, \
     Query, \
     Repeat, \
+    Separator, \
+    Slider, \
+    Spinbox, \
+    Tab, \
     Table, \
+    Tabs, \
     Template, \
-    VegaCell
+    Text, \
+    Textbox, \
+    Toggle, \
+    VegaCell, \
+    Vis
 
 
 def basic_list(
@@ -660,30 +657,30 @@ def flex(
     )
 
 
-def form_text(
+def text(
         size: str,
         text: str,
         tooltip: str,
-) -> FormText:
+) -> Text:
     """No documentation available.
 
     :param size: No documentation available.
     :param text: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormText(
+    return Text(
         size,
         text,
         tooltip,
     )
 
 
-def form_label(
+def label(
         label: str,
         required: bool,
         disabled: bool,
         tooltip: str,
-) -> FormLabel:
+) -> Label:
     """No documentation available.
 
     :param label: No documentation available.
@@ -691,7 +688,7 @@ def form_label(
     :param disabled: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormLabel(
+    return Label(
         label,
         required,
         disabled,
@@ -699,24 +696,24 @@ def form_label(
     )
 
 
-def form_separator(
+def separator(
         label: str,
-) -> FormSeparator:
+) -> Separator:
     """No documentation available.
 
     :param label: No documentation available.
     """
-    return FormSeparator(
+    return Separator(
         label,
     )
 
 
-def form_progress(
+def progress(
         label: str,
         caption: str,
         value: float,
         tooltip: str,
-) -> FormProgress:
+) -> Progress:
     """No documentation available.
 
     :param label: No documentation available.
@@ -724,7 +721,7 @@ def form_progress(
     :param value: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormProgress(
+    return Progress(
         label,
         caption,
         value,
@@ -732,22 +729,22 @@ def form_progress(
     )
 
 
-def form_message_bar(
+def message_bar(
         type: str,
         text: str,
-) -> FormMessageBar:
+) -> MessageBar:
     """No documentation available.
 
     :param type: No documentation available.
     :param text: No documentation available.
     """
-    return FormMessageBar(
+    return MessageBar(
         type,
         text,
     )
 
 
-def form_textbox(
+def textbox(
         name: str,
         label: str,
         placeholder: str,
@@ -763,7 +760,7 @@ def form_textbox(
         multiline: bool,
         password: bool,
         tooltip: str,
-) -> FormTextbox:
+) -> Textbox:
     """No documentation available.
 
     :param name: No documentation available.
@@ -782,7 +779,7 @@ def form_textbox(
     :param password: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormTextbox(
+    return Textbox(
         name,
         label,
         placeholder,
@@ -801,7 +798,7 @@ def form_textbox(
     )
 
 
-def form_checkbox(
+def checkbox(
         name: str,
         label: str,
         value: bool,
@@ -809,7 +806,7 @@ def form_checkbox(
         disabled: bool,
         trigger: bool,
         tooltip: str,
-) -> FormCheckbox:
+) -> Checkbox:
     """No documentation available.
 
     :param name: No documentation available.
@@ -820,7 +817,7 @@ def form_checkbox(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormCheckbox(
+    return Checkbox(
         name,
         label,
         value,
@@ -831,14 +828,14 @@ def form_checkbox(
     )
 
 
-def form_toggle(
+def toggle(
         name: str,
         label: str,
         value: bool,
         disabled: bool,
         trigger: bool,
         tooltip: str,
-) -> FormToggle:
+) -> Toggle:
     """No documentation available.
 
     :param name: No documentation available.
@@ -848,7 +845,7 @@ def form_toggle(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormToggle(
+    return Toggle(
         name,
         label,
         value,
@@ -858,33 +855,33 @@ def form_toggle(
     )
 
 
-def form_choice(
+def choice(
         name: str,
         label: str,
         disabled: bool,
-) -> FormChoice:
+) -> Choice:
     """No documentation available.
 
     :param name: No documentation available.
     :param label: No documentation available.
     :param disabled: No documentation available.
     """
-    return FormChoice(
+    return Choice(
         name,
         label,
         disabled,
     )
 
 
-def form_choice_group(
+def choice_group(
         name: str,
         label: str,
         value: str,
-        choices: List[FormChoice],
+        choices: List[Choice],
         required: bool,
         trigger: bool,
         tooltip: str,
-) -> FormChoiceGroup:
+) -> ChoiceGroup:
     """No documentation available.
 
     :param name: No documentation available.
@@ -895,7 +892,7 @@ def form_choice_group(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormChoiceGroup(
+    return ChoiceGroup(
         name,
         label,
         value,
@@ -906,13 +903,13 @@ def form_choice_group(
     )
 
 
-def form_checklist(
+def checklist(
         name: str,
         label: str,
         values: List[str],
-        choices: List[FormChoice],
+        choices: List[Choice],
         tooltip: str,
-) -> FormChecklist:
+) -> Checklist:
     """No documentation available.
 
     :param name: No documentation available.
@@ -921,7 +918,7 @@ def form_checklist(
     :param choices: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormChecklist(
+    return Checklist(
         name,
         label,
         values,
@@ -930,19 +927,19 @@ def form_checklist(
     )
 
 
-def form_dropdown(
+def dropdown(
         name: str,
         label: str,
         placeholder: str,
         multiple: bool,
         value: str,
         values: List[str],
-        choices: List[FormChoice],
+        choices: List[Choice],
         required: bool,
         disabled: bool,
         trigger: bool,
         tooltip: str,
-) -> FormDropdown:
+) -> Dropdown:
     """No documentation available.
 
     :param name: No documentation available.
@@ -957,7 +954,7 @@ def form_dropdown(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormDropdown(
+    return Dropdown(
         name,
         label,
         placeholder,
@@ -972,7 +969,7 @@ def form_dropdown(
     )
 
 
-def form_combobox(
+def combobox(
         name: str,
         label: str,
         placeholder: str,
@@ -981,7 +978,7 @@ def form_combobox(
         error: str,
         disabled: bool,
         tooltip: str,
-) -> FormCombobox:
+) -> Combobox:
     """No documentation available.
 
     :param name: No documentation available.
@@ -993,7 +990,7 @@ def form_combobox(
     :param disabled: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormCombobox(
+    return Combobox(
         name,
         label,
         placeholder,
@@ -1005,7 +1002,7 @@ def form_combobox(
     )
 
 
-def form_slider(
+def slider(
         name: str,
         label: str,
         min: float,
@@ -1015,7 +1012,7 @@ def form_slider(
         disabled: bool,
         trigger: bool,
         tooltip: str,
-) -> FormSlider:
+) -> Slider:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1028,7 +1025,7 @@ def form_slider(
     :param trigger: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormSlider(
+    return Slider(
         name,
         label,
         min,
@@ -1041,7 +1038,7 @@ def form_slider(
     )
 
 
-def form_spinbox(
+def spinbox(
         name: str,
         label: str,
         min: float,
@@ -1050,7 +1047,7 @@ def form_spinbox(
         value: float,
         disabled: bool,
         tooltip: str,
-) -> FormSpinbox:
+) -> Spinbox:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1062,7 +1059,7 @@ def form_spinbox(
     :param disabled: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormSpinbox(
+    return Spinbox(
         name,
         label,
         min,
@@ -1074,14 +1071,14 @@ def form_spinbox(
     )
 
 
-def form_date_picker(
+def date_picker(
         name: str,
         label: str,
         placeholder: str,
         value: str,
         disabled: bool,
         tooltip: str,
-) -> FormDatePicker:
+) -> DatePicker:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1091,7 +1088,7 @@ def form_date_picker(
     :param disabled: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormDatePicker(
+    return DatePicker(
         name,
         label,
         placeholder,
@@ -1101,13 +1098,13 @@ def form_date_picker(
     )
 
 
-def form_color_picker(
+def color_picker(
         name: str,
         label: str,
         value: str,
         choices: List[str],
         tooltip: str,
-) -> FormColorPicker:
+) -> ColorPicker:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1116,7 +1113,7 @@ def form_color_picker(
     :param choices: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormColorPicker(
+    return ColorPicker(
         name,
         label,
         value,
@@ -1125,7 +1122,7 @@ def form_color_picker(
     )
 
 
-def form_button(
+def button(
         name: str,
         label: str,
         caption: str,
@@ -1133,7 +1130,7 @@ def form_button(
         disabled: bool,
         link: bool,
         tooltip: str,
-) -> FormButton:
+) -> Button:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1144,7 +1141,7 @@ def form_button(
     :param link: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormButton(
+    return Button(
         name,
         label,
         caption,
@@ -1155,24 +1152,24 @@ def form_button(
     )
 
 
-def form_buttons(
-        buttons: List[FormButton],
-) -> FormButtons:
+def buttons(
+        buttons: List[Button],
+) -> Buttons:
     """No documentation available.
 
     :param buttons: No documentation available.
     """
-    return FormButtons(
+    return Buttons(
         buttons,
     )
 
 
-def form_file_upload(
+def file_upload(
         name: str,
         label: str,
         multiple: bool,
         tooltip: str,
-) -> FormFileUpload:
+) -> FileUpload:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1180,7 +1177,7 @@ def form_file_upload(
     :param multiple: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormFileUpload(
+    return FileUpload(
         name,
         label,
         multiple,
@@ -1188,67 +1185,34 @@ def form_file_upload(
     )
 
 
-def form_table_column(
-        name: str,
-        label: str,
-) -> FormTableColumn:
+def table(
+        box: str,
+        title: str,
+        cells: PackedData,
+        data: PackedData,
+) -> Table:
     """No documentation available.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    """
-    return FormTableColumn(
-        name,
-        label,
-    )
-
-
-def form_table_row(
-        name: str,
-        cells: List[str],
-) -> FormTableRow:
-    """No documentation available.
-
-    :param name: No documentation available.
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
     :param cells: No documentation available.
+    :param data: No documentation available.
     """
-    return FormTableRow(
-        name,
+    return Table(
+        box,
+        title,
         cells,
+        data,
     )
 
 
-def form_table(
-        name: str,
-        columns: List[FormTableColumn],
-        rows: List[FormTableRow],
-        multiple: bool,
-        tooltip: str,
-) -> FormTable:
-    """No documentation available.
-
-    :param name: No documentation available.
-    :param columns: No documentation available.
-    :param rows: No documentation available.
-    :param multiple: No documentation available.
-    :param tooltip: No documentation available.
-    """
-    return FormTable(
-        name,
-        columns,
-        rows,
-        multiple,
-        tooltip,
-    )
-
-
-def form_link(
+def link(
         label: str,
         path: str,
         disabled: bool,
         button: bool,
         tooltip: str,
-) -> FormLink:
+) -> Link:
     """No documentation available.
 
     :param label: No documentation available.
@@ -1257,7 +1221,7 @@ def form_link(
     :param button: No documentation available.
     :param tooltip: No documentation available.
     """
-    return FormLink(
+    return Link(
         label,
         path,
         disabled,
@@ -1266,48 +1230,48 @@ def form_link(
     )
 
 
-def form_tab(
+def tab(
         name: str,
         label: str,
         icon: str,
-) -> FormTab:
+) -> Tab:
     """No documentation available.
 
     :param name: No documentation available.
     :param label: No documentation available.
     :param icon: No documentation available.
     """
-    return FormTab(
+    return Tab(
         name,
         label,
         icon,
     )
 
 
-def form_tabs(
+def tabs(
         name: str,
         value: str,
-        items: List[FormTab],
-) -> FormTabs:
+        items: List[Tab],
+) -> Tabs:
     """No documentation available.
 
     :param name: No documentation available.
     :param value: No documentation available.
     :param items: No documentation available.
     """
-    return FormTabs(
+    return Tabs(
         name,
         value,
         items,
     )
 
 
-def form_expander(
+def expander(
         name: str,
         label: str,
         expanded: bool,
-        items: List[FormComponent],
-) -> FormExpander:
+        items: List[Component],
+) -> Expander:
     """No documentation available.
 
     :param name: No documentation available.
@@ -1315,7 +1279,7 @@ def form_expander(
     :param expanded: No documentation available.
     :param items: No documentation available.
     """
-    return FormExpander(
+    return Expander(
         name,
         label,
         expanded,
@@ -1323,77 +1287,77 @@ def form_expander(
     )
 
 
-def form_nav_item(
+def nav_item(
         name: str,
         label: str,
-) -> FormNavItem:
+) -> NavItem:
     """No documentation available.
 
     :param name: No documentation available.
     :param label: No documentation available.
     """
-    return FormNavItem(
+    return NavItem(
         name,
         label,
     )
 
 
-def form_nav_group(
+def nav_group(
         label: str,
-        items: List[FormNavItem],
-) -> FormNavGroup:
+        items: List[NavItem],
+) -> NavGroup:
     """No documentation available.
 
     :param label: No documentation available.
     :param items: No documentation available.
     """
-    return FormNavGroup(
+    return NavGroup(
         label,
         items,
     )
 
 
-def form_nav(
+def nav(
         name: str,
-        items: List[FormNavGroup],
-) -> FormNav:
+        items: List[NavGroup],
+) -> Nav:
     """No documentation available.
 
     :param name: No documentation available.
     :param items: No documentation available.
     """
-    return FormNav(
+    return Nav(
         name,
         items,
     )
 
 
-def form_component(
-        text: Optional[FormText] = None,
-        label: Optional[FormLabel] = None,
-        separator: Optional[FormSeparator] = None,
-        progress: Optional[FormProgress] = None,
-        message_bar: Optional[FormMessageBar] = None,
-        textbox: Optional[FormTextbox] = None,
-        checkbox: Optional[FormCheckbox] = None,
-        toggle: Optional[FormToggle] = None,
-        choice_group: Optional[FormChoiceGroup] = None,
-        checklist: Optional[FormChecklist] = None,
-        dropdown: Optional[FormDropdown] = None,
-        combobox: Optional[FormCombobox] = None,
-        slider: Optional[FormSlider] = None,
-        spinbox: Optional[FormSpinbox] = None,
-        date_picker: Optional[FormDatePicker] = None,
-        color_picker: Optional[FormColorPicker] = None,
-        buttons: Optional[FormButtons] = None,
-        file_upload: Optional[FormFileUpload] = None,
-        table: Optional[FormTable] = None,
-        link: Optional[FormLink] = None,
-        tabs: Optional[FormTabs] = None,
-        button: Optional[FormButton] = None,
-        expander: Optional[FormExpander] = None,
-        nav: Optional[FormNav] = None,
-) -> FormComponent:
+def component(
+        text: Optional[Text] = None,
+        label: Optional[Label] = None,
+        separator: Optional[Separator] = None,
+        progress: Optional[Progress] = None,
+        message_bar: Optional[MessageBar] = None,
+        textbox: Optional[Textbox] = None,
+        checkbox: Optional[Checkbox] = None,
+        toggle: Optional[Toggle] = None,
+        choice_group: Optional[ChoiceGroup] = None,
+        checklist: Optional[Checklist] = None,
+        dropdown: Optional[Dropdown] = None,
+        combobox: Optional[Combobox] = None,
+        slider: Optional[Slider] = None,
+        spinbox: Optional[Spinbox] = None,
+        date_picker: Optional[DatePicker] = None,
+        color_picker: Optional[ColorPicker] = None,
+        buttons: Optional[Buttons] = None,
+        file_upload: Optional[FileUpload] = None,
+        table: Optional[Table] = None,
+        link: Optional[Link] = None,
+        tabs: Optional[Tabs] = None,
+        button: Optional[Button] = None,
+        expander: Optional[Expander] = None,
+        nav: Optional[Nav] = None,
+) -> Component:
     """No documentation available.
 
     :param text: No documentation available.
@@ -1421,7 +1385,7 @@ def form_component(
     :param expander: No documentation available.
     :param nav: No documentation available.
     """
-    return FormComponent(
+    return Component(
         text,
         label,
         separator,
@@ -1453,7 +1417,7 @@ def form(
         box: str,
         url: str,
         args: PackedRecord,
-        items: Union[List[FormComponent], str],
+        items: Union[List[Component], str],
 ) -> Form:
     """No documentation available.
 
@@ -1587,7 +1551,7 @@ def pixel_art(
     )
 
 
-def plot_mark(
+def mark(
         coord: Optional[str] = None,
         mark: Optional[str] = None,
         x: Optional[Value] = None,
@@ -1643,7 +1607,7 @@ def plot_mark(
         ref_stroke_opacity: Optional[float] = None,
         ref_stroke_size: Optional[float] = None,
         ref_stroke_dash: Optional[str] = None,
-) -> PlotMark:
+) -> Mark:
     """No documentation available.
 
     :param coord: No documentation available.
@@ -1702,7 +1666,7 @@ def plot_mark(
     :param ref_stroke_size: No documentation available.
     :param ref_stroke_dash: No documentation available.
     """
-    return PlotMark(
+    return Mark(
         coord,
         mark,
         x,
@@ -1761,14 +1725,14 @@ def plot_mark(
     )
 
 
-def plot_vis(
-        marks: List[PlotMark],
-) -> PlotVis:
+def vis(
+        marks: List[Mark],
+) -> Vis:
     """No documentation available.
 
     :param marks: No documentation available.
     """
-    return PlotVis(
+    return Vis(
         marks,
     )
 
@@ -1777,7 +1741,7 @@ def plot(
         box: str,
         title: str,
         data: PackedRecord,
-        vis: PlotVis,
+        vis: Vis,
 ) -> Plot:
     """No documentation available.
 
@@ -1814,27 +1778,6 @@ def repeat(
         title,
         item_view,
         item_props,
-        data,
-    )
-
-
-def table(
-        box: str,
-        title: str,
-        cells: PackedData,
-        data: PackedData,
-) -> Table:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param cells: No documentation available.
-    :param data: No documentation available.
-    """
-    return Table(
-        box,
-        title,
-        cells,
         data,
     )
 

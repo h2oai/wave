@@ -3,14 +3,14 @@ import { cards } from './grid';
 import { bond, Card, S } from './telesync';
 import { Cell, Command } from './shared';
 
-export interface Section {
+export interface NotebookSection {
   cells: Cell[]
   commands: Command[]
   data: S
 }
 
 interface State {
-  sections: Section[]
+  sections: NotebookSection[]
 }
 
 const
