@@ -337,7 +337,7 @@ def create_lists_page(site: Site, update_freq=0.0):
     c = page.add('table', dict(
         box='6 1 3 4',
         title='Currency Trades',
-        view='table',
+        view='grid',
         cells=pack([
             dict(title='Currency', value='=currency'),
             dict(title='Trades',

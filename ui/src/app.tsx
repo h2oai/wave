@@ -1,6 +1,6 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { GridLayout } from './grid';
+import { GridLayout } from './layout';
 import { bond, box, connect, Page, SockEvent, SockEventType, SockMessageType, S } from './telesync';
 import { getTheme } from './theme';
 

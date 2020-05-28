@@ -1,5 +1,5 @@
 import React from 'react';
-import { cards, Repeat } from './grid';
+import { cards, Repeat } from './layout';
 import { bond, Card, Dict, Rec, S, Data } from './telesync';
 
 interface State {

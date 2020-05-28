@@ -1,6 +1,6 @@
 import Handlebars from 'handlebars';
 import React from 'react';
-import { cards, substitute } from './grid';
+import { cards, substitute } from './layout';
 import { MarkupCard } from './markup';
 import { bond, Card, Rec, S, unpack } from './telesync';
 

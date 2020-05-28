@@ -17,6 +17,6 @@ import './pixel_art'
 import './plot'
 import './form'
 import './repeat'
-import './table'
+import './grid'
 import './template'
 

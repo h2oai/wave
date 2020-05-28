@@ -1,6 +1,6 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { cards, Format, grid } from './grid';
+import { cards, Format, grid } from './layout';
 import { bond, Card, unpack, F, Rec, S, Data } from './telesync';
 import { getTheme } from './theme';
 import { MicroBars } from './parts/microbars';

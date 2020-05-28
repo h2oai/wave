@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { cards } from './grid';
+import { cards } from './layout';
 import { Markdown, MarkdownInline } from './markdown';
 import { B, F, Packed, bond, box, Box, Card, Dict, on, Rec, S, socket, U, unpack } from './telesync';
 import { border, getTheme, padding, pc, px } from './theme';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { cards } from './grid';
+import { cards } from './layout';
 import { bond, Card, S } from './telesync';
 import { Cell, Command } from './shared';
 
