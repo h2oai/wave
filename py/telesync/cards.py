@@ -11,6 +11,9 @@ PackedRecords = Union[Repeated[dict], str]
 PackedData = Union[Data, str]
 
 
+def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}
+
+
 class Card1:
     """No documentation available.
 
@@ -39,7 +42,7 @@ class Card1:
             raise ValueError('Card1.title is required.')
         if self.value is None:
             raise ValueError('Card1.value is required.')
-        return dict(
+        return _dump(
             view='card1',
             box=self.box,
             title=self.title,
@@ -144,7 +147,7 @@ class Card2:
             raise ValueError('Card2.plot_zero_value is required.')
         if self.plot_curve is None:
             raise ValueError('Card2.plot_curve is required.')
-        return dict(
+        return _dump(
             view='card2',
             box=self.box,
             title=self.title,
@@ -267,7 +270,7 @@ class Card3:
             raise ValueError('Card3.caption is required.')
         if self.data is None:
             raise ValueError('Card3.data is required.')
-        return dict(
+        return _dump(
             view='card3',
             box=self.box,
             title=self.title,
@@ -359,7 +362,7 @@ class Card4:
             raise ValueError('Card4.plot_color is required.')
         if self.data is None:
             raise ValueError('Card4.data is required.')
-        return dict(
+        return _dump(
             view='card4',
             box=self.box,
             title=self.title,
@@ -457,7 +460,7 @@ class Card5:
             raise ValueError('Card5.plot_color is required.')
         if self.data is None:
             raise ValueError('Card5.data is required.')
-        return dict(
+        return _dump(
             view='card5',
             box=self.box,
             title=self.title,
@@ -582,7 +585,7 @@ class Card6:
             raise ValueError('Card6.plot_zero_value is required.')
         if self.plot_curve is None:
             raise ValueError('Card6.plot_curve is required.')
-        return dict(
+        return _dump(
             view='card6',
             box=self.box,
             title=self.title,
@@ -732,7 +735,7 @@ class Card7:
             raise ValueError('Card7.plot_zero_value is required.')
         if self.plot_curve is None:
             raise ValueError('Card7.plot_curve is required.')
-        return dict(
+        return _dump(
             view='card7',
             box=self.box,
             title=self.title,
@@ -854,7 +857,7 @@ class Card8:
             raise ValueError('Card8.plot_color is required.')
         if self.data is None:
             raise ValueError('Card8.data is required.')
-        return dict(
+        return _dump(
             view='card8',
             box=self.box,
             title=self.title,
@@ -967,7 +970,7 @@ class Card9:
             raise ValueError('Card9.plot_color is required.')
         if self.data is None:
             raise ValueError('Card9.data is required.')
-        return dict(
+        return _dump(
             view='card9',
             box=self.box,
             title=self.title,
@@ -1058,7 +1061,7 @@ class HeadingCell:
             raise ValueError('HeadingCell.level is required.')
         if self.content is None:
             raise ValueError('HeadingCell.content is required.')
-        return dict(
+        return _dump(
             level=self.level,
             content=self.content,
         )
@@ -1095,7 +1098,7 @@ class MarkdownCell:
         """Returns the contents of this object as a dict."""
         if self.content is None:
             raise ValueError('MarkdownCell.content is required.')
-        return dict(
+        return _dump(
             content=self.content,
         )
 
@@ -1136,7 +1139,7 @@ class FrameCell:
             raise ValueError('FrameCell.width is required.')
         if self.height is None:
             raise ValueError('FrameCell.height is required.')
-        return dict(
+        return _dump(
             source=self.source,
             width=self.width,
             height=self.height,
@@ -1179,7 +1182,7 @@ class DataCell:
         """Returns the contents of this object as a dict."""
         if self.content is None:
             raise ValueError('DataCell.content is required.')
-        return dict(
+        return _dump(
             content=self.content,
         )
 
@@ -1217,7 +1220,7 @@ class DataSource:
             raise ValueError(f'Invalid value "{self.t}" for DataSource.t.')
         if self.id is None:
             raise ValueError('DataSource.id is required.')
-        return dict(
+        return _dump(
             t=self.t,
             id=self.id,
         )
@@ -1259,7 +1262,7 @@ class Query:
             raise ValueError('Query.sql is required.')
         if self.sources is None:
             raise ValueError('Query.sources is required.')
-        return dict(
+        return _dump(
             sql=self.sql,
             sources=[__e.dump() for __e in self.sources],
         )
@@ -1301,7 +1304,7 @@ class VegaCell:
             raise ValueError('VegaCell.specification is required.')
         if self.query is None:
             raise ValueError('VegaCell.query is required.')
-        return dict(
+        return _dump(
             specification=self.specification,
             query=self.query.dump(),
         )
@@ -1348,7 +1351,7 @@ class Cell:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        return dict(
+        return _dump(
             heading=None if self.heading is None else self.heading.dump(),
             markdown=None if self.markdown is None else self.markdown.dump(),
             frame=None if self.frame is None else self.frame.dump(),
@@ -1413,7 +1416,7 @@ class Command:
             raise ValueError('Command.caption is required.')
         if self.data is None:
             raise ValueError('Command.data is required.')
-        return dict(
+        return _dump(
             action=self.action,
             icon=self.icon,
             label=self.label,
@@ -1483,7 +1486,7 @@ class DashboardPanel:
             raise ValueError('DashboardPanel.commands is required.')
         if self.data is None:
             raise ValueError('DashboardPanel.data is required.')
-        return dict(
+        return _dump(
             cells=[__e.dump() for __e in self.cells],
             size=self.size,
             commands=[__e.dump() for __e in self.commands],
@@ -1537,7 +1540,7 @@ class DashboardRow:
             raise ValueError('DashboardRow.panels is required.')
         if self.size is None:
             raise ValueError('DashboardRow.size is required.')
-        return dict(
+        return _dump(
             panels=[__e.dump() for __e in self.panels],
             size=self.size,
         )
@@ -1579,7 +1582,7 @@ class DashboardPage:
             raise ValueError('DashboardPage.title is required.')
         if self.rows is None:
             raise ValueError('DashboardPage.rows is required.')
-        return dict(
+        return _dump(
             title=self.title,
             rows=[__e.dump() for __e in self.rows],
         )
@@ -1621,7 +1624,7 @@ class Dashboard:
             raise ValueError('Dashboard.box is required.')
         if self.pages is None:
             raise ValueError('Dashboard.pages is required.')
-        return dict(
+        return _dump(
             view='dashboard',
             box=self.box,
             pages=[__e.dump() for __e in self.pages],
@@ -1707,7 +1710,7 @@ class Flex:
             raise ValueError(f'Invalid value "{self.wrap}" for Flex.wrap.')
         if self.data is None:
             raise ValueError('Flex.data is required.')
-        return dict(
+        return _dump(
             view='flex',
             box=self.box,
             title=self.title,
@@ -1797,7 +1800,7 @@ class FormText:
             raise ValueError('FormText.text is required.')
         if self.tooltip is None:
             raise ValueError('FormText.tooltip is required.')
-        return dict(
+        return _dump(
             size=self.size,
             text=self.text,
             tooltip=self.tooltip,
@@ -1855,7 +1858,7 @@ class FormLabel:
             raise ValueError('FormLabel.disabled is required.')
         if self.tooltip is None:
             raise ValueError('FormLabel.tooltip is required.')
-        return dict(
+        return _dump(
             label=self.label,
             required=self.required,
             disabled=self.disabled,
@@ -1904,7 +1907,7 @@ class FormSeparator:
         """Returns the contents of this object as a dict."""
         if self.label is None:
             raise ValueError('FormSeparator.label is required.')
-        return dict(
+        return _dump(
             label=self.label,
         )
 
@@ -1950,7 +1953,7 @@ class FormProgress:
             raise ValueError('FormProgress.value is required.')
         if self.tooltip is None:
             raise ValueError('FormProgress.tooltip is required.')
-        return dict(
+        return _dump(
             label=self.label,
             caption=self.caption,
             value=self.value,
@@ -2004,7 +2007,7 @@ class FormMessageBar:
             raise ValueError('FormMessageBar.type is required.')
         if self.text is None:
             raise ValueError('FormMessageBar.text is required.')
-        return dict(
+        return _dump(
             type=self.type,
             text=self.text,
         )
@@ -2111,7 +2114,7 @@ class FormTextbox:
             raise ValueError('FormTextbox.password is required.')
         if self.tooltip is None:
             raise ValueError('FormTextbox.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             placeholder=self.placeholder,
@@ -2256,7 +2259,7 @@ class FormCheckbox:
             raise ValueError('FormCheckbox.trigger is required.')
         if self.tooltip is None:
             raise ValueError('FormCheckbox.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             value=self.value,
@@ -2348,7 +2351,7 @@ class FormToggle:
             raise ValueError('FormToggle.trigger is required.')
         if self.tooltip is None:
             raise ValueError('FormToggle.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             value=self.value,
@@ -2419,7 +2422,7 @@ class FormChoice:
             raise ValueError('FormChoice.label is required.')
         if self.disabled is None:
             raise ValueError('FormChoice.disabled is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             disabled=self.disabled,
@@ -2492,7 +2495,7 @@ class FormChoiceGroup:
             raise ValueError('FormChoiceGroup.trigger is required.')
         if self.tooltip is None:
             raise ValueError('FormChoiceGroup.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             value=self.value,
@@ -2579,7 +2582,7 @@ class FormChecklist:
             raise ValueError('FormChecklist.choices is required.')
         if self.tooltip is None:
             raise ValueError('FormChecklist.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             values=self.values,
@@ -2684,7 +2687,7 @@ class FormDropdown:
             raise ValueError('FormDropdown.trigger is required.')
         if self.tooltip is None:
             raise ValueError('FormDropdown.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             placeholder=self.placeholder,
@@ -2810,7 +2813,7 @@ class FormCombobox:
             raise ValueError('FormCombobox.disabled is required.')
         if self.tooltip is None:
             raise ValueError('FormCombobox.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             placeholder=self.placeholder,
@@ -2923,7 +2926,7 @@ class FormSlider:
             raise ValueError('FormSlider.trigger is required.')
         if self.tooltip is None:
             raise ValueError('FormSlider.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             min=self.min,
@@ -3037,7 +3040,7 @@ class FormSpinbox:
             raise ValueError('FormSpinbox.disabled is required.')
         if self.tooltip is None:
             raise ValueError('FormSpinbox.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             min=self.min,
@@ -3135,7 +3138,7 @@ class FormDatePicker:
             raise ValueError('FormDatePicker.disabled is required.')
         if self.tooltip is None:
             raise ValueError('FormDatePicker.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             placeholder=self.placeholder,
@@ -3216,7 +3219,7 @@ class FormColorPicker:
             raise ValueError('FormColorPicker.choices is required.')
         if self.tooltip is None:
             raise ValueError('FormColorPicker.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             value=self.value,
@@ -3301,7 +3304,7 @@ class FormButton:
             raise ValueError('FormButton.link is required.')
         if self.tooltip is None:
             raise ValueError('FormButton.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             caption=self.caption,
@@ -3368,7 +3371,7 @@ class FormButtons:
         """Returns the contents of this object as a dict."""
         if self.buttons is None:
             raise ValueError('FormButtons.buttons is required.')
-        return dict(
+        return _dump(
             buttons=[__e.dump() for __e in self.buttons],
         )
 
@@ -3414,7 +3417,7 @@ class FormFileUpload:
             raise ValueError('FormFileUpload.multiple is required.')
         if self.tooltip is None:
             raise ValueError('FormFileUpload.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             multiple=self.multiple,
@@ -3468,7 +3471,7 @@ class FormTableColumn:
             raise ValueError('FormTableColumn.name is required.')
         if self.label is None:
             raise ValueError('FormTableColumn.label is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
         )
@@ -3510,7 +3513,7 @@ class FormTableRow:
             raise ValueError('FormTableRow.name is required.')
         if self.cells is None:
             raise ValueError('FormTableRow.cells is required.')
-        return dict(
+        return _dump(
             name=self.name,
             cells=self.cells,
         )
@@ -3567,7 +3570,7 @@ class FormTable:
             raise ValueError('FormTable.multiple is required.')
         if self.tooltip is None:
             raise ValueError('FormTable.tooltip is required.')
-        return dict(
+        return _dump(
             name=self.name,
             columns=[__e.dump() for __e in self.columns],
             rows=[__e.dump() for __e in self.rows],
@@ -3642,7 +3645,7 @@ class FormLink:
             raise ValueError('FormLink.button is required.')
         if self.tooltip is None:
             raise ValueError('FormLink.tooltip is required.')
-        return dict(
+        return _dump(
             label=self.label,
             path=self.path,
             disabled=self.disabled,
@@ -3707,7 +3710,7 @@ class FormTab:
             raise ValueError('FormTab.label is required.')
         if self.icon is None:
             raise ValueError('FormTab.icon is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             icon=self.icon,
@@ -3760,7 +3763,7 @@ class FormTabs:
             raise ValueError('FormTabs.value is required.')
         if self.items is None:
             raise ValueError('FormTabs.items is required.')
-        return dict(
+        return _dump(
             name=self.name,
             value=self.value,
             items=[__e.dump() for __e in self.items],
@@ -3818,7 +3821,7 @@ class FormExpander:
             raise ValueError('FormExpander.expanded is required.')
         if self.items is None:
             raise ValueError('FormExpander.items is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
             expanded=self.expanded,
@@ -3872,7 +3875,7 @@ class FormNavItem:
             raise ValueError('FormNavItem.name is required.')
         if self.label is None:
             raise ValueError('FormNavItem.label is required.')
-        return dict(
+        return _dump(
             name=self.name,
             label=self.label,
         )
@@ -3914,7 +3917,7 @@ class FormNavGroup:
             raise ValueError('FormNavGroup.label is required.')
         if self.items is None:
             raise ValueError('FormNavGroup.items is required.')
-        return dict(
+        return _dump(
             label=self.label,
             items=[__e.dump() for __e in self.items],
         )
@@ -3956,7 +3959,7 @@ class FormNav:
             raise ValueError('FormNav.name is required.')
         if self.items is None:
             raise ValueError('FormNav.items is required.')
-        return dict(
+        return _dump(
             name=self.name,
             items=[__e.dump() for __e in self.items],
         )
@@ -4060,7 +4063,7 @@ class FormComponent:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        return dict(
+        return _dump(
             text=None if self.text is None else self.text.dump(),
             label=None if self.label is None else self.label.dump(),
             separator=None if self.separator is None else self.separator.dump(),
@@ -4196,7 +4199,7 @@ class Form:
             raise ValueError('Form.args is required.')
         if self.items is None:
             raise ValueError('Form.items is required.')
-        return dict(
+        return _dump(
             view='form',
             box=self.box,
             url=self.url,
@@ -4266,7 +4269,7 @@ class List:
             raise ValueError('List.item_props is required.')
         if self.data is None:
             raise ValueError('List.data is required.')
-        return dict(
+        return _dump(
             view='list',
             box=self.box,
             title=self.title,
@@ -4347,7 +4350,7 @@ class ListItem1:
             raise ValueError('ListItem1.aux_value is required.')
         if self.data is None:
             raise ValueError('ListItem1.data is required.')
-        return dict(
+        return _dump(
             view='list_item1',
             box=self.box,
             title=self.title,
@@ -4422,7 +4425,7 @@ class Markdown:
             raise ValueError('Markdown.title is required.')
         if self.content is None:
             raise ValueError('Markdown.content is required.')
-        return dict(
+        return _dump(
             view='markdown',
             box=self.box,
             title=self.title,
@@ -4480,7 +4483,7 @@ class Markup:
             raise ValueError('Markup.title is required.')
         if self.content is None:
             raise ValueError('Markup.content is required.')
-        return dict(
+        return _dump(
             view='markup',
             box=self.box,
             title=self.title,
@@ -4534,7 +4537,7 @@ class NotebookSection:
             raise ValueError('NotebookSection.commands is required.')
         if self.data is None:
             raise ValueError('NotebookSection.data is required.')
-        return dict(
+        return _dump(
             cells=[__e.dump() for __e in self.cells],
             commands=[__e.dump() for __e in self.commands],
             data=self.data,
@@ -4582,7 +4585,7 @@ class Notebook:
             raise ValueError('Notebook.box is required.')
         if self.sections is None:
             raise ValueError('Notebook.sections is required.')
-        return dict(
+        return _dump(
             view='notebook',
             box=self.box,
             sections=[__e.dump() for __e in self.sections],
@@ -4630,7 +4633,7 @@ class PixelArt:
             raise ValueError('PixelArt.title is required.')
         if self.data is None:
             raise ValueError('PixelArt.data is required.')
-        return dict(
+        return _dump(
             view='pixel_art',
             box=self.box,
             title=self.title,
@@ -4834,7 +4837,7 @@ class PlotMark:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        return dict(
+        return _dump(
             coord=self.coord,
             mark=self.mark,
             x=self.x,
@@ -5079,7 +5082,7 @@ class PlotVis:
         """Returns the contents of this object as a dict."""
         if self.marks is None:
             raise ValueError('PlotVis.marks is required.')
-        return dict(
+        return _dump(
             marks=[__e.dump() for __e in self.marks],
         )
 
@@ -5125,7 +5128,7 @@ class Plot:
             raise ValueError('Plot.data is required.')
         if self.vis is None:
             raise ValueError('Plot.vis is required.')
-        return dict(
+        return _dump(
             view='plot',
             box=self.box,
             title=self.title,
@@ -5195,7 +5198,7 @@ class Repeat:
             raise ValueError('Repeat.item_props is required.')
         if self.data is None:
             raise ValueError('Repeat.data is required.')
-        return dict(
+        return _dump(
             view='repeat',
             box=self.box,
             title=self.title,
@@ -5266,7 +5269,7 @@ class Table:
             raise ValueError('Table.cells is required.')
         if self.data is None:
             raise ValueError('Table.data is required.')
-        return dict(
+        return _dump(
             view='table',
             box=self.box,
             title=self.title,
@@ -5329,7 +5332,7 @@ class Template:
             raise ValueError('Template.title is required.')
         if self.content is None:
             raise ValueError('Template.content is required.')
-        return dict(
+        return _dump(
             view='template',
             box=self.box,
             title=self.title,

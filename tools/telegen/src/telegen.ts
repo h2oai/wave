@@ -332,7 +332,7 @@ const
             }
           }
         }
-        p(`        return dict(`)
+        p(`        return _dump(`)
         if (type.card) {
           p(`            view='${type.card}',`)
         }
@@ -401,6 +401,9 @@ const
         p('PackedRecord = Union[dict, str]')
         p('PackedRecords = Union[Repeated[dict], str]')
         p('PackedData = Union[Data, str]') // special-cased during packing, Go allocation and unpacking.
+        p('')
+        p('')
+        p('def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}')
         p('')
         for (const file of protocol.files) {
           for (const type of file.types) {

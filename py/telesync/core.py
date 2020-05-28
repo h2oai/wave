@@ -123,11 +123,7 @@ def _dump(xs: Any):
     elif isinstance(xs, dict):
         return {k: _dump(v) for k, v in xs.items()}
     elif _can_dump(xs):
-        d = dict()
-        for k, v in xs.dump().items():
-            if v is not None:
-                d[k] = v
-        return d
+        return xs.dump()
     else:
         return xs
 
