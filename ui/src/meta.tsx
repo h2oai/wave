@@ -3,8 +3,16 @@ import { cards } from './layout';
 import { on, bond, Card, Rec, S, Packed, telesync, unpack } from './telesync';
 
 
+/**
+ * Represents page-global state.
+ *
+ * This card is invisible.
+ * It is used to control attributes of the active page.
+*/
 interface State {
+  /** The title of the page. */
   title?: S
+  /** Form data. */
   args?: Packed<Rec>
 }
 
@@ -13,7 +21,6 @@ const
     const
       init = () => {
         const { title, args } = state
-        console.log(title, args)
         if (title) window.document.title = title
         if (args) telesync.argsB(unpack(args))
       },

@@ -28,11 +28,7 @@ const
             contentB({ page: e.page })
             break
           case SockEventType.Message:
-            if (e.type === SockMessageType.Err) {
-              contentB({ error: e.message })
-            } else {
-              console.log(e)
-            }
+            if (e.type === SockMessageType.Err) contentB({ error: e.message })
             break
         }
       },
