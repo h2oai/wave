@@ -2068,8 +2068,8 @@ class Textbox:
 
     :param name: An identifying name for this component.
     :param label: The text displayed above the field.
-    :param value: Text to be displayed inside the text box.
     :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message.
+    :param value: Text to be displayed inside the text box.
     :param mask: The masking string that defines the mask's behavior. A backslash will escape any character. Special format characters are: '9': [0-9] 'a': [a-zA-Z] '*': [a-zA-Z0-9].
     :param icon: Icon displayed in the far right end of the text field.
     :param prefix: Text to be displayed before the text box contents.
@@ -2086,8 +2086,8 @@ class Textbox:
             self,
             name: str,
             label: Optional[str] = None,
-            value: Optional[str] = None,
             placeholder: Optional[str] = None,
+            value: Optional[str] = None,
             mask: Optional[str] = None,
             icon: Optional[str] = None,
             prefix: Optional[str] = None,
@@ -2102,8 +2102,8 @@ class Textbox:
     ):
         self.name = name
         self.label = label
-        self.value = value
         self.placeholder = placeholder
+        self.value = value
         self.mask = mask
         self.icon = icon
         self.prefix = prefix
@@ -2123,8 +2123,8 @@ class Textbox:
         return _dump(
             name=self.name,
             label=self.label,
-            value=self.value,
             placeholder=self.placeholder,
+            value=self.value,
             mask=self.mask,
             icon=self.icon,
             prefix=self.prefix,
@@ -2145,8 +2145,8 @@ class Textbox:
         if __d_name is None:
             raise ValueError('Textbox.name is required.')
         __d_label: Any = __d.get('label')
-        __d_value: Any = __d.get('value')
         __d_placeholder: Any = __d.get('placeholder')
+        __d_value: Any = __d.get('value')
         __d_mask: Any = __d.get('mask')
         __d_icon: Any = __d.get('icon')
         __d_prefix: Any = __d.get('prefix')
@@ -2160,8 +2160,8 @@ class Textbox:
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
-        value: Optional[str] = __d_value
         placeholder: Optional[str] = __d_placeholder
+        value: Optional[str] = __d_value
         mask: Optional[str] = __d_mask
         icon: Optional[str] = __d_icon
         prefix: Optional[str] = __d_prefix
@@ -2176,8 +2176,8 @@ class Textbox:
         return Textbox(
             name,
             label,
-            value,
             placeholder,
+            value,
             mask,
             icon,
             prefix,

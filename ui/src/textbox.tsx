@@ -14,10 +14,10 @@ export interface Textbox {
   name: S
   /** The text displayed above the field. */
   label?: S
-  /** Text to be displayed inside the text box. */
-  value?: S
   /** A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message. */
   placeholder?: S
+  /** Text to be displayed inside the text box. */
+  value?: S
   /** The masking string that defines the mask's behavior. A backslash will escape any character. Special format characters are: '9': [0-9] 'a': [a-zA-Z] '*': [a-zA-Z0-9].*/
   mask?: S
   /** Icon displayed in the far right end of the text field. */

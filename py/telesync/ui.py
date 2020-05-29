@@ -798,8 +798,8 @@ def message_bar(
 def textbox(
         name: str,
         label: Optional[str] = None,
-        value: Optional[str] = None,
         placeholder: Optional[str] = None,
+        value: Optional[str] = None,
         mask: Optional[str] = None,
         icon: Optional[str] = None,
         prefix: Optional[str] = None,
@@ -820,8 +820,8 @@ def textbox(
 
     :param name: An identifying name for this component.
     :param label: The text displayed above the field.
-    :param value: Text to be displayed inside the text box.
     :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message.
+    :param value: Text to be displayed inside the text box.
     :param mask: The masking string that defines the mask's behavior. A backslash will escape any character. Special format characters are: '9': [0-9] 'a': [a-zA-Z] '*': [a-zA-Z0-9].
     :param icon: Icon displayed in the far right end of the text field.
     :param prefix: Text to be displayed before the text box contents.
@@ -837,8 +837,8 @@ def textbox(
     return Component(textbox=Textbox(
         name,
         label,
-        value,
         placeholder,
+        value,
         mask,
         icon,
         prefix,
