@@ -2225,25 +2225,38 @@ class Textbox:
 
 
 class Checkbox:
-    """No documentation available.
+    """Create a checkbox.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param value: No documentation available.
-    :param indeterminate: No documentation available.
-    :param disabled: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    A checkbox allows users to switch between two mutually exclusive options (checked or unchecked, on or off) through
+    a single click or tap. It can also be used to indicate a subordinate setting or preference when paired with another
+    component.
+
+    A checkbox is used to select or deselect action items. It can be used for a single item or for a list of multiple
+    items that a user can choose from. The component has two selection states: unselected and selected.
+
+    For a binary choice, the main difference between a checkbox and a toggle switch is that the checkbox is for status
+    and the toggle switch is for action.
+
+    Use multiple checkboxes for multi-select scenarios in which a user chooses one or more items from a group of
+    choices that are not mutually exclusive.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the checkbox.
+    :param value: True if selected, False if unselected.
+    :param indeterminate: True if the selection is indeterminate (neither selected nor unselected).
+    :param disabled: True if the checkbox is disabled.
+    :param trigger: True if the form should be submitted when the checkbox value changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            value: bool,
-            indeterminate: bool,
-            disabled: bool,
-            trigger: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            value: Optional[bool] = None,
+            indeterminate: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -2257,18 +2270,6 @@ class Checkbox:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Checkbox.name is required.')
-        if self.label is None:
-            raise ValueError('Checkbox.label is required.')
-        if self.value is None:
-            raise ValueError('Checkbox.value is required.')
-        if self.indeterminate is None:
-            raise ValueError('Checkbox.indeterminate is required.')
-        if self.disabled is None:
-            raise ValueError('Checkbox.disabled is required.')
-        if self.trigger is None:
-            raise ValueError('Checkbox.trigger is required.')
-        if self.tooltip is None:
-            raise ValueError('Checkbox.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2286,30 +2287,18 @@ class Checkbox:
         if __d_name is None:
             raise ValueError('Checkbox.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Checkbox.label is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Checkbox.value is required.')
         __d_indeterminate: Any = __d.get('indeterminate')
-        if __d_indeterminate is None:
-            raise ValueError('Checkbox.indeterminate is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Checkbox.disabled is required.')
         __d_trigger: Any = __d.get('trigger')
-        if __d_trigger is None:
-            raise ValueError('Checkbox.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Checkbox.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        value: bool = __d_value
-        indeterminate: bool = __d_indeterminate
-        disabled: bool = __d_disabled
-        trigger: bool = __d_trigger
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        value: Optional[bool] = __d_value
+        indeterminate: Optional[bool] = __d_indeterminate
+        disabled: Optional[bool] = __d_disabled
+        trigger: Optional[bool] = __d_trigger
+        tooltip: Optional[str] = __d_tooltip
         return Checkbox(
             name,
             label,
@@ -2322,23 +2311,30 @@ class Checkbox:
 
 
 class Toggle:
-    """No documentation available.
+    """Create a toggle.
+    Toggles represent a physical switch that allows users to turn things on or off.
+    Use toggles to present users with two mutually exclusive options (like on/off), where choosing an option results
+    in an immediate action.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param value: No documentation available.
-    :param disabled: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    Use a toggle for binary operations that take effect right after the user flips the Toggle.
+    For example, use a Toggle to turn services or hardware components on or off.
+    In other words, if a physical switch would work for the action, a Toggle is probably the best component to use.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param value: True if selected, False if unselected.
+    :param disabled: True if the checkbox is disabled.
+    :param trigger: True if the form should be submitted when the toggle value changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            value: bool,
-            disabled: bool,
-            trigger: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            value: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -2351,16 +2347,6 @@ class Toggle:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Toggle.name is required.')
-        if self.label is None:
-            raise ValueError('Toggle.label is required.')
-        if self.value is None:
-            raise ValueError('Toggle.value is required.')
-        if self.disabled is None:
-            raise ValueError('Toggle.disabled is required.')
-        if self.trigger is None:
-            raise ValueError('Toggle.trigger is required.')
-        if self.tooltip is None:
-            raise ValueError('Toggle.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2377,26 +2363,16 @@ class Toggle:
         if __d_name is None:
             raise ValueError('Toggle.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Toggle.label is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Toggle.value is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Toggle.disabled is required.')
         __d_trigger: Any = __d.get('trigger')
-        if __d_trigger is None:
-            raise ValueError('Toggle.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Toggle.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        value: bool = __d_value
-        disabled: bool = __d_disabled
-        trigger: bool = __d_trigger
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        value: Optional[bool] = __d_value
+        disabled: Optional[bool] = __d_disabled
+        trigger: Optional[bool] = __d_trigger
+        tooltip: Optional[str] = __d_tooltip
         return Toggle(
             name,
             label,
@@ -2408,17 +2384,17 @@ class Toggle:
 
 
 class Choice:
-    """No documentation available.
+    """Create a choice for a checklist, choice group or dropdown.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param disabled: No documentation available.
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param disabled: True if the checkbox is disabled.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            disabled: bool,
+            label: Optional[str] = None,
+            disabled: Optional[bool] = None,
     ):
         self.name = name
         self.label = label
@@ -2428,10 +2404,6 @@ class Choice:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Choice.name is required.')
-        if self.label is None:
-            raise ValueError('Choice.label is required.')
-        if self.disabled is None:
-            raise ValueError('Choice.disabled is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2445,14 +2417,10 @@ class Choice:
         if __d_name is None:
             raise ValueError('Choice.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Choice.label is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Choice.disabled is required.')
         name: str = __d_name
-        label: str = __d_label
-        disabled: bool = __d_disabled
+        label: Optional[str] = __d_label
+        disabled: Optional[bool] = __d_disabled
         return Choice(
             name,
             label,
@@ -2461,25 +2429,34 @@ class Choice:
 
 
 class ChoiceGroup:
-    """No documentation available.
+    """Create a choice group.
+    The choice group component, also known as radio buttons, let users select one option from two or more choices.
+    Each option is represented by one choice group button; a user can select only one choice group in a button group.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param value: No documentation available.
-    :param choices: No documentation available.
-    :param required: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    Choice groups emphasize all options equally, and that may draw more attention to the options than necessary.
+    Consider using other components, unless the options deserve extra attention from the user.
+    For example, if the default option is recommended for most users in most situations, use a dropdown instead.
+
+    If there are only two mutually exclusive options, combine them into a single Checkbox or Toggle switch.
+    For example, use a checkbox for "I agree" instead of choice group buttons for "I agree" and "I don't agree."
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param value: The name of the selected choice.
+    :param choices: The choices to be presented.
+    :param required: True if this field is required.
+    :param trigger: True if the form should be submitted when the selection changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            value: str,
-            choices: List[Choice],
-            required: bool,
-            trigger: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            value: Optional[str] = None,
+            choices: Optional[List[Choice]] = None,
+            required: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -2493,23 +2470,11 @@ class ChoiceGroup:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('ChoiceGroup.name is required.')
-        if self.label is None:
-            raise ValueError('ChoiceGroup.label is required.')
-        if self.value is None:
-            raise ValueError('ChoiceGroup.value is required.')
-        if self.choices is None:
-            raise ValueError('ChoiceGroup.choices is required.')
-        if self.required is None:
-            raise ValueError('ChoiceGroup.required is required.')
-        if self.trigger is None:
-            raise ValueError('ChoiceGroup.trigger is required.')
-        if self.tooltip is None:
-            raise ValueError('ChoiceGroup.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
             value=self.value,
-            choices=[__e.dump() for __e in self.choices],
+            choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             required=self.required,
             trigger=self.trigger,
             tooltip=self.tooltip,
@@ -2522,30 +2487,18 @@ class ChoiceGroup:
         if __d_name is None:
             raise ValueError('ChoiceGroup.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('ChoiceGroup.label is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('ChoiceGroup.value is required.')
         __d_choices: Any = __d.get('choices')
-        if __d_choices is None:
-            raise ValueError('ChoiceGroup.choices is required.')
         __d_required: Any = __d.get('required')
-        if __d_required is None:
-            raise ValueError('ChoiceGroup.required is required.')
         __d_trigger: Any = __d.get('trigger')
-        if __d_trigger is None:
-            raise ValueError('ChoiceGroup.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('ChoiceGroup.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        value: str = __d_value
-        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
-        required: bool = __d_required
-        trigger: bool = __d_trigger
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        value: Optional[str] = __d_value
+        choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
+        required: Optional[bool] = __d_required
+        trigger: Optional[bool] = __d_trigger
+        tooltip: Optional[str] = __d_tooltip
         return ChoiceGroup(
             name,
             label,
@@ -2558,21 +2511,23 @@ class ChoiceGroup:
 
 
 class Checklist:
-    """No documentation available.
+    """Create a set of checkboxes.
+    Use this for multi-select scenarios in which a user chooses one or more items from a group of
+    choices that are not mutually exclusive.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param values: No documentation available.
-    :param choices: No documentation available.
-    :param tooltip: No documentation available.
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed above the component.
+    :param values: The names of the selected choices.
+    :param choices: The choices to be presented.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            values: List[str],
-            choices: List[Choice],
-            tooltip: str,
+            label: Optional[str] = None,
+            values: Optional[List[str]] = None,
+            choices: Optional[List[Choice]] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -2584,19 +2539,11 @@ class Checklist:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Checklist.name is required.')
-        if self.label is None:
-            raise ValueError('Checklist.label is required.')
-        if self.values is None:
-            raise ValueError('Checklist.values is required.')
-        if self.choices is None:
-            raise ValueError('Checklist.choices is required.')
-        if self.tooltip is None:
-            raise ValueError('Checklist.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
             values=self.values,
-            choices=[__e.dump() for __e in self.choices],
+            choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             tooltip=self.tooltip,
         )
 
@@ -2607,22 +2554,14 @@ class Checklist:
         if __d_name is None:
             raise ValueError('Checklist.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Checklist.label is required.')
         __d_values: Any = __d.get('values')
-        if __d_values is None:
-            raise ValueError('Checklist.values is required.')
         __d_choices: Any = __d.get('choices')
-        if __d_choices is None:
-            raise ValueError('Checklist.choices is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Checklist.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        values: List[str] = __d_values
-        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        values: Optional[List[str]] = __d_values
+        choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
+        tooltip: Optional[str] = __d_tooltip
         return Checklist(
             name,
             label,

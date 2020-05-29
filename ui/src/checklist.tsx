@@ -4,12 +4,22 @@ import { Choice } from './choice_group';
 import { B, bond, box, Box, on, Rec, S } from './telesync';
 import { px } from './theme';
 
+/**
+ * Create a set of checkboxes.
+ * Use this for multi-select scenarios in which a user chooses one or more items from a group of
+ * choices that are not mutually exclusive.
+ */
 export interface Checklist {
+  /** An identifying name for this component. */
   name: S
-  label: S
-  values: S[]
-  choices: Choice[]
-  tooltip: S
+  /** Text to be displayed above the component. */
+  label?: S
+  /** The names of the selected choices. */
+  values?: S[]
+  /** The choices to be presented. */
+  choices?: Choice[]
+  /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
+  tooltip?: S
 }
 
 const
@@ -38,11 +48,11 @@ const
 
 export const
   XChecklist = bond(({ args, model: m }: { args: Rec, model: Checklist }) => {
-    args[m.name] = m.values
+    args[m.name] = m.values || []
     let _pause = false
     const
       defaultSelection = new Set<S>(m.values),
-      choices = m.choices.map(c => ({
+      choices = (m.choices || []).map(c => ({
         choice: c,
         selectedB: box(defaultSelection.has(c.name))
       })),

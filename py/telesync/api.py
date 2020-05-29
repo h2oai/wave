@@ -837,22 +837,35 @@ def textbox(
 
 def checkbox(
         name: str,
-        label: str,
-        value: bool,
-        indeterminate: bool,
-        disabled: bool,
-        trigger: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        value: Optional[bool] = None,
+        indeterminate: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a checkbox.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param value: No documentation available.
-    :param indeterminate: No documentation available.
-    :param disabled: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    A checkbox allows users to switch between two mutually exclusive options (checked or unchecked, on or off) through
+    a single click or tap. It can also be used to indicate a subordinate setting or preference when paired with another
+    component.
+
+    A checkbox is used to select or deselect action items. It can be used for a single item or for a list of multiple
+    items that a user can choose from. The component has two selection states: unselected and selected.
+
+    For a binary choice, the main difference between a checkbox and a toggle switch is that the checkbox is for status
+    and the toggle switch is for action.
+
+    Use multiple checkboxes for multi-select scenarios in which a user chooses one or more items from a group of
+    choices that are not mutually exclusive.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the checkbox.
+    :param value: True if selected, False if unselected.
+    :param indeterminate: True if the selection is indeterminate (neither selected nor unselected).
+    :param disabled: True if the checkbox is disabled.
+    :param trigger: True if the form should be submitted when the checkbox value changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(checkbox=Checkbox(
         name,
@@ -867,20 +880,27 @@ def checkbox(
 
 def toggle(
         name: str,
-        label: str,
-        value: bool,
-        disabled: bool,
-        trigger: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        value: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a toggle.
+    Toggles represent a physical switch that allows users to turn things on or off.
+    Use toggles to present users with two mutually exclusive options (like on/off), where choosing an option results
+    in an immediate action.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param value: No documentation available.
-    :param disabled: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    Use a toggle for binary operations that take effect right after the user flips the Toggle.
+    For example, use a Toggle to turn services or hardware components on or off.
+    In other words, if a physical switch would work for the action, a Toggle is probably the best component to use.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param value: True if selected, False if unselected.
+    :param disabled: True if the checkbox is disabled.
+    :param trigger: True if the form should be submitted when the toggle value changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(toggle=Toggle(
         name,
@@ -894,14 +914,14 @@ def toggle(
 
 def choice(
         name: str,
-        label: str,
-        disabled: bool,
+        label: Optional[str] = None,
+        disabled: Optional[bool] = None,
 ) -> Choice:
-    """No documentation available.
+    """Create a choice for a checklist, choice group or dropdown.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param disabled: No documentation available.
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param disabled: True if the checkbox is disabled.
     """
     return Choice(
         name,
@@ -912,22 +932,31 @@ def choice(
 
 def choice_group(
         name: str,
-        label: str,
-        value: str,
-        choices: List[Choice],
-        required: bool,
-        trigger: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        value: Optional[str] = None,
+        choices: Optional[List[Choice]] = None,
+        required: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a choice group.
+    The choice group component, also known as radio buttons, let users select one option from two or more choices.
+    Each option is represented by one choice group button; a user can select only one choice group in a button group.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param value: No documentation available.
-    :param choices: No documentation available.
-    :param required: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    Choice groups emphasize all options equally, and that may draw more attention to the options than necessary.
+    Consider using other components, unless the options deserve extra attention from the user.
+    For example, if the default option is recommended for most users in most situations, use a dropdown instead.
+
+    If there are only two mutually exclusive options, combine them into a single Checkbox or Toggle switch.
+    For example, use a checkbox for "I agree" instead of choice group buttons for "I agree" and "I don't agree."
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param value: The name of the selected choice.
+    :param choices: The choices to be presented.
+    :param required: True if this field is required.
+    :param trigger: True if the form should be submitted when the selection changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(choice_group=ChoiceGroup(
         name,
@@ -942,18 +971,20 @@ def choice_group(
 
 def checklist(
         name: str,
-        label: str,
-        values: List[str],
-        choices: List[Choice],
-        tooltip: str,
+        label: Optional[str] = None,
+        values: Optional[List[str]] = None,
+        choices: Optional[List[Choice]] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a set of checkboxes.
+    Use this for multi-select scenarios in which a user chooses one or more items from a group of
+    choices that are not mutually exclusive.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param values: No documentation available.
-    :param choices: No documentation available.
-    :param tooltip: No documentation available.
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed above the component.
+    :param values: The names of the selected choices.
+    :param choices: The choices to be presented.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(checklist=Checklist(
         name,
