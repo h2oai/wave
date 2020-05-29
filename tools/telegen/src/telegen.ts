@@ -2,7 +2,7 @@
 // Telegen
 // =======
 //
-// This tool scans the Typescript src directory for interface definitions and 
+// This tool scans the Typescript src directory for interface definitions and
 // generates the corresponding definitions in the target language.
 //
 // The translation is done is two passes:
@@ -483,10 +483,10 @@ const
         p('#')
         p('')
         p('from typing import Optional, Union, List')
-        p('from .cards import Value, PackedRecord, PackedRecords, PackedData')
+        p('from .types import Value, PackedRecord, PackedRecords, PackedData')
 
         const classNames = Object.keys(classes).sort().join(', \\\n    ')
-        p(`from .cards import \\`)
+        p(`from .types import \\`)
         p(`    ${classNames}`)
         p('')
 
@@ -542,8 +542,8 @@ const
     // console.log(JSON.stringify(protocol, null, 2))
     const protocol = makeProtocol(files)
     const [classes, api] = tranlateToPy(protocol)
-    fs.writeFileSync(path.join(pyOutDir, 'cards.py'), classes, 'utf8')
-    fs.writeFileSync(path.join(pyOutDir, 'api.py'), api, 'utf8')
+    fs.writeFileSync(path.join(pyOutDir, 'types.py'), classes, 'utf8')
+    fs.writeFileSync(path.join(pyOutDir, 'ui.py'), api, 'utf8')
   }
 
 
