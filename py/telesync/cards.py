@@ -2572,38 +2572,45 @@ class Checklist:
 
 
 class Dropdown:
-    """No documentation available.
+    """Create a dropdown.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param placeholder: No documentation available.
-    :param multiple: No documentation available.
-    :param value: No documentation available.
-    :param values: No documentation available.
-    :param choices: No documentation available.
-    :param required: No documentation available.
-    :param disabled: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    A dropdown is a list in which the selected item is always visible, and the others are visible on demand by clicking
+    a drop-down button. They are used to simplify the design and make a choice within the UI. When closed, only the
+    selected item is visible. When users click the drop-down button, all the options become visible.
+
+    To change the value, users open the list and click another value or use the arrow keys (up and down) to
+    select a new value.
+
+    Note: Use either the 'value' parameter or the 'values' parameter. Setting the 'values' parameter renders a
+    multi-select dropdown.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+    :param value: The name of the selected choice.
+    :param values: The names of the selected choices. If this parameter is set, multiple selections will be allowed.
+    :param choices: The choices to be presented.
+    :param required: True if this is a required field.
+    :param disabled: True if this field is disabled.
+    :param trigger: True if the form should be submitted when the dropdown value changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            placeholder: str,
-            multiple: bool,
-            value: str,
-            values: List[str],
-            choices: List[Choice],
-            required: bool,
-            disabled: bool,
-            trigger: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            placeholder: Optional[str] = None,
+            value: Optional[str] = None,
+            values: Optional[List[str]] = None,
+            choices: Optional[List[Choice]] = None,
+            required: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
         self.placeholder = placeholder
-        self.multiple = multiple
         self.value = value
         self.values = values
         self.choices = choices
@@ -2616,34 +2623,13 @@ class Dropdown:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Dropdown.name is required.')
-        if self.label is None:
-            raise ValueError('Dropdown.label is required.')
-        if self.placeholder is None:
-            raise ValueError('Dropdown.placeholder is required.')
-        if self.multiple is None:
-            raise ValueError('Dropdown.multiple is required.')
-        if self.value is None:
-            raise ValueError('Dropdown.value is required.')
-        if self.values is None:
-            raise ValueError('Dropdown.values is required.')
-        if self.choices is None:
-            raise ValueError('Dropdown.choices is required.')
-        if self.required is None:
-            raise ValueError('Dropdown.required is required.')
-        if self.disabled is None:
-            raise ValueError('Dropdown.disabled is required.')
-        if self.trigger is None:
-            raise ValueError('Dropdown.trigger is required.')
-        if self.tooltip is None:
-            raise ValueError('Dropdown.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
             placeholder=self.placeholder,
-            multiple=self.multiple,
             value=self.value,
             values=self.values,
-            choices=[__e.dump() for __e in self.choices],
+            choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             required=self.required,
             disabled=self.disabled,
             trigger=self.trigger,
@@ -2657,51 +2643,28 @@ class Dropdown:
         if __d_name is None:
             raise ValueError('Dropdown.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Dropdown.label is required.')
         __d_placeholder: Any = __d.get('placeholder')
-        if __d_placeholder is None:
-            raise ValueError('Dropdown.placeholder is required.')
-        __d_multiple: Any = __d.get('multiple')
-        if __d_multiple is None:
-            raise ValueError('Dropdown.multiple is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Dropdown.value is required.')
         __d_values: Any = __d.get('values')
-        if __d_values is None:
-            raise ValueError('Dropdown.values is required.')
         __d_choices: Any = __d.get('choices')
-        if __d_choices is None:
-            raise ValueError('Dropdown.choices is required.')
         __d_required: Any = __d.get('required')
-        if __d_required is None:
-            raise ValueError('Dropdown.required is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Dropdown.disabled is required.')
         __d_trigger: Any = __d.get('trigger')
-        if __d_trigger is None:
-            raise ValueError('Dropdown.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Dropdown.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        placeholder: str = __d_placeholder
-        multiple: bool = __d_multiple
-        value: str = __d_value
-        values: List[str] = __d_values
-        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
-        required: bool = __d_required
-        disabled: bool = __d_disabled
-        trigger: bool = __d_trigger
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        placeholder: Optional[str] = __d_placeholder
+        value: Optional[str] = __d_value
+        values: Optional[List[str]] = __d_values
+        choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
+        required: Optional[bool] = __d_required
+        disabled: Optional[bool] = __d_disabled
+        trigger: Optional[bool] = __d_trigger
+        tooltip: Optional[str] = __d_tooltip
         return Dropdown(
             name,
             label,
             placeholder,
-            multiple,
             value,
             values,
             choices,
@@ -2713,27 +2676,37 @@ class Dropdown:
 
 
 class Combobox:
-    """No documentation available.
+    """Create a combobox.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param placeholder: No documentation available.
-    :param value: No documentation available.
-    :param choices: No documentation available.
-    :param error: No documentation available.
-    :param disabled: No documentation available.
-    :param tooltip: No documentation available.
+    A combobox is a list in which the selected item is always visible, and the others are visible on demand by
+    clicking a drop-down button or by typing in the input.
+    They are used to simplify the design and make a choice within the UI.
+
+    When closed, only the selected item is visible.
+    When users click the drop-down button, all the options become visible.
+    To change the value, users open the list and click another value or use the arrow keys (up and down)
+    to select a new value.
+    When collapsed the user can select a new value by typing.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+    :param value: The name of the selected choice.
+    :param choices: The choices to be presented.
+    :param error: Text to be displayed as an error below the text box.
+    :param disabled: True if this field is disabled.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            placeholder: str,
-            value: str,
-            choices: List[str],
-            error: str,
-            disabled: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            placeholder: Optional[str] = None,
+            value: Optional[str] = None,
+            choices: Optional[List[str]] = None,
+            error: Optional[str] = None,
+            disabled: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -2748,20 +2721,6 @@ class Combobox:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Combobox.name is required.')
-        if self.label is None:
-            raise ValueError('Combobox.label is required.')
-        if self.placeholder is None:
-            raise ValueError('Combobox.placeholder is required.')
-        if self.value is None:
-            raise ValueError('Combobox.value is required.')
-        if self.choices is None:
-            raise ValueError('Combobox.choices is required.')
-        if self.error is None:
-            raise ValueError('Combobox.error is required.')
-        if self.disabled is None:
-            raise ValueError('Combobox.disabled is required.')
-        if self.tooltip is None:
-            raise ValueError('Combobox.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2780,34 +2739,20 @@ class Combobox:
         if __d_name is None:
             raise ValueError('Combobox.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Combobox.label is required.')
         __d_placeholder: Any = __d.get('placeholder')
-        if __d_placeholder is None:
-            raise ValueError('Combobox.placeholder is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Combobox.value is required.')
         __d_choices: Any = __d.get('choices')
-        if __d_choices is None:
-            raise ValueError('Combobox.choices is required.')
         __d_error: Any = __d.get('error')
-        if __d_error is None:
-            raise ValueError('Combobox.error is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Combobox.disabled is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Combobox.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        placeholder: str = __d_placeholder
-        value: str = __d_value
-        choices: List[str] = __d_choices
-        error: str = __d_error
-        disabled: bool = __d_disabled
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        placeholder: Optional[str] = __d_placeholder
+        value: Optional[str] = __d_value
+        choices: Optional[List[str]] = __d_choices
+        error: Optional[str] = __d_error
+        disabled: Optional[bool] = __d_disabled
+        tooltip: Optional[str] = __d_tooltip
         return Combobox(
             name,
             label,
@@ -2821,29 +2766,42 @@ class Combobox:
 
 
 class Slider:
-    """No documentation available.
+    """Create a slider.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param min: No documentation available.
-    :param max: No documentation available.
-    :param step: No documentation available.
-    :param value: No documentation available.
-    :param disabled: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    A slider is an element used to set a value. It provides a visual indication of adjustable content, as well as the
+    current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+    A knob or lever is dragged to one end or the other to make the choice, indicating the current value.
+    Marks on the slider bar can show values and users can choose where they want to drag the knob or lever to
+    set the value.
+
+    A slider is a good choice when you know that users think of the value as a relative quantity, not a numeric value.
+    For example, users think about setting their audio volume to low or medium — not about setting the
+    value to two or five.
+
+    The default value of the slider will be zero or be constrained to the min and max values. The min will be returned
+    if the value is set under the min and the max will be returned if set higher than the max value.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param min: The minimum value of the slider.
+    :param max: The maximum value of the slider.
+    :param step: The difference between two adjacent values of the slider.
+    :param value: The current value of the slider.
+    :param disabled: True if this field is disabled.
+    :param trigger: True if the form should be submitted when the slider value changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            min: float,
-            max: float,
-            step: float,
-            value: float,
-            disabled: bool,
-            trigger: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            min: Optional[float] = None,
+            max: Optional[float] = None,
+            step: Optional[float] = None,
+            value: Optional[float] = None,
+            disabled: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -2859,22 +2817,6 @@ class Slider:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Slider.name is required.')
-        if self.label is None:
-            raise ValueError('Slider.label is required.')
-        if self.min is None:
-            raise ValueError('Slider.min is required.')
-        if self.max is None:
-            raise ValueError('Slider.max is required.')
-        if self.step is None:
-            raise ValueError('Slider.step is required.')
-        if self.value is None:
-            raise ValueError('Slider.value is required.')
-        if self.disabled is None:
-            raise ValueError('Slider.disabled is required.')
-        if self.trigger is None:
-            raise ValueError('Slider.trigger is required.')
-        if self.tooltip is None:
-            raise ValueError('Slider.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -2894,38 +2836,22 @@ class Slider:
         if __d_name is None:
             raise ValueError('Slider.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Slider.label is required.')
         __d_min: Any = __d.get('min')
-        if __d_min is None:
-            raise ValueError('Slider.min is required.')
         __d_max: Any = __d.get('max')
-        if __d_max is None:
-            raise ValueError('Slider.max is required.')
         __d_step: Any = __d.get('step')
-        if __d_step is None:
-            raise ValueError('Slider.step is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Slider.value is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Slider.disabled is required.')
         __d_trigger: Any = __d.get('trigger')
-        if __d_trigger is None:
-            raise ValueError('Slider.trigger is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Slider.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        min: float = __d_min
-        max: float = __d_max
-        step: float = __d_step
-        value: float = __d_value
-        disabled: bool = __d_disabled
-        trigger: bool = __d_trigger
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        min: Optional[float] = __d_min
+        max: Optional[float] = __d_max
+        step: Optional[float] = __d_step
+        value: Optional[float] = __d_value
+        disabled: Optional[bool] = __d_disabled
+        trigger: Optional[bool] = __d_trigger
+        tooltip: Optional[str] = __d_tooltip
         return Slider(
             name,
             label,
@@ -2940,27 +2866,30 @@ class Slider:
 
 
 class Spinbox:
-    """No documentation available.
+    """Create a spinbox.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param min: No documentation available.
-    :param max: No documentation available.
-    :param step: No documentation available.
-    :param value: No documentation available.
-    :param disabled: No documentation available.
-    :param tooltip: No documentation available.
+    A spinbox allows the user to incrementally adjust a value in small steps.
+    It is mainly used for numeric values, but other values are supported too.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param min: The minimum value of the spinbox.
+    :param max: The maximum value of the spinbox.
+    :param step: The difference between two adjacent values of the spinbox.
+    :param value: The current value of the spinbox.
+    :param disabled: True if this field is disabled.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            min: float,
-            max: float,
-            step: float,
-            value: float,
-            disabled: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            min: Optional[float] = None,
+            max: Optional[float] = None,
+            step: Optional[float] = None,
+            value: Optional[float] = None,
+            disabled: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -2975,20 +2904,6 @@ class Spinbox:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Spinbox.name is required.')
-        if self.label is None:
-            raise ValueError('Spinbox.label is required.')
-        if self.min is None:
-            raise ValueError('Spinbox.min is required.')
-        if self.max is None:
-            raise ValueError('Spinbox.max is required.')
-        if self.step is None:
-            raise ValueError('Spinbox.step is required.')
-        if self.value is None:
-            raise ValueError('Spinbox.value is required.')
-        if self.disabled is None:
-            raise ValueError('Spinbox.disabled is required.')
-        if self.tooltip is None:
-            raise ValueError('Spinbox.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3007,34 +2922,20 @@ class Spinbox:
         if __d_name is None:
             raise ValueError('Spinbox.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Spinbox.label is required.')
         __d_min: Any = __d.get('min')
-        if __d_min is None:
-            raise ValueError('Spinbox.min is required.')
         __d_max: Any = __d.get('max')
-        if __d_max is None:
-            raise ValueError('Spinbox.max is required.')
         __d_step: Any = __d.get('step')
-        if __d_step is None:
-            raise ValueError('Spinbox.step is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Spinbox.value is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Spinbox.disabled is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Spinbox.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        min: float = __d_min
-        max: float = __d_max
-        step: float = __d_step
-        value: float = __d_value
-        disabled: bool = __d_disabled
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        min: Optional[float] = __d_min
+        max: Optional[float] = __d_max
+        step: Optional[float] = __d_step
+        value: Optional[float] = __d_value
+        disabled: Optional[bool] = __d_disabled
+        tooltip: Optional[str] = __d_tooltip
         return Spinbox(
             name,
             label,
@@ -3048,23 +2949,25 @@ class Spinbox:
 
 
 class DatePicker:
-    """No documentation available.
+    """Create a date picker.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param placeholder: No documentation available.
-    :param value: No documentation available.
-    :param disabled: No documentation available.
-    :param tooltip: No documentation available.
+    A date picker allows a user to pick a date value.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+    :param value: The date value in YYYY-MM-DD format.
+    :param disabled: True if this field is disabled.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            placeholder: str,
-            value: str,
-            disabled: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            placeholder: Optional[str] = None,
+            value: Optional[str] = None,
+            disabled: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -3077,16 +2980,6 @@ class DatePicker:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('DatePicker.name is required.')
-        if self.label is None:
-            raise ValueError('DatePicker.label is required.')
-        if self.placeholder is None:
-            raise ValueError('DatePicker.placeholder is required.')
-        if self.value is None:
-            raise ValueError('DatePicker.value is required.')
-        if self.disabled is None:
-            raise ValueError('DatePicker.disabled is required.')
-        if self.tooltip is None:
-            raise ValueError('DatePicker.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3103,26 +2996,16 @@ class DatePicker:
         if __d_name is None:
             raise ValueError('DatePicker.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('DatePicker.label is required.')
         __d_placeholder: Any = __d.get('placeholder')
-        if __d_placeholder is None:
-            raise ValueError('DatePicker.placeholder is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('DatePicker.value is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('DatePicker.disabled is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('DatePicker.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        placeholder: str = __d_placeholder
-        value: str = __d_value
-        disabled: bool = __d_disabled
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        placeholder: Optional[str] = __d_placeholder
+        value: Optional[str] = __d_value
+        disabled: Optional[bool] = __d_disabled
+        tooltip: Optional[str] = __d_tooltip
         return DatePicker(
             name,
             label,
@@ -3134,21 +3017,24 @@ class DatePicker:
 
 
 class ColorPicker:
-    """No documentation available.
+    """Create a color picker.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param value: No documentation available.
-    :param choices: No documentation available.
-    :param tooltip: No documentation available.
+    A date picker allows a user to pick a color value.
+    If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param value: The selected color (CSS-compatible string)
+    :param choices: A list of colors (CSS-compatible strings) to limit color choices to.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            value: str,
-            choices: List[str],
-            tooltip: str,
+            label: Optional[str] = None,
+            value: Optional[str] = None,
+            choices: Optional[List[str]] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -3160,14 +3046,6 @@ class ColorPicker:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('ColorPicker.name is required.')
-        if self.label is None:
-            raise ValueError('ColorPicker.label is required.')
-        if self.value is None:
-            raise ValueError('ColorPicker.value is required.')
-        if self.choices is None:
-            raise ValueError('ColorPicker.choices is required.')
-        if self.tooltip is None:
-            raise ValueError('ColorPicker.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3183,22 +3061,14 @@ class ColorPicker:
         if __d_name is None:
             raise ValueError('ColorPicker.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('ColorPicker.label is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('ColorPicker.value is required.')
         __d_choices: Any = __d.get('choices')
-        if __d_choices is None:
-            raise ValueError('ColorPicker.choices is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('ColorPicker.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        value: str = __d_value
-        choices: List[str] = __d_choices
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        value: Optional[str] = __d_value
+        choices: Optional[List[str]] = __d_choices
+        tooltip: Optional[str] = __d_tooltip
         return ColorPicker(
             name,
             label,

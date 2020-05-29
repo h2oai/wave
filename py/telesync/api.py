@@ -997,36 +997,43 @@ def checklist(
 
 def dropdown(
         name: str,
-        label: str,
-        placeholder: str,
-        multiple: bool,
-        value: str,
-        values: List[str],
-        choices: List[Choice],
-        required: bool,
-        disabled: bool,
-        trigger: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        placeholder: Optional[str] = None,
+        value: Optional[str] = None,
+        values: Optional[List[str]] = None,
+        choices: Optional[List[Choice]] = None,
+        required: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a dropdown.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param placeholder: No documentation available.
-    :param multiple: No documentation available.
-    :param value: No documentation available.
-    :param values: No documentation available.
-    :param choices: No documentation available.
-    :param required: No documentation available.
-    :param disabled: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    A dropdown is a list in which the selected item is always visible, and the others are visible on demand by clicking
+    a drop-down button. They are used to simplify the design and make a choice within the UI. When closed, only the
+    selected item is visible. When users click the drop-down button, all the options become visible.
+
+    To change the value, users open the list and click another value or use the arrow keys (up and down) to
+    select a new value.
+
+    Note: Use either the 'value' parameter or the 'values' parameter. Setting the 'values' parameter renders a
+    multi-select dropdown.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+    :param value: The name of the selected choice.
+    :param values: The names of the selected choices. If this parameter is set, multiple selections will be allowed.
+    :param choices: The choices to be presented.
+    :param required: True if this is a required field.
+    :param disabled: True if this field is disabled.
+    :param trigger: True if the form should be submitted when the dropdown value changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(dropdown=Dropdown(
         name,
         label,
         placeholder,
-        multiple,
         value,
         values,
         choices,
@@ -1039,24 +1046,34 @@ def dropdown(
 
 def combobox(
         name: str,
-        label: str,
-        placeholder: str,
-        value: str,
-        choices: List[str],
-        error: str,
-        disabled: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        placeholder: Optional[str] = None,
+        value: Optional[str] = None,
+        choices: Optional[List[str]] = None,
+        error: Optional[str] = None,
+        disabled: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a combobox.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param placeholder: No documentation available.
-    :param value: No documentation available.
-    :param choices: No documentation available.
-    :param error: No documentation available.
-    :param disabled: No documentation available.
-    :param tooltip: No documentation available.
+    A combobox is a list in which the selected item is always visible, and the others are visible on demand by
+    clicking a drop-down button or by typing in the input.
+    They are used to simplify the design and make a choice within the UI.
+
+    When closed, only the selected item is visible.
+    When users click the drop-down button, all the options become visible.
+    To change the value, users open the list and click another value or use the arrow keys (up and down)
+    to select a new value.
+    When collapsed the user can select a new value by typing.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+    :param value: The name of the selected choice.
+    :param choices: The choices to be presented.
+    :param error: Text to be displayed as an error below the text box.
+    :param disabled: True if this field is disabled.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(combobox=Combobox(
         name,
@@ -1072,26 +1089,39 @@ def combobox(
 
 def slider(
         name: str,
-        label: str,
-        min: float,
-        max: float,
-        step: float,
-        value: float,
-        disabled: bool,
-        trigger: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        min: Optional[float] = None,
+        max: Optional[float] = None,
+        step: Optional[float] = None,
+        value: Optional[float] = None,
+        disabled: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a slider.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param min: No documentation available.
-    :param max: No documentation available.
-    :param step: No documentation available.
-    :param value: No documentation available.
-    :param disabled: No documentation available.
-    :param trigger: No documentation available.
-    :param tooltip: No documentation available.
+    A slider is an element used to set a value. It provides a visual indication of adjustable content, as well as the
+    current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+    A knob or lever is dragged to one end or the other to make the choice, indicating the current value.
+    Marks on the slider bar can show values and users can choose where they want to drag the knob or lever to
+    set the value.
+
+    A slider is a good choice when you know that users think of the value as a relative quantity, not a numeric value.
+    For example, users think about setting their audio volume to low or medium — not about setting the
+    value to two or five.
+
+    The default value of the slider will be zero or be constrained to the min and max values. The min will be returned
+    if the value is set under the min and the max will be returned if set higher than the max value.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param min: The minimum value of the slider.
+    :param max: The maximum value of the slider.
+    :param step: The difference between two adjacent values of the slider.
+    :param value: The current value of the slider.
+    :param disabled: True if this field is disabled.
+    :param trigger: True if the form should be submitted when the slider value changes.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(slider=Slider(
         name,
@@ -1108,24 +1138,27 @@ def slider(
 
 def spinbox(
         name: str,
-        label: str,
-        min: float,
-        max: float,
-        step: float,
-        value: float,
-        disabled: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        min: Optional[float] = None,
+        max: Optional[float] = None,
+        step: Optional[float] = None,
+        value: Optional[float] = None,
+        disabled: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a spinbox.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param min: No documentation available.
-    :param max: No documentation available.
-    :param step: No documentation available.
-    :param value: No documentation available.
-    :param disabled: No documentation available.
-    :param tooltip: No documentation available.
+    A spinbox allows the user to incrementally adjust a value in small steps.
+    It is mainly used for numeric values, but other values are supported too.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param min: The minimum value of the spinbox.
+    :param max: The maximum value of the spinbox.
+    :param step: The difference between two adjacent values of the spinbox.
+    :param value: The current value of the spinbox.
+    :param disabled: True if this field is disabled.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(spinbox=Spinbox(
         name,
@@ -1141,20 +1174,22 @@ def spinbox(
 
 def date_picker(
         name: str,
-        label: str,
-        placeholder: str,
-        value: str,
-        disabled: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        placeholder: Optional[str] = None,
+        value: Optional[str] = None,
+        disabled: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a date picker.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param placeholder: No documentation available.
-    :param value: No documentation available.
-    :param disabled: No documentation available.
-    :param tooltip: No documentation available.
+    A date picker allows a user to pick a date value.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+    :param value: The date value in YYYY-MM-DD format.
+    :param disabled: True if this field is disabled.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(date_picker=DatePicker(
         name,
@@ -1168,18 +1203,21 @@ def date_picker(
 
 def color_picker(
         name: str,
-        label: str,
-        value: str,
-        choices: List[str],
-        tooltip: str,
+        label: Optional[str] = None,
+        value: Optional[str] = None,
+        choices: Optional[List[str]] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a color picker.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param value: No documentation available.
-    :param choices: No documentation available.
-    :param tooltip: No documentation available.
+    A date picker allows a user to pick a color value.
+    If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
+
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param value: The selected color (CSS-compatible string)
+    :param choices: A list of colors (CSS-compatible strings) to limit color choices to.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(color_picker=ColorPicker(
         name,

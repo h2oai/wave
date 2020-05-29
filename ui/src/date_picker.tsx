@@ -2,19 +2,30 @@ import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { B, bond, Rec, S, U } from './telesync';
 
+/**
+ * Create a date picker.
+ *
+ * A date picker allows a user to pick a date value.
+ */
 export interface DatePicker {
+  /** An identifying name for this component. */
   name: S
-  label: S
-  placeholder: S
-  value: S
-  disabled: B
-  tooltip: S
+  /** Text to be displayed alongside the component. */
+  label?: S
+  /** A string that provides a brief hint to the user as to what kind of information is expected in the field. */
+  placeholder?: S
+  /** The date value in YYYY-MM-DD format. */
+  value?: S
+  /** True if this field is disabled. */
+  disabled?: B
+  /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
+  tooltip?: S
 }
 
 const
   pad2 = (n: U) => { const s = `${n}`; return s.length === 1 ? `0${s}` : s },
   formatDate = (d: Date): S => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`,
-  parseDate = (s: S): Date | undefined => {
+  parseDate = (s: S | null): Date | undefined => {
     if (s && s.length) {
       const ss = s.split('-')
       if (ss.length !== 3) return undefined
@@ -27,16 +38,17 @@ const
 
 export const
   XDatePicker = bond(({ args, model: m }: { args: Rec, model: DatePicker }) => {
-    args[m.name] = m.value
+    const value = m.value || null
+    args[m.name] = value
     const
       onSelectDate = (d: Date | null | undefined) => {
-        args[m.name] = (d === null || d === undefined) ? m.value : formatDate(d)
+        args[m.name] = (d === null || d === undefined) ? value : formatDate(d)
       },
       render = () => (
         <Fluent.DatePicker
           data-test={m.name}
           label={m.label}
-          value={parseDate(m.value)}
+          value={parseDate(value)}
           placeholder={m.placeholder}
           disabled={m.disabled}
           onSelectDate={onSelectDate}
