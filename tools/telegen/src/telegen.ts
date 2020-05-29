@@ -10,7 +10,8 @@
 // - In the second pass, all interfaces named "State" and their corresponding
 //   dependencies exported to the target language.
 //
-// By convention, the interface named "State" is assigned the name of the card.
+// By convention, the presence of an interface named "State" in a file indicates
+// that the file defines a card, and is renamed to the titlecased filename.
 //
 // WARNING: The compiler API is not fully documented, and this tool makes use
 // of undocumented JSDoc features. Might break at any time.
@@ -142,8 +143,14 @@ const
     }
     return null
   },
+  flatten = <T extends {}>(xss: T[][]): T[] => {
+    const ys: T[] = []
+    for (const xs of xss) ys.push(...xs)
+    return ys
+  },
   collectComments = (node: any): string[] => {
-    return (node as any).jsDoc?.map((c: any) => c?.comment) || [] // FIXME Undocumented API
+    const comments: string[] = ((node as any).jsDoc?.map((c: any) => c?.comment) || []) // FIXME Undocumented API
+    return flatten(comments.filter(c => !!c).map(c => c.split(/\n/g).map(c => c.trim())))
   },
   collectMember = (component: string, typename: string, member: ts.TypeElement): Member => {
     if (member.kind === ts.SyntaxKind.PropertySignature) {
@@ -304,6 +311,9 @@ const
         }
         return null
       },
+      genComments = (comments: string[], padding: string): string => {
+        return comments.map(c => (padding + c).trimRight()).join('\n').trim()
+      },
       genClass = (type: Type) => {
         if (classes[type.name] === Declaration.Declared || classes[type.name] === Declaration.Forward) return
 
@@ -318,7 +328,7 @@ const
         console.log(`Generating ${type.name}...`)
         p('')
         p(`class ${type.name}:`)
-        p(`    """` + type.comments.join('\n    '))
+        p(`    """` + genComments(type.comments, '    '))
         p(``)
         for (const m of type.members) {
           p(`    :param ${m.name}: ` + m.comments.join(' '))
@@ -445,7 +455,7 @@ const
         } else {
           p(`) -> ${type.name}:`)
         }
-        p(`    """` + type.comments.join('\n    '))
+        p(`    """` + genComments(type.comments, '    '))
         p(``)
         for (const m of type.members) {
           p(`    :param ${m.name}: ` + m.comments.join(' '))
