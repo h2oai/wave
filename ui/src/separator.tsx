@@ -12,8 +12,14 @@ const
     },
   })
 
+/**
+ * Create a separator.
+ *
+ * A separator visually separates content into groups.
+ */
 export interface Separator {
-  label: S
+  /** The text displayed on the separator. */
+  label?: S
 }
 
 export const
@@ -21,4 +27,4 @@ export const
     <div className={css.separator}>
       <Fluent.Separator data-test='separator'>{m.label}</Fluent.Separator>
     </div>
-  ) 
+  )

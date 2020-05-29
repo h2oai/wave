@@ -1852,72 +1852,70 @@ class Flex:
 
 
 class Text:
-    """No documentation available.
+    """Create text content.
 
-    :param size: No documentation available.
-    :param text: No documentation available.
-    :param tooltip: No documentation available.
+    :param content: The text content.
+    :param size: The font size of the text content. One of "xl" (extra large), "l" (large), "m" (medium), "s" (small), "xs" (extra small).
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
-            size: str,
-            text: str,
-            tooltip: str,
+            content: str,
+            size: Optional[str] = None,
+            tooltip: Optional[str] = None,
     ):
+        self.content = content
         self.size = size
-        self.text = text
         self.tooltip = tooltip
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.size is None:
-            raise ValueError('Text.size is required.')
-        if self.text is None:
-            raise ValueError('Text.text is required.')
-        if self.tooltip is None:
-            raise ValueError('Text.tooltip is required.')
+        if self.content is None:
+            raise ValueError('Text.content is required.')
         return _dump(
+            content=self.content,
             size=self.size,
-            text=self.text,
             tooltip=self.tooltip,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Text':
         """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('Text.content is required.')
         __d_size: Any = __d.get('size')
-        if __d_size is None:
-            raise ValueError('Text.size is required.')
-        __d_text: Any = __d.get('text')
-        if __d_text is None:
-            raise ValueError('Text.text is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Text.tooltip is required.')
-        size: str = __d_size
-        text: str = __d_text
-        tooltip: str = __d_tooltip
+        content: str = __d_content
+        size: Optional[str] = __d_size
+        tooltip: Optional[str] = __d_tooltip
         return Text(
+            content,
             size,
-            text,
             tooltip,
         )
 
 
 class Label:
-    """No documentation available.
+    """Create a label.
 
-    :param label: No documentation available.
-    :param required: No documentation available.
-    :param disabled: No documentation available.
-    :param tooltip: No documentation available.
+    Labels give a name or title to a component or group of components.
+    Labels should be in close proximity to the component or group they are paired with.
+    Some components, such as textboxes, dropdowns, or toggles, already have labels
+    incorporated, but other components may optionally add a Label if it helps inform
+    the user of the component’s purpose.
+
+    :param label: The text displayed on the label.
+    :param required: True if the field is required.
+    :param disabled: True if the label should be disabled.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             label: str,
-            required: bool,
-            disabled: bool,
-            tooltip: str,
+            required: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.label = label
         self.required = required
@@ -1928,12 +1926,6 @@ class Label:
         """Returns the contents of this object as a dict."""
         if self.label is None:
             raise ValueError('Label.label is required.')
-        if self.required is None:
-            raise ValueError('Label.required is required.')
-        if self.disabled is None:
-            raise ValueError('Label.disabled is required.')
-        if self.tooltip is None:
-            raise ValueError('Label.tooltip is required.')
         return _dump(
             label=self.label,
             required=self.required,
@@ -1948,18 +1940,12 @@ class Label:
         if __d_label is None:
             raise ValueError('Label.label is required.')
         __d_required: Any = __d.get('required')
-        if __d_required is None:
-            raise ValueError('Label.required is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Label.disabled is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Label.tooltip is required.')
         label: str = __d_label
-        required: bool = __d_required
-        disabled: bool = __d_disabled
-        tooltip: str = __d_tooltip
+        required: Optional[bool] = __d_required
+        disabled: Optional[bool] = __d_disabled
+        tooltip: Optional[str] = __d_tooltip
         return Label(
             label,
             required,
@@ -1969,20 +1955,20 @@ class Label:
 
 
 class Separator:
-    """No documentation available.
+    """Create a separator.
 
-    :param label: No documentation available.
+    A separator visually separates content into groups.
+
+    :param label: The text displayed on the separator.
     """
     def __init__(
             self,
-            label: str,
+            label: Optional[str] = None,
     ):
         self.label = label
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('Separator.label is required.')
         return _dump(
             label=self.label,
         )
@@ -1991,28 +1977,44 @@ class Separator:
     def load(__d: Dict) -> 'Separator':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Separator.label is required.')
-        label: str = __d_label
+        label: Optional[str] = __d_label
         return Separator(
             label,
         )
 
 
 class Progress:
-    """No documentation available.
+    """Create a progress bar.
 
-    :param label: No documentation available.
-    :param caption: No documentation available.
-    :param value: No documentation available.
-    :param tooltip: No documentation available.
+    Progress bars are used to show the completion status of an operation lasting more than 2 seconds.
+    If the state of progress cannot be determined, do not set a value.
+    Progress bars feature a bar showing total units to completion, and total units finished.
+    The label appears above the bar, and the caption appears below.
+    The label should tell someone exactly what the operation is doing.
+
+    Examples of formatting include:
+    [Object] is being [operation name], or
+    [Object] is being [operation name] to [destination name] or
+    [Object] is being [operation name] from [source name] to [destination name]
+
+    Status text is generally in units elapsed and total units.
+    Real-world examples include copying files to a storage location, saving edits to a file, and more.
+    Use units that are informative and relevant to give the best idea to users of how long the operation will take to complete.
+    Avoid time units as they are rarely accurate enough to be trustworthy.
+    Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
+    Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
+
+    :param label: The text displayed above the bar.
+    :param caption: The text displayed below the bar.
+    :param value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             label: str,
-            caption: str,
-            value: float,
-            tooltip: str,
+            caption: Optional[str] = None,
+            value: Optional[float] = None,
+            tooltip: Optional[str] = None,
     ):
         self.label = label
         self.caption = caption
@@ -2023,12 +2025,6 @@ class Progress:
         """Returns the contents of this object as a dict."""
         if self.label is None:
             raise ValueError('Progress.label is required.')
-        if self.caption is None:
-            raise ValueError('Progress.caption is required.')
-        if self.value is None:
-            raise ValueError('Progress.value is required.')
-        if self.tooltip is None:
-            raise ValueError('Progress.tooltip is required.')
         return _dump(
             label=self.label,
             caption=self.caption,
@@ -2043,18 +2039,12 @@ class Progress:
         if __d_label is None:
             raise ValueError('Progress.label is required.')
         __d_caption: Any = __d.get('caption')
-        if __d_caption is None:
-            raise ValueError('Progress.caption is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Progress.value is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Progress.tooltip is required.')
         label: str = __d_label
-        caption: str = __d_caption
-        value: float = __d_value
-        tooltip: str = __d_tooltip
+        caption: Optional[str] = __d_caption
+        value: Optional[float] = __d_value
+        tooltip: Optional[str] = __d_tooltip
         return Progress(
             label,
             caption,
@@ -2064,25 +2054,25 @@ class Progress:
 
 
 class MessageBar:
-    """No documentation available.
+    """Create a message bar.
 
-    :param type: No documentation available.
-    :param text: No documentation available.
+    A message bar is an area at the top of a primary view that displays relevant status information.
+    You can use a message bar to tell the user about a situation that does not require their immediate attention and
+    therefore does not need to block other activities.
+
+    :param type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
+    :param text: The text displayed on the message bar.
     """
     def __init__(
             self,
-            type: str,
-            text: str,
+            type: Optional[str] = None,
+            text: Optional[str] = None,
     ):
         self.type = type
         self.text = text
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.type is None:
-            raise ValueError('MessageBar.type is required.')
-        if self.text is None:
-            raise ValueError('MessageBar.text is required.')
         return _dump(
             type=self.type,
             text=self.text,
@@ -2092,13 +2082,9 @@ class MessageBar:
     def load(__d: Dict) -> 'MessageBar':
         """Creates an instance of this class using the contents of a dict."""
         __d_type: Any = __d.get('type')
-        if __d_type is None:
-            raise ValueError('MessageBar.type is required.')
         __d_text: Any = __d.get('text')
-        if __d_text is None:
-            raise ValueError('MessageBar.text is required.')
-        type: str = __d_type
-        text: str = __d_text
+        type: Optional[str] = __d_type
+        text: Optional[str] = __d_text
         return MessageBar(
             type,
             text,

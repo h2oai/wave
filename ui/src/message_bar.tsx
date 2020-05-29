@@ -2,9 +2,18 @@ import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { S } from './telesync';
 
+/**
+ * Create a message bar.
+ *
+ * A message bar is an area at the top of a primary view that displays relevant status information.
+ * You can use a message bar to tell the user about a situation that does not require their immediate attention and
+ * therefore does not need to block other activities.
+ */
 export interface MessageBar {
-  type: S
-  text: S
+  /** The icon and color of the message bar. */
+  type?: 'info' | 'error' | 'warning' | 'success' | 'danger' | 'blocked'
+  /** The text displayed on the message bar. */
+  text?: S
 }
 
 const
@@ -22,6 +31,10 @@ const
 export const
   XMessageBar = ({ model: m }: { model: MessageBar }) => (
     m.text && m.text.length
-      ? <Fluent.MessageBar data-test='message-bar' messageBarType={toMessageBarType(m.type)} >{m.text}</Fluent.MessageBar>
+      ? (
+        <Fluent.MessageBar
+          data-test='message-bar'
+          messageBarType={toMessageBarType(m.type as S)} >{m.text}</Fluent.MessageBar>
+      )
       : <div />
   )

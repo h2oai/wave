@@ -661,35 +661,41 @@ def flex(
 
 
 def text(
-        size: str,
-        text: str,
-        tooltip: str,
+        content: str,
+        size: Optional[str] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create text content.
 
-    :param size: No documentation available.
-    :param text: No documentation available.
-    :param tooltip: No documentation available.
+    :param content: The text content.
+    :param size: The font size of the text content. One of "xl" (extra large), "l" (large), "m" (medium), "s" (small), "xs" (extra small).
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(text=Text(
+        content,
         size,
-        text,
         tooltip,
     ))
 
 
 def label(
         label: str,
-        required: bool,
-        disabled: bool,
-        tooltip: str,
+        required: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a label.
 
-    :param label: No documentation available.
-    :param required: No documentation available.
-    :param disabled: No documentation available.
-    :param tooltip: No documentation available.
+    Labels give a name or title to a component or group of components.
+    Labels should be in close proximity to the component or group they are paired with.
+    Some components, such as textboxes, dropdowns, or toggles, already have labels
+    incorporated, but other components may optionally add a Label if it helps inform
+    the user of the component’s purpose.
+
+    :param label: The text displayed on the label.
+    :param required: True if the field is required.
+    :param disabled: True if the label should be disabled.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(label=Label(
         label,
@@ -700,11 +706,13 @@ def label(
 
 
 def separator(
-        label: str,
+        label: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a separator.
 
-    :param label: No documentation available.
+    A separator visually separates content into groups.
+
+    :param label: The text displayed on the separator.
     """
     return Component(separator=Separator(
         label,
@@ -713,16 +721,34 @@ def separator(
 
 def progress(
         label: str,
-        caption: str,
-        value: float,
-        tooltip: str,
+        caption: Optional[str] = None,
+        value: Optional[float] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a progress bar.
 
-    :param label: No documentation available.
-    :param caption: No documentation available.
-    :param value: No documentation available.
-    :param tooltip: No documentation available.
+    Progress bars are used to show the completion status of an operation lasting more than 2 seconds.
+    If the state of progress cannot be determined, do not set a value.
+    Progress bars feature a bar showing total units to completion, and total units finished.
+    The label appears above the bar, and the caption appears below.
+    The label should tell someone exactly what the operation is doing.
+
+    Examples of formatting include:
+    [Object] is being [operation name], or
+    [Object] is being [operation name] to [destination name] or
+    [Object] is being [operation name] from [source name] to [destination name]
+
+    Status text is generally in units elapsed and total units.
+    Real-world examples include copying files to a storage location, saving edits to a file, and more.
+    Use units that are informative and relevant to give the best idea to users of how long the operation will take to complete.
+    Avoid time units as they are rarely accurate enough to be trustworthy.
+    Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
+    Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
+
+    :param label: The text displayed above the bar.
+    :param caption: The text displayed below the bar.
+    :param value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(progress=Progress(
         label,
@@ -733,13 +759,17 @@ def progress(
 
 
 def message_bar(
-        type: str,
-        text: str,
+        type: Optional[str] = None,
+        text: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a message bar.
 
-    :param type: No documentation available.
-    :param text: No documentation available.
+    A message bar is an area at the top of a primary view that displays relevant status information.
+    You can use a message bar to tell the user about a situation that does not require their immediate attention and
+    therefore does not need to block other activities.
+
+    :param type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
+    :param text: The text displayed on the message bar.
     """
     return Component(message_bar=MessageBar(
         type,

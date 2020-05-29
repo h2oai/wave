@@ -5,10 +5,14 @@ import { Markdown, MarkdownInline } from './markdown';
 import { Dict, S } from './telesync';
 import { border, getTheme, padding, pc } from './theme';
 
+/** Create text content. */
 export interface Text {
-  size: S
-  text: S
-  tooltip: S
+  /** The text content. */
+  content: S
+  /** The font size of the text content. One of "xl" (extra large), "l" (large), "m" (medium), "s" (small), "xs" (extra small). */
+  size?: S
+  /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
+  tooltip?: S
 }
 
 const
@@ -46,8 +50,8 @@ export const
   XText = ({ model: m }: { model: Text }) => {
     const
       name = 'text' + (m.size ? `-${m.size}` : ''),
-      md = m.text.indexOf('\n') >= 0
-        ? <div className={css.markdown}><Markdown source={m.text} /></div>
-        : <MarkdownInline source={m.text} />
-    return <Fluent.Text data-test={name} variant={toTextVariant(m.size)} block>{md}</Fluent.Text>
+      md = m.content.indexOf('\n') >= 0
+        ? <div className={css.markdown}><Markdown source={m.content} /></div>
+        : <MarkdownInline source={m.content} />
+    return <Fluent.Text data-test={name} variant={toTextVariant(m.size || 'm')} block>{md}</Fluent.Text>
   }

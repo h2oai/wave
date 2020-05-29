@@ -3,20 +3,6 @@ from typing import List, Union
 import telesync.cards as g
 
 
-def text(content: str, size: str = '', tooltip: str = '') -> g.Component:
-    """
-    Create text content.
-
-    See :func:`~h2o_q.ui.text_xl`, :func:`~h2o_q.ui.text_l`, :func:`~h2o_q.ui.text_m`, :func:`~h2o_q.ui.text_s`, :func:`~h2o_q.ui.text_xs`.
-
-    :param content: The text content.
-    :param size: The font size of the text content. One of "xl" (extra large), "l" (large), "m" (medium), "s" (small), "xs" (extra small).
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A text instance.
-    """
-    return g.Component(text=g.Text(size=size, text=content, tooltip=tooltip))
-
-
 def text_xl(content: str, tooltip: str = '') -> g.Component:
     """
     Create extra large sized text content.
@@ -70,113 +56,6 @@ def text_xs(content: str, tooltip: str = '') -> g.Component:
     :return: A text instance.
     """
     return text(content=content, size='xs', tooltip=tooltip)
-
-
-def label(
-        label: str = '',
-        required: bool = False,
-        disabled: bool = False,
-        tooltip: str = '',
-) -> g.Component:
-    """
-    Create a label.
-
-    Labels give a name or title to a component or group of components.
-    Labels should be in close proximity to the component or group they are paired with.
-    Some components, such as textboxes, dropdowns, or toggles, already have labels incorporated, but other components
-    may optionally add a Label if it helps inform the user of the component’s purpose.
-
-    :param label: The text displayed on the label.
-    :param required: True if the field is required.
-    :param disabled: True if the label should be disabled.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A label instance.
-    """
-    return g.Component(label=g.Label(
-        label=label,
-        required=required,
-        disabled=disabled,
-        tooltip=tooltip,
-    ))
-
-
-def separator(
-        label: str = '',
-) -> g.Component:
-    """
-    Create a separator.
-
-    A separator visually separates content into groups.
-
-    :param label: The text displayed on the separator.
-    :return: A separator instance.
-    """
-    return g.Component(separator=g.Separator(
-        label=label,
-    ))
-
-
-def progress(
-        label: str = '',
-        caption: str = 'Please wait...',
-        value: float = -1,
-        tooltip: str = '',
-) -> g.Component:
-    """
-    Create a progress bar.
-
-    Progress bars are used to show the completion status of an operation lasting more than 2 seconds.
-    If the state of progress cannot be determined, do not set a value.
-    Progress bars feature a bar showing total units to completion, and total units finished.
-    The label appears above the bar, and the caption appears below.
-    The label should tell someone exactly what the operation is doing.
-
-    Examples of formatting include:
-    * [Object] is being [operation name], or
-    * [Object] is being [operation name] to [destination name] or
-    * [Object] is being [operation name] from [source name] to [destination name]
-
-    Status text is generally in units elapsed and total units.
-
-    Real-world examples include copying files to a storage location, saving edits to a file, and more.
-    Use units that are informative and relevant to give the best idea to users of how long the operation will take to complete.
-    Avoid time units as they are rarely accurate enough to be trustworthy.
-    Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
-    Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
-
-    :param label: The text displayed above the bar.
-    :param caption: The text displayed below the bar.
-    :param value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A progress bar instance.
-    """
-    return g.Component(progress=g.Progress(
-        label=label,
-        caption=caption,
-        value=value,
-        tooltip=tooltip,
-    ))
-
-
-def message_bar(
-        type: str = 'info',
-        text: str = '',
-) -> g.Component:
-    """
-    Create a message bar.
-
-    A message bar is an area at the top of a primary view that displays relevant status information.
-    You can use a message bar to tell the user about a situation that does not require their immediate attention and
-    therefore does not need to block other activities.
-
-    :param type: The type of message bar, one of "info" (default), "error", "warning", "success", "danger", "blocked".
-    :param text: The text displayed on the message bar.
-    :return: A message bar instance.
-    """
-    return g.Component(message_bar=g.MessageBar(
-        type=type,
-        text=text,
-    ))
 
 
 def textbox(
