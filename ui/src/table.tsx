@@ -2,22 +2,50 @@ import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { B, bond, Rec, S } from './telesync';
 
+/** Create a table column. */
 interface TableColumn {
+  /** An identifying name for this column. */
   name: S
+  /** The text displayed on the column header. */
   label: S
 }
 
+/** Create a table row. */
 interface TableRow {
+  /** An identifying name for this row. */
   name: S
+  /** The cells in this row (displayed left to right). */
   cells: S[]
 }
 
+/**
+ * Create an interactive table.
+ *
+ * This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
+ * display a non-interactive table of information, use a markdown table.
+ *
+ * If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
+ * submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
+ * the table, and `row_name` is the `name` of the row that was clicked on.
+ *
+ * If `multiple` is set to True, each row in the table is selectable. A row can be selected by clicking on it.
+ * Multiple rows can be selected either by shift+clicking or using marquee selection. When the form is submitted,
+ * `q.args.table_name` is set to `[row1_name, row2_name, ...]` where `table_name` is the `name` of the table,
+ * and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note that if `multiple` is
+ * set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
+ * submission.
+ */
 export interface Table {
+  /** An identifying name for this component. */
   name: S
+  /** The columns in this table. */
   columns: TableColumn[]
+  /** The rows in this table. */
   rows: TableRow[]
-  multiple: B
-  tooltip: S
+  /** True to allow multiple rows to be selected. */
+  multiple?: B
+  /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
+  tooltip?: S
 }
 
 export const

@@ -6,11 +6,11 @@ import { B, bond, S } from './telesync';
  * Create a hyperlink.
  *
  * Hyperlinks can be internal or external.
- * Internal hyperlinks have paths that begin with a ``/`` and point to URLs within the Q UI.
+ * Internal hyperlinks have paths that begin with a `/` and point to URLs within the Q UI.
  * All other kinds of paths are treated as external hyperlinks.
  */
 export interface Link {
-  /** The text to be displayed. If blank, the ``path`` is used as the label. */
+  /** The text to be displayed. If blank, the `path` is used as the label. */
   label?: S
   /** The path or URL to link to. */
   path?: S

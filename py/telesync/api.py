@@ -30,8 +30,8 @@ from .cards import \
     DashboardPage, \
     DashboardPanel, \
     DashboardRow, \
-    DataCell, \
     DataSource, \
+    DataSourceQuery, \
     DatePicker, \
     Dropdown, \
     Expander, \
@@ -57,7 +57,6 @@ from .cards import \
     PixelArt, \
     Plot, \
     Progress, \
-    Query, \
     Repeat, \
     Separator, \
     Slider, \
@@ -412,10 +411,12 @@ def heading_cell(
         level: int,
         content: str,
 ) -> Cell:
-    """No documentation available.
+    """Create a heading cell.
 
-    :param level: No documentation available.
-    :param content: No documentation available.
+    A heading cell is rendered as a HTML heading (H1 to H6).
+
+    :param level: The heading level (between 1 and 6)
+    :param content: The heading text.
     """
     return Cell(heading=HeadingCell(
         level,
@@ -426,9 +427,14 @@ def heading_cell(
 def markdown_cell(
         content: str,
 ) -> Cell:
-    """No documentation available.
+    """Create a markdown cell.
 
-    :param content: No documentation available.
+    A markdown cell is rendered using Github-flavored markdown.
+    HTML markup is allowed in markdown content.
+    URLs, if found, are displayed as hyperlinks.
+    Copyright, reserved, trademark, quotes, etc. are replaced with language-neutral symbols.
+
+    :param content: The markdown content of this cell.
     """
     return Cell(markdown=MarkdownCell(
         content,
@@ -440,11 +446,14 @@ def frame_cell(
         width: str,
         height: str,
 ) -> Cell:
-    """No documentation available.
+    """Create a frame cell
 
-    :param source: No documentation available.
-    :param width: No documentation available.
-    :param height: No documentation available.
+    A frame cell is rendered as in inline frame (iframe) element.
+    See https://developer.mozilla.org/en-US/docs/Web/CSS/length for `width` and `height` parameters.
+
+    :param source: The HTML content of the frame.
+    :param width: The CSS width of the frame.
+    :param height: The CSS height of the frame.
     """
     return Cell(frame=FrameCell(
         source,
@@ -453,26 +462,14 @@ def frame_cell(
     ))
 
 
-def data_cell(
-        content: str,
-) -> Cell:
-    """No documentation available.
-
-    :param content: No documentation available.
-    """
-    return Cell(data=DataCell(
-        content,
-    ))
-
-
 def data_source(
         t: str,
         id: int,
 ) -> DataSource:
-    """No documentation available.
+    """Create a reference to a data source.
 
-    :param t: No documentation available. One of 'Table', 'View'.
-    :param id: No documentation available.
+    :param t: The type of the data source. One of 'table', 'view'.
+    :param id: The ID of the data source
     """
     return DataSource(
         t,
@@ -480,16 +477,16 @@ def data_source(
     )
 
 
-def query(
+def data_source_query(
         sql: str,
         sources: List[DataSource],
-) -> Query:
-    """No documentation available.
+) -> DataSourceQuery:
+    """Create a stored query.
 
-    :param sql: No documentation available.
-    :param sources: No documentation available.
+    :param sql: The SQL query.
+    :param sources: The data sources referred to in the SQL query.
     """
-    return Query(
+    return DataSourceQuery(
         sql,
         sources,
     )
@@ -497,12 +494,12 @@ def query(
 
 def vega_cell(
         specification: str,
-        query: Query,
+        query: DataSourceQuery,
 ) -> Cell:
-    """No documentation available.
+    """Create a VegaLite cell.
 
-    :param specification: No documentation available.
-    :param query: No documentation available.
+    :param specification: The VegaLite specification.
+    :param query: The query to be executed to populate this visualization.
     """
     return Cell(vega=VegaCell(
         specification,
@@ -514,62 +511,62 @@ def cell(
         heading: Optional[HeadingCell] = None,
         markdown: Optional[MarkdownCell] = None,
         frame: Optional[FrameCell] = None,
-        data: Optional[DataCell] = None,
         vega: Optional[VegaCell] = None,
 ) -> Cell:
-    """No documentation available.
+    """Create a cell.
 
-    :param heading: No documentation available.
-    :param markdown: No documentation available.
-    :param frame: No documentation available.
-    :param data: No documentation available.
-    :param vega: No documentation available.
+    :param heading: A heading cell.
+    :param markdown: A markdown cell.
+    :param frame: A frame cell.
+    :param vega: A vega cell.
     """
     return Cell(
         heading,
         markdown,
         frame,
-        data,
         vega,
     )
 
 
 def command(
         action: str,
-        icon: str,
         label: str,
-        caption: str,
-        data: str,
+        caption: Optional[str] = None,
+        icon: Optional[str] = None,
+        data: Optional[str] = None,
 ) -> Command:
-    """No documentation available.
+    """Create a command.
 
-    :param action: No documentation available.
-    :param icon: No documentation available.
-    :param label: No documentation available.
-    :param caption: No documentation available.
-    :param data: No documentation available.
+    Commands are typically displayed as context menu items associated with
+    parts of notebooks or dashboards.
+
+    :param action: The function to call when this command is invoked.
+    :param label: The text displayed for this command.
+    :param caption: The caption for this command (typically a tooltip).
+    :param icon: Data associated with this command, if any.
+    :param data: The icon to be displayed for this command.
     """
     return Command(
         action,
-        icon,
         label,
         caption,
+        icon,
         data,
     )
 
 
 def dashboard_panel(
         cells: List[Cell],
-        size: str,
-        commands: List[Command],
-        data: str,
+        size: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+        data: Optional[str] = None,
 ) -> DashboardPanel:
-    """No documentation available.
+    """Create a dashboard panel.
 
-    :param cells: No documentation available.
-    :param size: No documentation available.
-    :param commands: No documentation available.
-    :param data: No documentation available.
+    :param cells: A list of cells to display in the panel (top to bottom).
+    :param size: The absolute or relative width of the panel.
+    :param commands: A list of custom commands to allow on this panel.
+    :param data: Data associated with this section, if any.
     """
     return DashboardPanel(
         cells,
@@ -581,12 +578,12 @@ def dashboard_panel(
 
 def dashboard_row(
         panels: List[DashboardPanel],
-        size: str,
+        size: Optional[str] = None,
 ) -> DashboardRow:
-    """No documentation available.
+    """Create a dashboard row.
 
-    :param panels: No documentation available.
-    :param size: No documentation available.
+    :param panels: A list of panels to display in the row (left to right).
+    :param size: The absolute or relative height of the row.
     """
     return DashboardRow(
         panels,
@@ -598,10 +595,10 @@ def dashboard_page(
         title: str,
         rows: List[DashboardRow],
 ) -> DashboardPage:
-    """No documentation available.
+    """Create a dashboard page.
 
-    :param title: No documentation available.
-    :param rows: No documentation available.
+    :param title: The text displayed on the page's tab.
+    :param rows: A list of rows to display in the dashboard page (top to bottom).
     """
     return DashboardPage(
         title,
@@ -613,10 +610,31 @@ def dashboard(
         box: str,
         pages: List[DashboardPage],
 ) -> Dashboard:
-    """No documentation available.
+    """Create a dashboard.
+
+    A dashboard consists of one or more pages.
+    The dashboard is displayed as a tabbed layout, with each tab corresponding to a page.
+
+    A dashboard page consists of one or more rows, laid out top to bottom.
+    Each dashboard row in turn contains one or more panels, laid out left to right.
+    Each dashboard panel in turn conttains one or more cells, laid out top to bottom.
+
+    Dashboard rows and panels support both flexible and fixed sizing.
+
+    For flexible sizes, specify an integer without units, e.g. '2', '5', etc. These are interpreted as ratios.
+
+    For fixed sizes, specify the size with units, e.g. '200px', '2vw', etc.
+    The complete list of units can be found at https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
+
+    You can combine fixed and flexible sizes to make your dashboard responsive (adjust to different screen sizes).
+
+    Examples:
+    Two panels with sizes '3', '1' will result in a 3:1 split.
+    Three panels with sizes '300px', '1' and '300px' will result in a an expandable center panel in between two 300px panels.
+    Four panels with sizes '200px', '400px', '1', '2' will result in two fixed-width panels followed by a 1:2 split.
 
     :param box: A string indicating how to place this component on the page.
-    :param pages: No documentation available.
+    :param pages: A list of pages contained in the dashboard.
     """
     return Dashboard(
         box,
@@ -1311,10 +1329,10 @@ def table_column(
         name: str,
         label: str,
 ) -> TableColumn:
-    """No documentation available.
+    """Create a table column.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
+    :param name: An identifying name for this column.
+    :param label: The text displayed on the column header.
     """
     return TableColumn(
         name,
@@ -1326,10 +1344,10 @@ def table_row(
         name: str,
         cells: List[str],
 ) -> TableRow:
-    """No documentation available.
+    """Create a table row.
 
-    :param name: No documentation available.
-    :param cells: No documentation available.
+    :param name: An identifying name for this row.
+    :param cells: The cells in this row (displayed left to right).
     """
     return TableRow(
         name,
@@ -1341,16 +1359,30 @@ def table(
         name: str,
         columns: List[TableColumn],
         rows: List[TableRow],
-        multiple: bool,
-        tooltip: str,
+        multiple: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create an interactive table.
 
-    :param name: No documentation available.
-    :param columns: No documentation available.
-    :param rows: No documentation available.
-    :param multiple: No documentation available.
-    :param tooltip: No documentation available.
+    This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
+    display a non-interactive table of information, use a markdown table.
+
+    If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
+    submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
+    the table, and `row_name` is the `name` of the row that was clicked on.
+
+    If `multiple` is set to True, each row in the table is selectable. A row can be selected by clicking on it.
+    Multiple rows can be selected either by shift+clicking or using marquee selection. When the form is submitted,
+    `q.args.table_name` is set to `[row1_name, row2_name, ...]` where `table_name` is the `name` of the table,
+    and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note that if `multiple` is
+    set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
+    submission.
+
+    :param name: An identifying name for this component.
+    :param columns: The columns in this table.
+    :param rows: The rows in this table.
+    :param multiple: True to allow multiple rows to be selected.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(table=Table(
         name,
@@ -1371,10 +1403,10 @@ def link(
     """Create a hyperlink.
 
     Hyperlinks can be internal or external.
-    Internal hyperlinks have paths that begin with a ``/`` and point to URLs within the Q UI.
+    Internal hyperlinks have paths that begin with a `/` and point to URLs within the Q UI.
     All other kinds of paths are treated as external hyperlinks.
 
-    :param label: The text to be displayed. If blank, the ``path`` is used as the label.
+    :param label: The text to be displayed. If blank, the `path` is used as the label.
     :param path: The path or URL to link to.
     :param disabled: True if the link should be disable.
     :param button: True if the link should be rendered as a button
@@ -1684,14 +1716,16 @@ def markup(
 
 def notebook_section(
         cells: List[Cell],
-        commands: List[Command],
-        data: str,
+        commands: Optional[List[Command]] = None,
+        data: Optional[str] = None,
 ) -> NotebookSection:
-    """No documentation available.
+    """Create a notebook section.
 
-    :param cells: No documentation available.
-    :param commands: No documentation available.
-    :param data: No documentation available.
+    A notebook section is rendered as a sequence of cells.
+
+    :param cells: A list of cells to display in this notebook section.
+    :param commands: A list of custom commands to allow on this section.
+    :param data: Data associated with this section, if any.
     """
     return NotebookSection(
         cells,
@@ -1704,10 +1738,12 @@ def notebook(
         box: str,
         sections: List[NotebookSection],
 ) -> Notebook:
-    """No documentation available.
+    """Create a notebook.
+
+    A notebook is rendered as a sequence of sections.
 
     :param box: A string indicating how to place this component on the page.
-    :param sections: No documentation available.
+    :param sections: A list of sections to display in the notebook.
     """
     return Notebook(
         box,

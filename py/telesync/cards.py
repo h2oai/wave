@@ -1118,10 +1118,12 @@ class Card9:
 
 
 class HeadingCell:
-    """No documentation available.
+    """Create a heading cell.
 
-    :param level: No documentation available.
-    :param content: No documentation available.
+    A heading cell is rendered as a HTML heading (H1 to H6).
+
+    :param level: The heading level (between 1 and 6)
+    :param content: The heading text.
     """
     def __init__(
             self,
@@ -1160,9 +1162,14 @@ class HeadingCell:
 
 
 class MarkdownCell:
-    """No documentation available.
+    """Create a markdown cell.
 
-    :param content: No documentation available.
+    A markdown cell is rendered using Github-flavored markdown.
+    HTML markup is allowed in markdown content.
+    URLs, if found, are displayed as hyperlinks.
+    Copyright, reserved, trademark, quotes, etc. are replaced with language-neutral symbols.
+
+    :param content: The markdown content of this cell.
     """
     def __init__(
             self,
@@ -1191,11 +1198,14 @@ class MarkdownCell:
 
 
 class FrameCell:
-    """No documentation available.
+    """Create a frame cell
 
-    :param source: No documentation available.
-    :param width: No documentation available.
-    :param height: No documentation available.
+    A frame cell is rendered as in inline frame (iframe) element.
+    See https://developer.mozilla.org/en-US/docs/Web/CSS/length for `width` and `height` parameters.
+
+    :param source: The HTML content of the frame.
+    :param width: The CSS width of the frame.
+    :param height: The CSS height of the frame.
     """
     def __init__(
             self,
@@ -1243,42 +1253,11 @@ class FrameCell:
         )
 
 
-class DataCell:
-    """No documentation available.
-
-    :param content: No documentation available.
-    """
-    def __init__(
-            self,
-            content: str,
-    ):
-        self.content = content
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.content is None:
-            raise ValueError('DataCell.content is required.')
-        return _dump(
-            content=self.content,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'DataCell':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('DataCell.content is required.')
-        content: str = __d_content
-        return DataCell(
-            content,
-        )
-
-
 class DataSource:
-    """No documentation available.
+    """Create a reference to a data source.
 
-    :param t: No documentation available. One of 'Table', 'View'.
-    :param id: No documentation available.
+    :param t: The type of the data source. One of 'table', 'view'.
+    :param id: The ID of the data source
     """
     def __init__(
             self,
@@ -1292,7 +1271,7 @@ class DataSource:
         """Returns the contents of this object as a dict."""
         if self.t is None:
             raise ValueError('DataSource.t is required.')
-        if self.t not in ('Table', 'View'):
+        if self.t not in ('table', 'view'):
             raise ValueError(f'Invalid value "{self.t}" for DataSource.t.')
         if self.id is None:
             raise ValueError('DataSource.id is required.')
@@ -1318,11 +1297,11 @@ class DataSource:
         )
 
 
-class Query:
-    """No documentation available.
+class DataSourceQuery:
+    """Create a stored query.
 
-    :param sql: No documentation available.
-    :param sources: No documentation available.
+    :param sql: The SQL query.
+    :param sources: The data sources referred to in the SQL query.
     """
     def __init__(
             self,
@@ -1335,41 +1314,41 @@ class Query:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.sql is None:
-            raise ValueError('Query.sql is required.')
+            raise ValueError('DataSourceQuery.sql is required.')
         if self.sources is None:
-            raise ValueError('Query.sources is required.')
+            raise ValueError('DataSourceQuery.sources is required.')
         return _dump(
             sql=self.sql,
             sources=[__e.dump() for __e in self.sources],
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Query':
+    def load(__d: Dict) -> 'DataSourceQuery':
         """Creates an instance of this class using the contents of a dict."""
         __d_sql: Any = __d.get('sql')
         if __d_sql is None:
-            raise ValueError('Query.sql is required.')
+            raise ValueError('DataSourceQuery.sql is required.')
         __d_sources: Any = __d.get('sources')
         if __d_sources is None:
-            raise ValueError('Query.sources is required.')
+            raise ValueError('DataSourceQuery.sources is required.')
         sql: str = __d_sql
         sources: List[DataSource] = [DataSource.load(__e) for __e in __d_sources]
-        return Query(
+        return DataSourceQuery(
             sql,
             sources,
         )
 
 
 class VegaCell:
-    """No documentation available.
+    """Create a VegaLite cell.
 
-    :param specification: No documentation available.
-    :param query: No documentation available.
+    :param specification: The VegaLite specification.
+    :param query: The query to be executed to populate this visualization.
     """
     def __init__(
             self,
             specification: str,
-            query: Query,
+            query: DataSourceQuery,
     ):
         self.specification = specification
         self.query = query
@@ -1395,7 +1374,7 @@ class VegaCell:
         if __d_query is None:
             raise ValueError('VegaCell.query is required.')
         specification: str = __d_specification
-        query: Query = Query.load(__d_query)
+        query: DataSourceQuery = DataSourceQuery.load(__d_query)
         return VegaCell(
             specification,
             query,
@@ -1403,26 +1382,23 @@ class VegaCell:
 
 
 class Cell:
-    """No documentation available.
+    """Create a cell.
 
-    :param heading: No documentation available.
-    :param markdown: No documentation available.
-    :param frame: No documentation available.
-    :param data: No documentation available.
-    :param vega: No documentation available.
+    :param heading: A heading cell.
+    :param markdown: A markdown cell.
+    :param frame: A frame cell.
+    :param vega: A vega cell.
     """
     def __init__(
             self,
             heading: Optional[HeadingCell] = None,
             markdown: Optional[MarkdownCell] = None,
             frame: Optional[FrameCell] = None,
-            data: Optional[DataCell] = None,
             vega: Optional[VegaCell] = None,
     ):
         self.heading = heading
         self.markdown = markdown
         self.frame = frame
-        self.data = data
         self.vega = vega
 
     def dump(self) -> Dict:
@@ -1431,7 +1407,6 @@ class Cell:
             heading=None if self.heading is None else self.heading.dump(),
             markdown=None if self.markdown is None else self.markdown.dump(),
             frame=None if self.frame is None else self.frame.dump(),
-            data=None if self.data is None else self.data.dump(),
             vega=None if self.vega is None else self.vega.dump(),
         )
 
@@ -1441,62 +1416,56 @@ class Cell:
         __d_heading: Any = __d.get('heading')
         __d_markdown: Any = __d.get('markdown')
         __d_frame: Any = __d.get('frame')
-        __d_data: Any = __d.get('data')
         __d_vega: Any = __d.get('vega')
         heading: Optional[HeadingCell] = None if __d_heading is None else HeadingCell.load(__d_heading)
         markdown: Optional[MarkdownCell] = None if __d_markdown is None else MarkdownCell.load(__d_markdown)
         frame: Optional[FrameCell] = None if __d_frame is None else FrameCell.load(__d_frame)
-        data: Optional[DataCell] = None if __d_data is None else DataCell.load(__d_data)
         vega: Optional[VegaCell] = None if __d_vega is None else VegaCell.load(__d_vega)
         return Cell(
             heading,
             markdown,
             frame,
-            data,
             vega,
         )
 
 
 class Command:
-    """No documentation available.
+    """Create a command.
 
-    :param action: No documentation available.
-    :param icon: No documentation available.
-    :param label: No documentation available.
-    :param caption: No documentation available.
-    :param data: No documentation available.
+    Commands are typically displayed as context menu items associated with
+    parts of notebooks or dashboards.
+
+    :param action: The function to call when this command is invoked.
+    :param label: The text displayed for this command.
+    :param caption: The caption for this command (typically a tooltip).
+    :param icon: Data associated with this command, if any.
+    :param data: The icon to be displayed for this command.
     """
     def __init__(
             self,
             action: str,
-            icon: str,
             label: str,
-            caption: str,
-            data: str,
+            caption: Optional[str] = None,
+            icon: Optional[str] = None,
+            data: Optional[str] = None,
     ):
         self.action = action
-        self.icon = icon
         self.label = label
         self.caption = caption
+        self.icon = icon
         self.data = data
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.action is None:
             raise ValueError('Command.action is required.')
-        if self.icon is None:
-            raise ValueError('Command.icon is required.')
         if self.label is None:
             raise ValueError('Command.label is required.')
-        if self.caption is None:
-            raise ValueError('Command.caption is required.')
-        if self.data is None:
-            raise ValueError('Command.data is required.')
         return _dump(
             action=self.action,
-            icon=self.icon,
             label=self.label,
             caption=self.caption,
+            icon=self.icon,
             data=self.data,
         )
 
@@ -1506,46 +1475,40 @@ class Command:
         __d_action: Any = __d.get('action')
         if __d_action is None:
             raise ValueError('Command.action is required.')
-        __d_icon: Any = __d.get('icon')
-        if __d_icon is None:
-            raise ValueError('Command.icon is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('Command.label is required.')
         __d_caption: Any = __d.get('caption')
-        if __d_caption is None:
-            raise ValueError('Command.caption is required.')
+        __d_icon: Any = __d.get('icon')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Command.data is required.')
         action: str = __d_action
-        icon: str = __d_icon
         label: str = __d_label
-        caption: str = __d_caption
-        data: str = __d_data
+        caption: Optional[str] = __d_caption
+        icon: Optional[str] = __d_icon
+        data: Optional[str] = __d_data
         return Command(
             action,
-            icon,
             label,
             caption,
+            icon,
             data,
         )
 
 
 class DashboardPanel:
-    """No documentation available.
+    """Create a dashboard panel.
 
-    :param cells: No documentation available.
-    :param size: No documentation available.
-    :param commands: No documentation available.
-    :param data: No documentation available.
+    :param cells: A list of cells to display in the panel (top to bottom).
+    :param size: The absolute or relative width of the panel.
+    :param commands: A list of custom commands to allow on this panel.
+    :param data: Data associated with this section, if any.
     """
     def __init__(
             self,
             cells: List[Cell],
-            size: str,
-            commands: List[Command],
-            data: str,
+            size: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+            data: Optional[str] = None,
     ):
         self.cells = cells
         self.size = size
@@ -1556,16 +1519,10 @@ class DashboardPanel:
         """Returns the contents of this object as a dict."""
         if self.cells is None:
             raise ValueError('DashboardPanel.cells is required.')
-        if self.size is None:
-            raise ValueError('DashboardPanel.size is required.')
-        if self.commands is None:
-            raise ValueError('DashboardPanel.commands is required.')
-        if self.data is None:
-            raise ValueError('DashboardPanel.data is required.')
         return _dump(
             cells=[__e.dump() for __e in self.cells],
             size=self.size,
-            commands=[__e.dump() for __e in self.commands],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
             data=self.data,
         )
 
@@ -1576,18 +1533,12 @@ class DashboardPanel:
         if __d_cells is None:
             raise ValueError('DashboardPanel.cells is required.')
         __d_size: Any = __d.get('size')
-        if __d_size is None:
-            raise ValueError('DashboardPanel.size is required.')
         __d_commands: Any = __d.get('commands')
-        if __d_commands is None:
-            raise ValueError('DashboardPanel.commands is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('DashboardPanel.data is required.')
         cells: List[Cell] = [Cell.load(__e) for __e in __d_cells]
-        size: str = __d_size
-        commands: List[Command] = [Command.load(__e) for __e in __d_commands]
-        data: str = __d_data
+        size: Optional[str] = __d_size
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        data: Optional[str] = __d_data
         return DashboardPanel(
             cells,
             size,
@@ -1597,15 +1548,15 @@ class DashboardPanel:
 
 
 class DashboardRow:
-    """No documentation available.
+    """Create a dashboard row.
 
-    :param panels: No documentation available.
-    :param size: No documentation available.
+    :param panels: A list of panels to display in the row (left to right).
+    :param size: The absolute or relative height of the row.
     """
     def __init__(
             self,
             panels: List[DashboardPanel],
-            size: str,
+            size: Optional[str] = None,
     ):
         self.panels = panels
         self.size = size
@@ -1614,8 +1565,6 @@ class DashboardRow:
         """Returns the contents of this object as a dict."""
         if self.panels is None:
             raise ValueError('DashboardRow.panels is required.')
-        if self.size is None:
-            raise ValueError('DashboardRow.size is required.')
         return _dump(
             panels=[__e.dump() for __e in self.panels],
             size=self.size,
@@ -1628,10 +1577,8 @@ class DashboardRow:
         if __d_panels is None:
             raise ValueError('DashboardRow.panels is required.')
         __d_size: Any = __d.get('size')
-        if __d_size is None:
-            raise ValueError('DashboardRow.size is required.')
         panels: List[DashboardPanel] = [DashboardPanel.load(__e) for __e in __d_panels]
-        size: str = __d_size
+        size: Optional[str] = __d_size
         return DashboardRow(
             panels,
             size,
@@ -1639,10 +1586,10 @@ class DashboardRow:
 
 
 class DashboardPage:
-    """No documentation available.
+    """Create a dashboard page.
 
-    :param title: No documentation available.
-    :param rows: No documentation available.
+    :param title: The text displayed on the page's tab.
+    :param rows: A list of rows to display in the dashboard page (top to bottom).
     """
     def __init__(
             self,
@@ -1681,10 +1628,31 @@ class DashboardPage:
 
 
 class Dashboard:
-    """No documentation available.
+    """Create a dashboard.
+
+    A dashboard consists of one or more pages.
+    The dashboard is displayed as a tabbed layout, with each tab corresponding to a page.
+
+    A dashboard page consists of one or more rows, laid out top to bottom.
+    Each dashboard row in turn contains one or more panels, laid out left to right.
+    Each dashboard panel in turn conttains one or more cells, laid out top to bottom.
+
+    Dashboard rows and panels support both flexible and fixed sizing.
+
+    For flexible sizes, specify an integer without units, e.g. '2', '5', etc. These are interpreted as ratios.
+
+    For fixed sizes, specify the size with units, e.g. '200px', '2vw', etc.
+    The complete list of units can be found at https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
+
+    You can combine fixed and flexible sizes to make your dashboard responsive (adjust to different screen sizes).
+
+    Examples:
+    Two panels with sizes '3', '1' will result in a 3:1 split.
+    Three panels with sizes '300px', '1' and '300px' will result in a an expandable center panel in between two 300px panels.
+    Four panels with sizes '200px', '400px', '1', '2' will result in two fixed-width panels followed by a 1:2 split.
 
     :param box: A string indicating how to place this component on the page.
-    :param pages: No documentation available.
+    :param pages: A list of pages contained in the dashboard.
     """
     def __init__(
             self,
@@ -3251,10 +3219,10 @@ class FileUpload:
 
 
 class TableColumn:
-    """No documentation available.
+    """Create a table column.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
+    :param name: An identifying name for this column.
+    :param label: The text displayed on the column header.
     """
     def __init__(
             self,
@@ -3293,10 +3261,10 @@ class TableColumn:
 
 
 class TableRow:
-    """No documentation available.
+    """Create a table row.
 
-    :param name: No documentation available.
-    :param cells: No documentation available.
+    :param name: An identifying name for this row.
+    :param cells: The cells in this row (displayed left to right).
     """
     def __init__(
             self,
@@ -3335,21 +3303,35 @@ class TableRow:
 
 
 class Table:
-    """No documentation available.
+    """Create an interactive table.
 
-    :param name: No documentation available.
-    :param columns: No documentation available.
-    :param rows: No documentation available.
-    :param multiple: No documentation available.
-    :param tooltip: No documentation available.
+    This table differs from a markdown table in that it supports clicking or selecting rows. If you simply want to
+    display a non-interactive table of information, use a markdown table.
+
+    If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked, the form is
+    submitted automatically, and `q.args.table_name` is set to `[row_name]`, where `table_name` is the `name` of
+    the table, and `row_name` is the `name` of the row that was clicked on.
+
+    If `multiple` is set to True, each row in the table is selectable. A row can be selected by clicking on it.
+    Multiple rows can be selected either by shift+clicking or using marquee selection. When the form is submitted,
+    `q.args.table_name` is set to `[row1_name, row2_name, ...]` where `table_name` is the `name` of the table,
+    and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note that if `multiple` is
+    set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
+    submission.
+
+    :param name: An identifying name for this component.
+    :param columns: The columns in this table.
+    :param rows: The rows in this table.
+    :param multiple: True to allow multiple rows to be selected.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
             columns: List[TableColumn],
             rows: List[TableRow],
-            multiple: bool,
-            tooltip: str,
+            multiple: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.columns = columns
@@ -3365,10 +3347,6 @@ class Table:
             raise ValueError('Table.columns is required.')
         if self.rows is None:
             raise ValueError('Table.rows is required.')
-        if self.multiple is None:
-            raise ValueError('Table.multiple is required.')
-        if self.tooltip is None:
-            raise ValueError('Table.tooltip is required.')
         return _dump(
             name=self.name,
             columns=[__e.dump() for __e in self.columns],
@@ -3390,16 +3368,12 @@ class Table:
         if __d_rows is None:
             raise ValueError('Table.rows is required.')
         __d_multiple: Any = __d.get('multiple')
-        if __d_multiple is None:
-            raise ValueError('Table.multiple is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Table.tooltip is required.')
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
-        multiple: bool = __d_multiple
-        tooltip: str = __d_tooltip
+        multiple: Optional[bool] = __d_multiple
+        tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
             columns,
@@ -3413,10 +3387,10 @@ class Link:
     """Create a hyperlink.
 
     Hyperlinks can be internal or external.
-    Internal hyperlinks have paths that begin with a ``/`` and point to URLs within the Q UI.
+    Internal hyperlinks have paths that begin with a `/` and point to URLs within the Q UI.
     All other kinds of paths are treated as external hyperlinks.
 
-    :param label: The text to be displayed. If blank, the ``path`` is used as the label.
+    :param label: The text to be displayed. If blank, the `path` is used as the label.
     :param path: The path or URL to link to.
     :param disabled: True if the link should be disable.
     :param button: True if the link should be rendered as a button
@@ -4259,17 +4233,19 @@ class Markup:
 
 
 class NotebookSection:
-    """No documentation available.
+    """Create a notebook section.
 
-    :param cells: No documentation available.
-    :param commands: No documentation available.
-    :param data: No documentation available.
+    A notebook section is rendered as a sequence of cells.
+
+    :param cells: A list of cells to display in this notebook section.
+    :param commands: A list of custom commands to allow on this section.
+    :param data: Data associated with this section, if any.
     """
     def __init__(
             self,
             cells: List[Cell],
-            commands: List[Command],
-            data: str,
+            commands: Optional[List[Command]] = None,
+            data: Optional[str] = None,
     ):
         self.cells = cells
         self.commands = commands
@@ -4279,13 +4255,9 @@ class NotebookSection:
         """Returns the contents of this object as a dict."""
         if self.cells is None:
             raise ValueError('NotebookSection.cells is required.')
-        if self.commands is None:
-            raise ValueError('NotebookSection.commands is required.')
-        if self.data is None:
-            raise ValueError('NotebookSection.data is required.')
         return _dump(
             cells=[__e.dump() for __e in self.cells],
-            commands=[__e.dump() for __e in self.commands],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
             data=self.data,
         )
 
@@ -4296,14 +4268,10 @@ class NotebookSection:
         if __d_cells is None:
             raise ValueError('NotebookSection.cells is required.')
         __d_commands: Any = __d.get('commands')
-        if __d_commands is None:
-            raise ValueError('NotebookSection.commands is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('NotebookSection.data is required.')
         cells: List[Cell] = [Cell.load(__e) for __e in __d_cells]
-        commands: List[Command] = [Command.load(__e) for __e in __d_commands]
-        data: str = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        data: Optional[str] = __d_data
         return NotebookSection(
             cells,
             commands,
@@ -4312,10 +4280,12 @@ class NotebookSection:
 
 
 class Notebook:
-    """No documentation available.
+    """Create a notebook.
+
+    A notebook is rendered as a sequence of sections.
 
     :param box: A string indicating how to place this component on the page.
-    :param sections: No documentation available.
+    :param sections: A list of sections to display in the notebook.
     """
     def __init__(
             self,
