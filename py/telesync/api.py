@@ -1230,22 +1230,37 @@ def color_picker(
 
 def button(
         name: str,
-        label: str,
-        caption: str,
-        primary: bool,
-        disabled: bool,
-        link: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        caption: Optional[str] = None,
+        primary: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        link: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a button.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param caption: No documentation available.
-    :param primary: No documentation available.
-    :param disabled: No documentation available.
-    :param link: No documentation available.
-    :param tooltip: No documentation available.
+    Buttons are best used to enable a user to commit a change or complete steps in a task.
+    They are typically found inside forms, dialogs, panels or pages.
+    An example of their usage is confirming the deletion of a file in a confirmation dialog.
+
+    When considering their place in a layout, contemplate the order in which a user will flow through the UI.
+    As an example, in a form, the individual will need to read and interact with the form fields before submitting
+    the form. Therefore, as a general rule, the button should be placed at the bottom of the UI container
+    which holds the related UI elements.
+
+    Buttons may be placed within a "buttons" component which will lay out the buttons horizontally, or used
+    individually and they will be stacked vertically.
+
+    While buttons can technically be used to navigate a user to another part of the experience, this is not
+    recommended unless that navigation is part of an action or their flow.
+
+    :param name: An identifying name for this component.
+    :param label: The text displayed on the button.
+    :param caption: The caption displayed below the label. Setting a caption renders a compound button.
+    :param primary: True if the button should be rendered as the primary button in the set.
+    :param disabled: True if the button should be disabled.
+    :param link: True if the button should be rendered as link text and not a standard button.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(button=Button(
         name,
@@ -1259,29 +1274,30 @@ def button(
 
 
 def buttons(
-        buttons: List[Button],
+        items: List[Component],
 ) -> Component:
-    """No documentation available.
+    """Create a set of buttons to be layed out horizontally.
 
-    :param buttons: No documentation available.
+    :param items: The button in this set.
     """
     return Component(buttons=Buttons(
-        buttons,
+        items,
     ))
 
 
 def file_upload(
         name: str,
-        label: str,
-        multiple: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        multiple: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a file upload component.
+    A file upload component allows a user to browse, select and upload one or more files.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param multiple: No documentation available.
-    :param tooltip: No documentation available.
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param multiple: True if the component should allow multiple files to be uploaded.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(file_upload=FileUpload(
         name,
@@ -1346,19 +1362,23 @@ def table(
 
 
 def link(
-        label: str,
-        path: str,
-        disabled: bool,
-        button: bool,
-        tooltip: str,
+        label: Optional[str] = None,
+        path: Optional[str] = None,
+        disabled: Optional[bool] = None,
+        button: Optional[bool] = None,
+        tooltip: Optional[str] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a hyperlink.
 
-    :param label: No documentation available.
-    :param path: No documentation available.
-    :param disabled: No documentation available.
-    :param button: No documentation available.
-    :param tooltip: No documentation available.
+    Hyperlinks can be internal or external.
+    Internal hyperlinks have paths that begin with a ``/`` and point to URLs within the Q UI.
+    All other kinds of paths are treated as external hyperlinks.
+
+    :param label: The text to be displayed. If blank, the ``path`` is used as the label.
+    :param path: The path or URL to link to.
+    :param disabled: True if the link should be disable.
+    :param button: True if the link should be rendered as a button
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     return Component(link=Link(
         label,
@@ -1371,14 +1391,14 @@ def link(
 
 def tab(
         name: str,
-        label: str,
-        icon: str,
+        label: Optional[str] = None,
+        icon: Optional[str] = None,
 ) -> Tab:
-    """No documentation available.
+    """Create a tab.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param icon: No documentation available.
+    :param name: An identifying name for this component.
+    :param label: The text displayed on the tab.
+    :param icon: The icon displayed on the tab.
     """
     return Tab(
         name,
@@ -1389,14 +1409,14 @@ def tab(
 
 def tabs(
         name: str,
-        value: str,
-        items: List[Tab],
+        value: Optional[str] = None,
+        items: Optional[List[Tab]] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a tab bar.
 
-    :param name: No documentation available.
-    :param value: No documentation available.
-    :param items: No documentation available.
+    :param name: An identifying name for this component.
+    :param value: The name of the tab to select.
+    :param items: The tabs in this tab bar.
     """
     return Component(tabs=Tabs(
         name,
@@ -1407,16 +1427,18 @@ def tabs(
 
 def expander(
         name: str,
-        label: str,
-        expanded: bool,
-        items: List[Component],
+        label: Optional[str] = None,
+        expanded: Optional[bool] = None,
+        items: Optional[List[Component]] = None,
 ) -> Component:
-    """No documentation available.
+    """Creates a new expander.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param expanded: No documentation available.
-    :param items: No documentation available.
+    Expanders can be used to show or hide a group of related components.
+
+    :param name: An identifying name for this component.
+    :param label: The text displayed on the expander.
+    :param expanded: True if expanded, False if collapsed.
+    :param items: List of components to be hideable by the expander.
     """
     return Component(expander=Expander(
         name,
@@ -1488,41 +1510,41 @@ def component(
         spinbox: Optional[Spinbox] = None,
         date_picker: Optional[DatePicker] = None,
         color_picker: Optional[ColorPicker] = None,
+        button: Optional[Button] = None,
         buttons: Optional[Buttons] = None,
         file_upload: Optional[FileUpload] = None,
         table: Optional[Table] = None,
         link: Optional[Link] = None,
         tabs: Optional[Tabs] = None,
-        button: Optional[Button] = None,
         expander: Optional[Expander] = None,
         nav: Optional[Nav] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a component.
 
-    :param text: No documentation available.
-    :param label: No documentation available.
-    :param separator: No documentation available.
-    :param progress: No documentation available.
-    :param message_bar: No documentation available.
-    :param textbox: No documentation available.
-    :param checkbox: No documentation available.
-    :param toggle: No documentation available.
-    :param choice_group: No documentation available.
-    :param checklist: No documentation available.
-    :param dropdown: No documentation available.
-    :param combobox: No documentation available.
-    :param slider: No documentation available.
-    :param spinbox: No documentation available.
-    :param date_picker: No documentation available.
-    :param color_picker: No documentation available.
-    :param buttons: No documentation available.
-    :param file_upload: No documentation available.
-    :param table: No documentation available.
-    :param link: No documentation available.
-    :param tabs: No documentation available.
-    :param button: No documentation available.
-    :param expander: No documentation available.
-    :param nav: No documentation available.
+    :param text: Text block.
+    :param label: Label.
+    :param separator: Separator.
+    :param progress: Progress bar.
+    :param message_bar: Message bar.
+    :param textbox: Textbox.
+    :param checkbox: Checkbox.
+    :param toggle: Toggle.
+    :param choice_group: Choice group.
+    :param checklist: Checklist.
+    :param dropdown: Dropdown.
+    :param combobox: Combobox.
+    :param slider: Slider.
+    :param spinbox: Spinbox.
+    :param date_picker: Date picker.
+    :param color_picker: Color picker.
+    :param button: Button.
+    :param buttons: Button set.
+    :param file_upload: File upload.
+    :param table: Table.
+    :param link: Link.
+    :param tabs: Tabs.
+    :param expander: Expander.
+    :param nav: Navigation.
     """
     return Component(
         text,
@@ -1541,12 +1563,12 @@ def component(
         spinbox,
         date_picker,
         color_picker,
+        button,
         buttons,
         file_upload,
         table,
         link,
         tabs,
-        button,
         expander,
         nav,
     )
@@ -1558,12 +1580,12 @@ def form(
         args: PackedRecord,
         items: Union[List[Component], str],
 ) -> Form:
-    """No documentation available.
+    """Create a form.
 
     :param box: A string indicating how to place this component on the page.
     :param url: No documentation available.
     :param args: No documentation available.
-    :param items: No documentation available.
+    :param items: The components in this form.
     """
     return Form(
         box,

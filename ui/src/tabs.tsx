@@ -1,35 +1,48 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { bond, iff, Rec, S } from './telesync';
+import { bond, Rec, S } from './telesync';
 
+/**
+ * Create a tab.
+ */
 interface Tab {
+  /** An identifying name for this component. */
   name: S
-  label: S
-  icon: S
+  /** The text displayed on the tab. */
+  label?: S
+  /** The icon displayed on the tab. */
+  icon?: S
 }
 
+/**
+ * Create a tab bar.
+ */
 export interface Tabs {
+  /** An identifying name for this component. */
   name: S
-  value: S
-  items: Tab[]
+  /** The name of the tab to select. */
+  value?: S
+  /** The tabs in this tab bar. */
+  items?: Tab[]
 }
 
 export const
   XTabs = bond(({ args, model: m, submit }: { args: Rec, model: Tabs, submit: () => void }) => {
     const
-      render = () => {
-        const onLinkClick = (item?: Fluent.PivotItem) => {
-          if (!item) return
-          if (item.props.itemKey !== args[m.name]) {
-            args[m.name] = item.props.itemKey || null
-            submit()
-          }
+      onLinkClick = (item?: Fluent.PivotItem) => {
+        if (!item) return
+        if (item.props.itemKey !== args[m.name]) {
+          args[m.name] = item.props.itemKey || null
+          submit()
         }
-        const selectedKey = (m.value !== undefined && m.value !== null) ? m.value : null
-        const ts = m.items.map(t => {
-          return (<Fluent.PivotItem key={t.name} itemIcon={iff(t.icon)} itemKey={t.name} headerText={t.label}></Fluent.PivotItem>)
-        })
-        return (<Fluent.Pivot selectedKey={selectedKey} onLinkClick={onLinkClick}>{ts}</Fluent.Pivot>)
+      },
+      render = () => {
+        const
+          selectedKey = (m.value !== undefined && m.value !== null) ? m.value : null,
+          tabs = (m.items || []).map(t => (
+            <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />
+          ))
+        return (<Fluent.Pivot selectedKey={selectedKey} onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>)
       }
     return { render }
   })

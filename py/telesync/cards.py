@@ -3079,25 +3079,40 @@ class ColorPicker:
 
 
 class Button:
-    """No documentation available.
+    """Create a button.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param caption: No documentation available.
-    :param primary: No documentation available.
-    :param disabled: No documentation available.
-    :param link: No documentation available.
-    :param tooltip: No documentation available.
+    Buttons are best used to enable a user to commit a change or complete steps in a task.
+    They are typically found inside forms, dialogs, panels or pages.
+    An example of their usage is confirming the deletion of a file in a confirmation dialog.
+
+    When considering their place in a layout, contemplate the order in which a user will flow through the UI.
+    As an example, in a form, the individual will need to read and interact with the form fields before submitting
+    the form. Therefore, as a general rule, the button should be placed at the bottom of the UI container
+    which holds the related UI elements.
+
+    Buttons may be placed within a "buttons" component which will lay out the buttons horizontally, or used
+    individually and they will be stacked vertically.
+
+    While buttons can technically be used to navigate a user to another part of the experience, this is not
+    recommended unless that navigation is part of an action or their flow.
+
+    :param name: An identifying name for this component.
+    :param label: The text displayed on the button.
+    :param caption: The caption displayed below the label. Setting a caption renders a compound button.
+    :param primary: True if the button should be rendered as the primary button in the set.
+    :param disabled: True if the button should be disabled.
+    :param link: True if the button should be rendered as link text and not a standard button.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            caption: str,
-            primary: bool,
-            disabled: bool,
-            link: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            caption: Optional[str] = None,
+            primary: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            link: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -3111,18 +3126,6 @@ class Button:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Button.name is required.')
-        if self.label is None:
-            raise ValueError('Button.label is required.')
-        if self.caption is None:
-            raise ValueError('Button.caption is required.')
-        if self.primary is None:
-            raise ValueError('Button.primary is required.')
-        if self.disabled is None:
-            raise ValueError('Button.disabled is required.')
-        if self.link is None:
-            raise ValueError('Button.link is required.')
-        if self.tooltip is None:
-            raise ValueError('Button.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3140,30 +3143,18 @@ class Button:
         if __d_name is None:
             raise ValueError('Button.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Button.label is required.')
         __d_caption: Any = __d.get('caption')
-        if __d_caption is None:
-            raise ValueError('Button.caption is required.')
         __d_primary: Any = __d.get('primary')
-        if __d_primary is None:
-            raise ValueError('Button.primary is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Button.disabled is required.')
         __d_link: Any = __d.get('link')
-        if __d_link is None:
-            raise ValueError('Button.link is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Button.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        caption: str = __d_caption
-        primary: bool = __d_primary
-        disabled: bool = __d_disabled
-        link: bool = __d_link
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        caption: Optional[str] = __d_caption
+        primary: Optional[bool] = __d_primary
+        disabled: Optional[bool] = __d_disabled
+        link: Optional[bool] = __d_link
+        tooltip: Optional[str] = __d_tooltip
         return Button(
             name,
             label,
@@ -3176,50 +3167,51 @@ class Button:
 
 
 class Buttons:
-    """No documentation available.
+    """Create a set of buttons to be layed out horizontally.
 
-    :param buttons: No documentation available.
+    :param items: The button in this set.
     """
     def __init__(
             self,
-            buttons: List[Button],
+            items: List['Component'],
     ):
-        self.buttons = buttons
+        self.items = items
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.buttons is None:
-            raise ValueError('Buttons.buttons is required.')
+        if self.items is None:
+            raise ValueError('Buttons.items is required.')
         return _dump(
-            buttons=[__e.dump() for __e in self.buttons],
+            items=[__e.dump() for __e in self.items],
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Buttons':
         """Creates an instance of this class using the contents of a dict."""
-        __d_buttons: Any = __d.get('buttons')
-        if __d_buttons is None:
-            raise ValueError('Buttons.buttons is required.')
-        buttons: List[Button] = [Button.load(__e) for __e in __d_buttons]
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('Buttons.items is required.')
+        items: List['Component'] = [Component.load(__e) for __e in __d_items]
         return Buttons(
-            buttons,
+            items,
         )
 
 
 class FileUpload:
-    """No documentation available.
+    """Create a file upload component.
+    A file upload component allows a user to browse, select and upload one or more files.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param multiple: No documentation available.
-    :param tooltip: No documentation available.
+    :param name: An identifying name for this component.
+    :param label: Text to be displayed alongside the component.
+    :param multiple: True if the component should allow multiple files to be uploaded.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            multiple: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            multiple: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -3230,12 +3222,6 @@ class FileUpload:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('FileUpload.name is required.')
-        if self.label is None:
-            raise ValueError('FileUpload.label is required.')
-        if self.multiple is None:
-            raise ValueError('FileUpload.multiple is required.')
-        if self.tooltip is None:
-            raise ValueError('FileUpload.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3250,18 +3236,12 @@ class FileUpload:
         if __d_name is None:
             raise ValueError('FileUpload.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('FileUpload.label is required.')
         __d_multiple: Any = __d.get('multiple')
-        if __d_multiple is None:
-            raise ValueError('FileUpload.multiple is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('FileUpload.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        multiple: bool = __d_multiple
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        multiple: Optional[bool] = __d_multiple
+        tooltip: Optional[str] = __d_tooltip
         return FileUpload(
             name,
             label,
@@ -3430,21 +3410,25 @@ class Table:
 
 
 class Link:
-    """No documentation available.
+    """Create a hyperlink.
 
-    :param label: No documentation available.
-    :param path: No documentation available.
-    :param disabled: No documentation available.
-    :param button: No documentation available.
-    :param tooltip: No documentation available.
+    Hyperlinks can be internal or external.
+    Internal hyperlinks have paths that begin with a ``/`` and point to URLs within the Q UI.
+    All other kinds of paths are treated as external hyperlinks.
+
+    :param label: The text to be displayed. If blank, the ``path`` is used as the label.
+    :param path: The path or URL to link to.
+    :param disabled: True if the link should be disable.
+    :param button: True if the link should be rendered as a button
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
-            label: str,
-            path: str,
-            disabled: bool,
-            button: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            path: Optional[str] = None,
+            disabled: Optional[bool] = None,
+            button: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.label = label
         self.path = path
@@ -3454,16 +3438,6 @@ class Link:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('Link.label is required.')
-        if self.path is None:
-            raise ValueError('Link.path is required.')
-        if self.disabled is None:
-            raise ValueError('Link.disabled is required.')
-        if self.button is None:
-            raise ValueError('Link.button is required.')
-        if self.tooltip is None:
-            raise ValueError('Link.tooltip is required.')
         return _dump(
             label=self.label,
             path=self.path,
@@ -3476,25 +3450,15 @@ class Link:
     def load(__d: Dict) -> 'Link':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Link.label is required.')
         __d_path: Any = __d.get('path')
-        if __d_path is None:
-            raise ValueError('Link.path is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Link.disabled is required.')
         __d_button: Any = __d.get('button')
-        if __d_button is None:
-            raise ValueError('Link.button is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Link.tooltip is required.')
-        label: str = __d_label
-        path: str = __d_path
-        disabled: bool = __d_disabled
-        button: bool = __d_button
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        path: Optional[str] = __d_path
+        disabled: Optional[bool] = __d_disabled
+        button: Optional[bool] = __d_button
+        tooltip: Optional[str] = __d_tooltip
         return Link(
             label,
             path,
@@ -3505,17 +3469,17 @@ class Link:
 
 
 class Tab:
-    """No documentation available.
+    """Create a tab.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param icon: No documentation available.
+    :param name: An identifying name for this component.
+    :param label: The text displayed on the tab.
+    :param icon: The icon displayed on the tab.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            icon: str,
+            label: Optional[str] = None,
+            icon: Optional[str] = None,
     ):
         self.name = name
         self.label = label
@@ -3525,10 +3489,6 @@ class Tab:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Tab.name is required.')
-        if self.label is None:
-            raise ValueError('Tab.label is required.')
-        if self.icon is None:
-            raise ValueError('Tab.icon is required.')
         return _dump(
             name=self.name,
             label=self.label,
@@ -3542,14 +3502,10 @@ class Tab:
         if __d_name is None:
             raise ValueError('Tab.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Tab.label is required.')
         __d_icon: Any = __d.get('icon')
-        if __d_icon is None:
-            raise ValueError('Tab.icon is required.')
         name: str = __d_name
-        label: str = __d_label
-        icon: str = __d_icon
+        label: Optional[str] = __d_label
+        icon: Optional[str] = __d_icon
         return Tab(
             name,
             label,
@@ -3558,17 +3514,17 @@ class Tab:
 
 
 class Tabs:
-    """No documentation available.
+    """Create a tab bar.
 
-    :param name: No documentation available.
-    :param value: No documentation available.
-    :param items: No documentation available.
+    :param name: An identifying name for this component.
+    :param value: The name of the tab to select.
+    :param items: The tabs in this tab bar.
     """
     def __init__(
             self,
             name: str,
-            value: str,
-            items: List[Tab],
+            value: Optional[str] = None,
+            items: Optional[List[Tab]] = None,
     ):
         self.name = name
         self.value = value
@@ -3578,14 +3534,10 @@ class Tabs:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Tabs.name is required.')
-        if self.value is None:
-            raise ValueError('Tabs.value is required.')
-        if self.items is None:
-            raise ValueError('Tabs.items is required.')
         return _dump(
             name=self.name,
             value=self.value,
-            items=[__e.dump() for __e in self.items],
+            items=None if self.items is None else [__e.dump() for __e in self.items],
         )
 
     @staticmethod
@@ -3595,14 +3547,10 @@ class Tabs:
         if __d_name is None:
             raise ValueError('Tabs.name is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Tabs.value is required.')
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('Tabs.items is required.')
         name: str = __d_name
-        value: str = __d_value
-        items: List[Tab] = [Tab.load(__e) for __e in __d_items]
+        value: Optional[str] = __d_value
+        items: Optional[List[Tab]] = None if __d_items is None else [Tab.load(__e) for __e in __d_items]
         return Tabs(
             name,
             value,
@@ -3611,19 +3559,21 @@ class Tabs:
 
 
 class Expander:
-    """No documentation available.
+    """Creates a new expander.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param expanded: No documentation available.
-    :param items: No documentation available.
+    Expanders can be used to show or hide a group of related components.
+
+    :param name: An identifying name for this component.
+    :param label: The text displayed on the expander.
+    :param expanded: True if expanded, False if collapsed.
+    :param items: List of components to be hideable by the expander.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            expanded: bool,
-            items: List['Component'],
+            label: Optional[str] = None,
+            expanded: Optional[bool] = None,
+            items: Optional[List['Component']] = None,
     ):
         self.name = name
         self.label = label
@@ -3634,17 +3584,11 @@ class Expander:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Expander.name is required.')
-        if self.label is None:
-            raise ValueError('Expander.label is required.')
-        if self.expanded is None:
-            raise ValueError('Expander.expanded is required.')
-        if self.items is None:
-            raise ValueError('Expander.items is required.')
         return _dump(
             name=self.name,
             label=self.label,
             expanded=self.expanded,
-            items=[__e.dump() for __e in self.items],
+            items=None if self.items is None else [__e.dump() for __e in self.items],
         )
 
     @staticmethod
@@ -3654,18 +3598,12 @@ class Expander:
         if __d_name is None:
             raise ValueError('Expander.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Expander.label is required.')
         __d_expanded: Any = __d.get('expanded')
-        if __d_expanded is None:
-            raise ValueError('Expander.expanded is required.')
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('Expander.items is required.')
         name: str = __d_name
-        label: str = __d_label
-        expanded: bool = __d_expanded
-        items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        label: Optional[str] = __d_label
+        expanded: Optional[bool] = __d_expanded
+        items: Optional[List['Component']] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
         return Expander(
             name,
             label,
@@ -3801,32 +3739,32 @@ class Nav:
 
 
 class Component:
-    """No documentation available.
+    """Create a component.
 
-    :param text: No documentation available.
-    :param label: No documentation available.
-    :param separator: No documentation available.
-    :param progress: No documentation available.
-    :param message_bar: No documentation available.
-    :param textbox: No documentation available.
-    :param checkbox: No documentation available.
-    :param toggle: No documentation available.
-    :param choice_group: No documentation available.
-    :param checklist: No documentation available.
-    :param dropdown: No documentation available.
-    :param combobox: No documentation available.
-    :param slider: No documentation available.
-    :param spinbox: No documentation available.
-    :param date_picker: No documentation available.
-    :param color_picker: No documentation available.
-    :param buttons: No documentation available.
-    :param file_upload: No documentation available.
-    :param table: No documentation available.
-    :param link: No documentation available.
-    :param tabs: No documentation available.
-    :param button: No documentation available.
-    :param expander: No documentation available.
-    :param nav: No documentation available.
+    :param text: Text block.
+    :param label: Label.
+    :param separator: Separator.
+    :param progress: Progress bar.
+    :param message_bar: Message bar.
+    :param textbox: Textbox.
+    :param checkbox: Checkbox.
+    :param toggle: Toggle.
+    :param choice_group: Choice group.
+    :param checklist: Checklist.
+    :param dropdown: Dropdown.
+    :param combobox: Combobox.
+    :param slider: Slider.
+    :param spinbox: Spinbox.
+    :param date_picker: Date picker.
+    :param color_picker: Color picker.
+    :param button: Button.
+    :param buttons: Button set.
+    :param file_upload: File upload.
+    :param table: Table.
+    :param link: Link.
+    :param tabs: Tabs.
+    :param expander: Expander.
+    :param nav: Navigation.
     """
     def __init__(
             self,
@@ -3846,12 +3784,12 @@ class Component:
             spinbox: Optional[Spinbox] = None,
             date_picker: Optional[DatePicker] = None,
             color_picker: Optional[ColorPicker] = None,
+            button: Optional[Button] = None,
             buttons: Optional[Buttons] = None,
             file_upload: Optional[FileUpload] = None,
             table: Optional[Table] = None,
             link: Optional[Link] = None,
             tabs: Optional[Tabs] = None,
-            button: Optional[Button] = None,
             expander: Optional[Expander] = None,
             nav: Optional[Nav] = None,
     ):
@@ -3871,12 +3809,12 @@ class Component:
         self.spinbox = spinbox
         self.date_picker = date_picker
         self.color_picker = color_picker
+        self.button = button
         self.buttons = buttons
         self.file_upload = file_upload
         self.table = table
         self.link = link
         self.tabs = tabs
-        self.button = button
         self.expander = expander
         self.nav = nav
 
@@ -3899,12 +3837,12 @@ class Component:
             spinbox=None if self.spinbox is None else self.spinbox.dump(),
             date_picker=None if self.date_picker is None else self.date_picker.dump(),
             color_picker=None if self.color_picker is None else self.color_picker.dump(),
+            button=None if self.button is None else self.button.dump(),
             buttons=None if self.buttons is None else self.buttons.dump(),
             file_upload=None if self.file_upload is None else self.file_upload.dump(),
             table=None if self.table is None else self.table.dump(),
             link=None if self.link is None else self.link.dump(),
             tabs=None if self.tabs is None else self.tabs.dump(),
-            button=None if self.button is None else self.button.dump(),
             expander=None if self.expander is None else self.expander.dump(),
             nav=None if self.nav is None else self.nav.dump(),
         )
@@ -3928,12 +3866,12 @@ class Component:
         __d_spinbox: Any = __d.get('spinbox')
         __d_date_picker: Any = __d.get('date_picker')
         __d_color_picker: Any = __d.get('color_picker')
+        __d_button: Any = __d.get('button')
         __d_buttons: Any = __d.get('buttons')
         __d_file_upload: Any = __d.get('file_upload')
         __d_table: Any = __d.get('table')
         __d_link: Any = __d.get('link')
         __d_tabs: Any = __d.get('tabs')
-        __d_button: Any = __d.get('button')
         __d_expander: Any = __d.get('expander')
         __d_nav: Any = __d.get('nav')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
@@ -3952,12 +3890,12 @@ class Component:
         spinbox: Optional[Spinbox] = None if __d_spinbox is None else Spinbox.load(__d_spinbox)
         date_picker: Optional[DatePicker] = None if __d_date_picker is None else DatePicker.load(__d_date_picker)
         color_picker: Optional[ColorPicker] = None if __d_color_picker is None else ColorPicker.load(__d_color_picker)
+        button: Optional[Button] = None if __d_button is None else Button.load(__d_button)
         buttons: Optional[Buttons] = None if __d_buttons is None else Buttons.load(__d_buttons)
         file_upload: Optional[FileUpload] = None if __d_file_upload is None else FileUpload.load(__d_file_upload)
         table: Optional[Table] = None if __d_table is None else Table.load(__d_table)
         link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
-        button: Optional[Button] = None if __d_button is None else Button.load(__d_button)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         nav: Optional[Nav] = None if __d_nav is None else Nav.load(__d_nav)
         return Component(
@@ -3977,24 +3915,24 @@ class Component:
             spinbox,
             date_picker,
             color_picker,
+            button,
             buttons,
             file_upload,
             table,
             link,
             tabs,
-            button,
             expander,
             nav,
         )
 
 
 class Form:
-    """No documentation available.
+    """Create a form.
 
     :param box: A string indicating how to place this component on the page.
     :param url: No documentation available.
     :param args: No documentation available.
-    :param items: No documentation available.
+    :param items: The components in this form.
     """
     def __init__(
             self,

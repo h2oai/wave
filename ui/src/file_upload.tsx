@@ -3,11 +3,19 @@ import React from 'react';
 import { stylesheet } from 'typestyle';
 import { B, bond, box, Rec, S } from './telesync';
 
+/**
+ * Create a file upload component.
+ * A file upload component allows a user to browse, select and upload one or more files.
+ */
 export interface FileUpload {
+  /** An identifying name for this component. */
   name: S
-  label: S
-  multiple: B
-  tooltip: S
+  /** Text to be displayed alongside the component. */
+  label?: S
+  /** True if the component should allow multiple files to be uploaded. */
+  multiple?: B
+  /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
+  tooltip?: S
 }
 
 const

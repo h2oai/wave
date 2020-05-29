@@ -28,43 +28,79 @@ import { getTheme } from './theme';
 import { Toggle, XToggle } from './toggle';
 import { XToolTip } from './tooltip';
 
+/**
+ * Creates a new expander.
+ *
+ * Expanders can be used to show or hide a group of related components.
+ */
 interface Expander {
+  /** An identifying name for this component. */
   name: S
-  label: S
-  expanded: B
-  items: Component[]
+  /** The text displayed on the expander. */
+  label?: S
+  /** True if expanded, False if collapsed. */
+  expanded?: B
+  /** List of components to be hideable by the expander. */
+  items?: Component[]
 }
 
-interface Component {
+/** Create a component. */
+export interface Component {
+  /** Text block. */
   text?: Text
+  /** Label. */
   label?: Label
+  /** Separator. */
   separator?: Separator
+  /** Progress bar. */
   progress?: Progress
+  /** Message bar. */
   message_bar?: MessageBar
+  /** Textbox. */
   textbox?: Textbox
+  /** Checkbox. */
   checkbox?: Checkbox
+  /** Toggle. */
   toggle?: Toggle
+  /** Choice group. */
   choice_group?: ChoiceGroup
+  /** Checklist. */
   checklist?: Checklist
+  /** Dropdown. */
   dropdown?: Dropdown
+  /** Combobox. */
   combobox?: Combobox
+  /** Slider. */
   slider?: Slider
+  /** Spinbox. */
   spinbox?: Spinbox
+  /** Date picker. */
   date_picker?: DatePicker
+  /** Color picker. */
   color_picker?: ColorPicker
-  buttons?: Buttons
-  file_upload?: FileUpload
-  table?: Table
-  link?: Link
-  tabs?: Tabs
+  /** Button. */
   button?: Button
+  /** Button set. */
+  buttons?: Buttons
+  /** File upload. */
+  file_upload?: FileUpload
+  /** Table. */
+  table?: Table
+  /** Link. */
+  link?: Link
+  /** Tabs. */
+  tabs?: Tabs
+  /** Expander. */
   expander?: Expander
+  /** Navigation. */
   nav?: Nav
 }
 
+/** Create a form. */
 interface State {
   url: S
   args: Rec
+  /** The components in this form. */
   items: Packed<Component[]>
 }
 
@@ -134,7 +170,7 @@ const
           <div data-test='expander' className={className}>
             <Fluent.Separator alignContent="start"><Fluent.ActionButton title={actionTitle} iconProps={expanderIcon} onClick={onClick}>{m.label}</Fluent.ActionButton></Fluent.Separator>
             <div>
-              <XComponents items={m.items} args={args} submit={submit} />
+              <XComponents items={m.items || []} args={args} submit={submit} />
             </div>
           </div>
         )
