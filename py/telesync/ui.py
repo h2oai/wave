@@ -58,69 +58,6 @@ def text_xs(content: str, tooltip: str = '') -> g.Component:
     return text(content=content, size='xs', tooltip=tooltip)
 
 
-def textbox(
-        name: str,
-        label: str = '',
-        placeholder: str = '',
-        mask: str = '',
-        icon: str = '',
-        prefix: str = '',
-        suffix: str = '',
-        value: str = '',
-        error: str = '',
-        required: bool = False,
-        disabled: bool = False,
-        readonly: bool = False,
-        multiline: bool = False,
-        password: bool = False,
-        tooltip: str = '',
-) -> g.Component:
-    """
-    Create a text box.
-
-    The text box component enables a user to type text into an app.
-    It's typically used to capture a single line of text, but can be configured to capture multiple lines of text.
-    The text displays on the screen in a simple, uniform format.
-
-    :param name: An identifying name for this component.
-    :param label: The text displayed above the field.
-    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected
-           in the field. It should be a word or short phrase that demonstrates the expected type of data, rather
-           than an explanatory message.
-    :param mask: The masking string that defines the mask's behavior. A backslash will escape any character.
-           Special format characters are: '9': [0-9] 'a': [a-zA-Z] '*': [a-zA-Z0-9].
-    :param icon: Icon displayed in the far right end of the text field.
-    :param prefix: Text to be displayed before the text box contents.
-    :param suffix: Text to be displayed after the text box contents.
-    :param value: Text to be displayed inside the text box.
-    :param error: Text to be displayed as an error below the text box.
-    :param required: True if the text box is a required field.
-    :param disabled: True if the text box is disabled.
-    :param readonly: True if the text box is a read-only field.
-    :param multiline: True if the text box should allow multi-line text entry.
-    :param password: True if the text box should hide text content.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A text box instance.
-    """
-    return g.Component(textbox=g.Textbox(
-        name=name,
-        label=label,
-        placeholder=placeholder,
-        mask=mask,
-        icon=icon,
-        prefix=prefix,
-        suffix=suffix,
-        value=value,
-        error=error,
-        required=required,
-        disabled=disabled,
-        readonly=readonly,
-        multiline=multiline,
-        password=password,
-        tooltip=tooltip,
-    ))
-
-
 def checkbox(
         name: str,
         label: str = '',

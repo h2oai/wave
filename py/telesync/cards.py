@@ -2092,50 +2092,54 @@ class MessageBar:
 
 
 class Textbox:
-    """No documentation available.
+    """Create a text box.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
-    :param placeholder: No documentation available.
-    :param mask: No documentation available.
-    :param icon: No documentation available.
-    :param prefix: No documentation available.
-    :param suffix: No documentation available.
-    :param value: No documentation available.
-    :param error: No documentation available.
-    :param required: No documentation available.
-    :param disabled: No documentation available.
-    :param readonly: No documentation available.
-    :param multiline: No documentation available.
-    :param password: No documentation available.
-    :param tooltip: No documentation available.
+    The text box component enables a user to type text into an app.
+    It's typically used to capture a single line of text, but can be configured to capture multiple lines of text.
+    The text displays on the screen in a simple, uniform format.
+
+    :param name: An identifying name for this component.
+    :param label: The text displayed above the field.
+    :param value: Text to be displayed inside the text box.
+    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message.
+    :param mask: The masking string that defines the mask's behavior. A backslash will escape any character. Special format characters are: '9': [0-9] 'a': [a-zA-Z] '*': [a-zA-Z0-9].
+    :param icon: Icon displayed in the far right end of the text field.
+    :param prefix: Text to be displayed before the text box contents.
+    :param suffix: Text to be displayed after the text box contents.
+    :param error: Text to be displayed as an error below the text box.
+    :param required: True if the text box is a required field.
+    :param disabled: True if the text box is disabled.
+    :param readonly: True if the text box is a read-only field.
+    :param multiline: True if the text box should allow multi-line text entry.
+    :param password: True if the text box should hide text content.
+    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
             name: str,
-            label: str,
-            placeholder: str,
-            mask: str,
-            icon: str,
-            prefix: str,
-            suffix: str,
-            value: str,
-            error: str,
-            required: bool,
-            disabled: bool,
-            readonly: bool,
-            multiline: bool,
-            password: bool,
-            tooltip: str,
+            label: Optional[str] = None,
+            value: Optional[str] = None,
+            placeholder: Optional[str] = None,
+            mask: Optional[str] = None,
+            icon: Optional[str] = None,
+            prefix: Optional[str] = None,
+            suffix: Optional[str] = None,
+            error: Optional[str] = None,
+            required: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            readonly: Optional[bool] = None,
+            multiline: Optional[bool] = None,
+            password: Optional[bool] = None,
+            tooltip: Optional[str] = None,
     ):
         self.name = name
         self.label = label
+        self.value = value
         self.placeholder = placeholder
         self.mask = mask
         self.icon = icon
         self.prefix = prefix
         self.suffix = suffix
-        self.value = value
         self.error = error
         self.required = required
         self.disabled = disabled
@@ -2148,43 +2152,15 @@ class Textbox:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Textbox.name is required.')
-        if self.label is None:
-            raise ValueError('Textbox.label is required.')
-        if self.placeholder is None:
-            raise ValueError('Textbox.placeholder is required.')
-        if self.mask is None:
-            raise ValueError('Textbox.mask is required.')
-        if self.icon is None:
-            raise ValueError('Textbox.icon is required.')
-        if self.prefix is None:
-            raise ValueError('Textbox.prefix is required.')
-        if self.suffix is None:
-            raise ValueError('Textbox.suffix is required.')
-        if self.value is None:
-            raise ValueError('Textbox.value is required.')
-        if self.error is None:
-            raise ValueError('Textbox.error is required.')
-        if self.required is None:
-            raise ValueError('Textbox.required is required.')
-        if self.disabled is None:
-            raise ValueError('Textbox.disabled is required.')
-        if self.readonly is None:
-            raise ValueError('Textbox.readonly is required.')
-        if self.multiline is None:
-            raise ValueError('Textbox.multiline is required.')
-        if self.password is None:
-            raise ValueError('Textbox.password is required.')
-        if self.tooltip is None:
-            raise ValueError('Textbox.tooltip is required.')
         return _dump(
             name=self.name,
             label=self.label,
+            value=self.value,
             placeholder=self.placeholder,
             mask=self.mask,
             icon=self.icon,
             prefix=self.prefix,
             suffix=self.suffix,
-            value=self.value,
             error=self.error,
             required=self.required,
             disabled=self.disabled,
@@ -2201,71 +2177,43 @@ class Textbox:
         if __d_name is None:
             raise ValueError('Textbox.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Textbox.label is required.')
-        __d_placeholder: Any = __d.get('placeholder')
-        if __d_placeholder is None:
-            raise ValueError('Textbox.placeholder is required.')
-        __d_mask: Any = __d.get('mask')
-        if __d_mask is None:
-            raise ValueError('Textbox.mask is required.')
-        __d_icon: Any = __d.get('icon')
-        if __d_icon is None:
-            raise ValueError('Textbox.icon is required.')
-        __d_prefix: Any = __d.get('prefix')
-        if __d_prefix is None:
-            raise ValueError('Textbox.prefix is required.')
-        __d_suffix: Any = __d.get('suffix')
-        if __d_suffix is None:
-            raise ValueError('Textbox.suffix is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Textbox.value is required.')
+        __d_placeholder: Any = __d.get('placeholder')
+        __d_mask: Any = __d.get('mask')
+        __d_icon: Any = __d.get('icon')
+        __d_prefix: Any = __d.get('prefix')
+        __d_suffix: Any = __d.get('suffix')
         __d_error: Any = __d.get('error')
-        if __d_error is None:
-            raise ValueError('Textbox.error is required.')
         __d_required: Any = __d.get('required')
-        if __d_required is None:
-            raise ValueError('Textbox.required is required.')
         __d_disabled: Any = __d.get('disabled')
-        if __d_disabled is None:
-            raise ValueError('Textbox.disabled is required.')
         __d_readonly: Any = __d.get('readonly')
-        if __d_readonly is None:
-            raise ValueError('Textbox.readonly is required.')
         __d_multiline: Any = __d.get('multiline')
-        if __d_multiline is None:
-            raise ValueError('Textbox.multiline is required.')
         __d_password: Any = __d.get('password')
-        if __d_password is None:
-            raise ValueError('Textbox.password is required.')
         __d_tooltip: Any = __d.get('tooltip')
-        if __d_tooltip is None:
-            raise ValueError('Textbox.tooltip is required.')
         name: str = __d_name
-        label: str = __d_label
-        placeholder: str = __d_placeholder
-        mask: str = __d_mask
-        icon: str = __d_icon
-        prefix: str = __d_prefix
-        suffix: str = __d_suffix
-        value: str = __d_value
-        error: str = __d_error
-        required: bool = __d_required
-        disabled: bool = __d_disabled
-        readonly: bool = __d_readonly
-        multiline: bool = __d_multiline
-        password: bool = __d_password
-        tooltip: str = __d_tooltip
+        label: Optional[str] = __d_label
+        value: Optional[str] = __d_value
+        placeholder: Optional[str] = __d_placeholder
+        mask: Optional[str] = __d_mask
+        icon: Optional[str] = __d_icon
+        prefix: Optional[str] = __d_prefix
+        suffix: Optional[str] = __d_suffix
+        error: Optional[str] = __d_error
+        required: Optional[bool] = __d_required
+        disabled: Optional[bool] = __d_disabled
+        readonly: Optional[bool] = __d_readonly
+        multiline: Optional[bool] = __d_multiline
+        password: Optional[bool] = __d_password
+        tooltip: Optional[str] = __d_tooltip
         return Textbox(
             name,
             label,
+            value,
             placeholder,
             mask,
             icon,
             prefix,
             suffix,
-            value,
             error,
             required,
             disabled,
