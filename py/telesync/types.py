@@ -3904,37 +3904,25 @@ class Form:
     """Create a form.
 
     :param box: A string indicating how to place this component on the page.
-    :param url: No documentation available.
-    :param args: No documentation available.
     :param items: The components in this form.
     """
     def __init__(
             self,
             box: str,
-            url: str,
-            args: PackedRecord,
             items: Union[List[Component], str],
     ):
         self.box = box
-        self.url = url
-        self.args = args
         self.items = items
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('Form.box is required.')
-        if self.url is None:
-            raise ValueError('Form.url is required.')
-        if self.args is None:
-            raise ValueError('Form.args is required.')
         if self.items is None:
             raise ValueError('Form.items is required.')
         return _dump(
             view='form',
             box=self.box,
-            url=self.url,
-            args=self.args,
             items=self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
         )
 
@@ -3944,23 +3932,13 @@ class Form:
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('Form.box is required.')
-        __d_url: Any = __d.get('url')
-        if __d_url is None:
-            raise ValueError('Form.url is required.')
-        __d_args: Any = __d.get('args')
-        if __d_args is None:
-            raise ValueError('Form.args is required.')
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('Form.items is required.')
         box: str = __d_box
-        url: str = __d_url
-        args: PackedRecord = __d_args
         items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
         return Form(
             box,
-            url,
-            args,
             items,
         )
 
@@ -4229,6 +4207,52 @@ class Markup:
             box,
             title,
             content,
+        )
+
+
+class Meta:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param args: No documentation available.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: Optional[str] = None,
+            args: Optional[Union[PackedRecord, str]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.args = args
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('Meta.box is required.')
+        return _dump(
+            view='meta',
+            box=self.box,
+            title=self.title,
+            args=self.args,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Meta':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Meta.box is required.')
+        __d_title: Any = __d.get('title')
+        __d_args: Any = __d.get('args')
+        box: str = __d_box
+        title: Optional[str] = __d_title
+        args: Optional[Union[PackedRecord, str]] = __d_args
+        return Meta(
+            box,
+            title,
+            args,
         )
 
 

@@ -162,7 +162,7 @@ export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) =>
 
 //
 // Sync
-// 
+//
 
 export type B = boolean
 export type U = number
@@ -710,19 +710,21 @@ export interface Ref {
   set(key: S, value: any): void
 }
 
-export interface Socket {
+export interface Telesync {
   path: S
-  current: WebSocket | null
+  argsB: Box<Rec>
+  socket: WebSocket | null
   page(): PageRef
 }
 
 const keyseq = (...keys: S[]): S => keys.join(' ')
 
-export const socket: Socket = {
-  current: null,
+export const telesync: Telesync = {
+  socket: null,
+  argsB: box<Rec>({}),
   path: window.location.pathname,
   page: (path?: S): PageRef => {
-    path = path || socket.path
+    path = path || telesync.path
     const
       changes: OpD[] = [],
       ref = (k: S): Ref => {
@@ -736,7 +738,7 @@ export const socket: Socket = {
       del = (key: S) => changes.push({ k: key }),
       drop = () => changes.push({}),
       sync = () => {
-        const sock = socket.current
+        const sock = telesync.socket
         if (!sock) return
         const opsd: OpsD = { d: changes }
         sock.send(`* ${path} ${JSON.stringify(opsd)}`)
@@ -764,13 +766,13 @@ const
     const retry = () => reconnect(address, handle)
     let sock = new WebSocket(address)
     sock.onopen = function () {
-      socket.current = sock
+      telesync.socket = sock
       handle({ t: SockEventType.Message, type: SockMessageType.Info, message: 'Connected' })
       backoff = 1
-      sock.send(`+ ${socket.path} `) // protocol: t<sep>addr<sep>data
+      sock.send(`+ ${telesync.path} `) // protocol: t<sep>addr<sep>data
     }
     sock.onclose = function () {
-      socket.current = null
+      telesync.socket = null
       backoff *= 2
       if (backoff > 16) backoff = 16
       handle({ t: SockEventType.Message, type: SockMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })

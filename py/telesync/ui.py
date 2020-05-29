@@ -49,6 +49,7 @@ from .types import \
     MarkdownCell, \
     Markup, \
     MessageBar, \
+    Meta, \
     Nav, \
     NavGroup, \
     NavItem, \
@@ -1608,21 +1609,15 @@ def component(
 
 def form(
         box: str,
-        url: str,
-        args: PackedRecord,
         items: Union[List[Component], str],
 ) -> Form:
     """Create a form.
 
     :param box: A string indicating how to place this component on the page.
-    :param url: No documentation available.
-    :param args: No documentation available.
     :param items: The components in this form.
     """
     return Form(
         box,
-        url,
-        args,
         items,
     )
 
@@ -1711,6 +1706,24 @@ def markup(
         box,
         title,
         content,
+    )
+
+
+def meta(
+        box: str,
+        title: Optional[str] = None,
+        args: Optional[Union[PackedRecord, str]] = None,
+) -> Meta:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param args: No documentation available.
+    """
+    return Meta(
+        box,
+        title,
+        args,
     )
 
 

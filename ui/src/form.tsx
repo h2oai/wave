@@ -22,7 +22,7 @@ import { Slider, XSlider } from './slider';
 import { Spinbox, XSpinbox } from './spinbox';
 import { Table, XTable } from './table';
 import { Tabs, XTabs } from './tabs';
-import { bond, Card, Packed, Rec, S, socket, unpack } from './telesync';
+import { bond, Card, Packed, Rec, telesync, unpack } from './telesync';
 import { Text, XText } from './text';
 import { Textbox, XTextbox } from './textbox';
 import { getTheme } from './theme';
@@ -83,8 +83,6 @@ export interface Component {
 
 /** Create a form. */
 interface State {
-  url: S
-  args: Rec
   /** The components in this form. */
   items: Packed<Component[]>
 }
@@ -99,8 +97,6 @@ const
     },
   }),
   defaults: Partial<State> = {
-    url: '',
-    args: {},
     items: []
   }
 
@@ -164,11 +160,11 @@ const
         const
           s = theme.merge(defaults, state),
           items = unpack<Component[]>(s.items), // XXX ugly
-          args = unpack(s.args),
+          args = telesync.argsB(),
           submit = () => {
-            const sock = socket.current
+            const sock = telesync.socket
             if (!sock) return
-            sock.send(`@ ${s.url} ${JSON.stringify(args)}`)
+            sock.send(`@ ${telesync.path} ${JSON.stringify(args)}`)
           }
 
         return (
