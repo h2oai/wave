@@ -73,7 +73,7 @@ export const
       render = () => {
         const
           items = choices.map(({ choice, selectedB }, i) => (
-            <XChecklistItem name={`checkbox-${i + 1}`} key={i} label={choice.label} disabled={choice.disabled} selectedB={selectedB} />
+            <XChecklistItem name={`checkbox-${i + 1}`} key={i} label={choice.label || choice.name} disabled={choice.disabled || false} selectedB={selectedB} />
           ))
         return (
           <div data-test={m.name}>

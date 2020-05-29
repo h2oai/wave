@@ -85,11 +85,13 @@ export const
           buttons = m.items.map(c => c.button).filter(b => !!b) as Button[],
           children = buttons.map(b => (
             <XToolTip key={b.label} content={b.tooltip} showIcon={false} expand={false}>
-              <XButton button={b} args={args} submit={submit}>{b.label}</XButton>
+              <XButton model={b} args={args} submit={submit}>{b.label}</XButton>
             </XToolTip>
           ))
         return <div className={css.buttons}><Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack></div>
       }
     return { render }
   }),
-  XStandAloneButton = ({ args, model: m, submit }: { args: Rec, model: Button, submit: () => void }) => (<div><XButton key={m.label} button={m} args={args} submit={submit}>{m.label}</XButton></div>)
+  XStandAloneButton = ({ args, model: m, submit }: { args: Rec, model: Button, submit: () => void }) => (
+    <div><XButton key={m.label} model={m} args={args} submit={submit}>{m.label}</XButton></div>
+  )
