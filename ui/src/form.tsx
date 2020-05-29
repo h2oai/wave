@@ -9,6 +9,7 @@ import { ColorPicker, XColorPicker } from './color_picker';
 import { Combobox, XCombobox } from './combobox';
 import { DatePicker, XDatePicker } from './date_picker';
 import { Dropdown, XDropdown } from './dropdown';
+import { Expander, XExpander } from './expander';
 import { FileUpload, XFileUpload } from './file_upload';
 import { Label, XLabel } from './label';
 import { cards } from './layout';
@@ -21,28 +22,12 @@ import { Slider, XSlider } from './slider';
 import { Spinbox, XSpinbox } from './spinbox';
 import { Table, XTable } from './table';
 import { Tabs, XTabs } from './tabs';
-import { B, bond, box, Card, Packed, Rec, S, socket, unpack } from './telesync';
+import { bond, Card, Packed, Rec, S, socket, unpack } from './telesync';
 import { Text, XText } from './text';
 import { Textbox, XTextbox } from './textbox';
 import { getTheme } from './theme';
 import { Toggle, XToggle } from './toggle';
 import { XToolTip } from './tooltip';
-
-/**
- * Creates a new expander.
- *
- * Expanders can be used to show or hide a group of related components.
- */
-interface Expander {
-  /** An identifying name for this component. */
-  name: S
-  /** The text displayed on the expander. */
-  label?: S
-  /** True if expanded, False if collapsed. */
-  expanded?: B
-  /** List of components to be hideable by the expander. */
-  items?: Component[]
-}
 
 /** Create a component. */
 export interface Component {
@@ -112,20 +97,6 @@ const
       display: 'flex',
       flexDirection: 'column',
     },
-    expanderOpen: {
-      $nest: {
-        '>div:last-child': {
-          display: 'block',
-        },
-      },
-    },
-    expanderClosed: {
-      $nest: {
-        '>div:last-child': {
-          display: 'none',
-        },
-      },
-    },
   }),
   defaults: Partial<State> = {
     url: '',
@@ -151,32 +122,15 @@ const
 //     return <div />
 //   }
 
-const
-  XExpander = bond(({ args, model: m, submit }: { args: Rec, model: Expander, submit: () => void }) => {
-    const
-      isOpenB = box(args[m.name]),
-      onClick = () => {
-        args[m.name] = m.expanded = !m.expanded
-        isOpenB(m.expanded)
-      },
-      render = () => {
-        const
-          isOpen = isOpenB(),
-          actionTitle = isOpen ? 'Shrink' : 'Expand',
-          expanderIcon = { iconName: isOpen ? 'ChevronDownMed' : 'ChevronRightMed' },
-          className = isOpenB() ? css.expanderOpen : css.expanderClosed
 
-        return (
-          <div data-test='expander' className={className}>
-            <Fluent.Separator alignContent="start"><Fluent.ActionButton title={actionTitle} iconProps={expanderIcon} onClick={onClick}>{m.label}</Fluent.ActionButton></Fluent.Separator>
-            <div>
-              <XComponents items={m.items || []} args={args} submit={submit} />
-            </div>
-          </div>
-        )
-      }
-    return { isOpenB, render }
-  }),
+export const
+  XComponents = ({ args, items, submit }: { args: Rec, items: Component[], submit: () => void }) => {
+    const components = items.map((m, i) => <XComponent key={i} model={m} args={args} submit={submit} />)
+    // TODO gap 10px between fields
+    return <>{components}</>
+  }
+
+const
   XComponent = ({ model: m, args, submit }: { model: Component, args: Rec, submit: () => void }) => {
     if (m.text) return <XToolTip content={m.text.tooltip} expand={false}><XText model={m.text} /></XToolTip>
     if (m.label) return <XToolTip content={m.label.tooltip} expand={false}><XLabel model={m.label} /></XToolTip>
@@ -203,11 +157,6 @@ const
     if (m.expander) return <XExpander args={args} model={m.expander} submit={submit} />
     if (m.nav) return <XNav args={args} model={m.nav} submit={submit} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
-  },
-  XComponents = ({ args, items, submit }: { args: Rec, items: Component[], submit: () => void }) => {
-    const components = items.map((m, i) => <XComponent key={i} model={m} args={args} submit={submit} />)
-    // TODO gap 10px between fields
-    return <>{components}</>
   },
   View = bond(({ state, changed }: Card<State>) => {
     const
