@@ -45,3 +45,20 @@ run                            Run server
 run-ui                         Run UI in development mode (hot reloading)
 setup                          Set up development dependencies
 ```
+
+
+## Migration Guide
+
+### Breaking changes
+
+**1. `ui.buttons()`, `ui.expander()` and `ui.tabs()` accept a `list` of items instead of var args `*args`**
+
+Before:
+```py
+ui.buttons(ui.button(...), ui.button(...), ui.button(...))
+```
+
+After:
+```py
+ui.buttons([ui.button(...), ui.button(...), ui.button(...)]) # Note enclosing [ ]
+```
