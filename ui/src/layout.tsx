@@ -84,7 +84,7 @@ const
         }
         return slot
       },
-      badPlacement: Slot = placeOnGrid(1, 1, 1, 1), // XXX
+      badPlacement: Slot = placeOnGrid(0, 0, 1, 1), // XXX
       normalize = (s: S): S[] => {
         const x = s.trim().split(/\s+/g)
         switch (x.length) {
@@ -96,6 +96,7 @@ const
         }
       },
       place = (s: S): Slot => {
+        if (!s) return badPlacement
         const [x, y, w, h] = normalize(s).map(parseI)
         if (isNaN(x) || isNaN(y) || isNaN(w) || isNaN(h)) return badPlacement
         return placeOnGrid(x - 1, y - 1, w, h)
