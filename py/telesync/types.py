@@ -3943,6 +3943,60 @@ class Form:
         )
 
 
+class Frame:
+    """Render HTML content.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: The title for this card.
+    :param content: The HTML content.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            content: str,
+    ):
+        self.box = box
+        self.title = title
+        self.content = content
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('Frame.box is required.')
+        if self.title is None:
+            raise ValueError('Frame.title is required.')
+        if self.content is None:
+            raise ValueError('Frame.content is required.')
+        return _dump(
+            view='frame',
+            box=self.box,
+            title=self.title,
+            content=self.content,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Frame':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('Frame.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('Frame.title is required.')
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('Frame.content is required.')
+        box: str = __d_box
+        title: str = __d_title
+        content: str = __d_content
+        return Frame(
+            box,
+            title,
+            content,
+        )
+
+
 class Grid:
     """No documentation available.
 
@@ -4211,11 +4265,14 @@ class Markup:
 
 
 class Meta:
-    """No documentation available.
+    """Represents page-global state.
+
+    This card is invisible.
+    It is used to control attributes of the active page.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param args: No documentation available.
+    :param title: The title of the page.
+    :param args: Form data.
     """
     def __init__(
             self,

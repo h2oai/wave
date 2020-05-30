@@ -38,6 +38,7 @@ from .types import \
     FileUpload, \
     Flex, \
     Form, \
+    Frame, \
     FrameCell, \
     Grid, \
     HeadingCell, \
@@ -1622,6 +1623,24 @@ def form(
     )
 
 
+def frame(
+        box: str,
+        title: str,
+        content: str,
+) -> Frame:
+    """Render HTML content.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: The title for this card.
+    :param content: The HTML content.
+    """
+    return Frame(
+        box,
+        title,
+        content,
+    )
+
+
 def grid(
         box: str,
         title: str,
@@ -1714,11 +1733,14 @@ def meta(
         title: Optional[str] = None,
         args: Optional[Union[PackedRecord, str]] = None,
 ) -> Meta:
-    """No documentation available.
+    """Represents page-global state.
+
+    This card is invisible.
+    It is used to control attributes of the active page.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param args: No documentation available.
+    :param title: The title of the page.
+    :param args: Form data.
     """
     return Meta(
         box,

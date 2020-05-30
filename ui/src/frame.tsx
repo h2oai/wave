@@ -19,11 +19,11 @@ const
     },
   })
 
-/** Render HTML content. */
+/** Render a HTML page inside an iframe. */
 interface State {
   /** The title for this card.*/
   title: S
-  /** The HTML content. */
+  /** The HTML page. */
   content: S
 }
 
@@ -51,6 +51,3 @@ const
   })
 
 cards.register('frame', View)
-
-
-
