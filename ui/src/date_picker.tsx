@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, Rec, S, U } from './telesync';
+import { B, bond, S, telesync, U } from './telesync';
 
 /**
  * Create a date picker.
@@ -37,12 +37,12 @@ const
   }
 
 export const
-  XDatePicker = bond(({ args, model: m }: { args: Rec, model: DatePicker }) => {
+  XDatePicker = bond(({ model: m }: { model: DatePicker }) => {
     const value = m.value || null
-    args[m.name] = value
+    telesync.args[m.name] = value
     const
       onSelectDate = (d: Date | null | undefined) => {
-        args[m.name] = (d === null || d === undefined) ? value : formatDate(d)
+        telesync.args[m.name] = (d === null || d === undefined) ? value : formatDate(d)
       },
       render = () => (
         <Fluent.DatePicker

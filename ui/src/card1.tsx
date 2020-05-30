@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards, Format } from './layout';
-import { bond, Card, unpack, Rec, S } from './telesync';
+import { bond, Card, Rec, S, unpack } from './telesync';
 import { getTheme } from './theme';
 
 const

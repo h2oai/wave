@@ -1,10 +1,10 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { B, bond, Rec, S } from './telesync';
+import { Component } from './form';
+import { B, bond, S, telesync } from './telesync';
 import { px } from './theme';
 import { XToolTip } from './tooltip';
-import { Component } from './form';
 
 /**
  * Create a button.
@@ -56,13 +56,13 @@ const
   })
 
 const
-  XButton = bond(({ args, model: m, submit }: { args: Rec, model: Button, submit: () => void }) => {
-    args[m.name] = false
+  XButton = bond(({ model: m }: { model: Button }) => {
+    telesync.args[m.name] = false
     const
       render = () => {
         const onClick = () => {
-          args[m.name] = true
-          submit()
+          telesync.args[m.name] = true
+          telesync.sync()
         }
         if (m.link) {
           return (<Fluent.Link data-test='link' disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>)
@@ -78,20 +78,20 @@ const
     return { render }
   })
 export const
-  XButtons = bond(({ args, model: m, submit }: { args: Rec, model: Buttons, submit: () => void }) => {
+  XButtons = bond(({ model: m }: { model: Buttons }) => {
     const
       render = () => {
         const
           buttons = m.items.map(c => c.button).filter(b => !!b) as Button[],
           children = buttons.map(b => (
             <XToolTip key={b.label} content={b.tooltip} showIcon={false} expand={false}>
-              <XButton model={b} args={args} submit={submit}>{b.label}</XButton>
+              <XButton model={b}>{b.label}</XButton>
             </XToolTip>
           ))
         return <div className={css.buttons}><Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack></div>
       }
     return { render }
   }),
-  XStandAloneButton = ({ args, model: m, submit }: { args: Rec, model: Button, submit: () => void }) => (
-    <div><XButton key={m.label} model={m} args={args} submit={submit}>{m.label}</XButton></div>
+  XStandAloneButton = ({ model: m }: { model: Button }) => (
+    <div><XButton key={m.label} model={m}>{m.label}</XButton></div>
   )

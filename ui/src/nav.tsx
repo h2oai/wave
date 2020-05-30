@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { bond, Rec, S } from './telesync';
+import { bond, S, telesync } from './telesync';
 
 interface NavItem {
   name: S
@@ -18,13 +18,13 @@ export interface Nav {
 }
 
 export const
-  XNav = bond(({ args, model: m, submit }: { args: Rec, model: Nav, submit: () => void }) => {
-    args[m.name] = null
+  XNav = bond(({ model: m }: { model: Nav }) => {
+    telesync.args[m.name] = null
     const
       onLinkClick = (_ev?: React.MouseEvent<HTMLElement>, item?: Fluent.INavLink) => {
         if (!item) return
-        args[m.name] = item.key || null
-        submit()
+        telesync.args[m.name] = item.key || null
+        telesync.sync()
       },
       render = () => {
         const groups = m.items.map((g): Fluent.INavLinkGroup => ({

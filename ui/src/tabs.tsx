@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { bond, Rec, S } from './telesync';
+import { bond, S, telesync } from './telesync';
 
 /**
  * Create a tab.
@@ -27,13 +27,13 @@ export interface Tabs {
 }
 
 export const
-  XTabs = bond(({ args, model: m, submit }: { args: Rec, model: Tabs, submit: () => void }) => {
+  XTabs = bond(({ model: m }: { model: Tabs }) => {
     const
       onLinkClick = (item?: Fluent.PivotItem) => {
         if (!item) return
-        if (item.props.itemKey !== args[m.name]) {
-          args[m.name] = item.props.itemKey || null
-          submit()
+        if (item.props.itemKey !== telesync.args[m.name]) {
+          telesync.args[m.name] = item.props.itemKey || null
+          telesync.sync()
         }
       },
       render = () => {

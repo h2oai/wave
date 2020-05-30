@@ -711,17 +711,18 @@ export interface Ref {
 }
 
 export interface Telesync {
-  path: S
-  argsB: Box<Rec>
+  readonly path: S
+  readonly args: Rec
   socket: WebSocket | null
   page(): PageRef
+  sync(): void
 }
 
 const keyseq = (...keys: S[]): S => keys.join(' ')
 
 export const telesync: Telesync = {
   socket: null,
-  argsB: box<Rec>({}),
+  args: {},
   path: window.location.pathname,
   page: (path?: S): PageRef => {
     path = path || telesync.path
@@ -744,7 +745,12 @@ export const telesync: Telesync = {
         sock.send(`* ${path} ${JSON.stringify(opsd)}`)
       }
     return { get, set, del, drop, sync }
-  }
+  },
+  sync: () => {
+    const sock = telesync.socket
+    if (!sock) return
+    sock.send(`@ ${telesync.path} ${JSON.stringify(telesync.args)}`)
+  },
 }
 
 export enum SockEventType { Message, Data }

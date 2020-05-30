@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, Rec, S } from './telesync';
+import { B, bond, S, telesync } from './telesync';
 
 /**
  *  Create a choice for a checklist, choice group or dropdown.
@@ -44,13 +44,13 @@ export interface ChoiceGroup {
 }
 
 export const
-  XChoiceGroup = bond(({ args, model: m, submit }: { args: Rec, model: ChoiceGroup, submit: () => void }) => {
-    args[m.name] = m.value || null
+  XChoiceGroup = bond(({ model: m }: { model: ChoiceGroup }) => {
+    telesync.args[m.name] = m.value || null
     const
       options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
-        if (option) args[m.name] = option.key
-        if (m.trigger) submit();
+        if (option) telesync.args[m.name] = option.key
+        if (m.trigger) telesync.sync()
       },
       render = () => (
         <Fluent.ChoiceGroup

@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, F, Rec, S } from './telesync';
+import { B, bond, F, S, telesync } from './telesync';
 
 /**
  * Create a slider.
@@ -40,7 +40,7 @@ export interface Slider {
 }
 
 export const
-  XSlider = bond(({ args, model: m, submit }: { args: Rec, model: Slider, submit: () => void }) => {
+  XSlider = bond(({ model: m }: { model: Slider }) => {
     const
       min = m.min || 0,
       max = m.max || 100,
@@ -48,11 +48,11 @@ export const
       value = m.value || 0
 
     const defaultValue = (value < min) ? min : ((value > max) ? max : value)
-    args[m.name] = defaultValue
+    telesync.args[m.name] = defaultValue
     const
-      onChange = (v: number) => args[m.name] = v,
+      onChange = (v: number) => telesync.args[m.name] = v,
       onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => {
-        if (m.trigger) submit()
+        if (m.trigger) telesync.sync()
       },
       render = () => (
         <Fluent.Slider

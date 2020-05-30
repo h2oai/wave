@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { Component, XComponents } from './form';
-import { B, bond, box, Rec, S } from './telesync';
+import { B, bond, box, S, telesync } from './telesync';
 
 /**
  * Creates a new expander.
@@ -43,11 +43,11 @@ const
   })
 
 export const
-  XExpander = bond(({ args, model: m, submit }: { args: Rec, model: Expander, submit: () => void }) => {
+  XExpander = bond(({ model: m }: { model: Expander }) => {
     const
-      isOpenB = box(args[m.name]),
+      isOpenB = box(!!telesync.args[m.name]),
       onClick = () => {
-        args[m.name] = m.expanded = !m.expanded
+        telesync.args[m.name] = m.expanded = !m.expanded
         isOpenB(m.expanded)
       },
       render = () => {
@@ -61,7 +61,7 @@ export const
           <div data-test='expander' className={className}>
             <Fluent.Separator alignContent="start"><Fluent.ActionButton title={actionTitle} iconProps={expanderIcon} onClick={onClick}>{m.label}</Fluent.ActionButton></Fluent.Separator>
             <div>
-              <XComponents items={m.items || []} args={args} submit={submit} />
+              <XComponents items={m.items || []} />
             </div>
           </div>
         )

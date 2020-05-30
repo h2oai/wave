@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { Choice } from './choice_group';
-import { B, bond, Rec, S } from './telesync';
+import { B, bond, S, telesync } from './telesync';
 
 /**
  * Create a dropdown.
@@ -40,9 +40,9 @@ export interface Dropdown {
 }
 
 export const
-  XDropdown = bond(({ args, model: m, submit }: { args: Rec, model: Dropdown, submit: () => void }) => {
+  XDropdown = bond(({ model: m }: { model: Dropdown }) => {
     const isMultivalued = !!m.values
-    args[m.name] = isMultivalued
+    telesync.args[m.name] = isMultivalued
       ? (m.values || [])
       : (m.value || null)
 
@@ -58,12 +58,12 @@ export const
             } else {
               selection.delete(name)
             }
-            args[m.name] = Array.from(selection)
+            telesync.args[m.name] = Array.from(selection)
           } else {
-            args[m.name] = name
+            telesync.args[m.name] = name
           }
         }
-        if (m.trigger) submit();
+        if (m.trigger) telesync.sync()
       },
       render = () =>
         isMultivalued

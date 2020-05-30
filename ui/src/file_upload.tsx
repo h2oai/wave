@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { B, bond, box, Rec, S } from './telesync';
+import { B, bond, box, S, telesync } from './telesync';
 
 /**
  * Create a file upload component.
@@ -26,7 +26,7 @@ const
   })
 
 export const
-  XFileUpload = bond(({ args, model: m, submit }: { args: Rec, model: FileUpload, submit: () => void }) => {
+  XFileUpload = bond(({ model: m }: { model: FileUpload }) => {
     const
       ref = React.createRef<HTMLInputElement>(),
       formSubmittedB = box(false),
@@ -63,8 +63,8 @@ export const
           const res = await makeRequest
           const text = res.responseText
           const reply = JSON.parse(text)
-          args[m.name] = reply.files
-          submit()
+          telesync.args[m.name] = reply.files
+          telesync.sync()
         } catch (e) {
           console.error(e) // XXX handle properly
         }

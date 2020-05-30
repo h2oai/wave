@@ -1,10 +1,10 @@
+import { initializeIcons, loadTheme } from '@fluentui/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './app';
 import './cards';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { loadTheme, initializeIcons } from '@fluentui/react'
 
 loadTheme({
   defaultFontStyle: {
