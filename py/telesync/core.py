@@ -411,7 +411,7 @@ class Q:
         await asyncio.sleep(delay)
 
 
-Handle = Callable[[Q], Awaitable[Any]]
+Handler = Callable[[Q], Awaitable[Any]]
 
 
 async def noop_async(q: Q): pass
@@ -430,7 +430,7 @@ def load_state():
 
 
 class App:
-    def __init__(self, url: str, handle: Handle, address: Tuple[str, int],
+    def __init__(self, url: str, handle: Handler, address: Tuple[str, int],
                  hub_address: Tuple[str, int], hub_access_key: Tuple[str, str]):
         self.url = url
         self.handle = handle
@@ -454,24 +454,24 @@ async def _server(host: str, port: int, stop):
         save_state()
 
 
-def serve(
-        handle: Handle,
-        app_url: str,
-        app_host: str = 'localhost',
-        app_port: int = 55556,
+def listen(
+        route: str,
+        handler: Handler,
+        host: str = 'localhost',
+        port: int = 55556,
         hub_host: str = 'localhost',
         hub_port: int = 55555,
         hub_access_key_id: str = None,
         hub_access_key_secret: str = None,
 ):
     global _app
-    _app = App(app_url, handle, (app_host, app_port), (hub_host, hub_port),
+    _app = App(route, handler, (host, port), (hub_host, hub_port),
                (hub_access_key_id, hub_access_key_secret))
 
     host_port = f'{hub_host}:{hub_port}'
     requests.post(
         f'http://{host_port}',
-        data=marshal(dict(url=app_url, host=f'{app_host}:{app_port}')),
+        data=marshal(dict(url=route, host=f'{host}:{port}')),
         headers=_content_type_json,
         auth=HTTPBasicAuth(hub_access_key_id, hub_access_key_secret)
     )
@@ -480,4 +480,4 @@ def serve(
     stop = el.create_future()
     el.add_signal_handler(signal.SIGINT, stop.set_result, None)
     el.add_signal_handler(signal.SIGTERM, stop.set_result, None)
-    el.run_until_complete(_server(app_host, app_port, stop))
+    el.run_until_complete(_server(host, port, stop))

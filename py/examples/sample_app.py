@@ -1,4 +1,4 @@
-from telesync import Q, serve, ui, pack
+from telesync import Q, listen, ui, pack
 
 count = 0
 
@@ -20,4 +20,4 @@ async def main(q: Q):
 
 
 if __name__ == '__main__':
-    serve(handle=main, app_url='/test_app')
+    listen('/test_app', main)
