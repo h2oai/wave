@@ -36,4 +36,4 @@ const
     return { render, changed }
   })
 
-cards.register('template', View)
+cards.register('markdown', View)
