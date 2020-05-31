@@ -19,12 +19,18 @@ const
     },
   })
 
-/** Render a HTML page inside an iframe. */
+/**
+ * Render a card containing a HTML page inside an inline frame (iframe).
+ *
+ * Either a path or content can be provided as arguments.
+ */
 interface State {
   /** The title for this card.*/
   title: S
-  /** The HTML page. */
-  content: S
+  /** The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html' */
+  path?: S
+  /** The HTML content of the page. A string containing '<html>...</html>' */
+  content?: S
 }
 
 const
@@ -32,9 +38,9 @@ const
     // replace ' src="/' -> ' src="http://foo.bar.baz:8080/'
     return s.replace(/(\s+src\s*=\s*["'])\//g, `$1${window.location.protocol}//${window.location.host}/`)
   },
+  inline = (s: S): S => `data:text/html;base64,${btoa(fixrefs(s))}`,
   Frame = ({ source, width, height }: { source: S, width: S, height: S }) => {
-    const src = `data:text/html;base64,${btoa(fixrefs(source))}`
-    return <iframe title={xid()} src={src} style={{ width, height, border: 'none' }} />
+    return <iframe title={xid()} src={source} style={{ width, height }} frameBorder="0" />
   }
 
 const
@@ -43,7 +49,7 @@ const
       <div className={css.card}>
         <div className={css.title}>{state.title}</div>
         <div className={css.body}>
-          <Frame source={state.content} width='100%' height='100%' />
+          <Frame source={state.path ? state.path : state.content ? inline(state.content) : inline('Nothing to render.')} width='100%' height='100%' />
         </div>
       </div>
     )

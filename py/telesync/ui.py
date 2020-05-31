@@ -1626,17 +1626,22 @@ def form(
 def frame(
         box: str,
         title: str,
-        content: str,
+        path: Optional[str] = None,
+        content: Optional[str] = None,
 ) -> Frame:
-    """Render HTML content.
+    """Render a card containing a HTML page inside an inline frame (iframe).
+
+    Either a path or content can be provided as arguments.
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title for this card.
-    :param content: The HTML content.
+    :param path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
+    :param content: The HTML content of the page. A string containing '<html>...</html>'
     """
     return Frame(
         box,
         title,
+        path,
         content,
     )
 

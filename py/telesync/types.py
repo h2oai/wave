@@ -3944,20 +3944,25 @@ class Form:
 
 
 class Frame:
-    """Render HTML content.
+    """Render a card containing a HTML page inside an inline frame (iframe).
+
+    Either a path or content can be provided as arguments.
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title for this card.
-    :param content: The HTML content.
+    :param path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
+    :param content: The HTML content of the page. A string containing '<html>...</html>'
     """
     def __init__(
             self,
             box: str,
             title: str,
-            content: str,
+            path: Optional[str] = None,
+            content: Optional[str] = None,
     ):
         self.box = box
         self.title = title
+        self.path = path
         self.content = content
 
     def dump(self) -> Dict:
@@ -3966,12 +3971,11 @@ class Frame:
             raise ValueError('Frame.box is required.')
         if self.title is None:
             raise ValueError('Frame.title is required.')
-        if self.content is None:
-            raise ValueError('Frame.content is required.')
         return _dump(
             view='frame',
             box=self.box,
             title=self.title,
+            path=self.path,
             content=self.content,
         )
 
@@ -3984,15 +3988,16 @@ class Frame:
         __d_title: Any = __d.get('title')
         if __d_title is None:
             raise ValueError('Frame.title is required.')
+        __d_path: Any = __d.get('path')
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('Frame.content is required.')
         box: str = __d_box
         title: str = __d_title
-        content: str = __d_content
+        path: Optional[str] = __d_path
+        content: Optional[str] = __d_content
         return Frame(
             box,
             title,
+            path,
             content,
         )
 
