@@ -1,9 +1,13 @@
-from typing import List
 import os
-from telesync import Q, listen, ui, pack
-from pygments.formatters.html import HtmlFormatter
+import subprocess
+import sys
+from typing import List, Optional
+
 from pygments import highlight
+from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
+
+from telesync import Q, listen, ui
 
 py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
@@ -38,36 +42,65 @@ def read_example_code(py_filename: str) -> str:
     return write_file(ex_path, result)
 
 
+current_example_process: Optional[subprocess.Popen] = None
+
+
+def execute_example(py_filename: str):
+    global current_example_process
+    if current_example_process:
+        current_example_process.terminate()
+    current_example_process = subprocess.Popen([sys.executable, os.path.join(example_dir, py_filename)])
+
+
+async def setup_page(q: Q):
+    q.page['meta'] = ui.meta(
+        box='',
+        title='Examples'
+    )
+    q.page['examples'] = ui.form(
+        box='1 1 2 -1',
+        items=[
+            ui.nav(name='example', items=[
+                ui.nav_group(
+                    label='Examples',
+                    items=[ui.nav_item(name=x, label=x) for x in example_list]
+                ),
+            ])
+        ],
+    )
+    example = example_list[0]
+    q.page['code'] = ui.frame(
+        box='3 1 5 -1',
+        title=example,
+        content=read_example_code(example),
+    )
+    q.page['preview'] = ui.frame(
+        box='8 1 5 -1',
+        title='Preview',
+        path='/demo',
+    )
+    await q.page.push()
+
+
+async def display_example(q: Q, example: str):
+    card = q.page['code']
+    card.title = example
+    card.content = read_example_code(example)
+    await q.page.push()
+
+    demo_page = q.site['/demo']
+    demo_page.drop()
+    await demo_page.push()
+
+    execute_example(example)
+
+
 async def main(q: Q):
     example = q.args.example
     if example:
-        card = q.page['code']
-        card.title = example
-        card.content = read_example_code(example)
-        await q.page.push()
+        await display_example(q, example)
     else:
-        q.page['meta'] = ui.meta(
-            box='',
-            title='Examples'
-        )
-        group = ui.nav_group(label='Examples', items=[ui.nav_item(name=x, label=x) for x in example_list])
-        nav = ui.nav(name='example', items=[group])
-        q.page['examples'] = ui.form(
-            box='1 1 2 -1',
-            items=[nav],
-        )
-        q.page['code'] = ui.frame(
-            box='3 1 5 -1',
-            title='Code',
-            content=read_example_code(example_list[0]),
-        )
-        q.page['preview'] = ui.template(
-            box='8 1 5 -1',
-            title='Preview',
-            content='<iframe src="{{url}}" width="100%" height="100%" frameborder="0"/>',
-            data=dict(url='/demo'),
-        )
-        await q.page.push()
+        await setup_page(q)
 
 
 if __name__ == '__main__':
