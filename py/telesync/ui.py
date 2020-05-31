@@ -5,18 +5,17 @@
 from typing import Optional, Union, List
 from .types import Value, PackedRecord, PackedRecords, PackedData
 from .types import \
-    BasicList, \
     Button, \
     Buttons, \
-    Card1, \
-    Card2, \
-    Card3, \
-    Card4, \
-    Card5, \
-    Card6, \
-    Card7, \
-    Card8, \
-    Card9, \
+    Card1Card, \
+    Card2Card, \
+    Card3Card, \
+    Card4Card, \
+    Card5Card, \
+    Card6Card, \
+    Card7Card, \
+    Card8Card, \
+    Card9Card, \
     Cell, \
     Checkbox, \
     Checklist, \
@@ -26,7 +25,7 @@ from .types import \
     Combobox, \
     Command, \
     Component, \
-    Dashboard, \
+    DashboardCard, \
     DashboardPage, \
     DashboardPanel, \
     DashboardRow, \
@@ -36,30 +35,31 @@ from .types import \
     Dropdown, \
     Expander, \
     FileUpload, \
-    Flex, \
-    Form, \
-    Frame, \
+    FlexCard, \
+    FormCard, \
+    FrameCard, \
     FrameCell, \
-    Grid, \
+    GridCard, \
     HeadingCell, \
     Label, \
     Link, \
-    ListItem1, \
+    ListCard, \
+    ListItem1Card, \
     Mark, \
-    Markdown, \
+    MarkdownCard, \
     MarkdownCell, \
-    Markup, \
+    MarkupCard, \
     MessageBar, \
-    Meta, \
+    MetaCard, \
     Nav, \
     NavGroup, \
     NavItem, \
-    Notebook, \
+    NotebookCard, \
     NotebookSection, \
-    PixelArt, \
-    Plot, \
+    PixelArtCard, \
+    PlotCard, \
     Progress, \
-    Repeat, \
+    RepeatCard, \
     Separator, \
     Slider, \
     Spinbox, \
@@ -68,7 +68,7 @@ from .types import \
     TableColumn, \
     TableRow, \
     Tabs, \
-    Template, \
+    TemplateCard, \
     Text, \
     Textbox, \
     Toggle, \
@@ -76,36 +76,12 @@ from .types import \
     Vis
 
 
-def basic_list(
-        box: str,
-        title: str,
-        item_view: str,
-        item_props: PackedRecord,
-        data: PackedData,
-) -> BasicList:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param item_view: No documentation available.
-    :param item_props: No documentation available.
-    :param data: No documentation available.
-    """
-    return BasicList(
-        box,
-        title,
-        item_view,
-        item_props,
-        data,
-    )
-
-
-def card1(
+def card1_card(
         box: str,
         title: str,
         value: str,
         data: Optional[PackedRecord] = None,
-) -> Card1:
+) -> Card1Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -113,7 +89,7 @@ def card1(
     :param value: No documentation available.
     :param data: No documentation available.
     """
-    return Card1(
+    return Card1Card(
         box,
         title,
         value,
@@ -121,7 +97,7 @@ def card1(
     )
 
 
-def card2(
+def card2_card(
         box: str,
         title: str,
         value: str,
@@ -134,7 +110,7 @@ def card2(
         plot_value: str,
         plot_zero_value: float,
         plot_curve: str,
-) -> Card2:
+) -> Card2Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -150,7 +126,7 @@ def card2(
     :param plot_zero_value: No documentation available.
     :param plot_curve: No documentation available.
     """
-    return Card2(
+    return Card2Card(
         box,
         title,
         value,
@@ -166,14 +142,14 @@ def card2(
     )
 
 
-def card3(
+def card3_card(
         box: str,
         title: str,
         value: str,
         aux_value: str,
         caption: str,
         data: PackedRecord,
-) -> Card3:
+) -> Card3Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -183,7 +159,7 @@ def card3(
     :param caption: No documentation available.
     :param data: No documentation available.
     """
-    return Card3(
+    return Card3Card(
         box,
         title,
         value,
@@ -193,7 +169,7 @@ def card3(
     )
 
 
-def card4(
+def card4_card(
         box: str,
         title: str,
         value: str,
@@ -201,7 +177,7 @@ def card4(
         progress: float,
         plot_color: str,
         data: PackedRecord,
-) -> Card4:
+) -> Card4Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -212,7 +188,7 @@ def card4(
     :param plot_color: No documentation available.
     :param data: No documentation available.
     """
-    return Card4(
+    return Card4Card(
         box,
         title,
         value,
@@ -223,7 +199,7 @@ def card4(
     )
 
 
-def card5(
+def card5_card(
         box: str,
         title: str,
         value: str,
@@ -231,7 +207,7 @@ def card5(
         progress: float,
         plot_color: str,
         data: PackedRecord,
-) -> Card5:
+) -> Card5Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -242,7 +218,7 @@ def card5(
     :param plot_color: No documentation available.
     :param data: No documentation available.
     """
-    return Card5(
+    return Card5Card(
         box,
         title,
         value,
@@ -253,7 +229,7 @@ def card5(
     )
 
 
-def card6(
+def card6_card(
         box: str,
         title: str,
         value: str,
@@ -266,7 +242,7 @@ def card6(
         plot_value: str,
         plot_zero_value: float,
         plot_curve: str,
-) -> Card6:
+) -> Card6Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -282,7 +258,7 @@ def card6(
     :param plot_zero_value: No documentation available.
     :param plot_curve: No documentation available.
     """
-    return Card6(
+    return Card6Card(
         box,
         title,
         value,
@@ -298,7 +274,7 @@ def card6(
     )
 
 
-def card7(
+def card7_card(
         box: str,
         title: str,
         value: str,
@@ -310,7 +286,7 @@ def card7(
         plot_value: str,
         plot_zero_value: float,
         plot_curve: str,
-) -> Card7:
+) -> Card7Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -325,7 +301,7 @@ def card7(
     :param plot_zero_value: No documentation available.
     :param plot_curve: No documentation available.
     """
-    return Card7(
+    return Card7Card(
         box,
         title,
         value,
@@ -340,7 +316,7 @@ def card7(
     )
 
 
-def card8(
+def card8_card(
         box: str,
         title: str,
         value: str,
@@ -348,7 +324,7 @@ def card8(
         progress: float,
         plot_color: str,
         data: PackedRecord,
-) -> Card8:
+) -> Card8Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -359,7 +335,7 @@ def card8(
     :param plot_color: No documentation available.
     :param data: No documentation available.
     """
-    return Card8(
+    return Card8Card(
         box,
         title,
         value,
@@ -370,7 +346,7 @@ def card8(
     )
 
 
-def card9(
+def card9_card(
         box: str,
         title: str,
         caption: str,
@@ -381,7 +357,7 @@ def card9(
         progress: float,
         plot_color: str,
         data: PackedRecord,
-) -> Card9:
+) -> Card9Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -395,7 +371,7 @@ def card9(
     :param plot_color: No documentation available.
     :param data: No documentation available.
     """
-    return Card9(
+    return Card9Card(
         box,
         title,
         caption,
@@ -608,10 +584,10 @@ def dashboard_page(
     )
 
 
-def dashboard(
+def dashboard_card(
         box: str,
         pages: List[DashboardPage],
-) -> Dashboard:
+) -> DashboardCard:
     """Create a dashboard.
 
     A dashboard consists of one or more pages.
@@ -638,13 +614,13 @@ def dashboard(
     :param box: A string indicating how to place this component on the page.
     :param pages: A list of pages contained in the dashboard.
     """
-    return Dashboard(
+    return DashboardCard(
         box,
         pages,
     )
 
 
-def flex(
+def flex_card(
         box: str,
         title: str,
         item_view: str,
@@ -654,7 +630,7 @@ def flex(
         align: str,
         wrap: str,
         data: PackedData,
-) -> Flex:
+) -> FlexCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -667,7 +643,7 @@ def flex(
     :param wrap: No documentation available. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
     :param data: No documentation available.
     """
-    return Flex(
+    return FlexCard(
         box,
         title,
         item_view,
@@ -1608,27 +1584,27 @@ def component(
     )
 
 
-def form(
+def form_card(
         box: str,
         items: Union[List[Component], str],
-) -> Form:
+) -> FormCard:
     """Create a form.
 
     :param box: A string indicating how to place this component on the page.
     :param items: The components in this form.
     """
-    return Form(
+    return FormCard(
         box,
         items,
     )
 
 
-def frame(
+def frame_card(
         box: str,
         title: str,
         path: Optional[str] = None,
         content: Optional[str] = None,
-) -> Frame:
+) -> FrameCard:
     """Render a card containing a HTML page inside an inline frame (iframe).
 
     Either a path or content can be provided as arguments.
@@ -1638,7 +1614,7 @@ def frame(
     :param path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
     :param content: The HTML content of the page. A string containing '<html>...</html>'
     """
-    return Frame(
+    return FrameCard(
         box,
         title,
         path,
@@ -1646,12 +1622,12 @@ def frame(
     )
 
 
-def grid(
+def grid_card(
         box: str,
         title: str,
         cells: PackedData,
         data: PackedData,
-) -> Grid:
+) -> GridCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -1659,7 +1635,7 @@ def grid(
     :param cells: No documentation available.
     :param data: No documentation available.
     """
-    return Grid(
+    return GridCard(
         box,
         title,
         cells,
@@ -1667,14 +1643,38 @@ def grid(
     )
 
 
-def list_item1(
+def list_card(
+        box: str,
+        title: str,
+        item_view: str,
+        item_props: PackedRecord,
+        data: PackedData,
+) -> ListCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param item_view: No documentation available.
+    :param item_props: No documentation available.
+    :param data: No documentation available.
+    """
+    return ListCard(
+        box,
+        title,
+        item_view,
+        item_props,
+        data,
+    )
+
+
+def list_item1_card(
         box: str,
         title: str,
         caption: str,
         value: str,
         aux_value: str,
         data: PackedRecord,
-) -> ListItem1:
+) -> ListItem1Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -1684,7 +1684,7 @@ def list_item1(
     :param aux_value: No documentation available.
     :param data: No documentation available.
     """
-    return ListItem1(
+    return ListItem1Card(
         box,
         title,
         caption,
@@ -1694,12 +1694,12 @@ def list_item1(
     )
 
 
-def markdown(
+def markdown_card(
         box: str,
         title: str,
         content: str,
         data: Optional[PackedRecord] = None,
-) -> Markdown:
+) -> MarkdownCard:
     """Render Markdown content.
 
     :param box: A string indicating how to place this component on the page.
@@ -1707,7 +1707,7 @@ def markdown(
     :param content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
     :param data: Additional data for the card.
     """
-    return Markdown(
+    return MarkdownCard(
         box,
         title,
         content,
@@ -1715,29 +1715,29 @@ def markdown(
     )
 
 
-def markup(
+def markup_card(
         box: str,
         title: str,
         content: str,
-) -> Markup:
+) -> MarkupCard:
     """Render HTML content.
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title for this card.
     :param content: The HTML content.
     """
-    return Markup(
+    return MarkupCard(
         box,
         title,
         content,
     )
 
 
-def meta(
+def meta_card(
         box: str,
         title: Optional[str] = None,
         args: Optional[Union[PackedRecord, str]] = None,
-) -> Meta:
+) -> MetaCard:
     """Represents page-global state.
 
     This card is invisible.
@@ -1747,7 +1747,7 @@ def meta(
     :param title: The title of the page.
     :param args: Form data.
     """
-    return Meta(
+    return MetaCard(
         box,
         title,
         args,
@@ -1774,10 +1774,10 @@ def notebook_section(
     )
 
 
-def notebook(
+def notebook_card(
         box: str,
         sections: List[NotebookSection],
-) -> Notebook:
+) -> NotebookCard:
     """Create a notebook.
 
     A notebook is rendered as a sequence of sections.
@@ -1785,24 +1785,24 @@ def notebook(
     :param box: A string indicating how to place this component on the page.
     :param sections: A list of sections to display in the notebook.
     """
-    return Notebook(
+    return NotebookCard(
         box,
         sections,
     )
 
 
-def pixel_art(
+def pixel_art_card(
         box: str,
         title: str,
         data: PackedRecord,
-) -> PixelArt:
+) -> PixelArtCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
     :param title: No documentation available.
     :param data: No documentation available.
     """
-    return PixelArt(
+    return PixelArtCard(
         box,
         title,
         data,
@@ -1995,12 +1995,12 @@ def vis(
     )
 
 
-def plot(
+def plot_card(
         box: str,
         title: str,
         data: PackedRecord,
         vis: Vis,
-) -> Plot:
+) -> PlotCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -2008,7 +2008,7 @@ def plot(
     :param data: No documentation available.
     :param vis: No documentation available.
     """
-    return Plot(
+    return PlotCard(
         box,
         title,
         data,
@@ -2016,13 +2016,13 @@ def plot(
     )
 
 
-def repeat(
+def repeat_card(
         box: str,
         title: str,
         item_view: str,
         item_props: PackedRecord,
         data: PackedData,
-) -> Repeat:
+) -> RepeatCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -2031,7 +2031,7 @@ def repeat(
     :param item_props: No documentation available.
     :param data: No documentation available.
     """
-    return Repeat(
+    return RepeatCard(
         box,
         title,
         item_view,
@@ -2040,12 +2040,12 @@ def repeat(
     )
 
 
-def template(
+def template_card(
         box: str,
         title: str,
         content: str,
         data: Optional[PackedRecord] = None,
-) -> Template:
+) -> TemplateCard:
     """Render dynamic content using a HTML template.
 
     :param box: A string indicating how to place this component on the page.
@@ -2053,7 +2053,7 @@ def template(
     :param content: The Handlebars template. https://handlebarsjs.com/guide/
     :param data: Data for the Handlebars template
     """
-    return Template(
+    return TemplateCard(
         box,
         title,
         content,

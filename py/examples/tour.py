@@ -53,11 +53,11 @@ def execute_example(py_filename: str):
 
 
 async def setup_page(q: Q):
-    q.page['meta'] = ui.meta(
+    q.page['meta'] = ui.meta_card(
         box='',
         title='Examples'
     )
-    q.page['examples'] = ui.form(
+    q.page['examples'] = ui.form_card(
         box='1 1 2 -1',
         items=[
             ui.nav(name='example', items=[
@@ -69,12 +69,12 @@ async def setup_page(q: Q):
         ],
     )
     example = example_list[0]
-    q.page['code'] = ui.frame(
+    q.page['code'] = ui.frame_card(
         box='3 1 5 -1',
         title=example,
         content=read_example_code(example),
     )
-    q.page['preview'] = ui.frame(
+    q.page['preview'] = ui.frame_card(
         box='8 1 5 -1',
         title='Preview',
         path='/demo',

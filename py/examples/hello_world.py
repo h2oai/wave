@@ -10,7 +10,7 @@ site = Site()
 page = site['/demo']
 
 # Add a Markdown card named `hello` to the page.
-page['hello'] = ui.markdown(
+page['hello'] = ui.markdown_card(
     box='1 1 2 2',
     title='Hello World!',
     content='I am card.',

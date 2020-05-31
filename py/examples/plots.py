@@ -482,12 +482,12 @@ def create_polygon(key, page, box):
         vis=pack(
             plot(mark='polygon', x='=country', y='=product', color='=profit', color_range='#fee8c8 #fdbb84 #e34a33'))
     ))
-    data = []
+    rows = []
     for i in range(k1):
         for j in range(k2):
             x, dx = f.next()
-            data.append((f'A{i + 1}', f'B{j + 1}', x))
-    v.data = data
+            rows.append((f'A{i + 1}', f'B{j + 1}', x))
+    v.data = rows
 
 
 def create_point_map(key, page, box):
@@ -500,12 +500,12 @@ def create_point_map(key, page, box):
         data=data('country product profit', k1 * k2),
         vis=pack(plot(mark='point', x='=country', y='=product', size='=profit', shape='circle'))
     ))
-    data = []
+    rows = []
     for i in range(k1):
         for j in range(k2):
             x, dx = f.next()
-            data.append((f'A{i + 1}', f'B{j + 1}', x))
-    v.data = data
+            rows.append((f'A{i + 1}', f'B{j + 1}', x))
+    v.data = rows
 
 
 def create_line_labels(key, page, box):

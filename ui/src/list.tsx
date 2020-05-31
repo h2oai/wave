@@ -56,4 +56,4 @@ const
     return { render, changed }
   })
 
-cards.register('basic_list', View)
+cards.register('list', View)

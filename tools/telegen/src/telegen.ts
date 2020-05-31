@@ -207,7 +207,7 @@ const
             n = node as ts.InterfaceDeclaration,
             nodeName = n.name.getText(),
             isRoot = nodeName === 'State',
-            typeName = isRoot ? titlecase(file.name) : nodeName,
+            typeName = isRoot ? titlecase(`${file.name}_card`) : nodeName,
             members = n.members.map(m => collectMember(component, typeName, m)),
             comments = collectComments(n)
 
@@ -358,7 +358,7 @@ const
         }
         p(`        return _dump(`)
         if (type.isRoot) {
-          p(`            view='${snakeCase(type.name)}',`)
+          p(`            view='${type.file}',`)
         }
         for (const m of type.members) { // pack
           if (getKnownTypeOf(m)) {

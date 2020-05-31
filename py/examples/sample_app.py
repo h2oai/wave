@@ -14,7 +14,7 @@ async def main(q: Q):
         form = q.page['a_form']
         form.items = items
     else:
-        q.page['a_form'] = ui.form(url=q.url, box='1 1 12 10', items=items)
+        q.page['a_form'] = ui.form_card(box='1 1 12 10', items=items)
 
     await q.page.push()
 

@@ -14,83 +14,7 @@ PackedData = Union[Data, str]
 def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}
 
 
-class BasicList:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param item_view: No documentation available.
-    :param item_props: No documentation available.
-    :param data: No documentation available.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            item_view: str,
-            item_props: PackedRecord,
-            data: PackedData,
-    ):
-        self.box = box
-        self.title = title
-        self.item_view = item_view
-        self.item_props = item_props
-        self.data = data
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('BasicList.box is required.')
-        if self.title is None:
-            raise ValueError('BasicList.title is required.')
-        if self.item_view is None:
-            raise ValueError('BasicList.item_view is required.')
-        if self.item_props is None:
-            raise ValueError('BasicList.item_props is required.')
-        if self.data is None:
-            raise ValueError('BasicList.data is required.')
-        return _dump(
-            view='basic_list',
-            box=self.box,
-            title=self.title,
-            item_view=self.item_view,
-            item_props=self.item_props,
-            data=self.data,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'BasicList':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('BasicList.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('BasicList.title is required.')
-        __d_item_view: Any = __d.get('item_view')
-        if __d_item_view is None:
-            raise ValueError('BasicList.item_view is required.')
-        __d_item_props: Any = __d.get('item_props')
-        if __d_item_props is None:
-            raise ValueError('BasicList.item_props is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('BasicList.data is required.')
-        box: str = __d_box
-        title: str = __d_title
-        item_view: str = __d_item_view
-        item_props: PackedRecord = __d_item_props
-        data: PackedData = __d_data
-        return BasicList(
-            box,
-            title,
-            item_view,
-            item_props,
-            data,
-        )
-
-
-class Card1:
+class Card1Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -113,11 +37,11 @@ class Card1:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Card1.box is required.')
+            raise ValueError('Card1Card.box is required.')
         if self.title is None:
-            raise ValueError('Card1.title is required.')
+            raise ValueError('Card1Card.title is required.')
         if self.value is None:
-            raise ValueError('Card1.value is required.')
+            raise ValueError('Card1Card.value is required.')
         return _dump(
             view='card1',
             box=self.box,
@@ -127,23 +51,23 @@ class Card1:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Card1':
+    def load(__d: Dict) -> 'Card1Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Card1.box is required.')
+            raise ValueError('Card1Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Card1.title is required.')
+            raise ValueError('Card1Card.title is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('Card1.value is required.')
+            raise ValueError('Card1Card.value is required.')
         __d_data: Any = __d.get('data')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         data: Optional[PackedRecord] = __d_data
-        return Card1(
+        return Card1Card(
             box,
             title,
             value,
@@ -151,7 +75,7 @@ class Card1:
         )
 
 
-class Card2:
+class Card2Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -198,31 +122,31 @@ class Card2:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Card2.box is required.')
+            raise ValueError('Card2Card.box is required.')
         if self.title is None:
-            raise ValueError('Card2.title is required.')
+            raise ValueError('Card2Card.title is required.')
         if self.value is None:
-            raise ValueError('Card2.value is required.')
+            raise ValueError('Card2Card.value is required.')
         if self.aux_value is None:
-            raise ValueError('Card2.aux_value is required.')
+            raise ValueError('Card2Card.aux_value is required.')
         if self.data is None:
-            raise ValueError('Card2.data is required.')
+            raise ValueError('Card2Card.data is required.')
         if self.plot_type is None:
-            raise ValueError('Card2.plot_type is required.')
+            raise ValueError('Card2Card.plot_type is required.')
         if self.plot_type not in ('area', 'interval'):
-            raise ValueError(f'Invalid value "{self.plot_type}" for Card2.plot_type.')
+            raise ValueError(f'Invalid value "{self.plot_type}" for Card2Card.plot_type.')
         if self.plot_data is None:
-            raise ValueError('Card2.plot_data is required.')
+            raise ValueError('Card2Card.plot_data is required.')
         if self.plot_color is None:
-            raise ValueError('Card2.plot_color is required.')
+            raise ValueError('Card2Card.plot_color is required.')
         if self.plot_category is None:
-            raise ValueError('Card2.plot_category is required.')
+            raise ValueError('Card2Card.plot_category is required.')
         if self.plot_value is None:
-            raise ValueError('Card2.plot_value is required.')
+            raise ValueError('Card2Card.plot_value is required.')
         if self.plot_zero_value is None:
-            raise ValueError('Card2.plot_zero_value is required.')
+            raise ValueError('Card2Card.plot_zero_value is required.')
         if self.plot_curve is None:
-            raise ValueError('Card2.plot_curve is required.')
+            raise ValueError('Card2Card.plot_curve is required.')
         return _dump(
             view='card2',
             box=self.box,
@@ -240,44 +164,44 @@ class Card2:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Card2':
+    def load(__d: Dict) -> 'Card2Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Card2.box is required.')
+            raise ValueError('Card2Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Card2.title is required.')
+            raise ValueError('Card2Card.title is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('Card2.value is required.')
+            raise ValueError('Card2Card.value is required.')
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
-            raise ValueError('Card2.aux_value is required.')
+            raise ValueError('Card2Card.aux_value is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Card2.data is required.')
+            raise ValueError('Card2Card.data is required.')
         __d_plot_type: Any = __d.get('plot_type')
         if __d_plot_type is None:
-            raise ValueError('Card2.plot_type is required.')
+            raise ValueError('Card2Card.plot_type is required.')
         __d_plot_data: Any = __d.get('plot_data')
         if __d_plot_data is None:
-            raise ValueError('Card2.plot_data is required.')
+            raise ValueError('Card2Card.plot_data is required.')
         __d_plot_color: Any = __d.get('plot_color')
         if __d_plot_color is None:
-            raise ValueError('Card2.plot_color is required.')
+            raise ValueError('Card2Card.plot_color is required.')
         __d_plot_category: Any = __d.get('plot_category')
         if __d_plot_category is None:
-            raise ValueError('Card2.plot_category is required.')
+            raise ValueError('Card2Card.plot_category is required.')
         __d_plot_value: Any = __d.get('plot_value')
         if __d_plot_value is None:
-            raise ValueError('Card2.plot_value is required.')
+            raise ValueError('Card2Card.plot_value is required.')
         __d_plot_zero_value: Any = __d.get('plot_zero_value')
         if __d_plot_zero_value is None:
-            raise ValueError('Card2.plot_zero_value is required.')
+            raise ValueError('Card2Card.plot_zero_value is required.')
         __d_plot_curve: Any = __d.get('plot_curve')
         if __d_plot_curve is None:
-            raise ValueError('Card2.plot_curve is required.')
+            raise ValueError('Card2Card.plot_curve is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -290,7 +214,7 @@ class Card2:
         plot_value: str = __d_plot_value
         plot_zero_value: float = __d_plot_zero_value
         plot_curve: str = __d_plot_curve
-        return Card2(
+        return Card2Card(
             box,
             title,
             value,
@@ -306,7 +230,7 @@ class Card2:
         )
 
 
-class Card3:
+class Card3Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -335,17 +259,17 @@ class Card3:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Card3.box is required.')
+            raise ValueError('Card3Card.box is required.')
         if self.title is None:
-            raise ValueError('Card3.title is required.')
+            raise ValueError('Card3Card.title is required.')
         if self.value is None:
-            raise ValueError('Card3.value is required.')
+            raise ValueError('Card3Card.value is required.')
         if self.aux_value is None:
-            raise ValueError('Card3.aux_value is required.')
+            raise ValueError('Card3Card.aux_value is required.')
         if self.caption is None:
-            raise ValueError('Card3.caption is required.')
+            raise ValueError('Card3Card.caption is required.')
         if self.data is None:
-            raise ValueError('Card3.data is required.')
+            raise ValueError('Card3Card.data is required.')
         return _dump(
             view='card3',
             box=self.box,
@@ -357,33 +281,33 @@ class Card3:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Card3':
+    def load(__d: Dict) -> 'Card3Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Card3.box is required.')
+            raise ValueError('Card3Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Card3.title is required.')
+            raise ValueError('Card3Card.title is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('Card3.value is required.')
+            raise ValueError('Card3Card.value is required.')
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
-            raise ValueError('Card3.aux_value is required.')
+            raise ValueError('Card3Card.aux_value is required.')
         __d_caption: Any = __d.get('caption')
         if __d_caption is None:
-            raise ValueError('Card3.caption is required.')
+            raise ValueError('Card3Card.caption is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Card3.data is required.')
+            raise ValueError('Card3Card.data is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
         caption: str = __d_caption
         data: PackedRecord = __d_data
-        return Card3(
+        return Card3Card(
             box,
             title,
             value,
@@ -393,7 +317,7 @@ class Card3:
         )
 
 
-class Card4:
+class Card4Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -425,19 +349,19 @@ class Card4:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Card4.box is required.')
+            raise ValueError('Card4Card.box is required.')
         if self.title is None:
-            raise ValueError('Card4.title is required.')
+            raise ValueError('Card4Card.title is required.')
         if self.value is None:
-            raise ValueError('Card4.value is required.')
+            raise ValueError('Card4Card.value is required.')
         if self.aux_value is None:
-            raise ValueError('Card4.aux_value is required.')
+            raise ValueError('Card4Card.aux_value is required.')
         if self.progress is None:
-            raise ValueError('Card4.progress is required.')
+            raise ValueError('Card4Card.progress is required.')
         if self.plot_color is None:
-            raise ValueError('Card4.plot_color is required.')
+            raise ValueError('Card4Card.plot_color is required.')
         if self.data is None:
-            raise ValueError('Card4.data is required.')
+            raise ValueError('Card4Card.data is required.')
         return _dump(
             view='card4',
             box=self.box,
@@ -450,29 +374,29 @@ class Card4:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Card4':
+    def load(__d: Dict) -> 'Card4Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Card4.box is required.')
+            raise ValueError('Card4Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Card4.title is required.')
+            raise ValueError('Card4Card.title is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('Card4.value is required.')
+            raise ValueError('Card4Card.value is required.')
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
-            raise ValueError('Card4.aux_value is required.')
+            raise ValueError('Card4Card.aux_value is required.')
         __d_progress: Any = __d.get('progress')
         if __d_progress is None:
-            raise ValueError('Card4.progress is required.')
+            raise ValueError('Card4Card.progress is required.')
         __d_plot_color: Any = __d.get('plot_color')
         if __d_plot_color is None:
-            raise ValueError('Card4.plot_color is required.')
+            raise ValueError('Card4Card.plot_color is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Card4.data is required.')
+            raise ValueError('Card4Card.data is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -480,7 +404,7 @@ class Card4:
         progress: float = __d_progress
         plot_color: str = __d_plot_color
         data: PackedRecord = __d_data
-        return Card4(
+        return Card4Card(
             box,
             title,
             value,
@@ -491,7 +415,7 @@ class Card4:
         )
 
 
-class Card5:
+class Card5Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -523,19 +447,19 @@ class Card5:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Card5.box is required.')
+            raise ValueError('Card5Card.box is required.')
         if self.title is None:
-            raise ValueError('Card5.title is required.')
+            raise ValueError('Card5Card.title is required.')
         if self.value is None:
-            raise ValueError('Card5.value is required.')
+            raise ValueError('Card5Card.value is required.')
         if self.aux_value is None:
-            raise ValueError('Card5.aux_value is required.')
+            raise ValueError('Card5Card.aux_value is required.')
         if self.progress is None:
-            raise ValueError('Card5.progress is required.')
+            raise ValueError('Card5Card.progress is required.')
         if self.plot_color is None:
-            raise ValueError('Card5.plot_color is required.')
+            raise ValueError('Card5Card.plot_color is required.')
         if self.data is None:
-            raise ValueError('Card5.data is required.')
+            raise ValueError('Card5Card.data is required.')
         return _dump(
             view='card5',
             box=self.box,
@@ -548,29 +472,29 @@ class Card5:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Card5':
+    def load(__d: Dict) -> 'Card5Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Card5.box is required.')
+            raise ValueError('Card5Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Card5.title is required.')
+            raise ValueError('Card5Card.title is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('Card5.value is required.')
+            raise ValueError('Card5Card.value is required.')
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
-            raise ValueError('Card5.aux_value is required.')
+            raise ValueError('Card5Card.aux_value is required.')
         __d_progress: Any = __d.get('progress')
         if __d_progress is None:
-            raise ValueError('Card5.progress is required.')
+            raise ValueError('Card5Card.progress is required.')
         __d_plot_color: Any = __d.get('plot_color')
         if __d_plot_color is None:
-            raise ValueError('Card5.plot_color is required.')
+            raise ValueError('Card5Card.plot_color is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Card5.data is required.')
+            raise ValueError('Card5Card.data is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -578,7 +502,7 @@ class Card5:
         progress: float = __d_progress
         plot_color: str = __d_plot_color
         data: PackedRecord = __d_data
-        return Card5(
+        return Card5Card(
             box,
             title,
             value,
@@ -589,7 +513,7 @@ class Card5:
         )
 
 
-class Card6:
+class Card6Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -636,31 +560,31 @@ class Card6:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Card6.box is required.')
+            raise ValueError('Card6Card.box is required.')
         if self.title is None:
-            raise ValueError('Card6.title is required.')
+            raise ValueError('Card6Card.title is required.')
         if self.value is None:
-            raise ValueError('Card6.value is required.')
+            raise ValueError('Card6Card.value is required.')
         if self.aux_value is None:
-            raise ValueError('Card6.aux_value is required.')
+            raise ValueError('Card6Card.aux_value is required.')
         if self.data is None:
-            raise ValueError('Card6.data is required.')
+            raise ValueError('Card6Card.data is required.')
         if self.plot_type is None:
-            raise ValueError('Card6.plot_type is required.')
+            raise ValueError('Card6Card.plot_type is required.')
         if self.plot_type not in ('area', 'interval'):
-            raise ValueError(f'Invalid value "{self.plot_type}" for Card6.plot_type.')
+            raise ValueError(f'Invalid value "{self.plot_type}" for Card6Card.plot_type.')
         if self.plot_data is None:
-            raise ValueError('Card6.plot_data is required.')
+            raise ValueError('Card6Card.plot_data is required.')
         if self.plot_color is None:
-            raise ValueError('Card6.plot_color is required.')
+            raise ValueError('Card6Card.plot_color is required.')
         if self.plot_category is None:
-            raise ValueError('Card6.plot_category is required.')
+            raise ValueError('Card6Card.plot_category is required.')
         if self.plot_value is None:
-            raise ValueError('Card6.plot_value is required.')
+            raise ValueError('Card6Card.plot_value is required.')
         if self.plot_zero_value is None:
-            raise ValueError('Card6.plot_zero_value is required.')
+            raise ValueError('Card6Card.plot_zero_value is required.')
         if self.plot_curve is None:
-            raise ValueError('Card6.plot_curve is required.')
+            raise ValueError('Card6Card.plot_curve is required.')
         return _dump(
             view='card6',
             box=self.box,
@@ -678,44 +602,44 @@ class Card6:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Card6':
+    def load(__d: Dict) -> 'Card6Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Card6.box is required.')
+            raise ValueError('Card6Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Card6.title is required.')
+            raise ValueError('Card6Card.title is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('Card6.value is required.')
+            raise ValueError('Card6Card.value is required.')
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
-            raise ValueError('Card6.aux_value is required.')
+            raise ValueError('Card6Card.aux_value is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Card6.data is required.')
+            raise ValueError('Card6Card.data is required.')
         __d_plot_type: Any = __d.get('plot_type')
         if __d_plot_type is None:
-            raise ValueError('Card6.plot_type is required.')
+            raise ValueError('Card6Card.plot_type is required.')
         __d_plot_data: Any = __d.get('plot_data')
         if __d_plot_data is None:
-            raise ValueError('Card6.plot_data is required.')
+            raise ValueError('Card6Card.plot_data is required.')
         __d_plot_color: Any = __d.get('plot_color')
         if __d_plot_color is None:
-            raise ValueError('Card6.plot_color is required.')
+            raise ValueError('Card6Card.plot_color is required.')
         __d_plot_category: Any = __d.get('plot_category')
         if __d_plot_category is None:
-            raise ValueError('Card6.plot_category is required.')
+            raise ValueError('Card6Card.plot_category is required.')
         __d_plot_value: Any = __d.get('plot_value')
         if __d_plot_value is None:
-            raise ValueError('Card6.plot_value is required.')
+            raise ValueError('Card6Card.plot_value is required.')
         __d_plot_zero_value: Any = __d.get('plot_zero_value')
         if __d_plot_zero_value is None:
-            raise ValueError('Card6.plot_zero_value is required.')
+            raise ValueError('Card6Card.plot_zero_value is required.')
         __d_plot_curve: Any = __d.get('plot_curve')
         if __d_plot_curve is None:
-            raise ValueError('Card6.plot_curve is required.')
+            raise ValueError('Card6Card.plot_curve is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -728,7 +652,7 @@ class Card6:
         plot_value: str = __d_plot_value
         plot_zero_value: float = __d_plot_zero_value
         plot_curve: str = __d_plot_curve
-        return Card6(
+        return Card6Card(
             box,
             title,
             value,
@@ -744,7 +668,7 @@ class Card6:
         )
 
 
-class Card7:
+class Card7Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -788,29 +712,29 @@ class Card7:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Card7.box is required.')
+            raise ValueError('Card7Card.box is required.')
         if self.title is None:
-            raise ValueError('Card7.title is required.')
+            raise ValueError('Card7Card.title is required.')
         if self.value is None:
-            raise ValueError('Card7.value is required.')
+            raise ValueError('Card7Card.value is required.')
         if self.data is None:
-            raise ValueError('Card7.data is required.')
+            raise ValueError('Card7Card.data is required.')
         if self.plot_type is None:
-            raise ValueError('Card7.plot_type is required.')
+            raise ValueError('Card7Card.plot_type is required.')
         if self.plot_type not in ('area', 'interval'):
-            raise ValueError(f'Invalid value "{self.plot_type}" for Card7.plot_type.')
+            raise ValueError(f'Invalid value "{self.plot_type}" for Card7Card.plot_type.')
         if self.plot_data is None:
-            raise ValueError('Card7.plot_data is required.')
+            raise ValueError('Card7Card.plot_data is required.')
         if self.plot_color is None:
-            raise ValueError('Card7.plot_color is required.')
+            raise ValueError('Card7Card.plot_color is required.')
         if self.plot_category is None:
-            raise ValueError('Card7.plot_category is required.')
+            raise ValueError('Card7Card.plot_category is required.')
         if self.plot_value is None:
-            raise ValueError('Card7.plot_value is required.')
+            raise ValueError('Card7Card.plot_value is required.')
         if self.plot_zero_value is None:
-            raise ValueError('Card7.plot_zero_value is required.')
+            raise ValueError('Card7Card.plot_zero_value is required.')
         if self.plot_curve is None:
-            raise ValueError('Card7.plot_curve is required.')
+            raise ValueError('Card7Card.plot_curve is required.')
         return _dump(
             view='card7',
             box=self.box,
@@ -827,41 +751,41 @@ class Card7:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Card7':
+    def load(__d: Dict) -> 'Card7Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Card7.box is required.')
+            raise ValueError('Card7Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Card7.title is required.')
+            raise ValueError('Card7Card.title is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('Card7.value is required.')
+            raise ValueError('Card7Card.value is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Card7.data is required.')
+            raise ValueError('Card7Card.data is required.')
         __d_plot_type: Any = __d.get('plot_type')
         if __d_plot_type is None:
-            raise ValueError('Card7.plot_type is required.')
+            raise ValueError('Card7Card.plot_type is required.')
         __d_plot_data: Any = __d.get('plot_data')
         if __d_plot_data is None:
-            raise ValueError('Card7.plot_data is required.')
+            raise ValueError('Card7Card.plot_data is required.')
         __d_plot_color: Any = __d.get('plot_color')
         if __d_plot_color is None:
-            raise ValueError('Card7.plot_color is required.')
+            raise ValueError('Card7Card.plot_color is required.')
         __d_plot_category: Any = __d.get('plot_category')
         if __d_plot_category is None:
-            raise ValueError('Card7.plot_category is required.')
+            raise ValueError('Card7Card.plot_category is required.')
         __d_plot_value: Any = __d.get('plot_value')
         if __d_plot_value is None:
-            raise ValueError('Card7.plot_value is required.')
+            raise ValueError('Card7Card.plot_value is required.')
         __d_plot_zero_value: Any = __d.get('plot_zero_value')
         if __d_plot_zero_value is None:
-            raise ValueError('Card7.plot_zero_value is required.')
+            raise ValueError('Card7Card.plot_zero_value is required.')
         __d_plot_curve: Any = __d.get('plot_curve')
         if __d_plot_curve is None:
-            raise ValueError('Card7.plot_curve is required.')
+            raise ValueError('Card7Card.plot_curve is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -873,7 +797,7 @@ class Card7:
         plot_value: str = __d_plot_value
         plot_zero_value: float = __d_plot_zero_value
         plot_curve: str = __d_plot_curve
-        return Card7(
+        return Card7Card(
             box,
             title,
             value,
@@ -888,7 +812,7 @@ class Card7:
         )
 
 
-class Card8:
+class Card8Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -920,19 +844,19 @@ class Card8:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Card8.box is required.')
+            raise ValueError('Card8Card.box is required.')
         if self.title is None:
-            raise ValueError('Card8.title is required.')
+            raise ValueError('Card8Card.title is required.')
         if self.value is None:
-            raise ValueError('Card8.value is required.')
+            raise ValueError('Card8Card.value is required.')
         if self.aux_value is None:
-            raise ValueError('Card8.aux_value is required.')
+            raise ValueError('Card8Card.aux_value is required.')
         if self.progress is None:
-            raise ValueError('Card8.progress is required.')
+            raise ValueError('Card8Card.progress is required.')
         if self.plot_color is None:
-            raise ValueError('Card8.plot_color is required.')
+            raise ValueError('Card8Card.plot_color is required.')
         if self.data is None:
-            raise ValueError('Card8.data is required.')
+            raise ValueError('Card8Card.data is required.')
         return _dump(
             view='card8',
             box=self.box,
@@ -945,29 +869,29 @@ class Card8:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Card8':
+    def load(__d: Dict) -> 'Card8Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Card8.box is required.')
+            raise ValueError('Card8Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Card8.title is required.')
+            raise ValueError('Card8Card.title is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('Card8.value is required.')
+            raise ValueError('Card8Card.value is required.')
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
-            raise ValueError('Card8.aux_value is required.')
+            raise ValueError('Card8Card.aux_value is required.')
         __d_progress: Any = __d.get('progress')
         if __d_progress is None:
-            raise ValueError('Card8.progress is required.')
+            raise ValueError('Card8Card.progress is required.')
         __d_plot_color: Any = __d.get('plot_color')
         if __d_plot_color is None:
-            raise ValueError('Card8.plot_color is required.')
+            raise ValueError('Card8Card.plot_color is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Card8.data is required.')
+            raise ValueError('Card8Card.data is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -975,7 +899,7 @@ class Card8:
         progress: float = __d_progress
         plot_color: str = __d_plot_color
         data: PackedRecord = __d_data
-        return Card8(
+        return Card8Card(
             box,
             title,
             value,
@@ -986,7 +910,7 @@ class Card8:
         )
 
 
-class Card9:
+class Card9Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -1027,25 +951,25 @@ class Card9:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Card9.box is required.')
+            raise ValueError('Card9Card.box is required.')
         if self.title is None:
-            raise ValueError('Card9.title is required.')
+            raise ValueError('Card9Card.title is required.')
         if self.caption is None:
-            raise ValueError('Card9.caption is required.')
+            raise ValueError('Card9Card.caption is required.')
         if self.value is None:
-            raise ValueError('Card9.value is required.')
+            raise ValueError('Card9Card.value is required.')
         if self.aux_value is None:
-            raise ValueError('Card9.aux_value is required.')
+            raise ValueError('Card9Card.aux_value is required.')
         if self.value_caption is None:
-            raise ValueError('Card9.value_caption is required.')
+            raise ValueError('Card9Card.value_caption is required.')
         if self.aux_value_caption is None:
-            raise ValueError('Card9.aux_value_caption is required.')
+            raise ValueError('Card9Card.aux_value_caption is required.')
         if self.progress is None:
-            raise ValueError('Card9.progress is required.')
+            raise ValueError('Card9Card.progress is required.')
         if self.plot_color is None:
-            raise ValueError('Card9.plot_color is required.')
+            raise ValueError('Card9Card.plot_color is required.')
         if self.data is None:
-            raise ValueError('Card9.data is required.')
+            raise ValueError('Card9Card.data is required.')
         return _dump(
             view='card9',
             box=self.box,
@@ -1061,38 +985,38 @@ class Card9:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Card9':
+    def load(__d: Dict) -> 'Card9Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Card9.box is required.')
+            raise ValueError('Card9Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Card9.title is required.')
+            raise ValueError('Card9Card.title is required.')
         __d_caption: Any = __d.get('caption')
         if __d_caption is None:
-            raise ValueError('Card9.caption is required.')
+            raise ValueError('Card9Card.caption is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('Card9.value is required.')
+            raise ValueError('Card9Card.value is required.')
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
-            raise ValueError('Card9.aux_value is required.')
+            raise ValueError('Card9Card.aux_value is required.')
         __d_value_caption: Any = __d.get('value_caption')
         if __d_value_caption is None:
-            raise ValueError('Card9.value_caption is required.')
+            raise ValueError('Card9Card.value_caption is required.')
         __d_aux_value_caption: Any = __d.get('aux_value_caption')
         if __d_aux_value_caption is None:
-            raise ValueError('Card9.aux_value_caption is required.')
+            raise ValueError('Card9Card.aux_value_caption is required.')
         __d_progress: Any = __d.get('progress')
         if __d_progress is None:
-            raise ValueError('Card9.progress is required.')
+            raise ValueError('Card9Card.progress is required.')
         __d_plot_color: Any = __d.get('plot_color')
         if __d_plot_color is None:
-            raise ValueError('Card9.plot_color is required.')
+            raise ValueError('Card9Card.plot_color is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Card9.data is required.')
+            raise ValueError('Card9Card.data is required.')
         box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
@@ -1103,7 +1027,7 @@ class Card9:
         progress: float = __d_progress
         plot_color: str = __d_plot_color
         data: PackedRecord = __d_data
-        return Card9(
+        return Card9Card(
             box,
             title,
             caption,
@@ -1627,7 +1551,7 @@ class DashboardPage:
         )
 
 
-class Dashboard:
+class DashboardCard:
     """Create a dashboard.
 
     A dashboard consists of one or more pages.
@@ -1665,9 +1589,9 @@ class Dashboard:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Dashboard.box is required.')
+            raise ValueError('DashboardCard.box is required.')
         if self.pages is None:
-            raise ValueError('Dashboard.pages is required.')
+            raise ValueError('DashboardCard.pages is required.')
         return _dump(
             view='dashboard',
             box=self.box,
@@ -1675,23 +1599,23 @@ class Dashboard:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Dashboard':
+    def load(__d: Dict) -> 'DashboardCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Dashboard.box is required.')
+            raise ValueError('DashboardCard.box is required.')
         __d_pages: Any = __d.get('pages')
         if __d_pages is None:
-            raise ValueError('Dashboard.pages is required.')
+            raise ValueError('DashboardCard.pages is required.')
         box: str = __d_box
         pages: List[DashboardPage] = [DashboardPage.load(__e) for __e in __d_pages]
-        return Dashboard(
+        return DashboardCard(
             box,
             pages,
         )
 
 
-class Flex:
+class FlexCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -1729,31 +1653,31 @@ class Flex:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Flex.box is required.')
+            raise ValueError('FlexCard.box is required.')
         if self.title is None:
-            raise ValueError('Flex.title is required.')
+            raise ValueError('FlexCard.title is required.')
         if self.item_view is None:
-            raise ValueError('Flex.item_view is required.')
+            raise ValueError('FlexCard.item_view is required.')
         if self.item_props is None:
-            raise ValueError('Flex.item_props is required.')
+            raise ValueError('FlexCard.item_props is required.')
         if self.direction is None:
-            raise ValueError('Flex.direction is required.')
+            raise ValueError('FlexCard.direction is required.')
         if self.direction not in ('horizontal', 'vertical'):
-            raise ValueError(f'Invalid value "{self.direction}" for Flex.direction.')
+            raise ValueError(f'Invalid value "{self.direction}" for FlexCard.direction.')
         if self.justify is None:
-            raise ValueError('Flex.justify is required.')
+            raise ValueError('FlexCard.justify is required.')
         if self.justify not in ('start', 'end', 'center', 'between', 'around'):
-            raise ValueError(f'Invalid value "{self.justify}" for Flex.justify.')
+            raise ValueError(f'Invalid value "{self.justify}" for FlexCard.justify.')
         if self.align is None:
-            raise ValueError('Flex.align is required.')
+            raise ValueError('FlexCard.align is required.')
         if self.align not in ('start', 'end', 'center', 'baseline', 'stretch'):
-            raise ValueError(f'Invalid value "{self.align}" for Flex.align.')
+            raise ValueError(f'Invalid value "{self.align}" for FlexCard.align.')
         if self.wrap is None:
-            raise ValueError('Flex.wrap is required.')
+            raise ValueError('FlexCard.wrap is required.')
         if self.wrap not in ('start', 'end', 'center', 'between', 'around', 'stretch'):
-            raise ValueError(f'Invalid value "{self.wrap}" for Flex.wrap.')
+            raise ValueError(f'Invalid value "{self.wrap}" for FlexCard.wrap.')
         if self.data is None:
-            raise ValueError('Flex.data is required.')
+            raise ValueError('FlexCard.data is required.')
         return _dump(
             view='flex',
             box=self.box,
@@ -1768,35 +1692,35 @@ class Flex:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Flex':
+    def load(__d: Dict) -> 'FlexCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Flex.box is required.')
+            raise ValueError('FlexCard.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Flex.title is required.')
+            raise ValueError('FlexCard.title is required.')
         __d_item_view: Any = __d.get('item_view')
         if __d_item_view is None:
-            raise ValueError('Flex.item_view is required.')
+            raise ValueError('FlexCard.item_view is required.')
         __d_item_props: Any = __d.get('item_props')
         if __d_item_props is None:
-            raise ValueError('Flex.item_props is required.')
+            raise ValueError('FlexCard.item_props is required.')
         __d_direction: Any = __d.get('direction')
         if __d_direction is None:
-            raise ValueError('Flex.direction is required.')
+            raise ValueError('FlexCard.direction is required.')
         __d_justify: Any = __d.get('justify')
         if __d_justify is None:
-            raise ValueError('Flex.justify is required.')
+            raise ValueError('FlexCard.justify is required.')
         __d_align: Any = __d.get('align')
         if __d_align is None:
-            raise ValueError('Flex.align is required.')
+            raise ValueError('FlexCard.align is required.')
         __d_wrap: Any = __d.get('wrap')
         if __d_wrap is None:
-            raise ValueError('Flex.wrap is required.')
+            raise ValueError('FlexCard.wrap is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Flex.data is required.')
+            raise ValueError('FlexCard.data is required.')
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
@@ -1806,7 +1730,7 @@ class Flex:
         align: str = __d_align
         wrap: str = __d_wrap
         data: PackedData = __d_data
-        return Flex(
+        return FlexCard(
             box,
             title,
             item_view,
@@ -3900,7 +3824,7 @@ class Component:
         )
 
 
-class Form:
+class FormCard:
     """Create a form.
 
     :param box: A string indicating how to place this component on the page.
@@ -3917,9 +3841,9 @@ class Form:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Form.box is required.')
+            raise ValueError('FormCard.box is required.')
         if self.items is None:
-            raise ValueError('Form.items is required.')
+            raise ValueError('FormCard.items is required.')
         return _dump(
             view='form',
             box=self.box,
@@ -3927,23 +3851,23 @@ class Form:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Form':
+    def load(__d: Dict) -> 'FormCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Form.box is required.')
+            raise ValueError('FormCard.box is required.')
         __d_items: Any = __d.get('items')
         if __d_items is None:
-            raise ValueError('Form.items is required.')
+            raise ValueError('FormCard.items is required.')
         box: str = __d_box
         items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
-        return Form(
+        return FormCard(
             box,
             items,
         )
 
 
-class Frame:
+class FrameCard:
     """Render a card containing a HTML page inside an inline frame (iframe).
 
     Either a path or content can be provided as arguments.
@@ -3968,9 +3892,9 @@ class Frame:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Frame.box is required.')
+            raise ValueError('FrameCard.box is required.')
         if self.title is None:
-            raise ValueError('Frame.title is required.')
+            raise ValueError('FrameCard.title is required.')
         return _dump(
             view='frame',
             box=self.box,
@@ -3980,21 +3904,21 @@ class Frame:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Frame':
+    def load(__d: Dict) -> 'FrameCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Frame.box is required.')
+            raise ValueError('FrameCard.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Frame.title is required.')
+            raise ValueError('FrameCard.title is required.')
         __d_path: Any = __d.get('path')
         __d_content: Any = __d.get('content')
         box: str = __d_box
         title: str = __d_title
         path: Optional[str] = __d_path
         content: Optional[str] = __d_content
-        return Frame(
+        return FrameCard(
             box,
             title,
             path,
@@ -4002,7 +3926,7 @@ class Frame:
         )
 
 
-class Grid:
+class GridCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -4025,13 +3949,13 @@ class Grid:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Grid.box is required.')
+            raise ValueError('GridCard.box is required.')
         if self.title is None:
-            raise ValueError('Grid.title is required.')
+            raise ValueError('GridCard.title is required.')
         if self.cells is None:
-            raise ValueError('Grid.cells is required.')
+            raise ValueError('GridCard.cells is required.')
         if self.data is None:
-            raise ValueError('Grid.data is required.')
+            raise ValueError('GridCard.data is required.')
         return _dump(
             view='grid',
             box=self.box,
@@ -4041,25 +3965,25 @@ class Grid:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Grid':
+    def load(__d: Dict) -> 'GridCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Grid.box is required.')
+            raise ValueError('GridCard.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Grid.title is required.')
+            raise ValueError('GridCard.title is required.')
         __d_cells: Any = __d.get('cells')
         if __d_cells is None:
-            raise ValueError('Grid.cells is required.')
+            raise ValueError('GridCard.cells is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Grid.data is required.')
+            raise ValueError('GridCard.data is required.')
         box: str = __d_box
         title: str = __d_title
         cells: PackedData = __d_cells
         data: PackedData = __d_data
-        return Grid(
+        return GridCard(
             box,
             title,
             cells,
@@ -4067,7 +3991,83 @@ class Grid:
         )
 
 
-class ListItem1:
+class ListCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param item_view: No documentation available.
+    :param item_props: No documentation available.
+    :param data: No documentation available.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            item_view: str,
+            item_props: PackedRecord,
+            data: PackedData,
+    ):
+        self.box = box
+        self.title = title
+        self.item_view = item_view
+        self.item_props = item_props
+        self.data = data
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('ListCard.box is required.')
+        if self.title is None:
+            raise ValueError('ListCard.title is required.')
+        if self.item_view is None:
+            raise ValueError('ListCard.item_view is required.')
+        if self.item_props is None:
+            raise ValueError('ListCard.item_props is required.')
+        if self.data is None:
+            raise ValueError('ListCard.data is required.')
+        return _dump(
+            view='list',
+            box=self.box,
+            title=self.title,
+            item_view=self.item_view,
+            item_props=self.item_props,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ListCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('ListCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('ListCard.title is required.')
+        __d_item_view: Any = __d.get('item_view')
+        if __d_item_view is None:
+            raise ValueError('ListCard.item_view is required.')
+        __d_item_props: Any = __d.get('item_props')
+        if __d_item_props is None:
+            raise ValueError('ListCard.item_props is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('ListCard.data is required.')
+        box: str = __d_box
+        title: str = __d_title
+        item_view: str = __d_item_view
+        item_props: PackedRecord = __d_item_props
+        data: PackedData = __d_data
+        return ListCard(
+            box,
+            title,
+            item_view,
+            item_props,
+            data,
+        )
+
+
+class ListItem1Card:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -4096,17 +4096,17 @@ class ListItem1:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('ListItem1.box is required.')
+            raise ValueError('ListItem1Card.box is required.')
         if self.title is None:
-            raise ValueError('ListItem1.title is required.')
+            raise ValueError('ListItem1Card.title is required.')
         if self.caption is None:
-            raise ValueError('ListItem1.caption is required.')
+            raise ValueError('ListItem1Card.caption is required.')
         if self.value is None:
-            raise ValueError('ListItem1.value is required.')
+            raise ValueError('ListItem1Card.value is required.')
         if self.aux_value is None:
-            raise ValueError('ListItem1.aux_value is required.')
+            raise ValueError('ListItem1Card.aux_value is required.')
         if self.data is None:
-            raise ValueError('ListItem1.data is required.')
+            raise ValueError('ListItem1Card.data is required.')
         return _dump(
             view='list_item1',
             box=self.box,
@@ -4118,33 +4118,33 @@ class ListItem1:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'ListItem1':
+    def load(__d: Dict) -> 'ListItem1Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('ListItem1.box is required.')
+            raise ValueError('ListItem1Card.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('ListItem1.title is required.')
+            raise ValueError('ListItem1Card.title is required.')
         __d_caption: Any = __d.get('caption')
         if __d_caption is None:
-            raise ValueError('ListItem1.caption is required.')
+            raise ValueError('ListItem1Card.caption is required.')
         __d_value: Any = __d.get('value')
         if __d_value is None:
-            raise ValueError('ListItem1.value is required.')
+            raise ValueError('ListItem1Card.value is required.')
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
-            raise ValueError('ListItem1.aux_value is required.')
+            raise ValueError('ListItem1Card.aux_value is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('ListItem1.data is required.')
+            raise ValueError('ListItem1Card.data is required.')
         box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
         value: str = __d_value
         aux_value: str = __d_aux_value
         data: PackedRecord = __d_data
-        return ListItem1(
+        return ListItem1Card(
             box,
             title,
             caption,
@@ -4154,7 +4154,7 @@ class ListItem1:
         )
 
 
-class Markdown:
+class MarkdownCard:
     """Render Markdown content.
 
     :param box: A string indicating how to place this component on the page.
@@ -4177,11 +4177,11 @@ class Markdown:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Markdown.box is required.')
+            raise ValueError('MarkdownCard.box is required.')
         if self.title is None:
-            raise ValueError('Markdown.title is required.')
+            raise ValueError('MarkdownCard.title is required.')
         if self.content is None:
-            raise ValueError('Markdown.content is required.')
+            raise ValueError('MarkdownCard.content is required.')
         return _dump(
             view='markdown',
             box=self.box,
@@ -4191,23 +4191,23 @@ class Markdown:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Markdown':
+    def load(__d: Dict) -> 'MarkdownCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Markdown.box is required.')
+            raise ValueError('MarkdownCard.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Markdown.title is required.')
+            raise ValueError('MarkdownCard.title is required.')
         __d_content: Any = __d.get('content')
         if __d_content is None:
-            raise ValueError('Markdown.content is required.')
+            raise ValueError('MarkdownCard.content is required.')
         __d_data: Any = __d.get('data')
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
-        return Markdown(
+        return MarkdownCard(
             box,
             title,
             content,
@@ -4215,7 +4215,7 @@ class Markdown:
         )
 
 
-class Markup:
+class MarkupCard:
     """Render HTML content.
 
     :param box: A string indicating how to place this component on the page.
@@ -4235,11 +4235,11 @@ class Markup:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Markup.box is required.')
+            raise ValueError('MarkupCard.box is required.')
         if self.title is None:
-            raise ValueError('Markup.title is required.')
+            raise ValueError('MarkupCard.title is required.')
         if self.content is None:
-            raise ValueError('Markup.content is required.')
+            raise ValueError('MarkupCard.content is required.')
         return _dump(
             view='markup',
             box=self.box,
@@ -4248,28 +4248,28 @@ class Markup:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Markup':
+    def load(__d: Dict) -> 'MarkupCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Markup.box is required.')
+            raise ValueError('MarkupCard.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Markup.title is required.')
+            raise ValueError('MarkupCard.title is required.')
         __d_content: Any = __d.get('content')
         if __d_content is None:
-            raise ValueError('Markup.content is required.')
+            raise ValueError('MarkupCard.content is required.')
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
-        return Markup(
+        return MarkupCard(
             box,
             title,
             content,
         )
 
 
-class Meta:
+class MetaCard:
     """Represents page-global state.
 
     This card is invisible.
@@ -4292,7 +4292,7 @@ class Meta:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Meta.box is required.')
+            raise ValueError('MetaCard.box is required.')
         return _dump(
             view='meta',
             box=self.box,
@@ -4301,17 +4301,17 @@ class Meta:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Meta':
+    def load(__d: Dict) -> 'MetaCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Meta.box is required.')
+            raise ValueError('MetaCard.box is required.')
         __d_title: Any = __d.get('title')
         __d_args: Any = __d.get('args')
         box: str = __d_box
         title: Optional[str] = __d_title
         args: Optional[Union[PackedRecord, str]] = __d_args
-        return Meta(
+        return MetaCard(
             box,
             title,
             args,
@@ -4365,7 +4365,7 @@ class NotebookSection:
         )
 
 
-class Notebook:
+class NotebookCard:
     """Create a notebook.
 
     A notebook is rendered as a sequence of sections.
@@ -4384,9 +4384,9 @@ class Notebook:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Notebook.box is required.')
+            raise ValueError('NotebookCard.box is required.')
         if self.sections is None:
-            raise ValueError('Notebook.sections is required.')
+            raise ValueError('NotebookCard.sections is required.')
         return _dump(
             view='notebook',
             box=self.box,
@@ -4394,23 +4394,23 @@ class Notebook:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Notebook':
+    def load(__d: Dict) -> 'NotebookCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Notebook.box is required.')
+            raise ValueError('NotebookCard.box is required.')
         __d_sections: Any = __d.get('sections')
         if __d_sections is None:
-            raise ValueError('Notebook.sections is required.')
+            raise ValueError('NotebookCard.sections is required.')
         box: str = __d_box
         sections: List[NotebookSection] = [NotebookSection.load(__e) for __e in __d_sections]
-        return Notebook(
+        return NotebookCard(
             box,
             sections,
         )
 
 
-class PixelArt:
+class PixelArtCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -4430,11 +4430,11 @@ class PixelArt:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('PixelArt.box is required.')
+            raise ValueError('PixelArtCard.box is required.')
         if self.title is None:
-            raise ValueError('PixelArt.title is required.')
+            raise ValueError('PixelArtCard.title is required.')
         if self.data is None:
-            raise ValueError('PixelArt.data is required.')
+            raise ValueError('PixelArtCard.data is required.')
         return _dump(
             view='pixel_art',
             box=self.box,
@@ -4443,21 +4443,21 @@ class PixelArt:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'PixelArt':
+    def load(__d: Dict) -> 'PixelArtCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('PixelArt.box is required.')
+            raise ValueError('PixelArtCard.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('PixelArt.title is required.')
+            raise ValueError('PixelArtCard.title is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('PixelArt.data is required.')
+            raise ValueError('PixelArtCard.data is required.')
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
-        return PixelArt(
+        return PixelArtCard(
             box,
             title,
             data,
@@ -4900,7 +4900,7 @@ class Vis:
         )
 
 
-class Plot:
+class PlotCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -4923,13 +4923,13 @@ class Plot:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Plot.box is required.')
+            raise ValueError('PlotCard.box is required.')
         if self.title is None:
-            raise ValueError('Plot.title is required.')
+            raise ValueError('PlotCard.title is required.')
         if self.data is None:
-            raise ValueError('Plot.data is required.')
+            raise ValueError('PlotCard.data is required.')
         if self.vis is None:
-            raise ValueError('Plot.vis is required.')
+            raise ValueError('PlotCard.vis is required.')
         return _dump(
             view='plot',
             box=self.box,
@@ -4939,25 +4939,25 @@ class Plot:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Plot':
+    def load(__d: Dict) -> 'PlotCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Plot.box is required.')
+            raise ValueError('PlotCard.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Plot.title is required.')
+            raise ValueError('PlotCard.title is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Plot.data is required.')
+            raise ValueError('PlotCard.data is required.')
         __d_vis: Any = __d.get('vis')
         if __d_vis is None:
-            raise ValueError('Plot.vis is required.')
+            raise ValueError('PlotCard.vis is required.')
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
         vis: Vis = Vis.load(__d_vis)
-        return Plot(
+        return PlotCard(
             box,
             title,
             data,
@@ -4965,7 +4965,7 @@ class Plot:
         )
 
 
-class Repeat:
+class RepeatCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
@@ -4991,15 +4991,15 @@ class Repeat:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Repeat.box is required.')
+            raise ValueError('RepeatCard.box is required.')
         if self.title is None:
-            raise ValueError('Repeat.title is required.')
+            raise ValueError('RepeatCard.title is required.')
         if self.item_view is None:
-            raise ValueError('Repeat.item_view is required.')
+            raise ValueError('RepeatCard.item_view is required.')
         if self.item_props is None:
-            raise ValueError('Repeat.item_props is required.')
+            raise ValueError('RepeatCard.item_props is required.')
         if self.data is None:
-            raise ValueError('Repeat.data is required.')
+            raise ValueError('RepeatCard.data is required.')
         return _dump(
             view='repeat',
             box=self.box,
@@ -5010,29 +5010,29 @@ class Repeat:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Repeat':
+    def load(__d: Dict) -> 'RepeatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Repeat.box is required.')
+            raise ValueError('RepeatCard.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Repeat.title is required.')
+            raise ValueError('RepeatCard.title is required.')
         __d_item_view: Any = __d.get('item_view')
         if __d_item_view is None:
-            raise ValueError('Repeat.item_view is required.')
+            raise ValueError('RepeatCard.item_view is required.')
         __d_item_props: Any = __d.get('item_props')
         if __d_item_props is None:
-            raise ValueError('Repeat.item_props is required.')
+            raise ValueError('RepeatCard.item_props is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
-            raise ValueError('Repeat.data is required.')
+            raise ValueError('RepeatCard.data is required.')
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
         data: PackedData = __d_data
-        return Repeat(
+        return RepeatCard(
             box,
             title,
             item_view,
@@ -5041,7 +5041,7 @@ class Repeat:
         )
 
 
-class Template:
+class TemplateCard:
     """Render dynamic content using a HTML template.
 
     :param box: A string indicating how to place this component on the page.
@@ -5064,11 +5064,11 @@ class Template:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
-            raise ValueError('Template.box is required.')
+            raise ValueError('TemplateCard.box is required.')
         if self.title is None:
-            raise ValueError('Template.title is required.')
+            raise ValueError('TemplateCard.title is required.')
         if self.content is None:
-            raise ValueError('Template.content is required.')
+            raise ValueError('TemplateCard.content is required.')
         return _dump(
             view='template',
             box=self.box,
@@ -5078,23 +5078,23 @@ class Template:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Template':
+    def load(__d: Dict) -> 'TemplateCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         if __d_box is None:
-            raise ValueError('Template.box is required.')
+            raise ValueError('TemplateCard.box is required.')
         __d_title: Any = __d.get('title')
         if __d_title is None:
-            raise ValueError('Template.title is required.')
+            raise ValueError('TemplateCard.title is required.')
         __d_content: Any = __d.get('content')
         if __d_content is None:
-            raise ValueError('Template.content is required.')
+            raise ValueError('TemplateCard.content is required.')
         __d_data: Any = __d.get('data')
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
-        return Template(
+        return TemplateCard(
             box,
             title,
             content,
