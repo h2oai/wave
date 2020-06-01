@@ -2,7 +2,7 @@ import { default as React } from 'react';
 import { stylesheet } from 'typestyle';
 import { format, isFormatExpr } from './intl';
 import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './telesync';
-import { getTheme } from './theme';
+import { getTheme, margin } from './theme';
 
 interface Slot {
   left: U
@@ -128,9 +128,9 @@ const
   css = stylesheet({
     grid: {
       position: 'relative',
-      marginTop: grid.gap,
-      marginBottom: grid.gap,
+      boxSizing: 'border-box',
       width: grid.innerWidth,
+      margin: margin(grid.gap),
     },
     slot: {
       position: 'absolute',
