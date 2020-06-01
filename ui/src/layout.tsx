@@ -57,6 +57,7 @@ export const cards = newCardRegistry()
 type Size = [U, U]
 
 const
+  badPlacement: Slot = { left: 0, top: 0, width: 0, height: 0 },
   newGrid = (uw: U, uh: U, cols: U, rows: U, gap: U) => {
     let scale = 1
     const
@@ -84,7 +85,6 @@ const
         }
         return slot
       },
-      badPlacement: Slot = placeOnGrid(0, 0, 1, 1), // XXX
       normalize = (s: S): S[] => {
         const x = s.trim().split(/\s+/g)
         switch (x.length) {
@@ -155,10 +155,13 @@ export const
       render = () => {
         const
           children = page.list().map(c => {
-            const { left, top, right, bottom, width, height } = grid.place(c.state.box)
+            const
+              placement = grid.place(c.state.box),
+              { left, top, right, bottom, width, height } = placement,
+              display = placement === badPlacement ? 'none' : 'block'
             c.size = { width: width || 0, height: height || 0 } // TODO compute width from grid width; height cannot be relied upon
             return (
-              <div key={c.id} className={css.slot} style={{ left, top, right, bottom, width, height }}>
+              <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height }}>
                 <CardView card={c} />
               </div>
             )
