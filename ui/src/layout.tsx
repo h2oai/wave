@@ -151,7 +151,7 @@ const
 export const
   GridLayout = bond(({ page }: { page: Page }) => {
     const
-      { changed: changedB } = page,
+      { changed } = page,
       render = () => {
         const
           children = page.list().map(c => {
@@ -172,5 +172,5 @@ export const
           </div>
         )
       }
-    return { render, changedB }
+    return { render, changed }
   })

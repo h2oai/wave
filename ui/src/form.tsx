@@ -100,24 +100,6 @@ const
     items: []
   }
 
-// const
-//   XButton = bond(({ args, button: m, submit }: { args: Rec, button: Button, submit: () => void }) => {
-//     args[m.name] = false
-//     const
-//       render = () => {
-//         const onClick = () => {
-//           args[m.name] = true
-//           submit()
-//         }
-//         return <button data-test={m.name} onClick={onClick} >{m.label}</button>
-//       }
-//     return { render }
-//   }),
-//   XField = ({ component: c, args, submit }: { component: Component, args: Rec, submit: () => void }) => {
-//     if (c.button) return <XButton key={xid()} args={args} button={c.button} submit={submit} />
-//     return <div />
-//   }
-
 
 export const
   XComponents = ({ items }: { items: Component[] }) => {
