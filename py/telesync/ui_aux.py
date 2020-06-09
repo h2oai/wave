@@ -1,5 +1,5 @@
 from .types import Component
-from .ui import text
+from .ui_base import text
 
 
 def text_xl(content: str, tooltip: str = '') -> Component:

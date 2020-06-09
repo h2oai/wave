@@ -4277,17 +4277,14 @@ class MetaCard:
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title of the page.
-    :param args: Form data.
     """
     def __init__(
             self,
             box: str,
             title: Optional[str] = None,
-            args: Optional[Union[PackedRecord, str]] = None,
     ):
         self.box = box
         self.title = title
-        self.args = args
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4297,7 +4294,6 @@ class MetaCard:
             view='meta',
             box=self.box,
             title=self.title,
-            args=self.args,
         )
 
     @staticmethod
@@ -4307,14 +4303,11 @@ class MetaCard:
         if __d_box is None:
             raise ValueError('MetaCard.box is required.')
         __d_title: Any = __d.get('title')
-        __d_args: Any = __d.get('args')
         box: str = __d_box
         title: Optional[str] = __d_title
-        args: Optional[Union[PackedRecord, str]] = __d_args
         return MetaCard(
             box,
             title,
-            args,
         )
 
 
