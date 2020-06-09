@@ -22,7 +22,7 @@ import { Slider, XSlider } from './slider';
 import { Spinbox, XSpinbox } from './spinbox';
 import { Table, XTable } from './table';
 import { Tabs, XTabs } from './tabs';
-import { bond, Card, Packed, unpack } from './telesync';
+import { bond, Card, Packed, unpack, xid } from './telesync';
 import { Text, XText } from './text';
 import { Textbox, XTextbox } from './textbox';
 import { getTheme } from './theme';
@@ -103,7 +103,7 @@ const
 
 export const
   XComponents = ({ items }: { items: Component[] }) => {
-    const components = items.map((m, i) => <XComponent key={i} model={m} />)
+    const components = items.map(m => <XComponent key={xid()} model={m} />)
     // TODO gap 10px between fields
     return <>{components}</>
   }
