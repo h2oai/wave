@@ -37,7 +37,6 @@ export interface Progress {
 const
   defaults: Partial<Progress> = {
     caption: 'Please wait...',
-    value: -1,
   }
 
 export const
