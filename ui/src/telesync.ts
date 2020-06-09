@@ -377,6 +377,7 @@ const
     const a: T[] = []
     for (const k in d) a.push(d[k])
     return a
+
   },
   isMap = (x: any): B => {
     // for JSON data only: anything not null, string, number, bool, array
@@ -718,7 +719,16 @@ export interface Telesync {
   sync(): void
 }
 
-const keyseq = (...keys: S[]): S => keys.join(' ')
+const
+  keyseq = (...keys: S[]): S => keys.join(' '),
+  cloneRec = (a: Rec) => {
+    const b: Rec = {}
+    for (const k in a) b[k] = a[k]
+    return b
+  },
+  clearRec = (a: Rec) => {
+    for (const k in a) delete a[k]
+  }
 
 export const telesync: Telesync = {
   socket: null,
@@ -749,7 +759,9 @@ export const telesync: Telesync = {
   sync: () => {
     const sock = telesync.socket
     if (!sock) return
-    sock.send(`@ ${telesync.path} ${JSON.stringify(telesync.args)}`)
+    const args = cloneRec(telesync.args)
+    clearRec(telesync.args)
+    sock.send(`@ ${telesync.path} ${JSON.stringify(args)}`)
   },
 }
 
