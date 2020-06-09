@@ -3,7 +3,7 @@ import React from 'react';
 import { stylesheet } from 'typestyle';
 import { Component } from './form';
 import { B, bond, S, telesync } from './telesync';
-import { px } from './theme';
+import { padding } from './theme';
 import { XToolTip } from './tooltip';
 
 /**
@@ -51,7 +51,7 @@ const
   css = stylesheet({
     buttons: {
       boxSizing: 'border-box',
-      paddingTop: px(20),
+      padding: padding(20, 0)
     },
   })
 
@@ -59,11 +59,11 @@ const
   XButton = bond(({ model: m }: { model: Button }) => {
     telesync.args[m.name] = false
     const
+      onClick = () => {
+        telesync.args[m.name] = true
+        telesync.sync()
+      },
       render = () => {
-        const onClick = () => {
-          telesync.args[m.name] = true
-          telesync.sync()
-        }
         if (m.link) {
           return (<Fluent.Link data-test='link' disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>)
         }
@@ -93,5 +93,5 @@ export const
     return { render }
   }),
   XStandAloneButton = ({ model: m }: { model: Button }) => (
-    <div><XButton key={m.label} model={m}>{m.label}</XButton></div>
+    <div className={css.buttons}><XButton key={m.label} model={m}>{m.label}</XButton></div>
   )
