@@ -58,7 +58,7 @@ def strip_comment(line: str):
 
 def load_example(filename: str) -> Example:
     contents = read_file(os.path.join(example_dir, filename))
-    parts = contents.split('---', 2)
+    parts = contents.split('---', maxsplit=1)
     header, code = parts[0].strip().splitlines(), parts[1].strip()
     title, description = strip_comment(header[0]), [strip_comment(x) for x in header[1:]]
     return Example(filename, title, '\n'.join(description), highlight(code, py_lexer, html_formatter))
@@ -177,4 +177,4 @@ if __name__ == '__main__':
     example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
                          not line.strip().startswith('#')]
     catalog = load_examples(example_filenames)
-    listen('/tour', main)
+    listen(route='/tour', handler=main, port=55554)
