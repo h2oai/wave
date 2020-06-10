@@ -109,7 +109,7 @@ def card2_card(
         plot_category: str,
         plot_value: str,
         plot_zero_value: float,
-        plot_curve: str,
+        plot_curve: Optional[str] = None,
 ) -> Card2Card:
     """No documentation available.
 
@@ -124,7 +124,7 @@ def card2_card(
     :param plot_category: No documentation available.
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step_after', 'step_before'.
     """
     return Card2Card(
         box,
@@ -241,7 +241,7 @@ def card6_card(
         plot_category: str,
         plot_value: str,
         plot_zero_value: float,
-        plot_curve: str,
+        plot_curve: Optional[str] = None,
 ) -> Card6Card:
     """No documentation available.
 
@@ -256,7 +256,7 @@ def card6_card(
     :param plot_category: No documentation available.
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step_after', 'step_before'.
     """
     return Card6Card(
         box,
@@ -285,7 +285,7 @@ def card7_card(
         plot_category: str,
         plot_value: str,
         plot_zero_value: float,
-        plot_curve: str,
+        plot_curve: Optional[str] = None,
 ) -> Card7Card:
     """No documentation available.
 
@@ -299,7 +299,7 @@ def card7_card(
     :param plot_category: No documentation available.
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step_after', 'step_before'.
     """
     return Card7Card(
         box,

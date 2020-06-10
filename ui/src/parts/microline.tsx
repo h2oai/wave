@@ -18,8 +18,8 @@ const
     linear: d3.curveLinear,
     smooth: d3.curveCatmullRom,
     step: d3.curveStep,
-    stepAfter: d3.curveStepAfter,
-    stepBefore: d3.curveStepBefore,
+    step_after: d3.curveStepAfter,
+    step_before: d3.curveStepBefore,
   }
 
 export class MicroArea extends React.Component<Props> {

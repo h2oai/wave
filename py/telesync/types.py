@@ -89,7 +89,7 @@ class Card2Card:
     :param plot_category: No documentation available.
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step_after', 'step_before'.
     """
     def __init__(
             self,
@@ -104,7 +104,7 @@ class Card2Card:
             plot_category: str,
             plot_value: str,
             plot_zero_value: float,
-            plot_curve: str,
+            plot_curve: Optional[str] = None,
     ):
         self.box = box
         self.title = title
@@ -145,8 +145,6 @@ class Card2Card:
             raise ValueError('Card2Card.plot_value is required.')
         if self.plot_zero_value is None:
             raise ValueError('Card2Card.plot_zero_value is required.')
-        if self.plot_curve is None:
-            raise ValueError('Card2Card.plot_curve is required.')
         return _dump(
             view='card2',
             box=self.box,
@@ -200,8 +198,6 @@ class Card2Card:
         if __d_plot_zero_value is None:
             raise ValueError('Card2Card.plot_zero_value is required.')
         __d_plot_curve: Any = __d.get('plot_curve')
-        if __d_plot_curve is None:
-            raise ValueError('Card2Card.plot_curve is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -213,7 +209,7 @@ class Card2Card:
         plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
         plot_zero_value: float = __d_plot_zero_value
-        plot_curve: str = __d_plot_curve
+        plot_curve: Optional[str] = __d_plot_curve
         return Card2Card(
             box,
             title,
@@ -527,7 +523,7 @@ class Card6Card:
     :param plot_category: No documentation available.
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step_after', 'step_before'.
     """
     def __init__(
             self,
@@ -542,7 +538,7 @@ class Card6Card:
             plot_category: str,
             plot_value: str,
             plot_zero_value: float,
-            plot_curve: str,
+            plot_curve: Optional[str] = None,
     ):
         self.box = box
         self.title = title
@@ -583,8 +579,6 @@ class Card6Card:
             raise ValueError('Card6Card.plot_value is required.')
         if self.plot_zero_value is None:
             raise ValueError('Card6Card.plot_zero_value is required.')
-        if self.plot_curve is None:
-            raise ValueError('Card6Card.plot_curve is required.')
         return _dump(
             view='card6',
             box=self.box,
@@ -638,8 +632,6 @@ class Card6Card:
         if __d_plot_zero_value is None:
             raise ValueError('Card6Card.plot_zero_value is required.')
         __d_plot_curve: Any = __d.get('plot_curve')
-        if __d_plot_curve is None:
-            raise ValueError('Card6Card.plot_curve is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -651,7 +643,7 @@ class Card6Card:
         plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
         plot_zero_value: float = __d_plot_zero_value
-        plot_curve: str = __d_plot_curve
+        plot_curve: Optional[str] = __d_plot_curve
         return Card6Card(
             box,
             title,
@@ -681,7 +673,7 @@ class Card7Card:
     :param plot_category: No documentation available.
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step_after', 'step_before'.
     """
     def __init__(
             self,
@@ -695,7 +687,7 @@ class Card7Card:
             plot_category: str,
             plot_value: str,
             plot_zero_value: float,
-            plot_curve: str,
+            plot_curve: Optional[str] = None,
     ):
         self.box = box
         self.title = title
@@ -733,8 +725,6 @@ class Card7Card:
             raise ValueError('Card7Card.plot_value is required.')
         if self.plot_zero_value is None:
             raise ValueError('Card7Card.plot_zero_value is required.')
-        if self.plot_curve is None:
-            raise ValueError('Card7Card.plot_curve is required.')
         return _dump(
             view='card7',
             box=self.box,
@@ -784,8 +774,6 @@ class Card7Card:
         if __d_plot_zero_value is None:
             raise ValueError('Card7Card.plot_zero_value is required.')
         __d_plot_curve: Any = __d.get('plot_curve')
-        if __d_plot_curve is None:
-            raise ValueError('Card7Card.plot_curve is required.')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -796,7 +784,7 @@ class Card7Card:
         plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
         plot_zero_value: float = __d_plot_zero_value
-        plot_curve: str = __d_plot_curve
+        plot_curve: Optional[str] = __d_plot_curve
         return Card7Card(
             box,
             title,

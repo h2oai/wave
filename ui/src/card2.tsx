@@ -57,7 +57,7 @@ interface State {
   plot_category: S
   plot_value: S
   plot_zero_value: F
-  plot_curve: S
+  plot_curve?: 'linear' | 'smooth' | 'step' | 'step_after' | 'step_before'
 }
 
 
@@ -84,7 +84,7 @@ const
                 value={s.plot_value}
                 color={s.plot_color}
                 zeroValue={s.plot_zero_value}
-                curve={s.plot_curve}
+                curve={s.plot_curve || 'linear'}
               />
             ) : (
               <MicroBars
