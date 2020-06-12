@@ -3,14 +3,13 @@ import { cards, Repeat } from './layout';
 import { bond, Card, Dict, Rec, S, Data } from './telesync';
 
 interface State {
-  title: S
   item_view: S
   item_props: Rec
-  direction: 'horizontal' | 'vertical'
-  justify: 'start' | 'end' | 'center' | 'between' | 'around'
-  align: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
-  wrap: 'start' | 'end' | 'center' | 'between' | 'around' | 'stretch'
   data: Data
+  direction?: 'horizontal' | 'vertical'
+  justify?: 'start' | 'end' | 'center' | 'between' | 'around'
+  align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
+  wrap?: 'start' | 'end' | 'center' | 'between' | 'around' | 'stretch'
 }
 
 const

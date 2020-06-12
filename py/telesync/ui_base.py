@@ -622,37 +622,34 @@ def dashboard_card(
 
 def flex_card(
         box: str,
-        title: str,
         item_view: str,
         item_props: PackedRecord,
-        direction: str,
-        justify: str,
-        align: str,
-        wrap: str,
         data: PackedData,
+        direction: Optional[str] = None,
+        justify: Optional[str] = None,
+        align: Optional[str] = None,
+        wrap: Optional[str] = None,
 ) -> FlexCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
     :param item_view: No documentation available.
     :param item_props: No documentation available.
+    :param data: No documentation available.
     :param direction: No documentation available. One of 'horizontal', 'vertical'.
     :param justify: No documentation available. One of 'start', 'end', 'center', 'between', 'around'.
     :param align: No documentation available. One of 'start', 'end', 'center', 'baseline', 'stretch'.
     :param wrap: No documentation available. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
-    :param data: No documentation available.
     """
     return FlexCard(
         box,
-        title,
         item_view,
         item_props,
+        data,
         direction,
         justify,
         align,
         wrap,
-        data,
     )
 
 
@@ -1831,7 +1828,7 @@ def mark(
         color_range: Optional[str] = None,
         shape: Optional[str] = None,
         shape_range: Optional[str] = None,
-        size: Optional[float] = None,
+        size: Optional[Value] = None,
         size_range: Optional[str] = None,
         stack: Optional[str] = None,
         dodge: Optional[str] = None,
@@ -1846,7 +1843,7 @@ def mark(
         label_offset: Optional[float] = None,
         label_offset_x: Optional[float] = None,
         label_offset_y: Optional[float] = None,
-        label_rotation: Optional[str] = None,
+        label_rotation: Optional[float] = None,
         label_position: Optional[str] = None,
         label_overlap: Optional[str] = None,
         label_fill_color: Optional[str] = None,
@@ -2015,7 +2012,6 @@ def plot_card(
 
 def repeat_card(
         box: str,
-        title: str,
         item_view: str,
         item_props: PackedRecord,
         data: PackedData,
@@ -2023,14 +2019,12 @@ def repeat_card(
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
     :param item_view: No documentation available.
     :param item_props: No documentation available.
     :param data: No documentation available.
     """
     return RepeatCard(
         box,
-        title,
         item_view,
         item_props,
         data,

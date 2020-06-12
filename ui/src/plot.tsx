@@ -51,7 +51,7 @@ interface Mark {
   color_range?: S
   shape?: S
   shape_range?: S
-  size?: F
+  size?: V
   size_range?: S
   stack?: S
   dodge?: S
@@ -66,7 +66,7 @@ interface Mark {
   label_offset?: F
   label_offset_x?: F
   label_offset_y?: F
-  label_rotation?: S
+  label_rotation?: F
   label_position?: S  // 'top' | 'bottom' | 'middle' | 'left' | 'right';
   label_overlap?: S // 'hide' | 'overlap' | 'constrain'
   label_fill_color?: S
@@ -575,8 +575,8 @@ const
         const
           s = state,
           raw_data = unpack(s.data) as any[],
-          raw_marks = unpack(s.vis) as Mark[],
-          marks = raw_marks.map(refactorMark),
+          raw_vis = unpack(s.vis) as Vis,
+          marks = raw_vis.marks.map(refactorMark),
           vis: Vis = { marks: marks },
           // spaceT = spaceTypeOf(raw_marks, marks),
           data = refactorData(raw_data, vis.marks),

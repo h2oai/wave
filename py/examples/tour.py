@@ -1,8 +1,8 @@
+import collections
 import os
 import subprocess
 import sys
 from typing import List, Optional, OrderedDict
-import collections
 
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter

@@ -3,7 +3,6 @@ import { cards, Repeat } from './layout';
 import { bond, Card, Rec, S, Data } from './telesync';
 
 interface State {
-  title: S
   item_view: S
   item_props: Rec
   data: Data

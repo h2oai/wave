@@ -1,5 +1,5 @@
-import random
 import datetime
+import random
 
 
 class FakeSeries:

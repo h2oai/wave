@@ -1,10 +1,12 @@
 # Card6 / Area
 # No description available.
 # ---
-from telesync import Site, ui, data
-from faker import Faker
-from synth import FakePercent, FakeCategoricalSeries
 import time
+
+from faker import Faker
+
+from synth import FakeCategoricalSeries
+from telesync import Site, ui, data
 
 site = Site()
 

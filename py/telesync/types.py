@@ -1607,76 +1607,54 @@ class FlexCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
     :param item_view: No documentation available.
     :param item_props: No documentation available.
+    :param data: No documentation available.
     :param direction: No documentation available. One of 'horizontal', 'vertical'.
     :param justify: No documentation available. One of 'start', 'end', 'center', 'between', 'around'.
     :param align: No documentation available. One of 'start', 'end', 'center', 'baseline', 'stretch'.
     :param wrap: No documentation available. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
-    :param data: No documentation available.
     """
     def __init__(
             self,
             box: str,
-            title: str,
             item_view: str,
             item_props: PackedRecord,
-            direction: str,
-            justify: str,
-            align: str,
-            wrap: str,
             data: PackedData,
+            direction: Optional[str] = None,
+            justify: Optional[str] = None,
+            align: Optional[str] = None,
+            wrap: Optional[str] = None,
     ):
         self.box = box
-        self.title = title
         self.item_view = item_view
         self.item_props = item_props
+        self.data = data
         self.direction = direction
         self.justify = justify
         self.align = align
         self.wrap = wrap
-        self.data = data
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('FlexCard.box is required.')
-        if self.title is None:
-            raise ValueError('FlexCard.title is required.')
         if self.item_view is None:
             raise ValueError('FlexCard.item_view is required.')
         if self.item_props is None:
             raise ValueError('FlexCard.item_props is required.')
-        if self.direction is None:
-            raise ValueError('FlexCard.direction is required.')
-        if self.direction not in ('horizontal', 'vertical'):
-            raise ValueError(f'Invalid value "{self.direction}" for FlexCard.direction.')
-        if self.justify is None:
-            raise ValueError('FlexCard.justify is required.')
-        if self.justify not in ('start', 'end', 'center', 'between', 'around'):
-            raise ValueError(f'Invalid value "{self.justify}" for FlexCard.justify.')
-        if self.align is None:
-            raise ValueError('FlexCard.align is required.')
-        if self.align not in ('start', 'end', 'center', 'baseline', 'stretch'):
-            raise ValueError(f'Invalid value "{self.align}" for FlexCard.align.')
-        if self.wrap is None:
-            raise ValueError('FlexCard.wrap is required.')
-        if self.wrap not in ('start', 'end', 'center', 'between', 'around', 'stretch'):
-            raise ValueError(f'Invalid value "{self.wrap}" for FlexCard.wrap.')
         if self.data is None:
             raise ValueError('FlexCard.data is required.')
         return _dump(
             view='flex',
             box=self.box,
-            title=self.title,
             item_view=self.item_view,
             item_props=self.item_props,
+            data=self.data,
             direction=self.direction,
             justify=self.justify,
             align=self.align,
             wrap=self.wrap,
-            data=self.data,
         )
 
     @staticmethod
@@ -1685,49 +1663,36 @@ class FlexCard:
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('FlexCard.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('FlexCard.title is required.')
         __d_item_view: Any = __d.get('item_view')
         if __d_item_view is None:
             raise ValueError('FlexCard.item_view is required.')
         __d_item_props: Any = __d.get('item_props')
         if __d_item_props is None:
             raise ValueError('FlexCard.item_props is required.')
-        __d_direction: Any = __d.get('direction')
-        if __d_direction is None:
-            raise ValueError('FlexCard.direction is required.')
-        __d_justify: Any = __d.get('justify')
-        if __d_justify is None:
-            raise ValueError('FlexCard.justify is required.')
-        __d_align: Any = __d.get('align')
-        if __d_align is None:
-            raise ValueError('FlexCard.align is required.')
-        __d_wrap: Any = __d.get('wrap')
-        if __d_wrap is None:
-            raise ValueError('FlexCard.wrap is required.')
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('FlexCard.data is required.')
+        __d_direction: Any = __d.get('direction')
+        __d_justify: Any = __d.get('justify')
+        __d_align: Any = __d.get('align')
+        __d_wrap: Any = __d.get('wrap')
         box: str = __d_box
-        title: str = __d_title
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
-        direction: str = __d_direction
-        justify: str = __d_justify
-        align: str = __d_align
-        wrap: str = __d_wrap
         data: PackedData = __d_data
+        direction: Optional[str] = __d_direction
+        justify: Optional[str] = __d_justify
+        align: Optional[str] = __d_align
+        wrap: Optional[str] = __d_wrap
         return FlexCard(
             box,
-            title,
             item_view,
             item_props,
+            data,
             direction,
             justify,
             align,
             wrap,
-            data,
         )
 
 
@@ -4530,7 +4495,7 @@ class Mark:
             color_range: Optional[str] = None,
             shape: Optional[str] = None,
             shape_range: Optional[str] = None,
-            size: Optional[float] = None,
+            size: Optional[Value] = None,
             size_range: Optional[str] = None,
             stack: Optional[str] = None,
             dodge: Optional[str] = None,
@@ -4545,7 +4510,7 @@ class Mark:
             label_offset: Optional[float] = None,
             label_offset_x: Optional[float] = None,
             label_offset_y: Optional[float] = None,
-            label_rotation: Optional[str] = None,
+            label_rotation: Optional[float] = None,
             label_position: Optional[str] = None,
             label_overlap: Optional[str] = None,
             label_fill_color: Optional[str] = None,
@@ -4760,7 +4725,7 @@ class Mark:
         color_range: Optional[str] = __d_color_range
         shape: Optional[str] = __d_shape
         shape_range: Optional[str] = __d_shape_range
-        size: Optional[float] = __d_size
+        size: Optional[Value] = __d_size
         size_range: Optional[str] = __d_size_range
         stack: Optional[str] = __d_stack
         dodge: Optional[str] = __d_dodge
@@ -4775,7 +4740,7 @@ class Mark:
         label_offset: Optional[float] = __d_label_offset
         label_offset_x: Optional[float] = __d_label_offset_x
         label_offset_y: Optional[float] = __d_label_offset_y
-        label_rotation: Optional[str] = __d_label_rotation
+        label_rotation: Optional[float] = __d_label_rotation
         label_position: Optional[str] = __d_label_position
         label_overlap: Optional[str] = __d_label_overlap
         label_fill_color: Optional[str] = __d_label_fill_color
@@ -4950,7 +4915,6 @@ class RepeatCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
     :param item_view: No documentation available.
     :param item_props: No documentation available.
     :param data: No documentation available.
@@ -4958,13 +4922,11 @@ class RepeatCard:
     def __init__(
             self,
             box: str,
-            title: str,
             item_view: str,
             item_props: PackedRecord,
             data: PackedData,
     ):
         self.box = box
-        self.title = title
         self.item_view = item_view
         self.item_props = item_props
         self.data = data
@@ -4973,8 +4935,6 @@ class RepeatCard:
         """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('RepeatCard.box is required.')
-        if self.title is None:
-            raise ValueError('RepeatCard.title is required.')
         if self.item_view is None:
             raise ValueError('RepeatCard.item_view is required.')
         if self.item_props is None:
@@ -4984,7 +4944,6 @@ class RepeatCard:
         return _dump(
             view='repeat',
             box=self.box,
-            title=self.title,
             item_view=self.item_view,
             item_props=self.item_props,
             data=self.data,
@@ -4996,9 +4955,6 @@ class RepeatCard:
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('RepeatCard.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('RepeatCard.title is required.')
         __d_item_view: Any = __d.get('item_view')
         if __d_item_view is None:
             raise ValueError('RepeatCard.item_view is required.')
@@ -5009,13 +4965,11 @@ class RepeatCard:
         if __d_data is None:
             raise ValueError('RepeatCard.data is required.')
         box: str = __d_box
-        title: str = __d_title
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
         data: PackedData = __d_data
         return RepeatCard(
             box,
-            title,
             item_view,
             item_props,
             data,
