@@ -5,7 +5,7 @@ with open('README.md', 'r') as readme:
 
 setuptools.setup(
     name='telesync',
-    version='0.0.1',
+    version='0.0.2',
     author='Prithvi Prabhu',
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Q / Telesync Realtime Apps',
