@@ -10,7 +10,7 @@ interface Props {
   zeroValue?: F
   value: S
   color: S
-  curve: S// 'linear' | 'monotoneX' | 'monotoneY' | 'step' | 'stepAfter' | 'stepBefore'
+  curve: 'linear' | 'smooth' | 'step' | 'step-after' | 'step-before'
 }
 
 const
@@ -18,8 +18,8 @@ const
     linear: d3.curveLinear,
     smooth: d3.curveCatmullRom,
     step: d3.curveStep,
-    step_after: d3.curveStepAfter,
-    step_before: d3.curveStepBefore,
+    'step-after': d3.curveStepAfter,
+    'step-before': d3.curveStepBefore,
   }
 
 export class MicroArea extends React.Component<Props> {

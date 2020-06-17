@@ -89,7 +89,7 @@ class Card2Card:
     :param plot_category: No documentation available.
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step_after', 'step_before'.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
     """
     def __init__(
             self,
@@ -523,7 +523,7 @@ class Card6Card:
     :param plot_category: No documentation available.
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step_after', 'step_before'.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
     """
     def __init__(
             self,
@@ -673,7 +673,7 @@ class Card7Card:
     :param plot_category: No documentation available.
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step_after', 'step_before'.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
     """
     def __init__(
             self,

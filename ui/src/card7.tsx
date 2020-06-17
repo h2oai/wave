@@ -43,7 +43,7 @@ interface State {
   plot_category: S
   plot_value: S
   plot_zero_value: F
-  plot_curve?: 'linear' | 'smooth' | 'step' | 'step_after' | 'step_before'
+  plot_curve?: 'linear' | 'smooth' | 'step' | 'step-after' | 'step-before'
 }
 
 
