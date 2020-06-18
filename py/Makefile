@@ -1,4 +1,7 @@
-all: ## Build telesync wheel
+all: build ## Build telesync wheel
+
+.PHONY: build
+build: purge
 	./venv/bin/python3 setup.py bdist_wheel
 
 publish: ## Publish package to PyPI
@@ -17,8 +20,11 @@ docs: ## Build API docs
 docs-zip: docs ## Build and package docs into a zip file
 	cd docs/build/html && zip -r ../../../telesync-api-docs.zip .
 
-clean: ## Clean
-	rm -rf build dist docs/build telesync-api-docs.zip telesync.egg-info venv
+purge: ## Purge previous build
+	rm -rf build dist telesync.egg-info
+
+clean: purge ## Clean
+	rm -rf docs/build telesync-api-docs.zip venv
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
