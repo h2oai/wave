@@ -17,12 +17,12 @@ import (
 )
 
 const logo = `
-   __       __                          
+   __       __
   / /____  / /__  _______  ______  _____
  / __/ _ \/ / _ \/ ___/ / / / __ \/ ___/
-/ /_/  __/ /  __(__  ) /_/ / / / / /__  
-\__/\___/_/\___/____/\__, /_/ /_/\___/  
-                    /____/              
+/ /_/  __/ /  __(__  ) /_/ / / / / /__
+\__/\___/_/\___/____/\__, /_/ /_/\___/
+                    /____/
 `
 
 // Log represents key-value data for a log message.
@@ -221,6 +221,8 @@ type ServerConf struct {
 	AccessKeySecret string
 	Init            string
 	Compact         string
+	CertFile        string
+	KeyFile         string
 }
 
 // Run runs the HTTP server.
@@ -253,9 +255,16 @@ func Run(conf ServerConf) {
 	for _, line := range strings.Split(logo, "\n") {
 		log.Println("#", line)
 	}
+
 	echo(Log{"t": "listen", "address": conf.Listen, "webroot": conf.WebRoot})
 
-	if err := http.ListenAndServe(conf.Listen, nil); err != nil {
-		echo(Log{"t": "listen", "error": err.Error()})
+	if conf.CertFile != "" && conf.KeyFile != "" {
+		if err := http.ListenAndServeTLS(conf.Listen, conf.CertFile, conf.KeyFile, nil); err != nil {
+			echo(Log{"t": "listen_tls", "error": err.Error()})
+		}
+	} else {
+		if err := http.ListenAndServe(conf.Listen, nil); err != nil {
+			echo(Log{"t": "listen_no_tls", "error": err.Error()})
+		}
 	}
 }

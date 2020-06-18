@@ -7,13 +7,14 @@ import (
 )
 
 func main() {
-	var (
-		listen string
-	)
 
-	flag.StringVar(&listen, "listen", ":55554", "listen on this address")
+	var conf telesync.DSConf
+
+	flag.StringVar(&conf.Listen, "listen", ":55554", "listen on this address")
+	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
+	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 
 	flag.Parse()
 
-	telesync.NewDS().Run(listen)
+	telesync.NewDS().Run(conf)
 }

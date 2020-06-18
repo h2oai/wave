@@ -17,11 +17,11 @@ import (
 )
 
 const dbLogo = `
-   __       __         ____  
-  / /____  / /__  ____/ / /_ 
+   __       __         ____
+  / /____  / /__  ____/ / /_
  / __/ _ \/ / _ \/ __  / __ \
 / /_/  __/ /  __/ /_/ / /_/ /
-\__/\___/_/\___/\__,_/_.___/ 
+\__/\___/_/\___/\__,_/_.___/
 `
 
 //
@@ -53,6 +53,13 @@ const dbLogo = `
 // WAL mode and foreign key constraints are enabled.
 //
 
+// DSConf represents data store configuration options.
+type DSConf struct {
+	Listen   string
+	CertFile string
+	KeyFile  string
+}
+
 // DS represents a data store
 type DS struct {
 	catalog *Catalog
@@ -64,15 +71,19 @@ func NewDS() *DS {
 }
 
 // Run runs runs the server.
-func (ds *DS) Run(addr string) {
+func (ds *DS) Run(conf DSConf) {
 	http.HandleFunc("/", ds.handle)
 
 	for _, line := range strings.Split(dbLogo, "\n") {
 		log.Println(line)
 	}
-	log.Println("listening", addr)
+	log.Println("listening", conf.Listen)
 
-	log.Fatal(http.ListenAndServe(addr, nil))
+	if conf.CertFile != "" && conf.KeyFile != "" {
+		log.Fatal(http.ListenAndServeTLS(conf.Listen, conf.CertFile, conf.KeyFile, nil))
+	} else {
+		log.Fatal(http.ListenAndServe(conf.Listen, nil))
+	}
 }
 
 // DBRequest represents a database request.
