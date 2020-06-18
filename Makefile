@@ -9,17 +9,17 @@ setup: ## Set up development dependencies
 	cd py && $(MAKE) setup
 	cd tools/telegen && $(MAKE) setup build
 
-clean: ## Clean
+clean: clean-build ## Clean
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
 	cd tools/telegen && $(MAKE) clean
 	rm -f telesync teledb
 
-.PHONY: build
-build: build-ui build-py build-server ## Build everything
+clean-build: ## Clean build directory
+	rm -rf build
 
-build-py: ## Build Python driver
-	cd py && $(MAKE)
+.PHONY: build
+build: build-ui build-server ## Build everything
 
 build-ui: ## Build UI
 	cd ui && $(MAKE) build
@@ -37,10 +37,17 @@ build-server: ## Build server
 	go build ${LDFLAGS} -o telesync cmd/telesync/main.go
 
 run: ## Run server
-	go run cmd/telesync/main.go
+	go run cmd/telesync/main.go -webroot ./ui/build
 
 generate: ## Generate driver bindings
 	cd tools/telegen && $(MAKE) run
+
+release: clean-build build ## Prepare release build
+	mkdir -p build/telesync
+	rsync -a ui/build/ build/telesync/www
+	cp telesync build/telesync
+	cp release.txt build/telesync/readme.txt
+	cd build && tar -czf telesync.tar.gz telesync
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

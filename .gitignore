@@ -15,6 +15,7 @@
 # vendor/
 
 /.vscode
+/build
 /telesync
 /teledb
 /*.db

@@ -29,6 +29,12 @@ make run
 - Open root directory in Visual Studio Code.
 - Open `py/` in PyCharm.
 
+### Developing apps using bleeding edge
+
+Clone this repo and install into your app's `venv` using pip's `--editable` option `pip install -e`.
+
+For example `./venv/bin/pip install -e path/to/git/telesync/py/`.
+
 ### Make tasks
 
 ```
