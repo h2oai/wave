@@ -67,3 +67,13 @@ Links
 
 .. _pip: https://pip.pypa.io/en/stable/quickstart/
 
+Change Log
+---------------
+
+* v0.0.3
+    * Added
+        * Make Expando data structure available for apps.
+* v0.0.2
+    * Initial version
+* v0.0.1
+    * Package stub
