@@ -1,13 +1,21 @@
+import time
 import os
 import signal
 import pickle
 import asyncio
-import websockets
 import os.path
 import json
 from typing import List, Dict, Union, Tuple, Iterable, Callable, Any, Awaitable, Optional
 import requests
 from requests.auth import HTTPBasicAuth
+from functools import partial
+
+import tornado.escape
+import tornado.httpserver
+import tornado.ioloop
+import tornado.locks
+import tornado.options
+import tornado.web
 
 Primitive = Union[bool, str, int, float, None]
 PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
@@ -228,7 +236,6 @@ def data(
 class Page:
     def __init__(self, site: 'Site', url: str):
         self.site = site
-        self._ws = site._ws
         self.url = url
         self._changes = []
 
@@ -287,19 +294,6 @@ class Page:
         if p:
             self.site._save(self.url, p)
 
-    async def push(self):
-        p = self._diff()
-        if p:
-            await self._ws.send(f'* {self.url} {p}')
-
-    async def pull(self) -> 'Q':
-        req = await self._ws.recv()
-        return Q(self._ws, req)
-
-    async def poll(self) -> 'Q':
-        await self.push()
-        return await self.pull()
-
     def __setitem__(self, key, card):
         self.add(key, card)
 
@@ -354,10 +348,8 @@ class Site:
             access_key_secret = os.environ.get('TELESYNC_ACCESS_KEY_SECRET', 'access_key_secret')
 
         self._client = BasicAuthClient(host, port, access_key_id, access_key_secret)
-        self._ws: Optional[websockets.WebSocketServerProtocol] = None
 
     def _save(self, url: str, data: str):
-        print(data)
         self._client.patch(url, data)
 
     def load(self, url) -> dict:
@@ -392,20 +384,18 @@ def _session_for(sessions: dict, session_id: str):
 
 
 class Q:
-    def __init__(self, ws: websockets.WebSocketServerProtocol, args: str):
+    def __init__(self, args: dict):
         self.url = _app.url
-        self._ws = ws
-        host, port = _app.address
+        host, port = _app.hub_address
         key_id, key_secret = _app.hub_access_key
         site = Site(host, port, key_id, key_secret)
-        site._ws = ws
         self.site = site
         self.page = site[_app.url]
 
         app_state, sessions = _app.state
         self.app = app_state
         self.session = _session_for(sessions, _app.url)
-        self.args = Expando(unmarshal(args))
+        self.args = Expando(args)
 
     async def sleep(self, delay):
         await asyncio.sleep(delay)
@@ -443,15 +433,58 @@ class App:
 _app: Optional[App] = None
 
 
-async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
-    async for req in ws:
-        await _app.handle(Q(ws, req))
+class WebApp(tornado.web.Application):
+    def __init__(self):
+        handlers = [(r"/", RequestHandler)]
+        settings = dict(
+            # static_path=os.path.join(os.path.dirname(__file__), "static"),
+            debug=True,
+        )
+        super(WebApp, self).__init__(handlers, **settings)
 
 
-async def _server(host: str, port: int, stop):
-    async with websockets.serve(_serve, host, port):
-        await stop
-        save_state()
+class RequestHandler(tornado.web.RequestHandler):
+    async def post(self):
+        args = tornado.escape.json_decode(self.request.body)
+        await _app.handle(Q(args))
+        self.write('')
+
+
+SHUTDOWN_TIMEOUT = 3  # seconds
+
+
+def on_signal(server: tornado.httpserver.HTTPServer, sig, frame):
+    io_loop = tornado.ioloop.IOLoop.current()
+
+    def stop(timeout: float):
+        now = time.time()
+
+        # Wait for all tasks to complete.
+        n_tasks = len([t for t in asyncio.all_tasks() if t is not asyncio.current_task() and not t.done()])
+        if now < timeout and n_tasks > 0:
+            print(f'Waiting for {n_tasks} tasks to complete...')
+            io_loop.add_timeout(now + 1, stop, timeout)
+            return
+
+        # Wait for all connections to be closed.
+        n_conns = len(server._connections)
+        if now < timeout and n_conns > 0:
+            print(f'Waiting for {n_conns} connections to close...')
+            io_loop.add_timeout(now + 1, stop, timeout)
+            return
+
+        print(f'Shutting down ({n_tasks} tasks, {n_conns} connections open) ...')
+        io_loop.stop()
+        print('Shutdown complete!')
+
+    def shutdown():
+        print(f'Shutting down in {SHUTDOWN_TIMEOUT}s...')
+        try:
+            stop(time.time() + SHUTDOWN_TIMEOUT)
+        except BaseException as e:
+            print(f'Shutdown failed: {str(e)}')
+
+    io_loop.add_callback_from_signal(shutdown)
 
 
 def listen(
@@ -471,13 +504,19 @@ def listen(
     host_port = f'{hub_host}:{hub_port}'
     requests.post(
         f'http://{host_port}',
-        data=marshal(dict(url=route, host=f'{host}:{port}')),
+        data=marshal(dict(url=route, host=f'http://{host}:{port}')),
         headers=_content_type_json,
         auth=HTTPBasicAuth(hub_access_key_id, hub_access_key_secret)
     )
 
-    el = asyncio.get_event_loop()
-    stop = el.create_future()
-    el.add_signal_handler(signal.SIGINT, stop.set_result, None)
-    el.add_signal_handler(signal.SIGTERM, stop.set_result, None)
-    el.run_until_complete(_server(host, port, stop))
+    app = WebApp()
+    _, port = _app.address
+    server = app.listen(port)
+
+    signal.signal(signal.SIGTERM, partial(on_signal, server))
+    signal.signal(signal.SIGINT, partial(on_signal, server))
+
+    tornado.ioloop.IOLoop.current().start()  # blocking
+
+    save_state()
+
