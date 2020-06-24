@@ -670,21 +670,19 @@ const
     for (const k in c) page.add(k, loadCard(k, c[k]))
     return page
   },
-  exec = (page: Page | null, ops: OpD[]): Page | null => {
+  exec = (page: Page, ops: OpD[]): Page | null => {
     for (const op of ops) {
       if (op.k && op.k.length > 0) {
-        if (page) {
-          if (op.c) {
-            page.set(op.k, loadCycBuf(op.c))
-          } else if (op.f) {
-            page.set(op.k, loadFixBuf(op.f))
-          } else if (op.m) {
-            page.set(op.k, loadMapBuf(op.m))
-          } else if (op.d) {
-            page.add(op.k, loadCard(op.k, { d: op.d, b: op.b || [] }))
-          } else {
-            page.set(op.k, op.v)
-          }
+        if (op.c) {
+          page.set(op.k, loadCycBuf(op.c))
+        } else if (op.f) {
+          page.set(op.k, loadFixBuf(op.f))
+        } else if (op.m) {
+          page.set(op.k, loadMapBuf(op.m))
+        } else if (op.d) {
+          page.add(op.k, loadCard(op.k, { d: op.d, b: op.b || [] }))
+        } else {
+          page.set(op.k, op.v)
         }
       } else { // drop page
         page = newPage()
@@ -803,10 +801,10 @@ const
         try {
           const msg = JSON.parse(line) as OpsD
           if (msg.d) {
-            const newPage = exec(currentPage, msg.d)
-            if (currentPage !== newPage) {
-              currentPage = newPage
-              if (newPage) handle({ t: SockEventType.Data, page: newPage })
+            const page = exec(currentPage || newPage(), msg.d)
+            if (currentPage !== page) {
+              currentPage = page
+              if (page) handle({ t: SockEventType.Data, page: page })
             }
           } else if (msg.p) {
             currentPage = load(msg.p)
