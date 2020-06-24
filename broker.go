@@ -65,20 +65,18 @@ func newBroker(site *Site) *Broker {
 	}
 }
 
-// bridge establishes a route to a service.
+// bridge maps a route to a service.
 func (b *Broker) bridge(url, host string) {
 	s := newService(b, url, host)
 
 	b.servicesMux.Lock()
 	b.services[url] = s
 	b.servicesMux.Unlock()
+}
 
-	s.send <- boot
-
-	if err := s.run(); err != nil { // blocking
-		echo(Log{"t": "bridge", "host": host, "error": err.Error()})
-	}
-
+// unbridge unmaps a route from a service.
+// TODO establish heartbeat to service.
+func (b *Broker) unbridge(url string) {
 	b.servicesMux.Lock()
 	delete(b.services, url)
 	b.servicesMux.Unlock()
@@ -114,19 +112,16 @@ func parseMsg(s []byte) Msg {
 	return invalidMsg
 }
 
-// route routes data to a service.
-func (b *Broker) route(url string, data []byte) {
+func (b *Broker) at(url string) *Service {
 	b.servicesMux.RLock()
-	service, ok := b.services[url]
-	b.servicesMux.RUnlock()
-	if !ok {
-		echo(Log{"t": "route", "url": url, "error": "service not found"})
-		return
+	defer b.servicesMux.RUnlock()
+	if service, ok := b.services[url]; ok {
+		return service
 	}
-	service.route(data)
+	return nil
 }
 
-// patch broadcasts changes to clients and patches site data.
+// patch sends data to clients and patches site data.
 func (b *Broker) patch(url string, data []byte) {
 	b.publish <- Pub{url, data}
 	// Write AOF entry with patch marker "*" as-is to log file.

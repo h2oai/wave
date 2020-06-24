@@ -63,32 +63,47 @@ func (c *Client) listen() {
 		}
 
 		m := parseMsg(msg)
+		url := m.addr
 		switch m.t {
 		case patchMsgT:
-			c.broker.patch(m.addr, m.data)
+			c.broker.patch(url, m.data)
 		case routeMsgT:
-			c.broker.route(m.addr, m.data)
+			service := c.broker.at(url)
+			if service == nil {
+				echo(Log{"t": "route", "url": url, "err": "service unavailable"})
+				continue
+			}
+			service.route(m.data)
 		case watchMsgT:
-			c.subscribe(m.addr)
+			page := c.broker.site.at(url)
+			if page == nil {
+				if service := c.broker.at(url); service != nil {
+					// url = c.addr // XXX register using client address instead; will be used for replies only
+					c.subscribe(url) // XXX modify URL
+					service.route(boot)
+					continue
+				}
+			}
+
+			c.subscribe(url)
+
+			if page == nil {
+				c.route(notFound)
+				continue
+			}
+			data := page.marshal()
+			if data == nil {
+				c.route(notFound)
+				continue
+			}
+			c.route(data)
 		}
 	}
 }
 
 func (c *Client) subscribe(url string) {
-	c.urls = append(c.urls, url) // TODO review
+	c.urls = append(c.urls, url) // TODO remove; currently front-end subscribes to exactly one URL
 	c.broker.subscribe <- Sub{url, c}
-
-	page := c.broker.site.at(url)
-	if page == nil {
-		c.route(notFound)
-	} else {
-		data := page.marshal()
-		if data == nil {
-			c.route(notFound)
-		} else {
-			c.route(data)
-		}
-	}
 }
 
 func (c *Client) route(data []byte) bool {
