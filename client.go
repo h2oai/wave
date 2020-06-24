@@ -31,14 +31,15 @@ var (
 
 // Client represent a websocket (UI) client.
 type Client struct {
-	broker *Broker
-	conn   *websocket.Conn
-	urls   []string
-	send   chan []byte
+	broker *Broker         // broker
+	conn   *websocket.Conn // connection
+	addr   string          // remote host:port
+	urls   []string        // watched page urls
+	send   chan []byte     // send data
 }
 
-func newClient(broker *Broker, conn *websocket.Conn) *Client {
-	return &Client{broker, conn, nil, make(chan []byte, 256)}
+func newClient(broker *Broker, conn *websocket.Conn, addr string) *Client {
+	return &Client{broker, conn, addr, nil, make(chan []byte, 256)}
 }
 
 func (c *Client) listen() {
