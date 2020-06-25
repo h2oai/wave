@@ -31,14 +31,15 @@ var (
 
 // Client represent a websocket (UI) client.
 type Client struct {
-	broker *Broker
-	conn   *websocket.Conn
-	urls   []string
-	send   chan []byte
+	broker *Broker         // broker
+	conn   *websocket.Conn // connection
+	addr   string          // remote host:port
+	urls   []string        // watched page urls
+	send   chan []byte     // send data
 }
 
-func newClient(broker *Broker, conn *websocket.Conn) *Client {
-	return &Client{broker, conn, nil, make(chan []byte, 256)}
+func newClient(broker *Broker, conn *websocket.Conn, addr string) *Client {
+	return &Client{broker, conn, addr, nil, make(chan []byte, 256)}
 }
 
 func (c *Client) listen() {
@@ -68,7 +69,29 @@ func (c *Client) listen() {
 		case routeMsgT:
 			c.broker.route(m.addr, m.data)
 		case watchMsgT:
+			page := c.broker.site.at(m.addr)
+			if page == nil {
+				if relay := c.broker.at(m.addr); relay != nil {
+					c.subscribe(m.addr) // XXX subscribe using client address
+					relay.route(boot)
+					continue
+				}
+			}
+
 			c.subscribe(m.addr)
+
+			if page == nil {
+				c.route(notFound)
+				continue
+			}
+
+			data := page.marshal()
+			if data == nil {
+				c.route(notFound)
+				continue
+			}
+
+			c.route(data)
 		}
 	}
 }
@@ -76,18 +99,6 @@ func (c *Client) listen() {
 func (c *Client) subscribe(url string) {
 	c.urls = append(c.urls, url) // TODO review
 	c.broker.subscribe <- Sub{url, c}
-
-	page := c.broker.site.at(url)
-	if page == nil {
-		c.route(notFound)
-	} else {
-		data := page.marshal()
-		if data == nil {
-			c.route(notFound)
-		} else {
-			c.route(data)
-		}
-	}
 }
 
 func (c *Client) route(data []byte) bool {

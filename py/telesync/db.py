@@ -36,16 +36,15 @@ class TeleDB:
     Represents a TeleDB database client.
     """
 
-    def __init__(self, host: str, port: int, key_id: str, key_secret: str):
+    def __init__(self, address: str, key_id: str, key_secret: str):
         """
         Create a new client instance.
 
-        :param host: database host
-        :param port: database port
+        :param address: database address
         :param key_id: access key id
         :param key_secret: access key secret
         """
-        self._url = f'http://{host}:{port}'
+        self._address = address
         session = requests.Session()
         session.headers.update({'Content-type': 'application/json'})
         session.auth = (key_id, key_secret)
@@ -62,11 +61,9 @@ class TeleDB:
 
     def _call(self, req: dict) -> dict:
         data = marshal(req)
-        print(data)
-        res = self._session.post(self._url, data=data)
+        res = self._session.post(self._address, data=data)
         if res.status_code != 200:
             raise TeleDBError(f'Request failed (code={res.status_code}): {res.text}')
-        print(res.text)
         return unmarshal(res.text)
 
 

@@ -9,17 +9,17 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Service represents a remote service.
-type Service struct {
+// Relay represents a relay to an upstream service.
+type Relay struct {
 	broker *Broker
-	url    string        // target service url
-	host   string        // target host or host:port
+	url    string        // route
+	host   string        // upstream host or host:port
 	send   chan []byte   // send data to target
 	quit   chan struct{} // quit routing
 }
 
-func newService(broker *Broker, url, host string) *Service {
-	return &Service{
+func newRelay(broker *Broker, url, host string) *Relay {
+	return &Relay{
 		broker,
 		url,
 		host,
@@ -29,29 +29,30 @@ func newService(broker *Broker, url, host string) *Service {
 }
 
 const (
-	serviceConnectMaxRetries    = 20
-	serviceConnectRetryInterval = time.Millisecond * 500
-	serviceDisconnectTimeout    = time.Second
+	relayConnectMaxRetries    = 20
+	relayConnectRetryInterval = time.Millisecond * 500
+	relayDisconnectTimeout    = time.Second
 )
 
-// connect connects to the target.
-func (s *Service) connect() (c *websocket.Conn, err error) {
+// connect connects to the upstream service.
+func (s *Relay) connect() (c *websocket.Conn, err error) {
 	u := url.URL{Scheme: "ws", Host: s.host} // TODO wss
 	urlStr := u.String()
 
-	for i := 1; i <= serviceConnectMaxRetries; i++ {
-		echo(Log{"t": "route-connect", "url": s.url, "host": urlStr, "attempt": strconv.Itoa(i)})
+	for i := 1; i <= relayConnectMaxRetries; i++ {
+		echo(Log{"t": "relay-connect", "url": s.url, "host": urlStr, "attempt": strconv.Itoa(i)})
 		c, _, err = websocket.DefaultDialer.Dial(urlStr, nil)
 		if err == nil {
 			return
 		}
-		time.Sleep(serviceConnectRetryInterval)
+		time.Sleep(relayConnectRetryInterval)
 	}
-	err = fmt.Errorf("failed connecting to service %s at %s after %d attempts", s.url, urlStr, serviceConnectMaxRetries)
+	err = fmt.Errorf("failed connecting to service %s at %s after %d attempts", s.url, urlStr, relayConnectMaxRetries)
 	return
 }
 
-func (s *Service) route(data []byte) bool {
+// route routes data to the upstream service
+func (s *Relay) route(data []byte) bool {
 	select {
 	case s.send <- data:
 		return true
@@ -60,8 +61,8 @@ func (s *Service) route(data []byte) bool {
 	}
 }
 
-// run starts i/o from/to the target.
-func (s *Service) run() error {
+// run starts i/o from/to the upstream service.
+func (s *Relay) run() error {
 	c, err := s.connect()
 	if err != nil {
 		return fmt.Errorf("failed connecting to service: %v", err)
@@ -99,7 +100,7 @@ func (s *Service) run() error {
 				return fmt.Errorf("failed writing to service: %v", err)
 			}
 		case <-s.quit:
-			echo(Log{"t": "route-disconnect", "url": s.url, "host": s.host})
+			echo(Log{"t": "relay-disconnect", "url": s.url, "host": s.host})
 
 			// Attempt clean close: send close, wait for service to close, time-out.
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
@@ -108,7 +109,7 @@ func (s *Service) run() error {
 			}
 			select {
 			case <-done:
-			case <-time.After(serviceDisconnectTimeout):
+			case <-time.After(relayDisconnectTimeout):
 			}
 			return nil
 		}

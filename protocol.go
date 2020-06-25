@@ -58,9 +58,9 @@ type CycBufD struct {
 	I int             `json:"i"` // index
 }
 
-// ConnectReq represents a connection request
+// RelayRequest represents a request from a service for establishing a duplex relay.
 // XXX move to protocol
-type ConnectReq struct {
+type RelayRequest struct {
 	URL  string `json:"url"`
 	Host string `json:"host"`
 }

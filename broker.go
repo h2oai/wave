@@ -49,8 +49,8 @@ type Broker struct {
 	publish     chan Pub
 	subscribe   chan Sub
 	unsubscribe chan *Client
-	services    map[string]*Service // url => service
-	servicesMux sync.RWMutex        // mutex for tracking services
+	relays      map[string]*Relay // url => relay
+	relaysMux   sync.RWMutex      // mutex for tracking relays
 }
 
 func newBroker(site *Site) *Broker {
@@ -60,28 +60,28 @@ func newBroker(site *Site) *Broker {
 		make(chan Pub, 1024),
 		make(chan Sub),
 		make(chan *Client),
-		make(map[string]*Service),
+		make(map[string]*Relay),
 		sync.RWMutex{},
 	}
 }
 
-// bridge establishes a route to a service.
-func (b *Broker) bridge(url, host string) {
-	s := newService(b, url, host)
+// relay establishes a relay to an upstream service; blocking
+func (b *Broker) relay(url, host string) {
+	s := newRelay(b, url, host)
 
-	b.servicesMux.Lock()
-	b.services[url] = s
-	b.servicesMux.Unlock()
+	b.relaysMux.Lock()
+	b.relays[url] = s
+	b.relaysMux.Unlock()
 
-	s.send <- boot
+	echo(Log{"t": "relay", "url": url, "host": host})
 
 	if err := s.run(); err != nil { // blocking
-		echo(Log{"t": "bridge", "host": host, "error": err.Error()})
+		echo(Log{"t": "relay", "url": url, "host": host, "error": err.Error()})
 	}
 
-	b.servicesMux.Lock()
-	delete(b.services, url)
-	b.servicesMux.Unlock()
+	b.relaysMux.Lock()
+	delete(b.relays, url)
+	b.relaysMux.Unlock()
 }
 
 func parseMsgT(s []byte) MsgT {
@@ -114,16 +114,22 @@ func parseMsg(s []byte) Msg {
 	return invalidMsg
 }
 
+// at looks up a relay for a given url
+func (b *Broker) at(url string) *Relay {
+	b.relaysMux.RLock()
+	defer b.relaysMux.RUnlock()
+	relay, _ := b.relays[url]
+	return relay
+}
+
 // route routes data to a service.
 func (b *Broker) route(url string, data []byte) {
-	b.servicesMux.RLock()
-	service, ok := b.services[url]
-	b.servicesMux.RUnlock()
-	if !ok {
-		echo(Log{"t": "route", "url": url, "error": "service not found"})
+	relay := b.at(url)
+	if relay == nil {
+		echo(Log{"t": "route", "url": url, "error": "service unavailable"})
 		return
 	}
-	service.route(data)
+	relay.route(data)
 }
 
 // patch broadcasts changes to clients and patches site data.
