@@ -7,8 +7,6 @@ import os.path
 import json
 from urllib.parse import urlparse
 from typing import List, Dict, Union, Tuple, Callable, Any, Awaitable, Optional
-import requests
-from requests.auth import HTTPBasicAuth
 from functools import partial
 
 import tornado.escape
@@ -17,6 +15,7 @@ import tornado.ioloop
 import tornado.locks
 import tornado.options
 import tornado.web
+from tornado.httpclient import AsyncHTTPClient, HTTPClient, HTTPRequest
 
 Primitive = Union[bool, str, int, float, None]
 PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
@@ -310,6 +309,11 @@ class Page:
         if p:
             self.site._save(self.url, p)
 
+    async def push(self):
+        p = self._diff()
+        if p:
+            await self.site._save_async(self.url, p)
+
     def __setitem__(self, key, card):
         self.add(key, card)
 
@@ -322,28 +326,49 @@ class Page:
         self._track(dict(k=key))
 
 
+def _new_patch_request(url: str, body: Any) -> HTTPRequest:
+    return HTTPRequest(
+        url=f'{_config.hub_address}{url}',
+        method='PATCH',
+        headers=_content_type_json,
+        body=body,
+        auth_username=_config.hub_access_key_id,
+        auth_password=_config.hub_access_key_secret,
+    )
+
+
 class BasicAuthClient:
     def __init__(self):
-        self._address = _config.hub_address
-        self._auth = HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
-
-    def patch(self, url: str, data: Any):
-        res = requests.patch(f'{self._address}{url}', data=data, headers=_content_type_json, auth=self._auth)
-        if res.status_code != 200:
-            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
+        self._client: Optional[HTTPClient] = None
+        self._async_client: Optional[AsyncHTTPClient] = None
 
     def get(self, url: str):
-        res = requests.get(f'{self._address}{url}', headers=_content_type_json)
-        if res.status_code != 200:
-            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
-        return res.json()
+        if not self._client:
+            self._client = HTTPClient()
+        res = self._client.fetch(HTTPRequest(
+            url=f'{_config.hub_address}{url}',
+            headers=_content_type_json,
+            auth_username=_config.hub_access_key_id,
+            auth_password=_config.hub_access_key_secret,
+        ))
+        if res.code != 200:
+            raise ServiceError(f'Request failed (code={res.code}, reason={res.reason}): {res.body}')
+        return tornado.escape.json_decode(res.body)
 
-    def upload(self, url: str, files: List[str]) -> List[str]:
-        fs = [('files', (os.path.basename(f), open(f, 'rb'))) for f in files]
-        res = requests.put(f'{self._address}{url}', files=fs, auth=self._auth)
-        if res.status_code == 200:
-            return json.loads(res.text)['files']
-        raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
+    def patch(self, url: str, data: Any):
+        if not self._client:
+            self._client = HTTPClient()
+        res = self._client.fetch(_new_patch_request(url, data))
+        if res.code != 200:
+            raise ServiceError(f'Request failed (code={res.code}, reason={res.reason}): {res.body}')
+
+    async def patch_async(self, url: str, data: Any):
+        if not self._async_client:
+            self._async_client = AsyncHTTPClient()
+
+        res = await self._async_client.fetch(_new_patch_request(url, data))
+        if res.code != 200:
+            raise ServiceError(f'Request failed (code={res.code}, reason={res.reason}): {res.body}')
 
 
 class Site:
@@ -353,11 +378,11 @@ class Site:
     def _save(self, url: str, data: str):
         self._client.patch(url, data)
 
+    async def _save_async(self, url: str, data: str):
+        await self._client.patch_async(url, data)
+
     def load(self, url) -> dict:
         return self._client.get(url)
-
-    def upload(self, files: List[str]):
-        return self._client.upload('/f/out', files)
 
     def __getitem__(self, url) -> Page:
         return Page(self, url)
@@ -490,12 +515,16 @@ def on_signal(server: tornado.httpserver.HTTPServer, sig, frame):
 
 
 def _announce_service(route: str):
-    requests.post(
-        _config.hub_address,
-        data=marshal(dict(url=route, host=_config.app_address)),
+    http_client = HTTPClient()
+    http_client.fetch(HTTPRequest(
+        url=_config.hub_address,
+        method='POST',
         headers=_content_type_json,
-        auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
-    )
+        body=marshal(dict(url=route, host=_config.app_address)),
+        auth_username=_config.hub_access_key_id,
+        auth_password=_config.hub_access_key_secret,
+    ))
+    http_client.close()
 
 
 def listen(

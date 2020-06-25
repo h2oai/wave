@@ -68,7 +68,7 @@ func newBroker(site *Site) *Broker {
 // bridge maps a route to a service.
 func (b *Broker) bridge(url, host string) {
 	s := newService(b, url, host)
-
+	echo(Log{"t": "bridge", "url": url, "host": host})
 	b.servicesMux.Lock()
 	b.services[url] = s
 	b.servicesMux.Unlock()
@@ -77,6 +77,7 @@ func (b *Broker) bridge(url, host string) {
 // unbridge unmaps a route from a service.
 // TODO establish heartbeat to service.
 func (b *Broker) unbridge(url string) {
+	echo(Log{"t": "unbridge", "url": url})
 	b.servicesMux.Lock()
 	delete(b.services, url)
 	b.servicesMux.Unlock()

@@ -1,8 +1,7 @@
 from typing import Tuple, List, Optional, Dict
-
-import requests
-
-from .core import marshal, unmarshal
+import tornado.escape
+from tornado.httpclient import HTTPClient, HTTPRequest
+from .core import marshal
 
 
 def _new_stmt(query: str, params: List) -> Dict:
@@ -31,25 +30,26 @@ class TeleDBError(Exception):
     pass
 
 
+_content_type_json = {'Content-type': 'application/json'}
+
+
 class TeleDB:
     """
     Represents a TeleDB database client.
     """
 
-    def __init__(self, host: str, port: int, key_id: str, key_secret: str):
+    def __init__(self, address: str, key_id: str, key_secret: str):
         """
         Create a new client instance.
 
-        :param host: database host
-        :param port: database port
+        :param address: database address
         :param key_id: access key id
         :param key_secret: access key secret
         """
-        self._url = f'http://{host}:{port}'
-        session = requests.Session()
-        session.headers.update({'Content-type': 'application/json'})
-        session.auth = (key_id, key_secret)
-        self._session = session
+        self._address = address
+        self._key_id = key_id
+        self._key_secret = key_secret
+        self._client = HTTPClient()
 
     def __getitem__(self, name: str):
         """
@@ -62,12 +62,17 @@ class TeleDB:
 
     def _call(self, req: dict) -> dict:
         data = marshal(req)
-        print(data)
-        res = self._session.post(self._url, data=data)
-        if res.status_code != 200:
-            raise TeleDBError(f'Request failed (code={res.status_code}): {res.text}')
-        print(res.text)
-        return unmarshal(res.text)
+        res = self._client.fetch(HTTPRequest(
+            url=self._address,
+            method='POST',
+            headers=_content_type_json,
+            auth_username=self._key_id,
+            auth_password=self._key_secret,
+            body=data,
+        ))
+        if res.code != 200:
+            raise TeleDBError(f'Request failed (code={res.code}, reason={res.reason}): {res.body}')
+        return tornado.escape.json_decode(res.body)
 
 
 class _DB:
