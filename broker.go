@@ -129,7 +129,7 @@ func (b *Broker) route(url string, data []byte) {
 		echo(Log{"t": "route", "url": url, "error": "service unavailable"})
 		return
 	}
-	relay.route(data)
+	relay.relay(data)
 }
 
 // patch broadcasts changes to clients and patches site data.

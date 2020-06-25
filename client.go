@@ -73,7 +73,7 @@ func (c *Client) listen() {
 			if page == nil {
 				if relay := c.broker.at(m.addr); relay != nil {
 					c.subscribe(m.addr) // XXX subscribe using client address
-					relay.route(boot)
+					relay.relay(boot)
 					continue
 				}
 			}

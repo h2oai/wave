@@ -2,7 +2,6 @@ package telesync
 
 import (
 	"fmt"
-	"net/url"
 	"strconv"
 	"time"
 
@@ -12,8 +11,8 @@ import (
 // Relay represents a relay to an upstream service.
 type Relay struct {
 	broker *Broker
-	url    string        // route
-	host   string        // upstream host or host:port
+	route  string        // route
+	addr   string        // upstream address ws[s]://host:port
 	send   chan []byte   // send data to target
 	quit   chan struct{} // quit routing
 }
@@ -36,23 +35,20 @@ const (
 
 // connect connects to the upstream service.
 func (s *Relay) connect() (c *websocket.Conn, err error) {
-	u := url.URL{Scheme: "ws", Host: s.host} // TODO wss
-	urlStr := u.String()
-
 	for i := 1; i <= relayConnectMaxRetries; i++ {
-		echo(Log{"t": "relay-connect", "url": s.url, "host": urlStr, "attempt": strconv.Itoa(i)})
-		c, _, err = websocket.DefaultDialer.Dial(urlStr, nil)
+		echo(Log{"t": "relay-connect", "route": s.route, "addr": s.addr, "attempt": strconv.Itoa(i)})
+		c, _, err = websocket.DefaultDialer.Dial(s.addr, nil)
 		if err == nil {
 			return
 		}
 		time.Sleep(relayConnectRetryInterval)
 	}
-	err = fmt.Errorf("failed connecting to service %s at %s after %d attempts", s.url, urlStr, relayConnectMaxRetries)
+	err = fmt.Errorf("failed connecting to service %s at %s after %d attempts", s.route, s.addr, relayConnectMaxRetries)
 	return
 }
 
-// route routes data to the upstream service
-func (s *Relay) route(data []byte) bool {
+// relay relays data to the upstream service
+func (s *Relay) relay(data []byte) bool {
 	select {
 	case s.send <- data:
 		return true
@@ -100,7 +96,7 @@ func (s *Relay) run() error {
 				return fmt.Errorf("failed writing to service: %v", err)
 			}
 		case <-s.quit:
-			echo(Log{"t": "relay-disconnect", "url": s.url, "host": s.host})
+			echo(Log{"t": "relay-disconnect", "url": s.route, "host": s.addr})
 
 			// Attempt clean close: send close, wait for service to close, time-out.
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
