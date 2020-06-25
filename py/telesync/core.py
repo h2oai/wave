@@ -5,7 +5,8 @@ import pickle
 import asyncio
 import os.path
 import json
-from typing import List, Dict, Union, Tuple, Iterable, Callable, Any, Awaitable, Optional
+from urllib.parse import urlparse
+from typing import List, Dict, Union, Tuple, Callable, Any, Awaitable, Optional
 import requests
 from requests.auth import HTTPBasicAuth
 from functools import partial
@@ -20,6 +21,21 @@ import tornado.web
 Primitive = Union[bool, str, int, float, None]
 PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
 
+
+def get_env(key: str, value: Any):
+    return os.environ.get(f'TELESYNC_{key}', value)
+
+
+class Config:
+    def __init__(self):
+        self.app_address = get_env('APP_ADDRESS', 'http://localhost:55556')
+        self.hub_address = get_env('ADDRESS', 'http://localhost:55555')
+        self.hub_access_key_id: str = get_env('ACCESS_KEY_ID', 'access_key_id')
+        self.hub_access_key_secret: str = get_env('ACCESS_KEY_SECRET', 'access_key_secret')
+        self.shutdown_timeout: int = int(get_env('SHUTDOWN_TIMEOUT', '3'))  # seconds
+
+
+_config = Config()
 _key_sep = ' '
 _content_type_json = {'Content-type': 'application/json'}
 
@@ -307,9 +323,9 @@ class Page:
 
 
 class BasicAuthClient:
-    def __init__(self, host: str, port: int, username: str, password: str):
-        self._address = f'http://{host}:{port}'
-        self._auth = HTTPBasicAuth(username, password)
+    def __init__(self):
+        self._address = _config.hub_address
+        self._auth = HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
 
     def patch(self, url: str, data: Any):
         res = requests.patch(f'{self._address}{url}', data=data, headers=_content_type_json, auth=self._auth)
@@ -331,23 +347,8 @@ class BasicAuthClient:
 
 
 class Site:
-    def __init__(
-            self,
-            host: Optional[str] = None,
-            port: Optional[int] = None,
-            access_key_id: Optional[str] = None,
-            access_key_secret: Optional[str] = None,
-    ):
-        if host is None:
-            host = os.environ.get('TELESYNC_HOST', 'localhost')
-        if port is None:
-            port = int(os.environ.get('TELESYNC_PORT', '55555'))
-        if access_key_id is None:
-            access_key_id = os.environ.get('TELESYNC_ACCESS_KEY_ID', 'access_key_id')
-        if access_key_secret is None:
-            access_key_secret = os.environ.get('TELESYNC_ACCESS_KEY_SECRET', 'access_key_secret')
-
-        self._client = BasicAuthClient(host, port, access_key_id, access_key_secret)
+    def __init__(self):
+        self._client = BasicAuthClient()
 
     def _save(self, url: str, data: str):
         self._client.patch(url, data)
@@ -384,57 +385,51 @@ def _session_for(sessions: dict, session_id: str):
 
 
 class Q:
-    def __init__(self, args: dict):
-        self.url = _app.url
-        host, port = _app.hub_address
-        key_id, key_secret = _app.hub_access_key
-        site = Site(host, port, key_id, key_secret)
+    def __init__(
+            self,
+            route: str,
+            username: str,
+            app_state: Expando,
+            session_state: Expando,
+            args: Expando,
+    ):
+        site = Site()
         self.site = site
-        self.page = site[_app.url]
-
-        app_state, sessions = _app.state
+        self.page = site[route]
         self.app = app_state
-        self.session = _session_for(sessions, _app.url)
-        self.args = Expando(args)
+        self.session = session_state
+        self.args = args
+        self.username = username
 
     async def sleep(self, delay):
         await asyncio.sleep(delay)
 
 
 Handler = Callable[[Q], Awaitable[Any]]
+WebAppState = Tuple[Expando, dict]
 
 
 async def noop_async(q: Q): pass
 
 
-def save_state():
+def save_state(state: WebAppState):
     # TODO save to remote store if configured
-    app_state, sessions = _app.state
+    app_state, sessions = state
     state = expando_to_dict(app_state), {k: expando_to_dict(v) for k, v in sessions.items()}
     pickle.dump(state, open('telesync.state', 'wb'))
 
 
-def load_state():
+def load_state() -> WebAppState:
     # TODO load from remote store if configured
     return Expando(), dict()
 
 
-class App:
-    def __init__(self, url: str, handle: Handler, address: Tuple[str, int],
-                 hub_address: Tuple[str, int], hub_access_key: Tuple[str, str]):
-        self.url = url
-        self.handle = handle
-        self.address = address
-        self.hub_address = hub_address
-        self.hub_access_key = hub_access_key
-        self.state = load_state()  # app, sessions
-
-
-_app: Optional[App] = None
-
-
 class WebApp(tornado.web.Application):
-    def __init__(self):
+    def __init__(self, route: str, handle: Handler):
+        self.route = route
+        self.handle = handle
+        self.state = load_state()
+
         handlers = [(r"/", RequestHandler)]
         settings = dict(
             # static_path=os.path.join(os.path.dirname(__file__), "static"),
@@ -445,12 +440,19 @@ class WebApp(tornado.web.Application):
 
 class RequestHandler(tornado.web.RequestHandler):
     async def post(self):
-        args = tornado.escape.json_decode(self.request.body)
-        await _app.handle(Q(args))
-        self.write('')
-
-
-SHUTDOWN_TIMEOUT = 3  # seconds
+        req = self.request
+        username = req.headers.get('TELESYNC_USERNAME', '')
+        webapp: WebApp = self.application
+        app_state, sessions = webapp.state
+        session_state = _session_for(sessions, username)
+        await webapp.handle(Q(
+            route=webapp.route,
+            username=username,
+            app_state=app_state,
+            session_state=session_state,
+            args=Expando(tornado.escape.json_decode(req.body)),
+        ))
+        self.write('')  # TODO catch and return errors
 
 
 def on_signal(server: tornado.httpserver.HTTPServer, sig, frame):
@@ -478,45 +480,36 @@ def on_signal(server: tornado.httpserver.HTTPServer, sig, frame):
         print('Shutdown complete!')
 
     def shutdown():
-        print(f'Shutting down in {SHUTDOWN_TIMEOUT}s...')
+        print(f'Shutting down in {_config.shutdown_timeout}s...')
         try:
-            stop(time.time() + SHUTDOWN_TIMEOUT)
+            stop(time.time() + _config.shutdown_timeout)
         except BaseException as e:
             print(f'Shutdown failed: {str(e)}')
 
     io_loop.add_callback_from_signal(shutdown)
 
 
+def _announce_service(route: str):
+    requests.post(
+        _config.hub_address,
+        data=marshal(dict(url=route, host=_config.app_address)),
+        headers=_content_type_json,
+        auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
+    )
+
+
 def listen(
         route: str,
         handler: Handler,
-        host: str = 'localhost',
-        port: int = 55556,
-        hub_host: str = 'localhost',
-        hub_port: int = 55555,
-        hub_access_key_id: str = None,
-        hub_access_key_secret: str = None,
 ):
-    global _app
-    _app = App(route, handler, (host, port), (hub_host, hub_port),
-               (hub_access_key_id, hub_access_key_secret))
-
-    host_port = f'{hub_host}:{hub_port}'
-    requests.post(
-        f'http://{host_port}',
-        data=marshal(dict(url=route, host=f'http://{host}:{port}')),
-        headers=_content_type_json,
-        auth=HTTPBasicAuth(hub_access_key_id, hub_access_key_secret)
-    )
-
-    app = WebApp()
-    _, port = _app.address
-    server = app.listen(port)
+    webapp = WebApp(route, handler)
+    server = webapp.listen(urlparse(_config.app_address).port)
 
     signal.signal(signal.SIGTERM, partial(on_signal, server))
     signal.signal(signal.SIGINT, partial(on_signal, server))
 
+    _announce_service(route)
+
     tornado.ioloop.IOLoop.current().start()  # blocking
 
-    save_state()
-
+    save_state(webapp.state)
