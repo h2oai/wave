@@ -5,13 +5,30 @@ import asyncio
 import websockets
 import os.path
 import json
-from typing import List, Dict, Union, Tuple, Iterable, Callable, Any, Awaitable, Optional
+from urllib.parse import urlparse
+from typing import List, Dict, Union, Tuple, Callable, Any, Awaitable, Optional
 import requests
 from requests.auth import HTTPBasicAuth
 
 Primitive = Union[bool, str, int, float, None]
 PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
 
+
+def get_env(key: str, value: Any):
+    return os.environ.get(f'TELESYNC_{key}', value)
+
+
+class Config:
+    def __init__(self):
+        self.app_address = get_env('APP_ADDRESS', 'ws://localhost:55556')
+        self.listen_address = get_env('LISTEN_ADDRESS', 'ws://localhost:55556')
+        self.hub_address = get_env('ADDRESS', 'http://localhost:55555')
+        self.hub_access_key_id: str = get_env('ACCESS_KEY_ID', 'access_key_id')
+        self.hub_access_key_secret: str = get_env('ACCESS_KEY_SECRET', 'access_key_secret')
+        self.shutdown_timeout: int = int(get_env('SHUTDOWN_TIMEOUT', '3'))  # seconds
+
+
+_config = Config()
 _key_sep = ' '
 _content_type_json = {'Content-type': 'application/json'}
 
@@ -313,51 +330,34 @@ class Page:
 
 
 class BasicAuthClient:
-    def __init__(self, host: str, port: int, username: str, password: str):
-        self._address = f'http://{host}:{port}'
-        self._auth = HTTPBasicAuth(username, password)
+    def __init__(self):
+        self._auth = HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
 
     def patch(self, url: str, data: Any):
-        res = requests.patch(f'{self._address}{url}', data=data, headers=_content_type_json, auth=self._auth)
+        res = requests.patch(f'{_config.hub_address}{url}', data=data, headers=_content_type_json, auth=self._auth)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
     def get(self, url: str):
-        res = requests.get(f'{self._address}{url}', headers=_content_type_json)
+        res = requests.get(f'{_config.hub_address}{url}', headers=_content_type_json, auth=self._auth)
         if res.status_code != 200:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
         return res.json()
 
     def upload(self, url: str, files: List[str]) -> List[str]:
         fs = [('files', (os.path.basename(f), open(f, 'rb'))) for f in files]
-        res = requests.put(f'{self._address}{url}', files=fs, auth=self._auth)
+        res = requests.put(f'{_config.hub_address}{url}', files=fs, auth=self._auth)
         if res.status_code == 200:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
 
 
 class Site:
-    def __init__(
-            self,
-            host: Optional[str] = None,
-            port: Optional[int] = None,
-            access_key_id: Optional[str] = None,
-            access_key_secret: Optional[str] = None,
-    ):
-        if host is None:
-            host = os.environ.get('TELESYNC_HOST', 'localhost')
-        if port is None:
-            port = int(os.environ.get('TELESYNC_PORT', '55555'))
-        if access_key_id is None:
-            access_key_id = os.environ.get('TELESYNC_ACCESS_KEY_ID', 'access_key_id')
-        if access_key_secret is None:
-            access_key_secret = os.environ.get('TELESYNC_ACCESS_KEY_SECRET', 'access_key_secret')
-
-        self._client = BasicAuthClient(host, port, access_key_id, access_key_secret)
+    def __init__(self):
+        self._client = BasicAuthClient()
         self._ws: Optional[websockets.WebSocketServerProtocol] = None
 
     def _save(self, url: str, data: str):
-        print(data)
         self._client.patch(url, data)
 
     def load(self, url) -> dict:
@@ -392,92 +392,86 @@ def _session_for(sessions: dict, session_id: str):
 
 
 class Q:
-    def __init__(self, ws: websockets.WebSocketServerProtocol, args: str):
-        self.url = _app.url
-        self._ws = ws
-        host, port = _app.address
-        key_id, key_secret = _app.hub_access_key
-        site = Site(host, port, key_id, key_secret)
+    def __init__(
+            self,
+            ws: websockets.WebSocketServerProtocol,
+            route: str,
+            username: str,
+            app_state: Expando,
+            session_state: Expando,
+            args: Expando,
+    ):
+        site = Site()
         site._ws = ws
         self.site = site
-        self.page = site[_app.url]
-
-        app_state, sessions = _app.state
+        self.page = site[route]
         self.app = app_state
-        self.session = _session_for(sessions, _app.url)
-        self.args = Expando(unmarshal(args))
+        self.session = session_state
+        self.args = args
+        self.username = username
 
     async def sleep(self, delay):
         await asyncio.sleep(delay)
 
 
-Handler = Callable[[Q], Awaitable[Any]]
+HandleAsync = Callable[[Q], Awaitable[Any]]
+WebAppState = Tuple[Expando, Dict[str, Expando]]
 
 
-async def noop_async(q: Q): pass
-
-
-def save_state():
-    # TODO save to remote store if configured
-    app_state, sessions = _app.state
-    state = expando_to_dict(app_state), {k: expando_to_dict(v) for k, v in sessions.items()}
-    pickle.dump(state, open('telesync.state', 'wb'))
-
-
-def load_state():
-    # TODO load from remote store if configured
-    return Expando(), dict()
-
-
-class App:
-    def __init__(self, url: str, handle: Handler, address: Tuple[str, int],
-                 hub_address: Tuple[str, int], hub_access_key: Tuple[str, str]):
-        self.url = url
+class Server:
+    def __init__(self, route: str, handle: HandleAsync):
+        self.route = route
         self.handle = handle
-        self.address = address
-        self.hub_address = hub_address
-        self.hub_access_key = hub_access_key
-        self.state = load_state()  # app, sessions
+        # TODO load from remote store if configured
+        self.state: WebAppState = (Expando(), dict())
+
+    def stop(self):
+        # TODO save to remote store if configured
+        app_state, sessions = self.state
+        state = expando_to_dict(app_state), {k: expando_to_dict(v) for k, v in sessions.items()}
+        pickle.dump(state, open('telesync.state', 'wb'))
 
 
-_app: Optional[App] = None
+_server: Optional[Server] = None
 
 
 async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
     async for req in ws:
-        await _app.handle(Q(ws, req))
+        app_state, session_state = _server.state
+        username = ''  # XXX get from request
+        await _server.handle(Q(
+            ws=ws,
+            route=_server.route,
+            username=username,
+            app_state=app_state,
+            session_state=_session_for(session_state, username),
+            args=Expando(unmarshal(req)),
+        ))
 
 
-async def _server(host: str, port: int, stop):
+async def _start_server(host: Optional[str], port: int, stop_server):
     async with websockets.serve(_serve, host, port):
-        await stop
-        save_state()
+        await stop_server
+        _server.stop()
 
 
 def listen(
         route: str,
-        handler: Handler,
-        host: str = 'localhost',
-        port: int = 55556,
-        hub_host: str = 'localhost',
-        hub_port: int = 55555,
-        hub_access_key_id: str = None,
-        hub_access_key_secret: str = None,
+        handle: HandleAsync,
 ):
-    global _app
-    _app = App(route, handler, (host, port), (hub_host, hub_port),
-               (hub_access_key_id, hub_access_key_secret))
+    global _server
+    _server = Server(route=route, handle=handle)
 
-    host_port = f'{hub_host}:{hub_port}'
     requests.post(
-        f'http://{host_port}',
-        data=marshal(dict(url=route, host=f'{host}:{port}')),
+        _config.hub_address,
+        data=marshal(dict(url=route, host=_config.app_address)),
         headers=_content_type_json,
-        auth=HTTPBasicAuth(hub_access_key_id, hub_access_key_secret)
+        auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
     )
 
     el = asyncio.get_event_loop()
-    stop = el.create_future()
-    el.add_signal_handler(signal.SIGINT, stop.set_result, None)
-    el.add_signal_handler(signal.SIGTERM, stop.set_result, None)
-    el.run_until_complete(_server(host, port, stop))
+    stop_server = el.create_future()
+    el.add_signal_handler(signal.SIGINT, stop_server.set_result, None)
+    el.add_signal_handler(signal.SIGTERM, stop_server.set_result, None)
+    listen_address = urlparse(_config.listen_address)
+    el.run_until_complete(_start_server(listen_address.hostname, listen_address.port, stop_server))
