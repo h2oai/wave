@@ -536,6 +536,13 @@ const
 
     return { types, lookup }
   },
+  measureStats = (protocol: Protocol) => {
+    let n = 0
+    for (const t of protocol.types) {
+      n += t.members.length
+    }
+    return [protocol.types.length, n]
+  },
   main = (typescriptSrcDir: string, pyOutDir: string) => {
     const files: File[] = []
     processDir(files, typescriptSrcDir)
@@ -544,6 +551,9 @@ const
     const [classes, api] = tranlateToPy(protocol)
     fs.writeFileSync(path.join(pyOutDir, 'types.py'), classes, 'utf8')
     fs.writeFileSync(path.join(pyOutDir, 'ui_base.py'), api, 'utf8')
+
+    const [typeCount, memberCount] = measureStats(protocol)
+    console.log(`API surface: ${typeCount} types, ${memberCount} members.`)
   }
 
 
