@@ -31,15 +31,14 @@ var (
 
 // Client represent a websocket (UI) client.
 type Client struct {
-	broker *Broker         // broker
-	conn   *websocket.Conn // connection
-	addr   string          // remote host:port
-	urls   []string        // watched page urls
-	send   chan []byte     // send data
+	broker *Broker
+	conn   *websocket.Conn
+	urls   []string
+	send   chan []byte
 }
 
-func newClient(broker *Broker, conn *websocket.Conn, addr string) *Client {
-	return &Client{broker, conn, addr, nil, make(chan []byte, 256)}
+func newClient(broker *Broker, conn *websocket.Conn) *Client {
+	return &Client{broker, conn, nil, make(chan []byte, 256)}
 }
 
 func (c *Client) listen() {
@@ -63,47 +62,32 @@ func (c *Client) listen() {
 		}
 
 		m := parseMsg(msg)
-		url := m.addr
 		switch m.t {
 		case patchMsgT:
-			c.broker.patch(url, m.data)
+			c.broker.patch(m.addr, m.data)
 		case routeMsgT:
-			service := c.broker.at(url)
-			if service == nil {
-				echo(Log{"t": "route", "url": url, "err": "service unavailable"})
-				continue
-			}
-			service.route(m.data)
+			c.broker.route(m.addr, m.data)
 		case watchMsgT:
-			page := c.broker.site.at(url)
-			if page == nil {
-				if service := c.broker.at(url); service != nil {
-					// url = c.addr // XXX register using client address instead; will be used for replies only
-					c.subscribe(url) // XXX modify URL
-					service.route(boot)
-					continue
-				}
-			}
-
-			c.subscribe(url)
-
-			if page == nil {
-				c.route(notFound)
-				continue
-			}
-			data := page.marshal()
-			if data == nil {
-				c.route(notFound)
-				continue
-			}
-			c.route(data)
+			c.subscribe(m.addr)
 		}
 	}
 }
 
 func (c *Client) subscribe(url string) {
-	c.urls = append(c.urls, url) // TODO remove; currently front-end subscribes to exactly one URL
+	c.urls = append(c.urls, url) // TODO review
 	c.broker.subscribe <- Sub{url, c}
+
+	page := c.broker.site.at(url)
+	if page == nil {
+		c.route(notFound)
+	} else {
+		data := page.marshal()
+		if data == nil {
+			c.route(notFound)
+		} else {
+			c.route(data)
+		}
+	}
 }
 
 func (c *Client) route(data []byte) bool {

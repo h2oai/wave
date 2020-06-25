@@ -542,7 +542,7 @@ const
     // console.log(JSON.stringify(protocol, null, 2))
     const protocol = makeProtocol(files)
     const [classes, api] = tranlateToPy(protocol)
-    fs.writeFileSync(path.join(pyOutDir, 'protocol.py'), classes, 'utf8')
+    fs.writeFileSync(path.join(pyOutDir, 'types.py'), classes, 'utf8')
     fs.writeFileSync(path.join(pyOutDir, 'ui_base.py'), api, 'utf8')
   }
 

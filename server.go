@@ -29,7 +29,7 @@ const logo = `
 type Log map[string]string
 
 func echo(m Log) {
-	if j, err := json.Marshal(m); err == nil { // TODO speed up
+	if j, err := json.Marshal(m); err == nil {
 		log.Println("#", string(j))
 	}
 }
@@ -73,7 +73,6 @@ func fallback(prefix string, h http.Handler) http.Handler {
 		h.ServeHTTP(w, r2)
 	})
 }
-
 func (s *WebServer) authenticate(username, password string) bool {
 	hash, ok := s.users[username]
 	if !ok {
@@ -127,19 +126,19 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// TODO auth
 		switch r.Header.Get("Content-Type") {
 		case contentTypeJSON: // data
-			var req BridgeRequest
+			var connectReq ConnectReq
 			b, err := ioutil.ReadAll(r.Body) // XXX add limit
 			if err != nil {
 				echo(Log{"t": "read post request body", "error": err.Error()})
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return
 			}
-			if err := json.Unmarshal(b, &req); err != nil {
+			if err := json.Unmarshal(b, &connectReq); err != nil {
 				echo(Log{"t": "json_unmarshal", "error": err.Error()})
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 				return
 			}
-			go s.broker.bridge(req.URL, req.Host)
+			go s.broker.bridge(connectReq.URL, connectReq.Host)
 		default:
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		}

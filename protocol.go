@@ -58,8 +58,9 @@ type CycBufD struct {
 	I int             `json:"i"` // index
 }
 
-// BridgeRequest represents a remote service registration request.
-type BridgeRequest struct {
+// ConnectReq represents a connection request
+// XXX move to protocol
+type ConnectReq struct {
 	URL  string `json:"url"`
 	Host string `json:"host"`
 }

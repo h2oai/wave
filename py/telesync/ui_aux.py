@@ -1,4 +1,4 @@
-from .protocol import Component
+from .types import Component
 from .ui_base import text
 
 

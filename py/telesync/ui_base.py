@@ -3,8 +3,8 @@
 #
 
 from typing import Optional, Union, List
-from .protocol import Value, PackedRecord, PackedRecords, PackedData
-from .protocol import \
+from .types import Value, PackedRecord, PackedRecords, PackedData
+from .types import \
     Button, \
     Buttons, \
     Card1Card, \

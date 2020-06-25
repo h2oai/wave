@@ -18,7 +18,7 @@ def test_only(f):
 
 
 def run_tests():
-    site = Site()
+    site = Site('localhost', 55555, 'admin', 'admin')
     tests = only_tests if len(only_tests) else all_tests
     for t in tests:
         print(t.__name__)
