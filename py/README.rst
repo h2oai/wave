@@ -64,10 +64,16 @@ Links
 
 Change Log
 ---------------
-
+* v0.0.4
+    * Added
+        * Multi-user and multi-client support: launch apps in ``multicast`` or ``unicast`` modes in addition to ``broadcast`` mode.
+        * Client-specific data can now be stored and accessed via ``q.client``, similar to ``q.session`` and ``q.app``.
+        * Simpler page referencing: ``import site`` can be used instead of ``site = Site()``.
+    * Changed
+        * Apps now lauch in ``unicast`` mode by default instead of ``broadcast`` mode.
 * v0.0.3
     * Added
-        * Make Expando data structure available for apps.
+        * Make ``Expando`` data structure available for apps.
 * v0.0.2
     * Initial version
 * v0.0.1
