@@ -1,7 +1,7 @@
 import sys
 import difflib
 import json
-from telesync import Site, Page, data
+from telesync import site, Page, data
 
 all_tests = []
 only_tests = []
@@ -18,7 +18,7 @@ def test_only(f):
 
 
 def run_tests():
-    site = Site()
+
     tests = only_tests if len(only_tests) else all_tests
     for t in tests:
         print(t.__name__)

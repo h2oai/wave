@@ -370,6 +370,9 @@ class Site:
         return Page(self, url)
 
 
+site = Site()
+
+
 def _kv(key: str, index: str, value: Any):
     return dict(k=key, v=value) if index is None or index == '' else dict(k=key, i=index, v=value)
 
@@ -399,7 +402,6 @@ BROADCAST = 'broadcast'
 class Q:
     def __init__(
             self,
-            ws: websockets.WebSocketServerProtocol,
             mode: str,
             username: str,
             client_id: str,
@@ -409,8 +411,6 @@ class Q:
             client_state: Expando,
             args: Expando,
     ):
-        site = Site()
-        site._ws = ws
         self.site = site
         self.page = site[client_id if mode == UNICAST else username if mode == MULTICAST else route]
         self.app = app_state
@@ -471,11 +471,11 @@ def parse_request(req: str):
 
 
 async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
+    site._ws = ws
     async for req in ws:
         username, client_id, args = parse_request(req)
         app_state, session_state, client_state = _server.state
         await _server.handle(Q(
-            ws=ws,
             mode=_server.mode,
             username=username,
             client_id=client_id,
