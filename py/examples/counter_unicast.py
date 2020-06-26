@@ -1,12 +1,11 @@
 from telesync import Q, listen, ui, pack
 
-count = 0
-
 
 async def main(q: Q):
-    global count
+    count = q.client.count or 0
     if 'increment' in q.args:
         count += 1
+        q.client.count = count
 
     items = pack([ui.button(name='increment', label=f'Count={count}')])
 
@@ -20,4 +19,4 @@ async def main(q: Q):
 
 
 if __name__ == '__main__':
-    listen('/demo', main, mode='broadcast')
+    listen('/demo', main)
