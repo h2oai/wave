@@ -1,4 +1,4 @@
-package telesync
+package teledb
 
 import (
 	"encoding/json"

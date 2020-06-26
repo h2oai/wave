@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 
-	"github.com/h2oai/telesync"
+	"github.com/h2oai/telesync/teledb"
 )
 
 func main() {
 
-	var conf telesync.DSConf
+	var conf teledb.DSConf
 
 	flag.StringVar(&conf.Listen, "listen", ":55554", "listen on this address")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
@@ -16,5 +16,5 @@ func main() {
 
 	flag.Parse()
 
-	telesync.NewDS().Run(conf)
+	teledb.NewDS().Run(conf)
 }

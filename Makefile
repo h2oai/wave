@@ -9,14 +9,12 @@ setup: ## Set up development dependencies
 	cd py && $(MAKE) setup
 	cd tools/telegen && $(MAKE) setup build
 
-clean: clean-build ## Clean
+clean: ## Clean
+	rm -rf build
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
 	cd tools/telegen && $(MAKE) clean
-	rm -f telesync teledb
-
-clean-build: ## Clean build directory
-	rm -rf build
+	rm -f telesync
 
 .PHONY: build
 build: build-ui build-server ## Build everything
@@ -27,11 +25,6 @@ build-ui: ## Build UI
 run-ui: ## Run UI in development mode (hot reloading)
 	cd ui && $(MAKE) run
 
-build-db: ## Build database
-	CGO_ENABLED=1 go build ${LDFLAGS} -o teledb cmd/teledb/main.go
-
-run-db: ## Run database
-	go run cmd/teledb/main.go
 
 build-server: ## Build server
 	go build ${LDFLAGS} -o telesync cmd/telesync/main.go
