@@ -6,9 +6,7 @@ import time
 from faker import Faker
 
 from synth import FakePercent
-from telesync import Site, ui
-
-site = Site()
+from telesync import site, ui
 
 page = site['/demo']
 

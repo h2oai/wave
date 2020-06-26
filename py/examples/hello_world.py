@@ -2,10 +2,10 @@
 # No description available.
 # ---
 # Import `Site` and the `ui` module from the `telesync` package
-from telesync import Site, ui
+from telesync import site, ui
 
 # Connect to the Telesync server.
-site = Site()
+
 
 # Get the web page at route '/demo'.
 # If you're running this example on your local machine,

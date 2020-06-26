@@ -1,13 +1,12 @@
 # Form / Text
 # No description available.
 # ---
-from telesync import Site, ui
+from telesync import site, ui
 
-site = Site()
 page = site['/demo']
 
 sample_markdown = '''
-The **quick** _brown_ fox jumped over the lazy dog. 
+The **quick** _brown_ fox jumped over the lazy dog.
 
 Block quote:
 

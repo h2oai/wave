@@ -6,9 +6,7 @@ import time
 from faker import Faker
 
 from synth import FakeCategoricalSeries
-from telesync import Site, ui, data
-
-site = Site()
+from telesync import site, ui, data
 
 page = site['/demo']
 

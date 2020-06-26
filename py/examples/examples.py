@@ -1,7 +1,7 @@
 from faker import Faker
 import time
 import random
-from telesync import Site, data, pack
+from telesync import site, data, pack
 from synth import FakePercent, FakeCategoricalSeries
 
 fake = Faker()

@@ -1,9 +1,7 @@
 # Pixel Art
 # No description available.
 # ---
-from telesync import Site, data, ui
-
-site = Site()
+from telesync import site, data, ui
 
 page = site['/demo']
 page.drop()

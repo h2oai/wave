@@ -1,9 +1,7 @@
 # Form / Separator
 # No description available.
 # ---
-from telesync import Site, ui
-
-site = Site()
+from telesync import site, ui
 
 page = site['/demo']
 

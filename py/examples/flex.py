@@ -5,11 +5,10 @@ import random
 
 from faker import Faker
 
-from telesync import Site, ui, pack, data
+from telesync import site, ui, pack, data
 
 fake = Faker()
 
-site = Site()
 page = site['/demo']
 
 c = page.add('example', ui.flex_card(

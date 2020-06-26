@@ -1,9 +1,8 @@
 # Form / Message Bar
 # No description available.
 # ---
-from telesync import Site, ui
+from telesync import site, ui
 
-site = Site()
 page = site['/demo']
 
 page['example'] = ui.form_card(

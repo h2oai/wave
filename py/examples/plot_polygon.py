@@ -2,9 +2,7 @@
 # No description available.
 # ---
 from synth import FakeSeries
-from telesync import Site, data, ui
-
-site = Site()
+from telesync import site, data, ui
 
 page = site['/demo']
 

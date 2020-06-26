@@ -4,9 +4,7 @@
 import random
 
 from synth import FakeCategoricalSeries
-from telesync import Site, data, ui
-
-site = Site()
+from telesync import site, data, ui
 
 page = site['/demo']
 

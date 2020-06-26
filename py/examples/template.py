@@ -1,9 +1,8 @@
 # Template
 # No description available.
 # ---
-from telesync import Site, pack,ui
+from telesync import site, pack, ui
 
-site = Site()
 page = site['/demo']
 page.drop()
 
