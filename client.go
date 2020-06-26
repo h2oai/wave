@@ -81,9 +81,12 @@ func (c *Client) listen() {
 			page := c.broker.site.at(m.addr)
 			if page == nil { // not found
 				if relay := c.broker.at(m.addr); relay != nil { // is service?
-					if relay.mode == unicastMode { // multi-user upstream; transmit 1-to-1
-						c.subscribe(c.id) // transient page; use client ID instead of url
-					} else { // broadcast
+					switch relay.mode {
+					case unicastMode:
+						c.subscribe(c.id)
+					case multicastMode:
+						c.subscribe(c.username)
+					case broadcastMode:
 						c.subscribe(m.addr)
 					}
 					relay.relay(c.format(boot))

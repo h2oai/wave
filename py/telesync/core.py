@@ -392,6 +392,7 @@ def _session_for(sessions: dict, session_id: str):
 
 
 UNICAST = 'unicast'
+MULTICAST = 'multicast'
 BROADCAST = 'broadcast'
 
 
@@ -411,7 +412,7 @@ class Q:
         site = Site()
         site._ws = ws
         self.site = site
-        self.page = site[client_id if mode is UNICAST else route]
+        self.page = site[client_id if mode == UNICAST else username if mode == MULTICAST else route]
         self.app = app_state
         self.session = session_state
         self.client = client_state

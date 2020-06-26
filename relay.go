@@ -13,6 +13,7 @@ type RelayMode int
 
 const (
 	unicastMode RelayMode = iota
+	multicastMode
 	broadcastMode
 )
 
@@ -26,14 +27,20 @@ type Relay struct {
 	quit   chan struct{} // quit routing
 }
 
-func newRelay(broker *Broker, mode, route, addr string) *Relay {
-	m := unicastMode
-	if mode == "broadcast" {
-		m = broadcastMode
+func toRelayMode(mode string) RelayMode {
+	switch mode {
+	case "broadcast":
+		return broadcastMode
+	case "multicast":
+		return multicastMode
 	}
+	return unicastMode
+}
+
+func newRelay(broker *Broker, mode, route, addr string) *Relay {
 	return &Relay{
 		broker,
-		m,
+		toRelayMode(mode),
 		route,
 		addr,
 		make(chan []byte, 1024), // TODO revise size
