@@ -1,7 +1,7 @@
 OS?=linux
 VERSION?=dev
 BUILD_DATE?=$(shell date '+%Y%m%d%H%M%S')
-REL=telesync-$(VERSION)-$(BUILD_DATE)-$(OS)-amd64
+REL=telesync-$(VERSION)-$(OS)-amd64
 LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
 
 all: clean setup build ## Setup and build everything
