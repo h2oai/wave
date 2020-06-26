@@ -17,11 +17,11 @@ type Relay struct {
 	quit   chan struct{} // quit routing
 }
 
-func newRelay(broker *Broker, url, host string) *Relay {
+func newRelay(broker *Broker, route, addr string) *Relay {
 	return &Relay{
 		broker,
-		url,
-		host,
+		route,
+		addr,
 		make(chan []byte, 1024), // TODO revise size
 		make(chan struct{}, 1),
 	}
@@ -80,8 +80,13 @@ func (s *Relay) run() error {
 			switch m.t {
 			case patchMsgT:
 				s.broker.patch(m.addr, m.data)
-			case routeMsgT:
-				s.broker.route(m.addr, m.data)
+			case relayMsgT:
+				relay := s.broker.at(m.addr)
+				if relay == nil {
+					echo(Log{"t": "reroute", "route": m.addr, "error": "service unavailable"})
+					continue
+				}
+				relay.relay(m.data)
 			}
 		}
 	}()

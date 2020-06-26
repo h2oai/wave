@@ -395,8 +395,8 @@ class Q:
     def __init__(
             self,
             ws: websockets.WebSocketServerProtocol,
-            route: str,
             username: str,
+            route: str,
             app_state: Expando,
             session_state: Expando,
             args: Expando,
@@ -435,17 +435,37 @@ class Server:
 _server: Optional[Server] = None
 
 
+def parse_request(req: str):
+    username = ''
+    client_id = ''
+
+    # format:
+    # u:username\nc:client_id\n\nbody
+
+    head, body = req.split('\n\n', maxsplit=1)
+    for line in req.splitlines():
+        kv = line.split(':', maxsplit=1)
+        if len(kv) == 2:
+            k, v = kv
+            if k == 'u':
+                username = v
+            elif k == 'c':
+                client_id = v
+
+    return username, client_id, body
+
+
 async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
     async for req in ws:
+        username, client_id, args = parse_request(req)
         app_state, session_state = _server.state
-        username = ''  # XXX get from request
         await _server.handle(Q(
             ws=ws,
-            route=_server.route,
             username=username,
+            route=_server.route,  # XXX prefix client_id
             app_state=app_state,
             session_state=_session_for(session_state, username),
-            args=Expando(unmarshal(req)),
+            args=Expando(unmarshal(args)),
         ))
 
 

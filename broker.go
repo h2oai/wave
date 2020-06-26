@@ -13,7 +13,7 @@ const (
 	badMsgT MsgT = iota
 	noopMsgT
 	patchMsgT
-	routeMsgT
+	relayMsgT
 	watchMsgT
 )
 
@@ -45,11 +45,11 @@ type Sub struct {
 // Broker represents a message broker.
 type Broker struct {
 	site        *Site
-	clients     map[string]map[*Client]interface{} // url => clients
+	clients     map[string]map[*Client]interface{} // route => clients
 	publish     chan Pub
 	subscribe   chan Sub
 	unsubscribe chan *Client
-	relays      map[string]*Relay // url => relay
+	relays      map[string]*Relay // route => relay
 	relaysMux   sync.RWMutex      // mutex for tracking relays
 }
 
@@ -66,21 +66,21 @@ func newBroker(site *Site) *Broker {
 }
 
 // relay establishes a relay to an upstream service; blocking
-func (b *Broker) relay(url, host string) {
-	s := newRelay(b, url, host)
+func (b *Broker) relay(route, addr string) {
+	s := newRelay(b, route, addr)
 
 	b.relaysMux.Lock()
-	b.relays[url] = s
+	b.relays[route] = s
 	b.relaysMux.Unlock()
 
-	echo(Log{"t": "relay", "url": url, "host": host})
+	echo(Log{"t": "relay", "route": route, "host": addr})
 
 	if err := s.run(); err != nil { // blocking
-		echo(Log{"t": "relay", "url": url, "host": host, "error": err.Error()})
+		echo(Log{"t": "relay", "route": route, "host": addr, "error": err.Error()})
 	}
 
 	b.relaysMux.Lock()
-	delete(b.relays, url)
+	delete(b.relays, route)
 	b.relaysMux.Unlock()
 }
 
@@ -90,7 +90,7 @@ func parseMsgT(s []byte) MsgT {
 		case '*':
 			return patchMsgT
 		case '@':
-			return routeMsgT
+			return relayMsgT
 		case '+':
 			return watchMsgT
 		case '#':
@@ -114,22 +114,12 @@ func parseMsg(s []byte) Msg {
 	return invalidMsg
 }
 
-// at looks up a relay for a given url
-func (b *Broker) at(url string) *Relay {
+// at looks up a relay for a given route
+func (b *Broker) at(route string) *Relay {
 	b.relaysMux.RLock()
 	defer b.relaysMux.RUnlock()
-	relay, _ := b.relays[url]
+	relay, _ := b.relays[route]
 	return relay
-}
-
-// route routes data to a service.
-func (b *Broker) route(url string, data []byte) {
-	relay := b.at(url)
-	if relay == nil {
-		echo(Log{"t": "route", "url": url, "error": "service unavailable"})
-		return
-	}
-	relay.relay(data)
 }
 
 // patch broadcasts changes to clients and patches site data.
@@ -155,7 +145,7 @@ func (b *Broker) run() {
 		case pub := <-b.publish:
 			if clients, ok := b.clients[pub.url]; ok {
 				for client := range clients {
-					if !client.route(pub.data) {
+					if !client.relay(pub.data) {
 						b.drop(client)
 					}
 				}

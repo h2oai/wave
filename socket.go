@@ -21,7 +21,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		echo(Log{"t": "socket_upgrade", "err": err.Error()})
 		return
 	}
-	client := newClient(s.broker, conn, getRemoteAddr(r))
+	client := newClient(getRemoteAddr(r), "", s.broker, conn) // XXX set username
 	go client.flush()
 	go client.listen()
 }

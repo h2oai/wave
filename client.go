@@ -1,6 +1,7 @@
 package telesync
 
 import (
+	"bytes"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -17,29 +18,30 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	maxMessageSize = 1 * 1024 * 1024 // bytes
 )
 
 var (
 	newline  = []byte{'\n'}
 	notFound = []byte(`{"e":"not_found"}`)
 	upgrader = websocket.Upgrader{
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
+		ReadBufferSize:  1024, // TODO review
+		WriteBufferSize: 1024, // TODO review
 	}
 )
 
 // Client represent a websocket (UI) client.
 type Client struct {
-	broker *Broker         // broker
-	conn   *websocket.Conn // connection
-	addr   string          // remote host:port
-	urls   []string        // watched page urls
-	send   chan []byte     // send data
+	id       string          // unique id
+	username string          // username, or blank
+	broker   *Broker         // broker
+	conn     *websocket.Conn // connection
+	urls     []string        // watched page urls
+	send     chan []byte     // send data
 }
 
-func newClient(broker *Broker, conn *websocket.Conn, addr string) *Client {
-	return &Client{broker, conn, addr, nil, make(chan []byte, 256)}
+func newClient(id, username string, broker *Broker, conn *websocket.Conn) *Client {
+	return &Client{id, username, broker, conn, nil, make(chan []byte, 256)}
 }
 
 func (c *Client) listen() {
@@ -66,14 +68,19 @@ func (c *Client) listen() {
 		switch m.t {
 		case patchMsgT:
 			c.broker.patch(m.addr, m.data)
-		case routeMsgT:
-			c.broker.route(m.addr, m.data)
+		case relayMsgT:
+			relay := c.broker.at(m.addr)
+			if relay == nil {
+				echo(Log{"t": "relay", "route": m.addr, "error": "service unavailable"})
+				continue
+			}
+			relay.relay(c.format(m.data))
 		case watchMsgT:
 			page := c.broker.site.at(m.addr)
-			if page == nil {
-				if relay := c.broker.at(m.addr); relay != nil {
+			if page == nil { // not found
+				if relay := c.broker.at(m.addr); relay != nil { // is service?
 					c.subscribe(m.addr) // XXX subscribe using client address
-					relay.relay(boot)
+					relay.relay(c.format(boot))
 					continue
 				}
 			}
@@ -81,17 +88,17 @@ func (c *Client) listen() {
 			c.subscribe(m.addr)
 
 			if page == nil {
-				c.route(notFound)
+				c.relay(notFound)
 				continue
 			}
 
 			data := page.marshal()
 			if data == nil {
-				c.route(notFound)
+				c.relay(notFound)
 				continue
 			}
 
-			c.route(data)
+			c.relay(data)
 		}
 	}
 }
@@ -101,7 +108,7 @@ func (c *Client) subscribe(url string) {
 	c.broker.subscribe <- Sub{url, c}
 }
 
-func (c *Client) route(data []byte) bool {
+func (c *Client) relay(data []byte) bool {
 	select {
 	case c.send <- data:
 		return true
@@ -153,4 +160,26 @@ func (c *Client) flush() {
 
 func (c *Client) quit() {
 	close(c.send)
+}
+
+var (
+	usernameHeader = []byte("u:")
+	clientIDHeader = []byte("c:")
+	relayBodySep   = []byte("\n\n")
+)
+
+func (c *Client) format(data []byte) []byte {
+	var buf bytes.Buffer
+
+	buf.Write(usernameHeader)
+	buf.WriteString(c.username)
+	buf.WriteByte('\n')
+
+	buf.Write(clientIDHeader)
+	buf.WriteString(c.id)
+	buf.Write(relayBodySep)
+
+	buf.Write(data)
+
+	return buf.Bytes()
 }
