@@ -1,9 +1,8 @@
 OS?=linux
-REL=telesync-$(OS)-amd64
-
-ifneq ($(origin VERSION), undefined)
-	LDFLAGS := -ldflags '-X github.com/h2oai/telesync/build.Date=$(BUILD_DATE) -X github.com/h2oai/telesync/build.Version=$(VERSION) -X github.com/h2oai/telesync/build.ID=$(BUILD_ID)'
-endif
+VERSION?=dev
+BUILD_DATE?=$(shell date '+%Y%m%d%H%M%S')
+REL=telesync-$(VERSION)-$(BUILD_DATE)-$(OS)-amd64
+LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
 
 all: clean setup build ## Setup and build everything
 

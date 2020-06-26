@@ -185,6 +185,7 @@ func (b *Broker) drop(client *Client) {
 		delete(b.clients, url)
 	}
 
+	// FIXME leak: this is not captured in the AOF logging; page will be recreated on hydration
 	b.site.del(client.id) // delete transient page, if any.
 
 	echo(Log{"t": "disconnect", "addr": client.addr})
