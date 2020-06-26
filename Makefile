@@ -1,3 +1,6 @@
+OS?=linux
+REL=telesync-$(OS)-amd64
+
 ifneq ($(origin VERSION), undefined)
 	LDFLAGS := -ldflags '-X github.com/h2oai/telesync/build.Date=$(BUILD_DATE) -X github.com/h2oai/telesync/build.Version=$(VERSION) -X github.com/h2oai/telesync/build.ID=$(BUILD_ID)'
 endif
@@ -25,9 +28,8 @@ build-ui: ## Build UI
 run-ui: ## Run UI in development mode (hot reloading)
 	cd ui && $(MAKE) run
 
-
-build-server: ## Build server
-	go build ${LDFLAGS} -o telesync cmd/telesync/main.go
+build-server: ## Build server for current OS/Arch
+	go build $(LDFLAGS) -o telesync cmd/telesync/main.go
 
 run: ## Run server
 	go run cmd/telesync/main.go -webroot ./ui/build
@@ -35,12 +37,18 @@ run: ## Run server
 generate: ## Generate driver bindings
 	cd tools/telegen && $(MAKE) run
 
-release: clean-build build ## Prepare release build
-	mkdir -p build/telesync
-	rsync -a ui/build/ build/telesync/www
-	cp telesync build/telesync
-	cp release.txt build/telesync/readme.txt
-	cd build && tar -czf telesync.tar.gz telesync
+release: build-ui ## Prepare release builds
+	$(MAKE) OS=linux release-os
+	$(MAKE) OS=darwin release-os
+	$(MAKE) OS=windows release-os
+
+release-os:
+	rm -rf build/$(REL)
+	mkdir -p build/$(REL)
+	rsync -a ui/build/ build/$(REL)/www
+	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/telesync cmd/telesync/main.go
+	cp release.txt build/$(REL)/readme.txt
+	cd build && tar -czf $(REL).tar.gz $(REL)
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
