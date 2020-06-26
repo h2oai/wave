@@ -61,6 +61,7 @@ type CycBufD struct {
 // RelayRequest represents a request from a service for establishing a duplex relay.
 // XXX move to protocol
 type RelayRequest struct {
+	Mode string `json:"mode"`
 	URL  string `json:"url"`
 	Host string `json:"host"`
 }

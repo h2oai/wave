@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
 
@@ -33,6 +34,7 @@ var (
 // Client represent a websocket (UI) client.
 type Client struct {
 	id       string          // unique id
+	addr     string          // remote address
 	username string          // username, or blank
 	broker   *Broker         // broker
 	conn     *websocket.Conn // connection
@@ -40,8 +42,8 @@ type Client struct {
 	send     chan []byte     // send data
 }
 
-func newClient(id, username string, broker *Broker, conn *websocket.Conn) *Client {
-	return &Client{id, username, broker, conn, nil, make(chan []byte, 256)}
+func newClient(addr, username string, broker *Broker, conn *websocket.Conn) *Client {
+	return &Client{uuid.New().String(), addr, username, broker, conn, nil, make(chan []byte, 256)}
 }
 
 func (c *Client) listen() {
@@ -59,7 +61,7 @@ func (c *Client) listen() {
 		_, msg, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				echo(Log{"t": "socket_read", "err": err.Error()})
+				echo(Log{"t": "socket_read", "client": c.addr, "err": err.Error()})
 			}
 			break
 		}
@@ -71,7 +73,7 @@ func (c *Client) listen() {
 		case relayMsgT:
 			relay := c.broker.at(m.addr)
 			if relay == nil {
-				echo(Log{"t": "relay", "route": m.addr, "error": "service unavailable"})
+				echo(Log{"t": "relay", "client": c.addr, "route": m.addr, "error": "service unavailable"})
 				continue
 			}
 			relay.relay(c.format(m.data))
@@ -79,7 +81,11 @@ func (c *Client) listen() {
 			page := c.broker.site.at(m.addr)
 			if page == nil { // not found
 				if relay := c.broker.at(m.addr); relay != nil { // is service?
-					c.subscribe(m.addr) // XXX subscribe using client address
+					if relay.mode == unicastMode { // multi-user upstream; transmit 1-to-1
+						c.subscribe(c.id) // transient page; use client ID instead of url
+					} else { // broadcast
+						c.subscribe(m.addr)
+					}
 					relay.relay(c.format(boot))
 					continue
 				}

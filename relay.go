@@ -8,18 +8,32 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// RelayMode represents relay modes.
+type RelayMode int
+
+const (
+	unicastMode RelayMode = iota
+	broadcastMode
+)
+
 // Relay represents a relay to an upstream service.
 type Relay struct {
 	broker *Broker
+	mode   RelayMode     // mode
 	route  string        // route
 	addr   string        // upstream address ws[s]://host:port
 	send   chan []byte   // send data to target
 	quit   chan struct{} // quit routing
 }
 
-func newRelay(broker *Broker, route, addr string) *Relay {
+func newRelay(broker *Broker, mode, route, addr string) *Relay {
+	m := unicastMode
+	if mode == "broadcast" {
+		m = broadcastMode
+	}
 	return &Relay{
 		broker,
+		m,
 		route,
 		addr,
 		make(chan []byte, 1024), // TODO revise size

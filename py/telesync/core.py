@@ -391,44 +391,58 @@ def _session_for(sessions: dict, session_id: str):
     return session
 
 
+UNICAST = 'unicast'
+BROADCAST = 'broadcast'
+
+
 class Q:
     def __init__(
             self,
             ws: websockets.WebSocketServerProtocol,
+            mode: str,
             username: str,
+            client_id: str,
             route: str,
             app_state: Expando,
             session_state: Expando,
+            client_state: Expando,
             args: Expando,
     ):
         site = Site()
         site._ws = ws
         self.site = site
-        self.page = site[route]
+        self.page = site[client_id if mode is UNICAST else route]
         self.app = app_state
         self.session = session_state
+        self.client = client_state
         self.args = args
         self.username = username
+        self.route = route
 
     async def sleep(self, delay):
         await asyncio.sleep(delay)
 
 
 HandleAsync = Callable[[Q], Awaitable[Any]]
-WebAppState = Tuple[Expando, Dict[str, Expando]]
+WebAppState = Tuple[Expando, Dict[str, Expando], Dict[str, Expando]]
 
 
 class Server:
-    def __init__(self, route: str, handle: HandleAsync):
+    def __init__(self, mode: str, route: str, handle: HandleAsync):
+        self.mode = mode
         self.route = route
         self.handle = handle
         # TODO load from remote store if configured
-        self.state: WebAppState = (Expando(), dict())
+        self.state: WebAppState = (Expando(), dict(), dict())
 
     def stop(self):
         # TODO save to remote store if configured
-        app_state, sessions = self.state
-        state = expando_to_dict(app_state), {k: expando_to_dict(v) for k, v in sessions.items()}
+        app_state, sessions, clients = self.state
+        state = (
+            expando_to_dict(app_state),
+            {k: expando_to_dict(v) for k, v in sessions.items()},
+            {k: expando_to_dict(v) for k, v in clients.items()},
+        )
         pickle.dump(state, open('telesync.state', 'wb'))
 
 
@@ -458,13 +472,16 @@ def parse_request(req: str):
 async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
     async for req in ws:
         username, client_id, args = parse_request(req)
-        app_state, session_state = _server.state
+        app_state, session_state, client_state = _server.state
         await _server.handle(Q(
             ws=ws,
+            mode=_server.mode,
             username=username,
-            route=_server.route,  # XXX prefix client_id
+            client_id=client_id,
+            route=_server.route,
             app_state=app_state,
             session_state=_session_for(session_state, username),
+            client_state=_session_for(client_state, client_id),
             args=Expando(unmarshal(args)),
         ))
 
@@ -478,13 +495,14 @@ async def _start_server(host: Optional[str], port: int, stop_server):
 def listen(
         route: str,
         handle: HandleAsync,
+        mode=UNICAST,
 ):
     global _server
-    _server = Server(route=route, handle=handle)
+    _server = Server(mode=mode, route=route, handle=handle)
 
     requests.post(
         _config.hub_address,
-        data=marshal(dict(url=route, host=_config.app_address)),
+        data=marshal(dict(mode=mode, url=route, host=_config.app_address)),
         headers=_content_type_json,
         auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
     )

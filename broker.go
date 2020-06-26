@@ -66,8 +66,8 @@ func newBroker(site *Site) *Broker {
 }
 
 // relay establishes a relay to an upstream service; blocking
-func (b *Broker) relay(route, addr string) {
-	s := newRelay(b, route, addr)
+func (b *Broker) relay(mode, route, addr string) {
+	s := newRelay(b, mode, route, addr)
 
 	b.relaysMux.Lock()
 	b.relays[route] = s
@@ -163,7 +163,7 @@ func (b *Broker) add(url string, client *Client) {
 	}
 	clients[client] = nil
 
-	echo(Log{"t": "connect", "ip": client.conn.RemoteAddr().String(), "url": url})
+	echo(Log{"t": "connect", "addr": client.addr, "url": url})
 }
 
 // drop unregisters a client
@@ -185,5 +185,7 @@ func (b *Broker) drop(client *Client) {
 		delete(b.clients, url)
 	}
 
-	echo(Log{"t": "disconnect", "ip": client.conn.RemoteAddr().String()})
+	b.site.del(client.id) // delete transient page, if any.
+
+	echo(Log{"t": "disconnect", "addr": client.addr})
 }

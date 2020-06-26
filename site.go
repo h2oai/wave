@@ -21,6 +21,7 @@ func newSite() *Site {
 	return &Site{pages: make(map[string]*Page), ns: newNamespace()}
 }
 
+// at returns the page at url, else nil
 func (site *Site) at(url string) *Page {
 	site.RLock()
 	defer site.RUnlock()
@@ -30,6 +31,7 @@ func (site *Site) at(url string) *Page {
 	return nil
 }
 
+// get returns the page at url, else mints a new one.
 func (site *Site) get(url string) *Page {
 	if p := site.at(url); p != nil {
 		return p
@@ -44,12 +46,14 @@ func (site *Site) get(url string) *Page {
 	return p
 }
 
+// del deletes the page at url.
 func (site *Site) del(url string) {
 	site.Lock()
 	delete(site.pages, url)
 	site.Unlock()
 }
 
+// set overwrites a page's content.
 func (site *Site) set(url string, data []byte) error {
 	var ops OpsD
 	if err := json.Unmarshal(data, &ops); err != nil {
@@ -61,6 +65,7 @@ func (site *Site) set(url string, data []byte) error {
 	return nil
 }
 
+// patch patches a page's content.
 func (site *Site) patch(url string, data []byte) error {
 	var ops OpsD
 	if err := json.Unmarshal(data, &ops); err != nil { // TODO speed up
@@ -70,6 +75,7 @@ func (site *Site) patch(url string, data []byte) error {
 	return nil
 }
 
+// exec applies changes to a page's content.
 func (site *Site) exec(url string, ops OpsD) {
 	page := site.get(url)
 	page.Lock()
