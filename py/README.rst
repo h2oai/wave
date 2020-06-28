@@ -28,23 +28,26 @@ Install and update using `pip`_:
 Hello world
 ----------------
 
+``hello.py``:
+
 .. code-block:: python
 
     from telesync import site, ui
 
-    # Get the web page at route 'http://localhost:55555/demo'.
+    # Access the web page at http://localhost:55555/demo
     page = site['/demo']
 
-    # Add some content to the page.
+    # Add some content.
     page['example'] = ui.markdown_card(
       box='1 1 2 2',
       title='Hello World!',
       content='And now for something completely different.',
     )
 
-    # Finally, sync the page to update the web browser.
+    # Save the page
     page.sync()
 
+Run ``hello.py``:
 
 .. code-block:: text
 

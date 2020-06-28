@@ -1,57 +1,59 @@
-<div align="center">
-<img width="175" src="assets/telesync.png"/>
-</div>
+<div><img width="175" src="assets/telesync.png"/></div><br/>
 
-Telesync: Q's Realtime App SDK
+**Telesync: Q's Realtime App SDK**
 
-- Realtime cache module
-- Development server
-- UI components
-- Python driver
+- [Getting Started](#getting-started)
+- [Examples](https://github.com/h2oai/telesync/tree/master/py/examples)
+- [Report an issue](https://github.com/h2oai/q/issues)
 
-Issues: https://github.com/h2oai/q/issues
+## Getting Started
 
-## Development
+#### Step 1: Get Telesync
 
-### Setup and Run
-
-```sh
-git clone https://github.com/h2oai/telesync.git
-cd telesync
-make
-make run
-```
-
-### Daily Development
-
-- `make run`
-- `make run-ui`
-- Open root directory in Visual Studio Code.
-- Open `py/` in PyCharm.
-
-### Developing apps using bleeding edge
-
-Clone this repo and install into your app's `venv` using pip's `--editable` option `pip install -e`.
-
-For example `./venv/bin/pip install -e path/to/git/telesync/py/`.
-
-### Make tasks
+[Download](https://github.com/h2oai/telesync/releases) the development server and run:
 
 ```
-all                            Setup and build everything
-build                          Build everything
-build-db                       Build database
-build-py                       Build Python driver
-build-server                   Build server
-build-ui                       Build UI
-clean                          Clean
-help                           List all make tasks
-run-db                         Run database
-run                            Run server
-run-ui                         Run UI in development mode (hot reloading)
-setup                          Set up development dependencies
+$ ./telesync
 ```
 
+#### Step 2: Install the Python driver
+
+```
+pip install -U telesync
+```
+
+#### Step 3: Hello World!
+
+```python
+# ----- hello.py -----
+
+from telesync import site, ui
+
+# Access the web page at http://localhost:55555/demo
+page = site['/demo']
+
+# Add some content.
+page['example'] = ui.markdown_card(
+  box='1 1 2 2',
+  title='Hello World!',
+  content='And now for something completely different.',
+)
+
+# Save the page
+page.sync()
+```
+
+#### Step 4:
+
+Run your code:
+
+```
+$ python3 hello.py
+```
+
+#### Step 5:
+
+Go to http://localhost:55555/demo
 
 ## Migration Guide
 
