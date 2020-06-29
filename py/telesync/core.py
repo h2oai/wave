@@ -20,8 +20,8 @@ def get_env(key: str, value: Any):
 
 class Config:
     def __init__(self):
-        self.app_address = get_env('APP_ADDRESS', 'ws://localhost:55556')
-        self.listen_address = get_env('LISTEN_ADDRESS', 'ws://localhost:55556')
+        self.internal_address = get_env('INTERNAL_ADDRESS', 'ws://localhost:55556')
+        self.external_address = get_env('EXTERNAL_ADDRESS', self.internal_address)
         self.hub_address = get_env('ADDRESS', 'http://localhost:55555')
         self.hub_access_key_id: str = get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = get_env('ACCESS_KEY_SECRET', 'access_key_secret')
@@ -503,7 +503,7 @@ def listen(
 
     requests.post(
         _config.hub_address,
-        data=marshal(dict(mode=mode, url=route, host=_config.app_address)),
+        data=marshal(dict(mode=mode, url=route, host=_config.external_address)),
         headers=_content_type_json,
         auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
     )
@@ -512,5 +512,5 @@ def listen(
     stop_server = el.create_future()
     el.add_signal_handler(signal.SIGINT, stop_server.set_result, None)
     el.add_signal_handler(signal.SIGTERM, stop_server.set_result, None)
-    listen_address = urlparse(_config.listen_address)
-    el.run_until_complete(_start_server(listen_address.hostname, listen_address.port, stop_server))
+    internal_address = urlparse(_config.internal_address)
+    el.run_until_complete(_start_server(internal_address.hostname, internal_address.port, stop_server))
