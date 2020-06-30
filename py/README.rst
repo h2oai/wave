@@ -67,6 +67,9 @@ Links
 
 Change Log
 ---------------
+* v0.0.5
+    * Added
+        * Add configure() API to configure environment before launching.
 * v0.0.4
     * Added
         * Multi-user and multi-client support: launch apps in ``multicast`` or ``unicast`` modes in addition to ``broadcast`` mode.
