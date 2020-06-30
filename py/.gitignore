@@ -127,4 +127,5 @@ dmypy.json
 
 # Custom
 *.state
+*.gz
 

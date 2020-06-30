@@ -30,13 +30,16 @@ run-ui: ## Run UI in development mode (hot reloading)
 build-server: ## Build server for current OS/Arch
 	go build $(LDFLAGS) -o telesync cmd/telesync/main.go
 
+build-examples:
+	cd py && $(MAKE) examples
+
 run: ## Run server
 	go run cmd/telesync/main.go -webroot ./ui/build
 
 generate: ## Generate driver bindings
 	cd tools/telegen && $(MAKE) run
 
-release: build-ui ## Prepare release builds
+release: build-ui build-examples ## Prepare release builds
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows release-os
@@ -46,6 +49,7 @@ release-os:
 	mkdir -p build/$(REL)
 	rsync -a ui/build/ build/$(REL)/www
 	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/telesync cmd/telesync/main.go
+	cp py/examples.tar.gz build/$(REL)/
 	cp release.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz $(REL)
 

@@ -23,8 +23,13 @@ docs-zip: docs ## Build and package docs into a zip file
 purge: ## Purge previous build
 	rm -rf build dist telesync.egg-info
 
+.PHONY: examples
+examples:
+	tar -czf examples.tar.gz --exclude='*.state' --exclude='__pycache__' examples/
+
 clean: purge ## Clean
 	rm -rf docs/build telesync-api-docs.zip venv
+	rm examples.tar.gz
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
