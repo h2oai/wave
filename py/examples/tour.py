@@ -152,6 +152,12 @@ async def show_example(q: Q, example: Example):
     code_card = q.page['code']
     code_card.title = active_example.filename
     code_card.content = active_example.code
+
+    q.page['preview'] = ui.frame_card(
+        box='8 1 5 -1',
+        title=f'Preview of {active_example.filename}',
+        path='/demo',
+    )
     await q.page.push()
 
 
