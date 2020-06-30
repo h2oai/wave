@@ -78,36 +78,29 @@ func (c *Client) listen() {
 			}
 			relay.relay(c.format(m.data))
 		case watchMsgT:
-			page := c.broker.site.at(m.addr)
-			if page == nil { // not found
-				if relay := c.broker.at(m.addr); relay != nil { // is service?
-					switch relay.mode {
-					case unicastMode:
-						c.subscribe(c.id)
-					case multicastMode:
-						c.subscribe(c.username)
-					case broadcastMode:
-						c.subscribe(m.addr)
-					}
-					relay.relay(c.format(boot))
+			if relay := c.broker.at(m.addr); relay != nil { // is service?
+				switch relay.mode {
+				case unicastMode:
+					c.subscribe(c.id) // client-level
+				case multicastMode:
+					c.subscribe(c.username) // user-level
+				case broadcastMode:
+					c.subscribe(m.addr) // system-level
+				}
+				relay.relay(c.format(boot))
+				continue
+			}
+
+			c.subscribe(m.addr) // subscribe even if page is currently NA
+
+			if page := c.broker.site.at(m.addr); page != nil { // is page?
+				if data := page.marshal(); data != nil {
+					c.relay(data)
 					continue
 				}
 			}
 
-			c.subscribe(m.addr)
-
-			if page == nil {
-				c.relay(notFound)
-				continue
-			}
-
-			data := page.marshal()
-			if data == nil {
-				c.relay(notFound)
-				continue
-			}
-
-			c.relay(data)
+			c.relay(notFound)
 		}
 	}
 }
