@@ -8,7 +8,7 @@ from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 
-from telesync import Q, listen, ui
+from telesync import Q, configure, listen, ui
 
 py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
@@ -177,4 +177,5 @@ if __name__ == '__main__':
     example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
                          not line.strip().startswith('#')]
     catalog = load_examples(example_filenames)
+    configure(internal_address='ws://localhost:55554')
     listen('/tour', main)

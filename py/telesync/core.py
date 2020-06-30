@@ -18,9 +18,12 @@ def get_env(key: str, value: Any):
     return os.environ.get(f'TELESYNC_{key}', value)
 
 
+_default_internal_address = 'ws://localhost:55556'
+
+
 class Config:
     def __init__(self):
-        self.internal_address = get_env('INTERNAL_ADDRESS', 'ws://localhost:55556')
+        self.internal_address = get_env('INTERNAL_ADDRESS', _default_internal_address)
         self.external_address = get_env('EXTERNAL_ADDRESS', self.internal_address)
         self.hub_address = get_env('ADDRESS', 'http://localhost:55555')
         self.hub_access_key_id: str = get_env('ACCESS_KEY_ID', 'access_key_id')
@@ -493,11 +496,30 @@ async def _start_server(host: Optional[str], port: int, stop_server):
         _server.stop()
 
 
-def listen(
-        route: str,
-        handle: HandleAsync,
-        mode=UNICAST,
+def configure(
+        internal_address: Optional[str] = None,
+        external_address: Optional[str] = None,
+        hub_address: Optional[str] = None,
+        hub_access_key_id: Optional[str] = None,
+        hub_access_key_secret: Optional[str] = None,
 ):
+    if internal_address:
+        _config.internal_address = internal_address
+
+    if external_address:
+        _config.external_address = external_address
+    elif internal_address and (_config.external_address == _default_internal_address):
+        _config.external_address = internal_address
+
+    if hub_address:
+        _config.hub_address = hub_address
+    if hub_access_key_id:
+        _config.hub_access_key_id = hub_access_key_id
+    if hub_access_key_secret:
+        _config.hub_access_key_secret = hub_access_key_secret
+
+
+def listen(route: str, handle: HandleAsync, mode=UNICAST):
     global _server
     _server = Server(mode=mode, route=route, handle=handle)
 
