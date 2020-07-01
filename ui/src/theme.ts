@@ -1,5 +1,6 @@
 import { NestedCSSProperties } from "typestyle/lib/types";
 import { Dict, I, F, S, U } from "./telesync";
+import { loadTheme, IPartialTheme } from '@fluentui/react';
 
 interface RGB { r: U, g: U, b: U }
 interface Palette {
@@ -37,6 +38,11 @@ interface Tones {
   text7: S
   text8: S
   text9: S
+}
+
+interface ColorTheme {
+  palette: Palette & Tones
+  theme: IPartialTheme
 }
 
 export const
@@ -98,25 +104,109 @@ const
     brown: '#795548',
     gray: '#9E9E9E',
   },
-  palettes: Dict<Palette & Tones> = {
-    light: toPalette({
-      ...defaultColors,
-      text: '#323130',
-      card: '#ffffff',
-      page: '#f5f5f5',
-    }, 0.1),
-    dark: toPalette({
-      ...defaultColors,
-      text: '#ffffff',
-      card: '#21252b',
-      page: '#282c34',
-    }, 0),
-    neon: toPalette({
-      ...defaultColors,
-      text: '#ffffff',
-      card: '#0d0e0f',
-      page: '#1b1d1f',
-    }, 0),
+  palettes: Dict<ColorTheme> = {
+    light: {
+      palette: toPalette({
+        ...defaultColors,
+        text: '#a529d6',
+        card: '#ffffff',
+        page: '#f5f5f5',
+      }, 0.1),
+      theme: {
+        palette: {
+          themePrimary: '#a529d6',
+          themeLighterAlt: '#fbf5fd',
+          themeLighter: '#efd8f8',
+          themeLight: '#e2b8f3',
+          themeTertiary: '#c776e7',
+          themeSecondary: '#af3fdb',
+          themeDarkAlt: '#9525c1',
+          themeDark: '#7d1fa3',
+          themeDarker: '#5c1778',
+          neutralLighterAlt: '#f8f8f8',
+          neutralLighter: '#f4f4f4',
+          neutralLight: '#eaeaea',
+          neutralQuaternaryAlt: '#dadada',
+          neutralQuaternary: '#d0d0d0',
+          neutralTertiaryAlt: '#c8c8c8',
+          neutralTertiary: '#595959',
+          neutralSecondary: '#373737',
+          neutralPrimaryAlt: '#2f2f2f',
+          neutralPrimary: '#000000',
+          neutralDark: '#151515',
+          black: '#0b0b0b',
+          white: '#ffffff',
+        }
+      }
+    },
+
+    dark: {
+      palette: toPalette({
+        ...defaultColors,
+        text: '#46d1e0',
+        card: '#21252b',
+        page: '#282c34',
+      }, 0),
+      theme: {
+        palette: {
+          themePrimary: '#46d1e0',
+          themeLighterAlt: '#030809',
+          themeLighter: '#0b2124',
+          themeLight: '#153f43',
+          themeTertiary: '#2a7d87',
+          themeSecondary: '#3db8c5',
+          themeDarkAlt: '#56d5e3',
+          themeDark: '#6edce8',
+          themeDarker: '#92e5ee',
+          neutralLighterAlt: '#2f333c',
+          neutralLighter: '#353a44',
+          neutralLight: '#414651',
+          neutralQuaternaryAlt: '#484d59',
+          neutralQuaternary: '#4e545f',
+          neutralTertiaryAlt: '#686e7a',
+          neutralTertiary: '#e6eaea',
+          neutralSecondary: '#eaedee',
+          neutralPrimaryAlt: '#eef1f1',
+          neutralPrimary: '#dae0e0',
+          neutralDark: '#f6f8f8',
+          black: '#fafbfb',
+          white: '#282c34',
+        }
+      }
+    },
+    neon: {
+      palette: toPalette({
+        ...defaultColors,
+        text: '#bbc605',
+        card: '#0d0e0f',
+        page: '#1b1d1f',
+      }, 0), theme: {
+        palette: {
+          themePrimary: '#bbc605',
+          themeLighterAlt: '#080800',
+          themeLighter: '#1e2001',
+          themeLight: '#393c02',
+          themeTertiary: '#727704',
+          themeSecondary: '#a7af05',
+          themeDarkAlt: '#c4cd1a',
+          themeDark: '#cdd438',
+          themeDarker: '#dae066',
+          neutralLighterAlt: '#2d2c2c',
+          neutralLighter: '#363535',
+          neutralLight: '#434242',
+          neutralQuaternaryAlt: '#4c4b4b',
+          neutralQuaternary: '#535252',
+          neutralTertiaryAlt: '#706f6f',
+          neutralTertiary: '#b3afaf',
+          neutralSecondary: '#7a7a7a',
+          neutralPrimaryAlt: '#b4b4b4',
+          neutralPrimary: '#cdcdcd',
+          neutralDark: '#d8d8d8',
+          black: '#e2e2e2',
+          white: '#242323',
+        }
+      }
+    },
   },
   // tracking = a + b * Math.exp(c * fontSize)
   // a = -0.0223, b = 0.185, c = -0.1745
@@ -222,8 +312,8 @@ export interface Theme {
 
 let theme: Theme | null = null
 export const
-  loadTheme = (name: S): Theme => {
-    const colors = palettes[name],
+  setTheme = (name: S): Theme => {
+    const colors = palettes[name].palette,
       resolveColor = (s: S): S => {
         if (s.startsWith('$')) {
           const c = (colors as any)[s.substr(1)]
@@ -241,7 +331,8 @@ export const
         }
         return s as T
       }
+    loadTheme(palettes[name].theme)
     theme = { font, colors, merge, }
     return theme
   },
-  getTheme = (): Theme => theme ? theme : loadTheme('light')
+  getTheme = (): Theme => theme ? theme : setTheme('dark')
