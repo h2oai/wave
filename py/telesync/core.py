@@ -9,6 +9,9 @@ from urllib.parse import urlparse
 from typing import List, Dict, Union, Tuple, Callable, Any, Awaitable, Optional
 import requests
 from requests.auth import HTTPBasicAuth
+import logging
+
+logger = logging.getLogger(__name__)
 
 Primitive = Union[bool, str, int, float, None]
 PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
@@ -305,11 +308,13 @@ class Page:
     def sync(self):
         p = self._diff()
         if p:
+            logger.debug(data)
             self.site._save(self.url, p)
 
     async def push(self):
         p = self._diff()
         if p:
+            logger.debug(p)
             await self._ws.send(f'* {self.url} {p}')
 
     async def pull(self) -> 'Q':
@@ -477,6 +482,8 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
     site._ws = ws
     async for req in ws:
         username, client_id, args = parse_request(req)
+        logger.debug(f'user: {username}, client: {client_id}')
+        logger.debug(args)
         app_state, session_state, client_state = _server.state
         await _server.handle(Q(
             mode=_server.mode,
@@ -523,16 +530,27 @@ def listen(route: str, handle: HandleAsync, mode=UNICAST):
     global _server
     _server = Server(mode=mode, route=route, handle=handle)
 
+    logger.info(f'Server Mode: {mode}')
+    logger.info(f'Server Route: {route}')
+    logger.info(f'External Address: {_config.external_address}')
+    logger.info(f'Hub Address: {_config.hub_address}')
+    logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
+    logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
+    logger.info(f'Shutdown Timeout{_config.shutdown_timeout}')
+
+    logger.debug('Announcing server...')
     requests.post(
         _config.hub_address,
         data=marshal(dict(mode=mode, url=route, host=_config.external_address)),
         headers=_content_type_json,
         auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
     )
+    logger.debug('Announcement: success!')
 
     el = asyncio.get_event_loop()
     stop_server = el.create_future()
     el.add_signal_handler(signal.SIGINT, stop_server.set_result, None)
     el.add_signal_handler(signal.SIGTERM, stop_server.set_result, None)
     internal_address = urlparse(_config.internal_address)
+    logger.info(f'Listening on host "{internal_address.hostname}", port "{internal_address.port}"...')
     el.run_until_complete(_start_server(internal_address.hostname, internal_address.port, stop_server))
