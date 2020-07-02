@@ -2,7 +2,7 @@ import React from 'react';
 import { stylesheet } from 'typestyle';
 import { GridLayout } from './layout';
 import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType } from './telesync';
-import { getTheme, pc } from './theme';
+import { getTheme, pc, clas } from './theme';
 import { Spinner, SpinnerSize } from '@fluentui/react';
 
 const
@@ -20,6 +20,7 @@ const
       height: pc(100),
       display: 'flex',
       justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: theme.colors.page,
       color: theme.colors.text,
     }
@@ -46,7 +47,7 @@ const
       render = () => {
         const { page, error } = contentB()
         // TODO prettier error section
-        if (error) return <div className={css.centerFullHeight}>{error}</div>
+        if (error) return <div className={clas(css.centerFullHeight, css.app)}>{error}</div>
         if (!page) return <Spinner className={css.centerFullHeight} size={SpinnerSize.large} label='Loading ...' />
 
         return (

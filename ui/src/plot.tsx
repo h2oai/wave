@@ -366,7 +366,7 @@ const
     if (isS(color_field)) {
       o.color = { fields: [color_field], values: isS(color_range) ? split(color_range) : cat10 }
     } else {
-      o.color = isS(color) ? color : theme.colors.text
+      o.color = isS(color) ? color : theme.colors.gray
     }
     if (isS(shape_field)) {
       if (isS(shape_range)) {
