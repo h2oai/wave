@@ -2,7 +2,7 @@ import collections
 import os
 import subprocess
 import sys
-from typing import List, Optional, OrderedDict
+from typing import List, Optional, Dict
 
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
@@ -52,7 +52,7 @@ def write_file(p: str, txt: str) -> str:
     return txt
 
 
-def strip_comment(line: str):
+def strip_comment(line: str) -> str:
     return line.strip(" #")
 
 
@@ -64,7 +64,7 @@ def load_example(filename: str) -> Example:
     return Example(filename, title, '\n'.join(description), highlight(code, py_lexer, html_formatter))
 
 
-def load_examples(filenames: List[str]) -> OrderedDict[str, Example]:
+def load_examples(filenames: List[str]) -> Dict[str, Example]:
     examples = collections.OrderedDict()
     for filename in filenames:
         examples[filename] = load_example(filename)
