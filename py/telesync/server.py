@@ -122,6 +122,8 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
         except:
             logger.exception('Unhandled exception')
             try:
+                q.page.drop()
+                # TODO replace this with a custom-designed error display
                 q.page['__unhandled_error__'] = markdown_card(
                     box='1 1 -1 -1',
                     title='Error',
