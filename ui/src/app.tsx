@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { GridLayout } from './layout';
-import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType } from './telesync';
+import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, telesync } from './telesync';
 import { getTheme, pc, clas } from './theme';
 import { Spinner, SpinnerSize } from '@fluentui/react';
 
@@ -41,8 +41,16 @@ const
             break
         }
       },
+      onHashChanged = () => {
+        const h = window.location.hash
+        if (h && h.length > 1) {
+          telesync.args['#'] = h.substr(1)
+          telesync.sync()
+        }
+      },
       init = () => {
         connect('/ws', onSocket)
+        window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {
         const { page, error } = contentB()
@@ -55,8 +63,12 @@ const
             <GridLayout key={page.key} page={page} />
           </div>
         )
+      },
+      dispose = () => {
+        window.removeEventListener('hashchange', onHashChanged)
       }
-    return { init, render, contentB }
+
+    return { init, render, dispose, contentB }
   })
 
 export default App
