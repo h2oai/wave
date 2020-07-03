@@ -11,7 +11,7 @@ setup: ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
 	./venv/bin/python -m pip install setuptools wheel twine requests websockets faker
-	./venv/bin/python -m pip install --editable telesync
+	./venv/bin/python -m pip install --editable .
 
 .PHONY: docs
 docs: ## Build API docs
@@ -29,7 +29,7 @@ examples:
 
 clean: purge ## Clean
 	rm -rf docs/build telesync-api-docs.zip venv
-	rm examples.tar.gz
+	rm -f examples.tar.gz
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
