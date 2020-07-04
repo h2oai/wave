@@ -1347,62 +1347,65 @@ class Command:
     Commands are typically displayed as context menu items associated with
     parts of notebooks or dashboards.
 
-    :param action: The function to call when this command is invoked.
+    :param name: An identifying name for this component.
     :param label: The text displayed for this command.
     :param caption: The caption for this command (typically a tooltip).
-    :param icon: Data associated with this command, if any.
-    :param data: The icon to be displayed for this command.
+    :param icon: The icon to be displayed for this command.
+    :param items: Sub-commands, if any
+    :param data: Data associated with this command, if any.
     """
     def __init__(
             self,
-            action: str,
-            label: str,
+            name: str,
+            label: Optional[str] = None,
             caption: Optional[str] = None,
             icon: Optional[str] = None,
+            items: Optional[List['Command']] = None,
             data: Optional[str] = None,
     ):
-        self.action = action
+        self.name = name
         self.label = label
         self.caption = caption
         self.icon = icon
+        self.items = items
         self.data = data
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.action is None:
-            raise ValueError('Command.action is required.')
-        if self.label is None:
-            raise ValueError('Command.label is required.')
+        if self.name is None:
+            raise ValueError('Command.name is required.')
         return _dump(
-            action=self.action,
+            name=self.name,
             label=self.label,
             caption=self.caption,
             icon=self.icon,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
             data=self.data,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Command':
         """Creates an instance of this class using the contents of a dict."""
-        __d_action: Any = __d.get('action')
-        if __d_action is None:
-            raise ValueError('Command.action is required.')
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('Command.name is required.')
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Command.label is required.')
         __d_caption: Any = __d.get('caption')
         __d_icon: Any = __d.get('icon')
+        __d_items: Any = __d.get('items')
         __d_data: Any = __d.get('data')
-        action: str = __d_action
-        label: str = __d_label
+        name: str = __d_name
+        label: Optional[str] = __d_label
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
+        items: Optional[List['Command']] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
         data: Optional[str] = __d_data
         return Command(
-            action,
+            name,
             label,
             caption,
             icon,
+            items,
             data,
         )
 
@@ -5034,4 +5037,61 @@ class TemplateCard:
             title,
             content,
             data,
+        )
+
+
+class ToolbarCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param items: Items to render.
+    :param secondary_items: Items to render on the right side (or left, in RTL).
+    :param overflow_items: Items to render in an overflow menu.
+    """
+    def __init__(
+            self,
+            box: str,
+            items: List[Command],
+            secondary_items: Optional[List[Command]] = None,
+            overflow_items: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.items = items
+        self.secondary_items = secondary_items
+        self.overflow_items = overflow_items
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('ToolbarCard.box is required.')
+        if self.items is None:
+            raise ValueError('ToolbarCard.items is required.')
+        return _dump(
+            view='toolbar',
+            box=self.box,
+            items=[__e.dump() for __e in self.items],
+            secondary_items=None if self.secondary_items is None else [__e.dump() for __e in self.secondary_items],
+            overflow_items=None if self.overflow_items is None else [__e.dump() for __e in self.overflow_items],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ToolbarCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('ToolbarCard.box is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('ToolbarCard.items is required.')
+        __d_secondary_items: Any = __d.get('secondary_items')
+        __d_overflow_items: Any = __d.get('overflow_items')
+        box: str = __d_box
+        items: List[Command] = [Command.load(__e) for __e in __d_items]
+        secondary_items: Optional[List[Command]] = None if __d_secondary_items is None else [Command.load(__e) for __e in __d_secondary_items]
+        overflow_items: Optional[List[Command]] = None if __d_overflow_items is None else [Command.load(__e) for __e in __d_overflow_items]
+        return ToolbarCard(
+            box,
+            items,
+            secondary_items,
+            overflow_items,
         )

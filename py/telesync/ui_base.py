@@ -72,6 +72,7 @@ from .types import \
     Text, \
     Textbox, \
     Toggle, \
+    ToolbarCard, \
     VegaCell, \
     Vis
 
@@ -507,10 +508,11 @@ def cell(
 
 
 def command(
-        action: str,
-        label: str,
+        name: str,
+        label: Optional[str] = None,
         caption: Optional[str] = None,
         icon: Optional[str] = None,
+        items: Optional[List[Command]] = None,
         data: Optional[str] = None,
 ) -> Command:
     """Create a command.
@@ -518,17 +520,19 @@ def command(
     Commands are typically displayed as context menu items associated with
     parts of notebooks or dashboards.
 
-    :param action: The function to call when this command is invoked.
+    :param name: An identifying name for this component.
     :param label: The text displayed for this command.
     :param caption: The caption for this command (typically a tooltip).
-    :param icon: Data associated with this command, if any.
-    :param data: The icon to be displayed for this command.
+    :param icon: The icon to be displayed for this command.
+    :param items: Sub-commands, if any
+    :param data: Data associated with this command, if any.
     """
     return Command(
-        action,
+        name,
         label,
         caption,
         icon,
+        items,
         data,
     )
 
@@ -2049,4 +2053,25 @@ def template_card(
         title,
         content,
         data,
+    )
+
+
+def toolbar_card(
+        box: str,
+        items: List[Command],
+        secondary_items: Optional[List[Command]] = None,
+        overflow_items: Optional[List[Command]] = None,
+) -> ToolbarCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param items: Items to render.
+    :param secondary_items: Items to render on the right side (or left, in RTL).
+    :param overflow_items: Items to render in an overflow menu.
+    """
+    return ToolbarCard(
+        box,
+        items,
+        secondary_items,
+        overflow_items,
     )

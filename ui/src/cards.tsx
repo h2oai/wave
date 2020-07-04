@@ -21,4 +21,5 @@ import './pixel_art'
 import './plot'
 import './repeat'
 import './template'
+import './toolbar'
 

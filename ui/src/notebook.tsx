@@ -93,15 +93,17 @@ export interface Cell {
  * parts of notebooks or dashboards.
  */
 export interface Command {
-  /** The function to call when this command is invoked. */
-  action: S
+  /** An identifying name for this component. */
+  name: S
   /** The text displayed for this command. */
-  label: S
+  label?: S
   /** The caption for this command (typically a tooltip). */
   caption?: S
-  /** Data associated with this command, if any. */
-  icon?: S
   /** The icon to be displayed for this command. */
+  icon?: S
+  /** Sub-commands, if any */
+  items?: Command[]
+  /** Data associated with this command, if any. */
   data?: S
 }
 
