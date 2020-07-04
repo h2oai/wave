@@ -1,5 +1,6 @@
 import collections
 import os
+import os.path
 import subprocess
 import sys
 from typing import List, Optional, Dict
@@ -17,6 +18,7 @@ example_dir = os.path.dirname(os.path.realpath(__file__))
 
 class Example:
     def __init__(self, filename: str, title: str, description: str, code: str):
+        self.name = os.path.splitext(filename)[0]
         self.filename = filename
         self.title = title
         self.description = description
@@ -67,7 +69,8 @@ def load_example(filename: str) -> Example:
 def load_examples(filenames: List[str]) -> Dict[str, Example]:
     examples = collections.OrderedDict()
     for filename in filenames:
-        examples[filename] = load_example(filename)
+        example = load_example(filename)
+        examples[example.name] = example
     example_list = [e for e in examples.values()]
     k = len(example_list) - 1
     for i, e in enumerate(example_list):
@@ -78,45 +81,25 @@ def load_examples(filenames: List[str]) -> Dict[str, Example]:
     return examples
 
 
-def make_blurb(example: Example):
-    return ui.form_card(
-        box='3 1 5 3',
-        items=[
-            ui.text(example.title, size='xl'),
-            ui.text(example.description),
-            ui.buttons([
-                ui.button(
-                    name='previous',
-                    label='Previous',
-                    disabled=False if example.previous_example else True,
-                ),
-                ui.button(
-                    name='next',
-                    label='Next',
-                    primary=True,
-                    disabled=False if example.next_example else True,
-                )
-            ])
-        ],
-    )
-
-
 async def setup_page(q: Q):
     q.page['meta'] = ui.meta_card(
         box='',
         title='Examples'
     )
 
-    q.page['examples'] = ui.form_card(
+    q.page['examples'] = ui.nav_card(
         box='1 1 2 -1',
         items=[
-            ui.nav(name='example', items=[
-                ui.nav_group(
-                    label='Examples',
-                    items=[ui.nav_item(name=e.filename, label=e.title) for e in catalog.values()]
-                ),
-            ])
+            ui.nav_group(
+                label='Examples',
+                items=[ui.nav_item(name=f'#{e.name}', label=e.title) for e in catalog.values()]
+            ),
         ],
+    )
+
+    q.page['blurb'] = ui.form_card(
+        box='3 1 5 3',
+        items=[],
     )
 
     q.page['code'] = ui.frame_card(
@@ -130,6 +113,20 @@ async def setup_page(q: Q):
         path='/demo',
     )
     await q.page.push()
+
+
+def make_blurb(example: Example):
+    buttons = []
+    if example.previous_example:
+        buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
+    if example.next_example:
+        buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
+
+    return [
+        ui.text(example.title, size='xl'),
+        ui.text(example.description),
+        ui.buttons(buttons),
+    ]
 
 
 async def show_example(q: Q, example: Example):
@@ -147,36 +144,34 @@ async def show_example(q: Q, example: Example):
     active_example = example
     active_example.start()
 
-    # Update example page
-    q.page['blurb'] = make_blurb(active_example)
+    # Update example blurb
+    q.page['blurb'].items = make_blurb(active_example)
+
+    # Update code display
     code_card = q.page['code']
     code_card.title = active_example.filename
     code_card.content = active_example.code
 
-    q.page['preview'] = ui.frame_card(
-        box='8 1 5 -1',
-        title=f'Preview of {active_example.filename}',
-        path='/demo',
-    )
+    # Update preview title
+    preview_card = q.page['preview']
+    preview_card.title = f'Preview of {active_example.filename}'
+    # HACK
+    # The ?e= appended to the path forces the frame to reload.
+    # The url param is not actually used.
+    preview_card.path = f'/demo?e={active_example.name}'
     await q.page.push()
 
 
 async def main(q: Q):
-    if q.args.example:
-        return await show_example(q, catalog[q.args.example])
+    if not q.client.initialized:
+        q.client.initialized = True
+        await setup_page(q)
 
-    if active_example:
-        if q.args.previous:
-            example = active_example.previous_example
-            if example:
-                return await show_example(q, example)
-        if q.args.next:
-            example = active_example.next_example
-            if example:
-                return await show_example(q, example)
+    route = q.args['#']
+    if not route:
+        route = 'hello_world'
 
-    await setup_page(q)
-    await show_example(q, catalog[example_filenames[0]])
+    await show_example(q, catalog[route])
 
 
 if __name__ == '__main__':
