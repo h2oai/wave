@@ -3466,132 +3466,6 @@ class Expander:
         )
 
 
-class NavItem:
-    """No documentation available.
-
-    :param name: No documentation available.
-    :param label: No documentation available.
-    """
-    def __init__(
-            self,
-            name: str,
-            label: str,
-    ):
-        self.name = name
-        self.label = label
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('NavItem.name is required.')
-        if self.label is None:
-            raise ValueError('NavItem.label is required.')
-        return _dump(
-            name=self.name,
-            label=self.label,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'NavItem':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('NavItem.name is required.')
-        __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('NavItem.label is required.')
-        name: str = __d_name
-        label: str = __d_label
-        return NavItem(
-            name,
-            label,
-        )
-
-
-class NavGroup:
-    """No documentation available.
-
-    :param label: No documentation available.
-    :param items: No documentation available.
-    """
-    def __init__(
-            self,
-            label: str,
-            items: List[NavItem],
-    ):
-        self.label = label
-        self.items = items
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('NavGroup.label is required.')
-        if self.items is None:
-            raise ValueError('NavGroup.items is required.')
-        return _dump(
-            label=self.label,
-            items=[__e.dump() for __e in self.items],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'NavGroup':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('NavGroup.label is required.')
-        __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('NavGroup.items is required.')
-        label: str = __d_label
-        items: List[NavItem] = [NavItem.load(__e) for __e in __d_items]
-        return NavGroup(
-            label,
-            items,
-        )
-
-
-class Nav:
-    """No documentation available.
-
-    :param name: No documentation available.
-    :param items: No documentation available.
-    """
-    def __init__(
-            self,
-            name: str,
-            items: List[NavGroup],
-    ):
-        self.name = name
-        self.items = items
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Nav.name is required.')
-        if self.items is None:
-            raise ValueError('Nav.items is required.')
-        return _dump(
-            name=self.name,
-            items=[__e.dump() for __e in self.items],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Nav':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Nav.name is required.')
-        __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('Nav.items is required.')
-        name: str = __d_name
-        items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
-        return Nav(
-            name,
-            items,
-        )
-
-
 class Component:
     """Create a component.
 
@@ -3618,7 +3492,6 @@ class Component:
     :param link: Link.
     :param tabs: Tabs.
     :param expander: Expander.
-    :param nav: Navigation.
     """
     def __init__(
             self,
@@ -3645,7 +3518,6 @@ class Component:
             link: Optional[Link] = None,
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
-            nav: Optional[Nav] = None,
     ):
         self.text = text
         self.label = label
@@ -3670,7 +3542,6 @@ class Component:
         self.link = link
         self.tabs = tabs
         self.expander = expander
-        self.nav = nav
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3698,7 +3569,6 @@ class Component:
             link=None if self.link is None else self.link.dump(),
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
-            nav=None if self.nav is None else self.nav.dump(),
         )
 
     @staticmethod
@@ -3727,7 +3597,6 @@ class Component:
         __d_link: Any = __d.get('link')
         __d_tabs: Any = __d.get('tabs')
         __d_expander: Any = __d.get('expander')
-        __d_nav: Any = __d.get('nav')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         label: Optional[Label] = None if __d_label is None else Label.load(__d_label)
         separator: Optional[Separator] = None if __d_separator is None else Separator.load(__d_separator)
@@ -3751,7 +3620,6 @@ class Component:
         link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
-        nav: Optional[Nav] = None if __d_nav is None else Nav.load(__d_nav)
         return Component(
             text,
             label,
@@ -3776,7 +3644,6 @@ class Component:
             link,
             tabs,
             expander,
-            nav,
         )
 
 

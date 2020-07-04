@@ -51,7 +51,6 @@ from .types import \
     MarkupCard, \
     MessageBar, \
     MetaCard, \
-    Nav, \
     NavGroup, \
     NavItem, \
     NotebookCard, \
@@ -1460,51 +1459,6 @@ def expander(
     ))
 
 
-def nav_item(
-        name: str,
-        label: str,
-) -> NavItem:
-    """No documentation available.
-
-    :param name: No documentation available.
-    :param label: No documentation available.
-    """
-    return NavItem(
-        name,
-        label,
-    )
-
-
-def nav_group(
-        label: str,
-        items: List[NavItem],
-) -> NavGroup:
-    """No documentation available.
-
-    :param label: No documentation available.
-    :param items: No documentation available.
-    """
-    return NavGroup(
-        label,
-        items,
-    )
-
-
-def nav(
-        name: str,
-        items: List[NavGroup],
-) -> Component:
-    """No documentation available.
-
-    :param name: No documentation available.
-    :param items: No documentation available.
-    """
-    return Component(nav=Nav(
-        name,
-        items,
-    ))
-
-
 def component(
         text: Optional[Text] = None,
         label: Optional[Label] = None,
@@ -1529,7 +1483,6 @@ def component(
         link: Optional[Link] = None,
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
-        nav: Optional[Nav] = None,
 ) -> Component:
     """Create a component.
 
@@ -1556,7 +1509,6 @@ def component(
     :param link: Link.
     :param tabs: Tabs.
     :param expander: Expander.
-    :param nav: Navigation.
     """
     return Component(
         text,
@@ -1582,7 +1534,6 @@ def component(
         link,
         tabs,
         expander,
-        nav,
     )
 
 

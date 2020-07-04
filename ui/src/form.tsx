@@ -15,7 +15,6 @@ import { Label, XLabel } from './label';
 import { cards } from './layout';
 import { Link, XLink } from './link';
 import { MessageBar, XMessageBar } from './message_bar';
-import { Nav, XNav } from './nav';
 import { Progress, XProgress } from './progress';
 import { Separator, XSeparator } from './separator';
 import { Slider, XSlider } from './slider';
@@ -77,8 +76,6 @@ export interface Component {
   tabs?: Tabs
   /** Expander. */
   expander?: Expander
-  /** Navigation. */
-  nav?: Nav
 }
 
 /** Create a form. */
@@ -133,7 +130,6 @@ const
     if (m.tabs) return <XTabs model={m.tabs} />
     if (m.button) return <XToolTip content={m.button.tooltip} showIcon={false} expand={false}><XStandAloneButton model={m.button} /></XToolTip>
     if (m.expander) return <XExpander model={m.expander} />
-    if (m.nav) return <XNav model={m.nav} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   },
   View = bond(({ state, changed }: Card<State>) => {
