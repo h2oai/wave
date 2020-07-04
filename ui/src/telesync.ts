@@ -566,7 +566,7 @@ const
         const { d, b } = c
         for (let k in d) {
           let v = d[k]
-          if (b && k.length > 0 && k[0] === '#') {
+          if (b && k.length > 0 && k[0] === '~') {
             const buf = loadBuf(b[v as U])
             if (buf) {
               k = k.substr(1)

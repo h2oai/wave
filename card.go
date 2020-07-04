@@ -35,15 +35,17 @@ type Card struct {
 	data map[string]interface{}
 }
 
+const dataPrefix = "~"
+
 func loadCard(ns *Namespace, c CardD) *Card {
 	card := &Card{make(map[string]interface{})}
 	ks := make([]string, 1) // to avoid allocation during card.set() below
 	for k, v := range c.D {
-		if len(k) > 0 && strings.HasPrefix(k, "#") {
+		if len(k) > 0 && strings.HasPrefix(k, dataPrefix) {
 			if f, ok := v.(float64); ok {
 				i := int(f)
 				if i >= 0 && i < len(c.B) {
-					k, v = strings.TrimPrefix(k, "#"), loadBuf(ns, c.B[i])
+					k, v = strings.TrimPrefix(k, dataPrefix), loadBuf(ns, c.B[i])
 				}
 			}
 		}

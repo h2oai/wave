@@ -305,7 +305,7 @@ class Page:
 
         for k, v in data:
             del props[k]
-            props[f'#{k}'] = v
+            props[f'~{k}'] = v
 
         if len(bufs) > 0:
             self._track(dict(k=key, d=props, b=bufs))
