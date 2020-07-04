@@ -130,7 +130,7 @@ func (c *Card) dump() CardD {
 	var bufs []BufD
 	for k, iv := range c.data {
 		if v, ok := iv.(Buf); ok {
-			data["#"+k] = len(bufs)
+			data[dataPrefix+k] = len(bufs)
 			bufs = append(bufs, v.dump())
 		} else {
 			data[k] = deepClone(iv)
