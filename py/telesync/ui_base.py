@@ -64,6 +64,7 @@ from .types import \
     Slider, \
     Spinbox, \
     Tab, \
+    TabCard, \
     Table, \
     TableColumn, \
     TableRow, \
@@ -2032,6 +2033,24 @@ def repeat_card(
         item_view,
         item_props,
         data,
+    )
+
+
+def tab_card(
+        box: str,
+        items: List[Tab],
+        link: Optional[bool] = None,
+) -> TabCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param items: Items to render.
+    :param link: True if tabs should be rendered as links and not a standard tab.
+    """
+    return TabCard(
+        box,
+        items,
+        link,
     )
 
 

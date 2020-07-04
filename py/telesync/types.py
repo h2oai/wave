@@ -4979,6 +4979,56 @@ class RepeatCard:
         )
 
 
+class TabCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param items: Items to render.
+    :param link: True if tabs should be rendered as links and not a standard tab.
+    """
+    def __init__(
+            self,
+            box: str,
+            items: List[Tab],
+            link: Optional[bool] = None,
+    ):
+        self.box = box
+        self.items = items
+        self.link = link
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('TabCard.box is required.')
+        if self.items is None:
+            raise ValueError('TabCard.items is required.')
+        return _dump(
+            view='tab',
+            box=self.box,
+            items=[__e.dump() for __e in self.items],
+            link=self.link,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TabCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('TabCard.box is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('TabCard.items is required.')
+        __d_link: Any = __d.get('link')
+        box: str = __d_box
+        items: List[Tab] = [Tab.load(__e) for __e in __d_items]
+        link: Optional[bool] = __d_link
+        return TabCard(
+            box,
+            items,
+            link,
+        )
+
+
 class TemplateCard:
     """Render dynamic content using a HTML template.
 

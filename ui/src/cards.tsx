@@ -20,6 +20,7 @@ import './none'
 import './pixel_art'
 import './plot'
 import './repeat'
+import './tab'
 import './template'
 import './toolbar'
 

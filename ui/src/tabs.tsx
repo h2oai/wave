@@ -5,7 +5,7 @@ import { bond, S, telesync } from './telesync';
 /**
  * Create a tab.
  */
-interface Tab {
+export interface Tab {
   /** An identifying name for this component. */
   name: S
   /** The text displayed on the tab. */
