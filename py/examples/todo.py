@@ -28,11 +28,11 @@ async def main(q: Q):
 
 async def show_todos(q: Q):
     # Get items for this user.
-    todos: List[TodoItem] = q.session.todos
+    todos: List[TodoItem] = q.user.todos
 
     # Create a sample list if we don't have any.
     if todos is None:
-        q.session.todos = todos = [TodoItem('Do this'), TodoItem('Do that'), TodoItem('Do something else')]
+        q.user.todos = todos = [TodoItem('Do this'), TodoItem('Do that'), TodoItem('Do something else')]
 
     # If the user checked/unchecked an item, update our list.
     for todo in todos:
@@ -56,7 +56,7 @@ async def show_todos(q: Q):
 
 async def add_todo(q: Q):
     # Insert a new item
-    q.session.todos.insert(0, TodoItem(q.args.text or 'Untitled'))
+    q.user.todos.insert(0, TodoItem(q.args.text or 'Untitled'))
 
     # Go back to our list.
     await show_todos(q)

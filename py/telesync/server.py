@@ -37,14 +37,14 @@ class Q:
             client_id: str,
             route: str,
             app_state: Expando,
-            session_state: Expando,
+            user_state: Expando,
             client_state: Expando,
             args: Expando,
     ):
         self.site = site
         self.page = site[client_id if mode == UNICAST else username if mode == MULTICAST else route]
         self.app = app_state
-        self.session = session_state
+        self.user = user_state
         self.client = client_state
         self.args = args
         self.username = username
@@ -106,14 +106,14 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
         username, client_id, args = parse_request(req)
         logger.debug(f'user: {username}, client: {client_id}')
         logger.debug(args)
-        app_state, session_state, client_state = _server.state
+        app_state, user_state, client_state = _server.state
         q = Q(
             mode=_server.mode,
             username=username,
             client_id=client_id,
             route=_server.route,
             app_state=app_state,
-            session_state=_session_for(session_state, username),
+            user_state=_session_for(user_state, username),
             client_state=_session_for(client_state, client_id),
             args=Expando(unmarshal(args)),
         )

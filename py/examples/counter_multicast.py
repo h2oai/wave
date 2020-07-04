@@ -2,10 +2,10 @@ from telesync import Q, listen, ui, pack
 
 
 async def main(q: Q):
-    count = q.session.count or 0
+    count = q.user.count or 0
     if 'increment' in q.args:
         count += 1
-        q.session.count = count
+        q.user.count = count
 
     items = pack([ui.button(name='increment', label=f'Count={count}')])
 
