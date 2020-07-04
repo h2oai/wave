@@ -1347,7 +1347,7 @@ class Command:
     Commands are typically displayed as context menu items associated with
     parts of notebooks or dashboards.
 
-    :param name: An identifying name for this component.
+    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
     :param label: The text displayed for this command.
     :param caption: The caption for this command (typically a tooltip).
     :param icon: The icon to be displayed for this command.
@@ -2944,7 +2944,7 @@ class Button:
     While buttons can technically be used to navigate a user to another part of the experience, this is not
     recommended unless that navigation is part of an action or their flow.
 
-    :param name: An identifying name for this component.
+    :param name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
     :param label: The text displayed on the button.
     :param caption: The caption displayed below the label. Setting a caption renders a compound button.
     :param primary: True if the button should be rendered as the primary button in the set.

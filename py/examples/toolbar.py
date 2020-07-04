@@ -1,5 +1,5 @@
-# Navigation Bar
-# No description available.
+# Toolbar
+# Use toolbars to provide commands that operate on the content of a page.
 # ---
 from telesync import Q, listen, ui, site
 

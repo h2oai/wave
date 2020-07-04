@@ -1,4 +1,4 @@
-# Hash Routing
+# Routing
 # This example demonstrates how you can observe and handle changes to the browser's
 # [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash)
 #
