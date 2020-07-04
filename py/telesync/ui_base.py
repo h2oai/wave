@@ -51,6 +51,7 @@ from .types import \
     MarkupCard, \
     MessageBar, \
     MetaCard, \
+    NavCard, \
     NavGroup, \
     NavItem, \
     NotebookCard, \
@@ -1701,6 +1702,51 @@ def meta_card(
     return MetaCard(
         box,
         title,
+    )
+
+
+def nav_item(
+        name: str,
+        label: str,
+) -> NavItem:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    """
+    return NavItem(
+        name,
+        label,
+    )
+
+
+def nav_group(
+        label: str,
+        items: List[NavItem],
+) -> NavGroup:
+    """No documentation available.
+
+    :param label: No documentation available.
+    :param items: No documentation available.
+    """
+    return NavGroup(
+        label,
+        items,
+    )
+
+
+def nav_card(
+        box: str,
+        items: List[NavGroup],
+) -> NavCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param items: No documentation available.
+    """
+    return NavCard(
+        box,
+        items,
     )
 
 

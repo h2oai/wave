@@ -1,6 +1,7 @@
-import * as Fluent from '@fluentui/react';
+import { INavLink, INavLinkGroup, Nav } from '@fluentui/react';
 import React from 'react';
-import { bond, S, telesync } from './telesync';
+import { cards } from './layout';
+import { bond, Card, S, telesync } from './telesync';
 
 interface NavItem {
   name: S
@@ -12,30 +13,34 @@ interface NavGroup {
   items: NavItem[]
 }
 
-export interface Nav {
-  name: S
+interface State {
   items: NavGroup[]
 }
 
-export const
-  XNav = bond(({ model: m }: { model: Nav }) => {
-    telesync.args[m.name] = null
+const
+  View = bond(({ state, changed }: Card<State>) => {
     const
-      onLinkClick = (_ev?: React.MouseEvent<HTMLElement>, item?: Fluent.INavLink) => {
-        if (!item) return
-        telesync.args[m.name] = item.key || null
-        telesync.sync()
-      },
       render = () => {
-        const groups = m.items.map((g): Fluent.INavLinkGroup => ({
+        const groups = state.items.map((g): INavLinkGroup => ({
           name: g.label,
-          links: g.items.map((i): Fluent.INavLink => ({
+          links: g.items.map((i): INavLink => ({
             key: i.name,
             name: i.label,
-            url: '#'
+            url: '',
+            onClick: () => {
+              const name = i.name
+              if (name[0] === '#') {
+                window.location.hash = name.substr(1)
+                return
+              }
+              telesync.args[name] = true
+              telesync.sync()
+            }
           }))
         }))
-        return <Fluent.Nav groups={groups} onLinkClick={onLinkClick} />
+        return <Nav groups={groups} />
       }
-    return { render }
+    return { render, changed }
   })
+
+cards.register('nav', View)

@@ -4134,6 +4134,133 @@ class MetaCard:
         )
 
 
+class NavItem:
+    """No documentation available.
+
+    :param name: No documentation available.
+    :param label: No documentation available.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+    ):
+        self.name = name
+        self.label = label
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('NavItem.name is required.')
+        if self.label is None:
+            raise ValueError('NavItem.label is required.')
+        return _dump(
+            name=self.name,
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'NavItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('NavItem.name is required.')
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('NavItem.label is required.')
+        name: str = __d_name
+        label: str = __d_label
+        return NavItem(
+            name,
+            label,
+        )
+
+
+class NavGroup:
+    """No documentation available.
+
+    :param label: No documentation available.
+    :param items: No documentation available.
+    """
+    def __init__(
+            self,
+            label: str,
+            items: List[NavItem],
+    ):
+        self.label = label
+        self.items = items
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('NavGroup.label is required.')
+        if self.items is None:
+            raise ValueError('NavGroup.items is required.')
+        return _dump(
+            label=self.label,
+            items=[__e.dump() for __e in self.items],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'NavGroup':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('NavGroup.label is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('NavGroup.items is required.')
+        label: str = __d_label
+        items: List[NavItem] = [NavItem.load(__e) for __e in __d_items]
+        return NavGroup(
+            label,
+            items,
+        )
+
+
+class NavCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param items: No documentation available.
+    """
+    def __init__(
+            self,
+            box: str,
+            items: List[NavGroup],
+    ):
+        self.box = box
+        self.items = items
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('NavCard.box is required.')
+        if self.items is None:
+            raise ValueError('NavCard.items is required.')
+        return _dump(
+            view='nav',
+            box=self.box,
+            items=[__e.dump() for __e in self.items],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'NavCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('NavCard.box is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('NavCard.items is required.')
+        box: str = __d_box
+        items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
+        return NavCard(
+            box,
+            items,
+        )
+
+
 class NotebookSection:
     """Create a notebook section.
 
