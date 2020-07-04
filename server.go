@@ -250,7 +250,7 @@ func Run(conf ServerConf) {
 	hub := newBroker(site)
 	go hub.run()
 
-	http.Handle("/ws", newSocketServer(hub))
+	http.Handle("/_s", newSocketServer(hub))
 	http.Handle("/", newWebServer(site, hub, users, conf.WebRoot))
 
 	for _, line := range strings.Split(logo, "\n") {

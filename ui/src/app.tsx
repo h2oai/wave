@@ -49,7 +49,7 @@ const
         }
       },
       init = () => {
-        connect('/ws', onSocket)
+        connect('/_s', onSocket)
         window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {
