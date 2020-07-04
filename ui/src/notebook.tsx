@@ -93,7 +93,7 @@ export interface Cell {
  * parts of notebooks or dashboards.
  */
 export interface Command {
-  /** An identifying name for this component. */
+  /** An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed. */
   name: S
   /** The text displayed for this command. */
   label?: S

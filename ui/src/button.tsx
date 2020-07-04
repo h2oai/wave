@@ -25,7 +25,7 @@ import { XToolTip } from './tooltip';
  * recommended unless that navigation is part of an action or their flow.
  */
 export interface Button {
-  /** An identifying name for this component. */
+  /** An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked. */
   name: S
   /** The text displayed on the button. */
   label?: S
@@ -60,6 +60,10 @@ const
     telesync.args[m.name] = false
     const
       onClick = () => {
+        if (m.name[0] === '#') {
+          window.location.hash = m.name.substr(1)
+          return
+        }
         telesync.args[m.name] = true
         telesync.sync()
       },

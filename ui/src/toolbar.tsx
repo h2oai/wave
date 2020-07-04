@@ -18,6 +18,10 @@ const
   toCommand = ({ name, label, caption, icon, items }: Command): ICommandBarItemProps => {
     telesync.args[name] = false
     const onClick = () => {
+      if (name[0] === '#') {
+        window.location.hash = name.substr(1)
+        return
+      }
       telesync.args[name] = true
       telesync.sync()
     }
