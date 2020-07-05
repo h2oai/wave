@@ -16,6 +16,7 @@
 
 /.vscode
 /build
+/data
 /telesync
 /teledb
 /*.db

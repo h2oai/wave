@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"path/filepath"
 	"runtime"
 
 	"github.com/h2oai/telesync"
@@ -26,7 +27,8 @@ func main() {
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
 	flag.StringVar(&conf.Listen, "listen", ":55555", "listen on this address")
-	flag.StringVar(&conf.WebRoot, "webroot", "./www", "directory to serve web assets from")
+	flag.StringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from")
+	flag.StringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
 	flag.StringVar(&conf.AccessKeyID, "access-key-id", "access_key_id", "default access key ID")
 	flag.StringVar(&conf.AccessKeySecret, "access-key-secret", "access_key_secret", "default access key secret")
 	flag.StringVar(&conf.Init, "init", "", "initialize site content from AOF log")
@@ -40,6 +42,9 @@ func main() {
 		fmt.Printf("Telesync Development Server\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
 		return
 	}
+
+	conf.WebDir, _ = filepath.Abs(conf.WebDir)
+	conf.DataDir, _ = filepath.Abs(conf.DataDir)
 
 	telesync.Run(conf)
 }

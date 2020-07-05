@@ -365,6 +365,7 @@ class Page:
 class BasicAuthClient:
     def __init__(self):
         self._auth = HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
+        self._secure = False
 
     def patch(self, url: str, data: Any):
         res = requests.patch(f'{_config.hub_address}{url}', data=data, headers=_content_type_json, auth=self._auth)
@@ -377,9 +378,11 @@ class BasicAuthClient:
             raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
         return res.json()
 
-    def upload(self, url: str, files: List[str]) -> List[str]:
+    def upload(self, files: List[str]) -> List[str]:
+        # XXX Use aiohttp client for async multipart or streaming upload
+        upload_url = f'{_config.hub_address}/_f'
         fs = [('files', (os.path.basename(f), open(f, 'rb'))) for f in files]
-        res = requests.put(f'{_config.hub_address}{url}', files=fs, auth=self._auth)
+        res = requests.post(upload_url, files=fs, auth=self._auth, verify=self._secure)
         if res.status_code == 200:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
@@ -399,7 +402,7 @@ class Site:
         return _client.get(url)
 
     def upload(self, files: List[str]):
-        return _client.upload('/f/out', files)
+        return _client.upload(files)
 
     def __getitem__(self, url) -> Page:
         return Page(self, url)
