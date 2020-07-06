@@ -156,17 +156,13 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// FileServer represents a file server.
-type FileServer struct {
-	dir     string
-	handler http.Handler
+// FileStore represents a file store.
+type FileStore struct {
+	dir string
 }
 
-func newFileServer(dir string) http.Handler {
-	return &FileServer{
-		dir,
-		http.FileServer(http.Dir(dir)),
-	}
+func newFileStore(dir string) http.Handler {
+	return &FileStore{dir}
 }
 
 // UploadResponse represents a response to a file upload operation.
@@ -174,7 +170,7 @@ type UploadResponse struct {
 	Files []string `json:"files"`
 }
 
-func (fs *FileServer) uploadFiles(r *http.Request) ([]string, error) {
+func (fs *FileStore) uploadFiles(r *http.Request) ([]string, error) {
 	if err := r.ParseMultipartForm(32 << 20); err != nil { // 32 MB
 		return nil, fmt.Errorf("failed parsing upload form from request: %v", err)
 	}
@@ -224,6 +220,43 @@ func (fs *FileServer) uploadFiles(r *http.Request) ([]string, error) {
 	return uploadPaths, nil
 }
 
+func (fs *FileStore) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		files, err := fs.uploadFiles(r)
+		if err != nil {
+			echo(Log{"t": "file_upload", "error": err.Error()})
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		res, err := json.Marshal(UploadResponse{Files: files})
+		if err != nil {
+			echo(Log{"t": "file_upload", "error": err.Error()})
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(res)
+	default:
+		echo(Log{"t": "file_upload", "method": r.Method, "path": r.URL.Path, "error": "method not allowed"})
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+	}
+}
+
+// FileServer represents a file server.
+type FileServer struct {
+	dir     string
+	handler http.Handler
+}
+
+func newFileServer(dir string) http.Handler {
+	return &FileServer{
+		dir,
+		http.FileServer(http.Dir(dir)),
+	}
+}
+
 func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
@@ -240,21 +273,8 @@ func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// case http.MethodDelete: // TODO garbage collection
 
 	default:
-		files, err := fs.uploadFiles(r)
-		if err != nil {
-			echo(Log{"t": "file_upload", "error": err.Error()})
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
-
-		res, err := json.Marshal(UploadResponse{Files: files})
-		if err != nil {
-			echo(Log{"t": "file_upload", "error": err.Error()})
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(res)
+		echo(Log{"t": "file_download", "method": r.Method, "path": r.URL.Path, "error": "method not allowed"})
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 	}
 }
 
@@ -359,7 +379,9 @@ func Run(conf ServerConf) {
 	go hub.run()
 
 	http.Handle("/_s", newSocketServer(hub))
-	http.Handle("/_f/", newFileServer(filepath.Join(conf.DataDir, "f"))) // XXX secure
+	fileDir := filepath.Join(conf.DataDir, "f")
+	http.Handle("/_f", newFileStore(fileDir))   // XXX secure
+	http.Handle("/_f/", newFileServer(fileDir)) // XXX secure
 	http.Handle("/", newWebServer(site, hub, users, conf.WebDir))
 
 	for _, line := range strings.Split(logo, "\n") {
