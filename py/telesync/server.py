@@ -10,7 +10,7 @@ import requests
 import websockets
 from requests.auth import HTTPBasicAuth
 
-from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, site
+from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite
 from .ui import markdown_card
 
 logger = logging.getLogger(__name__)
@@ -32,6 +32,7 @@ BROADCAST = 'broadcast'
 class Q:
     def __init__(
             self,
+            site: AsyncSite,
             mode: str,
             username: str,
             client_id: str,
@@ -101,13 +102,14 @@ def parse_request(req: str):
 
 
 async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
-    site._ws = ws
+    site = AsyncSite(ws)
     async for req in ws:
         username, client_id, args = parse_request(req)
         logger.debug(f'user: {username}, client: {client_id}')
         logger.debug(args)
         app_state, user_state, client_state = _server.state
         q = Q(
+            site=site,
             mode=_server.mode,
             username=username,
             client_id=client_id,
@@ -117,10 +119,12 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
             client_state=_session_for(client_state, client_id),
             args=Expando(unmarshal(args)),
         )
+        # noinspection PyBroadException,PyPep8
         try:
             await _server.handle(q)
         except:
             logger.exception('Unhandled exception')
+            # noinspection PyBroadException,PyPep8
             try:
                 q.page.drop()
                 # TODO replace this with a custom-designed error display

@@ -177,7 +177,7 @@ def _dump(xs: Any):
 
 
 class Ref:
-    def __init__(self, page: 'Page', key: str):
+    def __init__(self, page: 'PageBase', key: str):
         self.__dict__[PAGE] = page
         self.__dict__[KEY] = key
 
@@ -273,10 +273,8 @@ def data(
     return Data(fields, size, rows)
 
 
-class Page:
-    def __init__(self, site: 'Site', url: str):
-        self.site = site
-        self._ws = site._ws
+class PageBase:
+    def __init__(self, url: str):
         self.url = url
         self._changes = []
 
@@ -324,31 +322,8 @@ class Page:
         self._changes.clear()
         return d
 
-    def load(self) -> dict:
-        return self.site.load(self.url)
-
     def drop(self):
         self._track({})
-
-    def sync(self):
-        p = self._diff()
-        if p:
-            logger.debug(data)
-            self.site._save(self.url, p)
-
-    async def push(self):
-        p = self._diff()
-        if p:
-            logger.debug(p)
-            await self._ws.send(f'* {self.url} {p}')
-
-    async def pull(self) -> 'Q':
-        req = await self._ws.recv()
-        return Q(self._ws, req)
-
-    async def poll(self) -> 'Q':
-        await self.push()
-        return await self.pull()
 
     def __setitem__(self, key, card):
         self.add(key, card)
@@ -360,6 +335,47 @@ class Page:
 
     def __delitem__(self, key: str):
         self._track(dict(k=key))
+
+
+class Page(PageBase):
+    def __init__(self, site: 'Site', url: str):
+        self.site = site
+        super().__init__(url)
+
+    def load(self) -> dict:
+        return self.site.load(self.url)
+
+    def sync(self):
+        p = self._diff()
+        if p:
+            logger.debug(data)
+            self.site._save(self.url, p)
+
+
+class AsyncPage(PageBase):
+    def __init__(self, site: 'AsyncSite', url: str):
+        self.site = site
+        self._ws = site._ws
+        super().__init__(url)
+
+    async def load(self) -> dict:
+        return await self.site.load(self.url)
+
+    async def push(self):
+        p = self._diff()
+        if p:
+            logger.debug(p)
+            await self._ws.send(f'* {self.url} {p}')
+
+    # XXX Broken
+    async def pull(self) -> 'Q':
+        req = await self._ws.recv()
+        return Q(self._ws, req)
+
+    # XXX Broken
+    async def poll(self) -> 'Q':
+        await self.push()
+        return await self.pull()
 
 
 class BasicAuthClient:
@@ -392,8 +408,8 @@ _client = BasicAuthClient()
 
 
 class Site:
-    def __init__(self):
-        self._ws: Optional[websockets.WebSocketServerProtocol] = None
+    def __getitem__(self, url) -> Page:
+        return Page(self, url)
 
     def _save(self, url: str, data: str):
         _client.patch(url, data)
@@ -401,11 +417,25 @@ class Site:
     def load(self, url) -> dict:
         return _client.get(url)
 
-    def upload(self, files: List[str]):
+    def upload(self, files: List[str]) -> List[str]:
         return _client.upload(files)
 
-    def __getitem__(self, url) -> Page:
-        return Page(self, url)
+
+class AsyncSite:
+    def __init__(self, ws: websockets.WebSocketServerProtocol):
+        self._ws = ws
+
+    def __getitem__(self, url) -> AsyncPage:
+        return AsyncPage(self, url)
+
+    async def load(self, url) -> dict:
+        # XXX implement
+        return {}
+
+    async def upload(self, files: List[str]) -> List[str]:
+        # XXX use non-blocking aiohttp post
+        paths = _client.upload(files)
+        return paths
 
 
 site = Site()
