@@ -33,7 +33,7 @@ def make_card(**props):
     for k, v in props.items():
         # HACK
         if isinstance(v, dict) and len(v) == 1 and ('__c__' in v or '__f__' in v or '__m__' in v):
-            d['#' + k] = len(b)
+            d['~' + k] = len(b)
             buf = dict()
             for k2, v2 in v.items():
                 buf[k2[2]] = v2
