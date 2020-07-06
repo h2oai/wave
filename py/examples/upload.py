@@ -1,5 +1,5 @@
-# File uploads
-# No description available.
+# Uploads
+# Upload files to the Telesync server.
 # ---
 import os
 from telesync import site, ui
