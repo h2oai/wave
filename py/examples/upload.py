@@ -1,7 +1,7 @@
 # File uploads
 # No description available.
 # ---
-import os.path
+import os
 from telesync import site, ui
 
 
@@ -16,6 +16,10 @@ write_csv('cubes.csv', [[x, x * x * x] for x in range(1, 11)])
 
 # Upload CSVs
 squares_path, cubes_path = site.upload(['squares.csv', 'cubes.csv'])
+
+# Delete local CSVs
+os.remove('squares.csv')
+os.remove('cubes.csv')
 
 # Display links to these CSVs
 page = site['/demo']
