@@ -67,6 +67,17 @@ Links
 
 Change Log
 ---------------
+* v0.0.6
+    * Added
+        * Log network traffic when logging is set to debug mode.
+        * Capture and display unhandled exceptions on the UI.
+        * Routing using location hash.
+        * Toolbar component.
+        * Tabs component.
+        * Nav component.
+        * Upload API: ``q.upload()``
+    * Changed
+        * ``q.session`` renamed to ``q.user``
 * v0.0.5
     * Added
         * Add configure() API to configure environment before launching.
