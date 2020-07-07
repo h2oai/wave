@@ -5,6 +5,7 @@ import os.path
 from typing import List, Dict, Union, Tuple, Any, Optional
 
 import requests
+import shutil
 import websockets
 from requests.auth import HTTPBasicAuth
 
@@ -403,6 +404,17 @@ class BasicAuthClient:
             return json.loads(res.text)['files']
         raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
 
+    def download(self, url: str, path: str) -> str:
+        path = os.path.abspath(path)
+        # If path is dir, get basename from url
+        filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
+
+        with requests.get(f'{_config.hub_address}{url}', stream=True) as r:
+            with open(filepath, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+
+        return filepath
+
 
 _client = BasicAuthClient()
 
@@ -420,6 +432,9 @@ class Site:
     def upload(self, files: List[str]) -> List[str]:
         return _client.upload(files)
 
+    def download(self, url: str, path: str) -> str:
+        return _client.download(url, path)
+
 
 class AsyncSite:
     def __init__(self, ws: websockets.WebSocketServerProtocol):
@@ -436,6 +451,11 @@ class AsyncSite:
         # XXX use non-blocking aiohttp post
         paths = _client.upload(files)
         return paths
+
+    async def download(self, url: str, path: str) -> str:
+        # XXX use non-blocking aiohttp get
+        path = _client.download(url, path)
+        return path
 
 
 site = Site()
