@@ -42,7 +42,7 @@ export const
         try {
           const makeRequest = new Promise<XMLHttpRequest>(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/f/in");
+            xhr.open("POST", "/_f");
             xhr.upload.onprogress = function (e) {
               percentComplete(e.loaded / e.total)
             }
