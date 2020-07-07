@@ -39,7 +39,7 @@ run: ## Run server
 generate: ## Generate driver bindings
 	cd tools/telegen && $(MAKE) run
 
-release: build-ui build-examples ## Prepare release builds
+release: build-ui build-examples ## Prepare release builds (use "VERSION=v1.2.3 make release"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows release-os
