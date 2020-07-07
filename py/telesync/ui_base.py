@@ -40,6 +40,7 @@ from .types import \
     FrameCard, \
     FrameCell, \
     GridCard, \
+    GroupedList, \
     HeadingCell, \
     Label, \
     Link, \
@@ -1460,6 +1461,18 @@ def expander(
     ))
 
 
+def grouped_list(
+        label: Optional[str] = None,
+) -> Component:
+    """Create an interactive GroupList.
+
+    :param label: The text displayed on the separator.
+    """
+    return Component(groupedList=GroupedList(
+        label,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         label: Optional[Label] = None,
@@ -1484,6 +1497,7 @@ def component(
         link: Optional[Link] = None,
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
+        groupedList: Optional[GroupedList] = None,
 ) -> Component:
     """Create a component.
 
@@ -1510,6 +1524,7 @@ def component(
     :param link: Link.
     :param tabs: Tabs.
     :param expander: Expander.
+    :param groupedList: GroupedList
     """
     return Component(
         text,
@@ -1535,6 +1550,7 @@ def component(
         link,
         tabs,
         expander,
+        groupedList,
     )
 
 

@@ -3466,6 +3466,33 @@ class Expander:
         )
 
 
+class GroupedList:
+    """Create an interactive GroupList.
+
+    :param label: The text displayed on the separator.
+    """
+    def __init__(
+            self,
+            label: Optional[str] = None,
+    ):
+        self.label = label
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        return _dump(
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'GroupedList':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        label: Optional[str] = __d_label
+        return GroupedList(
+            label,
+        )
+
+
 class Component:
     """Create a component.
 
@@ -3492,6 +3519,7 @@ class Component:
     :param link: Link.
     :param tabs: Tabs.
     :param expander: Expander.
+    :param groupedList: GroupedList
     """
     def __init__(
             self,
@@ -3518,6 +3546,7 @@ class Component:
             link: Optional[Link] = None,
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
+            groupedList: Optional[GroupedList] = None,
     ):
         self.text = text
         self.label = label
@@ -3542,6 +3571,7 @@ class Component:
         self.link = link
         self.tabs = tabs
         self.expander = expander
+        self.groupedList = groupedList
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3569,6 +3599,7 @@ class Component:
             link=None if self.link is None else self.link.dump(),
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
+            groupedList=None if self.groupedList is None else self.groupedList.dump(),
         )
 
     @staticmethod
@@ -3597,6 +3628,7 @@ class Component:
         __d_link: Any = __d.get('link')
         __d_tabs: Any = __d.get('tabs')
         __d_expander: Any = __d.get('expander')
+        __d_groupedList: Any = __d.get('groupedList')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         label: Optional[Label] = None if __d_label is None else Label.load(__d_label)
         separator: Optional[Separator] = None if __d_separator is None else Separator.load(__d_separator)
@@ -3620,6 +3652,7 @@ class Component:
         link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
+        groupedList: Optional[GroupedList] = None if __d_groupedList is None else GroupedList.load(__d_groupedList)
         return Component(
             text,
             label,
@@ -3644,6 +3677,7 @@ class Component:
             link,
             tabs,
             expander,
+            groupedList,
         )
 
 

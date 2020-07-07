@@ -27,6 +27,7 @@ import { Textbox, XTextbox } from './textbox';
 import { getTheme } from './theme';
 import { Toggle, XToggle } from './toggle';
 import { XToolTip } from './tooltip';
+import { GroupedList, XGroupedList } from "./grouped_list";
 
 /** Create a component. */
 export interface Component {
@@ -76,6 +77,8 @@ export interface Component {
   tabs?: Tabs
   /** Expander. */
   expander?: Expander
+  /** GroupedList */
+  groupedList?: GroupedList
 }
 
 /** Create a form. */
@@ -130,6 +133,7 @@ const
     if (m.tabs) return <XTabs model={m.tabs} />
     if (m.button) return <XToolTip content={m.button.tooltip} showIcon={false} expand={false}><XStandAloneButton model={m.button} /></XToolTip>
     if (m.expander) return <XExpander model={m.expander} />
+    if (m.groupedList) return <XGroupedList />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   },
   View = bond(({ state, changed }: Card<State>) => {
