@@ -4,7 +4,7 @@ import vegaEmbed from 'vega-embed';
 import { CardMenu } from './card_menu';
 import { cards } from './layout';
 import { Command } from './notebook';
-import { bond, Card, Rec, S, unpack } from './telesync';
+import { bond, Card, Rec, S, unpack, xid } from './telesync';
 import { getTheme } from './theme';
 
 const
@@ -70,8 +70,8 @@ const
         return (
           <div className={css.card}>
             <div className={css.title}>{state.title}</div>
-            <VegaLite spec={JSON.parse(state.specification)} data={data} />
-            {state.commands ? <CardMenu items={state.commands} /> : null}
+            <VegaLite key={xid()} spec={JSON.parse(state.specification)} data={data} />
+            {state.commands ? <CardMenu key={state.commands.map(c => c.name).join(';')} items={state.commands} /> : null}
           </div>
         )
       }
