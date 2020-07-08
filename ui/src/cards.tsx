@@ -24,4 +24,5 @@ import './repeat'
 import './tab'
 import './template'
 import './toolbar'
+import './vega'
 

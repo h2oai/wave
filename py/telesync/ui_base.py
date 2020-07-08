@@ -74,6 +74,7 @@ from .types import \
     Textbox, \
     Toggle, \
     ToolbarCard, \
+    VegaCard, \
     VegaCell, \
     Vis
 
@@ -2090,4 +2091,25 @@ def toolbar_card(
         items,
         secondary_items,
         overflow_items,
+    )
+
+
+def vega_card(
+        box: str,
+        title: str,
+        specification: str,
+        data: Optional[PackedRecord] = None,
+) -> VegaCard:
+    """Create a card containing a Vega-lite plot.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: The title of this card.
+    :param specification: The Vega-lite specification.
+    :param data: Data for the plot, if any.
+    """
+    return VegaCard(
+        box,
+        title,
+        specification,
+        data,
     )

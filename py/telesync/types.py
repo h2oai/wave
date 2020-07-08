@@ -5139,3 +5139,64 @@ class ToolbarCard:
             secondary_items,
             overflow_items,
         )
+
+
+class VegaCard:
+    """Create a card containing a Vega-lite plot.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: The title of this card.
+    :param specification: The Vega-lite specification.
+    :param data: Data for the plot, if any.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            specification: str,
+            data: Optional[PackedRecord] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.specification = specification
+        self.data = data
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('VegaCard.box is required.')
+        if self.title is None:
+            raise ValueError('VegaCard.title is required.')
+        if self.specification is None:
+            raise ValueError('VegaCard.specification is required.')
+        return _dump(
+            view='vega',
+            box=self.box,
+            title=self.title,
+            specification=self.specification,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'VegaCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('VegaCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('VegaCard.title is required.')
+        __d_specification: Any = __d.get('specification')
+        if __d_specification is None:
+            raise ValueError('VegaCard.specification is required.')
+        __d_data: Any = __d.get('data')
+        box: str = __d_box
+        title: str = __d_title
+        specification: str = __d_specification
+        data: Optional[PackedRecord] = __d_data
+        return VegaCard(
+            box,
+            title,
+            specification,
+            data,
+        )

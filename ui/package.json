@@ -23,7 +23,10 @@
     "react-intl": "^4.2.2",
     "react-scripts": "3.4.0",
     "typescript": "^3.7.5",
-    "typestyle": "^2.0.4"
+    "typestyle": "^2.0.4",
+    "vega": "^5.13.0",
+    "vega-embed": "^6.9.0",
+    "vega-lite": "^4.13.1"
   },
   "scripts": {
     "start": "react-scripts start",

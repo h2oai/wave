@@ -574,8 +574,8 @@ const
         if (!el) return
         const
           s = state,
-          raw_data = unpack(s.data) as any[],
-          raw_vis = unpack(s.vis) as Vis,
+          raw_data = unpack<any[]>(s.data),
+          raw_vis = unpack<Vis>(s.vis),
           marks = raw_vis.marks.map(refactorMark),
           vis: Vis = { marks: marks },
           // spaceT = spaceTypeOf(raw_marks, marks),
