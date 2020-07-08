@@ -30,8 +30,8 @@ export const
     const
       ref = React.createRef<HTMLInputElement>(),
       formSubmittedB = box(false),
-      filePicked = box(false),
-      percentComplete = box(0.0),
+      filePickedB = box(false),
+      percentCompleteB = box(0.0),
       upload = async () => {
         const fileInput = ref.current
         if (!fileInput) return
@@ -40,58 +40,60 @@ export const
         formSubmittedB(true)
         for (let i = 0; i < files.length; i++) formData.append('files', files[i])
         try {
-          const makeRequest = new Promise<XMLHttpRequest>(function (resolve, reject) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/_f");
-            xhr.upload.onprogress = function (e) {
-              percentComplete(e.loaded / e.total)
+          const makeRequest = new Promise<XMLHttpRequest>((resolve, reject) => {
+            const xhr = new XMLHttpRequest()
+            xhr.open("POST", "/_f")
+            xhr.upload.onprogress = (e) => {
+              percentCompleteB(e.loaded / e.total)
             }
-            xhr.send(formData);
-            xhr.onreadystatechange = function () {
-              if (xhr.readyState !== this.DONE) return;
+            xhr.send(formData)
+            xhr.onreadystatechange = () => {
+              if (xhr.readyState !== XMLHttpRequest.DONE) return
               if (xhr.status >= 200 && xhr.status < 300) {
-                resolve(xhr);
+                resolve(xhr)
               } else {
-                reject({
-                  status: xhr.status,
-                  statusText: xhr.statusText
-                });
+                reject(xhr)
               }
-            };
-          });
+            }
+          })
 
-          const res = await makeRequest
-          const text = res.responseText
-          const reply = JSON.parse(text)
+          const
+            res = await makeRequest,
+            text = res.responseText,
+            reply = JSON.parse(text)
+
           telesync.args[m.name] = reply.files
           telesync.sync()
+
         } catch (e) {
           console.error(e) // XXX handle properly
         }
       },
-      onChange = (e: React.ChangeEvent<HTMLInputElement>) => filePicked(e.target.value.length > 0),
+      onChange = (e: React.ChangeEvent<HTMLInputElement>) => filePickedB(e.target.value.length > 0),
       render = () => {
         const buttonText = formSubmittedB()
           ? "Uploading..."
           : m.label
-        const uploadDescription = formSubmittedB() ? "Uploading: " + (percentComplete() * 100).toFixed(2) + "%" : null
-        return (<div data-test={m.name}>
-          <div>
-            <input disabled={formSubmittedB()} ref={ref} className={css.fileInput} onChange={onChange} type='file' multiple={m.multiple} />
+        const uploadDescription = formSubmittedB() ? "Uploading: " + (percentCompleteB() * 100).toFixed(2) + "%" : null
+        return (
+          <div data-test={m.name}>
+            <div>
+              <input disabled={formSubmittedB()} ref={ref} className={css.fileInput} onChange={onChange} type='file' multiple={m.multiple} />
+            </div>
+            <div>
+              <Fluent.ProgressIndicator
+                data-test='progress' // TODO: Does not work.
+                description={uploadDescription}
+                percentComplete={percentCompleteB()}
+                progressHidden={!formSubmittedB()}
+              />
+            </div>
+            <div>
+              <Fluent.PrimaryButton disabled={formSubmittedB() || !filePickedB()} text={buttonText} onClick={upload} />
+            </div>
           </div>
-          <div>
-            <Fluent.ProgressIndicator
-              data-test='progress' // TODO: Does not work.
-              description={uploadDescription}
-              percentComplete={percentComplete()}
-              progressHidden={!formSubmittedB()}
-            />
-          </div>
-          <div>
-            <Fluent.PrimaryButton disabled={formSubmittedB() || !filePicked()} text={buttonText} onClick={upload} />
-          </div>
-        </div>)
+        )
       }
 
-    return { render, formSubmittedB, percentComplete, filePicked }
+    return { render, formSubmittedB, percentCompleteB, filePickedB }
   })
