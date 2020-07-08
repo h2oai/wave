@@ -2099,6 +2099,7 @@ def vega_card(
         title: str,
         specification: str,
         data: Optional[PackedRecord] = None,
+        commands: Optional[List[Command]] = None,
 ) -> VegaCard:
     """Create a card containing a Vega-lite plot.
 
@@ -2106,10 +2107,12 @@ def vega_card(
     :param title: The title of this card.
     :param specification: The Vega-lite specification.
     :param data: Data for the plot, if any.
+    :param commands: Contextual commands for this plot, if any
     """
     return VegaCard(
         box,
         title,
         specification,
         data,
+        commands,
     )

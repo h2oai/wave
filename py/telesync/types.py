@@ -5148,6 +5148,7 @@ class VegaCard:
     :param title: The title of this card.
     :param specification: The Vega-lite specification.
     :param data: Data for the plot, if any.
+    :param commands: Contextual commands for this plot, if any
     """
     def __init__(
             self,
@@ -5155,11 +5156,13 @@ class VegaCard:
             title: str,
             specification: str,
             data: Optional[PackedRecord] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.specification = specification
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5175,6 +5178,7 @@ class VegaCard:
             title=self.title,
             specification=self.specification,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -5190,13 +5194,16 @@ class VegaCard:
         if __d_specification is None:
             raise ValueError('VegaCard.specification is required.')
         __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         specification: str = __d_specification
         data: Optional[PackedRecord] = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return VegaCard(
             box,
             title,
             specification,
             data,
+            commands,
         )

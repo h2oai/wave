@@ -1,9 +1,11 @@
 import React from 'react';
-import { cards } from './layout';
-import { bond, Card, S, Rec, unpack } from './telesync';
-import vegaEmbed from 'vega-embed';
-import { getTheme } from './theme';
 import { stylesheet } from 'typestyle';
+import vegaEmbed from 'vega-embed';
+import { CardMenu } from './card_menu';
+import { cards } from './layout';
+import { Command } from './notebook';
+import { bond, Card, Rec, S, unpack } from './telesync';
+import { getTheme } from './theme';
 
 const
   theme = getTheme(),
@@ -56,6 +58,8 @@ interface State {
   specification: S
   /** Data for the plot, if any. */
   data?: Rec
+  /** Contextual commands for this plot, if any */
+  commands?: Command[]
 }
 
 const
@@ -67,6 +71,7 @@ const
           <div className={css.card}>
             <div className={css.title}>{state.title}</div>
             <VegaLite spec={JSON.parse(state.specification)} data={data} />
+            {state.commands ? <CardMenu items={state.commands} /> : null}
           </div>
         )
       }
