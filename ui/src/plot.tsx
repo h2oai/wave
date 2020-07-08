@@ -112,7 +112,7 @@ interface MarkExt extends Mark {
   label_format?: Fmt
 }
 
-export interface Vis {
+export interface Plot {
   marks: Mark[]
 }
 
@@ -555,7 +555,7 @@ const
 interface State {
   title: S
   data: Rec
-  vis: Vis
+  plot: Plot
 }
 
 const defaults: Partial<State> = {
@@ -566,7 +566,7 @@ const
   View = bond(({ state, changed }: Card<State>) => {
     let
       currentChart: Chart | null = null,
-      currentVis: Vis | null = null
+      currentPlot: Plot | null = null
     const
       container = React.createRef<HTMLDivElement>(),
       init = () => {
@@ -575,13 +575,13 @@ const
         const
           s = state,
           raw_data = unpack<any[]>(s.data),
-          raw_vis = unpack<Vis>(s.vis),
-          marks = raw_vis.marks.map(refactorMark),
-          vis: Vis = { marks: marks },
+          raw_plot = unpack<Plot>(s.plot),
+          marks = raw_plot.marks.map(refactorMark),
+          plot: Plot = { marks: marks },
           // spaceT = spaceTypeOf(raw_marks, marks),
-          data = refactorData(raw_data, vis.marks),
-          chart = makeChart(el, vis.marks)
-        currentVis = vis
+          data = refactorData(raw_data, plot.marks),
+          chart = makeChart(el, plot.marks)
+        currentPlot = plot
         if (chart) {
           currentChart = chart
           chart.data(data)
@@ -590,11 +590,11 @@ const
       },
       update = () => {
         const el = container.current
-        if (!el || !currentChart || !currentVis) return
+        if (!el || !currentChart || !currentPlot) return
         const
           s = state,
           raw_data = unpack(s.data) as any[],
-          data = refactorData(raw_data, currentVis.marks)
+          data = refactorData(raw_data, currentPlot.marks)
         currentChart.changeData(data)
       },
       render = () => {

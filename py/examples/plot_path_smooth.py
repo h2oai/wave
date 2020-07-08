@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Path, smooth',
     data=data('profit sales', n),
-    vis=ui.vis([ui.mark(mark='path', x='=profit', y='=sales', curve='smooth')])
+    plot=ui.plot([ui.mark(mark='path', x='=profit', y='=sales', curve='smooth')])
 ))
 v.data = [(x, y) for x, y in [f.next() for _ in range(n)]]
 

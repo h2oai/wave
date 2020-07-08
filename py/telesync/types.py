@@ -4812,7 +4812,7 @@ class Mark:
         )
 
 
-class Vis:
+class Plot:
     """No documentation available.
 
     :param marks: No documentation available.
@@ -4826,19 +4826,19 @@ class Vis:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.marks is None:
-            raise ValueError('Vis.marks is required.')
+            raise ValueError('Plot.marks is required.')
         return _dump(
             marks=[__e.dump() for __e in self.marks],
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Vis':
+    def load(__d: Dict) -> 'Plot':
         """Creates an instance of this class using the contents of a dict."""
         __d_marks: Any = __d.get('marks')
         if __d_marks is None:
-            raise ValueError('Vis.marks is required.')
+            raise ValueError('Plot.marks is required.')
         marks: List[Mark] = [Mark.load(__e) for __e in __d_marks]
-        return Vis(
+        return Plot(
             marks,
         )
 
@@ -4849,19 +4849,19 @@ class PlotCard:
     :param box: A string indicating how to place this component on the page.
     :param title: No documentation available.
     :param data: No documentation available.
-    :param vis: No documentation available.
+    :param plot: No documentation available.
     """
     def __init__(
             self,
             box: str,
             title: str,
             data: PackedRecord,
-            vis: Vis,
+            plot: Plot,
     ):
         self.box = box
         self.title = title
         self.data = data
-        self.vis = vis
+        self.plot = plot
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4871,14 +4871,14 @@ class PlotCard:
             raise ValueError('PlotCard.title is required.')
         if self.data is None:
             raise ValueError('PlotCard.data is required.')
-        if self.vis is None:
-            raise ValueError('PlotCard.vis is required.')
+        if self.plot is None:
+            raise ValueError('PlotCard.plot is required.')
         return _dump(
             view='plot',
             box=self.box,
             title=self.title,
             data=self.data,
-            vis=self.vis.dump(),
+            plot=self.plot.dump(),
         )
 
     @staticmethod
@@ -4893,18 +4893,18 @@ class PlotCard:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('PlotCard.data is required.')
-        __d_vis: Any = __d.get('vis')
-        if __d_vis is None:
-            raise ValueError('PlotCard.vis is required.')
+        __d_plot: Any = __d.get('plot')
+        if __d_plot is None:
+            raise ValueError('PlotCard.plot is required.')
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
-        vis: Vis = Vis.load(__d_vis)
+        plot: Plot = Plot.load(__d_plot)
         return PlotCard(
             box,
             title,
             data,
-            vis,
+            plot,
         )
 
 

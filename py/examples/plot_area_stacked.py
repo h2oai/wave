@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Area, stacked',
     data=data('product date price', n * 5),
-    vis=ui.vis(
+    plot=ui.plot(
         [ui.mark(mark='area', x_scale='time', x='=date', y='=price', color='=product', stack='auto', y_min=0)])
 ))
 

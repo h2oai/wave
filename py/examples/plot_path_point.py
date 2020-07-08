@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Path + Point',
     data=data('profit sales', n),
-    vis=ui.vis([
+    plot=ui.plot([
         ui.mark(mark='path', x='=profit', y='=sales'),
         ui.mark(mark='point', x='=profit', y='=sales'),
     ])

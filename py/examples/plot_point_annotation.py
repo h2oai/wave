@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Numeric-Numeric',
     data=data('price performance', n),
-    vis=ui.vis([
+    plot=ui.plot([
         ui.mark(mark='point', x='=price', y='=performance', x_min=0, x_max=100, y_min=0, y_max=100),
         ui.mark(x=50, y=50, label='point'),
         ui.mark(x=40, label='vertical line'),

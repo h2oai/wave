@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Heatmap',
     data=data('country product profit', k1 * k2),
-    vis=ui.vis([
+    plot=ui.plot([
         ui.mark(mark='polygon', x='=country', y='=product', color='=profit',
                 color_range='#fee8c8 #fdbb84 #e34a33')])
 ))

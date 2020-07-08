@@ -57,6 +57,7 @@ from .types import \
     NotebookCard, \
     NotebookSection, \
     PixelArtCard, \
+    Plot, \
     PlotCard, \
     Progress, \
     RepeatCard, \
@@ -75,8 +76,7 @@ from .types import \
     Toggle, \
     ToolbarCard, \
     VegaCard, \
-    VegaCell, \
-    Vis
+    VegaCell
 
 
 def card1_card(
@@ -1980,14 +1980,14 @@ def mark(
     )
 
 
-def vis(
+def plot(
         marks: List[Mark],
-) -> Vis:
+) -> Plot:
     """No documentation available.
 
     :param marks: No documentation available.
     """
-    return Vis(
+    return Plot(
         marks,
     )
 
@@ -1996,20 +1996,20 @@ def plot_card(
         box: str,
         title: str,
         data: PackedRecord,
-        vis: Vis,
+        plot: Plot,
 ) -> PlotCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
     :param title: No documentation available.
     :param data: No documentation available.
-    :param vis: No documentation available.
+    :param plot: No documentation available.
     """
     return PlotCard(
         box,
         title,
         data,
-        vis,
+        plot,
     )
 
 

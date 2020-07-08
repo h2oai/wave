@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Categorical-Numeric',
     data=data('product price', n),
-    vis=ui.vis([
+    plot=ui.plot([
         ui.mark(mark='interval', x='=product', y='=price', y_min=0, y_max=100),
         ui.mark(x='C10', y=80, label='point'),
         ui.mark(x='C13', label='vertical line'),

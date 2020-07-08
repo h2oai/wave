@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Area + Line, smooth',
     data=data('date price', n),
-    vis=ui.vis([
+    plot=ui.plot([
         ui.mark(mark='area', x_scale='time', x='=date', y='=price', curve='smooth', y_min=0),
         ui.mark(mark='line', x='=date', y='=price', curve='smooth')
     ])

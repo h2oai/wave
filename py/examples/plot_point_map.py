@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Points, size-encoded',
     data=data('country product profit', k1 * k2),
-    vis=ui.vis([ui.mark(mark='point', x='=country', y='=product', size='=profit', shape='circle')])
+    plot=ui.plot([ui.mark(mark='point', x='=country', y='=product', size='=profit', shape='circle')])
 ))
 rows = []
 for i in range(k1):

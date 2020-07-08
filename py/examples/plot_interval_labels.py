@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Label Customization',
     data=data('product price', n),
-    vis=ui.vis([
+    plot=ui.plot([
         ui.mark(mark='interval', x='=product',
                 y='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}', y_min=0,
                 color='#333333',
