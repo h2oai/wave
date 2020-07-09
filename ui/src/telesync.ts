@@ -712,6 +712,7 @@ export interface Ref {
 export interface Telesync {
   readonly path: S
   readonly args: Rec
+  readonly refreshRateB: Box<U>
   socket: WebSocket | null
   page(): PageRef
   sync(): void
@@ -729,9 +730,10 @@ const
   }
 
 export const telesync: Telesync = {
-  socket: null,
-  args: {},
   path: window.location.pathname,
+  args: {},
+  refreshRateB: box(-1),
+  socket: null,
   page: (path?: S): PageRef => {
     path = path || telesync.path
     const
@@ -763,6 +765,14 @@ export const telesync: Telesync = {
   },
 }
 
+on(telesync.refreshRateB, r => {
+  // If we receive a change in refresh rate once the page has been loaded, close the socket.
+  // The socket onclose handler will reconnect using the refresh rate if necessary.
+  if (r < 0) return
+  const sock = telesync.socket
+  if (sock) sock.close()
+})
+
 export enum SockEventType { Message, Data }
 export type SockEvent = SockMessage | SockData
 export interface SockData { t: SockEventType.Data, page: Page }
@@ -788,6 +798,11 @@ const
       sock.send(`+ ${telesync.path} `) // protocol: t<sep>addr<sep>data
     }
     sock.onclose = function () {
+      const refreshRate = telesync.refreshRateB()
+      if (refreshRate === 0) return
+
+      // TODO handle refreshRate > 0 case
+
       telesync.socket = null
       backoff *= 2
       if (backoff > 16) backoff = 16

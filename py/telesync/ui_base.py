@@ -1742,6 +1742,7 @@ def markup_card(
 def meta_card(
         box: str,
         title: Optional[str] = None,
+        refresh: Optional[int] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -1751,11 +1752,13 @@ def meta_card(
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title of the page.
+    :param refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
     :param commands: Contextual menu commands for this component.
     """
     return MetaCard(
         box,
         title,
+        refresh,
         commands,
     )
 

@@ -4219,16 +4219,19 @@ class MetaCard:
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title of the page.
+    :param refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
             box: str,
             title: Optional[str] = None,
+            refresh: Optional[int] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
+        self.refresh = refresh
         self.commands = commands
 
     def dump(self) -> Dict:
@@ -4239,6 +4242,7 @@ class MetaCard:
             view='meta',
             box=self.box,
             title=self.title,
+            refresh=self.refresh,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4249,13 +4253,16 @@ class MetaCard:
         if __d_box is None:
             raise ValueError('MetaCard.box is required.')
         __d_title: Any = __d.get('title')
+        __d_refresh: Any = __d.get('refresh')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
+        refresh: Optional[int] = __d_refresh
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
             title,
+            refresh,
             commands,
         )
 
