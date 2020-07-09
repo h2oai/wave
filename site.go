@@ -3,6 +3,7 @@ package telesync
 import (
 	"encoding/json"
 	"fmt"
+	"sort"
 	"sync"
 )
 
@@ -101,4 +102,22 @@ func (site *Site) exec(url string, ops OpsD) {
 	}
 	page.cache = nil // will be re-cached on next call to site.get(url)
 	page.Unlock()
+}
+
+// urls returns a sorted slice of urls hosted by this site.
+func (site *Site) urls() []string {
+	site.RLock()
+	defer site.RUnlock()
+
+	pages := site.pages
+
+	urls := make([]string, len(pages))
+	i := 0
+	for url := range pages {
+		urls[i] = url
+		i++
+	}
+
+	sort.Strings(urls)
+	return urls
 }

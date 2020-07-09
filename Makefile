@@ -34,7 +34,7 @@ build-examples:
 	cd py && $(MAKE) examples
 
 run: ## Run server
-	go run cmd/telesync/main.go -web-dir ./ui/build
+	go run cmd/telesync/main.go -web-dir ./ui/build -debug
 
 generate: ## Generate driver bindings
 	cd tools/telegen && $(MAKE) run

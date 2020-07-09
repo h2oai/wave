@@ -352,6 +352,7 @@ type ServerConf struct {
 	Compact         string
 	CertFile        string
 	KeyFile         string
+	Debug           bool
 }
 
 // Run runs the HTTP server.
@@ -375,14 +376,18 @@ func Run(conf ServerConf) {
 		initSite(site, conf.Init)
 	}
 
-	hub := newBroker(site)
-	go hub.run()
+	broker := newBroker(site)
+	go broker.run()
 
-	http.Handle("/_s", newSocketServer(hub))
+	if conf.Debug {
+		http.Handle("/_d/site", newDebugHandler(broker))
+	}
+
+	http.Handle("/_s", newSocketServer(broker))
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))   // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir)) // XXX secure
-	http.Handle("/", newWebServer(site, hub, users, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, users, conf.WebDir))
 
 	for _, line := range strings.Split(logo, "\n") {
 		log.Println("#", line)

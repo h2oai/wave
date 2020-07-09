@@ -3,6 +3,7 @@ package telesync
 import (
 	"bytes"
 	"log"
+	"sort"
 	"sync"
 )
 
@@ -189,4 +190,22 @@ func (b *Broker) drop(client *Client) {
 	b.site.del(client.id) // delete transient page, if any.
 
 	echo(Log{"t": "disconnect", "addr": client.addr})
+}
+
+// urls returns a sorted slice of urls relayed by this broker.
+func (b *Broker) urls() []string {
+	b.relaysMux.RLock()
+	defer b.relaysMux.RUnlock()
+
+	relays := b.relays
+
+	urls := make([]string, len(relays))
+	i := 0
+	for url := range relays {
+		urls[i] = url
+		i++
+	}
+
+	sort.Strings(urls)
+	return urls
 }
