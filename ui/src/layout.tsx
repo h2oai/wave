@@ -3,6 +3,8 @@ import { stylesheet } from 'typestyle';
 import { format, isFormatExpr } from './intl';
 import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './telesync';
 import { getTheme, margin } from './theme';
+import { Command } from './notebook';
+import { CardMenu } from './card_menu';
 
 interface Slot {
   left: U
@@ -163,6 +165,7 @@ export const
             return (
               <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height }}>
                 <CardView card={c} />
+                {c.state.commands ? <CardMenu key={c.state.commands.map((c: Command) => c.name).join(';')} items={c.state.commands} /> : null}
               </div>
             )
           })

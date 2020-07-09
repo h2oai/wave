@@ -14,6 +14,75 @@ PackedData = Union[Data, str]
 def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}
 
 
+class Command:
+    """Create a command.
+
+    Commands are typically displayed as context menu items associated with
+    parts of notebooks or dashboards.
+
+    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
+    :param label: The text displayed for this command.
+    :param caption: The caption for this command (typically a tooltip).
+    :param icon: The icon to be displayed for this command.
+    :param items: Sub-commands, if any
+    :param data: Data associated with this command, if any.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: Optional[str] = None,
+            caption: Optional[str] = None,
+            icon: Optional[str] = None,
+            items: Optional[List['Command']] = None,
+            data: Optional[str] = None,
+    ):
+        self.name = name
+        self.label = label
+        self.caption = caption
+        self.icon = icon
+        self.items = items
+        self.data = data
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('Command.name is required.')
+        return _dump(
+            name=self.name,
+            label=self.label,
+            caption=self.caption,
+            icon=self.icon,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Command':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('Command.name is required.')
+        __d_label: Any = __d.get('label')
+        __d_caption: Any = __d.get('caption')
+        __d_icon: Any = __d.get('icon')
+        __d_items: Any = __d.get('items')
+        __d_data: Any = __d.get('data')
+        name: str = __d_name
+        label: Optional[str] = __d_label
+        caption: Optional[str] = __d_caption
+        icon: Optional[str] = __d_icon
+        items: Optional[List['Command']] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
+        data: Optional[str] = __d_data
+        return Command(
+            name,
+            label,
+            caption,
+            icon,
+            items,
+            data,
+        )
+
+
 class Card1Card:
     """No documentation available.
 
@@ -21,6 +90,7 @@ class Card1Card:
     :param title: No documentation available.
     :param value: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -28,11 +98,13 @@ class Card1Card:
             title: str,
             value: str,
             data: Optional[PackedRecord] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.value = value
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -48,6 +120,7 @@ class Card1Card:
             title=self.title,
             value=self.value,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -63,15 +136,18 @@ class Card1Card:
         if __d_value is None:
             raise ValueError('Card1Card.value is required.')
         __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         data: Optional[PackedRecord] = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Card1Card(
             box,
             title,
             value,
             data,
+            commands,
         )
 
 
@@ -90,6 +166,7 @@ class Card2Card:
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
     :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -105,6 +182,7 @@ class Card2Card:
             plot_value: str,
             plot_zero_value: float,
             plot_curve: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
@@ -118,6 +196,7 @@ class Card2Card:
         self.plot_value = plot_value
         self.plot_zero_value = plot_zero_value
         self.plot_curve = plot_curve
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -159,6 +238,7 @@ class Card2Card:
             plot_value=self.plot_value,
             plot_zero_value=self.plot_zero_value,
             plot_curve=self.plot_curve,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -198,6 +278,7 @@ class Card2Card:
         if __d_plot_zero_value is None:
             raise ValueError('Card2Card.plot_zero_value is required.')
         __d_plot_curve: Any = __d.get('plot_curve')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -210,6 +291,7 @@ class Card2Card:
         plot_value: str = __d_plot_value
         plot_zero_value: float = __d_plot_zero_value
         plot_curve: Optional[str] = __d_plot_curve
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Card2Card(
             box,
             title,
@@ -223,6 +305,7 @@ class Card2Card:
             plot_value,
             plot_zero_value,
             plot_curve,
+            commands,
         )
 
 
@@ -235,6 +318,7 @@ class Card3Card:
     :param aux_value: No documentation available.
     :param caption: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -244,6 +328,7 @@ class Card3Card:
             aux_value: str,
             caption: str,
             data: PackedRecord,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
@@ -251,6 +336,7 @@ class Card3Card:
         self.aux_value = aux_value
         self.caption = caption
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -274,6 +360,7 @@ class Card3Card:
             aux_value=self.aux_value,
             caption=self.caption,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -297,12 +384,14 @@ class Card3Card:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card3Card.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
         caption: str = __d_caption
         data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Card3Card(
             box,
             title,
@@ -310,6 +399,7 @@ class Card3Card:
             aux_value,
             caption,
             data,
+            commands,
         )
 
 
@@ -323,6 +413,7 @@ class Card4Card:
     :param progress: No documentation available.
     :param plot_color: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -333,6 +424,7 @@ class Card4Card:
             progress: float,
             plot_color: str,
             data: PackedRecord,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
@@ -341,6 +433,7 @@ class Card4Card:
         self.progress = progress
         self.plot_color = plot_color
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -367,6 +460,7 @@ class Card4Card:
             progress=self.progress,
             plot_color=self.plot_color,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -393,6 +487,7 @@ class Card4Card:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card4Card.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -400,6 +495,7 @@ class Card4Card:
         progress: float = __d_progress
         plot_color: str = __d_plot_color
         data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Card4Card(
             box,
             title,
@@ -408,6 +504,7 @@ class Card4Card:
             progress,
             plot_color,
             data,
+            commands,
         )
 
 
@@ -421,6 +518,7 @@ class Card5Card:
     :param progress: No documentation available.
     :param plot_color: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -431,6 +529,7 @@ class Card5Card:
             progress: float,
             plot_color: str,
             data: PackedRecord,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
@@ -439,6 +538,7 @@ class Card5Card:
         self.progress = progress
         self.plot_color = plot_color
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -465,6 +565,7 @@ class Card5Card:
             progress=self.progress,
             plot_color=self.plot_color,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -491,6 +592,7 @@ class Card5Card:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card5Card.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -498,6 +600,7 @@ class Card5Card:
         progress: float = __d_progress
         plot_color: str = __d_plot_color
         data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Card5Card(
             box,
             title,
@@ -506,6 +609,7 @@ class Card5Card:
             progress,
             plot_color,
             data,
+            commands,
         )
 
 
@@ -524,6 +628,7 @@ class Card6Card:
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
     :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -539,6 +644,7 @@ class Card6Card:
             plot_value: str,
             plot_zero_value: float,
             plot_curve: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
@@ -552,6 +658,7 @@ class Card6Card:
         self.plot_value = plot_value
         self.plot_zero_value = plot_zero_value
         self.plot_curve = plot_curve
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -593,6 +700,7 @@ class Card6Card:
             plot_value=self.plot_value,
             plot_zero_value=self.plot_zero_value,
             plot_curve=self.plot_curve,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -632,6 +740,7 @@ class Card6Card:
         if __d_plot_zero_value is None:
             raise ValueError('Card6Card.plot_zero_value is required.')
         __d_plot_curve: Any = __d.get('plot_curve')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -644,6 +753,7 @@ class Card6Card:
         plot_value: str = __d_plot_value
         plot_zero_value: float = __d_plot_zero_value
         plot_curve: Optional[str] = __d_plot_curve
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Card6Card(
             box,
             title,
@@ -657,6 +767,7 @@ class Card6Card:
             plot_value,
             plot_zero_value,
             plot_curve,
+            commands,
         )
 
 
@@ -674,6 +785,7 @@ class Card7Card:
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
     :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -688,6 +800,7 @@ class Card7Card:
             plot_value: str,
             plot_zero_value: float,
             plot_curve: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
@@ -700,6 +813,7 @@ class Card7Card:
         self.plot_value = plot_value
         self.plot_zero_value = plot_zero_value
         self.plot_curve = plot_curve
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -738,6 +852,7 @@ class Card7Card:
             plot_value=self.plot_value,
             plot_zero_value=self.plot_zero_value,
             plot_curve=self.plot_curve,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -774,6 +889,7 @@ class Card7Card:
         if __d_plot_zero_value is None:
             raise ValueError('Card7Card.plot_zero_value is required.')
         __d_plot_curve: Any = __d.get('plot_curve')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -785,6 +901,7 @@ class Card7Card:
         plot_value: str = __d_plot_value
         plot_zero_value: float = __d_plot_zero_value
         plot_curve: Optional[str] = __d_plot_curve
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Card7Card(
             box,
             title,
@@ -797,6 +914,7 @@ class Card7Card:
             plot_value,
             plot_zero_value,
             plot_curve,
+            commands,
         )
 
 
@@ -810,6 +928,7 @@ class Card8Card:
     :param progress: No documentation available.
     :param plot_color: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -820,6 +939,7 @@ class Card8Card:
             progress: float,
             plot_color: str,
             data: PackedRecord,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
@@ -828,6 +948,7 @@ class Card8Card:
         self.progress = progress
         self.plot_color = plot_color
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -854,6 +975,7 @@ class Card8Card:
             progress=self.progress,
             plot_color=self.plot_color,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -880,6 +1002,7 @@ class Card8Card:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card8Card.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -887,6 +1010,7 @@ class Card8Card:
         progress: float = __d_progress
         plot_color: str = __d_plot_color
         data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Card8Card(
             box,
             title,
@@ -895,6 +1019,7 @@ class Card8Card:
             progress,
             plot_color,
             data,
+            commands,
         )
 
 
@@ -911,6 +1036,7 @@ class Card9Card:
     :param progress: No documentation available.
     :param plot_color: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -924,6 +1050,7 @@ class Card9Card:
             progress: float,
             plot_color: str,
             data: PackedRecord,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
@@ -935,6 +1062,7 @@ class Card9Card:
         self.progress = progress
         self.plot_color = plot_color
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -970,6 +1098,7 @@ class Card9Card:
             progress=self.progress,
             plot_color=self.plot_color,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -1005,6 +1134,7 @@ class Card9Card:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('Card9Card.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
@@ -1015,6 +1145,7 @@ class Card9Card:
         progress: float = __d_progress
         plot_color: str = __d_plot_color
         data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return Card9Card(
             box,
             title,
@@ -1026,6 +1157,7 @@ class Card9Card:
             progress,
             plot_color,
             data,
+            commands,
         )
 
 
@@ -1341,93 +1473,21 @@ class Cell:
         )
 
 
-class Command:
-    """Create a command.
-
-    Commands are typically displayed as context menu items associated with
-    parts of notebooks or dashboards.
-
-    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
-    :param label: The text displayed for this command.
-    :param caption: The caption for this command (typically a tooltip).
-    :param icon: The icon to be displayed for this command.
-    :param items: Sub-commands, if any
-    :param data: Data associated with this command, if any.
-    """
-    def __init__(
-            self,
-            name: str,
-            label: Optional[str] = None,
-            caption: Optional[str] = None,
-            icon: Optional[str] = None,
-            items: Optional[List['Command']] = None,
-            data: Optional[str] = None,
-    ):
-        self.name = name
-        self.label = label
-        self.caption = caption
-        self.icon = icon
-        self.items = items
-        self.data = data
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Command.name is required.')
-        return _dump(
-            name=self.name,
-            label=self.label,
-            caption=self.caption,
-            icon=self.icon,
-            items=None if self.items is None else [__e.dump() for __e in self.items],
-            data=self.data,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Command':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Command.name is required.')
-        __d_label: Any = __d.get('label')
-        __d_caption: Any = __d.get('caption')
-        __d_icon: Any = __d.get('icon')
-        __d_items: Any = __d.get('items')
-        __d_data: Any = __d.get('data')
-        name: str = __d_name
-        label: Optional[str] = __d_label
-        caption: Optional[str] = __d_caption
-        icon: Optional[str] = __d_icon
-        items: Optional[List['Command']] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
-        data: Optional[str] = __d_data
-        return Command(
-            name,
-            label,
-            caption,
-            icon,
-            items,
-            data,
-        )
-
-
 class DashboardPanel:
     """Create a dashboard panel.
 
     :param cells: A list of cells to display in the panel (top to bottom).
     :param size: The absolute or relative width of the panel.
-    :param commands: A list of custom commands to allow on this panel.
     :param data: Data associated with this section, if any.
     """
     def __init__(
             self,
             cells: List[Cell],
             size: Optional[str] = None,
-            commands: Optional[List[Command]] = None,
             data: Optional[str] = None,
     ):
         self.cells = cells
         self.size = size
-        self.commands = commands
         self.data = data
 
     def dump(self) -> Dict:
@@ -1437,7 +1497,6 @@ class DashboardPanel:
         return _dump(
             cells=[__e.dump() for __e in self.cells],
             size=self.size,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
             data=self.data,
         )
 
@@ -1448,16 +1507,13 @@ class DashboardPanel:
         if __d_cells is None:
             raise ValueError('DashboardPanel.cells is required.')
         __d_size: Any = __d.get('size')
-        __d_commands: Any = __d.get('commands')
         __d_data: Any = __d.get('data')
         cells: List[Cell] = [Cell.load(__e) for __e in __d_cells]
         size: Optional[str] = __d_size
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         data: Optional[str] = __d_data
         return DashboardPanel(
             cells,
             size,
-            commands,
             data,
         )
 
@@ -1568,14 +1624,17 @@ class DashboardCard:
 
     :param box: A string indicating how to place this component on the page.
     :param pages: A list of pages contained in the dashboard.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
             box: str,
             pages: List[DashboardPage],
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.pages = pages
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1587,6 +1646,7 @@ class DashboardCard:
             view='dashboard',
             box=self.box,
             pages=[__e.dump() for __e in self.pages],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -1598,11 +1658,14 @@ class DashboardCard:
         __d_pages: Any = __d.get('pages')
         if __d_pages is None:
             raise ValueError('DashboardCard.pages is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         pages: List[DashboardPage] = [DashboardPage.load(__e) for __e in __d_pages]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return DashboardCard(
             box,
             pages,
+            commands,
         )
 
 
@@ -1617,6 +1680,7 @@ class FlexCard:
     :param justify: No documentation available. One of 'start', 'end', 'center', 'between', 'around'.
     :param align: No documentation available. One of 'start', 'end', 'center', 'baseline', 'stretch'.
     :param wrap: No documentation available. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -1628,6 +1692,7 @@ class FlexCard:
             justify: Optional[str] = None,
             align: Optional[str] = None,
             wrap: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.item_view = item_view
@@ -1637,6 +1702,7 @@ class FlexCard:
         self.justify = justify
         self.align = align
         self.wrap = wrap
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1658,6 +1724,7 @@ class FlexCard:
             justify=self.justify,
             align=self.align,
             wrap=self.wrap,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -1679,6 +1746,7 @@ class FlexCard:
         __d_justify: Any = __d.get('justify')
         __d_align: Any = __d.get('align')
         __d_wrap: Any = __d.get('wrap')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
@@ -1687,6 +1755,7 @@ class FlexCard:
         justify: Optional[str] = __d_justify
         align: Optional[str] = __d_align
         wrap: Optional[str] = __d_wrap
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FlexCard(
             box,
             item_view,
@@ -1696,6 +1765,7 @@ class FlexCard:
             justify,
             align,
             wrap,
+            commands,
         )
 
 
@@ -3652,14 +3722,17 @@ class FormCard:
 
     :param box: A string indicating how to place this component on the page.
     :param items: The components in this form.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
             box: str,
             items: Union[List[Component], str],
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.items = items
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3671,6 +3744,7 @@ class FormCard:
             view='form',
             box=self.box,
             items=self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -3682,11 +3756,14 @@ class FormCard:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('FormCard.items is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FormCard(
             box,
             items,
+            commands,
         )
 
 
@@ -3699,6 +3776,7 @@ class FrameCard:
     :param title: The title for this card.
     :param path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
     :param content: The HTML content of the page. A string containing '<html>...</html>'
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3706,11 +3784,13 @@ class FrameCard:
             title: str,
             path: Optional[str] = None,
             content: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.path = path
         self.content = content
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3724,6 +3804,7 @@ class FrameCard:
             title=self.title,
             path=self.path,
             content=self.content,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -3737,15 +3818,18 @@ class FrameCard:
             raise ValueError('FrameCard.title is required.')
         __d_path: Any = __d.get('path')
         __d_content: Any = __d.get('content')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         path: Optional[str] = __d_path
         content: Optional[str] = __d_content
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FrameCard(
             box,
             title,
             path,
             content,
+            commands,
         )
 
 
@@ -3756,6 +3840,7 @@ class GridCard:
     :param title: No documentation available.
     :param cells: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3763,11 +3848,13 @@ class GridCard:
             title: str,
             cells: PackedData,
             data: PackedData,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.cells = cells
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3785,6 +3872,7 @@ class GridCard:
             title=self.title,
             cells=self.cells,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -3802,15 +3890,18 @@ class GridCard:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('GridCard.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         cells: PackedData = __d_cells
         data: PackedData = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return GridCard(
             box,
             title,
             cells,
             data,
+            commands,
         )
 
 
@@ -3822,6 +3913,7 @@ class ListCard:
     :param item_view: No documentation available.
     :param item_props: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3830,12 +3922,14 @@ class ListCard:
             item_view: str,
             item_props: PackedRecord,
             data: PackedData,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.item_view = item_view
         self.item_props = item_props
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3856,6 +3950,7 @@ class ListCard:
             item_view=self.item_view,
             item_props=self.item_props,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -3876,17 +3971,20 @@ class ListCard:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('ListCard.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
         data: PackedData = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ListCard(
             box,
             title,
             item_view,
             item_props,
             data,
+            commands,
         )
 
 
@@ -3899,6 +3997,7 @@ class ListItem1Card:
     :param value: No documentation available.
     :param aux_value: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3908,6 +4007,7 @@ class ListItem1Card:
             value: str,
             aux_value: str,
             data: PackedRecord,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
@@ -3915,6 +4015,7 @@ class ListItem1Card:
         self.value = value
         self.aux_value = aux_value
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3938,6 +4039,7 @@ class ListItem1Card:
             value=self.value,
             aux_value=self.aux_value,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -3961,12 +4063,14 @@ class ListItem1Card:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('ListItem1Card.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
         value: str = __d_value
         aux_value: str = __d_aux_value
         data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ListItem1Card(
             box,
             title,
@@ -3974,6 +4078,7 @@ class ListItem1Card:
             value,
             aux_value,
             data,
+            commands,
         )
 
 
@@ -3984,6 +4089,7 @@ class MarkdownCard:
     :param title: The title for this card.
     :param content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
     :param data: Additional data for the card.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3991,11 +4097,13 @@ class MarkdownCard:
             title: str,
             content: str,
             data: Optional[PackedRecord] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.content = content
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4011,6 +4119,7 @@ class MarkdownCard:
             title=self.title,
             content=self.content,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -4026,15 +4135,18 @@ class MarkdownCard:
         if __d_content is None:
             raise ValueError('MarkdownCard.content is required.')
         __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MarkdownCard(
             box,
             title,
             content,
             data,
+            commands,
         )
 
 
@@ -4044,16 +4156,19 @@ class MarkupCard:
     :param box: A string indicating how to place this component on the page.
     :param title: The title for this card.
     :param content: The HTML content.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
             box: str,
             title: str,
             content: str,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.content = content
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4068,6 +4183,7 @@ class MarkupCard:
             box=self.box,
             title=self.title,
             content=self.content,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -4082,13 +4198,16 @@ class MarkupCard:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('MarkupCard.content is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MarkupCard(
             box,
             title,
             content,
+            commands,
         )
 
 
@@ -4100,14 +4219,17 @@ class MetaCard:
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title of the page.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
             box: str,
             title: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4117,6 +4239,7 @@ class MetaCard:
             view='meta',
             box=self.box,
             title=self.title,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -4126,11 +4249,14 @@ class MetaCard:
         if __d_box is None:
             raise ValueError('MetaCard.box is required.')
         __d_title: Any = __d.get('title')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
             title,
+            commands,
         )
 
 
@@ -4223,14 +4349,17 @@ class NavCard:
 
     :param box: A string indicating how to place this component on the page.
     :param items: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
             box: str,
             items: List[NavGroup],
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.items = items
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4242,6 +4371,7 @@ class NavCard:
             view='nav',
             box=self.box,
             items=[__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -4253,11 +4383,14 @@ class NavCard:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('NavCard.items is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return NavCard(
             box,
             items,
+            commands,
         )
 
 
@@ -4267,17 +4400,14 @@ class NotebookSection:
     A notebook section is rendered as a sequence of cells.
 
     :param cells: A list of cells to display in this notebook section.
-    :param commands: A list of custom commands to allow on this section.
     :param data: Data associated with this section, if any.
     """
     def __init__(
             self,
             cells: List[Cell],
-            commands: Optional[List[Command]] = None,
             data: Optional[str] = None,
     ):
         self.cells = cells
-        self.commands = commands
         self.data = data
 
     def dump(self) -> Dict:
@@ -4286,7 +4416,6 @@ class NotebookSection:
             raise ValueError('NotebookSection.cells is required.')
         return _dump(
             cells=[__e.dump() for __e in self.cells],
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
             data=self.data,
         )
 
@@ -4296,14 +4425,11 @@ class NotebookSection:
         __d_cells: Any = __d.get('cells')
         if __d_cells is None:
             raise ValueError('NotebookSection.cells is required.')
-        __d_commands: Any = __d.get('commands')
         __d_data: Any = __d.get('data')
         cells: List[Cell] = [Cell.load(__e) for __e in __d_cells]
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         data: Optional[str] = __d_data
         return NotebookSection(
             cells,
-            commands,
             data,
         )
 
@@ -4315,14 +4441,17 @@ class NotebookCard:
 
     :param box: A string indicating how to place this component on the page.
     :param sections: A list of sections to display in the notebook.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
             box: str,
             sections: List[NotebookSection],
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.sections = sections
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4334,6 +4463,7 @@ class NotebookCard:
             view='notebook',
             box=self.box,
             sections=[__e.dump() for __e in self.sections],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -4345,11 +4475,14 @@ class NotebookCard:
         __d_sections: Any = __d.get('sections')
         if __d_sections is None:
             raise ValueError('NotebookCard.sections is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         sections: List[NotebookSection] = [NotebookSection.load(__e) for __e in __d_sections]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return NotebookCard(
             box,
             sections,
+            commands,
         )
 
 
@@ -4359,16 +4492,19 @@ class PixelArtCard:
     :param box: A string indicating how to place this component on the page.
     :param title: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
             box: str,
             title: str,
             data: PackedRecord,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4383,6 +4519,7 @@ class PixelArtCard:
             box=self.box,
             title=self.title,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -4397,13 +4534,16 @@ class PixelArtCard:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('PixelArtCard.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return PixelArtCard(
             box,
             title,
             data,
+            commands,
         )
 
 
@@ -4850,6 +4990,7 @@ class PlotCard:
     :param title: No documentation available.
     :param data: No documentation available.
     :param plot: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4857,11 +4998,13 @@ class PlotCard:
             title: str,
             data: PackedRecord,
             plot: Plot,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.data = data
         self.plot = plot
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4879,6 +5022,7 @@ class PlotCard:
             title=self.title,
             data=self.data,
             plot=self.plot.dump(),
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -4896,15 +5040,18 @@ class PlotCard:
         __d_plot: Any = __d.get('plot')
         if __d_plot is None:
             raise ValueError('PlotCard.plot is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
         plot: Plot = Plot.load(__d_plot)
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return PlotCard(
             box,
             title,
             data,
             plot,
+            commands,
         )
 
 
@@ -4915,6 +5062,7 @@ class RepeatCard:
     :param item_view: No documentation available.
     :param item_props: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4922,11 +5070,13 @@ class RepeatCard:
             item_view: str,
             item_props: PackedRecord,
             data: PackedData,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.item_view = item_view
         self.item_props = item_props
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4944,6 +5094,7 @@ class RepeatCard:
             item_view=self.item_view,
             item_props=self.item_props,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -4961,15 +5112,18 @@ class RepeatCard:
         __d_data: Any = __d.get('data')
         if __d_data is None:
             raise ValueError('RepeatCard.data is required.')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
         data: PackedData = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return RepeatCard(
             box,
             item_view,
             item_props,
             data,
+            commands,
         )
 
 
@@ -4979,16 +5133,19 @@ class TabCard:
     :param box: A string indicating how to place this component on the page.
     :param items: Items to render.
     :param link: True if tabs should be rendered as links and not a standard tab.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
             box: str,
             items: List[Tab],
             link: Optional[bool] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.items = items
         self.link = link
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5001,6 +5158,7 @@ class TabCard:
             box=self.box,
             items=[__e.dump() for __e in self.items],
             link=self.link,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -5013,13 +5171,16 @@ class TabCard:
         if __d_items is None:
             raise ValueError('TabCard.items is required.')
         __d_link: Any = __d.get('link')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: List[Tab] = [Tab.load(__e) for __e in __d_items]
         link: Optional[bool] = __d_link
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TabCard(
             box,
             items,
             link,
+            commands,
         )
 
 
@@ -5030,6 +5191,7 @@ class TemplateCard:
     :param title: The title for this card.
     :param content: The Handlebars template. https://handlebarsjs.com/guide/
     :param data: Data for the Handlebars template
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -5037,11 +5199,13 @@ class TemplateCard:
             title: str,
             content: str,
             data: Optional[PackedRecord] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.content = content
         self.data = data
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5057,6 +5221,7 @@ class TemplateCard:
             title=self.title,
             content=self.content,
             data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -5072,15 +5237,18 @@ class TemplateCard:
         if __d_content is None:
             raise ValueError('TemplateCard.content is required.')
         __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TemplateCard(
             box,
             title,
             content,
             data,
+            commands,
         )
 
 
@@ -5091,6 +5259,7 @@ class ToolbarCard:
     :param items: Items to render.
     :param secondary_items: Items to render on the right side (or left, in RTL).
     :param overflow_items: Items to render in an overflow menu.
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -5098,11 +5267,13 @@ class ToolbarCard:
             items: List[Command],
             secondary_items: Optional[List[Command]] = None,
             overflow_items: Optional[List[Command]] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.items = items
         self.secondary_items = secondary_items
         self.overflow_items = overflow_items
+        self.commands = commands
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5116,6 +5287,7 @@ class ToolbarCard:
             items=[__e.dump() for __e in self.items],
             secondary_items=None if self.secondary_items is None else [__e.dump() for __e in self.secondary_items],
             overflow_items=None if self.overflow_items is None else [__e.dump() for __e in self.overflow_items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -5129,15 +5301,18 @@ class ToolbarCard:
             raise ValueError('ToolbarCard.items is required.')
         __d_secondary_items: Any = __d.get('secondary_items')
         __d_overflow_items: Any = __d.get('overflow_items')
+        __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: List[Command] = [Command.load(__e) for __e in __d_items]
         secondary_items: Optional[List[Command]] = None if __d_secondary_items is None else [Command.load(__e) for __e in __d_secondary_items]
         overflow_items: Optional[List[Command]] = None if __d_overflow_items is None else [Command.load(__e) for __e in __d_overflow_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ToolbarCard(
             box,
             items,
             secondary_items,
             overflow_items,
+            commands,
         )
 
 
@@ -5148,7 +5323,7 @@ class VegaCard:
     :param title: The title of this card.
     :param specification: The Vega-lite specification.
     :param data: Data for the plot, if any.
-    :param commands: Contextual commands for this plot, if any
+    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,

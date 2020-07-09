@@ -79,11 +79,42 @@ from .types import \
     VegaCell
 
 
+def command(
+        name: str,
+        label: Optional[str] = None,
+        caption: Optional[str] = None,
+        icon: Optional[str] = None,
+        items: Optional[List[Command]] = None,
+        data: Optional[str] = None,
+) -> Command:
+    """Create a command.
+
+    Commands are typically displayed as context menu items associated with
+    parts of notebooks or dashboards.
+
+    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
+    :param label: The text displayed for this command.
+    :param caption: The caption for this command (typically a tooltip).
+    :param icon: The icon to be displayed for this command.
+    :param items: Sub-commands, if any
+    :param data: Data associated with this command, if any.
+    """
+    return Command(
+        name,
+        label,
+        caption,
+        icon,
+        items,
+        data,
+    )
+
+
 def card1_card(
         box: str,
         title: str,
         value: str,
         data: Optional[PackedRecord] = None,
+        commands: Optional[List[Command]] = None,
 ) -> Card1Card:
     """No documentation available.
 
@@ -91,12 +122,14 @@ def card1_card(
     :param title: No documentation available.
     :param value: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return Card1Card(
         box,
         title,
         value,
         data,
+        commands,
     )
 
 
@@ -113,6 +146,7 @@ def card2_card(
         plot_value: str,
         plot_zero_value: float,
         plot_curve: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -> Card2Card:
     """No documentation available.
 
@@ -128,6 +162,7 @@ def card2_card(
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
     :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
     """
     return Card2Card(
         box,
@@ -142,6 +177,7 @@ def card2_card(
         plot_value,
         plot_zero_value,
         plot_curve,
+        commands,
     )
 
 
@@ -152,6 +188,7 @@ def card3_card(
         aux_value: str,
         caption: str,
         data: PackedRecord,
+        commands: Optional[List[Command]] = None,
 ) -> Card3Card:
     """No documentation available.
 
@@ -161,6 +198,7 @@ def card3_card(
     :param aux_value: No documentation available.
     :param caption: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return Card3Card(
         box,
@@ -169,6 +207,7 @@ def card3_card(
         aux_value,
         caption,
         data,
+        commands,
     )
 
 
@@ -180,6 +219,7 @@ def card4_card(
         progress: float,
         plot_color: str,
         data: PackedRecord,
+        commands: Optional[List[Command]] = None,
 ) -> Card4Card:
     """No documentation available.
 
@@ -190,6 +230,7 @@ def card4_card(
     :param progress: No documentation available.
     :param plot_color: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return Card4Card(
         box,
@@ -199,6 +240,7 @@ def card4_card(
         progress,
         plot_color,
         data,
+        commands,
     )
 
 
@@ -210,6 +252,7 @@ def card5_card(
         progress: float,
         plot_color: str,
         data: PackedRecord,
+        commands: Optional[List[Command]] = None,
 ) -> Card5Card:
     """No documentation available.
 
@@ -220,6 +263,7 @@ def card5_card(
     :param progress: No documentation available.
     :param plot_color: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return Card5Card(
         box,
@@ -229,6 +273,7 @@ def card5_card(
         progress,
         plot_color,
         data,
+        commands,
     )
 
 
@@ -245,6 +290,7 @@ def card6_card(
         plot_value: str,
         plot_zero_value: float,
         plot_curve: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -> Card6Card:
     """No documentation available.
 
@@ -260,6 +306,7 @@ def card6_card(
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
     :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
     """
     return Card6Card(
         box,
@@ -274,6 +321,7 @@ def card6_card(
         plot_value,
         plot_zero_value,
         plot_curve,
+        commands,
     )
 
 
@@ -289,6 +337,7 @@ def card7_card(
         plot_value: str,
         plot_zero_value: float,
         plot_curve: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -> Card7Card:
     """No documentation available.
 
@@ -303,6 +352,7 @@ def card7_card(
     :param plot_value: No documentation available.
     :param plot_zero_value: No documentation available.
     :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
     """
     return Card7Card(
         box,
@@ -316,6 +366,7 @@ def card7_card(
         plot_value,
         plot_zero_value,
         plot_curve,
+        commands,
     )
 
 
@@ -327,6 +378,7 @@ def card8_card(
         progress: float,
         plot_color: str,
         data: PackedRecord,
+        commands: Optional[List[Command]] = None,
 ) -> Card8Card:
     """No documentation available.
 
@@ -337,6 +389,7 @@ def card8_card(
     :param progress: No documentation available.
     :param plot_color: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return Card8Card(
         box,
@@ -346,6 +399,7 @@ def card8_card(
         progress,
         plot_color,
         data,
+        commands,
     )
 
 
@@ -360,6 +414,7 @@ def card9_card(
         progress: float,
         plot_color: str,
         data: PackedRecord,
+        commands: Optional[List[Command]] = None,
 ) -> Card9Card:
     """No documentation available.
 
@@ -373,6 +428,7 @@ def card9_card(
     :param progress: No documentation available.
     :param plot_color: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return Card9Card(
         box,
@@ -385,6 +441,7 @@ def card9_card(
         progress,
         plot_color,
         data,
+        commands,
     )
 
 
@@ -509,53 +566,20 @@ def cell(
     )
 
 
-def command(
-        name: str,
-        label: Optional[str] = None,
-        caption: Optional[str] = None,
-        icon: Optional[str] = None,
-        items: Optional[List[Command]] = None,
-        data: Optional[str] = None,
-) -> Command:
-    """Create a command.
-
-    Commands are typically displayed as context menu items associated with
-    parts of notebooks or dashboards.
-
-    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
-    :param label: The text displayed for this command.
-    :param caption: The caption for this command (typically a tooltip).
-    :param icon: The icon to be displayed for this command.
-    :param items: Sub-commands, if any
-    :param data: Data associated with this command, if any.
-    """
-    return Command(
-        name,
-        label,
-        caption,
-        icon,
-        items,
-        data,
-    )
-
-
 def dashboard_panel(
         cells: List[Cell],
         size: Optional[str] = None,
-        commands: Optional[List[Command]] = None,
         data: Optional[str] = None,
 ) -> DashboardPanel:
     """Create a dashboard panel.
 
     :param cells: A list of cells to display in the panel (top to bottom).
     :param size: The absolute or relative width of the panel.
-    :param commands: A list of custom commands to allow on this panel.
     :param data: Data associated with this section, if any.
     """
     return DashboardPanel(
         cells,
         size,
-        commands,
         data,
     )
 
@@ -593,6 +617,7 @@ def dashboard_page(
 def dashboard_card(
         box: str,
         pages: List[DashboardPage],
+        commands: Optional[List[Command]] = None,
 ) -> DashboardCard:
     """Create a dashboard.
 
@@ -619,10 +644,12 @@ def dashboard_card(
 
     :param box: A string indicating how to place this component on the page.
     :param pages: A list of pages contained in the dashboard.
+    :param commands: Contextual menu commands for this component.
     """
     return DashboardCard(
         box,
         pages,
+        commands,
     )
 
 
@@ -635,6 +662,7 @@ def flex_card(
         justify: Optional[str] = None,
         align: Optional[str] = None,
         wrap: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -> FlexCard:
     """No documentation available.
 
@@ -646,6 +674,7 @@ def flex_card(
     :param justify: No documentation available. One of 'start', 'end', 'center', 'between', 'around'.
     :param align: No documentation available. One of 'start', 'end', 'center', 'baseline', 'stretch'.
     :param wrap: No documentation available. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
+    :param commands: Contextual menu commands for this component.
     """
     return FlexCard(
         box,
@@ -656,6 +685,7 @@ def flex_card(
         justify,
         align,
         wrap,
+        commands,
     )
 
 
@@ -1542,15 +1572,18 @@ def component(
 def form_card(
         box: str,
         items: Union[List[Component], str],
+        commands: Optional[List[Command]] = None,
 ) -> FormCard:
     """Create a form.
 
     :param box: A string indicating how to place this component on the page.
     :param items: The components in this form.
+    :param commands: Contextual menu commands for this component.
     """
     return FormCard(
         box,
         items,
+        commands,
     )
 
 
@@ -1559,6 +1592,7 @@ def frame_card(
         title: str,
         path: Optional[str] = None,
         content: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -> FrameCard:
     """Render a card containing a HTML page inside an inline frame (iframe).
 
@@ -1568,12 +1602,14 @@ def frame_card(
     :param title: The title for this card.
     :param path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
     :param content: The HTML content of the page. A string containing '<html>...</html>'
+    :param commands: Contextual menu commands for this component.
     """
     return FrameCard(
         box,
         title,
         path,
         content,
+        commands,
     )
 
 
@@ -1582,6 +1618,7 @@ def grid_card(
         title: str,
         cells: PackedData,
         data: PackedData,
+        commands: Optional[List[Command]] = None,
 ) -> GridCard:
     """No documentation available.
 
@@ -1589,12 +1626,14 @@ def grid_card(
     :param title: No documentation available.
     :param cells: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return GridCard(
         box,
         title,
         cells,
         data,
+        commands,
     )
 
 
@@ -1604,6 +1643,7 @@ def list_card(
         item_view: str,
         item_props: PackedRecord,
         data: PackedData,
+        commands: Optional[List[Command]] = None,
 ) -> ListCard:
     """No documentation available.
 
@@ -1612,6 +1652,7 @@ def list_card(
     :param item_view: No documentation available.
     :param item_props: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return ListCard(
         box,
@@ -1619,6 +1660,7 @@ def list_card(
         item_view,
         item_props,
         data,
+        commands,
     )
 
 
@@ -1629,6 +1671,7 @@ def list_item1_card(
         value: str,
         aux_value: str,
         data: PackedRecord,
+        commands: Optional[List[Command]] = None,
 ) -> ListItem1Card:
     """No documentation available.
 
@@ -1638,6 +1681,7 @@ def list_item1_card(
     :param value: No documentation available.
     :param aux_value: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return ListItem1Card(
         box,
@@ -1646,6 +1690,7 @@ def list_item1_card(
         value,
         aux_value,
         data,
+        commands,
     )
 
 
@@ -1654,6 +1699,7 @@ def markdown_card(
         title: str,
         content: str,
         data: Optional[PackedRecord] = None,
+        commands: Optional[List[Command]] = None,
 ) -> MarkdownCard:
     """Render Markdown content.
 
@@ -1661,12 +1707,14 @@ def markdown_card(
     :param title: The title for this card.
     :param content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
     :param data: Additional data for the card.
+    :param commands: Contextual menu commands for this component.
     """
     return MarkdownCard(
         box,
         title,
         content,
         data,
+        commands,
     )
 
 
@@ -1674,23 +1722,27 @@ def markup_card(
         box: str,
         title: str,
         content: str,
+        commands: Optional[List[Command]] = None,
 ) -> MarkupCard:
     """Render HTML content.
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title for this card.
     :param content: The HTML content.
+    :param commands: Contextual menu commands for this component.
     """
     return MarkupCard(
         box,
         title,
         content,
+        commands,
     )
 
 
 def meta_card(
         box: str,
         title: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
 
@@ -1699,10 +1751,12 @@ def meta_card(
 
     :param box: A string indicating how to place this component on the page.
     :param title: The title of the page.
+    :param commands: Contextual menu commands for this component.
     """
     return MetaCard(
         box,
         title,
+        commands,
     )
 
 
@@ -1739,21 +1793,23 @@ def nav_group(
 def nav_card(
         box: str,
         items: List[NavGroup],
+        commands: Optional[List[Command]] = None,
 ) -> NavCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
     :param items: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return NavCard(
         box,
         items,
+        commands,
     )
 
 
 def notebook_section(
         cells: List[Cell],
-        commands: Optional[List[Command]] = None,
         data: Optional[str] = None,
 ) -> NotebookSection:
     """Create a notebook section.
@@ -1761,12 +1817,10 @@ def notebook_section(
     A notebook section is rendered as a sequence of cells.
 
     :param cells: A list of cells to display in this notebook section.
-    :param commands: A list of custom commands to allow on this section.
     :param data: Data associated with this section, if any.
     """
     return NotebookSection(
         cells,
-        commands,
         data,
     )
 
@@ -1774,6 +1828,7 @@ def notebook_section(
 def notebook_card(
         box: str,
         sections: List[NotebookSection],
+        commands: Optional[List[Command]] = None,
 ) -> NotebookCard:
     """Create a notebook.
 
@@ -1781,10 +1836,12 @@ def notebook_card(
 
     :param box: A string indicating how to place this component on the page.
     :param sections: A list of sections to display in the notebook.
+    :param commands: Contextual menu commands for this component.
     """
     return NotebookCard(
         box,
         sections,
+        commands,
     )
 
 
@@ -1792,17 +1849,20 @@ def pixel_art_card(
         box: str,
         title: str,
         data: PackedRecord,
+        commands: Optional[List[Command]] = None,
 ) -> PixelArtCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
     :param title: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return PixelArtCard(
         box,
         title,
         data,
+        commands,
     )
 
 
@@ -1997,6 +2057,7 @@ def plot_card(
         title: str,
         data: PackedRecord,
         plot: Plot,
+        commands: Optional[List[Command]] = None,
 ) -> PlotCard:
     """No documentation available.
 
@@ -2004,12 +2065,14 @@ def plot_card(
     :param title: No documentation available.
     :param data: No documentation available.
     :param plot: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return PlotCard(
         box,
         title,
         data,
         plot,
+        commands,
     )
 
 
@@ -2018,6 +2081,7 @@ def repeat_card(
         item_view: str,
         item_props: PackedRecord,
         data: PackedData,
+        commands: Optional[List[Command]] = None,
 ) -> RepeatCard:
     """No documentation available.
 
@@ -2025,12 +2089,14 @@ def repeat_card(
     :param item_view: No documentation available.
     :param item_props: No documentation available.
     :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
     """
     return RepeatCard(
         box,
         item_view,
         item_props,
         data,
+        commands,
     )
 
 
@@ -2038,17 +2104,20 @@ def tab_card(
         box: str,
         items: List[Tab],
         link: Optional[bool] = None,
+        commands: Optional[List[Command]] = None,
 ) -> TabCard:
     """No documentation available.
 
     :param box: A string indicating how to place this component on the page.
     :param items: Items to render.
     :param link: True if tabs should be rendered as links and not a standard tab.
+    :param commands: Contextual menu commands for this component.
     """
     return TabCard(
         box,
         items,
         link,
+        commands,
     )
 
 
@@ -2057,6 +2126,7 @@ def template_card(
         title: str,
         content: str,
         data: Optional[PackedRecord] = None,
+        commands: Optional[List[Command]] = None,
 ) -> TemplateCard:
     """Render dynamic content using a HTML template.
 
@@ -2064,12 +2134,14 @@ def template_card(
     :param title: The title for this card.
     :param content: The Handlebars template. https://handlebarsjs.com/guide/
     :param data: Data for the Handlebars template
+    :param commands: Contextual menu commands for this component.
     """
     return TemplateCard(
         box,
         title,
         content,
         data,
+        commands,
     )
 
 
@@ -2078,6 +2150,7 @@ def toolbar_card(
         items: List[Command],
         secondary_items: Optional[List[Command]] = None,
         overflow_items: Optional[List[Command]] = None,
+        commands: Optional[List[Command]] = None,
 ) -> ToolbarCard:
     """No documentation available.
 
@@ -2085,12 +2158,14 @@ def toolbar_card(
     :param items: Items to render.
     :param secondary_items: Items to render on the right side (or left, in RTL).
     :param overflow_items: Items to render in an overflow menu.
+    :param commands: Contextual menu commands for this component.
     """
     return ToolbarCard(
         box,
         items,
         secondary_items,
         overflow_items,
+        commands,
     )
 
 
@@ -2107,7 +2182,7 @@ def vega_card(
     :param title: The title of this card.
     :param specification: The Vega-lite specification.
     :param data: Data for the plot, if any.
-    :param commands: Contextual commands for this plot, if any
+    :param commands: Contextual menu commands for this component.
     """
     return VegaCard(
         box,

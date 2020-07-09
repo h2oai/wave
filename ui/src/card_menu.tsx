@@ -3,14 +3,13 @@ import * as React from 'react';
 import { stylesheet } from 'typestyle';
 import { Command } from './notebook';
 import { bond, box, telesync } from './telesync';
-import { grid } from './layout'
 
 const
   css = stylesheet({
     menu: {
       position: 'absolute',
-      top: -grid.gap + 5,
-      right: -grid.gap,
+      top: 5, // should be 0 logically, but adjusted here to suit the MoreVertical icon.
+      right: 0,
       $nest: {
         '>div:first-child': {
           width: 32, height: 32,

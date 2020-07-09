@@ -90,8 +90,9 @@ const
     console.warn(`Warning: ${s}`)
     warnings++
   },
-  reservedWords = ['view', 'box'],
+  reservedWords = ['view', 'box', 'commands'],
   boxComment = 'A string indicating how to place this component on the page.',
+  commandsComment = 'Contextual menu commands for this component.',
   noComment = 'No documentation available.',
   toLookup = (xs: string[]): Dict<boolean> => {
     const d: Dict<boolean> = {}
@@ -218,6 +219,10 @@ const
 
           // All cards must have a box defined.
           if (isRoot) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], isPacked: false })
+
+          // All cards can optionally have a contextual menu.
+          if (isRoot) members.push({ t: MemberT.Repeated, name: 'commands', typeName: 'Command', isOptional: true, comments: [commandsComment], isPacked: false })
+
           const isUnion = !members.filter(m => !m.isOptional).length // all members are optional?
           file.types.push({ name: typeName, file: file.name, comments, members, isRoot, isUnion })
       }

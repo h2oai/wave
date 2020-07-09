@@ -1,9 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import vegaEmbed from 'vega-embed';
-import { CardMenu } from './card_menu';
 import { cards } from './layout';
-import { Command } from './notebook';
 import { bond, Card, Rec, S, unpack, xid } from './telesync';
 import { getTheme } from './theme';
 
@@ -58,8 +56,6 @@ interface State {
   specification: S
   /** Data for the plot, if any. */
   data?: Rec
-  /** Contextual commands for this plot, if any */
-  commands?: Command[]
 }
 
 const
@@ -71,7 +67,6 @@ const
           <div className={css.card}>
             <div className={css.title}>{state.title}</div>
             <VegaLite key={xid()} spec={JSON.parse(state.specification)} data={data} />
-            {state.commands ? <CardMenu key={state.commands.map(c => c.name).join(';')} items={state.commands} /> : null}
           </div>
         )
       }

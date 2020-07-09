@@ -1,7 +1,7 @@
 import React from 'react';
 import { cards } from './layout';
+import { Cell } from './notebook';
 import { bond, Card, S } from './telesync';
-import { Cell, Command } from './notebook';
 
 /**
  * Create a dashboard panel.
@@ -11,8 +11,6 @@ interface DashboardPanel {
   cells: Cell[]
   /** The absolute or relative width of the panel. */
   size?: S
-  /** A list of custom commands to allow on this panel. */
-  commands?: Command[]
   /** Data associated with this section, if any. */
   data?: S
 }

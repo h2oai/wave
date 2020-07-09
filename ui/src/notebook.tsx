@@ -115,8 +115,6 @@ export interface Command {
 export interface NotebookSection {
   /** A list of cells to display in this notebook section. */
   cells: Cell[]
-  /** A list of custom commands to allow on this section. */
-  commands?: Command[]
   /** Data associated with this section, if any. */
   data?: S
 }
