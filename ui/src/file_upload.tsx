@@ -75,7 +75,7 @@ export const
         try {
           const makeRequest = new Promise<XMLHttpRequest>(function (resolve, reject) {
             const xhr = new XMLHttpRequest()
-            xhr.open("POST", "/_f") //TODO: set correct upload url
+            xhr.open("POST", "/_f")
             xhr.upload.onprogress = e => percentCompleteB(e.loaded / e.total)
             xhr.send(formData)
             xhr.onreadystatechange = function () {
@@ -89,9 +89,9 @@ export const
           telesync.args[model.name] = files
           telesync.sync()
           successMsgB(`Successfully uploaded files: ${filesB().map(({ name }) => name).join(',')}.`)
-        } catch (e) {
-          errorB('There was an error when uploading file.')
         }
+        catch (e) { errorB('There was an error when uploading file.') }
+        finally { filesB([]) }
       },
       onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -125,11 +125,11 @@ export const
       onDismissError = () => errorB(''),
       onDismissSuccess = () => {
         successMsgB('')
-        percentCompleteB(0.0)
+        percentCompleteB(0)
       },
       removeFile = (index: U) => () => {
         filesB().splice(index, 1)
-        filesB(filesB())
+        filesB([...filesB()])
       },
       getUploadBodyComponent = () => {
         if (errorB()) return (
