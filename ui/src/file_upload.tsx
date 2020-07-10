@@ -22,7 +22,7 @@ export interface FileUpload {
 const
   { colors } = getTheme(),
   css = stylesheet({
-    upload__input: {
+    uploadInput: {
       opacity: 0
     },
     upload: {
@@ -32,10 +32,10 @@ const
       boxSizing: 'border-box',
       margin: 5,
     },
-    'upload--dragging': {
+    uploadDragging: {
       border: dashed(2, colors.text),
     },
-    upload__label: {
+    uploadLabel: {
       ...centerMixin(),
       padding: 15,
       background: colors.text,
@@ -47,10 +47,10 @@ const
         }
       }
     },
-    'upload__message-bar': {
+    uploadMessageBar: {
       margin: '20px 0'
     },
-    upload__remove: {
+    uploadRemove: {
       fontSize: 20,
       position: 'absolute',
       top: -15,
@@ -73,15 +73,15 @@ export const
         filesB().forEach(f => formData.append('files', f))
 
         try {
-          const makeRequest = new Promise<XMLHttpRequest>(function (resolve, reject) {
+          const makeRequest = new Promise<XMLHttpRequest>((resolve, reject) => {
             const xhr = new XMLHttpRequest()
             xhr.open("POST", "/_f")
             xhr.upload.onprogress = e => percentCompleteB(e.loaded / e.total)
             xhr.send(formData)
-            xhr.onreadystatechange = function () {
-              if (xhr.readyState !== this.DONE) return
+            xhr.onreadystatechange = () => {
+              if (xhr.readyState !== XMLHttpRequest.DONE) return
               if (xhr.status >= 200 && xhr.status < 300) resolve(xhr)
-              else reject({ status: xhr.status, statusText: xhr.statusText })
+              else reject(xhr)
             }
           })
           const { responseText } = await makeRequest
@@ -136,7 +136,7 @@ export const
           <>
             <Fluent.Text variant='xLarge'>An error occured</Fluent.Text>
             <Fluent.MessageBar
-              className={css["upload__message-bar"]}
+              className={css.uploadMessageBar}
               messageBarType={Fluent.MessageBarType.error}
               isMultiline={true}
               onDismiss={onDismissError}>
@@ -148,7 +148,7 @@ export const
           <>
             <Fluent.Text variant='xLarge'>Upload successful</Fluent.Text>
             <Fluent.MessageBar
-              className={css["upload__message-bar"]}
+              className={css.uploadMessageBar}
               messageBarType={Fluent.MessageBarType.success}
               isMultiline={true}
               onDismiss={onDismissSuccess}>
@@ -178,7 +178,7 @@ export const
               {
                 filesB().map(({ name }, i) => (
                   <Fluent.StackItem key={xid()} styles={{ root: { textAlign: 'center', position: 'relative' } }}>
-                    <Fluent.Icon className={css.upload__remove} iconName='RemoveFilter' onClick={removeFile(i)} />
+                    <Fluent.Icon className={css.uploadRemove} iconName='RemoveFilter' onClick={removeFile(i)} />
                     <Fluent.Icon iconName='OpenFile' styles={{ root: { fontSize: 35 } }} />
                     <br />
                     <Fluent.Text nowrap={true} styles={{ root: { display: 'block', margin: '15px 0' } }}>{name}</Fluent.Text>
@@ -193,11 +193,11 @@ export const
             <Fluent.Icon iconName='CloudUpload' styles={{ root: { fontSize: 50 } }} />
             <input
               id='file'
-              className={css.upload__input}
+              className={css.uploadInput}
               onChange={onChange}
               type='file'
               multiple={model.multiple} />
-            <label htmlFor="file" className={css.upload__label}>
+            <label htmlFor="file" className={css.uploadLabel}>
               <Fluent.Text variant={'large'}>{model.multiple ? 'Choose files' : 'Choose a file'}</Fluent.Text>
             </label>
             <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or Drag&Drop it here.</Fluent.Text>
@@ -205,7 +205,7 @@ export const
         )
       },
       render = () => {
-        const uploadClasses = isDraggingB() ? clas(css.upload, css["upload--dragging"]) : css.upload
+        const uploadClasses = isDraggingB() ? clas(css.upload, css.uploadDragging) : css.upload
         return (
           <div data-test={model.name}>
             <form
