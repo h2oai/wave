@@ -46,28 +46,33 @@ const
     },
   })
 
+/** Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value. */
 interface State {
+  /** The card's title. */
   title: S
+  /** The card's caption. */
   caption: S
+  /** The primary value displayed. */
   value: S
+  /** The auxiliary value, typically a target value. */
   aux_value: S
+  /** The caption displayed below the primary value. */
   value_caption: S
+  /** The caption displayed below the auxiliary value. */
   aux_value_caption: S
+  /** The value of the progress bar, between 0 and 1. */
   progress: F
-  plot_color: S
-  data: Rec
-}
-
-const defaults: Partial<State> = {
-  title: 'Untitled',
+  /** The color of the progress bar. */
+  plot_color?: S
+  /** Data for this card. */
+  data?: Rec
 }
 
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
         const
-          s = theme.merge(defaults, state),
           data = unpack(s.data)
 
         return (
@@ -87,7 +92,7 @@ const
                   <Format data={data} format={s.aux_value} />
                 </div>
               </div>
-              <ProgressBar thickness={2} color={s.plot_color} value={s.progress} />
+              <ProgressBar thickness={2} color={s.plot_color || theme.colors.gray} value={s.progress} />
               <div className={css.captions}>
                 <div className={css.value_caption}>
                   <Format data={data} format={s.value_caption} />

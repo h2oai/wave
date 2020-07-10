@@ -40,26 +40,27 @@ const
     },
   })
 
+/** Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge. */
 interface State {
+  /** The card's title. */
   title: S
+  /** The primary value displayed. */
   value: S
+  /** The auxiliary value displayed next to the primary value. */
   aux_value: S
+  /** The value of the progress gauge, between 0 and 1. */
   progress: F
-  plot_color: S
-  data: Rec
-}
-
-const defaults: Partial<State> = {
-  title: 'Untitled',
+  /** The color of the progress gauge. */
+  plot_color?: S
+  /** Data for this card. */
+  data?: Rec
 }
 
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
-        const
-          s = theme.merge(defaults, state),
-          data = unpack(s.data)
+        const data = unpack(s.data)
 
         return (
           <div className={css.card}>
@@ -67,7 +68,7 @@ const
               <Format data={data} format={s.title} />
             </div>
             <div className={css.body}>
-              <ProgressArc size={grid.unitInnerWidth} thickness={2} color={s.plot_color} value={s.progress} />
+              <ProgressArc size={grid.unitInnerWidth} thickness={2} color={s.plot_color || theme.colors.gray} value={s.progress} />
               <div className={css.value_overlay}>
                 <div className={css.value}>
                   <Format data={data} format={s.value} />

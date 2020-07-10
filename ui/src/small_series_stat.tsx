@@ -33,62 +33,63 @@ const
     },
   })
 
+/** Create a small stat card displaying a primary value and a series plot. */
 interface State {
+  /** The card's title. */
   title: S
+  /** The primary value displayed. */
   value: S
-  data: Rec
-  plot_type: 'area' | 'interval'
+  /** The plot's data. */
   plot_data: Data
-  plot_color: S
-  plot_category: S
+  /** The data field to use for y-axis values. */
   plot_value: S
-  plot_zero_value: F
+  /** The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used. */
+  plot_zero_value?: F
+  /** The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'. */
+  plot_category?: S
+  /** The type of plot. Defaults to `area`. */
+  plot_type?: 'area' | 'interval'
+  /** The plot's curve style. Defaults to `linear`. */
   plot_curve?: 'linear' | 'smooth' | 'step' | 'step-after' | 'step-before'
-}
-
-
-
-const defaults: Partial<State> = {
-  title: 'Untitled',
-  plot_type: 'area',
-  plot_color: theme.colors.gray,
-  plot_curve: 'linear',
+  /** The plot's color. */
+  plot_color?: S
+  /** Data for this card. */
+  data?: Rec
 }
 
 const
-  View = bond(({ state, changed, size }: Card<State>) => {
+  View = bond(({ state: s, changed, size }: Card<State>) => {
     const
       render = () => {
         const
-          s = theme.merge(defaults, state),
           plotWidth = size ? size.width : grid.unitWidth,
           data = unpack(s.data),
-          plot = s.plot_type === 'area'
+          plot = s.plot_type === 'interval'
             ? (
-              <MicroArea
-                width={plotWidth}
-                height={plotHeight}
-                data={unpack(s.plot_data)}
-                value={s.plot_value}
-                color={s.plot_color}
-                zeroValue={s.plot_zero_value}
-                curve={s.plot_curve || 'linear'}
-              />
-            ) : (
               <MicroBars
                 width={plotWidth}
                 height={plotHeight}
                 data={unpack(s.plot_data)}
                 category={s.plot_category}
                 value={s.plot_value}
-                color={s.plot_color}
+                color={s.plot_color || theme.colors.gray}
                 zeroValue={s.plot_zero_value}
+              />
+            ) : (
+              <MicroArea
+                width={plotWidth}
+                height={plotHeight}
+                data={unpack(s.plot_data)}
+                value={s.plot_value}
+                color={s.plot_color || theme.colors.gray}
+                zeroValue={s.plot_zero_value}
+                curve={s.plot_curve || 'linear'}
               />
             )
         return (
           <div className={css.card}>
             <div className={css.titleBar}>
-              <div className={css.title}>
+              <div className={css.title || 'Untitled'}>
                 <Format data={data} format={s.title} />
               </div>
               <div className={css.value}>

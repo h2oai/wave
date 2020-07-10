@@ -1310,22 +1310,22 @@ def large_bar_stat_card(
         value_caption: str,
         aux_value_caption: str,
         progress: float,
-        plot_color: str,
-        data: PackedRecord,
+        plot_color: Optional[str] = None,
+        data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
 ) -> LargeBarStatCard:
-    """No documentation available.
+    """Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param caption: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param value_caption: No documentation available.
-    :param aux_value_caption: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param caption: The card's caption.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value, typically a target value.
+    :param value_caption: The caption displayed below the primary value.
+    :param aux_value_caption: The caption displayed below the auxiliary value.
+    :param progress: The value of the progress bar, between 0 and 1.
+    :param plot_color: The color of the progress bar.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return LargeBarStatCard(
@@ -1349,17 +1349,17 @@ def large_stat_card(
         value: str,
         aux_value: str,
         caption: str,
-        data: PackedRecord,
+        data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
 ) -> LargeStatCard:
-    """No documentation available.
+    """Create a stat card displaying a primary value, an auxiliary value and a caption.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param caption: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed next to the primary value.
+    :param caption: The caption displayed below the primary value.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return LargeStatCard(
@@ -1843,43 +1843,43 @@ def small_series_stat_card(
         box: str,
         title: str,
         value: str,
-        data: PackedRecord,
-        plot_type: str,
         plot_data: PackedData,
-        plot_color: str,
-        plot_category: str,
         plot_value: str,
-        plot_zero_value: float,
+        plot_zero_value: Optional[float] = None,
+        plot_category: Optional[str] = None,
+        plot_type: Optional[str] = None,
         plot_curve: Optional[str] = None,
+        plot_color: Optional[str] = None,
+        data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
 ) -> SmallSeriesStatCard:
-    """No documentation available.
+    """Create a small stat card displaying a primary value and a series plot.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param plot_data: The plot's data.
+    :param plot_value: The data field to use for y-axis values.
+    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
+    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
+    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param plot_color: The plot's color.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return SmallSeriesStatCard(
         box,
         title,
         value,
-        data,
-        plot_type,
         plot_data,
-        plot_color,
-        plot_category,
         plot_value,
         plot_zero_value,
+        plot_category,
+        plot_type,
         plot_curve,
+        plot_color,
+        data,
         commands,
     )
 
@@ -1891,12 +1891,12 @@ def small_stat_card(
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
 ) -> SmallStatCard:
-    """No documentation available.
+    """Create a stat card displaying a single value.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return SmallStatCard(
@@ -1935,19 +1935,19 @@ def tall_gauge_stat_card(
         value: str,
         aux_value: str,
         progress: float,
-        plot_color: str,
-        data: PackedRecord,
+        plot_color: Optional[str] = None,
+        data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
 ) -> TallGaugeStatCard:
-    """No documentation available.
+    """Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed next to the primary value.
+    :param progress: The value of the progress gauge, between 0 and 1.
+    :param plot_color: The color of the progress gauge.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return TallGaugeStatCard(
@@ -1967,30 +1967,30 @@ def tall_series_stat_card(
         title: str,
         value: str,
         aux_value: str,
-        data: PackedRecord,
-        plot_type: str,
         plot_data: PackedData,
-        plot_color: str,
-        plot_category: str,
         plot_value: str,
-        plot_zero_value: float,
+        plot_zero_value: Optional[float] = None,
+        plot_category: Optional[str] = None,
+        plot_type: Optional[str] = None,
         plot_curve: Optional[str] = None,
+        plot_color: Optional[str] = None,
+        data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
 ) -> TallSeriesStatCard:
-    """No documentation available.
+    """Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed below the primary value.
+    :param plot_data: The plot's data.
+    :param plot_value: The data field to use for y-axis values.
+    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
+    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
+    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param plot_color: The plot's color.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return TallSeriesStatCard(
@@ -1998,14 +1998,14 @@ def tall_series_stat_card(
         title,
         value,
         aux_value,
-        data,
-        plot_type,
         plot_data,
-        plot_color,
-        plot_category,
         plot_value,
         plot_zero_value,
+        plot_category,
+        plot_type,
         plot_curve,
+        plot_color,
+        data,
         commands,
     )
 
@@ -2088,19 +2088,19 @@ def wide_bar_stat_card(
         value: str,
         aux_value: str,
         progress: float,
-        plot_color: str,
-        data: PackedRecord,
+        plot_color: Optional[str] = None,
+        data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
 ) -> WideBarStatCard:
-    """No documentation available.
+    """Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed next to the primary value.
+    :param progress: The value of the progress bar, between 0 and 1.
+    :param plot_color: The color of the progress bar.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return WideBarStatCard(
@@ -2121,19 +2121,19 @@ def wide_gauge_stat_card(
         value: str,
         aux_value: str,
         progress: float,
-        plot_color: str,
-        data: PackedRecord,
+        plot_color: Optional[str] = None,
+        data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
 ) -> WideGaugeStatCard:
-    """No documentation available.
+    """Create a wide stat card displaying a primary value, an auxiliary value and a progress gauge.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed next to the primary value.
+    :param progress: The value of the progress gauge, between 0 and 1.
+    :param plot_color: The color of the progress gauge.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return WideGaugeStatCard(
@@ -2153,30 +2153,30 @@ def wide_series_stat_card(
         title: str,
         value: str,
         aux_value: str,
-        data: PackedRecord,
-        plot_type: str,
         plot_data: PackedData,
-        plot_color: str,
-        plot_category: str,
         plot_value: str,
-        plot_zero_value: float,
+        plot_zero_value: Optional[float] = None,
+        plot_category: Optional[str] = None,
+        plot_type: Optional[str] = None,
         plot_curve: Optional[str] = None,
+        plot_color: Optional[str] = None,
+        data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
 ) -> WideSeriesStatCard:
-    """No documentation available.
+    """Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed below the primary value.
+    :param plot_data: The plot's data.
+    :param plot_value: The data field to use for y-axis values.
+    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
+    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
+    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param plot_color: The plot's color.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return WideSeriesStatCard(
@@ -2184,13 +2184,13 @@ def wide_series_stat_card(
         title,
         value,
         aux_value,
-        data,
-        plot_type,
         plot_data,
-        plot_color,
-        plot_category,
         plot_value,
         plot_zero_value,
+        plot_category,
+        plot_type,
         plot_curve,
+        plot_color,
+        data,
         commands,
     )

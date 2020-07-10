@@ -2828,18 +2828,18 @@ class GridCard:
 
 
 class LargeBarStatCard:
-    """No documentation available.
+    """Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param caption: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param value_caption: No documentation available.
-    :param aux_value_caption: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param caption: The card's caption.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value, typically a target value.
+    :param value_caption: The caption displayed below the primary value.
+    :param aux_value_caption: The caption displayed below the auxiliary value.
+    :param progress: The value of the progress bar, between 0 and 1.
+    :param plot_color: The color of the progress bar.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -2852,8 +2852,8 @@ class LargeBarStatCard:
             value_caption: str,
             aux_value_caption: str,
             progress: float,
-            plot_color: str,
-            data: PackedRecord,
+            plot_color: Optional[str] = None,
+            data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -2886,10 +2886,6 @@ class LargeBarStatCard:
             raise ValueError('LargeBarStatCard.aux_value_caption is required.')
         if self.progress is None:
             raise ValueError('LargeBarStatCard.progress is required.')
-        if self.plot_color is None:
-            raise ValueError('LargeBarStatCard.plot_color is required.')
-        if self.data is None:
-            raise ValueError('LargeBarStatCard.data is required.')
         return _dump(
             view='large_bar_stat',
             box=self.box,
@@ -2933,11 +2929,7 @@ class LargeBarStatCard:
         if __d_progress is None:
             raise ValueError('LargeBarStatCard.progress is required.')
         __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('LargeBarStatCard.plot_color is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('LargeBarStatCard.data is required.')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
@@ -2947,8 +2939,8 @@ class LargeBarStatCard:
         value_caption: str = __d_value_caption
         aux_value_caption: str = __d_aux_value_caption
         progress: float = __d_progress
-        plot_color: str = __d_plot_color
-        data: PackedRecord = __d_data
+        plot_color: Optional[str] = __d_plot_color
+        data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return LargeBarStatCard(
             box,
@@ -2966,14 +2958,14 @@ class LargeBarStatCard:
 
 
 class LargeStatCard:
-    """No documentation available.
+    """Create a stat card displaying a primary value, an auxiliary value and a caption.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param caption: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed next to the primary value.
+    :param caption: The caption displayed below the primary value.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -2983,7 +2975,7 @@ class LargeStatCard:
             value: str,
             aux_value: str,
             caption: str,
-            data: PackedRecord,
+            data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -3006,8 +2998,6 @@ class LargeStatCard:
             raise ValueError('LargeStatCard.aux_value is required.')
         if self.caption is None:
             raise ValueError('LargeStatCard.caption is required.')
-        if self.data is None:
-            raise ValueError('LargeStatCard.data is required.')
         return _dump(
             view='large_stat',
             box=self.box,
@@ -3038,15 +3028,13 @@ class LargeStatCard:
         if __d_caption is None:
             raise ValueError('LargeStatCard.caption is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('LargeStatCard.data is required.')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
         caption: str = __d_caption
-        data: PackedRecord = __d_data
+        data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return LargeStatCard(
             box,
@@ -4289,19 +4277,19 @@ class RepeatCard:
 
 
 class SmallSeriesStatCard:
-    """No documentation available.
+    """Create a small stat card displaying a primary value and a series plot.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param plot_data: The plot's data.
+    :param plot_value: The data field to use for y-axis values.
+    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
+    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
+    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param plot_color: The plot's color.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -4309,27 +4297,27 @@ class SmallSeriesStatCard:
             box: str,
             title: str,
             value: str,
-            data: PackedRecord,
-            plot_type: str,
             plot_data: PackedData,
-            plot_color: str,
-            plot_category: str,
             plot_value: str,
-            plot_zero_value: float,
+            plot_zero_value: Optional[float] = None,
+            plot_category: Optional[str] = None,
+            plot_type: Optional[str] = None,
             plot_curve: Optional[str] = None,
+            plot_color: Optional[str] = None,
+            data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.value = value
-        self.data = data
-        self.plot_type = plot_type
         self.plot_data = plot_data
-        self.plot_color = plot_color
-        self.plot_category = plot_category
         self.plot_value = plot_value
         self.plot_zero_value = plot_zero_value
+        self.plot_category = plot_category
+        self.plot_type = plot_type
         self.plot_curve = plot_curve
+        self.plot_color = plot_color
+        self.data = data
         self.commands = commands
 
     def dump(self) -> Dict:
@@ -4340,35 +4328,23 @@ class SmallSeriesStatCard:
             raise ValueError('SmallSeriesStatCard.title is required.')
         if self.value is None:
             raise ValueError('SmallSeriesStatCard.value is required.')
-        if self.data is None:
-            raise ValueError('SmallSeriesStatCard.data is required.')
-        if self.plot_type is None:
-            raise ValueError('SmallSeriesStatCard.plot_type is required.')
-        if self.plot_type not in ('area', 'interval'):
-            raise ValueError(f'Invalid value "{self.plot_type}" for SmallSeriesStatCard.plot_type.')
         if self.plot_data is None:
             raise ValueError('SmallSeriesStatCard.plot_data is required.')
-        if self.plot_color is None:
-            raise ValueError('SmallSeriesStatCard.plot_color is required.')
-        if self.plot_category is None:
-            raise ValueError('SmallSeriesStatCard.plot_category is required.')
         if self.plot_value is None:
             raise ValueError('SmallSeriesStatCard.plot_value is required.')
-        if self.plot_zero_value is None:
-            raise ValueError('SmallSeriesStatCard.plot_zero_value is required.')
         return _dump(
             view='small_series_stat',
             box=self.box,
             title=self.title,
             value=self.value,
-            data=self.data,
-            plot_type=self.plot_type,
             plot_data=self.plot_data,
-            plot_color=self.plot_color,
-            plot_category=self.plot_category,
             plot_value=self.plot_value,
             plot_zero_value=self.plot_zero_value,
+            plot_category=self.plot_category,
+            plot_type=self.plot_type,
             plot_curve=self.plot_curve,
+            plot_color=self.plot_color,
+            data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4384,64 +4360,54 @@ class SmallSeriesStatCard:
         __d_value: Any = __d.get('value')
         if __d_value is None:
             raise ValueError('SmallSeriesStatCard.value is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('SmallSeriesStatCard.data is required.')
-        __d_plot_type: Any = __d.get('plot_type')
-        if __d_plot_type is None:
-            raise ValueError('SmallSeriesStatCard.plot_type is required.')
         __d_plot_data: Any = __d.get('plot_data')
         if __d_plot_data is None:
             raise ValueError('SmallSeriesStatCard.plot_data is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('SmallSeriesStatCard.plot_color is required.')
-        __d_plot_category: Any = __d.get('plot_category')
-        if __d_plot_category is None:
-            raise ValueError('SmallSeriesStatCard.plot_category is required.')
         __d_plot_value: Any = __d.get('plot_value')
         if __d_plot_value is None:
             raise ValueError('SmallSeriesStatCard.plot_value is required.')
         __d_plot_zero_value: Any = __d.get('plot_zero_value')
-        if __d_plot_zero_value is None:
-            raise ValueError('SmallSeriesStatCard.plot_zero_value is required.')
+        __d_plot_category: Any = __d.get('plot_category')
+        __d_plot_type: Any = __d.get('plot_type')
         __d_plot_curve: Any = __d.get('plot_curve')
+        __d_plot_color: Any = __d.get('plot_color')
+        __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
-        data: PackedRecord = __d_data
-        plot_type: str = __d_plot_type
         plot_data: PackedData = __d_plot_data
-        plot_color: str = __d_plot_color
-        plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
-        plot_zero_value: float = __d_plot_zero_value
+        plot_zero_value: Optional[float] = __d_plot_zero_value
+        plot_category: Optional[str] = __d_plot_category
+        plot_type: Optional[str] = __d_plot_type
         plot_curve: Optional[str] = __d_plot_curve
+        plot_color: Optional[str] = __d_plot_color
+        data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return SmallSeriesStatCard(
             box,
             title,
             value,
-            data,
-            plot_type,
             plot_data,
-            plot_color,
-            plot_category,
             plot_value,
             plot_zero_value,
+            plot_category,
+            plot_type,
             plot_curve,
+            plot_color,
+            data,
             commands,
         )
 
 
 class SmallStatCard:
-    """No documentation available.
+    """Create a stat card displaying a single value.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -4561,15 +4527,15 @@ class TabCard:
 
 
 class TallGaugeStatCard:
-    """No documentation available.
+    """Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed next to the primary value.
+    :param progress: The value of the progress gauge, between 0 and 1.
+    :param plot_color: The color of the progress gauge.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -4579,8 +4545,8 @@ class TallGaugeStatCard:
             value: str,
             aux_value: str,
             progress: float,
-            plot_color: str,
-            data: PackedRecord,
+            plot_color: Optional[str] = None,
+            data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -4604,10 +4570,6 @@ class TallGaugeStatCard:
             raise ValueError('TallGaugeStatCard.aux_value is required.')
         if self.progress is None:
             raise ValueError('TallGaugeStatCard.progress is required.')
-        if self.plot_color is None:
-            raise ValueError('TallGaugeStatCard.plot_color is required.')
-        if self.data is None:
-            raise ValueError('TallGaugeStatCard.data is required.')
         return _dump(
             view='tall_gauge_stat',
             box=self.box,
@@ -4639,19 +4601,15 @@ class TallGaugeStatCard:
         if __d_progress is None:
             raise ValueError('TallGaugeStatCard.progress is required.')
         __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('TallGaugeStatCard.plot_color is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('TallGaugeStatCard.data is required.')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
         progress: float = __d_progress
-        plot_color: str = __d_plot_color
-        data: PackedRecord = __d_data
+        plot_color: Optional[str] = __d_plot_color
+        data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TallGaugeStatCard(
             box,
@@ -4666,20 +4624,20 @@ class TallGaugeStatCard:
 
 
 class TallSeriesStatCard:
-    """No documentation available.
+    """Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed below the primary value.
+    :param plot_data: The plot's data.
+    :param plot_value: The data field to use for y-axis values.
+    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
+    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
+    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param plot_color: The plot's color.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -4688,28 +4646,28 @@ class TallSeriesStatCard:
             title: str,
             value: str,
             aux_value: str,
-            data: PackedRecord,
-            plot_type: str,
             plot_data: PackedData,
-            plot_color: str,
-            plot_category: str,
             plot_value: str,
-            plot_zero_value: float,
+            plot_zero_value: Optional[float] = None,
+            plot_category: Optional[str] = None,
+            plot_type: Optional[str] = None,
             plot_curve: Optional[str] = None,
+            plot_color: Optional[str] = None,
+            data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.value = value
         self.aux_value = aux_value
-        self.data = data
-        self.plot_type = plot_type
         self.plot_data = plot_data
-        self.plot_color = plot_color
-        self.plot_category = plot_category
         self.plot_value = plot_value
         self.plot_zero_value = plot_zero_value
+        self.plot_category = plot_category
+        self.plot_type = plot_type
         self.plot_curve = plot_curve
+        self.plot_color = plot_color
+        self.data = data
         self.commands = commands
 
     def dump(self) -> Dict:
@@ -4722,36 +4680,24 @@ class TallSeriesStatCard:
             raise ValueError('TallSeriesStatCard.value is required.')
         if self.aux_value is None:
             raise ValueError('TallSeriesStatCard.aux_value is required.')
-        if self.data is None:
-            raise ValueError('TallSeriesStatCard.data is required.')
-        if self.plot_type is None:
-            raise ValueError('TallSeriesStatCard.plot_type is required.')
-        if self.plot_type not in ('area', 'interval'):
-            raise ValueError(f'Invalid value "{self.plot_type}" for TallSeriesStatCard.plot_type.')
         if self.plot_data is None:
             raise ValueError('TallSeriesStatCard.plot_data is required.')
-        if self.plot_color is None:
-            raise ValueError('TallSeriesStatCard.plot_color is required.')
-        if self.plot_category is None:
-            raise ValueError('TallSeriesStatCard.plot_category is required.')
         if self.plot_value is None:
             raise ValueError('TallSeriesStatCard.plot_value is required.')
-        if self.plot_zero_value is None:
-            raise ValueError('TallSeriesStatCard.plot_zero_value is required.')
         return _dump(
             view='tall_series_stat',
             box=self.box,
             title=self.title,
             value=self.value,
             aux_value=self.aux_value,
-            data=self.data,
-            plot_type=self.plot_type,
             plot_data=self.plot_data,
-            plot_color=self.plot_color,
-            plot_category=self.plot_category,
             plot_value=self.plot_value,
             plot_zero_value=self.plot_zero_value,
+            plot_category=self.plot_category,
+            plot_type=self.plot_type,
             plot_curve=self.plot_curve,
+            plot_color=self.plot_color,
+            data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4770,55 +4716,45 @@ class TallSeriesStatCard:
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
             raise ValueError('TallSeriesStatCard.aux_value is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('TallSeriesStatCard.data is required.')
-        __d_plot_type: Any = __d.get('plot_type')
-        if __d_plot_type is None:
-            raise ValueError('TallSeriesStatCard.plot_type is required.')
         __d_plot_data: Any = __d.get('plot_data')
         if __d_plot_data is None:
             raise ValueError('TallSeriesStatCard.plot_data is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('TallSeriesStatCard.plot_color is required.')
-        __d_plot_category: Any = __d.get('plot_category')
-        if __d_plot_category is None:
-            raise ValueError('TallSeriesStatCard.plot_category is required.')
         __d_plot_value: Any = __d.get('plot_value')
         if __d_plot_value is None:
             raise ValueError('TallSeriesStatCard.plot_value is required.')
         __d_plot_zero_value: Any = __d.get('plot_zero_value')
-        if __d_plot_zero_value is None:
-            raise ValueError('TallSeriesStatCard.plot_zero_value is required.')
+        __d_plot_category: Any = __d.get('plot_category')
+        __d_plot_type: Any = __d.get('plot_type')
         __d_plot_curve: Any = __d.get('plot_curve')
+        __d_plot_color: Any = __d.get('plot_color')
+        __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
-        data: PackedRecord = __d_data
-        plot_type: str = __d_plot_type
         plot_data: PackedData = __d_plot_data
-        plot_color: str = __d_plot_color
-        plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
-        plot_zero_value: float = __d_plot_zero_value
+        plot_zero_value: Optional[float] = __d_plot_zero_value
+        plot_category: Optional[str] = __d_plot_category
+        plot_type: Optional[str] = __d_plot_type
         plot_curve: Optional[str] = __d_plot_curve
+        plot_color: Optional[str] = __d_plot_color
+        data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TallSeriesStatCard(
             box,
             title,
             value,
             aux_value,
-            data,
-            plot_type,
             plot_data,
-            plot_color,
-            plot_category,
             plot_value,
             plot_zero_value,
+            plot_category,
+            plot_type,
             plot_curve,
+            plot_color,
+            data,
             commands,
         )
 
@@ -5024,15 +4960,15 @@ class VegaCard:
 
 
 class WideBarStatCard:
-    """No documentation available.
+    """Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed next to the primary value.
+    :param progress: The value of the progress bar, between 0 and 1.
+    :param plot_color: The color of the progress bar.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -5042,8 +4978,8 @@ class WideBarStatCard:
             value: str,
             aux_value: str,
             progress: float,
-            plot_color: str,
-            data: PackedRecord,
+            plot_color: Optional[str] = None,
+            data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -5067,10 +5003,6 @@ class WideBarStatCard:
             raise ValueError('WideBarStatCard.aux_value is required.')
         if self.progress is None:
             raise ValueError('WideBarStatCard.progress is required.')
-        if self.plot_color is None:
-            raise ValueError('WideBarStatCard.plot_color is required.')
-        if self.data is None:
-            raise ValueError('WideBarStatCard.data is required.')
         return _dump(
             view='wide_bar_stat',
             box=self.box,
@@ -5102,19 +5034,15 @@ class WideBarStatCard:
         if __d_progress is None:
             raise ValueError('WideBarStatCard.progress is required.')
         __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('WideBarStatCard.plot_color is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('WideBarStatCard.data is required.')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
         progress: float = __d_progress
-        plot_color: str = __d_plot_color
-        data: PackedRecord = __d_data
+        plot_color: Optional[str] = __d_plot_color
+        data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WideBarStatCard(
             box,
@@ -5129,15 +5057,15 @@ class WideBarStatCard:
 
 
 class WideGaugeStatCard:
-    """No documentation available.
+    """Create a wide stat card displaying a primary value, an auxiliary value and a progress gauge.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed next to the primary value.
+    :param progress: The value of the progress gauge, between 0 and 1.
+    :param plot_color: The color of the progress gauge.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -5147,8 +5075,8 @@ class WideGaugeStatCard:
             value: str,
             aux_value: str,
             progress: float,
-            plot_color: str,
-            data: PackedRecord,
+            plot_color: Optional[str] = None,
+            data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -5172,10 +5100,6 @@ class WideGaugeStatCard:
             raise ValueError('WideGaugeStatCard.aux_value is required.')
         if self.progress is None:
             raise ValueError('WideGaugeStatCard.progress is required.')
-        if self.plot_color is None:
-            raise ValueError('WideGaugeStatCard.plot_color is required.')
-        if self.data is None:
-            raise ValueError('WideGaugeStatCard.data is required.')
         return _dump(
             view='wide_gauge_stat',
             box=self.box,
@@ -5207,19 +5131,15 @@ class WideGaugeStatCard:
         if __d_progress is None:
             raise ValueError('WideGaugeStatCard.progress is required.')
         __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('WideGaugeStatCard.plot_color is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('WideGaugeStatCard.data is required.')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
         progress: float = __d_progress
-        plot_color: str = __d_plot_color
-        data: PackedRecord = __d_data
+        plot_color: Optional[str] = __d_plot_color
+        data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WideGaugeStatCard(
             box,
@@ -5234,20 +5154,20 @@ class WideGaugeStatCard:
 
 
 class WideSeriesStatCard:
-    """No documentation available.
+    """Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param title: The card's title.
+    :param value: The primary value displayed.
+    :param aux_value: The auxiliary value displayed below the primary value.
+    :param plot_data: The plot's data.
+    :param plot_value: The data field to use for y-axis values.
+    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
+    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
+    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param plot_color: The plot's color.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -5256,28 +5176,28 @@ class WideSeriesStatCard:
             title: str,
             value: str,
             aux_value: str,
-            data: PackedRecord,
-            plot_type: str,
             plot_data: PackedData,
-            plot_color: str,
-            plot_category: str,
             plot_value: str,
-            plot_zero_value: float,
+            plot_zero_value: Optional[float] = None,
+            plot_category: Optional[str] = None,
+            plot_type: Optional[str] = None,
             plot_curve: Optional[str] = None,
+            plot_color: Optional[str] = None,
+            data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         self.title = title
         self.value = value
         self.aux_value = aux_value
-        self.data = data
-        self.plot_type = plot_type
         self.plot_data = plot_data
-        self.plot_color = plot_color
-        self.plot_category = plot_category
         self.plot_value = plot_value
         self.plot_zero_value = plot_zero_value
+        self.plot_category = plot_category
+        self.plot_type = plot_type
         self.plot_curve = plot_curve
+        self.plot_color = plot_color
+        self.data = data
         self.commands = commands
 
     def dump(self) -> Dict:
@@ -5290,36 +5210,24 @@ class WideSeriesStatCard:
             raise ValueError('WideSeriesStatCard.value is required.')
         if self.aux_value is None:
             raise ValueError('WideSeriesStatCard.aux_value is required.')
-        if self.data is None:
-            raise ValueError('WideSeriesStatCard.data is required.')
-        if self.plot_type is None:
-            raise ValueError('WideSeriesStatCard.plot_type is required.')
-        if self.plot_type not in ('area', 'interval'):
-            raise ValueError(f'Invalid value "{self.plot_type}" for WideSeriesStatCard.plot_type.')
         if self.plot_data is None:
             raise ValueError('WideSeriesStatCard.plot_data is required.')
-        if self.plot_color is None:
-            raise ValueError('WideSeriesStatCard.plot_color is required.')
-        if self.plot_category is None:
-            raise ValueError('WideSeriesStatCard.plot_category is required.')
         if self.plot_value is None:
             raise ValueError('WideSeriesStatCard.plot_value is required.')
-        if self.plot_zero_value is None:
-            raise ValueError('WideSeriesStatCard.plot_zero_value is required.')
         return _dump(
             view='wide_series_stat',
             box=self.box,
             title=self.title,
             value=self.value,
             aux_value=self.aux_value,
-            data=self.data,
-            plot_type=self.plot_type,
             plot_data=self.plot_data,
-            plot_color=self.plot_color,
-            plot_category=self.plot_category,
             plot_value=self.plot_value,
             plot_zero_value=self.plot_zero_value,
+            plot_category=self.plot_category,
+            plot_type=self.plot_type,
             plot_curve=self.plot_curve,
+            plot_color=self.plot_color,
+            data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -5338,54 +5246,44 @@ class WideSeriesStatCard:
         __d_aux_value: Any = __d.get('aux_value')
         if __d_aux_value is None:
             raise ValueError('WideSeriesStatCard.aux_value is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('WideSeriesStatCard.data is required.')
-        __d_plot_type: Any = __d.get('plot_type')
-        if __d_plot_type is None:
-            raise ValueError('WideSeriesStatCard.plot_type is required.')
         __d_plot_data: Any = __d.get('plot_data')
         if __d_plot_data is None:
             raise ValueError('WideSeriesStatCard.plot_data is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('WideSeriesStatCard.plot_color is required.')
-        __d_plot_category: Any = __d.get('plot_category')
-        if __d_plot_category is None:
-            raise ValueError('WideSeriesStatCard.plot_category is required.')
         __d_plot_value: Any = __d.get('plot_value')
         if __d_plot_value is None:
             raise ValueError('WideSeriesStatCard.plot_value is required.')
         __d_plot_zero_value: Any = __d.get('plot_zero_value')
-        if __d_plot_zero_value is None:
-            raise ValueError('WideSeriesStatCard.plot_zero_value is required.')
+        __d_plot_category: Any = __d.get('plot_category')
+        __d_plot_type: Any = __d.get('plot_type')
         __d_plot_curve: Any = __d.get('plot_curve')
+        __d_plot_color: Any = __d.get('plot_color')
+        __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         aux_value: str = __d_aux_value
-        data: PackedRecord = __d_data
-        plot_type: str = __d_plot_type
         plot_data: PackedData = __d_plot_data
-        plot_color: str = __d_plot_color
-        plot_category: str = __d_plot_category
         plot_value: str = __d_plot_value
-        plot_zero_value: float = __d_plot_zero_value
+        plot_zero_value: Optional[float] = __d_plot_zero_value
+        plot_category: Optional[str] = __d_plot_category
+        plot_type: Optional[str] = __d_plot_type
         plot_curve: Optional[str] = __d_plot_curve
+        plot_color: Optional[str] = __d_plot_color
+        data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WideSeriesStatCard(
             box,
             title,
             value,
             aux_value,
-            data,
-            plot_type,
             plot_data,
-            plot_color,
-            plot_category,
             plot_value,
             plot_zero_value,
+            plot_category,
+            plot_type,
             plot_curve,
+            plot_color,
+            data,
             commands,
         )

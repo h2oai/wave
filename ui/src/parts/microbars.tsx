@@ -7,7 +7,7 @@ interface Props {
   height: U
   data: any[]
   zeroValue?: F
-  category: S
+  category?: S
   value: S
   color: S
 }
@@ -15,7 +15,10 @@ interface Props {
 export class MicroBars extends React.Component<Props> {
   ref = React.createRef<SVGSVGElement>()
   render() {
-    const { width, height, value, category, color, data, zeroValue } = this.props
+    const
+      { width, height, value, category: _category, color, data, zeroValue } = this.props,
+      category = _category ? _category : 'x'
+
 
     let [minY, maxY] = d3.extent<any, any>(data, d => d[value])
 

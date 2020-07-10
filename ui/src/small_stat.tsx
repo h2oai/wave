@@ -21,22 +21,21 @@ const
     }
   })
 
+/** Create a stat card displaying a single value. */
 interface State {
+  /** The card's title. */
   title: S
+  /** The primary value displayed. */
   value: S
+  /** Data for this card. */
   data?: Rec
 }
 
-const defaults: Partial<State> = {
-  title: 'Untitled',
-}
-
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
         const
-          s = theme.merge(defaults, state),
           data = unpack(s.data)
         return (
           <div className={css.card}>

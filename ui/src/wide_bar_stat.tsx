@@ -33,26 +33,27 @@ const
     }
   })
 
+/** Create a wide stat card displaying a primary value, an auxiliary value and a progress bar. */
 interface State {
+  /** The card's title. */
   title: S
+  /** The primary value displayed. */
   value: S
+  /** The auxiliary value displayed next to the primary value. */
   aux_value: S
+  /** The value of the progress bar, between 0 and 1. */
   progress: F
-  plot_color: S
-  data: Rec
-}
-
-const defaults: Partial<State> = {
-  title: 'Untitled',
+  /** The color of the progress bar. */
+  plot_color?: S
+  /** Data for this card. */
+  data?: Rec
 }
 
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
-        const
-          s = theme.merge(defaults, state),
-          data = unpack(s.data)
+        const data = unpack(s.data)
 
         return (
           <div className={css.card}>
@@ -67,7 +68,7 @@ const
                 <Format data={data} format={s.aux_value} />
               </div>
             </div>
-            <ProgressBar thickness={2} color={s.plot_color} value={s.progress} />
+            <ProgressBar thickness={2} color={s.plot_color || theme.colors.gray} value={s.progress} />
           </div>
         )
       }

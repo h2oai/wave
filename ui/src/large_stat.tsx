@@ -33,24 +33,24 @@ const
     }
   })
 
+/** Create a stat card displaying a primary value, an auxiliary value and a caption. */
 interface State {
+  /** The card's title. */
   title: S
+  /** The primary value displayed. */
   value: S
+  /** The auxiliary value displayed next to the primary value. */
   aux_value: S
+  /** The caption displayed below the primary value. */
   caption: S
-  data: Rec
-}
-
-const defaults: Partial<State> = {
-  title: 'Untitled',
-  caption: 'No description available',
+  /** Data for this card. */
+  data?: Rec
 }
 
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
-        const s = theme.merge(defaults, state)
         return (
           <div className={css.card}>
             <div className={css.title}>
