@@ -8,7 +8,7 @@ page = site['/demo']
 page['example'] = ui.form_card(
     box='1 1 4 10',
     items=[
-      ui.file_upload(name='file_upload', label='Upload a file')
+        ui.file_upload(name='file_upload', label='Upload!')
     ]
 )
 

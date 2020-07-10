@@ -198,9 +198,9 @@ export const
               type='file'
               multiple={model.multiple} />
             <label htmlFor="file" className={css.uploadLabel}>
-              <Fluent.Text variant={'large'}>{model.multiple ? 'Choose files' : 'Choose a file'}</Fluent.Text>
+              <Fluent.Text variant={'large'}>Browse...</Fluent.Text>
             </label>
-            <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or Drag&Drop it here.</Fluent.Text>
+            <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or drag and drop {model.multiple ? 'files' : 'a file'} here.</Fluent.Text>
           </>
         )
       },
