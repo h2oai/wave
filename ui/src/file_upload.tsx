@@ -205,9 +205,7 @@ export const
         )
       },
       render = () => {
-        const
-          uploadClasses = isDraggingB() ? clas(css.upload, css["upload--dragging"]) : css.upload,
-          files = filesB()
+        const uploadClasses = isDraggingB() ? clas(css.upload, css["upload--dragging"]) : css.upload
         return (
           <div data-test={model.name}>
             <form
@@ -223,7 +221,7 @@ export const
             </form>
             <Fluent.PrimaryButton
               styles={{ root: { float: 'right' } }}
-              disabled={!!percentCompleteB() || !files.length}
+              disabled={!!percentCompleteB() || !filesB().length}
               text={model.label}
               onClick={upload} />
           </div>
