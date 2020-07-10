@@ -68,7 +68,7 @@ const
               <Format data={data} format={s.title} />
             </div>
             <div className={css.body}>
-              <ProgressArc size={grid.unitInnerWidth} thickness={2} color={s.plot_color || theme.colors.gray} value={s.progress} />
+              <ProgressArc size={grid.unitInnerWidth} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
               <div className={css.value_overlay}>
                 <div className={css.value}>
                   <Format data={data} format={s.value} />

@@ -219,13 +219,15 @@ export interface Theme {
   font: ThemeFont
   colors: Palette & Tones
   merge<T>(defs: Partial<T>, state: Partial<T>): T
+  color(color?: S): S
 }
 
 let theme: Theme | null = null
 export const
   loadTheme = (name: S): Theme => {
     const colors = palettes[name],
-      resolveColor = (s: S): S => {
+      color = (s?: S): S => {
+        if (!s) return colors.gray
         if (s.startsWith('$')) {
           const c = (colors as any)[s.substr(1)]
           return c ? c : colors.gray
@@ -235,14 +237,14 @@ export const
       merge = <T extends {}>(defs: Partial<T>, state: Partial<T>): T => {
         const s = { ...defs, ...state } as any
         for (const k in s) {
-          if (k.endsWith('_color')) {
+          if (k.endsWith('_color')) {// XXX obsolete; remove
             const v = s[k]
-            if (typeof v === 'string') s[k] = resolveColor(v)
+            if (typeof v === 'string') s[k] = color(v)
           }
         }
         return s as T
       }
-    theme = { font, colors, merge, }
+    theme = { font, colors, merge, color }
     return theme
   },
   getTheme = (): Theme => theme ? theme : loadTheme('light')

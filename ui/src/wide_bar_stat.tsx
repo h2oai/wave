@@ -68,7 +68,7 @@ const
                 <Format data={data} format={s.aux_value} />
               </div>
             </div>
-            <ProgressBar thickness={2} color={s.plot_color || theme.colors.gray} value={s.progress} />
+            <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
           </div>
         )
       }

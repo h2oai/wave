@@ -83,7 +83,7 @@ const
         return (
           <div className={css.card}>
             <div className={css.left}>
-              <ProgressArc size={grid.unitInnerHeight} thickness={2} color={s.plot_color || theme.colors.gray} value={s.progress} />
+              <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
               <div className={css.percentContainer}>
                 <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
               </div>

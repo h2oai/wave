@@ -75,7 +75,7 @@ const
                 data={unpack(s.plot_data)}
                 category={s.plot_category}
                 value={s.plot_value}
-                color={s.plot_color || theme.colors.gray}
+                color={theme.color(s.plot_color)}
                 zeroValue={s.plot_zero_value}
               />
             ) : (
@@ -84,7 +84,7 @@ const
                 height={plotHeight}
                 data={unpack(s.plot_data)}
                 value={s.plot_value}
-                color={s.plot_color || theme.colors.gray}
+                color={theme.color(s.plot_color)}
                 zeroValue={s.plot_zero_value}
                 curve={s.plot_curve || 'linear'}
               />
