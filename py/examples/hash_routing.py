@@ -4,7 +4,7 @@
 #
 # The location hash can be accessed using `q.args['#']`.
 # ---
-from telesync import Q, listen, ui, site
+from telesync import Q, listen, ui
 
 
 async def main(q: Q):

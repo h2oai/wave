@@ -82,5 +82,5 @@ const
     return { render, changed }
   })
 
-cards.register('card5', View)
+cards.register('tall_gauge_stat', View)
 

@@ -7,15 +7,6 @@ from .types import Value, PackedRecord, PackedRecords, PackedData
 from .types import \
     Button, \
     Buttons, \
-    Card1Card, \
-    Card2Card, \
-    Card3Card, \
-    Card4Card, \
-    Card5Card, \
-    Card6Card, \
-    Card7Card, \
-    Card8Card, \
-    Card9Card, \
     Cell, \
     Checkbox, \
     Checklist, \
@@ -42,6 +33,8 @@ from .types import \
     GridCard, \
     HeadingCell, \
     Label, \
+    LargeBarStatCard, \
+    LargeStatCard, \
     Link, \
     ListCard, \
     ListItem1Card, \
@@ -63,6 +56,8 @@ from .types import \
     RepeatCard, \
     Separator, \
     Slider, \
+    SmallSeriesStatCard, \
+    SmallStatCard, \
     Spinbox, \
     Tab, \
     TabCard, \
@@ -70,379 +65,18 @@ from .types import \
     TableColumn, \
     TableRow, \
     Tabs, \
+    TallGaugeStatCard, \
+    TallSeriesStatCard, \
     TemplateCard, \
     Text, \
     Textbox, \
     Toggle, \
     ToolbarCard, \
     VegaCard, \
-    VegaCell
-
-
-def command(
-        name: str,
-        label: Optional[str] = None,
-        caption: Optional[str] = None,
-        icon: Optional[str] = None,
-        items: Optional[List[Command]] = None,
-        data: Optional[str] = None,
-) -> Command:
-    """Create a command.
-
-    Commands are typically displayed as context menu items associated with
-    parts of notebooks or dashboards.
-
-    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
-    :param label: The text displayed for this command.
-    :param caption: The caption for this command (typically a tooltip).
-    :param icon: The icon to be displayed for this command.
-    :param items: Sub-commands, if any
-    :param data: Data associated with this command, if any.
-    """
-    return Command(
-        name,
-        label,
-        caption,
-        icon,
-        items,
-        data,
-    )
-
-
-def card1_card(
-        box: str,
-        title: str,
-        value: str,
-        data: Optional[PackedRecord] = None,
-        commands: Optional[List[Command]] = None,
-) -> Card1Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    return Card1Card(
-        box,
-        title,
-        value,
-        data,
-        commands,
-    )
-
-
-def card2_card(
-        box: str,
-        title: str,
-        value: str,
-        aux_value: str,
-        data: PackedRecord,
-        plot_type: str,
-        plot_data: PackedData,
-        plot_color: str,
-        plot_category: str,
-        plot_value: str,
-        plot_zero_value: float,
-        plot_curve: Optional[str] = None,
-        commands: Optional[List[Command]] = None,
-) -> Card2Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param commands: Contextual menu commands for this component.
-    """
-    return Card2Card(
-        box,
-        title,
-        value,
-        aux_value,
-        data,
-        plot_type,
-        plot_data,
-        plot_color,
-        plot_category,
-        plot_value,
-        plot_zero_value,
-        plot_curve,
-        commands,
-    )
-
-
-def card3_card(
-        box: str,
-        title: str,
-        value: str,
-        aux_value: str,
-        caption: str,
-        data: PackedRecord,
-        commands: Optional[List[Command]] = None,
-) -> Card3Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param caption: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    return Card3Card(
-        box,
-        title,
-        value,
-        aux_value,
-        caption,
-        data,
-        commands,
-    )
-
-
-def card4_card(
-        box: str,
-        title: str,
-        value: str,
-        aux_value: str,
-        progress: float,
-        plot_color: str,
-        data: PackedRecord,
-        commands: Optional[List[Command]] = None,
-) -> Card4Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    return Card4Card(
-        box,
-        title,
-        value,
-        aux_value,
-        progress,
-        plot_color,
-        data,
-        commands,
-    )
-
-
-def card5_card(
-        box: str,
-        title: str,
-        value: str,
-        aux_value: str,
-        progress: float,
-        plot_color: str,
-        data: PackedRecord,
-        commands: Optional[List[Command]] = None,
-) -> Card5Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    return Card5Card(
-        box,
-        title,
-        value,
-        aux_value,
-        progress,
-        plot_color,
-        data,
-        commands,
-    )
-
-
-def card6_card(
-        box: str,
-        title: str,
-        value: str,
-        aux_value: str,
-        data: PackedRecord,
-        plot_type: str,
-        plot_data: PackedData,
-        plot_color: str,
-        plot_category: str,
-        plot_value: str,
-        plot_zero_value: float,
-        plot_curve: Optional[str] = None,
-        commands: Optional[List[Command]] = None,
-) -> Card6Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param commands: Contextual menu commands for this component.
-    """
-    return Card6Card(
-        box,
-        title,
-        value,
-        aux_value,
-        data,
-        plot_type,
-        plot_data,
-        plot_color,
-        plot_category,
-        plot_value,
-        plot_zero_value,
-        plot_curve,
-        commands,
-    )
-
-
-def card7_card(
-        box: str,
-        title: str,
-        value: str,
-        data: PackedRecord,
-        plot_type: str,
-        plot_data: PackedData,
-        plot_color: str,
-        plot_category: str,
-        plot_value: str,
-        plot_zero_value: float,
-        plot_curve: Optional[str] = None,
-        commands: Optional[List[Command]] = None,
-) -> Card7Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param commands: Contextual menu commands for this component.
-    """
-    return Card7Card(
-        box,
-        title,
-        value,
-        data,
-        plot_type,
-        plot_data,
-        plot_color,
-        plot_category,
-        plot_value,
-        plot_zero_value,
-        plot_curve,
-        commands,
-    )
-
-
-def card8_card(
-        box: str,
-        title: str,
-        value: str,
-        aux_value: str,
-        progress: float,
-        plot_color: str,
-        data: PackedRecord,
-        commands: Optional[List[Command]] = None,
-) -> Card8Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    return Card8Card(
-        box,
-        title,
-        value,
-        aux_value,
-        progress,
-        plot_color,
-        data,
-        commands,
-    )
-
-
-def card9_card(
-        box: str,
-        title: str,
-        caption: str,
-        value: str,
-        aux_value: str,
-        value_caption: str,
-        aux_value_caption: str,
-        progress: float,
-        plot_color: str,
-        data: PackedRecord,
-        commands: Optional[List[Command]] = None,
-) -> Card9Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param caption: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param value_caption: No documentation available.
-    :param aux_value_caption: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    return Card9Card(
-        box,
-        title,
-        caption,
-        value,
-        aux_value,
-        value_caption,
-        aux_value_caption,
-        progress,
-        plot_color,
-        data,
-        commands,
-    )
+    VegaCell, \
+    WideBarStatCard, \
+    WideGaugeStatCard, \
+    WideSeriesStatCard
 
 
 def heading_cell(
@@ -611,6 +245,36 @@ def dashboard_page(
     return DashboardPage(
         title,
         rows,
+    )
+
+
+def command(
+        name: str,
+        label: Optional[str] = None,
+        caption: Optional[str] = None,
+        icon: Optional[str] = None,
+        items: Optional[List[Command]] = None,
+        data: Optional[str] = None,
+) -> Command:
+    """Create a command.
+
+    Commands are typically displayed as context menu items associated with
+    parts of notebooks or dashboards.
+
+    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
+    :param label: The text displayed for this command.
+    :param caption: The caption for this command (typically a tooltip).
+    :param icon: The icon to be displayed for this command.
+    :param items: Sub-commands, if any
+    :param data: Data associated with this command, if any.
+    """
+    return Command(
+        name,
+        label,
+        caption,
+        icon,
+        items,
+        data,
     )
 
 
@@ -1637,6 +1301,78 @@ def grid_card(
     )
 
 
+def large_bar_stat_card(
+        box: str,
+        title: str,
+        caption: str,
+        value: str,
+        aux_value: str,
+        value_caption: str,
+        aux_value_caption: str,
+        progress: float,
+        plot_color: str,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> LargeBarStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param caption: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param value_caption: No documentation available.
+    :param aux_value_caption: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    return LargeBarStatCard(
+        box,
+        title,
+        caption,
+        value,
+        aux_value,
+        value_caption,
+        aux_value_caption,
+        progress,
+        plot_color,
+        data,
+        commands,
+    )
+
+
+def large_stat_card(
+        box: str,
+        title: str,
+        value: str,
+        aux_value: str,
+        caption: str,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> LargeStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param caption: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    return LargeStatCard(
+        box,
+        title,
+        value,
+        aux_value,
+        caption,
+        data,
+        commands,
+    )
+
+
 def list_card(
         box: str,
         title: str,
@@ -2103,6 +1839,75 @@ def repeat_card(
     )
 
 
+def small_series_stat_card(
+        box: str,
+        title: str,
+        value: str,
+        data: PackedRecord,
+        plot_type: str,
+        plot_data: PackedData,
+        plot_color: str,
+        plot_category: str,
+        plot_value: str,
+        plot_zero_value: float,
+        plot_curve: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> SmallSeriesStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param data: No documentation available.
+    :param plot_type: No documentation available. One of 'area', 'interval'.
+    :param plot_data: No documentation available.
+    :param plot_color: No documentation available.
+    :param plot_category: No documentation available.
+    :param plot_value: No documentation available.
+    :param plot_zero_value: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
+    """
+    return SmallSeriesStatCard(
+        box,
+        title,
+        value,
+        data,
+        plot_type,
+        plot_data,
+        plot_color,
+        plot_category,
+        plot_value,
+        plot_zero_value,
+        plot_curve,
+        commands,
+    )
+
+
+def small_stat_card(
+        box: str,
+        title: str,
+        value: str,
+        data: Optional[PackedRecord] = None,
+        commands: Optional[List[Command]] = None,
+) -> SmallStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    return SmallStatCard(
+        box,
+        title,
+        value,
+        data,
+        commands,
+    )
+
+
 def tab_card(
         box: str,
         items: List[Tab],
@@ -2120,6 +1925,87 @@ def tab_card(
         box,
         items,
         link,
+        commands,
+    )
+
+
+def tall_gauge_stat_card(
+        box: str,
+        title: str,
+        value: str,
+        aux_value: str,
+        progress: float,
+        plot_color: str,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> TallGaugeStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    return TallGaugeStatCard(
+        box,
+        title,
+        value,
+        aux_value,
+        progress,
+        plot_color,
+        data,
+        commands,
+    )
+
+
+def tall_series_stat_card(
+        box: str,
+        title: str,
+        value: str,
+        aux_value: str,
+        data: PackedRecord,
+        plot_type: str,
+        plot_data: PackedData,
+        plot_color: str,
+        plot_category: str,
+        plot_value: str,
+        plot_zero_value: float,
+        plot_curve: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> TallSeriesStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param data: No documentation available.
+    :param plot_type: No documentation available. One of 'area', 'interval'.
+    :param plot_data: No documentation available.
+    :param plot_color: No documentation available.
+    :param plot_category: No documentation available.
+    :param plot_value: No documentation available.
+    :param plot_zero_value: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
+    """
+    return TallSeriesStatCard(
+        box,
+        title,
+        value,
+        aux_value,
+        data,
+        plot_type,
+        plot_data,
+        plot_color,
+        plot_category,
+        plot_value,
+        plot_zero_value,
+        plot_curve,
         commands,
     )
 
@@ -2192,5 +2078,119 @@ def vega_card(
         title,
         specification,
         data,
+        commands,
+    )
+
+
+def wide_bar_stat_card(
+        box: str,
+        title: str,
+        value: str,
+        aux_value: str,
+        progress: float,
+        plot_color: str,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> WideBarStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    return WideBarStatCard(
+        box,
+        title,
+        value,
+        aux_value,
+        progress,
+        plot_color,
+        data,
+        commands,
+    )
+
+
+def wide_gauge_stat_card(
+        box: str,
+        title: str,
+        value: str,
+        aux_value: str,
+        progress: float,
+        plot_color: str,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> WideGaugeStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    return WideGaugeStatCard(
+        box,
+        title,
+        value,
+        aux_value,
+        progress,
+        plot_color,
+        data,
+        commands,
+    )
+
+
+def wide_series_stat_card(
+        box: str,
+        title: str,
+        value: str,
+        aux_value: str,
+        data: PackedRecord,
+        plot_type: str,
+        plot_data: PackedData,
+        plot_color: str,
+        plot_category: str,
+        plot_value: str,
+        plot_zero_value: float,
+        plot_curve: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> WideSeriesStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param data: No documentation available.
+    :param plot_type: No documentation available. One of 'area', 'interval'.
+    :param plot_data: No documentation available.
+    :param plot_color: No documentation available.
+    :param plot_category: No documentation available.
+    :param plot_value: No documentation available.
+    :param plot_zero_value: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
+    """
+    return WideSeriesStatCard(
+        box,
+        title,
+        value,
+        aux_value,
+        data,
+        plot_type,
+        plot_data,
+        plot_color,
+        plot_category,
+        plot_value,
+        plot_zero_value,
+        plot_curve,
         commands,
     )

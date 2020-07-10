@@ -1,9 +1,8 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards, Format } from './layout';
-import { bond, Card, unpack, F, Rec, S } from './telesync';
+import { bond, Card, Rec, S } from './telesync';
 import { getTheme } from './theme';
-import { ProgressBar } from './parts/progress_bar';
 
 const
   theme = getTheme(),
@@ -11,7 +10,6 @@ const
     card: {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-between',
     },
     title: {
       ...theme.font.s12,
@@ -22,14 +20,16 @@ const
       alignItems: 'baseline',
     },
     value: {
-      ...theme.font.s18,
-      ...theme.font.w3,
+      ...theme.font.s40,
+      ...theme.font.w2,
     },
     aux_value: {
-      ...theme.font.s13,
-      color: theme.colors.text7,
-      flexGrow: 1,
       marginLeft: 5,
+      color: theme.colors.text6,
+    },
+    caption: {
+      ...theme.font.s13,
+      color: theme.colors.text5,
     }
   })
 
@@ -37,41 +37,40 @@ interface State {
   title: S
   value: S
   aux_value: S
-  progress: F
-  plot_color: S
+  caption: S
   data: Rec
 }
 
 const defaults: Partial<State> = {
   title: 'Untitled',
+  caption: 'No description available',
 }
 
 const
   View = bond(({ state, changed }: Card<State>) => {
     const
       render = () => {
-        const
-          s = theme.merge(defaults, state),
-          data = unpack(s.data)
-
+        const s = theme.merge(defaults, state)
         return (
           <div className={css.card}>
             <div className={css.title}>
-              <Format data={data} format={s.title} />
+              <Format data={s.data} format={s.title} />
             </div>
             <div className={css.values}>
               <div className={css.value}>
-                <Format data={data} format={s.value} />
+                <Format data={s.data} defaultValue={s.value} format={s.value} />
               </div>
               <div className={css.aux_value}>
-                <Format data={data} format={s.aux_value} />
+                <Format data={s.data} format={s.aux_value} />
               </div>
             </div>
-            <ProgressBar thickness={2} color={s.plot_color} value={s.progress} />
+            <div className={css.caption}>
+              <Format data={s.data} format={s.caption} />
+            </div>
           </div>
         )
       }
     return { render, changed }
   })
 
-cards.register('card8', View)
+cards.register('large_stat', View)

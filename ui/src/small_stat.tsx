@@ -52,4 +52,4 @@ const
   })
 
 
-cards.register('card1', View)
+cards.register('small_stat', View)

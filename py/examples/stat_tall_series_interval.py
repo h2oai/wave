@@ -1,4 +1,4 @@
-# Card2 / Interval
+# Stat / Series / Tall / Interval
 # No description available.
 # ---
 import time
@@ -13,8 +13,8 @@ page = site['/demo']
 fake = Faker()
 f = FakeCategoricalSeries()
 cat, val, pc = f.next()
-c = page.add(f'example', ui.card2_card(
-    box='1 1 2 1',
+c = page.add(f'example', ui.tall_series_stat_card(
+    box='1 1 1 2',
     title=fake.cryptocurrency_name(),
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl quux style="unit" unit="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
@@ -23,7 +23,7 @@ c = page.add(f'example', ui.card2_card(
     plot_type='interval',
     plot_value='qux',
     plot_color='$red',
-    plot_data=data('foo qux', -15),
+    plot_data=data('foo qux', -20),
     plot_zero_value=0,
 ))
 page.sync()

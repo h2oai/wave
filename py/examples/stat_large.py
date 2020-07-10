@@ -1,4 +1,4 @@
-# Card3
+# Stat / Large
 # No description available.
 # ---
 import time
@@ -13,7 +13,7 @@ page = site['/demo']
 fake = Faker()
 f = FakePercent()
 val, pc = f.next()
-c = page.add(f'example', ui.card3_card(
+c = page.add(f'example', ui.large_stat_card(
     box='1 1 2 2',
     title=fake.cryptocurrency_name(),
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',

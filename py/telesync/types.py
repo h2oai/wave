@@ -14,1153 +14,6 @@ PackedData = Union[Data, str]
 def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}
 
 
-class Command:
-    """Create a command.
-
-    Commands are typically displayed as context menu items associated with
-    parts of notebooks or dashboards.
-
-    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
-    :param label: The text displayed for this command.
-    :param caption: The caption for this command (typically a tooltip).
-    :param icon: The icon to be displayed for this command.
-    :param items: Sub-commands, if any
-    :param data: Data associated with this command, if any.
-    """
-    def __init__(
-            self,
-            name: str,
-            label: Optional[str] = None,
-            caption: Optional[str] = None,
-            icon: Optional[str] = None,
-            items: Optional[List['Command']] = None,
-            data: Optional[str] = None,
-    ):
-        self.name = name
-        self.label = label
-        self.caption = caption
-        self.icon = icon
-        self.items = items
-        self.data = data
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Command.name is required.')
-        return _dump(
-            name=self.name,
-            label=self.label,
-            caption=self.caption,
-            icon=self.icon,
-            items=None if self.items is None else [__e.dump() for __e in self.items],
-            data=self.data,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Command':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Command.name is required.')
-        __d_label: Any = __d.get('label')
-        __d_caption: Any = __d.get('caption')
-        __d_icon: Any = __d.get('icon')
-        __d_items: Any = __d.get('items')
-        __d_data: Any = __d.get('data')
-        name: str = __d_name
-        label: Optional[str] = __d_label
-        caption: Optional[str] = __d_caption
-        icon: Optional[str] = __d_icon
-        items: Optional[List['Command']] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
-        data: Optional[str] = __d_data
-        return Command(
-            name,
-            label,
-            caption,
-            icon,
-            items,
-            data,
-        )
-
-
-class Card1Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            value: str,
-            data: Optional[PackedRecord] = None,
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        self.title = title
-        self.value = value
-        self.data = data
-        self.commands = commands
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Card1Card.box is required.')
-        if self.title is None:
-            raise ValueError('Card1Card.title is required.')
-        if self.value is None:
-            raise ValueError('Card1Card.value is required.')
-        return _dump(
-            view='card1',
-            box=self.box,
-            title=self.title,
-            value=self.value,
-            data=self.data,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Card1Card':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Card1Card.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Card1Card.title is required.')
-        __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Card1Card.value is required.')
-        __d_data: Any = __d.get('data')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        title: str = __d_title
-        value: str = __d_value
-        data: Optional[PackedRecord] = __d_data
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return Card1Card(
-            box,
-            title,
-            value,
-            data,
-            commands,
-        )
-
-
-class Card2Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param commands: Contextual menu commands for this component.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            value: str,
-            aux_value: str,
-            data: PackedRecord,
-            plot_type: str,
-            plot_data: PackedData,
-            plot_color: str,
-            plot_category: str,
-            plot_value: str,
-            plot_zero_value: float,
-            plot_curve: Optional[str] = None,
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        self.title = title
-        self.value = value
-        self.aux_value = aux_value
-        self.data = data
-        self.plot_type = plot_type
-        self.plot_data = plot_data
-        self.plot_color = plot_color
-        self.plot_category = plot_category
-        self.plot_value = plot_value
-        self.plot_zero_value = plot_zero_value
-        self.plot_curve = plot_curve
-        self.commands = commands
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Card2Card.box is required.')
-        if self.title is None:
-            raise ValueError('Card2Card.title is required.')
-        if self.value is None:
-            raise ValueError('Card2Card.value is required.')
-        if self.aux_value is None:
-            raise ValueError('Card2Card.aux_value is required.')
-        if self.data is None:
-            raise ValueError('Card2Card.data is required.')
-        if self.plot_type is None:
-            raise ValueError('Card2Card.plot_type is required.')
-        if self.plot_type not in ('area', 'interval'):
-            raise ValueError(f'Invalid value "{self.plot_type}" for Card2Card.plot_type.')
-        if self.plot_data is None:
-            raise ValueError('Card2Card.plot_data is required.')
-        if self.plot_color is None:
-            raise ValueError('Card2Card.plot_color is required.')
-        if self.plot_category is None:
-            raise ValueError('Card2Card.plot_category is required.')
-        if self.plot_value is None:
-            raise ValueError('Card2Card.plot_value is required.')
-        if self.plot_zero_value is None:
-            raise ValueError('Card2Card.plot_zero_value is required.')
-        return _dump(
-            view='card2',
-            box=self.box,
-            title=self.title,
-            value=self.value,
-            aux_value=self.aux_value,
-            data=self.data,
-            plot_type=self.plot_type,
-            plot_data=self.plot_data,
-            plot_color=self.plot_color,
-            plot_category=self.plot_category,
-            plot_value=self.plot_value,
-            plot_zero_value=self.plot_zero_value,
-            plot_curve=self.plot_curve,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Card2Card':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Card2Card.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Card2Card.title is required.')
-        __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Card2Card.value is required.')
-        __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('Card2Card.aux_value is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Card2Card.data is required.')
-        __d_plot_type: Any = __d.get('plot_type')
-        if __d_plot_type is None:
-            raise ValueError('Card2Card.plot_type is required.')
-        __d_plot_data: Any = __d.get('plot_data')
-        if __d_plot_data is None:
-            raise ValueError('Card2Card.plot_data is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('Card2Card.plot_color is required.')
-        __d_plot_category: Any = __d.get('plot_category')
-        if __d_plot_category is None:
-            raise ValueError('Card2Card.plot_category is required.')
-        __d_plot_value: Any = __d.get('plot_value')
-        if __d_plot_value is None:
-            raise ValueError('Card2Card.plot_value is required.')
-        __d_plot_zero_value: Any = __d.get('plot_zero_value')
-        if __d_plot_zero_value is None:
-            raise ValueError('Card2Card.plot_zero_value is required.')
-        __d_plot_curve: Any = __d.get('plot_curve')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        title: str = __d_title
-        value: str = __d_value
-        aux_value: str = __d_aux_value
-        data: PackedRecord = __d_data
-        plot_type: str = __d_plot_type
-        plot_data: PackedData = __d_plot_data
-        plot_color: str = __d_plot_color
-        plot_category: str = __d_plot_category
-        plot_value: str = __d_plot_value
-        plot_zero_value: float = __d_plot_zero_value
-        plot_curve: Optional[str] = __d_plot_curve
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return Card2Card(
-            box,
-            title,
-            value,
-            aux_value,
-            data,
-            plot_type,
-            plot_data,
-            plot_color,
-            plot_category,
-            plot_value,
-            plot_zero_value,
-            plot_curve,
-            commands,
-        )
-
-
-class Card3Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param caption: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            value: str,
-            aux_value: str,
-            caption: str,
-            data: PackedRecord,
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        self.title = title
-        self.value = value
-        self.aux_value = aux_value
-        self.caption = caption
-        self.data = data
-        self.commands = commands
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Card3Card.box is required.')
-        if self.title is None:
-            raise ValueError('Card3Card.title is required.')
-        if self.value is None:
-            raise ValueError('Card3Card.value is required.')
-        if self.aux_value is None:
-            raise ValueError('Card3Card.aux_value is required.')
-        if self.caption is None:
-            raise ValueError('Card3Card.caption is required.')
-        if self.data is None:
-            raise ValueError('Card3Card.data is required.')
-        return _dump(
-            view='card3',
-            box=self.box,
-            title=self.title,
-            value=self.value,
-            aux_value=self.aux_value,
-            caption=self.caption,
-            data=self.data,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Card3Card':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Card3Card.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Card3Card.title is required.')
-        __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Card3Card.value is required.')
-        __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('Card3Card.aux_value is required.')
-        __d_caption: Any = __d.get('caption')
-        if __d_caption is None:
-            raise ValueError('Card3Card.caption is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Card3Card.data is required.')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        title: str = __d_title
-        value: str = __d_value
-        aux_value: str = __d_aux_value
-        caption: str = __d_caption
-        data: PackedRecord = __d_data
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return Card3Card(
-            box,
-            title,
-            value,
-            aux_value,
-            caption,
-            data,
-            commands,
-        )
-
-
-class Card4Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            value: str,
-            aux_value: str,
-            progress: float,
-            plot_color: str,
-            data: PackedRecord,
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        self.title = title
-        self.value = value
-        self.aux_value = aux_value
-        self.progress = progress
-        self.plot_color = plot_color
-        self.data = data
-        self.commands = commands
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Card4Card.box is required.')
-        if self.title is None:
-            raise ValueError('Card4Card.title is required.')
-        if self.value is None:
-            raise ValueError('Card4Card.value is required.')
-        if self.aux_value is None:
-            raise ValueError('Card4Card.aux_value is required.')
-        if self.progress is None:
-            raise ValueError('Card4Card.progress is required.')
-        if self.plot_color is None:
-            raise ValueError('Card4Card.plot_color is required.')
-        if self.data is None:
-            raise ValueError('Card4Card.data is required.')
-        return _dump(
-            view='card4',
-            box=self.box,
-            title=self.title,
-            value=self.value,
-            aux_value=self.aux_value,
-            progress=self.progress,
-            plot_color=self.plot_color,
-            data=self.data,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Card4Card':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Card4Card.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Card4Card.title is required.')
-        __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Card4Card.value is required.')
-        __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('Card4Card.aux_value is required.')
-        __d_progress: Any = __d.get('progress')
-        if __d_progress is None:
-            raise ValueError('Card4Card.progress is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('Card4Card.plot_color is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Card4Card.data is required.')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        title: str = __d_title
-        value: str = __d_value
-        aux_value: str = __d_aux_value
-        progress: float = __d_progress
-        plot_color: str = __d_plot_color
-        data: PackedRecord = __d_data
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return Card4Card(
-            box,
-            title,
-            value,
-            aux_value,
-            progress,
-            plot_color,
-            data,
-            commands,
-        )
-
-
-class Card5Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            value: str,
-            aux_value: str,
-            progress: float,
-            plot_color: str,
-            data: PackedRecord,
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        self.title = title
-        self.value = value
-        self.aux_value = aux_value
-        self.progress = progress
-        self.plot_color = plot_color
-        self.data = data
-        self.commands = commands
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Card5Card.box is required.')
-        if self.title is None:
-            raise ValueError('Card5Card.title is required.')
-        if self.value is None:
-            raise ValueError('Card5Card.value is required.')
-        if self.aux_value is None:
-            raise ValueError('Card5Card.aux_value is required.')
-        if self.progress is None:
-            raise ValueError('Card5Card.progress is required.')
-        if self.plot_color is None:
-            raise ValueError('Card5Card.plot_color is required.')
-        if self.data is None:
-            raise ValueError('Card5Card.data is required.')
-        return _dump(
-            view='card5',
-            box=self.box,
-            title=self.title,
-            value=self.value,
-            aux_value=self.aux_value,
-            progress=self.progress,
-            plot_color=self.plot_color,
-            data=self.data,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Card5Card':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Card5Card.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Card5Card.title is required.')
-        __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Card5Card.value is required.')
-        __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('Card5Card.aux_value is required.')
-        __d_progress: Any = __d.get('progress')
-        if __d_progress is None:
-            raise ValueError('Card5Card.progress is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('Card5Card.plot_color is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Card5Card.data is required.')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        title: str = __d_title
-        value: str = __d_value
-        aux_value: str = __d_aux_value
-        progress: float = __d_progress
-        plot_color: str = __d_plot_color
-        data: PackedRecord = __d_data
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return Card5Card(
-            box,
-            title,
-            value,
-            aux_value,
-            progress,
-            plot_color,
-            data,
-            commands,
-        )
-
-
-class Card6Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param commands: Contextual menu commands for this component.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            value: str,
-            aux_value: str,
-            data: PackedRecord,
-            plot_type: str,
-            plot_data: PackedData,
-            plot_color: str,
-            plot_category: str,
-            plot_value: str,
-            plot_zero_value: float,
-            plot_curve: Optional[str] = None,
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        self.title = title
-        self.value = value
-        self.aux_value = aux_value
-        self.data = data
-        self.plot_type = plot_type
-        self.plot_data = plot_data
-        self.plot_color = plot_color
-        self.plot_category = plot_category
-        self.plot_value = plot_value
-        self.plot_zero_value = plot_zero_value
-        self.plot_curve = plot_curve
-        self.commands = commands
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Card6Card.box is required.')
-        if self.title is None:
-            raise ValueError('Card6Card.title is required.')
-        if self.value is None:
-            raise ValueError('Card6Card.value is required.')
-        if self.aux_value is None:
-            raise ValueError('Card6Card.aux_value is required.')
-        if self.data is None:
-            raise ValueError('Card6Card.data is required.')
-        if self.plot_type is None:
-            raise ValueError('Card6Card.plot_type is required.')
-        if self.plot_type not in ('area', 'interval'):
-            raise ValueError(f'Invalid value "{self.plot_type}" for Card6Card.plot_type.')
-        if self.plot_data is None:
-            raise ValueError('Card6Card.plot_data is required.')
-        if self.plot_color is None:
-            raise ValueError('Card6Card.plot_color is required.')
-        if self.plot_category is None:
-            raise ValueError('Card6Card.plot_category is required.')
-        if self.plot_value is None:
-            raise ValueError('Card6Card.plot_value is required.')
-        if self.plot_zero_value is None:
-            raise ValueError('Card6Card.plot_zero_value is required.')
-        return _dump(
-            view='card6',
-            box=self.box,
-            title=self.title,
-            value=self.value,
-            aux_value=self.aux_value,
-            data=self.data,
-            plot_type=self.plot_type,
-            plot_data=self.plot_data,
-            plot_color=self.plot_color,
-            plot_category=self.plot_category,
-            plot_value=self.plot_value,
-            plot_zero_value=self.plot_zero_value,
-            plot_curve=self.plot_curve,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Card6Card':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Card6Card.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Card6Card.title is required.')
-        __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Card6Card.value is required.')
-        __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('Card6Card.aux_value is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Card6Card.data is required.')
-        __d_plot_type: Any = __d.get('plot_type')
-        if __d_plot_type is None:
-            raise ValueError('Card6Card.plot_type is required.')
-        __d_plot_data: Any = __d.get('plot_data')
-        if __d_plot_data is None:
-            raise ValueError('Card6Card.plot_data is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('Card6Card.plot_color is required.')
-        __d_plot_category: Any = __d.get('plot_category')
-        if __d_plot_category is None:
-            raise ValueError('Card6Card.plot_category is required.')
-        __d_plot_value: Any = __d.get('plot_value')
-        if __d_plot_value is None:
-            raise ValueError('Card6Card.plot_value is required.')
-        __d_plot_zero_value: Any = __d.get('plot_zero_value')
-        if __d_plot_zero_value is None:
-            raise ValueError('Card6Card.plot_zero_value is required.')
-        __d_plot_curve: Any = __d.get('plot_curve')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        title: str = __d_title
-        value: str = __d_value
-        aux_value: str = __d_aux_value
-        data: PackedRecord = __d_data
-        plot_type: str = __d_plot_type
-        plot_data: PackedData = __d_plot_data
-        plot_color: str = __d_plot_color
-        plot_category: str = __d_plot_category
-        plot_value: str = __d_plot_value
-        plot_zero_value: float = __d_plot_zero_value
-        plot_curve: Optional[str] = __d_plot_curve
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return Card6Card(
-            box,
-            title,
-            value,
-            aux_value,
-            data,
-            plot_type,
-            plot_data,
-            plot_color,
-            plot_category,
-            plot_value,
-            plot_zero_value,
-            plot_curve,
-            commands,
-        )
-
-
-class Card7Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param data: No documentation available.
-    :param plot_type: No documentation available. One of 'area', 'interval'.
-    :param plot_data: No documentation available.
-    :param plot_color: No documentation available.
-    :param plot_category: No documentation available.
-    :param plot_value: No documentation available.
-    :param plot_zero_value: No documentation available.
-    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param commands: Contextual menu commands for this component.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            value: str,
-            data: PackedRecord,
-            plot_type: str,
-            plot_data: PackedData,
-            plot_color: str,
-            plot_category: str,
-            plot_value: str,
-            plot_zero_value: float,
-            plot_curve: Optional[str] = None,
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        self.title = title
-        self.value = value
-        self.data = data
-        self.plot_type = plot_type
-        self.plot_data = plot_data
-        self.plot_color = plot_color
-        self.plot_category = plot_category
-        self.plot_value = plot_value
-        self.plot_zero_value = plot_zero_value
-        self.plot_curve = plot_curve
-        self.commands = commands
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Card7Card.box is required.')
-        if self.title is None:
-            raise ValueError('Card7Card.title is required.')
-        if self.value is None:
-            raise ValueError('Card7Card.value is required.')
-        if self.data is None:
-            raise ValueError('Card7Card.data is required.')
-        if self.plot_type is None:
-            raise ValueError('Card7Card.plot_type is required.')
-        if self.plot_type not in ('area', 'interval'):
-            raise ValueError(f'Invalid value "{self.plot_type}" for Card7Card.plot_type.')
-        if self.plot_data is None:
-            raise ValueError('Card7Card.plot_data is required.')
-        if self.plot_color is None:
-            raise ValueError('Card7Card.plot_color is required.')
-        if self.plot_category is None:
-            raise ValueError('Card7Card.plot_category is required.')
-        if self.plot_value is None:
-            raise ValueError('Card7Card.plot_value is required.')
-        if self.plot_zero_value is None:
-            raise ValueError('Card7Card.plot_zero_value is required.')
-        return _dump(
-            view='card7',
-            box=self.box,
-            title=self.title,
-            value=self.value,
-            data=self.data,
-            plot_type=self.plot_type,
-            plot_data=self.plot_data,
-            plot_color=self.plot_color,
-            plot_category=self.plot_category,
-            plot_value=self.plot_value,
-            plot_zero_value=self.plot_zero_value,
-            plot_curve=self.plot_curve,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Card7Card':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Card7Card.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Card7Card.title is required.')
-        __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Card7Card.value is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Card7Card.data is required.')
-        __d_plot_type: Any = __d.get('plot_type')
-        if __d_plot_type is None:
-            raise ValueError('Card7Card.plot_type is required.')
-        __d_plot_data: Any = __d.get('plot_data')
-        if __d_plot_data is None:
-            raise ValueError('Card7Card.plot_data is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('Card7Card.plot_color is required.')
-        __d_plot_category: Any = __d.get('plot_category')
-        if __d_plot_category is None:
-            raise ValueError('Card7Card.plot_category is required.')
-        __d_plot_value: Any = __d.get('plot_value')
-        if __d_plot_value is None:
-            raise ValueError('Card7Card.plot_value is required.')
-        __d_plot_zero_value: Any = __d.get('plot_zero_value')
-        if __d_plot_zero_value is None:
-            raise ValueError('Card7Card.plot_zero_value is required.')
-        __d_plot_curve: Any = __d.get('plot_curve')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        title: str = __d_title
-        value: str = __d_value
-        data: PackedRecord = __d_data
-        plot_type: str = __d_plot_type
-        plot_data: PackedData = __d_plot_data
-        plot_color: str = __d_plot_color
-        plot_category: str = __d_plot_category
-        plot_value: str = __d_plot_value
-        plot_zero_value: float = __d_plot_zero_value
-        plot_curve: Optional[str] = __d_plot_curve
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return Card7Card(
-            box,
-            title,
-            value,
-            data,
-            plot_type,
-            plot_data,
-            plot_color,
-            plot_category,
-            plot_value,
-            plot_zero_value,
-            plot_curve,
-            commands,
-        )
-
-
-class Card8Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            value: str,
-            aux_value: str,
-            progress: float,
-            plot_color: str,
-            data: PackedRecord,
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        self.title = title
-        self.value = value
-        self.aux_value = aux_value
-        self.progress = progress
-        self.plot_color = plot_color
-        self.data = data
-        self.commands = commands
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Card8Card.box is required.')
-        if self.title is None:
-            raise ValueError('Card8Card.title is required.')
-        if self.value is None:
-            raise ValueError('Card8Card.value is required.')
-        if self.aux_value is None:
-            raise ValueError('Card8Card.aux_value is required.')
-        if self.progress is None:
-            raise ValueError('Card8Card.progress is required.')
-        if self.plot_color is None:
-            raise ValueError('Card8Card.plot_color is required.')
-        if self.data is None:
-            raise ValueError('Card8Card.data is required.')
-        return _dump(
-            view='card8',
-            box=self.box,
-            title=self.title,
-            value=self.value,
-            aux_value=self.aux_value,
-            progress=self.progress,
-            plot_color=self.plot_color,
-            data=self.data,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Card8Card':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Card8Card.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Card8Card.title is required.')
-        __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Card8Card.value is required.')
-        __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('Card8Card.aux_value is required.')
-        __d_progress: Any = __d.get('progress')
-        if __d_progress is None:
-            raise ValueError('Card8Card.progress is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('Card8Card.plot_color is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Card8Card.data is required.')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        title: str = __d_title
-        value: str = __d_value
-        aux_value: str = __d_aux_value
-        progress: float = __d_progress
-        plot_color: str = __d_plot_color
-        data: PackedRecord = __d_data
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return Card8Card(
-            box,
-            title,
-            value,
-            aux_value,
-            progress,
-            plot_color,
-            data,
-            commands,
-        )
-
-
-class Card9Card:
-    """No documentation available.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param caption: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param value_caption: No documentation available.
-    :param aux_value_caption: No documentation available.
-    :param progress: No documentation available.
-    :param plot_color: No documentation available.
-    :param data: No documentation available.
-    :param commands: Contextual menu commands for this component.
-    """
-    def __init__(
-            self,
-            box: str,
-            title: str,
-            caption: str,
-            value: str,
-            aux_value: str,
-            value_caption: str,
-            aux_value_caption: str,
-            progress: float,
-            plot_color: str,
-            data: PackedRecord,
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        self.title = title
-        self.caption = caption
-        self.value = value
-        self.aux_value = aux_value
-        self.value_caption = value_caption
-        self.aux_value_caption = aux_value_caption
-        self.progress = progress
-        self.plot_color = plot_color
-        self.data = data
-        self.commands = commands
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('Card9Card.box is required.')
-        if self.title is None:
-            raise ValueError('Card9Card.title is required.')
-        if self.caption is None:
-            raise ValueError('Card9Card.caption is required.')
-        if self.value is None:
-            raise ValueError('Card9Card.value is required.')
-        if self.aux_value is None:
-            raise ValueError('Card9Card.aux_value is required.')
-        if self.value_caption is None:
-            raise ValueError('Card9Card.value_caption is required.')
-        if self.aux_value_caption is None:
-            raise ValueError('Card9Card.aux_value_caption is required.')
-        if self.progress is None:
-            raise ValueError('Card9Card.progress is required.')
-        if self.plot_color is None:
-            raise ValueError('Card9Card.plot_color is required.')
-        if self.data is None:
-            raise ValueError('Card9Card.data is required.')
-        return _dump(
-            view='card9',
-            box=self.box,
-            title=self.title,
-            caption=self.caption,
-            value=self.value,
-            aux_value=self.aux_value,
-            value_caption=self.value_caption,
-            aux_value_caption=self.aux_value_caption,
-            progress=self.progress,
-            plot_color=self.plot_color,
-            data=self.data,
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Card9Card':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('Card9Card.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Card9Card.title is required.')
-        __d_caption: Any = __d.get('caption')
-        if __d_caption is None:
-            raise ValueError('Card9Card.caption is required.')
-        __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Card9Card.value is required.')
-        __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('Card9Card.aux_value is required.')
-        __d_value_caption: Any = __d.get('value_caption')
-        if __d_value_caption is None:
-            raise ValueError('Card9Card.value_caption is required.')
-        __d_aux_value_caption: Any = __d.get('aux_value_caption')
-        if __d_aux_value_caption is None:
-            raise ValueError('Card9Card.aux_value_caption is required.')
-        __d_progress: Any = __d.get('progress')
-        if __d_progress is None:
-            raise ValueError('Card9Card.progress is required.')
-        __d_plot_color: Any = __d.get('plot_color')
-        if __d_plot_color is None:
-            raise ValueError('Card9Card.plot_color is required.')
-        __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Card9Card.data is required.')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        title: str = __d_title
-        caption: str = __d_caption
-        value: str = __d_value
-        aux_value: str = __d_aux_value
-        value_caption: str = __d_value_caption
-        aux_value_caption: str = __d_aux_value_caption
-        progress: float = __d_progress
-        plot_color: str = __d_plot_color
-        data: PackedRecord = __d_data
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return Card9Card(
-            box,
-            title,
-            caption,
-            value,
-            aux_value,
-            value_caption,
-            aux_value_caption,
-            progress,
-            plot_color,
-            data,
-            commands,
-        )
-
-
 class HeadingCell:
     """Create a heading cell.
 
@@ -1595,6 +448,75 @@ class DashboardPage:
         return DashboardPage(
             title,
             rows,
+        )
+
+
+class Command:
+    """Create a command.
+
+    Commands are typically displayed as context menu items associated with
+    parts of notebooks or dashboards.
+
+    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
+    :param label: The text displayed for this command.
+    :param caption: The caption for this command (typically a tooltip).
+    :param icon: The icon to be displayed for this command.
+    :param items: Sub-commands, if any
+    :param data: Data associated with this command, if any.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: Optional[str] = None,
+            caption: Optional[str] = None,
+            icon: Optional[str] = None,
+            items: Optional[List['Command']] = None,
+            data: Optional[str] = None,
+    ):
+        self.name = name
+        self.label = label
+        self.caption = caption
+        self.icon = icon
+        self.items = items
+        self.data = data
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('Command.name is required.')
+        return _dump(
+            name=self.name,
+            label=self.label,
+            caption=self.caption,
+            icon=self.icon,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Command':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('Command.name is required.')
+        __d_label: Any = __d.get('label')
+        __d_caption: Any = __d.get('caption')
+        __d_icon: Any = __d.get('icon')
+        __d_items: Any = __d.get('items')
+        __d_data: Any = __d.get('data')
+        name: str = __d_name
+        label: Optional[str] = __d_label
+        caption: Optional[str] = __d_caption
+        icon: Optional[str] = __d_icon
+        items: Optional[List['Command']] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
+        data: Optional[str] = __d_data
+        return Command(
+            name,
+            label,
+            caption,
+            icon,
+            items,
+            data,
         )
 
 
@@ -3905,6 +2827,238 @@ class GridCard:
         )
 
 
+class LargeBarStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param caption: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param value_caption: No documentation available.
+    :param aux_value_caption: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            caption: str,
+            value: str,
+            aux_value: str,
+            value_caption: str,
+            aux_value_caption: str,
+            progress: float,
+            plot_color: str,
+            data: PackedRecord,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.caption = caption
+        self.value = value
+        self.aux_value = aux_value
+        self.value_caption = value_caption
+        self.aux_value_caption = aux_value_caption
+        self.progress = progress
+        self.plot_color = plot_color
+        self.data = data
+        self.commands = commands
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('LargeBarStatCard.box is required.')
+        if self.title is None:
+            raise ValueError('LargeBarStatCard.title is required.')
+        if self.caption is None:
+            raise ValueError('LargeBarStatCard.caption is required.')
+        if self.value is None:
+            raise ValueError('LargeBarStatCard.value is required.')
+        if self.aux_value is None:
+            raise ValueError('LargeBarStatCard.aux_value is required.')
+        if self.value_caption is None:
+            raise ValueError('LargeBarStatCard.value_caption is required.')
+        if self.aux_value_caption is None:
+            raise ValueError('LargeBarStatCard.aux_value_caption is required.')
+        if self.progress is None:
+            raise ValueError('LargeBarStatCard.progress is required.')
+        if self.plot_color is None:
+            raise ValueError('LargeBarStatCard.plot_color is required.')
+        if self.data is None:
+            raise ValueError('LargeBarStatCard.data is required.')
+        return _dump(
+            view='large_bar_stat',
+            box=self.box,
+            title=self.title,
+            caption=self.caption,
+            value=self.value,
+            aux_value=self.aux_value,
+            value_caption=self.value_caption,
+            aux_value_caption=self.aux_value_caption,
+            progress=self.progress,
+            plot_color=self.plot_color,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'LargeBarStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('LargeBarStatCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('LargeBarStatCard.title is required.')
+        __d_caption: Any = __d.get('caption')
+        if __d_caption is None:
+            raise ValueError('LargeBarStatCard.caption is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('LargeBarStatCard.value is required.')
+        __d_aux_value: Any = __d.get('aux_value')
+        if __d_aux_value is None:
+            raise ValueError('LargeBarStatCard.aux_value is required.')
+        __d_value_caption: Any = __d.get('value_caption')
+        if __d_value_caption is None:
+            raise ValueError('LargeBarStatCard.value_caption is required.')
+        __d_aux_value_caption: Any = __d.get('aux_value_caption')
+        if __d_aux_value_caption is None:
+            raise ValueError('LargeBarStatCard.aux_value_caption is required.')
+        __d_progress: Any = __d.get('progress')
+        if __d_progress is None:
+            raise ValueError('LargeBarStatCard.progress is required.')
+        __d_plot_color: Any = __d.get('plot_color')
+        if __d_plot_color is None:
+            raise ValueError('LargeBarStatCard.plot_color is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('LargeBarStatCard.data is required.')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        caption: str = __d_caption
+        value: str = __d_value
+        aux_value: str = __d_aux_value
+        value_caption: str = __d_value_caption
+        aux_value_caption: str = __d_aux_value_caption
+        progress: float = __d_progress
+        plot_color: str = __d_plot_color
+        data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return LargeBarStatCard(
+            box,
+            title,
+            caption,
+            value,
+            aux_value,
+            value_caption,
+            aux_value_caption,
+            progress,
+            plot_color,
+            data,
+            commands,
+        )
+
+
+class LargeStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param caption: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            value: str,
+            aux_value: str,
+            caption: str,
+            data: PackedRecord,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.value = value
+        self.aux_value = aux_value
+        self.caption = caption
+        self.data = data
+        self.commands = commands
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('LargeStatCard.box is required.')
+        if self.title is None:
+            raise ValueError('LargeStatCard.title is required.')
+        if self.value is None:
+            raise ValueError('LargeStatCard.value is required.')
+        if self.aux_value is None:
+            raise ValueError('LargeStatCard.aux_value is required.')
+        if self.caption is None:
+            raise ValueError('LargeStatCard.caption is required.')
+        if self.data is None:
+            raise ValueError('LargeStatCard.data is required.')
+        return _dump(
+            view='large_stat',
+            box=self.box,
+            title=self.title,
+            value=self.value,
+            aux_value=self.aux_value,
+            caption=self.caption,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'LargeStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('LargeStatCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('LargeStatCard.title is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('LargeStatCard.value is required.')
+        __d_aux_value: Any = __d.get('aux_value')
+        if __d_aux_value is None:
+            raise ValueError('LargeStatCard.aux_value is required.')
+        __d_caption: Any = __d.get('caption')
+        if __d_caption is None:
+            raise ValueError('LargeStatCard.caption is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('LargeStatCard.data is required.')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        value: str = __d_value
+        aux_value: str = __d_aux_value
+        caption: str = __d_caption
+        data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return LargeStatCard(
+            box,
+            title,
+            value,
+            aux_value,
+            caption,
+            data,
+            commands,
+        )
+
+
 class ListCard:
     """No documentation available.
 
@@ -5134,6 +4288,221 @@ class RepeatCard:
         )
 
 
+class SmallSeriesStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param data: No documentation available.
+    :param plot_type: No documentation available. One of 'area', 'interval'.
+    :param plot_data: No documentation available.
+    :param plot_color: No documentation available.
+    :param plot_category: No documentation available.
+    :param plot_value: No documentation available.
+    :param plot_zero_value: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            value: str,
+            data: PackedRecord,
+            plot_type: str,
+            plot_data: PackedData,
+            plot_color: str,
+            plot_category: str,
+            plot_value: str,
+            plot_zero_value: float,
+            plot_curve: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.value = value
+        self.data = data
+        self.plot_type = plot_type
+        self.plot_data = plot_data
+        self.plot_color = plot_color
+        self.plot_category = plot_category
+        self.plot_value = plot_value
+        self.plot_zero_value = plot_zero_value
+        self.plot_curve = plot_curve
+        self.commands = commands
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('SmallSeriesStatCard.box is required.')
+        if self.title is None:
+            raise ValueError('SmallSeriesStatCard.title is required.')
+        if self.value is None:
+            raise ValueError('SmallSeriesStatCard.value is required.')
+        if self.data is None:
+            raise ValueError('SmallSeriesStatCard.data is required.')
+        if self.plot_type is None:
+            raise ValueError('SmallSeriesStatCard.plot_type is required.')
+        if self.plot_type not in ('area', 'interval'):
+            raise ValueError(f'Invalid value "{self.plot_type}" for SmallSeriesStatCard.plot_type.')
+        if self.plot_data is None:
+            raise ValueError('SmallSeriesStatCard.plot_data is required.')
+        if self.plot_color is None:
+            raise ValueError('SmallSeriesStatCard.plot_color is required.')
+        if self.plot_category is None:
+            raise ValueError('SmallSeriesStatCard.plot_category is required.')
+        if self.plot_value is None:
+            raise ValueError('SmallSeriesStatCard.plot_value is required.')
+        if self.plot_zero_value is None:
+            raise ValueError('SmallSeriesStatCard.plot_zero_value is required.')
+        return _dump(
+            view='small_series_stat',
+            box=self.box,
+            title=self.title,
+            value=self.value,
+            data=self.data,
+            plot_type=self.plot_type,
+            plot_data=self.plot_data,
+            plot_color=self.plot_color,
+            plot_category=self.plot_category,
+            plot_value=self.plot_value,
+            plot_zero_value=self.plot_zero_value,
+            plot_curve=self.plot_curve,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'SmallSeriesStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('SmallSeriesStatCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('SmallSeriesStatCard.title is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('SmallSeriesStatCard.value is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('SmallSeriesStatCard.data is required.')
+        __d_plot_type: Any = __d.get('plot_type')
+        if __d_plot_type is None:
+            raise ValueError('SmallSeriesStatCard.plot_type is required.')
+        __d_plot_data: Any = __d.get('plot_data')
+        if __d_plot_data is None:
+            raise ValueError('SmallSeriesStatCard.plot_data is required.')
+        __d_plot_color: Any = __d.get('plot_color')
+        if __d_plot_color is None:
+            raise ValueError('SmallSeriesStatCard.plot_color is required.')
+        __d_plot_category: Any = __d.get('plot_category')
+        if __d_plot_category is None:
+            raise ValueError('SmallSeriesStatCard.plot_category is required.')
+        __d_plot_value: Any = __d.get('plot_value')
+        if __d_plot_value is None:
+            raise ValueError('SmallSeriesStatCard.plot_value is required.')
+        __d_plot_zero_value: Any = __d.get('plot_zero_value')
+        if __d_plot_zero_value is None:
+            raise ValueError('SmallSeriesStatCard.plot_zero_value is required.')
+        __d_plot_curve: Any = __d.get('plot_curve')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        value: str = __d_value
+        data: PackedRecord = __d_data
+        plot_type: str = __d_plot_type
+        plot_data: PackedData = __d_plot_data
+        plot_color: str = __d_plot_color
+        plot_category: str = __d_plot_category
+        plot_value: str = __d_plot_value
+        plot_zero_value: float = __d_plot_zero_value
+        plot_curve: Optional[str] = __d_plot_curve
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return SmallSeriesStatCard(
+            box,
+            title,
+            value,
+            data,
+            plot_type,
+            plot_data,
+            plot_color,
+            plot_category,
+            plot_value,
+            plot_zero_value,
+            plot_curve,
+            commands,
+        )
+
+
+class SmallStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            value: str,
+            data: Optional[PackedRecord] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.value = value
+        self.data = data
+        self.commands = commands
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('SmallStatCard.box is required.')
+        if self.title is None:
+            raise ValueError('SmallStatCard.title is required.')
+        if self.value is None:
+            raise ValueError('SmallStatCard.value is required.')
+        return _dump(
+            view='small_stat',
+            box=self.box,
+            title=self.title,
+            value=self.value,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'SmallStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('SmallStatCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('SmallStatCard.title is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('SmallStatCard.value is required.')
+        __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        value: str = __d_value
+        data: Optional[PackedRecord] = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return SmallStatCard(
+            box,
+            title,
+            value,
+            data,
+            commands,
+        )
+
+
 class TabCard:
     """No documentation available.
 
@@ -5187,6 +4556,269 @@ class TabCard:
             box,
             items,
             link,
+            commands,
+        )
+
+
+class TallGaugeStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            value: str,
+            aux_value: str,
+            progress: float,
+            plot_color: str,
+            data: PackedRecord,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.value = value
+        self.aux_value = aux_value
+        self.progress = progress
+        self.plot_color = plot_color
+        self.data = data
+        self.commands = commands
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('TallGaugeStatCard.box is required.')
+        if self.title is None:
+            raise ValueError('TallGaugeStatCard.title is required.')
+        if self.value is None:
+            raise ValueError('TallGaugeStatCard.value is required.')
+        if self.aux_value is None:
+            raise ValueError('TallGaugeStatCard.aux_value is required.')
+        if self.progress is None:
+            raise ValueError('TallGaugeStatCard.progress is required.')
+        if self.plot_color is None:
+            raise ValueError('TallGaugeStatCard.plot_color is required.')
+        if self.data is None:
+            raise ValueError('TallGaugeStatCard.data is required.')
+        return _dump(
+            view='tall_gauge_stat',
+            box=self.box,
+            title=self.title,
+            value=self.value,
+            aux_value=self.aux_value,
+            progress=self.progress,
+            plot_color=self.plot_color,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TallGaugeStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('TallGaugeStatCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('TallGaugeStatCard.title is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('TallGaugeStatCard.value is required.')
+        __d_aux_value: Any = __d.get('aux_value')
+        if __d_aux_value is None:
+            raise ValueError('TallGaugeStatCard.aux_value is required.')
+        __d_progress: Any = __d.get('progress')
+        if __d_progress is None:
+            raise ValueError('TallGaugeStatCard.progress is required.')
+        __d_plot_color: Any = __d.get('plot_color')
+        if __d_plot_color is None:
+            raise ValueError('TallGaugeStatCard.plot_color is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('TallGaugeStatCard.data is required.')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        value: str = __d_value
+        aux_value: str = __d_aux_value
+        progress: float = __d_progress
+        plot_color: str = __d_plot_color
+        data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return TallGaugeStatCard(
+            box,
+            title,
+            value,
+            aux_value,
+            progress,
+            plot_color,
+            data,
+            commands,
+        )
+
+
+class TallSeriesStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param data: No documentation available.
+    :param plot_type: No documentation available. One of 'area', 'interval'.
+    :param plot_data: No documentation available.
+    :param plot_color: No documentation available.
+    :param plot_category: No documentation available.
+    :param plot_value: No documentation available.
+    :param plot_zero_value: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            value: str,
+            aux_value: str,
+            data: PackedRecord,
+            plot_type: str,
+            plot_data: PackedData,
+            plot_color: str,
+            plot_category: str,
+            plot_value: str,
+            plot_zero_value: float,
+            plot_curve: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.value = value
+        self.aux_value = aux_value
+        self.data = data
+        self.plot_type = plot_type
+        self.plot_data = plot_data
+        self.plot_color = plot_color
+        self.plot_category = plot_category
+        self.plot_value = plot_value
+        self.plot_zero_value = plot_zero_value
+        self.plot_curve = plot_curve
+        self.commands = commands
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('TallSeriesStatCard.box is required.')
+        if self.title is None:
+            raise ValueError('TallSeriesStatCard.title is required.')
+        if self.value is None:
+            raise ValueError('TallSeriesStatCard.value is required.')
+        if self.aux_value is None:
+            raise ValueError('TallSeriesStatCard.aux_value is required.')
+        if self.data is None:
+            raise ValueError('TallSeriesStatCard.data is required.')
+        if self.plot_type is None:
+            raise ValueError('TallSeriesStatCard.plot_type is required.')
+        if self.plot_type not in ('area', 'interval'):
+            raise ValueError(f'Invalid value "{self.plot_type}" for TallSeriesStatCard.plot_type.')
+        if self.plot_data is None:
+            raise ValueError('TallSeriesStatCard.plot_data is required.')
+        if self.plot_color is None:
+            raise ValueError('TallSeriesStatCard.plot_color is required.')
+        if self.plot_category is None:
+            raise ValueError('TallSeriesStatCard.plot_category is required.')
+        if self.plot_value is None:
+            raise ValueError('TallSeriesStatCard.plot_value is required.')
+        if self.plot_zero_value is None:
+            raise ValueError('TallSeriesStatCard.plot_zero_value is required.')
+        return _dump(
+            view='tall_series_stat',
+            box=self.box,
+            title=self.title,
+            value=self.value,
+            aux_value=self.aux_value,
+            data=self.data,
+            plot_type=self.plot_type,
+            plot_data=self.plot_data,
+            plot_color=self.plot_color,
+            plot_category=self.plot_category,
+            plot_value=self.plot_value,
+            plot_zero_value=self.plot_zero_value,
+            plot_curve=self.plot_curve,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TallSeriesStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('TallSeriesStatCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('TallSeriesStatCard.title is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('TallSeriesStatCard.value is required.')
+        __d_aux_value: Any = __d.get('aux_value')
+        if __d_aux_value is None:
+            raise ValueError('TallSeriesStatCard.aux_value is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('TallSeriesStatCard.data is required.')
+        __d_plot_type: Any = __d.get('plot_type')
+        if __d_plot_type is None:
+            raise ValueError('TallSeriesStatCard.plot_type is required.')
+        __d_plot_data: Any = __d.get('plot_data')
+        if __d_plot_data is None:
+            raise ValueError('TallSeriesStatCard.plot_data is required.')
+        __d_plot_color: Any = __d.get('plot_color')
+        if __d_plot_color is None:
+            raise ValueError('TallSeriesStatCard.plot_color is required.')
+        __d_plot_category: Any = __d.get('plot_category')
+        if __d_plot_category is None:
+            raise ValueError('TallSeriesStatCard.plot_category is required.')
+        __d_plot_value: Any = __d.get('plot_value')
+        if __d_plot_value is None:
+            raise ValueError('TallSeriesStatCard.plot_value is required.')
+        __d_plot_zero_value: Any = __d.get('plot_zero_value')
+        if __d_plot_zero_value is None:
+            raise ValueError('TallSeriesStatCard.plot_zero_value is required.')
+        __d_plot_curve: Any = __d.get('plot_curve')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        value: str = __d_value
+        aux_value: str = __d_aux_value
+        data: PackedRecord = __d_data
+        plot_type: str = __d_plot_type
+        plot_data: PackedData = __d_plot_data
+        plot_color: str = __d_plot_color
+        plot_category: str = __d_plot_category
+        plot_value: str = __d_plot_value
+        plot_zero_value: float = __d_plot_zero_value
+        plot_curve: Optional[str] = __d_plot_curve
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return TallSeriesStatCard(
+            box,
+            title,
+            value,
+            aux_value,
+            data,
+            plot_type,
+            plot_data,
+            plot_color,
+            plot_category,
+            plot_value,
+            plot_zero_value,
+            plot_curve,
             commands,
         )
 
@@ -5387,5 +5019,373 @@ class VegaCard:
             title,
             specification,
             data,
+            commands,
+        )
+
+
+class WideBarStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            value: str,
+            aux_value: str,
+            progress: float,
+            plot_color: str,
+            data: PackedRecord,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.value = value
+        self.aux_value = aux_value
+        self.progress = progress
+        self.plot_color = plot_color
+        self.data = data
+        self.commands = commands
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('WideBarStatCard.box is required.')
+        if self.title is None:
+            raise ValueError('WideBarStatCard.title is required.')
+        if self.value is None:
+            raise ValueError('WideBarStatCard.value is required.')
+        if self.aux_value is None:
+            raise ValueError('WideBarStatCard.aux_value is required.')
+        if self.progress is None:
+            raise ValueError('WideBarStatCard.progress is required.')
+        if self.plot_color is None:
+            raise ValueError('WideBarStatCard.plot_color is required.')
+        if self.data is None:
+            raise ValueError('WideBarStatCard.data is required.')
+        return _dump(
+            view='wide_bar_stat',
+            box=self.box,
+            title=self.title,
+            value=self.value,
+            aux_value=self.aux_value,
+            progress=self.progress,
+            plot_color=self.plot_color,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'WideBarStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('WideBarStatCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('WideBarStatCard.title is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('WideBarStatCard.value is required.')
+        __d_aux_value: Any = __d.get('aux_value')
+        if __d_aux_value is None:
+            raise ValueError('WideBarStatCard.aux_value is required.')
+        __d_progress: Any = __d.get('progress')
+        if __d_progress is None:
+            raise ValueError('WideBarStatCard.progress is required.')
+        __d_plot_color: Any = __d.get('plot_color')
+        if __d_plot_color is None:
+            raise ValueError('WideBarStatCard.plot_color is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('WideBarStatCard.data is required.')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        value: str = __d_value
+        aux_value: str = __d_aux_value
+        progress: float = __d_progress
+        plot_color: str = __d_plot_color
+        data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return WideBarStatCard(
+            box,
+            title,
+            value,
+            aux_value,
+            progress,
+            plot_color,
+            data,
+            commands,
+        )
+
+
+class WideGaugeStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param progress: No documentation available.
+    :param plot_color: No documentation available.
+    :param data: No documentation available.
+    :param commands: Contextual menu commands for this component.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            value: str,
+            aux_value: str,
+            progress: float,
+            plot_color: str,
+            data: PackedRecord,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.value = value
+        self.aux_value = aux_value
+        self.progress = progress
+        self.plot_color = plot_color
+        self.data = data
+        self.commands = commands
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('WideGaugeStatCard.box is required.')
+        if self.title is None:
+            raise ValueError('WideGaugeStatCard.title is required.')
+        if self.value is None:
+            raise ValueError('WideGaugeStatCard.value is required.')
+        if self.aux_value is None:
+            raise ValueError('WideGaugeStatCard.aux_value is required.')
+        if self.progress is None:
+            raise ValueError('WideGaugeStatCard.progress is required.')
+        if self.plot_color is None:
+            raise ValueError('WideGaugeStatCard.plot_color is required.')
+        if self.data is None:
+            raise ValueError('WideGaugeStatCard.data is required.')
+        return _dump(
+            view='wide_gauge_stat',
+            box=self.box,
+            title=self.title,
+            value=self.value,
+            aux_value=self.aux_value,
+            progress=self.progress,
+            plot_color=self.plot_color,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'WideGaugeStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('WideGaugeStatCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('WideGaugeStatCard.title is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('WideGaugeStatCard.value is required.')
+        __d_aux_value: Any = __d.get('aux_value')
+        if __d_aux_value is None:
+            raise ValueError('WideGaugeStatCard.aux_value is required.')
+        __d_progress: Any = __d.get('progress')
+        if __d_progress is None:
+            raise ValueError('WideGaugeStatCard.progress is required.')
+        __d_plot_color: Any = __d.get('plot_color')
+        if __d_plot_color is None:
+            raise ValueError('WideGaugeStatCard.plot_color is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('WideGaugeStatCard.data is required.')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        value: str = __d_value
+        aux_value: str = __d_aux_value
+        progress: float = __d_progress
+        plot_color: str = __d_plot_color
+        data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return WideGaugeStatCard(
+            box,
+            title,
+            value,
+            aux_value,
+            progress,
+            plot_color,
+            data,
+            commands,
+        )
+
+
+class WideSeriesStatCard:
+    """No documentation available.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: No documentation available.
+    :param value: No documentation available.
+    :param aux_value: No documentation available.
+    :param data: No documentation available.
+    :param plot_type: No documentation available. One of 'area', 'interval'.
+    :param plot_data: No documentation available.
+    :param plot_color: No documentation available.
+    :param plot_category: No documentation available.
+    :param plot_value: No documentation available.
+    :param plot_zero_value: No documentation available.
+    :param plot_curve: No documentation available. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+    :param commands: Contextual menu commands for this component.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            value: str,
+            aux_value: str,
+            data: PackedRecord,
+            plot_type: str,
+            plot_data: PackedData,
+            plot_color: str,
+            plot_category: str,
+            plot_value: str,
+            plot_zero_value: float,
+            plot_curve: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        self.title = title
+        self.value = value
+        self.aux_value = aux_value
+        self.data = data
+        self.plot_type = plot_type
+        self.plot_data = plot_data
+        self.plot_color = plot_color
+        self.plot_category = plot_category
+        self.plot_value = plot_value
+        self.plot_zero_value = plot_zero_value
+        self.plot_curve = plot_curve
+        self.commands = commands
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('WideSeriesStatCard.box is required.')
+        if self.title is None:
+            raise ValueError('WideSeriesStatCard.title is required.')
+        if self.value is None:
+            raise ValueError('WideSeriesStatCard.value is required.')
+        if self.aux_value is None:
+            raise ValueError('WideSeriesStatCard.aux_value is required.')
+        if self.data is None:
+            raise ValueError('WideSeriesStatCard.data is required.')
+        if self.plot_type is None:
+            raise ValueError('WideSeriesStatCard.plot_type is required.')
+        if self.plot_type not in ('area', 'interval'):
+            raise ValueError(f'Invalid value "{self.plot_type}" for WideSeriesStatCard.plot_type.')
+        if self.plot_data is None:
+            raise ValueError('WideSeriesStatCard.plot_data is required.')
+        if self.plot_color is None:
+            raise ValueError('WideSeriesStatCard.plot_color is required.')
+        if self.plot_category is None:
+            raise ValueError('WideSeriesStatCard.plot_category is required.')
+        if self.plot_value is None:
+            raise ValueError('WideSeriesStatCard.plot_value is required.')
+        if self.plot_zero_value is None:
+            raise ValueError('WideSeriesStatCard.plot_zero_value is required.')
+        return _dump(
+            view='wide_series_stat',
+            box=self.box,
+            title=self.title,
+            value=self.value,
+            aux_value=self.aux_value,
+            data=self.data,
+            plot_type=self.plot_type,
+            plot_data=self.plot_data,
+            plot_color=self.plot_color,
+            plot_category=self.plot_category,
+            plot_value=self.plot_value,
+            plot_zero_value=self.plot_zero_value,
+            plot_curve=self.plot_curve,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'WideSeriesStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('WideSeriesStatCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('WideSeriesStatCard.title is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('WideSeriesStatCard.value is required.')
+        __d_aux_value: Any = __d.get('aux_value')
+        if __d_aux_value is None:
+            raise ValueError('WideSeriesStatCard.aux_value is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('WideSeriesStatCard.data is required.')
+        __d_plot_type: Any = __d.get('plot_type')
+        if __d_plot_type is None:
+            raise ValueError('WideSeriesStatCard.plot_type is required.')
+        __d_plot_data: Any = __d.get('plot_data')
+        if __d_plot_data is None:
+            raise ValueError('WideSeriesStatCard.plot_data is required.')
+        __d_plot_color: Any = __d.get('plot_color')
+        if __d_plot_color is None:
+            raise ValueError('WideSeriesStatCard.plot_color is required.')
+        __d_plot_category: Any = __d.get('plot_category')
+        if __d_plot_category is None:
+            raise ValueError('WideSeriesStatCard.plot_category is required.')
+        __d_plot_value: Any = __d.get('plot_value')
+        if __d_plot_value is None:
+            raise ValueError('WideSeriesStatCard.plot_value is required.')
+        __d_plot_zero_value: Any = __d.get('plot_zero_value')
+        if __d_plot_zero_value is None:
+            raise ValueError('WideSeriesStatCard.plot_zero_value is required.')
+        __d_plot_curve: Any = __d.get('plot_curve')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        value: str = __d_value
+        aux_value: str = __d_aux_value
+        data: PackedRecord = __d_data
+        plot_type: str = __d_plot_type
+        plot_data: PackedData = __d_plot_data
+        plot_color: str = __d_plot_color
+        plot_category: str = __d_plot_category
+        plot_value: str = __d_plot_value
+        plot_zero_value: float = __d_plot_zero_value
+        plot_curve: Optional[str] = __d_plot_curve
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return WideSeriesStatCard(
+            box,
+            title,
+            value,
+            aux_value,
+            data,
+            plot_type,
+            plot_data,
+            plot_color,
+            plot_category,
+            plot_value,
+            plot_zero_value,
+            plot_curve,
             commands,
         )

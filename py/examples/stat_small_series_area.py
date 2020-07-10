@@ -1,4 +1,4 @@
-# Card7 / Area
+# Stat / Series / Small / Area
 # No description available.
 # ---
 import time
@@ -17,7 +17,7 @@ cards = []
 for i in range(len(curves)):
     f = FakeCategoricalSeries()
     cat, val, pc = f.next()
-    c = page.add(f'example{i}', ui.card7_card(
+    c = page.add(f'example{i}', ui.small_series_stat_card(
         box=f'1 {i + 1} 1 1',
         title=fake.cryptocurrency_name(),
         value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',

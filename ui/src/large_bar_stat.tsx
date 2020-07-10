@@ -103,5 +103,5 @@ const
     return { render, changed }
   })
 
-cards.register('card9', View)
+cards.register('large_bar_stat', View)
 

@@ -1,4 +1,4 @@
-# Card7 / Area
+# Stat / Series / Tall / Area
 # No description available.
 # ---
 import time
@@ -17,10 +17,11 @@ cards = []
 for i in range(len(curves)):
     f = FakeCategoricalSeries()
     cat, val, pc = f.next()
-    c = page.add(f'example{i}', ui.card7_card(
-        box=f'1 {i + 1} 1 1',
-        title=fake.cryptocurrency_code(),
+    c = page.add(f'example{i}', ui.tall_series_stat_card(
+        box=f'{i + 1} 1 1 2',
+        title=fake.cryptocurrency_name(),
         value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+        aux_value='={{intl quux style="unit" unit="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
         data=dict(qux=val, quux=pc),
         plot_type='area',
         plot_category='foo',

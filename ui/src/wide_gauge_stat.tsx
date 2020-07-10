@@ -1,23 +1,35 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards, Format, grid } from './layout';
-import { bond, Card, unpack, F, Rec, S, Data } from './telesync';
+import { bond, Card, unpack, F, Rec, S } from './telesync';
 import { getTheme } from './theme';
-import { MicroBars } from './parts/microbars';
-import { MicroArea } from './parts/microline';
+import { ProgressArc } from './parts/progress_arc';
 
 const
   theme = getTheme(),
-  plotWidth = grid.unitWidth - grid.gap,
-  plotHeight = grid.unitInnerHeight,
   css = stylesheet({
     card: {
       display: 'flex',
     },
     left: {
-      width: plotWidth,
+      width: grid.unitInnerHeight,
       height: grid.unitInnerHeight,
       marginRight: grid.gap,
+    },
+    percentContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      width: grid.unitInnerHeight,
+      height: grid.unitInnerHeight,
+    },
+    percent: {
+      ...theme.font.s12,
+      opacity: 0.5,
     },
     right: {
       flexGrow: 1,
@@ -28,6 +40,7 @@ const
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
+      overflow: 'visible'
     },
     values: {
       display: 'flex',
@@ -38,11 +51,10 @@ const
       ...theme.font.w3,
     },
     aux_value: {
-      flexGrow: 1,
       ...theme.font.s13,
       color: theme.colors.text7,
+      flexGrow: 1,
       marginLeft: 5,
-      marginBottom: 3,
     }
   })
 
@@ -50,22 +62,13 @@ interface State {
   title: S
   value: S
   aux_value: S
-  data: Rec
-  plot_type: 'area' | 'interval'
-  plot_data: Data
+  progress: F
   plot_color: S
-  plot_category: S
-  plot_value: S
-  plot_zero_value: F
-  plot_curve?: 'linear' | 'smooth' | 'step' | 'step-after' | 'step-before'
+  data: Rec
 }
-
 
 const defaults: Partial<State> = {
   title: 'Untitled',
-  plot_type: 'area',
-  plot_color: theme.colors.gray,
-  plot_curve: 'linear',
 }
 
 const
@@ -74,33 +77,16 @@ const
       render = () => {
         const
           s = theme.merge(defaults, state),
-          data = unpack(s.data),
-          plot = s.plot_type === 'area'
-            ? (
-              <MicroArea
-                width={plotWidth}
-                height={plotHeight}
-                data={unpack(s.plot_data)}
-                value={s.plot_value}
-                color={s.plot_color}
-                zeroValue={s.plot_zero_value}
-                curve={s.plot_curve || 'linear'}
-              />
-            ) : (
-              <MicroBars
-                width={plotWidth}
-                height={plotHeight}
-                data={unpack(s.plot_data)}
-                category={s.plot_category}
-                value={s.plot_value}
-                color={s.plot_color}
-                zeroValue={s.plot_zero_value}
-              />
-            )
+          data = unpack(s.data)
 
         return (
           <div className={css.card}>
-            <div className={css.left}>{plot}</div>
+            <div className={css.left}>
+              <ProgressArc size={grid.unitInnerHeight} thickness={2} color={s.plot_color} value={s.progress} />
+              <div className={css.percentContainer}>
+                <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
+              </div>
+            </div>
             <div className={css.right}>
               <div className={css.title}>
                 <Format data={data} format={s.title} />
@@ -119,4 +105,4 @@ const
     return { render, changed }
   })
 
-cards.register('card2', View)
+cards.register('wide_gauge_stat', View)
