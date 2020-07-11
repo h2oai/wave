@@ -9,9 +9,49 @@ import { border, getTheme, padding, pc } from './theme';
 export interface Text {
   /** The text content. */
   content: S
-  /** The font size of the text content. One of "xl" (extra large), "l" (large), "m" (medium), "s" (small), "xs" (extra small). */
-  size?: S
-  /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
+  /** The font size of the text content. */
+  size?: 'xl' | 'l' | 'm' | 's' | 'xs'
+  /** Tooltip message. */
+  tooltip?: S
+}
+
+/** Create extra-large sized text content. */
+export interface TextXl {
+  /** The text content. */
+  content: S
+  /** Tooltip message. */
+  tooltip?: S
+}
+
+/** Create large sized text content. */
+export interface TextL {
+  /** The text content. */
+  content: S
+  /** Tooltip message. */
+  tooltip?: S
+}
+
+/** Create medium sized text content. */
+export interface TextM {
+  /** The text content. */
+  content: S
+  /** Tooltip message. */
+  tooltip?: S
+}
+
+/** Create small sized text content. */
+export interface TextS {
+  /** The text content. */
+  content: S
+  /** Tooltip message. */
+  tooltip?: S
+}
+
+/** Create extra-small sized text content. */
+export interface TextXs {
+  /** The text content. */
+  content: S
+  /** Tooltip message. */
   tooltip?: S
 }
 
@@ -47,11 +87,11 @@ const
   toTextVariant = (s: S) => { const v = textVariants[s]; return v ? v : 'mediumPlus' }
 
 export const
-  XText = ({ model: m }: { model: Text }) => {
+  XText = ({ content, size }: { content: S, size?: S }) => {
     const
-      name = 'text' + (m.size ? `-${m.size}` : ''),
-      md = m.content.indexOf('\n') >= 0
-        ? <div className={css.markdown}><Markdown source={m.content} /></div>
-        : <MarkdownInline source={m.content} />
-    return <Fluent.Text data-test={name} variant={toTextVariant(m.size || 'm')} block>{md}</Fluent.Text>
+      name = 'text' + (size ? `-${size}` : ''),
+      md = content.indexOf('\n') >= 0
+        ? <div className={css.markdown}><Markdown source={content} /></div>
+        : <MarkdownInline source={content} />
+    return <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block>{md}</Fluent.Text>
   }

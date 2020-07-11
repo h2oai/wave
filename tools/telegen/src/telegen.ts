@@ -549,7 +549,7 @@ const
     const protocol = makeProtocol(files)
     const [classes, api] = tranlateToPy(protocol)
     fs.writeFileSync(path.join(pyOutDir, 'types.py'), classes, 'utf8')
-    fs.writeFileSync(path.join(pyOutDir, 'ui_base.py'), api, 'utf8')
+    fs.writeFileSync(path.join(pyOutDir, 'ui.py'), api, 'utf8')
 
     const [typeCount, memberCount] = measureStats(protocol)
     console.log(`API surface: ${typeCount} types, ${memberCount} members.`)

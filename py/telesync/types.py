@@ -187,8 +187,8 @@ class Text:
     """Create text content.
 
     :param content: The text content.
-    :param size: The font size of the text content. One of "xl" (extra large), "l" (large), "m" (medium), "s" (small), "xs" (extra small).
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :param size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'.
+    :param tooltip: Tooltip message.
     """
     def __init__(
             self,
@@ -224,6 +224,196 @@ class Text:
         return Text(
             content,
             size,
+            tooltip,
+        )
+
+
+class TextXl:
+    """Create extra-large sized text content.
+
+    :param content: The text content.
+    :param tooltip: Tooltip message.
+    """
+    def __init__(
+            self,
+            content: str,
+            tooltip: Optional[str] = None,
+    ):
+        self.content = content
+        self.tooltip = tooltip
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.content is None:
+            raise ValueError('TextXl.content is required.')
+        return _dump(
+            content=self.content,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TextXl':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('TextXl.content is required.')
+        __d_tooltip: Any = __d.get('tooltip')
+        content: str = __d_content
+        tooltip: Optional[str] = __d_tooltip
+        return TextXl(
+            content,
+            tooltip,
+        )
+
+
+class TextL:
+    """Create large sized text content.
+
+    :param content: The text content.
+    :param tooltip: Tooltip message.
+    """
+    def __init__(
+            self,
+            content: str,
+            tooltip: Optional[str] = None,
+    ):
+        self.content = content
+        self.tooltip = tooltip
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.content is None:
+            raise ValueError('TextL.content is required.')
+        return _dump(
+            content=self.content,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TextL':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('TextL.content is required.')
+        __d_tooltip: Any = __d.get('tooltip')
+        content: str = __d_content
+        tooltip: Optional[str] = __d_tooltip
+        return TextL(
+            content,
+            tooltip,
+        )
+
+
+class TextM:
+    """Create medium sized text content.
+
+    :param content: The text content.
+    :param tooltip: Tooltip message.
+    """
+    def __init__(
+            self,
+            content: str,
+            tooltip: Optional[str] = None,
+    ):
+        self.content = content
+        self.tooltip = tooltip
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.content is None:
+            raise ValueError('TextM.content is required.')
+        return _dump(
+            content=self.content,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TextM':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('TextM.content is required.')
+        __d_tooltip: Any = __d.get('tooltip')
+        content: str = __d_content
+        tooltip: Optional[str] = __d_tooltip
+        return TextM(
+            content,
+            tooltip,
+        )
+
+
+class TextS:
+    """Create small sized text content.
+
+    :param content: The text content.
+    :param tooltip: Tooltip message.
+    """
+    def __init__(
+            self,
+            content: str,
+            tooltip: Optional[str] = None,
+    ):
+        self.content = content
+        self.tooltip = tooltip
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.content is None:
+            raise ValueError('TextS.content is required.')
+        return _dump(
+            content=self.content,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TextS':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('TextS.content is required.')
+        __d_tooltip: Any = __d.get('tooltip')
+        content: str = __d_content
+        tooltip: Optional[str] = __d_tooltip
+        return TextS(
+            content,
+            tooltip,
+        )
+
+
+class TextXs:
+    """Create extra-small sized text content.
+
+    :param content: The text content.
+    :param tooltip: Tooltip message.
+    """
+    def __init__(
+            self,
+            content: str,
+            tooltip: Optional[str] = None,
+    ):
+        self.content = content
+        self.tooltip = tooltip
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.content is None:
+            raise ValueError('TextXs.content is required.')
+        return _dump(
+            content=self.content,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TextXs':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('TextXs.content is required.')
+        __d_tooltip: Any = __d.get('tooltip')
+        content: str = __d_content
+        tooltip: Optional[str] = __d_tooltip
+        return TextXs(
+            content,
             tooltip,
         )
 
@@ -1954,6 +2144,11 @@ class Component:
     """Create a component.
 
     :param text: Text block.
+    :param text_xl: Extra-large sized text block.
+    :param text_l: Large sized text block.
+    :param text_m: Medium sized text block.
+    :param text_s: Small sized text block.
+    :param text_xs: Extra-small sized text block.
     :param label: Label.
     :param separator: Separator.
     :param progress: Progress bar.
@@ -1980,6 +2175,11 @@ class Component:
     def __init__(
             self,
             text: Optional[Text] = None,
+            text_xl: Optional[TextXl] = None,
+            text_l: Optional[TextL] = None,
+            text_m: Optional[TextM] = None,
+            text_s: Optional[TextS] = None,
+            text_xs: Optional[TextXs] = None,
             label: Optional[Label] = None,
             separator: Optional[Separator] = None,
             progress: Optional[Progress] = None,
@@ -2004,6 +2204,11 @@ class Component:
             expander: Optional[Expander] = None,
     ):
         self.text = text
+        self.text_xl = text_xl
+        self.text_l = text_l
+        self.text_m = text_m
+        self.text_s = text_s
+        self.text_xs = text_xs
         self.label = label
         self.separator = separator
         self.progress = progress
@@ -2031,6 +2236,11 @@ class Component:
         """Returns the contents of this object as a dict."""
         return _dump(
             text=None if self.text is None else self.text.dump(),
+            text_xl=None if self.text_xl is None else self.text_xl.dump(),
+            text_l=None if self.text_l is None else self.text_l.dump(),
+            text_m=None if self.text_m is None else self.text_m.dump(),
+            text_s=None if self.text_s is None else self.text_s.dump(),
+            text_xs=None if self.text_xs is None else self.text_xs.dump(),
             label=None if self.label is None else self.label.dump(),
             separator=None if self.separator is None else self.separator.dump(),
             progress=None if self.progress is None else self.progress.dump(),
@@ -2059,6 +2269,11 @@ class Component:
     def load(__d: Dict) -> 'Component':
         """Creates an instance of this class using the contents of a dict."""
         __d_text: Any = __d.get('text')
+        __d_text_xl: Any = __d.get('text_xl')
+        __d_text_l: Any = __d.get('text_l')
+        __d_text_m: Any = __d.get('text_m')
+        __d_text_s: Any = __d.get('text_s')
+        __d_text_xs: Any = __d.get('text_xs')
         __d_label: Any = __d.get('label')
         __d_separator: Any = __d.get('separator')
         __d_progress: Any = __d.get('progress')
@@ -2082,6 +2297,11 @@ class Component:
         __d_tabs: Any = __d.get('tabs')
         __d_expander: Any = __d.get('expander')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
+        text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
+        text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
+        text_m: Optional[TextM] = None if __d_text_m is None else TextM.load(__d_text_m)
+        text_s: Optional[TextS] = None if __d_text_s is None else TextS.load(__d_text_s)
+        text_xs: Optional[TextXs] = None if __d_text_xs is None else TextXs.load(__d_text_xs)
         label: Optional[Label] = None if __d_label is None else Label.load(__d_label)
         separator: Optional[Separator] = None if __d_separator is None else Separator.load(__d_separator)
         progress: Optional[Progress] = None if __d_progress is None else Progress.load(__d_progress)
@@ -2106,6 +2326,11 @@ class Component:
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         return Component(
             text,
+            text_xl,
+            text_l,
+            text_m,
+            text_s,
+            text_xs,
             label,
             separator,
             progress,

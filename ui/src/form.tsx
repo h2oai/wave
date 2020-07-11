@@ -22,7 +22,7 @@ import { Spinbox, XSpinbox } from './spinbox';
 import { Table, XTable } from './table';
 import { Tabs, XTabs } from './tabs';
 import { bond, Card, Packed, unpack, xid } from './telesync';
-import { Text, XText } from './text';
+import { Text, XText, TextXs, TextXl, TextL, TextM, TextS } from './text';
 import { Textbox, XTextbox } from './textbox';
 import { getTheme } from './theme';
 import { Toggle, XToggle } from './toggle';
@@ -32,6 +32,16 @@ import { XToolTip } from './tooltip';
 export interface Component {
   /** Text block. */
   text?: Text
+  /** Extra-large sized text block. */
+  text_xl?: TextXl
+  /** Large sized text block. */
+  text_l?: TextL
+  /** Medium sized text block. */
+  text_m?: TextM
+  /** Small sized text block. */
+  text_s?: TextS
+  /** Extra-small sized text block. */
+  text_xs?: TextXs
   /** Label. */
   label?: Label
   /** Separator. */
@@ -107,7 +117,12 @@ export const
 
 const
   XComponent = ({ model: m }: { model: Component }) => {
-    if (m.text) return <XToolTip content={m.text.tooltip} expand={false}><XText model={m.text} /></XToolTip>
+    if (m.text) return <XToolTip content={m.text.tooltip} expand={false}><XText content={m.text.content} size={m.text.size} /></XToolTip>
+    if (m.text_xl) return <XToolTip content={m.text_xl.tooltip} expand={false}><XText content={m.text_xl.content} size='xl' /></XToolTip>
+    if (m.text_l) return <XToolTip content={m.text_l.tooltip} expand={false}><XText content={m.text_l.content} size='l' /></XToolTip>
+    if (m.text_m) return <XToolTip content={m.text_m.tooltip} expand={false}><XText content={m.text_m.content} /></XToolTip>
+    if (m.text_s) return <XToolTip content={m.text_s.tooltip} expand={false}><XText content={m.text_s.content} size='s' /></XToolTip>
+    if (m.text_xs) return <XToolTip content={m.text_xs.tooltip} expand={false}><XText content={m.text_xs.content} size='xs' /></XToolTip>
     if (m.label) return <XToolTip content={m.label.tooltip} expand={false}><XLabel model={m.label} /></XToolTip>
     if (m.link) return <XToolTip content={m.link.tooltip} expand={false}><XLink model={m.link} /></XToolTip>
     if (m.separator) return <XSeparator model={m.separator} />
