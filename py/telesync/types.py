@@ -2716,7 +2716,7 @@ class ListItem1Card:
 
 
 class MarkdownCard:
-    """Render Markdown content.
+    """Create a card that renders Markdown content.
 
     Github-flavored markdown is supported.
     HTML markup is allowed in markdown content.
@@ -3101,63 +3101,64 @@ class PixelArtCard:
 
 
 class Mark:
-    """No documentation available.
+    """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
+    A plot can contain multiple such layers of marks.
 
-    :param coord: No documentation available.
-    :param type: No documentation available.
-    :param x: No documentation available.
-    :param x0: No documentation available.
-    :param x1: No documentation available.
-    :param x2: No documentation available.
-    :param x_min: No documentation available.
-    :param x_max: No documentation available.
-    :param x_nice: No documentation available.
-    :param x_scale: No documentation available.
-    :param x_title: No documentation available.
-    :param y: No documentation available.
-    :param y0: No documentation available.
-    :param y1: No documentation available.
-    :param y2: No documentation available.
-    :param y_min: No documentation available.
-    :param y_max: No documentation available.
-    :param y_nice: No documentation available.
-    :param y_scale: No documentation available.
-    :param y_title: No documentation available.
-    :param color: No documentation available.
-    :param color_range: No documentation available.
-    :param shape: No documentation available.
-    :param shape_range: No documentation available.
-    :param size: No documentation available.
-    :param size_range: No documentation available.
-    :param stack: No documentation available.
-    :param dodge: No documentation available.
-    :param curve: No documentation available. One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
-    :param fill_color: No documentation available.
-    :param fill_opacity: No documentation available.
-    :param stroke_color: No documentation available.
-    :param stroke_opacity: No documentation available.
-    :param stroke_size: No documentation available.
-    :param stroke_dash: No documentation available.
-    :param label: No documentation available.
-    :param label_offset: No documentation available.
-    :param label_offset_x: No documentation available.
-    :param label_offset_y: No documentation available.
-    :param label_rotation: No documentation available.
-    :param label_position: No documentation available.
-    :param label_overlap: No documentation available.
-    :param label_fill_color: No documentation available.
-    :param label_fill_opacity: No documentation available.
-    :param label_stroke_color: No documentation available.
-    :param label_stroke_opacity: No documentation available.
-    :param label_stroke_size: No documentation available.
-    :param label_font_size: No documentation available.
-    :param label_font_weight: No documentation available.
-    :param label_line_height: No documentation available.
-    :param label_align: No documentation available.
-    :param ref_stroke_color: No documentation available.
-    :param ref_stroke_opacity: No documentation available.
-    :param ref_stroke_size: No documentation available.
-    :param ref_stroke_dash: No documentation available.
+    :param coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
+    :param type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
+    :param x: X field or value.
+    :param x0: X base field or value.
+    :param x1: X bin lower bound field or value. For histograms.
+    :param x2: X bin upper bound field or value. For histograms.
+    :param x_min: X axis scale minimum.
+    :param x_max: X axis scale maximum.
+    :param x_nice: Whether to nice X axis scale ticks.
+    :param x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+    :param x_title: X axis title.
+    :param y: Y field or value.
+    :param y0: Y base field or value.
+    :param y1: Y bin lower bound field or value. For histograms.
+    :param y2: Y bin upper bound field or value. For histograms.
+    :param y_min: Y axis scale minimum.
+    :param y_max: Y axis scale maximum.
+    :param y_nice: Whether to nice Y axis scale ticks.
+    :param y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+    :param y_title: Y axis title.
+    :param color: Mark color field or value.
+    :param color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
+    :param shape: Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
+    :param shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
+    :param size: Mark size field or value.
+    :param size_range: Mark size range. A string containing space-separated integers, e.g. `'4 30'`
+    :param stack: Field to stack marks by, or 'auto' to infer.
+    :param dodge: Field to dodge marks by, or 'auto' to infer.
+    :param curve: Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
+    :param fill_color: Mark fill color.
+    :param fill_opacity: Mark fill opacity.
+    :param stroke_color: Mark stroke color.
+    :param stroke_opacity: Mark stroke opacity.
+    :param stroke_size: Mark stroke size.
+    :param stroke_dash: Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+    :param label: Label field or value.
+    :param label_offset: Distance between label and mark.
+    :param label_offset_x: Horizontal distance between label and mark.
+    :param label_offset_y: Vertical distance between label and mark.
+    :param label_rotation: Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
+    :param label_position: Label position relative to the mark.
+    :param label_overlap: Strategy to use if labels overlap.
+    :param label_fill_color: Label fill color.
+    :param label_fill_opacity: Label fill opacity.
+    :param label_stroke_color: Label stroke color.
+    :param label_stroke_opacity: Label stroke opacity.
+    :param label_stroke_size: Label stroke size (line width or pen thickness).
+    :param label_font_size: Label font size.
+    :param label_font_weight: Label font weight.
+    :param label_line_height: Label line height.
+    :param label_align: Label text alignment. One of 'left', 'right', 'center', 'start', 'end'.
+    :param ref_stroke_color: Reference line stroke color.
+    :param ref_stroke_opacity: Reference line stroke opacity.
+    :param ref_stroke_size: Reference line stroke size (line width or pen thickness).
+    :param ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
     """
     def __init__(
             self,
@@ -3200,7 +3201,7 @@ class Mark:
             label_offset: Optional[float] = None,
             label_offset_x: Optional[float] = None,
             label_offset_y: Optional[float] = None,
-            label_rotation: Optional[float] = None,
+            label_rotation: Optional[str] = None,
             label_position: Optional[str] = None,
             label_overlap: Optional[str] = None,
             label_fill_color: Optional[str] = None,
@@ -3430,7 +3431,7 @@ class Mark:
         label_offset: Optional[float] = __d_label_offset
         label_offset_x: Optional[float] = __d_label_offset_x
         label_offset_y: Optional[float] = __d_label_offset_y
-        label_rotation: Optional[float] = __d_label_rotation
+        label_rotation: Optional[str] = __d_label_rotation
         label_position: Optional[str] = __d_label_position
         label_overlap: Optional[str] = __d_label_overlap
         label_fill_color: Optional[str] = __d_label_fill_color
@@ -3506,7 +3507,7 @@ class Mark:
 
 
 class Plot:
-    """No documentation available.
+    """Create a plot. A plot is composed of one or more graphical mark layers.
 
     :param marks: No documentation available.
     """
@@ -3537,12 +3538,12 @@ class Plot:
 
 
 class PlotCard:
-    """No documentation available.
+    """Create a card displaying a plot.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param data: No documentation available.
-    :param plot: No documentation available.
+    :param title: The title for this card.
+    :param data: Data for this card.
+    :param plot: The plot to be displayed in this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(

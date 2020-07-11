@@ -12,7 +12,7 @@ export const
   MarkdownInline = ({ source }: { source: S }) => (<span dangerouslySetInnerHTML={{ __html: markdownSafe.renderInline(source) }} />)
 
 /**
- * Render Markdown content.
+ * Create a card that renders Markdown content.
  *
  * Github-flavored markdown is supported.
  * HTML markup is allowed in markdown content.
