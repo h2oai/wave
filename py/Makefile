@@ -11,12 +11,12 @@ publish: ## Publish package to PyPI
 setup: ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
-	./venv/bin/python -m pip install setuptools wheel twine requests websockets faker
+	./venv/bin/python -m pip install setuptools wheel twine requests websockets faker sphinx sphinx_rtd_theme
 	./venv/bin/python -m pip install --editable .
 
 .PHONY: docs
 docs: ## Build API docs
-	cd docs && $(MAKE) html
+	./venv/bin/sphinx-build -b html docs build
 
 docs-zip: docs ## Build and package docs into a zip file
 	cd docs/build/html && zip -r ../../../telesync-api-docs.zip .
