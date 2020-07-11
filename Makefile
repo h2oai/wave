@@ -30,6 +30,9 @@ run-ui: ## Run UI in development mode (hot reloading)
 build-server: ## Build server for current OS/Arch
 	go build $(LDFLAGS) -o telesync cmd/telesync/main.go
 
+build-py: ## Build wheel
+	cd py && $(MAKE) build
+
 build-examples:
 	cd py && $(MAKE) examples
 
@@ -39,7 +42,7 @@ run: ## Run server
 generate: ## Generate driver bindings
 	cd tools/telegen && $(MAKE) run
 
-release: build-ui build-examples ## Prepare release builds (use "VERSION=v1.2.3 make release"
+release: build-ui build-py build-examples ## Prepare release builds (use "VERSION=v1.2.3 make release)"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows release-os

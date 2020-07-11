@@ -2,6 +2,7 @@ all: build ## Build telesync wheel
 
 .PHONY: build
 build: purge
+	sed -i -r -e "s/version.+/version='$(VERSION)',/" setup.py
 	./venv/bin/python3 setup.py bdist_wheel
 
 publish: ## Publish package to PyPI
@@ -25,6 +26,7 @@ purge: ## Purge previous build
 
 .PHONY: examples
 examples:
+	sed -i -r -e "s/telesync.+/telesync==$(VERSION)/" examples/requirements.txt
 	tar -czf examples.tar.gz --exclude='*.state' --exclude='__pycache__' examples/
 
 clean: purge ## Clean
