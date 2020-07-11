@@ -14,7 +14,7 @@ v = page.add('example', ui.plot_card(
     title='Intervals, polar, stacked',
     data=data('country product price', n * k),
     plot=ui.plot([
-        ui.mark(coord='polar', mark='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0)])
+        ui.mark(coord='polar', type='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0)])
 ))
 
 v.data = [(g, t, x) for x in [f.next() for _ in range(n)] for g, t, x, dx in x]

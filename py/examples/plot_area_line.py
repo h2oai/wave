@@ -13,8 +13,8 @@ v = page.add('example', ui.plot_card(
     title='Area + Line',
     data=data('date price', n),
     plot=ui.plot([
-        ui.mark(mark='area', x_scale='time', x='=date', y='=price', y_min=0),
-        ui.mark(mark='line', x='=date', y='=price')
+        ui.mark(type='area', x_scale='time', x='=date', y='=price', y_min=0),
+        ui.mark(type='line', x='=date', y='=price')
     ])
 ))
 v.data = [(t, x) for t, x, dx in [f.next() for _ in range(n)]]

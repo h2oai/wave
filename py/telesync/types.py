@@ -3104,7 +3104,7 @@ class Mark:
     """No documentation available.
 
     :param coord: No documentation available.
-    :param mark: No documentation available.
+    :param type: No documentation available.
     :param x: No documentation available.
     :param x0: No documentation available.
     :param x1: No documentation available.
@@ -3162,7 +3162,7 @@ class Mark:
     def __init__(
             self,
             coord: Optional[str] = None,
-            mark: Optional[str] = None,
+            type: Optional[str] = None,
             x: Optional[Value] = None,
             x0: Optional[Value] = None,
             x1: Optional[Value] = None,
@@ -3218,7 +3218,7 @@ class Mark:
             ref_stroke_dash: Optional[str] = None,
     ):
         self.coord = coord
-        self.mark = mark
+        self.type = type
         self.x = x
         self.x0 = x0
         self.x1 = x1
@@ -3277,7 +3277,7 @@ class Mark:
         """Returns the contents of this object as a dict."""
         return _dump(
             coord=self.coord,
-            mark=self.mark,
+            type=self.type,
             x=self.x,
             x0=self.x0,
             x1=self.x1,
@@ -3337,7 +3337,7 @@ class Mark:
     def load(__d: Dict) -> 'Mark':
         """Creates an instance of this class using the contents of a dict."""
         __d_coord: Any = __d.get('coord')
-        __d_mark: Any = __d.get('mark')
+        __d_type: Any = __d.get('type')
         __d_x: Any = __d.get('x')
         __d_x0: Any = __d.get('x0')
         __d_x1: Any = __d.get('x1')
@@ -3392,7 +3392,7 @@ class Mark:
         __d_ref_stroke_size: Any = __d.get('ref_stroke_size')
         __d_ref_stroke_dash: Any = __d.get('ref_stroke_dash')
         coord: Optional[str] = __d_coord
-        mark: Optional[str] = __d_mark
+        type: Optional[str] = __d_type
         x: Optional[Value] = __d_x
         x0: Optional[Value] = __d_x0
         x1: Optional[Value] = __d_x1
@@ -3448,7 +3448,7 @@ class Mark:
         ref_stroke_dash: Optional[str] = __d_ref_stroke_dash
         return Mark(
             coord,
-            mark,
+            type,
             x,
             x0,
             x1,

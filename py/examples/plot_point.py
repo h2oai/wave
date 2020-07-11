@@ -13,7 +13,7 @@ v = page.add('example', ui.plot_card(
     title='Point',
     data=data('price performance', n),
     plot=ui.plot([
-        ui.mark(mark='point', x='=price', y='=performance')
+        ui.mark(type='point', x='=price', y='=performance')
     ])
 ))
 v.data = [f.next() for i in range(n)]

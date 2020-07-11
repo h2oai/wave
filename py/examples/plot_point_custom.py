@@ -14,7 +14,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Point, custom',
     data=data('price performance discount', n),
-    plot=ui.plot([ui.mark(mark='point', x='=price', y='=performance', size='=discount', size_range='4 30',
+    plot=ui.plot([ui.mark(type='point', x='=price', y='=performance', size='=discount', size_range='4 30',
                           fill_color='#eb4559', stroke_color='#eb4559', stroke_size=1, fill_opacity=0.3,
                           stroke_opacity=1)])
 ))

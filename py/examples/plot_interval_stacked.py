@@ -13,7 +13,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Intervals, stacked',
     data=data('country product price', n * k),
-    plot=ui.plot([ui.mark(mark='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0)])
+    plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0)])
 ))
 
 v.data = [(g, t, x) for x in [f.next() for _ in range(n)] for g, t, x, dx in x]

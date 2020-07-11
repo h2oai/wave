@@ -17,7 +17,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Point, groups',
     data=data('product price performance', n * 3),
-    plot=ui.plot([ui.mark(mark='point', x='=price', y='=performance', color='=product', shape='circle')])
+    plot=ui.plot([ui.mark(type='point', x='=price', y='=performance', color='=product', shape='circle')])
 ))
 v.data = create_fake_row('G1', f1, n) + create_fake_row('G2', f1, n) + create_fake_row('G3', f1, n)
 

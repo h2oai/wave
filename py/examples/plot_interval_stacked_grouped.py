@@ -15,7 +15,7 @@ v = page.add('example', ui.plot_card(
     title='Intervals, stacked and dodged',
     data=data('category country product price', n * k * 2),
     plot=ui.plot([
-        ui.mark(mark='interval', x='=product', y='=price', color='=country', stack='auto', dodge='=category',
+        ui.mark(type='interval', x='=product', y='=price', color='=country', stack='auto', dodge='=category',
                 y_min=0)])
 ))
 

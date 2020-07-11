@@ -13,8 +13,8 @@ v = page.add('example', ui.plot_card(
     title='Path + Point',
     data=data('profit sales', n),
     plot=ui.plot([
-        ui.mark(mark='path', x='=profit', y='=sales'),
-        ui.mark(mark='point', x='=profit', y='=sales'),
+        ui.mark(type='path', x='=profit', y='=sales'),
+        ui.mark(type='point', x='=profit', y='=sales'),
     ])
 ))
 v.data = [(x, y) for x, y in [f.next() for _ in range(n)]]

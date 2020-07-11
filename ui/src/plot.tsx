@@ -28,7 +28,7 @@ enum SpaceT { CC, DD, TT, CD, DC, TC, CT, TD, DT }
 
 interface Mark {
   coord?: S
-  mark?: S // XXX annotate
+  type?: S // XXX annotate
   x?: V
   x0?: V
   x1?: V
@@ -241,14 +241,14 @@ const
       }
     }
     for (const mark of marks) {
-      const { mark: type, x1_field, x2_field, y_field } = mark
+      const { type, x1_field, x2_field, y_field } = mark
       if (type === 'interval' && isS(x1_field) && isS(x2_field) && isS(y_field)) { // histogram on x
         mark.x_field = x1_field + ' - ' + x2_field
         convertToPairs(ds, x1_field, x2_field, mark.x_field)
       }
     }
     for (const mark of marks) {
-      const { mark: type, y1_field, y2_field, x_field } = mark
+      const { type, y1_field, y2_field, x_field } = mark
       if (type === 'interval' && isS(y1_field) && isS(y2_field) && isS(x_field)) { // histogram on y
         mark.y_field = y1_field + ' - ' + y2_field
         convertToPairs(ds, y1_field, y2_field, mark.y_field)
@@ -338,7 +338,7 @@ const
     }
   },
   makeGeom = ({
-    mark: type, x_field, y_field,
+    type, x_field, y_field,
     color_field, color_range, color,
     shape_field, shape_range, shape,
     size_field, size_range, size,

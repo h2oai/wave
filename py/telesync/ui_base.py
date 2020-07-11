@@ -1353,7 +1353,7 @@ def pixel_art_card(
 
 def mark(
         coord: Optional[str] = None,
-        mark: Optional[str] = None,
+        type: Optional[str] = None,
         x: Optional[Value] = None,
         x0: Optional[Value] = None,
         x1: Optional[Value] = None,
@@ -1411,7 +1411,7 @@ def mark(
     """No documentation available.
 
     :param coord: No documentation available.
-    :param mark: No documentation available.
+    :param type: No documentation available.
     :param x: No documentation available.
     :param x0: No documentation available.
     :param x1: No documentation available.
@@ -1468,7 +1468,7 @@ def mark(
     """
     return Mark(
         coord,
-        mark,
+        type,
         x,
         x0,
         x1,

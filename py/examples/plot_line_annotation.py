@@ -13,7 +13,7 @@ v = page.add('example', ui.plot_card(
     title='Time-Numeric',
     data=data('date price', n),
     plot=ui.plot([
-        ui.mark(mark='line', x_scale='time', x='=date', y='=price', y_min=0, y_max=100),
+        ui.mark(type='line', x_scale='time', x='=date', y='=price', y_min=0, y_max=100),
         ui.mark(x=50, y=50, label='point'),
         ui.mark(x='2010-05-15T19:59:21.000000Z', label='vertical line'),
         ui.mark(y=40, label='horizontal line'),
