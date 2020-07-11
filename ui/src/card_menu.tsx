@@ -1,7 +1,7 @@
 import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react';
 import * as React from 'react';
 import { stylesheet } from 'typestyle';
-import { Command } from './notebook';
+import { Command } from './toolbar';
 import { bond, box, telesync } from './telesync';
 
 const

@@ -1,8 +1,28 @@
 import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react';
 import React from 'react';
 import { cards } from './layout';
-import { Command } from './notebook';
-import { bond, Card, telesync } from './telesync';
+import { bond, Card, telesync, S } from './telesync';
+
+/**
+ * Create a command.
+ *
+ * Commands are typically displayed as context menu items or toolbar button.
+ */
+export interface Command {
+  /** An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed. */
+  name: S
+  /** The text displayed for this command. */
+  label?: S
+  /** The caption for this command (typically a tooltip). */
+  caption?: S
+  /** The icon to be displayed for this command. */
+  icon?: S
+  /** Sub-commands, if any */
+  items?: Command[]
+  /** Data associated with this command, if any. */
+  data?: S
+}
+
 
 interface State {
   /** Items to render. */

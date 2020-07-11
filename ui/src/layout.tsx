@@ -3,7 +3,7 @@ import { stylesheet } from 'typestyle';
 import { format, isFormatExpr } from './intl';
 import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './telesync';
 import { getTheme, margin } from './theme';
-import { Command } from './notebook';
+import { Command } from './toolbar';
 import { CardMenu } from './card_menu';
 
 interface Slot {

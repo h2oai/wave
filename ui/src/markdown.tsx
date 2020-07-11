@@ -11,7 +11,14 @@ export const
   MarkdownSafe = ({ source }: { source: S }) => (<div dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />),
   MarkdownInline = ({ source }: { source: S }) => (<span dangerouslySetInnerHTML={{ __html: markdownSafe.renderInline(source) }} />)
 
-/** Render Markdown content.*/
+/**
+ * Render Markdown content.
+ *
+ * Github-flavored markdown is supported.
+ * HTML markup is allowed in markdown content.
+ * URLs, if found, are displayed as hyperlinks.
+ * Copyright, reserved, trademark, quotes, etc. are replaced with language-neutral symbols.
+ */
 interface State {
   /** The title for this card.*/
   title: S

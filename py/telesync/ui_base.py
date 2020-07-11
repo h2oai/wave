@@ -7,7 +7,6 @@ from .types import Value, PackedRecord, PackedRecords, PackedData
 from .types import \
     Button, \
     Buttons, \
-    Cell, \
     Checkbox, \
     Checklist, \
     Choice, \
@@ -16,12 +15,6 @@ from .types import \
     Combobox, \
     Command, \
     Component, \
-    DashboardCard, \
-    DashboardPage, \
-    DashboardPanel, \
-    DashboardRow, \
-    DataSource, \
-    DataSourceQuery, \
     DatePicker, \
     Dropdown, \
     Expander, \
@@ -29,9 +22,7 @@ from .types import \
     FlexCard, \
     FormCard, \
     FrameCard, \
-    FrameCell, \
     GridCard, \
-    HeadingCell, \
     Label, \
     LargeBarStatCard, \
     LargeStatCard, \
@@ -40,15 +31,12 @@ from .types import \
     ListItem1Card, \
     Mark, \
     MarkdownCard, \
-    MarkdownCell, \
     MarkupCard, \
     MessageBar, \
     MetaCard, \
     NavCard, \
     NavGroup, \
     NavItem, \
-    NotebookCard, \
-    NotebookSection, \
     PixelArtCard, \
     Plot, \
     PlotCard, \
@@ -73,179 +61,9 @@ from .types import \
     Toggle, \
     ToolbarCard, \
     VegaCard, \
-    VegaCell, \
     WideBarStatCard, \
     WideGaugeStatCard, \
     WideSeriesStatCard
-
-
-def heading_cell(
-        level: int,
-        content: str,
-) -> Cell:
-    """Create a heading cell.
-
-    A heading cell is rendered as a HTML heading (H1 to H6).
-
-    :param level: The heading level (between 1 and 6)
-    :param content: The heading text.
-    """
-    return Cell(heading=HeadingCell(
-        level,
-        content,
-    ))
-
-
-def markdown_cell(
-        content: str,
-) -> Cell:
-    """Create a markdown cell.
-
-    A markdown cell is rendered using Github-flavored markdown.
-    HTML markup is allowed in markdown content.
-    URLs, if found, are displayed as hyperlinks.
-    Copyright, reserved, trademark, quotes, etc. are replaced with language-neutral symbols.
-
-    :param content: The markdown content of this cell.
-    """
-    return Cell(markdown=MarkdownCell(
-        content,
-    ))
-
-
-def frame_cell(
-        source: str,
-        width: str,
-        height: str,
-) -> Cell:
-    """Create a frame cell
-
-    A frame cell is rendered as in inline frame (iframe) element.
-    See https://developer.mozilla.org/en-US/docs/Web/CSS/length for `width` and `height` parameters.
-
-    :param source: The HTML content of the frame.
-    :param width: The CSS width of the frame.
-    :param height: The CSS height of the frame.
-    """
-    return Cell(frame=FrameCell(
-        source,
-        width,
-        height,
-    ))
-
-
-def data_source(
-        t: str,
-        id: int,
-) -> DataSource:
-    """Create a reference to a data source.
-
-    :param t: The type of the data source. One of 'table', 'view'.
-    :param id: The ID of the data source
-    """
-    return DataSource(
-        t,
-        id,
-    )
-
-
-def data_source_query(
-        sql: str,
-        sources: List[DataSource],
-) -> DataSourceQuery:
-    """Create a stored query.
-
-    :param sql: The SQL query.
-    :param sources: The data sources referred to in the SQL query.
-    """
-    return DataSourceQuery(
-        sql,
-        sources,
-    )
-
-
-def vega_cell(
-        specification: str,
-        query: DataSourceQuery,
-) -> Cell:
-    """Create a VegaLite cell.
-
-    :param specification: The VegaLite specification.
-    :param query: The query to be executed to populate this visualization.
-    """
-    return Cell(vega=VegaCell(
-        specification,
-        query,
-    ))
-
-
-def cell(
-        heading: Optional[HeadingCell] = None,
-        markdown: Optional[MarkdownCell] = None,
-        frame: Optional[FrameCell] = None,
-        vega: Optional[VegaCell] = None,
-) -> Cell:
-    """Create a cell.
-
-    :param heading: A heading cell.
-    :param markdown: A markdown cell.
-    :param frame: A frame cell.
-    :param vega: A vega cell.
-    """
-    return Cell(
-        heading,
-        markdown,
-        frame,
-        vega,
-    )
-
-
-def dashboard_panel(
-        cells: List[Cell],
-        size: Optional[str] = None,
-        data: Optional[str] = None,
-) -> DashboardPanel:
-    """Create a dashboard panel.
-
-    :param cells: A list of cells to display in the panel (top to bottom).
-    :param size: The absolute or relative width of the panel.
-    :param data: Data associated with this section, if any.
-    """
-    return DashboardPanel(
-        cells,
-        size,
-        data,
-    )
-
-
-def dashboard_row(
-        panels: List[DashboardPanel],
-        size: Optional[str] = None,
-) -> DashboardRow:
-    """Create a dashboard row.
-
-    :param panels: A list of panels to display in the row (left to right).
-    :param size: The absolute or relative height of the row.
-    """
-    return DashboardRow(
-        panels,
-        size,
-    )
-
-
-def dashboard_page(
-        title: str,
-        rows: List[DashboardRow],
-) -> DashboardPage:
-    """Create a dashboard page.
-
-    :param title: The text displayed on the page's tab.
-    :param rows: A list of rows to display in the dashboard page (top to bottom).
-    """
-    return DashboardPage(
-        title,
-        rows,
-    )
 
 
 def command(
@@ -258,8 +76,7 @@ def command(
 ) -> Command:
     """Create a command.
 
-    Commands are typically displayed as context menu items associated with
-    parts of notebooks or dashboards.
+    Commands are typically displayed as context menu items or toolbar button.
 
     :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
     :param label: The text displayed for this command.
@@ -275,45 +92,6 @@ def command(
         icon,
         items,
         data,
-    )
-
-
-def dashboard_card(
-        box: str,
-        pages: List[DashboardPage],
-        commands: Optional[List[Command]] = None,
-) -> DashboardCard:
-    """Create a dashboard.
-
-    A dashboard consists of one or more pages.
-    The dashboard is displayed as a tabbed layout, with each tab corresponding to a page.
-
-    A dashboard page consists of one or more rows, laid out top to bottom.
-    Each dashboard row in turn contains one or more panels, laid out left to right.
-    Each dashboard panel in turn conttains one or more cells, laid out top to bottom.
-
-    Dashboard rows and panels support both flexible and fixed sizing.
-
-    For flexible sizes, specify an integer without units, e.g. '2', '5', etc. These are interpreted as ratios.
-
-    For fixed sizes, specify the size with units, e.g. '200px', '2vw', etc.
-    The complete list of units can be found at https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units
-
-    You can combine fixed and flexible sizes to make your dashboard responsive (adjust to different screen sizes).
-
-    Examples:
-    Two panels with sizes '3', '1' will result in a 3:1 split.
-    Three panels with sizes '300px', '1' and '300px' will result in a an expandable center panel in between two 300px panels.
-    Four panels with sizes '200px', '400px', '1', '2' will result in two fixed-width panels followed by a 1:2 split.
-
-    :param box: A string indicating how to place this component on the page.
-    :param pages: A list of pages contained in the dashboard.
-    :param commands: Contextual menu commands for this component.
-    """
-    return DashboardCard(
-        box,
-        pages,
-        commands,
     )
 
 
@@ -1439,6 +1217,11 @@ def markdown_card(
 ) -> MarkdownCard:
     """Render Markdown content.
 
+    Github-flavored markdown is supported.
+    HTML markup is allowed in markdown content.
+    URLs, if found, are displayed as hyperlinks.
+    Copyright, reserved, trademark, quotes, etc. are replaced with language-neutral symbols.
+
     :param box: A string indicating how to place this component on the page.
     :param title: The title for this card.
     :param content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
@@ -1543,43 +1326,6 @@ def nav_card(
     return NavCard(
         box,
         items,
-        commands,
-    )
-
-
-def notebook_section(
-        cells: List[Cell],
-        data: Optional[str] = None,
-) -> NotebookSection:
-    """Create a notebook section.
-
-    A notebook section is rendered as a sequence of cells.
-
-    :param cells: A list of cells to display in this notebook section.
-    :param data: Data associated with this section, if any.
-    """
-    return NotebookSection(
-        cells,
-        data,
-    )
-
-
-def notebook_card(
-        box: str,
-        sections: List[NotebookSection],
-        commands: Optional[List[Command]] = None,
-) -> NotebookCard:
-    """Create a notebook.
-
-    A notebook is rendered as a sequence of sections.
-
-    :param box: A string indicating how to place this component on the page.
-    :param sections: A list of sections to display in the notebook.
-    :param commands: Contextual menu commands for this component.
-    """
-    return NotebookCard(
-        box,
-        sections,
         commands,
     )
 
