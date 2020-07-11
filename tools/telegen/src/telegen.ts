@@ -487,13 +487,7 @@ const
         p('# THIS FILE IS GENERATED; DO NOT EDIT')
         p('#')
         p('')
-        p('from typing import Optional, Union, List')
-        p('from .types import Value, PackedRecord, PackedRecords, PackedData')
-
-        const classNames = Object.keys(classes).sort().join(', \\\n    ')
-        p(`from .types import \\`)
-        p(`    ${classNames}`)
-        p('')
+        p('from .types import *')
 
         for (const type of protocol.types) {
           if (type.isRoot) {

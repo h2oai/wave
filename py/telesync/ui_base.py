@@ -2,69 +2,7 @@
 # THIS FILE IS GENERATED; DO NOT EDIT
 #
 
-from typing import Optional, Union, List
-from .types import Value, PackedRecord, PackedRecords, PackedData
-from .types import \
-    Button, \
-    Buttons, \
-    Checkbox, \
-    Checklist, \
-    Choice, \
-    ChoiceGroup, \
-    ColorPicker, \
-    Combobox, \
-    Command, \
-    Component, \
-    DatePicker, \
-    Dropdown, \
-    Expander, \
-    FileUpload, \
-    FlexCard, \
-    FormCard, \
-    FrameCard, \
-    GridCard, \
-    Label, \
-    LargeBarStatCard, \
-    LargeStatCard, \
-    Link, \
-    ListCard, \
-    ListItem1Card, \
-    Mark, \
-    MarkdownCard, \
-    MarkupCard, \
-    MessageBar, \
-    MetaCard, \
-    NavCard, \
-    NavGroup, \
-    NavItem, \
-    PixelArtCard, \
-    Plot, \
-    PlotCard, \
-    Progress, \
-    RepeatCard, \
-    Separator, \
-    Slider, \
-    SmallSeriesStatCard, \
-    SmallStatCard, \
-    Spinbox, \
-    Tab, \
-    TabCard, \
-    Table, \
-    TableColumn, \
-    TableRow, \
-    Tabs, \
-    TallGaugeStatCard, \
-    TallSeriesStatCard, \
-    TemplateCard, \
-    Text, \
-    Textbox, \
-    Toggle, \
-    ToolbarCard, \
-    VegaCard, \
-    WideBarStatCard, \
-    WideGaugeStatCard, \
-    WideSeriesStatCard
-
+from .types import *
 
 def command(
         name: str,
