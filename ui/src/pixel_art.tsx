@@ -45,21 +45,22 @@ const
 
   }
 
+/** Create a card displaying a collaborative Pixel art tool, just for kicks. */
 interface State {
+  /** The title for this card.*/
   title: S
+  /** The data for this card.*/
   data: Rec
 }
 
+/** A pixel. */
 interface Pixel {
+  /** The pixel's color. */
   color: S
 }
 
-const defaults: Partial<State> = {
-  title: 'Untitled',
-}
-
 const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Card<State>) => {
     let brush = '#000'
     const
       paint = (i: U) => {
@@ -69,7 +70,6 @@ const
       },
       render = () => {
         const
-          s = theme.merge(defaults, state),
           data = unpack<(Pixel | null)[]>(s.data),
           swatches = palette.map((c, i) => (
             <div

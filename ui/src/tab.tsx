@@ -4,6 +4,7 @@ import { cards } from './layout';
 import { Tab } from './tabs';
 import { bond, Card, telesync, B } from './telesync';
 
+/** Create a card containing tabs for navigation. */
 interface State {
   /** Items to render. */
   items: Tab[]

@@ -83,16 +83,17 @@ class Command:
 
 
 class FlexCard:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
+    Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
 
     :param box: A string indicating how to place this component on the page.
-    :param item_view: No documentation available.
-    :param item_props: No documentation available.
-    :param data: No documentation available.
-    :param direction: No documentation available. One of 'horizontal', 'vertical'.
-    :param justify: No documentation available. One of 'start', 'end', 'center', 'between', 'around'.
-    :param align: No documentation available. One of 'start', 'end', 'center', 'baseline', 'stretch'.
-    :param wrap: No documentation available. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
+    :param item_view: The child card type.
+    :param item_props: The child card properties.
+    :param data: Data for this card.
+    :param direction: Layout direction. One of 'horizontal', 'vertical'.
+    :param justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'.
+    :param align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'.
+    :param wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -2247,12 +2248,12 @@ class FrameCard:
 
 
 class GridCard:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param cells: No documentation available.
-    :param data: No documentation available.
+    :param title: EXPERIMENTAL. DO NOT USE.
+    :param cells: EXPERIMENTAL. DO NOT USE.
+    :param data: EXPERIMENTAL. DO NOT USE.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -2539,13 +2540,14 @@ class LargeStatCard:
 
 
 class ListCard:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
+    Create a card containing other cards laid out in the form of a list (vertically, top-to-bottom).
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param item_view: No documentation available.
-    :param item_props: No documentation available.
-    :param data: No documentation available.
+    :param title: The title for this card.
+    :param item_view: The child card type.
+    :param item_props: The child card properties.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -2622,14 +2624,14 @@ class ListCard:
 
 
 class ListItem1Card:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param caption: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
+    :param title: EXPERIMENTAL. DO NOT USE.
+    :param caption: EXPERIMENTAL. DO NOT USE.
+    :param value: EXPERIMENTAL. DO NOT USE.
+    :param aux_value: EXPERIMENTAL. DO NOT USE.
+    :param data: EXPERIMENTAL. DO NOT USE.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -2906,10 +2908,10 @@ class MetaCard:
 
 
 class NavItem:
-    """No documentation available.
+    """Create a navigation item.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
+    :param name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+    :param label: The label to display.
     """
     def __init__(
             self,
@@ -2948,10 +2950,10 @@ class NavItem:
 
 
 class NavGroup:
-    """No documentation available.
+    """Create a group of navigation items.
 
-    :param label: No documentation available.
-    :param items: No documentation available.
+    :param label: The label to display for this group.
+    :param items: The navigation items contained in this group.
     """
     def __init__(
             self,
@@ -2990,10 +2992,10 @@ class NavGroup:
 
 
 class NavCard:
-    """No documentation available.
+    """Create a card containing a navigation pane.
 
     :param box: A string indicating how to place this component on the page.
-    :param items: No documentation available.
+    :param items: The navigation groups contained in this pane.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -3040,11 +3042,11 @@ class NavCard:
 
 
 class PixelArtCard:
-    """No documentation available.
+    """Create a card displaying a collaborative Pixel art tool, just for kicks.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param data: No documentation available.
+    :param title: The title for this card.
+    :param data: The data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -3509,7 +3511,7 @@ class Mark:
 class Plot:
     """Create a plot. A plot is composed of one or more graphical mark layers.
 
-    :param marks: No documentation available.
+    :param marks: The graphical mark layers contained in this plot.
     """
     def __init__(
             self,
@@ -3610,12 +3612,13 @@ class PlotCard:
 
 
 class RepeatCard:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
+    Create a card containing other cards.
 
     :param box: A string indicating how to place this component on the page.
-    :param item_view: No documentation available.
-    :param item_props: No documentation available.
-    :param data: No documentation available.
+    :param item_view: EXPERIMENTAL. DO NOT USE.
+    :param item_props: The child card properties.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
@@ -3875,7 +3878,7 @@ class SmallStatCard:
 
 
 class TabCard:
-    """No documentation available.
+    """Create a card containing tabs for navigation.
 
     :param box: A string indicating how to place this component on the page.
     :param items: Items to render.
@@ -4233,7 +4236,7 @@ class TemplateCard:
 
 
 class ToolbarCard:
-    """No documentation available.
+    """Create a card containing a toolbar.
 
     :param box: A string indicating how to place this component on the page.
     :param items: Items to render.

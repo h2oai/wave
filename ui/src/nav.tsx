@@ -3,17 +3,25 @@ import React from 'react';
 import { cards } from './layout';
 import { bond, Card, S, telesync } from './telesync';
 
+/** Create a navigation item. */
 interface NavItem {
+  /** The name of this item. Prefix the name with a '#' to trigger hash-change navigation. */
   name: S
+  /** The label to display. */
   label: S
 }
 
+/** Create a group of navigation items. */
 interface NavGroup {
+  /** The label to display for this group. */
   label: S
+  /** The navigation items contained in this group. */
   items: NavItem[]
 }
 
+/** Create a card containing a navigation pane. */
 interface State {
+  /** The navigation groups contained in this pane. */
   items: NavGroup[]
 }
 

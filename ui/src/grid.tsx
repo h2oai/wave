@@ -30,22 +30,21 @@ const
     }
   })
 
+/** EXPERIMENTAL. DO NOT USE. */
 interface State {
+  /** EXPERIMENTAL. DO NOT USE. */
   title: S
+  /** EXPERIMENTAL. DO NOT USE. */
   cells: Data
+  /** EXPERIMENTAL. DO NOT USE. */
   data: Data
 }
 
-const defaults: Partial<State> = {
-  title: 'Untitled',
-}
-
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
-        const s = { ...defaults, ...state } as State
-        let cells = unpack<any[]>(state.cells)
+        let cells = unpack<any[]>(s.cells)
 
         if (!Array.isArray(cells)) cells = [{ title: 'Data' }]
 
@@ -70,7 +69,7 @@ const
 
         return (
           <div className={css.card}>
-            <div className={css.title}>{s.title}</div>
+            <div className={css.title}>{s.title || 'Untitled'}</div>
             <div className={css.body}>
               <table className={css.table}>
                 <thead>

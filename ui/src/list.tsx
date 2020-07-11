@@ -27,23 +27,25 @@ const
     }
   })
 
+/**
+ * EXPERIMENTAL. DO NOT USE.
+ * Create a card containing other cards laid out in the form of a list (vertically, top-to-bottom).
+ **/
 interface State {
+  /** The title for this card. */
   title: S
+  /** The child card type. */
   item_view: S
+  /** The child card properties. */
   item_props: Rec
+  /** Data for this card. */
   data: Data
 }
 
-const defaults: Partial<State> = {
-  title: 'Untitled',
-}
-
 const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
-        const
-          s = { ...defaults, ...state } as State
         return (
           <div className={css.card}>
             <div className={css.title}>{s.title}</div>

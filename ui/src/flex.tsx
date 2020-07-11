@@ -2,19 +2,28 @@ import React from 'react';
 import { cards, Repeat } from './layout';
 import { bond, Card, Dict, Rec, S, Data } from './telesync';
 
+/**
+ * EXPERIMENTAL. DO NOT USE.
+ * Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
+ **/
 interface State {
+  /** The child card type. */
   item_view: S
+  /** The child card properties. */
   item_props: Rec
+  /** Data for this card. */
   data: Data
+  /** Layout direction. */
   direction?: 'horizontal' | 'vertical'
+  /** Layout strategy for main axis. */
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
+  /** Layout strategy for cross axis. */
   align?: 'start' | 'end' | 'center' | 'baseline' | 'stretch'
+  /** Wrapping strategy. */
   wrap?: 'start' | 'end' | 'center' | 'between' | 'around' | 'stretch'
 }
 
 const
-  defaults: Partial<State> = {
-  },
   directions: Dict<S> = {
     horizontal: 'row',
     vertical: 'column',
@@ -64,10 +73,9 @@ const
     const
       render = () => {
         // FIXME theme.merge()
-        const s = { ...defaults, ...state } as State
         return (
-          <div style={toFlexStyle(s)}>
-            <Repeat view={s.item_view} props={s.item_props} data={s.data} />
+          <div style={toFlexStyle(state)}>
+            <Repeat view={state.item_view} props={state.item_props} data={state.data} />
           </div>
         )
       }

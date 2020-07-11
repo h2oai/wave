@@ -24,6 +24,7 @@ export interface Command {
 }
 
 
+/** Create a card containing a toolbar. */
 interface State {
   /** Items to render. */
   items: Command[]

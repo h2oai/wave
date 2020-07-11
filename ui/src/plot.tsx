@@ -199,6 +199,7 @@ interface MarkExt extends Mark {
 
 /** Create a plot. A plot is composed of one or more graphical mark layers. */
 export interface Plot {
+  /** The graphical mark layers contained in this plot. */
   marks: Mark[]
 }
 

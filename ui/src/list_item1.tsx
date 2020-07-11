@@ -34,11 +34,17 @@ const
     },
   })
 
+/** EXPERIMENTAL. DO NOT USE. */
 interface State {
+  /** EXPERIMENTAL. DO NOT USE. */
   title: S
+  /** EXPERIMENTAL. DO NOT USE. */
   caption: S
+  /** EXPERIMENTAL. DO NOT USE. */
   value: S
+  /** EXPERIMENTAL. DO NOT USE. */
   aux_value: S
+  /** EXPERIMENTAL. DO NOT USE. */
   data: Rec
 }
 

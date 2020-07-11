@@ -106,16 +106,17 @@ def flex_card(
         wrap: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> FlexCard:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
+    Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
 
     :param box: A string indicating how to place this component on the page.
-    :param item_view: No documentation available.
-    :param item_props: No documentation available.
-    :param data: No documentation available.
-    :param direction: No documentation available. One of 'horizontal', 'vertical'.
-    :param justify: No documentation available. One of 'start', 'end', 'center', 'between', 'around'.
-    :param align: No documentation available. One of 'start', 'end', 'center', 'baseline', 'stretch'.
-    :param wrap: No documentation available. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
+    :param item_view: The child card type.
+    :param item_props: The child card properties.
+    :param data: Data for this card.
+    :param direction: Layout direction. One of 'horizontal', 'vertical'.
+    :param justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'.
+    :param align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'.
+    :param wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
     :param commands: Contextual menu commands for this component.
     """
     return FlexCard(
@@ -1062,12 +1063,12 @@ def grid_card(
         data: PackedData,
         commands: Optional[List[Command]] = None,
 ) -> GridCard:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param cells: No documentation available.
-    :param data: No documentation available.
+    :param title: EXPERIMENTAL. DO NOT USE.
+    :param cells: EXPERIMENTAL. DO NOT USE.
+    :param data: EXPERIMENTAL. DO NOT USE.
     :param commands: Contextual menu commands for this component.
     """
     return GridCard(
@@ -1159,13 +1160,14 @@ def list_card(
         data: PackedData,
         commands: Optional[List[Command]] = None,
 ) -> ListCard:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
+    Create a card containing other cards laid out in the form of a list (vertically, top-to-bottom).
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param item_view: No documentation available.
-    :param item_props: No documentation available.
-    :param data: No documentation available.
+    :param title: The title for this card.
+    :param item_view: The child card type.
+    :param item_props: The child card properties.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return ListCard(
@@ -1187,14 +1189,14 @@ def list_item1_card(
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> ListItem1Card:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param caption: No documentation available.
-    :param value: No documentation available.
-    :param aux_value: No documentation available.
-    :param data: No documentation available.
+    :param title: EXPERIMENTAL. DO NOT USE.
+    :param caption: EXPERIMENTAL. DO NOT USE.
+    :param value: EXPERIMENTAL. DO NOT USE.
+    :param aux_value: EXPERIMENTAL. DO NOT USE.
+    :param data: EXPERIMENTAL. DO NOT USE.
     :param commands: Contextual menu commands for this component.
     """
     return ListItem1Card(
@@ -1286,10 +1288,10 @@ def nav_item(
         name: str,
         label: str,
 ) -> NavItem:
-    """No documentation available.
+    """Create a navigation item.
 
-    :param name: No documentation available.
-    :param label: No documentation available.
+    :param name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+    :param label: The label to display.
     """
     return NavItem(
         name,
@@ -1301,10 +1303,10 @@ def nav_group(
         label: str,
         items: List[NavItem],
 ) -> NavGroup:
-    """No documentation available.
+    """Create a group of navigation items.
 
-    :param label: No documentation available.
-    :param items: No documentation available.
+    :param label: The label to display for this group.
+    :param items: The navigation items contained in this group.
     """
     return NavGroup(
         label,
@@ -1317,10 +1319,10 @@ def nav_card(
         items: List[NavGroup],
         commands: Optional[List[Command]] = None,
 ) -> NavCard:
-    """No documentation available.
+    """Create a card containing a navigation pane.
 
     :param box: A string indicating how to place this component on the page.
-    :param items: No documentation available.
+    :param items: The navigation groups contained in this pane.
     :param commands: Contextual menu commands for this component.
     """
     return NavCard(
@@ -1336,11 +1338,11 @@ def pixel_art_card(
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> PixelArtCard:
-    """No documentation available.
+    """Create a card displaying a collaborative Pixel art tool, just for kicks.
 
     :param box: A string indicating how to place this component on the page.
-    :param title: No documentation available.
-    :param data: No documentation available.
+    :param title: The title for this card.
+    :param data: The data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return PixelArtCard(
@@ -1531,7 +1533,7 @@ def plot(
 ) -> Plot:
     """Create a plot. A plot is composed of one or more graphical mark layers.
 
-    :param marks: No documentation available.
+    :param marks: The graphical mark layers contained in this plot.
     """
     return Plot(
         marks,
@@ -1569,12 +1571,13 @@ def repeat_card(
         data: PackedData,
         commands: Optional[List[Command]] = None,
 ) -> RepeatCard:
-    """No documentation available.
+    """EXPERIMENTAL. DO NOT USE.
+    Create a card containing other cards.
 
     :param box: A string indicating how to place this component on the page.
-    :param item_view: No documentation available.
-    :param item_props: No documentation available.
-    :param data: No documentation available.
+    :param item_view: EXPERIMENTAL. DO NOT USE.
+    :param item_props: The child card properties.
+    :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
     """
     return RepeatCard(
@@ -1661,7 +1664,7 @@ def tab_card(
         link: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> TabCard:
-    """No documentation available.
+    """Create a card containing tabs for navigation.
 
     :param box: A string indicating how to place this component on the page.
     :param items: Items to render.
@@ -1788,7 +1791,7 @@ def toolbar_card(
         overflow_items: Optional[List[Command]] = None,
         commands: Optional[List[Command]] = None,
 ) -> ToolbarCard:
-    """No documentation available.
+    """Create a card containing a toolbar.
 
     :param box: A string indicating how to place this component on the page.
     :param items: Items to render.

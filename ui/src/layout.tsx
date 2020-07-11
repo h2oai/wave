@@ -6,7 +6,7 @@ import { getTheme, margin } from './theme';
 import { Command } from './toolbar';
 import { CardMenu } from './card_menu';
 
-interface Slot {
+type Slot = {
   left: U
   top: U
   width?: U
