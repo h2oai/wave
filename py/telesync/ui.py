@@ -22,6 +22,7 @@ def command(
     :param icon: The icon to be displayed for this command.
     :param items: Sub-commands, if any
     :param data: Data associated with this command, if any.
+    :return: A :class:`telesync.types.Command` instance.
     """
     return Command(
         name,
@@ -56,6 +57,7 @@ def flex_card(
     :param align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'.
     :param wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.FlexCard` instance.
     """
     return FlexCard(
         box,
@@ -80,6 +82,7 @@ def text(
     :param content: The text content.
     :param size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'.
     :param tooltip: Tooltip message.
+    :return: A :class:`telesync.types.Text` instance.
     """
     return Component(text=Text(
         content,
@@ -96,6 +99,7 @@ def text_xl(
 
     :param content: The text content.
     :param tooltip: Tooltip message.
+    :return: A :class:`telesync.types.TextXl` instance.
     """
     return Component(text_xl=TextXl(
         content,
@@ -111,6 +115,7 @@ def text_l(
 
     :param content: The text content.
     :param tooltip: Tooltip message.
+    :return: A :class:`telesync.types.TextL` instance.
     """
     return Component(text_l=TextL(
         content,
@@ -126,6 +131,7 @@ def text_m(
 
     :param content: The text content.
     :param tooltip: Tooltip message.
+    :return: A :class:`telesync.types.TextM` instance.
     """
     return Component(text_m=TextM(
         content,
@@ -141,6 +147,7 @@ def text_s(
 
     :param content: The text content.
     :param tooltip: Tooltip message.
+    :return: A :class:`telesync.types.TextS` instance.
     """
     return Component(text_s=TextS(
         content,
@@ -156,6 +163,7 @@ def text_xs(
 
     :param content: The text content.
     :param tooltip: Tooltip message.
+    :return: A :class:`telesync.types.TextXs` instance.
     """
     return Component(text_xs=TextXs(
         content,
@@ -181,6 +189,7 @@ def label(
     :param required: True if the field is required.
     :param disabled: True if the label should be disabled.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Label` instance.
     """
     return Component(label=Label(
         label,
@@ -198,6 +207,7 @@ def separator(
     A separator visually separates content into groups.
 
     :param label: The text displayed on the separator.
+    :return: A :class:`telesync.types.Separator` instance.
     """
     return Component(separator=Separator(
         label,
@@ -234,6 +244,7 @@ def progress(
     :param caption: The text displayed below the bar.
     :param value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Progress` instance.
     """
     return Component(progress=Progress(
         label,
@@ -255,6 +266,7 @@ def message_bar(
 
     :param type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
     :param text: The text displayed on the message bar.
+    :return: A :class:`telesync.types.MessageBar` instance.
     """
     return Component(message_bar=MessageBar(
         type,
@@ -300,6 +312,7 @@ def textbox(
     :param multiline: True if the text box should allow multi-line text entry.
     :param password: True if the text box should hide text content.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Textbox` instance.
     """
     return Component(textbox=Textbox(
         name,
@@ -351,6 +364,7 @@ def checkbox(
     :param disabled: True if the checkbox is disabled.
     :param trigger: True if the form should be submitted when the checkbox value changes.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Checkbox` instance.
     """
     return Component(checkbox=Checkbox(
         name,
@@ -386,6 +400,7 @@ def toggle(
     :param disabled: True if the checkbox is disabled.
     :param trigger: True if the form should be submitted when the toggle value changes.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Toggle` instance.
     """
     return Component(toggle=Toggle(
         name,
@@ -407,6 +422,7 @@ def choice(
     :param name: An identifying name for this component.
     :param label: Text to be displayed alongside the component.
     :param disabled: True if the checkbox is disabled.
+    :return: A :class:`telesync.types.Choice` instance.
     """
     return Choice(
         name,
@@ -442,6 +458,7 @@ def choice_group(
     :param required: True if this field is required.
     :param trigger: True if the form should be submitted when the selection changes.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.ChoiceGroup` instance.
     """
     return Component(choice_group=ChoiceGroup(
         name,
@@ -470,6 +487,7 @@ def checklist(
     :param values: The names of the selected choices.
     :param choices: The choices to be presented.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Checklist` instance.
     """
     return Component(checklist=Checklist(
         name,
@@ -514,6 +532,7 @@ def dropdown(
     :param disabled: True if this field is disabled.
     :param trigger: True if the form should be submitted when the dropdown value changes.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Dropdown` instance.
     """
     return Component(dropdown=Dropdown(
         name,
@@ -559,6 +578,7 @@ def combobox(
     :param error: Text to be displayed as an error below the text box.
     :param disabled: True if this field is disabled.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Combobox` instance.
     """
     return Component(combobox=Combobox(
         name,
@@ -607,6 +627,7 @@ def slider(
     :param disabled: True if this field is disabled.
     :param trigger: True if the form should be submitted when the slider value changes.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Slider` instance.
     """
     return Component(slider=Slider(
         name,
@@ -644,6 +665,7 @@ def spinbox(
     :param value: The current value of the spinbox.
     :param disabled: True if this field is disabled.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Spinbox` instance.
     """
     return Component(spinbox=Spinbox(
         name,
@@ -675,6 +697,7 @@ def date_picker(
     :param value: The date value in YYYY-MM-DD format.
     :param disabled: True if this field is disabled.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.DatePicker` instance.
     """
     return Component(date_picker=DatePicker(
         name,
@@ -703,6 +726,7 @@ def color_picker(
     :param value: The selected color (CSS-compatible string)
     :param choices: A list of colors (CSS-compatible strings) to limit color choices to.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.ColorPicker` instance.
     """
     return Component(color_picker=ColorPicker(
         name,
@@ -746,6 +770,7 @@ def button(
     :param disabled: True if the button should be disabled.
     :param link: True if the button should be rendered as link text and not a standard button.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Button` instance.
     """
     return Component(button=Button(
         name,
@@ -764,6 +789,7 @@ def buttons(
     """Create a set of buttons to be layed out horizontally.
 
     :param items: The button in this set.
+    :return: A :class:`telesync.types.Buttons` instance.
     """
     return Component(buttons=Buttons(
         items,
@@ -783,6 +809,7 @@ def file_upload(
     :param label: Text to be displayed alongside the component.
     :param multiple: True if the component should allow multiple files to be uploaded.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.FileUpload` instance.
     """
     return Component(file_upload=FileUpload(
         name,
@@ -800,6 +827,7 @@ def table_column(
 
     :param name: An identifying name for this column.
     :param label: The text displayed on the column header.
+    :return: A :class:`telesync.types.TableColumn` instance.
     """
     return TableColumn(
         name,
@@ -815,6 +843,7 @@ def table_row(
 
     :param name: An identifying name for this row.
     :param cells: The cells in this row (displayed left to right).
+    :return: A :class:`telesync.types.TableRow` instance.
     """
     return TableRow(
         name,
@@ -850,6 +879,7 @@ def table(
     :param rows: The rows in this table.
     :param multiple: True to allow multiple rows to be selected.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Table` instance.
     """
     return Component(table=Table(
         name,
@@ -878,6 +908,7 @@ def link(
     :param disabled: True if the link should be disable.
     :param button: True if the link should be rendered as a button
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :return: A :class:`telesync.types.Link` instance.
     """
     return Component(link=Link(
         label,
@@ -898,6 +929,7 @@ def tab(
     :param name: An identifying name for this component.
     :param label: The text displayed on the tab.
     :param icon: The icon displayed on the tab.
+    :return: A :class:`telesync.types.Tab` instance.
     """
     return Tab(
         name,
@@ -916,6 +948,7 @@ def tabs(
     :param name: An identifying name for this component.
     :param value: The name of the tab to select.
     :param items: The tabs in this tab bar.
+    :return: A :class:`telesync.types.Tabs` instance.
     """
     return Component(tabs=Tabs(
         name,
@@ -938,6 +971,7 @@ def expander(
     :param label: The text displayed on the expander.
     :param expanded: True if expanded, False if collapsed.
     :param items: List of components to be hideable by the expander.
+    :return: A :class:`telesync.types.Expander` instance.
     """
     return Component(expander=Expander(
         name,
@@ -1007,6 +1041,7 @@ def component(
     :param link: Link.
     :param tabs: Tabs.
     :param expander: Expander.
+    :return: A :class:`telesync.types.Component` instance.
     """
     return Component(
         text,
@@ -1050,6 +1085,7 @@ def form_card(
     :param box: A string indicating how to place this component on the page.
     :param items: The components in this form.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.FormCard` instance.
     """
     return FormCard(
         box,
@@ -1074,6 +1110,7 @@ def frame_card(
     :param path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
     :param content: The HTML content of the page. A string containing '<html>...</html>'
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.FrameCard` instance.
     """
     return FrameCard(
         box,
@@ -1098,6 +1135,7 @@ def grid_card(
     :param cells: EXPERIMENTAL. DO NOT USE.
     :param data: EXPERIMENTAL. DO NOT USE.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.GridCard` instance.
     """
     return GridCard(
         box,
@@ -1134,6 +1172,7 @@ def large_bar_stat_card(
     :param plot_color: The color of the progress bar.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.LargeBarStatCard` instance.
     """
     return LargeBarStatCard(
         box,
@@ -1168,6 +1207,7 @@ def large_stat_card(
     :param caption: The caption displayed below the primary value.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.LargeStatCard` instance.
     """
     return LargeStatCard(
         box,
@@ -1197,6 +1237,7 @@ def list_card(
     :param item_props: The child card properties.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.ListCard` instance.
     """
     return ListCard(
         box,
@@ -1226,6 +1267,7 @@ def list_item1_card(
     :param aux_value: EXPERIMENTAL. DO NOT USE.
     :param data: EXPERIMENTAL. DO NOT USE.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.ListItem1Card` instance.
     """
     return ListItem1Card(
         box,
@@ -1257,6 +1299,7 @@ def markdown_card(
     :param content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
     :param data: Additional data for the card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.MarkdownCard` instance.
     """
     return MarkdownCard(
         box,
@@ -1279,6 +1322,7 @@ def markup_card(
     :param title: The title for this card.
     :param content: The HTML content.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.MarkupCard` instance.
     """
     return MarkupCard(
         box,
@@ -1303,6 +1347,7 @@ def meta_card(
     :param title: The title of the page.
     :param refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.MetaCard` instance.
     """
     return MetaCard(
         box,
@@ -1320,6 +1365,7 @@ def nav_item(
 
     :param name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
     :param label: The label to display.
+    :return: A :class:`telesync.types.NavItem` instance.
     """
     return NavItem(
         name,
@@ -1335,6 +1381,7 @@ def nav_group(
 
     :param label: The label to display for this group.
     :param items: The navigation items contained in this group.
+    :return: A :class:`telesync.types.NavGroup` instance.
     """
     return NavGroup(
         label,
@@ -1352,6 +1399,7 @@ def nav_card(
     :param box: A string indicating how to place this component on the page.
     :param items: The navigation groups contained in this pane.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.NavCard` instance.
     """
     return NavCard(
         box,
@@ -1372,6 +1420,7 @@ def pixel_art_card(
     :param title: The title for this card.
     :param data: The data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.PixelArtCard` instance.
     """
     return PixelArtCard(
         box,
@@ -1496,6 +1545,7 @@ def mark(
     :param ref_stroke_opacity: Reference line stroke opacity.
     :param ref_stroke_size: Reference line stroke size (line width or pen thickness).
     :param ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+    :return: A :class:`telesync.types.Mark` instance.
     """
     return Mark(
         coord,
@@ -1562,6 +1612,7 @@ def plot(
     """Create a plot. A plot is composed of one or more graphical mark layers.
 
     :param marks: The graphical mark layers contained in this plot.
+    :return: A :class:`telesync.types.Plot` instance.
     """
     return Plot(
         marks,
@@ -1582,6 +1633,7 @@ def plot_card(
     :param data: Data for this card.
     :param plot: The plot to be displayed in this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.PlotCard` instance.
     """
     return PlotCard(
         box,
@@ -1607,6 +1659,7 @@ def repeat_card(
     :param item_props: The child card properties.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.RepeatCard` instance.
     """
     return RepeatCard(
         box,
@@ -1645,6 +1698,7 @@ def small_series_stat_card(
     :param plot_color: The plot's color.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.SmallSeriesStatCard` instance.
     """
     return SmallSeriesStatCard(
         box,
@@ -1676,6 +1730,7 @@ def small_stat_card(
     :param value: The primary value displayed.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.SmallStatCard` instance.
     """
     return SmallStatCard(
         box,
@@ -1698,6 +1753,7 @@ def tab_card(
     :param items: Items to render.
     :param link: True if tabs should be rendered as links and not a standard tab.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.TabCard` instance.
     """
     return TabCard(
         box,
@@ -1727,6 +1783,7 @@ def tall_gauge_stat_card(
     :param plot_color: The color of the progress gauge.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.TallGaugeStatCard` instance.
     """
     return TallGaugeStatCard(
         box,
@@ -1770,6 +1827,7 @@ def tall_series_stat_card(
     :param plot_color: The plot's color.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.TallSeriesStatCard` instance.
     """
     return TallSeriesStatCard(
         box,
@@ -1802,6 +1860,7 @@ def template_card(
     :param content: The Handlebars template. https://handlebarsjs.com/guide/
     :param data: Data for the Handlebars template
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.TemplateCard` instance.
     """
     return TemplateCard(
         box,
@@ -1826,6 +1885,7 @@ def toolbar_card(
     :param secondary_items: Items to render on the right side (or left, in RTL).
     :param overflow_items: Items to render in an overflow menu.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.ToolbarCard` instance.
     """
     return ToolbarCard(
         box,
@@ -1850,6 +1910,7 @@ def vega_card(
     :param specification: The Vega-lite specification.
     :param data: Data for the plot, if any.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.VegaCard` instance.
     """
     return VegaCard(
         box,
@@ -1880,6 +1941,7 @@ def wide_bar_stat_card(
     :param plot_color: The color of the progress bar.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.WideBarStatCard` instance.
     """
     return WideBarStatCard(
         box,
@@ -1913,6 +1975,7 @@ def wide_gauge_stat_card(
     :param plot_color: The color of the progress gauge.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.WideGaugeStatCard` instance.
     """
     return WideGaugeStatCard(
         box,
@@ -1956,6 +2019,7 @@ def wide_series_stat_card(
     :param plot_color: The plot's color.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.WideSeriesStatCard` instance.
     """
     return WideSeriesStatCard(
         box,

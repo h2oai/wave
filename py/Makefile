@@ -16,7 +16,7 @@ setup: ## Install dependencies
 
 .PHONY: docs
 docs: ## Build API docs
-	./venv/bin/sphinx-build -b html docs build
+	./venv/bin/sphinx-build -b html docs build/docs
 
 docs-zip: docs ## Build and package docs into a zip file
 	cd docs/build/html && zip -r ../../../telesync-api-docs.zip .
