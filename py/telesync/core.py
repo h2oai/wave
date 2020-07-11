@@ -15,24 +15,24 @@ Primitive = Union[bool, str, int, float, None]
 PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
 
 
-def get_env(key: str, value: Any):
+def _get_env(key: str, value: Any):
     return os.environ.get(f'TELESYNC_{key}', value)
 
 
 _default_internal_address = 'ws://localhost:55556'
 
 
-class Config:
+class _Config:
     def __init__(self):
-        self.internal_address = get_env('INTERNAL_ADDRESS', _default_internal_address)
-        self.external_address = get_env('EXTERNAL_ADDRESS', self.internal_address)
-        self.hub_address = get_env('ADDRESS', 'http://localhost:55555')
-        self.hub_access_key_id: str = get_env('ACCESS_KEY_ID', 'access_key_id')
-        self.hub_access_key_secret: str = get_env('ACCESS_KEY_SECRET', 'access_key_secret')
-        self.shutdown_timeout: int = int(get_env('SHUTDOWN_TIMEOUT', '3'))  # seconds
+        self.internal_address = _get_env('INTERNAL_ADDRESS', _default_internal_address)
+        self.external_address = _get_env('EXTERNAL_ADDRESS', self.internal_address)
+        self.hub_address = _get_env('ADDRESS', 'http://localhost:55555')
+        self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
+        self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
+        self.shutdown_timeout: int = int(_get_env('SHUTDOWN_TIMEOUT', '3'))  # seconds
 
 
-_config = Config()
+_config = _Config()
 
 
 def configure(
@@ -42,6 +42,16 @@ def configure(
         hub_access_key_id: Optional[str] = None,
         hub_access_key_secret: Optional[str] = None,
 ):
+    """
+
+    :param internal_address:
+    :param external_address:
+    :param hub_address:
+    :param hub_access_key_id:
+    :param hub_access_key_secret:
+
+    :return:
+    """
     if internal_address:
         _config.internal_address = internal_address
 
@@ -58,7 +68,7 @@ def configure(
         _config.hub_access_key_secret = hub_access_key_secret
 
     global _client
-    _client = BasicAuthClient()
+    _client = _BasicAuthClient()
 
 
 _key_sep = ' '
@@ -104,7 +114,7 @@ def _guard_primitive_dict_values(d: Dict[str, Any]):
             _guard_primitive(x)
 
 
-def guard_key(key: str):
+def _guard_key(key: str):
     if _is_str(key):
         if ' ' in key:
             raise KeyError('keys cannot contain spaces')
@@ -122,7 +132,9 @@ DICT = '__kv'
 
 class Expando:
     """
-    Represents an object whose members can be dynamically added and removed at run time.
+    Represents an object whose members (attributes) can be dynamically added and removed at run time.
+
+    :param args: An optional ``dict`` of attribute-value pairs to initialize the expando instance with.
     """
 
     def __init__(self, args: Optional[Dict] = None):
@@ -144,6 +156,12 @@ class Expando:
 
 
 def expando_to_dict(e: Expando) -> dict:
+    """
+    Convert an expando to a dict.
+
+    :param e: The expando instance.
+    :return: A dictionary.
+    """
     return e.__dict__[DICT]
 
 
@@ -152,7 +170,7 @@ KEY = '__key__'
 
 
 def _set_op(o, k, v):
-    guard_key(k)
+    _guard_key(k)
     k = getattr(o, KEY) + _key_sep + str(k)
     if isinstance(v, Data):
         op = v.dump()
@@ -178,16 +196,21 @@ def _dump(xs: Any):
 
 
 class Ref:
+    """
+    Represents a local reference to an element on a :class:`telesync.core.Page`.
+    Any changes made to this local reference are tracked and sent to the remote Telesync server when the page is saved.
+    """
+
     def __init__(self, page: 'PageBase', key: str):
         self.__dict__[PAGE] = page
         self.__dict__[KEY] = key
 
     def __getattr__(self, key):
-        guard_key(key)
+        _guard_key(key)
         return Ref(getattr(self, PAGE), getattr(self, KEY) + _key_sep + key)
 
     def __getitem__(self, key):
-        guard_key(key)
+        _guard_key(key)
         return Ref(getattr(self, PAGE), getattr(self, KEY) + _key_sep + str(key))
 
     def __setattr__(self, key, value):
@@ -202,6 +225,14 @@ class Ref:
 
 
 class Data:
+    """
+    Represents a data placeholder. A data placeholder is used to allocate memory on the Telesync server to store data.
+
+    :param fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
+    :param size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
+    :param data: Initial data. Must be either a key-row ``dict`` for variable-length buffers OR a row ``list`` for fixed-size and circular buffers.
+    """
+
     def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
         self.fields = fields
         self.data = data
@@ -236,6 +267,23 @@ def data(
         columns: Optional[Union[dict, list]] = None,
         pack=False,
 ) -> Union[Data, str]:
+    """
+    Create a :class:`telesync.core.Data` instance for associating data with cards.
+
+    ``data(fields, size)`` creates a placeholder for data and allocates memory on the Telesync server.
+
+    ``data(fields, size, rows)`` creates a placeholder and initializes it with the provided rows.
+
+    If ``pack`` is ``True``, the ``size`` parameter is ignored, and the function returns a packed string representing the data.
+
+    :param fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
+    :param size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
+    :param rows: The rows in this data.
+    :param columns: The columns in this data.
+    :param pack: True to return a packed string representing the data instead of a :class:`telesync.core.Data` placeholder.
+
+    :return: Either a :class:`telesync.core.Data` placeholder or a packed string representing the data.
+    """
     if _is_str(fields):
         fields = fields.strip()
         if fields == '':
@@ -275,11 +323,25 @@ def data(
 
 
 class PageBase:
+    """
+    Represents a remote page.
+
+    :param url: The URL of the remote page.
+    """
+
     def __init__(self, url: str):
         self.url = url
         self._changes = []
 
     def add(self, key: str, card: Any) -> Ref:
+        """
+        Add a card to this page.
+
+        :param key: The card's key. Must uniquely identify the card on the page. Overwrites any other card with the same key.
+        :param card: A card. Use one of the ``ui.*_card()`` to create cards.
+
+        :return: A reference to the added card.
+        """
         if key is None:
             raise ValueError('card must have a key')
 
@@ -324,6 +386,9 @@ class PageBase:
         return d
 
     def drop(self):
+        """
+        Delete this page from the remote site. Same as ``del site[url]``.
+        """
         self._track({})
 
     def __setitem__(self, key, card):
@@ -339,14 +404,29 @@ class PageBase:
 
 
 class Page(PageBase):
+    """
+    Represents a reference to a remote Telesync page.
+
+    :param site: The parent site.
+    :param url: The URL of this page.
+    """
+
     def __init__(self, site: 'Site', url: str):
         self.site = site
         super().__init__(url)
 
     def load(self) -> dict:
+        """
+        Retrieve the serialized form of this page from the remote site.
+
+        :return: The serialized form of this page
+        """
         return self.site.load(self.url)
 
     def sync(self):
+        """
+        Save the page. Sends all local changes made to this page to the remote site.
+        """
         p = self._diff()
         if p:
             logger.debug(data)
@@ -354,15 +434,30 @@ class Page(PageBase):
 
 
 class AsyncPage(PageBase):
+    """
+    Represents a reference to a remote Telesync page. Similar to :class:`telesync.core.Page` except that this class exposes ``async`` methods.
+
+    :param site: The parent site.
+    :param url: The URL of this page.
+    """
+
     def __init__(self, site: 'AsyncSite', url: str):
         self.site = site
         self._ws = site._ws
         super().__init__(url)
 
     async def load(self) -> dict:
+        """
+        Retrieve the serialized form of this page from the remote site.
+
+        :return: The serialized form of this page
+        """
         return await self.site.load(self.url)
 
     async def push(self):
+        """
+        Save the page. Sends all local changes made to this page to the remote site.
+        """
         p = self._diff()
         if p:
             logger.debug(p)
@@ -370,16 +465,26 @@ class AsyncPage(PageBase):
 
     # XXX Broken
     async def pull(self) -> 'Q':
+        """
+        EXPERIMENTAL. DO NOT USE.
+
+        :return:
+        """
         req = await self._ws.recv()
         return Q(self._ws, req)
 
     # XXX Broken
     async def poll(self) -> 'Q':
+        """
+        EXPERIMENTAL. DO NOT USE.
+
+        :return:
+        """
         await self.push()
         return await self.pull()
 
 
-class BasicAuthClient:
+class _BasicAuthClient:
     def __init__(self):
         self._auth = HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
         self._secure = False
@@ -416,10 +521,14 @@ class BasicAuthClient:
         return filepath
 
 
-_client = BasicAuthClient()
+_client = _BasicAuthClient()
 
 
 class Site:
+    """
+    Represents a reference to the remote Telesync site. A Site instance is used to obtain references to the site's pages.
+    """
+
     def __getitem__(self, url) -> Page:
         return Page(self, url)
 
@@ -427,16 +536,39 @@ class Site:
         _client.patch(url, data)
 
     def load(self, url) -> dict:
+        """
+        Retrieve data at the given URL, typically the serialized form of a page.
+        :param url: The URL to read.
+
+        :return: The serialized page.
+        """
         return _client.get(url)
 
     def upload(self, files: List[str]) -> List[str]:
+        """
+        Upload local files to the site.
+        :param files: A list of file paths of the files to be uploaded..
+
+        :return: A list of remote URLs for the uploaded files, in order.
+        """
         return _client.upload(files)
 
     def download(self, url: str, path: str) -> str:
+        """
+        Download a file from the site.
+        :param url: The URL of the file.
+        :param path: The local directory or file path to download to. If a directory is provided, the original name of the file is retained.
+
+        :return: The path to the downloaded file.
+        """
         return _client.download(url, path)
 
 
 class AsyncSite:
+    """
+    Represents a reference to the remote Telesync site. Similar to :class:`telesync.core.Site` except that this class exposes ``async`` methods.
+    """
+
     def __init__(self, ws: websockets.WebSocketServerProtocol):
         self._ws = ws
 
@@ -444,15 +576,33 @@ class AsyncSite:
         return AsyncPage(self, url)
 
     async def load(self, url) -> dict:
+        """
+        Retrieve data at the given URL, typically the serialized form of a page.
+        :param url: The URL to read.
+
+        :return: The serialized page.
+        """
         # XXX implement
         return {}
 
     async def upload(self, files: List[str]) -> List[str]:
+        """
+        Upload local files to the site.
+        :param files: A list of file paths of the files to be uploaded..
+
+        :return: A list of remote URLs for the uploaded files, in order.
+        """
         # XXX use non-blocking aiohttp post
         paths = _client.upload(files)
         return paths
 
     async def download(self, url: str, path: str) -> str:
+        """
+        Download a file from the site.
+        :param url: The URL of the file.
+        :param path: The local directory or file path to download to. If a directory is provided, the original name of the file is retained.
+        :return: The path to the downloaded file.
+        """
         # XXX use non-blocking aiohttp get
         path = _client.download(url, path)
         return path
@@ -465,10 +615,31 @@ def _kv(key: str, index: str, value: Any):
     return dict(k=key, v=value) if index is None or index == '' else dict(k=key, i=index, v=value)
 
 
-def marshal(d: Any): return json.dumps(d, allow_nan=False, separators=(',', ':'))
+def marshal(d: Any) -> str:
+    """
+    Marshal to JSON.
+    :param d: Any object or value.
+
+    :return: A string containing the JSON-serialized form.
+    """
+    return json.dumps(d, allow_nan=False, separators=(',', ':'))
 
 
-def unmarshal(s: str): return json.loads(s)
+def unmarshal(s: str) -> Any:
+    """
+    Unmarshal a JSON string.
+    :param s: A string containing JSON-serialized data.
+
+    :return: The deserialized object or value.
+    """
+    return json.loads(s)
 
 
-def pack(data: Any): return 'data:' + marshal(_dump(data))
+def pack(data: Any) -> str:
+    """
+    Pack (compress) the provided value.
+    :param data: Any object or value.
+
+    :return:The object or value compressed into a string.
+    """
+    return 'data:' + marshal(_dump(data))

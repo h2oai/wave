@@ -30,6 +30,20 @@ BROADCAST = 'broadcast'
 
 
 class Q:
+    """
+    Represents the application context.
+
+    :param site: A reference to the current site.
+    :param mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
+    :param username: The username of the user who initiated the active request.
+    :param client_id: A unique ID representing the user's client (browser tabs across devices). A user could be accessing the site via multiple clients.
+    :param route: The route served by the server.
+    :param app_state: An :class:`telesync.core.Expando` instance to hold application-specific state.
+    :param user_state: An :class:`telesync.core.Expando` instance to hold user-specific state.
+    :param client_state: An :class:`telesync.core.Expando` instance to hold client-specific state.
+    :param args:  An :class:`telesync.core.Expando` instance containing the active request.
+    """
+
     def __init__(
             self,
             site: AsyncSite,
@@ -59,7 +73,7 @@ HandleAsync = Callable[[Q], Awaitable[Any]]
 WebAppState = Tuple[Expando, Dict[str, Expando], Dict[str, Expando]]
 
 
-class Server:
+class _Server:
     def __init__(self, mode: str, route: str, handle: HandleAsync):
         self.mode = mode
         self.route = route
@@ -78,10 +92,10 @@ class Server:
         pickle.dump(state, open('telesync.state', 'wb'))
 
 
-_server: Optional[Server] = None
+_server: Optional[_Server] = None
 
 
-def parse_request(req: str):
+def _parse_request(req: str):
     username = ''
     client_id = ''
 
@@ -104,7 +118,7 @@ def parse_request(req: str):
 async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
     site = AsyncSite(ws)
     async for req in ws:
-        username, client_id, args = parse_request(req)
+        username, client_id, args = _parse_request(req)
         logger.debug(f'user: {username}, client: {client_id}')
         logger.debug(args)
         app_state, user_state, client_state = _server.state
@@ -145,8 +159,15 @@ async def _start_server(host: Optional[str], port: int, stop_server):
 
 
 def listen(route: str, handle: HandleAsync, mode=UNICAST):
+    """
+    Launch an application server.
+
+    :param route: The route to listen to. e.g. `'/foo'` or `'/foo/bar/baz'`.
+    :param handle: The handler function.
+    :param mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
+    """
     global _server
-    _server = Server(mode=mode, route=route, handle=handle)
+    _server = _Server(mode=mode, route=route, handle=handle)
 
     logger.info(f'Server Mode: {mode}')
     logger.info(f'Server Route: {route}')
