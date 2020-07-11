@@ -23,7 +23,7 @@ os.remove('cubes.csv')
 
 # Display links to these CSVs
 page = site['/demo']
-page['hello'] = ui.markdown_card(
+page['example'] = ui.markdown_card(
     box='1 1 2 2',
     title='Download CSVs',
     content=f'[Squares]({squares_path}) [Cubes]({cubes_path})',

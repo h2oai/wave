@@ -5,7 +5,7 @@ from telesync import site, ui
 
 page = site['/demo']
 
-page['hello'] = ui.form_card(
+page['example'] = ui.form_card(
     box='1 1 2 5',
     items=[
         ui.separator(label='Separator 1'),

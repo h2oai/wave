@@ -37,7 +37,7 @@ Table:
 | Item 1   | Item 2   | Item 3   |
 '''
 
-page['hello'] = ui.form_card(
+page['example'] = ui.form_card(
     box='1 1 4 -1',
     items=[ui.text(sample_markdown)]
 )
