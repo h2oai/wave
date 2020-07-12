@@ -1,5 +1,5 @@
 # Plot / Point / Custom
-# No description available.
+# Customize a plot's fill/stroke color, size and opacity.
 # ---
 import random
 

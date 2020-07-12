@@ -1,5 +1,5 @@
 # Plot / Point / Sizes
-# No description available.
+# Make a scatterplot with mark sizes mapped to a continuous variable (a "bubble plot").
 # ---
 import random
 

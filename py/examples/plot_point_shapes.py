@@ -1,5 +1,5 @@
 # Plot / Point / Shapes
-# No description available.
+# Make a scatterplot with categories encoded as mark shapes.
 # ---
 from synth import FakeScatter
 from telesync import site, data, ui

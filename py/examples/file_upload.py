@@ -1,5 +1,5 @@
 # Form / File Upload
-# No description available.
+# Use a file upload component to allow users to upload files.
 # ---
 from telesync import site, ui
 

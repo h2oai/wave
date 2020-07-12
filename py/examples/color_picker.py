@@ -1,5 +1,5 @@
 # Form / Color Picker
-# No description available.
+# Use a color picker to allow a user to select a color.
 # ---
 from telesync import Q, listen, ui
 

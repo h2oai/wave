@@ -1,5 +1,5 @@
 # Form / Link
-# No description available.
+# Use links to allow navigation to internal and external URLs.
 # ---
 from telesync import site, ui
 

@@ -1,5 +1,5 @@
 # Pixel Art
-# No description available.
+# A card that demonstrates collaborative editing in Telesync.
 # ---
 from telesync import site, data, ui
 

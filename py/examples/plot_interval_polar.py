@@ -1,5 +1,5 @@
 # Plot / Interval / Polar
-# No description available.
+# Make a bar chart using polar coordinates (a Nightingale Rose Chart).
 # ---
 from synth import FakeCategoricalSeries
 from telesync import site, data, ui

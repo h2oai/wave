@@ -1,5 +1,5 @@
 # Hello World!
-# No description available.
+# A simple example to get you started with Telesync.
 # ---
 # Import `Site` and the `ui` module from the `telesync` package
 from telesync import site, ui

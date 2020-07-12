@@ -1,5 +1,5 @@
 # Form / Checkbox
-# No description available.
+# Use checkboxes to switch between two mutually exclusive options.
 # ---
 from telesync import Q, listen, ui
 

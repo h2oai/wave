@@ -1,6 +1,5 @@
 # Routing
-# This example demonstrates how you can observe and handle changes to the browser's
-# [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash)
+# Use the browser's [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash) for routing using URLs.
 #
 # The location hash can be accessed using `q.args['#']`.
 # ---

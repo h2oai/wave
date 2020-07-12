@@ -1,5 +1,5 @@
 # Flex
-# No description available.
+# Use a flex card to tile multiple child cards along one dimension, with optional wrapping.
 # ---
 import random
 

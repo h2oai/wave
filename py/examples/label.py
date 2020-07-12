@@ -1,5 +1,5 @@
 # Form / Label
-# No description available.
+# Use labels to give a name to a component or a group of components in a form.
 # ---
 from telesync import site, ui
 

@@ -1,5 +1,5 @@
 # Form / Date Picker
-# No description available.
+# Use date pickers to allow users to pick dates.
 # ---
 from telesync import Q, listen, ui
 

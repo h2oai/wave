@@ -1,5 +1,5 @@
 # Plot / Point
-# No description available.
+# Make a scatterplot.
 # ---
 from synth import FakeScatter
 from telesync import site, data, ui

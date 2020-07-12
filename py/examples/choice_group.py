@@ -1,5 +1,5 @@
 # Form / Choice Group
-# No description available.
+# Use choice groups to let users select one option from two or more choices.
 # ---
 from telesync import Q, listen, ui
 

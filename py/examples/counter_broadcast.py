@@ -1,12 +1,14 @@
+# Mode / Broadcast
+# Launch the server in broadcast mode to synchronize browser state across users.
+# ---
 from telesync import Q, listen, ui, pack
-
-count = 0
 
 
 async def main(q: Q):
-    global count
+    count = q.app.count or 0
     if 'increment' in q.args:
         count += 1
+        q.app.count = count
 
     items = pack([ui.button(name='increment', label=f'Count={count}')])
 

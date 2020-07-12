@@ -1,5 +1,5 @@
 # Form / Button
-# No description available.
+# Use buttons to enable a user to commit a change or complete steps in a task.
 # ---
 from telesync import Q, listen, ui
 

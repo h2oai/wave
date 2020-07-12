@@ -1,5 +1,5 @@
 # Form / Dropdown
-# No description available.
+# Use dropdowns to allow users to choose between available choices.
 # ---
 from telesync import Q, listen, ui
 

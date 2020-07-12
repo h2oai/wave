@@ -1,3 +1,6 @@
+# Mode / Unicast
+# Launch the server in unicast mode and use `q.client` to manage client-local state.
+# ---
 from telesync import Q, listen, ui, pack
 
 

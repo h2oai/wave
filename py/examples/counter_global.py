@@ -1,14 +1,15 @@
-# Mode / Multicast
-# Launch the server in multicast mode to synchronize browser state across a user's clients.
+# Mode / Broadcast / Global
+# Launch the server in broadcast mode to synchronize browser state across users. Global variables can be used to manage state.
 # ---
 from telesync import Q, listen, ui, pack
 
+count = 0
+
 
 async def main(q: Q):
-    count = q.user.count or 0
+    global count
     if 'increment' in q.args:
         count += 1
-        q.user.count = count
 
     items = pack([ui.button(name='increment', label=f'Count={count}')])
 
@@ -22,4 +23,4 @@ async def main(q: Q):
 
 
 if __name__ == '__main__':
-    listen('/demo', main, mode='multicast')
+    listen('/demo', main, mode='broadcast')

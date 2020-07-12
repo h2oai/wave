@@ -1,5 +1,5 @@
 # Form / Checklist
-# No description available.
+# Use a checklist to group a set of related checkboxes.
 # ---
 from telesync import Q, listen, ui
 

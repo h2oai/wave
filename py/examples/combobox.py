@@ -1,5 +1,5 @@
 # Form / Combobox
-# No description available.
+# Use comboboxes to allow users to either choose between available choices or indicate a choice by free-form editing.
 # ---
 from telesync import Q, listen, ui
 

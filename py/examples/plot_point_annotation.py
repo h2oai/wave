@@ -1,5 +1,5 @@
 # Plot / Point / Annotation
-# No description available.
+# Add annotations (points, lines and regions) to a plot.
 # ---
 from synth import FakeScatter
 from telesync import site, data, ui
@@ -13,8 +13,8 @@ v = page.add('example', ui.plot_card(
     title='Numeric-Numeric',
     data=data('price performance', n),
     plot=ui.plot([
-        ui.mark(type='point', x='=price', y='=performance', x_min=0, x_max=100, y_min=0, y_max=100),
-        ui.mark(x=50, y=50, label='point'),
+        ui.mark(type='point', x='=price', y='=performance', x_min=0, x_max=100, y_min=0, y_max=100),  # the plot
+        ui.mark(x=50, y=50, label='point'),  # A single reference point
         ui.mark(x=40, label='vertical line'),
         ui.mark(y=40, label='horizontal line'),
         ui.mark(x=70, x0=60, label='vertical region'),

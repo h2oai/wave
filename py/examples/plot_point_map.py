@@ -1,5 +1,5 @@
 # Plot / Point / Map
-# No description available.
+# Make a plot to compare quantities across categories. Similar to a heatmap, but using size-encoding instead of color-encoding.
 # ---
 from synth import FakeSeries
 from telesync import site, data, ui

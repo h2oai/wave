@@ -1,5 +1,5 @@
 # Form / Buttons
-# No description available.
+# Use the `ui.buttons()` function to group related buttons.
 # ---
 from telesync import Q, listen, ui
 

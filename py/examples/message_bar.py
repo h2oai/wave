@@ -1,5 +1,5 @@
 # Form / Message Bar
-# No description available.
+# Use message bars to indicate relevant status information.
 # ---
 from telesync import site, ui
 
