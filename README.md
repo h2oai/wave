@@ -8,52 +8,10 @@
 
 ## Getting Started
 
-#### Step 1: Get Telesync
+To build apps using Telesync, you need the `telesync` development server and the `telesync` pip package.
 
-[Download](https://github.com/h2oai/telesync/releases) the development server and run:
-
-```
-$ ./telesync
-```
-
-#### Step 2: Install the Python driver
-
-```
-pip install -U telesync
-```
-
-#### Step 3: Hello World!
-
-```python
-# ----- hello.py -----
-
-from telesync import site, ui
-
-# Access the web page at http://localhost:55555/demo
-page = site['/demo']
-
-# Add some content.
-page['example'] = ui.markdown_card(
-  box='1 1 2 2',
-  title='Hello World!',
-  content='And now for something completely different.',
-)
-
-# Save the page
-page.sync()
-```
-
-#### Step 4:
-
-Run your code:
-
-```
-$ python3 hello.py
-```
-
-#### Step 5:
-
-Go to http://localhost:55555/demo
+1. [Download](https://github.com/h2oai/telesync/releases) a release. The release contains everything you need, including the SDK, documentation and examples.
+2. See `readme.txt` included with your release.
 
 ## Migration Guide
 

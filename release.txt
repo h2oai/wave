@@ -12,30 +12,18 @@ Telesync Development Server
 USAGE
 
   1. Run './telesync' and point your browser to http://localhost:55555
-  2. Run your telesync Python app (python -m my_app)
+  2. Run your Telesync Python app (python -m my_app)
 
 
-REFERENCES
+NOTES
 
-  - pip package: https://pypi.org/project/telesync/
-  - Examples: https://github.com/h2oai/telesync/tree/master/py/examples
+  - For an interactive tour of Telesync, see 'examples/readme.txt'
+  - For SDK documentation, see 'docs/index.html'.
+  - For example apps and code snippets, see 'examples/'.
+  - For additional command-line options, run './telesync -help'
+  - For the pip package, see https://pypi.org/project/telesync/
 
 
-COMMAND LINE OPTIONS
+Happy Telesync'ing!
 
-  -access-key-id string
-        default access key ID (default "access_key_id")
-  -access-key-secret string
-        default access key secret (default "access_key_secret")
-  -compact string
-        compact AOF log
-  -init string
-        initialize site content from AOF log
-  -listen string
-        listen on this address (default ":55555")
-  -tls-cert-file string
-        path to certificate file (TLS only)
-  -tls-key-file string
-        path to private key file (TLS only)
-  -webroot string
-        directory to serve web assets from (default "./www")
+

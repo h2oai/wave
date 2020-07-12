@@ -18,20 +18,19 @@ setup: ## Install dependencies
 docs: sync-examples ## Build API docs
 	./venv/bin/sphinx-build -b html docs build/docs
 
-docs-zip: docs ## Build and package docs into a zip file
-	cd docs/build/html && zip -r ../../../telesync-api-docs.zip .
-
 purge: ## Purge previous build
 	rm -rf build dist telesync.egg-info
 
 .PHONY: examples
 examples:
 	sed -i -r -e "s/telesync.+/telesync==$(VERSION)/" examples/requirements.txt
-	tar -czf examples.tar.gz --exclude='*.state' --exclude='__pycache__' examples/
 
 sync-examples:
 	rm -f docs/example*.rst
 	./venv/bin/python docs/sync_examples.py
+
+.PHONY: release
+release: build docs examples ## Prepare release artifacts
 
 clean: purge ## Clean
 	rm -rf docs/build telesync-api-docs.zip venv

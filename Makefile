@@ -31,10 +31,7 @@ build-server: ## Build server for current OS/Arch
 	go build $(LDFLAGS) -o telesync cmd/telesync/main.go
 
 build-py: ## Build wheel
-	cd py && $(MAKE) build
-
-build-examples:
-	cd py && $(MAKE) examples
+	cd py && $(MAKE) release
 
 run: ## Run server
 	go run cmd/telesync/main.go -web-dir ./ui/build -debug
@@ -42,7 +39,7 @@ run: ## Run server
 generate: ## Generate driver bindings
 	cd tools/telegen && $(MAKE) run
 
-release: build-ui build-py build-examples ## Prepare release builds (use "VERSION=v1.2.3 make release)"
+release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make release)"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows release-os
@@ -51,10 +48,11 @@ release-os:
 	rm -rf build/$(REL)
 	mkdir -p build/$(REL)
 	rsync -a ui/build/ build/$(REL)/www
+	rsync -a py/build/docs build/$(REL)/
+	rsync -a py/examples build/$(REL)/
 	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/telesync cmd/telesync/main.go
-	cp py/examples.tar.gz build/$(REL)/
 	cp release.txt build/$(REL)/readme.txt
-	cd build && tar -czf $(REL).tar.gz $(REL)
+	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
