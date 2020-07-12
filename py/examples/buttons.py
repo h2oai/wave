@@ -20,7 +20,7 @@ async def main(q: Q):
                 ui.button(name='standard_disabled_button', label='Standard', disabled=True),
             ]),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

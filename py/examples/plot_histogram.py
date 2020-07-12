@@ -16,4 +16,4 @@ v = page.add('example', ui.plot_card(
 ))
 v.data = [(i * 10, i * 10 + 10, x) for i, (c, x, dx) in enumerate([f.next() for _ in range(n)])]
 
-page.sync()
+page.save()

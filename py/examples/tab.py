@@ -15,4 +15,4 @@ page['tabs'] = ui.tab_card(
     ],
 )
 
-page.sync()
+page.save()

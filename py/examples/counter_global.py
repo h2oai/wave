@@ -19,7 +19,7 @@ async def main(q: Q):
     else:
         q.page['example'] = ui.form_card(box='1 1 12 10', items=items)
 
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

@@ -17,4 +17,4 @@ page['tabs'] = ui.tab_card(
     link=True,
 )
 
-page.sync()
+page.save()

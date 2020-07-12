@@ -26,4 +26,4 @@ page['example'] = ui.form_card(
         ui.text('Extra small text', size='xs'),
     ],
 )
-page.sync()
+page.save()

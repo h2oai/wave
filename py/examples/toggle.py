@@ -21,7 +21,7 @@ async def main(q: Q):
             ui.toggle(name='toggle_checked_disabled', label='Checked (Disabled)', value=True, disabled=True),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

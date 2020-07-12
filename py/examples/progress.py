@@ -12,4 +12,4 @@ page['example'] = ui.form_card(
         ui.progress(label='Standard Progress', caption='Downloading the interwebs...', value=0.25),
     ]
 )
-page.sync()
+page.save()

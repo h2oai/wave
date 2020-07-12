@@ -24,4 +24,4 @@ c = page.add('template_example', ui.template_card(
         dict(name='Eggs', price='$1.75'),
     ])),
 ))
-page.sync()
+page.save()

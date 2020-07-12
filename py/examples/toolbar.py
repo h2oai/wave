@@ -28,7 +28,7 @@ async def main(q: Q):
             ui.command(name='rename', label='Rename', icon='Edit'),
         ],
     )
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

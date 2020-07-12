@@ -66,7 +66,7 @@ async def main(q: Q):
         # Flag to indicate that we've added a plot
         q.client.plot_added = True
 
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

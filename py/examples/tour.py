@@ -112,7 +112,7 @@ async def setup_page(q: Q):
         title='Preview',
         path='/demo',
     )
-    await q.page.push()
+    await q.page.save()
 
 
 def make_blurb(example: Example):
@@ -133,7 +133,7 @@ async def show_example(q: Q, example: Example):
     # Clear demo page
     demo_page = q.site['/demo']
     demo_page.drop()
-    await demo_page.push()
+    await demo_page.save()
 
     # Stop active example, if any.
     global active_example
@@ -159,7 +159,7 @@ async def show_example(q: Q, example: Example):
     # The ?e= appended to the path forces the frame to reload.
     # The url param is not actually used.
     preview_card.path = f'/demo?e={active_example.name}'
-    await q.page.push()
+    await q.page.save()
 
 
 async def main(q: Q):

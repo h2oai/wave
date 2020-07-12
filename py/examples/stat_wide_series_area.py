@@ -32,7 +32,7 @@ for i in range(len(curves)):
         plot_curve=curves[i],
     ))
     cards.append((f, c))
-page.sync()
+page.save()
 
 while True:
     time.sleep(1)
@@ -41,4 +41,4 @@ while True:
         c.data.qux = val
         c.data.quux = pc
         c.plot_data[-1] = [cat, val]
-    page.sync()
+    page.save()

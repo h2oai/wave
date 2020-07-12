@@ -19,10 +19,10 @@ beer_card = page.add('example', ui.markdown_card(
     data=dict(before='99', after='98'),
 ))
 
-page.sync()
+page.save()
 
 for i in range(98, 2, -1):
     time.sleep(1)
     beer_card.data.before = str(i)
     beer_card.data.after = str(i - 1)
-    page.sync()
+    page.save()

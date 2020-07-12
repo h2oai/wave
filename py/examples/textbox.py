@@ -38,7 +38,7 @@ async def main(q: Q):
             ui.textbox(name='textbox_multiline', label='Multiline textarea', multiline=True),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

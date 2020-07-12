@@ -51,7 +51,7 @@ async def show_todos(q: Q):
         *([ui.separator('Done')] if len(done) else []),
         *done,
     ])
-    await q.page.push()
+    await q.page.save()
 
 
 async def add_todo(q: Q):
@@ -72,7 +72,7 @@ async def new_todo(q: Q):
             ui.button(name='show_todos', label='Back'),
         ]),
     ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

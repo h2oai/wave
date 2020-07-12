@@ -21,11 +21,11 @@ c = page.add(f'example', ui.large_stat_card(
     data=dict(qux=val, quux=pc * 100),
     caption=' '.join(fake.sentences()),
 ))
-page.sync()
+page.save()
 
 while True:
     time.sleep(1)
     val, pc = f.next()
     c.data.qux = val
     c.data.quux = pc * 100
-    page.sync()
+    page.save()

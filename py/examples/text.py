@@ -41,4 +41,4 @@ page['example'] = ui.form_card(
     box='1 1 4 -1',
     items=[ui.text(sample_markdown)]
 )
-page.sync()
+page.save()

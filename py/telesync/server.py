@@ -147,7 +147,7 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
                     title='Error',
                     content=f'```\n{traceback.format_exc()}\n```',
                 )
-                await q.page.push()
+                await q.page.save()
             except:
                 logger.exception('Failed transmitting unhandled exception')
 

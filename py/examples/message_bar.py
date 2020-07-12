@@ -16,4 +16,4 @@ page['example'] = ui.form_card(
         ui.message_bar(type='danger', text='This is a danger message.'),
     ]
 )
-page.sync()
+page.save()

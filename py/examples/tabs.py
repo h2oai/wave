@@ -21,7 +21,7 @@ async def main(q: Q):
             ui.tabs(name='menu', value='email', items=tabs),
             get_tab_content('email'),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 def get_tab_content(category: str):

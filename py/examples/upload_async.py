@@ -34,7 +34,7 @@ async def main(q: Q):
             ui.slider(name='row_count', label='Squares to generate', min=0, max=100, step=10, value=30),
             ui.button(name='generate_csv', label='Generate', primary=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

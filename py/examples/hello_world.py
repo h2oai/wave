@@ -17,4 +17,4 @@ page['hello'] = ui.markdown_card(
 )
 
 # Finally, sync the page to send our changes to the server.
-page.sync()
+page.save()

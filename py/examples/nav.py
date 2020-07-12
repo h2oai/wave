@@ -20,4 +20,4 @@ page['tabs'] = ui.nav_card(
     ],
 )
 
-page.sync()
+page.save()

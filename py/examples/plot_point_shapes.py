@@ -21,4 +21,4 @@ v = page.add('example', ui.plot_card(
 ))
 v.data = create_fake_row('G1', f1, n) + create_fake_row('G2', f1, n)
 
-page.sync()
+page.save()

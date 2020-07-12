@@ -13,7 +13,7 @@ page['example'] = ui.form_card(
         ui.progress(label='Basic Progress'),
     ]
 )
-page.sync()
+page.save()
 
 for i in range(1, 11):
     time.sleep(1)
@@ -24,4 +24,4 @@ for i in range(1, 11):
     # This will work, too:
     # page['example'].items[0].progress.value = i/10
 
-    page.sync()
+    page.save()

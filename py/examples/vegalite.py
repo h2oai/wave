@@ -56,4 +56,4 @@ page.add('external', ui.vega_card(
     data=data2,
 ))
 
-page.sync()
+page.save()

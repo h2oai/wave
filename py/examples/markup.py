@@ -18,4 +18,4 @@ page['example'] = ui.markup_card(
     title='Menu',
     content=menu,
 )
-page.sync()
+page.save()

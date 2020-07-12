@@ -28,4 +28,4 @@ page['example'] = ui.markdown_card(
     title='Download CSVs',
     content=f'[Squares]({squares_path}) [Cubes]({cubes_path})',
 )
-page.sync()
+page.save()

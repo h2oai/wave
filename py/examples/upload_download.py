@@ -39,7 +39,7 @@ async def main(q: Q):
             ui.text_xl('Upload some files'),
             ui.file_upload(name='user_files', label='Upload', multiple=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

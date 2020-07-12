@@ -23,4 +23,4 @@ for i in range(k1):
         rows.append((f'A{i + 1}', f'B{j + 1}', x))
 v.data = rows
 
-page.sync()
+page.save()

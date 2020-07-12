@@ -23,4 +23,4 @@ data1 = [('A', g, t, x) for x in [f1.next() for _ in range(n)] for g, t, x, dx i
 data2 = [('B', g, t, x) for x in [f2.next() for _ in range(n)] for g, t, x, dx in x]
 v.data = data1 + data2
 
-page.sync()
+page.save()

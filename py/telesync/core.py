@@ -425,6 +425,13 @@ class Page(PageBase):
 
     def sync(self):
         """
+        DEPRECATED: Use :meth:`telesync.core.Page.save` instead.
+        """
+        logger.warn('page.sync() is deprecated. Please use page.save() instead.')
+        self.save()
+
+    def save(self):
+        """
         Save the page. Sends all local changes made to this page to the remote site.
         """
         p = self._diff()
@@ -456,6 +463,13 @@ class AsyncPage(PageBase):
 
     async def push(self):
         """
+        DEPRECATED: Use :meth:`telesync.core.AsyncPage.save` instead.
+        """
+        logger.warn('page.push() is deprecated. Please use page.save() instead.')
+        await self.save()
+
+    async def save(self):
+        """
         Save the page. Sends all local changes made to this page to the remote site.
         """
         p = self._diff()
@@ -467,8 +481,6 @@ class AsyncPage(PageBase):
     async def pull(self) -> 'Q':
         """
         EXPERIMENTAL. DO NOT USE.
-
-        :return:
         """
         req = await self._ws.recv()
         return Q(self._ws, req)
@@ -477,10 +489,8 @@ class AsyncPage(PageBase):
     async def poll(self) -> 'Q':
         """
         EXPERIMENTAL. DO NOT USE.
-
-        :return:
         """
-        await self.push()
+        await self.save()
         return await self.pull()
 
 

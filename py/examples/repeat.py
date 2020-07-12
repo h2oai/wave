@@ -21,4 +21,4 @@ c = page.add('example', ui.repeat_card(
 c.data = [[fake.cryptocurrency_name(), fake.cryptocurrency_code(), random.randint(100, 1000), random.randint(10, 100)]
           for _ in range(15)]
 
-page.sync()
+page.save()

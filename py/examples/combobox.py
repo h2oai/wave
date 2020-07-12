@@ -24,7 +24,7 @@ async def main(q: Q):
                         choices=combobox_choices, error='This combobox has an error!'),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

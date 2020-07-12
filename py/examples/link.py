@@ -14,4 +14,4 @@ page['example'] = ui.form_card(
         ui.link(label='External link, disabled', path='https://h2o.ai', disabled=True),
     ]
 )
-page.sync()
+page.save()

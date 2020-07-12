@@ -22,7 +22,7 @@ async def main(q: Q):
             ui.choice_group(name='choice_group', label='Pick one', value='B', required=True, choices=choices),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

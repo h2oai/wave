@@ -11,4 +11,4 @@ page.add('example', ui.pixel_art_card(
     title='Art',
     data=data('color', 16 * 16),
 ))
-page.sync()
+page.save()

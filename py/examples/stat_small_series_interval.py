@@ -25,7 +25,7 @@ c = page.add(f'example', ui.small_series_stat_card(
     plot_data=data('foo qux', -20),
     plot_zero_value=0,
 ))
-page.sync()
+page.save()
 
 while True:
     time.sleep(1)
@@ -33,4 +33,4 @@ while True:
     c.data.qux = val
     c.data.quux = pc
     c.plot_data[-1] = [cat, val]
-    page.sync()
+    page.save()

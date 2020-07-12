@@ -43,4 +43,4 @@ page['example'] = ui.markdown_card(
     title='I was made using markdown!',
     content=sample_markdown,
 )
-page.sync()
+page.save()

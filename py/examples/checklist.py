@@ -16,7 +16,7 @@ async def main(q: Q):
                          choices=[ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']]),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

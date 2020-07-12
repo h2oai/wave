@@ -17,4 +17,4 @@ page['example'] = ui.form_card(
     ]
 )
 
-page.sync()
+page.save()

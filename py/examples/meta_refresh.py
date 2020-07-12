@@ -14,4 +14,4 @@ page['example'] = ui.markdown_card(
     content='This page stops receiving updates once loaded.',
 )
 
-page.sync()
+page.save()

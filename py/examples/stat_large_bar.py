@@ -25,7 +25,7 @@ c = page.add(f'example', ui.large_bar_stat_card(
     data=dict(foo=val, bar=pc * 100),
     caption=' '.join(fake.sentences(2)),
 ))
-page.sync()
+page.save()
 
 while True:
     time.sleep(1)
@@ -33,4 +33,4 @@ while True:
     c.data.foo = val
     c.data.bar = pc * 100
     c.progress = pc
-    page.sync()
+    page.save()

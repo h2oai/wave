@@ -19,4 +19,4 @@ v = page.add('example', ui.plot_card(
 ))
 v.data = [(x, y) for x, y in [f.next() for _ in range(n)]]
 
-page.sync()
+page.save()

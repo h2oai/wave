@@ -35,7 +35,7 @@ async def main(q: Q):
             title='Store',
             content='Welcome to our store!',
         )
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

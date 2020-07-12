@@ -18,10 +18,10 @@ c = page.add('example', ui.small_stat_card(
     title=fake.cryptocurrency_name(),
     value=f'${val:.2f}',
 ))
-page.sync()
+page.save()
 
 while True:
     time.sleep(1)
     val, _ = f.next()
     c.value = f'${val:.2f}'
-    page.sync()
+    page.save()

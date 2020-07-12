@@ -13,4 +13,4 @@ page['example'] = ui.form_card(
         ui.label(label='Disabled Label', disabled=True),
     ]
 )
-page.sync()
+page.save()

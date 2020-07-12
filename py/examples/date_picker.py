@@ -19,7 +19,7 @@ async def main(q: Q):
             ui.date_picker(name='date_disabled', label='Disabled date picker', value='2017-10-19', disabled=True),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

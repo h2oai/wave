@@ -34,7 +34,7 @@ async def main(q: Q):
             ui.button(name='primary_compound_disabled_button', label='Primary (Disabled)', caption='Compound Button',
                       primary=True, disabled=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ async def main(q: Q):
             ui.color_picker(name='color', label='Pick a color', value='#F25F5C'),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
-    await q.page.push()
+    await q.page.save()
 
 
 if __name__ == '__main__':

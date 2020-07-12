@@ -24,4 +24,4 @@ c = page.add('example', ui.flex_card(
 ))
 c.data = [[fake.cryptocurrency_code(), random.randint(0, 1)] for _ in range(10)]
 
-page.sync()
+page.save()
