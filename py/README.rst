@@ -45,7 +45,7 @@ Hello world
     )
 
     # Save the page
-    page.sync()
+    page.save()
 
 Run ``hello.py``:
 
@@ -67,6 +67,25 @@ Links
 
 Change Log
 ---------------
+* v0.0.7
+    * Added
+        * Download API: ``q.download()``.
+        * Vega-lite support: ``ui.vega_card()``.
+        * Context menu support to all cards.
+        * ``refresh`` attribute on ``meta_card`` allows static pages to stop receiving live updates.
+        * Passing ``-debug`` when starting server displays site stats at ``/_d/site``.
+        * Drag and drop support for file upload component.
+        * Template expression support for markdown cards.
+        * All APIs and examples documented.
+        * All 110 examples now ship with the Sphinx documentation.
+        * Documentation now ships with release download.
+    * Changed
+        * API consistency: ``ui.vis()`` renamed to ``ui.plot()``.
+        * All stats cards now have descriptive names.
+        * API consistency: ``ui.mark.mark`` renamed to ``ui.mark.type``.
+        * API consistency: ``page.sync()`` and ``page.push()`` renamed to ``page.save()``.
+    * Removed
+        * ``ui.dashboard_card()`` and ``ui.notebook_card()``.
 * v0.0.6
     * Added
         * Log network traffic when logging is set to debug mode.
@@ -75,7 +94,7 @@ Change Log
         * Toolbar component.
         * Tabs component.
         * Nav component.
-        * Upload API: ``q.upload()``
+        * Upload API: ``q.upload()``.
     * Changed
         * ``q.session`` renamed to ``q.user``
 * v0.0.5
