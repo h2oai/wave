@@ -1,5 +1,5 @@
 # Plot / Area
-# No description available.
+# Make an area plot.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

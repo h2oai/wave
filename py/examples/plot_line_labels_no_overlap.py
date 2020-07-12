@@ -1,5 +1,5 @@
 # Plot / Line / Labels / Occlusion
-# No description available.
+# Make a line plot with non-overlapping labels.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

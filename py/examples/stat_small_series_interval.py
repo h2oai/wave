@@ -1,5 +1,5 @@
 # Stat / Series / Small / Interval
-# No description available.
+# Create a small stat card displaying a primary value and a series plot.
 # ---
 import time
 

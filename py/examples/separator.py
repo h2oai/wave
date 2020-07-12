@@ -1,5 +1,5 @@
 # Form / Separator
-# No description available.
+# Use a separator to visually separate content into groups.
 # ---
 from telesync import site, ui
 

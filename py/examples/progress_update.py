@@ -1,5 +1,5 @@
 # Form / Progress / Updating
-# No description available.
+# Update a progress bar's completion status periodically.
 # ---
 import time
 

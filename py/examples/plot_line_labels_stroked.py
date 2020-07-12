@@ -1,5 +1,5 @@
 # Plot / Line / Labels/ Stroked
-# No description available.
+# Customize label rendering: add a subtle outline to labels to improve readability.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

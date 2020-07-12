@@ -1,5 +1,5 @@
 # Stat / Gauge / Tall
-# No description available.
+# Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
 # ---
 import time
 

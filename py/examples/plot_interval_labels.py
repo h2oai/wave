@@ -1,5 +1,5 @@
 # Plot / Interval / Labels
-# Make a bar chart with labels on each bar.
+# Make a bar plot with labels on each bar.
 # ---
 from synth import FakeCategoricalSeries
 from telesync import site, data, ui

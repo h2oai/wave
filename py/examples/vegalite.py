@@ -1,5 +1,5 @@
 # Plot / Vega-lite
-# Create a plot using Vega-lite
+# Make a plot using Vega-lite.
 # ---
 from telesync import site, data, ui
 
@@ -7,7 +7,7 @@ page = site['/demo']
 
 spec1 = '''
 {
-  "description": "A simple bar chart with embedded data.",
+  "description": "A simple bar plot with embedded data.",
   "data": {
     "values": [
       {"a": "A","b": 28}, {"a": "B","b": 55}, {"a": "C","b": 43},
@@ -34,7 +34,7 @@ page.add('embedded', ui.vega_card(
 # and update data multiple times.
 spec2 = '''
 {
-  "description": "A simple bar chart with embedded data.",
+  "description": "A simple bar plot with embedded data.",
   "mark": "bar",
   "encoding": {
     "x": {"field": "a", "type": "ordinal"},

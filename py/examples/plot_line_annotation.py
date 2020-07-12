@@ -1,5 +1,5 @@
 # Plot / Line / Annotation
-# No description available.
+# Add annotations to a line plot.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

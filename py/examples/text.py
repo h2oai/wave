@@ -1,5 +1,5 @@
 # Form / Text
-# No description available.
+# Use markdown in a text component to display formatted content within a form.
 # ---
 from telesync import site, ui
 

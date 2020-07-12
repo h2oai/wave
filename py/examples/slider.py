@@ -1,5 +1,5 @@
 # Form / Slider
-# No description available.
+# Use a slider to allow users to set a value withing a specific range.
 # ---
 from telesync import Q, listen, ui
 

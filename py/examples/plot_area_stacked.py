@@ -1,5 +1,5 @@
 # Plot / Area / Stacked
-# No description available.
+# Make a stacked area plot.
 # ---
 from synth import FakeMultiTimeSeries
 from telesync import site, data, ui

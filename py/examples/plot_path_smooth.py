@@ -1,5 +1,5 @@
 # Plot / Path / Smooth
-# No description available.
+# Make a path plot with a smooth curve.
 # ---
 from synth import FakeScatter
 from telesync import site, data, ui

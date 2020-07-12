@@ -1,5 +1,5 @@
 # Stat / Gauge / Wide
-# No description available.
+# Create a wide stat card displaying a primary value, an auxiliary value and a progress gauge.
 # ---
 import time
 

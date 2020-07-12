@@ -1,5 +1,5 @@
 # Plot / Area / Negative
-# No description available.
+# Make an area plot showing positive and negative values.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

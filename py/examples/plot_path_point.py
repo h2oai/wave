@@ -1,5 +1,5 @@
 # Plot / Path / Point
-# No description available.
+# Make a path plot with an additional layer of points.
 # ---
 from synth import FakeScatter
 from telesync import site, data, ui

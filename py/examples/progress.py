@@ -1,5 +1,5 @@
 # Form / Progress
-# No description available.
+# Use a progress bar to indicate completion status of an operation.
 # ---
 from telesync import site, ui
 

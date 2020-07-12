@@ -1,5 +1,5 @@
 # Stat / Series / Wide / Interval
-# No description available.
+# Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
 # ---
 import time
 

@@ -1,5 +1,5 @@
 # Plot / Area + Line
-# No description available.
+# Make an area plot with an additional line layer on top.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

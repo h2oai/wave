@@ -1,5 +1,5 @@
 # Plot / Area + Line / Smooth
-# No description available.
+# Make a combined area + line plot using a smooth curve.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

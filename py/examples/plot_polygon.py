@@ -1,5 +1,5 @@
 # Plot / Polygon
-# No description available.
+# Make a heatmap.
 # ---
 from synth import FakeSeries
 from telesync import site, data, ui

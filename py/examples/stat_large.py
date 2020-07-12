@@ -1,5 +1,5 @@
 # Stat / Large
-# No description available.
+# Create a stat card displaying a primary value, an auxiliary value and a caption.
 # ---
 import time
 

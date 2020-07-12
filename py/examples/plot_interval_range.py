@@ -1,5 +1,5 @@
 # Plot / Interval / Range
-# Make a bar chart with each bar representing high/low (or start/end) values. Transposing this produces a gantt chart.
+# Make a bar plot with each bar representing high/low (or start/end) values. Transposing this produces a gantt plot.
 # ---
 import random
 

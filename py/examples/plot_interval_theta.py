@@ -1,5 +1,5 @@
 # Plot / Interval / Theta
-# No description available.
+# Make a "racetrack" plot (a bar plot in polar coordinates, transposed).
 # ---
 from synth import FakeMultiCategoricalSeries
 from telesync import site, data, ui

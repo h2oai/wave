@@ -1,5 +1,5 @@
 # Plot / Interval / Groups
-# Make a grouped bar chart.
+# Make a grouped bar plot.
 # ---
 from synth import FakeMultiCategoricalSeries
 from telesync import site, data, ui

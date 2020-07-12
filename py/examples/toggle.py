@@ -1,5 +1,5 @@
 # Form / Toggle
-# No description available.
+# Use a toggle to present users with two mutually exclusive options (to turn settings on and off).
 # ---
 from telesync import Q, listen, ui
 

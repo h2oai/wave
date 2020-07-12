@@ -1,5 +1,5 @@
 # Template
-# No description available.
+# Use a template card to render dynamic content using a HTML template.
 # ---
 from telesync import site, pack, ui
 

@@ -1,5 +1,5 @@
 # Stat / Bar / Wide
-# No description available.
+# Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
 # ---
 import time
 

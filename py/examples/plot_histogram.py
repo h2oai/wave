@@ -1,5 +1,5 @@
 # Plot / Histogram
-# No description available.
+# Make a histogram.
 # ---
 from synth import FakeCategoricalSeries
 from telesync import site, data, ui

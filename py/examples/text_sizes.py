@@ -1,5 +1,5 @@
 # Form / Text / Sizes
-# No description available.
+# Use text size variants to display formatted text using predefined font sizes.
 # ---
 from telesync import site, ui
 

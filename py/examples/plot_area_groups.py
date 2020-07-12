@@ -1,5 +1,5 @@
 # Plot / Area / Groups
-# No description available.
+# Make an area plot showing multiple categories.
 # ---
 from synth import FakeMultiTimeSeries
 from telesync import site, data, ui

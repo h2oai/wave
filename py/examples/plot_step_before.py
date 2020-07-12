@@ -1,5 +1,5 @@
-# Plot / Step / Before
-# No description available.
+# Plot / Line / Step / Before
+# Make a line plot with a step-before curve.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

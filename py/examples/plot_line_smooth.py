@@ -1,5 +1,5 @@
 # Plot / Line / Smooth
-# No description available.
+# Make a line plot using a smooth curve.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

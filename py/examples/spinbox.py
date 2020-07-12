@@ -1,5 +1,5 @@
 # Form / Spinbox
-# No description available.
+# Use a spinbox to allow users to incrementally adjust a value in small steps.
 # ---
 from telesync import Q, listen, ui
 

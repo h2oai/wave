@@ -1,5 +1,5 @@
 # Form / Textbox
-# No description available.
+# Use a textbox to allow users to provide text inputs.
 # ---
 from telesync import Q, listen, ui
 

@@ -1,5 +1,5 @@
 # Plot / Interval / Annotation
-# No description available.
+# Add annotations to a bar plot.
 # ---
 from synth import FakeCategoricalSeries
 from telesync import site, data, ui

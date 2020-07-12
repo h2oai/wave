@@ -1,5 +1,5 @@
 # Plot / Line / Groups
-# No description available.
+# Make a multi-series line plot.
 # ---
 from synth import FakeMultiTimeSeries
 from telesync import site, data, ui

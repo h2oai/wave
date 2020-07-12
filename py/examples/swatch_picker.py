@@ -1,5 +1,5 @@
 # Form / Swatch Picker
-# No description available.
+# Use a swatch picker to allow users to choose a from a specific set of colors.
 # ---
 from telesync import Q, listen, ui
 

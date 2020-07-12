@@ -1,5 +1,5 @@
 # Form / Tabs
-# No description available.
+# Use tabs within a form to navigate between two or more distinct content categories.
 # ---
 from telesync import Q, listen, ui
 

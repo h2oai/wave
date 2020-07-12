@@ -1,5 +1,5 @@
 # Plot / Line / Labels
-# No description available.
+# Add labels to a line plot.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

@@ -1,5 +1,5 @@
 # Plot / Path
-# No description available.
+# Make a path plot.
 # ---
 from synth import FakeScatter
 from telesync import site, data, ui

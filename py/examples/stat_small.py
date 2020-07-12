@@ -1,5 +1,5 @@
 # Stat / Small
-# No description available.
+# Create a stat card displaying a single value.
 # ---
 import time
 

@@ -4,7 +4,7 @@
 import json
 from telesync import Q, listen, ui, data
 
-# Vega lite spec for a bar chart, defaults to linear scale.
+# Vega lite spec for a bar plot, defaults to linear scale.
 spec_linear_scale = json.dumps(dict(
     mark='bar',
     encoding=dict(
@@ -13,7 +13,7 @@ spec_linear_scale = json.dumps(dict(
     )
 ))
 
-# Vega lite spec for a bar chart, log scaled.
+# Vega lite spec for a bar plot, log scaled.
 spec_log_scale = json.dumps(dict(
     mark='bar',
     encoding=dict(

@@ -1,5 +1,5 @@
 # Plot / Interval
-# Make a bar chart.
+# Make a bar plot.
 # ---
 from synth import FakeCategoricalSeries
 from telesync import site, data, ui

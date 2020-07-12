@@ -1,5 +1,5 @@
 # Plot / Interval / Helix
-# No description available.
+# Make a bar plot in helical coordinates.
 # ---
 from synth import FakeCategoricalSeries
 from telesync import site, data, ui

@@ -1,5 +1,5 @@
 # Plot / Line
-# No description available.
+# Make a line plot.
 # ---
 from synth import FakeTimeSeries
 from telesync import site, data, ui

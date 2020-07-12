@@ -1,5 +1,5 @@
 # Plot / Interval / Stacked
-# Make a stacked bar chart.
+# Make a stacked bar plot.
 # ---
 from synth import FakeMultiCategoricalSeries
 from telesync import site, data, ui
