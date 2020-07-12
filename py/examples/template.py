@@ -6,10 +6,22 @@ from telesync import site, pack, ui
 page = site['/demo']
 page.drop()
 
+menu = '''
+<ol>
+{{#each dishes}}
+<li><strong>{{name}}</strong> costs {{price}}</li>
+{{/each}}
+</ol
+'''
+
 c = page.add('template_example', ui.template_card(
-    box=f'1 1 2 1',
-    title='Pricing',
-    content='{{product}} costs {{price}}!',
-    data=pack(dict(product='Coffee', price='$3.45')),
+    box=f'1 1 2 2',
+    title='Menu',
+    content=menu,
+    data=pack(dict(dishes=[
+        dict(name='Spam', price='$2.00'),
+        dict(name='Ham', price='$3.45'),
+        dict(name='Eggs', price='$1.75'),
+    ])),
 ))
 page.sync()
