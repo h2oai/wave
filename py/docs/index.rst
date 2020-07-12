@@ -6,6 +6,7 @@ Welcome to the Telesync API documentation!
    :caption: Contents:
 
    modules
+   examples
 
 Introduction
 ============

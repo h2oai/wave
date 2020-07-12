@@ -1,5 +1,5 @@
-telesync
-========
+API
+===
 
 .. toctree::
    :maxdepth: 4
