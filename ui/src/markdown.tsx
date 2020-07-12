@@ -36,7 +36,7 @@ const
         return (
           <MarkupCard
             title={substitute(state.title, data)}
-            content={markdown.render(state.content)}
+            content={markdown.render(substitute(state.content, data))}
           />
         )
       }
