@@ -17,7 +17,11 @@ To build apps using Telesync, you need the `telesync` development server and the
 
 ### Breaking changes
 
-**1. `ui.buttons()`, `ui.expander()` and `ui.tabs()` accept a `list` of items instead of var args `*args`**
+**1. `q.wait()`, `q.show()`, `q.fail()`, `q.exit()` removed.**
+
+**2 `q.dashboard()` and `q.notebook()` removed.**
+
+**3. `ui.buttons()`, `ui.expander()` and `ui.tabs()` accept a `list` of items instead of var args `*args`**
 
 Before:
 ```py
@@ -28,3 +32,7 @@ After:
 ```py
 ui.buttons([ui.button(...), ui.button(...), ui.button(...)]) # Note enclosing [ ]
 ```
+
+**4. `q.upload()` changed to `q.site.upload()`**
+
+**5. `q.args.foo=` changed to `q.client.foo=`**
