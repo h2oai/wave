@@ -1,4 +1,6 @@
 pygments
 Faker
 matplotlib
+altair
+vega-datasets
 telesync==0.0.7
