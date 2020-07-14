@@ -1336,6 +1336,7 @@ def meta_card(
         box: str,
         title: Optional[str] = None,
         refresh: Optional[int] = None,
+        notification: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -1346,6 +1347,7 @@ def meta_card(
     :param box: A string indicating how to place this component on the page.
     :param title: The title of the page.
     :param refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
+    :param notification: Notification text that appears in the right top corner.
     :param commands: Contextual menu commands for this component.
     :return: A :class:`telesync.types.MetaCard` instance.
     """
@@ -1353,6 +1355,7 @@ def meta_card(
         box,
         title,
         refresh,
+        notification,
         commands,
     )
 
