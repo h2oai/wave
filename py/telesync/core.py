@@ -530,6 +530,12 @@ class _BasicAuthClient:
 
         return filepath
 
+    def unload(self, url: str):
+        res = requests.delete(f'{_config.hub_address}{url}')
+        if res.status_code == 200:
+            return
+        raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
+
 
 _client = _BasicAuthClient()
 
@@ -572,6 +578,13 @@ class Site:
         :return: The path to the downloaded file.
         """
         return _client.download(url, path)
+
+    def unload(self, url: str):
+        """
+        Delete an uploaded file from the site.
+        :param url: The URL of the file to delete.
+        """
+        _client.unload(url)
 
 
 class AsyncSite:
@@ -616,6 +629,14 @@ class AsyncSite:
         # XXX use non-blocking aiohttp get
         path = _client.download(url, path)
         return path
+
+    async def unload(self, url: str):
+        """
+        Delete an uploaded file from the site.
+        :param url: The URL of the file to delete.
+        """
+        # XXX use non-blocking aiohttp get
+        _client.unload(url)
 
 
 site = Site()
