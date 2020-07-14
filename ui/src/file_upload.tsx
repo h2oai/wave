@@ -17,6 +17,12 @@ export interface FileUpload {
   multiple?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** An optional string array for defining allowed upload types. E.g. .pdf, .docx ... . Default value is empty - every file type is allowed. */
+  allowedFileTypes?: S[]
+  /** Maximum file size in Mb that none of the files uploaded can exceed. Default value is unlimited. */
+  maxSizePerFile?: U
+  /** Maximum file size in Mb for all uploaded files combined that cannot be excceeded. Default value is unlimited. */
+  maxSizeTotal?: U
 }
 
 const
@@ -58,7 +64,7 @@ const
       cursor: 'pointer'
     }
   })
-
+const convertBytesToMegabytes = (bytes: number) => bytes * 1024 * 1024
 export const
   XFileUpload = bond(({ model }: { model: FileUpload }) => {
     const
@@ -67,6 +73,8 @@ export const
       percentCompleteB = box(0.0),
       errorB = box(''),
       successMsgB = box(''),
+      maxSizePerFileMb = model.maxSizePerFile ? convertBytesToMegabytes(model.maxSizePerFile) : 0,
+      maxSizeTotalMb = model.maxSizeTotal ? convertBytesToMegabytes(model.maxSizeTotal) : 0,
       upload = async () => {
         const formData = new FormData()
 
@@ -93,9 +101,47 @@ export const
         catch (e) { errorB('There was an error when uploading file.') }
         finally { filesB([]) }
       },
+      isFileTypeAllowed = (fileName: string) => {
+        if (!model.allowedFileTypes) return true
+        for (const allowedFileType of model.allowedFileTypes) {
+          if (fileName.endsWith(allowedFileType)) return true
+        }
+        return false
+      },
+      validateFiles = (fileArr: File[]) => {
+        const notAllowedFiles = fileArr.filter(({ name }) => !isFileTypeAllowed(name))
+        if (notAllowedFiles.length) {
+          return `Not allowed extension for files: ${notAllowedFiles.map(({ name }) => name).join(', ')}. 
+          Allowed file extensions: ${model.allowedFileTypes?.join(', ')}.`
+
+        }
+
+        if (maxSizePerFileMb) {
+          const maxSizePerFileExceededFiles = fileArr.filter(({ size }) => size > maxSizePerFileMb)
+          if (maxSizePerFileExceededFiles.length) {
+            return `Max file size exceeded for files: ${maxSizePerFileExceededFiles.map(({ name }) => name).join(', ')}. 
+            Allowed size per file: ${model.maxSizePerFile}Mb.`
+          }
+        }
+
+        if (maxSizeTotalMb) {
+          const totalSize = fileArr.reduce((total, { size }) => total + size, 0)
+          if (totalSize > maxSizeTotalMb) {
+            return `Total max file size exceeded. Allowed size: ${model.maxSizeTotal}Mb.`
+          }
+        }
+      },
       onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
-        if (files?.length) filesB(Array.from(files))
+        if (!files?.length) return
+        const fileArr = Array.from(files);
+
+        const errMsg = validateFiles(fileArr)
+        if (errMsg) {
+          errorB(errMsg)
+          return
+        }
+        filesB(fileArr)
       },
       onIsDragging = (e: React.DragEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -110,11 +156,20 @@ export const
       onDrop = (e: React.DragEvent<HTMLFormElement>) => {
         onIsNotDragging(e)
         const files = e.dataTransfer.files;
+        if (!files.length || errorB() || successMsgB()) return
         if (!model.multiple && files.length > 1) {
           errorB('Cannot upload multiple files. Input is not set to multiple mode.')
           return
         }
-        if (files.length) filesB(Array.from(files))
+        const fileArr = Array.from(files)
+
+        const errMsg = validateFiles(fileArr)
+        if (errMsg) {
+          errorB(errMsg)
+          return
+        }
+
+        filesB(fileArr)
       },
       // Workaround - This event prevents onDrop from firing.
       // https://stackoverflow.com/questions/50230048/react-ondrop-is-not-firing/50230145.
@@ -196,6 +251,7 @@ export const
               className={css.uploadInput}
               onChange={onChange}
               type='file'
+              accept={model.allowedFileTypes?.join(',') || undefined}
               multiple={model.multiple} />
             <label htmlFor="file" className={css.uploadLabel}>
               <Fluent.Text variant={'large'}>Browse...</Fluent.Text>
@@ -205,7 +261,7 @@ export const
         )
       },
       render = () => {
-        const uploadClasses = isDraggingB() ? clas(css.upload, css.uploadDragging) : css.upload
+        const uploadClasses = isDraggingB() && !errorB() && !successMsgB() ? clas(css.upload, css.uploadDragging) : css.upload
         return (
           <div data-test={model.name}>
             <form

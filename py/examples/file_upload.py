@@ -8,7 +8,8 @@ page = site['/demo']
 page['example'] = ui.form_card(
     box='1 1 4 10',
     items=[
-        ui.file_upload(name='file_upload', label='Upload!')
+        ui.file_upload(name='file_upload', label='Upload!', multiple=True, 
+        allowedFileTypes=['.csv', '.gz'], maxSizePerFile=10, maxSizeTotal=15)
     ]
 )
 

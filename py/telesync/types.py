@@ -1727,6 +1727,9 @@ class FileUpload:
     :param label: Text to be displayed alongside the component.
     :param multiple: True if the component should allow multiple files to be uploaded.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :param allowedFileTypes: An optional string array for defining allowed upload types. E.g. .pdf, .docx ... . Default value is empty - every file type is allowed.
+    :param maxSizePerFile: Maximum file size in Mb that none of the files uploaded can exceed. Default value is unlimited.
+    :param maxSizeTotal: Maximum file size in Mb for all uploaded files combined that cannot be excceeded. Default value is unlimited.
     """
     def __init__(
             self,
@@ -1734,11 +1737,17 @@ class FileUpload:
             label: Optional[str] = None,
             multiple: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            allowedFileTypes: Optional[List[str]] = None,
+            maxSizePerFile: Optional[int] = None,
+            maxSizeTotal: Optional[int] = None,
     ):
         self.name = name
         self.label = label
         self.multiple = multiple
         self.tooltip = tooltip
+        self.allowedFileTypes = allowedFileTypes
+        self.maxSizePerFile = maxSizePerFile
+        self.maxSizeTotal = maxSizeTotal
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1749,6 +1758,9 @@ class FileUpload:
             label=self.label,
             multiple=self.multiple,
             tooltip=self.tooltip,
+            allowedFileTypes=self.allowedFileTypes,
+            maxSizePerFile=self.maxSizePerFile,
+            maxSizeTotal=self.maxSizeTotal,
         )
 
     @staticmethod
@@ -1760,15 +1772,24 @@ class FileUpload:
         __d_label: Any = __d.get('label')
         __d_multiple: Any = __d.get('multiple')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_allowedFileTypes: Any = __d.get('allowedFileTypes')
+        __d_maxSizePerFile: Any = __d.get('maxSizePerFile')
+        __d_maxSizeTotal: Any = __d.get('maxSizeTotal')
         name: str = __d_name
         label: Optional[str] = __d_label
         multiple: Optional[bool] = __d_multiple
         tooltip: Optional[str] = __d_tooltip
+        allowedFileTypes: Optional[List[str]] = __d_allowedFileTypes
+        maxSizePerFile: Optional[int] = __d_maxSizePerFile
+        maxSizeTotal: Optional[int] = __d_maxSizeTotal
         return FileUpload(
             name,
             label,
             multiple,
             tooltip,
+            allowedFileTypes,
+            maxSizePerFile,
+            maxSizeTotal,
         )
 
 

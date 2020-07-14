@@ -801,6 +801,9 @@ def file_upload(
         label: Optional[str] = None,
         multiple: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        allowedFileTypes: Optional[List[str]] = None,
+        maxSizePerFile: Optional[int] = None,
+        maxSizeTotal: Optional[int] = None,
 ) -> Component:
     """Create a file upload component.
     A file upload component allows a user to browse, select and upload one or more files.
@@ -809,6 +812,9 @@ def file_upload(
     :param label: Text to be displayed alongside the component.
     :param multiple: True if the component should allow multiple files to be uploaded.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    :param allowedFileTypes: An optional string array for defining allowed upload types. E.g. .pdf, .docx ... . Default value is empty - every file type is allowed.
+    :param maxSizePerFile: Maximum file size in Mb that none of the files uploaded can exceed. Default value is unlimited.
+    :param maxSizeTotal: Maximum file size in Mb for all uploaded files combined that cannot be excceeded. Default value is unlimited.
     :return: A :class:`telesync.types.FileUpload` instance.
     """
     return Component(file_upload=FileUpload(
@@ -816,6 +822,9 @@ def file_upload(
         label,
         multiple,
         tooltip,
+        allowedFileTypes,
+        maxSizePerFile,
+        maxSizeTotal,
     ))
 
 
