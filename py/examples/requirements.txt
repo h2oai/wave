@@ -1,3 +1,4 @@
 pygments
 Faker
+matplotlib
 telesync==0.0.7
