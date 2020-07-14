@@ -1,5 +1,6 @@
 # Mode / Broadcast
 # Launch the server in broadcast mode to synchronize browser state across users.
+# [Open this link](/demo) in multiple browsers and watch them synchronize in realtime.
 # ---
 from telesync import Q, listen, ui, pack
 

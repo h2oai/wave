@@ -39,7 +39,7 @@ Table:
 '''
 
 page['example'] = ui.markdown_card(
-    box='1 1 2 2',
+    box='1 1 3 -1',
     title='I was made using markdown!',
     content=sample_markdown,
 )
