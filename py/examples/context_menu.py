@@ -1,5 +1,5 @@
-# Plot / Vega-lite / Menu
-# Display a context menu on a Vega-lite card.
+# Context Menu
+# Display a context menu on a card.
 # ---
 import json
 from telesync import Q, listen, ui, data
