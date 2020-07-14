@@ -67,6 +67,18 @@ Links
 
 Change Log
 ---------------
+* v0.1.0
+    * Added
+        * Example for displaying iframe content > 2MB.
+        * Example for plotting using matplotlib.
+        * Example for plotting using Altair.
+        * Example for plotting using Vega.
+        * Example for plotting using Bokeh.
+        * Example for plotting using custom D3.js Javascript.
+        * Example for live dashboard with stats cards.
+        * Example for master-detail user interfaces using ``ui.table()``.
+        * Example for authoring multi-step wizard user interfaces.
+        * Unload API: ``q.unload()`` to delete uploaded files.
 * v0.0.7
     * Added
         * Download API: ``q.download()``.

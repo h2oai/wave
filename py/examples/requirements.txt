@@ -6,4 +6,4 @@ bokeh
 matplotlib
 altair
 vega-datasets
-telesync==0.0.7
+telesync==0.1.0
