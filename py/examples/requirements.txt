@@ -1,5 +1,7 @@
 pygments
 Faker
+numpy
+pandas
 bokeh
 matplotlib
 altair
