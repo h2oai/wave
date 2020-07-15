@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { B, bond, box, S, telesync, U, xid } from './telesync';
+import { B, bond, box, S, telesync, U, xid, F } from './telesync';
 import { getTheme, centerMixin, dashed, clas } from './theme';
 
 /**
@@ -15,14 +15,14 @@ export interface FileUpload {
   label?: S
   /** True if the component should allow multiple files to be uploaded. */
   multiple?: B
+  /** List of allowed file extensions, e.g. `pdf`, `docx`, etc. */
+  file_extensions?: S[]
+  /** Maximum allowed size (Mb) per file. Defaults to no limit. */
+  max_file_size?: F
+  /** Maximum allowed size (Mb) for all files combined. Defaults to no limit. */
+  max_size?: F
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
-  /** An optional string array for defining allowed upload types. E.g. .pdf, .docx ... . Default value is empty - every file type is allowed. */
-  allowedFileTypes?: S[]
-  /** Maximum file size in Mb that none of the files uploaded can exceed. Default value is unlimited. */
-  maxSizePerFile?: U
-  /** Maximum file size in Mb for all uploaded files combined that cannot be excceeded. Default value is unlimited. */
-  maxSizeTotal?: U
 }
 
 const
@@ -64,7 +64,7 @@ const
       cursor: 'pointer'
     }
   })
-const convertBytesToMegabytes = (bytes: number) => bytes * 1024 * 1024
+const convertMegabytesToBytes = (bytes: F) => bytes * 1024 * 1024
 export const
   XFileUpload = bond(({ model }: { model: FileUpload }) => {
     const
@@ -73,8 +73,11 @@ export const
       percentCompleteB = box(0.0),
       errorB = box(''),
       successMsgB = box(''),
-      maxSizePerFileMb = model.maxSizePerFile ? convertBytesToMegabytes(model.maxSizePerFile) : 0,
-      maxSizeTotalMb = model.maxSizeTotal ? convertBytesToMegabytes(model.maxSizeTotal) : 0,
+      maxFileSizeBytes = model.max_file_size ? convertMegabytesToBytes(model.max_file_size) : 0,
+      maxSizeBytes = model.max_size ? convertMegabytesToBytes(model.max_size) : 0,
+      fileExtensions = model.file_extensions
+        ? model.file_extensions.map(e => e.startsWith('.') ? e : `.${e}`)
+        : null,
       upload = async () => {
         const formData = new FormData()
 
@@ -102,9 +105,9 @@ export const
         finally { filesB([]) }
       },
       isFileTypeAllowed = (fileName: string) => {
-        if (!model.allowedFileTypes) return true
-        for (const allowedFileType of model.allowedFileTypes) {
-          if (fileName.endsWith(allowedFileType)) return true
+        if (!fileExtensions) return true
+        for (const allowedExtension of fileExtensions) {
+          if (fileName.toLowerCase().endsWith(allowedExtension.toLowerCase())) return true
         }
         return false
       },
@@ -112,22 +115,22 @@ export const
         const notAllowedFiles = fileArr.filter(({ name }) => !isFileTypeAllowed(name))
         if (notAllowedFiles.length) {
           return `Not allowed extension for files: ${notAllowedFiles.map(({ name }) => name).join(', ')}. 
-          Allowed file extensions: ${model.allowedFileTypes?.join(', ')}.`
+          Allowed file extensions: ${fileExtensions?.join(', ')}.`
 
         }
 
-        if (maxSizePerFileMb) {
-          const maxSizePerFileExceededFiles = fileArr.filter(({ size }) => size > maxSizePerFileMb)
+        if (maxFileSizeBytes) {
+          const maxSizePerFileExceededFiles = fileArr.filter(({ size }) => size > maxFileSizeBytes)
           if (maxSizePerFileExceededFiles.length) {
             return `Max file size exceeded for files: ${maxSizePerFileExceededFiles.map(({ name }) => name).join(', ')}. 
-            Allowed size per file: ${model.maxSizePerFile}Mb.`
+            Allowed size per file: ${model.max_file_size}Mb.`
           }
         }
 
-        if (maxSizeTotalMb) {
+        if (maxSizeBytes) {
           const totalSize = fileArr.reduce((total, { size }) => total + size, 0)
-          if (totalSize > maxSizeTotalMb) {
-            return `Total max file size exceeded. Allowed size: ${model.maxSizeTotal}Mb.`
+          if (totalSize > maxSizeBytes) {
+            return `Total max file size exceeded. Allowed size: ${model.max_size}Mb.`
           }
         }
       },
@@ -251,7 +254,7 @@ export const
               className={css.uploadInput}
               onChange={onChange}
               type='file'
-              accept={model.allowedFileTypes?.join(',') || undefined}
+              accept={fileExtensions?.join(',') || undefined}
               multiple={model.multiple} />
             <label htmlFor="file" className={css.uploadLabel}>
               <Fluent.Text variant={'large'}>Browse...</Fluent.Text>

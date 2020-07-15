@@ -1726,28 +1726,28 @@ class FileUpload:
     :param name: An identifying name for this component.
     :param label: Text to be displayed alongside the component.
     :param multiple: True if the component should allow multiple files to be uploaded.
+    :param file_extensions: List of allowed file extensions, e.g. `pdf`, `docx`, etc.
+    :param max_file_size: Maximum allowed size (Mb) per file. Defaults to no limit.
+    :param max_size: Maximum allowed size (Mb) for all files combined. Defaults to no limit.
     :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :param allowedFileTypes: An optional string array for defining allowed upload types. E.g. .pdf, .docx ... . Default value is empty - every file type is allowed.
-    :param maxSizePerFile: Maximum file size in Mb that none of the files uploaded can exceed. Default value is unlimited.
-    :param maxSizeTotal: Maximum file size in Mb for all uploaded files combined that cannot be excceeded. Default value is unlimited.
     """
     def __init__(
             self,
             name: str,
             label: Optional[str] = None,
             multiple: Optional[bool] = None,
+            file_extensions: Optional[List[str]] = None,
+            max_file_size: Optional[float] = None,
+            max_size: Optional[float] = None,
             tooltip: Optional[str] = None,
-            allowedFileTypes: Optional[List[str]] = None,
-            maxSizePerFile: Optional[int] = None,
-            maxSizeTotal: Optional[int] = None,
     ):
         self.name = name
         self.label = label
         self.multiple = multiple
+        self.file_extensions = file_extensions
+        self.max_file_size = max_file_size
+        self.max_size = max_size
         self.tooltip = tooltip
-        self.allowedFileTypes = allowedFileTypes
-        self.maxSizePerFile = maxSizePerFile
-        self.maxSizeTotal = maxSizeTotal
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1757,10 +1757,10 @@ class FileUpload:
             name=self.name,
             label=self.label,
             multiple=self.multiple,
+            file_extensions=self.file_extensions,
+            max_file_size=self.max_file_size,
+            max_size=self.max_size,
             tooltip=self.tooltip,
-            allowedFileTypes=self.allowedFileTypes,
-            maxSizePerFile=self.maxSizePerFile,
-            maxSizeTotal=self.maxSizeTotal,
         )
 
     @staticmethod
@@ -1771,25 +1771,25 @@ class FileUpload:
             raise ValueError('FileUpload.name is required.')
         __d_label: Any = __d.get('label')
         __d_multiple: Any = __d.get('multiple')
+        __d_file_extensions: Any = __d.get('file_extensions')
+        __d_max_file_size: Any = __d.get('max_file_size')
+        __d_max_size: Any = __d.get('max_size')
         __d_tooltip: Any = __d.get('tooltip')
-        __d_allowedFileTypes: Any = __d.get('allowedFileTypes')
-        __d_maxSizePerFile: Any = __d.get('maxSizePerFile')
-        __d_maxSizeTotal: Any = __d.get('maxSizeTotal')
         name: str = __d_name
         label: Optional[str] = __d_label
         multiple: Optional[bool] = __d_multiple
+        file_extensions: Optional[List[str]] = __d_file_extensions
+        max_file_size: Optional[float] = __d_max_file_size
+        max_size: Optional[float] = __d_max_size
         tooltip: Optional[str] = __d_tooltip
-        allowedFileTypes: Optional[List[str]] = __d_allowedFileTypes
-        maxSizePerFile: Optional[int] = __d_maxSizePerFile
-        maxSizeTotal: Optional[int] = __d_maxSizeTotal
         return FileUpload(
             name,
             label,
             multiple,
+            file_extensions,
+            max_file_size,
+            max_size,
             tooltip,
-            allowedFileTypes,
-            maxSizePerFile,
-            maxSizeTotal,
         )
 
 
