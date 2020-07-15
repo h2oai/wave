@@ -31,6 +31,8 @@ export interface Button {
   label?: S
   /** The caption displayed below the label. Setting a caption renders a compound button. */
   caption?: S
+  /** A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True. */
+  value?: S
   /** True if the button should be rendered as the primary button in the set. */
   primary?: B
   /** True if the button should be disabled. */
@@ -64,7 +66,7 @@ const
           window.location.hash = m.name.substr(1)
           return
         }
-        telesync.args[m.name] = true
+        telesync.args[m.name] = m.value !== undefined ? m.value : true
         telesync.sync()
       },
       render = () => {

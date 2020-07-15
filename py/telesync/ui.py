@@ -741,6 +741,7 @@ def button(
         name: str,
         label: Optional[str] = None,
         caption: Optional[str] = None,
+        value: Optional[str] = None,
         primary: Optional[bool] = None,
         disabled: Optional[bool] = None,
         link: Optional[bool] = None,
@@ -766,6 +767,7 @@ def button(
     :param name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
     :param label: The text displayed on the button.
     :param caption: The caption displayed below the label. Setting a caption renders a compound button.
+    :param value: A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True.
     :param primary: True if the button should be rendered as the primary button in the set.
     :param disabled: True if the button should be disabled.
     :param link: True if the button should be rendered as link text and not a standard button.
@@ -776,6 +778,7 @@ def button(
         name,
         label,
         caption,
+        value,
         primary,
         disabled,
         link,
@@ -1356,7 +1359,7 @@ def meta_card(
     :param box: A string indicating how to place this component on the page.
     :param title: The title of the page.
     :param refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
-    :param notification: Notification text that appears in the right top corner.
+    :param notification: Display a desktop notification to the user.
     :param commands: Contextual menu commands for this component.
     :return: A :class:`telesync.types.MetaCard` instance.
     """

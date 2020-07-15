@@ -1621,6 +1621,7 @@ class Button:
     :param name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
     :param label: The text displayed on the button.
     :param caption: The caption displayed below the label. Setting a caption renders a compound button.
+    :param value: A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True.
     :param primary: True if the button should be rendered as the primary button in the set.
     :param disabled: True if the button should be disabled.
     :param link: True if the button should be rendered as link text and not a standard button.
@@ -1631,6 +1632,7 @@ class Button:
             name: str,
             label: Optional[str] = None,
             caption: Optional[str] = None,
+            value: Optional[str] = None,
             primary: Optional[bool] = None,
             disabled: Optional[bool] = None,
             link: Optional[bool] = None,
@@ -1639,6 +1641,7 @@ class Button:
         self.name = name
         self.label = label
         self.caption = caption
+        self.value = value
         self.primary = primary
         self.disabled = disabled
         self.link = link
@@ -1652,6 +1655,7 @@ class Button:
             name=self.name,
             label=self.label,
             caption=self.caption,
+            value=self.value,
             primary=self.primary,
             disabled=self.disabled,
             link=self.link,
@@ -1666,6 +1670,7 @@ class Button:
             raise ValueError('Button.name is required.')
         __d_label: Any = __d.get('label')
         __d_caption: Any = __d.get('caption')
+        __d_value: Any = __d.get('value')
         __d_primary: Any = __d.get('primary')
         __d_disabled: Any = __d.get('disabled')
         __d_link: Any = __d.get('link')
@@ -1673,6 +1678,7 @@ class Button:
         name: str = __d_name
         label: Optional[str] = __d_label
         caption: Optional[str] = __d_caption
+        value: Optional[str] = __d_value
         primary: Optional[bool] = __d_primary
         disabled: Optional[bool] = __d_disabled
         link: Optional[bool] = __d_link
@@ -1681,6 +1687,7 @@ class Button:
             name,
             label,
             caption,
+            value,
             primary,
             disabled,
             link,
@@ -3106,7 +3113,7 @@ class MetaCard:
     :param box: A string indicating how to place this component on the page.
     :param title: The title of the page.
     :param refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
-    :param notification: Notification text that appears in the right top corner.
+    :param notification: Display a desktop notification to the user.
     :param commands: Contextual menu commands for this component.
     """
     def __init__(
