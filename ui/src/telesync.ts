@@ -655,14 +655,14 @@ const
       sync = () => {
         if (dirty) {
           changed(true)
-          dirty = false // reset
         } else {
           for (const k in dirties) {
             const c = cards[k]
             if (c) c.changed(true)
           }
-          dirties = {} // reset
         }
+        dirty = false // reset
+        dirties = {} // reset
       }
 
     return { key, changed, add, get, set, list, drop, sync }
