@@ -1,6 +1,8 @@
 # Meta / Notification
-# Show notification.
+# Display a desktop notification.
 # ---
+import time
+
 from telesync import site, ui
 
 page = site['/demo']
@@ -9,9 +11,12 @@ page['meta'] = ui.meta_card(box='')
 
 page['example'] = ui.markdown_card(
     box='1 1 2 2',
-    title='Notification',
-    content='Allow browser notifcations in order to see them.',
+    title='Desktop Notifications',
+    content='This page should display a desktop notification in a few seconds. Wait for it...',
 )
-page['meta'].notification = 'Processing complete!'
+page.save()
+
+time.sleep(5)
+page['meta'].notification = 'And now for something completely different!'
 
 page.save()

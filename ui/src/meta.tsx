@@ -13,7 +13,7 @@ interface State {
   title?: S
   /** Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use). */
   refresh?: U
-  /** Notification text that appears in the right top corner. */
+  /** Display a desktop notification to the user. */
   notification?: S
 }
 
@@ -21,10 +21,10 @@ const
   View = bond(({ state, changed }: Card<State>) => {
     const
       init = () => {
-        const { title, refresh } = state
+        const { title, refresh, notification } = state
         if (title) window.document.title = title
         if (typeof refresh === 'number') telesync.refreshRateB(refresh)
-        if (state.notification) showNotification(state.notification)
+        if (notification) showNotification(notification)
       },
       showNotification = async (notificationText: string) => {
         // TODO: Decide on fallback when user's browser does not support Notification API.
