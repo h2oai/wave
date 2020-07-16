@@ -1158,6 +1158,34 @@ def grid_card(
     )
 
 
+def image_card(
+        box: str,
+        title: str,
+        type: str,
+        image: str,
+        data: Optional[PackedRecord] = None,
+        commands: Optional[List[Command]] = None,
+) -> ImageCard:
+    """Create a card that displays a base64-encoded image.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: The card's title.
+    :param type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `ico`, `jpeg`, `png`, `webp`.
+    :param image: Image data, base64-encoded.
+    :param data: Data for this card.
+    :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.ImageCard` instance.
+    """
+    return ImageCard(
+        box,
+        title,
+        type,
+        image,
+        data,
+        commands,
+    )
+
+
 def large_bar_stat_card(
         box: str,
         title: str,

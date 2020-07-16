@@ -2534,6 +2534,84 @@ class GridCard:
         )
 
 
+class ImageCard:
+    """Create a card that displays a base64-encoded image.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            type: str,
+            image: str,
+            data: Optional[PackedRecord] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The card's title."""
+        self.type = type
+        """The image MIME subtype. One of `apng`, `bmp`, `gif`, `ico`, `jpeg`, `png`, `webp`."""
+        self.image = image
+        """Image data, base64-encoded."""
+        self.data = data
+        """Data for this card."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('ImageCard.box is required.')
+        if self.title is None:
+            raise ValueError('ImageCard.title is required.')
+        if self.type is None:
+            raise ValueError('ImageCard.type is required.')
+        if self.image is None:
+            raise ValueError('ImageCard.image is required.')
+        return _dump(
+            view='image',
+            box=self.box,
+            title=self.title,
+            type=self.type,
+            image=self.image,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ImageCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('ImageCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('ImageCard.title is required.')
+        __d_type: Any = __d.get('type')
+        if __d_type is None:
+            raise ValueError('ImageCard.type is required.')
+        __d_image: Any = __d.get('image')
+        if __d_image is None:
+            raise ValueError('ImageCard.image is required.')
+        __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        type: str = __d_type
+        image: str = __d_image
+        data: Optional[PackedRecord] = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return ImageCard(
+            box,
+            title,
+            type,
+            image,
+            data,
+            commands,
+        )
+
+
 class LargeBarStatCard:
     """Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
     """
