@@ -16,6 +16,8 @@ To build apps using Telesync, you need the `telesync` development server and the
 
 ## Migration Guide
 
+Before you begin, it is highly recommended that you [download](https://github.com/h2oai/telesync/releases) a release and run the interactive `tour.py` that ships with the release to get a feel for what Telesync programs look like in practice.
+
 ### What has changed?
 
 From an app-development perspective, the most important change is that Telesync is more of a library rather than a framework.
@@ -78,7 +80,7 @@ q.page['my_card'] = ui.form_card(
 await q.page.save()
 ```
 
-Note that the the *After* example requires a `box` that specifies where to draw your form. This is because you are not limited to using a sidebar, and can use the entire width/length of the page.
+Note that the *After* example requires a `box` that specifies where to draw your form. This is because you are not limited to using a sidebar, and can use the entire width/length of the page.
 
 The same technique can be used to update the UI again (or display intermediate results):
 
