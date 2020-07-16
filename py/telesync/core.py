@@ -43,14 +43,13 @@ def configure(
         hub_access_key_secret: Optional[str] = None,
 ):
     """
+    Configure networking addresses/credentials before use.
 
-    :param internal_address:
-    :param external_address:
-    :param hub_address:
-    :param hub_access_key_id:
-    :param hub_access_key_secret:
-
-    :return:
+    :param internal_address: The local host:port to listen on.
+    :param external_address: The remote host:port of this server.
+    :param hub_address: The host:port of the Telesync server.
+    :param hub_access_key_id: The access key ID to use while connecting to the Telesync server.
+    :param hub_access_key_secret: The access key secret to use while connecting to the Telesync server.
     """
     if internal_address:
         _config.internal_address = internal_address
@@ -227,16 +226,15 @@ class Ref:
 class Data:
     """
     Represents a data placeholder. A data placeholder is used to allocate memory on the Telesync server to store data.
-
-    :param fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
-    :param size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
-    :param data: Initial data. Must be either a key-row ``dict`` for variable-length buffers OR a row ``list`` for fixed-size and circular buffers.
     """
 
     def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
         self.fields = fields
+        """The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names."""
         self.data = data
+        """Initial data. Must be either a key-row ``dict`` for variable-length buffers OR a row ``list`` for fixed-size and circular buffers."""
         self.size = size
+        """The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers."""
 
     def dump(self):
         f = self.fields

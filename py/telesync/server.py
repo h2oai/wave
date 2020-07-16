@@ -32,16 +32,6 @@ BROADCAST = 'broadcast'
 class Q:
     """
     Represents the application context.
-
-    :param site: A reference to the current site.
-    :param mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
-    :param username: The username of the user who initiated the active request.
-    :param client_id: A unique ID representing the user's client (browser tabs across devices). A user could be accessing the site via multiple clients.
-    :param route: The route served by the server.
-    :param app_state: An :class:`telesync.core.Expando` instance to hold application-specific state.
-    :param user_state: An :class:`telesync.core.Expando` instance to hold user-specific state.
-    :param client_state: An :class:`telesync.core.Expando` instance to hold client-specific state.
-    :param args:  An :class:`telesync.core.Expando` instance containing the active request.
     """
 
     def __init__(
@@ -56,14 +46,24 @@ class Q:
             client_state: Expando,
             args: Expando,
     ):
+        self.mode = mode
+        """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
         self.site = site
+        """A reference to the current site."""
         self.page = site[client_id if mode == UNICAST else username if mode == MULTICAST else route]
+        """A reference to the current page."""
         self.app = app_state
+        """A :class:`telesync.core.Expando` instance to hold application-specific state."""
         self.user = user_state
+        """A :class:`telesync.core.Expando` instance to hold user-specific state."""
         self.client = client_state
+        """An :class:`telesync.core.Expando` instance to hold client-specific state."""
         self.args = args
+        """A :class:`telesync.core.Expando` instance containing the active request."""
         self.username = username
+        """The username of the user who initiated the active request."""
         self.route = route
+        """The route served by the server."""
 
     async def sleep(self, delay):
         await asyncio.sleep(delay)

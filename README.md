@@ -160,7 +160,7 @@ listen('/my/app/route', main)
 
 #### Removed: `q.dashboard()` and `q.notebook()`.
 
-Every page in Telesync is a dashboard page. Instead of creating a separate dashboard or notebook, simply add cards to a page and arrange it the way you want. Cards can be created by using one of the several `ui.*_card()` APIs. Also see the "Dashboard" and "Layout" example to learn how to lay out several cards on a page.
+Every page in Telesync is a dashboard page. Instead of creating a separate dashboard or notebook, simply add cards to a page and arrange it the way you want. Cards can be created by using one of the several `ui.*_card()` APIs. Also see the [dashboard](py/examples/dashboard.py), [layout](py/examples/layout.py) and [sizing](py/examples/layout_size.py) examples to learn how to lay out several cards on a page.
 
 #### Changed: `ui.buttons()`, `ui.expander()` and `ui.tabs()` accept a `list` of items instead of var args `*args`
 

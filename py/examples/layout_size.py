@@ -17,7 +17,6 @@ from telesync import site, ui
 # In this example, we place multiple cards on a page to demonstrate their `box` values.
 
 page = site['/demo']
-page.drop()
 boxes = [
     '1 1 1 1',
     '2 1 2 1',
