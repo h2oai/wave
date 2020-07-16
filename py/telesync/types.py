@@ -18,13 +18,6 @@ class Command:
     """Create a command.
 
     Commands are typically displayed as context menu items or toolbar button.
-
-    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
-    :param label: The text displayed for this command.
-    :param caption: The caption for this command (typically a tooltip).
-    :param icon: The icon to be displayed for this command.
-    :param items: Sub-commands, if any
-    :param data: Data associated with this command, if any.
     """
     def __init__(
             self,
@@ -36,11 +29,17 @@ class Command:
             data: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed."""
         self.label = label
+        """The text displayed for this command."""
         self.caption = caption
+        """The caption for this command (typically a tooltip)."""
         self.icon = icon
+        """The icon to be displayed for this command."""
         self.items = items
+        """Sub-commands, if any"""
         self.data = data
+        """Data associated with this command, if any."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -85,16 +84,6 @@ class Command:
 class FlexCard:
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
-
-    :param box: A string indicating how to place this component on the page.
-    :param item_view: The child card type.
-    :param item_props: The child card properties.
-    :param data: Data for this card.
-    :param direction: Layout direction. One of 'horizontal', 'vertical'.
-    :param justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'.
-    :param align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'.
-    :param wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -109,14 +98,23 @@ class FlexCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.item_view = item_view
+        """The child card type."""
         self.item_props = item_props
+        """The child card properties."""
         self.data = data
+        """Data for this card."""
         self.direction = direction
+        """Layout direction. One of 'horizontal', 'vertical'."""
         self.justify = justify
+        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'."""
         self.align = align
+        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'."""
         self.wrap = wrap
+        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -185,10 +183,6 @@ class FlexCard:
 
 class Text:
     """Create text content.
-
-    :param content: The text content.
-    :param size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'.
-    :param tooltip: Tooltip message.
     """
     def __init__(
             self,
@@ -197,8 +191,11 @@ class Text:
             tooltip: Optional[str] = None,
     ):
         self.content = content
+        """The text content."""
         self.size = size
+        """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'."""
         self.tooltip = tooltip
+        """Tooltip message."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -230,9 +227,6 @@ class Text:
 
 class TextXl:
     """Create extra-large sized text content.
-
-    :param content: The text content.
-    :param tooltip: Tooltip message.
     """
     def __init__(
             self,
@@ -240,7 +234,9 @@ class TextXl:
             tooltip: Optional[str] = None,
     ):
         self.content = content
+        """The text content."""
         self.tooltip = tooltip
+        """Tooltip message."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -268,9 +264,6 @@ class TextXl:
 
 class TextL:
     """Create large sized text content.
-
-    :param content: The text content.
-    :param tooltip: Tooltip message.
     """
     def __init__(
             self,
@@ -278,7 +271,9 @@ class TextL:
             tooltip: Optional[str] = None,
     ):
         self.content = content
+        """The text content."""
         self.tooltip = tooltip
+        """Tooltip message."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -306,9 +301,6 @@ class TextL:
 
 class TextM:
     """Create medium sized text content.
-
-    :param content: The text content.
-    :param tooltip: Tooltip message.
     """
     def __init__(
             self,
@@ -316,7 +308,9 @@ class TextM:
             tooltip: Optional[str] = None,
     ):
         self.content = content
+        """The text content."""
         self.tooltip = tooltip
+        """Tooltip message."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -344,9 +338,6 @@ class TextM:
 
 class TextS:
     """Create small sized text content.
-
-    :param content: The text content.
-    :param tooltip: Tooltip message.
     """
     def __init__(
             self,
@@ -354,7 +345,9 @@ class TextS:
             tooltip: Optional[str] = None,
     ):
         self.content = content
+        """The text content."""
         self.tooltip = tooltip
+        """Tooltip message."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -382,9 +375,6 @@ class TextS:
 
 class TextXs:
     """Create extra-small sized text content.
-
-    :param content: The text content.
-    :param tooltip: Tooltip message.
     """
     def __init__(
             self,
@@ -392,7 +382,9 @@ class TextXs:
             tooltip: Optional[str] = None,
     ):
         self.content = content
+        """The text content."""
         self.tooltip = tooltip
+        """Tooltip message."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -426,11 +418,6 @@ class Label:
     Some components, such as textboxes, dropdowns, or toggles, already have labels
     incorporated, but other components may optionally add a Label if it helps inform
     the user of the component’s purpose.
-
-    :param label: The text displayed on the label.
-    :param required: True if the field is required.
-    :param disabled: True if the label should be disabled.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -440,9 +427,13 @@ class Label:
             tooltip: Optional[str] = None,
     ):
         self.label = label
+        """The text displayed on the label."""
         self.required = required
+        """True if the field is required."""
         self.disabled = disabled
+        """True if the label should be disabled."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -480,14 +471,13 @@ class Separator:
     """Create a separator.
 
     A separator visually separates content into groups.
-
-    :param label: The text displayed on the separator.
     """
     def __init__(
             self,
             label: Optional[str] = None,
     ):
         self.label = label
+        """The text displayed on the separator."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -525,11 +515,6 @@ class Progress:
     Avoid time units as they are rarely accurate enough to be trustworthy.
     Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
     Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
-
-    :param label: The text displayed above the bar.
-    :param caption: The text displayed below the bar.
-    :param value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -539,9 +524,13 @@ class Progress:
             tooltip: Optional[str] = None,
     ):
         self.label = label
+        """The text displayed above the bar."""
         self.caption = caption
+        """The text displayed below the bar."""
         self.value = value
+        """The progress, between 0.0 and 1.0, or -1 (default) if indeterminate."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -581,9 +570,6 @@ class MessageBar:
     A message bar is an area at the top of a primary view that displays relevant status information.
     You can use a message bar to tell the user about a situation that does not require their immediate attention and
     therefore does not need to block other activities.
-
-    :param type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
-    :param text: The text displayed on the message bar.
     """
     def __init__(
             self,
@@ -591,7 +577,9 @@ class MessageBar:
             text: Optional[str] = None,
     ):
         self.type = type
+        """The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'."""
         self.text = text
+        """The text displayed on the message bar."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -619,22 +607,6 @@ class Textbox:
     The text box component enables a user to type text into an app.
     It's typically used to capture a single line of text, but can be configured to capture multiple lines of text.
     The text displays on the screen in a simple, uniform format.
-
-    :param name: An identifying name for this component.
-    :param label: The text displayed above the field.
-    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message.
-    :param value: Text to be displayed inside the text box.
-    :param mask: The masking string that defines the mask's behavior. A backslash will escape any character. Special format characters are: '9': [0-9] 'a': [a-zA-Z] '*': [a-zA-Z0-9].
-    :param icon: Icon displayed in the far right end of the text field.
-    :param prefix: Text to be displayed before the text box contents.
-    :param suffix: Text to be displayed after the text box contents.
-    :param error: Text to be displayed as an error below the text box.
-    :param required: True if the text box is a required field.
-    :param disabled: True if the text box is disabled.
-    :param readonly: True if the text box is a read-only field.
-    :param multiline: True if the text box should allow multi-line text entry.
-    :param password: True if the text box should hide text content.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -655,20 +627,35 @@ class Textbox:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """The text displayed above the field."""
         self.placeholder = placeholder
+        """A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message."""
         self.value = value
+        """Text to be displayed inside the text box."""
         self.mask = mask
+        """The masking string that defines the mask's behavior. A backslash will escape any character. Special format characters are: '9': [0-9] 'a': [a-zA-Z] '*': [a-zA-Z0-9]."""
         self.icon = icon
+        """Icon displayed in the far right end of the text field."""
         self.prefix = prefix
+        """Text to be displayed before the text box contents."""
         self.suffix = suffix
+        """Text to be displayed after the text box contents."""
         self.error = error
+        """Text to be displayed as an error below the text box."""
         self.required = required
+        """True if the text box is a required field."""
         self.disabled = disabled
+        """True if the text box is disabled."""
         self.readonly = readonly
+        """True if the text box is a read-only field."""
         self.multiline = multiline
+        """True if the text box should allow multi-line text entry."""
         self.password = password
+        """True if the text box should hide text content."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -761,14 +748,6 @@ class Checkbox:
 
     Use multiple checkboxes for multi-select scenarios in which a user chooses one or more items from a group of
     choices that are not mutually exclusive.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the checkbox.
-    :param value: True if selected, False if unselected.
-    :param indeterminate: True if the selection is indeterminate (neither selected nor unselected).
-    :param disabled: True if the checkbox is disabled.
-    :param trigger: True if the form should be submitted when the checkbox value changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -781,12 +760,19 @@ class Checkbox:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the checkbox."""
         self.value = value
+        """True if selected, False if unselected."""
         self.indeterminate = indeterminate
+        """True if the selection is indeterminate (neither selected nor unselected)."""
         self.disabled = disabled
+        """True if the checkbox is disabled."""
         self.trigger = trigger
+        """True if the form should be submitted when the checkbox value changes."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -841,13 +827,6 @@ class Toggle:
     Use a toggle for binary operations that take effect right after the user flips the Toggle.
     For example, use a Toggle to turn services or hardware components on or off.
     In other words, if a physical switch would work for the action, a Toggle is probably the best component to use.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param value: True if selected, False if unselected.
-    :param disabled: True if the checkbox is disabled.
-    :param trigger: True if the form should be submitted when the toggle value changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -859,11 +838,17 @@ class Toggle:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.value = value
+        """True if selected, False if unselected."""
         self.disabled = disabled
+        """True if the checkbox is disabled."""
         self.trigger = trigger
+        """True if the form should be submitted when the toggle value changes."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -907,10 +892,6 @@ class Toggle:
 
 class Choice:
     """Create a choice for a checklist, choice group or dropdown.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param disabled: True if the checkbox is disabled.
     """
     def __init__(
             self,
@@ -919,8 +900,11 @@ class Choice:
             disabled: Optional[bool] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.disabled = disabled
+        """True if the checkbox is disabled."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -961,14 +945,6 @@ class ChoiceGroup:
 
     If there are only two mutually exclusive options, combine them into a single Checkbox or Toggle switch.
     For example, use a checkbox for "I agree" instead of choice group buttons for "I agree" and "I don't agree."
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param value: The name of the selected choice.
-    :param choices: The choices to be presented.
-    :param required: True if this field is required.
-    :param trigger: True if the form should be submitted when the selection changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -981,12 +957,19 @@ class ChoiceGroup:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.value = value
+        """The name of the selected choice."""
         self.choices = choices
+        """The choices to be presented."""
         self.required = required
+        """True if this field is required."""
         self.trigger = trigger
+        """True if the form should be submitted when the selection changes."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1036,12 +1019,6 @@ class Checklist:
     """Create a set of checkboxes.
     Use this for multi-select scenarios in which a user chooses one or more items from a group of
     choices that are not mutually exclusive.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed above the component.
-    :param values: The names of the selected choices.
-    :param choices: The choices to be presented.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1052,10 +1029,15 @@ class Checklist:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed above the component."""
         self.values = values
+        """The names of the selected choices."""
         self.choices = choices
+        """The choices to be presented."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1105,17 +1087,6 @@ class Dropdown:
 
     Note: Use either the 'value' parameter or the 'values' parameter. Setting the 'values' parameter renders a
     multi-select dropdown.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
-    :param value: The name of the selected choice.
-    :param values: The names of the selected choices. If this parameter is set, multiple selections will be allowed.
-    :param choices: The choices to be presented.
-    :param required: True if this is a required field.
-    :param disabled: True if this field is disabled.
-    :param trigger: True if the form should be submitted when the dropdown value changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1131,15 +1102,25 @@ class Dropdown:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.placeholder = placeholder
+        """A string that provides a brief hint to the user as to what kind of information is expected in the field."""
         self.value = value
+        """The name of the selected choice."""
         self.values = values
+        """The names of the selected choices. If this parameter is set, multiple selections will be allowed."""
         self.choices = choices
+        """The choices to be presented."""
         self.required = required
+        """True if this is a required field."""
         self.disabled = disabled
+        """True if this field is disabled."""
         self.trigger = trigger
+        """True if the form should be submitted when the dropdown value changes."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1209,15 +1190,6 @@ class Combobox:
     To change the value, users open the list and click another value or use the arrow keys (up and down)
     to select a new value.
     When collapsed the user can select a new value by typing.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
-    :param value: The name of the selected choice.
-    :param choices: The choices to be presented.
-    :param error: Text to be displayed as an error below the text box.
-    :param disabled: True if this field is disabled.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1231,13 +1203,21 @@ class Combobox:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.placeholder = placeholder
+        """A string that provides a brief hint to the user as to what kind of information is expected in the field."""
         self.value = value
+        """The name of the selected choice."""
         self.choices = choices
+        """The choices to be presented."""
         self.error = error
+        """Text to be displayed as an error below the text box."""
         self.disabled = disabled
+        """True if this field is disabled."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1302,16 +1282,6 @@ class Slider:
 
     The default value of the slider will be zero or be constrained to the min and max values. The min will be returned
     if the value is set under the min and the max will be returned if set higher than the max value.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param min: The minimum value of the slider.
-    :param max: The maximum value of the slider.
-    :param step: The difference between two adjacent values of the slider.
-    :param value: The current value of the slider.
-    :param disabled: True if this field is disabled.
-    :param trigger: True if the form should be submitted when the slider value changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1326,14 +1296,23 @@ class Slider:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.min = min
+        """The minimum value of the slider."""
         self.max = max
+        """The maximum value of the slider."""
         self.step = step
+        """The difference between two adjacent values of the slider."""
         self.value = value
+        """The current value of the slider."""
         self.disabled = disabled
+        """True if this field is disabled."""
         self.trigger = trigger
+        """True if the form should be submitted when the slider value changes."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1392,15 +1371,6 @@ class Spinbox:
 
     A spinbox allows the user to incrementally adjust a value in small steps.
     It is mainly used for numeric values, but other values are supported too.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param min: The minimum value of the spinbox.
-    :param max: The maximum value of the spinbox.
-    :param step: The difference between two adjacent values of the spinbox.
-    :param value: The current value of the spinbox.
-    :param disabled: True if this field is disabled.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1414,13 +1384,21 @@ class Spinbox:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.min = min
+        """The minimum value of the spinbox."""
         self.max = max
+        """The maximum value of the spinbox."""
         self.step = step
+        """The difference between two adjacent values of the spinbox."""
         self.value = value
+        """The current value of the spinbox."""
         self.disabled = disabled
+        """True if this field is disabled."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1474,13 +1452,6 @@ class DatePicker:
     """Create a date picker.
 
     A date picker allows a user to pick a date value.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
-    :param value: The date value in YYYY-MM-DD format.
-    :param disabled: True if this field is disabled.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1492,11 +1463,17 @@ class DatePicker:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.placeholder = placeholder
+        """A string that provides a brief hint to the user as to what kind of information is expected in the field."""
         self.value = value
+        """The date value in YYYY-MM-DD format."""
         self.disabled = disabled
+        """True if this field is disabled."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1543,12 +1520,6 @@ class ColorPicker:
 
     A date picker allows a user to pick a color value.
     If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param value: The selected color (CSS-compatible string)
-    :param choices: A list of colors (CSS-compatible strings) to limit color choices to.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1559,10 +1530,15 @@ class ColorPicker:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.value = value
+        """The selected color (CSS-compatible string)"""
         self.choices = choices
+        """A list of colors (CSS-compatible strings) to limit color choices to."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1617,15 +1593,6 @@ class Button:
 
     While buttons can technically be used to navigate a user to another part of the experience, this is not
     recommended unless that navigation is part of an action or their flow.
-
-    :param name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
-    :param label: The text displayed on the button.
-    :param caption: The caption displayed below the label. Setting a caption renders a compound button.
-    :param value: A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True.
-    :param primary: True if the button should be rendered as the primary button in the set.
-    :param disabled: True if the button should be disabled.
-    :param link: True if the button should be rendered as link text and not a standard button.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1639,13 +1606,21 @@ class Button:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked."""
         self.label = label
+        """The text displayed on the button."""
         self.caption = caption
+        """The caption displayed below the label. Setting a caption renders a compound button."""
         self.value = value
+        """A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True."""
         self.primary = primary
+        """True if the button should be rendered as the primary button in the set."""
         self.disabled = disabled
+        """True if the button should be disabled."""
         self.link = link
+        """True if the button should be rendered as link text and not a standard button."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1697,14 +1672,13 @@ class Button:
 
 class Buttons:
     """Create a set of buttons to be layed out horizontally.
-
-    :param items: The button in this set.
     """
     def __init__(
             self,
             items: List['Component'],
     ):
         self.items = items
+        """The button in this set."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1729,14 +1703,6 @@ class Buttons:
 class FileUpload:
     """Create a file upload component.
     A file upload component allows a user to browse, select and upload one or more files.
-
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param multiple: True if the component should allow multiple files to be uploaded.
-    :param file_extensions: List of allowed file extensions, e.g. `pdf`, `docx`, etc.
-    :param max_file_size: Maximum allowed size (Mb) per file. Defaults to no limit.
-    :param max_size: Maximum allowed size (Mb) for all files combined. Defaults to no limit.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1749,12 +1715,19 @@ class FileUpload:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """Text to be displayed alongside the component."""
         self.multiple = multiple
+        """True if the component should allow multiple files to be uploaded."""
         self.file_extensions = file_extensions
+        """List of allowed file extensions, e.g. `pdf`, `docx`, etc."""
         self.max_file_size = max_file_size
+        """Maximum allowed size (Mb) per file. Defaults to no limit."""
         self.max_size = max_size
+        """Maximum allowed size (Mb) for all files combined. Defaults to no limit."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1802,9 +1775,6 @@ class FileUpload:
 
 class TableColumn:
     """Create a table column.
-
-    :param name: An identifying name for this column.
-    :param label: The text displayed on the column header.
     """
     def __init__(
             self,
@@ -1812,7 +1782,9 @@ class TableColumn:
             label: str,
     ):
         self.name = name
+        """An identifying name for this column."""
         self.label = label
+        """The text displayed on the column header."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1844,9 +1816,6 @@ class TableColumn:
 
 class TableRow:
     """Create a table row.
-
-    :param name: An identifying name for this row.
-    :param cells: The cells in this row (displayed left to right).
     """
     def __init__(
             self,
@@ -1854,7 +1823,9 @@ class TableRow:
             cells: List[str],
     ):
         self.name = name
+        """An identifying name for this row."""
         self.cells = cells
+        """The cells in this row (displayed left to right)."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1900,12 +1871,6 @@ class Table:
     and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note that if `multiple` is
     set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
     submission.
-
-    :param name: An identifying name for this component.
-    :param columns: The columns in this table.
-    :param rows: The rows in this table.
-    :param multiple: True to allow multiple rows to be selected.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1916,10 +1881,15 @@ class Table:
             tooltip: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.columns = columns
+        """The columns in this table."""
         self.rows = rows
+        """The rows in this table."""
         self.multiple = multiple
+        """True to allow multiple rows to be selected."""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1971,12 +1941,6 @@ class Link:
     Hyperlinks can be internal or external.
     Internal hyperlinks have paths that begin with a `/` and point to URLs within the Q UI.
     All other kinds of paths are treated as external hyperlinks.
-
-    :param label: The text to be displayed. If blank, the `path` is used as the label.
-    :param path: The path or URL to link to.
-    :param disabled: True if the link should be disable.
-    :param button: True if the link should be rendered as a button
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     """
     def __init__(
             self,
@@ -1987,10 +1951,15 @@ class Link:
             tooltip: Optional[str] = None,
     ):
         self.label = label
+        """The text to be displayed. If blank, the `path` is used as the label."""
         self.path = path
+        """The path or URL to link to."""
         self.disabled = disabled
+        """True if the link should be disable."""
         self.button = button
+        """True if the link should be rendered as a button"""
         self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2026,10 +1995,6 @@ class Link:
 
 class Tab:
     """Create a tab.
-
-    :param name: An identifying name for this component.
-    :param label: The text displayed on the tab.
-    :param icon: The icon displayed on the tab.
     """
     def __init__(
             self,
@@ -2038,8 +2003,11 @@ class Tab:
             icon: Optional[str] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """The text displayed on the tab."""
         self.icon = icon
+        """The icon displayed on the tab."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2071,10 +2039,6 @@ class Tab:
 
 class Tabs:
     """Create a tab bar.
-
-    :param name: An identifying name for this component.
-    :param value: The name of the tab to select.
-    :param items: The tabs in this tab bar.
     """
     def __init__(
             self,
@@ -2083,8 +2047,11 @@ class Tabs:
             items: Optional[List[Tab]] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.value = value
+        """The name of the tab to select."""
         self.items = items
+        """The tabs in this tab bar."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2118,11 +2085,6 @@ class Expander:
     """Creates a new expander.
 
     Expanders can be used to show or hide a group of related components.
-
-    :param name: An identifying name for this component.
-    :param label: The text displayed on the expander.
-    :param expanded: True if expanded, False if collapsed.
-    :param items: List of components to be hideable by the expander.
     """
     def __init__(
             self,
@@ -2132,9 +2094,13 @@ class Expander:
             items: Optional[List['Component']] = None,
     ):
         self.name = name
+        """An identifying name for this component."""
         self.label = label
+        """The text displayed on the expander."""
         self.expanded = expanded
+        """True if expanded, False if collapsed."""
         self.items = items
+        """List of components to be hideable by the expander."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2170,35 +2136,6 @@ class Expander:
 
 class Component:
     """Create a component.
-
-    :param text: Text block.
-    :param text_xl: Extra-large sized text block.
-    :param text_l: Large sized text block.
-    :param text_m: Medium sized text block.
-    :param text_s: Small sized text block.
-    :param text_xs: Extra-small sized text block.
-    :param label: Label.
-    :param separator: Separator.
-    :param progress: Progress bar.
-    :param message_bar: Message bar.
-    :param textbox: Textbox.
-    :param checkbox: Checkbox.
-    :param toggle: Toggle.
-    :param choice_group: Choice group.
-    :param checklist: Checklist.
-    :param dropdown: Dropdown.
-    :param combobox: Combobox.
-    :param slider: Slider.
-    :param spinbox: Spinbox.
-    :param date_picker: Date picker.
-    :param color_picker: Color picker.
-    :param button: Button.
-    :param buttons: Button set.
-    :param file_upload: File upload.
-    :param table: Table.
-    :param link: Link.
-    :param tabs: Tabs.
-    :param expander: Expander.
     """
     def __init__(
             self,
@@ -2232,33 +2169,61 @@ class Component:
             expander: Optional[Expander] = None,
     ):
         self.text = text
+        """Text block."""
         self.text_xl = text_xl
+        """Extra-large sized text block."""
         self.text_l = text_l
+        """Large sized text block."""
         self.text_m = text_m
+        """Medium sized text block."""
         self.text_s = text_s
+        """Small sized text block."""
         self.text_xs = text_xs
+        """Extra-small sized text block."""
         self.label = label
+        """Label."""
         self.separator = separator
+        """Separator."""
         self.progress = progress
+        """Progress bar."""
         self.message_bar = message_bar
+        """Message bar."""
         self.textbox = textbox
+        """Textbox."""
         self.checkbox = checkbox
+        """Checkbox."""
         self.toggle = toggle
+        """Toggle."""
         self.choice_group = choice_group
+        """Choice group."""
         self.checklist = checklist
+        """Checklist."""
         self.dropdown = dropdown
+        """Dropdown."""
         self.combobox = combobox
+        """Combobox."""
         self.slider = slider
+        """Slider."""
         self.spinbox = spinbox
+        """Spinbox."""
         self.date_picker = date_picker
+        """Date picker."""
         self.color_picker = color_picker
+        """Color picker."""
         self.button = button
+        """Button."""
         self.buttons = buttons
+        """Button set."""
         self.file_upload = file_upload
+        """File upload."""
         self.table = table
+        """Table."""
         self.link = link
+        """Link."""
         self.tabs = tabs
+        """Tabs."""
         self.expander = expander
+        """Expander."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2386,10 +2351,6 @@ class Component:
 
 class FormCard:
     """Create a form.
-
-    :param box: A string indicating how to place this component on the page.
-    :param items: The components in this form.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -2398,8 +2359,11 @@ class FormCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.items = items
+        """The components in this form."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2438,12 +2402,6 @@ class FrameCard:
     """Render a card containing a HTML page inside an inline frame (iframe).
 
     Either a path or content can be provided as arguments.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
-    :param content: The HTML content of the page. A string containing '<html>...</html>'
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -2454,10 +2412,15 @@ class FrameCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The title for this card."""
         self.path = path
+        """The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'"""
         self.content = content
+        """The HTML content of the page. A string containing '<html>...</html>'"""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2502,12 +2465,6 @@ class FrameCard:
 
 class GridCard:
     """EXPERIMENTAL. DO NOT USE.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: EXPERIMENTAL. DO NOT USE.
-    :param cells: EXPERIMENTAL. DO NOT USE.
-    :param data: EXPERIMENTAL. DO NOT USE.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -2518,10 +2475,15 @@ class GridCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """EXPERIMENTAL. DO NOT USE."""
         self.cells = cells
+        """EXPERIMENTAL. DO NOT USE."""
         self.data = data
+        """EXPERIMENTAL. DO NOT USE."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2574,18 +2536,6 @@ class GridCard:
 
 class LargeBarStatCard:
     """Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param caption: The card's caption.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value, typically a target value.
-    :param value_caption: The caption displayed below the primary value.
-    :param aux_value_caption: The caption displayed below the auxiliary value.
-    :param progress: The value of the progress bar, between 0 and 1.
-    :param plot_color: The color of the progress bar.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -2602,16 +2552,27 @@ class LargeBarStatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The card's title."""
         self.caption = caption
+        """The card's caption."""
         self.value = value
+        """The primary value displayed."""
         self.aux_value = aux_value
+        """The auxiliary value, typically a target value."""
         self.value_caption = value_caption
+        """The caption displayed below the primary value."""
         self.aux_value_caption = aux_value_caption
+        """The caption displayed below the auxiliary value."""
         self.progress = progress
+        """The value of the progress bar, between 0 and 1."""
         self.plot_color = plot_color
+        """The color of the progress bar."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2704,14 +2665,6 @@ class LargeBarStatCard:
 
 class LargeStatCard:
     """Create a stat card displaying a primary value, an auxiliary value and a caption.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed next to the primary value.
-    :param caption: The caption displayed below the primary value.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -2724,12 +2677,19 @@ class LargeStatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The card's title."""
         self.value = value
+        """The primary value displayed."""
         self.aux_value = aux_value
+        """The auxiliary value displayed next to the primary value."""
         self.caption = caption
+        """The caption displayed below the primary value."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2795,13 +2755,6 @@ class LargeStatCard:
 class ListCard:
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards laid out in the form of a list (vertically, top-to-bottom).
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param item_view: The child card type.
-    :param item_props: The child card properties.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -2813,11 +2766,17 @@ class ListCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The title for this card."""
         self.item_view = item_view
+        """The child card type."""
         self.item_props = item_props
+        """The child card properties."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2878,14 +2837,6 @@ class ListCard:
 
 class ListItem1Card:
     """EXPERIMENTAL. DO NOT USE.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: EXPERIMENTAL. DO NOT USE.
-    :param caption: EXPERIMENTAL. DO NOT USE.
-    :param value: EXPERIMENTAL. DO NOT USE.
-    :param aux_value: EXPERIMENTAL. DO NOT USE.
-    :param data: EXPERIMENTAL. DO NOT USE.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -2898,12 +2849,19 @@ class ListItem1Card:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """EXPERIMENTAL. DO NOT USE."""
         self.caption = caption
+        """EXPERIMENTAL. DO NOT USE."""
         self.value = value
+        """EXPERIMENTAL. DO NOT USE."""
         self.aux_value = aux_value
+        """EXPERIMENTAL. DO NOT USE."""
         self.data = data
+        """EXPERIMENTAL. DO NOT USE."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2977,12 +2935,6 @@ class MarkdownCard:
     HTML markup is allowed in markdown content.
     URLs, if found, are displayed as hyperlinks.
     Copyright, reserved, trademark, quotes, etc. are replaced with language-neutral symbols.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
-    :param data: Additional data for the card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -2993,10 +2945,15 @@ class MarkdownCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The title for this card."""
         self.content = content
+        """The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/"""
         self.data = data
+        """Additional data for the card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3045,11 +3002,6 @@ class MarkdownCard:
 
 class MarkupCard:
     """Render HTML content.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param content: The HTML content.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3059,9 +3011,13 @@ class MarkupCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The title for this card."""
         self.content = content
+        """The HTML content."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3109,12 +3065,6 @@ class MetaCard:
 
     This card is invisible.
     It is used to control attributes of the active page.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title of the page.
-    :param refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
-    :param notification: Display a desktop notification to the user.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3125,10 +3075,15 @@ class MetaCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The title of the page."""
         self.refresh = refresh
+        """Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use)."""
         self.notification = notification
+        """Display a desktop notification to the user."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3169,9 +3124,6 @@ class MetaCard:
 
 class NavItem:
     """Create a navigation item.
-
-    :param name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-    :param label: The label to display.
     """
     def __init__(
             self,
@@ -3179,7 +3131,9 @@ class NavItem:
             label: str,
     ):
         self.name = name
+        """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
         self.label = label
+        """The label to display."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3211,9 +3165,6 @@ class NavItem:
 
 class NavGroup:
     """Create a group of navigation items.
-
-    :param label: The label to display for this group.
-    :param items: The navigation items contained in this group.
     """
     def __init__(
             self,
@@ -3221,7 +3172,9 @@ class NavGroup:
             items: List[NavItem],
     ):
         self.label = label
+        """The label to display for this group."""
         self.items = items
+        """The navigation items contained in this group."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3253,10 +3206,6 @@ class NavGroup:
 
 class NavCard:
     """Create a card containing a navigation pane.
-
-    :param box: A string indicating how to place this component on the page.
-    :param items: The navigation groups contained in this pane.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3265,8 +3214,11 @@ class NavCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.items = items
+        """The navigation groups contained in this pane."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3303,11 +3255,6 @@ class NavCard:
 
 class PixelArtCard:
     """Create a card displaying a collaborative Pixel art tool, just for kicks.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param data: The data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3317,9 +3264,13 @@ class PixelArtCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The title for this card."""
         self.data = data
+        """The data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3365,62 +3316,6 @@ class PixelArtCard:
 class Mark:
     """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
     A plot can contain multiple such layers of marks.
-
-    :param coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
-    :param type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
-    :param x: X field or value.
-    :param x0: X base field or value.
-    :param x1: X bin lower bound field or value. For histograms.
-    :param x2: X bin upper bound field or value. For histograms.
-    :param x_min: X axis scale minimum.
-    :param x_max: X axis scale maximum.
-    :param x_nice: Whether to nice X axis scale ticks.
-    :param x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
-    :param x_title: X axis title.
-    :param y: Y field or value.
-    :param y0: Y base field or value.
-    :param y1: Y bin lower bound field or value. For histograms.
-    :param y2: Y bin upper bound field or value. For histograms.
-    :param y_min: Y axis scale minimum.
-    :param y_max: Y axis scale maximum.
-    :param y_nice: Whether to nice Y axis scale ticks.
-    :param y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
-    :param y_title: Y axis title.
-    :param color: Mark color field or value.
-    :param color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
-    :param shape: Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
-    :param shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
-    :param size: Mark size field or value.
-    :param size_range: Mark size range. A string containing space-separated integers, e.g. `'4 30'`
-    :param stack: Field to stack marks by, or 'auto' to infer.
-    :param dodge: Field to dodge marks by, or 'auto' to infer.
-    :param curve: Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
-    :param fill_color: Mark fill color.
-    :param fill_opacity: Mark fill opacity.
-    :param stroke_color: Mark stroke color.
-    :param stroke_opacity: Mark stroke opacity.
-    :param stroke_size: Mark stroke size.
-    :param stroke_dash: Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
-    :param label: Label field or value.
-    :param label_offset: Distance between label and mark.
-    :param label_offset_x: Horizontal distance between label and mark.
-    :param label_offset_y: Vertical distance between label and mark.
-    :param label_rotation: Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
-    :param label_position: Label position relative to the mark.
-    :param label_overlap: Strategy to use if labels overlap.
-    :param label_fill_color: Label fill color.
-    :param label_fill_opacity: Label fill opacity.
-    :param label_stroke_color: Label stroke color.
-    :param label_stroke_opacity: Label stroke opacity.
-    :param label_stroke_size: Label stroke size (line width or pen thickness).
-    :param label_font_size: Label font size.
-    :param label_font_weight: Label font weight.
-    :param label_line_height: Label line height.
-    :param label_align: Label text alignment. One of 'left', 'right', 'center', 'start', 'end'.
-    :param ref_stroke_color: Reference line stroke color.
-    :param ref_stroke_opacity: Reference line stroke opacity.
-    :param ref_stroke_size: Reference line stroke size (line width or pen thickness).
-    :param ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
     """
     def __init__(
             self,
@@ -3481,60 +3376,115 @@ class Mark:
             ref_stroke_dash: Optional[str] = None,
     ):
         self.coord = coord
+        """Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'."""
         self.type = type
+        """Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'."""
         self.x = x
+        """X field or value."""
         self.x0 = x0
+        """X base field or value."""
         self.x1 = x1
+        """X bin lower bound field or value. For histograms."""
         self.x2 = x2
+        """X bin upper bound field or value. For histograms."""
         self.x_min = x_min
+        """X axis scale minimum."""
         self.x_max = x_max
+        """X axis scale maximum."""
         self.x_nice = x_nice
+        """Whether to nice X axis scale ticks."""
         self.x_scale = x_scale
+        """X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'."""
         self.x_title = x_title
+        """X axis title."""
         self.y = y
+        """Y field or value."""
         self.y0 = y0
+        """Y base field or value."""
         self.y1 = y1
+        """Y bin lower bound field or value. For histograms."""
         self.y2 = y2
+        """Y bin upper bound field or value. For histograms."""
         self.y_min = y_min
+        """Y axis scale minimum."""
         self.y_max = y_max
+        """Y axis scale maximum."""
         self.y_nice = y_nice
+        """Whether to nice Y axis scale ticks."""
         self.y_scale = y_scale
+        """Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'."""
         self.y_title = y_title
+        """Y axis title."""
         self.color = color
+        """Mark color field or value."""
         self.color_range = color_range
+        """Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`"""
         self.shape = shape
+        """Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'."""
         self.shape_range = shape_range
+        """Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`"""
         self.size = size
+        """Mark size field or value."""
         self.size_range = size_range
+        """Mark size range. A string containing space-separated integers, e.g. `'4 30'`"""
         self.stack = stack
+        """Field to stack marks by, or 'auto' to infer."""
         self.dodge = dodge
+        """Field to dodge marks by, or 'auto' to infer."""
         self.curve = curve
+        """Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'."""
         self.fill_color = fill_color
+        """Mark fill color."""
         self.fill_opacity = fill_opacity
+        """Mark fill opacity."""
         self.stroke_color = stroke_color
+        """Mark stroke color."""
         self.stroke_opacity = stroke_opacity
+        """Mark stroke opacity."""
         self.stroke_size = stroke_size
+        """Mark stroke size."""
         self.stroke_dash = stroke_dash
+        """Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]."""
         self.label = label
+        """Label field or value."""
         self.label_offset = label_offset
+        """Distance between label and mark."""
         self.label_offset_x = label_offset_x
+        """Horizontal distance between label and mark."""
         self.label_offset_y = label_offset_y
+        """Vertical distance between label and mark."""
         self.label_rotation = label_rotation
+        """Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation."""
         self.label_position = label_position
+        """Label position relative to the mark."""
         self.label_overlap = label_overlap
+        """Strategy to use if labels overlap."""
         self.label_fill_color = label_fill_color
+        """Label fill color."""
         self.label_fill_opacity = label_fill_opacity
+        """Label fill opacity."""
         self.label_stroke_color = label_stroke_color
+        """Label stroke color."""
         self.label_stroke_opacity = label_stroke_opacity
+        """Label stroke opacity."""
         self.label_stroke_size = label_stroke_size
+        """Label stroke size (line width or pen thickness)."""
         self.label_font_size = label_font_size
+        """Label font size."""
         self.label_font_weight = label_font_weight
+        """Label font weight."""
         self.label_line_height = label_line_height
+        """Label line height."""
         self.label_align = label_align
+        """Label text alignment. One of 'left', 'right', 'center', 'start', 'end'."""
         self.ref_stroke_color = ref_stroke_color
+        """Reference line stroke color."""
         self.ref_stroke_opacity = ref_stroke_opacity
+        """Reference line stroke opacity."""
         self.ref_stroke_size = ref_stroke_size
+        """Reference line stroke size (line width or pen thickness)."""
         self.ref_stroke_dash = ref_stroke_dash
+        """Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3770,14 +3720,13 @@ class Mark:
 
 class Plot:
     """Create a plot. A plot is composed of one or more graphical mark layers.
-
-    :param marks: The graphical mark layers contained in this plot.
     """
     def __init__(
             self,
             marks: List[Mark],
     ):
         self.marks = marks
+        """The graphical mark layers contained in this plot."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3801,12 +3750,6 @@ class Plot:
 
 class PlotCard:
     """Create a card displaying a plot.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param data: Data for this card.
-    :param plot: The plot to be displayed in this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3817,10 +3760,15 @@ class PlotCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The title for this card."""
         self.data = data
+        """Data for this card."""
         self.plot = plot
+        """The plot to be displayed in this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3874,12 +3822,6 @@ class PlotCard:
 class RepeatCard:
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards.
-
-    :param box: A string indicating how to place this component on the page.
-    :param item_view: EXPERIMENTAL. DO NOT USE.
-    :param item_props: The child card properties.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3890,10 +3832,15 @@ class RepeatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.item_view = item_view
+        """EXPERIMENTAL. DO NOT USE."""
         self.item_props = item_props
+        """The child card properties."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3946,19 +3893,6 @@ class RepeatCard:
 
 class SmallSeriesStatCard:
     """Create a small stat card displaying a primary value and a series plot.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param plot_data: The plot's data.
-    :param plot_value: The data field to use for y-axis values.
-    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
-    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
-    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
-    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param plot_color: The plot's color.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -3976,17 +3910,29 @@ class SmallSeriesStatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The card's title."""
         self.value = value
+        """The primary value displayed."""
         self.plot_data = plot_data
+        """The plot's data."""
         self.plot_value = plot_value
+        """The data field to use for y-axis values."""
         self.plot_zero_value = plot_zero_value
+        """The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used."""
         self.plot_category = plot_category
+        """The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'."""
         self.plot_type = plot_type
+        """The type of plot. Defaults to `area`. One of 'area', 'interval'."""
         self.plot_curve = plot_curve
+        """The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'."""
         self.plot_color = plot_color
+        """The plot's color."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4071,12 +4017,6 @@ class SmallSeriesStatCard:
 
 class SmallStatCard:
     """Create a stat card displaying a single value.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4087,10 +4027,15 @@ class SmallStatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The card's title."""
         self.value = value
+        """The primary value displayed."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4139,11 +4084,6 @@ class SmallStatCard:
 
 class TabCard:
     """Create a card containing tabs for navigation.
-
-    :param box: A string indicating how to place this component on the page.
-    :param items: Items to render.
-    :param link: True if tabs should be rendered as links and not a standard tab.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4153,9 +4093,13 @@ class TabCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.items = items
+        """Items to render."""
         self.link = link
+        """True if tabs should be rendered as links and not a standard tab."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4196,15 +4140,6 @@ class TabCard:
 
 class TallGaugeStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed next to the primary value.
-    :param progress: The value of the progress gauge, between 0 and 1.
-    :param plot_color: The color of the progress gauge.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4218,13 +4153,21 @@ class TallGaugeStatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The card's title."""
         self.value = value
+        """The primary value displayed."""
         self.aux_value = aux_value
+        """The auxiliary value displayed next to the primary value."""
         self.progress = progress
+        """The value of the progress gauge, between 0 and 1."""
         self.plot_color = plot_color
+        """The color of the progress gauge."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4293,20 +4236,6 @@ class TallGaugeStatCard:
 
 class TallSeriesStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed below the primary value.
-    :param plot_data: The plot's data.
-    :param plot_value: The data field to use for y-axis values.
-    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
-    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
-    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
-    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param plot_color: The plot's color.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4325,18 +4254,31 @@ class TallSeriesStatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The card's title."""
         self.value = value
+        """The primary value displayed."""
         self.aux_value = aux_value
+        """The auxiliary value displayed below the primary value."""
         self.plot_data = plot_data
+        """The plot's data."""
         self.plot_value = plot_value
+        """The data field to use for y-axis values."""
         self.plot_zero_value = plot_zero_value
+        """The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used."""
         self.plot_category = plot_category
+        """The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'."""
         self.plot_type = plot_type
+        """The type of plot. Defaults to `area`. One of 'area', 'interval'."""
         self.plot_curve = plot_curve
+        """The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'."""
         self.plot_color = plot_color
+        """The plot's color."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4429,12 +4371,6 @@ class TallSeriesStatCard:
 
 class TemplateCard:
     """Render dynamic content using a HTML template.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param content: The Handlebars template. https://handlebarsjs.com/guide/
-    :param data: Data for the Handlebars template
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4445,10 +4381,15 @@ class TemplateCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The title for this card."""
         self.content = content
+        """The Handlebars template. https://handlebarsjs.com/guide/"""
         self.data = data
+        """Data for the Handlebars template"""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4497,12 +4438,6 @@ class TemplateCard:
 
 class ToolbarCard:
     """Create a card containing a toolbar.
-
-    :param box: A string indicating how to place this component on the page.
-    :param items: Items to render.
-    :param secondary_items: Items to render on the right side (or left, in RTL).
-    :param overflow_items: Items to render in an overflow menu.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4513,10 +4448,15 @@ class ToolbarCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.items = items
+        """Items to render."""
         self.secondary_items = secondary_items
+        """Items to render on the right side (or left, in RTL)."""
         self.overflow_items = overflow_items
+        """Items to render in an overflow menu."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4561,12 +4501,6 @@ class ToolbarCard:
 
 class VegaCard:
     """Create a card containing a Vega-lite plot.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title of this card.
-    :param specification: The Vega-lite specification.
-    :param data: Data for the plot, if any.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4577,10 +4511,15 @@ class VegaCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The title of this card."""
         self.specification = specification
+        """The Vega-lite specification."""
         self.data = data
+        """Data for the plot, if any."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4629,15 +4568,6 @@ class VegaCard:
 
 class WideBarStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed next to the primary value.
-    :param progress: The value of the progress bar, between 0 and 1.
-    :param plot_color: The color of the progress bar.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4651,13 +4581,21 @@ class WideBarStatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The card's title."""
         self.value = value
+        """The primary value displayed."""
         self.aux_value = aux_value
+        """The auxiliary value displayed next to the primary value."""
         self.progress = progress
+        """The value of the progress bar, between 0 and 1."""
         self.plot_color = plot_color
+        """The color of the progress bar."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4726,15 +4664,6 @@ class WideBarStatCard:
 
 class WideGaugeStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a progress gauge.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed next to the primary value.
-    :param progress: The value of the progress gauge, between 0 and 1.
-    :param plot_color: The color of the progress gauge.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4748,13 +4677,21 @@ class WideGaugeStatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The card's title."""
         self.value = value
+        """The primary value displayed."""
         self.aux_value = aux_value
+        """The auxiliary value displayed next to the primary value."""
         self.progress = progress
+        """The value of the progress gauge, between 0 and 1."""
         self.plot_color = plot_color
+        """The color of the progress gauge."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4823,20 +4760,6 @@ class WideGaugeStatCard:
 
 class WideSeriesStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
-
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed below the primary value.
-    :param plot_data: The plot's data.
-    :param plot_value: The data field to use for y-axis values.
-    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
-    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
-    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
-    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param plot_color: The plot's color.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
     """
     def __init__(
             self,
@@ -4855,18 +4778,31 @@ class WideSeriesStatCard:
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
+        """A string indicating how to place this component on the page."""
         self.title = title
+        """The card's title."""
         self.value = value
+        """The primary value displayed."""
         self.aux_value = aux_value
+        """The auxiliary value displayed below the primary value."""
         self.plot_data = plot_data
+        """The plot's data."""
         self.plot_value = plot_value
+        """The data field to use for y-axis values."""
         self.plot_zero_value = plot_zero_value
+        """The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used."""
         self.plot_category = plot_category
+        """The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'."""
         self.plot_type = plot_type
+        """The type of plot. Defaults to `area`. One of 'area', 'interval'."""
         self.plot_curve = plot_curve
+        """The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'."""
         self.plot_color = plot_color
+        """The plot's color."""
         self.data = data
+        """Data for this card."""
         self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

@@ -334,10 +334,6 @@ const
         p('')
         p(`class ${type.name}:`)
         p(`    """` + genComments(type.comments, '    '))
-        p(``)
-        for (const m of type.members) {
-          p(`    :param ${m.name}: ` + m.comments.join(' '))
-        }
         p(`    """`)
         p(`    def __init__(`)
         p(`            self,`)
@@ -347,6 +343,7 @@ const
         p(`    ):`)
         for (const m of type.members) {
           p(`        self.${m.name} = ${m.name}`)
+          p(`        """${m.comments.join(' ')}"""`)
         }
         p('')
         p(`    def dump(self) -> Dict:`)
