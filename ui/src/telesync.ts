@@ -528,7 +528,7 @@ const
         const keys = keysOf(tups)
         keys.sort()
         const xs: Rec[] = []
-        for (const k in keys) xs.push(t.make(tups[k]))
+        for (const k of keys) xs.push(t.make(tups[k]))
         return xs
       }
     return { __buf__: true, put, set, get, list }
