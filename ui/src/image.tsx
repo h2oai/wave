@@ -21,7 +21,7 @@ const
 interface State {
   /** The card's title. */
   title: S
-  /** The image MIME subtype. One of `apng`, `bmp`, `gif`, `ico`, `jpeg`, `png`, `webp`. */
+  /** The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. */
   type: S
   /** Image data, base64-encoded. */
   image: S
