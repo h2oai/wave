@@ -1,6 +1,7 @@
 import './flex'
 import './form'
 import './frame'
+import './graphics'
 import './grid'
 import './image'
 import './large_bar_stat'
@@ -26,3 +27,4 @@ import './vega'
 import './wide_bar_stat'
 import './wide_gauge_stat'
 import './wide_series_stat'
+

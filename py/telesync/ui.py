@@ -1133,6 +1133,34 @@ def frame_card(
     )
 
 
+def graphics_card(
+        box: str,
+        view_box: str,
+        data: PackedRecord,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> GraphicsCard:
+    """Create a card for displaying vector graphics.
+
+    :param box: A string indicating how to place this component on the page.
+    :param view_box: The position and dimension of the SVG viewport, in user space. A space-separated list of four numbers: min-x, min-y, width and height. For example, '0 0 400 300'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
+    :param data: The data for this card.
+    :param width: The displayed width of the rectangular viewport. (Not the width of its coordinate system.)
+    :param height: The displayed height of the rectangular viewport. (Not the height of its coordinate system.)
+    :param commands: Contextual menu commands for this component.
+    :return: A :class:`telesync.types.GraphicsCard` instance.
+    """
+    return GraphicsCard(
+        box,
+        view_box,
+        data,
+        width,
+        height,
+        commands,
+    )
+
+
 def grid_card(
         box: str,
         title: str,
@@ -1170,7 +1198,7 @@ def image_card(
 
     :param box: A string indicating how to place this component on the page.
     :param title: The card's title.
-    :param type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `ico`, `jpeg`, `png`, `webp`.
+    :param type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
     :param image: Image data, base64-encoded.
     :param data: Data for this card.
     :param commands: Contextual menu commands for this component.

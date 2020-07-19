@@ -2463,6 +2463,80 @@ class FrameCard:
         )
 
 
+class GraphicsCard:
+    """Create a card for displaying vector graphics.
+    """
+    def __init__(
+            self,
+            box: str,
+            view_box: str,
+            data: PackedRecord,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.view_box = view_box
+        """The position and dimension of the SVG viewport, in user space. A space-separated list of four numbers: min-x, min-y, width and height. For example, '0 0 400 300'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox"""
+        self.data = data
+        """The data for this card."""
+        self.width = width
+        """The displayed width of the rectangular viewport. (Not the width of its coordinate system.)"""
+        self.height = height
+        """The displayed height of the rectangular viewport. (Not the height of its coordinate system.)"""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('GraphicsCard.box is required.')
+        if self.view_box is None:
+            raise ValueError('GraphicsCard.view_box is required.')
+        if self.data is None:
+            raise ValueError('GraphicsCard.data is required.')
+        return _dump(
+            view='graphics',
+            box=self.box,
+            view_box=self.view_box,
+            data=self.data,
+            width=self.width,
+            height=self.height,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'GraphicsCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('GraphicsCard.box is required.')
+        __d_view_box: Any = __d.get('view_box')
+        if __d_view_box is None:
+            raise ValueError('GraphicsCard.view_box is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('GraphicsCard.data is required.')
+        __d_width: Any = __d.get('width')
+        __d_height: Any = __d.get('height')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        view_box: str = __d_view_box
+        data: PackedRecord = __d_data
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return GraphicsCard(
+            box,
+            view_box,
+            data,
+            width,
+            height,
+            commands,
+        )
+
+
 class GridCard:
     """EXPERIMENTAL. DO NOT USE.
     """
@@ -2551,7 +2625,7 @@ class ImageCard:
         self.title = title
         """The card's title."""
         self.type = type
-        """The image MIME subtype. One of `apng`, `bmp`, `gif`, `ico`, `jpeg`, `png`, `webp`."""
+        """The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`."""
         self.image = image
         """Image data, base64-encoded."""
         self.data = data

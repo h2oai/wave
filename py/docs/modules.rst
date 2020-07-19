@@ -6,6 +6,7 @@ API
 
    core
    server
+   graphics
    ui
    types
 
