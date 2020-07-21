@@ -1,6 +1,5 @@
 # Graphics / Path
 # Use the graphics API to draw a red square.
-# Source: https://codepen.io/dudleystorey/pen/HLBki
 # ---
 from telesync import site, ui, graphics as g
 

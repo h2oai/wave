@@ -1,4 +1,5 @@
 import json
+import math
 from typing import List, Union
 from .core import data as _data, Data, Ref
 
@@ -156,7 +157,7 @@ class Path:
     def _d(self, command: str, *args) -> 'Path':
         self.__d.append(command)
         for arg in args:
-            self.__d.append(str(arg))
+            self.__d.append(str(round(arg, 2) if isinstance(arg, float) else arg))
         return self
 
     def d(self) -> str:
@@ -472,5 +473,188 @@ class Path:
         return self._d('a', rx, ry, x_axis_rotation, 1 if large_arc else 0, 1 if sweep else 0, x, y)
 
 
-def p() -> Path():
+def p() -> Path:
+    """
+    Create a new :class:`telesync.graphics.Path`.
+
+    :return: A new :class:`telesync.graphics.Path`.
+    """
     return Path()
+
+
+class _Vec(object):
+    __slots__ = ('x', 'y')
+
+    def __init__(self, x: Union[int, float], y: Union[int, float]):
+        self.x = float(x)
+        self.y = float(y)
+
+    def __neg__(self) -> '_Vec': return _Vec(-self.x, -self.y)
+
+    def __add__(self, v: '_Vec') -> '_Vec': return _Vec(self.x + v.x, self.y + v.y)
+
+    def __sub__(self, v: '_Vec') -> '_Vec': return _Vec(self.x - v.x, self.y - v.y)
+
+    def __mul__(self, v: Union['_Vec', int, float]) -> Union['_Vec', float]:
+        if isinstance(v, _Vec):
+            return self.x * v.x + self.y * v.y  # dot product
+        return _Vec(self.x * v, self.y * v)
+
+    def __rmul__(self, v: Union['_Vec', int, float]) -> Union['_Vec', float]: return self.__mul__(v)
+
+    def __div__(self, d: Union[int, float]): return _Vec(self.x / d, self.y / d)
+
+    def __abs__(self) -> float: return (self.x ** 2 + self.y ** 2) ** 0.5
+
+    def rotate(self, a: Union[int, float]):
+        p = _Vec(-self.y, self.x)  # perpendicular
+        c = math.cos(a)
+        s = math.sin(a)
+        return _Vec(self.x * c + p.x * s, self.y * c + p.y * s)
+
+
+class Turtle:
+    """
+    A Logo-like Turtle implementation for generating SVG paths.
+    This is not a complete Turtle implementation. Contains a useful subset relevant to generating paths without
+    using trigonometry or mental gymnastics.
+    """
+
+    def __init__(self, x=0.0, y=0.0, ax=1.0, ay=0.0):
+        """
+        Create a Turtle.
+
+        :param x: initial position x
+        :param y: initial position y
+        :param ax: initial angle vector x
+        :param ay: initial angle vector y
+        """
+        self._p = _Vec(x, y)  # position vector
+        self._a = _Vec(ax, ay)  # orientation vector
+        self._pd = False  # pen down?
+        self._path = Path()
+
+    def _draw(self) -> 'Turtle':
+        if self._pd:
+            self._path.L(self._p.x, self._p.y)
+        else:
+            self._path.M(self._p.x, self._p.y)
+        return self
+
+    def _move(self, d: float) -> 'Turtle':
+        self._p = self._p + self._a * d
+        return self._draw()
+
+    def _rotate(self, a: float) -> 'Turtle':
+        self._a = self._a.rotate(a * math.pi / 180.0)
+        return self
+
+    def f(self, distance: float) -> 'Turtle':
+        """
+        Move forward.
+
+        :param distance: Distance to move by.
+        :return: The current turtle instance.
+        """
+        return self._move(distance)
+
+    def b(self, distance: float) -> 'Turtle':
+        """
+        Move backward.
+
+        :param distance: Distance to move by.
+        :return: The current turtle instance.
+        """
+        return self._move(-distance)
+
+    def l(self, degrees: float) -> 'Turtle':
+        """
+        Turn left.
+
+        :param degrees: Angle in degrees.
+        :return: The current turtle instance.
+        """
+        return self._rotate(-degrees)
+
+    def r(self, degrees: float) -> 'Turtle':
+        """
+        Turn right.
+
+        :param degrees: Angle in degrees.
+        :return: The current turtle instance.
+        """
+        return self._rotate(degrees)
+
+    def pu(self, close: any) -> 'Turtle':
+        """
+        Pen up.
+
+        :param: close Whether to close the current subpath.
+        :return: The current turtle instance.
+        """
+        if close:
+            self._path.Z()
+
+        self._pd = False
+        return self
+
+    def pd(self) -> 'Turtle':
+        """
+        Pen down.
+
+        :return: The current turtle instance.
+        """
+        self._pd = True
+        return self
+
+    def p(self, x: float = 0.0, y: float = 0.0) -> 'Turtle':
+        """
+        Set the turtle's position.
+
+        :param x: x-coordinate
+        :param y: y-coordinate
+        :return: The current turtle instance.
+        """
+        self._p = _Vec(x, y)
+        return self._draw()
+
+    def a(self, ax: float = 1.0, ay: float = 0.0) -> 'Turtle':
+        """
+        Set the turtle's orientation.
+
+        :param ax: angle vector x
+        :param ay: angle vector y
+        :return: The current turtle instance.
+        """
+        self._a = _Vec(ax, ay)
+        return self
+
+    def d(self) -> str:
+        """
+        Serialize this turtle's movements into SVG path data.
+
+        :return: The ``d`` attribute for a SVG path.
+        """
+        return self._path.d()
+
+    def path(self, **kwargs):
+        """
+        Create a SVG path element that represents this turtle's movements.
+
+        :param kwargs: Additional attributes for the SVG path element.
+        :return: A SVG path element.
+        """
+        return self._path.path(**kwargs)
+
+
+def turtle(x=0.0, y=0.0, ax=1.0, ay=0.0) -> Turtle:
+    """
+    Create a new :class:`telesync.graphics.Turtle`.
+
+    :param x: initial position x
+    :param y: initial position y
+    :param ax: initial angle vector x
+    :param ay: initial angle vector y
+    :return: A new :class:`telesync.graphics.Turtle`.
+    """
+    return Turtle(x, y, ax, ay)
