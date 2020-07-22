@@ -1136,7 +1136,8 @@ def frame_card(
 def graphics_card(
         box: str,
         view_box: str,
-        data: PackedRecord,
+        scene: PackedData,
+        stage: Optional[PackedRecords] = None,
         width: Optional[str] = None,
         height: Optional[str] = None,
         commands: Optional[List[Command]] = None,
@@ -1145,7 +1146,8 @@ def graphics_card(
 
     :param box: A string indicating how to place this component on the page.
     :param view_box: The position and dimension of the SVG viewport, in user space. A space-separated list of four numbers: min-x, min-y, width and height. For example, '0 0 400 300'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
-    :param data: The data for this card.
+    :param scene: Foreground layer for rendering dynamic SVG elements.
+    :param stage: Background layer for rendering static SVG elements. Must be packed to conserve memory.
     :param width: The displayed width of the rectangular viewport. (Not the width of its coordinate system.)
     :param height: The displayed height of the rectangular viewport. (Not the height of its coordinate system.)
     :param commands: Contextual menu commands for this component.
@@ -1154,7 +1156,8 @@ def graphics_card(
     return GraphicsCard(
         box,
         view_box,
-        data,
+        scene,
+        stage,
         width,
         height,
         commands,

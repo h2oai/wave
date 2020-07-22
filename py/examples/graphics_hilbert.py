@@ -37,7 +37,7 @@ async def main(q: Q):
     if not q.client.initialized:
         q.page['curve'] = ui.graphics_card(
             box='1 1 4 6', view_box='0 0 300 300', width='100%', height='100%',
-            data=g.data(
+            scene=g.scene(
                 hilbert_curve=g.path(d=hilbert_curve, fill='none', stroke='#333')
             ),
         )
@@ -48,7 +48,7 @@ async def main(q: Q):
         )
         q.client.initialized = True
     else:
-        g.draw(q.page['curve'].data.hilbert_curve, d=hilbert_curve)
+        g.draw(q.page['curve'].scene.hilbert_curve, d=hilbert_curve)
 
     await q.page.save()
 

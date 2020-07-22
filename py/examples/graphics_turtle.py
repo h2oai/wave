@@ -12,7 +12,7 @@ spirograph = t.pu(1).path(stroke='red', fill='yellow')
 page = site['/demo']
 page['example'] = ui.graphics_card(
     box='1 1 2 3', view_box='0 0 220 220', width='100%', height='100%',
-    data=g.data(foo=spirograph),
+    scene=g.scene(foo=spirograph),
 )
 
 page.save()
