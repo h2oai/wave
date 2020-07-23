@@ -1,7 +1,7 @@
 import json
 import math
-from typing import List, Union
-from .core import pack, data as _data, Data, Ref
+from typing import Union, Optional
+from .core import pack, data as _data, Data, Ref, Expando, expando_to_dict
 
 
 # TODO add formal parameters for shape functions, including presentation attributes:
@@ -26,7 +26,7 @@ def scene(**kwargs) -> Data:
     :param kwargs: Graphical elements to render as part of the scene.
     :return: A :class:`telesync.core.Data` instance.
     """
-    return _data(fields='d o', rows={k: [json.dumps(v), ''] for k, v in kwargs.items()})
+    return _data(fields='d o', rows={k: [json.dumps(expando_to_dict(v)), ''] for k, v in kwargs.items()})
 
 
 def draw(element: Ref, **kwargs) -> Ref:
@@ -53,12 +53,12 @@ def reset(element: Ref) -> Ref:
     return element
 
 
-def _el(t: str, d: dict) -> dict:
+def _el(t: str, d: dict) -> Expando:
     d['_t'] = t
-    return d
+    return Expando(d)
 
 
-def circle(**kwargs) -> dict:
+def circle(**kwargs) -> Expando:
     """
     Draw a circle.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/circle
@@ -69,7 +69,7 @@ def circle(**kwargs) -> dict:
     return _el('c', kwargs)
 
 
-def ellipse(**kwargs) -> dict:
+def ellipse(**kwargs) -> Expando:
     """
     Draw an ellipse.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/ellipse
@@ -80,7 +80,7 @@ def ellipse(**kwargs) -> dict:
     return _el('e', kwargs)
 
 
-def image(**kwargs) -> dict:
+def image(**kwargs) -> Expando:
     """
     Draw an image.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image
@@ -91,7 +91,7 @@ def image(**kwargs) -> dict:
     return _el('i', kwargs)
 
 
-def line(**kwargs) -> dict:
+def line(**kwargs) -> Expando:
     """
     Draw a line.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/line
@@ -102,7 +102,7 @@ def line(**kwargs) -> dict:
     return _el('l', kwargs)
 
 
-def path(**kwargs) -> dict:
+def path(**kwargs) -> Expando:
     """
     Draw a path.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path
@@ -113,7 +113,7 @@ def path(**kwargs) -> dict:
     return _el('p', kwargs)
 
 
-def polygon(**kwargs) -> dict:
+def polygon(**kwargs) -> Expando:
     """
     Draw a polygon.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon
@@ -124,7 +124,7 @@ def polygon(**kwargs) -> dict:
     return _el('pg', kwargs)
 
 
-def polyline(**kwargs) -> dict:
+def polyline(**kwargs) -> Expando:
     """
     Draw a polyline.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polyline
@@ -135,7 +135,7 @@ def polyline(**kwargs) -> dict:
     return _el('pl', kwargs)
 
 
-def rect(**kwargs) -> dict:
+def rect(**kwargs) -> Expando:
     """
     Draw a rectangle.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect
@@ -146,7 +146,7 @@ def rect(**kwargs) -> dict:
     return _el('r', kwargs)
 
 
-def text(**kwargs) -> dict:
+def text(**kwargs) -> Expando:
     """
     Draw text.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text
@@ -179,7 +179,7 @@ class Path:
         """
         return ' '.join(self.__d)
 
-    def path(self, **kwargs) -> dict:
+    def path(self, **kwargs) -> Expando:
         """
         A SVG path element representing the commands in this ``Path`` instance.
         Same as calling ``telesync.graphics.path(d=path.d())``
@@ -648,7 +648,7 @@ class Turtle:
         """
         return self._path.d()
 
-    def path(self, **kwargs) -> dict:
+    def path(self, **kwargs) -> Expando:
         """
         Create a SVG path element that represents this turtle's movements.
 
