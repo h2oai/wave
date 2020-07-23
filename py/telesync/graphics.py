@@ -554,17 +554,17 @@ class Turtle:
     using trigonometry or mental gymnastics.
     """
 
-    def __init__(self, x=0.0, y=0.0, ax=1.0, ay=0.0):
+    def __init__(self, x=0.0, y=0.0, degrees=0):
         """
         Create a Turtle.
 
         :param x: initial position x
         :param y: initial position y
-        :param ax: initial angle vector x
-        :param ay: initial angle vector y
+        :param degrees: initial angle in degrees
         """
         self._p = _Vec(x, y)  # position vector
-        self._a = _Vec(ax, ay)  # orientation vector
+        a = math.radians(degrees)
+        self._a = _Vec(math.cos(a), math.sin(a))  # orientation vector
         self._pd = False  # pen down?
         self._path = Path()
 
@@ -580,7 +580,7 @@ class Turtle:
         return self._draw()
 
     def _rotate(self, a: float) -> 'Turtle':
-        self._a = self._a.rotate(a * math.pi / 180.0)
+        self._a = self._a.rotate(math.radians(a))
         return self
 
     def f(self, distance: float) -> 'Turtle':
@@ -652,15 +652,15 @@ class Turtle:
         self._p = _Vec(x, y)
         return self._draw()
 
-    def a(self, ax: float = 1.0, ay: float = 0.0) -> 'Turtle':
+    def a(self, degrees: float = 0) -> 'Turtle':
         """
         Set the turtle's orientation.
 
-        :param ax: angle vector x
-        :param ay: angle vector y
+        :param degrees: angle in degrees
         :return: The current turtle instance.
         """
-        self._a = _Vec(ax, ay)
+        a = math.radians(degrees)
+        self._a = _Vec(math.cos(a), math.sin(a))
         return self
 
     def d(self) -> str:
@@ -681,14 +681,13 @@ class Turtle:
         return self._path.path(**kwargs)
 
 
-def turtle(x=0.0, y=0.0, ax=1.0, ay=0.0) -> Turtle:
+def turtle(x=0.0, y=0.0, degrees=0.0) -> Turtle:
     """
     Create a new :class:`telesync.graphics.Turtle`.
 
     :param x: initial position x
     :param y: initial position y
-    :param ax: initial angle vector x
-    :param ay: initial angle vector y
+    :param degrees: initial angle in degrees
     :return: A new :class:`telesync.graphics.Turtle`.
     """
-    return Turtle(x, y, ax, ay)
+    return Turtle(x, y, degrees)
