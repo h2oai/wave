@@ -59,6 +59,7 @@ def _el(t: str, d: dict) -> Expando:
 
 
 _element_types = dict(
+    a='arc',
     c='circle',
     e='ellipse',
     i='image',
@@ -79,6 +80,20 @@ def type_of(element: Expando) -> Optional[str]:
     :return: A string indicating the type of the element, e.g. 'circle', 'line', etc.
     """
     return _element_types.get(element['_t'], None)
+
+
+def arc(r1: float, r2: float, a1: float, a2: float, **kwargs) -> Expando:
+    """
+    Draw circular or annular sector, as in a pie or donut chart, centered at (0, 0).
+
+    :param r1: inner radius.
+    :param r2: outer radius.
+    :param a1: start angle, in degrees.
+    :param a2: end angle, in degrees.
+    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    :return: Data for the graphical element.
+    """
+    return _el('a', dict(r1=r1, r2=r2, a1=a1, a2=a2, **kwargs))
 
 
 def circle(**kwargs) -> Expando:
@@ -169,15 +184,16 @@ def rect(**kwargs) -> Expando:
     return _el('r', kwargs)
 
 
-def text(**kwargs) -> Expando:
+def text(text: str, **kwargs) -> Expando:
     """
     Draw text.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text
 
+    :param text: The text content.
     :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
     :return: Data for the graphical element.
     """
-    return _el('t', kwargs)
+    return _el('t', dict(text=text, **kwargs))
 
 
 class Path:
@@ -554,7 +570,7 @@ class Turtle:
     using trigonometry or mental gymnastics.
     """
 
-    def __init__(self, x=0.0, y=0.0, degrees=0):
+    def __init__(self, x=0.0, y=0.0, degrees=0.0):
         """
         Create a Turtle.
 

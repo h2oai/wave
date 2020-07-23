@@ -2,10 +2,10 @@
 # Use the graphics module to render and update shapes.
 # ---
 
-import time
 from telesync import site, ui, graphics as g
 
 # Create some shapes
+arc = g.arc(r1=25, r2=50, a1=90, a2=180)
 circle = g.circle(cx=25, cy=25, r=25)
 ellipse = g.ellipse(cx=25, cy=25, rx=25, ry=20)
 image = g.image(width=50, height=50, href='https://www.python.org/static/community_logos/python-powered-h-140x182.png')
@@ -20,7 +20,7 @@ rounded_rect = g.rect(x=0, y=0, width=50, height=50, rx=10)
 text = g.text(x=0, y=48, text='Z', font_size='4em')
 
 # Collect 'em all
-shapes = [circle, ellipse, image, line, path, path2, path3, polygon, polyline, rect, rounded_rect, text]
+shapes = [arc, circle, ellipse, image, line, path, path2, path3, polygon, polyline, rect, rounded_rect, text]
 
 # Apply fill/stroke for each shape
 for shape in shapes:
@@ -39,6 +39,7 @@ page = site['/demo']
 page['example'] = ui.graphics_card(
     box='1 1 1 10', view_box='0 0 70 800', width='100%', height='100%',
     scene=g.scene(
+        arc=arc,
         circle=circle,
         ellipse=ellipse,
         image=image,

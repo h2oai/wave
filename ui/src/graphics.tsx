@@ -1,3 +1,4 @@
+import * as d3 from 'd3';
 import React from 'react';
 import { cards } from './layout';
 import { bond, Card, Data, Rec, Recs, S, U, unpack } from './telesync';
@@ -29,15 +30,20 @@ interface State {
 }
 
 const
-  toAttributes = (d: any): [S, any, S | undefined] => {
+  toAttributes = (d: any): [S, any] => {
     const
       t = d['_t'] || 'u',  // default to '<use/>'
-      a: any = {},
-      c = (d['text'] as S) || undefined
+      a: any = {}
     delete d['_t']
-    delete d['text']
+
     for (const k in d) a[k.replace(/_/g, '-')] = d[k] // xml_attr to xml-attr
-    return [t, a, c]
+    return [t, a]
+  },
+  extract = (d: any, extra: S[]): any[] => {
+    const e: any[] = []
+    for (const k of extra) e.push(d[k])
+    for (const k of extra) delete d[k]
+    return e
   },
   View = bond(({ state, changed }: Card<State>) => {
     type El = { d: S, o: S }
@@ -45,8 +51,17 @@ const
     const
       renderEl = (o: Rec, i: U) => {
         const
-          [t, a, c] = toAttributes(o)
+          [t, a] = toAttributes(o)
         switch (t) {
+          case 'a': {
+            const [r1, r2, a1, a2] = extract(a, ['r1', 'r2', 'a1', 'a2'])
+            return <path key={i} {...a} d={d3.arc()({
+              innerRadius: r1,
+              outerRadius: r2,
+              startAngle: a1 * Math.PI / 180.0,
+              endAngle: a2 * Math.PI / 180.0,
+            })} />
+          }
           case 'c': return <circle key={i} {...a} />
           case 'e': return <ellipse key={i} {...a} />
           case 'i': return <image key={i} {...a} />
@@ -55,7 +70,10 @@ const
           case 'pg': return <polygon key={i} {...a} />
           case 'pl': return <polyline key={i} {...a} />
           case 'r': return <rect key={i} {...a} />
-          case 't': return <text key={i} {...a} >{c}</text>
+          case 't': {
+            const [text] = extract(a, ['text'])
+            return <text key={i} {...a} >{text}</text>
+          }
           default: return <use key={i} {...a} />
         }
       },
