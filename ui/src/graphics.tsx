@@ -29,13 +29,15 @@ interface State {
 }
 
 const
-  toAttributes = (d: any): [S, any] => {
+  toAttributes = (d: any): [S, any, S | undefined] => {
     const
       t = d['_t'] || 'u',  // default to '<use/>'
-      a: any = {}
+      a: any = {},
+      c = (d['text'] as S) || undefined
     delete d['_t']
+    delete d['text']
     for (const k in d) a[k.replace(/_/g, '-')] = d[k] // xml_attr to xml-attr
-    return [t, a]
+    return [t, a, c]
   },
   View = bond(({ state, changed }: Card<State>) => {
     type El = { d: S, o: S }
@@ -43,7 +45,7 @@ const
     const
       renderEl = (o: Rec, i: U) => {
         const
-          [t, a] = toAttributes(o)
+          [t, a, c] = toAttributes(o)
         switch (t) {
           case 'c': return <circle key={i} {...a} />
           case 'e': return <ellipse key={i} {...a} />
@@ -53,7 +55,7 @@ const
           case 'pg': return <polygon key={i} {...a} />
           case 'pl': return <polyline key={i} {...a} />
           case 'r': return <rect key={i} {...a} />
-          case 't': return <text key={i} {...a} />
+          case 't': return <text key={i} {...a} >{c}</text>
           default: return <use key={i} {...a} />
         }
       },
