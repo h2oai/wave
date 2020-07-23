@@ -58,6 +58,29 @@ def _el(t: str, d: dict) -> Expando:
     return Expando(d)
 
 
+_element_types = dict(
+    c='circle',
+    e='ellipse',
+    i='image',
+    l='line',
+    p='path',
+    pg='polygon',
+    pl='polyline',
+    r='rect',
+    t='text',
+)
+
+
+def type_of(element: Expando) -> Optional[str]:
+    """
+    Get the type of the graphical element.
+
+    :param element: A graphical element.
+    :return: A string indicating the type of the element, e.g. 'circle', 'line', etc.
+    """
+    return _element_types.get(element['_t'], None)
+
+
 def circle(**kwargs) -> Expando:
     """
     Draw a circle.
