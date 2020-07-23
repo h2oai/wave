@@ -13,10 +13,10 @@ interface State {
    * See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
    */
   view_box: S
-  /** Foreground layer for rendering dynamic SVG elements. */
-  scene: Data
   /** Background layer for rendering static SVG elements. Must be packed to conserve memory. */
   stage?: Recs
+  /** Foreground layer for rendering dynamic SVG elements. */
+  scene?: Data
   /**
    * The displayed width of the rectangular viewport.
    * (Not the width of its coordinate system.)
@@ -81,10 +81,10 @@ const
         const
           { view_box, width, height, stage, scene } = state,
           stageEls = stage ? unpack<Recs>(stage).map(renderEl) : [],
-          sceneEls = unpack<El[]>(scene).map(({ d, o }, i) => renderEl({
+          sceneEls = scene ? unpack<El[]>(scene).map(({ d, o }, i) => renderEl({
             ...(d ? JSON.parse(d) : {}),
             ...(o ? JSON.parse(o) : {}),
-          }, i))
+          }, i)) : []
         return (
           <div>
             <svg viewBox={view_box} width={width} height={height}>

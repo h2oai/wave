@@ -15,7 +15,7 @@ def stage(**kwargs) -> str:
     :param kwargs: Graphical elements to render as part of the stage.
     :return: Packed data.
     """
-    return pack([v for v in kwargs.values()])
+    return pack([expando_to_dict(v) for v in kwargs.values()])
 
 
 def scene(**kwargs) -> Data:

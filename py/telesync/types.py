@@ -2470,8 +2470,8 @@ class GraphicsCard:
             self,
             box: str,
             view_box: str,
-            scene: PackedData,
             stage: Optional[PackedRecords] = None,
+            scene: Optional[PackedData] = None,
             width: Optional[str] = None,
             height: Optional[str] = None,
             commands: Optional[List[Command]] = None,
@@ -2480,10 +2480,10 @@ class GraphicsCard:
         """A string indicating how to place this component on the page."""
         self.view_box = view_box
         """The position and dimension of the SVG viewport, in user space. A space-separated list of four numbers: min-x, min-y, width and height. For example, '0 0 400 300'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox"""
-        self.scene = scene
-        """Foreground layer for rendering dynamic SVG elements."""
         self.stage = stage
         """Background layer for rendering static SVG elements. Must be packed to conserve memory."""
+        self.scene = scene
+        """Foreground layer for rendering dynamic SVG elements."""
         self.width = width
         """The displayed width of the rectangular viewport. (Not the width of its coordinate system.)"""
         self.height = height
@@ -2497,14 +2497,12 @@ class GraphicsCard:
             raise ValueError('GraphicsCard.box is required.')
         if self.view_box is None:
             raise ValueError('GraphicsCard.view_box is required.')
-        if self.scene is None:
-            raise ValueError('GraphicsCard.scene is required.')
         return _dump(
             view='graphics',
             box=self.box,
             view_box=self.view_box,
-            scene=self.scene,
             stage=self.stage,
+            scene=self.scene,
             width=self.width,
             height=self.height,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
@@ -2519,25 +2517,23 @@ class GraphicsCard:
         __d_view_box: Any = __d.get('view_box')
         if __d_view_box is None:
             raise ValueError('GraphicsCard.view_box is required.')
-        __d_scene: Any = __d.get('scene')
-        if __d_scene is None:
-            raise ValueError('GraphicsCard.scene is required.')
         __d_stage: Any = __d.get('stage')
+        __d_scene: Any = __d.get('scene')
         __d_width: Any = __d.get('width')
         __d_height: Any = __d.get('height')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         view_box: str = __d_view_box
-        scene: PackedData = __d_scene
         stage: Optional[PackedRecords] = __d_stage
+        scene: Optional[PackedData] = __d_scene
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return GraphicsCard(
             box,
             view_box,
-            scene,
             stage,
+            scene,
             width,
             height,
             commands,

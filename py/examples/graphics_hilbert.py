@@ -1,4 +1,4 @@
-# Graphics / Turtle
+# Graphics / Hilbert
 # Use turtle graphics recursively to draw Hilbert curves.
 # ---
 from telesync import ui, listen, Q, graphics as g

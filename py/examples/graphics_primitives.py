@@ -38,7 +38,7 @@ for shape in shapes:
 page = site['/demo']
 page['example'] = ui.graphics_card(
     box='1 1 1 10', view_box='0 0 70 800', width='100%', height='100%',
-    scene=g.scene(
+    stage=g.stage(
         arc=arc,
         circle=circle,
         ellipse=ellipse,
