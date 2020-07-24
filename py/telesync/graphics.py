@@ -1,6 +1,6 @@
 import json
 import math
-from typing import Union, Optional
+from typing import Union, Optional, List
 from .core import pack, data as _data, Data, Ref, Expando, expando_to_dict
 
 
@@ -67,6 +67,7 @@ _element_types = dict(
     p='path',
     pg='polygon',
     pl='polyline',
+    s='spline',
     r='rect',
     t='text',
 )
@@ -171,6 +172,42 @@ def polyline(**kwargs) -> Expando:
     :return: Data for the graphical element.
     """
     return _el('pl', kwargs)
+
+
+Floats = Optional[List[Optional[float]]]
+
+
+def _str(fs: Floats) -> Optional[str]:
+    if fs is None:
+        return None
+    return ' '.join(['' if f is None else str(round(f, 2)) for f in fs])
+
+
+def spline(x: Floats = None, y: Floats = None,
+           x0: Floats = None, y0: Floats = None,
+           curve: Optional[str] = None, radial: Optional[bool] = None, **kwargs) -> Expando:
+    """
+    Draw a spline.
+
+    If x, y are specified, draws a regular spline.
+
+    If x, y, y0 are specified, draws a horizontal area spline. Set baseline to zero if y0 is an empty list.
+
+    If x, x0, y are specified, draws a vertical area spline. Set baseline zero if x0 is an empty list
+
+    Missing information is rendered as gaps in the spline.
+
+    :param x: x-coordinates.
+    :param y: y-coordinates.
+    :param x0: base x-coordinates.
+    :param y0: base y-coordinates.
+    :param curve: Interpolation. One of basis, basis-closed, basis-open, cardinal, cardinal-closed, cardinal-open, smooth, smooth-closed, smooth-open, linear, linear-closed, monotone-x, monotone-y, natural, step, step-after, step-before. Defaults to linear.
+    :param radial: Whether (x, y) should be treated as (angle,radius) or (x0, x, y0, y) should be treated as (start-angle, end-angle, inner-radius, outer-radius).
+    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    :return: Data for the graphical element.
+    """
+    attrs = dict(x=_str(x), y=_str(y), x0=_str(x0), y0=_str(y0), curve=curve, radial=radial)
+    return _el('s', dict(**{k: v for k, v in attrs.items() if v is not None}, **kwargs))
 
 
 def rect(**kwargs) -> Expando:
