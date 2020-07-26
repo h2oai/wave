@@ -3,6 +3,7 @@
 **Telesync: Q's Realtime App SDK**
 
 - [Getting Started](#getting-started)
+- [Roadmap](https://github.com/h2oai/telesync/wiki/Roadmap)
 - [Migration Guide](#migration-guide)
 - [Examples](https://github.com/h2oai/telesync/tree/master/py/examples)
 - [Report an issue](https://github.com/h2oai/q/issues)
