@@ -65,6 +65,19 @@ Links
 
 Change Log
 ---------------
+* v0.1.1
+    * Added
+        * Options for file type and size to file upload component.
+        * API for displaying desktop notifications.
+        * Buttons can now submit specific values instead of only True/False.
+        * Examples for layout and card sizing.
+        * Image card for displaying base64-encoded images.
+        * Example for image card.
+        * Vector graphics API.
+        * Turtle graphics based path generator.
+        * Examples for graphics card.
+    * Fixed
+        * Re-rendering performance improvements.
 * v0.1.0
     * Added
         * Example for displaying iframe content > 2MB.
