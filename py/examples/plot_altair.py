@@ -3,7 +3,7 @@
 # ---
 import altair
 from vega_datasets import data
-from telesync import site, ui
+from h2o_q import site, ui
 
 spec = altair.Chart(data.cars()).mark_circle(size=60).encode(
     x='Horsepower',

@@ -6,7 +6,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from telesync import ui, listen, Q
+from h2o_q import ui, listen, Q
 
 np.random.seed(19680801)
 

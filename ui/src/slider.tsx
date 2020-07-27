@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, F, S, telesync } from './telesync';
+import { B, bond, F, S, qd } from './qd';
 
 /**
  * Create a slider.
@@ -48,11 +48,11 @@ export const
       value = m.value || 0
 
     const defaultValue = (value < min) ? min : ((value > max) ? max : value)
-    telesync.args[m.name] = defaultValue
+    qd.args[m.name] = defaultValue
     const
-      onChange = (v: number) => telesync.args[m.name] = v,
+      onChange = (v: number) => qd.args[m.name] = v,
       onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => {
-        if (m.trigger) telesync.sync()
+        if (m.trigger) qd.sync()
       },
       render = () => (
         <Fluent.Slider

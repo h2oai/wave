@@ -1,7 +1,7 @@
 import { INavLink, INavLinkGroup, Nav } from '@fluentui/react';
 import React from 'react';
 import { cards } from './layout';
-import { bond, Card, S, telesync } from './telesync';
+import { bond, Card, S, qd } from './qd';
 
 /** Create a navigation item. */
 interface NavItem {
@@ -41,8 +41,8 @@ const
                 window.location.hash = name.substr(1)
                 return
               }
-              telesync.args[name] = true
-              telesync.sync()
+              qd.args[name] = true
+              qd.sync()
             }
           }))
         }))

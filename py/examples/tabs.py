@@ -1,7 +1,7 @@
 # Form / Tabs
 # Use tabs within a form to navigate between two or more distinct content categories.
 # ---
-from telesync import Q, listen, ui
+from h2o_q import Q, listen, ui
 
 tabs = [
     ui.tab(name='email', label='Mail', icon='Mail'),

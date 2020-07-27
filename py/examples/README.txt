@@ -6,7 +6,7 @@ Step 1: Set up virtual environment:
     $ ./venv/bin/pip install -r requirements.txt
 
 
-Step 2: Run the Telesync server.
+Step 2: Run the Q server.
 
 
 Step 3: Run the tour app:

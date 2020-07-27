@@ -1,7 +1,7 @@
 # Table
 # Use a table to create master-detail views. This example demonstrates how to create a simple issue tracker.
 # ---
-from telesync import Q, listen, ui
+from h2o_q import Q, listen, ui
 from faker import Faker
 
 fake = Faker()

@@ -1,4 +1,4 @@
-module github.com/telesync/teledb
+module github.com/qd/qdb
 
 go 1.14
 

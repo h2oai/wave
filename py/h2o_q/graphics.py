@@ -10,7 +10,7 @@ from .core import pack, data as _data, Data, Ref, Expando, expando_to_dict
 def stage(**kwargs) -> str:
     """
     Create a stage. A stage holds static graphics elements that are rendered as part of the background (behind the scene).
-    The return value must be assigned to the `stage` property of a :class:`telesync.types.GraphicsCard`.
+    The return value must be assigned to the `stage` property of a :class:`h2o_q.types.GraphicsCard`.
 
     :param kwargs: Graphical elements to render as part of the stage.
     :return: Packed data.
@@ -21,10 +21,10 @@ def stage(**kwargs) -> str:
 def scene(**kwargs) -> Data:
     """
     Create a scene. A scene holds graphic elements whose attributes need to be changed dynamically (causing a re-render).
-    The return value must be assigned to the `scene` property of a :class:`telesync.types.GraphicsCard`.
+    The return value must be assigned to the `scene` property of a :class:`h2o_q.types.GraphicsCard`.
 
     :param kwargs: Graphical elements to render as part of the scene.
-    :return: A :class:`telesync.core.Data` instance.
+    :return: A :class:`h2o_q.core.Data` instance.
     """
     return _data(fields='d o', rows={k: [json.dumps(expando_to_dict(v)), ''] for k, v in kwargs.items()})
 
@@ -44,7 +44,7 @@ def draw(element: Ref, **kwargs) -> Ref:
 def reset(element: Ref) -> Ref:
     """
     Schedule a redraw of the specified graphical element using its original attributes.
-    Calling this function clears any changes performed using the :func:`telesync.graphics.draw` function.
+    Calling this function clears any changes performed using the :func:`h2o_q.graphics.draw` function.
 
     :param element: A reference to a graphical element.
     :return: The element reference, without change.
@@ -258,7 +258,7 @@ class Path:
     def path(self, **kwargs) -> Expando:
         """
         A SVG path element representing the commands in this ``Path`` instance.
-        Same as calling ``telesync.graphics.path(d=path.d())``
+        Same as calling ``h2o_q.graphics.path(d=path.d())``
 
         :param kwargs: Additional attributes for the SVG path element.
         :return: A SVG path element.
@@ -562,9 +562,9 @@ class Path:
 
 def p() -> Path:
     """
-    Create a new :class:`telesync.graphics.Path`.
+    Create a new :class:`h2o_q.graphics.Path`.
 
-    :return: A new :class:`telesync.graphics.Path`.
+    :return: A new :class:`h2o_q.graphics.Path`.
     """
     return Path()
 
@@ -736,11 +736,11 @@ class Turtle:
 
 def turtle(x=0.0, y=0.0, degrees=0.0) -> Turtle:
     """
-    Create a new :class:`telesync.graphics.Turtle`.
+    Create a new :class:`h2o_q.graphics.Turtle`.
 
     :param x: initial position x
     :param y: initial position y
     :param degrees: initial angle in degrees
-    :return: A new :class:`telesync.graphics.Turtle`.
+    :return: A new :class:`h2o_q.graphics.Turtle`.
     """
     return Turtle(x, y, degrees)

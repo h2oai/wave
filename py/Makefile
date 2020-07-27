@@ -1,4 +1,4 @@
-all: build ## Build telesync wheel
+all: build ## Build h2o_q wheel
 
 .PHONY: build
 build: purge
@@ -20,11 +20,11 @@ docs: sync-examples ## Build API docs
 	./venv/bin/sphinx-build -b html docs build/docs
 
 purge: ## Purge previous build
-	rm -rf build dist telesync.egg-info
+	rm -rf build dist h2o_q.egg-info
 
 .PHONY: examples
 examples:
-	sed -i -r -e "s/telesync.+/telesync==$(VERSION)/" examples/requirements.txt
+	sed -i -r -e "s/h2o_q.+/h2o_q==$(VERSION)/" examples/requirements.txt
 
 sync-examples:
 	rm -f docs/example*.rst
@@ -34,7 +34,7 @@ sync-examples:
 release: build docs examples ## Prepare release artifacts
 
 clean: purge ## Clean
-	rm -rf docs/build telesync-api-docs.zip venv
+	rm -rf docs/build h2o_q-api-docs.zip venv
 	rm -f examples.tar.gz
 
 help: ## List all make tasks

@@ -3,8 +3,8 @@
 ## Setup and Run
 
 ```sh
-git clone https://github.com/h2oai/telesync.git
-cd telesync
+git clone https://github.com/h2oai/qd.git
+cd qd
 make
 make run
 ```
@@ -20,7 +20,7 @@ make run
 
 Clone this repo and install into your app's `venv` using pip's `--editable` option `pip install -e`.
 
-For example `./venv/bin/pip install -e path/to/git/telesync/py/`.
+For example `./venv/bin/pip install -e path/to/git/qd/py/`.
 
 ## Make tasks
 

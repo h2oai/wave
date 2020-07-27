@@ -53,13 +53,13 @@ class Q:
         self.page = site[client_id if mode == UNICAST else username if mode == MULTICAST else route]
         """A reference to the current page."""
         self.app = app_state
-        """A :class:`telesync.core.Expando` instance to hold application-specific state."""
+        """A :class:`h2o_q.core.Expando` instance to hold application-specific state."""
         self.user = user_state
-        """A :class:`telesync.core.Expando` instance to hold user-specific state."""
+        """A :class:`h2o_q.core.Expando` instance to hold user-specific state."""
         self.client = client_state
-        """An :class:`telesync.core.Expando` instance to hold client-specific state."""
+        """An :class:`h2o_q.core.Expando` instance to hold client-specific state."""
         self.args = args
-        """A :class:`telesync.core.Expando` instance containing the active request."""
+        """A :class:`h2o_q.core.Expando` instance containing the active request."""
         self.username = username
         """The username of the user who initiated the active request."""
         self.route = route
@@ -89,7 +89,7 @@ class _Server:
             {k: expando_to_dict(v) for k, v in sessions.items()},
             {k: expando_to_dict(v) for k, v in clients.items()},
         )
-        pickle.dump(state, open('telesync.state', 'wb'))
+        pickle.dump(state, open('h2o_q.state', 'wb'))
 
 
 _server: Optional[_Server] = None

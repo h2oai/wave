@@ -1,7 +1,7 @@
-telesync.core module
+h2o_q.core module
 ====================
 
-.. automodule:: telesync.core
+.. automodule:: h2o_q.core
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, S, telesync } from './telesync';
+import { B, bond, S, qd } from './qd';
 
 /** Create a table column. */
 interface TableColumn {
@@ -50,7 +50,7 @@ export interface Table {
 
 export const
   XTable = bond(({ model: m }: { model: Table }) => {
-    telesync.args[m.name] = []
+    qd.args[m.name] = []
     const
       items = m.rows.map(r => {
         const item: any = { __key__: r.name }
@@ -70,12 +70,12 @@ export const
       primaryColumnKey = columns[0].key,
       selection = new Fluent.Selection({
         onSelectionChanged: () => {
-          telesync.args[m.name] = selection.getSelection().map(item => (item as any).__key__)
+          qd.args[m.name] = selection.getSelection().map(item => (item as any).__key__)
         }
       }),
       onItemInvoked = (item: any) => {
-        telesync.args[m.name] = [item.__key__]
-        telesync.sync()
+        qd.args[m.name] = [item.__key__]
+        qd.sync()
       },
       onRenderItemColumn = (item?: any, _index?: number, column?: Fluent.IColumn) => {
         if (!item) return <span />
@@ -83,8 +83,8 @@ export const
         const v = item[column.fieldName as any]
         if (column.key === primaryColumnKey) {
           const onClick = () => {
-            telesync.args[m.name] = [item.__key__]
-            telesync.sync()
+            qd.args[m.name] = [item.__key__]
+            qd.sync()
           }
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         } else {

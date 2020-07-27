@@ -1,5 +1,5 @@
 import { NestedCSSProperties } from "typestyle/lib/types";
-import { Dict, I, F, S, U } from "./telesync";
+import { Dict, I, F, S, U } from "./qd";
 
 interface RGB { r: U, g: U, b: U }
 interface Palette {

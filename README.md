@@ -1,31 +1,31 @@
 <div><img width="175" src="assets/telesync.png"/></div><br/>
 
-**Telesync: Q's Realtime App SDK**
+**Q Realtime App Development Server and SDK**
 
 - [Getting Started](#getting-started)
-- [Roadmap](https://github.com/h2oai/telesync/wiki/Roadmap)
+- [Roadmap](https://github.com/h2oai/qd/wiki/Roadmap)
 - [Migration Guide](#migration-guide)
-- [Examples](https://github.com/h2oai/telesync/tree/master/py/examples)
+- [Examples](https://github.com/h2oai/qd/tree/master/py/examples)
 - [Report an issue](https://github.com/h2oai/q/issues)
 
 ## Getting Started
 
-To build apps using Telesync, you need the `telesync` development server and the `telesync` pip package.
+To build apps using Q, you need the `h2o_q` development server and the `h2o_q` pip package.
 
-1. [Download](https://github.com/h2oai/telesync/releases) a release. The release contains everything you need, including the SDK, documentation and examples.
+1. [Download](https://github.com/h2oai/qd/releases) a release. The release contains everything you need, including the SDK, documentation and examples.
 2. See `readme.txt` included with your release.
 
 ## Migration Guide
 
-Before you begin, it is highly recommended that you [download](https://github.com/h2oai/telesync/releases) a release and run the interactive `tour.py` that ships with the release to get a feel for what Telesync programs look like in practice.
+Before you begin, it is highly recommended that you [download](https://github.com/h2oai/qd/releases) a release and run the interactive `tour.py` that ships with the release to get a feel for what Q programs look like in practice.
 
 ### What has changed?
 
-From an app-development perspective, the most important change is that Telesync is more of a library rather than a framework.
+From an app-development perspective, the most important change is that Q is more of a library rather than a framework.
 
-With the previous framework, the only way to execute an app was via Q. There is no such limitation with Telesync.
+With the previous framework, the only way to execute an app was via Q. There is no such limitation with Q.
 
-The script/app you author is just a regular Python program in which you `import telesync` and execute via:
+The script/app you author is just a regular Python program in which you `import h2o_q` and execute via:
 1. The command line: `python3 foo.py`.
 2. In the Python REPL `python3`.
 3. In a Jupyter notebook.
@@ -42,7 +42,7 @@ From an information architecture perspective, control has been inverted: instead
 Instead, define a `async` request-handling function, say `main()`, and pass that function to `listen()`, like this:
 
 ```py
-from telesync import Q, listen
+from h2o_q import Q, listen
 
 async def main(q: Q):
   pass
@@ -106,7 +106,7 @@ await q.page.save()
 
 #### Removed: callback functions for request-handling.
 
-Telesync apps are 100% push-based, using duplex communication instead of a request/reply paradigm. There is no need to have a tangled mess of callbacks to define application logic.
+Q apps are 100% push-based, using duplex communication instead of a request/reply paradigm. There is no need to have a tangled mess of callbacks to define application logic.
 
 Instead, all requests are routed to a single function, and you can decide how to organize your application logic by branching on `q.args.*`.
 
@@ -161,7 +161,7 @@ listen('/my/app/route', main)
 
 #### Removed: `q.dashboard()` and `q.notebook()`.
 
-Every page in Telesync is a dashboard page. Instead of creating a separate dashboard or notebook, simply add cards to a page and arrange it the way you want. Cards can be created by using one of the several `ui.*_card()` APIs. Also see the [dashboard](py/examples/dashboard.py), [layout](py/examples/layout.py) and [sizing](py/examples/layout_size.py) examples to learn how to lay out several cards on a page.
+Every page in Q is a dashboard page. Instead of creating a separate dashboard or notebook, simply add cards to a page and arrange it the way you want. Cards can be created by using one of the several `ui.*_card()` APIs. Also see the [dashboard](py/examples/dashboard.py), [layout](py/examples/layout.py) and [sizing](py/examples/layout_size.py) examples to learn how to lay out several cards on a page.
 
 #### Changed: `ui.buttons()`, `ui.expander()` and `ui.tabs()` accept a `list` of items instead of var args `*args`
 
@@ -183,7 +183,7 @@ The `upload()` method has been moved to the `Site` instance, since each `Site` r
 
 Setting attributes on `q.args` (e.g. `q.args.foo = 'bar'`) is no longer preserved between requests. This was the primary mechanism employed previously to preserve data between requests.
 
-Instead, Telesync provides 4 mechanisms for preserving data between requests:
+Instead, Q provides 4 mechanisms for preserving data between requests:
 
 1. **Process-level**: Use global variables.
 1. **App-level**: Use `q.app.foo = 'bar'` to save; access `q.app.foo` to read it back again.

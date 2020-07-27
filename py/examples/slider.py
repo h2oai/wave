@@ -1,7 +1,7 @@
 # Form / Slider
 # Use a slider to allow users to set a value withing a specific range.
 # ---
-from telesync import Q, listen, ui
+from h2o_q import Q, listen, ui
 
 
 async def main(q: Q):

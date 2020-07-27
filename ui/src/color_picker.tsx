@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { bond, S, telesync } from './telesync';
+import { bond, S, qd } from './qd';
 
 /**
  * Create a color picker.
@@ -27,10 +27,10 @@ const
 export const
   XColorPicker = bond(({ model: m }: { model: ColorPicker }) => {
     const value = m.value || null
-    telesync.args[m.name] = value
+    qd.args[m.name] = value
     const
-      onColorChanged = (_id?: string, color?: string) => telesync.args[m.name] = color ? color : value,
-      onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => telesync.args[m.name] = color ? color.str : value,
+      onColorChanged = (_id?: string, color?: string) => qd.args[m.name] = color ? color : value,
+      onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => qd.args[m.name] = color ? color.str : value,
       render = () => m.choices && m.choices.length
         ? (
           <div>

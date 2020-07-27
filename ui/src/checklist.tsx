@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { Choice } from './choice_group';
-import { B, bond, box, Box, on, S, telesync } from './telesync';
+import { B, bond, box, Box, on, S, qd } from './qd';
 import { px } from './theme';
 
 /**
@@ -48,7 +48,7 @@ const
 
 export const
   XChecklist = bond(({ model: m }: { model: Checklist }) => {
-    telesync.args[m.name] = m.values || []
+    qd.args[m.name] = m.values || []
     let _pause = false
     const
       defaultSelection = new Set<S>(m.values),
@@ -60,7 +60,7 @@ export const
         if (_pause) return
         const vs: S[] = []
         for (const c of choices) if (c.selectedB()) vs.push(c.choice.name)
-        telesync.args[m.name] = vs
+        qd.args[m.name] = vs
       },
       select = (value: B) => {
         _pause = true

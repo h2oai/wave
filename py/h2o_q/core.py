@@ -47,9 +47,9 @@ def configure(
 
     :param internal_address: The local host:port to listen on.
     :param external_address: The remote host:port of this server.
-    :param hub_address: The host:port of the Telesync server.
-    :param hub_access_key_id: The access key ID to use while connecting to the Telesync server.
-    :param hub_access_key_secret: The access key secret to use while connecting to the Telesync server.
+    :param hub_address: The host:port of the Q server.
+    :param hub_access_key_id: The access key ID to use while connecting to the Q server.
+    :param hub_access_key_secret: The access key secret to use while connecting to the Q server.
     """
     if internal_address:
         _config.internal_address = internal_address
@@ -196,8 +196,8 @@ def _dump(xs: Any):
 
 class Ref:
     """
-    Represents a local reference to an element on a :class:`telesync.core.Page`.
-    Any changes made to this local reference are tracked and sent to the remote Telesync server when the page is saved.
+    Represents a local reference to an element on a :class:`h2o_q.core.Page`.
+    Any changes made to this local reference are tracked and sent to the remote Q server when the page is saved.
     """
 
     def __init__(self, page: 'PageBase', key: str):
@@ -225,7 +225,7 @@ class Ref:
 
 class Data:
     """
-    Represents a data placeholder. A data placeholder is used to allocate memory on the Telesync server to store data.
+    Represents a data placeholder. A data placeholder is used to allocate memory on the Q server to store data.
     """
 
     def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
@@ -266,9 +266,9 @@ def data(
         pack=False,
 ) -> Union[Data, str]:
     """
-    Create a :class:`telesync.core.Data` instance for associating data with cards.
+    Create a :class:`h2o_q.core.Data` instance for associating data with cards.
 
-    ``data(fields, size)`` creates a placeholder for data and allocates memory on the Telesync server.
+    ``data(fields, size)`` creates a placeholder for data and allocates memory on the Q server.
 
     ``data(fields, size, rows)`` creates a placeholder and initializes it with the provided rows.
 
@@ -278,9 +278,9 @@ def data(
     :param size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
     :param rows: The rows in this data.
     :param columns: The columns in this data.
-    :param pack: True to return a packed string representing the data instead of a :class:`telesync.core.Data` placeholder.
+    :param pack: True to return a packed string representing the data instead of a :class:`h2o_q.core.Data` placeholder.
 
-    :return: Either a :class:`telesync.core.Data` placeholder or a packed string representing the data.
+    :return: Either a :class:`h2o_q.core.Data` placeholder or a packed string representing the data.
     """
     if _is_str(fields):
         fields = fields.strip()
@@ -403,7 +403,7 @@ class PageBase:
 
 class Page(PageBase):
     """
-    Represents a reference to a remote Telesync page.
+    Represents a reference to a remote Q page.
 
     :param site: The parent site.
     :param url: The URL of this page.
@@ -423,7 +423,7 @@ class Page(PageBase):
 
     def sync(self):
         """
-        DEPRECATED: Use :meth:`telesync.core.Page.save` instead.
+        DEPRECATED: Use :meth:`h2o_q.core.Page.save` instead.
         """
         logger.warn('page.sync() is deprecated. Please use page.save() instead.')
         self.save()
@@ -440,7 +440,7 @@ class Page(PageBase):
 
 class AsyncPage(PageBase):
     """
-    Represents a reference to a remote Telesync page. Similar to :class:`telesync.core.Page` except that this class exposes ``async`` methods.
+    Represents a reference to a remote Q page. Similar to :class:`h2o_q.core.Page` except that this class exposes ``async`` methods.
 
     :param site: The parent site.
     :param url: The URL of this page.
@@ -461,7 +461,7 @@ class AsyncPage(PageBase):
 
     async def push(self):
         """
-        DEPRECATED: Use :meth:`telesync.core.AsyncPage.save` instead.
+        DEPRECATED: Use :meth:`h2o_q.core.AsyncPage.save` instead.
         """
         logger.warn('page.push() is deprecated. Please use page.save() instead.')
         await self.save()
@@ -540,7 +540,7 @@ _client = _BasicAuthClient()
 
 class Site:
     """
-    Represents a reference to the remote Telesync site. A Site instance is used to obtain references to the site's pages.
+    Represents a reference to the remote Q site. A Site instance is used to obtain references to the site's pages.
     """
 
     def __getitem__(self, url) -> Page:
@@ -587,7 +587,7 @@ class Site:
 
 class AsyncSite:
     """
-    Represents a reference to the remote Telesync site. Similar to :class:`telesync.core.Site` except that this class exposes ``async`` methods.
+    Represents a reference to the remote Q site. Similar to :class:`h2o_q.core.Site` except that this class exposes ``async`` methods.
     """
 
     def __init__(self, ws: websockets.WebSocketServerProtocol):

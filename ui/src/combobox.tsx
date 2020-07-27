@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, box, S, telesync } from './telesync';
+import { B, bond, box, S, qd } from './qd';
 
 /**
  * Create a combobox.
@@ -37,13 +37,13 @@ export interface Combobox {
 
 export const
   XCombobox = bond(({ model: m }: { model: Combobox }) => {
-    telesync.args[m.name] = m.value || null
+    qd.args[m.name] = m.value || null
     const
       textB = box(m.value),
       options = (m.choices || []).map((text, i): Fluent.IComboBoxOption => ({ key: `${i}`, text })),
       onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: number, value?: string) => {
         const v = option ? option.text : value ? value : ''
-        telesync.args[m.name] = v
+        qd.args[m.name] = v
         textB(v)
       },
       render = () => (

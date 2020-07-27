@@ -1,5 +1,5 @@
 import React from 'react';
-import { bond, Card } from './telesync';
+import { bond, Card } from './qd';
 import { cards } from './layout';
 
 const

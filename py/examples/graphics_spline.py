@@ -3,7 +3,7 @@
 # ---
 
 import random
-from telesync import site, ui, graphics as g
+from h2o_q import site, ui, graphics as g
 
 x = [i * 20 for i in range(50)]
 y = [

@@ -1,7 +1,7 @@
 {
-  "name": "telegen",
+  "name": "qgen",
   "version": "0.0.1",
-  "description": "Telesync UI component stub generator",
+  "description": "Q UI component stub generator",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

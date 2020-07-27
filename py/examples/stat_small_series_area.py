@@ -6,7 +6,7 @@ import time
 from faker import Faker
 
 from synth import FakeCategoricalSeries
-from telesync import site, ui, data
+from h2o_q import site, ui, data
 
 page = site['/demo']
 

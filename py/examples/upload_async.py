@@ -4,7 +4,7 @@
 
 
 import os
-from telesync import Q, listen, ui
+from h2o_q import Q, listen, ui
 
 
 def write_csv(filename, rows):

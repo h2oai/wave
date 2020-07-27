@@ -1,7 +1,7 @@
 # Form / Text / Sizes
 # Use text size variants to display formatted text using predefined font sizes.
 # ---
-from telesync import site, ui
+from h2o_q import site, ui
 
 page = site['/demo']
 

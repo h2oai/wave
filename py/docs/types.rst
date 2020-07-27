@@ -1,7 +1,7 @@
-telesync.types module
+h2o_q.types module
 =====================
 
-.. automodule:: telesync.types
+.. automodule:: h2o_q.types
    :members:
    :undoc-members:
    :show-inheritance:

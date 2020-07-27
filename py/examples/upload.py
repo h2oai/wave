@@ -1,8 +1,8 @@
 # Uploads
-# Upload files to the Telesync server.
+# Upload files to the Q server.
 # ---
 import os
-from telesync import site, ui
+from h2o_q import site, ui
 
 
 def write_csv(filename, rows):

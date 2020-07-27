@@ -711,7 +711,7 @@ export interface Ref {
   set(key: S, value: any): void
 }
 
-export interface Telesync {
+export interface Qd {
   readonly path: S
   readonly args: Rec
   readonly refreshRateB: Box<U>
@@ -731,13 +731,13 @@ const
     for (const k in a) delete a[k]
   }
 
-export const telesync: Telesync = {
+export const qd: Qd = {
   path: window.location.pathname,
   args: {},
   refreshRateB: box(-1),
   socket: null,
   page: (path?: S): PageRef => {
-    path = path || telesync.path
+    path = path || qd.path
     const
       changes: OpD[] = [],
       ref = (k: S): Ref => {
@@ -751,7 +751,7 @@ export const telesync: Telesync = {
       del = (key: S) => changes.push({ k: key }),
       drop = () => changes.push({}),
       sync = () => {
-        const sock = telesync.socket
+        const sock = qd.socket
         if (!sock) return
         const opsd: OpsD = { d: changes }
         sock.send(`* ${path} ${JSON.stringify(opsd)}`)
@@ -759,19 +759,19 @@ export const telesync: Telesync = {
     return { get, set, del, drop, sync }
   },
   sync: () => {
-    const sock = telesync.socket
+    const sock = qd.socket
     if (!sock) return
-    const args = cloneRec(telesync.args)
-    clearRec(telesync.args)
-    sock.send(`@ ${telesync.path} ${JSON.stringify(args)}`)
+    const args = cloneRec(qd.args)
+    clearRec(qd.args)
+    sock.send(`@ ${qd.path} ${JSON.stringify(args)}`)
   },
 }
 
-on(telesync.refreshRateB, r => {
+on(qd.refreshRateB, r => {
   // If we receive a change in refresh rate once the page has been loaded, close the socket.
   // The socket onclose handler will reconnect using the refresh rate if necessary.
   if (r < 0) return
-  const sock = telesync.socket
+  const sock = qd.socket
   if (sock) sock.close()
 })
 
@@ -794,18 +794,18 @@ const
     const retry = () => reconnect(address, handle)
     let sock = new WebSocket(address)
     sock.onopen = function () {
-      telesync.socket = sock
+      qd.socket = sock
       handle({ t: SockEventType.Message, type: SockMessageType.Info, message: 'Connected' })
       backoff = 1
-      sock.send(`+ ${telesync.path} `) // protocol: t<sep>addr<sep>data
+      sock.send(`+ ${qd.path} `) // protocol: t<sep>addr<sep>data
     }
     sock.onclose = function () {
-      const refreshRate = telesync.refreshRateB()
+      const refreshRate = qd.refreshRateB()
       if (refreshRate === 0) return
 
       // TODO handle refreshRate > 0 case
 
-      telesync.socket = null
+      qd.socket = null
       backoff *= 2
       if (backoff > 16) backoff = 16
       handle({ t: SockEventType.Message, type: SockMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })

@@ -2,7 +2,7 @@
 # Make a line plot with non-overlapping labels.
 # ---
 from synth import FakeTimeSeries
-from telesync import site, data, ui
+from h2o_q import site, data, ui
 
 page = site['/demo']
 

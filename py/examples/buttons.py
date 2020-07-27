@@ -1,7 +1,7 @@
 # Form / Buttons
 # Use the `ui.buttons()` function to group related buttons.
 # ---
-from telesync import Q, listen, ui
+from h2o_q import Q, listen, ui
 
 
 async def main(q: Q):

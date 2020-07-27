@@ -1,7 +1,7 @@
 # Markdown
 # Use a markdown card to display formatted content using markdown.
 # ---
-from telesync import site, ui
+from h2o_q import site, ui
 
 page = site['/demo']
 

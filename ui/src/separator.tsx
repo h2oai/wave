@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { S } from './telesync';
+import { S } from './qd';
 import { px } from './theme';
 
 const

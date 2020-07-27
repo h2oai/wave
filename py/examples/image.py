@@ -1,7 +1,7 @@
 # Image
 # Use an image card to display a base64-encoded image.
 # ---
-from telesync import site, ui
+from h2o_q import site, ui
 import io
 import base64
 import numpy as np

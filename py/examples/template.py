@@ -1,7 +1,7 @@
 # Template
 # Use a template card to render dynamic content using a HTML template.
 # ---
-from telesync import site, pack, ui
+from h2o_q import site, pack, ui
 
 page = site['/demo']
 page.drop()

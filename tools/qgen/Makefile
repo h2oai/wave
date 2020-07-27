@@ -8,7 +8,7 @@ setup:
 	npm ci
 
 run:
-	node build/telegen.js ../../ui/src ../../py/telesync
+	node build/qgen.js ../../ui/src ../../py/h2o_q
 
 clean:
 	rm -rf build node_modules

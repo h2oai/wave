@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { B, bond, box, S, telesync, U, xid, F } from './telesync';
+import { B, bond, box, S, qd, U, xid, F } from './qd';
 import { getTheme, centerMixin, dashed, clas } from './theme';
 
 /**
@@ -97,8 +97,8 @@ export const
           })
           const { responseText } = await makeRequest
           const { files } = JSON.parse(responseText)
-          telesync.args[model.name] = files
-          telesync.sync()
+          qd.args[model.name] = files
+          qd.sync()
           successMsgB(`Successfully uploaded files: ${filesB().map(({ name }) => name).join(',')}.`)
         }
         catch (e) { errorB('There was an error when uploading file.') }
@@ -114,7 +114,7 @@ export const
       validateFiles = (fileArr: File[]) => {
         const notAllowedFiles = fileArr.filter(({ name }) => !isFileTypeAllowed(name))
         if (notAllowedFiles.length) {
-          return `Not allowed extension for files: ${notAllowedFiles.map(({ name }) => name).join(', ')}. 
+          return `Not allowed extension for files: ${notAllowedFiles.map(({ name }) => name).join(', ')}.
           Allowed file extensions: ${fileExtensions?.join(', ')}.`
 
         }
@@ -122,7 +122,7 @@ export const
         if (maxFileSizeBytes) {
           const maxSizePerFileExceededFiles = fileArr.filter(({ size }) => size > maxFileSizeBytes)
           if (maxSizePerFileExceededFiles.length) {
-            return `Max file size exceeded for files: ${maxSizePerFileExceededFiles.map(({ name }) => name).join(', ')}. 
+            return `Max file size exceeded for files: ${maxSizePerFileExceededFiles.map(({ name }) => name).join(', ')}.
             Allowed size per file: ${model.max_file_size}Mb.`
           }
         }

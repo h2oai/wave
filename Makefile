@@ -1,7 +1,7 @@
 OS?=linux
 VERSION?=dev
 BUILD_DATE?=$(shell date '+%Y%m%d%H%M%S')
-REL=telesync-$(VERSION)-$(OS)-amd64
+REL=qd-$(VERSION)-$(OS)-amd64
 LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
 
 all: clean setup build ## Setup and build everything
@@ -16,7 +16,7 @@ clean: ## Clean
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
 	cd tools/telegen && $(MAKE) clean
-	rm -f telesync
+	rm -f qd
 
 .PHONY: build
 build: build-ui build-server ## Build everything
@@ -28,13 +28,13 @@ run-ui: ## Run UI in development mode (hot reloading)
 	cd ui && $(MAKE) run
 
 build-server: ## Build server for current OS/Arch
-	go build $(LDFLAGS) -o telesync cmd/telesync/main.go
+	go build $(LDFLAGS) -o qd cmd/qd/main.go
 
 build-py: ## Build wheel
 	cd py && $(MAKE) release
 
 run: ## Run server
-	go run cmd/telesync/main.go -web-dir ./ui/build -debug
+	go run cmd/qd/main.go -web-dir ./ui/build -debug
 
 generate: ## Generate driver bindings
 	cd tools/telegen && $(MAKE) run
@@ -50,7 +50,7 @@ release-os:
 	rsync -a ui/build/ build/$(REL)/www
 	rsync -a py/build/docs build/$(REL)/
 	rsync -a py/examples build/$(REL)/
-	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/telesync cmd/telesync/main.go
+	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd cmd/qd/main.go
 	cp release.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 

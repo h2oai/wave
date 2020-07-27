@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/h2oai/telesync"
+	"github.com/h2oai/qd"
 )
 
 var (
@@ -21,7 +21,7 @@ func main() {
 	// TODO https://github.com/urfave/cli/blob/master/docs/v2/manual.md
 
 	var (
-		conf    telesync.ServerConf
+		conf    qd.ServerConf
 		version bool
 	)
 
@@ -40,12 +40,12 @@ func main() {
 	flag.Parse()
 
 	if version {
-		fmt.Printf("Telesync Development Server\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
+		fmt.Printf("Q Development Server\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
 		return
 	}
 
 	conf.WebDir, _ = filepath.Abs(conf.WebDir)
 	conf.DataDir, _ = filepath.Abs(conf.DataDir)
 
-	telesync.Run(conf)
+	qd.Run(conf)
 }

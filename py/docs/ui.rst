@@ -1,7 +1,7 @@
-telesync.ui module
+h2o_q.ui module
 ==================
 
-.. automodule:: telesync.ui
+.. automodule:: h2o_q.ui
    :members:
    :undoc-members:
    :show-inheritance:

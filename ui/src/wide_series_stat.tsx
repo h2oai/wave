@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards, Format, grid } from './layout';
-import { bond, Card, unpack, F, Rec, S, Data } from './telesync';
+import { bond, Card, unpack, F, Rec, S, Data } from './qd';
 import { getTheme } from './theme';
 import { MicroBars } from './parts/microbars';
 import { MicroArea } from './parts/microline';

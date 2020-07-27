@@ -2,7 +2,7 @@
 # Add annotations to a bar plot.
 # ---
 from synth import FakeCategoricalSeries
-from telesync import site, data, ui
+from h2o_q import site, data, ui
 
 page = site['/demo']
 

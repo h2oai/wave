@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, S, telesync } from './telesync';
+import { B, bond, S, qd } from './qd';
 import { px } from './theme';
 
 /**
@@ -45,15 +45,15 @@ const
 
 export const
   XCheckbox = bond(({ model: m }: { model: Checkbox }) => {
-    telesync.args[m.name] = m.value ? true : false
+    qd.args[m.name] = m.value ? true : false
     const
       onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-        telesync.args[m.name] = checked === true
+        qd.args[m.name] = checked === true
           ? true
           : checked === false
             ? false
             : null
-        if (m.trigger) telesync.sync()
+        if (m.trigger) qd.sync()
       },
       render = () =>
         m.indeterminate

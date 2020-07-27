@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards, Format, grid } from './layout';
-import { bond, Card, unpack, F, Rec, S } from './telesync';
+import { bond, Card, unpack, F, Rec, S } from './qd';
 import { getTheme } from './theme';
 import { ProgressArc } from './parts/progress_arc';
 

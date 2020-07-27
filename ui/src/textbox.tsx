@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, S, telesync } from './telesync';
+import { B, bond, S, qd } from './qd';
 
 /**
  * Create a text box.
@@ -44,11 +44,11 @@ export interface Textbox {
 
 export const
   XTextbox = bond(({ model: m }: { model: Textbox }) => {
-    telesync.args[m.name] = m.value || ''
+    qd.args[m.name] = m.value || ''
     const
       icon: Fluent.IIconProps | undefined = m.icon && m.icon.length ? { iconName: m.icon } : undefined,
       onChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
-        telesync.args[m.name] = (v !== undefined && v !== null) ? v : (m.value || '')
+        qd.args[m.name] = (v !== undefined && v !== null) ? v : (m.value || '')
       },
       password = m.password ? 'password' : undefined,
       render = () => m.mask

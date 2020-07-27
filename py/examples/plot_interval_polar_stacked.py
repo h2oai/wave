@@ -2,7 +2,7 @@
 # Make a stacked rose plot (a stacked bar plot in polar coordinates).
 # ---
 from synth import FakeMultiCategoricalSeries
-from telesync import site, data, ui
+from h2o_q import site, data, ui
 
 page = site['/demo']
 

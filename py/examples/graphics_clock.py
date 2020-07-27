@@ -4,7 +4,7 @@
 # ---
 import time
 import datetime
-from telesync import site, ui, graphics as g
+from h2o_q import site, ui, graphics as g
 
 page = site['/demo']
 page['example'] = ui.graphics_card(

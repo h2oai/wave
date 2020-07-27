@@ -1,6 +1,6 @@
 import React from 'react';
 import { cards } from './layout';
-import { bond, Card, on, S, U, telesync } from './telesync';
+import { bond, Card, on, S, U, qd } from './qd';
 
 /**
  * Represents page-global state.
@@ -23,7 +23,7 @@ const
       init = () => {
         const { title, refresh, notification } = state
         if (title) window.document.title = title
-        if (typeof refresh === 'number') telesync.refreshRateB(refresh)
+        if (typeof refresh === 'number') qd.refreshRateB(refresh)
         if (notification) showNotification(notification)
       },
       showNotification = async (notificationText: string) => {

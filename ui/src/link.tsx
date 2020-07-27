@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, S } from './telesync';
+import { B, bond, S } from './qd';
 
 /**
  * Create a hyperlink.

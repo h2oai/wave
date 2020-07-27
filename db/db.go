@@ -1,4 +1,4 @@
-package teledb
+package qdb
 
 import (
 	"encoding/json"

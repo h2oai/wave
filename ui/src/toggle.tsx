@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, S, telesync } from './telesync';
+import { B, bond, S, qd } from './qd';
 
 /**
  * Create a toggle.
@@ -29,11 +29,11 @@ export interface Toggle {
 
 export const
   XToggle = bond(({ model: m }: { model: Toggle }) => {
-    telesync.args[m.name] = m.value ? true : false
+    qd.args[m.name] = m.value ? true : false
     const
       onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-        telesync.args[m.name] = checked ? true : false
-        if (m.trigger) telesync.sync()
+        qd.args[m.name] = checked ? true : false
+        if (m.trigger) qd.sync()
       },
       render = () => (
         <Fluent.Toggle

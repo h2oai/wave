@@ -1,7 +1,7 @@
 # Wizard
 # Create a multi-step wizard using form cards.
 # ---
-from telesync import Q, ui, listen
+from h2o_q import Q, ui, listen
 
 
 async def main(q: Q):

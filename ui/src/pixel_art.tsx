@@ -1,7 +1,7 @@
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards } from './layout';
-import { bond, Card, unpack, Rec, S, telesync, U } from './telesync';
+import { bond, Card, unpack, Rec, S, qd, U } from './qd';
 import { getTheme } from './theme';
 
 const
@@ -64,7 +64,7 @@ const
     let brush = '#000'
     const
       paint = (i: U) => {
-        const page = telesync.page()
+        const page = qd.page()
         page.set(`${name} data ${i}`, brush === 'none' ? null : [brush])
         page.sync()
       },

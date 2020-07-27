@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, bond, F, S, telesync } from './telesync';
+import { B, bond, F, S, qd } from './qd';
 
 /**
  * Create a spinbox.
@@ -37,7 +37,7 @@ export const
 
     const defaultValue = (value < min) ? min : ((value > max) ? max : value)
 
-    telesync.args[m.name] = defaultValue
+    qd.args[m.name] = defaultValue
 
     const
       parseValue = (v: string) => {
@@ -45,20 +45,20 @@ export const
         return (!isNaN(x) && isFinite(x)) ? x : value
       },
       onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        telesync.args[m.name] = parseValue(e.target.value)
+        qd.args[m.name] = parseValue(e.target.value)
       },
       onIncrement = (v: string) => {
         const
           value = parseValue(v),
           newValue = (value + step > max) ? max : value + step
-        telesync.args[m.name] = newValue
+        qd.args[m.name] = newValue
         return String(newValue)
       },
       onDecrement = (v: string) => {
         const
           value = parseValue(v),
           newValue = (value - step < min) ? min : value - step
-        telesync.args[m.name] = newValue
+        qd.args[m.name] = newValue
         return String(newValue)
       },
       render = () => (

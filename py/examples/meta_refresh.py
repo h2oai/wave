@@ -1,7 +1,7 @@
 # Meta / Refresh
 # Turn off live updates for static pages to conserve server resources.
 # ---
-from telesync import site, ui
+from h2o_q import site, ui
 
 page = site['/demo']
 

@@ -1,6 +1,6 @@
 import Handlebars from 'handlebars';
 import { createIntl, createIntlCache } from 'react-intl';
-import { B, S } from './telesync';
+import { B, S } from './qd';
 
 Handlebars.registerHelper('intl', (v: any, { hash: opts }: any) => {
   opts = kvToOpts(opts)
@@ -18,7 +18,7 @@ const intlCache = createIntlCache() // prevents memory leaks per docs
 export const intl = createIntl({
   locale: navigator.language,
   messages: {},
-  // the intl lib throws console.errors for each missing id. 
+  // the intl lib throws console.errors for each missing id.
   // since we generate format messages on the fly, ignore all errors.
   onError: () => { },
 }, intlCache)

@@ -5,7 +5,7 @@ import random
 
 from faker import Faker
 
-from telesync import site, ui, pack, data
+from h2o_q import site, ui, pack, data
 
 fake = Faker()
 

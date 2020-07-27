@@ -1,7 +1,7 @@
 # Form / Choice Group
 # Use choice groups to let users select one option from two or more choices.
 # ---
-from telesync import Q, listen, ui
+from h2o_q import Q, listen, ui
 
 choices = [
     ui.choice('A', 'Option A'),

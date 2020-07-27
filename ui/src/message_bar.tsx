@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { S } from './telesync';
+import { S } from './qd';
 
 /**
  * Create a message bar.

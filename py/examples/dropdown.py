@@ -1,7 +1,7 @@
 # Form / Dropdown
 # Use dropdowns to allow users to choose between available choices.
 # ---
-from telesync import Q, listen, ui
+from h2o_q import Q, listen, ui
 
 choices = [
     ui.choice('A', 'Option A'),

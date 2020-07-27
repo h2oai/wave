@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { Markdown } from './markdown';
-import { B, S } from './telesync';
+import { B, S } from './qd';
 
 const
   css = stylesheet({

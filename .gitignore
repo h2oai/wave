@@ -17,7 +17,7 @@
 /.vscode
 /build
 /data
-/telesync
+/qd
 /teledb
 /*.db
 *.log

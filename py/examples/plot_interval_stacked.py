@@ -2,7 +2,7 @@
 # Make a stacked bar plot.
 # ---
 from synth import FakeMultiCategoricalSeries
-from telesync import site, data, ui
+from h2o_q import site, data, ui
 
 page = site['/demo']
 

@@ -462,7 +462,7 @@ const
         for (const m of type.members) {
           p(`    :param ${m.name}: ` + m.comments.join(' '))
         }
-        p(`    :return: A :class:\`telesync.types.${type.name}\` instance.`)
+        p(`    :return: A :class:\`h2o_q.types.${type.name}\` instance.`)
         p(`    """`)
         if (type.oneOf) {
           p(`    return ${type.oneOf.type.name}(${type.oneOf.name}=${type.name}(`)

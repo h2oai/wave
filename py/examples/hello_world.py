@@ -1,8 +1,8 @@
 # Hello World!
-# A simple example to get you started with Telesync.
+# A simple example to get you started with Q.
 # ---
-# Import `Site` and the `ui` module from the `telesync` package
-from telesync import site, ui
+# Import `Site` and the `ui` module from the `h2o_q` package
+from h2o_q import site, ui
 
 # Get the web page at route '/demo'.
 # If you're running this example on your local machine,

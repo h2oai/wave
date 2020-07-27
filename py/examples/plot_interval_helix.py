@@ -2,7 +2,7 @@
 # Make a bar plot in helical coordinates.
 # ---
 from synth import FakeCategoricalSeries
-from telesync import site, data, ui
+from h2o_q import site, data, ui
 
 page = site['/demo']
 

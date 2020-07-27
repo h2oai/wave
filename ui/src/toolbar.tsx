@@ -1,7 +1,7 @@
 import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react';
 import React from 'react';
 import { cards } from './layout';
-import { bond, Card, telesync, S } from './telesync';
+import { bond, Card, qd, S } from './qd';
 
 /**
  * Create a command.
@@ -37,14 +37,14 @@ interface State {
 const
   overflowProps: IButtonProps = { ariaLabel: 'More' },
   toCommand = ({ name, label, caption, icon, items }: Command): ICommandBarItemProps => {
-    telesync.args[name] = false
+    qd.args[name] = false
     const onClick = () => {
       if (name[0] === '#') {
         window.location.hash = name.substr(1)
         return
       }
-      telesync.args[name] = true
-      telesync.sync()
+      qd.args[name] = true
+      qd.sync()
     }
     return {
       key: name,

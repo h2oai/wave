@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { Component } from './form';
-import { B, bond, S, telesync } from './telesync';
+import { B, bond, S, qd } from './qd';
 import { padding } from './theme';
 import { XToolTip } from './tooltip';
 
@@ -59,15 +59,15 @@ const
 
 const
   XButton = bond(({ model: m }: { model: Button }) => {
-    telesync.args[m.name] = false
+    qd.args[m.name] = false
     const
       onClick = () => {
         if (m.name[0] === '#') {
           window.location.hash = m.name.substr(1)
           return
         }
-        telesync.args[m.name] = m.value !== undefined ? m.value : true
-        telesync.sync()
+        qd.args[m.name] = m.value !== undefined ? m.value : true
+        qd.sync()
       },
       render = () => {
         if (m.link) {

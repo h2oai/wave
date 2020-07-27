@@ -5,7 +5,7 @@
 
 import os
 import os.path
-from telesync import Q, listen, ui
+from h2o_q import Q, listen, ui
 
 
 def make_link_list(links_and_sizes):

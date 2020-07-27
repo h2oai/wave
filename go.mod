@@ -1,4 +1,4 @@
-module github.com/h2oai/telesync
+module github.com/h2oai/qd
 
 go 1.14
 

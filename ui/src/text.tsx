@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { Markdown, MarkdownInline } from './markdown';
-import { Dict, S } from './telesync';
+import { Dict, S } from './qd';
 import { border, getTheme, padding, pc } from './theme';
 
 /** Create text content. */

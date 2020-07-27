@@ -21,7 +21,7 @@ import { Slider, XSlider } from './slider';
 import { Spinbox, XSpinbox } from './spinbox';
 import { Table, XTable } from './table';
 import { Tabs, XTabs } from './tabs';
-import { bond, Card, Packed, unpack, xid } from './telesync';
+import { bond, Card, Packed, unpack, xid } from './qd';
 import { Text, XText, TextXs, TextXl, TextL, TextM, TextS } from './text';
 import { Textbox, XTextbox } from './textbox';
 import { getTheme } from './theme';

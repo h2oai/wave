@@ -1,7 +1,7 @@
 # Nav
 # Use nav cards to display sidebar navigation.
 # ---
-from telesync import site, ui
+from h2o_q import site, ui
 
 page = site['/demo']
 

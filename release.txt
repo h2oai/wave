@@ -6,24 +6,24 @@
                      /____/
 
 -------------------------------------------------------------------------------
-Telesync Development Server
+Q Development Server
 -------------------------------------------------------------------------------
 
 USAGE
 
-  1. Run './telesync' and point your browser to http://localhost:55555
-  2. Run your Telesync Python app (python -m my_app)
+  1. Run './qd' and point your browser to http://localhost:55555
+  2. Run your Q Python app (python -m my_app)
 
 
 NOTES
 
-  - For an interactive tour of Telesync, see 'examples/readme.txt'
+  - For an interactive tour of Q, see 'examples/readme.txt'
   - For SDK documentation, see 'docs/index.html'.
   - For example apps and code snippets, see 'examples/'.
-  - For additional command-line options, run './telesync -help'
-  - For the pip package, see https://pypi.org/project/telesync/
+  - For additional command-line options, run './qd -help'
+  - For the pip package, see https://pypi.org/project/h2o_q/
 
 
-Happy Telesync'ing!
+Happy Q'ing!
 
 

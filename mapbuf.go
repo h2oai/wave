@@ -1,4 +1,4 @@
-package telesync
+package qd
 
 // MapBuf represents a map (dictionary) buffer.
 type MapBuf struct {

@@ -1,7 +1,7 @@
 import markdownit from 'markdown-it';
 import React from 'react';
 import { cards, substitute } from './layout';
-import { bond, Card, Rec, S, unpack } from './telesync';
+import { bond, Card, Rec, S, unpack } from './qd';
 import { MarkupCard } from './markup'
 
 export const

@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { B, S } from './telesync';
+import { B, S } from './qd';
 
 /**
  * Create a label.

@@ -2,7 +2,7 @@ import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react';
 import * as React from 'react';
 import { stylesheet } from 'typestyle';
 import { Command } from './toolbar';
-import { bond, box, telesync, Card } from './telesync';
+import { bond, box, qd, Card } from './qd';
 
 const
   css = stylesheet({
@@ -36,8 +36,8 @@ const
   toContextMenuItem = (c: Command): IContextualMenuItem => {
     const
       onClick = () => {
-        telesync.args[c.name] = c.data === undefined ? true : c.data
-        telesync.sync()
+        qd.args[c.name] = c.data === undefined ? true : c.data
+        qd.sync()
       }
     return {
       key: c.name,

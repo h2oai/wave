@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { Component, XComponents } from './form';
-import { B, bond, box, S, telesync } from './telesync';
+import { B, bond, box, S, qd } from './qd';
 
 /**
  * Creates a new expander.
@@ -45,9 +45,9 @@ const
 export const
   XExpander = bond(({ model: m }: { model: Expander }) => {
     const
-      isOpenB = box(!!telesync.args[m.name]),
+      isOpenB = box(!!qd.args[m.name]),
       onClick = () => {
-        telesync.args[m.name] = m.expanded = !m.expanded
+        qd.args[m.name] = m.expanded = !m.expanded
         isOpenB(m.expanded)
       },
       render = () => {

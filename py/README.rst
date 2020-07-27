@@ -1,7 +1,7 @@
-Telesync
-========
+H2O Q
+=====
 
-Telesync is a lightweight library for programming interactive web applications
+H2O Q is a lightweight software stack for programming interactive web applications
 entirely in Python (no HTML/Javascript/CSS) required.
 
 It is designed to make it fast, fun and easy to build low-latency, realtime,
@@ -9,10 +9,8 @@ collaborative, web-based applications. It ships batteries-included with
 a suite of form and data visualization components for rapidly prototyping
 analytical and decision-support applications.
 
-Telesync's components work in conjunction with the Telesync relay server
-that facilitates realtime state synchronization between Python and web browsers.
-
-The Telesync relay server is built into H2O.ai Q for enterprise-grade hosting.
+Q's components work in conjunction with the Q relay server that facilitates 
+realtime state synchronization between Python and web browsers.
 
 
 Installing
@@ -22,7 +20,7 @@ Install and update using `pip`_:
 
 .. code-block:: text
 
-    pip install -U telesync
+    pip install -U h2o_q
 
 
 Hello world
@@ -32,7 +30,7 @@ Hello world
 
 .. code-block:: python
 
-    from telesync import site, ui
+    from h2o_q import site, ui
 
     # Access the web page at http://localhost:55555/demo
     page = site['/demo']
@@ -58,9 +56,9 @@ Links
 -----
 
 * Website: https://www.h2o.ai/h2o-q/
-* Releases: https://pypi.org/project/telesync/
-* Code: https://github.com/h2oai/telesync
-* Issue tracker: https://github.com/h2oai/telesync/issues
+* Releases: https://pypi.org/project/h2o_q/
+* Code: https://github.com/h2oai/h2o_q
+* Issue tracker: https://github.com/h2oai/h2o_q/issues
 
 
 .. _pip: https://pip.pypa.io/en/stable/quickstart/

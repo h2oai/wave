@@ -1,4 +1,4 @@
-Welcome to the Telesync API documentation!
+Welcome to the Q API documentation!
 ==========================================
 
 .. toctree::

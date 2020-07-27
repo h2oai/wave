@@ -1,4 +1,4 @@
-package telesync
+package qd
 
 import (
 	"encoding/json"

@@ -1,34 +1,34 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { XButtons, Buttons } from './button';
-import * as T from './telesync';
+import * as T from './qd';
 
 
 const TEST_NAME = 'test-btn';
 describe('Button.tsx', () => {
   beforeEach(() => {
     window.location.hash = ''
-    T.telesync.args[TEST_NAME] = null
+    T.qd.args[TEST_NAME] = null
   })
 
-  it('Calls telesync.sync() after click', () => {
+  it('Calls qd.sync() after click', () => {
     const
       syncMock = jest.fn(),
       btnProps: Buttons = { items: [{ button: { name: TEST_NAME, label: 'btn-label' } }] },
       { getByText } = render(<XButtons model={btnProps} />)
 
-    T.telesync.sync = syncMock
+    T.qd.sync = syncMock
     fireEvent.click(getByText('btn-label'))
 
     expect(syncMock).toHaveBeenCalled()
   })
 
-  it('Sets correct telesync args after click', () => {
+  it('Sets correct qd args after click', () => {
     const btnProps: Buttons = { items: [{ button: { name: TEST_NAME, label: 'btn-label' } }] }
     const { getByText } = render(<XButtons model={btnProps} />)
     fireEvent.click(getByText('btn-label'))
 
-    expect(T.telesync.args[TEST_NAME]).toBe(true)
+    expect(T.qd.args[TEST_NAME]).toBe(true)
   })
 
   it('Sets window.location hash when name starts with #', () => {
@@ -45,7 +45,7 @@ describe('Button.tsx', () => {
       btnProps: Buttons = { items: [{ button: { name: `#${TEST_NAME}`, label: 'btn-label' } }] },
       { getByText } = render(<XButtons model={btnProps} />)
 
-    T.telesync.sync = syncMock
+    T.qd.sync = syncMock
     fireEvent.click(getByText('btn-label'))
 
     expect(syncMock).toHaveBeenCalledTimes(0)
@@ -58,7 +58,7 @@ describe('Button.tsx', () => {
 
     fireEvent.click(getByText('btn-label'))
 
-    expect(T.telesync.args[TEST_NAME]).toBe(null)
+    expect(T.qd.args[TEST_NAME]).toBe(null)
   })
 
   it('Does not set window.location hash when name does not start with #', () => {

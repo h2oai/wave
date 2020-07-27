@@ -1,8 +1,8 @@
 # Pixel Art
-# A card that demonstrates collaborative editing in Telesync.
+# A card that demonstrates collaborative editing in Q.
 # [Open this link](/demo) in multiple browsers and watch them synchronize in realtime.
 # ---
-from telesync import site, data, ui
+from h2o_q import site, data, ui
 
 page = site['/demo']
 page.drop()

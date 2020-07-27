@@ -2,7 +2,7 @@
 # Make a "racetrack" plot (a bar plot in polar coordinates, transposed).
 # ---
 from synth import FakeMultiCategoricalSeries
-from telesync import site, data, ui
+from h2o_q import site, data, ui
 
 page = site['/demo']
 

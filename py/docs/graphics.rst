@@ -1,7 +1,7 @@
-telesync.graphics module
+h2o_q.graphics module
 ========================
 
-.. automodule:: telesync.graphics
+.. automodule:: h2o_q.graphics
    :members:
    :undoc-members:
    :show-inheritance:

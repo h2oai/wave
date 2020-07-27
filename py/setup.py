@@ -4,11 +4,11 @@ with open('README.rst', 'r') as readme:
     long_description = readme.read()
 
 setuptools.setup(
-    name='telesync',
-    version='0.1.0',
+    name='h2o_q',
+    version='0.1.1',
     author='Prithvi Prabhu',
     author_email='prithvi@h2o.ai',
-    description='Python driver for H2O Q / Telesync Realtime Apps',
+    description='Python driver for H2O Q Realtime Apps',
     long_description=long_description,
     url='https://h2o.ai',
     packages=setuptools.find_packages(),

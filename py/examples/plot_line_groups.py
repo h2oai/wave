@@ -2,7 +2,7 @@
 # Make a multi-series line plot.
 # ---
 from synth import FakeMultiTimeSeries
-from telesync import site, data, ui
+from h2o_q import site, data, ui
 
 page = site['/demo']
 

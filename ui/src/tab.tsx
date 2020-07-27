@@ -2,7 +2,7 @@ import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react';
 import React from 'react';
 import { cards } from './layout';
 import { Tab } from './tabs';
-import { bond, Card, telesync, B } from './telesync';
+import { bond, Card, qd, B } from './qd';
 
 /** Create a card containing tabs for navigation. */
 interface State {
@@ -22,8 +22,8 @@ const
           window.location.hash = name.substr(1)
           return
         }
-        telesync.args[name] = true
-        telesync.sync()
+        qd.args[name] = true
+        qd.sync()
       },
       render = () => {
         const

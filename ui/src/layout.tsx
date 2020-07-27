@@ -2,7 +2,7 @@ import { default as React } from 'react';
 import { stylesheet } from 'typestyle';
 import { CardMenu } from './card_menu';
 import { format, isFormatExpr } from './intl';
-import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './telesync';
+import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd';
 import { getTheme, margin } from './theme';
 
 type Slot = {

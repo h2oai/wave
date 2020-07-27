@@ -1,4 +1,4 @@
-package telesync
+package qd
 
 // CycBuf represents a cyclic buffer.
 type CycBuf struct {

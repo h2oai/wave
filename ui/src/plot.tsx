@@ -4,7 +4,7 @@ import React from 'react';
 import { stylesheet } from 'typestyle';
 import { cards } from './layout';
 import { Fmt, parseFormat } from './intl';
-import { B, bond, Card, unpack, Dict, F, parseI, parseU, Rec, S, V } from './telesync';
+import { B, bond, Card, unpack, Dict, F, parseI, parseU, Rec, S, V } from './qd';
 import { getTheme } from './theme';
 
 const

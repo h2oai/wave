@@ -1,7 +1,7 @@
 # Form / Text
 # Use markdown in a text component to display formatted content within a form.
 # ---
-from telesync import site, ui
+from h2o_q import site, ui
 
 page = site['/demo']
 
