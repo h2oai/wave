@@ -1,6 +1,4 @@
-<div><img width="175" src="assets/telesync.png"/></div><br/>
-
-**Q Realtime App Development Server and SDK**
+# Q SDK
 
 - [Getting Started](#getting-started)
 - [Roadmap](https://github.com/h2oai/qd/wiki/Roadmap)
@@ -10,7 +8,7 @@
 
 ## Getting Started
 
-To build apps using Q, you need the `h2o_q` development server and the `h2o_q` pip package.
+To build apps using Q, you need the `qd` development server and the `h2o_q` pip package.
 
 1. [Download](https://github.com/h2oai/qd/releases) a release. The release contains everything you need, including the SDK, documentation and examples.
 2. See `readme.txt` included with your release.
