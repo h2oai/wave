@@ -112,18 +112,27 @@ const
           case 'r': return <rect key={i} {...a} />
           case 's': {
             const
-              [x, y, x0, y0, curve] = extract(a, ['x', 'y', 'x0', 'y0', 'curve']),
+              [x, y, x0, y0, curve, radial] = extract(a, ['x', 'y', 'x0', 'y0', 'curve', 'radial']),
               c = curves[curve] || d3.curveLinear,
-              d = y0 === ''
-                ? d3.area().x(get0).y1(get1).y0(ret0).curve(c)(zip(nums(x), nums(y), (x, y) => [x, y]) as any)
-                : y0
-                  ? d3.area().x(get0).y1(get2).y0(get1).curve(c)(zip3(nums(x), nums(y0), nums(y), (x, y0, y) => [x, y0, y]) as any)
-                  : x0 === ''
-                    ? d3.area().x1(get0).x0(ret0).y(get1).curve(c)(zip(nums(x), nums(y), (x, y) => [x, y]) as any)
-                    : x0
-                      ? d3.area().x1(get1).x0(get0).y(get2).curve(c)(zip3(nums(x0), nums(x), nums(y), (x0, x, y) => [x0, x, y]) as any)
-                      : d3.line().curve(c)(zip(nums(x), nums(y), (x, y) => [x, y]))
-            console.log(i, curve, x0, y0)
+              d = radial
+                ? y0 === ''
+                  ? d3.radialArea().angle(get0).outerRadius(get1).innerRadius(ret0).curve(c)(zip(nums(x), nums(y), (x, y) => [x, y]) as any)
+                  : y0
+                    ? d3.radialArea().angle(get0).outerRadius(get2).innerRadius(get1).curve(c)(zip3(nums(x), nums(y0), nums(y), (x, y0, y) => [x, y0, y]) as any)
+                    : x0 === ''
+                      ? d3.radialArea().endAngle(get0).startAngle(ret0).radius(get1).curve(c)(zip(nums(x), nums(y), (x, y) => [x, y]) as any)
+                      : x0
+                        ? d3.radialArea().endAngle(get1).startAngle(get0).radius(get2).curve(c)(zip3(nums(x0), nums(x), nums(y), (x0, x, y) => [x0, x, y]) as any)
+                        : d3.radialLine().curve(c)(zip(nums(x), nums(y), (x, y) => [x, y]))
+                : y0 === ''
+                  ? d3.area().x(get0).y1(get1).y0(ret0).curve(c)(zip(nums(x), nums(y), (x, y) => [x, y]) as any)
+                  : y0
+                    ? d3.area().x(get0).y1(get2).y0(get1).curve(c)(zip3(nums(x), nums(y0), nums(y), (x, y0, y) => [x, y0, y]) as any)
+                    : x0 === ''
+                      ? d3.area().x1(get0).x0(ret0).y(get1).curve(c)(zip(nums(x), nums(y), (x, y) => [x, y]) as any)
+                      : x0
+                        ? d3.area().x1(get1).x0(get0).y(get2).curve(c)(zip3(nums(x0), nums(x), nums(y), (x0, x, y) => [x0, x, y]) as any)
+                        : d3.line().curve(c)(zip(nums(x), nums(y), (x, y) => [x, y]))
             return <path key={i} {...a} d={d} />
           }
           case 't': {
