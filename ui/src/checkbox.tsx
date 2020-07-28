@@ -37,22 +37,18 @@ export interface Checkbox {
 }
 
 const
-  checkboxStyles = () => ({
+  checkboxStyles: Partial<Fluent.ICheckboxStyles> = {
     root: {
       marginBottom: px(10),
     }
-  })
+  }
 
 export const
   XCheckbox = bond(({ model: m }: { model: Checkbox }) => {
-    qd.args[m.name] = m.value ? true : false
+    qd.args[m.name] = !!m.value
     const
       onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-        qd.args[m.name] = checked === true
-          ? true
-          : checked === false
-            ? false
-            : null
+        qd.args[m.name] = checked === null ? null : !!checked
         if (m.trigger) qd.sync()
       },
       render = () =>

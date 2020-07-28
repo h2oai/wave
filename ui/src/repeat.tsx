@@ -18,13 +18,11 @@ interface State {
 const
   View = bond(({ state: s, changed }: Card<State>) => {
     const
-      render = () => {
-        return (
-          <div>
-            <Repeat view={s.item_view} props={s.item_props} data={s.data} />
-          </div>
-        )
-      }
+      render = () => (
+        <div>
+          <Repeat view={s.item_view} props={s.item_props} data={s.data} />
+        </div>
+      )
     return { render, changed }
   })
 

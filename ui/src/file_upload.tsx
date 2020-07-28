@@ -80,7 +80,6 @@ export const
         : null,
       upload = async () => {
         const formData = new FormData()
-
         filesB().forEach(f => formData.append('files', f))
 
         try {
@@ -112,11 +111,14 @@ export const
         return false
       },
       validateFiles = (fileArr: File[]) => {
+        if (!model.multiple && fileArr.length > 1) {
+          return 'Cannot upload multiple files. Input is not set to multiple mode.'
+        }
+
         const notAllowedFiles = fileArr.filter(({ name }) => !isFileTypeAllowed(name))
         if (notAllowedFiles.length) {
           return `Not allowed extension for files: ${notAllowedFiles.map(({ name }) => name).join(', ')}.
           Allowed file extensions: ${fileExtensions?.join(', ')}.`
-
         }
 
         if (maxFileSizeBytes) {
@@ -160,10 +162,6 @@ export const
         onIsNotDragging(e)
         const files = e.dataTransfer.files;
         if (!files.length || errorB() || successMsgB()) return
-        if (!model.multiple && files.length > 1) {
-          errorB('Cannot upload multiple files. Input is not set to multiple mode.')
-          return
-        }
         const fileArr = Array.from(files)
 
         const errMsg = validateFiles(fileArr)
@@ -251,6 +249,7 @@ export const
             <Fluent.Icon iconName='CloudUpload' styles={{ root: { fontSize: 50 } }} />
             <input
               id='file'
+              data-test={model.name}
               className={css.uploadInput}
               onChange={onChange}
               type='file'
@@ -266,7 +265,7 @@ export const
       render = () => {
         const uploadClasses = isDraggingB() && !errorB() && !successMsgB() ? clas(css.upload, css.uploadDragging) : css.upload
         return (
-          <div data-test={model.name}>
+          <div>
             <form
               className={uploadClasses}
               onDragStart={onIsDragging}

@@ -26,10 +26,10 @@ export const
   XLink = bond(({ model: m }: { model: Link }) => {
     const
       label = m.label || m.path,
-      onClick = m.button ? () => { window.open(m.path) } : null,
+      onClick = () => { window.open(m.path) },
       render = () => {
         // TODO target="_blank"
-        return onClick
+        return m.button
           ? <div><Fluent.DefaultButton text={label} disabled={m.disabled} onClick={onClick} /></div>
           : <div><Fluent.Link data-test='link' href={m.path} disabled={m.disabled}>{label}</Fluent.Link></div>
       }
