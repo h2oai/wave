@@ -16,7 +16,7 @@ PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
 
 
 def _get_env(key: str, value: Any):
-    return os.environ.get(f'TELESYNC_{key}', value)
+    return os.environ.get(f'H2O_Q_{key}', value)
 
 
 _default_internal_address = 'ws://localhost:55556'
