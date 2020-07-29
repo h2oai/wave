@@ -4,9 +4,10 @@ import { XDropdown, Dropdown } from './dropdown';
 import * as T from './qd';
 import { initializeIcons } from '@fluentui/react';
 
+const name = 'dropdown-test'
 const defaultProps: Dropdown = {
-  name: 'dropdown-test',
-  label: 'dropdown-test',
+  name,
+  label: name,
   choices: [
     { name: 'A', label: 'Choice A' },
     { name: 'B', label: 'Choice B' },
@@ -23,7 +24,7 @@ describe('Dropdown.tsx', () => {
       syncMock = jest.fn(),
       { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, trigger: true }} />)
 
-    fireEvent.click(getByTestId('dropdown-test'))
+    fireEvent.click(getByTestId(name))
     T.qd.sync = syncMock
     fireEvent.click(getByText('Choice A'))
 
@@ -35,7 +36,7 @@ describe('Dropdown.tsx', () => {
       syncMock = jest.fn(),
       { getByTestId, getByText } = render(<XDropdown model={defaultProps} />)
 
-    fireEvent.click(getByTestId('dropdown-test'))
+    fireEvent.click(getByTestId(name))
     T.qd.sync = syncMock
     fireEvent.click(getByText('Choice A'))
 
@@ -45,50 +46,55 @@ describe('Dropdown.tsx', () => {
   it('Returns a single item when selected', () => {
     const { getByTestId, getByText } = render(<XDropdown model={defaultProps} />)
 
-    fireEvent.click(getByTestId('dropdown-test'))
+    fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A'))
 
-    expect(T.qd.args['dropdown-test']).toBe('A')
+    expect(T.qd.args[name]).toBe('A')
   })
 
   it('Returns a single item on init', () => {
     render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
-    expect(T.qd.args['dropdown-test']).toBe('A')
+    expect(T.qd.args[name]).toBe('A')
   })
 
   it('Returns the last item when selected more than once', () => {
     const { getByTestId, getByText } = render(<XDropdown model={defaultProps} />)
 
-    fireEvent.click(getByTestId('dropdown-test'))
+    fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A'))
-    fireEvent.click(getByTestId('dropdown-test'))
+    fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice B'))
 
-    expect(T.qd.args['dropdown-test']).toBe('B')
+    expect(T.qd.args[name]).toBe('B')
   })
 
   it('Returns multiple items on init', () => {
     render(<XDropdown model={{ ...defaultProps, values: ['A', 'B'] }} />)
-    expect(T.qd.args['dropdown-test']).toMatchObject(['A', 'B'])
+    expect(T.qd.args[name]).toMatchObject(['A', 'B'])
+  })
+
+  it('Returns null when value not specified - init', () => {
+    render(<XDropdown model={defaultProps} />)
+    expect(T.qd.args[name]).toBeNull()
   })
 
   it('Returns multiple items on select', () => {
     const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, values: [] }} />)
 
-    fireEvent.click(getByTestId('dropdown-test'))
+    fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A').parentElement!)
     fireEvent.click(getByText('Choice B').parentElement!)
 
-    expect(T.qd.args['dropdown-test']).toMatchObject(['A', 'B'])
+    expect(T.qd.args[name]).toMatchObject(['A', 'B'])
   })
 
   it('Returns empty array on deselect', () => {
     const { getByTestId, getByText, getAllByText } = render(<XDropdown model={{ ...defaultProps, values: ['A', 'B'] }} />)
 
-    fireEvent.click(getByTestId('dropdown-test'))
+    fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A').parentElement!)
     fireEvent.click(getAllByText('Choice B')[1].parentElement!)
 
-    expect(T.qd.args['dropdown-test']).toMatchObject([])
+    expect(T.qd.args[name]).toMatchObject([])
   })
 })

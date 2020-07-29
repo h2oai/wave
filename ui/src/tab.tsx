@@ -12,13 +12,13 @@ interface State {
   link?: B
 }
 
-const
+export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
         if (!name) return
-        if (name[0] === '#') {
+        if (name.startsWith('#')) {
           window.location.hash = name.substr(1)
           return
         }

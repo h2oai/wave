@@ -59,13 +59,12 @@ export const
       hide = () => hiddenB(true),
       render = () => {
         const commands: Command[] | undefined = state.commands
-        if (!commands) return <></>
-        if (!commands.length) return <></>
+        if (!commands || !commands.length) return <></>
         const
           hidden = hiddenB(),
           items = commands.map(toContextMenuItem)
         return (
-          <div className={css.menu}>
+          <div className={css.menu} data-test={card.name}>
             <div className={css.target} ref={target} onClick={show}>
               <Icon className={css.icon} iconName='MoreVertical' />
             </div>

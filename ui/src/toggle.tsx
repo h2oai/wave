@@ -29,10 +29,10 @@ export interface Toggle {
 
 export const
   XToggle = bond(({ model: m }: { model: Toggle }) => {
-    qd.args[m.name] = m.value ? true : false
+    qd.args[m.name] = !!m.value
     const
       onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-        qd.args[m.name] = checked ? true : false
+        qd.args[m.name] = !!checked
         if (m.trigger) qd.sync()
       },
       render = () => (

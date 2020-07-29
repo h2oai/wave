@@ -1,6 +1,7 @@
 import React from 'react';
 import { cards } from './layout';
 import { bond, Card, on, S, U, qd } from './qd';
+import { showNotification } from './notification'
 
 /**
  * Represents page-global state.
@@ -17,7 +18,7 @@ interface State {
   notification?: S
 }
 
-const
+export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       init = () => {
@@ -25,14 +26,6 @@ const
         if (title) window.document.title = title
         if (typeof refresh === 'number') qd.refreshRateB(refresh)
         if (notification) showNotification(notification)
-      },
-      showNotification = async (notificationText: string) => {
-        // TODO: Decide on fallback when user's browser does not support Notification API.
-        if (!('Notification' in window)) return
-        else if (Notification.permission === 'granted') new Notification(notificationText)
-        else if (Notification.permission !== 'denied') {
-          if (await Notification.requestPermission() === 'granted') new Notification(notificationText)
-        }
       },
       render = () => (<></>)
     on(changed, init)

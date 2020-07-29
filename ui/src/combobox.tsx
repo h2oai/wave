@@ -42,7 +42,7 @@ export const
       textB = box(m.value),
       options = (m.choices || []).map((text, i): Fluent.IComboBoxOption => ({ key: `${i}`, text })),
       onChange = (_e: React.FormEvent<Fluent.IComboBox>, option?: Fluent.IComboBoxOption, _index?: number, value?: string) => {
-        const v = option ? option.text : value ? value : ''
+        const v = option?.text || value || ''
         qd.args[m.name] = v
         textB(v)
       },
@@ -54,7 +54,7 @@ export const
           options={options}
           disabled={m.disabled}
           autoComplete="on"
-          allowFreeform
+          allowFreeform={true}
           errorMessage={m.error}
           text={textB()}
           onChange={onChange}

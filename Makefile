@@ -27,6 +27,9 @@ build-ui: ## Build UI
 run-ui: ## Run UI in development mode (hot reloading)
 	cd ui && $(MAKE) run
 
+test-ui-ci: ## Run UI unit tests in CI mode 
+	cd ui && $(MAKE) test-ci
+
 build-server: ## Build server for current OS/Arch
 	go build $(LDFLAGS) -o qd cmd/qd/main.go
 

@@ -25,19 +25,18 @@ interface State {
   items: NavGroup[]
 }
 
-const
+export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       render = () => {
         const groups = state.items.map((g): INavLinkGroup => ({
           name: g.label,
-          links: g.items.map((i): INavLink => ({
-            key: i.name,
-            name: i.label,
+          links: g.items.map(({ name, label }): INavLink => ({
+            key: name,
+            name: label,
             url: '',
             onClick: () => {
-              const name = i.name
-              if (name[0] === '#') {
+              if (name.startsWith('#')) {
                 window.location.hash = name.substr(1)
                 return
               }

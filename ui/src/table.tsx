@@ -87,9 +87,8 @@ export const
             qd.sync()
           }
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
-        } else {
-          return <span>{v}</span>
         }
+        else return <span>{v}</span>
       },
       render = () => (
         m.multiple ? (
