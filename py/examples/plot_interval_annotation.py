@@ -1,5 +1,5 @@
 # Plot / Interval / Annotation
-# Add annotations to a bar plot.
+# Add annotations to a column plot.
 # ---
 from synth import FakeCategoricalSeries
 from h2o_q import site, data, ui

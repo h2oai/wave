@@ -1,5 +1,5 @@
 # Plot / Interval / Labels
-# Make a bar plot with labels on each bar.
+# Make a column plot with labels on each bar.
 # ---
 from synth import FakeCategoricalSeries
 from h2o_q import site, data, ui

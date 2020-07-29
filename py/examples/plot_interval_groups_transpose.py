@@ -1,5 +1,5 @@
-# Plot / Interval / Groups
-# Make a grouped column plot.
+# Plot / Interval / Groups / Transpose
+# Make a grouped bar plot.
 # ---
 from synth import FakeMultiCategoricalSeries
 from h2o_q import site, data, ui
@@ -13,7 +13,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Intervals, groups',
     data=data('country product price', n * k),
-    plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', color='=country', dodge='auto', y_min=0)])
+    plot=ui.plot([ui.mark(type='interval', x='=price', y='=product', color='=country', dodge='auto', y_min=0)])
 ))
 
 v.data = [(g, t, x) for x in [f.next() for _ in range(n)] for g, t, x, dx in x]

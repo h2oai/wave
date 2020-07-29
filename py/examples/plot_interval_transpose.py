@@ -1,5 +1,5 @@
-# Plot / Interval
-# Make a column plot.
+# Plot / Interval / Transpose
+# Make a bar plot.
 # ---
 from synth import FakeCategoricalSeries
 from h2o_q import site, data, ui
@@ -12,7 +12,7 @@ v = page.add('example', ui.plot_card(
     box='1 1 4 5',
     title='Interval',
     data=data('product price', n),
-    plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)])
+    plot=ui.plot([ui.mark(type='interval', x='=price', y='=product', y_min=0)])
 ))
 v.data = [(c, x) for c, x, dx in [f.next() for _ in range(n)]]
 

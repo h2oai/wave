@@ -1,10 +1,10 @@
 import { Chart, registerInteraction } from '@antv/g2';
-import { AdjustOption, AnnotationPosition, ArcOption, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface';
+import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, ChartCfg } from '@antv/g2/lib/interface';
 import React from 'react';
 import { stylesheet } from 'typestyle';
-import { cards } from './layout';
 import { Fmt, parseFormat } from './intl';
-import { B, bond, Card, unpack, Dict, F, parseI, parseU, Rec, S, V } from './qd';
+import { cards } from './layout';
+import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V } from './qd';
 import { getTheme } from './theme';
 
 const
@@ -246,7 +246,17 @@ const
   convertToPairs = (ds: any[], f0: S, f1: S, f: S) => {
     for (const d of ds) if (d) d[f] = [d[f0], d[f1]]
   },
-  formattables = split('x x0 x1 x2 y y0 y1 y2 color shape size dodge label').map(f => ([f, f + '_field', f + '_format'])),
+  xyVariants = ' 0 1 2'.split(' '),
+  xyExtra = split('min max nice scale title'),
+  makeXYProps = (p: S) => xyVariants.map(s => p + s),
+  makeXYExtraProps = (p: S) => xyExtra.map(s => `${p}_${s}`),
+  makeFormattables = (xs: S[]) => xs.map(f => ([f, f + '_field', f + '_format'])),
+  xProps = makeFormattables(makeXYProps('x')),
+  yProps = makeFormattables(makeXYProps('y')),
+  xExtraProps = makeXYExtraProps('x'),
+  yExtraProps = makeXYExtraProps('y'),
+  otherProps = makeFormattables(split('color shape size dodge label')),
+  formattables = [...xProps, ...yProps, ...otherProps],
   scaleTypeOf = (ds: any[], marks: Mark[], attr: S): 'c' | 'd' | 't' => {
     const f = attr + '_field', s = attr + '_scale'
     for (const mark of marks) {
@@ -276,6 +286,23 @@ const
       return render(dummyDatum)
     }
     return ''
+  },
+  transposeMark = (mark: Mark) => { // WARNING: Can modify marks in-place!
+    const m: any = mark
+    for (let k = 0; k < xProps.length; k++) {
+      const x = xProps[k], y = yProps[k]
+      for (let i = 0; i < x.length; i++) {
+        const tmp = m[x[i]]
+        m[x[i]] = m[y[i]]
+        m[y[i]] = tmp
+      }
+    }
+    for (let i = 0; i < xExtraProps.length; i++) {
+      const x = xExtraProps[i], y = yExtraProps[i]
+      const tmp = m[x]
+      m[x] = m[y]
+      m[y] = tmp
+    }
   },
   refactorMark = (mark: Mark): MarkExt => {
     // if any fields are passed in as format expressions, separate them out into _field and _format
@@ -579,9 +606,29 @@ const
     o.nice = isB(nice) ? nice : true
     return o
   },
-  makeCoord = (marks: Mark[]): CoordinateOption | undefined => {
-    for (const { coord } of marks) if (isS(coord)) return { type: coord as any }
+  getCoordType = (marks: Mark[]): S | undefined => {
+    for (const { coord } of marks) if (isS(coord)) return coord
     return undefined
+  },
+  makeCoord = (space: SpaceT, marks: Mark[]): CoordinateOption | undefined => {
+
+    // HACK ALERT!
+    // Flip all x* and y* properties if the x-variable is continuous.
+    // This is because the underlying lib expects x-variables to be always discrete.
+    // So if the coord space is continuous-discrete, flip x/y and set a transpose transform on the coords.
+
+    const
+      type = getCoordType(marks) as any,
+      transpose = space === SpaceT.CD,
+      actions: CoordinateActions[] | undefined = transpose ? [['transpose']] : undefined
+
+    if (transpose) for (const mark of marks) transposeMark(mark)
+
+    return (
+      type
+        ? actions ? { type, actions } : { type }
+        : actions ? { actions } : undefined
+    )
   },
   makeMarks = (marks: Mark[]): [GeometryOption[], AnnotationOption[]] => {
     const
@@ -599,17 +646,20 @@ const
 
     return [geometries, annotations]
   },
-  makeChart = (el: HTMLElement, marks: Mark[]): Chart | null => {
-    if (!marks) return null
-    const [geometries, annotations] = makeMarks(marks)
+  makeChart = (el: HTMLElement, space: SpaceT, marks: Mark[]): ChartCfg => {
+    // WARNING: makeCoord() must be called before other functions.
+    const
+      coordinate = makeCoord(space, marks), // WARNING: this call may transpose x/y in-place.
+      scales = makeScales(marks),
+      [geometries, annotations] = makeMarks(marks)
 
-    return new Chart({
+    return {
       container: el,
       autoFit: true,
       options: {
         animate: false,
-        coordinate: makeCoord(marks),
-        scales: makeScales(marks),
+        coordinate,
+        scales,
         geometries,
         annotations,
         interactions: [
@@ -622,7 +672,7 @@ const
           // XXX pass container element
         }
       }
-    })
+    }
   }
 
 const
@@ -665,9 +715,9 @@ const
           raw_plot = unpack<Plot>(s.plot),
           marks = raw_plot.marks.map(refactorMark),
           plot: Plot = { marks: marks },
-          // spaceT = spaceTypeOf(raw_marks, marks),
+          space = spaceTypeOf(raw_data, marks),
           data = refactorData(raw_data, plot.marks),
-          chart = makeChart(el, plot.marks)
+          chart = plot.marks ? new Chart(makeChart(el, space, plot.marks)) : null
         currentPlot = plot
         if (chart) {
           currentChart = chart
