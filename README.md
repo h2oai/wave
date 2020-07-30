@@ -190,6 +190,14 @@ Instead, Q provides 4 mechanisms for preserving data between requests:
 
 Here, *Client* refers to a distinct tab in a browser.
 
+If you want to rely on the old behavior of preserving `q.args` for the lifetime of the application, copy `q.args` to `q.client` like this:
+
+```python
+from h2o_q import copy_expando
+
+copy_expando(q.args, q.client, exclude_keys=['back2', 'select_target', 'restart'])
+```
+
 #### Changed: No need to JSON-serialize values to preserve them between requests.
 
 `q.args.foo=` only supported JSON-serialized values. No such restrictions exist for the `q.app`, `q.user` and `q.client` containers. You could, for example, load a Pandas dataframe and set `q.user.df = my_df`, and the dataframe will be accessible across requests for the lifetime of the app.
