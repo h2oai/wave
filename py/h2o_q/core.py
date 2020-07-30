@@ -149,6 +149,10 @@ class Expando:
 
     def __contains__(self, k): return k in self.__dict__[DICT]
 
+    def __delattr__(self, k): del self.__dict__[DICT][k]
+
+    def __delitem__(self, k): del self.__dict__[DICT][k]
+
     def __repr__(self): return repr(self.__dict__[DICT])
 
     def __str__(self): return '\n'.join([f'{k} = {repr(v)}' for k, v in self.__dict__[DICT].items()])
@@ -156,12 +160,58 @@ class Expando:
 
 def expando_to_dict(e: Expando) -> dict:
     """
-    Convert an expando to a dict.
+    Extract an expando's underlying dictionary.
+    Any modifications to the dictionary also affect the original expando.
 
     :param e: The expando instance.
-    :return: A dictionary.
+    :return: The expando's dictionary.
     """
     return e.__dict__[DICT]
+
+
+def clone_expando(source: Expando, exclude_keys: Optional[Union[list, tuple]] = None,
+                  include_keys: Optional[Union[list, tuple]] = None) -> Expando:
+    """
+    Clone an expando instance. Creates a shallow clone.
+
+    :param source: The expando to clone.
+    :param exclude_keys: Keys to exclude while cloning.
+    :param include_keys: Keys to include while cloning.
+    :return: The expando clone.
+    """
+    return copy_expando(source, Expando(), exclude_keys, include_keys)
+
+
+def copy_expando(source: Expando, target: Expando, exclude_keys: Optional[Union[list, tuple]] = None,
+                 include_keys: Optional[Union[list, tuple]] = None) -> Expando:
+    """
+    Copy all entries from the source expando instance to the target expando instance.
+
+    :param source: The expando to copy from.
+    :param target: The expando to copy to.
+    :param exclude_keys: Keys to exclude while copying.
+    :param include_keys: Keys to include while copying.
+    :return: The target expando.
+    """
+    if include_keys:
+        if exclude_keys:
+            for k in include_keys:
+                if k not in exclude_keys:
+                    target[k] = source[k]
+        else:
+            for k in include_keys:
+                target[k] = source[k]
+    else:
+        d = expando_to_dict(source)
+        if exclude_keys:
+            for k, v in d.items():
+                if k not in exclude_keys:
+                    target[k] = v
+        else:
+            for k, v in d.items():
+                target[k] = v
+
+    return target
 
 
 PAGE = '__page__'
