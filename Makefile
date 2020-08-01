@@ -9,13 +9,13 @@ all: clean setup build ## Setup and build everything
 setup: ## Set up development dependencies
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
-	cd tools/telegen && $(MAKE) setup build
+	cd tools/qgen && $(MAKE) setup build
 
 clean: ## Clean
 	rm -rf build
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
-	cd tools/telegen && $(MAKE) clean
+	cd tools/qgen && $(MAKE) clean
 	rm -f qd
 
 .PHONY: build
@@ -40,7 +40,7 @@ run: ## Run server
 	go run cmd/qd/main.go -web-dir ./ui/build -debug
 
 generate: ## Generate driver bindings
-	cd tools/telegen && $(MAKE) run
+	cd tools/qgen && $(MAKE) run
 
 release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make release)"
 	$(MAKE) OS=linux release-os
