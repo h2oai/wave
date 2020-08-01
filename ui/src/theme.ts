@@ -204,14 +204,23 @@ interface ThemeFont {
   s30: NestedCSSProperties
   s40: NestedCSSProperties
   s80: NestedCSSProperties
+  /** Thin */
   w1: NestedCSSProperties
+  /** Extra light */
   w2: NestedCSSProperties
+  /** Light */
   w3: NestedCSSProperties
+  /** Regular */
   w4: NestedCSSProperties
+  /** Medium */
   w5: NestedCSSProperties
+  /** Semi bold */
   w6: NestedCSSProperties
+  /** Bold */
   w7: NestedCSSProperties
+  /** Extra bold */
   w8: NestedCSSProperties
+  /** Black */
   w9: NestedCSSProperties
 }
 

@@ -1189,6 +1189,36 @@ def grid_card(
     )
 
 
+def header_card(
+        box: str,
+        title: str,
+        subtitle: str,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> HeaderCard:
+    """Render a card containing a HTML page inside an inline frame (iframe).
+
+    Either a path or content can be provided as arguments.
+
+    :param box: A string indicating how to place this component on the page.
+    :param title: The title.
+    :param subtitle: The subtitle, displayed below the title.
+    :param icon: The icon type, displayed to the left.
+    :param icon_color: The icon's color.
+    :param commands: Contextual menu commands for this component.
+    :return: A :class:`h2o_q.types.HeaderCard` instance.
+    """
+    return HeaderCard(
+        box,
+        title,
+        subtitle,
+        icon,
+        icon_color,
+        commands,
+    )
+
+
 def image_card(
         box: str,
         title: str,

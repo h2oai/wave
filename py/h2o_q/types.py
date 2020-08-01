@@ -2611,6 +2611,82 @@ class GridCard:
         )
 
 
+class HeaderCard:
+    """Render a card containing a HTML page inside an inline frame (iframe).
+
+    Either a path or content can be provided as arguments.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            subtitle: str,
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.icon = icon
+        """The icon type, displayed to the left."""
+        self.icon_color = icon_color
+        """The icon's color."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('HeaderCard.box is required.')
+        if self.title is None:
+            raise ValueError('HeaderCard.title is required.')
+        if self.subtitle is None:
+            raise ValueError('HeaderCard.subtitle is required.')
+        return _dump(
+            view='header',
+            box=self.box,
+            title=self.title,
+            subtitle=self.subtitle,
+            icon=self.icon,
+            icon_color=self.icon_color,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'HeaderCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('HeaderCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('HeaderCard.title is required.')
+        __d_subtitle: Any = __d.get('subtitle')
+        if __d_subtitle is None:
+            raise ValueError('HeaderCard.subtitle is required.')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        subtitle: str = __d_subtitle
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return HeaderCard(
+            box,
+            title,
+            subtitle,
+            icon,
+            icon_color,
+            commands,
+        )
+
+
 class ImageCard:
     """Create a card that displays a base64-encoded image.
     """
