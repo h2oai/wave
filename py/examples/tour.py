@@ -81,14 +81,23 @@ def load_examples(filenames: List[str]) -> Dict[str, Example]:
     return examples
 
 
+app_title = 'H2O Q SDK Tour'
+
+
 async def setup_page(q: Q):
     q.page['meta'] = ui.meta_card(
         box='',
-        title='Examples'
+        title=app_title
+    )
+
+    q.page['header'] = ui.header_card(
+        box='1 1 2 1',
+        title=app_title,
+        subtitle=f'{len(catalog)} Interactive Examples',
     )
 
     q.page['examples'] = ui.nav_card(
-        box='1 1 2 -1',
+        box='1 2 2 -1',
         items=[
             ui.nav_group(
                 label='Examples',
@@ -123,7 +132,7 @@ def make_blurb(example: Example):
         buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
 
     return [
-        ui.text(example.title, size='xl'),
+        ui.text(example.title, size='l'),
         ui.text(example.description),
         ui.buttons(buttons),
     ]
