@@ -10,10 +10,12 @@ from .core import pack, data as _data, Data, Ref, Expando, expando_to_dict
 def stage(**kwargs) -> str:
     """
     Create a stage. A stage holds static graphics elements that are rendered as part of the background (behind the scene).
-    The return value must be assigned to the `stage` property of a :class:`h2o_q.types.GraphicsCard`.
+    The return value must be assigned to the `stage` property of a `h2o_q.types.GraphicsCard`.
 
-    :param kwargs: Graphical elements to render as part of the stage.
-    :return: Packed data.
+    Args:
+        kwargs: Graphical elements to render as part of the stage.
+    Returns:
+        Packed data.
     """
     return pack([expando_to_dict(v) for v in kwargs.values()])
 
@@ -21,10 +23,12 @@ def stage(**kwargs) -> str:
 def scene(**kwargs) -> Data:
     """
     Create a scene. A scene holds graphic elements whose attributes need to be changed dynamically (causing a re-render).
-    The return value must be assigned to the `scene` property of a :class:`h2o_q.types.GraphicsCard`.
+    The return value must be assigned to the `scene` property of a `h2o_q.types.GraphicsCard`.
 
-    :param kwargs: Graphical elements to render as part of the scene.
-    :return: A :class:`h2o_q.core.Data` instance.
+    Args:
+        kwargs: Graphical elements to render as part of the scene.
+    Returns:
+        A `h2o_q.core.Data` instance.
     """
     return _data(fields='d o', rows={k: [json.dumps(expando_to_dict(v)), ''] for k, v in kwargs.items()})
 
@@ -33,9 +37,11 @@ def draw(element: Ref, **kwargs) -> Ref:
     """
     Schedule a redraw of the specified graphical element using the provided attributes.
 
-    :param element: A reference to a graphical element.
-    :param kwargs: Attributes to use while performing a redraw.
-    :return: The element reference, without change.
+    Args:
+        element: A reference to a graphical element.
+        kwargs: Attributes to use while performing a redraw.
+    Returns:
+        The element reference, without change.
     """
     element['o'] = json.dumps(kwargs)
     return element
@@ -44,10 +50,12 @@ def draw(element: Ref, **kwargs) -> Ref:
 def reset(element: Ref) -> Ref:
     """
     Schedule a redraw of the specified graphical element using its original attributes.
-    Calling this function clears any changes performed using the :func:`h2o_q.graphics.draw` function.
+    Calling this function clears any changes performed using the `h2o_q.graphics.draw` function.
 
-    :param element: A reference to a graphical element.
-    :return: The element reference, without change.
+    Args:
+        element: A reference to a graphical element.
+    Returns:
+        The element reference, without change.
     """
     element['o'] = ''
     return element
@@ -77,8 +85,10 @@ def type_of(element: Expando) -> Optional[str]:
     """
     Get the type of the graphical element.
 
-    :param element: A graphical element.
-    :return: A string indicating the type of the element, e.g. 'circle', 'line', etc.
+    Args:
+        element: A graphical element.
+    Returns:
+        A string indicating the type of the element, e.g. 'circle', 'line', etc.
     """
     return _element_types.get(element['_t'], None)
 
@@ -87,12 +97,14 @@ def arc(r1: float, r2: float, a1: float, a2: float, **kwargs) -> Expando:
     """
     Draw circular or annular sector, as in a pie or donut chart, centered at (0, 0).
 
-    :param r1: inner radius.
-    :param r2: outer radius.
-    :param a1: start angle, in degrees.
-    :param a2: end angle, in degrees.
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        r1: inner radius.
+        r2: outer radius.
+        a1: start angle, in degrees.
+        a2: end angle, in degrees.
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('a', dict(r1=r1, r2=r2, a1=a1, a2=a2, **kwargs))
 
@@ -102,8 +114,10 @@ def circle(**kwargs) -> Expando:
     Draw a circle.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/circle
 
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('c', kwargs)
 
@@ -113,8 +127,10 @@ def ellipse(**kwargs) -> Expando:
     Draw an ellipse.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/ellipse
 
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('e', kwargs)
 
@@ -124,8 +140,10 @@ def image(**kwargs) -> Expando:
     Draw an image.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image
 
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('i', kwargs)
 
@@ -135,8 +153,10 @@ def line(**kwargs) -> Expando:
     Draw a line.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/line
 
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('l', kwargs)
 
@@ -146,8 +166,10 @@ def path(**kwargs) -> Expando:
     Draw a path.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path
 
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('p', kwargs)
 
@@ -157,8 +179,10 @@ def polygon(**kwargs) -> Expando:
     Draw a polygon.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon
 
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('pg', kwargs)
 
@@ -168,8 +192,10 @@ def polyline(**kwargs) -> Expando:
     Draw a polyline.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polyline
 
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('pl', kwargs)
 
@@ -191,20 +217,22 @@ def spline(x: Floats = None, y: Floats = None,
 
     If x, y are specified, draws a regular spline.
 
-    If x, y, y0 are specified, draws a horizontal area spline. Set baseline to zero if y0 is an empty list.
+    If x, y, y0 are specified, draws a horizontal area spline. Sets baseline to zero if y0 is an empty list.
 
-    If x, x0, y are specified, draws a vertical area spline. Set baseline zero if x0 is an empty list
+    If x, x0, y are specified, draws a vertical area spline. Sets baseline to zero if x0 is an empty list
 
     Missing information is rendered as gaps in the spline.
 
-    :param x: x-coordinates.
-    :param y: y-coordinates.
-    :param x0: base x-coordinates.
-    :param y0: base y-coordinates.
-    :param curve: Interpolation. One of basis, basis-closed, basis-open, cardinal, cardinal-closed, cardinal-open, smooth, smooth-closed, smooth-open, linear, linear-closed, monotone-x, monotone-y, natural, step, step-after, step-before. Defaults to linear.
-    :param radial: Whether (x, y) should be treated as (angle,radius) or (x0, x, y0, y) should be treated as (start-angle, end-angle, inner-radius, outer-radius).
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        x: x-coordinates.
+        y: y-coordinates.
+        x0: base x-coordinates.
+        y0: base y-coordinates.
+        curve: Interpolation. One of basis, basis-closed, basis-open, cardinal, cardinal-closed, cardinal-open, smooth, smooth-closed, smooth-open, linear, linear-closed, monotone-x, monotone-y, natural, step, step-after, step-before. Defaults to linear.
+        radial: Whether (x, y) should be treated as (angle,radius) or (x0, x, y0, y) should be treated as (start-angle, end-angle, inner-radius, outer-radius).
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     attrs = dict(x=_str(x), y=_str(y), x0=_str(x0), y0=_str(y0), curve=curve, radial=radial)
     return _el('s', dict(**{k: v for k, v in attrs.items() if v is not None}, **kwargs))
@@ -215,8 +243,10 @@ def rect(**kwargs) -> Expando:
     Draw a rectangle.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect
 
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('r', kwargs)
 
@@ -226,9 +256,11 @@ def text(text: str, **kwargs) -> Expando:
     Draw text.
     See https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text
 
-    :param text: The text content.
-    :param kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
-    :return: Data for the graphical element.
+    Args:
+        text: The text content.
+        kwargs: Attributes to use for the initial render. SVG attributes, snake-cased.
+    Returns:
+        Data for the graphical element.
     """
     return _el('t', dict(text=text, **kwargs))
 
@@ -251,7 +283,8 @@ class Path:
         """
         Serialize this path's commands into SVG path data.
 
-        :return: The ``d`` attribute for a SVG path.
+        Returns:
+            The ``d`` attribute for a SVG path.
         """
         return ' '.join(self.__d)
 
@@ -260,8 +293,10 @@ class Path:
         A SVG path element representing the commands in this ``Path`` instance.
         Same as calling ``h2o_q.graphics.path(d=path.d())``
 
-        :param kwargs: Additional attributes for the SVG path element.
-        :return: A SVG path element.
+        Args:
+            kwargs: Additional attributes for the SVG path element.
+        Returns:
+            A SVG path element.
         """
         return path(d=self.d(), **kwargs)
 
@@ -272,9 +307,11 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataMovetoCommands
 
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('M', x, y)
 
@@ -285,9 +322,11 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataMovetoCommands
 
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('m', x, y)
 
@@ -297,7 +336,8 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataClosePathCommand
 
-        :return: The current ``Path`` instance.
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('Z')
 
@@ -307,7 +347,8 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataClosePathCommand
 
-        :return: The current ``Path`` instance.
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('z')
 
@@ -318,9 +359,11 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataLinetoCommands
 
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('L', x, y)
 
@@ -331,9 +374,11 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataLinetoCommands
 
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('l', x, y)
 
@@ -344,8 +389,10 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataLinetoCommands
 
-        :param x: x-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x: x-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('H', x)
 
@@ -356,8 +403,10 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataLinetoCommands
 
-        :param x: x-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x: x-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('h', x)
 
@@ -368,8 +417,10 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataLinetoCommands
 
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('V', y)
 
@@ -380,8 +431,10 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataLinetoCommands
 
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('v', y)
 
@@ -393,13 +446,15 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataCubicBezierCommands
 
-        :param x1: x-coordinate of first control point
-        :param y1: x-coordinate of first control point
-        :param x2: y-coordinate of second control point
-        :param y2: y-coordinate of second control point
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x1: x-coordinate of first control point
+            y1: x-coordinate of first control point
+            x2: y-coordinate of second control point
+            y2: y-coordinate of second control point
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('C', x1, y1, x2, y2, x, y)
 
@@ -411,13 +466,15 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataCubicBezierCommands
 
-        :param x1: x-coordinate of first control point
-        :param y1: x-coordinate of first control point
-        :param x2: y-coordinate of second control point
-        :param y2: y-coordinate of second control point
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x1: x-coordinate of first control point
+            y1: x-coordinate of first control point
+            x2: y-coordinate of second control point
+            y2: y-coordinate of second control point
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('c', x1, y1, x2, y2, x, y)
 
@@ -430,11 +487,13 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataCubicBezierCommands
 
-        :param x2: y-coordinate of second control point
-        :param y2: y-coordinate of second control point
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x2: y-coordinate of second control point
+            y2: y-coordinate of second control point
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('S', x2, y2, x, y)
 
@@ -447,11 +506,13 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataCubicBezierCommands
 
-        :param x2: y-coordinate of second control point
-        :param y2: y-coordinate of second control point
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x2: y-coordinate of second control point
+            y2: y-coordinate of second control point
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('s', x2, y2, x, y)
 
@@ -462,11 +523,13 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataQuadraticBezierCommands
 
-        :param x1: x-coordinate of first control point
-        :param y1: x-coordinate of first control point
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x1: x-coordinate of first control point
+            y1: x-coordinate of first control point
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('Q', x1, y1, x, y)
 
@@ -477,11 +540,13 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataQuadraticBezierCommands
 
-        :param x1: x-coordinate of first control point
-        :param y1: x-coordinate of first control point
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x1: x-coordinate of first control point
+            y1: x-coordinate of first control point
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('q', x1, y1, x, y)
 
@@ -493,9 +558,11 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataQuadraticBezierCommands
 
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('T', x, y)
 
@@ -507,9 +574,11 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataQuadraticBezierCommands
 
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('t', x, y)
 
@@ -525,14 +594,16 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataEllipticalArcCommands
 
-        :param rx: x-radius
-        :param ry: y-radius
-        :param x_axis_rotation: Rotation in degrees.
-        :param large_arc: Determines if the arc should be greater than or less than 180 degrees.
-        :param sweep: Determines if the arc should begin moving at positive angles or negative ones.
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            rx: x-radius
+            ry: y-radius
+            x_axis_rotation: Rotation in degrees.
+            large_arc: Determines if the arc should be greater than or less than 180 degrees.
+            sweep: Determines if the arc should begin moving at positive angles or negative ones.
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('A', rx, ry, x_axis_rotation, 1 if large_arc else 0, 1 if sweep else 0, x, y)
 
@@ -548,23 +619,26 @@ class Path:
 
         See https://www.w3.org/TR/SVG/paths.html#PathDataEllipticalArcCommands
 
-        :param rx: x-radius
-        :param ry: y-radius
-        :param x_axis_rotation: Rotation in degrees.
-        :param large_arc: Determines if the arc should be greater than or less than 180 degrees.
-        :param sweep: Determines if the arc should begin moving at positive angles or negative ones.
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current ``Path`` instance.
+        Args:
+            rx: x-radius
+            ry: y-radius
+            x_axis_rotation: Rotation in degrees.
+            large_arc: Determines if the arc should be greater than or less than 180 degrees.
+            sweep: Determines if the arc should begin moving at positive angles or negative ones.
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current ``Path`` instance.
         """
         return self._d('a', rx, ry, x_axis_rotation, 1 if large_arc else 0, 1 if sweep else 0, x, y)
 
 
 def p() -> Path:
     """
-    Create a new :class:`h2o_q.graphics.Path`.
+    Create a new `h2o_q.graphics.Path`.
 
-    :return: A new :class:`h2o_q.graphics.Path`.
+    Returns:
+        A new `h2o_q.graphics.Path`.
     """
     return Path()
 
@@ -611,9 +685,10 @@ class Turtle:
         """
         Create a Turtle.
 
-        :param x: initial position x
-        :param y: initial position y
-        :param degrees: initial angle in degrees
+        Args:
+            x: initial position x
+            y: initial position y
+            degrees: initial angle in degrees
         """
         self._p = _Vec(x, y)  # position vector
         a = math.radians(degrees)
@@ -640,8 +715,10 @@ class Turtle:
         """
         Move forward.
 
-        :param distance: Distance to move by.
-        :return: The current turtle instance.
+        Args:
+            distance: Distance to move by.
+        Returns:
+            The current turtle instance.
         """
         return self._move(distance)
 
@@ -649,8 +726,10 @@ class Turtle:
         """
         Move backward.
 
-        :param distance: Distance to move by.
-        :return: The current turtle instance.
+        Args:
+            distance: Distance to move by.
+        Returns:
+            The current turtle instance.
         """
         return self._move(-distance)
 
@@ -658,8 +737,10 @@ class Turtle:
         """
         Turn left.
 
-        :param degrees: Angle in degrees.
-        :return: The current turtle instance.
+        Args:
+            degrees: Angle in degrees.
+        Returns:
+            The current turtle instance.
         """
         return self._rotate(-degrees)
 
@@ -667,8 +748,10 @@ class Turtle:
         """
         Turn right.
 
-        :param degrees: Angle in degrees.
-        :return: The current turtle instance.
+        Args:
+            degrees: Angle in degrees.
+        Returns:
+            The current turtle instance.
         """
         return self._rotate(degrees)
 
@@ -676,8 +759,10 @@ class Turtle:
         """
         Pen up.
 
-        :param: close Whether to close the current subpath.
-        :return: The current turtle instance.
+        Args:
+            close: Whether to close the current subpath.
+        Returns:
+            The current turtle instance.
         """
         if close:
             self._path.Z()
@@ -689,7 +774,8 @@ class Turtle:
         """
         Pen down.
 
-        :return: The current turtle instance.
+        Returns:
+            The current turtle instance.
         """
         self._pd = True
         return self
@@ -698,9 +784,11 @@ class Turtle:
         """
         Set the turtle's position.
 
-        :param x: x-coordinate
-        :param y: y-coordinate
-        :return: The current turtle instance.
+        Args:
+            x: x-coordinate
+            y: y-coordinate
+        Returns:
+            The current turtle instance.
         """
         self._p = _Vec(x, y)
         return self._draw()
@@ -709,8 +797,10 @@ class Turtle:
         """
         Set the turtle's orientation.
 
-        :param degrees: angle in degrees
-        :return: The current turtle instance.
+        Args:
+            degrees: angle in degrees
+        Returns:
+            The current turtle instance.
         """
         a = math.radians(degrees)
         self._a = _Vec(math.cos(a), math.sin(a))
@@ -720,7 +810,8 @@ class Turtle:
         """
         Serialize this turtle's movements into SVG path data.
 
-        :return: The ``d`` attribute for a SVG path.
+        Returns:
+            The ``d`` attribute for a SVG path.
         """
         return self._path.d()
 
@@ -728,19 +819,23 @@ class Turtle:
         """
         Create a SVG path element that represents this turtle's movements.
 
-        :param kwargs: Additional attributes for the SVG path element.
-        :return: A SVG path element.
+        Args:
+            kwargs: Additional attributes for the SVG path element.
+        Returns:
+            A SVG path element.
         """
         return self._path.path(**kwargs)
 
 
 def turtle(x=0.0, y=0.0, degrees=0.0) -> Turtle:
     """
-    Create a new :class:`h2o_q.graphics.Turtle`.
+    Create a new `h2o_q.graphics.Turtle`.
 
-    :param x: initial position x
-    :param y: initial position y
-    :param degrees: initial angle in degrees
-    :return: A new :class:`h2o_q.graphics.Turtle`.
+    Args:
+        x: initial position x
+        y: initial position y
+        degrees: initial angle in degrees
+    Returns:
+        A new `h2o_q.graphics.Turtle`.
     """
     return Turtle(x, y, degrees)

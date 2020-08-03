@@ -1,5 +1,5 @@
 //
-// Telegen
+// QGen
 // =======
 //
 // This tool scans the Typescript src directory for interface definitions and
@@ -244,7 +244,7 @@ const
   },
   processDir = (files: File[], dirpath: string) => {
     const
-      ignored = toLookup(fs.readFileSync(path.join(dirpath, '.telegen'), 'utf8').split('\n').map(x => x.trim())),
+      ignored = toLookup(fs.readFileSync(path.join(dirpath, '.qgen'), 'utf8').split('\n').map(x => x.trim())),
       filenames = fs.readdirSync(dirpath)
     for (const filename of filenames) {
       if (ignored[filename]) continue
@@ -459,10 +459,12 @@ const
         }
         p(`    """` + genComments(type.comments, '    '))
         p(``)
+        p(`    Args:`)
         for (const m of type.members) {
-          p(`    :param ${m.name}: ` + m.comments.join(' '))
+          p(`        ${m.name}: ` + m.comments.join(' '))
         }
-        p(`    :return: A :class:\`h2o_q.types.${type.name}\` instance.`)
+        p(`    Returns:`)
+        p(`        A \`h2o_q.types.${type.name}\` instance.`)
         p(`    """`)
         if (type.oneOf) {
           p(`    return ${type.oneOf.type.name}(${type.oneOf.name}=${type.name}(`)

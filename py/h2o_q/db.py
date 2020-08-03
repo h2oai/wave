@@ -40,9 +40,10 @@ class TeleDB:
         """
         Create a new client instance.
 
-        :param address: database address
-        :param key_id: access key id
-        :param key_secret: access key secret
+        Args:
+            address: database address
+            key_id: access key id
+            key_secret: access key secret
         """
         self._address = address
         session = requests.Session()
@@ -54,8 +55,10 @@ class TeleDB:
         """
         Returns a connector to a database with the given name.
 
-        :param name: the database name
-        :return: a connector instance
+        Args:
+            name: the database name
+        Returns:
+            a connector instance
         """
         return _DB(self, name)
 
@@ -85,11 +88,13 @@ class _DB:
         The result will be None if the error is not None.
         Therefore, always check if there is an error before attempting to use the result.
 
-        :param sql: SQL statement
-        :param params: Parameters to the SQL statement, one of str, int, float or None
-        :return: A (result, error) tuple
+        Args:
+            sql: SQL statement
+            params: Parameters to the SQL statement, one of str, int, float or None
+        Returns:
+            A (result, error) tuple
 
-        :Example:
+        Example:
 
         result, err = db.exec(sql)
         if err:
@@ -117,10 +122,12 @@ class _DB:
         The results will be None if the error is not None.
         Therefore, always check if there is an error before attempting to use the results.
 
-        :param args: SQL statements
-        :return: a (results, error) tuple
+        Args:
+            args: SQL statements
+        Returns:
+            a (results, error) tuple
 
-        :Example:
+        Example:
 
         results, error = db.exec_many(
             'CREATE TABLE student(name TEXT, age INTEGER)',

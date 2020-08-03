@@ -16,13 +16,15 @@ def command(
 
     Commands are typically displayed as context menu items or toolbar button.
 
-    :param name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
-    :param label: The text displayed for this command.
-    :param caption: The caption for this command (typically a tooltip).
-    :param icon: The icon to be displayed for this command.
-    :param items: Sub-commands, if any
-    :param data: Data associated with this command, if any.
-    :return: A :class:`h2o_q.types.Command` instance.
+    Args:
+        name: An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed.
+        label: The text displayed for this command.
+        caption: The caption for this command (typically a tooltip).
+        icon: The icon to be displayed for this command.
+        items: Sub-commands, if any
+        data: Data associated with this command, if any.
+    Returns:
+        A `h2o_q.types.Command` instance.
     """
     return Command(
         name,
@@ -48,16 +50,18 @@ def flex_card(
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
 
-    :param box: A string indicating how to place this component on the page.
-    :param item_view: The child card type.
-    :param item_props: The child card properties.
-    :param data: Data for this card.
-    :param direction: Layout direction. One of 'horizontal', 'vertical'.
-    :param justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'.
-    :param align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'.
-    :param wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.FlexCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        item_view: The child card type.
+        item_props: The child card properties.
+        data: Data for this card.
+        direction: Layout direction. One of 'horizontal', 'vertical'.
+        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'.
+        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'.
+        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.FlexCard` instance.
     """
     return FlexCard(
         box,
@@ -79,10 +83,12 @@ def text(
 ) -> Component:
     """Create text content.
 
-    :param content: The text content.
-    :param size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'.
-    :param tooltip: Tooltip message.
-    :return: A :class:`h2o_q.types.Text` instance.
+    Args:
+        content: The text content.
+        size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'.
+        tooltip: Tooltip message.
+    Returns:
+        A `h2o_q.types.Text` instance.
     """
     return Component(text=Text(
         content,
@@ -97,9 +103,11 @@ def text_xl(
 ) -> Component:
     """Create extra-large sized text content.
 
-    :param content: The text content.
-    :param tooltip: Tooltip message.
-    :return: A :class:`h2o_q.types.TextXl` instance.
+    Args:
+        content: The text content.
+        tooltip: Tooltip message.
+    Returns:
+        A `h2o_q.types.TextXl` instance.
     """
     return Component(text_xl=TextXl(
         content,
@@ -113,9 +121,11 @@ def text_l(
 ) -> Component:
     """Create large sized text content.
 
-    :param content: The text content.
-    :param tooltip: Tooltip message.
-    :return: A :class:`h2o_q.types.TextL` instance.
+    Args:
+        content: The text content.
+        tooltip: Tooltip message.
+    Returns:
+        A `h2o_q.types.TextL` instance.
     """
     return Component(text_l=TextL(
         content,
@@ -129,9 +139,11 @@ def text_m(
 ) -> Component:
     """Create medium sized text content.
 
-    :param content: The text content.
-    :param tooltip: Tooltip message.
-    :return: A :class:`h2o_q.types.TextM` instance.
+    Args:
+        content: The text content.
+        tooltip: Tooltip message.
+    Returns:
+        A `h2o_q.types.TextM` instance.
     """
     return Component(text_m=TextM(
         content,
@@ -145,9 +157,11 @@ def text_s(
 ) -> Component:
     """Create small sized text content.
 
-    :param content: The text content.
-    :param tooltip: Tooltip message.
-    :return: A :class:`h2o_q.types.TextS` instance.
+    Args:
+        content: The text content.
+        tooltip: Tooltip message.
+    Returns:
+        A `h2o_q.types.TextS` instance.
     """
     return Component(text_s=TextS(
         content,
@@ -161,9 +175,11 @@ def text_xs(
 ) -> Component:
     """Create extra-small sized text content.
 
-    :param content: The text content.
-    :param tooltip: Tooltip message.
-    :return: A :class:`h2o_q.types.TextXs` instance.
+    Args:
+        content: The text content.
+        tooltip: Tooltip message.
+    Returns:
+        A `h2o_q.types.TextXs` instance.
     """
     return Component(text_xs=TextXs(
         content,
@@ -185,11 +201,13 @@ def label(
     incorporated, but other components may optionally add a Label if it helps inform
     the user of the component’s purpose.
 
-    :param label: The text displayed on the label.
-    :param required: True if the field is required.
-    :param disabled: True if the label should be disabled.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Label` instance.
+    Args:
+        label: The text displayed on the label.
+        required: True if the field is required.
+        disabled: True if the label should be disabled.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Label` instance.
     """
     return Component(label=Label(
         label,
@@ -206,8 +224,10 @@ def separator(
 
     A separator visually separates content into groups.
 
-    :param label: The text displayed on the separator.
-    :return: A :class:`h2o_q.types.Separator` instance.
+    Args:
+        label: The text displayed on the separator.
+    Returns:
+        A `h2o_q.types.Separator` instance.
     """
     return Component(separator=Separator(
         label,
@@ -240,11 +260,13 @@ def progress(
     Also, combine steps of a complex operation into one total bar to avoid “rewinding” the bar.
     Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
 
-    :param label: The text displayed above the bar.
-    :param caption: The text displayed below the bar.
-    :param value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Progress` instance.
+    Args:
+        label: The text displayed above the bar.
+        caption: The text displayed below the bar.
+        value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Progress` instance.
     """
     return Component(progress=Progress(
         label,
@@ -264,9 +286,11 @@ def message_bar(
     You can use a message bar to tell the user about a situation that does not require their immediate attention and
     therefore does not need to block other activities.
 
-    :param type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
-    :param text: The text displayed on the message bar.
-    :return: A :class:`h2o_q.types.MessageBar` instance.
+    Args:
+        type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
+        text: The text displayed on the message bar.
+    Returns:
+        A `h2o_q.types.MessageBar` instance.
     """
     return Component(message_bar=MessageBar(
         type,
@@ -297,22 +321,24 @@ def textbox(
     It's typically used to capture a single line of text, but can be configured to capture multiple lines of text.
     The text displays on the screen in a simple, uniform format.
 
-    :param name: An identifying name for this component.
-    :param label: The text displayed above the field.
-    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message.
-    :param value: Text to be displayed inside the text box.
-    :param mask: The masking string that defines the mask's behavior. A backslash will escape any character. Special format characters are: '9': [0-9] 'a': [a-zA-Z] '*': [a-zA-Z0-9].
-    :param icon: Icon displayed in the far right end of the text field.
-    :param prefix: Text to be displayed before the text box contents.
-    :param suffix: Text to be displayed after the text box contents.
-    :param error: Text to be displayed as an error below the text box.
-    :param required: True if the text box is a required field.
-    :param disabled: True if the text box is disabled.
-    :param readonly: True if the text box is a read-only field.
-    :param multiline: True if the text box should allow multi-line text entry.
-    :param password: True if the text box should hide text content.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Textbox` instance.
+    Args:
+        name: An identifying name for this component.
+        label: The text displayed above the field.
+        placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message.
+        value: Text to be displayed inside the text box.
+        mask: The masking string that defines the mask's behavior. A backslash will escape any character. Special format characters are: '9': [0-9] 'a': [a-zA-Z] '*': [a-zA-Z0-9].
+        icon: Icon displayed in the far right end of the text field.
+        prefix: Text to be displayed before the text box contents.
+        suffix: Text to be displayed after the text box contents.
+        error: Text to be displayed as an error below the text box.
+        required: True if the text box is a required field.
+        disabled: True if the text box is disabled.
+        readonly: True if the text box is a read-only field.
+        multiline: True if the text box should allow multi-line text entry.
+        password: True if the text box should hide text content.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Textbox` instance.
     """
     return Component(textbox=Textbox(
         name,
@@ -357,14 +383,16 @@ def checkbox(
     Use multiple checkboxes for multi-select scenarios in which a user chooses one or more items from a group of
     choices that are not mutually exclusive.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the checkbox.
-    :param value: True if selected, False if unselected.
-    :param indeterminate: True if the selection is indeterminate (neither selected nor unselected).
-    :param disabled: True if the checkbox is disabled.
-    :param trigger: True if the form should be submitted when the checkbox value changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Checkbox` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the checkbox.
+        value: True if selected, False if unselected.
+        indeterminate: True if the selection is indeterminate (neither selected nor unselected).
+        disabled: True if the checkbox is disabled.
+        trigger: True if the form should be submitted when the checkbox value changes.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Checkbox` instance.
     """
     return Component(checkbox=Checkbox(
         name,
@@ -394,13 +422,15 @@ def toggle(
     For example, use a Toggle to turn services or hardware components on or off.
     In other words, if a physical switch would work for the action, a Toggle is probably the best component to use.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param value: True if selected, False if unselected.
-    :param disabled: True if the checkbox is disabled.
-    :param trigger: True if the form should be submitted when the toggle value changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Toggle` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        value: True if selected, False if unselected.
+        disabled: True if the checkbox is disabled.
+        trigger: True if the form should be submitted when the toggle value changes.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Toggle` instance.
     """
     return Component(toggle=Toggle(
         name,
@@ -419,10 +449,12 @@ def choice(
 ) -> Choice:
     """Create a choice for a checklist, choice group or dropdown.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param disabled: True if the checkbox is disabled.
-    :return: A :class:`h2o_q.types.Choice` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        disabled: True if the checkbox is disabled.
+    Returns:
+        A `h2o_q.types.Choice` instance.
     """
     return Choice(
         name,
@@ -451,14 +483,16 @@ def choice_group(
     If there are only two mutually exclusive options, combine them into a single Checkbox or Toggle switch.
     For example, use a checkbox for "I agree" instead of choice group buttons for "I agree" and "I don't agree."
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param value: The name of the selected choice.
-    :param choices: The choices to be presented.
-    :param required: True if this field is required.
-    :param trigger: True if the form should be submitted when the selection changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.ChoiceGroup` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        value: The name of the selected choice.
+        choices: The choices to be presented.
+        required: True if this field is required.
+        trigger: True if the form should be submitted when the selection changes.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.ChoiceGroup` instance.
     """
     return Component(choice_group=ChoiceGroup(
         name,
@@ -482,12 +516,14 @@ def checklist(
     Use this for multi-select scenarios in which a user chooses one or more items from a group of
     choices that are not mutually exclusive.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed above the component.
-    :param values: The names of the selected choices.
-    :param choices: The choices to be presented.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Checklist` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed above the component.
+        values: The names of the selected choices.
+        choices: The choices to be presented.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Checklist` instance.
     """
     return Component(checklist=Checklist(
         name,
@@ -522,17 +558,19 @@ def dropdown(
     Note: Use either the 'value' parameter or the 'values' parameter. Setting the 'values' parameter renders a
     multi-select dropdown.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
-    :param value: The name of the selected choice.
-    :param values: The names of the selected choices. If this parameter is set, multiple selections will be allowed.
-    :param choices: The choices to be presented.
-    :param required: True if this is a required field.
-    :param disabled: True if this field is disabled.
-    :param trigger: True if the form should be submitted when the dropdown value changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Dropdown` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+        value: The name of the selected choice.
+        values: The names of the selected choices. If this parameter is set, multiple selections will be allowed.
+        choices: The choices to be presented.
+        required: True if this is a required field.
+        disabled: True if this field is disabled.
+        trigger: True if the form should be submitted when the dropdown value changes.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Dropdown` instance.
     """
     return Component(dropdown=Dropdown(
         name,
@@ -570,15 +608,17 @@ def combobox(
     to select a new value.
     When collapsed the user can select a new value by typing.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
-    :param value: The name of the selected choice.
-    :param choices: The choices to be presented.
-    :param error: Text to be displayed as an error below the text box.
-    :param disabled: True if this field is disabled.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Combobox` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+        value: The name of the selected choice.
+        choices: The choices to be presented.
+        error: Text to be displayed as an error below the text box.
+        disabled: True if this field is disabled.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Combobox` instance.
     """
     return Component(combobox=Combobox(
         name,
@@ -618,16 +658,18 @@ def slider(
     The default value of the slider will be zero or be constrained to the min and max values. The min will be returned
     if the value is set under the min and the max will be returned if set higher than the max value.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param min: The minimum value of the slider.
-    :param max: The maximum value of the slider.
-    :param step: The difference between two adjacent values of the slider.
-    :param value: The current value of the slider.
-    :param disabled: True if this field is disabled.
-    :param trigger: True if the form should be submitted when the slider value changes.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Slider` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        min: The minimum value of the slider.
+        max: The maximum value of the slider.
+        step: The difference between two adjacent values of the slider.
+        value: The current value of the slider.
+        disabled: True if this field is disabled.
+        trigger: True if the form should be submitted when the slider value changes.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Slider` instance.
     """
     return Component(slider=Slider(
         name,
@@ -657,15 +699,17 @@ def spinbox(
     A spinbox allows the user to incrementally adjust a value in small steps.
     It is mainly used for numeric values, but other values are supported too.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param min: The minimum value of the spinbox.
-    :param max: The maximum value of the spinbox.
-    :param step: The difference between two adjacent values of the spinbox.
-    :param value: The current value of the spinbox.
-    :param disabled: True if this field is disabled.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Spinbox` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        min: The minimum value of the spinbox.
+        max: The maximum value of the spinbox.
+        step: The difference between two adjacent values of the spinbox.
+        value: The current value of the spinbox.
+        disabled: True if this field is disabled.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Spinbox` instance.
     """
     return Component(spinbox=Spinbox(
         name,
@@ -691,13 +735,15 @@ def date_picker(
 
     A date picker allows a user to pick a date value.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
-    :param value: The date value in YYYY-MM-DD format.
-    :param disabled: True if this field is disabled.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.DatePicker` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
+        value: The date value in YYYY-MM-DD format.
+        disabled: True if this field is disabled.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.DatePicker` instance.
     """
     return Component(date_picker=DatePicker(
         name,
@@ -721,12 +767,14 @@ def color_picker(
     A date picker allows a user to pick a color value.
     If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param value: The selected color (CSS-compatible string)
-    :param choices: A list of colors (CSS-compatible strings) to limit color choices to.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.ColorPicker` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        value: The selected color (CSS-compatible string)
+        choices: A list of colors (CSS-compatible strings) to limit color choices to.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.ColorPicker` instance.
     """
     return Component(color_picker=ColorPicker(
         name,
@@ -764,15 +812,17 @@ def button(
     While buttons can technically be used to navigate a user to another part of the experience, this is not
     recommended unless that navigation is part of an action or their flow.
 
-    :param name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
-    :param label: The text displayed on the button.
-    :param caption: The caption displayed below the label. Setting a caption renders a compound button.
-    :param value: A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True.
-    :param primary: True if the button should be rendered as the primary button in the set.
-    :param disabled: True if the button should be disabled.
-    :param link: True if the button should be rendered as link text and not a standard button.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Button` instance.
+    Args:
+        name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
+        label: The text displayed on the button.
+        caption: The caption displayed below the label. Setting a caption renders a compound button.
+        value: A value for this button. If a value is set, it is used for the button's submitted instead of a boolean True.
+        primary: True if the button should be rendered as the primary button in the set.
+        disabled: True if the button should be disabled.
+        link: True if the button should be rendered as link text and not a standard button.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Button` instance.
     """
     return Component(button=Button(
         name,
@@ -791,8 +841,10 @@ def buttons(
 ) -> Component:
     """Create a set of buttons to be layed out horizontally.
 
-    :param items: The button in this set.
-    :return: A :class:`h2o_q.types.Buttons` instance.
+    Args:
+        items: The button in this set.
+    Returns:
+        A `h2o_q.types.Buttons` instance.
     """
     return Component(buttons=Buttons(
         items,
@@ -811,14 +863,16 @@ def file_upload(
     """Create a file upload component.
     A file upload component allows a user to browse, select and upload one or more files.
 
-    :param name: An identifying name for this component.
-    :param label: Text to be displayed alongside the component.
-    :param multiple: True if the component should allow multiple files to be uploaded.
-    :param file_extensions: List of allowed file extensions, e.g. `pdf`, `docx`, etc.
-    :param max_file_size: Maximum allowed size (Mb) per file. Defaults to no limit.
-    :param max_size: Maximum allowed size (Mb) for all files combined. Defaults to no limit.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.FileUpload` instance.
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        multiple: True if the component should allow multiple files to be uploaded.
+        file_extensions: List of allowed file extensions, e.g. `pdf`, `docx`, etc.
+        max_file_size: Maximum allowed size (Mb) per file. Defaults to no limit.
+        max_size: Maximum allowed size (Mb) for all files combined. Defaults to no limit.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.FileUpload` instance.
     """
     return Component(file_upload=FileUpload(
         name,
@@ -837,9 +891,11 @@ def table_column(
 ) -> TableColumn:
     """Create a table column.
 
-    :param name: An identifying name for this column.
-    :param label: The text displayed on the column header.
-    :return: A :class:`h2o_q.types.TableColumn` instance.
+    Args:
+        name: An identifying name for this column.
+        label: The text displayed on the column header.
+    Returns:
+        A `h2o_q.types.TableColumn` instance.
     """
     return TableColumn(
         name,
@@ -853,9 +909,11 @@ def table_row(
 ) -> TableRow:
     """Create a table row.
 
-    :param name: An identifying name for this row.
-    :param cells: The cells in this row (displayed left to right).
-    :return: A :class:`h2o_q.types.TableRow` instance.
+    Args:
+        name: An identifying name for this row.
+        cells: The cells in this row (displayed left to right).
+    Returns:
+        A `h2o_q.types.TableRow` instance.
     """
     return TableRow(
         name,
@@ -886,12 +944,14 @@ def table(
     set to True, the form is not submitted automatically, and one or more buttons are required in the form to trigger
     submission.
 
-    :param name: An identifying name for this component.
-    :param columns: The columns in this table.
-    :param rows: The rows in this table.
-    :param multiple: True to allow multiple rows to be selected.
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Table` instance.
+    Args:
+        name: An identifying name for this component.
+        columns: The columns in this table.
+        rows: The rows in this table.
+        multiple: True to allow multiple rows to be selected.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Table` instance.
     """
     return Component(table=Table(
         name,
@@ -915,12 +975,14 @@ def link(
     Internal hyperlinks have paths that begin with a `/` and point to URLs within the Q UI.
     All other kinds of paths are treated as external hyperlinks.
 
-    :param label: The text to be displayed. If blank, the `path` is used as the label.
-    :param path: The path or URL to link to.
-    :param disabled: True if the link should be disable.
-    :param button: True if the link should be rendered as a button
-    :param tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
-    :return: A :class:`h2o_q.types.Link` instance.
+    Args:
+        label: The text to be displayed. If blank, the `path` is used as the label.
+        path: The path or URL to link to.
+        disabled: True if the link should be disable.
+        button: True if the link should be rendered as a button
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Link` instance.
     """
     return Component(link=Link(
         label,
@@ -938,10 +1000,12 @@ def tab(
 ) -> Tab:
     """Create a tab.
 
-    :param name: An identifying name for this component.
-    :param label: The text displayed on the tab.
-    :param icon: The icon displayed on the tab.
-    :return: A :class:`h2o_q.types.Tab` instance.
+    Args:
+        name: An identifying name for this component.
+        label: The text displayed on the tab.
+        icon: The icon displayed on the tab.
+    Returns:
+        A `h2o_q.types.Tab` instance.
     """
     return Tab(
         name,
@@ -957,10 +1021,12 @@ def tabs(
 ) -> Component:
     """Create a tab bar.
 
-    :param name: An identifying name for this component.
-    :param value: The name of the tab to select.
-    :param items: The tabs in this tab bar.
-    :return: A :class:`h2o_q.types.Tabs` instance.
+    Args:
+        name: An identifying name for this component.
+        value: The name of the tab to select.
+        items: The tabs in this tab bar.
+    Returns:
+        A `h2o_q.types.Tabs` instance.
     """
     return Component(tabs=Tabs(
         name,
@@ -979,11 +1045,13 @@ def expander(
 
     Expanders can be used to show or hide a group of related components.
 
-    :param name: An identifying name for this component.
-    :param label: The text displayed on the expander.
-    :param expanded: True if expanded, False if collapsed.
-    :param items: List of components to be hideable by the expander.
-    :return: A :class:`h2o_q.types.Expander` instance.
+    Args:
+        name: An identifying name for this component.
+        label: The text displayed on the expander.
+        expanded: True if expanded, False if collapsed.
+        items: List of components to be hideable by the expander.
+    Returns:
+        A `h2o_q.types.Expander` instance.
     """
     return Component(expander=Expander(
         name,
@@ -1025,35 +1093,37 @@ def component(
 ) -> Component:
     """Create a component.
 
-    :param text: Text block.
-    :param text_xl: Extra-large sized text block.
-    :param text_l: Large sized text block.
-    :param text_m: Medium sized text block.
-    :param text_s: Small sized text block.
-    :param text_xs: Extra-small sized text block.
-    :param label: Label.
-    :param separator: Separator.
-    :param progress: Progress bar.
-    :param message_bar: Message bar.
-    :param textbox: Textbox.
-    :param checkbox: Checkbox.
-    :param toggle: Toggle.
-    :param choice_group: Choice group.
-    :param checklist: Checklist.
-    :param dropdown: Dropdown.
-    :param combobox: Combobox.
-    :param slider: Slider.
-    :param spinbox: Spinbox.
-    :param date_picker: Date picker.
-    :param color_picker: Color picker.
-    :param button: Button.
-    :param buttons: Button set.
-    :param file_upload: File upload.
-    :param table: Table.
-    :param link: Link.
-    :param tabs: Tabs.
-    :param expander: Expander.
-    :return: A :class:`h2o_q.types.Component` instance.
+    Args:
+        text: Text block.
+        text_xl: Extra-large sized text block.
+        text_l: Large sized text block.
+        text_m: Medium sized text block.
+        text_s: Small sized text block.
+        text_xs: Extra-small sized text block.
+        label: Label.
+        separator: Separator.
+        progress: Progress bar.
+        message_bar: Message bar.
+        textbox: Textbox.
+        checkbox: Checkbox.
+        toggle: Toggle.
+        choice_group: Choice group.
+        checklist: Checklist.
+        dropdown: Dropdown.
+        combobox: Combobox.
+        slider: Slider.
+        spinbox: Spinbox.
+        date_picker: Date picker.
+        color_picker: Color picker.
+        button: Button.
+        buttons: Button set.
+        file_upload: File upload.
+        table: Table.
+        link: Link.
+        tabs: Tabs.
+        expander: Expander.
+    Returns:
+        A `h2o_q.types.Component` instance.
     """
     return Component(
         text,
@@ -1094,10 +1164,12 @@ def form_card(
 ) -> FormCard:
     """Create a form.
 
-    :param box: A string indicating how to place this component on the page.
-    :param items: The components in this form.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.FormCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: The components in this form.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.FormCard` instance.
     """
     return FormCard(
         box,
@@ -1117,12 +1189,14 @@ def frame_card(
 
     Either a path or content can be provided as arguments.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
-    :param content: The HTML content of the page. A string containing '<html>...</html>'
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.FrameCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
+        content: The HTML content of the page. A string containing '<html>...</html>'
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.FrameCard` instance.
     """
     return FrameCard(
         box,
@@ -1144,14 +1218,16 @@ def graphics_card(
 ) -> GraphicsCard:
     """Create a card for displaying vector graphics.
 
-    :param box: A string indicating how to place this component on the page.
-    :param view_box: The position and dimension of the SVG viewport, in user space. A space-separated list of four numbers: min-x, min-y, width and height. For example, '0 0 400 300'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
-    :param stage: Background layer for rendering static SVG elements. Must be packed to conserve memory.
-    :param scene: Foreground layer for rendering dynamic SVG elements.
-    :param width: The displayed width of the rectangular viewport. (Not the width of its coordinate system.)
-    :param height: The displayed height of the rectangular viewport. (Not the height of its coordinate system.)
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.GraphicsCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        view_box: The position and dimension of the SVG viewport, in user space. A space-separated list of four numbers: min-x, min-y, width and height. For example, '0 0 400 300'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox
+        stage: Background layer for rendering static SVG elements. Must be packed to conserve memory.
+        scene: Foreground layer for rendering dynamic SVG elements.
+        width: The displayed width of the rectangular viewport. (Not the width of its coordinate system.)
+        height: The displayed height of the rectangular viewport. (Not the height of its coordinate system.)
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.GraphicsCard` instance.
     """
     return GraphicsCard(
         box,
@@ -1173,12 +1249,14 @@ def grid_card(
 ) -> GridCard:
     """EXPERIMENTAL. DO NOT USE.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: EXPERIMENTAL. DO NOT USE.
-    :param cells: EXPERIMENTAL. DO NOT USE.
-    :param data: EXPERIMENTAL. DO NOT USE.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.GridCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: EXPERIMENTAL. DO NOT USE.
+        cells: EXPERIMENTAL. DO NOT USE.
+        data: EXPERIMENTAL. DO NOT USE.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.GridCard` instance.
     """
     return GridCard(
         box,
@@ -1201,13 +1279,15 @@ def header_card(
 
     Either a path or content can be provided as arguments.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title.
-    :param subtitle: The subtitle, displayed below the title.
-    :param icon: The icon type, displayed to the left.
-    :param icon_color: The icon's color.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.HeaderCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title.
+        subtitle: The subtitle, displayed below the title.
+        icon: The icon type, displayed to the left.
+        icon_color: The icon's color.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.HeaderCard` instance.
     """
     return HeaderCard(
         box,
@@ -1229,13 +1309,15 @@ def image_card(
 ) -> ImageCard:
     """Create a card that displays a base64-encoded image.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
-    :param image: Image data, base64-encoded.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.ImageCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
+        image: Image data, base64-encoded.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.ImageCard` instance.
     """
     return ImageCard(
         box,
@@ -1262,18 +1344,20 @@ def large_bar_stat_card(
 ) -> LargeBarStatCard:
     """Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param caption: The card's caption.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value, typically a target value.
-    :param value_caption: The caption displayed below the primary value.
-    :param aux_value_caption: The caption displayed below the auxiliary value.
-    :param progress: The value of the progress bar, between 0 and 1.
-    :param plot_color: The color of the progress bar.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.LargeBarStatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        caption: The card's caption.
+        value: The primary value displayed.
+        aux_value: The auxiliary value, typically a target value.
+        value_caption: The caption displayed below the primary value.
+        aux_value_caption: The caption displayed below the auxiliary value.
+        progress: The value of the progress bar, between 0 and 1.
+        plot_color: The color of the progress bar.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.LargeBarStatCard` instance.
     """
     return LargeBarStatCard(
         box,
@@ -1301,14 +1385,16 @@ def large_stat_card(
 ) -> LargeStatCard:
     """Create a stat card displaying a primary value, an auxiliary value and a caption.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed next to the primary value.
-    :param caption: The caption displayed below the primary value.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.LargeStatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        value: The primary value displayed.
+        aux_value: The auxiliary value displayed next to the primary value.
+        caption: The caption displayed below the primary value.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.LargeStatCard` instance.
     """
     return LargeStatCard(
         box,
@@ -1332,13 +1418,15 @@ def list_card(
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards laid out in the form of a list (vertically, top-to-bottom).
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param item_view: The child card type.
-    :param item_props: The child card properties.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.ListCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        item_view: The child card type.
+        item_props: The child card properties.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.ListCard` instance.
     """
     return ListCard(
         box,
@@ -1361,14 +1449,16 @@ def list_item1_card(
 ) -> ListItem1Card:
     """EXPERIMENTAL. DO NOT USE.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: EXPERIMENTAL. DO NOT USE.
-    :param caption: EXPERIMENTAL. DO NOT USE.
-    :param value: EXPERIMENTAL. DO NOT USE.
-    :param aux_value: EXPERIMENTAL. DO NOT USE.
-    :param data: EXPERIMENTAL. DO NOT USE.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.ListItem1Card` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: EXPERIMENTAL. DO NOT USE.
+        caption: EXPERIMENTAL. DO NOT USE.
+        value: EXPERIMENTAL. DO NOT USE.
+        aux_value: EXPERIMENTAL. DO NOT USE.
+        data: EXPERIMENTAL. DO NOT USE.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.ListItem1Card` instance.
     """
     return ListItem1Card(
         box,
@@ -1395,12 +1485,14 @@ def markdown_card(
     URLs, if found, are displayed as hyperlinks.
     Copyright, reserved, trademark, quotes, etc. are replaced with language-neutral symbols.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
-    :param data: Additional data for the card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.MarkdownCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
+        data: Additional data for the card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.MarkdownCard` instance.
     """
     return MarkdownCard(
         box,
@@ -1419,11 +1511,13 @@ def markup_card(
 ) -> MarkupCard:
     """Render HTML content.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param content: The HTML content.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.MarkupCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        content: The HTML content.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.MarkupCard` instance.
     """
     return MarkupCard(
         box,
@@ -1445,12 +1539,14 @@ def meta_card(
     This card is invisible.
     It is used to control attributes of the active page.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title of the page.
-    :param refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
-    :param notification: Display a desktop notification to the user.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.MetaCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title of the page.
+        refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
+        notification: Display a desktop notification to the user.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.MetaCard` instance.
     """
     return MetaCard(
         box,
@@ -1467,9 +1563,11 @@ def nav_item(
 ) -> NavItem:
     """Create a navigation item.
 
-    :param name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-    :param label: The label to display.
-    :return: A :class:`h2o_q.types.NavItem` instance.
+    Args:
+        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+        label: The label to display.
+    Returns:
+        A `h2o_q.types.NavItem` instance.
     """
     return NavItem(
         name,
@@ -1483,9 +1581,11 @@ def nav_group(
 ) -> NavGroup:
     """Create a group of navigation items.
 
-    :param label: The label to display for this group.
-    :param items: The navigation items contained in this group.
-    :return: A :class:`h2o_q.types.NavGroup` instance.
+    Args:
+        label: The label to display for this group.
+        items: The navigation items contained in this group.
+    Returns:
+        A `h2o_q.types.NavGroup` instance.
     """
     return NavGroup(
         label,
@@ -1500,10 +1600,12 @@ def nav_card(
 ) -> NavCard:
     """Create a card containing a navigation pane.
 
-    :param box: A string indicating how to place this component on the page.
-    :param items: The navigation groups contained in this pane.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.NavCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: The navigation groups contained in this pane.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.NavCard` instance.
     """
     return NavCard(
         box,
@@ -1520,11 +1622,13 @@ def pixel_art_card(
 ) -> PixelArtCard:
     """Create a card displaying a collaborative Pixel art tool, just for kicks.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param data: The data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.PixelArtCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        data: The data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.PixelArtCard` instance.
     """
     return PixelArtCard(
         box,
@@ -1594,62 +1698,64 @@ def mark(
     """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
     A plot can contain multiple such layers of marks.
 
-    :param coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
-    :param type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
-    :param x: X field or value.
-    :param x0: X base field or value.
-    :param x1: X bin lower bound field or value. For histograms.
-    :param x2: X bin upper bound field or value. For histograms.
-    :param x_min: X axis scale minimum.
-    :param x_max: X axis scale maximum.
-    :param x_nice: Whether to nice X axis scale ticks.
-    :param x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
-    :param x_title: X axis title.
-    :param y: Y field or value.
-    :param y0: Y base field or value.
-    :param y1: Y bin lower bound field or value. For histograms.
-    :param y2: Y bin upper bound field or value. For histograms.
-    :param y_min: Y axis scale minimum.
-    :param y_max: Y axis scale maximum.
-    :param y_nice: Whether to nice Y axis scale ticks.
-    :param y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
-    :param y_title: Y axis title.
-    :param color: Mark color field or value.
-    :param color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
-    :param shape: Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
-    :param shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
-    :param size: Mark size field or value.
-    :param size_range: Mark size range. A string containing space-separated integers, e.g. `'4 30'`
-    :param stack: Field to stack marks by, or 'auto' to infer.
-    :param dodge: Field to dodge marks by, or 'auto' to infer.
-    :param curve: Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
-    :param fill_color: Mark fill color.
-    :param fill_opacity: Mark fill opacity.
-    :param stroke_color: Mark stroke color.
-    :param stroke_opacity: Mark stroke opacity.
-    :param stroke_size: Mark stroke size.
-    :param stroke_dash: Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
-    :param label: Label field or value.
-    :param label_offset: Distance between label and mark.
-    :param label_offset_x: Horizontal distance between label and mark.
-    :param label_offset_y: Vertical distance between label and mark.
-    :param label_rotation: Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
-    :param label_position: Label position relative to the mark.
-    :param label_overlap: Strategy to use if labels overlap.
-    :param label_fill_color: Label fill color.
-    :param label_fill_opacity: Label fill opacity.
-    :param label_stroke_color: Label stroke color.
-    :param label_stroke_opacity: Label stroke opacity.
-    :param label_stroke_size: Label stroke size (line width or pen thickness).
-    :param label_font_size: Label font size.
-    :param label_font_weight: Label font weight.
-    :param label_line_height: Label line height.
-    :param label_align: Label text alignment. One of 'left', 'right', 'center', 'start', 'end'.
-    :param ref_stroke_color: Reference line stroke color.
-    :param ref_stroke_opacity: Reference line stroke opacity.
-    :param ref_stroke_size: Reference line stroke size (line width or pen thickness).
-    :param ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
-    :return: A :class:`h2o_q.types.Mark` instance.
+    Args:
+        coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
+        type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
+        x: X field or value.
+        x0: X base field or value.
+        x1: X bin lower bound field or value. For histograms.
+        x2: X bin upper bound field or value. For histograms.
+        x_min: X axis scale minimum.
+        x_max: X axis scale maximum.
+        x_nice: Whether to nice X axis scale ticks.
+        x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+        x_title: X axis title.
+        y: Y field or value.
+        y0: Y base field or value.
+        y1: Y bin lower bound field or value. For histograms.
+        y2: Y bin upper bound field or value. For histograms.
+        y_min: Y axis scale minimum.
+        y_max: Y axis scale maximum.
+        y_nice: Whether to nice Y axis scale ticks.
+        y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+        y_title: Y axis title.
+        color: Mark color field or value.
+        color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
+        shape: Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
+        shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
+        size: Mark size field or value.
+        size_range: Mark size range. A string containing space-separated integers, e.g. `'4 30'`
+        stack: Field to stack marks by, or 'auto' to infer.
+        dodge: Field to dodge marks by, or 'auto' to infer.
+        curve: Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
+        fill_color: Mark fill color.
+        fill_opacity: Mark fill opacity.
+        stroke_color: Mark stroke color.
+        stroke_opacity: Mark stroke opacity.
+        stroke_size: Mark stroke size.
+        stroke_dash: Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+        label: Label field or value.
+        label_offset: Distance between label and mark.
+        label_offset_x: Horizontal distance between label and mark.
+        label_offset_y: Vertical distance between label and mark.
+        label_rotation: Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
+        label_position: Label position relative to the mark.
+        label_overlap: Strategy to use if labels overlap.
+        label_fill_color: Label fill color.
+        label_fill_opacity: Label fill opacity.
+        label_stroke_color: Label stroke color.
+        label_stroke_opacity: Label stroke opacity.
+        label_stroke_size: Label stroke size (line width or pen thickness).
+        label_font_size: Label font size.
+        label_font_weight: Label font weight.
+        label_line_height: Label line height.
+        label_align: Label text alignment. One of 'left', 'right', 'center', 'start', 'end'.
+        ref_stroke_color: Reference line stroke color.
+        ref_stroke_opacity: Reference line stroke opacity.
+        ref_stroke_size: Reference line stroke size (line width or pen thickness).
+        ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+    Returns:
+        A `h2o_q.types.Mark` instance.
     """
     return Mark(
         coord,
@@ -1715,8 +1821,10 @@ def plot(
 ) -> Plot:
     """Create a plot. A plot is composed of one or more graphical mark layers.
 
-    :param marks: The graphical mark layers contained in this plot.
-    :return: A :class:`h2o_q.types.Plot` instance.
+    Args:
+        marks: The graphical mark layers contained in this plot.
+    Returns:
+        A `h2o_q.types.Plot` instance.
     """
     return Plot(
         marks,
@@ -1732,12 +1840,14 @@ def plot_card(
 ) -> PlotCard:
     """Create a card displaying a plot.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param data: Data for this card.
-    :param plot: The plot to be displayed in this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.PlotCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        data: Data for this card.
+        plot: The plot to be displayed in this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.PlotCard` instance.
     """
     return PlotCard(
         box,
@@ -1758,12 +1868,14 @@ def repeat_card(
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards.
 
-    :param box: A string indicating how to place this component on the page.
-    :param item_view: EXPERIMENTAL. DO NOT USE.
-    :param item_props: The child card properties.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.RepeatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        item_view: EXPERIMENTAL. DO NOT USE.
+        item_props: The child card properties.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.RepeatCard` instance.
     """
     return RepeatCard(
         box,
@@ -1790,19 +1902,21 @@ def small_series_stat_card(
 ) -> SmallSeriesStatCard:
     """Create a small stat card displaying a primary value and a series plot.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param plot_data: The plot's data.
-    :param plot_value: The data field to use for y-axis values.
-    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
-    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
-    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
-    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param plot_color: The plot's color.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.SmallSeriesStatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        value: The primary value displayed.
+        plot_data: The plot's data.
+        plot_value: The data field to use for y-axis values.
+        plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
+        plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
+        plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+        plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+        plot_color: The plot's color.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.SmallSeriesStatCard` instance.
     """
     return SmallSeriesStatCard(
         box,
@@ -1829,12 +1943,14 @@ def small_stat_card(
 ) -> SmallStatCard:
     """Create a stat card displaying a single value.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.SmallStatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        value: The primary value displayed.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.SmallStatCard` instance.
     """
     return SmallStatCard(
         box,
@@ -1853,11 +1969,13 @@ def tab_card(
 ) -> TabCard:
     """Create a card containing tabs for navigation.
 
-    :param box: A string indicating how to place this component on the page.
-    :param items: Items to render.
-    :param link: True if tabs should be rendered as links and not a standard tab.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.TabCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: Items to render.
+        link: True if tabs should be rendered as links and not a standard tab.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.TabCard` instance.
     """
     return TabCard(
         box,
@@ -1879,15 +1997,17 @@ def tall_gauge_stat_card(
 ) -> TallGaugeStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed next to the primary value.
-    :param progress: The value of the progress gauge, between 0 and 1.
-    :param plot_color: The color of the progress gauge.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.TallGaugeStatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        value: The primary value displayed.
+        aux_value: The auxiliary value displayed next to the primary value.
+        progress: The value of the progress gauge, between 0 and 1.
+        plot_color: The color of the progress gauge.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.TallGaugeStatCard` instance.
     """
     return TallGaugeStatCard(
         box,
@@ -1918,20 +2038,22 @@ def tall_series_stat_card(
 ) -> TallSeriesStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed below the primary value.
-    :param plot_data: The plot's data.
-    :param plot_value: The data field to use for y-axis values.
-    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
-    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
-    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
-    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param plot_color: The plot's color.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.TallSeriesStatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        value: The primary value displayed.
+        aux_value: The auxiliary value displayed below the primary value.
+        plot_data: The plot's data.
+        plot_value: The data field to use for y-axis values.
+        plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
+        plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
+        plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+        plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+        plot_color: The plot's color.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.TallSeriesStatCard` instance.
     """
     return TallSeriesStatCard(
         box,
@@ -1959,12 +2081,14 @@ def template_card(
 ) -> TemplateCard:
     """Render dynamic content using a HTML template.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title for this card.
-    :param content: The Handlebars template. https://handlebarsjs.com/guide/
-    :param data: Data for the Handlebars template
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.TemplateCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        content: The Handlebars template. https://handlebarsjs.com/guide/
+        data: Data for the Handlebars template
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.TemplateCard` instance.
     """
     return TemplateCard(
         box,
@@ -1984,12 +2108,14 @@ def toolbar_card(
 ) -> ToolbarCard:
     """Create a card containing a toolbar.
 
-    :param box: A string indicating how to place this component on the page.
-    :param items: Items to render.
-    :param secondary_items: Items to render on the right side (or left, in RTL).
-    :param overflow_items: Items to render in an overflow menu.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.ToolbarCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: Items to render.
+        secondary_items: Items to render on the right side (or left, in RTL).
+        overflow_items: Items to render in an overflow menu.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.ToolbarCard` instance.
     """
     return ToolbarCard(
         box,
@@ -2009,12 +2135,14 @@ def vega_card(
 ) -> VegaCard:
     """Create a card containing a Vega-lite plot.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The title of this card.
-    :param specification: The Vega-lite specification.
-    :param data: Data for the plot, if any.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.VegaCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title of this card.
+        specification: The Vega-lite specification.
+        data: Data for the plot, if any.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.VegaCard` instance.
     """
     return VegaCard(
         box,
@@ -2037,15 +2165,17 @@ def wide_bar_stat_card(
 ) -> WideBarStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed next to the primary value.
-    :param progress: The value of the progress bar, between 0 and 1.
-    :param plot_color: The color of the progress bar.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.WideBarStatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        value: The primary value displayed.
+        aux_value: The auxiliary value displayed next to the primary value.
+        progress: The value of the progress bar, between 0 and 1.
+        plot_color: The color of the progress bar.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.WideBarStatCard` instance.
     """
     return WideBarStatCard(
         box,
@@ -2071,15 +2201,17 @@ def wide_gauge_stat_card(
 ) -> WideGaugeStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a progress gauge.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed next to the primary value.
-    :param progress: The value of the progress gauge, between 0 and 1.
-    :param plot_color: The color of the progress gauge.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.WideGaugeStatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        value: The primary value displayed.
+        aux_value: The auxiliary value displayed next to the primary value.
+        progress: The value of the progress gauge, between 0 and 1.
+        plot_color: The color of the progress gauge.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.WideGaugeStatCard` instance.
     """
     return WideGaugeStatCard(
         box,
@@ -2110,20 +2242,22 @@ def wide_series_stat_card(
 ) -> WideSeriesStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
 
-    :param box: A string indicating how to place this component on the page.
-    :param title: The card's title.
-    :param value: The primary value displayed.
-    :param aux_value: The auxiliary value displayed below the primary value.
-    :param plot_data: The plot's data.
-    :param plot_value: The data field to use for y-axis values.
-    :param plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
-    :param plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
-    :param plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
-    :param plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
-    :param plot_color: The plot's color.
-    :param data: Data for this card.
-    :param commands: Contextual menu commands for this component.
-    :return: A :class:`h2o_q.types.WideSeriesStatCard` instance.
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        value: The primary value displayed.
+        aux_value: The auxiliary value displayed below the primary value.
+        plot_data: The plot's data.
+        plot_value: The data field to use for y-axis values.
+        plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
+        plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
+        plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+        plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+        plot_color: The plot's color.
+        data: Data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.WideSeriesStatCard` instance.
     """
     return WideSeriesStatCard(
         box,

@@ -45,11 +45,12 @@ def configure(
     """
     Configure networking addresses/credentials before use.
 
-    :param internal_address: The local host:port to listen on.
-    :param external_address: The remote host:port of this server.
-    :param hub_address: The host:port of the Q server.
-    :param hub_access_key_id: The access key ID to use while connecting to the Q server.
-    :param hub_access_key_secret: The access key secret to use while connecting to the Q server.
+    Args:
+        internal_address: The local host:port to listen on.
+        external_address: The remote host:port of this server.
+        hub_address: The host:port of the Q server.
+        hub_access_key_id: The access key ID to use while connecting to the Q server.
+        hub_access_key_secret: The access key secret to use while connecting to the Q server.
     """
     if internal_address:
         _config.internal_address = internal_address
@@ -133,7 +134,8 @@ class Expando:
     """
     Represents an object whose members (attributes) can be dynamically added and removed at run time.
 
-    :param args: An optional ``dict`` of attribute-value pairs to initialize the expando instance with.
+    Args:
+        args: An optional ``dict`` of attribute-value pairs to initialize the expando instance with.
     """
 
     def __init__(self, args: Optional[Dict] = None):
@@ -163,8 +165,12 @@ def expando_to_dict(e: Expando) -> dict:
     Extract an expando's underlying dictionary.
     Any modifications to the dictionary also affect the original expando.
 
-    :param e: The expando instance.
-    :return: The expando's dictionary.
+    Args:
+        e: The expando instance.
+
+    Returns:
+        The expando's dictionary.
+
     """
     return e.__dict__[DICT]
 
@@ -174,10 +180,12 @@ def clone_expando(source: Expando, exclude_keys: Optional[Union[list, tuple]] = 
     """
     Clone an expando instance. Creates a shallow clone.
 
-    :param source: The expando to clone.
-    :param exclude_keys: Keys to exclude while cloning.
-    :param include_keys: Keys to include while cloning.
-    :return: The expando clone.
+    Args:
+        source: The expando to clone.
+        exclude_keys: Keys to exclude while cloning.
+        include_keys: Keys to include while cloning.
+    Returns:
+        The expando clone.
     """
     return copy_expando(source, Expando(), exclude_keys, include_keys)
 
@@ -187,11 +195,13 @@ def copy_expando(source: Expando, target: Expando, exclude_keys: Optional[Union[
     """
     Copy all entries from the source expando instance to the target expando instance.
 
-    :param source: The expando to copy from.
-    :param target: The expando to copy to.
-    :param exclude_keys: Keys to exclude while copying.
-    :param include_keys: Keys to include while copying.
-    :return: The target expando.
+    Args:
+        source: The expando to copy from.
+        target: The expando to copy to.
+        exclude_keys: Keys to exclude while copying.
+        include_keys: Keys to include while copying.
+    Returns:
+        The target expando.
     """
     if include_keys:
         if exclude_keys:
@@ -246,7 +256,7 @@ def _dump(xs: Any):
 
 class Ref:
     """
-    Represents a local reference to an element on a :class:`h2o_q.core.Page`.
+    Represents a local reference to an element on a `h2o_q.core.Page`.
     Any changes made to this local reference are tracked and sent to the remote Q server when the page is saved.
     """
 
@@ -276,15 +286,17 @@ class Ref:
 class Data:
     """
     Represents a data placeholder. A data placeholder is used to allocate memory on the Q server to store data.
+
+    Args:
+        fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
+        size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
+        data: Initial data. Must be either a key-row ``dict`` for variable-length buffers OR a row ``list`` for fixed-size and circular buffers.
     """
 
     def __init__(self, fields: Union[str, tuple, list], size: int = 0, data: Optional[Union[dict, list]] = None):
         self.fields = fields
-        """The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names."""
         self.data = data
-        """Initial data. Must be either a key-row ``dict`` for variable-length buffers OR a row ``list`` for fixed-size and circular buffers."""
         self.size = size
-        """The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers."""
 
     def dump(self):
         f = self.fields
@@ -316,7 +328,7 @@ def data(
         pack=False,
 ) -> Union[Data, str]:
     """
-    Create a :class:`h2o_q.core.Data` instance for associating data with cards.
+    Create a `h2o_q.core.Data` instance for associating data with cards.
 
     ``data(fields, size)`` creates a placeholder for data and allocates memory on the Q server.
 
@@ -324,13 +336,15 @@ def data(
 
     If ``pack`` is ``True``, the ``size`` parameter is ignored, and the function returns a packed string representing the data.
 
-    :param fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
-    :param size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
-    :param rows: The rows in this data.
-    :param columns: The columns in this data.
-    :param pack: True to return a packed string representing the data instead of a :class:`h2o_q.core.Data` placeholder.
+    Args:
+        fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
+        size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
+        rows: The rows in this data.
+        columns: The columns in this data.
+        pack: True to return a packed string representing the data instead of a `h2o_q.core.Data` placeholder.
 
-    :return: Either a :class:`h2o_q.core.Data` placeholder or a packed string representing the data.
+    Returns:
+        Either a `h2o_q.core.Data` placeholder or a packed string representing the data.
     """
     if _is_str(fields):
         fields = fields.strip()
@@ -374,7 +388,8 @@ class PageBase:
     """
     Represents a remote page.
 
-    :param url: The URL of the remote page.
+    Args:
+        url: The URL of the remote page.
     """
 
     def __init__(self, url: str):
@@ -385,10 +400,12 @@ class PageBase:
         """
         Add a card to this page.
 
-        :param key: The card's key. Must uniquely identify the card on the page. Overwrites any other card with the same key.
-        :param card: A card. Use one of the ``ui.*_card()`` to create cards.
+        Args:
+            key: The card's key. Must uniquely identify the card on the page. Overwrites any other card with the same key.
+            card: A card. Use one of the ``ui.*_card()`` to create cards.
 
-        :return: A reference to the added card.
+        Returns:
+            A reference to the added card.
         """
         if key is None:
             raise ValueError('card must have a key')
@@ -455,8 +472,9 @@ class Page(PageBase):
     """
     Represents a reference to a remote Q page.
 
-    :param site: The parent site.
-    :param url: The URL of this page.
+    Args:
+        site: The parent site.
+        url: The URL of this page.
     """
 
     def __init__(self, site: 'Site', url: str):
@@ -467,13 +485,14 @@ class Page(PageBase):
         """
         Retrieve the serialized form of this page from the remote site.
 
-        :return: The serialized form of this page
+        Returns:
+            The serialized form of this page
         """
         return self.site.load(self.url)
 
     def sync(self):
         """
-        DEPRECATED: Use :meth:`h2o_q.core.Page.save` instead.
+        DEPRECATED: Use `h2o_q.core.Page.save` instead.
         """
         logger.warn('page.sync() is deprecated. Please use page.save() instead.')
         self.save()
@@ -490,10 +509,12 @@ class Page(PageBase):
 
 class AsyncPage(PageBase):
     """
-    Represents a reference to a remote Q page. Similar to :class:`h2o_q.core.Page` except that this class exposes ``async`` methods.
+    Represents a reference to a remote Q page. Similar to `h2o_q.core.Page` except that this class exposes ``async`` methods.
 
-    :param site: The parent site.
-    :param url: The URL of this page.
+
+    Args:
+        site: The parent site.
+        url: The URL of this page.
     """
 
     def __init__(self, site: 'AsyncSite', url: str):
@@ -505,13 +526,14 @@ class AsyncPage(PageBase):
         """
         Retrieve the serialized form of this page from the remote site.
 
-        :return: The serialized form of this page
+        Returns:
+            The serialized form of this page
         """
         return await self.site.load(self.url)
 
     async def push(self):
         """
-        DEPRECATED: Use :meth:`h2o_q.core.AsyncPage.save` instead.
+        DEPRECATED: Use `h2o_q.core.AsyncPage.save` instead.
         """
         logger.warn('page.push() is deprecated. Please use page.save() instead.')
         await self.save()
@@ -602,42 +624,53 @@ class Site:
     def load(self, url) -> dict:
         """
         Retrieve data at the given URL, typically the serialized form of a page.
-        :param url: The URL to read.
 
-        :return: The serialized page.
+        Args:
+            url: The URL to read.
+
+        Returns:
+            The serialized page.
         """
         return _client.get(url)
 
     def upload(self, files: List[str]) -> List[str]:
         """
         Upload local files to the site.
-        :param files: A list of file paths of the files to be uploaded..
 
-        :return: A list of remote URLs for the uploaded files, in order.
+        Args:
+            files: A list of file paths of the files to be uploaded..
+
+        Returns:
+            A list of remote URLs for the uploaded files, in order.
         """
         return _client.upload(files)
 
     def download(self, url: str, path: str) -> str:
         """
         Download a file from the site.
-        :param url: The URL of the file.
-        :param path: The local directory or file path to download to. If a directory is provided, the original name of the file is retained.
 
-        :return: The path to the downloaded file.
+        Args:
+            url: The URL of the file.
+            path: The local directory or file path to download to. If a directory is provided, the original name of the file is retained.
+
+        Returns:
+            The path to the downloaded file.
         """
         return _client.download(url, path)
 
     def unload(self, url: str):
         """
         Delete an uploaded file from the site.
-        :param url: The URL of the file to delete.
+
+        Args:
+            url: The URL of the file to delete.
         """
         _client.unload(url)
 
 
 class AsyncSite:
     """
-    Represents a reference to the remote Q site. Similar to :class:`h2o_q.core.Site` except that this class exposes ``async`` methods.
+    Represents a reference to the remote Q site. Similar to `h2o_q.core.Site` except that this class exposes ``async`` methods.
     """
 
     def __init__(self, ws: websockets.WebSocketServerProtocol):
@@ -649,9 +682,12 @@ class AsyncSite:
     async def load(self, url) -> dict:
         """
         Retrieve data at the given URL, typically the serialized form of a page.
-        :param url: The URL to read.
 
-        :return: The serialized page.
+        Args:
+            url: The URL to read.
+
+        Returns:
+            The serialized page.
         """
         # XXX implement
         return {}
@@ -659,9 +695,12 @@ class AsyncSite:
     async def upload(self, files: List[str]) -> List[str]:
         """
         Upload local files to the site.
-        :param files: A list of file paths of the files to be uploaded..
 
-        :return: A list of remote URLs for the uploaded files, in order.
+        Args:
+            files: A list of file paths of the files to be uploaded..
+
+        Returns:
+            A list of remote URLs for the uploaded files, in order.
         """
         # XXX use non-blocking aiohttp post
         paths = _client.upload(files)
@@ -670,9 +709,12 @@ class AsyncSite:
     async def download(self, url: str, path: str) -> str:
         """
         Download a file from the site.
-        :param url: The URL of the file.
-        :param path: The local directory or file path to download to. If a directory is provided, the original name of the file is retained.
-        :return: The path to the downloaded file.
+
+        Args:
+            url: The URL of the file.
+            path: The local directory or file path to download to. If a directory is provided, the original name of the file is retained.
+        Returns:
+            The path to the downloaded file.
         """
         # XXX use non-blocking aiohttp get
         path = _client.download(url, path)
@@ -681,7 +723,9 @@ class AsyncSite:
     async def unload(self, url: str):
         """
         Delete an uploaded file from the site.
-        :param url: The URL of the file to delete.
+
+        Args:
+            url: The URL of the file to delete.
         """
         # XXX use non-blocking aiohttp get
         _client.unload(url)
@@ -697,9 +741,12 @@ def _kv(key: str, index: str, value: Any):
 def marshal(d: Any) -> str:
     """
     Marshal to JSON.
-    :param d: Any object or value.
 
-    :return: A string containing the JSON-serialized form.
+    Args:
+        d: Any object or value.
+
+    Returns:
+        A string containing the JSON-serialized form.
     """
     return json.dumps(d, allow_nan=False, separators=(',', ':'))
 
@@ -707,9 +754,12 @@ def marshal(d: Any) -> str:
 def unmarshal(s: str) -> Any:
     """
     Unmarshal a JSON string.
-    :param s: A string containing JSON-serialized data.
 
-    :return: The deserialized object or value.
+    Args:
+        s: A string containing JSON-serialized data.
+
+    Returns:
+        The deserialized object or value.
     """
     return json.loads(s)
 
@@ -717,8 +767,10 @@ def unmarshal(s: str) -> Any:
 def pack(data: Any) -> str:
     """
     Pack (compress) the provided value.
-    :param data: Any object or value.
 
-    :return:The object or value compressed into a string.
+    Args:
+        data: Any object or value.
+
+    The object or value compressed into a string.
     """
     return 'data:' + marshal(_dump(data))

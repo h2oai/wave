@@ -1,15 +1,6 @@
 import os.path
 from typing import List
 
-index_content = '''
-Examples
-========
-
-.. toctree::
-   :maxdepth: 4
-
-'''
-
 docs_dir = os.path.realpath(os.path.dirname(__file__))
 example_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardir, 'examples'))
 
@@ -57,20 +48,21 @@ def main():
 
     examples = [load_example(filename) for filename in filenames]
 
-    examples_rst = [f'   example_{e.name}' for e in examples]
-    examples_rst.insert(0, index_content)
-    write_file(os.path.join(docs_dir, 'examples.rst'), '\n'.join(examples_rst))
-
+    md = ['# Examples']
     for e in examples:
-        example_rst = [
-            e.title,
-            '=' * len(e.title),
+        md.extend([
+            '',
+            '## ' + e.title,
             '',
             e.description,
             '',
-            f'.. literalinclude:: ../examples/{e.name}.py',
-        ]
-        write_file(os.path.join(docs_dir, f'example_{e.name}.rst'), '\n'.join(example_rst))
+            '```py',
+            e.code,
+            '```',
+            '',
+        ])
+
+    write_file(os.path.join(docs_dir, 'examples.md'), '\n'.join(md))
 
 
 if __name__ == '__main__':

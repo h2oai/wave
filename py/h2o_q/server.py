@@ -53,13 +53,13 @@ class Q:
         self.page = site[client_id if mode == UNICAST else username if mode == MULTICAST else route]
         """A reference to the current page."""
         self.app = app_state
-        """A :class:`h2o_q.core.Expando` instance to hold application-specific state."""
+        """A `h2o_q.core.Expando` instance to hold application-specific state."""
         self.user = user_state
-        """A :class:`h2o_q.core.Expando` instance to hold user-specific state."""
+        """A `h2o_q.core.Expando` instance to hold user-specific state."""
         self.client = client_state
-        """An :class:`h2o_q.core.Expando` instance to hold client-specific state."""
+        """An `h2o_q.core.Expando` instance to hold client-specific state."""
         self.args = args
-        """A :class:`h2o_q.core.Expando` instance containing the active request."""
+        """A `h2o_q.core.Expando` instance containing the active request."""
         self.username = username
         """The username of the user who initiated the active request."""
         self.route = route
@@ -162,9 +162,10 @@ def listen(route: str, handle: HandleAsync, mode=UNICAST):
     """
     Launch an application server.
 
-    :param route: The route to listen to. e.g. `'/foo'` or `'/foo/bar/baz'`.
-    :param handle: The handler function.
-    :param mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
+    Args:
+        route: The route to listen to. e.g. `'/foo'` or `'/foo/bar/baz'`.
+        handle: The handler function.
+        mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
     """
     global _server
     _server = _Server(mode=mode, route=route, handle=handle)

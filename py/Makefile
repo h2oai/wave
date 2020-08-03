@@ -17,7 +17,7 @@ setup: ## Install dependencies
 
 .PHONY: docs
 docs: sync-examples ## Build API docs
-	./venv/bin/sphinx-build -b html docs build/docs
+	./venv/bin/pdoc --force --html --output-dir public h2o_q
 
 purge: ## Purge previous build
 	rm -rf build dist h2o_q.egg-info
@@ -27,7 +27,7 @@ examples:
 	sed -i -r -e "s/h2o_q.+/h2o_q==$(VERSION)/" examples/requirements.txt
 
 sync-examples:
-	rm -f docs/example*.rst
+	rm -f docs/example*.md
 	./venv/bin/python docs/sync_examples.py
 
 .PHONY: release
