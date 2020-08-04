@@ -448,8 +448,8 @@ class Path:
 
         Args:
             x1: x-coordinate of first control point
-            y1: x-coordinate of first control point
-            x2: y-coordinate of second control point
+            y1: y-coordinate of first control point
+            x2: x-coordinate of second control point
             y2: y-coordinate of second control point
             x: x-coordinate
             y: y-coordinate
@@ -468,8 +468,8 @@ class Path:
 
         Args:
             x1: x-coordinate of first control point
-            y1: x-coordinate of first control point
-            x2: y-coordinate of second control point
+            y1: y-coordinate of first control point
+            x2: x-coordinate of second control point
             y2: y-coordinate of second control point
             x: x-coordinate
             y: y-coordinate
@@ -488,7 +488,7 @@ class Path:
         See https://www.w3.org/TR/SVG/paths.html#PathDataCubicBezierCommands
 
         Args:
-            x2: y-coordinate of second control point
+            x2: x-coordinate of second control point
             y2: y-coordinate of second control point
             x: x-coordinate
             y: y-coordinate
@@ -507,7 +507,7 @@ class Path:
         See https://www.w3.org/TR/SVG/paths.html#PathDataCubicBezierCommands
 
         Args:
-            x2: y-coordinate of second control point
+            x2: x-coordinate of second control point
             y2: y-coordinate of second control point
             x: x-coordinate
             y: y-coordinate
@@ -525,7 +525,7 @@ class Path:
 
         Args:
             x1: x-coordinate of first control point
-            y1: x-coordinate of first control point
+            y1: y-coordinate of first control point
             x: x-coordinate
             y: y-coordinate
         Returns:
@@ -542,7 +542,7 @@ class Path:
 
         Args:
             x1: x-coordinate of first control point
-            y1: x-coordinate of first control point
+            y1: y-coordinate of first control point
             x: x-coordinate
             y: y-coordinate
         Returns:
