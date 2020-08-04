@@ -46,6 +46,7 @@ release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make r
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows release-os
+	$(MAKE) release-docs
 
 release-os:
 	rm -rf build/$(REL)
@@ -56,6 +57,9 @@ release-os:
 	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd cmd/qd/main.go
 	cp release.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
+
+release-docs:
+	rm -rf docs && rsync -a py/build/docs/h2o_q . && mv h2o_q docs
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
