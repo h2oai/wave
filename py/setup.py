@@ -10,7 +10,7 @@ setuptools.setup(
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Q Realtime Apps',
     long_description=long_description,
-    url='https://h2o.ai',
+    url='https://h2o.ai/h2o-q/',
     packages=setuptools.find_packages(),
     classifiers=[
         'Programming Language :: Python :: 3',

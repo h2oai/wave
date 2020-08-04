@@ -20,7 +20,7 @@ Install and update using `pip`_:
 
 .. code-block:: text
 
-    pip install -U h2o_q
+    pip install -U h2o-q
 
 
 Hello world
@@ -56,10 +56,10 @@ Links
 -----
 
 * Website: https://www.h2o.ai/h2o-q/
-* Releases: https://pypi.org/project/h2o_q/
-* Code: https://github.com/h2oai/h2o_q
-* Issue tracker: https://github.com/h2oai/h2o_q/issues
-
+* Releases: https://pypi.org/project/h2o-q/
+* Documentation: https://h2oai.github.io/qd/
+* Code: https://github.com/h2oai/qd
+* Issue tracker: https://github.com/h2oai/qd/issues
 
 .. _pip: https://pip.pypa.io/en/stable/quickstart/
 
