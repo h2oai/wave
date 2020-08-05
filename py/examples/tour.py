@@ -188,4 +188,9 @@ if __name__ == '__main__':
                          not line.strip().startswith('#')]
     catalog = load_examples(example_filenames)
     configure(internal_address='ws://localhost:55554')
+    print('----------------------------------------')
+    print(' Welcome to the H2O Q Interactive Tour!')
+    print('')
+    print(' Go to http://localhost:55555/tour')
+    print('----------------------------------------')
     listen('/tour', main)

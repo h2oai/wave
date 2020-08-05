@@ -1,29 +1,33 @@
-    __       __
-   / /____  / /__  _______  ______  _____
-  / __/ _ \/ / _ \/ ___/ / / / __ \/ ___/
- / /_/  __/ /  __(__  ) /_/ / / / / /__
- \__/\___/_/\___/____/\__, /_/ /_/\___/
-                     /____/
+===============================================================================
+H2O Q SDK
 
 -------------------------------------------------------------------------------
-Q Development Server
+CONTENTS
+
+    Examples .......... examples/
+    Documentation...... docs/index.html
+    Q Server .......... qd
+
+
 -------------------------------------------------------------------------------
+TOUR
 
-USAGE
+    Step 1: Start the Q development server:
+            $ ./qd
 
-  1. Run './qd' and point your browser to http://localhost:55555
-  2. Run your Q Python app (python -m my_app)
+    Step 2: Run the tour:
+            $ python3 -m venv venv
+            $ ./venv/bin/pip install -r examples/requirements.txt
+            $ ./venv/bin/python examples/tour.py
 
-
-NOTES
-
-  - For an interactive tour of Q, see 'examples/readme.txt'
-  - For SDK documentation, see 'docs/index.html'.
-  - For example apps and code snippets, see 'examples/'.
-  - For additional command-line options, run './qd -help'
-  - For the pip package, see https://pypi.org/project/h2o_q/
+    Step 3: Go to http://localhost:55555/tour
 
 
-Happy Q'ing!
+-------------------------------------------------------------------------------
+LINKS
+
+    Website ........... https://www.h2o.ai/h2o-q/
+    Documentation ..... https://h2oai.github.io/qd/
+    PyPI package ...... https://pypi.org/project/h2o-q/
 
 

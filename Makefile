@@ -52,7 +52,7 @@ release-os:
 	rm -rf build/$(REL)
 	mkdir -p build/$(REL)
 	rsync -a ui/build/ build/$(REL)/www
-	rsync -a py/build/docs build/$(REL)/
+	rsync -a py/build/docs/h2o_q build/$(REL)/ && mv build/$(REL)/h2o_q build/$(REL)/docs
 	rsync -a py/examples build/$(REL)/
 	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd cmd/qd/main.go
 	cp release.txt build/$(REL)/readme.txt
