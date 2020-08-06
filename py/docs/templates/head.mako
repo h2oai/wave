@@ -23,6 +23,11 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.5;
 }
 
+h1 {
+  margin: 3rem 0 2rem 0;
+  border-top: 1px solid #000;
+}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -47,7 +52,7 @@ dd {
   font-size: 100%;
 }
 
-#index h3, #index a, .toc a {
+#sidebar h1, #index h3, #index a, .toc a {
   border: none;
 }
 
