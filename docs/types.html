@@ -14,6 +14,60 @@
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://rsms.me/inter/inter-ui.css" rel="stylesheet">
+<style>
+body {
+font-family: 'Inter', sans-serif;
+font-size: 1rem;
+color: #000;
+-webkit-font-smoothing: antialiased;
+line-height: 1.666666;
+}
+img {
+max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6, b, strong {
+font-weight: 600;
+}
+h1, h2, h3, h4, h5, h6 {
+font-size: 1rem;
+line-height: 1.5;
+}
+h1 {
+margin: 3rem 0 2rem 0;
+}
+a {
+text-decoration: none;
+color: inherit;
+border-color: #000;
+border-bottom-style: solid;
+border-bottom-width: 1px;
+}
+code {
+font-family: 'Inconsolata', monospace;
+}
+pre {
+border: none;
+}
+dd {
+margin-left: 1em;
+}
+.http-server-breadcrumbs {
+font-size: 100%;
+}
+.desc h2 {
+font-size: 1rem;
+font-weight: 600;
+}
+.name {
+font-size:1em;
+}
+.hljs-comment {
+font-style: normal;
+}
+</style>
 </head>
 <body>
 <main>
@@ -17859,6 +17913,9 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 </section>
 </article>
 <nav id="sidebar">
+<div style="text-align:center">
+<img src="q.png" alt="H2O Q" style="width:75%">
+</div>
 <h1>Index</h1>
 <div class="toc">
 <ul></ul>
