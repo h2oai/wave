@@ -966,6 +966,7 @@ def link(
         label: Optional[str] = None,
         path: Optional[str] = None,
         disabled: Optional[bool] = None,
+        download: Optional[bool] = None,
         button: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
@@ -978,8 +979,9 @@ def link(
     Args:
         label: The text to be displayed. If blank, the `path` is used as the label.
         path: The path or URL to link to.
-        disabled: True if the link should be disable.
-        button: True if the link should be rendered as a button
+        disabled: True if the link should be disabled.
+        download: True if the link should be used for file download.
+        button: True if the link should be rendered as a button.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Link` instance.
@@ -988,6 +990,7 @@ def link(
         label,
         path,
         disabled,
+        download,
         button,
         tooltip,
     ))

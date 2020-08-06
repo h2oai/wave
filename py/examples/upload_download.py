@@ -7,16 +7,10 @@ import os
 import os.path
 from h2o_q import Q, listen, ui
 
-
-def make_link_list(links_and_sizes):
-    # Make a markdown list of links.
-    return '\n'.join([f'- [{os.path.basename(link)} ({size} bytes)]({link})' for link, size in links_and_sizes])
-
-
 async def main(q: Q):
     links = q.args.user_files
     if links:
-        links_and_sizes = []
+        items = [ui.text_xl('Files uploaded!')]
         for link in links:
             local_path = await q.site.download(link, '.')
             #
@@ -24,16 +18,13 @@ async def main(q: Q):
             # To keep this example simple, we just read the file size.
             #
             size = os.path.getsize(local_path)
-            links_and_sizes.append((link, size))
 
+            items.append(ui.link(label=f'{os.path.basename(link)} ({size} bytes)', download=True, path=link))
             # Clean up
             os.remove(local_path)
 
-        q.page['example'].items = [
-            ui.text_xl('Files uploaded!'),
-            ui.text(make_link_list(links_and_sizes)),
-            ui.button(name='back', label='Back', primary=True),
-        ]
+        items.append(ui.button(name='back', label='Back', primary=True))
+        q.page['example'].items = items
     else:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
             ui.text_xl('Upload some files'),
