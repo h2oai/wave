@@ -33,7 +33,7 @@ describe('Nav.tsx', () => {
   })
 
   it('Does not render download attribute', () => {
-    const { getByTestId } = render(<XLink model={{ ...linkProps }} />)
+    const { getByTestId } = render(<XLink model={linkProps} />)
     expect(getByTestId(name).getAttribute('download')).toBeNull()
   })
 })
