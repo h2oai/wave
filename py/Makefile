@@ -17,7 +17,8 @@ setup: ## Install dependencies
 
 .PHONY: docs
 docs: sync-examples ## Build API docs
-	./venv/bin/pdoc --force --html --output-dir build/docs h2o_q
+	./venv/bin/pdoc --force --html --template-dir docs/templates --output-dir build/docs h2o_q
+	cp ../q.png build/docs/h2o_q/
 
 purge: ## Purge previous build
 	rm -rf build dist h2o_q.egg-info
