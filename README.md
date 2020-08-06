@@ -1,6 +1,7 @@
 # Q SDK
 
 - [Getting Started](#getting-started)
+- [Documentation](https://h2oai.github.io/qd/)
 - [Roadmap](https://github.com/h2oai/qd/wiki/Roadmap)
 - [Migration Guide](#migration-guide)
 - [Examples](https://github.com/h2oai/qd/tree/master/py/examples)
