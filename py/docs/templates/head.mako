@@ -23,10 +23,6 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.5;
 }
 
-h1 {
-  margin: 3rem 0 2rem 0;
-}
-
 a {
   text-decoration: none;
   color: inherit;
@@ -51,6 +47,10 @@ dd {
   font-size: 100%;
 }
 
+#index h3, #index a, .toc a {
+  border: none;
+}
+
 .desc h2 {
   font-size: 1rem;
   font-weight: 600;
@@ -64,4 +64,8 @@ dd {
   font-style: normal;
 }
 
+.logo {
+  border: 10px solid #ffdf00;
+  height: 110px;
+}
 </style>

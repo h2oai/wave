@@ -1,3 +1,1 @@
-<div style="text-align:center">
-<img src="q.png" alt="H2O Q" style="width:75%">
-</div>
+<img class='logo' src='https://h2oai.github.io/qd/q.png'/>
