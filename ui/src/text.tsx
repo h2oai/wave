@@ -84,7 +84,7 @@ const
     s: 'small',
     xs: 'xSmall',
   },
-  toTextVariant = (s: S) => { const v = textVariants[s]; return v || 'mediumPlus' }
+  toTextVariant = (s: S) => textVariants[s] || 'mediumPlus'
 
 export const
   XText = ({ content, size }: { content: S, size?: S }) => {
