@@ -1,26 +1,7 @@
-# Getting Started
-
-TODO
-
-# Tutorial
-
-TODO
-
-# Basics
-
-TODO
-
-# Cheat Sheet
-
-TODO
-
-# Graphics
-
-TODO
 
 # Change Log
 
-- v0.1.2
+- [v0.1.2](https://github.com/h2oai/qd/releases/tag/v0.1.2) - Aug 7, 2020
     - Added
         - API for `h2o_q.core.Expando` copy, clone and item/attribute deletion.
         - Migration guide.
@@ -32,7 +13,7 @@ TODO
         - Renamed env var prefix for settings to `H2O_Q_`.
     - Fixed
         - Plot X/Y axis transpose bug.
-- v0.1.1
+- [v0.1.1](https://github.com/h2oai/qd/releases/tag/v0.1.1) - Jul 27, 2020
     - Added
         - Options for file type and size to file upload component.
         - API for displaying desktop notifications.
@@ -45,7 +26,7 @@ TODO
         - Examples for graphics card.
     - Fixed
         - Re-rendering performance improvements.
-- v0.1.0
+- [v0.1.0](https://github.com/h2oai/qd/releases/tag/v0.1.0) - Jul 13, 2020
     - Added
         - Example for displaying iframe content > 2MB.
         - Example for plotting using matplotlib.
@@ -57,7 +38,7 @@ TODO
         - Example for master-detail user interfaces using `ui.table()`.
         - Example for authoring multi-step wizard user interfaces.
         - Unload API: `q.unload()` to delete uploaded files.
-- v0.0.7
+- [v0.0.7](https://github.com/h2oai/qd/releases/tag/v0.0.7) - Jul 12, 2020
     - Added
         - Download API: `q.download()`.
         - Vega-lite support: `ui.vega_card()`.
@@ -76,7 +57,7 @@ TODO
         - API consistency: `page.sync()` and `page.push()` renamed to `page.save()`.
     - Removed
         - `ui.dashboard_card()` and `ui.notebook_card()`.
-- v0.0.6
+- [v0.0.6](https://github.com/h2oai/qd/releases/tag/v0.0.6) - Jul 6, 2020
     - Added
         - Log network traffic when logging is set to debug mode.
         - Capture and display unhandled exceptions on the UI.
@@ -87,20 +68,20 @@ TODO
         - Upload API: `q.upload()`.
     - Changed
         - `q.session` renamed to `q.user`
-- v0.0.5
+- [v0.0.5](https://github.com/h2oai/qd/releases/tag/v0.0.5) - Jun 29, 2020
     - Added
         - Add configure() API to configure environment before launching.
-- v0.0.4
+- [v0.0.4](https://github.com/h2oai/qd/releases/tag/v0.0.4) - Jun 26, 2020
     - Added
         - Multi-user and multi-client support: launch apps in `multicast` or `unicast` modes in addition to `broadcast` mode.
         - Client-specific data can now be stored and accessed via `q.client`, similar to `q.session` and `q.app`.
         - Simpler page referencing: `import site` can be used instead of `site = Site()`.
     - Changed
         - Apps now lauch in `unicast` mode by default instead of `broadcast` mode.
-- v0.0.3
+- [v0.0.3](https://github.com/h2oai/qd/releases/tag/v0.0.3) - Jun 19, 2020
     - Added
         - Make `Expando` data structure available for apps.
-- v0.0.2
+- [v0.0.2](https://github.com/h2oai/qd/releases/tag/v0.0.2) - Jun 17, 2020
     - Initial version
 - v0.0.1
     - Package stub
@@ -270,7 +251,7 @@ After: Note the parameter name change `frame_cell(source=...)` to `frame(content
 
 ```
 ui.form_cell(
-  box='1 5 2 4', 
+  box='1 5 2 4',
   items=[
     ui.text(content='Foo'),
     ui.frame(content=html_foo, height='200px'),
