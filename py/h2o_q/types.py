@@ -2134,6 +2134,53 @@ class Expander:
         )
 
 
+class Frame:
+    """Create a new inline frame (an `iframe`).
+    """
+    def __init__(
+            self,
+            path: Optional[str] = None,
+            content: Optional[str] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+    ):
+        self.path = path
+        """The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`"""
+        self.content = content
+        """The HTML content of the page. A string containing `<html>...</html>`."""
+        self.width = width
+        """The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`."""
+        self.height = height
+        """The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        return _dump(
+            path=self.path,
+            content=self.content,
+            width=self.width,
+            height=self.height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Frame':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_path: Any = __d.get('path')
+        __d_content: Any = __d.get('content')
+        __d_width: Any = __d.get('width')
+        __d_height: Any = __d.get('height')
+        path: Optional[str] = __d_path
+        content: Optional[str] = __d_content
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        return Frame(
+            path,
+            content,
+            width,
+            height,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -2167,6 +2214,7 @@ class Component:
             link: Optional[Link] = None,
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
+            frame: Optional[Frame] = None,
     ):
         self.text = text
         """Text block."""
@@ -2224,6 +2272,8 @@ class Component:
         """Tabs."""
         self.expander = expander
         """Expander."""
+        self.frame = frame
+        """Frame"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2256,6 +2306,7 @@ class Component:
             link=None if self.link is None else self.link.dump(),
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
+            frame=None if self.frame is None else self.frame.dump(),
         )
 
     @staticmethod
@@ -2289,6 +2340,7 @@ class Component:
         __d_link: Any = __d.get('link')
         __d_tabs: Any = __d.get('tabs')
         __d_expander: Any = __d.get('expander')
+        __d_frame: Any = __d.get('frame')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -2317,6 +2369,7 @@ class Component:
         link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
+        frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
         return Component(
             text,
             text_xl,
@@ -2346,6 +2399,7 @@ class Component:
             link,
             tabs,
             expander,
+            frame,
         )
 
 
@@ -2399,7 +2453,7 @@ class FormCard:
 
 
 class FrameCard:
-    """Render a card containing a HTML page inside an inline frame (iframe).
+    """Render a card containing a HTML page inside an inline frame (an `iframe`).
 
     Either a path or content can be provided as arguments.
     """
@@ -2416,9 +2470,9 @@ class FrameCard:
         self.title = title
         """The title for this card."""
         self.path = path
-        """The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'"""
+        """The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`"""
         self.content = content
-        """The HTML content of the page. A string containing '<html>...</html>'"""
+        """The HTML content of the page. A string containing `<html>...</html>`"""
         self.commands = commands
         """Contextual menu commands for this component."""
 

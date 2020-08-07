@@ -1061,6 +1061,30 @@ def expander(
     ))
 
 
+def frame(
+        path: Optional[str] = None,
+        content: Optional[str] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+) -> Component:
+    """Create a new inline frame (an `iframe`).
+
+    Args:
+        path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
+        content: The HTML content of the page. A string containing `<html>...</html>`.
+        width: The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.
+        height: The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.
+    Returns:
+        A `h2o_q.types.Frame` instance.
+    """
+    return Component(frame=Frame(
+        path,
+        content,
+        width,
+        height,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         text_xl: Optional[TextXl] = None,
@@ -1090,6 +1114,7 @@ def component(
         link: Optional[Link] = None,
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
+        frame: Optional[Frame] = None,
 ) -> Component:
     """Create a component.
 
@@ -1122,6 +1147,7 @@ def component(
         link: Link.
         tabs: Tabs.
         expander: Expander.
+        frame: Frame
     Returns:
         A `h2o_q.types.Component` instance.
     """
@@ -1154,6 +1180,7 @@ def component(
         link,
         tabs,
         expander,
+        frame,
     )
 
 
@@ -1185,15 +1212,15 @@ def frame_card(
         content: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> FrameCard:
-    """Render a card containing a HTML page inside an inline frame (iframe).
+    """Render a card containing a HTML page inside an inline frame (an `iframe`).
 
     Either a path or content can be provided as arguments.
 
     Args:
         box: A string indicating how to place this component on the page.
         title: The title for this card.
-        path: The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'
-        content: The HTML content of the page. A string containing '<html>...</html>'
+        path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
+        content: The HTML content of the page. A string containing `<html>...</html>`
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.FrameCard` instance.

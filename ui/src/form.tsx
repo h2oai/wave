@@ -27,6 +27,7 @@ import { Textbox, XTextbox } from './textbox';
 import { getTheme } from './theme';
 import { Toggle, XToggle } from './toggle';
 import { XToolTip } from './tooltip';
+import { Frame, XFrame } from './frame';
 
 /** Create a component. */
 export interface Component {
@@ -86,6 +87,8 @@ export interface Component {
   tabs?: Tabs
   /** Expander. */
   expander?: Expander
+  /** Frame */
+  frame?: Frame
 }
 
 /** Create a form. */
@@ -145,6 +148,7 @@ const
     if (m.tabs) return <XTabs model={m.tabs} />
     if (m.button) return <XToolTip content={m.button.tooltip} showIcon={false} expand={false}><XStandAloneButton model={m.button} /></XToolTip>
     if (m.expander) return <XExpander model={m.expander} />
+    if (m.frame) return <XFrame model={m.frame} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   },
   View = bond(({ state, changed }: Card<State>) => {

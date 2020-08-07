@@ -20,16 +20,30 @@ const
   })
 
 /**
- * Render a card containing a HTML page inside an inline frame (iframe).
+ * Create a new inline frame (an `iframe`).
+ */
+export interface Frame {
+  /** The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html` */
+  path?: S
+  /** The HTML content of the page. A string containing `<html>...</html>`. */
+  content?: S
+  /** The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`. */
+  width?: S
+  /** The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`. */
+  height?: S
+}
+
+/**
+ * Render a card containing a HTML page inside an inline frame (an `iframe`).
  *
  * Either a path or content can be provided as arguments.
  */
 interface State {
   /** The title for this card.*/
   title: S
-  /** The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html' */
+  /** The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html` */
   path?: S
-  /** The HTML content of the page. A string containing '<html>...</html>' */
+  /** The HTML content of the page. A string containing `<html>...</html>` */
   content?: S
 }
 
@@ -39,9 +53,13 @@ const
     return s.replace(/(\s+src\s*=\s*["'])\//g, `$1${window.location.protocol}//${window.location.host}/`)
   },
   inline = (s: S): S => `data:text/html;base64,${btoa(fixrefs(s))}`,
-  Frame = ({ source, width, height }: { source: S, width: S, height: S }) => {
-    return <iframe title={xid()} src={source} style={{ width, height }} frameBorder="0" />
-  }
+  InlineFrame = ({ path, content, width, height }: { path?: S, content?: S, width: S, height: S }) => (
+    <iframe title={xid()} src={path ? path : content ? inline(content) : inline('Nothing to render.')} style={{ width, height }} frameBorder="0" />
+  )
+
+export const XFrame = ({ model: { path, content, width, height } }: { model: Frame }) => {
+  return <InlineFrame path={path} content={content} width={width || '100%'} height={height || '150px'} />
+}
 
 const
   View = bond(({ state, changed }: Card<State>) => {
@@ -49,7 +67,7 @@ const
       <div className={css.card}>
         <div className={css.title}>{state.title}</div>
         <div className={css.body}>
-          <Frame source={state.path ? state.path : state.content ? inline(state.content) : inline('Nothing to render.')} width='100%' height='100%' />
+          <InlineFrame path={state.path} content={state.content} width='100%' height='100%' />
         </div>
       </div>
     )
