@@ -103,6 +103,143 @@ realtime state synchronization between Python and web browsers.</p>
 <p>TODO</p>
 <h1 id="graphics">Graphics</h1>
 <p>TODO</p>
+<h1 id="change-log">Change Log</h1>
+<ul>
+<li>v0.1.2<ul>
+<li>Added<ul>
+<li>API for <code><a title="h2o_q.core.Expando" href="core.html#h2o_q.core.Expando">Expando</a></code> copy, clone and item/attribute deletion.</li>
+<li>Migration guide.</li>
+<li>Example for setting browser window title.</li>
+<li>API and example for Header card: <code><a title="h2o_q.ui.header_card" href="ui.html#h2o_q.ui.header_card">header_card()</a></code>.</li>
+<li>Export <code><a title="h2o_q.core.Ref" href="core.html#h2o_q.core.Ref">Ref</a></code> from <code><a title="h2o_q" href="#h2o_q">h2o_q</a></code>.</li>
+<li>API and examples for inline frames inside form cards: <code><a title="h2o_q.ui.frame" href="ui.html#h2o_q.ui.frame">frame()</a></code>.</li>
+</ul>
+</li>
+<li>Changed<ul>
+<li>Renamed env var prefix for settings to <code>H2O_Q_</code>.</li>
+</ul>
+</li>
+<li>Fixed<ul>
+<li>Plot X/Y axis transpose bug.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>v0.1.1<ul>
+<li>Added<ul>
+<li>Options for file type and size to file upload component.</li>
+<li>API for displaying desktop notifications.</li>
+<li>Buttons can now submit specific values instead of only True/False.</li>
+<li>Examples for layout and card sizing.</li>
+<li>Image card for displaying base64-encoded images.</li>
+<li>Example for image card.</li>
+<li>Vector graphics API.</li>
+<li>Turtle graphics based path generator.</li>
+<li>Examples for graphics card.</li>
+</ul>
+</li>
+<li>Fixed<ul>
+<li>Re-rendering performance improvements.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>v0.1.0<ul>
+<li>Added<ul>
+<li>Example for displaying iframe content &gt; 2MB.</li>
+<li>Example for plotting using matplotlib.</li>
+<li>Example for plotting using Altair.</li>
+<li>Example for plotting using Vega.</li>
+<li>Example for plotting using Bokeh.</li>
+<li>Example for plotting using custom D3.js Javascript.</li>
+<li>Example for live dashboard with stats cards.</li>
+<li>Example for master-detail user interfaces using <code><a title="h2o_q.ui.table" href="ui.html#h2o_q.ui.table">table()</a></code>.</li>
+<li>Example for authoring multi-step wizard user interfaces.</li>
+<li>Unload API: <code>q.unload()</code> to delete uploaded files.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>v0.0.7<ul>
+<li>Added<ul>
+<li>Download API: <code>q.download()</code>.</li>
+<li>Vega-lite support: <code><a title="h2o_q.ui.vega_card" href="ui.html#h2o_q.ui.vega_card">vega_card()</a></code>.</li>
+<li>Context menu support to all cards.</li>
+<li><code>refresh</code> attribute on <code>meta_card</code> allows static pages to stop receiving live updates.</li>
+<li>Passing <code>-debug</code> when starting server displays site stats at <code>/_d/site</code>.</li>
+<li>Drag and drop support for file upload component.</li>
+<li>Template expression support for markdown cards.</li>
+<li>All APIs and examples documented.</li>
+<li>All 110 examples now ship with the Sphinx documentation.</li>
+<li>Documentation now ships with release download.</li>
+</ul>
+</li>
+<li>Changed<ul>
+<li>API consistency: <code>ui.vis()</code> renamed to <code><a title="h2o_q.ui.plot" href="ui.html#h2o_q.ui.plot">plot()</a></code>.</li>
+<li>All stats cards now have descriptive names.</li>
+<li>API consistency: <code>ui.mark.mark</code> renamed to <code>ui.mark.type</code>.</li>
+<li>API consistency: <code>page.sync()</code> and <code>page.push()</code> renamed to <code>page.save()</code>.</li>
+</ul>
+</li>
+<li>Removed<ul>
+<li><code>ui.dashboard_card()</code> and <code>ui.notebook_card()</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>v0.0.6<ul>
+<li>Added<ul>
+<li>Log network traffic when logging is set to debug mode.</li>
+<li>Capture and display unhandled exceptions on the UI.</li>
+<li>Routing using location hash.</li>
+<li>Toolbar component.</li>
+<li>Tabs component.</li>
+<li>Nav component.</li>
+<li>Upload API: <code>q.upload()</code>.</li>
+</ul>
+</li>
+<li>Changed<ul>
+<li><code>q.session</code> renamed to <code>q.user</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>v0.0.5<ul>
+<li>Added<ul>
+<li>Add configure() API to configure environment before launching.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>v0.0.4<ul>
+<li>Added<ul>
+<li>Multi-user and multi-client support: launch apps in <code>multicast</code> or <code>unicast</code> modes in addition to <code>broadcast</code> mode.</li>
+<li>Client-specific data can now be stored and accessed via <code>q.client</code>, similar to <code>q.session</code> and <code>q.app</code>.</li>
+<li>Simpler page referencing: <code>import site</code> can be used instead of <code>site = Site()</code>.</li>
+</ul>
+</li>
+<li>Changed<ul>
+<li>Apps now lauch in <code>unicast</code> mode by default instead of <code>broadcast</code> mode.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>v0.0.3<ul>
+<li>Added<ul>
+<li>Make <code>Expando</code> data structure available for apps.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>v0.0.2<ul>
+<li>Initial version</li>
+</ul>
+</li>
+<li>v0.0.1<ul>
+<li>Package stub</li>
+</ul>
+</li>
+</ul>
 <h1 id="migration-guide">Migration Guide</h1>
 <p>Before you begin, it is highly recommended that you <a href="https://github.com/h2oai/qd/releases">download</a> a release and run the interactive <code>tour.py</code> that ships with the release to get a feel for what Q programs look like in practice.</p>
 <h2 id="what-has-changed">What has changed?</h2>
@@ -216,7 +353,28 @@ def step3(q: Q):
 listen('/my/app/route', main)
 </code></pre>
 <p><strong>Removed: <code>q.dashboard()</code> and <code>q.notebook()</code>.</strong></p>
-<p>Every page in Q is a dashboard page. Instead of creating a separate dashboard or notebook, simply add cards to a page and arrange it the way you want. Cards can be created by using one of the several <code>ui.*_card()</code> APIs. Also see the <a href="py/examples/dashboard.py">dashboard</a>, <a href="py/examples/layout.py">layout</a> and <a href="py/examples/layout_size.py">sizing</a> examples to learn how to lay out several cards on a page.</p>
+<p>Every page in Q is a dashboard page. Instead of creating a separate dashboard or notebook, simply add cards to a page and arrange it the way you want. Cards can be created by using one of the several <code>ui.*_card()</code> APIs. Also see the <a href="#dashboard">dashboard</a>, <a href="#layout-position">layout</a> and <a href="#layout-size">sizing</a> examples to learn how to lay out several cards on a page.</p>
+<p>If you want to display a notebook-style vertical stack of markdown, html or other content, use <code><a title="h2o_q.ui.text" href="ui.html#h2o_q.ui.text">text()</a></code> and <code><a title="h2o_q.ui.frame" href="ui.html#h2o_q.ui.frame">frame()</a></code> contained inside a <code><a title="h2o_q.ui.form_card" href="ui.html#h2o_q.ui.form_card">form_card()</a></code>, like this:</p>
+<p>Before:</p>
+<pre><code>ui.notebook([ui.notebook_section([
+  ui.markdown_cell(content='Foo'),
+  ui.frame_cell(source=html_foo, height='200px'),
+  ui.markdown_cell(content='Bar'),
+  ui.frame_cell(source=html_bar, height='200px'),
+])])
+
+</code></pre>
+<p>After: Note the parameter name change <code>frame_cell(source=...)</code> to <code>frame(content=...)</code>.</p>
+<pre><code>ui.form_cell(
+  box='1 5 2 4', 
+  items=[
+    ui.text(content='Foo'),
+    ui.frame(content=html_foo, height='200px'),
+    ui.text(content='Bar'),
+    ui.frame(content=html_bar, height='200px'),
+  ],
+)
+</code></pre>
 <p><strong>Changed: <code><a title="h2o_q.ui.buttons" href="ui.html#h2o_q.ui.buttons">buttons()</a></code>, <code><a title="h2o_q.ui.expander" href="ui.html#h2o_q.ui.expander">expander()</a></code> and <code><a title="h2o_q.ui.tabs" href="ui.html#h2o_q.ui.tabs">tabs()</a></code> accept a <code>list</code> of items instead of var args <code>*args</code>.</strong></p>
 <p>Before:</p>
 <pre><code class="py">ui.buttons(ui.button(...), ui.button(...), ui.button(...))
@@ -1806,6 +1964,82 @@ page['example'] = ui.form_card(
         ui.file_upload(name='file_upload', label='Upload!', multiple=True,
         file_extensions=['csv', 'gz'], max_file_size=10, max_size=15)
     ]
+)
+
+page.save()
+</code></pre>
+<h2 id="form-frame">Form / Frame</h2>
+<p>Use a frame component in a form card to display HTML content inline.</p>
+<pre><code class="py">from h2o_q import site, ui
+
+html = '''
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello World!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+'''
+
+page = site['/demo']
+
+page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[
+        ui.frame(content=html, height='100px')
+    ]
+)
+
+page.save()
+</code></pre>
+<h2 id="form-frame-path">Form / Frame / Path</h2>
+<p>Use a frame component in a form card to display external web pages.</p>
+<pre><code class="py">from h2o_q import site, ui
+
+page = site['/demo']
+
+page['example'] = ui.form_card(
+    box='1 1 6 5',
+    items=[
+        ui.frame(path='https://example.com', height='400px')
+    ]
+)
+
+page.save()
+</code></pre>
+<h2 id="frame">Frame</h2>
+<p>Use a frame card to display HTML content.</p>
+<pre><code class="py">from h2o_q import site, ui
+
+html = '''
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello World!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+'''
+
+page = site['/demo']
+
+page['example'] = ui.frame_card(
+    box='1 1 2 2',
+    title='Example',
+    content=html,
+)
+
+page.save()
+</code></pre>
+<h2 id="frame-path">Frame / Path</h2>
+<p>Use a frame card to display external web pages.</p>
+<pre><code class="py">from h2o_q import site, ui
+
+page = site['/demo']
+
+page['example'] = ui.frame_card(
+    box='1 1 6 5',
+    title='Example',
+    path='https://example.com',
 )
 
 page.save()
@@ -4438,6 +4672,7 @@ from .types import *</code></pre>
 <li><a href="#basics">Basics</a></li>
 <li><a href="#cheat-sheet">Cheat Sheet</a></li>
 <li><a href="#graphics">Graphics</a></li>
+<li><a href="#change-log">Change Log</a></li>
 <li><a href="#migration-guide">Migration Guide</a><ul>
 <li><a href="#what-has-changed">What has changed?</a></li>
 <li><a href="#breaking-changes">Breaking changes</a></li>
@@ -4486,6 +4721,10 @@ from .types import *</code></pre>
 <li><a href="#form-tabs">Form / Tabs</a></li>
 <li><a href="#form-separator">Form / Separator</a></li>
 <li><a href="#form-file-upload">Form / File Upload</a></li>
+<li><a href="#form-frame">Form / Frame</a></li>
+<li><a href="#form-frame-path">Form / Frame / Path</a></li>
+<li><a href="#frame">Frame</a></li>
+<li><a href="#frame-path">Frame / Path</a></li>
 <li><a href="#lists">Lists</a></li>
 <li><a href="#grid">Grid</a></li>
 <li><a href="#flex">Flex</a></li>

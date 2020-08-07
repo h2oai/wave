@@ -1151,6 +1151,30 @@ def expander(
     ))
 
 
+def frame(
+        path: Optional[str] = None,
+        content: Optional[str] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a new inline frame (an `iframe`).
+
+    Args:
+        path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
+        content: The HTML content of the page. A string containing `&lt;html&gt;...&lt;/html&gt;`.
+        width: The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.
+        height: The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.
+    Returns:
+        A `h2o_q.types.Frame` instance.
+    &#34;&#34;&#34;
+    return Component(frame=Frame(
+        path,
+        content,
+        width,
+        height,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         text_xl: Optional[TextXl] = None,
@@ -1180,6 +1204,7 @@ def component(
         link: Optional[Link] = None,
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
+        frame: Optional[Frame] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a component.
 
@@ -1212,6 +1237,7 @@ def component(
         link: Link.
         tabs: Tabs.
         expander: Expander.
+        frame: Frame
     Returns:
         A `h2o_q.types.Component` instance.
     &#34;&#34;&#34;
@@ -1244,6 +1270,7 @@ def component(
         link,
         tabs,
         expander,
+        frame,
     )
 
 
@@ -1275,15 +1302,15 @@ def frame_card(
         content: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -&gt; FrameCard:
-    &#34;&#34;&#34;Render a card containing a HTML page inside an inline frame (iframe).
+    &#34;&#34;&#34;Render a card containing a HTML page inside an inline frame (an `iframe`).
 
     Either a path or content can be provided as arguments.
 
     Args:
         box: A string indicating how to place this component on the page.
         title: The title for this card.
-        path: The path or URL of the web page, e.g. &#39;/foo.html&#39; or &#39;http://example.com/foo.html&#39;
-        content: The HTML content of the page. A string containing &#39;&lt;html&gt;...&lt;/html&gt;&#39;
+        path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
+        content: The HTML content of the page. A string containing `&lt;html&gt;...&lt;/html&gt;`
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.FrameCard` instance.
@@ -2952,7 +2979,7 @@ When collapsed the user can select a new value by typing.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.component"><code class="name flex">
-<span>def <span class="ident">component</span></span>(<span>text: Union[<a title="h2o_q.types.Text" href="types.html#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="types.html#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="types.html#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="types.html#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="types.html#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="types.html#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="types.html#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="types.html#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="types.html#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="types.html#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="types.html#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="types.html#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="types.html#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="types.html#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="types.html#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="types.html#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="types.html#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="types.html#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="types.html#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="types.html#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="types.html#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="types.html#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="types.html#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="types.html#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="types.html#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="types.html#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="types.html#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="types.html#h2o_q.types.Expander">Expander</a>, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">component</span></span>(<span>text: Union[<a title="h2o_q.types.Text" href="types.html#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="types.html#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="types.html#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="types.html#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="types.html#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="types.html#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="types.html#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="types.html#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="types.html#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="types.html#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="types.html#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="types.html#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="types.html#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="types.html#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="types.html#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="types.html#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="types.html#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="types.html#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="types.html#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="types.html#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="types.html#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="types.html#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="types.html#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="types.html#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="types.html#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="types.html#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="types.html#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="types.html#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="types.html#h2o_q.types.Frame">Frame</a>, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a component.</p>
@@ -3014,6 +3041,8 @@ When collapsed the user can select a new value by typing.</p>
 <dd>Tabs.</dd>
 <dt><strong><code>expander</code></strong></dt>
 <dd>Expander.</dd>
+<dt><strong><code>frame</code></strong></dt>
+<dd>Frame</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>A <code><a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></code> instance.</p></div>
@@ -3050,6 +3079,7 @@ When collapsed the user can select a new value by typing.</p>
         link: Optional[Link] = None,
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
+        frame: Optional[Frame] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a component.
 
@@ -3082,6 +3112,7 @@ When collapsed the user can select a new value by typing.</p>
         link: Link.
         tabs: Tabs.
         expander: Expander.
+        frame: Frame
     Returns:
         A `h2o_q.types.Component` instance.
     &#34;&#34;&#34;
@@ -3114,6 +3145,7 @@ When collapsed the user can select a new value by typing.</p>
         link,
         tabs,
         expander,
+        frame,
     )</code></pre>
 </details>
 </dd>
@@ -3495,11 +3527,57 @@ Create a card containing other cards laid out using a one-dimensional model with
     )</code></pre>
 </details>
 </dd>
+<dt id="h2o_q.ui.frame"><code class="name flex">
+<span>def <span class="ident">frame</span></span>(<span>path: Union[str, NoneType] = None, content: Union[str, NoneType] = None, width: Union[str, NoneType] = None, height: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a new inline frame (an <code>iframe</code>).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong></dt>
+<dd>The path or URL of the web page, e.g. <code>/foo.html</code> or <code>http://example.com/foo.html</code></dd>
+<dt><strong><code>content</code></strong></dt>
+<dd>The HTML content of the page. A string containing <code>&lt;html&gt;...&lt;/html&gt;</code>.</dd>
+<dt><strong><code>width</code></strong></dt>
+<dd>The width of the frame, e.g. <code>200px</code>, <code>50%</code>, etc. Defaults to <code>100%</code>.</dd>
+<dt><strong><code>height</code></strong></dt>
+<dd>The height of the frame, e.g. <code>200px</code>, <code>50%</code>, etc. Defaults to <code>150px</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.Frame" href="types.html#h2o_q.types.Frame">Frame</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def frame(
+        path: Optional[str] = None,
+        content: Optional[str] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a new inline frame (an `iframe`).
+
+    Args:
+        path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
+        content: The HTML content of the page. A string containing `&lt;html&gt;...&lt;/html&gt;`.
+        width: The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.
+        height: The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.
+    Returns:
+        A `h2o_q.types.Frame` instance.
+    &#34;&#34;&#34;
+    return Component(frame=Frame(
+        path,
+        content,
+        width,
+        height,
+    ))</code></pre>
+</details>
+</dd>
 <dt id="h2o_q.ui.frame_card"><code class="name flex">
 <span>def <span class="ident">frame_card</span></span>(<span>box: str, title: str, path: Union[str, NoneType] = None, content: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.FrameCard" href="types.html#h2o_q.types.FrameCard">FrameCard</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Render a card containing a HTML page inside an inline frame (iframe).</p>
+<div class="desc"><p>Render a card containing a HTML page inside an inline frame (an <code>iframe</code>).</p>
 <p>Either a path or content can be provided as arguments.</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -3508,9 +3586,9 @@ Create a card containing other cards laid out using a one-dimensional model with
 <dt><strong><code>title</code></strong></dt>
 <dd>The title for this card.</dd>
 <dt><strong><code>path</code></strong></dt>
-<dd>The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'</dd>
+<dd>The path or URL of the web page, e.g. <code>/foo.html</code> or <code>http://example.com/foo.html</code></dd>
 <dt><strong><code>content</code></strong></dt>
-<dd>The HTML content of the page. A string containing '<html>&hellip;</html>'</dd>
+<dd>The HTML content of the page. A string containing <code>&lt;html&gt;...&lt;/html&gt;</code></dd>
 <dt><strong><code>commands</code></strong></dt>
 <dd>Contextual menu commands for this component.</dd>
 </dl>
@@ -3527,15 +3605,15 @@ Create a card containing other cards laid out using a one-dimensional model with
         content: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -&gt; FrameCard:
-    &#34;&#34;&#34;Render a card containing a HTML page inside an inline frame (iframe).
+    &#34;&#34;&#34;Render a card containing a HTML page inside an inline frame (an `iframe`).
 
     Either a path or content can be provided as arguments.
 
     Args:
         box: A string indicating how to place this component on the page.
         title: The title for this card.
-        path: The path or URL of the web page, e.g. &#39;/foo.html&#39; or &#39;http://example.com/foo.html&#39;
-        content: The HTML content of the page. A string containing &#39;&lt;html&gt;...&lt;/html&gt;&#39;
+        path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
+        content: The HTML content of the page. A string containing `&lt;html&gt;...&lt;/html&gt;`
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.FrameCard` instance.
@@ -6611,6 +6689,7 @@ In other words, if a physical switch would work for the action, a Toggle is prob
 <li><code><a title="h2o_q.ui.file_upload" href="#h2o_q.ui.file_upload">file_upload</a></code></li>
 <li><code><a title="h2o_q.ui.flex_card" href="#h2o_q.ui.flex_card">flex_card</a></code></li>
 <li><code><a title="h2o_q.ui.form_card" href="#h2o_q.ui.form_card">form_card</a></code></li>
+<li><code><a title="h2o_q.ui.frame" href="#h2o_q.ui.frame">frame</a></code></li>
 <li><code><a title="h2o_q.ui.frame_card" href="#h2o_q.ui.frame_card">frame_card</a></code></li>
 <li><code><a title="h2o_q.ui.graphics_card" href="#h2o_q.ui.graphics_card">graphics_card</a></code></li>
 <li><code><a title="h2o_q.ui.grid_card" href="#h2o_q.ui.grid_card">grid_card</a></code></li>

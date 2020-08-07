@@ -2224,6 +2224,53 @@ class Expander:
         )
 
 
+class Frame:
+    &#34;&#34;&#34;Create a new inline frame (an `iframe`).
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            path: Optional[str] = None,
+            content: Optional[str] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+    ):
+        self.path = path
+        &#34;&#34;&#34;The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`&#34;&#34;&#34;
+        self.content = content
+        &#34;&#34;&#34;The HTML content of the page. A string containing `&lt;html&gt;...&lt;/html&gt;`.&#34;&#34;&#34;
+        self.width = width
+        &#34;&#34;&#34;The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.&#34;&#34;&#34;
+        self.height = height
+        &#34;&#34;&#34;The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        return _dump(
+            path=self.path,
+            content=self.content,
+            width=self.width,
+            height=self.height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Frame&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_path: Any = __d.get(&#39;path&#39;)
+        __d_content: Any = __d.get(&#39;content&#39;)
+        __d_width: Any = __d.get(&#39;width&#39;)
+        __d_height: Any = __d.get(&#39;height&#39;)
+        path: Optional[str] = __d_path
+        content: Optional[str] = __d_content
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        return Frame(
+            path,
+            content,
+            width,
+            height,
+        )
+
+
 class Component:
     &#34;&#34;&#34;Create a component.
     &#34;&#34;&#34;
@@ -2257,6 +2304,7 @@ class Component:
             link: Optional[Link] = None,
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
+            frame: Optional[Frame] = None,
     ):
         self.text = text
         &#34;&#34;&#34;Text block.&#34;&#34;&#34;
@@ -2314,6 +2362,8 @@ class Component:
         &#34;&#34;&#34;Tabs.&#34;&#34;&#34;
         self.expander = expander
         &#34;&#34;&#34;Expander.&#34;&#34;&#34;
+        self.frame = frame
+        &#34;&#34;&#34;Frame&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -2346,6 +2396,7 @@ class Component:
             link=None if self.link is None else self.link.dump(),
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
+            frame=None if self.frame is None else self.frame.dump(),
         )
 
     @staticmethod
@@ -2379,6 +2430,7 @@ class Component:
         __d_link: Any = __d.get(&#39;link&#39;)
         __d_tabs: Any = __d.get(&#39;tabs&#39;)
         __d_expander: Any = __d.get(&#39;expander&#39;)
+        __d_frame: Any = __d.get(&#39;frame&#39;)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -2407,6 +2459,7 @@ class Component:
         link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
+        frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
         return Component(
             text,
             text_xl,
@@ -2436,6 +2489,7 @@ class Component:
             link,
             tabs,
             expander,
+            frame,
         )
 
 
@@ -2489,7 +2543,7 @@ class FormCard:
 
 
 class FrameCard:
-    &#34;&#34;&#34;Render a card containing a HTML page inside an inline frame (iframe).
+    &#34;&#34;&#34;Render a card containing a HTML page inside an inline frame (an `iframe`).
 
     Either a path or content can be provided as arguments.
     &#34;&#34;&#34;
@@ -2506,9 +2560,9 @@ class FrameCard:
         self.title = title
         &#34;&#34;&#34;The title for this card.&#34;&#34;&#34;
         self.path = path
-        &#34;&#34;&#34;The path or URL of the web page, e.g. &#39;/foo.html&#39; or &#39;http://example.com/foo.html&#39;&#34;&#34;&#34;
+        &#34;&#34;&#34;The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`&#34;&#34;&#34;
         self.content = content
-        &#34;&#34;&#34;The HTML content of the page. A string containing &#39;&lt;html&gt;...&lt;/html&gt;&#39;&#34;&#34;&#34;
+        &#34;&#34;&#34;The HTML content of the page. A string containing `&lt;html&gt;...&lt;/html&gt;`&#34;&#34;&#34;
         self.commands = commands
         &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
 
@@ -6762,7 +6816,7 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
 </dd>
 <dt id="h2o_q.types.Component"><code class="flex name class">
 <span>class <span class="ident">Component</span></span>
-<span>(</span><span>text: Union[<a title="h2o_q.types.Text" href="#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="#h2o_q.types.Expander">Expander</a>, NoneType] = None)</span>
+<span>(</span><span>text: Union[<a title="h2o_q.types.Text" href="#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="#h2o_q.types.Frame">Frame</a>, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a component.</p></div>
@@ -6803,6 +6857,7 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             link: Optional[Link] = None,
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
+            frame: Optional[Frame] = None,
     ):
         self.text = text
         &#34;&#34;&#34;Text block.&#34;&#34;&#34;
@@ -6860,6 +6915,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         &#34;&#34;&#34;Tabs.&#34;&#34;&#34;
         self.expander = expander
         &#34;&#34;&#34;Expander.&#34;&#34;&#34;
+        self.frame = frame
+        &#34;&#34;&#34;Frame&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -6892,6 +6949,7 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             link=None if self.link is None else self.link.dump(),
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
+            frame=None if self.frame is None else self.frame.dump(),
         )
 
     @staticmethod
@@ -6925,6 +6983,7 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         __d_link: Any = __d.get(&#39;link&#39;)
         __d_tabs: Any = __d.get(&#39;tabs&#39;)
         __d_expander: Any = __d.get(&#39;expander&#39;)
+        __d_frame: Any = __d.get(&#39;frame&#39;)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6953,6 +7012,7 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
+        frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
         return Component(
             text,
             text_xl,
@@ -6982,6 +7042,7 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             link,
             tabs,
             expander,
+            frame,
         )</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -7026,6 +7087,7 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
     __d_link: Any = __d.get(&#39;link&#39;)
     __d_tabs: Any = __d.get(&#39;tabs&#39;)
     __d_expander: Any = __d.get(&#39;expander&#39;)
+    __d_frame: Any = __d.get(&#39;frame&#39;)
     text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
     text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
     text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -7054,6 +7116,7 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
     link: Optional[Link] = None if __d_link is None else Link.load(__d_link)
     tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
     expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
+    frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
     return Component(
         text,
         text_xl,
@@ -7083,6 +7146,7 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
         link,
         tabs,
         expander,
+        frame,
     )</code></pre>
 </details>
 </dd>
@@ -7132,6 +7196,10 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 <dt id="h2o_q.types.Component.file_upload"><code class="name">var <span class="ident">file_upload</span></code></dt>
 <dd>
 <div class="desc"><p>File upload.</p></div>
+</dd>
+<dt id="h2o_q.types.Component.frame"><code class="name">var <span class="ident">frame</span></code></dt>
+<dd>
+<div class="desc"><p>Frame</p></div>
 </dd>
 <dt id="h2o_q.types.Component.label"><code class="name">var <span class="ident">label</span></code></dt>
 <dd>
@@ -7244,6 +7312,7 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
         link=None if self.link is None else self.link.dump(),
         tabs=None if self.tabs is None else self.tabs.dump(),
         expander=None if self.expander is None else self.expander.dump(),
+        frame=None if self.frame is None else self.frame.dump(),
     )</code></pre>
 </details>
 </dd>
@@ -8359,19 +8428,148 @@ def load(__d: Dict) -&gt; &#39;FormCard&#39;:
 </dd>
 </dl>
 </dd>
+<dt id="h2o_q.types.Frame"><code class="flex name class">
+<span>class <span class="ident">Frame</span></span>
+<span>(</span><span>path: Union[str, NoneType] = None, content: Union[str, NoneType] = None, width: Union[str, NoneType] = None, height: Union[str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a new inline frame (an <code>iframe</code>).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Frame:
+    &#34;&#34;&#34;Create a new inline frame (an `iframe`).
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            path: Optional[str] = None,
+            content: Optional[str] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+    ):
+        self.path = path
+        &#34;&#34;&#34;The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`&#34;&#34;&#34;
+        self.content = content
+        &#34;&#34;&#34;The HTML content of the page. A string containing `&lt;html&gt;...&lt;/html&gt;`.&#34;&#34;&#34;
+        self.width = width
+        &#34;&#34;&#34;The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.&#34;&#34;&#34;
+        self.height = height
+        &#34;&#34;&#34;The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        return _dump(
+            path=self.path,
+            content=self.content,
+            width=self.width,
+            height=self.height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Frame&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_path: Any = __d.get(&#39;path&#39;)
+        __d_content: Any = __d.get(&#39;content&#39;)
+        __d_width: Any = __d.get(&#39;width&#39;)
+        __d_height: Any = __d.get(&#39;height&#39;)
+        path: Optional[str] = __d_path
+        content: Optional[str] = __d_content
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        return Frame(
+            path,
+            content,
+            width,
+            height,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.Frame.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_Frame__d: Dict) ‑> <a title="h2o_q.types.Frame" href="#h2o_q.types.Frame">Frame</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;Frame&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_path: Any = __d.get(&#39;path&#39;)
+    __d_content: Any = __d.get(&#39;content&#39;)
+    __d_width: Any = __d.get(&#39;width&#39;)
+    __d_height: Any = __d.get(&#39;height&#39;)
+    path: Optional[str] = __d_path
+    content: Optional[str] = __d_content
+    width: Optional[str] = __d_width
+    height: Optional[str] = __d_height
+    return Frame(
+        path,
+        content,
+        width,
+        height,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.Frame.content"><code class="name">var <span class="ident">content</span></code></dt>
+<dd>
+<div class="desc"><p>The HTML content of the page. A string containing <code>&lt;html&gt;...&lt;/html&gt;</code>.</p></div>
+</dd>
+<dt id="h2o_q.types.Frame.height"><code class="name">var <span class="ident">height</span></code></dt>
+<dd>
+<div class="desc"><p>The height of the frame, e.g. <code>200px</code>, <code>50%</code>, etc. Defaults to <code>150px</code>.</p></div>
+</dd>
+<dt id="h2o_q.types.Frame.path"><code class="name">var <span class="ident">path</span></code></dt>
+<dd>
+<div class="desc"><p>The path or URL of the web page, e.g. <code>/foo.html</code> or <code>http://example.com/foo.html</code></p></div>
+</dd>
+<dt id="h2o_q.types.Frame.width"><code class="name">var <span class="ident">width</span></code></dt>
+<dd>
+<div class="desc"><p>The width of the frame, e.g. <code>200px</code>, <code>50%</code>, etc. Defaults to <code>100%</code>.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.Frame.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    return _dump(
+        path=self.path,
+        content=self.content,
+        width=self.width,
+        height=self.height,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="h2o_q.types.FrameCard"><code class="flex name class">
 <span>class <span class="ident">FrameCard</span></span>
 <span>(</span><span>box: str, title: str, path: Union[str, NoneType] = None, content: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Render a card containing a HTML page inside an inline frame (iframe).</p>
+<div class="desc"><p>Render a card containing a HTML page inside an inline frame (an <code>iframe</code>).</p>
 <p>Either a path or content can be provided as arguments.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class FrameCard:
-    &#34;&#34;&#34;Render a card containing a HTML page inside an inline frame (iframe).
+    &#34;&#34;&#34;Render a card containing a HTML page inside an inline frame (an `iframe`).
 
     Either a path or content can be provided as arguments.
     &#34;&#34;&#34;
@@ -8388,9 +8586,9 @@ def load(__d: Dict) -&gt; &#39;FormCard&#39;:
         self.title = title
         &#34;&#34;&#34;The title for this card.&#34;&#34;&#34;
         self.path = path
-        &#34;&#34;&#34;The path or URL of the web page, e.g. &#39;/foo.html&#39; or &#39;http://example.com/foo.html&#39;&#34;&#34;&#34;
+        &#34;&#34;&#34;The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`&#34;&#34;&#34;
         self.content = content
-        &#34;&#34;&#34;The HTML content of the page. A string containing &#39;&lt;html&gt;...&lt;/html&gt;&#39;&#34;&#34;&#34;
+        &#34;&#34;&#34;The HTML content of the page. A string containing `&lt;html&gt;...&lt;/html&gt;`&#34;&#34;&#34;
         self.commands = commands
         &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
 
@@ -8484,11 +8682,11 @@ def load(__d: Dict) -&gt; &#39;FrameCard&#39;:
 </dd>
 <dt id="h2o_q.types.FrameCard.content"><code class="name">var <span class="ident">content</span></code></dt>
 <dd>
-<div class="desc"><p>The HTML content of the page. A string containing '<html>&hellip;</html>'</p></div>
+<div class="desc"><p>The HTML content of the page. A string containing <code>&lt;html&gt;...&lt;/html&gt;</code></p></div>
 </dd>
 <dt id="h2o_q.types.FrameCard.path"><code class="name">var <span class="ident">path</span></code></dt>
 <dd>
-<div class="desc"><p>The path or URL of the web page, e.g. '/foo.html' or 'http://example.com/foo.html'</p></div>
+<div class="desc"><p>The path or URL of the web page, e.g. <code>/foo.html</code> or <code>http://example.com/foo.html</code></p></div>
 </dd>
 <dt id="h2o_q.types.FrameCard.title"><code class="name">var <span class="ident">title</span></code></dt>
 <dd>
@@ -18062,6 +18260,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.Component.dump" href="#h2o_q.types.Component.dump">dump</a></code></li>
 <li><code><a title="h2o_q.types.Component.expander" href="#h2o_q.types.Component.expander">expander</a></code></li>
 <li><code><a title="h2o_q.types.Component.file_upload" href="#h2o_q.types.Component.file_upload">file_upload</a></code></li>
+<li><code><a title="h2o_q.types.Component.frame" href="#h2o_q.types.Component.frame">frame</a></code></li>
 <li><code><a title="h2o_q.types.Component.label" href="#h2o_q.types.Component.label">label</a></code></li>
 <li><code><a title="h2o_q.types.Component.link" href="#h2o_q.types.Component.link">link</a></code></li>
 <li><code><a title="h2o_q.types.Component.load" href="#h2o_q.types.Component.load">load</a></code></li>
@@ -18161,6 +18360,17 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.FormCard.dump" href="#h2o_q.types.FormCard.dump">dump</a></code></li>
 <li><code><a title="h2o_q.types.FormCard.items" href="#h2o_q.types.FormCard.items">items</a></code></li>
 <li><code><a title="h2o_q.types.FormCard.load" href="#h2o_q.types.FormCard.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="h2o_q.types.Frame" href="#h2o_q.types.Frame">Frame</a></code></h4>
+<ul class="two-column">
+<li><code><a title="h2o_q.types.Frame.content" href="#h2o_q.types.Frame.content">content</a></code></li>
+<li><code><a title="h2o_q.types.Frame.dump" href="#h2o_q.types.Frame.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.Frame.height" href="#h2o_q.types.Frame.height">height</a></code></li>
+<li><code><a title="h2o_q.types.Frame.load" href="#h2o_q.types.Frame.load">load</a></code></li>
+<li><code><a title="h2o_q.types.Frame.path" href="#h2o_q.types.Frame.path">path</a></code></li>
+<li><code><a title="h2o_q.types.Frame.width" href="#h2o_q.types.Frame.width">width</a></code></li>
 </ul>
 </li>
 <li>
