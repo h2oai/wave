@@ -14,9 +14,11 @@ export interface Link {
   label?: S
   /** The path or URL to link to. */
   path?: S
-  /** True if the link should be disable. */
+  /** True if the link should be disabled. */
   disabled?: B
-  /** True if the link should be rendered as a button */
+  /** True if the link should be used for file download. */
+  download?: B
+  /** True if the link should be rendered as a button. */
   button?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -31,7 +33,7 @@ export const
         // TODO target="_blank"
         return m.button
           ? <div><Fluent.DefaultButton text={label} disabled={m.disabled} onClick={onClick} /></div>
-          : <div><Fluent.Link data-test='link' href={m.path} disabled={m.disabled}>{label}</Fluent.Link></div>
+          : <div><Fluent.Link data-test='link' href={m.path} download={m.download || undefined} disabled={m.disabled}>{label}</Fluent.Link></div>
       }
     return { render }
   })

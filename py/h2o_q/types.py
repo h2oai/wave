@@ -1947,6 +1947,7 @@ class Link:
             label: Optional[str] = None,
             path: Optional[str] = None,
             disabled: Optional[bool] = None,
+            download: Optional[bool] = None,
             button: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -1955,9 +1956,11 @@ class Link:
         self.path = path
         """The path or URL to link to."""
         self.disabled = disabled
-        """True if the link should be disable."""
+        """True if the link should be disabled."""
+        self.download = download
+        """True if the link should be used for file download."""
         self.button = button
-        """True if the link should be rendered as a button"""
+        """True if the link should be rendered as a button."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1967,6 +1970,7 @@ class Link:
             label=self.label,
             path=self.path,
             disabled=self.disabled,
+            download=self.download,
             button=self.button,
             tooltip=self.tooltip,
         )
@@ -1977,17 +1981,20 @@ class Link:
         __d_label: Any = __d.get('label')
         __d_path: Any = __d.get('path')
         __d_disabled: Any = __d.get('disabled')
+        __d_download: Any = __d.get('download')
         __d_button: Any = __d.get('button')
         __d_tooltip: Any = __d.get('tooltip')
         label: Optional[str] = __d_label
         path: Optional[str] = __d_path
         disabled: Optional[bool] = __d_disabled
+        download: Optional[bool] = __d_download
         button: Optional[bool] = __d_button
         tooltip: Optional[str] = __d_tooltip
         return Link(
             label,
             path,
             disabled,
+            download,
             button,
             tooltip,
         )

@@ -26,4 +26,14 @@ describe('Nav.tsx', () => {
     expect(windowOpenMock).toHaveBeenCalled()
     expect(windowOpenMock).toHaveBeenCalledWith(name)
   })
+
+  it('Renders download attribute', () => {
+    const { getByTestId } = render(<XLink model={{ ...linkProps, download: true }} />)
+    expect(getByTestId(name).getAttribute('download')).toEqual('')
+  })
+
+  it('Does not render download attribute', () => {
+    const { getByTestId } = render(<XLink model={linkProps} />)
+    expect(getByTestId(name).getAttribute('download')).toBeNull()
+  })
 })
