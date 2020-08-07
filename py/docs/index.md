@@ -165,6 +165,34 @@ listen('/my/app/route', main)
 
 Every page in Q is a dashboard page. Instead of creating a separate dashboard or notebook, simply add cards to a page and arrange it the way you want. Cards can be created by using one of the several `ui.*_card()` APIs. Also see the [dashboard](#dashboard), [layout](#layout-position) and [sizing](#layout-size) examples to learn how to lay out several cards on a page.
 
+If you want to display a notebook-style vertical stack of markdown, html or other content, use `h2o_q.ui.text()` and `h2o_q.ui.frame()` contained inside a `h2o_q.ui.form_card()`, like this:
+
+Before:
+```
+ui.notebook([ui.notebook_section([
+  ui.markdown_cell(content='Foo'),
+  ui.frame_cell(source=html_foo, height='200px'),
+  ui.markdown_cell(content='Bar'),
+  ui.frame_cell(source=html_bar, height='200px'),
+])])
+
+```
+
+After: Note the parameter name change `frame_cell(source=...)` to `frame(content=...)`.
+
+```
+ui.form_cell(
+  box='1 5 2 4', 
+  items=[
+    ui.text(content='Foo'),
+    ui.frame(content=html_foo, height='200px'),
+    ui.text(content='Bar'),
+    ui.frame(content=html_bar, height='200px'),
+  ],
+)
+```
+
+
 **Changed: `ui.buttons()`, `ui.expander()` and `ui.tabs()` accept a `list` of items instead of var args `*args`.**
 
 Before:
