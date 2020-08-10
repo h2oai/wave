@@ -17,12 +17,13 @@ example_dir = os.path.dirname(os.path.realpath(__file__))
 
 
 class Example:
-    def __init__(self, filename: str, title: str, description: str, code: str):
+    def __init__(self, filename: str, title: str, description: str, source: str):
         self.name = os.path.splitext(filename)[0]
         self.filename = filename
         self.title = title
         self.description = description
-        self.code = code
+        self.source = source
+        self.code = highlight(source, py_lexer, html_formatter)
         self.previous_example: Optional[Example] = None
         self.next_example: Optional[Example] = None
         self.process: Optional[subprocess.Popen] = None
@@ -61,9 +62,9 @@ def strip_comment(line: str) -> str:
 def load_example(filename: str) -> Example:
     contents = read_file(os.path.join(example_dir, filename))
     parts = contents.split('---', maxsplit=1)
-    header, code = parts[0].strip().splitlines(), parts[1].strip()
+    header, source = parts[0].strip().splitlines(), parts[1].strip()
     title, description = strip_comment(header[0]), [strip_comment(x) for x in header[1:]]
-    return Example(filename, title, '\n'.join(description), highlight(code, py_lexer, html_formatter))
+    return Example(filename, title, '\n'.join(description), source)
 
 
 def load_examples(filenames: List[str]) -> Dict[str, Example]:
@@ -161,8 +162,15 @@ async def show_example(q: Q, example: Example):
     code_card.title = active_example.filename
     code_card.content = active_example.code
 
-    # Update preview title
     preview_card = q.page['preview']
+
+    # If the example is an app, wait for the app handshake to complete before pointing the iframe to the app.
+    if active_example.source.find('listen(') > 0:
+        preview_card.title = f'Loading, please wait...'
+        await q.page.save()
+        await q.sleep(1.5)
+
+    # Update preview title
     preview_card.title = f'Preview of {active_example.filename}'
     # HACK
     # The ?e= appended to the path forces the frame to reload.
