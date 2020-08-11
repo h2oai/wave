@@ -1,6 +1,10 @@
 
 # Change Log
 
+- [v0.1.3](https://github.com/h2oai/qd/releases/tag/v0.1.3) - Aug 10, 2020
+    - Fixed
+        - `h2o_q.ui.link()` now has a `download` attribute to work around a [Firefox bug](https://bugzilla.mozilla.org/show_bug.cgi?id=858538).
+        - Race condition in the interactive tour that caused some examples to not preview properly.
 - [v0.1.2](https://github.com/h2oai/qd/releases/tag/v0.1.2) - Aug 7, 2020
     - Added
         - API for `h2o_q.core.Expando` copy, clone and item/attribute deletion.

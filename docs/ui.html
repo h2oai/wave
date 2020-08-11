@@ -1056,6 +1056,7 @@ def link(
         label: Optional[str] = None,
         path: Optional[str] = None,
         disabled: Optional[bool] = None,
+        download: Optional[bool] = None,
         button: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
@@ -1068,8 +1069,9 @@ def link(
     Args:
         label: The text to be displayed. If blank, the `path` is used as the label.
         path: The path or URL to link to.
-        disabled: True if the link should be disable.
-        button: True if the link should be rendered as a button
+        disabled: True if the link should be disabled.
+        download: True if the link should be used for file download.
+        button: True if the link should be rendered as a button.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Link` instance.
@@ -1078,6 +1080,7 @@ def link(
         label,
         path,
         disabled,
+        download,
         button,
         tooltip,
     ))
@@ -4054,7 +4057,7 @@ the user of the component’s purpose.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.link"><code class="name flex">
-<span>def <span class="ident">link</span></span>(<span>label: Union[str, NoneType] = None, path: Union[str, NoneType] = None, disabled: Union[bool, NoneType] = None, button: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">link</span></span>(<span>label: Union[str, NoneType] = None, path: Union[str, NoneType] = None, disabled: Union[bool, NoneType] = None, download: Union[bool, NoneType] = None, button: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a hyperlink.</p>
@@ -4068,9 +4071,11 @@ All other kinds of paths are treated as external hyperlinks.</p>
 <dt><strong><code>path</code></strong></dt>
 <dd>The path or URL to link to.</dd>
 <dt><strong><code>disabled</code></strong></dt>
-<dd>True if the link should be disable.</dd>
+<dd>True if the link should be disabled.</dd>
+<dt><strong><code>download</code></strong></dt>
+<dd>True if the link should be used for file download.</dd>
 <dt><strong><code>button</code></strong></dt>
-<dd>True if the link should be rendered as a button</dd>
+<dd>True if the link should be rendered as a button.</dd>
 <dt><strong><code>tooltip</code></strong></dt>
 <dd>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</dd>
 </dl>
@@ -4084,6 +4089,7 @@ All other kinds of paths are treated as external hyperlinks.</p>
         label: Optional[str] = None,
         path: Optional[str] = None,
         disabled: Optional[bool] = None,
+        download: Optional[bool] = None,
         button: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
@@ -4096,8 +4102,9 @@ All other kinds of paths are treated as external hyperlinks.</p>
     Args:
         label: The text to be displayed. If blank, the `path` is used as the label.
         path: The path or URL to link to.
-        disabled: True if the link should be disable.
-        button: True if the link should be rendered as a button
+        disabled: True if the link should be disabled.
+        download: True if the link should be used for file download.
+        button: True if the link should be rendered as a button.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Link` instance.
@@ -4106,6 +4113,7 @@ All other kinds of paths are treated as external hyperlinks.</p>
         label,
         path,
         disabled,
+        download,
         button,
         tooltip,
     ))</code></pre>

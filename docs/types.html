@@ -2037,6 +2037,7 @@ class Link:
             label: Optional[str] = None,
             path: Optional[str] = None,
             disabled: Optional[bool] = None,
+            download: Optional[bool] = None,
             button: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -2045,9 +2046,11 @@ class Link:
         self.path = path
         &#34;&#34;&#34;The path or URL to link to.&#34;&#34;&#34;
         self.disabled = disabled
-        &#34;&#34;&#34;True if the link should be disable.&#34;&#34;&#34;
+        &#34;&#34;&#34;True if the link should be disabled.&#34;&#34;&#34;
+        self.download = download
+        &#34;&#34;&#34;True if the link should be used for file download.&#34;&#34;&#34;
         self.button = button
-        &#34;&#34;&#34;True if the link should be rendered as a button&#34;&#34;&#34;
+        &#34;&#34;&#34;True if the link should be rendered as a button.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -2057,6 +2060,7 @@ class Link:
             label=self.label,
             path=self.path,
             disabled=self.disabled,
+            download=self.download,
             button=self.button,
             tooltip=self.tooltip,
         )
@@ -2067,17 +2071,20 @@ class Link:
         __d_label: Any = __d.get(&#39;label&#39;)
         __d_path: Any = __d.get(&#39;path&#39;)
         __d_disabled: Any = __d.get(&#39;disabled&#39;)
+        __d_download: Any = __d.get(&#39;download&#39;)
         __d_button: Any = __d.get(&#39;button&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         label: Optional[str] = __d_label
         path: Optional[str] = __d_path
         disabled: Optional[bool] = __d_disabled
+        download: Optional[bool] = __d_download
         button: Optional[bool] = __d_button
         tooltip: Optional[str] = __d_tooltip
         return Link(
             label,
             path,
             disabled,
+            download,
             button,
             tooltip,
         )
@@ -10139,7 +10146,7 @@ def load(__d: Dict) -&gt; &#39;LargeStatCard&#39;:
 </dd>
 <dt id="h2o_q.types.Link"><code class="flex name class">
 <span>class <span class="ident">Link</span></span>
-<span>(</span><span>label: Union[str, NoneType] = None, path: Union[str, NoneType] = None, disabled: Union[bool, NoneType] = None, button: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
+<span>(</span><span>label: Union[str, NoneType] = None, path: Union[str, NoneType] = None, disabled: Union[bool, NoneType] = None, download: Union[bool, NoneType] = None, button: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a hyperlink.</p>
@@ -10162,6 +10169,7 @@ All other kinds of paths are treated as external hyperlinks.</p></div>
             label: Optional[str] = None,
             path: Optional[str] = None,
             disabled: Optional[bool] = None,
+            download: Optional[bool] = None,
             button: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -10170,9 +10178,11 @@ All other kinds of paths are treated as external hyperlinks.</p></div>
         self.path = path
         &#34;&#34;&#34;The path or URL to link to.&#34;&#34;&#34;
         self.disabled = disabled
-        &#34;&#34;&#34;True if the link should be disable.&#34;&#34;&#34;
+        &#34;&#34;&#34;True if the link should be disabled.&#34;&#34;&#34;
+        self.download = download
+        &#34;&#34;&#34;True if the link should be used for file download.&#34;&#34;&#34;
         self.button = button
-        &#34;&#34;&#34;True if the link should be rendered as a button&#34;&#34;&#34;
+        &#34;&#34;&#34;True if the link should be rendered as a button.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -10182,6 +10192,7 @@ All other kinds of paths are treated as external hyperlinks.</p></div>
             label=self.label,
             path=self.path,
             disabled=self.disabled,
+            download=self.download,
             button=self.button,
             tooltip=self.tooltip,
         )
@@ -10192,17 +10203,20 @@ All other kinds of paths are treated as external hyperlinks.</p></div>
         __d_label: Any = __d.get(&#39;label&#39;)
         __d_path: Any = __d.get(&#39;path&#39;)
         __d_disabled: Any = __d.get(&#39;disabled&#39;)
+        __d_download: Any = __d.get(&#39;download&#39;)
         __d_button: Any = __d.get(&#39;button&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         label: Optional[str] = __d_label
         path: Optional[str] = __d_path
         disabled: Optional[bool] = __d_disabled
+        download: Optional[bool] = __d_download
         button: Optional[bool] = __d_button
         tooltip: Optional[str] = __d_tooltip
         return Link(
             label,
             path,
             disabled,
+            download,
             button,
             tooltip,
         )</code></pre>
@@ -10224,17 +10238,20 @@ def load(__d: Dict) -&gt; &#39;Link&#39;:
     __d_label: Any = __d.get(&#39;label&#39;)
     __d_path: Any = __d.get(&#39;path&#39;)
     __d_disabled: Any = __d.get(&#39;disabled&#39;)
+    __d_download: Any = __d.get(&#39;download&#39;)
     __d_button: Any = __d.get(&#39;button&#39;)
     __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
     label: Optional[str] = __d_label
     path: Optional[str] = __d_path
     disabled: Optional[bool] = __d_disabled
+    download: Optional[bool] = __d_download
     button: Optional[bool] = __d_button
     tooltip: Optional[str] = __d_tooltip
     return Link(
         label,
         path,
         disabled,
+        download,
         button,
         tooltip,
     )</code></pre>
@@ -10245,11 +10262,15 @@ def load(__d: Dict) -&gt; &#39;Link&#39;:
 <dl>
 <dt id="h2o_q.types.Link.button"><code class="name">var <span class="ident">button</span></code></dt>
 <dd>
-<div class="desc"><p>True if the link should be rendered as a button</p></div>
+<div class="desc"><p>True if the link should be rendered as a button.</p></div>
 </dd>
 <dt id="h2o_q.types.Link.disabled"><code class="name">var <span class="ident">disabled</span></code></dt>
 <dd>
-<div class="desc"><p>True if the link should be disable.</p></div>
+<div class="desc"><p>True if the link should be disabled.</p></div>
+</dd>
+<dt id="h2o_q.types.Link.download"><code class="name">var <span class="ident">download</span></code></dt>
+<dd>
+<div class="desc"><p>True if the link should be used for file download.</p></div>
 </dd>
 <dt id="h2o_q.types.Link.label"><code class="name">var <span class="ident">label</span></code></dt>
 <dd>
@@ -10281,6 +10302,7 @@ def load(__d: Dict) -&gt; &#39;Link&#39;:
         label=self.label,
         path=self.path,
         disabled=self.disabled,
+        download=self.download,
         button=self.button,
         tooltip=self.tooltip,
     )</code></pre>
@@ -18485,6 +18507,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <ul class="two-column">
 <li><code><a title="h2o_q.types.Link.button" href="#h2o_q.types.Link.button">button</a></code></li>
 <li><code><a title="h2o_q.types.Link.disabled" href="#h2o_q.types.Link.disabled">disabled</a></code></li>
+<li><code><a title="h2o_q.types.Link.download" href="#h2o_q.types.Link.download">download</a></code></li>
 <li><code><a title="h2o_q.types.Link.dump" href="#h2o_q.types.Link.dump">dump</a></code></li>
 <li><code><a title="h2o_q.types.Link.label" href="#h2o_q.types.Link.label">label</a></code></li>
 <li><code><a title="h2o_q.types.Link.load" href="#h2o_q.types.Link.load">load</a></code></li>
