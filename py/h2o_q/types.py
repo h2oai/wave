@@ -2188,6 +2188,121 @@ class Frame:
         )
 
 
+class PickerOption:
+    """A single option for picker.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: Optional[str] = None,
+    ):
+        self.name = name
+        """An identifying name for this item."""
+        self.label = label
+        """Text to be displayed."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('PickerOption.name is required.')
+        return _dump(
+            name=self.name,
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'PickerOption':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('PickerOption.name is required.')
+        __d_label: Any = __d.get('label')
+        name: str = __d_name
+        label: Optional[str] = __d_label
+        return PickerOption(
+            name,
+            label,
+        )
+
+
+class Picker:
+    """Create a picker.
+    Use this for multi-select scenarios in which a user chooses one or more items from a dynamic dropdown
+    that is updated to match user's typing.
+    """
+    def __init__(
+            self,
+            name: str,
+            items: List[PickerOption],
+            label: Optional[str] = None,
+            values: Optional[List[str]] = None,
+            item_limit: Optional[int] = None,
+            disabled: Optional[bool] = None,
+            tooltip: Optional[str] = None,
+    ):
+        self.name = name
+        """An identifying name for this component."""
+        self.items = items
+        """The choices to be presented."""
+        self.label = label
+        """Text to be displayed above the component."""
+        self.values = values
+        """The names of the selected choices."""
+        self.item_limit = item_limit
+        """Max number of picked suggestions."""
+        self.disabled = disabled
+        """Controls whether the picker should be disabled or not."""
+        self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('Picker.name is required.')
+        if self.items is None:
+            raise ValueError('Picker.items is required.')
+        return _dump(
+            name=self.name,
+            items=[__e.dump() for __e in self.items],
+            label=self.label,
+            values=self.values,
+            item_limit=self.item_limit,
+            disabled=self.disabled,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Picker':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('Picker.name is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('Picker.items is required.')
+        __d_label: Any = __d.get('label')
+        __d_values: Any = __d.get('values')
+        __d_item_limit: Any = __d.get('item_limit')
+        __d_disabled: Any = __d.get('disabled')
+        __d_tooltip: Any = __d.get('tooltip')
+        name: str = __d_name
+        items: List[PickerOption] = [PickerOption.load(__e) for __e in __d_items]
+        label: Optional[str] = __d_label
+        values: Optional[List[str]] = __d_values
+        item_limit: Optional[int] = __d_item_limit
+        disabled: Optional[bool] = __d_disabled
+        tooltip: Optional[str] = __d_tooltip
+        return Picker(
+            name,
+            items,
+            label,
+            values,
+            item_limit,
+            disabled,
+            tooltip,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -2222,6 +2337,7 @@ class Component:
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
             frame: Optional[Frame] = None,
+            picker: Optional[Picker] = None,
     ):
         self.text = text
         """Text block."""
@@ -2281,6 +2397,8 @@ class Component:
         """Expander."""
         self.frame = frame
         """Frame"""
+        self.picker = picker
+        """Picker"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2314,6 +2432,7 @@ class Component:
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
             frame=None if self.frame is None else self.frame.dump(),
+            picker=None if self.picker is None else self.picker.dump(),
         )
 
     @staticmethod
@@ -2348,6 +2467,7 @@ class Component:
         __d_tabs: Any = __d.get('tabs')
         __d_expander: Any = __d.get('expander')
         __d_frame: Any = __d.get('frame')
+        __d_picker: Any = __d.get('picker')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -2377,6 +2497,7 @@ class Component:
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
+        picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
         return Component(
             text,
             text_xl,
@@ -2407,6 +2528,7 @@ class Component:
             tabs,
             expander,
             frame,
+            picker,
         )
 
 

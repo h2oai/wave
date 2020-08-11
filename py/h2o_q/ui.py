@@ -1088,6 +1088,59 @@ def frame(
     ))
 
 
+def picker_option(
+        name: str,
+        label: Optional[str] = None,
+) -> PickerOption:
+    """A single option for picker.
+
+    Args:
+        name: An identifying name for this item.
+        label: Text to be displayed.
+    Returns:
+        A `h2o_q.types.PickerOption` instance.
+    """
+    return PickerOption(
+        name,
+        label,
+    )
+
+
+def picker(
+        name: str,
+        items: List[PickerOption],
+        label: Optional[str] = None,
+        values: Optional[List[str]] = None,
+        item_limit: Optional[int] = None,
+        disabled: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+) -> Component:
+    """Create a picker.
+    Use this for multi-select scenarios in which a user chooses one or more items from a dynamic dropdown
+    that is updated to match user's typing.
+
+    Args:
+        name: An identifying name for this component.
+        items: The choices to be presented.
+        label: Text to be displayed above the component.
+        values: The names of the selected choices.
+        item_limit: Max number of picked suggestions.
+        disabled: Controls whether the picker should be disabled or not.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Picker` instance.
+    """
+    return Component(picker=Picker(
+        name,
+        items,
+        label,
+        values,
+        item_limit,
+        disabled,
+        tooltip,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         text_xl: Optional[TextXl] = None,
@@ -1118,6 +1171,7 @@ def component(
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
         frame: Optional[Frame] = None,
+        picker: Optional[Picker] = None,
 ) -> Component:
     """Create a component.
 
@@ -1151,6 +1205,7 @@ def component(
         tabs: Tabs.
         expander: Expander.
         frame: Frame
+        picker: Picker
     Returns:
         A `h2o_q.types.Component` instance.
     """
@@ -1184,6 +1239,7 @@ def component(
         tabs,
         expander,
         frame,
+        picker,
     )
 
 
