@@ -1,6 +1,8 @@
 
 # Change Log
-
+- [v0.1.4](https://github.com/h2oai/qd/releases/tag/v0.1.3) - Aug 10, 2020
+    - Fixed
+        - Frame heights are not respected with total height of frames exceeds containing card size
 - [v0.1.3](https://github.com/h2oai/qd/releases/tag/v0.1.3) - Aug 10, 2020
     - Fixed
         - `h2o_q.ui.link()` now has a `download` attribute to work around a [Firefox bug](https://bugzilla.mozilla.org/show_bug.cgi?id=858538).

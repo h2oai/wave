@@ -6,4 +6,4 @@ bokeh
 matplotlib
 altair
 vega-datasets
-h2o_q==0.1.3
+h2o_q==0.1.4
