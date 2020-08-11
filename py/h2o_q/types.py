@@ -14,6 +14,54 @@ PackedData = Union[Data, str]
 def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}
 
 
+class BreadcrumbItem:
+    """Create a breadcrumb item.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+            href: Optional[str] = None,
+    ):
+        self.name = name
+        """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
+        self.label = label
+        """The label to display."""
+        self.href = href
+        """Url to navigate to when this breadcrumb item is clicked."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('BreadcrumbItem.name is required.')
+        if self.label is None:
+            raise ValueError('BreadcrumbItem.label is required.')
+        return _dump(
+            name=self.name,
+            label=self.label,
+            href=self.href,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'BreadcrumbItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('BreadcrumbItem.name is required.')
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('BreadcrumbItem.label is required.')
+        __d_href: Any = __d.get('href')
+        name: str = __d_name
+        label: str = __d_label
+        href: Optional[str] = __d_href
+        return BreadcrumbItem(
+            name,
+            label,
+            href,
+        )
+
+
 class Command:
     """Create a command.
 
@@ -78,6 +126,55 @@ class Command:
             icon,
             items,
             data,
+        )
+
+
+class BreadcrumbsCard:
+    """Create a card containing navigation breadcrumbs.
+    """
+    def __init__(
+            self,
+            box: str,
+            items: List[BreadcrumbItem],
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.items = items
+        """Items to render."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('BreadcrumbsCard.box is required.')
+        if self.items is None:
+            raise ValueError('BreadcrumbsCard.items is required.')
+        return _dump(
+            view='breadcrumbs',
+            box=self.box,
+            items=[__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'BreadcrumbsCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('BreadcrumbsCard.box is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('BreadcrumbsCard.items is required.')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        items: List[BreadcrumbItem] = [BreadcrumbItem.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return BreadcrumbsCard(
+            box,
+            items,
+            commands,
         )
 
 

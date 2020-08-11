@@ -4,6 +4,27 @@
 
 from .types import *
 
+def breadcrumb_item(
+        name: str,
+        label: str,
+        href: Optional[str] = None,
+) -> BreadcrumbItem:
+    """Create a breadcrumb item.
+
+    Args:
+        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+        label: The label to display.
+        href: Url to navigate to when this breadcrumb item is clicked.
+    Returns:
+        A `h2o_q.types.BreadcrumbItem` instance.
+    """
+    return BreadcrumbItem(
+        name,
+        label,
+        href,
+    )
+
+
 def command(
         name: str,
         label: Optional[str] = None,
@@ -33,6 +54,27 @@ def command(
         icon,
         items,
         data,
+    )
+
+
+def breadcrumbs_card(
+        box: str,
+        items: List[BreadcrumbItem],
+        commands: Optional[List[Command]] = None,
+) -> BreadcrumbsCard:
+    """Create a card containing navigation breadcrumbs.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: Items to render.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.BreadcrumbsCard` instance.
+    """
+    return BreadcrumbsCard(
+        box,
+        items,
+        commands,
     )
 
 
