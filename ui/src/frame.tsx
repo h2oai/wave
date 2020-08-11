@@ -53,13 +53,16 @@ const
     return s.replace(/(\s+src\s*=\s*["'])\//g, `$1${window.location.protocol}//${window.location.host}/`)
   },
   inline = (s: S): S => `data:text/html;base64,${btoa(fixrefs(s))}`,
-  InlineFrame = ({ path, content, width, height }: { path?: S, content?: S, width: S, height: S }) => (
-    <iframe title={xid()} src={path ? path : content ? inline(content) : inline('Nothing to render.')} style={{ width, height }} frameBorder="0" />
+  InlineFrame = ({ path, content }: { path?: S, content?: S }) => (
+    <iframe title={xid()} src={path ? path : content ? inline(content) : inline('Nothing to render.')} frameBorder="0" width="100%" height="100%" />
   )
 
-export const XFrame = ({ model: { path, content, width, height } }: { model: Frame }) => {
-  return <InlineFrame path={path} content={content} width={width || '100%'} height={height || '150px'} />
-}
+// HACK: Applying width/height styles directly on iframe don't work in Chrome/FF; so wrap in div instead.
+export const XFrame = ({ model: { path, content, width, height } }: { model: Frame }) => (
+  <div style={{ width: width || '100%', height: height || '150px' }}>
+    <InlineFrame path={path} content={content} />
+  </div>
+)
 
 const
   View = bond(({ state, changed }: Card<State>) => {
@@ -67,7 +70,7 @@ const
       <div className={css.card}>
         <div className={css.title}>{state.title}</div>
         <div className={css.body}>
-          <InlineFrame path={state.path} content={state.content} width='100%' height='100%' />
+          <InlineFrame path={state.path} content={state.content} />
         </div>
       </div>
     )

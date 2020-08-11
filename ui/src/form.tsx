@@ -1,6 +1,5 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { stylesheet } from 'typestyle';
 import { Button, Buttons, XButtons, XStandAloneButton } from './button';
 import { Checkbox, XCheckbox } from './checkbox';
 import { Checklist, XChecklist } from './checklist';
@@ -11,23 +10,23 @@ import { DatePicker, XDatePicker } from './date_picker';
 import { Dropdown, XDropdown } from './dropdown';
 import { Expander, XExpander } from './expander';
 import { FileUpload, XFileUpload } from './file_upload';
+import { Frame, XFrame } from './frame';
 import { Label, XLabel } from './label';
 import { cards } from './layout';
 import { Link, XLink } from './link';
 import { MessageBar, XMessageBar } from './message_bar';
 import { Progress, XProgress } from './progress';
+import { bond, Card, Packed, unpack, xid } from './qd';
 import { Separator, XSeparator } from './separator';
 import { Slider, XSlider } from './slider';
 import { Spinbox, XSpinbox } from './spinbox';
 import { Table, XTable } from './table';
 import { Tabs, XTabs } from './tabs';
-import { bond, Card, Packed, unpack, xid } from './qd';
-import { Text, XText, TextXs, TextXl, TextL, TextM, TextS } from './text';
+import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text';
 import { Textbox, XTextbox } from './textbox';
 import { getTheme } from './theme';
 import { Toggle, XToggle } from './toggle';
 import { XToolTip } from './tooltip';
-import { Frame, XFrame } from './frame';
 
 /** Create a component. */
 export interface Component {
@@ -100,12 +99,6 @@ interface State {
 
 const
   theme = getTheme(),
-  css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-  }),
   defaults: Partial<State> = {
     items: []
   }
@@ -159,7 +152,7 @@ const
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
-          <div className={css.card}>
+          <div>
             <XComponents items={items} />
           </div>)
       }
