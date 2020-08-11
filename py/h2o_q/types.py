@@ -21,14 +21,11 @@ class BreadcrumbItem:
             self,
             name: str,
             label: str,
-            href: Optional[str] = None,
     ):
         self.name = name
         """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
         self.label = label
         """The label to display."""
-        self.href = href
-        """Url to navigate to when this breadcrumb item is clicked."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -39,7 +36,6 @@ class BreadcrumbItem:
         return _dump(
             name=self.name,
             label=self.label,
-            href=self.href,
         )
 
     @staticmethod
@@ -51,14 +47,11 @@ class BreadcrumbItem:
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('BreadcrumbItem.label is required.')
-        __d_href: Any = __d.get('href')
         name: str = __d_name
         label: str = __d_label
-        href: Optional[str] = __d_href
         return BreadcrumbItem(
             name,
             label,
-            href,
         )
 
 
@@ -130,7 +123,13 @@ class Command:
 
 
 class BreadcrumbsCard:
-    """Create a card containing navigation breadcrumbs.
+    """Create a card containing breadcrumbs.
+    Breadcrumbs should be used as a navigational aid in your app or site.
+    They indicate the current page’s location within a hierarchy and help
+    the user understand where they are in relation to the rest of that hierarchy.
+    They also afford one-click access to higher levels of that hierarchy.
+    Breadcrumbs are typically placed, in horizontal form, under the masthead
+    or navigation of an experience, above the primary content area.
     """
     def __init__(
             self,
