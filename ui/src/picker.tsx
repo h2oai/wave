@@ -14,20 +14,20 @@ interface PickerOption {
 
 /**
  * Create a picker.
- * Use this for multi-select scenarios in which a user chooses one or more items from a dynamic dropdown
- * that is updated to match user's typing.
+ * Pickers are used to select one or more choices, such as tags or files, from a list. 
+ * Use a picker to allow the user to quickly search for or manage a few tags or files.
 */
 export interface Picker {
   /** An identifying name for this component. */
   name: S
   /** The choices to be presented. */
-  items: PickerOption[]
+  choices: PickerOption[]
   /** Text to be displayed above the component. */
   label?: S
   /** The names of the selected choices. */
   values?: S[]
-  /** Max number of picked suggestions. */
-  item_limit?: U
+  /** Maximum number of selectable choices. Defaults to no limit. */
+  max_choices?: U
   /** Controls whether the picker should be disabled or not. */
   disabled?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
@@ -41,7 +41,7 @@ const pickerSuggestionsProps: Fluent.IBasePickerSuggestionsProps = {
 
 export const XPicker = bond(({ model: m }: { model: Picker }) => {
   const
-    tags: Fluent.ITag[] = m.items.map(({ name, label }) => ({ key: name, name: label || name })),
+    tags: Fluent.ITag[] = m.choices.map(({ name, label }) => ({ key: name, name: label || name })),
     initialSelectedTags = m.values?.map(val => ({ key: val, name: val })),
     filterSuggestedTags = (filterText: string, selectedTags?: Fluent.ITag[]) => {
       if (!filterText) return []
@@ -59,7 +59,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
           onResolveSuggestions={filterSuggestedTags}
           onChange={onChange}
           pickerSuggestionsProps={pickerSuggestionsProps}
-          itemLimit={m.item_limit}
+          itemLimit={m.max_choices}
           selectedItems={initialSelectedTags}
           disabled={m.disabled}
         />

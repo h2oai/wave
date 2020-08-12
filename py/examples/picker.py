@@ -1,5 +1,5 @@
 # Form / Picker
-# Use pickers to allow users to pick multiple values.
+# Use pickers to allow users to select one or more choices, such as tags or files, from a list.
 # ---
 from h2o_q import Q, listen, ui
 
@@ -13,10 +13,12 @@ async def main(q: Q):
     else:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
           ui.picker(name='picker', label='Picker showcase', items=[
-            ui.picker_option(name='h2o'),
-            ui.picker_option(name='artificial'),
-            ui.picker_option(name='inteligence'),
-            ui.picker_option(name='wins'),
+            ui.picker_option(name='spam', label='Spam'),
+            ui.picker_option(name='eggs', label= 'Eggs'),
+            ui.picker_option(name='ham', label= 'Ham'),
+            ui.picker_option(name='cheese', label='Cheese'),
+            ui.picker_option(name='beans', label='Beans'),
+            ui.picker_option(name='toast', label='Toast'),
           ]),
           ui.button(name='show_inputs', label='Submit', primary=True),
         ])

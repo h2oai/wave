@@ -1108,23 +1108,23 @@ def picker_option(
 
 def picker(
         name: str,
-        items: List[PickerOption],
+        choices: List[PickerOption],
         label: Optional[str] = None,
         values: Optional[List[str]] = None,
-        item_limit: Optional[int] = None,
+        max_choices: Optional[int] = None,
         disabled: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a picker.
-    Use this for multi-select scenarios in which a user chooses one or more items from a dynamic dropdown
-    that is updated to match user's typing.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Use a picker to allow the user to quickly search for or manage a few tags or files.
 
     Args:
         name: An identifying name for this component.
-        items: The choices to be presented.
+        choices: The choices to be presented.
         label: Text to be displayed above the component.
         values: The names of the selected choices.
-        item_limit: Max number of picked suggestions.
+        max_choices: Maximum number of selectable choices. Defaults to no limit.
         disabled: Controls whether the picker should be disabled or not.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
@@ -1132,10 +1132,10 @@ def picker(
     """
     return Component(picker=Picker(
         name,
-        items,
+        choices,
         label,
         values,
-        item_limit,
+        max_choices,
         disabled,
         tooltip,
     ))

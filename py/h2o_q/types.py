@@ -2227,29 +2227,29 @@ class PickerOption:
 
 class Picker:
     """Create a picker.
-    Use this for multi-select scenarios in which a user chooses one or more items from a dynamic dropdown
-    that is updated to match user's typing.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Use a picker to allow the user to quickly search for or manage a few tags or files.
     """
     def __init__(
             self,
             name: str,
-            items: List[PickerOption],
+            choices: List[PickerOption],
             label: Optional[str] = None,
             values: Optional[List[str]] = None,
-            item_limit: Optional[int] = None,
+            max_choices: Optional[int] = None,
             disabled: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
         """An identifying name for this component."""
-        self.items = items
+        self.choices = choices
         """The choices to be presented."""
         self.label = label
         """Text to be displayed above the component."""
         self.values = values
         """The names of the selected choices."""
-        self.item_limit = item_limit
-        """Max number of picked suggestions."""
+        self.max_choices = max_choices
+        """Maximum number of selectable choices. Defaults to no limit."""
         self.disabled = disabled
         """Controls whether the picker should be disabled or not."""
         self.tooltip = tooltip
@@ -2259,14 +2259,14 @@ class Picker:
         """Returns the contents of this object as a dict."""
         if self.name is None:
             raise ValueError('Picker.name is required.')
-        if self.items is None:
-            raise ValueError('Picker.items is required.')
+        if self.choices is None:
+            raise ValueError('Picker.choices is required.')
         return _dump(
             name=self.name,
-            items=[__e.dump() for __e in self.items],
+            choices=[__e.dump() for __e in self.choices],
             label=self.label,
             values=self.values,
-            item_limit=self.item_limit,
+            max_choices=self.max_choices,
             disabled=self.disabled,
             tooltip=self.tooltip,
         )
@@ -2277,27 +2277,27 @@ class Picker:
         __d_name: Any = __d.get('name')
         if __d_name is None:
             raise ValueError('Picker.name is required.')
-        __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('Picker.items is required.')
+        __d_choices: Any = __d.get('choices')
+        if __d_choices is None:
+            raise ValueError('Picker.choices is required.')
         __d_label: Any = __d.get('label')
         __d_values: Any = __d.get('values')
-        __d_item_limit: Any = __d.get('item_limit')
+        __d_max_choices: Any = __d.get('max_choices')
         __d_disabled: Any = __d.get('disabled')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
-        items: List[PickerOption] = [PickerOption.load(__e) for __e in __d_items]
+        choices: List[PickerOption] = [PickerOption.load(__e) for __e in __d_choices]
         label: Optional[str] = __d_label
         values: Optional[List[str]] = __d_values
-        item_limit: Optional[int] = __d_item_limit
+        max_choices: Optional[int] = __d_max_choices
         disabled: Optional[bool] = __d_disabled
         tooltip: Optional[str] = __d_tooltip
         return Picker(
             name,
-            items,
+            choices,
             label,
             values,
-            item_limit,
+            max_choices,
             disabled,
             tooltip,
         )
