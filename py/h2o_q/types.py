@@ -2188,43 +2188,6 @@ class Frame:
         )
 
 
-class PickerOption:
-    """A single option for picker.
-    """
-    def __init__(
-            self,
-            name: str,
-            label: Optional[str] = None,
-    ):
-        self.name = name
-        """An identifying name for this item."""
-        self.label = label
-        """Text to be displayed."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('PickerOption.name is required.')
-        return _dump(
-            name=self.name,
-            label=self.label,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'PickerOption':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('PickerOption.name is required.')
-        __d_label: Any = __d.get('label')
-        name: str = __d_name
-        label: Optional[str] = __d_label
-        return PickerOption(
-            name,
-            label,
-        )
-
-
 class Picker:
     """Create a picker.
     Pickers are used to select one or more choices, such as tags or files, from a list.
@@ -2233,7 +2196,7 @@ class Picker:
     def __init__(
             self,
             name: str,
-            choices: List[PickerOption],
+            choices: List[Choice],
             label: Optional[str] = None,
             values: Optional[List[str]] = None,
             max_choices: Optional[int] = None,
@@ -2286,7 +2249,7 @@ class Picker:
         __d_disabled: Any = __d.get('disabled')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
-        choices: List[PickerOption] = [PickerOption.load(__e) for __e in __d_choices]
+        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
         label: Optional[str] = __d_label
         values: Optional[List[str]] = __d_values
         max_choices: Optional[int] = __d_max_choices

@@ -1,16 +1,7 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { bond, S, U, B, qd } from './qd';
-
-/**
- * A single option for picker.
- */
-interface PickerOption {
-  /** An identifying name for this item. */
-  name: S
-  /** Text to be displayed. */
-  label?: S
-}
+import { Choice } from './choice_group';
 
 /**
  * Create a picker.
@@ -21,7 +12,7 @@ export interface Picker {
   /** An identifying name for this component. */
   name: S
   /** The choices to be presented. */
-  choices: PickerOption[]
+  choices: Choice[]
   /** Text to be displayed above the component. */
   label?: S
   /** The names of the selected choices. */

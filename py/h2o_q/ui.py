@@ -1088,27 +1088,9 @@ def frame(
     ))
 
 
-def picker_option(
-        name: str,
-        label: Optional[str] = None,
-) -> PickerOption:
-    """A single option for picker.
-
-    Args:
-        name: An identifying name for this item.
-        label: Text to be displayed.
-    Returns:
-        A `h2o_q.types.PickerOption` instance.
-    """
-    return PickerOption(
-        name,
-        label,
-    )
-
-
 def picker(
         name: str,
-        choices: List[PickerOption],
+        choices: List[Choice],
         label: Optional[str] = None,
         values: Optional[List[str]] = None,
         max_choices: Optional[int] = None,
