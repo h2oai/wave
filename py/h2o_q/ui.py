@@ -358,6 +358,7 @@ def textbox(
         readonly: Optional[bool] = None,
         multiline: Optional[bool] = None,
         password: Optional[bool] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a text box.
@@ -381,6 +382,7 @@ def textbox(
         readonly: True if the text box is a read-only field.
         multiline: True if the text box should allow multi-line text entry.
         password: True if the text box should hide text content.
+        trigger: True if the form should be submitted when the text value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Textbox` instance.
@@ -400,6 +402,7 @@ def textbox(
         readonly,
         multiline,
         password,
+        trigger,
         tooltip,
     ))
 

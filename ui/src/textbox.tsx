@@ -38,6 +38,8 @@ export interface Textbox {
   multiline?: B
   /** True if the text box should hide text content. */
   password?: B
+  /** True if the form should be submitted when the text value changes. */
+  trigger?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -49,6 +51,7 @@ export const
       icon: Fluent.IIconProps | undefined = m.icon && m.icon.length ? { iconName: m.icon } : undefined,
       onChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
         qd.args[m.name] = (v !== undefined && v !== null) ? v : (m.value || '')
+        if (m.trigger) qd.sync()
       },
       password = m.password ? 'password' : undefined,
       render = () => m.mask
