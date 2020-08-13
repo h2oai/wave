@@ -4,6 +4,24 @@
 
 from .types import *
 
+def breadcrumb(
+        name: str,
+        label: str,
+) -> Breadcrumb:
+    """Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
+
+    Args:
+        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+        label: The label to display.
+    Returns:
+        A `h2o_q.types.Breadcrumb` instance.
+    """
+    return Breadcrumb(
+        name,
+        label,
+    )
+
+
 def command(
         name: str,
         label: Optional[str] = None,
@@ -33,6 +51,33 @@ def command(
         icon,
         items,
         data,
+    )
+
+
+def breadcrumbs_card(
+        box: str,
+        items: List[Breadcrumb],
+        commands: Optional[List[Command]] = None,
+) -> BreadcrumbsCard:
+    """Create a card containing breadcrumbs.
+    Breadcrumbs should be used as a navigational aid in your app or site.
+    They indicate the current page’s location within a hierarchy and help
+    the user understand where they are in relation to the rest of that hierarchy.
+    They also afford one-click access to higher levels of that hierarchy.
+    Breadcrumbs are typically placed, in horizontal form, under the masthead
+    or navigation of an experience, above the primary content area.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.BreadcrumbsCard` instance.
+    """
+    return BreadcrumbsCard(
+        box,
+        items,
+        commands,
     )
 
 
