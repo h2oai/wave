@@ -1088,6 +1088,41 @@ def frame(
     ))
 
 
+def picker(
+        name: str,
+        choices: List[Choice],
+        label: Optional[str] = None,
+        values: Optional[List[str]] = None,
+        max_choices: Optional[int] = None,
+        disabled: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+) -> Component:
+    """Create a picker.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Use a picker to allow the user to quickly search for or manage a few tags or files.
+
+    Args:
+        name: An identifying name for this component.
+        choices: The choices to be presented.
+        label: Text to be displayed above the component.
+        values: The names of the selected choices.
+        max_choices: Maximum number of selectable choices. Defaults to no limit.
+        disabled: Controls whether the picker should be disabled or not.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Picker` instance.
+    """
+    return Component(picker=Picker(
+        name,
+        choices,
+        label,
+        values,
+        max_choices,
+        disabled,
+        tooltip,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         text_xl: Optional[TextXl] = None,
@@ -1118,6 +1153,7 @@ def component(
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
         frame: Optional[Frame] = None,
+        picker: Optional[Picker] = None,
 ) -> Component:
     """Create a component.
 
@@ -1151,6 +1187,7 @@ def component(
         tabs: Tabs.
         expander: Expander.
         frame: Frame
+        picker: Picker
     Returns:
         A `h2o_q.types.Component` instance.
     """
@@ -1184,6 +1221,7 @@ def component(
         tabs,
         expander,
         frame,
+        picker,
     )
 
 
