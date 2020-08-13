@@ -14,8 +14,8 @@ PackedData = Union[Data, str]
 def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}
 
 
-class BreadcrumbItem:
-    """Create a breadcrumb item.
+class Breadcrumb:
+    """Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
     """
     def __init__(
             self,
@@ -30,26 +30,26 @@ class BreadcrumbItem:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('BreadcrumbItem.name is required.')
+            raise ValueError('Breadcrumb.name is required.')
         if self.label is None:
-            raise ValueError('BreadcrumbItem.label is required.')
+            raise ValueError('Breadcrumb.label is required.')
         return _dump(
             name=self.name,
             label=self.label,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'BreadcrumbItem':
+    def load(__d: Dict) -> 'Breadcrumb':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('BreadcrumbItem.name is required.')
+            raise ValueError('Breadcrumb.name is required.')
         __d_label: Any = __d.get('label')
         if __d_label is None:
-            raise ValueError('BreadcrumbItem.label is required.')
+            raise ValueError('Breadcrumb.label is required.')
         name: str = __d_name
         label: str = __d_label
-        return BreadcrumbItem(
+        return Breadcrumb(
             name,
             label,
         )
@@ -134,13 +134,13 @@ class BreadcrumbsCard:
     def __init__(
             self,
             box: str,
-            items: List[BreadcrumbItem],
+            items: List[Breadcrumb],
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
-        """Items to render."""
+        """A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`"""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -168,7 +168,7 @@ class BreadcrumbsCard:
             raise ValueError('BreadcrumbsCard.items is required.')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
-        items: List[BreadcrumbItem] = [BreadcrumbItem.load(__e) for __e in __d_items]
+        items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return BreadcrumbsCard(
             box,

@@ -3,8 +3,8 @@ import React from 'react';
 import { cards } from './layout';
 import { bond, Card, S, qd } from './qd';
 
-/** Create a breadcrumb item. */
-interface BreadcrumbItem {
+/** Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`. */
+interface Breadcrumb {
   /** The name of this item. Prefix the name with a '#' to trigger hash-change navigation. */
   name: S
   /** The label to display. */
@@ -20,8 +20,8 @@ interface BreadcrumbItem {
  * or navigation of an experience, above the primary content area.
  */
 interface State {
-  /** Items to render. */
-  items: BreadcrumbItem[]
+  /** A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()` */
+  items: Breadcrumb[]
 }
 
 export const
