@@ -510,7 +510,6 @@ const
     Data: 'PackedData', // XXX
   },
   translateToR = (protocol: Protocol): string => {
-    console.log(rTypeMappings)
     const
       lines: string[] = [],
       p = (line: string) => lines.push(line),
@@ -634,7 +633,7 @@ const
       },
       layoutParams = (xs: string[], pad: string) => {
         const lines = pad + xs.join(',\n' + pad)
-        return '\n' + lines.substring(0, lines.lastIndexOf(','))
+        return '\n' + lines
       },
       genFunc = (type: Type) => {
         if (apis[type.name]) return
@@ -657,13 +656,32 @@ const
           assigns = type.members.map(m => `${m.name}=${m.name}`)
 
         p(`ui_${snakeCase(type.name)} <- function(${layoutParams(params, '  ')}) {`)
+        for (const m of type.members) {
+          switch (m.t) {
+            case MemberT.Singular:
+              switch (m.typeName) {
+                case 'S':
+                case 'F':
+                case 'I':
+                case 'U':
+                case 'B':
+                  p(`  if(!is(${m.name}, '${rTypeMappings[m.typeName]}')) { stop("${m.name}: expected ${rTypeMappings[m.typeName]}") }`)
+                  break
+                default:
+                  p(`  # TODO Validate ${m.name}: ${m.typeName}`)
+              }
+              break
+            default:
+              p(`  # TODO Validate ${m.name}`)
+          }
+        }
         if (type.oneOf) {
           p(`  .o <- list(${type.oneOf.name}=list(${layoutParams(assigns, '    ')}))`)
         } else {
           p(`  .o <- list(${layoutParams(assigns, '    ')})`)
         }
         const typeName = type.oneOf ? type.oneOf.type.name : type.name
-        p(`  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_${typeName}"))`)
+        p(`  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_${typeName}"))`)
         p('  return(.o)')
         p('}')
 

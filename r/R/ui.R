@@ -18,6 +18,23 @@ dump_object <- function(x) {
 }
 
 
+#' Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
+#'
+#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+#' @param label The label to display.
+#' @return A Breadcrumb instance.
+ui_breadcrumb <- function(
+  name,
+  label) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  .o <- list(
+    name=name,
+    label=label)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Breadcrumb"))
+  return(.o)
+}
+
 #' Create a command.
 #' 
 #' Commands are typically displayed as context menu items or toolbar button.
@@ -34,14 +51,49 @@ ui_command <- function(
   label = NULL,
   caption = NULL,
   icon = NULL,
-  items = NULL) {
+  items = NULL,
+  data = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(caption, 'character')) { stop("caption: expected character") }
+  if(!is(icon, 'character')) { stop("icon: expected character") }
+  # TODO Validate items
+  if(!is(data, 'character')) { stop("data: expected character") }
   .o <- list(
     name=name,
     label=label,
     caption=caption,
     icon=icon,
-    items=items)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Command"))
+    items=items,
+    data=data)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Command"))
+  return(.o)
+}
+
+#' Create a card containing breadcrumbs.
+#' Breadcrumbs should be used as a navigational aid in your app or site.
+#' They indicate the current page’s location within a hierarchy and help
+#' the user understand where they are in relation to the rest of that hierarchy.
+#' They also afford one-click access to higher levels of that hierarchy.
+#' Breadcrumbs are typically placed, in horizontal form, under the masthead
+#' or navigation of an experience, above the primary content area.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param items A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`
+#' @param commands Contextual menu commands for this component.
+#' @return A BreadcrumbsCard instance.
+ui_breadcrumbs_card <- function(
+  box,
+  items,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  # TODO Validate items
+  # TODO Validate commands
+  .o <- list(
+    box=box,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_BreadcrumbsCard"))
   return(.o)
 }
 
@@ -70,7 +122,17 @@ ui_flex_card <- function(
   direction = NULL,
   justify = NULL,
   align = NULL,
-  wrap = NULL) {
+  wrap = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(item_view, 'character')) { stop("item_view: expected character") }
+  # TODO Validate item_props: Rec
+  # TODO Validate data: Data
+  # TODO Validate direction
+  # TODO Validate justify
+  # TODO Validate align
+  # TODO Validate wrap
+  # TODO Validate commands
   .o <- list(
     box=box,
     item_view=item_view,
@@ -79,8 +141,9 @@ ui_flex_card <- function(
     direction=direction,
     justify=justify,
     align=align,
-    wrap=wrap)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_FlexCard"))
+    wrap=wrap,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FlexCard"))
   return(.o)
 }
 
@@ -93,11 +156,16 @@ ui_flex_card <- function(
 #' @return A Text instance.
 ui_text <- function(
   content,
-  size = NULL) {
+  size = NULL,
+  tooltip = NULL) {
+  if(!is(content, 'character')) { stop("content: expected character") }
+  # TODO Validate size
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(text=list(
     content=content,
-    size=size))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    size=size,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -107,10 +175,14 @@ ui_text <- function(
 #' @param tooltip Tooltip message.
 #' @return A TextXl instance.
 ui_text_xl <- function(
-  content) {
+  content,
+  tooltip = NULL) {
+  if(!is(content, 'character')) { stop("content: expected character") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(text_xl=list(
-    content=content))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    content=content,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -120,10 +192,14 @@ ui_text_xl <- function(
 #' @param tooltip Tooltip message.
 #' @return A TextL instance.
 ui_text_l <- function(
-  content) {
+  content,
+  tooltip = NULL) {
+  if(!is(content, 'character')) { stop("content: expected character") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(text_l=list(
-    content=content))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    content=content,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -133,10 +209,14 @@ ui_text_l <- function(
 #' @param tooltip Tooltip message.
 #' @return A TextM instance.
 ui_text_m <- function(
-  content) {
+  content,
+  tooltip = NULL) {
+  if(!is(content, 'character')) { stop("content: expected character") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(text_m=list(
-    content=content))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    content=content,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -146,10 +226,14 @@ ui_text_m <- function(
 #' @param tooltip Tooltip message.
 #' @return A TextS instance.
 ui_text_s <- function(
-  content) {
+  content,
+  tooltip = NULL) {
+  if(!is(content, 'character')) { stop("content: expected character") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(text_s=list(
-    content=content))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    content=content,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -159,10 +243,14 @@ ui_text_s <- function(
 #' @param tooltip Tooltip message.
 #' @return A TextXs instance.
 ui_text_xs <- function(
-  content) {
+  content,
+  tooltip = NULL) {
+  if(!is(content, 'character')) { stop("content: expected character") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(text_xs=list(
-    content=content))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    content=content,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -182,12 +270,18 @@ ui_text_xs <- function(
 ui_label <- function(
   label,
   required = NULL,
-  disabled = NULL) {
+  disabled = NULL,
+  tooltip = NULL) {
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(required, 'logical')) { stop("required: expected logical") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(label=list(
     label=label,
     required=required,
-    disabled=disabled))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    disabled=disabled,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -198,10 +292,11 @@ ui_label <- function(
 #' @param label The text displayed on the separator.
 #' @return A Separator instance.
 ui_separator <- function(
-) {
+  label = NULL) {
+  if(!is(label, 'character')) { stop("label: expected character") }
   .o <- list(separator=list(
-))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    label=label))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -233,12 +328,18 @@ ui_separator <- function(
 ui_progress <- function(
   label,
   caption = NULL,
-  value = NULL) {
+  value = NULL,
+  tooltip = NULL) {
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(caption, 'character')) { stop("caption: expected character") }
+  if(!is(value, 'numeric')) { stop("value: expected numeric") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(progress=list(
     label=label,
     caption=caption,
-    value=value))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    value=value,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -253,10 +354,14 @@ ui_progress <- function(
 #' @param text The text displayed on the message bar.
 #' @return A MessageBar instance.
 ui_message_bar <- function(
-  type = NULL) {
+  type = NULL,
+  text = NULL) {
+  # TODO Validate type
+  if(!is(text, 'character')) { stop("text: expected character") }
   .o <- list(message_bar=list(
-    type=type))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    type=type,
+    text=text))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -296,7 +401,23 @@ ui_textbox <- function(
   disabled = NULL,
   readonly = NULL,
   multiline = NULL,
-  password = NULL) {
+  password = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(placeholder, 'character')) { stop("placeholder: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(mask, 'character')) { stop("mask: expected character") }
+  if(!is(icon, 'character')) { stop("icon: expected character") }
+  if(!is(prefix, 'character')) { stop("prefix: expected character") }
+  if(!is(suffix, 'character')) { stop("suffix: expected character") }
+  if(!is(error, 'character')) { stop("error: expected character") }
+  if(!is(required, 'logical')) { stop("required: expected logical") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(readonly, 'logical')) { stop("readonly: expected logical") }
+  if(!is(multiline, 'logical')) { stop("multiline: expected logical") }
+  if(!is(password, 'logical')) { stop("password: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(textbox=list(
     name=name,
     label=label,
@@ -311,8 +432,9 @@ ui_textbox <- function(
     disabled=disabled,
     readonly=readonly,
     multiline=multiline,
-    password=password))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    password=password,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -345,15 +467,24 @@ ui_checkbox <- function(
   value = NULL,
   indeterminate = NULL,
   disabled = NULL,
-  trigger = NULL) {
+  trigger = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(value, 'logical')) { stop("value: expected logical") }
+  if(!is(indeterminate, 'logical')) { stop("indeterminate: expected logical") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(checkbox=list(
     name=name,
     label=label,
     value=value,
     indeterminate=indeterminate,
     disabled=disabled,
-    trigger=trigger))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    trigger=trigger,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -378,14 +509,22 @@ ui_toggle <- function(
   label = NULL,
   value = NULL,
   disabled = NULL,
-  trigger = NULL) {
+  trigger = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(value, 'logical')) { stop("value: expected logical") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(toggle=list(
     name=name,
     label=label,
     value=value,
     disabled=disabled,
-    trigger=trigger))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    trigger=trigger,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -397,11 +536,16 @@ ui_toggle <- function(
 #' @return A Choice instance.
 ui_choice <- function(
   name,
-  label = NULL) {
+  label = NULL,
+  disabled = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
   .o <- list(
     name=name,
-    label=label)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Choice"))
+    label=label,
+    disabled=disabled)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Choice"))
   return(.o)
 }
 
@@ -430,15 +574,24 @@ ui_choice_group <- function(
   value = NULL,
   choices = NULL,
   required = NULL,
-  trigger = NULL) {
+  trigger = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  # TODO Validate choices
+  if(!is(required, 'logical')) { stop("required: expected logical") }
+  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(choice_group=list(
     name=name,
     label=label,
     value=value,
     choices=choices,
     required=required,
-    trigger=trigger))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    trigger=trigger,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -456,13 +609,20 @@ ui_checklist <- function(
   name,
   label = NULL,
   values = NULL,
-  choices = NULL) {
+  choices = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  # TODO Validate values
+  # TODO Validate choices
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(checklist=list(
     name=name,
     label=label,
     values=values,
-    choices=choices))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    choices=choices,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -498,7 +658,18 @@ ui_dropdown <- function(
   choices = NULL,
   required = NULL,
   disabled = NULL,
-  trigger = NULL) {
+  trigger = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(placeholder, 'character')) { stop("placeholder: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  # TODO Validate values
+  # TODO Validate choices
+  if(!is(required, 'logical')) { stop("required: expected logical") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(dropdown=list(
     name=name,
     label=label,
@@ -508,8 +679,9 @@ ui_dropdown <- function(
     choices=choices,
     required=required,
     disabled=disabled,
-    trigger=trigger))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    trigger=trigger,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -541,7 +713,16 @@ ui_combobox <- function(
   value = NULL,
   choices = NULL,
   error = NULL,
-  disabled = NULL) {
+  disabled = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(placeholder, 'character')) { stop("placeholder: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  # TODO Validate choices
+  if(!is(error, 'character')) { stop("error: expected character") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(combobox=list(
     name=name,
     label=label,
@@ -549,8 +730,9 @@ ui_combobox <- function(
     value=value,
     choices=choices,
     error=error,
-    disabled=disabled))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    disabled=disabled,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -587,7 +769,17 @@ ui_slider <- function(
   step = NULL,
   value = NULL,
   disabled = NULL,
-  trigger = NULL) {
+  trigger = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(min, 'numeric')) { stop("min: expected numeric") }
+  if(!is(max, 'numeric')) { stop("max: expected numeric") }
+  if(!is(step, 'numeric')) { stop("step: expected numeric") }
+  if(!is(value, 'numeric')) { stop("value: expected numeric") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(slider=list(
     name=name,
     label=label,
@@ -596,8 +788,9 @@ ui_slider <- function(
     step=step,
     value=value,
     disabled=disabled,
-    trigger=trigger))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    trigger=trigger,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -622,7 +815,16 @@ ui_spinbox <- function(
   max = NULL,
   step = NULL,
   value = NULL,
-  disabled = NULL) {
+  disabled = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(min, 'numeric')) { stop("min: expected numeric") }
+  if(!is(max, 'numeric')) { stop("max: expected numeric") }
+  if(!is(step, 'numeric')) { stop("step: expected numeric") }
+  if(!is(value, 'numeric')) { stop("value: expected numeric") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(spinbox=list(
     name=name,
     label=label,
@@ -630,8 +832,9 @@ ui_spinbox <- function(
     max=max,
     step=step,
     value=value,
-    disabled=disabled))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    disabled=disabled,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -651,14 +854,22 @@ ui_date_picker <- function(
   label = NULL,
   placeholder = NULL,
   value = NULL,
-  disabled = NULL) {
+  disabled = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(placeholder, 'character')) { stop("placeholder: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(date_picker=list(
     name=name,
     label=label,
     placeholder=placeholder,
     value=value,
-    disabled=disabled))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    disabled=disabled,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -677,13 +888,20 @@ ui_color_picker <- function(
   name,
   label = NULL,
   value = NULL,
-  choices = NULL) {
+  choices = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  # TODO Validate choices
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(color_picker=list(
     name=name,
     label=label,
     value=value,
-    choices=choices))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    choices=choices,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -720,7 +938,16 @@ ui_button <- function(
   value = NULL,
   primary = NULL,
   disabled = NULL,
-  link = NULL) {
+  link = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(caption, 'character')) { stop("caption: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(primary, 'logical')) { stop("primary: expected logical") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(link, 'logical')) { stop("link: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(button=list(
     name=name,
     label=label,
@@ -728,8 +955,9 @@ ui_button <- function(
     value=value,
     primary=primary,
     disabled=disabled,
-    link=link))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    link=link,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -738,10 +966,11 @@ ui_button <- function(
 #' @param items The button in this set.
 #' @return A Buttons instance.
 ui_buttons <- function(
-) {
+  items) {
+  # TODO Validate items
   .o <- list(buttons=list(
-))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    items=items))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -762,15 +991,24 @@ ui_file_upload <- function(
   multiple = NULL,
   file_extensions = NULL,
   max_file_size = NULL,
-  max_size = NULL) {
+  max_size = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(multiple, 'logical')) { stop("multiple: expected logical") }
+  # TODO Validate file_extensions
+  if(!is(max_file_size, 'numeric')) { stop("max_file_size: expected numeric") }
+  if(!is(max_size, 'numeric')) { stop("max_size: expected numeric") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(file_upload=list(
     name=name,
     label=label,
     multiple=multiple,
     file_extensions=file_extensions,
     max_file_size=max_file_size,
-    max_size=max_size))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    max_size=max_size,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -780,10 +1018,14 @@ ui_file_upload <- function(
 #' @param label The text displayed on the column header.
 #' @return A TableColumn instance.
 ui_table_column <- function(
-  name) {
+  name,
+  label) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
   .o <- list(
-    name=name)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_TableColumn"))
+    name=name,
+    label=label)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableColumn"))
   return(.o)
 }
 
@@ -793,10 +1035,14 @@ ui_table_column <- function(
 #' @param cells The cells in this row (displayed left to right).
 #' @return A TableRow instance.
 ui_table_row <- function(
-  name) {
+  name,
+  cells) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  # TODO Validate cells
   .o <- list(
-    name=name)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_TableRow"))
+    name=name,
+    cells=cells)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableRow"))
   return(.o)
 }
 
@@ -826,13 +1072,20 @@ ui_table <- function(
   name,
   columns,
   rows,
-  multiple = NULL) {
+  multiple = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  # TODO Validate columns
+  # TODO Validate rows
+  if(!is(multiple, 'logical')) { stop("multiple: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(table=list(
     name=name,
     columns=columns,
     rows=rows,
-    multiple=multiple))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    multiple=multiple,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -854,14 +1107,22 @@ ui_link <- function(
   path = NULL,
   disabled = NULL,
   download = NULL,
-  button = NULL) {
+  button = NULL,
+  tooltip = NULL) {
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(path, 'character')) { stop("path: expected character") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(download, 'logical')) { stop("download: expected logical") }
+  if(!is(button, 'logical')) { stop("button: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
   .o <- list(link=list(
     label=label,
     path=path,
     disabled=disabled,
     download=download,
-    button=button))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    button=button,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -873,11 +1134,16 @@ ui_link <- function(
 #' @return A Tab instance.
 ui_tab <- function(
   name,
-  label = NULL) {
+  label = NULL,
+  icon = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(icon, 'character')) { stop("icon: expected character") }
   .o <- list(
     name=name,
-    label=label)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Tab"))
+    label=label,
+    icon=icon)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Tab"))
   return(.o)
 }
 
@@ -889,11 +1155,16 @@ ui_tab <- function(
 #' @return A Tabs instance.
 ui_tabs <- function(
   name,
-  value = NULL) {
+  value = NULL,
+  items = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  # TODO Validate items
   .o <- list(tabs=list(
     name=name,
-    value=value))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    value=value,
+    items=items))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -909,12 +1180,18 @@ ui_tabs <- function(
 ui_expander <- function(
   name,
   label = NULL,
-  expanded = NULL) {
+  expanded = NULL,
+  items = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(expanded, 'logical')) { stop("expanded: expected logical") }
+  # TODO Validate items
   .o <- list(expander=list(
     name=name,
     label=label,
-    expanded=expanded))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    expanded=expanded,
+    items=items))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -928,12 +1205,57 @@ ui_expander <- function(
 ui_frame <- function(
   path = NULL,
   content = NULL,
-  width = NULL) {
+  width = NULL,
+  height = NULL) {
+  if(!is(path, 'character')) { stop("path: expected character") }
+  if(!is(content, 'character')) { stop("content: expected character") }
+  if(!is(width, 'character')) { stop("width: expected character") }
+  if(!is(height, 'character')) { stop("height: expected character") }
   .o <- list(frame=list(
     path=path,
     content=content,
-    width=width))
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    width=width,
+    height=height))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
+#' Create a picker.
+#' Pickers are used to select one or more choices, such as tags or files, from a list.
+#' Use a picker to allow the user to quickly search for or manage a few tags or files.
+#'
+#' @param name An identifying name for this component.
+#' @param choices The choices to be presented.
+#' @param label Text to be displayed above the component.
+#' @param values The names of the selected choices.
+#' @param max_choices Maximum number of selectable choices. Defaults to no limit.
+#' @param disabled Controls whether the picker should be disabled or not.
+#' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @return A Picker instance.
+ui_picker <- function(
+  name,
+  choices,
+  label = NULL,
+  values = NULL,
+  max_choices = NULL,
+  disabled = NULL,
+  tooltip = NULL) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  # TODO Validate choices
+  if(!is(label, 'character')) { stop("label: expected character") }
+  # TODO Validate values
+  if(!is(max_choices, 'numeric')) { stop("max_choices: expected numeric") }
+  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  .o <- list(picker=list(
+    name=name,
+    choices=choices,
+    label=label,
+    values=values,
+    max_choices=max_choices,
+    disabled=disabled,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -968,6 +1290,7 @@ ui_frame <- function(
 #' @param tabs Tabs.
 #' @param expander Expander.
 #' @param frame Frame
+#' @param picker Picker
 #' @return A Component instance.
 ui_component <- function(
   text = NULL,
@@ -997,7 +1320,39 @@ ui_component <- function(
   table = NULL,
   link = NULL,
   tabs = NULL,
-  expander = NULL) {
+  expander = NULL,
+  frame = NULL,
+  picker = NULL) {
+  # TODO Validate text: Text
+  # TODO Validate text_xl: TextXl
+  # TODO Validate text_l: TextL
+  # TODO Validate text_m: TextM
+  # TODO Validate text_s: TextS
+  # TODO Validate text_xs: TextXs
+  # TODO Validate label: Label
+  # TODO Validate separator: Separator
+  # TODO Validate progress: Progress
+  # TODO Validate message_bar: MessageBar
+  # TODO Validate textbox: Textbox
+  # TODO Validate checkbox: Checkbox
+  # TODO Validate toggle: Toggle
+  # TODO Validate choice_group: ChoiceGroup
+  # TODO Validate checklist: Checklist
+  # TODO Validate dropdown: Dropdown
+  # TODO Validate combobox: Combobox
+  # TODO Validate slider: Slider
+  # TODO Validate spinbox: Spinbox
+  # TODO Validate date_picker: DatePicker
+  # TODO Validate color_picker: ColorPicker
+  # TODO Validate button: Button
+  # TODO Validate buttons: Buttons
+  # TODO Validate file_upload: FileUpload
+  # TODO Validate table: Table
+  # TODO Validate link: Link
+  # TODO Validate tabs: Tabs
+  # TODO Validate expander: Expander
+  # TODO Validate frame: Frame
+  # TODO Validate picker: Picker
   .o <- list(
     text=text,
     text_xl=text_xl,
@@ -1026,8 +1381,10 @@ ui_component <- function(
     table=table,
     link=link,
     tabs=tabs,
-    expander=expander)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Component"))
+    expander=expander,
+    frame=frame,
+    picker=picker)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
 
@@ -1039,11 +1396,16 @@ ui_component <- function(
 #' @return A FormCard instance.
 ui_form_card <- function(
   box,
-  items) {
+  items,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  # TODO Validate items
+  # TODO Validate commands
   .o <- list(
     box=box,
-    items=items)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_FormCard"))
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FormCard"))
   return(.o)
 }
 
@@ -1061,13 +1423,20 @@ ui_frame_card <- function(
   box,
   title,
   path = NULL,
-  content = NULL) {
+  content = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(path, 'character')) { stop("path: expected character") }
+  if(!is(content, 'character')) { stop("content: expected character") }
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     path=path,
-    content=content)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_FrameCard"))
+    content=content,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FrameCard"))
   return(.o)
 }
 
@@ -1092,15 +1461,24 @@ ui_graphics_card <- function(
   stage = NULL,
   scene = NULL,
   width = NULL,
-  height = NULL) {
+  height = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(view_box, 'character')) { stop("view_box: expected character") }
+  # TODO Validate stage: Recs
+  # TODO Validate scene: Data
+  if(!is(width, 'character')) { stop("width: expected character") }
+  if(!is(height, 'character')) { stop("height: expected character") }
+  # TODO Validate commands
   .o <- list(
     box=box,
     view_box=view_box,
     stage=stage,
     scene=scene,
     width=width,
-    height=height)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_GraphicsCard"))
+    height=height,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_GraphicsCard"))
   return(.o)
 }
 
@@ -1116,13 +1494,20 @@ ui_grid_card <- function(
   box,
   title,
   cells,
-  data) {
+  data,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  # TODO Validate cells: Data
+  # TODO Validate data: Data
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     cells=cells,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_GridCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_GridCard"))
   return(.o)
 }
 
@@ -1142,14 +1527,22 @@ ui_header_card <- function(
   title,
   subtitle,
   icon = NULL,
-  icon_color = NULL) {
+  icon_color = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(subtitle, 'character')) { stop("subtitle: expected character") }
+  if(!is(icon, 'character')) { stop("icon: expected character") }
+  if(!is(icon_color, 'character')) { stop("icon_color: expected character") }
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     subtitle=subtitle,
     icon=icon,
-    icon_color=icon_color)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_HeaderCard"))
+    icon_color=icon_color,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_HeaderCard"))
   return(.o)
 }
 
@@ -1167,14 +1560,22 @@ ui_image_card <- function(
   title,
   type,
   image,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(type, 'character')) { stop("type: expected character") }
+  if(!is(image, 'character')) { stop("image: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     type=type,
     image=image,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_ImageCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ImageCard"))
   return(.o)
 }
 
@@ -1202,7 +1603,19 @@ ui_large_bar_stat_card <- function(
   aux_value_caption,
   progress,
   plot_color = NULL,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(caption, 'character')) { stop("caption: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  if(!is(value_caption, 'character')) { stop("value_caption: expected character") }
+  if(!is(aux_value_caption, 'character')) { stop("aux_value_caption: expected character") }
+  if(!is(progress, 'numeric')) { stop("progress: expected numeric") }
+  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
@@ -1213,8 +1626,9 @@ ui_large_bar_stat_card <- function(
     aux_value_caption=aux_value_caption,
     progress=progress,
     plot_color=plot_color,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_LargeBarStatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_LargeBarStatCard"))
   return(.o)
 }
 
@@ -1234,15 +1648,24 @@ ui_large_stat_card <- function(
   value,
   aux_value,
   caption,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  if(!is(caption, 'character')) { stop("caption: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     value=value,
     aux_value=aux_value,
     caption=caption,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_LargeStatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_LargeStatCard"))
   return(.o)
 }
 
@@ -1261,14 +1684,22 @@ ui_list_card <- function(
   title,
   item_view,
   item_props,
-  data) {
+  data,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(item_view, 'character')) { stop("item_view: expected character") }
+  # TODO Validate item_props: Rec
+  # TODO Validate data: Data
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     item_view=item_view,
     item_props=item_props,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_ListCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ListCard"))
   return(.o)
 }
 
@@ -1288,15 +1719,24 @@ ui_list_item1_card <- function(
   caption,
   value,
   aux_value,
-  data) {
+  data,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(caption, 'character')) { stop("caption: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     caption=caption,
     value=value,
     aux_value=aux_value,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_ListItem1Card"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ListItem1Card"))
   return(.o)
 }
 
@@ -1317,13 +1757,20 @@ ui_markdown_card <- function(
   box,
   title,
   content,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(content, 'character')) { stop("content: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     content=content,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_MarkdownCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MarkdownCard"))
   return(.o)
 }
 
@@ -1337,12 +1784,18 @@ ui_markdown_card <- function(
 ui_markup_card <- function(
   box,
   title,
-  content) {
+  content,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(content, 'character')) { stop("content: expected character") }
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
-    content=content)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_MarkupCard"))
+    content=content,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MarkupCard"))
   return(.o)
 }
 
@@ -1361,13 +1814,20 @@ ui_meta_card <- function(
   box,
   title = NULL,
   refresh = NULL,
-  notification = NULL) {
+  notification = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(refresh, 'numeric')) { stop("refresh: expected numeric") }
+  if(!is(notification, 'character')) { stop("notification: expected character") }
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     refresh=refresh,
-    notification=notification)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_MetaCard"))
+    notification=notification,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
   return(.o)
 }
 
@@ -1377,10 +1837,14 @@ ui_meta_card <- function(
 #' @param label The label to display.
 #' @return A NavItem instance.
 ui_nav_item <- function(
-  name) {
+  name,
+  label) {
+  if(!is(name, 'character')) { stop("name: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
   .o <- list(
-    name=name)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_NavItem"))
+    name=name,
+    label=label)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavItem"))
   return(.o)
 }
 
@@ -1390,10 +1854,14 @@ ui_nav_item <- function(
 #' @param items The navigation items contained in this group.
 #' @return A NavGroup instance.
 ui_nav_group <- function(
-  label) {
+  label,
+  items) {
+  if(!is(label, 'character')) { stop("label: expected character") }
+  # TODO Validate items
   .o <- list(
-    label=label)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_NavGroup"))
+    label=label,
+    items=items)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavGroup"))
   return(.o)
 }
 
@@ -1405,11 +1873,16 @@ ui_nav_group <- function(
 #' @return A NavCard instance.
 ui_nav_card <- function(
   box,
-  items) {
+  items,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  # TODO Validate items
+  # TODO Validate commands
   .o <- list(
     box=box,
-    items=items)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_NavCard"))
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavCard"))
   return(.o)
 }
 
@@ -1423,12 +1896,18 @@ ui_nav_card <- function(
 ui_pixel_art_card <- function(
   box,
   title,
-  data) {
+  data,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_PixelArtCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_PixelArtCard"))
   return(.o)
 }
 
@@ -1551,7 +2030,63 @@ ui_mark <- function(
   label_align = NULL,
   ref_stroke_color = NULL,
   ref_stroke_opacity = NULL,
-  ref_stroke_size = NULL) {
+  ref_stroke_size = NULL,
+  ref_stroke_dash = NULL) {
+  # TODO Validate coord
+  # TODO Validate type
+  # TODO Validate x: V
+  # TODO Validate x0: V
+  # TODO Validate x1: V
+  # TODO Validate x2: V
+  if(!is(x_min, 'numeric')) { stop("x_min: expected numeric") }
+  if(!is(x_max, 'numeric')) { stop("x_max: expected numeric") }
+  if(!is(x_nice, 'logical')) { stop("x_nice: expected logical") }
+  # TODO Validate x_scale
+  if(!is(x_title, 'character')) { stop("x_title: expected character") }
+  # TODO Validate y: V
+  # TODO Validate y0: V
+  # TODO Validate y1: V
+  # TODO Validate y2: V
+  if(!is(y_min, 'numeric')) { stop("y_min: expected numeric") }
+  if(!is(y_max, 'numeric')) { stop("y_max: expected numeric") }
+  if(!is(y_nice, 'logical')) { stop("y_nice: expected logical") }
+  # TODO Validate y_scale
+  if(!is(y_title, 'character')) { stop("y_title: expected character") }
+  if(!is(color, 'character')) { stop("color: expected character") }
+  if(!is(color_range, 'character')) { stop("color_range: expected character") }
+  if(!is(shape, 'character')) { stop("shape: expected character") }
+  if(!is(shape_range, 'character')) { stop("shape_range: expected character") }
+  # TODO Validate size: V
+  if(!is(size_range, 'character')) { stop("size_range: expected character") }
+  if(!is(stack, 'character')) { stop("stack: expected character") }
+  if(!is(dodge, 'character')) { stop("dodge: expected character") }
+  # TODO Validate curve
+  if(!is(fill_color, 'character')) { stop("fill_color: expected character") }
+  if(!is(fill_opacity, 'numeric')) { stop("fill_opacity: expected numeric") }
+  if(!is(stroke_color, 'character')) { stop("stroke_color: expected character") }
+  if(!is(stroke_opacity, 'numeric')) { stop("stroke_opacity: expected numeric") }
+  if(!is(stroke_size, 'numeric')) { stop("stroke_size: expected numeric") }
+  if(!is(stroke_dash, 'character')) { stop("stroke_dash: expected character") }
+  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is(label_offset, 'numeric')) { stop("label_offset: expected numeric") }
+  if(!is(label_offset_x, 'numeric')) { stop("label_offset_x: expected numeric") }
+  if(!is(label_offset_y, 'numeric')) { stop("label_offset_y: expected numeric") }
+  if(!is(label_rotation, 'character')) { stop("label_rotation: expected character") }
+  if(!is(label_position, 'character')) { stop("label_position: expected character") }
+  if(!is(label_overlap, 'character')) { stop("label_overlap: expected character") }
+  if(!is(label_fill_color, 'character')) { stop("label_fill_color: expected character") }
+  if(!is(label_fill_opacity, 'numeric')) { stop("label_fill_opacity: expected numeric") }
+  if(!is(label_stroke_color, 'character')) { stop("label_stroke_color: expected character") }
+  if(!is(label_stroke_opacity, 'numeric')) { stop("label_stroke_opacity: expected numeric") }
+  if(!is(label_stroke_size, 'numeric')) { stop("label_stroke_size: expected numeric") }
+  if(!is(label_font_size, 'numeric')) { stop("label_font_size: expected numeric") }
+  if(!is(label_font_weight, 'character')) { stop("label_font_weight: expected character") }
+  if(!is(label_line_height, 'numeric')) { stop("label_line_height: expected numeric") }
+  # TODO Validate label_align
+  if(!is(ref_stroke_color, 'character')) { stop("ref_stroke_color: expected character") }
+  if(!is(ref_stroke_opacity, 'numeric')) { stop("ref_stroke_opacity: expected numeric") }
+  if(!is(ref_stroke_size, 'numeric')) { stop("ref_stroke_size: expected numeric") }
+  if(!is(ref_stroke_dash, 'character')) { stop("ref_stroke_dash: expected character") }
   .o <- list(
     coord=coord,
     type=type,
@@ -1606,8 +2141,9 @@ ui_mark <- function(
     label_align=label_align,
     ref_stroke_color=ref_stroke_color,
     ref_stroke_opacity=ref_stroke_opacity,
-    ref_stroke_size=ref_stroke_size)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Mark"))
+    ref_stroke_size=ref_stroke_size,
+    ref_stroke_dash=ref_stroke_dash)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Mark"))
   return(.o)
 }
 
@@ -1616,10 +2152,11 @@ ui_mark <- function(
 #' @param marks The graphical mark layers contained in this plot.
 #' @return A Plot instance.
 ui_plot <- function(
-) {
+  marks) {
+  # TODO Validate marks
   .o <- list(
-)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_Plot"))
+    marks=marks)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Plot"))
   return(.o)
 }
 
@@ -1635,13 +2172,20 @@ ui_plot_card <- function(
   box,
   title,
   data,
-  plot) {
+  plot,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate plot: Plot
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     data=data,
-    plot=plot)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_PlotCard"))
+    plot=plot,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_PlotCard"))
   return(.o)
 }
 
@@ -1658,13 +2202,20 @@ ui_repeat_card <- function(
   box,
   item_view,
   item_props,
-  data) {
+  data,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(item_view, 'character')) { stop("item_view: expected character") }
+  # TODO Validate item_props: Rec
+  # TODO Validate data: Data
+  # TODO Validate commands
   .o <- list(
     box=box,
     item_view=item_view,
     item_props=item_props,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_RepeatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_RepeatCard"))
   return(.o)
 }
 
@@ -1696,7 +2247,20 @@ ui_small_series_stat_card <- function(
   plot_type = NULL,
   plot_curve = NULL,
   plot_color = NULL,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  # TODO Validate plot_data: Data
+  if(!is(plot_value, 'character')) { stop("plot_value: expected character") }
+  if(!is(plot_zero_value, 'numeric')) { stop("plot_zero_value: expected numeric") }
+  if(!is(plot_category, 'character')) { stop("plot_category: expected character") }
+  # TODO Validate plot_type
+  # TODO Validate plot_curve
+  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
@@ -1708,8 +2272,9 @@ ui_small_series_stat_card <- function(
     plot_type=plot_type,
     plot_curve=plot_curve,
     plot_color=plot_color,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_SmallSeriesStatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SmallSeriesStatCard"))
   return(.o)
 }
 
@@ -1725,13 +2290,20 @@ ui_small_stat_card <- function(
   box,
   title,
   value,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     value=value,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_SmallStatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SmallStatCard"))
   return(.o)
 }
 
@@ -1745,12 +2317,18 @@ ui_small_stat_card <- function(
 ui_tab_card <- function(
   box,
   items,
-  link = NULL) {
+  link = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  # TODO Validate items
+  if(!is(link, 'logical')) { stop("link: expected logical") }
+  # TODO Validate commands
   .o <- list(
     box=box,
     items=items,
-    link=link)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_TabCard"))
+    link=link,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TabCard"))
   return(.o)
 }
 
@@ -1772,7 +2350,16 @@ ui_tall_gauge_stat_card <- function(
   aux_value,
   progress,
   plot_color = NULL,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  if(!is(progress, 'numeric')) { stop("progress: expected numeric") }
+  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
@@ -1780,8 +2367,9 @@ ui_tall_gauge_stat_card <- function(
     aux_value=aux_value,
     progress=progress,
     plot_color=plot_color,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_TallGaugeStatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TallGaugeStatCard"))
   return(.o)
 }
 
@@ -1815,7 +2403,21 @@ ui_tall_series_stat_card <- function(
   plot_type = NULL,
   plot_curve = NULL,
   plot_color = NULL,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  # TODO Validate plot_data: Data
+  if(!is(plot_value, 'character')) { stop("plot_value: expected character") }
+  if(!is(plot_zero_value, 'numeric')) { stop("plot_zero_value: expected numeric") }
+  if(!is(plot_category, 'character')) { stop("plot_category: expected character") }
+  # TODO Validate plot_type
+  # TODO Validate plot_curve
+  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
@@ -1828,8 +2430,9 @@ ui_tall_series_stat_card <- function(
     plot_type=plot_type,
     plot_curve=plot_curve,
     plot_color=plot_color,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_TallSeriesStatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TallSeriesStatCard"))
   return(.o)
 }
 
@@ -1845,13 +2448,20 @@ ui_template_card <- function(
   box,
   title,
   content,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(content, 'character')) { stop("content: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     content=content,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_TemplateCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TemplateCard"))
   return(.o)
 }
 
@@ -1867,13 +2477,20 @@ ui_toolbar_card <- function(
   box,
   items,
   secondary_items = NULL,
-  overflow_items = NULL) {
+  overflow_items = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  # TODO Validate items
+  # TODO Validate secondary_items
+  # TODO Validate overflow_items
+  # TODO Validate commands
   .o <- list(
     box=box,
     items=items,
     secondary_items=secondary_items,
-    overflow_items=overflow_items)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_ToolbarCard"))
+    overflow_items=overflow_items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ToolbarCard"))
   return(.o)
 }
 
@@ -1889,13 +2506,20 @@ ui_vega_card <- function(
   box,
   title,
   specification,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(specification, 'character')) { stop("specification: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
     specification=specification,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_VegaCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_VegaCard"))
   return(.o)
 }
 
@@ -1917,7 +2541,16 @@ ui_wide_bar_stat_card <- function(
   aux_value,
   progress,
   plot_color = NULL,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  if(!is(progress, 'numeric')) { stop("progress: expected numeric") }
+  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
@@ -1925,8 +2558,9 @@ ui_wide_bar_stat_card <- function(
     aux_value=aux_value,
     progress=progress,
     plot_color=plot_color,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_WideBarStatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideBarStatCard"))
   return(.o)
 }
 
@@ -1948,7 +2582,16 @@ ui_wide_gauge_stat_card <- function(
   aux_value,
   progress,
   plot_color = NULL,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  if(!is(progress, 'numeric')) { stop("progress: expected numeric") }
+  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
@@ -1956,8 +2599,9 @@ ui_wide_gauge_stat_card <- function(
     aux_value=aux_value,
     progress=progress,
     plot_color=plot_color,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_WideGaugeStatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideGaugeStatCard"))
   return(.o)
 }
 
@@ -1991,7 +2635,21 @@ ui_wide_series_stat_card <- function(
   plot_type = NULL,
   plot_curve = NULL,
   plot_color = NULL,
-  data = NULL) {
+  data = NULL,
+  commands = NULL) {
+  if(!is(box, 'character')) { stop("box: expected character") }
+  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  # TODO Validate plot_data: Data
+  if(!is(plot_value, 'character')) { stop("plot_value: expected character") }
+  if(!is(plot_zero_value, 'numeric')) { stop("plot_zero_value: expected numeric") }
+  if(!is(plot_category, 'character')) { stop("plot_category: expected character") }
+  # TODO Validate plot_type
+  # TODO Validate plot_curve
+  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  # TODO Validate data: Rec
+  # TODO Validate commands
   .o <- list(
     box=box,
     title=title,
@@ -2004,7 +2662,8 @@ ui_wide_series_stat_card <- function(
     plot_type=plot_type,
     plot_curve=plot_curve,
     plot_color=plot_color,
-    data=data)
-  class(.o) <- append(class(.o), list(.h2oq_obj, "h2oq_WideSeriesStatCard"))
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideSeriesStatCard"))
   return(.o)
 }
