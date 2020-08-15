@@ -26,8 +26,16 @@ dump_object <- function(x) {
 ui_breadcrumb <- function(
   name,
   label) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
   .o <- list(
     name=name,
     label=label)
@@ -53,12 +61,32 @@ ui_command <- function(
   icon = NULL,
   items = NULL,
   data = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(caption, 'character')) { stop("caption: expected character") }
-  if(!is(icon, 'character')) { stop("icon: expected character") }
-  # TODO Validate items
-  if(!is(data, 'character')) { stop("data: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(caption)) {
+    if(!is(caption, "character")) {
+      stop("caption: expected character")
+    }
+  }
+  if(!is.null(icon)) {
+    if(!is(icon, "character")) {
+      stop("icon: expected character")
+    }
+  }
+  # TODO Validate items: repeated Command
+  if(!is.null(data)) {
+    if(!is(data, "character")) {
+      stop("data: expected character")
+    }
+  }
   .o <- list(
     name=name,
     label=label,
@@ -86,9 +114,13 @@ ui_breadcrumbs_card <- function(
   box,
   items,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  # TODO Validate items
-  # TODO Validate commands
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  # TODO Validate items: repeated Breadcrumb
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     items=items,
@@ -124,15 +156,23 @@ ui_flex_card <- function(
   align = NULL,
   wrap = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(item_view, 'character')) { stop("item_view: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(item_view)) {
+    if(!is(item_view, "character")) {
+      stop("item_view: expected character")
+    }
+  }
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
   # TODO Validate direction
   # TODO Validate justify
   # TODO Validate align
   # TODO Validate wrap
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     item_view=item_view,
@@ -158,9 +198,17 @@ ui_text <- function(
   content,
   size = NULL,
   tooltip = NULL) {
-  if(!is(content, 'character')) { stop("content: expected character") }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
   # TODO Validate size
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(text=list(
     content=content,
     size=size,
@@ -177,8 +225,16 @@ ui_text <- function(
 ui_text_xl <- function(
   content,
   tooltip = NULL) {
-  if(!is(content, 'character')) { stop("content: expected character") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(text_xl=list(
     content=content,
     tooltip=tooltip))
@@ -194,8 +250,16 @@ ui_text_xl <- function(
 ui_text_l <- function(
   content,
   tooltip = NULL) {
-  if(!is(content, 'character')) { stop("content: expected character") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(text_l=list(
     content=content,
     tooltip=tooltip))
@@ -211,8 +275,16 @@ ui_text_l <- function(
 ui_text_m <- function(
   content,
   tooltip = NULL) {
-  if(!is(content, 'character')) { stop("content: expected character") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(text_m=list(
     content=content,
     tooltip=tooltip))
@@ -228,8 +300,16 @@ ui_text_m <- function(
 ui_text_s <- function(
   content,
   tooltip = NULL) {
-  if(!is(content, 'character')) { stop("content: expected character") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(text_s=list(
     content=content,
     tooltip=tooltip))
@@ -245,8 +325,16 @@ ui_text_s <- function(
 ui_text_xs <- function(
   content,
   tooltip = NULL) {
-  if(!is(content, 'character')) { stop("content: expected character") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(text_xs=list(
     content=content,
     tooltip=tooltip))
@@ -272,10 +360,26 @@ ui_label <- function(
   required = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(required, 'logical')) { stop("required: expected logical") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(required)) {
+    if(!is(required, "logical")) {
+      stop("required: expected logical")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(label=list(
     label=label,
     required=required,
@@ -293,7 +397,11 @@ ui_label <- function(
 #' @return A Separator instance.
 ui_separator <- function(
   label = NULL) {
-  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
   .o <- list(separator=list(
     label=label))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
@@ -330,10 +438,26 @@ ui_progress <- function(
   caption = NULL,
   value = NULL,
   tooltip = NULL) {
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(caption, 'character')) { stop("caption: expected character") }
-  if(!is(value, 'numeric')) { stop("value: expected numeric") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(caption)) {
+    if(!is(caption, "character")) {
+      stop("caption: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "numeric")) {
+      stop("value: expected numeric")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(progress=list(
     label=label,
     caption=caption,
@@ -357,7 +481,11 @@ ui_message_bar <- function(
   type = NULL,
   text = NULL) {
   # TODO Validate type
-  if(!is(text, 'character')) { stop("text: expected character") }
+  if(!is.null(text)) {
+    if(!is(text, "character")) {
+      stop("text: expected character")
+    }
+  }
   .o <- list(message_bar=list(
     type=type,
     text=text))
@@ -403,21 +531,81 @@ ui_textbox <- function(
   multiline = NULL,
   password = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(placeholder, 'character')) { stop("placeholder: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(mask, 'character')) { stop("mask: expected character") }
-  if(!is(icon, 'character')) { stop("icon: expected character") }
-  if(!is(prefix, 'character')) { stop("prefix: expected character") }
-  if(!is(suffix, 'character')) { stop("suffix: expected character") }
-  if(!is(error, 'character')) { stop("error: expected character") }
-  if(!is(required, 'logical')) { stop("required: expected logical") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(readonly, 'logical')) { stop("readonly: expected logical") }
-  if(!is(multiline, 'logical')) { stop("multiline: expected logical") }
-  if(!is(password, 'logical')) { stop("password: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(placeholder)) {
+    if(!is(placeholder, "character")) {
+      stop("placeholder: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(mask)) {
+    if(!is(mask, "character")) {
+      stop("mask: expected character")
+    }
+  }
+  if(!is.null(icon)) {
+    if(!is(icon, "character")) {
+      stop("icon: expected character")
+    }
+  }
+  if(!is.null(prefix)) {
+    if(!is(prefix, "character")) {
+      stop("prefix: expected character")
+    }
+  }
+  if(!is.null(suffix)) {
+    if(!is(suffix, "character")) {
+      stop("suffix: expected character")
+    }
+  }
+  if(!is.null(error)) {
+    if(!is(error, "character")) {
+      stop("error: expected character")
+    }
+  }
+  if(!is.null(required)) {
+    if(!is(required, "logical")) {
+      stop("required: expected logical")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(readonly)) {
+    if(!is(readonly, "logical")) {
+      stop("readonly: expected logical")
+    }
+  }
+  if(!is.null(multiline)) {
+    if(!is(multiline, "logical")) {
+      stop("multiline: expected logical")
+    }
+  }
+  if(!is.null(password)) {
+    if(!is(password, "logical")) {
+      stop("password: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(textbox=list(
     name=name,
     label=label,
@@ -469,13 +657,41 @@ ui_checkbox <- function(
   disabled = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(value, 'logical')) { stop("value: expected logical") }
-  if(!is(indeterminate, 'logical')) { stop("indeterminate: expected logical") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "logical")) {
+      stop("value: expected logical")
+    }
+  }
+  if(!is.null(indeterminate)) {
+    if(!is(indeterminate, "logical")) {
+      stop("indeterminate: expected logical")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(trigger)) {
+    if(!is(trigger, "logical")) {
+      stop("trigger: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(checkbox=list(
     name=name,
     label=label,
@@ -511,12 +727,36 @@ ui_toggle <- function(
   disabled = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(value, 'logical')) { stop("value: expected logical") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "logical")) {
+      stop("value: expected logical")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(trigger)) {
+    if(!is(trigger, "logical")) {
+      stop("trigger: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(toggle=list(
     name=name,
     label=label,
@@ -538,9 +778,21 @@ ui_choice <- function(
   name,
   label = NULL,
   disabled = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
   .o <- list(
     name=name,
     label=label,
@@ -576,13 +828,37 @@ ui_choice_group <- function(
   required = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  # TODO Validate choices
-  if(!is(required, 'logical')) { stop("required: expected logical") }
-  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  # TODO Validate choices: repeated Choice
+  if(!is.null(required)) {
+    if(!is(required, "logical")) {
+      stop("required: expected logical")
+    }
+  }
+  if(!is.null(trigger)) {
+    if(!is(trigger, "logical")) {
+      stop("trigger: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(choice_group=list(
     name=name,
     label=label,
@@ -611,11 +887,27 @@ ui_checklist <- function(
   values = NULL,
   choices = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  # TODO Validate values
-  # TODO Validate choices
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(values)) {
+    if(FALSE %in% unlist(lapply(values,function(x){ is(x, "character") }))) {
+       stop("values: expected list of character")
+    }
+  }
+  # TODO Validate choices: repeated Choice
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(checklist=list(
     name=name,
     label=label,
@@ -660,16 +952,52 @@ ui_dropdown <- function(
   disabled = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(placeholder, 'character')) { stop("placeholder: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  # TODO Validate values
-  # TODO Validate choices
-  if(!is(required, 'logical')) { stop("required: expected logical") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(placeholder)) {
+    if(!is(placeholder, "character")) {
+      stop("placeholder: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(values)) {
+    if(FALSE %in% unlist(lapply(values,function(x){ is(x, "character") }))) {
+       stop("values: expected list of character")
+    }
+  }
+  # TODO Validate choices: repeated Choice
+  if(!is.null(required)) {
+    if(!is(required, "logical")) {
+      stop("required: expected logical")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(trigger)) {
+    if(!is(trigger, "logical")) {
+      stop("trigger: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(dropdown=list(
     name=name,
     label=label,
@@ -715,14 +1043,46 @@ ui_combobox <- function(
   error = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(placeholder, 'character')) { stop("placeholder: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  # TODO Validate choices
-  if(!is(error, 'character')) { stop("error: expected character") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(placeholder)) {
+    if(!is(placeholder, "character")) {
+      stop("placeholder: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(choices)) {
+    if(FALSE %in% unlist(lapply(choices,function(x){ is(x, "character") }))) {
+       stop("choices: expected list of character")
+    }
+  }
+  if(!is.null(error)) {
+    if(!is(error, "character")) {
+      stop("error: expected character")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(combobox=list(
     name=name,
     label=label,
@@ -771,15 +1131,51 @@ ui_slider <- function(
   disabled = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(min, 'numeric')) { stop("min: expected numeric") }
-  if(!is(max, 'numeric')) { stop("max: expected numeric") }
-  if(!is(step, 'numeric')) { stop("step: expected numeric") }
-  if(!is(value, 'numeric')) { stop("value: expected numeric") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(trigger, 'logical')) { stop("trigger: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(min)) {
+    if(!is(min, "numeric")) {
+      stop("min: expected numeric")
+    }
+  }
+  if(!is.null(max)) {
+    if(!is(max, "numeric")) {
+      stop("max: expected numeric")
+    }
+  }
+  if(!is.null(step)) {
+    if(!is(step, "numeric")) {
+      stop("step: expected numeric")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "numeric")) {
+      stop("value: expected numeric")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(trigger)) {
+    if(!is(trigger, "logical")) {
+      stop("trigger: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(slider=list(
     name=name,
     label=label,
@@ -817,14 +1213,46 @@ ui_spinbox <- function(
   value = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(min, 'numeric')) { stop("min: expected numeric") }
-  if(!is(max, 'numeric')) { stop("max: expected numeric") }
-  if(!is(step, 'numeric')) { stop("step: expected numeric") }
-  if(!is(value, 'numeric')) { stop("value: expected numeric") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(min)) {
+    if(!is(min, "numeric")) {
+      stop("min: expected numeric")
+    }
+  }
+  if(!is.null(max)) {
+    if(!is(max, "numeric")) {
+      stop("max: expected numeric")
+    }
+  }
+  if(!is.null(step)) {
+    if(!is(step, "numeric")) {
+      stop("step: expected numeric")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "numeric")) {
+      stop("value: expected numeric")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(spinbox=list(
     name=name,
     label=label,
@@ -856,12 +1284,36 @@ ui_date_picker <- function(
   value = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(placeholder, 'character')) { stop("placeholder: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(placeholder)) {
+    if(!is(placeholder, "character")) {
+      stop("placeholder: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(date_picker=list(
     name=name,
     label=label,
@@ -890,11 +1342,31 @@ ui_color_picker <- function(
   value = NULL,
   choices = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  # TODO Validate choices
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(choices)) {
+    if(FALSE %in% unlist(lapply(choices,function(x){ is(x, "character") }))) {
+       stop("choices: expected list of character")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(color_picker=list(
     name=name,
     label=label,
@@ -940,14 +1412,46 @@ ui_button <- function(
   disabled = NULL,
   link = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(caption, 'character')) { stop("caption: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(primary, 'logical')) { stop("primary: expected logical") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(link, 'logical')) { stop("link: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(caption)) {
+    if(!is(caption, "character")) {
+      stop("caption: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(primary)) {
+    if(!is(primary, "logical")) {
+      stop("primary: expected logical")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(link)) {
+    if(!is(link, "logical")) {
+      stop("link: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(button=list(
     name=name,
     label=label,
@@ -967,7 +1471,7 @@ ui_button <- function(
 #' @return A Buttons instance.
 ui_buttons <- function(
   items) {
-  # TODO Validate items
+  # TODO Validate items: repeated Component
   .o <- list(buttons=list(
     items=items))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
@@ -993,13 +1497,41 @@ ui_file_upload <- function(
   max_file_size = NULL,
   max_size = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(multiple, 'logical')) { stop("multiple: expected logical") }
-  # TODO Validate file_extensions
-  if(!is(max_file_size, 'numeric')) { stop("max_file_size: expected numeric") }
-  if(!is(max_size, 'numeric')) { stop("max_size: expected numeric") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(multiple)) {
+    if(!is(multiple, "logical")) {
+      stop("multiple: expected logical")
+    }
+  }
+  if(!is.null(file_extensions)) {
+    if(FALSE %in% unlist(lapply(file_extensions,function(x){ is(x, "character") }))) {
+       stop("file_extensions: expected list of character")
+    }
+  }
+  if(!is.null(max_file_size)) {
+    if(!is(max_file_size, "numeric")) {
+      stop("max_file_size: expected numeric")
+    }
+  }
+  if(!is.null(max_size)) {
+    if(!is(max_size, "numeric")) {
+      stop("max_size: expected numeric")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(file_upload=list(
     name=name,
     label=label,
@@ -1020,8 +1552,16 @@ ui_file_upload <- function(
 ui_table_column <- function(
   name,
   label) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
   .o <- list(
     name=name,
     label=label)
@@ -1037,8 +1577,16 @@ ui_table_column <- function(
 ui_table_row <- function(
   name,
   cells) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  # TODO Validate cells
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(cells)) {
+    if(FALSE %in% unlist(lapply(cells,function(x){ is(x, "character") }))) {
+       stop("cells: expected list of character")
+    }
+  }
   .o <- list(
     name=name,
     cells=cells)
@@ -1074,11 +1622,23 @@ ui_table <- function(
   rows,
   multiple = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  # TODO Validate columns
-  # TODO Validate rows
-  if(!is(multiple, 'logical')) { stop("multiple: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  # TODO Validate columns: repeated TableColumn
+  # TODO Validate rows: repeated TableRow
+  if(!is.null(multiple)) {
+    if(!is(multiple, "logical")) {
+      stop("multiple: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(table=list(
     name=name,
     columns=columns,
@@ -1109,12 +1669,36 @@ ui_link <- function(
   download = NULL,
   button = NULL,
   tooltip = NULL) {
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(path, 'character')) { stop("path: expected character") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(download, 'logical')) { stop("download: expected logical") }
-  if(!is(button, 'logical')) { stop("button: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(path)) {
+    if(!is(path, "character")) {
+      stop("path: expected character")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(download)) {
+    if(!is(download, "logical")) {
+      stop("download: expected logical")
+    }
+  }
+  if(!is.null(button)) {
+    if(!is(button, "logical")) {
+      stop("button: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(link=list(
     label=label,
     path=path,
@@ -1136,9 +1720,21 @@ ui_tab <- function(
   name,
   label = NULL,
   icon = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(icon, 'character')) { stop("icon: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(icon)) {
+    if(!is(icon, "character")) {
+      stop("icon: expected character")
+    }
+  }
   .o <- list(
     name=name,
     label=label,
@@ -1157,9 +1753,17 @@ ui_tabs <- function(
   name,
   value = NULL,
   items = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  # TODO Validate items
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  # TODO Validate items: repeated Tab
   .o <- list(tabs=list(
     name=name,
     value=value,
@@ -1182,10 +1786,22 @@ ui_expander <- function(
   label = NULL,
   expanded = NULL,
   items = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(expanded, 'logical')) { stop("expanded: expected logical") }
-  # TODO Validate items
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(expanded)) {
+    if(!is(expanded, "logical")) {
+      stop("expanded: expected logical")
+    }
+  }
+  # TODO Validate items: repeated Component
   .o <- list(expander=list(
     name=name,
     label=label,
@@ -1207,10 +1823,26 @@ ui_frame <- function(
   content = NULL,
   width = NULL,
   height = NULL) {
-  if(!is(path, 'character')) { stop("path: expected character") }
-  if(!is(content, 'character')) { stop("content: expected character") }
-  if(!is(width, 'character')) { stop("width: expected character") }
-  if(!is(height, 'character')) { stop("height: expected character") }
+  if(!is.null(path)) {
+    if(!is(path, "character")) {
+      stop("path: expected character")
+    }
+  }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
+  if(!is.null(width)) {
+    if(!is(width, "character")) {
+      stop("width: expected character")
+    }
+  }
+  if(!is.null(height)) {
+    if(!is(height, "character")) {
+      stop("height: expected character")
+    }
+  }
   .o <- list(frame=list(
     path=path,
     content=content,
@@ -1240,13 +1872,37 @@ ui_picker <- function(
   max_choices = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  # TODO Validate choices
-  if(!is(label, 'character')) { stop("label: expected character") }
-  # TODO Validate values
-  if(!is(max_choices, 'numeric')) { stop("max_choices: expected numeric") }
-  if(!is(disabled, 'logical')) { stop("disabled: expected logical") }
-  if(!is(tooltip, 'character')) { stop("tooltip: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  # TODO Validate choices: repeated Choice
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(values)) {
+    if(FALSE %in% unlist(lapply(values,function(x){ is(x, "character") }))) {
+       stop("values: expected list of character")
+    }
+  }
+  if(!is.null(max_choices)) {
+    if(!is(max_choices, "numeric")) {
+      stop("max_choices: expected numeric")
+    }
+  }
+  if(!is.null(disabled)) {
+    if(!is(disabled, "logical")) {
+      stop("disabled: expected logical")
+    }
+  }
+  if(!is.null(tooltip)) {
+    if(!is(tooltip, "character")) {
+      stop("tooltip: expected character")
+    }
+  }
   .o <- list(picker=list(
     name=name,
     choices=choices,
@@ -1398,9 +2054,13 @@ ui_form_card <- function(
   box,
   items,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  # TODO Validate items
-  # TODO Validate commands
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  # TODO Validate items: repeated Component
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     items=items,
@@ -1425,11 +2085,27 @@ ui_frame_card <- function(
   path = NULL,
   content = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(path, 'character')) { stop("path: expected character") }
-  if(!is(content, 'character')) { stop("content: expected character") }
-  # TODO Validate commands
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(path)) {
+    if(!is(path, "character")) {
+      stop("path: expected character")
+    }
+  }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1463,13 +2139,29 @@ ui_graphics_card <- function(
   width = NULL,
   height = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(view_box, 'character')) { stop("view_box: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(view_box)) {
+    if(!is(view_box, "character")) {
+      stop("view_box: expected character")
+    }
+  }
   # TODO Validate stage: Recs
   # TODO Validate scene: Data
-  if(!is(width, 'character')) { stop("width: expected character") }
-  if(!is(height, 'character')) { stop("height: expected character") }
-  # TODO Validate commands
+  if(!is.null(width)) {
+    if(!is(width, "character")) {
+      stop("width: expected character")
+    }
+  }
+  if(!is.null(height)) {
+    if(!is(height, "character")) {
+      stop("height: expected character")
+    }
+  }
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     view_box=view_box,
@@ -1496,11 +2188,19 @@ ui_grid_card <- function(
   cells,
   data,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
   # TODO Validate cells: Data
   # TODO Validate data: Data
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1529,12 +2229,32 @@ ui_header_card <- function(
   icon = NULL,
   icon_color = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(subtitle, 'character')) { stop("subtitle: expected character") }
-  if(!is(icon, 'character')) { stop("icon: expected character") }
-  if(!is(icon_color, 'character')) { stop("icon_color: expected character") }
-  # TODO Validate commands
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(subtitle)) {
+    if(!is(subtitle, "character")) {
+      stop("subtitle: expected character")
+    }
+  }
+  if(!is.null(icon)) {
+    if(!is(icon, "character")) {
+      stop("icon: expected character")
+    }
+  }
+  if(!is.null(icon_color)) {
+    if(!is(icon_color, "character")) {
+      stop("icon_color: expected character")
+    }
+  }
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1562,12 +2282,28 @@ ui_image_card <- function(
   image,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(type, 'character')) { stop("type: expected character") }
-  if(!is(image, 'character')) { stop("image: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(type)) {
+    if(!is(type, "character")) {
+      stop("type: expected character")
+    }
+  }
+  if(!is.null(image)) {
+    if(!is(image, "character")) {
+      stop("image: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1605,17 +2341,53 @@ ui_large_bar_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(caption, 'character')) { stop("caption: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
-  if(!is(value_caption, 'character')) { stop("value_caption: expected character") }
-  if(!is(aux_value_caption, 'character')) { stop("aux_value_caption: expected character") }
-  if(!is(progress, 'numeric')) { stop("progress: expected numeric") }
-  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(caption)) {
+    if(!is(caption, "character")) {
+      stop("caption: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(aux_value)) {
+    if(!is(aux_value, "character")) {
+      stop("aux_value: expected character")
+    }
+  }
+  if(!is.null(value_caption)) {
+    if(!is(value_caption, "character")) {
+      stop("value_caption: expected character")
+    }
+  }
+  if(!is.null(aux_value_caption)) {
+    if(!is(aux_value_caption, "character")) {
+      stop("aux_value_caption: expected character")
+    }
+  }
+  if(!is.null(progress)) {
+    if(!is(progress, "numeric")) {
+      stop("progress: expected numeric")
+    }
+  }
+  if(!is.null(plot_color)) {
+    if(!is(plot_color, "character")) {
+      stop("plot_color: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1650,13 +2422,33 @@ ui_large_stat_card <- function(
   caption,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
-  if(!is(caption, 'character')) { stop("caption: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(aux_value)) {
+    if(!is(aux_value, "character")) {
+      stop("aux_value: expected character")
+    }
+  }
+  if(!is.null(caption)) {
+    if(!is(caption, "character")) {
+      stop("caption: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1686,12 +2478,24 @@ ui_list_card <- function(
   item_props,
   data,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(item_view, 'character')) { stop("item_view: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(item_view)) {
+    if(!is(item_view, "character")) {
+      stop("item_view: expected character")
+    }
+  }
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1721,13 +2525,33 @@ ui_list_item1_card <- function(
   aux_value,
   data,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(caption, 'character')) { stop("caption: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(caption)) {
+    if(!is(caption, "character")) {
+      stop("caption: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(aux_value)) {
+    if(!is(aux_value, "character")) {
+      stop("aux_value: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1759,11 +2583,23 @@ ui_markdown_card <- function(
   content,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(content, 'character')) { stop("content: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1786,10 +2622,22 @@ ui_markup_card <- function(
   title,
   content,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(content, 'character')) { stop("content: expected character") }
-  # TODO Validate commands
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1816,11 +2664,27 @@ ui_meta_card <- function(
   refresh = NULL,
   notification = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(refresh, 'numeric')) { stop("refresh: expected numeric") }
-  if(!is(notification, 'character')) { stop("notification: expected character") }
-  # TODO Validate commands
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(refresh)) {
+    if(!is(refresh, "numeric")) {
+      stop("refresh: expected numeric")
+    }
+  }
+  if(!is.null(notification)) {
+    if(!is(notification, "character")) {
+      stop("notification: expected character")
+    }
+  }
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -1839,8 +2703,16 @@ ui_meta_card <- function(
 ui_nav_item <- function(
   name,
   label) {
-  if(!is(name, 'character')) { stop("name: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
+  if(!is.null(name)) {
+    if(!is(name, "character")) {
+      stop("name: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
   .o <- list(
     name=name,
     label=label)
@@ -1856,8 +2728,12 @@ ui_nav_item <- function(
 ui_nav_group <- function(
   label,
   items) {
-  if(!is(label, 'character')) { stop("label: expected character") }
-  # TODO Validate items
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  # TODO Validate items: repeated NavItem
   .o <- list(
     label=label,
     items=items)
@@ -1875,9 +2751,13 @@ ui_nav_card <- function(
   box,
   items,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  # TODO Validate items
-  # TODO Validate commands
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  # TODO Validate items: repeated NavGroup
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     items=items,
@@ -1898,10 +2778,18 @@ ui_pixel_art_card <- function(
   title,
   data,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2038,55 +2926,215 @@ ui_mark <- function(
   # TODO Validate x0: V
   # TODO Validate x1: V
   # TODO Validate x2: V
-  if(!is(x_min, 'numeric')) { stop("x_min: expected numeric") }
-  if(!is(x_max, 'numeric')) { stop("x_max: expected numeric") }
-  if(!is(x_nice, 'logical')) { stop("x_nice: expected logical") }
+  if(!is.null(x_min)) {
+    if(!is(x_min, "numeric")) {
+      stop("x_min: expected numeric")
+    }
+  }
+  if(!is.null(x_max)) {
+    if(!is(x_max, "numeric")) {
+      stop("x_max: expected numeric")
+    }
+  }
+  if(!is.null(x_nice)) {
+    if(!is(x_nice, "logical")) {
+      stop("x_nice: expected logical")
+    }
+  }
   # TODO Validate x_scale
-  if(!is(x_title, 'character')) { stop("x_title: expected character") }
+  if(!is.null(x_title)) {
+    if(!is(x_title, "character")) {
+      stop("x_title: expected character")
+    }
+  }
   # TODO Validate y: V
   # TODO Validate y0: V
   # TODO Validate y1: V
   # TODO Validate y2: V
-  if(!is(y_min, 'numeric')) { stop("y_min: expected numeric") }
-  if(!is(y_max, 'numeric')) { stop("y_max: expected numeric") }
-  if(!is(y_nice, 'logical')) { stop("y_nice: expected logical") }
+  if(!is.null(y_min)) {
+    if(!is(y_min, "numeric")) {
+      stop("y_min: expected numeric")
+    }
+  }
+  if(!is.null(y_max)) {
+    if(!is(y_max, "numeric")) {
+      stop("y_max: expected numeric")
+    }
+  }
+  if(!is.null(y_nice)) {
+    if(!is(y_nice, "logical")) {
+      stop("y_nice: expected logical")
+    }
+  }
   # TODO Validate y_scale
-  if(!is(y_title, 'character')) { stop("y_title: expected character") }
-  if(!is(color, 'character')) { stop("color: expected character") }
-  if(!is(color_range, 'character')) { stop("color_range: expected character") }
-  if(!is(shape, 'character')) { stop("shape: expected character") }
-  if(!is(shape_range, 'character')) { stop("shape_range: expected character") }
+  if(!is.null(y_title)) {
+    if(!is(y_title, "character")) {
+      stop("y_title: expected character")
+    }
+  }
+  if(!is.null(color)) {
+    if(!is(color, "character")) {
+      stop("color: expected character")
+    }
+  }
+  if(!is.null(color_range)) {
+    if(!is(color_range, "character")) {
+      stop("color_range: expected character")
+    }
+  }
+  if(!is.null(shape)) {
+    if(!is(shape, "character")) {
+      stop("shape: expected character")
+    }
+  }
+  if(!is.null(shape_range)) {
+    if(!is(shape_range, "character")) {
+      stop("shape_range: expected character")
+    }
+  }
   # TODO Validate size: V
-  if(!is(size_range, 'character')) { stop("size_range: expected character") }
-  if(!is(stack, 'character')) { stop("stack: expected character") }
-  if(!is(dodge, 'character')) { stop("dodge: expected character") }
+  if(!is.null(size_range)) {
+    if(!is(size_range, "character")) {
+      stop("size_range: expected character")
+    }
+  }
+  if(!is.null(stack)) {
+    if(!is(stack, "character")) {
+      stop("stack: expected character")
+    }
+  }
+  if(!is.null(dodge)) {
+    if(!is(dodge, "character")) {
+      stop("dodge: expected character")
+    }
+  }
   # TODO Validate curve
-  if(!is(fill_color, 'character')) { stop("fill_color: expected character") }
-  if(!is(fill_opacity, 'numeric')) { stop("fill_opacity: expected numeric") }
-  if(!is(stroke_color, 'character')) { stop("stroke_color: expected character") }
-  if(!is(stroke_opacity, 'numeric')) { stop("stroke_opacity: expected numeric") }
-  if(!is(stroke_size, 'numeric')) { stop("stroke_size: expected numeric") }
-  if(!is(stroke_dash, 'character')) { stop("stroke_dash: expected character") }
-  if(!is(label, 'character')) { stop("label: expected character") }
-  if(!is(label_offset, 'numeric')) { stop("label_offset: expected numeric") }
-  if(!is(label_offset_x, 'numeric')) { stop("label_offset_x: expected numeric") }
-  if(!is(label_offset_y, 'numeric')) { stop("label_offset_y: expected numeric") }
-  if(!is(label_rotation, 'character')) { stop("label_rotation: expected character") }
-  if(!is(label_position, 'character')) { stop("label_position: expected character") }
-  if(!is(label_overlap, 'character')) { stop("label_overlap: expected character") }
-  if(!is(label_fill_color, 'character')) { stop("label_fill_color: expected character") }
-  if(!is(label_fill_opacity, 'numeric')) { stop("label_fill_opacity: expected numeric") }
-  if(!is(label_stroke_color, 'character')) { stop("label_stroke_color: expected character") }
-  if(!is(label_stroke_opacity, 'numeric')) { stop("label_stroke_opacity: expected numeric") }
-  if(!is(label_stroke_size, 'numeric')) { stop("label_stroke_size: expected numeric") }
-  if(!is(label_font_size, 'numeric')) { stop("label_font_size: expected numeric") }
-  if(!is(label_font_weight, 'character')) { stop("label_font_weight: expected character") }
-  if(!is(label_line_height, 'numeric')) { stop("label_line_height: expected numeric") }
+  if(!is.null(fill_color)) {
+    if(!is(fill_color, "character")) {
+      stop("fill_color: expected character")
+    }
+  }
+  if(!is.null(fill_opacity)) {
+    if(!is(fill_opacity, "numeric")) {
+      stop("fill_opacity: expected numeric")
+    }
+  }
+  if(!is.null(stroke_color)) {
+    if(!is(stroke_color, "character")) {
+      stop("stroke_color: expected character")
+    }
+  }
+  if(!is.null(stroke_opacity)) {
+    if(!is(stroke_opacity, "numeric")) {
+      stop("stroke_opacity: expected numeric")
+    }
+  }
+  if(!is.null(stroke_size)) {
+    if(!is(stroke_size, "numeric")) {
+      stop("stroke_size: expected numeric")
+    }
+  }
+  if(!is.null(stroke_dash)) {
+    if(!is(stroke_dash, "character")) {
+      stop("stroke_dash: expected character")
+    }
+  }
+  if(!is.null(label)) {
+    if(!is(label, "character")) {
+      stop("label: expected character")
+    }
+  }
+  if(!is.null(label_offset)) {
+    if(!is(label_offset, "numeric")) {
+      stop("label_offset: expected numeric")
+    }
+  }
+  if(!is.null(label_offset_x)) {
+    if(!is(label_offset_x, "numeric")) {
+      stop("label_offset_x: expected numeric")
+    }
+  }
+  if(!is.null(label_offset_y)) {
+    if(!is(label_offset_y, "numeric")) {
+      stop("label_offset_y: expected numeric")
+    }
+  }
+  if(!is.null(label_rotation)) {
+    if(!is(label_rotation, "character")) {
+      stop("label_rotation: expected character")
+    }
+  }
+  if(!is.null(label_position)) {
+    if(!is(label_position, "character")) {
+      stop("label_position: expected character")
+    }
+  }
+  if(!is.null(label_overlap)) {
+    if(!is(label_overlap, "character")) {
+      stop("label_overlap: expected character")
+    }
+  }
+  if(!is.null(label_fill_color)) {
+    if(!is(label_fill_color, "character")) {
+      stop("label_fill_color: expected character")
+    }
+  }
+  if(!is.null(label_fill_opacity)) {
+    if(!is(label_fill_opacity, "numeric")) {
+      stop("label_fill_opacity: expected numeric")
+    }
+  }
+  if(!is.null(label_stroke_color)) {
+    if(!is(label_stroke_color, "character")) {
+      stop("label_stroke_color: expected character")
+    }
+  }
+  if(!is.null(label_stroke_opacity)) {
+    if(!is(label_stroke_opacity, "numeric")) {
+      stop("label_stroke_opacity: expected numeric")
+    }
+  }
+  if(!is.null(label_stroke_size)) {
+    if(!is(label_stroke_size, "numeric")) {
+      stop("label_stroke_size: expected numeric")
+    }
+  }
+  if(!is.null(label_font_size)) {
+    if(!is(label_font_size, "numeric")) {
+      stop("label_font_size: expected numeric")
+    }
+  }
+  if(!is.null(label_font_weight)) {
+    if(!is(label_font_weight, "character")) {
+      stop("label_font_weight: expected character")
+    }
+  }
+  if(!is.null(label_line_height)) {
+    if(!is(label_line_height, "numeric")) {
+      stop("label_line_height: expected numeric")
+    }
+  }
   # TODO Validate label_align
-  if(!is(ref_stroke_color, 'character')) { stop("ref_stroke_color: expected character") }
-  if(!is(ref_stroke_opacity, 'numeric')) { stop("ref_stroke_opacity: expected numeric") }
-  if(!is(ref_stroke_size, 'numeric')) { stop("ref_stroke_size: expected numeric") }
-  if(!is(ref_stroke_dash, 'character')) { stop("ref_stroke_dash: expected character") }
+  if(!is.null(ref_stroke_color)) {
+    if(!is(ref_stroke_color, "character")) {
+      stop("ref_stroke_color: expected character")
+    }
+  }
+  if(!is.null(ref_stroke_opacity)) {
+    if(!is(ref_stroke_opacity, "numeric")) {
+      stop("ref_stroke_opacity: expected numeric")
+    }
+  }
+  if(!is.null(ref_stroke_size)) {
+    if(!is(ref_stroke_size, "numeric")) {
+      stop("ref_stroke_size: expected numeric")
+    }
+  }
+  if(!is.null(ref_stroke_dash)) {
+    if(!is(ref_stroke_dash, "character")) {
+      stop("ref_stroke_dash: expected character")
+    }
+  }
   .o <- list(
     coord=coord,
     type=type,
@@ -2153,7 +3201,7 @@ ui_mark <- function(
 #' @return A Plot instance.
 ui_plot <- function(
   marks) {
-  # TODO Validate marks
+  # TODO Validate marks: repeated Mark
   .o <- list(
     marks=marks)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Plot"))
@@ -2174,11 +3222,19 @@ ui_plot_card <- function(
   data,
   plot,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
   # TODO Validate data: Rec
   # TODO Validate plot: Plot
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2204,11 +3260,19 @@ ui_repeat_card <- function(
   item_props,
   data,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(item_view, 'character')) { stop("item_view: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(item_view)) {
+    if(!is(item_view, "character")) {
+      stop("item_view: expected character")
+    }
+  }
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     item_view=item_view,
@@ -2249,18 +3313,46 @@ ui_small_series_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
   # TODO Validate plot_data: Data
-  if(!is(plot_value, 'character')) { stop("plot_value: expected character") }
-  if(!is(plot_zero_value, 'numeric')) { stop("plot_zero_value: expected numeric") }
-  if(!is(plot_category, 'character')) { stop("plot_category: expected character") }
+  if(!is.null(plot_value)) {
+    if(!is(plot_value, "character")) {
+      stop("plot_value: expected character")
+    }
+  }
+  if(!is.null(plot_zero_value)) {
+    if(!is(plot_zero_value, "numeric")) {
+      stop("plot_zero_value: expected numeric")
+    }
+  }
+  if(!is.null(plot_category)) {
+    if(!is(plot_category, "character")) {
+      stop("plot_category: expected character")
+    }
+  }
   # TODO Validate plot_type
   # TODO Validate plot_curve
-  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  if(!is.null(plot_color)) {
+    if(!is(plot_color, "character")) {
+      stop("plot_color: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2292,11 +3384,23 @@ ui_small_stat_card <- function(
   value,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2319,10 +3423,18 @@ ui_tab_card <- function(
   items,
   link = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  # TODO Validate items
-  if(!is(link, 'logical')) { stop("link: expected logical") }
-  # TODO Validate commands
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  # TODO Validate items: repeated Tab
+  if(!is.null(link)) {
+    if(!is(link, "logical")) {
+      stop("link: expected logical")
+    }
+  }
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     items=items,
@@ -2352,14 +3464,38 @@ ui_tall_gauge_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
-  if(!is(progress, 'numeric')) { stop("progress: expected numeric") }
-  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(aux_value)) {
+    if(!is(aux_value, "character")) {
+      stop("aux_value: expected character")
+    }
+  }
+  if(!is.null(progress)) {
+    if(!is(progress, "numeric")) {
+      stop("progress: expected numeric")
+    }
+  }
+  if(!is.null(plot_color)) {
+    if(!is(plot_color, "character")) {
+      stop("plot_color: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2405,19 +3541,51 @@ ui_tall_series_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(aux_value)) {
+    if(!is(aux_value, "character")) {
+      stop("aux_value: expected character")
+    }
+  }
   # TODO Validate plot_data: Data
-  if(!is(plot_value, 'character')) { stop("plot_value: expected character") }
-  if(!is(plot_zero_value, 'numeric')) { stop("plot_zero_value: expected numeric") }
-  if(!is(plot_category, 'character')) { stop("plot_category: expected character") }
+  if(!is.null(plot_value)) {
+    if(!is(plot_value, "character")) {
+      stop("plot_value: expected character")
+    }
+  }
+  if(!is.null(plot_zero_value)) {
+    if(!is(plot_zero_value, "numeric")) {
+      stop("plot_zero_value: expected numeric")
+    }
+  }
+  if(!is.null(plot_category)) {
+    if(!is(plot_category, "character")) {
+      stop("plot_category: expected character")
+    }
+  }
   # TODO Validate plot_type
   # TODO Validate plot_curve
-  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  if(!is.null(plot_color)) {
+    if(!is(plot_color, "character")) {
+      stop("plot_color: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2450,11 +3618,23 @@ ui_template_card <- function(
   content,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(content, 'character')) { stop("content: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(content)) {
+    if(!is(content, "character")) {
+      stop("content: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2479,11 +3659,15 @@ ui_toolbar_card <- function(
   secondary_items = NULL,
   overflow_items = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  # TODO Validate items
-  # TODO Validate secondary_items
-  # TODO Validate overflow_items
-  # TODO Validate commands
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  # TODO Validate items: repeated Command
+  # TODO Validate secondary_items: repeated Command
+  # TODO Validate overflow_items: repeated Command
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     items=items,
@@ -2508,11 +3692,23 @@ ui_vega_card <- function(
   specification,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(specification, 'character')) { stop("specification: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(specification)) {
+    if(!is(specification, "character")) {
+      stop("specification: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2543,14 +3739,38 @@ ui_wide_bar_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
-  if(!is(progress, 'numeric')) { stop("progress: expected numeric") }
-  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(aux_value)) {
+    if(!is(aux_value, "character")) {
+      stop("aux_value: expected character")
+    }
+  }
+  if(!is.null(progress)) {
+    if(!is(progress, "numeric")) {
+      stop("progress: expected numeric")
+    }
+  }
+  if(!is.null(plot_color)) {
+    if(!is(plot_color, "character")) {
+      stop("plot_color: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2584,14 +3804,38 @@ ui_wide_gauge_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
-  if(!is(progress, 'numeric')) { stop("progress: expected numeric") }
-  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(aux_value)) {
+    if(!is(aux_value, "character")) {
+      stop("aux_value: expected character")
+    }
+  }
+  if(!is.null(progress)) {
+    if(!is(progress, "numeric")) {
+      stop("progress: expected numeric")
+    }
+  }
+  if(!is.null(plot_color)) {
+    if(!is(plot_color, "character")) {
+      stop("plot_color: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,
@@ -2637,19 +3881,51 @@ ui_wide_series_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is(box, 'character')) { stop("box: expected character") }
-  if(!is(title, 'character')) { stop("title: expected character") }
-  if(!is(value, 'character')) { stop("value: expected character") }
-  if(!is(aux_value, 'character')) { stop("aux_value: expected character") }
+  if(!is.null(box)) {
+    if(!is(box, "character")) {
+      stop("box: expected character")
+    }
+  }
+  if(!is.null(title)) {
+    if(!is(title, "character")) {
+      stop("title: expected character")
+    }
+  }
+  if(!is.null(value)) {
+    if(!is(value, "character")) {
+      stop("value: expected character")
+    }
+  }
+  if(!is.null(aux_value)) {
+    if(!is(aux_value, "character")) {
+      stop("aux_value: expected character")
+    }
+  }
   # TODO Validate plot_data: Data
-  if(!is(plot_value, 'character')) { stop("plot_value: expected character") }
-  if(!is(plot_zero_value, 'numeric')) { stop("plot_zero_value: expected numeric") }
-  if(!is(plot_category, 'character')) { stop("plot_category: expected character") }
+  if(!is.null(plot_value)) {
+    if(!is(plot_value, "character")) {
+      stop("plot_value: expected character")
+    }
+  }
+  if(!is.null(plot_zero_value)) {
+    if(!is(plot_zero_value, "numeric")) {
+      stop("plot_zero_value: expected numeric")
+    }
+  }
+  if(!is.null(plot_category)) {
+    if(!is(plot_category, "character")) {
+      stop("plot_category: expected character")
+    }
+  }
   # TODO Validate plot_type
   # TODO Validate plot_curve
-  if(!is(plot_color, 'character')) { stop("plot_color: expected character") }
+  if(!is.null(plot_color)) {
+    if(!is(plot_color, "character")) {
+      stop("plot_color: expected character")
+    }
+  }
   # TODO Validate data: Rec
-  # TODO Validate commands
+  # TODO Validate commands: repeated Command
   .o <- list(
     box=box,
     title=title,

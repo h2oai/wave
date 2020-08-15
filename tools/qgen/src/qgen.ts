@@ -665,10 +665,32 @@ const
                 case 'I':
                 case 'U':
                 case 'B':
-                  p(`  if(!is(${m.name}, '${rTypeMappings[m.typeName]}')) { stop("${m.name}: expected ${rTypeMappings[m.typeName]}") }`)
+                  p(`  if(!is.null(${m.name})) {`)
+                  p(`    if(!is(${m.name}, "${rTypeMappings[m.typeName]}")) {`)
+                  p(`      stop("${m.name}: expected ${rTypeMappings[m.typeName]}")`)
+                  p(`    }`)
+                  p(`  }`)
                   break
                 default:
                   p(`  # TODO Validate ${m.name}: ${m.typeName}`)
+              }
+              break
+            case MemberT.Repeated:
+              switch (m.typeName) {
+                case 'S':
+                case 'S':
+                case 'F':
+                case 'I':
+                case 'U':
+                case 'B':
+                  p(`  if(!is.null(${m.name})) {`)
+                  p(`    if(FALSE %in% unlist(lapply(${m.name},function(x){ is(x, "${rTypeMappings[m.typeName]}") }))) {`)
+                  p(`       stop("${m.name}: expected list of ${rTypeMappings[m.typeName]}")`)
+                  p(`    }`)
+                  p(`  }`)
+                  break
+                default:
+                  p(`  # TODO Validate ${m.name}: repeated ${m.typeName}`)
               }
               break
             default:
