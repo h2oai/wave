@@ -4,6 +4,7 @@ numpy
 pandas
 bokeh
 matplotlib
+plotly
 altair
 vega-datasets
 h2o_q==0.1.4
