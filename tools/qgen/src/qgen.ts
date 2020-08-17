@@ -24,27 +24,32 @@ import * as fs from 'fs'
 import * as path from 'path'
 import ts from 'typescript'
 
-export interface Dict<T> { [key: string]: T } // generic object
+interface Dict<T> { [key: string]: T } // generic object
 const packedT = 'Packed' // name of marker parametric type to indicate if an attributed could be packed.
+type B = boolean
+// type U = number
+// type I = number
+// type F = number
+type S = string
 
 interface OneOf {
-  name: string
+  name: S
   type: Type
 }
 
 enum MemberT { Enum, Singular, Repeated }
 interface MemberBase {
-  readonly name: string
-  readonly comments: string[]
-  readonly isOptional: boolean
+  readonly name: S
+  readonly comments: S[]
+  readonly isOptional: B
 }
 interface EnumMember extends MemberBase {
   readonly t: MemberT.Enum
-  readonly values: string[]
+  readonly values: S[]
 }
 interface PackableMember extends MemberBase {
-  readonly typeName: string
-  readonly isPacked: boolean
+  readonly typeName: S
+  readonly isPacked: B
 }
 interface SingularMember extends PackableMember {
   readonly t: MemberT.Singular
@@ -54,12 +59,12 @@ interface RepeatedMember extends PackableMember {
 }
 type Member = EnumMember | SingularMember | RepeatedMember
 interface Type {
-  readonly name: string
-  readonly file: string
-  readonly comments: string[]
+  readonly name: S
+  readonly file: S
+  readonly comments: S[]
   readonly members: Member[]
-  readonly isRoot: boolean
-  readonly isUnion: boolean
+  readonly isRoot: B
+  readonly isUnion: B
   oneOf?: OneOf
 }
 interface Protocol {
@@ -67,7 +72,7 @@ interface Protocol {
   readonly types: Type[]
 }
 interface File {
-  readonly name: string
+  readonly name: S
   readonly types: Type[]
 }
 
@@ -75,7 +80,7 @@ enum Declaration { Forward, Declared }
 
 const codeGenErrorT = 'CodeGenError'
 class CodeGenError extends Error {
-  constructor(message: string) {
+  constructor(message: S) {
     super(message)
     this.name = codeGenErrorT
   }
@@ -84,9 +89,9 @@ class CodeGenError extends Error {
 let warnings = 0
 
 const
-  titlecase = (s: string) => s.replace(/_/g, ' ').replace(/\b./g, s => s.toUpperCase()).replace(/\s+/g, ''),
-  snakeCase = (s: string) => s.replace(/[A-Z]/g, s => '_' + s.toLowerCase()).substr(1),
-  warn = (s: string) => {
+  titlecase = (s: S) => s.replace(/_/g, ' ').replace(/\b./g, s => s.toUpperCase()).replace(/\s+/g, ''),
+  snakeCase = (s: S) => s.replace(/[A-Z]/g, s => '_' + s.toLowerCase()).substr(1),
+  warn = (s: S) => {
     console.warn(`Warning: ${s}`)
     warnings++
   },
@@ -94,12 +99,12 @@ const
   boxComment = 'A string indicating how to place this component on the page.',
   commandsComment = 'Contextual menu commands for this component.',
   noComment = 'No documentation available.',
-  toLookup = (xs: string[]): Dict<boolean> => {
-    const d: Dict<boolean> = {}
+  toLookup = (xs: S[]): Dict<B> => {
+    const d: Dict<B> = {}
     for (const x of xs) d[x] = true
     return d
   },
-  collectSingularType = (type: ts.TypeNode): string | null => {
+  collectSingularType = (type: ts.TypeNode): S | null => {
     if (type.kind === ts.SyntaxKind.TypeReference) {
       const t = type as ts.TypeReferenceNode
       return t.typeName.getText()
@@ -115,7 +120,7 @@ const
     }
     return null
   },
-  collectRepeatedType = (type: ts.TypeNode): string | null => {
+  collectRepeatedType = (type: ts.TypeNode): S | null => {
     if (type.kind === ts.SyntaxKind.ArrayType) {
       const
         t = type as ts.ArrayTypeNode,
@@ -124,11 +129,11 @@ const
     }
     return null
   },
-  collectEnumType = (type: ts.TypeNode): string[] | null => {
+  collectEnumType = (type: ts.TypeNode): S[] | null => {
     if (type.kind === ts.SyntaxKind.UnionType) {
       const
         t = type as ts.UnionTypeNode,
-        values = t.types.map((t): string => {
+        values = t.types.map((t): S => {
           switch (t.kind) {
             case ts.SyntaxKind.LiteralType:
               {
@@ -149,11 +154,11 @@ const
     for (const xs of xss) ys.push(...xs)
     return ys
   },
-  collectComments = (node: any): string[] => {
-    const comments: string[] = ((node as any).jsDoc?.map((c: any) => c?.comment) || []) // FIXME Undocumented API
+  collectComments = (node: any): S[] => {
+    const comments: S[] = ((node as any).jsDoc?.map((c: any) => c?.comment) || []) // FIXME Undocumented API
     return flatten(comments.filter(c => !!c).map(c => c.split(/\n/g).map(c => c.trim())))
   },
-  collectMember = (component: string, typename: string, member: ts.TypeElement): Member => {
+  collectMember = (component: S, typename: S, member: ts.TypeElement): Member => {
     if (member.kind === ts.SyntaxKind.PropertySignature) {
       const
         m = member as ts.PropertySignature,
@@ -171,7 +176,7 @@ const
         comments.push(noComment)
       }
 
-      let tt: string | null = null
+      let tt: S | null = null
       const pt = collectPackedType(memberType)
       if (pt) {
         tt = collectRepeatedType(pt)
@@ -200,7 +205,7 @@ const
     }
     throw new CodeGenError(`unsupported member kind on ${component}.${typename}`)
   },
-  collectTypes = (component: string, file: File, sourceFile: ts.SourceFile) => {
+  collectTypes = (component: S, file: File, sourceFile: ts.SourceFile) => {
     ts.forEachChild(sourceFile, (node) => {
       switch (node.kind) {
         case ts.SyntaxKind.InterfaceDeclaration:
@@ -228,7 +233,7 @@ const
       }
     })
   },
-  processFile = (files: File[], filepath: string) => {
+  processFile = (files: File[], filepath: S) => {
     console.log(`Parsing ${filepath}`)
     const
       component = path.parse(filepath).name,
@@ -242,7 +247,7 @@ const
     collectTypes(component, file, sourceFile)
     files.push(file)
   },
-  processDir = (files: File[], dirpath: string) => {
+  processDir = (files: File[], dirpath: S) => {
     const
       ignored = toLookup(fs.readFileSync(path.join(dirpath, '.qgen'), 'utf8').split('\n').map(x => x.trim())),
       filenames = fs.readdirSync(dirpath)
@@ -252,7 +257,7 @@ const
       if (fs.statSync(filepath).isFile()) processFile(files, filepath)
     }
   },
-  pyTypeMappings: Dict<string> = {
+  pyTypeMappings: Dict<S> = {
     S: 'str',
     F: 'float',
     I: 'int',
@@ -263,13 +268,13 @@ const
     Recs: 'PackedRecords',
     Data: 'PackedData',
   },
-  tranlateToPy = (protocol: Protocol): [string, string] => {
+  tranlateToPy = (protocol: Protocol): [S, S] => {
     const
-      lines: string[] = [],
-      p = (line: string) => lines.push(line),
-      flush = (): string => { const s = lines.join('\n'); lines.length = 0; return s },
+      lines: S[] = [],
+      p = (line: S) => lines.push(line),
+      flush = (): S => { const s = lines.join('\n'); lines.length = 0; return s },
       classes: Dict<Declaration> = {},
-      apis: Dict<boolean> = {},
+      apis: Dict<B> = {},
       knownTypes = ((): Dict<Type> => {
         const d: Dict<Type> = {}
         for (const type of protocol.types) {
@@ -277,17 +282,17 @@ const
         }
         return d
       })(),
-      maybeForwardDeclare = (t: string): string => {
+      maybeForwardDeclare = (t: S): S => {
         const d = classes[t]
         return d === Declaration.Forward ? `'${t}'` : t
       },
-      mapType = (t: string): string => {
+      mapType = (t: S): S => {
         const pt = pyTypeMappings[t]
         if (pt) return pt
         if (knownTypes[t]) return maybeForwardDeclare(t)
         throw new CodeGenError(`cannot map type ${t} to Python`)
       },
-      genType = (m: Member): string => {
+      genType = (m: Member): S => {
         switch (m.t) {
           case MemberT.Enum:
             return 'str'
@@ -297,18 +302,18 @@ const
             return `List[${mapType(m.typeName)}]`
         }
       },
-      genPackedType = (m: Member): string => {
+      genPackedType = (m: Member): S => {
         if ((m.t === MemberT.Repeated || m.t === MemberT.Singular) && m.isPacked) {
           return `Union[${genType(m)}, str]`
         }
         return genType(m)
       },
-      genOptType = (m: Member): string => {
+      genOptType = (m: Member): S => {
         const t = genPackedType(m)
         return m.isOptional ? `Optional[${t}]` : t
       },
-      genSig = (m: Member): string => `${m.name}: ${genOptType(m)}`,
-      getSigWithDefault = (m: Member): string => genSig(m) + (m.isOptional ? ' = None' : ''),
+      genSig = (m: Member): S => `${m.name}: ${genOptType(m)}`,
+      getSigWithDefault = (m: Member): S => genSig(m) + (m.isOptional ? ' = None' : ''),
       getKnownTypeOf = (m: Member): Type | null => {
         switch (m.t) {
           case MemberT.Singular: return knownTypes[m.typeName] || null
@@ -316,7 +321,7 @@ const
         }
         return null
       },
-      genComments = (comments: string[], padding: string): string => {
+      genComments = (comments: S[], padding: S): S => {
         return comments.map(c => (padding + c).trimRight()).join('\n').trim()
       },
       genClass = (type: Type) => {
@@ -415,7 +420,7 @@ const
 
         classes[type.name] = Declaration.Declared
       },
-      genClasses = (): string => {
+      genClasses = (): S => {
         p('#')
         p('# THIS FILE IS GENERATED; DO NOT EDIT')
         p('#')
@@ -482,7 +487,7 @@ const
         p('')
 
       },
-      genAPIs = (): string => {
+      genAPIs = (): S => {
         p('#')
         p('# THIS FILE IS GENERATED; DO NOT EDIT')
         p('#')
@@ -498,7 +503,7 @@ const
       }
     return [genClasses(), genAPIs()]
   },
-  rTypeMappings: Dict<string> = {
+  rTypeMappings: Dict<S> = {
     S: 'character',
     F: 'numeric',
     I: 'numeric',
@@ -509,13 +514,13 @@ const
     Recs: 'PackedRecords', // XXX
     Data: 'PackedData', // XXX
   },
-  translateToR = (protocol: Protocol): string => {
+  translateToR = (protocol: Protocol): S => {
     const
-      lines: string[] = [],
-      p = (line: string) => lines.push(line),
-      flush = (): string => { const s = lines.join('\n'); lines.length = 0; return s },
+      lines: S[] = [],
+      p = (line: S) => lines.push(line),
+      flush = (): S => { const s = lines.join('\n'); lines.length = 0; return s },
       classes: Dict<Declaration> = {},
-      apis: Dict<boolean> = {},
+      apis: Dict<B> = {},
       knownTypes = ((): Dict<Type> => {
         const d: Dict<Type> = {}
         for (const type of protocol.types) {
@@ -523,8 +528,13 @@ const
         }
         return d
       })(),
-      genSig = (m: Member): string => m.name,
-      getSigWithDefault = (m: Member): string => genSig(m) + (m.isOptional ? ' = NULL' : ''),
+      mapType = (t: S): S => {
+        const pt = rTypeMappings[t]
+        if (pt) return pt
+        throw new CodeGenError(`cannot map type ${t} to R`)
+      },
+      genSig = (m: Member): S => m.name,
+      getSigWithDefault = (m: Member): S => genSig(m) + (m.isOptional ? ' = NULL' : ''),
       getKnownTypeOf = (m: Member): Type | null => {
         switch (m.t) {
           case MemberT.Singular: return knownTypes[m.typeName] || null
@@ -532,7 +542,7 @@ const
         }
         return null
       },
-      genComments = (comments: string[]): string => {
+      genComments = (comments: S[]): S => {
         return comments.map(c => "#' " + c.trimRight()).join('\n').trim()
       },
       genClass = (type: Type) => {
@@ -631,9 +641,20 @@ const
 
         classes[type.name] = Declaration.Declared
       },
-      layoutParams = (xs: string[], pad: string) => {
+      layoutParams = (xs: S[], pad: S) => {
         const lines = pad + xs.join(',\n' + pad)
         return '\n' + lines
+      },
+      genClassName = (t: S) => `h2oq_${t}`,
+      genParamValidation = (t: S, rt: S) => {
+        p(`  if(!is.null(${t}) && !is(${t}, "${rt}")) {`)
+        p(`    stop("${t}: expected ${rt}")`)
+        p(`  }`)
+      },
+      genRepeatedParamValidation = (t: S, rt: S) => {
+        p(`  if(!is.null(${t}) && (FALSE %in% unlist(lapply(${t},function(x){ is(x, "${rt}") })))) {`)
+        p(`    stop("${t}: expected list of ${rt}")`)
+        p(`  }`)
       },
       genFunc = (type: Type) => {
         if (apis[type.name]) return
@@ -665,32 +686,35 @@ const
                 case 'I':
                 case 'U':
                 case 'B':
-                  p(`  if(!is.null(${m.name})) {`)
-                  p(`    if(!is(${m.name}, "${rTypeMappings[m.typeName]}")) {`)
-                  p(`      stop("${m.name}: expected ${rTypeMappings[m.typeName]}")`)
-                  p(`    }`)
-                  p(`  }`)
+                  genParamValidation(m.name, mapType(m.typeName))
+                  break
+                case 'V':
+                case 'Rec':
+                case 'Recs':
+                case 'Data':
+                  p(`  # TODO Validate ${m.name}: ${m.typeName}`)
                   break
                 default:
-                  p(`  # TODO Validate ${m.name}: ${m.typeName}`)
+                  genParamValidation(m.name, genClassName(m.typeName))
               }
               break
             case MemberT.Repeated:
               switch (m.typeName) {
                 case 'S':
-                case 'S':
                 case 'F':
                 case 'I':
                 case 'U':
                 case 'B':
-                  p(`  if(!is.null(${m.name})) {`)
-                  p(`    if(FALSE %in% unlist(lapply(${m.name},function(x){ is(x, "${rTypeMappings[m.typeName]}") }))) {`)
-                  p(`       stop("${m.name}: expected list of ${rTypeMappings[m.typeName]}")`)
-                  p(`    }`)
-                  p(`  }`)
+                  genRepeatedParamValidation(m.name, mapType(m.typeName))
+                  break
+                case 'V':
+                case 'Rec':
+                case 'Recs':
+                case 'Data':
+                  p(`  # TODO Validate ${m.name}: repeated ${m.typeName}`)
                   break
                 default:
-                  p(`  # TODO Validate ${m.name}: repeated ${m.typeName}`)
+                  genRepeatedParamValidation(m.name, genClassName(m.typeName))
               }
               break
             default:
@@ -703,12 +727,11 @@ const
           p(`  .o <- list(${layoutParams(assigns, '    ')})`)
         }
         const typeName = type.oneOf ? type.oneOf.type.name : type.name
-        p(`  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_${typeName}"))`)
+        p(`  class(.o) <- append(class(.o), c(.h2oq_obj, "${genClassName(typeName)}"))`)
         p('  return(.o)')
         p('}')
-
       },
-      genFuncs = (): string => {
+      genFuncs = (): S => {
         p('#')
         p('# THIS FILE IS GENERATED; DO NOT EDIT')
         p('#')
@@ -782,16 +805,16 @@ const
     }
     return [protocol.types.length, n]
   },
-  generatePy = (protocol: Protocol, outDir: string) => {
+  generatePy = (protocol: Protocol, outDir: S) => {
     const [classes, api] = tranlateToPy(protocol)
     fs.writeFileSync(path.join(outDir, 'types.py'), classes, 'utf8')
     fs.writeFileSync(path.join(outDir, 'ui.py'), api, 'utf8')
   },
-  generateR = (protocol: Protocol, outDir: string) => {
+  generateR = (protocol: Protocol, outDir: S) => {
     const api = translateToR(protocol)
     fs.writeFileSync(path.join(outDir, 'ui.R'), api, 'utf8')
   },
-  main = (typescriptSrcDir: string, pyOutDir: string, rOutDir: string) => {
+  main = (typescriptSrcDir: S, pyOutDir: S, rOutDir: S) => {
     const files: File[] = []
     processDir(files, typescriptSrcDir)
     // console.log(JSON.stringify(protocol, null, 2))
