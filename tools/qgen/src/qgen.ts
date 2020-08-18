@@ -646,16 +646,8 @@ const
         return '\n' + lines
       },
       genClassName = (t: S) => `h2oq_${t}`,
-      genParamValidation = (t: S, rt: S) => {
-        p(`  if(!is.null(${t}) && !is(${t}, "${rt}")) {`)
-        p(`    stop("${t}: expected ${rt}")`)
-        p(`  }`)
-      },
-      genRepeatedParamValidation = (t: S, rt: S) => {
-        p(`  if(!is.null(${t}) && (FALSE %in% unlist(lapply(${t},function(x){ is(x, "${rt}") })))) {`)
-        p(`    stop("${t}: expected list of ${rt}")`)
-        p(`  }`)
-      },
+      genParamValidation = (n: S, t: S) => p(`  .guard_scalar("${n}", "${t}", ${n})`),
+      genRepeatedParamValidation = (n: S, t: S) => p(`  .guard_vector("${n}", "${t}", ${n})`),
       genFunc = (type: Type) => {
         if (apis[type.name]) return
         apis[type.name] = true
@@ -741,6 +733,17 @@ const
         p(`  jsonlite::toJSON(x, auto_unbox = TRUE)`)
         p(`}`)
         p(``)
+        p(`.guard_scalar <- function(n, t, x) {`)
+        p(`  if(!is.null(x) && !is(x, t)) {`)
+        p(`    stop(sprintf("%s: expected %s", n, t))`)
+        p(`  }`)
+        p(`}`)
+        p(``)
+        p(`.guard_vector <- function(n, t, xs) {`)
+        p(`  if(!is.null(xs) && (FALSE %in% unlist(lapply(xs, function(x){ is(x, t) })))) {`)
+        p(`    stop(sprintf("%s: expected list of %s", n, t))`)
+        p(`  }`)
+        p(`}`)
         p(`.h2oq_obj <- "h2oq_Object"`)
         p(``)
         p(`dump_object <- function(x) {`)

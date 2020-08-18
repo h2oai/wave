@@ -7,6 +7,17 @@
   jsonlite::toJSON(x, auto_unbox = TRUE)
 }
 
+.guard_scalar <- function(n, t, x) {
+  if(!is.null(x) && !is(x, t)) {
+    stop(sprintf("%s: expected %s", n, t))
+  }
+}
+
+.guard_vector <- function(n, t, xs) {
+  if(!is.null(xs) && (FALSE %in% unlist(lapply(xs, function(x){ is(x, t) })))) {
+    stop(sprintf("%s: expected list of %s", n, t))
+  }
+}
 .h2oq_obj <- "h2oq_Object"
 
 dump_object <- function(x) {
@@ -26,12 +37,8 @@ dump_object <- function(x) {
 ui_breadcrumb <- function(
   name,
   label) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
   .o <- list(
     name=name,
     label=label)
@@ -57,24 +64,12 @@ ui_command <- function(
   icon = NULL,
   items = NULL,
   data = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(caption) && !is(caption, "character")) {
-    stop("caption: expected character")
-  }
-  if(!is.null(icon) && !is(icon, "character")) {
-    stop("icon: expected character")
-  }
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_Command") })))) {
-    stop("items: expected list of h2oq_Command")
-  }
-  if(!is.null(data) && !is(data, "character")) {
-    stop("data: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("icon", "character", icon)
+  .guard_vector("items", "h2oq_Command", items)
+  .guard_scalar("data", "character", data)
   .o <- list(
     name=name,
     label=label,
@@ -102,15 +97,9 @@ ui_breadcrumbs_card <- function(
   box,
   items,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_Breadcrumb") })))) {
-    stop("items: expected list of h2oq_Breadcrumb")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "h2oq_Breadcrumb", items)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
@@ -146,21 +135,15 @@ ui_flex_card <- function(
   align = NULL,
   wrap = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(item_view) && !is(item_view, "character")) {
-    stop("item_view: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("item_view", "character", item_view)
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
   # TODO Validate direction
   # TODO Validate justify
   # TODO Validate align
   # TODO Validate wrap
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     item_view=item_view,
@@ -186,13 +169,9 @@ ui_text <- function(
   content,
   size = NULL,
   tooltip = NULL) {
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
+  .guard_scalar("content", "character", content)
   # TODO Validate size
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(text=list(
     content=content,
     size=size,
@@ -209,12 +188,8 @@ ui_text <- function(
 ui_text_xl <- function(
   content,
   tooltip = NULL) {
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("content", "character", content)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(text_xl=list(
     content=content,
     tooltip=tooltip))
@@ -230,12 +205,8 @@ ui_text_xl <- function(
 ui_text_l <- function(
   content,
   tooltip = NULL) {
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("content", "character", content)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(text_l=list(
     content=content,
     tooltip=tooltip))
@@ -251,12 +222,8 @@ ui_text_l <- function(
 ui_text_m <- function(
   content,
   tooltip = NULL) {
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("content", "character", content)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(text_m=list(
     content=content,
     tooltip=tooltip))
@@ -272,12 +239,8 @@ ui_text_m <- function(
 ui_text_s <- function(
   content,
   tooltip = NULL) {
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("content", "character", content)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(text_s=list(
     content=content,
     tooltip=tooltip))
@@ -293,12 +256,8 @@ ui_text_s <- function(
 ui_text_xs <- function(
   content,
   tooltip = NULL) {
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("content", "character", content)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(text_xs=list(
     content=content,
     tooltip=tooltip))
@@ -324,18 +283,10 @@ ui_label <- function(
   required = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(required) && !is(required, "logical")) {
-    stop("required: expected logical")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("label", "character", label)
+  .guard_scalar("required", "logical", required)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(label=list(
     label=label,
     required=required,
@@ -353,9 +304,7 @@ ui_label <- function(
 #' @return A Separator instance.
 ui_separator <- function(
   label = NULL) {
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
+  .guard_scalar("label", "character", label)
   .o <- list(separator=list(
     label=label))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
@@ -392,18 +341,10 @@ ui_progress <- function(
   caption = NULL,
   value = NULL,
   tooltip = NULL) {
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(caption) && !is(caption, "character")) {
-    stop("caption: expected character")
-  }
-  if(!is.null(value) && !is(value, "numeric")) {
-    stop("value: expected numeric")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("label", "character", label)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("value", "numeric", value)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(progress=list(
     label=label,
     caption=caption,
@@ -427,9 +368,7 @@ ui_message_bar <- function(
   type = NULL,
   text = NULL) {
   # TODO Validate type
-  if(!is.null(text) && !is(text, "character")) {
-    stop("text: expected character")
-  }
+  .guard_scalar("text", "character", text)
   .o <- list(message_bar=list(
     type=type,
     text=text))
@@ -475,51 +414,21 @@ ui_textbox <- function(
   multiline = NULL,
   password = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(placeholder) && !is(placeholder, "character")) {
-    stop("placeholder: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(mask) && !is(mask, "character")) {
-    stop("mask: expected character")
-  }
-  if(!is.null(icon) && !is(icon, "character")) {
-    stop("icon: expected character")
-  }
-  if(!is.null(prefix) && !is(prefix, "character")) {
-    stop("prefix: expected character")
-  }
-  if(!is.null(suffix) && !is(suffix, "character")) {
-    stop("suffix: expected character")
-  }
-  if(!is.null(error) && !is(error, "character")) {
-    stop("error: expected character")
-  }
-  if(!is.null(required) && !is(required, "logical")) {
-    stop("required: expected logical")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(readonly) && !is(readonly, "logical")) {
-    stop("readonly: expected logical")
-  }
-  if(!is.null(multiline) && !is(multiline, "logical")) {
-    stop("multiline: expected logical")
-  }
-  if(!is.null(password) && !is(password, "logical")) {
-    stop("password: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("placeholder", "character", placeholder)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("mask", "character", mask)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("prefix", "character", prefix)
+  .guard_scalar("suffix", "character", suffix)
+  .guard_scalar("error", "character", error)
+  .guard_scalar("required", "logical", required)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("readonly", "logical", readonly)
+  .guard_scalar("multiline", "logical", multiline)
+  .guard_scalar("password", "logical", password)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(textbox=list(
     name=name,
     label=label,
@@ -571,27 +480,13 @@ ui_checkbox <- function(
   disabled = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(value) && !is(value, "logical")) {
-    stop("value: expected logical")
-  }
-  if(!is.null(indeterminate) && !is(indeterminate, "logical")) {
-    stop("indeterminate: expected logical")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(trigger) && !is(trigger, "logical")) {
-    stop("trigger: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("value", "logical", value)
+  .guard_scalar("indeterminate", "logical", indeterminate)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(checkbox=list(
     name=name,
     label=label,
@@ -627,24 +522,12 @@ ui_toggle <- function(
   disabled = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(value) && !is(value, "logical")) {
-    stop("value: expected logical")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(trigger) && !is(trigger, "logical")) {
-    stop("trigger: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("value", "logical", value)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(toggle=list(
     name=name,
     label=label,
@@ -666,15 +549,9 @@ ui_choice <- function(
   name,
   label = NULL,
   disabled = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("disabled", "logical", disabled)
   .o <- list(
     name=name,
     label=label,
@@ -710,27 +587,13 @@ ui_choice_group <- function(
   required = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(choices) && (FALSE %in% unlist(lapply(choices,function(x){ is(x, "h2oq_Choice") })))) {
-    stop("choices: expected list of h2oq_Choice")
-  }
-  if(!is.null(required) && !is(required, "logical")) {
-    stop("required: expected logical")
-  }
-  if(!is.null(trigger) && !is(trigger, "logical")) {
-    stop("trigger: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("value", "character", value)
+  .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_scalar("required", "logical", required)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(choice_group=list(
     name=name,
     label=label,
@@ -759,21 +622,11 @@ ui_checklist <- function(
   values = NULL,
   choices = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(values) && (FALSE %in% unlist(lapply(values,function(x){ is(x, "character") })))) {
-    stop("values: expected list of character")
-  }
-  if(!is.null(choices) && (FALSE %in% unlist(lapply(choices,function(x){ is(x, "h2oq_Choice") })))) {
-    stop("choices: expected list of h2oq_Choice")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_vector("values", "character", values)
+  .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(checklist=list(
     name=name,
     label=label,
@@ -818,36 +671,16 @@ ui_dropdown <- function(
   disabled = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(placeholder) && !is(placeholder, "character")) {
-    stop("placeholder: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(values) && (FALSE %in% unlist(lapply(values,function(x){ is(x, "character") })))) {
-    stop("values: expected list of character")
-  }
-  if(!is.null(choices) && (FALSE %in% unlist(lapply(choices,function(x){ is(x, "h2oq_Choice") })))) {
-    stop("choices: expected list of h2oq_Choice")
-  }
-  if(!is.null(required) && !is(required, "logical")) {
-    stop("required: expected logical")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(trigger) && !is(trigger, "logical")) {
-    stop("trigger: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("placeholder", "character", placeholder)
+  .guard_scalar("value", "character", value)
+  .guard_vector("values", "character", values)
+  .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_scalar("required", "logical", required)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(dropdown=list(
     name=name,
     label=label,
@@ -893,30 +726,14 @@ ui_combobox <- function(
   error = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(placeholder) && !is(placeholder, "character")) {
-    stop("placeholder: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(choices) && (FALSE %in% unlist(lapply(choices,function(x){ is(x, "character") })))) {
-    stop("choices: expected list of character")
-  }
-  if(!is.null(error) && !is(error, "character")) {
-    stop("error: expected character")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("placeholder", "character", placeholder)
+  .guard_scalar("value", "character", value)
+  .guard_vector("choices", "character", choices)
+  .guard_scalar("error", "character", error)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(combobox=list(
     name=name,
     label=label,
@@ -965,33 +782,15 @@ ui_slider <- function(
   disabled = NULL,
   trigger = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(min) && !is(min, "numeric")) {
-    stop("min: expected numeric")
-  }
-  if(!is.null(max) && !is(max, "numeric")) {
-    stop("max: expected numeric")
-  }
-  if(!is.null(step) && !is(step, "numeric")) {
-    stop("step: expected numeric")
-  }
-  if(!is.null(value) && !is(value, "numeric")) {
-    stop("value: expected numeric")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(trigger) && !is(trigger, "logical")) {
-    stop("trigger: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("min", "numeric", min)
+  .guard_scalar("max", "numeric", max)
+  .guard_scalar("step", "numeric", step)
+  .guard_scalar("value", "numeric", value)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(slider=list(
     name=name,
     label=label,
@@ -1029,30 +828,14 @@ ui_spinbox <- function(
   value = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(min) && !is(min, "numeric")) {
-    stop("min: expected numeric")
-  }
-  if(!is.null(max) && !is(max, "numeric")) {
-    stop("max: expected numeric")
-  }
-  if(!is.null(step) && !is(step, "numeric")) {
-    stop("step: expected numeric")
-  }
-  if(!is.null(value) && !is(value, "numeric")) {
-    stop("value: expected numeric")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("min", "numeric", min)
+  .guard_scalar("max", "numeric", max)
+  .guard_scalar("step", "numeric", step)
+  .guard_scalar("value", "numeric", value)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(spinbox=list(
     name=name,
     label=label,
@@ -1084,24 +867,12 @@ ui_date_picker <- function(
   value = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(placeholder) && !is(placeholder, "character")) {
-    stop("placeholder: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("placeholder", "character", placeholder)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(date_picker=list(
     name=name,
     label=label,
@@ -1130,21 +901,11 @@ ui_color_picker <- function(
   value = NULL,
   choices = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(choices) && (FALSE %in% unlist(lapply(choices,function(x){ is(x, "character") })))) {
-    stop("choices: expected list of character")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("value", "character", value)
+  .guard_vector("choices", "character", choices)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(color_picker=list(
     name=name,
     label=label,
@@ -1190,30 +951,14 @@ ui_button <- function(
   disabled = NULL,
   link = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(caption) && !is(caption, "character")) {
-    stop("caption: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(primary) && !is(primary, "logical")) {
-    stop("primary: expected logical")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(link) && !is(link, "logical")) {
-    stop("link: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("primary", "logical", primary)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("link", "logical", link)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(button=list(
     name=name,
     label=label,
@@ -1233,9 +978,7 @@ ui_button <- function(
 #' @return A Buttons instance.
 ui_buttons <- function(
   items) {
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_Component") })))) {
-    stop("items: expected list of h2oq_Component")
-  }
+  .guard_vector("items", "h2oq_Component", items)
   .o <- list(buttons=list(
     items=items))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
@@ -1261,27 +1004,13 @@ ui_file_upload <- function(
   max_file_size = NULL,
   max_size = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(multiple) && !is(multiple, "logical")) {
-    stop("multiple: expected logical")
-  }
-  if(!is.null(file_extensions) && (FALSE %in% unlist(lapply(file_extensions,function(x){ is(x, "character") })))) {
-    stop("file_extensions: expected list of character")
-  }
-  if(!is.null(max_file_size) && !is(max_file_size, "numeric")) {
-    stop("max_file_size: expected numeric")
-  }
-  if(!is.null(max_size) && !is(max_size, "numeric")) {
-    stop("max_size: expected numeric")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("multiple", "logical", multiple)
+  .guard_vector("file_extensions", "character", file_extensions)
+  .guard_scalar("max_file_size", "numeric", max_file_size)
+  .guard_scalar("max_size", "numeric", max_size)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(file_upload=list(
     name=name,
     label=label,
@@ -1302,12 +1031,8 @@ ui_file_upload <- function(
 ui_table_column <- function(
   name,
   label) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
   .o <- list(
     name=name,
     label=label)
@@ -1323,12 +1048,8 @@ ui_table_column <- function(
 ui_table_row <- function(
   name,
   cells) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(cells) && (FALSE %in% unlist(lapply(cells,function(x){ is(x, "character") })))) {
-    stop("cells: expected list of character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_vector("cells", "character", cells)
   .o <- list(
     name=name,
     cells=cells)
@@ -1364,21 +1085,11 @@ ui_table <- function(
   rows,
   multiple = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(columns) && (FALSE %in% unlist(lapply(columns,function(x){ is(x, "h2oq_TableColumn") })))) {
-    stop("columns: expected list of h2oq_TableColumn")
-  }
-  if(!is.null(rows) && (FALSE %in% unlist(lapply(rows,function(x){ is(x, "h2oq_TableRow") })))) {
-    stop("rows: expected list of h2oq_TableRow")
-  }
-  if(!is.null(multiple) && !is(multiple, "logical")) {
-    stop("multiple: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_vector("columns", "h2oq_TableColumn", columns)
+  .guard_vector("rows", "h2oq_TableRow", rows)
+  .guard_scalar("multiple", "logical", multiple)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(table=list(
     name=name,
     columns=columns,
@@ -1409,24 +1120,12 @@ ui_link <- function(
   download = NULL,
   button = NULL,
   tooltip = NULL) {
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(path) && !is(path, "character")) {
-    stop("path: expected character")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(download) && !is(download, "logical")) {
-    stop("download: expected logical")
-  }
-  if(!is.null(button) && !is(button, "logical")) {
-    stop("button: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("label", "character", label)
+  .guard_scalar("path", "character", path)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("download", "logical", download)
+  .guard_scalar("button", "logical", button)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(link=list(
     label=label,
     path=path,
@@ -1448,15 +1147,9 @@ ui_tab <- function(
   name,
   label = NULL,
   icon = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(icon) && !is(icon, "character")) {
-    stop("icon: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("icon", "character", icon)
   .o <- list(
     name=name,
     label=label,
@@ -1475,15 +1168,9 @@ ui_tabs <- function(
   name,
   value = NULL,
   items = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_Tab") })))) {
-    stop("items: expected list of h2oq_Tab")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("value", "character", value)
+  .guard_vector("items", "h2oq_Tab", items)
   .o <- list(tabs=list(
     name=name,
     value=value,
@@ -1506,18 +1193,10 @@ ui_expander <- function(
   label = NULL,
   expanded = NULL,
   items = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(expanded) && !is(expanded, "logical")) {
-    stop("expanded: expected logical")
-  }
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_Component") })))) {
-    stop("items: expected list of h2oq_Component")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("expanded", "logical", expanded)
+  .guard_vector("items", "h2oq_Component", items)
   .o <- list(expander=list(
     name=name,
     label=label,
@@ -1539,18 +1218,10 @@ ui_frame <- function(
   content = NULL,
   width = NULL,
   height = NULL) {
-  if(!is.null(path) && !is(path, "character")) {
-    stop("path: expected character")
-  }
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
-  if(!is.null(width) && !is(width, "character")) {
-    stop("width: expected character")
-  }
-  if(!is.null(height) && !is(height, "character")) {
-    stop("height: expected character")
-  }
+  .guard_scalar("path", "character", path)
+  .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("height", "character", height)
   .o <- list(frame=list(
     path=path,
     content=content,
@@ -1580,27 +1251,13 @@ ui_picker <- function(
   max_choices = NULL,
   disabled = NULL,
   tooltip = NULL) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(choices) && (FALSE %in% unlist(lapply(choices,function(x){ is(x, "h2oq_Choice") })))) {
-    stop("choices: expected list of h2oq_Choice")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(values) && (FALSE %in% unlist(lapply(values,function(x){ is(x, "character") })))) {
-    stop("values: expected list of character")
-  }
-  if(!is.null(max_choices) && !is(max_choices, "numeric")) {
-    stop("max_choices: expected numeric")
-  }
-  if(!is.null(disabled) && !is(disabled, "logical")) {
-    stop("disabled: expected logical")
-  }
-  if(!is.null(tooltip) && !is(tooltip, "character")) {
-    stop("tooltip: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_scalar("label", "character", label)
+  .guard_vector("values", "character", values)
+  .guard_scalar("max_choices", "numeric", max_choices)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("tooltip", "character", tooltip)
   .o <- list(picker=list(
     name=name,
     choices=choices,
@@ -1677,96 +1334,36 @@ ui_component <- function(
   expander = NULL,
   frame = NULL,
   picker = NULL) {
-  if(!is.null(text) && !is(text, "h2oq_Text")) {
-    stop("text: expected h2oq_Text")
-  }
-  if(!is.null(text_xl) && !is(text_xl, "h2oq_TextXl")) {
-    stop("text_xl: expected h2oq_TextXl")
-  }
-  if(!is.null(text_l) && !is(text_l, "h2oq_TextL")) {
-    stop("text_l: expected h2oq_TextL")
-  }
-  if(!is.null(text_m) && !is(text_m, "h2oq_TextM")) {
-    stop("text_m: expected h2oq_TextM")
-  }
-  if(!is.null(text_s) && !is(text_s, "h2oq_TextS")) {
-    stop("text_s: expected h2oq_TextS")
-  }
-  if(!is.null(text_xs) && !is(text_xs, "h2oq_TextXs")) {
-    stop("text_xs: expected h2oq_TextXs")
-  }
-  if(!is.null(label) && !is(label, "h2oq_Label")) {
-    stop("label: expected h2oq_Label")
-  }
-  if(!is.null(separator) && !is(separator, "h2oq_Separator")) {
-    stop("separator: expected h2oq_Separator")
-  }
-  if(!is.null(progress) && !is(progress, "h2oq_Progress")) {
-    stop("progress: expected h2oq_Progress")
-  }
-  if(!is.null(message_bar) && !is(message_bar, "h2oq_MessageBar")) {
-    stop("message_bar: expected h2oq_MessageBar")
-  }
-  if(!is.null(textbox) && !is(textbox, "h2oq_Textbox")) {
-    stop("textbox: expected h2oq_Textbox")
-  }
-  if(!is.null(checkbox) && !is(checkbox, "h2oq_Checkbox")) {
-    stop("checkbox: expected h2oq_Checkbox")
-  }
-  if(!is.null(toggle) && !is(toggle, "h2oq_Toggle")) {
-    stop("toggle: expected h2oq_Toggle")
-  }
-  if(!is.null(choice_group) && !is(choice_group, "h2oq_ChoiceGroup")) {
-    stop("choice_group: expected h2oq_ChoiceGroup")
-  }
-  if(!is.null(checklist) && !is(checklist, "h2oq_Checklist")) {
-    stop("checklist: expected h2oq_Checklist")
-  }
-  if(!is.null(dropdown) && !is(dropdown, "h2oq_Dropdown")) {
-    stop("dropdown: expected h2oq_Dropdown")
-  }
-  if(!is.null(combobox) && !is(combobox, "h2oq_Combobox")) {
-    stop("combobox: expected h2oq_Combobox")
-  }
-  if(!is.null(slider) && !is(slider, "h2oq_Slider")) {
-    stop("slider: expected h2oq_Slider")
-  }
-  if(!is.null(spinbox) && !is(spinbox, "h2oq_Spinbox")) {
-    stop("spinbox: expected h2oq_Spinbox")
-  }
-  if(!is.null(date_picker) && !is(date_picker, "h2oq_DatePicker")) {
-    stop("date_picker: expected h2oq_DatePicker")
-  }
-  if(!is.null(color_picker) && !is(color_picker, "h2oq_ColorPicker")) {
-    stop("color_picker: expected h2oq_ColorPicker")
-  }
-  if(!is.null(button) && !is(button, "h2oq_Button")) {
-    stop("button: expected h2oq_Button")
-  }
-  if(!is.null(buttons) && !is(buttons, "h2oq_Buttons")) {
-    stop("buttons: expected h2oq_Buttons")
-  }
-  if(!is.null(file_upload) && !is(file_upload, "h2oq_FileUpload")) {
-    stop("file_upload: expected h2oq_FileUpload")
-  }
-  if(!is.null(table) && !is(table, "h2oq_Table")) {
-    stop("table: expected h2oq_Table")
-  }
-  if(!is.null(link) && !is(link, "h2oq_Link")) {
-    stop("link: expected h2oq_Link")
-  }
-  if(!is.null(tabs) && !is(tabs, "h2oq_Tabs")) {
-    stop("tabs: expected h2oq_Tabs")
-  }
-  if(!is.null(expander) && !is(expander, "h2oq_Expander")) {
-    stop("expander: expected h2oq_Expander")
-  }
-  if(!is.null(frame) && !is(frame, "h2oq_Frame")) {
-    stop("frame: expected h2oq_Frame")
-  }
-  if(!is.null(picker) && !is(picker, "h2oq_Picker")) {
-    stop("picker: expected h2oq_Picker")
-  }
+  .guard_scalar("text", "h2oq_Text", text)
+  .guard_scalar("text_xl", "h2oq_TextXl", text_xl)
+  .guard_scalar("text_l", "h2oq_TextL", text_l)
+  .guard_scalar("text_m", "h2oq_TextM", text_m)
+  .guard_scalar("text_s", "h2oq_TextS", text_s)
+  .guard_scalar("text_xs", "h2oq_TextXs", text_xs)
+  .guard_scalar("label", "h2oq_Label", label)
+  .guard_scalar("separator", "h2oq_Separator", separator)
+  .guard_scalar("progress", "h2oq_Progress", progress)
+  .guard_scalar("message_bar", "h2oq_MessageBar", message_bar)
+  .guard_scalar("textbox", "h2oq_Textbox", textbox)
+  .guard_scalar("checkbox", "h2oq_Checkbox", checkbox)
+  .guard_scalar("toggle", "h2oq_Toggle", toggle)
+  .guard_scalar("choice_group", "h2oq_ChoiceGroup", choice_group)
+  .guard_scalar("checklist", "h2oq_Checklist", checklist)
+  .guard_scalar("dropdown", "h2oq_Dropdown", dropdown)
+  .guard_scalar("combobox", "h2oq_Combobox", combobox)
+  .guard_scalar("slider", "h2oq_Slider", slider)
+  .guard_scalar("spinbox", "h2oq_Spinbox", spinbox)
+  .guard_scalar("date_picker", "h2oq_DatePicker", date_picker)
+  .guard_scalar("color_picker", "h2oq_ColorPicker", color_picker)
+  .guard_scalar("button", "h2oq_Button", button)
+  .guard_scalar("buttons", "h2oq_Buttons", buttons)
+  .guard_scalar("file_upload", "h2oq_FileUpload", file_upload)
+  .guard_scalar("table", "h2oq_Table", table)
+  .guard_scalar("link", "h2oq_Link", link)
+  .guard_scalar("tabs", "h2oq_Tabs", tabs)
+  .guard_scalar("expander", "h2oq_Expander", expander)
+  .guard_scalar("frame", "h2oq_Frame", frame)
+  .guard_scalar("picker", "h2oq_Picker", picker)
   .o <- list(
     text=text,
     text_xl=text_xl,
@@ -1812,15 +1409,9 @@ ui_form_card <- function(
   box,
   items,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_Component") })))) {
-    stop("items: expected list of h2oq_Component")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "h2oq_Component", items)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
@@ -1845,21 +1436,11 @@ ui_frame_card <- function(
   path = NULL,
   content = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(path) && !is(path, "character")) {
-    stop("path: expected character")
-  }
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("path", "character", path)
+  .guard_scalar("content", "character", content)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -1893,23 +1474,13 @@ ui_graphics_card <- function(
   width = NULL,
   height = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(view_box) && !is(view_box, "character")) {
-    stop("view_box: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("view_box", "character", view_box)
   # TODO Validate stage: Recs
   # TODO Validate scene: Data
-  if(!is.null(width) && !is(width, "character")) {
-    stop("width: expected character")
-  }
-  if(!is.null(height) && !is(height, "character")) {
-    stop("height: expected character")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("width", "character", width)
+  .guard_scalar("height", "character", height)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     view_box=view_box,
@@ -1936,17 +1507,11 @@ ui_grid_card <- function(
   cells,
   data,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
   # TODO Validate cells: Data
   # TODO Validate data: Data
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -1975,24 +1540,12 @@ ui_header_card <- function(
   icon = NULL,
   icon_color = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(subtitle) && !is(subtitle, "character")) {
-    stop("subtitle: expected character")
-  }
-  if(!is.null(icon) && !is(icon, "character")) {
-    stop("icon: expected character")
-  }
-  if(!is.null(icon_color) && !is(icon_color, "character")) {
-    stop("icon_color: expected character")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("icon_color", "character", icon_color)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2020,22 +1573,12 @@ ui_image_card <- function(
   image,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(type) && !is(type, "character")) {
-    stop("type: expected character")
-  }
-  if(!is.null(image) && !is(image, "character")) {
-    stop("image: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("type", "character", type)
+  .guard_scalar("image", "character", image)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2073,37 +1616,17 @@ ui_large_bar_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(caption) && !is(caption, "character")) {
-    stop("caption: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(aux_value) && !is(aux_value, "character")) {
-    stop("aux_value: expected character")
-  }
-  if(!is.null(value_caption) && !is(value_caption, "character")) {
-    stop("value_caption: expected character")
-  }
-  if(!is.null(aux_value_caption) && !is(aux_value_caption, "character")) {
-    stop("aux_value_caption: expected character")
-  }
-  if(!is.null(progress) && !is(progress, "numeric")) {
-    stop("progress: expected numeric")
-  }
-  if(!is.null(plot_color) && !is(plot_color, "character")) {
-    stop("plot_color: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("value_caption", "character", value_caption)
+  .guard_scalar("aux_value_caption", "character", aux_value_caption)
+  .guard_scalar("progress", "numeric", progress)
+  .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2138,25 +1661,13 @@ ui_large_stat_card <- function(
   caption,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(aux_value) && !is(aux_value, "character")) {
-    stop("aux_value: expected character")
-  }
-  if(!is.null(caption) && !is(caption, "character")) {
-    stop("caption: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("caption", "character", caption)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2186,20 +1697,12 @@ ui_list_card <- function(
   item_props,
   data,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(item_view) && !is(item_view, "character")) {
-    stop("item_view: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("item_view", "character", item_view)
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2229,25 +1732,13 @@ ui_list_item1_card <- function(
   aux_value,
   data,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(caption) && !is(caption, "character")) {
-    stop("caption: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(aux_value) && !is(aux_value, "character")) {
-    stop("aux_value: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("aux_value", "character", aux_value)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2279,19 +1770,11 @@ ui_markdown_card <- function(
   content,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2314,18 +1797,10 @@ ui_markup_card <- function(
   title,
   content,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("content", "character", content)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2352,21 +1827,11 @@ ui_meta_card <- function(
   refresh = NULL,
   notification = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(refresh) && !is(refresh, "numeric")) {
-    stop("refresh: expected numeric")
-  }
-  if(!is.null(notification) && !is(notification, "character")) {
-    stop("notification: expected character")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("refresh", "numeric", refresh)
+  .guard_scalar("notification", "character", notification)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2385,12 +1850,8 @@ ui_meta_card <- function(
 ui_nav_item <- function(
   name,
   label) {
-  if(!is.null(name) && !is(name, "character")) {
-    stop("name: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
   .o <- list(
     name=name,
     label=label)
@@ -2406,12 +1867,8 @@ ui_nav_item <- function(
 ui_nav_group <- function(
   label,
   items) {
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_NavItem") })))) {
-    stop("items: expected list of h2oq_NavItem")
-  }
+  .guard_scalar("label", "character", label)
+  .guard_vector("items", "h2oq_NavItem", items)
   .o <- list(
     label=label,
     items=items)
@@ -2429,15 +1886,9 @@ ui_nav_card <- function(
   box,
   items,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_NavGroup") })))) {
-    stop("items: expected list of h2oq_NavGroup")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "h2oq_NavGroup", items)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
@@ -2458,16 +1909,10 @@ ui_pixel_art_card <- function(
   title,
   data,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2604,135 +2049,55 @@ ui_mark <- function(
   # TODO Validate x0: V
   # TODO Validate x1: V
   # TODO Validate x2: V
-  if(!is.null(x_min) && !is(x_min, "numeric")) {
-    stop("x_min: expected numeric")
-  }
-  if(!is.null(x_max) && !is(x_max, "numeric")) {
-    stop("x_max: expected numeric")
-  }
-  if(!is.null(x_nice) && !is(x_nice, "logical")) {
-    stop("x_nice: expected logical")
-  }
+  .guard_scalar("x_min", "numeric", x_min)
+  .guard_scalar("x_max", "numeric", x_max)
+  .guard_scalar("x_nice", "logical", x_nice)
   # TODO Validate x_scale
-  if(!is.null(x_title) && !is(x_title, "character")) {
-    stop("x_title: expected character")
-  }
+  .guard_scalar("x_title", "character", x_title)
   # TODO Validate y: V
   # TODO Validate y0: V
   # TODO Validate y1: V
   # TODO Validate y2: V
-  if(!is.null(y_min) && !is(y_min, "numeric")) {
-    stop("y_min: expected numeric")
-  }
-  if(!is.null(y_max) && !is(y_max, "numeric")) {
-    stop("y_max: expected numeric")
-  }
-  if(!is.null(y_nice) && !is(y_nice, "logical")) {
-    stop("y_nice: expected logical")
-  }
+  .guard_scalar("y_min", "numeric", y_min)
+  .guard_scalar("y_max", "numeric", y_max)
+  .guard_scalar("y_nice", "logical", y_nice)
   # TODO Validate y_scale
-  if(!is.null(y_title) && !is(y_title, "character")) {
-    stop("y_title: expected character")
-  }
-  if(!is.null(color) && !is(color, "character")) {
-    stop("color: expected character")
-  }
-  if(!is.null(color_range) && !is(color_range, "character")) {
-    stop("color_range: expected character")
-  }
-  if(!is.null(shape) && !is(shape, "character")) {
-    stop("shape: expected character")
-  }
-  if(!is.null(shape_range) && !is(shape_range, "character")) {
-    stop("shape_range: expected character")
-  }
+  .guard_scalar("y_title", "character", y_title)
+  .guard_scalar("color", "character", color)
+  .guard_scalar("color_range", "character", color_range)
+  .guard_scalar("shape", "character", shape)
+  .guard_scalar("shape_range", "character", shape_range)
   # TODO Validate size: V
-  if(!is.null(size_range) && !is(size_range, "character")) {
-    stop("size_range: expected character")
-  }
-  if(!is.null(stack) && !is(stack, "character")) {
-    stop("stack: expected character")
-  }
-  if(!is.null(dodge) && !is(dodge, "character")) {
-    stop("dodge: expected character")
-  }
+  .guard_scalar("size_range", "character", size_range)
+  .guard_scalar("stack", "character", stack)
+  .guard_scalar("dodge", "character", dodge)
   # TODO Validate curve
-  if(!is.null(fill_color) && !is(fill_color, "character")) {
-    stop("fill_color: expected character")
-  }
-  if(!is.null(fill_opacity) && !is(fill_opacity, "numeric")) {
-    stop("fill_opacity: expected numeric")
-  }
-  if(!is.null(stroke_color) && !is(stroke_color, "character")) {
-    stop("stroke_color: expected character")
-  }
-  if(!is.null(stroke_opacity) && !is(stroke_opacity, "numeric")) {
-    stop("stroke_opacity: expected numeric")
-  }
-  if(!is.null(stroke_size) && !is(stroke_size, "numeric")) {
-    stop("stroke_size: expected numeric")
-  }
-  if(!is.null(stroke_dash) && !is(stroke_dash, "character")) {
-    stop("stroke_dash: expected character")
-  }
-  if(!is.null(label) && !is(label, "character")) {
-    stop("label: expected character")
-  }
-  if(!is.null(label_offset) && !is(label_offset, "numeric")) {
-    stop("label_offset: expected numeric")
-  }
-  if(!is.null(label_offset_x) && !is(label_offset_x, "numeric")) {
-    stop("label_offset_x: expected numeric")
-  }
-  if(!is.null(label_offset_y) && !is(label_offset_y, "numeric")) {
-    stop("label_offset_y: expected numeric")
-  }
-  if(!is.null(label_rotation) && !is(label_rotation, "character")) {
-    stop("label_rotation: expected character")
-  }
-  if(!is.null(label_position) && !is(label_position, "character")) {
-    stop("label_position: expected character")
-  }
-  if(!is.null(label_overlap) && !is(label_overlap, "character")) {
-    stop("label_overlap: expected character")
-  }
-  if(!is.null(label_fill_color) && !is(label_fill_color, "character")) {
-    stop("label_fill_color: expected character")
-  }
-  if(!is.null(label_fill_opacity) && !is(label_fill_opacity, "numeric")) {
-    stop("label_fill_opacity: expected numeric")
-  }
-  if(!is.null(label_stroke_color) && !is(label_stroke_color, "character")) {
-    stop("label_stroke_color: expected character")
-  }
-  if(!is.null(label_stroke_opacity) && !is(label_stroke_opacity, "numeric")) {
-    stop("label_stroke_opacity: expected numeric")
-  }
-  if(!is.null(label_stroke_size) && !is(label_stroke_size, "numeric")) {
-    stop("label_stroke_size: expected numeric")
-  }
-  if(!is.null(label_font_size) && !is(label_font_size, "numeric")) {
-    stop("label_font_size: expected numeric")
-  }
-  if(!is.null(label_font_weight) && !is(label_font_weight, "character")) {
-    stop("label_font_weight: expected character")
-  }
-  if(!is.null(label_line_height) && !is(label_line_height, "numeric")) {
-    stop("label_line_height: expected numeric")
-  }
+  .guard_scalar("fill_color", "character", fill_color)
+  .guard_scalar("fill_opacity", "numeric", fill_opacity)
+  .guard_scalar("stroke_color", "character", stroke_color)
+  .guard_scalar("stroke_opacity", "numeric", stroke_opacity)
+  .guard_scalar("stroke_size", "numeric", stroke_size)
+  .guard_scalar("stroke_dash", "character", stroke_dash)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("label_offset", "numeric", label_offset)
+  .guard_scalar("label_offset_x", "numeric", label_offset_x)
+  .guard_scalar("label_offset_y", "numeric", label_offset_y)
+  .guard_scalar("label_rotation", "character", label_rotation)
+  .guard_scalar("label_position", "character", label_position)
+  .guard_scalar("label_overlap", "character", label_overlap)
+  .guard_scalar("label_fill_color", "character", label_fill_color)
+  .guard_scalar("label_fill_opacity", "numeric", label_fill_opacity)
+  .guard_scalar("label_stroke_color", "character", label_stroke_color)
+  .guard_scalar("label_stroke_opacity", "numeric", label_stroke_opacity)
+  .guard_scalar("label_stroke_size", "numeric", label_stroke_size)
+  .guard_scalar("label_font_size", "numeric", label_font_size)
+  .guard_scalar("label_font_weight", "character", label_font_weight)
+  .guard_scalar("label_line_height", "numeric", label_line_height)
   # TODO Validate label_align
-  if(!is.null(ref_stroke_color) && !is(ref_stroke_color, "character")) {
-    stop("ref_stroke_color: expected character")
-  }
-  if(!is.null(ref_stroke_opacity) && !is(ref_stroke_opacity, "numeric")) {
-    stop("ref_stroke_opacity: expected numeric")
-  }
-  if(!is.null(ref_stroke_size) && !is(ref_stroke_size, "numeric")) {
-    stop("ref_stroke_size: expected numeric")
-  }
-  if(!is.null(ref_stroke_dash) && !is(ref_stroke_dash, "character")) {
-    stop("ref_stroke_dash: expected character")
-  }
+  .guard_scalar("ref_stroke_color", "character", ref_stroke_color)
+  .guard_scalar("ref_stroke_opacity", "numeric", ref_stroke_opacity)
+  .guard_scalar("ref_stroke_size", "numeric", ref_stroke_size)
+  .guard_scalar("ref_stroke_dash", "character", ref_stroke_dash)
   .o <- list(
     coord=coord,
     type=type,
@@ -2799,9 +2164,7 @@ ui_mark <- function(
 #' @return A Plot instance.
 ui_plot <- function(
   marks) {
-  if(!is.null(marks) && (FALSE %in% unlist(lapply(marks,function(x){ is(x, "h2oq_Mark") })))) {
-    stop("marks: expected list of h2oq_Mark")
-  }
+  .guard_vector("marks", "h2oq_Mark", marks)
   .o <- list(
     marks=marks)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Plot"))
@@ -2822,19 +2185,11 @@ ui_plot_card <- function(
   data,
   plot,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
-  if(!is.null(plot) && !is(plot, "h2oq_Plot")) {
-    stop("plot: expected h2oq_Plot")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("plot", "h2oq_Plot", plot)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2860,17 +2215,11 @@ ui_repeat_card <- function(
   item_props,
   data,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(item_view) && !is(item_view, "character")) {
-    stop("item_view: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("item_view", "character", item_view)
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     item_view=item_view,
@@ -2911,34 +2260,18 @@ ui_small_series_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("value", "character", value)
   # TODO Validate plot_data: Data
-  if(!is.null(plot_value) && !is(plot_value, "character")) {
-    stop("plot_value: expected character")
-  }
-  if(!is.null(plot_zero_value) && !is(plot_zero_value, "numeric")) {
-    stop("plot_zero_value: expected numeric")
-  }
-  if(!is.null(plot_category) && !is(plot_category, "character")) {
-    stop("plot_category: expected character")
-  }
+  .guard_scalar("plot_value", "character", plot_value)
+  .guard_scalar("plot_zero_value", "numeric", plot_zero_value)
+  .guard_scalar("plot_category", "character", plot_category)
   # TODO Validate plot_type
   # TODO Validate plot_curve
-  if(!is.null(plot_color) && !is(plot_color, "character")) {
-    stop("plot_color: expected character")
-  }
+  .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2970,19 +2303,11 @@ ui_small_stat_card <- function(
   value,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("value", "character", value)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3005,18 +2330,10 @@ ui_tab_card <- function(
   items,
   link = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_Tab") })))) {
-    stop("items: expected list of h2oq_Tab")
-  }
-  if(!is.null(link) && !is(link, "logical")) {
-    stop("link: expected logical")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "h2oq_Tab", items)
+  .guard_scalar("link", "logical", link)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
@@ -3046,28 +2363,14 @@ ui_tall_gauge_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(aux_value) && !is(aux_value, "character")) {
-    stop("aux_value: expected character")
-  }
-  if(!is.null(progress) && !is(progress, "numeric")) {
-    stop("progress: expected numeric")
-  }
-  if(!is.null(plot_color) && !is(plot_color, "character")) {
-    stop("plot_color: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("progress", "numeric", progress)
+  .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3113,37 +2416,19 @@ ui_tall_series_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(aux_value) && !is(aux_value, "character")) {
-    stop("aux_value: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("aux_value", "character", aux_value)
   # TODO Validate plot_data: Data
-  if(!is.null(plot_value) && !is(plot_value, "character")) {
-    stop("plot_value: expected character")
-  }
-  if(!is.null(plot_zero_value) && !is(plot_zero_value, "numeric")) {
-    stop("plot_zero_value: expected numeric")
-  }
-  if(!is.null(plot_category) && !is(plot_category, "character")) {
-    stop("plot_category: expected character")
-  }
+  .guard_scalar("plot_value", "character", plot_value)
+  .guard_scalar("plot_zero_value", "numeric", plot_zero_value)
+  .guard_scalar("plot_category", "character", plot_category)
   # TODO Validate plot_type
   # TODO Validate plot_curve
-  if(!is.null(plot_color) && !is(plot_color, "character")) {
-    stop("plot_color: expected character")
-  }
+  .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3176,19 +2461,11 @@ ui_template_card <- function(
   content,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(content) && !is(content, "character")) {
-    stop("content: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3213,21 +2490,11 @@ ui_toolbar_card <- function(
   secondary_items = NULL,
   overflow_items = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(items) && (FALSE %in% unlist(lapply(items,function(x){ is(x, "h2oq_Command") })))) {
-    stop("items: expected list of h2oq_Command")
-  }
-  if(!is.null(secondary_items) && (FALSE %in% unlist(lapply(secondary_items,function(x){ is(x, "h2oq_Command") })))) {
-    stop("secondary_items: expected list of h2oq_Command")
-  }
-  if(!is.null(overflow_items) && (FALSE %in% unlist(lapply(overflow_items,function(x){ is(x, "h2oq_Command") })))) {
-    stop("overflow_items: expected list of h2oq_Command")
-  }
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "h2oq_Command", items)
+  .guard_vector("secondary_items", "h2oq_Command", secondary_items)
+  .guard_vector("overflow_items", "h2oq_Command", overflow_items)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
@@ -3252,19 +2519,11 @@ ui_vega_card <- function(
   specification,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(specification) && !is(specification, "character")) {
-    stop("specification: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("specification", "character", specification)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3295,28 +2554,14 @@ ui_wide_bar_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(aux_value) && !is(aux_value, "character")) {
-    stop("aux_value: expected character")
-  }
-  if(!is.null(progress) && !is(progress, "numeric")) {
-    stop("progress: expected numeric")
-  }
-  if(!is.null(plot_color) && !is(plot_color, "character")) {
-    stop("plot_color: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("progress", "numeric", progress)
+  .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3350,28 +2595,14 @@ ui_wide_gauge_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(aux_value) && !is(aux_value, "character")) {
-    stop("aux_value: expected character")
-  }
-  if(!is.null(progress) && !is(progress, "numeric")) {
-    stop("progress: expected numeric")
-  }
-  if(!is.null(plot_color) && !is(plot_color, "character")) {
-    stop("plot_color: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("progress", "numeric", progress)
+  .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3417,37 +2648,19 @@ ui_wide_series_stat_card <- function(
   plot_color = NULL,
   data = NULL,
   commands = NULL) {
-  if(!is.null(box) && !is(box, "character")) {
-    stop("box: expected character")
-  }
-  if(!is.null(title) && !is(title, "character")) {
-    stop("title: expected character")
-  }
-  if(!is.null(value) && !is(value, "character")) {
-    stop("value: expected character")
-  }
-  if(!is.null(aux_value) && !is(aux_value, "character")) {
-    stop("aux_value: expected character")
-  }
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("aux_value", "character", aux_value)
   # TODO Validate plot_data: Data
-  if(!is.null(plot_value) && !is(plot_value, "character")) {
-    stop("plot_value: expected character")
-  }
-  if(!is.null(plot_zero_value) && !is(plot_zero_value, "numeric")) {
-    stop("plot_zero_value: expected numeric")
-  }
-  if(!is.null(plot_category) && !is(plot_category, "character")) {
-    stop("plot_category: expected character")
-  }
+  .guard_scalar("plot_value", "character", plot_value)
+  .guard_scalar("plot_zero_value", "numeric", plot_zero_value)
+  .guard_scalar("plot_category", "character", plot_category)
   # TODO Validate plot_type
   # TODO Validate plot_curve
-  if(!is.null(plot_color) && !is(plot_color, "character")) {
-    stop("plot_color: expected character")
-  }
+  .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  if(!is.null(commands) && (FALSE %in% unlist(lapply(commands,function(x){ is(x, "h2oq_Command") })))) {
-    stop("commands: expected list of h2oq_Command")
-  }
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
