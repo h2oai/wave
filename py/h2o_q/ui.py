@@ -1852,8 +1852,8 @@ def mark(
         label_offset_x: Horizontal distance between label and mark.
         label_offset_y: Vertical distance between label and mark.
         label_rotation: Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
-        label_position: Label position relative to the mark.
-        label_overlap: Strategy to use if labels overlap.
+        label_position: Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'.
+        label_overlap: Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'.
         label_fill_color: Label fill color.
         label_fill_opacity: Label fill opacity.
         label_stroke_color: Label stroke color.

@@ -112,9 +112,9 @@ interface Mark {
   /** Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation. */
   label_rotation?: S
   /** Label position relative to the mark. */
-  label_position?: S  // 'top' | 'bottom' | 'middle' | 'left' | 'right';
+  label_position?: 'top' | 'bottom' | 'middle' | 'left' | 'right'
   /** Strategy to use if labels overlap. */
-  label_overlap?: S // 'hide' | 'overlap' | 'constrain'
+  label_overlap?: 'hide' | 'overlap' | 'constrain'
   /** Label fill color. */
   label_fill_color?: S
   /** Label fill opacity. */

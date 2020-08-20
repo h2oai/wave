@@ -3929,9 +3929,9 @@ class Mark:
         self.label_rotation = label_rotation
         """Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation."""
         self.label_position = label_position
-        """Label position relative to the mark."""
+        """Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'."""
         self.label_overlap = label_overlap
-        """Strategy to use if labels overlap."""
+        """Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'."""
         self.label_fill_color = label_fill_color
         """Label fill color."""
         self.label_fill_opacity = label_fill_opacity

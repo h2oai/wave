@@ -1971,7 +1971,9 @@ ui_pixel_art_card <- function(
 #' @param label_offset_y Vertical distance between label and mark.
 #' @param label_rotation Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
 #' @param label_position Label position relative to the mark.
+#'   One of 'top', 'bottom', 'middle', 'left', 'right'.
 #' @param label_overlap Strategy to use if labels overlap.
+#'   One of 'hide', 'overlap', 'constrain'.
 #' @param label_fill_color Label fill color.
 #' @param label_fill_opacity Label fill opacity.
 #' @param label_stroke_color Label stroke color.
@@ -2083,8 +2085,8 @@ ui_mark <- function(
   .guard_scalar("label_offset_x", "numeric", label_offset_x)
   .guard_scalar("label_offset_y", "numeric", label_offset_y)
   .guard_scalar("label_rotation", "character", label_rotation)
-  .guard_scalar("label_position", "character", label_position)
-  .guard_scalar("label_overlap", "character", label_overlap)
+  # TODO Validate label_position
+  # TODO Validate label_overlap
   .guard_scalar("label_fill_color", "character", label_fill_color)
   .guard_scalar("label_fill_opacity", "numeric", label_fill_opacity)
   .guard_scalar("label_stroke_color", "character", label_stroke_color)
