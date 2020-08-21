@@ -5,7 +5,7 @@
 - [Roadmap](https://github.com/h2oai/qd/wiki/Roadmap)
 - [Migration Guide](https://h2oai.github.io/qd/#migration-guide)
 - [Examples](https://h2oai.github.io/qd/#migration-guide)
-- [Report an issue](https://github.com/h2oai/q/issues)
+- [Report an issue](https://github.com/h2oai/qd/issues)
 
 ## Getting Started
 
