@@ -1,7 +1,9 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { Choice } from './choice_group';
-import { B, bond, S, qd } from './qd';
+import { B, bond, S, qd, box } from './qd';
+import { stylesheet } from 'typestyle';
+import { rem } from './theme';
 
 /**
  * Create a dropdown.
@@ -39,6 +41,14 @@ export interface Dropdown {
   tooltip?: S
 }
 
+
+const css = stylesheet({
+  links: {
+    paddingTop: 10,
+    fontSize: rem(0.8)
+  }
+})
+
 export const
   XDropdown = bond(({ model: m }: { model: Dropdown }) => {
     const isMultivalued = !!m.values
@@ -48,6 +58,7 @@ export const
 
     const
       selection = isMultivalued ? new Set<S>(m.values) : null,
+      selectedOptionsB = box(Array.from(selection || [])),
       options = (m.choices || []).map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
@@ -65,33 +76,48 @@ export const
         }
         if (m.trigger) qd.sync()
       },
-      render = () =>
-        isMultivalued
-          ? (
-            <Fluent.Dropdown
-              data-test={m.name}
-              label={m.label}
-              placeholder={m.placeholder}
-              options={options}
-              required={m.required}
-              disabled={m.disabled}
-              multiSelect
-              defaultSelectedKeys={m.values}
-              onChange={onChange}
-            />
-          )
-          : (
-            <Fluent.Dropdown
-              data-test={m.name}
-              label={m.label}
-              placeholder={m.placeholder}
-              options={options}
-              required={m.required}
-              disabled={m.disabled}
-              defaultSelectedKey={m.value}
-              onChange={onChange}
-            />
-          )
+      selectAll = () => {
+        if (!selection) return
 
-    return { render }
+        selection.clear()
+        options.forEach(o => { if (!o.disabled) selection.add(o.key as S) })
+
+        const selectionArr = Array.from(selection)
+        selectedOptionsB(selectionArr)
+        qd.args[m.name] = selectionArr
+
+        onChange()
+      },
+      deselectAll = () => {
+        if (!selection) return
+
+        selection.clear()
+        selectedOptionsB([])
+        qd.args[m.name] = []
+
+        onChange()
+      },
+      render = () =>
+        <>
+          {
+            isMultivalued &&
+            <div className={css.links}>
+              <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+            </div>
+          }
+          <Fluent.Dropdown
+            data-test={m.name}
+            label={m.label}
+            placeholder={m.placeholder}
+            options={options}
+            required={m.required}
+            disabled={m.disabled}
+            multiSelect={isMultivalued || undefined}
+            defaultSelectedKey={!isMultivalued ? m.value : undefined}
+            selectedKeys={isMultivalued ? selectedOptionsB() : undefined}
+            onChange={onChange}
+          />
+        </>
+
+    return { render, selectedOptionsB }
   })
