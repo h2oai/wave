@@ -11,6 +11,7 @@ describe('Textbox.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.useFakeTimers()
     T.qd.args[name] = null
   })
 
@@ -28,6 +29,7 @@ describe('Textbox.tsx', () => {
   it('Sets args on input', () => {
     const { getByTestId } = render(<XTextbox model={textboxProps} />)
     fireEvent.change(getByTestId(name), { target: { value: 'text' } })
+    jest.runOnlyPendingTimers()
 
     expect(T.qd.args[name]).toBe('text')
   })
@@ -53,6 +55,7 @@ describe('Textbox.tsx', () => {
     T.qd.sync = syncMock
 
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
+    jest.runOnlyPendingTimers()
 
     expect(syncMock).toBeCalled()
   })
