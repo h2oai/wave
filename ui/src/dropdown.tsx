@@ -58,7 +58,7 @@ export const
 
     const
       selection = isMultivalued ? new Set<S>(m.values) : null,
-      selectedOptionsB = box(selection ? Array.from(selection) : []),
+      selectedOptionsB = box(Array.from(selection || [])),
       options = (m.choices || []).map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
