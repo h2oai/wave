@@ -53,6 +53,7 @@
   },
   "proxy": "http://localhost:55555",
   "devDependencies": {
-    "http-proxy-middleware": "^1.0.3"
+    "http-proxy-middleware": "^1.0.3",
+    "jest-canvas-mock": "^2.2.0"
   }
 }

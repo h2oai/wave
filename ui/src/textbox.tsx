@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
 import { B, bond, S, qd } from './qd';
+import { debounce } from 'vega';
 
 /**
  * Create a text box.
@@ -38,6 +39,8 @@ export interface Textbox {
   multiline?: B
   /** True if the text box should hide text content. */
   password?: B
+  /** True if the form should be submitted when the text value changes. */
+  trigger?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -47,9 +50,12 @@ export const
     qd.args[m.name] = m.value || ''
     const
       icon: Fluent.IIconProps | undefined = m.icon && m.icon.length ? { iconName: m.icon } : undefined,
-      onChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
+      onChange = debounce(500, (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
+        v = v || (e.target as HTMLInputElement).value
+
         qd.args[m.name] = (v !== undefined && v !== null) ? v : (m.value || '')
-      },
+        if (m.trigger) qd.sync()
+      }),
       password = m.password ? 'password' : undefined,
       render = () => m.mask
         ? (

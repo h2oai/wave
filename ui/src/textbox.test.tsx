@@ -9,7 +9,11 @@ const textboxProps: Textbox = { name }
 
 describe('Textbox.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(() => {
+    jest.clearAllMocks()
+    jest.useFakeTimers()
+    T.qd.args[name] = null
+  })
 
   it('Sets args - init - no value specified', () => {
     render(<XTextbox model={textboxProps} />)
@@ -25,6 +29,7 @@ describe('Textbox.tsx', () => {
   it('Sets args on input', () => {
     const { getByTestId } = render(<XTextbox model={textboxProps} />)
     fireEvent.change(getByTestId(name), { target: { value: 'text' } })
+    jest.runOnlyPendingTimers()
 
     expect(T.qd.args[name]).toBe('text')
   })
@@ -41,5 +46,28 @@ describe('Textbox.tsx', () => {
     fireEvent.change(getByTestId(name), { target: { value: undefined } })
 
     expect(T.qd.args[name]).toBe('default')
+  })
+
+  it('Calls sync on change - trigger specified', () => {
+    const { getByTestId } = render(<XTextbox model={{ ...textboxProps, trigger: true }} />)
+
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+
+    fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
+    jest.runOnlyPendingTimers()
+
+    expect(syncMock).toBeCalled()
+  })
+
+  it('Does not call sync on change - trigger not specified', () => {
+    const { getByTestId } = render(<XTextbox model={textboxProps} />)
+
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+
+    fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
+
+    expect(syncMock).toBeCalledTimes(0)
   })
 })

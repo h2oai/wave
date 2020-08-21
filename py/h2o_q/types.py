@@ -720,6 +720,7 @@ class Textbox:
             readonly: Optional[bool] = None,
             multiline: Optional[bool] = None,
             password: Optional[bool] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -750,6 +751,8 @@ class Textbox:
         """True if the text box should allow multi-line text entry."""
         self.password = password
         """True if the text box should hide text content."""
+        self.trigger = trigger
+        """True if the form should be submitted when the text value changes."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -772,6 +775,7 @@ class Textbox:
             readonly=self.readonly,
             multiline=self.multiline,
             password=self.password,
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -794,6 +798,7 @@ class Textbox:
         __d_readonly: Any = __d.get('readonly')
         __d_multiline: Any = __d.get('multiline')
         __d_password: Any = __d.get('password')
+        __d_trigger: Any = __d.get('trigger')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -809,6 +814,7 @@ class Textbox:
         readonly: Optional[bool] = __d_readonly
         multiline: Optional[bool] = __d_multiline
         password: Optional[bool] = __d_password
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return Textbox(
             name,
@@ -825,6 +831,7 @@ class Textbox:
             readonly,
             multiline,
             password,
+            trigger,
             tooltip,
         )
 
