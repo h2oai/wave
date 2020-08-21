@@ -7,7 +7,7 @@ import { initializeIcons } from '@fluentui/react';
 const name = 'picker';
 const pickerProps: Picker = {
   name,
-  items: [{ name }, { name: 'something else' }]
+  choices: [{ name }, { name: 'something else' }]
 }
 const typeToInput = (input: HTMLInputElement, value: string) => {
   input.focus()

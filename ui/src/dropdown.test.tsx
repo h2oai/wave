@@ -20,24 +20,22 @@ describe('Dropdown.tsx', () => {
   beforeAll(() => initializeIcons())
 
   it('Calls qd.sync() when trigger is on', () => {
-    const
-      syncMock = jest.fn(),
-      { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, trigger: true }} />)
+    const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, trigger: true }} />)
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
 
     fireEvent.click(getByTestId(name))
-    T.qd.sync = syncMock
     fireEvent.click(getByText('Choice A'))
 
     expect(syncMock).toHaveBeenCalled()
   })
 
   it('Does not call qd.sync() when trigger is off', () => {
-    const
-      syncMock = jest.fn(),
-      { getByTestId, getByText } = render(<XDropdown model={defaultProps} />)
+    const { getByTestId, getByText } = render(<XDropdown model={defaultProps} />)
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
 
     fireEvent.click(getByTestId(name))
-    T.qd.sync = syncMock
     fireEvent.click(getByText('Choice A'))
 
     expect(syncMock).toHaveBeenCalledTimes(0)
@@ -89,12 +87,62 @@ describe('Dropdown.tsx', () => {
   })
 
   it('Returns empty array on deselect', () => {
-    const { getByTestId, getByText, getAllByText } = render(<XDropdown model={{ ...defaultProps, values: ['A', 'B'] }} />)
+    const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A', 'B'] }} />)
 
     fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A').parentElement!)
-    fireEvent.click(getAllByText('Choice B')[1].parentElement!)
+    fireEvent.click(getByText('Choice B').parentElement!)
 
     expect(T.qd.args[name]).toMatchObject([])
+  })
+
+  it('Selects all options on Select all', () => {
+    const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'] }} />)
+
+    fireEvent.click(getByText('Select All'))
+
+    expect(T.qd.args[name]).toMatchObject(['A', 'B', 'C', 'D'])
+  })
+
+  it('Selects all options on Select all - except disabled', () => {
+    const choices = [
+      { name: 'A', label: 'Choice A' },
+      { name: 'B', label: 'Choice B' },
+      { name: 'C', label: 'Choice C', disabled: true },
+      { name: 'D', label: 'Choice D' },
+    ]
+    const { getByText } = render(<XDropdown model={{ ...defaultProps, choices, values: ['A'] }} />)
+
+    fireEvent.click(getByText('Select All'))
+
+    expect(T.qd.args[name]).toMatchObject(['A', 'B', 'D'])
+  })
+
+  it('Calls sync on Select all - trigger enabled', () => {
+    const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+
+    fireEvent.click(getByText('Select All'))
+
+    expect(syncMock).toHaveBeenCalled()
+  })
+
+  it('Deselects all options on Deselect all', () => {
+    const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A', 'B', 'C', 'D'] }} />)
+
+    fireEvent.click(getByText('Deselect All'))
+
+    expect(T.qd.args[name]).toMatchObject([])
+  })
+
+  it('Calls sync on Deselect all - trigger enabled', () => {
+    const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+
+    fireEvent.click(getByText('Deselect All'))
+
+    expect(syncMock).toHaveBeenCalled()
   })
 })
