@@ -70,4 +70,9 @@ describe('rangeSlider.tsx', () => {
 
     expect(syncMock).toHaveBeenCalledTimes(0)
   })
+
+  it('Shows label when specified', () => {
+    const { getByText } = render(<XRangeSlider model={{ ...rangeSliderProps, label: 'Label' }} />)
+    expect(getByText('Label')).toBeInTheDocument()
+  })
 })
