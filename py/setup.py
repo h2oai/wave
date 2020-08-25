@@ -27,7 +27,7 @@ setuptools.setup(
         'Topic :: Software Development :: Widget Sets',
         'Topic :: System :: Distributed Computing',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.6.1',
     install_requires=[
         'requests',
         'websockets'
