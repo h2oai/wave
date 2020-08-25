@@ -1,2 +1,5 @@
 node_modules
 build
+config/webpackDevServer.config.js
+src/react-app-env.d.ts
+src/serviceWorker.ts

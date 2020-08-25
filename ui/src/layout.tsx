@@ -14,7 +14,17 @@ type Slot = {
   bottom?: U
 }
 
+const
+  newCardRegistry = () => {
+    const
+      m: Dict<typeof React.Component> = {},
+      register = (name: S, ctor: typeof React.Component) => m[name] = ctor,
+      lookup = (name: S) => m[name] || m['']
+    return { register, lookup }
+  }
+
 export const
+  cards = newCardRegistry(),
   substitute = (formatString?: S, data?: Rec, defaultValue: any = null) => {
     return (formatString !== undefined && formatString !== null)
       ? isFormatExpr(formatString)
@@ -43,17 +53,6 @@ export const
     })
     return <>{items}</>
   }
-
-const
-  newCardRegistry = () => {
-    const
-      m: Dict<typeof React.Component> = {},
-      register = (name: S, ctor: typeof React.Component) => m[name] = ctor,
-      lookup = (name: S) => m[name] || m['']
-    return { register, lookup }
-  }
-
-export const cards = newCardRegistry()
 
 type Size = [U, U]
 

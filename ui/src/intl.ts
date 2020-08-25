@@ -2,18 +2,6 @@ import Handlebars from 'handlebars'
 import { createIntl, createIntlCache } from 'react-intl'
 import { B, S } from './qd'
 
-Handlebars.registerHelper('intl', (v: any, { hash: opts }: any) => {
-  opts = kvToOpts(opts)
-  const t = opts.type
-  return t === 'date'
-    ? intl.formatDate(v, opts)
-    : t === 'time'
-      ? intl.formatTime(v, opts)
-      : t === 'number' || typeof v === 'number'
-        ? intl.formatNumber(v, opts)
-        : v
-})
-
 const intlCache = createIntlCache() // prevents memory leaks per docs
 export const intl = createIntl({
   locale: navigator.language,
@@ -44,7 +32,17 @@ const
   },
   isBareExpr = (s: S): B => /^\w+$/.test(s)
 
-
+Handlebars.registerHelper('intl', (v: any, { hash: opts }: any) => {
+  opts = kvToOpts(opts)
+  const t = opts.type
+  return t === 'date'
+    ? intl.formatDate(v, opts)
+    : t === 'time'
+      ? intl.formatTime(v, opts)
+      : t === 'number' || typeof v === 'number'
+        ? intl.formatNumber(v, opts)
+        : v
+})
 
 export type Fmt = (datum: any, value?: any) => S
 

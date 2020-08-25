@@ -1,6 +1,5 @@
 import * as d3 from 'd3'
 import React from 'react'
-import { grid } from '../layout'
 import { F, S, U } from '../qd'
 
 interface Props {
@@ -53,16 +52,10 @@ export class MicroArea extends React.Component<Props> {
         .x((_, i) => scaleX(i))
         .y0(_ => scaleY(zeroValue == null ? minY : zeroValue))
         .y1(d => scaleY(d[value]))
-        .curve(fcurve),
-      onMouseMove = (e: React.MouseEvent) => {
-        const el = this.ref.current
-        if (!el) return
-        const r = el.getBoundingClientRect()
-        const i = Math.floor(scaleX.invert(e.clientX - r.left / grid.scale))
-        if (i >= 0) console.log(data[i])
-      }
+        .curve(fcurve)
+
     return (
-      <svg ref={this.ref} width={width} height={height} onMouseMove={onMouseMove}>
+      <svg ref={this.ref} width={width} height={height}>
         <path d={ar(data) as S} fill={color} fillOpacity='0.1' strokeLinejoin='round' strokeLinecap='round'></path>
         <path d={ln(data) as S} fill='none' stroke={color} strokeWidth='1.5' strokeLinejoin='round' strokeLinecap='round'></path>
       </svg>

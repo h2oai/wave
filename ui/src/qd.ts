@@ -29,6 +29,7 @@ interface Boxed<T> extends Box<T> {
 
 type Equal<T> = (a: T, b: T) => boolean
 function different<T>(_a: T, _b: T) { return false }
+function remove<T>(xs: T[], x: T): void { const i = xs.indexOf(x); if (i > -1) xs.splice(i, 1) }
 export function box<T>(value?: T, equal?: Equal<T>): Box<T>;
 export function box<T>(...args: any[]): Box<T> {
   let
@@ -60,6 +61,17 @@ export function box<T>(...args: any[]): Box<T> {
   return f as Box<T>
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function react(immediate: boolean, boxen: Box<any>[], f: Function): Disposable {
+  const
+    xs = boxen as Boxed<any>[],
+    emit = () => f(...xs.map(x => x())),
+    arrows = xs.map(x => x.on(emit)),
+    dispose = () => arrows.forEach(a => a.dispose())
+
+  if (immediate) emit()
+  return { dispose }
+}
 export function boxed<T>(x: any): x is Box<T> { return x && x.__boxed__ === true }
 export function unbox<T>(x: T | Box<T>): T { return boxed(x) ? x() : x }
 export function rebox<T>(b: Box<T>, f: Eff<T>) { const x = b(); f(x); (b as Boxed<T>).touch() }
@@ -75,18 +87,6 @@ export function to<A, B>(a: Box<A>, b: Box<B>, f: Eff2<A, B>): Disposable;
 export function to<A, B, C>(a: Box<A>, b: Box<B>, c: Box<C>, f: Eff3<A, B, C>): Disposable;
 export function to<A, B, C, D>(a: Box<A>, b: Box<B>, c: Box<C>, d: Box<D>, f: Eff4<A, B, C, D>): Disposable;
 export function to(...args: any[]): Disposable { return react(true, args.slice(0, args.length - 1), args[args.length - 1]) }
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function react(immediate: boolean, boxen: Box<any>[], f: Function): Disposable {
-  const
-    xs = boxen as Boxed<any>[],
-    emit = () => f(...xs.map(x => x())),
-    arrows = xs.map(x => x.on(emit)),
-    dispose = () => arrows.forEach(a => a.dispose())
-
-  if (immediate) emit()
-  return { dispose }
-}
 
 export function by<A, B>(a: Box<A>, map: Func<A, B>): Box<B>
 export function by<A, B, C>(a: Box<A>, b: Box<B>, zip: Func2<A, B, C>): Box<B>
@@ -105,11 +105,9 @@ export function by(...args: any[]): any {
 }
 
 export function watch<T>(x: Box<T>, label?: string): Disposable {
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   return on(x, label ? ((x: T) => console.log(label, x)) : ((x: T) => console.log(x)))
 }
-
-function remove<T>(xs: T[], x: T): void { const i = xs.indexOf(x); if (i > -1) xs.splice(i, 1) }
 
 //
 // React Component + Dataflow
@@ -279,31 +277,6 @@ interface FixBuf extends DataBuf {
 type CycBuf = DataBuf
 type MapBuf = DataBuf
 
-let guid = 0
-export const
-  xid = () => `x${++guid}`,
-  parseI = (s: S): I => {
-    if (!/^-{0,1}\d+$/.test(s)) return NaN
-    return parseInt(s, 10)
-  },
-  parseU = (s: S): U => {
-    const i = parseI(s)
-    return isNaN(i) || i < 0 ? NaN : i
-  },
-  dict = <T extends unknown>(kvs: [S, T][]): Dict<T> => {
-    const d: Dict<T> = {}
-    for (const [k, v] of kvs) d[k] = v
-    return d
-  },
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  unpack = <T extends {}>(data: any): T =>
-    (typeof data === 'string')
-      ? decodeString(data)
-      : (isData(data))
-        ? data.list()
-        : data,
-  iff = (x: S) => x && x.length ? x : undefined
-
 const
   decodeType = (d: S): [S, S] => {
     const i = d.indexOf(':')
@@ -367,6 +340,18 @@ const
         break
     }
     return data
+  }
+
+let guid = 0
+export const
+  xid = () => `x${++guid}`,
+  parseI = (s: S): I => {
+    if (!/^-{0,1}\d+$/.test(s)) return NaN
+    return parseInt(s, 10)
+  },
+  parseU = (s: S): U => {
+    const i = parseI(s)
+    return isNaN(i) || i < 0 ? NaN : i
   }
 
 const
@@ -441,13 +426,6 @@ const
   newFixBuf = (t: Typ, tups: (Tup | null)[]): FixBuf => {
     const
       n = tups.length,
-      put = (xs: any) => {
-        if (Array.isArray(xs) && xs.length === n) for (let i = 0; i < n; i++) seti(i, xs[i])
-      },
-      set = (k: S, v: any) => {
-        const i = parseI(k)
-        if (!isNaN(i)) seti(i, v)
-      },
       seti = (i: U, v: any) => {
         if (i >= 0 && i < n) {
           if (v === null) {
@@ -458,16 +436,23 @@ const
           }
         }
       },
-      get = (k: S): Cur | null => {
+      set = (k: S, v: any) => {
         const i = parseI(k)
-        if (!isNaN(i)) return geti(i)
-        return null
+        if (!isNaN(i)) seti(i, v)
+      },
+      put = (xs: any) => {
+        if (Array.isArray(xs) && xs.length === n) for (let i = 0; i < n; i++) seti(i, xs[i])
       },
       geti = (i: U): Cur | null => {
         if (i >= 0 && i < n) {
           const tup = tups[i]
           if (tup) return newCur(t, tup)
         }
+        return null
+      },
+      get = (k: S): Cur | null => {
+        const i = parseI(k)
+        if (!isNaN(i)) return geti(i)
         return null
       },
       list = (): (Rec | null)[] => {
@@ -482,9 +467,6 @@ const
       n = tups.length,
       b = newFixBuf(t, tups),
       cur = "",
-      put = (xs: any) => {
-        if (Array.isArray(xs)) for (const x of xs) set(cur, x)
-      },
       set = (_k: S, v: any) => {
         b.seti(i, v)
         i++
@@ -492,6 +474,9 @@ const
       },
       get = (_k: S): Cur | null => {
         return b.geti(i)
+      },
+      put = (xs: any) => {
+        if (Array.isArray(xs)) for (const x of xs) set(cur, x)
       },
       list = (): Rec[] => {
         const xs: Rec[] = []
@@ -560,24 +545,32 @@ const
     if (b.m) return loadMapBuf(b.m)
     return null
   },
+  gset = (x: any, k: S, v: any) => {
+    if (x == null) return
+    if (isBuf(x)) x.set(k, v)
+    else if (isCur(x)) x.set(k, v)
+    else if (isMap(x)) {
+      if (v == null) delete x[k]; else x[k] = v
+    } else if (Array.isArray(x)) {
+      const i = parseI(k)
+      if (!isNaN(i) && i >= 0 && i < x.length) x[i] = v
+    }
+  },
+  gget = (x: any, k: S): any => {
+    if (x == null) return null
+    if (isBuf(x)) return x.get(k)
+    if (isCur(x)) return x.get(k)
+    if (isMap(x)) return x[k]
+    if (Array.isArray(x)) {
+      const i = parseI(k)
+      if (!isNaN(i) && i >= 0 && i < x.length) return x[i]
+    }
+    return null
+  },
   loadCard = (key: S, c: CardD): C => {
     const
       data: Dict<any> = {},
       changed = box<B>(),
-      ctor = (c: CardD) => {
-        const { d, b } = c
-        for (let k in d) {
-          let v = d[k]
-          if (b && k.length > 0 && k[0] === '~') {
-            const buf = loadBuf(b[v as U])
-            if (buf) {
-              k = k.substr(1)
-              v = buf
-            }
-          }
-          set([k], v)
-        }
-      },
       set = (ks: S[], v: any) => {
         switch (ks.length) {
           case 0:
@@ -601,31 +594,24 @@ const
               return
             }
         }
+      },
+      ctor = (c: CardD) => {
+        const { d, b } = c
+        for (let k in d) {
+          let v = d[k]
+          if (b && k.length > 0 && k[0] === '~') {
+            const buf = loadBuf(b[v as U])
+            if (buf) {
+              k = k.substr(1)
+              v = buf
+            }
+          }
+          set([k], v)
+        }
       }
+
     ctor(c)
     return { id: xid(), name: key, state: data, changed, set }
-  },
-  gset = (x: any, k: S, v: any) => {
-    if (x == null) return
-    if (isBuf(x)) x.set(k, v)
-    else if (isCur(x)) x.set(k, v)
-    else if (isMap(x)) {
-      if (v == null) delete x[k]; else x[k] = v
-    } else if (Array.isArray(x)) {
-      const i = parseI(k)
-      if (!isNaN(i) && i >= 0 && i < x.length) x[i] = v
-    }
-  },
-  gget = (x: any, k: S): any => {
-    if (x == null) return null
-    if (isBuf(x)) return x.get(k)
-    if (isCur(x)) return x.get(k)
-    if (isMap(x)) return x[k]
-    if (Array.isArray(x)) {
-      const i = parseI(k)
-      if (!isNaN(i) && i >= 0 && i < x.length) return x[i]
-    }
-    return null
   },
   newPage = (): Page => {
     let dirty = false, dirties: Dict<B> = {}
@@ -695,6 +681,21 @@ const
     if (page) page.sync()
     return page
   }
+
+export const
+  dict = <T extends unknown>(kvs: [S, T][]): Dict<T> => {
+    const d: Dict<T> = {}
+    for (const [k, v] of kvs) d[k] = v
+    return d
+  },
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  unpack = <T extends {}>(data: any): T =>
+    (typeof data === 'string')
+      ? decodeString(data)
+      : (isData(data))
+        ? data.list()
+        : data,
+  iff = (x: S) => x && x.length ? x : undefined
 
 //
 // In-browser API
