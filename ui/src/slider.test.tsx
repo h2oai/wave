@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XSlider, Slider } from './slider';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XSlider, Slider } from './slider'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'slider';
+const name = 'slider'
 const sliderProps: Slider = { name }
 const defaultRect = { left: 0, top: 0, right: 100, bottom: 40, width: 100, height: 40 } as DOMRect
 const mouseEvent = { clientX: 50, clientY: 0 }

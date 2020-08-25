@@ -1,9 +1,9 @@
-import { default as React } from 'react';
-import { stylesheet } from 'typestyle';
-import { CardMenu } from './card_menu';
-import { format, isFormatExpr } from './intl';
-import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd';
-import { getTheme, margin } from './theme';
+import { default as React } from 'react'
+import { stylesheet } from 'typestyle'
+import { CardMenu } from './card_menu'
+import { format, isFormatExpr } from './intl'
+import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd'
+import { getTheme, margin } from './theme'
 
 type Slot = {
   left: U
@@ -29,7 +29,7 @@ export const
     return x === null ? x : <>{x}</>
   },
   CardView = ({ card }: { card: Card<any> }) => {
-    let Tag = cards.lookup(card.state.view)
+    const Tag = cards.lookup(card.state.view)
     return <Tag {...card} />
   },
   Repeat = ({ view, props, data }: { view: S | any, props: any, data: any }) => {

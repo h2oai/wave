@@ -1,7 +1,7 @@
-import * as d3 from 'd3';
-import React from 'react';
-import { cards } from './layout';
-import { bond, Card, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd';
+import * as d3 from 'd3'
+import React from 'react'
+import { cards } from './layout'
+import { bond, Card, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd'
 
 
 /** Create a card for displaying vector graphics. */

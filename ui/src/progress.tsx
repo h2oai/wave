@@ -1,6 +1,6 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { F, S } from './qd';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { F, S } from './qd'
 
 /**
  * Create a progress bar.

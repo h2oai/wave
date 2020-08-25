@@ -1,8 +1,8 @@
-import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react';
-import * as React from 'react';
-import { stylesheet } from 'typestyle';
-import { Command } from './toolbar';
-import { bond, box, qd, Card } from './qd';
+import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react'
+import * as React from 'react'
+import { stylesheet } from 'typestyle'
+import { Command } from './toolbar'
+import { bond, box, qd, Card } from './qd'
 
 const
   css = stylesheet({

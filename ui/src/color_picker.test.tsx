@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XColorPicker, ColorPicker } from './color_picker';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XColorPicker, ColorPicker } from './color_picker'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'colorPicker';
+const name = 'colorPicker'
 const colorPickerProps: ColorPicker = { name }
 describe('ColorPicker.tsx', () => {
   beforeAll(() => initializeIcons())

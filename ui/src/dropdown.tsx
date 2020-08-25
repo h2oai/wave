@@ -1,9 +1,9 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { Choice } from './choice_group';
-import { B, bond, S, qd, box } from './qd';
-import { stylesheet } from 'typestyle';
-import { rem } from './theme';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { Choice } from './choice_group'
+import { B, bond, S, qd, box } from './qd'
+import { stylesheet } from 'typestyle'
+import { rem } from './theme'
 
 /**
  * Create a dropdown.

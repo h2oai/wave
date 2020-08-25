@@ -1,6 +1,6 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { B, bond, S, qd, U } from './qd';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { B, bond, S, qd, U } from './qd'
 
 /**
  * Create a date picker.

@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XPicker, Picker } from './picker';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XPicker, Picker } from './picker'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'picker';
+const name = 'picker'
 const pickerProps: Picker = {
   name,
   choices: [{ name }, { name: 'something else' }]
@@ -89,7 +89,7 @@ describe('Picker.tsx', () => {
 
   it('Filters correctly - does not offer already selected', () => {
     const { getByRole, queryByRole } = render(<XPicker model={pickerProps} />)
-    const input = (getByRole('textbox') as HTMLInputElement);
+    const input = (getByRole('textbox') as HTMLInputElement)
 
     typeToInput(input, name)
     fireEvent.click(getByRole('option').querySelector('button')!)

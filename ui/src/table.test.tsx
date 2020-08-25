@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XTable, Table } from './table';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XTable, Table } from './table'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'table';
+const name = 'table'
 const tableProps: Table = {
   name,
   columns: [{ name: 'colname1', label: 'col1' }],
@@ -47,7 +47,7 @@ describe('Table.tsx', () => {
 
   it('Sets args - multiple selection', () => {
     const { getAllByRole } = render(<XTable model={{ ...tableProps, multiple: true }} />)
-    const checkboxes = getAllByRole('checkbox');
+    const checkboxes = getAllByRole('checkbox')
 
     fireEvent.click(checkboxes[1])
     fireEvent.click(checkboxes[2])

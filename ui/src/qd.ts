@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 
 //
 // Dataflow
@@ -76,7 +76,7 @@ export function to<A, B, C>(a: Box<A>, b: Box<B>, c: Box<C>, f: Eff3<A, B, C>): 
 export function to<A, B, C, D>(a: Box<A>, b: Box<B>, c: Box<C>, d: Box<D>, f: Eff4<A, B, C, D>): Disposable;
 export function to(...args: any[]): Disposable { return react(true, args.slice(0, args.length - 1), args[args.length - 1]) }
 
-// tslint:disable-next-line:ban-types
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function react(immediate: boolean, boxen: Box<any>[], f: Function): Disposable {
   const
     xs = boxen as Boxed<any>[],
@@ -96,7 +96,7 @@ export function by(...args: any[]): any {
   const
     m = args.length - 1,
     xs = args.slice(0, m) as Boxed<any>[],
-    // tslint:disable-next-line:ban-types
+    // eslint-disable-next-line @typescript-eslint/ban-types
     f = args[m] as Function,
     y = box(f(...xs.map(x => x())))
 
@@ -130,6 +130,7 @@ export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) =>
       super(props)
 
       const
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         self = this,
         model = ctor(props),
         arrows: Disposable[] = []
@@ -275,8 +276,8 @@ interface FixBuf extends DataBuf {
   seti(i: U, v: any): void
   geti(i: U): Cur | null
 }
-interface CycBuf extends DataBuf { }
-interface MapBuf extends DataBuf { }
+type CycBuf = DataBuf
+type MapBuf = DataBuf
 
 let guid = 0
 export const
@@ -289,11 +290,12 @@ export const
     const i = parseI(s)
     return isNaN(i) || i < 0 ? NaN : i
   },
-  dict = <T extends {}>(kvs: [S, T][]): Dict<T> => {
+  dict = <T extends unknown>(kvs: [S, T][]): Dict<T> => {
     const d: Dict<T> = {}
     for (const [k, v] of kvs) d[k] = v
     return d
   },
+  // eslint-disable-next-line @typescript-eslint/ban-types
   unpack = <T extends {}>(data: any): T =>
     (typeof data === 'string')
       ? decodeString(data)
@@ -368,12 +370,12 @@ const
   }
 
 const
-  keysOf = <T extends {}>(d: Dict<T>): S[] => {
+  keysOf = <T extends unknown>(d: Dict<T>): S[] => {
     const a: S[] = []
     for (const k in d) a.push(k)
     return a
   },
-  valuesOf = <T extends {}>(d: Dict<T>): T[] => {
+  valuesOf = <T extends unknown>(d: Dict<T>): T[] => {
     const a: T[] = []
     for (const k in d) a.push(d[k])
     return a
@@ -792,7 +794,7 @@ const
   },
   reconnect = (address: S, handle: SockHandler) => {
     const retry = () => reconnect(address, handle)
-    let sock = new WebSocket(address)
+    const sock = new WebSocket(address)
     sock.onopen = function () {
       qd.socket = sock
       handle({ t: SockEventType.Message, type: SockMessageType.Info, message: 'Connected' })

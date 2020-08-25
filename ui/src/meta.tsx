@@ -1,6 +1,6 @@
-import React from 'react';
-import { cards } from './layout';
-import { bond, Card, on, S, U, qd } from './qd';
+import React from 'react'
+import { cards } from './layout'
+import { bond, Card, on, S, U, qd } from './qd'
 import { showNotification } from './notification'
 
 /**

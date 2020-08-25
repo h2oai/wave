@@ -1,9 +1,9 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { GridLayout } from './layout';
-import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, qd } from './qd';
-import { getTheme, pc, clas } from './theme';
-import { Spinner, SpinnerSize } from '@fluentui/react';
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { GridLayout } from './layout'
+import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, qd } from './qd'
+import { getTheme, pc, clas } from './theme'
+import { Spinner, SpinnerSize } from '@fluentui/react'
 
 const
   theme = getTheme(),

@@ -1,5 +1,5 @@
-import { NestedCSSProperties } from "typestyle/lib/types";
-import { Dict, I, F, S, U } from "./qd";
+import { NestedCSSProperties } from "typestyle/lib/types"
+import { Dict, I, F, S, U } from "./qd"
 
 interface RGB { r: U, g: U, b: U }
 interface Palette {
@@ -60,7 +60,7 @@ const
   black: RGB = { r: 0, g: 0, b: 0 },
   rgb = (hex: S): RGB => {
     const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-    return x ? { r: parseInt(x[1], 16), g: parseInt(x[2], 16), b: parseInt(x[3], 16) } : black;
+    return x ? { r: parseInt(x[1], 16), g: parseInt(x[2], 16), b: parseInt(x[3], 16) } : black
   },
   toPalette = (palette: Palette, a: F): Palette & Tones => {
     const
@@ -243,7 +243,7 @@ export const
         }
         return s
       },
-      merge = <T extends {}>(defs: Partial<T>, state: Partial<T>): T => {
+      merge = <T extends unknown>(defs: Partial<T>, state: Partial<T>): T => {
         const s = { ...defs, ...state } as any
         for (const k in s) {
           if (k.endsWith('_color')) {// XXX obsolete; remove

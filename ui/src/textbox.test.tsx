@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XTextbox, Textbox } from './textbox';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XTextbox, Textbox } from './textbox'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'textbox';
+const name = 'textbox'
 const textboxProps: Textbox = { name }
 
 describe('Textbox.tsx', () => {

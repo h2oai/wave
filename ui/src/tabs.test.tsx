@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XTabs, Tabs } from './tabs';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XTabs, Tabs } from './tabs'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'tabs';
+const name = 'tabs'
 const tabsProps: Tabs = { name, items: [{ name }] }
 
 describe('Tabs.tsx', () => {

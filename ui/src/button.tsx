@@ -1,10 +1,10 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { Component } from './form';
-import { B, bond, S, qd } from './qd';
-import { padding } from './theme';
-import { XToolTip } from './tooltip';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { Component } from './form'
+import { B, bond, S, qd } from './qd'
+import { padding } from './theme'
+import { XToolTip } from './tooltip'
 
 /**
  * Create a button.

@@ -1,8 +1,8 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XToggle, Toggle } from './toggle';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XToggle, Toggle } from './toggle'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
 const name = 'toggle'
 const toggleProps: Toggle = { name }

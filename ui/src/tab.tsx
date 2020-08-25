@@ -1,8 +1,8 @@
-import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react';
-import React from 'react';
-import { cards } from './layout';
-import { Tab } from './tabs';
-import { bond, Card, qd, B } from './qd';
+import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react'
+import React from 'react'
+import { cards } from './layout'
+import { Tab } from './tabs'
+import { bond, Card, qd, B } from './qd'
 
 /** Create a card containing tabs for navigation. */
 interface State {

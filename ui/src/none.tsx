@@ -1,9 +1,9 @@
-import React from 'react';
-import { bond, Card } from './qd';
-import { cards } from './layout';
+import React from 'react'
+import { bond, Card, S } from './qd'
+import { cards } from './layout'
 
-export const
-  View = bond(({ state, changed }: Card<{}>) => {
+const
+  View = bond(({ state, changed }: Card<Record<S, unknown>>) => {
     const
       render = () => (
         <div data-test='none'>

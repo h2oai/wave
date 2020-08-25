@@ -1,8 +1,8 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { CardMenu } from './card_menu';
-import { Card, box } from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { CardMenu } from './card_menu'
+import { Card, box } from './qd'
+import { initializeIcons } from '@fluentui/react'
 
 const name = 'card'
 const baseCardMenuProps: Card<any> = { name, state: {}, changed: box(false) }

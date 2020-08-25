@@ -1,8 +1,8 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { View } from './nav';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { View } from './nav'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
 const
   name = 'nav',

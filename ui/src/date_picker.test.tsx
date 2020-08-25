@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XDatePicker, DatePicker } from './date_picker';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XDatePicker, DatePicker } from './date_picker'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'datepicker';
+const name = 'datepicker'
 const datepickerProps: DatePicker = { name }
 describe('Datepicker.tsx', () => {
   beforeAll(() => initializeIcons())

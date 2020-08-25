@@ -1,6 +1,6 @@
-import Handlebars from 'handlebars';
-import { createIntl, createIntlCache } from 'react-intl';
-import { B, S } from './qd';
+import Handlebars from 'handlebars'
+import { createIntl, createIntlCache } from 'react-intl'
+import { B, S } from './qd'
 
 Handlebars.registerHelper('intl', (v: any, { hash: opts }: any) => {
   opts = kvToOpts(opts)
@@ -69,7 +69,7 @@ export const
 
     return null
   },
-  compile = (s: S) => Handlebars.compile(s),
+  compile = (s: S): any => Handlebars.compile(s),
   format = (s: S, data: any): S => {
     if (isBareExpr(s)) s = '{{' + s + '}}'
     const t = compile(s)

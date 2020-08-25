@@ -1,6 +1,6 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { B, bond, F, S, qd } from './qd';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { B, bond, F, S, qd } from './qd'
 
 /**
  * Create a slider.

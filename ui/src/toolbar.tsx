@@ -1,7 +1,7 @@
-import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react';
-import React from 'react';
-import { cards } from './layout';
-import { bond, Card, qd, S } from './qd';
+import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
+import React from 'react'
+import { cards } from './layout'
+import { bond, Card, qd, S } from './qd'
 
 /**
  * Create a command.

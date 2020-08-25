@@ -1,6 +1,6 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { bond, S, qd } from './qd';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { bond, S, qd } from './qd'
 
 /**
  * Create a tab.
