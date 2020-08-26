@@ -45,7 +45,7 @@ generate: ## Generate driver bindings
 release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make release)"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
-	$(MAKE) OS=windows release-os
+	$(MAKE) OS=windows EXE_EXT=".exe" release-os
 	$(MAKE) release-docs
 
 release-os:
@@ -54,7 +54,7 @@ release-os:
 	rsync -a ui/build/ build/$(REL)/www
 	rsync -a py/build/docs/h2o_q build/$(REL)/ && mv build/$(REL)/h2o_q build/$(REL)/docs
 	rsync -a py/examples build/$(REL)/
-	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd cmd/qd/main.go
+	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd$(EXE_EXT) cmd/qd/main.go
 	cp release.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
