@@ -5,13 +5,12 @@ import { B, S } from './qd';
 Handlebars.registerHelper('intl', (v: any, { hash: opts }: any) => {
   opts = kvToOpts(opts)
   const t = opts.type
-  return t === 'date'
-    ? intl.formatDate(v, opts)
-    : t === 'time'
-      ? intl.formatTime(v, opts)
-      : t === 'number' || typeof v === 'number'
-        ? intl.formatNumber(v, opts)
-        : v
+
+  if (t === 'date') return intl.formatDate(v, opts)
+  else if (t === 'time') return intl.formatTime(v, opts)
+  else if (t === 'number' || typeof v === 'number') return intl.formatNumber(v, opts)
+
+  return v
 })
 
 const intlCache = createIntlCache() // prevents memory leaks per docs
@@ -20,7 +19,7 @@ export const intl = createIntl({
   messages: {},
   // the intl lib throws console.errors for each missing id.
   // since we generate format messages on the fly, ignore all errors.
-  onError: () => { },
+  onError: () => { /* noop */ },
 }, intlCache)
 
 const

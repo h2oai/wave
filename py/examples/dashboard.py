@@ -53,7 +53,7 @@ def create_dashboard(update_freq=0.0):
             box=f'{6 + i} 1 1 1',
             title=fake.cryptocurrency_code(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            data=dict(qux=val, quux=pc),
+            data=dict(qux=val, quux=pc / 100),
             plot_category='foo',
             plot_value='qux',
             plot_color=next_color(),
@@ -71,8 +71,8 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 2 2 1',
             title=fake.cryptocurrency_name(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl quux style="unit" unit="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-            data=dict(qux=val, quux=pc),
+            aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+            data=dict(qux=val, quux=pc / 100),
             plot_category='foo',
             plot_value='qux',
             plot_color=next_color(),
@@ -90,7 +90,7 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 3 2 1',
             title=fake.cryptocurrency_name(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl quux style="unit" unit="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+            aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
             data=dict(qux=val, quux=pc),
             plot_type='interval',
             plot_category='foo',
@@ -109,10 +109,10 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 4 1 2',
             title=fake.cryptocurrency_name(),
             value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl bar style="unit" unit="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+            aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             plot_color=next_color(),
             progress=pc,
-            data=dict(foo=val, bar=pc * 100),
+            data=dict(foo=val, bar=pc / 100),
         ))
         large_pcs.append((f, c))
 
@@ -124,7 +124,7 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 6 1 2',
             title=fake.cryptocurrency_name(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl quux style="unit" unit="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+            aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
             data=dict(qux=val, quux=pc),
             plot_type='area',
             plot_category='foo',
@@ -144,10 +144,10 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 8 2 1',
             title=fake.cryptocurrency_name(),
             value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl bar style="unit" unit="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+            aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             plot_color=next_color(),
             progress=pc,
-            data=dict(foo=val, bar=pc * 100),
+            data=dict(foo=val, bar=pc / 100),
         ))
         small_pcs.append((f, c))
 
@@ -159,10 +159,10 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 8 2 1',
             title=fake.cryptocurrency_name(),
             value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl bar style="unit" unit="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+            aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             plot_color=next_color(),
             progress=pc,
-            data=dict(foo=val, bar=pc * 100),
+            data=dict(foo=val, bar=pc / 100),
         ))
         small_pbs.append((f, c))
 
@@ -174,8 +174,8 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 9 2 2',
             title=fake.cryptocurrency_name(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl quux style="unit" unit="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-            data=dict(qux=val, quux=pc * 100),
+            aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+            data=dict(qux=val, quux=pc / 100),
             caption=' '.join(fake.sentences()),
         ))
         large_cards.append((f, c))
@@ -189,11 +189,11 @@ def create_dashboard(update_freq=0.0):
             title=fake.cryptocurrency_name(),
             value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             value_caption='This Month',
-            aux_value='={{intl bar style="unit" unit="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+            aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             aux_value_caption='Previous Month',
             plot_color=next_color(),
             progress=pc,
-            data=dict(foo=val, bar=pc * 100),
+            data=dict(foo=val, bar=pc / 100),
             caption=' '.join(fake.sentences(2)),
         ))
         large_pbs.append((f, c))
@@ -210,54 +210,54 @@ def create_dashboard(update_freq=0.0):
         for f, c in simples_colored:
             cat, val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc
+            c.data.quux = pc / 100
             c.plot_data[-1] = [cat, val]
 
         for f, c in lines:
             cat, val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc
+            c.data.quux = pc / 100
             c.plot_data[-1] = [cat, val]
 
         for f, c in bars:
             cat, val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc
+            c.data.quux = pc / 100
             c.plot_data[-1] = [cat, val]
 
         for f, c in large_lines:
             cat, val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc
+            c.data.quux = pc / 100
             c.plot_data[-1] = [cat, val]
 
         for f, c in large_pcs:
             val, pc = f.next()
             c.data.foo = val
-            c.data.bar = pc * 100
+            c.data.bar = pc
             c.progress = pc
 
         for f, c in small_pcs:
             val, pc = f.next()
             c.data.foo = val
-            c.data.bar = pc * 100
+            c.data.bar = pc
             c.progress = pc
 
         for f, c in small_pbs:
             val, pc = f.next()
             c.data.foo = val
-            c.data.bar = pc * 100
+            c.data.bar = pc
             c.progress = pc
 
         for f, c in large_cards:
             val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc * 100
+            c.data.quux = pc
 
         for f, c in large_pbs:
             val, pc = f.next()
             c.data.foo = val
-            c.data.bar = pc * 100
+            c.data.bar = pc
             c.progress = pc
 
         page.save()

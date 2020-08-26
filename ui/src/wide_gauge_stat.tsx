@@ -74,36 +74,35 @@ interface State {
   data?: Rec
 }
 
-const
-  View = bond(({ state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const data = unpack(s.data)
+export const View = bond(({ state: s, changed }: Card<State>) => {
+  const
+    render = () => {
+      const data = unpack(s.data)
 
-        return (
-          <div className={css.card}>
-            <div className={css.left}>
-              <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-              <div className={css.percentContainer}>
-                <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
+      return (
+        <div className={css.card}>
+          <div className={css.left}>
+            <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <div className={css.percentContainer}>
+              <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
+            </div>
+          </div>
+          <div className={css.right}>
+            <div className={css.title}>
+              <Format data={data} format={s.title} />
+            </div>
+            <div className={css.values}>
+              <div className={css.value}>
+                <Format data={data} format={s.value} />
+              </div>
+              <div className={css.aux_value}>
+                <Format data={data} format={s.aux_value} />
               </div>
             </div>
-            <div className={css.right}>
-              <div className={css.title}>
-                <Format data={data} format={s.title} />
-              </div>
-              <div className={css.values}>
-                <div className={css.value}>
-                  <Format data={data} format={s.value} />
-                </div>
-                <div className={css.aux_value}>
-                  <Format data={data} format={s.aux_value} />
-                </div>
-              </div>
-            </div>
-          </div>)
-      }
-    return { render, changed }
-  })
+          </div>
+        </div>)
+    }
+  return { render, changed }
+})
 
 cards.register('wide_gauge_stat', View)
