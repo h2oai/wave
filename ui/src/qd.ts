@@ -98,10 +98,10 @@ export function by(...args: any[]): any {
     xs = args.slice(0, m) as Boxed<any>[],
     // eslint-disable-next-line @typescript-eslint/ban-types
     f = args[m] as Function,
-    y = box(f(...xs.map(x => x())))
+    yB = box(f(...xs.map(x => x())))
 
-  xs.forEach(x => x.on(_ => y(f(...xs.map(x => x())))))
-  return y
+  xs.forEach(x => x.on(_ => yB(f(...xs.map(x => x())))))
+  return yB
 }
 
 export function watch<T>(x: Box<T>, label?: string): Disposable {
@@ -570,7 +570,7 @@ const
   loadCard = (key: S, c: CardD): C => {
     const
       data: Dict<any> = {},
-      changed = box<B>(),
+      changedB = box<B>(),
       set = (ks: S[], v: any) => {
         switch (ks.length) {
           case 0:
@@ -611,7 +611,7 @@ const
       }
 
     ctor(c)
-    return { id: xid(), name: key, state: data, changed, set }
+    return { id: xid(), name: key, state: data, changed: changedB, set }
   },
   newPage = (): Page => {
     let dirty = false, dirties: Dict<B> = {}
@@ -619,7 +619,7 @@ const
     const
       key = xid(),
       cards: Dict<C> = {},
-      changed = box<B>(),
+      changedB = box<B>(),
       add = (k: S, card: C) => {
         cards[k] = card
         dirty = true
@@ -642,7 +642,7 @@ const
       },
       sync = () => {
         if (dirty) {
-          changed(true)
+          changedB(true)
         } else {
           for (const k in dirties) {
             const c = cards[k]
@@ -653,7 +653,7 @@ const
         dirties = {} // reset
       }
 
-    return { key, changed, add, get, set, list, drop, sync }
+    return { key, changed: changedB, add, get, set, list, drop, sync }
   },
   load = ({ c }: PageD): Page => {
     const page = newPage()

@@ -1,0 +1,5 @@
+{
+  "name": "eslint-plugin-q",
+  "version": "1.0.0",
+  "main": "linter.js"
+}

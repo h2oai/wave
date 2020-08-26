@@ -29,9 +29,11 @@
   },
   "plugins": [
     "react",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "q"
   ],
   "rules": {
+    "q/box-variable-suffix": "error",
     "react/display-name": "off",
     "no-console": [
       "error",
