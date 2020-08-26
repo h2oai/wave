@@ -18,8 +18,10 @@ const intlCache = createIntlCache() // prevents memory leaks per docs
 export const intl = createIntl({
   locale: navigator.language,
   messages: {},
-  // the intl lib throws console.errors for each missing id.
-  // since we generate format messages on the fly, ignore all errors.
+  // Since we generate format messages on the fly, ignore all errors.
+  // The intl lib requires messages to be initialized in advance,
+  // Otherwise, it throws console.errors for each missing id, each time format() is called.
+  // As of this implementation, there's no formal way to disable that behavior.
   onError: () => { },
 }, intlCache)
 
