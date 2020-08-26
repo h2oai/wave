@@ -55,7 +55,7 @@ release-os:
 	rsync -a py/build/docs/h2o_q build/$(REL)/ && mv build/$(REL)/h2o_q build/$(REL)/docs
 	rsync -a py/examples build/$(REL)/
 	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd$(EXE_EXT) cmd/qd/main.go
-	cp release.txt build/$(REL)/readme.txt
+	cp readme-$(OS).txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
 release-docs:
