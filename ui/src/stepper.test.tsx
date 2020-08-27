@@ -22,6 +22,23 @@ describe('Stepper.tsx', () => {
     }
   })
 
+  it('Throws error when done steps are not in order', () => {
+    stepperProps = {
+      ...stepperProps,
+      state: {
+        items: [
+          { label: 'Step1' },
+          { label: 'Step2' },
+          { label: 'Step3', done: true },
+        ]
+      }
+    }
+    // Should throw an error, but we don't want to see it in testing terminal.
+    jest.spyOn(console, 'error').mockImplementation(jest.fn())
+
+    expect(() => render(<View {...stepperProps} />)).toThrowError()
+  })
+
   it('Renders step numbers by default', () => {
     const { queryByText } = render(<View {...stepperProps} />)
 
