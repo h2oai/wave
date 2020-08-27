@@ -56,31 +56,32 @@ interface State {
   data?: Rec
 }
 
-export const View = bond(({ state: s, changed }: Card<State>) => {
-  const
-    render = () => {
-      const data = unpack(s.data)
+export const
+  View = bond(({ state: s, changed }: Card<State>) => {
+    const
+      render = () => {
+        const data = unpack(s.data)
 
-      return (
-        <div className={css.card}>
-          <div className={css.title}>
-            <Format data={data} format={s.title} />
-          </div>
-          <div className={css.body}>
-            <ProgressArc size={grid.unitInnerWidth} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-            <div className={css.value_overlay}>
-              <div className={css.value}>
-                <Format data={data} format={s.value} />
-              </div>
-              <div className={css.aux_value}>
-                <Format data={data} format={s.aux_value} />
+        return (
+          <div className={css.card}>
+            <div className={css.title}>
+              <Format data={data} format={s.title} />
+            </div>
+            <div className={css.body}>
+              <ProgressArc size={grid.unitInnerWidth} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+              <div className={css.value_overlay}>
+                <div className={css.value}>
+                  <Format data={data} format={s.value} />
+                </div>
+                <div className={css.aux_value}>
+                  <Format data={data} format={s.aux_value} />
+                </div>
               </div>
             </div>
-          </div>
-        </div>)
-    }
-  return { render, changed }
-})
+          </div>)
+      }
+    return { render, changed }
+  })
 
 cards.register('tall_gauge_stat', View)
 

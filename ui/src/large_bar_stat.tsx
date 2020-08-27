@@ -68,44 +68,45 @@ interface State {
   data?: Rec
 }
 
-export const View = bond(({ state: s, changed }: Card<State>) => {
-  const
-    render = () => {
-      const
-        data = unpack(s.data)
+export const
+  View = bond(({ state: s, changed }: Card<State>) => {
+    const
+      render = () => {
+        const
+          data = unpack(s.data)
 
-      return (
-        <div className={css.card}>
-          <div className={css.title}>
-            <Format data={data} format={s.title} />
-          </div>
-          <div className={css.caption}>
-            <Format data={data} format={s.caption} />
-          </div>
-          <div>
-            <div className={css.values}>
-              <div className={css.value}>
-                <Format data={data} format={s.value} />
+        return (
+          <div className={css.card}>
+            <div className={css.title}>
+              <Format data={data} format={s.title} />
+            </div>
+            <div className={css.caption}>
+              <Format data={data} format={s.caption} />
+            </div>
+            <div>
+              <div className={css.values}>
+                <div className={css.value}>
+                  <Format data={data} format={s.value} />
+                </div>
+                <div className={css.aux_value}>
+                  <Format data={data} format={s.aux_value} />
+                </div>
               </div>
-              <div className={css.aux_value}>
-                <Format data={data} format={s.aux_value} />
+              <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+              <div className={css.captions}>
+                <div className={css.value_caption}>
+                  <Format data={data} format={s.value_caption} />
+                </div>
+                <div className={css.aux_value_caption}>
+                  <Format data={data} format={s.aux_value_caption} />
+                </div>
               </div>
             </div>
-            <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-            <div className={css.captions}>
-              <div className={css.value_caption}>
-                <Format data={data} format={s.value_caption} />
-              </div>
-              <div className={css.aux_value_caption}>
-                <Format data={data} format={s.aux_value_caption} />
-              </div>
-            </div>
           </div>
-        </div>
-      )
-    }
-  return { render, changed }
-})
+        )
+      }
+    return { render, changed }
+  })
 
 cards.register('large_bar_stat', View)
 
