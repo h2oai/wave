@@ -5,6 +5,7 @@ build
 # Config files
 config/webpackDevServer.config.js
 jest.config.js
+lint-staged.config.js
 
 # React boilerplate
 src/react-app-env.d.ts
