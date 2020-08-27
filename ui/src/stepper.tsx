@@ -48,7 +48,7 @@ const
   }),
   iconStyles: Fluent.IIconStyles = { root: { fontSize: 24 } }
 
-const
+export const
   View = bond(({ state }: Card<State>) => {
     state.items.forEach((s, i) => {
       if (i > 0 && !state.items[i - 1].done && s.done) {
