@@ -1,5 +1,11 @@
+# Generated assets
 node_modules
 build
+
+# Config files
 config/webpackDevServer.config.js
+jest.config.js
+
+# React boilerplate
 src/react-app-env.d.ts
 src/serviceWorker.ts
