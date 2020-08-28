@@ -12,6 +12,11 @@ describe('Spinbox.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XSpinbox model={spinboxProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init', () => {
     render(<XSpinbox model={spinboxProps} />)
     expect(T.qd.args[name]).toBe(0)

@@ -15,6 +15,16 @@ describe('Textbox.tsx', () => {
     T.qd.args[name] = null
   })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XTextbox model={textboxProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
+  it('Renders data-test attr - masked', () => {
+    const { queryByTestId } = render(<XTextbox model={{ ...textboxProps, mask: 'mask' }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init - no value specified', () => {
     render(<XTextbox model={textboxProps} />)
     expect(T.qd.args[name]).toBe('')

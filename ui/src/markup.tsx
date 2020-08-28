@@ -31,26 +31,16 @@ export const
     return <div dangerouslySetInnerHTML={html} />
   },
   MarkupCard = ({ title, content }: { title: S, content: S }) => (
-    title
-      ? (
-        <div className={css.titledCard}>
-          <div className={css.title}>{title}</div>
-          <Markup content={content} />
-        </div>
-      )
-      : (
-        <div className={css.untitledCard}>
-          <Markup content={content} />
-        </div>
-      )
+    <div data-test='markup' className={title ? css.titledCard : css.untitledCard}>
+      {title && <div className={css.title}>{title}</div>}
+      <Markup content={content} />
+    </div>
   )
 
-const
+export const
   View = bond(({ state, changed }: Card<State>) => {
     const render = () => <MarkupCard title={state.title} content={state.content} />
     return { render, changed }
   })
 
 cards.register('markup', View)
-
-

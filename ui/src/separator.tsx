@@ -24,7 +24,7 @@ export interface Separator {
 
 export const
   XSeparator = ({ model: m }: { model: Separator }) => (
-    <div className={css.separator}>
+    <div data-test='separator' className={css.separator}>
       <Fluent.Separator data-test='separator'>{m.label}</Fluent.Separator>
     </div>
   )

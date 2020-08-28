@@ -10,6 +10,11 @@ describe('ColorPicker.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XColorPicker model={colorPickerProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init - value not specified', () => {
     render(<XColorPicker model={colorPickerProps} />)
     expect(T.qd.args[name]).toBeFalsy()

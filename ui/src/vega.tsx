@@ -58,13 +58,13 @@ interface State {
   data?: Rec
 }
 
-const
+export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       render = () => {
         const data = unpack<any[]>(state.data)
         return (
-          <div className={css.card}>
+          <div data-test='vega' className={css.card}>
             <div className={css.title}>{state.title}</div>
             <VegaLite key={xid()} spec={JSON.parse(state.specification)} data={data} />
           </div>

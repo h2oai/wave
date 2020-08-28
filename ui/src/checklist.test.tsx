@@ -10,6 +10,11 @@ describe('Checklist.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XChecklist model={checklistProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - single selection', () => {
     const { getByText } = render(<XChecklist model={checklistProps} />)
     fireEvent.click(getByText('Choice1').parentElement!)

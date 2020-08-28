@@ -68,13 +68,13 @@ const
     return css
   }
 
-const
+export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       render = () => {
         // FIXME theme.merge()
         return (
-          <div style={toFlexStyle(state)}>
+          <div style={toFlexStyle(state)} data-test='flex'>
             <Repeat view={state.item_view} props={state.item_props} data={state.data} />
           </div>
         )

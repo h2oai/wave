@@ -29,6 +29,11 @@ describe('Nav.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<View {...navProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init', () => {
     render(<View {...navProps} />)
     expect(T.qd.args[name]).toBeNull()

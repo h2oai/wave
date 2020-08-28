@@ -14,6 +14,11 @@ describe('Toggle.tsx', () => {
     T.qd.args[name] = null
   })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XToggle model={toggleProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Calls sync when trigger is on', () => {
     const syncMock = jest.fn()
     const { getByTestId } = render(<XToggle model={{ ...toggleProps, trigger: true }} />)

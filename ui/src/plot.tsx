@@ -699,7 +699,7 @@ interface State {
   plot: Plot
 }
 
-const
+export const
   View = bond(({ state, changed }: Card<State>) => {
     let
       currentChart: Chart | null = null,
@@ -736,7 +736,7 @@ const
       },
       render = () => {
         return (
-          <div className={css.card}>
+          <div data-test='plot' className={css.card}>
             <div className={css.title}>{state.title || 'Untitled'}</div>
             <div className={css.plot} ref={container} />
           </div>

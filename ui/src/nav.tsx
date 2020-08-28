@@ -45,7 +45,7 @@ export const
             }
           }))
         }))
-        return <Nav groups={groups} />
+        return <div data-test='nav'><Nav groups={groups} /></div>
       }
     return { render, changed }
   })

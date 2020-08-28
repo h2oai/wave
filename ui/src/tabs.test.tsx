@@ -11,6 +11,10 @@ describe('Tabs.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XTabs model={tabsProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
 
   it('Sets args and calls sync on click', () => {
     const syncMock = jest.fn()

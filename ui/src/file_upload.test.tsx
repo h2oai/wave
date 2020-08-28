@@ -30,6 +30,11 @@ describe('FileUpload.tsx', () => {
     setTimeout(() => { xhrMockObj['onreadystatechange'](); }, 0);
   }
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XFileUpload model={fileUploadProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Shows dragging screen on dragging', () => {
     const { getByTestId, queryByText } = render(<XFileUpload model={fileUploadProps} />)
     fireEvent.dragEnter(getByTestId(name))

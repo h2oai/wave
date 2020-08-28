@@ -91,31 +91,34 @@ export const
         else return <span>{v}</span>
       },
       render = () => (
-        m.multiple ? (
-          <Fluent.MarqueeSelection selection={selection}>
-            <Fluent.DetailsList
-              data-test={m.name}
-              items={items}
-              columns={columns}
-              layoutMode={Fluent.DetailsListLayoutMode.justified}
-              selection={selection}
-              selectionMode={Fluent.SelectionMode.multiple}
-              selectionPreservedOnEmptyClick={true}
-            />
-          </Fluent.MarqueeSelection>
-        ) : (
-            <Fluent.DetailsList
-              data-test={m.name}
-              items={items}
-              columns={columns}
-              layoutMode={Fluent.DetailsListLayoutMode.justified}
-              selection={selection}
-              selectionMode={Fluent.SelectionMode.none}
-              selectionPreservedOnEmptyClick={true}
-              onItemInvoked={onItemInvoked}
-              onRenderItemColumn={onRenderItemColumn}
-            />
-          )
+        <div data-test={m.name}>
+          {
+            m.multiple
+              ? (
+                <Fluent.MarqueeSelection selection={selection}>
+                  <Fluent.DetailsList
+                    items={items}
+                    columns={columns}
+                    layoutMode={Fluent.DetailsListLayoutMode.justified}
+                    selection={selection}
+                    selectionMode={Fluent.SelectionMode.multiple}
+                    selectionPreservedOnEmptyClick={true}
+                  />
+                </Fluent.MarqueeSelection>
+              ) : (
+                <Fluent.DetailsList
+                  items={items}
+                  columns={columns}
+                  layoutMode={Fluent.DetailsListLayoutMode.justified}
+                  selection={selection}
+                  selectionMode={Fluent.SelectionMode.none}
+                  selectionPreservedOnEmptyClick={true}
+                  onItemInvoked={onItemInvoked}
+                  onRenderItemColumn={onRenderItemColumn}
+                />
+              )
+          }
+        </div>
       )
     return { render }
   })

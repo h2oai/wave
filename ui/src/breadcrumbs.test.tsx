@@ -26,6 +26,11 @@ describe('Breadcrumbs.tsx', () => {
     jest.clearAllMocks()
   })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<View {...breadcrumbsProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init', () => {
     render(<View {...breadcrumbsProps} />)
     expect(T.qd.args[name]).toBeNull()

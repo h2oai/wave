@@ -14,6 +14,11 @@ describe('Checkbox.tsx', () => {
     T.qd.args[name] = null
   })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XCheckbox model={checkboxProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Does not call sync when trigger is off', () => {
     const syncMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={checkboxProps} />)

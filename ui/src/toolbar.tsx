@@ -56,7 +56,9 @@ const
       onClick,
     }
   },
-  toCommands = (commands: Command[]) => commands.map(toCommand),
+  toCommands = (commands: Command[]) => commands.map(toCommand)
+
+export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       render = () => {
@@ -68,6 +70,7 @@ const
         return (
           <div>
             <CommandBar
+              data-test='toolbar'
               items={commands}
               overflowItems={overflowCommands}
               overflowButtonProps={overflowProps}

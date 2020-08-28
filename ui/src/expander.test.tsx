@@ -10,6 +10,11 @@ describe('Expander.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XExpander model={expanderProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init - null', () => {
     render(<XExpander model={expanderProps} />)
     expect(T.qd.args[name]).toBeNull()
