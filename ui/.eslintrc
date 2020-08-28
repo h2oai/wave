@@ -34,6 +34,7 @@
   ],
   "rules": {
     "q/box-variable-suffix": "error",
+    "q/data-test-on-component": "error",
     "react/display-name": "off",
     "no-console": [
       "error",
