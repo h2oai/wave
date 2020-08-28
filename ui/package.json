@@ -20,7 +20,7 @@
     "markdown-it": "^11.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
-    "react-intl": "^4.2.2",
+    "react-intl": "^5.7.1",
     "react-scripts": "3.4.0",
     "react-test-renderer": "^16.13.1",
     "typescript": "^3.7.5",

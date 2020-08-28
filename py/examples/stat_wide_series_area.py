@@ -21,8 +21,8 @@ for i in range(len(curves)):
         box=f'1 {i + 1} 2 1',
         title=fake.cryptocurrency_name(),
         value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-        aux_value='={{intl quux style="unit" unit="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-        data=dict(qux=val, quux=pc),
+        aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+        data=dict(qux=val, quux=pc / 100),
         plot_category='foo',
         plot_type='area',
         plot_value='qux',
@@ -39,6 +39,6 @@ while True:
     for f, c in cards:
         cat, val, pc = f.next()
         c.data.qux = val
-        c.data.quux = pc
+        c.data.quux = pc / 100
         c.plot_data[-1] = [cat, val]
     page.save()

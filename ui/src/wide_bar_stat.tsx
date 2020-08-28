@@ -49,7 +49,7 @@ interface State {
   data?: Rec
 }
 
-const
+export const
   View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
