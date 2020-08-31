@@ -17,8 +17,8 @@ TOUR
 
     Step 2: Run the tour:
             $ python3 -m venv venv
-            $ .\venv\Scripts\pip install -r examples\requirements.txt
-            $ .\venv\Scripts\python examples\tour.py
+            $ venv\Scripts\pip install -r examples\requirements.txt
+            $ venv\Scripts\python examples\tour.py
 
     Step 3: Go to http://localhost:55555/tour
 
