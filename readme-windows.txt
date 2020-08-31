@@ -13,7 +13,7 @@ CONTENTS
 TOUR
 
     Step 1: Start the Q development server:
-            $ .\qd
+            $ qd.exe
 
     Step 2: Run the tour:
             $ python3 -m venv venv
