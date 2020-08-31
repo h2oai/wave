@@ -20,6 +20,33 @@ module.exports = {
         }
       })
     },
+    "card-variable-name": {
+      meta: {
+        type: 'suggestion',
+      },
+      create: context => ({
+        ExpressionStatement: node => {
+          const expression = node.expression
+          if (!expression) return
+
+          const callee = expression.callee
+          if (!callee) return
+
+          if (
+            callee.object &&
+            callee.object.name === 'cards' &&
+            callee.property &&
+            callee.property.name === 'register' &&
+            expression.arguments.length === 2 &&
+            expression.arguments[1] &&
+            expression.arguments[1].name !== 'View'
+          ) context.report(expression, `
+          Component name should be "View" for card components.
+          Replace ${expression.arguments[1].name} with View.
+          `)
+        }
+      })
+    },
     "data-test-on-component": {
       meta: {
         type: 'suggestion',

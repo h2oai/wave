@@ -35,6 +35,7 @@
   "rules": {
     "q/box-variable-suffix": "error",
     "q/data-test-on-component": "error",
+    "q/card-variable-name": "error",
     "react/display-name": "off",
     "no-console": [
       "error",
