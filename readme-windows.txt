@@ -13,12 +13,12 @@ CONTENTS
 TOUR
 
     Step 1: Start the Q development server:
-            $ ./qd
+            $ qd.exe
 
     Step 2: Run the tour:
             $ python3 -m venv venv
-            $ ./venv/bin/pip install -r examples/requirements.txt
-            $ ./venv/bin/python examples/tour.py
+            $ venv\Scripts\pip install -r examples\requirements.txt
+            $ venv\Scripts\python examples\tour.py
 
     Step 3: Go to http://localhost:55555/tour
 
