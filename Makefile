@@ -39,6 +39,12 @@ build-py: ## Build wheel
 run: ## Run server
 	go run cmd/qd/main.go -web-dir ./ui/build -debug
 
+run-cypress-bridge: ## Run Cypress proxy
+	go run cmd/qd/main.go -cypress
+
+run-cypress: ## Run Cypress
+	cd test && ./node_modules/.bin/cypress open
+
 generate: ## Generate driver bindings
 	cd tools/qgen && $(MAKE) run
 

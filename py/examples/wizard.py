@@ -1,7 +1,8 @@
 # Wizard
 # Create a multi-step wizard using form cards.
 # ---
-from h2o_q import Q, ui, listen
+import sys
+from h2o_q import Q, ui, listen, test, run_tests
 
 
 async def main(q: Q):
@@ -41,4 +42,20 @@ async def main(q: Q):
     await q.page.save()
 
 
-listen('/demo', main)
+@test
+def test_wizard(t):
+    t.visit('/demo')
+    t.locate('step1').click()
+    t.locate('text').should('have.text', 'What is your name?')
+    t.locate('nickname').type('Fred')
+    t.locate('step2').click()
+    t.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
+    t.locate('feeling').type('quirky')
+    t.locate('step3').click()
+    t.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
+
+
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    run_tests()
+else:
+    listen('/demo', main)

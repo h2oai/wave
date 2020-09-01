@@ -21,8 +21,11 @@ func main() {
 	// TODO https://github.com/urfave/cli/blob/master/docs/v2/manual.md
 
 	var (
-		conf    qd.ServerConf
-		version bool
+		conf           qd.ServerConf
+		version        bool
+		cypress        bool
+		cypressAddress string
+		cypressDir     string
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
@@ -37,10 +40,21 @@ func main() {
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
 
+	// TODO move to "q cypress"
+	flag.BoolVar(&cypress, "cypress", false, "start Cypress bridge")
+	flag.StringVar(&cypressAddress, "cypress-bridge-address", ":55550", "listen on this address for Cypress bridge")
+	flag.StringVar(&cypressDir, "cypress-dir", "./test", "path to Cypress installation")
+
 	flag.Parse()
 
 	if version {
 		fmt.Printf("Q Development Server\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
+		return
+	}
+
+	if cypress {
+		cypressDir, _ = filepath.Abs(cypressDir)
+		qd.StartCypressBridge(cypressAddress, cypressDir)
 		return
 	}
 

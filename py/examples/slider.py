@@ -1,5 +1,5 @@
 # Form / Slider
-# Use a slider to allow users to set a value withing a specific range.
+# Use a slider to allow users to set a value within a specific range.
 # ---
 from h2o_q import Q, listen, ui
 
