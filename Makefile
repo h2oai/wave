@@ -30,6 +30,9 @@ run-ui: ## Run UI in development mode (hot reloading)
 test-ui-ci: ## Run UI unit tests in CI mode 
 	cd ui && $(MAKE) test-ci
 
+test-ui-watch: ## Run UI unit tests in CI mode 
+	cd ui && $(MAKE) test
+
 build-server: ## Build server for current OS/Arch
 	go build $(LDFLAGS) -o qd cmd/qd/main.go
 
