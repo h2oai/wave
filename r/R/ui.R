@@ -396,6 +396,7 @@ ui_message_bar <- function(
 #' @param readonly True if the text box is a read-only field.
 #' @param multiline True if the text box should allow multi-line text entry.
 #' @param password True if the text box should hide text content.
+#' @param trigger True if the form should be submitted when the text value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Textbox instance.
 ui_textbox <- function(
@@ -413,6 +414,7 @@ ui_textbox <- function(
   readonly = NULL,
   multiline = NULL,
   password = NULL,
+  trigger = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
@@ -428,6 +430,7 @@ ui_textbox <- function(
   .guard_scalar("readonly", "logical", readonly)
   .guard_scalar("multiline", "logical", multiline)
   .guard_scalar("password", "logical", password)
+  .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(textbox=list(
     name=name,
@@ -444,6 +447,7 @@ ui_textbox <- function(
     readonly=readonly,
     multiline=multiline,
     password=password,
+    trigger=trigger,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
@@ -1270,7 +1274,60 @@ ui_picker <- function(
   return(.o)
 }
 
-#' Create a component.
+#' Create a range slider.
+#' 
+#' A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
+#' current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+#' Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
+#'
+#' @param name An identifying name for this component.
+#' @param label Text to be displayed alongside the component.
+#' @param min The minimum value of the slider. Defaults to 0.
+#' @param max The maximum value of the slider. Defaults to 100.
+#' @param step The difference between two adjacent values of the slider.
+#' @param min_value The lower bound of the selected range.
+#' @param max_value The upper bound of the selected range.
+#' @param disabled True if this field is disabled.
+#' @param trigger True if the form should be submitted when the slider value changes.
+#' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @return A RangeSlider instance.
+ui_range_slider <- function(
+  name,
+  label = NULL,
+  min = NULL,
+  max = NULL,
+  step = NULL,
+  min_value = NULL,
+  max_value = NULL,
+  disabled = NULL,
+  trigger = NULL,
+  tooltip = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("min", "numeric", min)
+  .guard_scalar("max", "numeric", max)
+  .guard_scalar("step", "numeric", step)
+  .guard_scalar("min_value", "numeric", min_value)
+  .guard_scalar("max_value", "numeric", max_value)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("tooltip", "character", tooltip)
+  .o <- list(range_slider=list(
+    name=name,
+    label=label,
+    min=min,
+    max=max,
+    step=step,
+    min_value=min_value,
+    max_value=max_value,
+    disabled=disabled,
+    trigger=trigger,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
+#' No documentation available.
 #'
 #' @param text Text block.
 #' @param text_xl Extra-large sized text block.
@@ -1302,6 +1359,7 @@ ui_picker <- function(
 #' @param expander Expander.
 #' @param frame Frame
 #' @param picker Picker
+#' @param range_slider No documentation available.
 #' @return A Component instance.
 ui_component <- function(
   text = NULL,
@@ -1333,7 +1391,8 @@ ui_component <- function(
   tabs = NULL,
   expander = NULL,
   frame = NULL,
-  picker = NULL) {
+  picker = NULL,
+  range_slider = NULL) {
   .guard_scalar("text", "h2oq_Text", text)
   .guard_scalar("text_xl", "h2oq_TextXl", text_xl)
   .guard_scalar("text_l", "h2oq_TextL", text_l)
@@ -1364,6 +1423,7 @@ ui_component <- function(
   .guard_scalar("expander", "h2oq_Expander", expander)
   .guard_scalar("frame", "h2oq_Frame", frame)
   .guard_scalar("picker", "h2oq_Picker", picker)
+  .guard_scalar("range_slider", "h2oq_RangeSlider", range_slider)
   .o <- list(
     text=text,
     text_xl=text_xl,
@@ -1394,7 +1454,8 @@ ui_component <- function(
     tabs=tabs,
     expander=expander,
     frame=frame,
-    picker=picker)
+    picker=picker,
+    range_slider=range_slider)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }

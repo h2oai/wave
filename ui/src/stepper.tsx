@@ -1,30 +1,32 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { bond, S, B, U, Card } from './qd';
-import { cards } from './layout';
+import { bond, S, B, U } from './qd';
 import { stylesheet } from 'typestyle';
 import { getTheme, rem } from './theme';
 
 /**
- * A single stage of a process.
+ * Create a step for a stepper.
  */
 interface Step {
   /** Text displayed below icon. */
   label: S
   /** Icon to be displayed. */
   icon?: S
-  /** Indicates whether the step has already been completed. */
+  /** Indicates whether this step has already been completed. */
   done?: B
 }
 
 /**
-  Displays progress through numbered steps.
+  Create a component that displays a sequence of steps in a process.
+  The steps keep users informed about where they are in the process and how much is left to complete.
 */
-interface State {
+export interface Stepper {
   /** An identifying name for this component. */
   name: S
-  /** Particular stages user is supposed to go through. */
+  /** The sequence of steps to be displayed. */
   items: Step[]
+  /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
+  tooltip?: S
 }
 
 const
@@ -49,14 +51,14 @@ const
   iconStyles: Fluent.IIconStyles = { root: { fontSize: 24 } }
 
 export const
-  View = bond(({ state }: Card<State>) => {
-    state.items.forEach((s, i) => {
-      if (i > 0 && !state.items[i - 1].done && s.done) {
+  XStepper = bond(({ model: m }: { model: Stepper }) => {
+    m.items.forEach((s, i) => {
+      if (i > 0 && !m.items[i - 1].done && s.done) {
         throw new Error(`Step ${i} cannot be done because step ${i - 1} is not.`)
       }
     })
     const
-      steps = state.items,
+      steps = m.items,
       disabledStyles = (stepIdx: U) => stepIdx > 0 && !steps[stepIdx - 1].done ? css.disabled : '',
       createStep = (step: Step, i: U) => (
         <React.Fragment key={i}>
@@ -81,7 +83,7 @@ export const
       ),
       render = () => (
         <Fluent.Stack
-          data-test={state.name}
+          data-test={m.name}
           horizontal
           horizontalAlign='space-between'
           verticalAlign='center'
@@ -92,5 +94,3 @@ export const
 
     return { render }
   })
-
-cards.register('stepper', View)

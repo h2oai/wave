@@ -2467,7 +2467,7 @@ class RangeSlider:
 
 
 class Component:
-    """Create a component.
+    """No documentation available.
     """
     def __init__(
             self,
@@ -2564,7 +2564,7 @@ class Component:
         self.picker = picker
         """Picker"""
         self.range_slider = range_slider
-        """RangeSlider"""
+        """No documentation available."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4662,110 +4662,6 @@ class SmallStatCard:
             title,
             value,
             data,
-            commands,
-        )
-
-
-class Step:
-    """A single stage of a process.
-    """
-    def __init__(
-            self,
-            label: str,
-            icon: Optional[str] = None,
-            done: Optional[bool] = None,
-    ):
-        self.label = label
-        """Text displayed below icon."""
-        self.icon = icon
-        """Icon to be displayed."""
-        self.done = done
-        """Indicates whether the step has already been completed."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('Step.label is required.')
-        return _dump(
-            label=self.label,
-            icon=self.icon,
-            done=self.done,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Step':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Step.label is required.')
-        __d_icon: Any = __d.get('icon')
-        __d_done: Any = __d.get('done')
-        label: str = __d_label
-        icon: Optional[str] = __d_icon
-        done: Optional[bool] = __d_done
-        return Step(
-            label,
-            icon,
-            done,
-        )
-
-
-class StepperCard:
-    """Displays progress through numbered steps.
-    """
-    def __init__(
-            self,
-            box: str,
-            name: str,
-            items: List[Step],
-            commands: Optional[List[Command]] = None,
-    ):
-        self.box = box
-        """A string indicating how to place this component on the page."""
-        self.name = name
-        """An identifying name for this component."""
-        self.items = items
-        """Particular stages user is supposed to go through."""
-        self.commands = commands
-        """Contextual menu commands for this component."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('StepperCard.box is required.')
-        if self.name is None:
-            raise ValueError('StepperCard.name is required.')
-        if self.items is None:
-            raise ValueError('StepperCard.items is required.')
-        return _dump(
-            view='stepper',
-            box=self.box,
-            name=self.name,
-            items=[__e.dump() for __e in self.items],
-            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'StepperCard':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('StepperCard.box is required.')
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('StepperCard.name is required.')
-        __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('StepperCard.items is required.')
-        __d_commands: Any = __d.get('commands')
-        box: str = __d_box
-        name: str = __d_name
-        items: List[Step] = [Step.load(__e) for __e in __d_items]
-        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return StepperCard(
-            box,
-            name,
-            items,
             commands,
         )
 

@@ -1250,7 +1250,7 @@ def component(
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
 ) -> Component:
-    """Create a component.
+    """No documentation available.
 
     Args:
         text: Text block.
@@ -1283,7 +1283,7 @@ def component(
         expander: Expander.
         frame: Frame
         picker: Picker
-        range_slider: RangeSlider
+        range_slider: No documentation available.
     Returns:
         A `h2o_q.types.Component` instance.
     """
@@ -2122,51 +2122,6 @@ def small_stat_card(
         title,
         value,
         data,
-        commands,
-    )
-
-
-def step(
-        label: str,
-        icon: Optional[str] = None,
-        done: Optional[bool] = None,
-) -> Step:
-    """A single stage of a process.
-
-    Args:
-        label: Text displayed below icon.
-        icon: Icon to be displayed.
-        done: Indicates whether the step has already been completed.
-    Returns:
-        A `h2o_q.types.Step` instance.
-    """
-    return Step(
-        label,
-        icon,
-        done,
-    )
-
-
-def stepper_card(
-        box: str,
-        name: str,
-        items: List[Step],
-        commands: Optional[List[Command]] = None,
-) -> StepperCard:
-    """Displays progress through numbered steps.
-
-    Args:
-        box: A string indicating how to place this component on the page.
-        name: An identifying name for this component.
-        items: Particular stages user is supposed to go through.
-        commands: Contextual menu commands for this component.
-    Returns:
-        A `h2o_q.types.StepperCard` instance.
-    """
-    return StepperCard(
-        box,
-        name,
-        items,
         commands,
     )
 

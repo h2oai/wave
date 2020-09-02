@@ -29,6 +29,7 @@ import { Toggle, XToggle } from './toggle';
 import { XToolTip } from './tooltip';
 import { Picker, XPicker } from './picker';
 import { RangeSlider, XRangeSlider } from './range_slider';
+import { Stepper, XStepper } from './stepper';
 
 /** Create a component. */
 export interface Component {
@@ -94,6 +95,8 @@ export interface Component {
   picker?: Picker
   /** RangeSlider */
   range_slider?: RangeSlider
+  /** Stepper */
+  stepper?: Stepper
 }
 
 /** Create a form. */
@@ -150,6 +153,7 @@ const
     if (m.frame) return <XFrame model={m.frame} />
     if (m.picker) return <XToolTip content={m.picker.tooltip}><XPicker model={m.picker} /></XToolTip>
     if (m.range_slider) return <XToolTip content={m.range_slider.tooltip}><XRangeSlider model={m.range_slider} /></XToolTip>
+    if (m.stepper) return <XToolTip content={m.stepper.tooltip}><XStepper model={m.stepper} /></XToolTip>
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
