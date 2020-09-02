@@ -75,8 +75,9 @@ Commit messages must follow [Conventional commits](https://www.conventionalcommi
 - Run accompanying unit tests if found.
 - Run Typescript compiler for typescript files.
 
-If any of these checks will fail, the commit is aborted and you have to fix the errors first.
+If any of these checks fails, the commit is aborted and you have to fix the errors first.
 
+Make sure your commit message also ends with an issue number (e.g. fix: Typo #11).
 ### Commonly used make targets
 
 ``` bash
