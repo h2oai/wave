@@ -62,30 +62,26 @@ const
 /**
  * Create a range slider.
  *
- * A range slider is an element used to set a value. It provides a visual indication of adjustable content, as well as the
+ * A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
  * current setting in the total range of content. It is displayed as a horizontal track with options on either side.
  * Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
- *
- * A range slider is a good choice when you know that users think of the value as a relative quantity and also want
- * to specify an interval (range) instead of a single numeric value.
- *
- * The default value of the range slider will be zero for min and 100 for max.
+ * 
 */
 export interface RangeSlider {
   /** An identifying name for this component. */
   name: S
   /** Text to be displayed alongside the component. */
   label?: S
-  /** The minimum value of the slider. */
+  /** The minimum value of the slider. Defaults to 0. */
   min?: F
-  /** The maximum value of the slider. */
+  /** The maximum value of the slider. Defaults to 100. */
   max?: F
   /** The difference between two adjacent values of the slider. */
   step?: F
-  /** The current max value of the slider. */
-  max_value?: F
-  /** The current min value of the slider. */
+  /** The lower bound of the selected range. */
   min_value?: F
+  /** The upper bound of the selected range. */
+  max_value?: F
   /** True if this field is disabled. */
   disabled?: B
   /** True if the form should be submitted when the slider value changes. */

@@ -1177,31 +1177,26 @@ def range_slider(
         min: Optional[float] = None,
         max: Optional[float] = None,
         step: Optional[float] = None,
-        max_value: Optional[float] = None,
         min_value: Optional[float] = None,
+        max_value: Optional[float] = None,
         disabled: Optional[bool] = None,
         trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a range slider.
 
-    A range slider is an element used to set a value. It provides a visual indication of adjustable content, as well as the
+    A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
     current setting in the total range of content. It is displayed as a horizontal track with options on either side.
     Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
-
-    A range slider is a good choice when you know that users think of the value as a relative quantity and also want
-    to specify an interval (range) instead of a single numeric value.
-
-    The default value of the range slider will be zero for min and 100 for max.
 
     Args:
         name: An identifying name for this component.
         label: Text to be displayed alongside the component.
-        min: The minimum value of the slider.
-        max: The maximum value of the slider.
+        min: The minimum value of the slider. Defaults to 0.
+        max: The maximum value of the slider. Defaults to 100.
         step: The difference between two adjacent values of the slider.
-        max_value: The current max value of the slider.
-        min_value: The current min value of the slider.
+        min_value: The lower bound of the selected range.
+        max_value: The upper bound of the selected range.
         disabled: True if this field is disabled.
         trigger: True if the form should be submitted when the slider value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -1214,8 +1209,8 @@ def range_slider(
         min,
         max,
         step,
-        max_value,
         min_value,
+        max_value,
         disabled,
         trigger,
         tooltip,

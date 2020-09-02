@@ -1,5 +1,5 @@
 # Form / Range Slider
-# Use a range slider to allow users to set a value within a specific range from both extremes.
+# Use a range slider to allow users to select a value range (from, to).
 # ---
 from h2o_q import Q, listen, ui
 

@@ -2372,14 +2372,9 @@ class Picker:
 class RangeSlider:
     """Create a range slider.
 
-    A range slider is an element used to set a value. It provides a visual indication of adjustable content, as well as the
+    A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
     current setting in the total range of content. It is displayed as a horizontal track with options on either side.
     Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
-
-    A range slider is a good choice when you know that users think of the value as a relative quantity and also want
-    to specify an interval (range) instead of a single numeric value.
-
-    The default value of the range slider will be zero for min and 100 for max.
     """
     def __init__(
             self,
@@ -2388,8 +2383,8 @@ class RangeSlider:
             min: Optional[float] = None,
             max: Optional[float] = None,
             step: Optional[float] = None,
-            max_value: Optional[float] = None,
             min_value: Optional[float] = None,
+            max_value: Optional[float] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
@@ -2399,15 +2394,15 @@ class RangeSlider:
         self.label = label
         """Text to be displayed alongside the component."""
         self.min = min
-        """The minimum value of the slider."""
+        """The minimum value of the slider. Defaults to 0."""
         self.max = max
-        """The maximum value of the slider."""
+        """The maximum value of the slider. Defaults to 100."""
         self.step = step
         """The difference between two adjacent values of the slider."""
-        self.max_value = max_value
-        """The current max value of the slider."""
         self.min_value = min_value
-        """The current min value of the slider."""
+        """The lower bound of the selected range."""
+        self.max_value = max_value
+        """The upper bound of the selected range."""
         self.disabled = disabled
         """True if this field is disabled."""
         self.trigger = trigger
@@ -2425,8 +2420,8 @@ class RangeSlider:
             min=self.min,
             max=self.max,
             step=self.step,
-            max_value=self.max_value,
             min_value=self.min_value,
+            max_value=self.max_value,
             disabled=self.disabled,
             trigger=self.trigger,
             tooltip=self.tooltip,
@@ -2442,8 +2437,8 @@ class RangeSlider:
         __d_min: Any = __d.get('min')
         __d_max: Any = __d.get('max')
         __d_step: Any = __d.get('step')
-        __d_max_value: Any = __d.get('max_value')
         __d_min_value: Any = __d.get('min_value')
+        __d_max_value: Any = __d.get('max_value')
         __d_disabled: Any = __d.get('disabled')
         __d_trigger: Any = __d.get('trigger')
         __d_tooltip: Any = __d.get('tooltip')
@@ -2452,8 +2447,8 @@ class RangeSlider:
         min: Optional[float] = __d_min
         max: Optional[float] = __d_max
         step: Optional[float] = __d_step
-        max_value: Optional[float] = __d_max_value
         min_value: Optional[float] = __d_min_value
+        max_value: Optional[float] = __d_max_value
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
@@ -2463,8 +2458,8 @@ class RangeSlider:
             min,
             max,
             step,
-            max_value,
             min_value,
+            max_value,
             disabled,
             trigger,
             tooltip,
