@@ -4,7 +4,7 @@ import { View } from './wide_gauge_stat';
 import * as T from './qd';
 
 const
-  title = 'wide-gauge-stat',
+  title = 'wide_gauge_stat',
   wideGaugeStatProps: T.Card<any> = {
     name: title,
     state: {

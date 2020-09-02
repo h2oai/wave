@@ -4,7 +4,7 @@ import { XMessageBar, MessageBar } from './message_bar';
 import { initializeIcons } from '@fluentui/react';
 
 const
-  name = 'message-bar',
+  name = 'message_bar',
   messagebarProps: MessageBar = { text: name }
 
 describe('MessageBar.tsx', () => {

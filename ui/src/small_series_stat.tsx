@@ -87,7 +87,7 @@ export const
               />
             )
         return (
-          <div data-test='small-series-stat' className={css.card}>
+          <div data-test='small_series_stat' className={css.card}>
             <div className={css.titleBar}>
               <div className={css.title || 'Untitled'}>
                 <Format data={data} format={s.title} />

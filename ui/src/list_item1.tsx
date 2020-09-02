@@ -61,7 +61,7 @@ export const
           data = unpack(s.data)
 
         return (
-          <div data-test='list-item-1' className={css.item}>
+          <div data-test='list_item_1' className={css.item}>
             <div className={css.left}>
               <div className={css.title}>
                 <Format data={data} format={s.title} />

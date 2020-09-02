@@ -4,7 +4,7 @@ import { View } from './list_item1';
 import * as T from './qd';
 
 const
-  name = 'list-item-1',
+  name = 'list_item_1',
   list_item_props: T.Card<any> = {
     name,
     state: { data: [] },

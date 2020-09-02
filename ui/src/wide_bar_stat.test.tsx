@@ -4,7 +4,7 @@ import { View } from './wide_bar_stat';
 import * as T from './qd';
 
 const
-  title = 'wide-bar-stat',
+  title = 'wide_bar_stat',
   wideBarStatProps: T.Card<any> = {
     name: title,
     state: {

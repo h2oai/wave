@@ -63,7 +63,7 @@ export const
         const data = unpack(s.data)
 
         return (
-          <div data-test='tall-gauge-stat' className={css.card}>
+          <div data-test='tall_gauge_stat' className={css.card}>
             <div className={css.title}>
               <Format data={data} format={s.title} />
             </div>

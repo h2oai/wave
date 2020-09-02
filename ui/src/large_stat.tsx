@@ -52,7 +52,7 @@ export const
     const
       render = () => {
         return (
-          <div data-test='large-stat' className={css.card}>
+          <div data-test='large_stat' className={css.card}>
             <div className={css.title}>
               <Format data={s.data} format={s.title} />
             </div>

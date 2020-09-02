@@ -4,7 +4,7 @@ import { View } from './small_series_stat';
 import * as T from './qd';
 
 const
-  name = 'small-series-stat',
+  name = 'small_series_stat',
   smallSeriesStatProps: T.Card<any> = {
     name,
     state: {

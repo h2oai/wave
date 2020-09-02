@@ -76,7 +76,7 @@ export const
           data = unpack(s.data)
 
         return (
-          <div data-test='large-bar-stat' className={css.card}>
+          <div data-test='large_bar_stat' className={css.card}>
             <div className={css.title}>
               <Format data={data} format={s.title} />
             </div>

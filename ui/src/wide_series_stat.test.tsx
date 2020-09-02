@@ -4,7 +4,7 @@ import { View } from './wide_series_stat';
 import * as T from './qd';
 
 const
-  title = 'wide-series-stat',
+  title = 'wide_series_stat',
   wideSeriesStatProps: T.Card<any> = {
     name: title,
     state: {

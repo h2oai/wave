@@ -4,7 +4,7 @@ import { View } from './large_stat';
 import * as T from './qd';
 
 const
-  title = 'large-stat',
+  title = 'large_stat',
   largeStatProps: T.Card<any> = {
     name: title,
     state: {

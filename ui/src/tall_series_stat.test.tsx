@@ -4,7 +4,7 @@ import { View } from './tall_series_stat';
 import * as T from './qd';
 
 const
-  title = 'tall-series-stat',
+  title = 'tall_series_stat',
   tallSeriesStatProps: T.Card<any> = {
     name: title,
     state: {
