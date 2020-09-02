@@ -1327,7 +1327,50 @@ ui_range_slider <- function(
   return(.o)
 }
 
-#' No documentation available.
+#' Create a step for a stepper.
+#'
+#' @param label Text displayed below icon.
+#' @param icon Icon to be displayed.
+#' @param done Indicates whether this step has already been completed.
+#' @return A Step instance.
+ui_step <- function(
+  label,
+  icon = NULL,
+  done = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("done", "logical", done)
+  .o <- list(
+    label=label,
+    icon=icon,
+    done=done)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Step"))
+  return(.o)
+}
+
+#' Create a component that displays a sequence of steps in a process.
+#' The steps keep users informed about where they are in the process and how much is left to complete.
+#'
+#' @param name An identifying name for this component.
+#' @param items The sequence of steps to be displayed.
+#' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @return A Stepper instance.
+ui_stepper <- function(
+  name,
+  items,
+  tooltip = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_vector("items", "h2oq_Step", items)
+  .guard_scalar("tooltip", "character", tooltip)
+  .o <- list(stepper=list(
+    name=name,
+    items=items,
+    tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
+#' Create a component.
 #'
 #' @param text Text block.
 #' @param text_xl Extra-large sized text block.
@@ -1359,7 +1402,8 @@ ui_range_slider <- function(
 #' @param expander Expander.
 #' @param frame Frame
 #' @param picker Picker
-#' @param range_slider No documentation available.
+#' @param range_slider RangeSlider
+#' @param stepper Stepper
 #' @return A Component instance.
 ui_component <- function(
   text = NULL,
@@ -1392,7 +1436,8 @@ ui_component <- function(
   expander = NULL,
   frame = NULL,
   picker = NULL,
-  range_slider = NULL) {
+  range_slider = NULL,
+  stepper = NULL) {
   .guard_scalar("text", "h2oq_Text", text)
   .guard_scalar("text_xl", "h2oq_TextXl", text_xl)
   .guard_scalar("text_l", "h2oq_TextL", text_l)
@@ -1424,6 +1469,7 @@ ui_component <- function(
   .guard_scalar("frame", "h2oq_Frame", frame)
   .guard_scalar("picker", "h2oq_Picker", picker)
   .guard_scalar("range_slider", "h2oq_RangeSlider", range_slider)
+  .guard_scalar("stepper", "h2oq_Stepper", stepper)
   .o <- list(
     text=text,
     text_xl=text_xl,
@@ -1455,7 +1501,8 @@ ui_component <- function(
     expander=expander,
     frame=frame,
     picker=picker,
-    range_slider=range_slider)
+    range_slider=range_slider,
+    stepper=stepper)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }

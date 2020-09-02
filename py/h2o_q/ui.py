@@ -1217,6 +1217,49 @@ def range_slider(
     ))
 
 
+def step(
+        label: str,
+        icon: Optional[str] = None,
+        done: Optional[bool] = None,
+) -> Step:
+    """Create a step for a stepper.
+
+    Args:
+        label: Text displayed below icon.
+        icon: Icon to be displayed.
+        done: Indicates whether this step has already been completed.
+    Returns:
+        A `h2o_q.types.Step` instance.
+    """
+    return Step(
+        label,
+        icon,
+        done,
+    )
+
+
+def stepper(
+        name: str,
+        items: List[Step],
+        tooltip: Optional[str] = None,
+) -> Component:
+    """Create a component that displays a sequence of steps in a process.
+    The steps keep users informed about where they are in the process and how much is left to complete.
+
+    Args:
+        name: An identifying name for this component.
+        items: The sequence of steps to be displayed.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Stepper` instance.
+    """
+    return Component(stepper=Stepper(
+        name,
+        items,
+        tooltip,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         text_xl: Optional[TextXl] = None,
@@ -1249,8 +1292,9 @@ def component(
         frame: Optional[Frame] = None,
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
+        stepper: Optional[Stepper] = None,
 ) -> Component:
-    """No documentation available.
+    """Create a component.
 
     Args:
         text: Text block.
@@ -1283,7 +1327,8 @@ def component(
         expander: Expander.
         frame: Frame
         picker: Picker
-        range_slider: No documentation available.
+        range_slider: RangeSlider
+        stepper: Stepper
     Returns:
         A `h2o_q.types.Component` instance.
     """
@@ -1319,6 +1364,7 @@ def component(
         frame,
         picker,
         range_slider,
+        stepper,
     )
 
 

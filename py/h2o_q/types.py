@@ -2466,8 +2466,101 @@ class RangeSlider:
         )
 
 
+class Step:
+    """Create a step for a stepper.
+    """
+    def __init__(
+            self,
+            label: str,
+            icon: Optional[str] = None,
+            done: Optional[bool] = None,
+    ):
+        self.label = label
+        """Text displayed below icon."""
+        self.icon = icon
+        """Icon to be displayed."""
+        self.done = done
+        """Indicates whether this step has already been completed."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('Step.label is required.')
+        return _dump(
+            label=self.label,
+            icon=self.icon,
+            done=self.done,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Step':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('Step.label is required.')
+        __d_icon: Any = __d.get('icon')
+        __d_done: Any = __d.get('done')
+        label: str = __d_label
+        icon: Optional[str] = __d_icon
+        done: Optional[bool] = __d_done
+        return Step(
+            label,
+            icon,
+            done,
+        )
+
+
+class Stepper:
+    """Create a component that displays a sequence of steps in a process.
+    The steps keep users informed about where they are in the process and how much is left to complete.
+    """
+    def __init__(
+            self,
+            name: str,
+            items: List[Step],
+            tooltip: Optional[str] = None,
+    ):
+        self.name = name
+        """An identifying name for this component."""
+        self.items = items
+        """The sequence of steps to be displayed."""
+        self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('Stepper.name is required.')
+        if self.items is None:
+            raise ValueError('Stepper.items is required.')
+        return _dump(
+            name=self.name,
+            items=[__e.dump() for __e in self.items],
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Stepper':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('Stepper.name is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('Stepper.items is required.')
+        __d_tooltip: Any = __d.get('tooltip')
+        name: str = __d_name
+        items: List[Step] = [Step.load(__e) for __e in __d_items]
+        tooltip: Optional[str] = __d_tooltip
+        return Stepper(
+            name,
+            items,
+            tooltip,
+        )
+
+
 class Component:
-    """No documentation available.
+    """Create a component.
     """
     def __init__(
             self,
@@ -2502,6 +2595,7 @@ class Component:
             frame: Optional[Frame] = None,
             picker: Optional[Picker] = None,
             range_slider: Optional[RangeSlider] = None,
+            stepper: Optional[Stepper] = None,
     ):
         self.text = text
         """Text block."""
@@ -2564,7 +2658,9 @@ class Component:
         self.picker = picker
         """Picker"""
         self.range_slider = range_slider
-        """No documentation available."""
+        """RangeSlider"""
+        self.stepper = stepper
+        """Stepper"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2600,6 +2696,7 @@ class Component:
             frame=None if self.frame is None else self.frame.dump(),
             picker=None if self.picker is None else self.picker.dump(),
             range_slider=None if self.range_slider is None else self.range_slider.dump(),
+            stepper=None if self.stepper is None else self.stepper.dump(),
         )
 
     @staticmethod
@@ -2636,6 +2733,7 @@ class Component:
         __d_frame: Any = __d.get('frame')
         __d_picker: Any = __d.get('picker')
         __d_range_slider: Any = __d.get('range_slider')
+        __d_stepper: Any = __d.get('stepper')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -2667,6 +2765,7 @@ class Component:
         frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
         picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
         range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
+        stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
         return Component(
             text,
             text_xl,
@@ -2699,6 +2798,7 @@ class Component:
             frame,
             picker,
             range_slider,
+            stepper,
         )
 
 
