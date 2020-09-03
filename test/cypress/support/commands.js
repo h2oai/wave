@@ -29,3 +29,10 @@ const commands = {
 };
 
 (() => { for (const k in commands) Cypress.Commands.add(k, commands[k]) })()
+
+Cypress.Commands.overwrite("type", (originalFn, element, text, options) => {
+  if (!options) options = { delay: 500 }
+  if (!options.delay) options = { ...options, delay: 500 }
+
+  return originalFn(element, text, options)
+})
