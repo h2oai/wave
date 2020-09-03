@@ -939,18 +939,24 @@ def file_upload(
 def table_column(
         name: str,
         label: str,
+        sortable: Optional[bool] = None,
+        searchable: Optional[bool] = None,
 ) -> TableColumn:
     """Create a table column.
 
     Args:
         name: An identifying name for this column.
         label: The text displayed on the column header.
+        sortable: Indicates whether the column is sortable.
+        searchable: Indicates whether the column is searchable.
     Returns:
         A `h2o_q.types.TableColumn` instance.
     """
     return TableColumn(
         name,
         label,
+        sortable,
+        searchable,
     )
 
 

@@ -1,6 +1,8 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, S, qd } from './qd'
+import { stylesheet } from 'typestyle'
+import { B, bond, box, qd, S } from './qd'
+import { rem } from './theme'
 
 /** Create a table column. */
 interface TableColumn {
@@ -8,6 +10,10 @@ interface TableColumn {
   name: S
   /** The text displayed on the column header. */
   label: S
+  /** Indicates whether the column is sortable. */
+  sortable?: B
+  /** Indicates whether the column is searchable. */
+  searchable?: B
 }
 
 /** Create a table row. */
@@ -47,27 +53,76 @@ export interface Table {
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
+const css = stylesheet({
+  sortableHeader: {
+    $nest: {
+      '.ms-DetailsHeader-cellName': {
+        display: 'flex',
+        flexDirection: 'row-reverse',
+      }
+    }
+  },
+  sortingIcon: {
+    marginLeft: 10,
+    fontSize: rem(1.1)
+  }
+})
 
 export const
   XTable = bond(({ model: m }: { model: Table }) => {
     qd.args[m.name] = []
     const
-      items = m.rows.map(r => {
+      items = box(m.rows.map(r => {
         const item: any = { __key__: r.name }
         for (let i = 0, n = r.cells.length; i < n; i++) {
           const col = m.columns[i]
           item[col.name] = r.cells[i]
         }
         return item
-      }),
-      columns = m.columns.map((c): Fluent.IColumn => ({
+      })),
+      filteredItemsB = box(items()),
+      onFilterChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr?: S) => {
+        if (searchStr === undefined) return
+        if (searchStr === '') filteredItemsB(items())
+
+        else filteredItemsB([])
+      },
+      onRenderDetailsHeader = (props?: Fluent.IDetailsHeaderProps) => {
+        if (!props) return <span />
+
+        return (
+          <>
+            <Fluent.TextField label='Filter' onChange={onFilterChange} styles={{ root: { width: '50%', float: 'right' } }} />
+            <Fluent.DetailsHeader {...props} />
+          </>
+        )
+      },
+      onSortColumnClick = (_ev: React.MouseEvent<HTMLElement>, column: Fluent.IColumn) => {
+        const sortAsc = column.iconName === 'SortDown'
+        column.iconName = sortAsc ? 'SortUp' : 'SortDown'
+
+        items([...items()].sort((a, b) => {
+          const itemA = String(a[column.key]).toLowerCase()
+          const itemB = String(b[column.key]).toLowerCase()
+
+          if (sortAsc) return itemB > itemA ? -1 : 1
+          else return itemB > itemA ? 1 : -1
+
+        }))
+        columnsB(columnsB().map((col) => column.key === col.key ? column : col))
+      },
+      columnsB = box(m.columns.map((c): Fluent.IColumn => ({
         key: c.name,
         name: c.label,
         fieldName: c.name,
         isResizable: true,
-        minWidth: 50,
-      })),
-      primaryColumnKey = columns[0].key,
+        headerClassName: c.sortable ? css.sortableHeader : undefined,
+        iconClassName: c.sortable ? css.sortingIcon : undefined,
+        iconName: c.sortable ? 'SortDown' : undefined,
+        onColumnClick: c.sortable ? onSortColumnClick : undefined,
+        minWidth: 150,
+      }))),
+      primaryColumnKey = columnsB()[0].key,
       selection = new Fluent.Selection({
         onSelectionChanged: () => {
           qd.args[m.name] = selection.getSelection().map(item => (item as any).__key__)
@@ -78,8 +133,8 @@ export const
         qd.sync()
       },
       onRenderItemColumn = (item?: any, _index?: number, column?: Fluent.IColumn) => {
-        if (!item) return <span />
-        if (!column) return <span />
+        if (!item || !column) return <span />
+
         const v = item[column.fieldName as any]
         if (column.key === primaryColumnKey) {
           const onClick = () => {
@@ -88,7 +143,8 @@ export const
           }
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }
-        else return <span>{v}</span>
+
+        return <span>{v}</span>
       },
       render = () => (
         <div data-test={m.name}>
@@ -97,8 +153,8 @@ export const
               ? (
                 <Fluent.MarqueeSelection selection={selection}>
                   <Fluent.DetailsList
-                    items={items}
-                    columns={columns}
+                    items={filteredItemsB()}
+                    columns={columnsB()}
                     layoutMode={Fluent.DetailsListLayoutMode.justified}
                     selection={selection}
                     selectionMode={Fluent.SelectionMode.multiple}
@@ -107,18 +163,19 @@ export const
                 </Fluent.MarqueeSelection>
               ) : (
                 <Fluent.DetailsList
-                  items={items}
-                  columns={columns}
+                  items={filteredItemsB()}
+                  columns={columnsB()}
                   layoutMode={Fluent.DetailsListLayoutMode.justified}
                   selection={selection}
                   selectionMode={Fluent.SelectionMode.none}
                   selectionPreservedOnEmptyClick={true}
                   onItemInvoked={onItemInvoked}
                   onRenderItemColumn={onRenderItemColumn}
+                  onRenderDetailsHeader={onRenderDetailsHeader}
                 />
               )
           }
         </div>
       )
-    return { render }
+    return { render, columnsB, itemsB: items, filteredItemsB }
   })

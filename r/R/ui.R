@@ -1035,15 +1035,23 @@ ui_file_upload <- function(
 #'
 #' @param name An identifying name for this column.
 #' @param label The text displayed on the column header.
+#' @param sortable Indicates whether the column is sortable.
+#' @param searchable Indicates whether the column is searchable.
 #' @return A TableColumn instance.
 ui_table_column <- function(
   name,
-  label) {
+  label,
+  sortable = NULL,
+  searchable = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
+  .guard_scalar("sortable", "logical", sortable)
+  .guard_scalar("searchable", "logical", searchable)
   .o <- list(
     name=name,
-    label=label)
+    label=label,
+    sortable=sortable,
+    searchable=searchable)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableColumn"))
   return(.o)
 }

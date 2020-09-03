@@ -1890,11 +1890,17 @@ class TableColumn:
             self,
             name: str,
             label: str,
+            sortable: Optional[bool] = None,
+            searchable: Optional[bool] = None,
     ):
         self.name = name
         """An identifying name for this column."""
         self.label = label
         """The text displayed on the column header."""
+        self.sortable = sortable
+        """Indicates whether the column is sortable."""
+        self.searchable = searchable
+        """Indicates whether the column is searchable."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1905,6 +1911,8 @@ class TableColumn:
         return _dump(
             name=self.name,
             label=self.label,
+            sortable=self.sortable,
+            searchable=self.searchable,
         )
 
     @staticmethod
@@ -1916,11 +1924,17 @@ class TableColumn:
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('TableColumn.label is required.')
+        __d_sortable: Any = __d.get('sortable')
+        __d_searchable: Any = __d.get('searchable')
         name: str = __d_name
         label: str = __d_label
+        sortable: Optional[bool] = __d_sortable
+        searchable: Optional[bool] = __d_searchable
         return TableColumn(
             name,
             label,
+            sortable,
+            searchable,
         )
 
 

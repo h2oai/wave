@@ -27,7 +27,7 @@ issue_lookup = {issue.id: issue for issue in issues}
 
 # Create columns for our issue table.
 columns = [
-    ui.table_column(name='text', label='Issue'),
+    ui.table_column(name='text', label='Issue', sortable=True),
     ui.table_column(name='status', label='Status'),
     ui.table_column(name='views', label='Views'),
 ]
@@ -59,7 +59,7 @@ async def edit_multiple(q: Q):
 
 async def show_issues(q: Q):
     q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
+        box='1 1 7 -1',
         items=[
             make_issue_table(),
             ui.buttons([ui.button(name='edit_multiple', label='Edit Multiple...', primary=True)]),
