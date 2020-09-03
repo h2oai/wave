@@ -1171,6 +1171,52 @@ def picker(
     ))
 
 
+def range_slider(
+        name: str,
+        label: Optional[str] = None,
+        min: Optional[float] = None,
+        max: Optional[float] = None,
+        step: Optional[float] = None,
+        min_value: Optional[float] = None,
+        max_value: Optional[float] = None,
+        disabled: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+) -> Component:
+    """Create a range slider.
+
+    A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
+    current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+    Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
+
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        min: The minimum value of the slider. Defaults to 0.
+        max: The maximum value of the slider. Defaults to 100.
+        step: The difference between two adjacent values of the slider.
+        min_value: The lower bound of the selected range.
+        max_value: The upper bound of the selected range.
+        disabled: True if this field is disabled.
+        trigger: True if the form should be submitted when the slider value changes.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.RangeSlider` instance.
+    """
+    return Component(range_slider=RangeSlider(
+        name,
+        label,
+        min,
+        max,
+        step,
+        min_value,
+        max_value,
+        disabled,
+        trigger,
+        tooltip,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         text_xl: Optional[TextXl] = None,
@@ -1202,6 +1248,7 @@ def component(
         expander: Optional[Expander] = None,
         frame: Optional[Frame] = None,
         picker: Optional[Picker] = None,
+        range_slider: Optional[RangeSlider] = None,
 ) -> Component:
     """Create a component.
 
@@ -1236,6 +1283,7 @@ def component(
         expander: Expander.
         frame: Frame
         picker: Picker
+        range_slider: RangeSlider
     Returns:
         A `h2o_q.types.Component` instance.
     """
@@ -1270,6 +1318,7 @@ def component(
         expander,
         frame,
         picker,
+        range_slider,
     )
 
 

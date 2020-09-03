@@ -2369,6 +2369,103 @@ class Picker:
         )
 
 
+class RangeSlider:
+    """Create a range slider.
+
+    A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
+    current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+    Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: Optional[str] = None,
+            min: Optional[float] = None,
+            max: Optional[float] = None,
+            step: Optional[float] = None,
+            min_value: Optional[float] = None,
+            max_value: Optional[float] = None,
+            disabled: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+            tooltip: Optional[str] = None,
+    ):
+        self.name = name
+        """An identifying name for this component."""
+        self.label = label
+        """Text to be displayed alongside the component."""
+        self.min = min
+        """The minimum value of the slider. Defaults to 0."""
+        self.max = max
+        """The maximum value of the slider. Defaults to 100."""
+        self.step = step
+        """The difference between two adjacent values of the slider."""
+        self.min_value = min_value
+        """The lower bound of the selected range."""
+        self.max_value = max_value
+        """The upper bound of the selected range."""
+        self.disabled = disabled
+        """True if this field is disabled."""
+        self.trigger = trigger
+        """True if the form should be submitted when the slider value changes."""
+        self.tooltip = tooltip
+        """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('RangeSlider.name is required.')
+        return _dump(
+            name=self.name,
+            label=self.label,
+            min=self.min,
+            max=self.max,
+            step=self.step,
+            min_value=self.min_value,
+            max_value=self.max_value,
+            disabled=self.disabled,
+            trigger=self.trigger,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'RangeSlider':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('RangeSlider.name is required.')
+        __d_label: Any = __d.get('label')
+        __d_min: Any = __d.get('min')
+        __d_max: Any = __d.get('max')
+        __d_step: Any = __d.get('step')
+        __d_min_value: Any = __d.get('min_value')
+        __d_max_value: Any = __d.get('max_value')
+        __d_disabled: Any = __d.get('disabled')
+        __d_trigger: Any = __d.get('trigger')
+        __d_tooltip: Any = __d.get('tooltip')
+        name: str = __d_name
+        label: Optional[str] = __d_label
+        min: Optional[float] = __d_min
+        max: Optional[float] = __d_max
+        step: Optional[float] = __d_step
+        min_value: Optional[float] = __d_min_value
+        max_value: Optional[float] = __d_max_value
+        disabled: Optional[bool] = __d_disabled
+        trigger: Optional[bool] = __d_trigger
+        tooltip: Optional[str] = __d_tooltip
+        return RangeSlider(
+            name,
+            label,
+            min,
+            max,
+            step,
+            min_value,
+            max_value,
+            disabled,
+            trigger,
+            tooltip,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -2404,6 +2501,7 @@ class Component:
             expander: Optional[Expander] = None,
             frame: Optional[Frame] = None,
             picker: Optional[Picker] = None,
+            range_slider: Optional[RangeSlider] = None,
     ):
         self.text = text
         """Text block."""
@@ -2465,6 +2563,8 @@ class Component:
         """Frame"""
         self.picker = picker
         """Picker"""
+        self.range_slider = range_slider
+        """RangeSlider"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2499,6 +2599,7 @@ class Component:
             expander=None if self.expander is None else self.expander.dump(),
             frame=None if self.frame is None else self.frame.dump(),
             picker=None if self.picker is None else self.picker.dump(),
+            range_slider=None if self.range_slider is None else self.range_slider.dump(),
         )
 
     @staticmethod
@@ -2534,6 +2635,7 @@ class Component:
         __d_expander: Any = __d.get('expander')
         __d_frame: Any = __d.get('frame')
         __d_picker: Any = __d.get('picker')
+        __d_range_slider: Any = __d.get('range_slider')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -2564,6 +2666,7 @@ class Component:
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
         picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
+        range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
         return Component(
             text,
             text_xl,
@@ -2595,6 +2698,7 @@ class Component:
             expander,
             frame,
             picker,
+            range_slider,
         )
 
 
