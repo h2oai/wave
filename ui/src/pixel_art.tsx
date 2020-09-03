@@ -59,7 +59,7 @@ interface Pixel {
   color: S
 }
 
-const
+export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
     let brush = '#000'
     const
@@ -91,7 +91,7 @@ const
             )
           })
         return (
-          <div className={css.card}>
+          <div data-test='pixel_art' className={css.card}>
             <div className={css.title}>{s.title}</div>
             <div className={css.canvas}>{pixels}</div>
             <div className={css.swatches}>

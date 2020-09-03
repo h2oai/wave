@@ -4,7 +4,7 @@ import { View } from './wide_bar_stat';
 import * as T from './qd';
 
 const
-  title = 'WideBarStat',
+  title = 'wide_bar_stat',
   wideBarStatProps: T.Card<any> = {
     name: title,
     state: {
@@ -19,9 +19,9 @@ const
 
 describe('WideBarStat.tsx', () => {
 
-  it('Renders correctly', () => {
-    const { container } = render(<View {...wideBarStatProps} />)
-    expect(container).toBeInTheDocument()
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<View {...wideBarStatProps} />)
+    expect(queryByTestId(title)).toBeInTheDocument()
   })
 
   it('Renders title correctly', () => {

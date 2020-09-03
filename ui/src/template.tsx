@@ -14,14 +14,16 @@ interface State {
   data?: Rec
 }
 
-const
+export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       template = Handlebars.compile(state.content || ''),
       render = () => {
         const data = unpack(state.data)
         return (
-          <MarkupCard title={substitute(state.title, data)} content={template(data || {})} />
+          <div data-test='template'>
+            <MarkupCard title={substitute(state.title, data)} content={template(data || {})} />
+          </div>
         )
       }
     return { render, changed }

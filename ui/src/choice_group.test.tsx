@@ -10,6 +10,11 @@ describe('ChoiceGroup.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XChoiceGroup model={choiceGroupProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - single selection', () => {
     const { getByText } = render(<XChoiceGroup model={choiceGroupProps} />)
     fireEvent.click(getByText('Choice1').parentElement!)

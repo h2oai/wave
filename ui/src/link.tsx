@@ -32,7 +32,7 @@ export const
       render = () => {
         // TODO target="_blank"
         return m.button
-          ? <div><Fluent.DefaultButton text={label} disabled={m.disabled} onClick={onClick} /></div>
+          ? <div><Fluent.DefaultButton data-test='link' text={label} disabled={m.disabled} onClick={onClick} /></div>
           : <div><Fluent.Link data-test='link' href={m.path} download={m.download || undefined} disabled={m.disabled}>{label}</Fluent.Link></div>
       }
     return { render }

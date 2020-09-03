@@ -31,7 +31,7 @@ export const
           items = state.items.map(({ name, label, icon }) => (
             <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
           ))
-        return <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick}>{items}</Pivot>
+        return <Pivot data-test='tab' linkFormat={linkFormat} onLinkClick={onLinkClick}>{items}</Pivot>
 
       }
     return { render, changed }

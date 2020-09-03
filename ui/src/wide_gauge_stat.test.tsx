@@ -4,7 +4,7 @@ import { View } from './wide_gauge_stat';
 import * as T from './qd';
 
 const
-  title = 'WideGaugeStat',
+  title = 'wide_gauge_stat',
   wideGaugeStatProps: T.Card<any> = {
     name: title,
     state: {
@@ -19,9 +19,9 @@ const
 
 describe('WideGaugeStat.tsx', () => {
 
-  it('Renders correctly', () => {
-    const { container } = render(<View {...wideGaugeStatProps} />)
-    expect(container).toBeInTheDocument()
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<View {...wideGaugeStatProps} />)
+    expect(queryByTestId(title)).toBeInTheDocument()
   })
 
   it('Renders title correctly', () => {

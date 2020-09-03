@@ -34,29 +34,24 @@ export const
   }) => {
     if (!content) return <>{children}</>
 
-    showIcon = showIcon === undefined ? true : showIcon
-    expand = expand === undefined ? true : expand
-
     const
       tooltipProps: Fluent.ITooltipProps = {
         onRenderContent: () => (<div><Markdown source={content} /></div>)
       }
-    if (showIcon) {
-      return (
-        <div className={css.container}>
-          <div className={expand ? css.element : ''}>{children}</div>
-          <Fluent.TooltipHost tooltipProps={tooltipProps}>
-            <Fluent.FontIcon className={css.icon} iconName='Info' />
-          </Fluent.TooltipHost>
-        </div>
-      )
-    } else {
-      return (
-        <div className={css.container}>
-          <Fluent.TooltipHost tooltipProps={tooltipProps}>
-            {children}
-          </Fluent.TooltipHost>
-        </div>
-      )
-    }
+    return (
+      <div className={css.container} data-test='tooltip'>
+        {
+          showIcon === undefined || showIcon
+            ? (
+              <>
+                <div className={expand === undefined || expand ? css.element : ''}>{children}</div>
+                <Fluent.TooltipHost tooltipProps={tooltipProps}>
+                  <Fluent.FontIcon className={css.icon} iconName='Info' />
+                </Fluent.TooltipHost>
+              </>
+            )
+            : <Fluent.TooltipHost tooltipProps={tooltipProps}>{children}</Fluent.TooltipHost>
+        }
+      </div>
+    )
   }

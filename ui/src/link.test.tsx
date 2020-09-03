@@ -5,12 +5,16 @@ import { initializeIcons } from '@fluentui/react';
 
 const
   name = 'link',
-  linkProps: Link = {
-    path: name,
-  }
-describe('Nav.tsx', () => {
+  linkProps: Link = { path: name }
+
+describe('Link.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { jest.clearAllMocks() })
+
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XLink model={linkProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
 
   it('Sets default label when not specified', () => {
     const { queryByText } = render(<XLink model={linkProps} />)

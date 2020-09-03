@@ -19,6 +19,11 @@ describe('Dropdown.tsx', () => {
 
   beforeAll(() => initializeIcons())
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XDropdown model={defaultProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Calls qd.sync() when trigger is on', () => {
     const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, trigger: true }} />)
     const syncMock = jest.fn()

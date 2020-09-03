@@ -40,7 +40,7 @@ interface State {
   data: Data
 }
 
-const
+export const
   View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
@@ -68,7 +68,7 @@ const
           })
 
         return (
-          <div className={css.card}>
+          <div data-test='grid' className={css.card}>
             <div className={css.title}>{s.title || 'Untitled'}</div>
             <div className={css.body}>
               <table className={css.table}>

@@ -151,7 +151,9 @@ const
     if (m.picker) return <XToolTip content={m.picker.tooltip}><XPicker model={m.picker} /></XToolTip>
     if (m.range_slider) return <XToolTip content={m.range_slider.tooltip}><XRangeSlider model={m.range_slider} /></XToolTip>
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
-  },
+  }
+
+export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       render = () => {
@@ -160,7 +162,7 @@ const
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
-          <div>
+          <div data-test='form'>
             <XComponents items={items} />
           </div>)
       }

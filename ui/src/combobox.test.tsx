@@ -10,6 +10,11 @@ describe('Combobox.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XCombobox model={comboboxProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init - value not specified', () => {
     render(<XCombobox model={comboboxProps} />)
     expect(T.qd.args[name]).toBeNull()

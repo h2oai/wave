@@ -14,6 +14,11 @@ describe('Button.tsx', () => {
     jest.clearAllMocks()
   })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XButtons model={btnProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Calls sync() after click', () => {
     const
       syncMock = jest.fn(),

@@ -22,6 +22,11 @@ describe('Meta.tsx', () => {
     jest.clearAllMocks()
   })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<View {...tabProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args and calls sync on click', () => {
     const syncMock = jest.fn()
     T.qd.sync = syncMock

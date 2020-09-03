@@ -40,7 +40,7 @@ export const
         }
       }
       )),
-      render = () => <Breadcrumb items={items} />
+      render = () => <Breadcrumb data-test='breadcrumbs' items={items} />
 
     return { render, changed }
   })

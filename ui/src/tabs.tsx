@@ -42,7 +42,7 @@ export const
           tabs = (m.items || []).map(t => (
             <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />
           ))
-        return (<Fluent.Pivot selectedKey={selectedKey} onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>)
+        return (<Fluent.Pivot data-test='tabs' selectedKey={selectedKey} onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>)
       }
     return { render }
   })

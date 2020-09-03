@@ -82,7 +82,9 @@ const
   ret0 = () => 0,
   get0 = (d: any) => d[0],
   get1 = (d: any) => d[1],
-  get2 = (d: any) => d[2],
+  get2 = (d: any) => d[2]
+
+export const
   View = bond(({ state, changed }: Card<State>) => {
     type El = { d: S, o: S }
 
@@ -151,7 +153,7 @@ const
             ...(o ? JSON.parse(o) : {}),
           }, i)) : []
         return (
-          <div>
+          <div data-test='graphics'>
             <svg viewBox={view_box} width={width} height={height}>
               <g>{stageEls}</g>
               <g>{sceneEls}</g>

@@ -81,7 +81,7 @@ export const
         const data = unpack(s.data)
 
         return (
-          <div className={css.card}>
+          <div data-test='wide_gauge_stat' className={css.card}>
             <div className={css.left}>
               <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
               <div className={css.percentContainer}>

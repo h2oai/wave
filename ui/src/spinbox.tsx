@@ -63,7 +63,6 @@ export const
       },
       render = () => (
         <Fluent.SpinButton
-          data-test={m.name}
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
           min={min}

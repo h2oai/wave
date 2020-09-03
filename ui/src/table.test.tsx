@@ -18,6 +18,11 @@ describe('Table.tsx', () => {
     T.qd.args[name] = null
   })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XTable model={tableProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args and calls sync on doubleclick', () => {
     const syncMock = jest.fn()
     T.qd.sync = syncMock

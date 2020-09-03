@@ -44,11 +44,12 @@ export const
     const
       { label, caption, value } = { ...defaults, ...model }
     return (
-      <Fluent.ProgressIndicator
-        data-test='progress' // TODO: Does not work.
-        label={label}
-        description={caption}
-        percentComplete={value}
-      />
+      <div data-test='progress'>
+        <Fluent.ProgressIndicator
+          label={label}
+          description={caption}
+          percentComplete={value}
+        />
+      </div>
     )
   }

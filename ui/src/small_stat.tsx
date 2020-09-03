@@ -31,14 +31,14 @@ interface State {
   data?: Rec
 }
 
-const
+export const
   View = bond(({ state: s, changed }: Card<State>) => {
     const
       render = () => {
         const
           data = unpack(s.data)
         return (
-          <div className={css.card}>
+          <div data-test='small_stat' className={css.card}>
             <div className={css.title}>
               <Format data={data} format={s.title} />
             </div>

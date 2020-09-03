@@ -57,7 +57,7 @@ interface State {
   data?: Rec
 }
 
-const
+export const
   View = bond(({ state: s, changed, size }: Card<State>) => {
     const
       render = () => {
@@ -87,7 +87,7 @@ const
               />
             )
         return (
-          <div className={css.card}>
+          <div data-test='small_series_stat' className={css.card}>
             <div className={css.titleBar}>
               <div className={css.title || 'Untitled'}>
                 <Format data={data} format={s.title} />

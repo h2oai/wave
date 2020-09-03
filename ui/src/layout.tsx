@@ -169,7 +169,7 @@ export const
             )
           })
         return (
-          <div className={css.grid}>
+          <div data-test={page.key} className={css.grid}>
             {children}
           </div>
         )

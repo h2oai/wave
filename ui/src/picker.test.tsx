@@ -19,6 +19,11 @@ describe('Picker.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XPicker model={pickerProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets correct args - init', () => {
     render(<XPicker model={pickerProps} />)
     expect(T.qd.args[name]).toBeNull()

@@ -4,7 +4,7 @@ import { View } from './large_bar_stat';
 import * as T from './qd';
 
 const
-  title = 'LargeBarStat',
+  title = 'large_bar_stat',
   largeBarStatProps: T.Card<any> = {
     name: title,
     state: {
@@ -19,9 +19,9 @@ const
 
 describe('LargeBarStat.tsx', () => {
 
-  it('Renders correctly', () => {
-    const { container } = render(<View {...largeBarStatProps} />)
-    expect(container).toBeInTheDocument()
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<View {...largeBarStatProps} />)
+    expect(queryByTestId(title)).toBeInTheDocument()
   })
 
   it('Renders title correctly', () => {

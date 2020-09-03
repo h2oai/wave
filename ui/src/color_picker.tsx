@@ -32,19 +32,17 @@ export const
       onColorChanged = (_id?: string, color?: string) => qd.args[m.name] = color ? color : value,
       onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => qd.args[m.name] = color ? color.str : value,
       render = () => (
-        <div>
+        <div data-test={m.name}>
           <Fluent.Label>{m.label}</Fluent.Label>
           {
             m.choices && m.choices.length
               ? <Fluent.SwatchColorPicker
-                data-test={m.name}
                 columnCount={10}
                 selectedId={value || m.choices[0]}
                 colorCells={toColorCells(m.choices)}
                 onColorChanged={onColorChanged}
               />
               : <Fluent.ColorPicker
-                data-test={m.name}
                 color={value || '#000'}
                 onChange={onChange}
               />

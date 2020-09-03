@@ -33,7 +33,7 @@ export const
     m.text && m.text.length
       ? (
         <Fluent.MessageBar
-          data-test='message-bar'
+          data-test='message_bar'
           messageBarType={toMessageBarType(m.type as S)} >{m.text}</Fluent.MessageBar>
       )
       : <div />

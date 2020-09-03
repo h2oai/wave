@@ -10,6 +10,11 @@ describe('Datepicker.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XDatePicker model={datepickerProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init - value not specified', () => {
     render(<XDatePicker model={datepickerProps} />)
     expect(T.qd.args[name]).toBeFalsy()

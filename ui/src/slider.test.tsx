@@ -13,6 +13,11 @@ describe('Slider.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XSlider model={sliderProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init', () => {
     render(<XSlider model={sliderProps} />)
     expect(T.qd.args[name]).toBe(0)
