@@ -47,10 +47,10 @@ def test_wizard(t):
     t.visit('/demo')
     t.locate('step1').click()
     t.locate('text').should('have.text', 'What is your name?')
-    t.locate('nickname').type('Fred')
+    t.locate('nickname').clear().type('Fred')
     t.locate('step2').click()
     t.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
-    t.locate('feeling').type('quirky')
+    t.locate('feeling').clear().type('quirky')
     t.locate('step3').click()
     t.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
 
