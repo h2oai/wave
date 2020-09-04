@@ -22,7 +22,7 @@
 
 dump_object <- function(x) {
   if(is(x, .h2oq_obj)) {
-    to_json(x)
+    .to_json(x)
   } else {
     stop("cannot dump")
   }

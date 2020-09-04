@@ -748,7 +748,7 @@ const
         p(``)
         p(`dump_object <- function(x) {`)
         p(`  if(is(x, .h2oq_obj)) {`)
-        p(`    to_json(x)`)
+        p(`    .to_json(x)`)
         p(`  } else {`)
         p(`    stop("cannot dump")`)
         p(`  }`)
