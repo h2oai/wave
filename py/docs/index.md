@@ -310,7 +310,96 @@ copy_expando(q.args, q.client, exclude_keys=['back2', 'select_target', 'restart'
 `q.args.foo=` only supported JSON-serialized values. No such restrictions exist for the `q.app`, `q.user` and `q.client` containers. You could, for example, load a Pandas dataframe and set `q.user.df = my_df`, and the dataframe will be accessible across requests for the lifetime of the app.
 
 
+# Authoring functional tests
+
+Q supports authoring functional tests in Python for the [Cypress](https://www.cypress.io/) test framework. This feature lets you automate browser-based point-and-click tests for your app.
+
+## Prerequisites
+
+### Step 1: Install Node.js
+
+Install a recent version of [Node.js](https://nodejs.org/en/).
+
+### Step 2: Set up Cypress
+
+Using your terminal, go to your Q installation's `test` directory and install Cypress
+
+```
+$ cd path/to/q
+$ cd test
+$ npm install
+```
+
+## Writing a test
+
+See the [Wizard](#wizard) example to understand how to author tests for your interactive app. Specifically, note how the `@test` attribute and  the `run_tests()` function is used.
 
 
+```py
+
+@test
+def test_wizard(t):
+    t.visit('/demo')
+    t.locate('step1').click()
+    t.locate('text').should('have.text', 'What is your name?')
+    t.locate('nickname').clear().type('Fred')
+    t.locate('step2').click()
+    t.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
+    t.locate('feeling').clear().type('quirky')
+    t.locate('step3').click()
+    t.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
+
+
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    run_tests()
+else:
+    listen('/demo', main)
+
+```
+
+See [Assertions](https://docs.cypress.io/guides/references/assertions.html#Common-Assertions) to understand how the Cypress API works.
+
+## Running your test
+
+### Step 1: Start the Q server as usual
+
+```
+$ q
+```
+
+### Step 2: Start the Q test bridge
+
+The Q test bridge is built into your Q server executable, and helps run your Python tests on Cypress.
+
+In a new terminal window, run the Q executable with the `-cypress` command line argument.
+
+```
+$ qd -cypress
+```
+
+Optionally, use the `-cypress-dir` and `-cypress-bridge-address` command line arguments if you need additional control over the test bridge (run `qd -help` for details).
+
+### Step 3: Run your test
+
+From your app's `venv`, run:
+
+```
+$ python examples/wizard.py test
+```
+
+Running the above command translates your Python test to Javascript and sends it to the Q test bridge. You should now see your test executing in the terminal window that belongs your test bridge.
+
+### Step 4: (Optional) Explore your executed tests
+
+All your executed tests are stored in your `test/cypress/integration` directory. To view past results and re-run tests, simply launch Cypress like this:
+
+
+```
+$ cd path/to/q
+$ cd test
+$ ./node_modules/.bin/cypress open
+```
+
+You can then use the Cypres user interface to browse and execute individual tests interactively.
 
 .. include:: ../docs/examples.md
