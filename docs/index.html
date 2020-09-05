@@ -95,7 +95,28 @@ analytical and decision-support applications.</p>
 realtime state synchronization between Python and web browsers.</p>
 <h1 id="change-log">Change Log</h1>
 <ul>
-<li><a href="https://github.com/h2oai/qd/releases/tag/v0.1.3">v0.1.4</a> - Aug 10, 2020<ul>
+<li><a href="https://github.com/h2oai/qd/releases/tag/v0.1.5">v0.1.5</a> - Sep 10, 2020<ul>
+<li>Added<ul>
+<li>Picker component.</li>
+<li>Breadcrumbs component.</li>
+<li>Range slider component.</li>
+<li>Stepper component.</li>
+<li>Allow backend to handle changes to textboxes as you type.</li>
+<li>Select / deselect all controls for multivalued dropdown component.</li>
+<li>Examples for using plotly plots.</li>
+<li>Example for updating vega plots.</li>
+<li>OS-specific installations instructions.</li>
+<li>Cypress test framework support.</li>
+</ul>
+</li>
+<li>Fixed<ul>
+<li>Add .exe extension o Windows executable.</li>
+<li>Percentage formatting in Safari.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://github.com/h2oai/qd/releases/tag/v0.1.4">v0.1.4</a> - Aug 10, 2020<ul>
 <li>Fixed<ul>
 <li>Frame heights are not respected with total height of frames exceeds containing card size</li>
 </ul>
@@ -406,6 +427,63 @@ copy_expando(q.args, q.client, exclude_keys=['back2', 'select_target', 'restart'
 </code></pre>
 <p><strong>Changed: No need to JSON-serialize values to preserve them between requests.</strong></p>
 <p><code>q.args.foo=</code> only supported JSON-serialized values. No such restrictions exist for the <code>q.app</code>, <code>q.user</code> and <code>q.client</code> containers. You could, for example, load a Pandas dataframe and set <code>q.user.df = my_df</code>, and the dataframe will be accessible across requests for the lifetime of the app.</p>
+<h1 id="authoring-functional-tests">Authoring functional tests</h1>
+<p>Q supports authoring functional tests in Python for the <a href="https://www.cypress.io/">Cypress</a> test framework. This feature lets you automate browser-based point-and-click tests for your app.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="step-1-install-nodejs">Step 1: Install Node.js</h3>
+<p>Install a recent version of <a href="https://nodejs.org/en/">Node.js</a>.</p>
+<h3 id="step-2-set-up-cypress">Step 2: Set up Cypress</h3>
+<p>Using your terminal, go to your Q installation's <code><a title="h2o_q.test" href="test.html">h2o_q.test</a></code> directory and install Cypress</p>
+<pre><code>$ cd path/to/q
+$ cd test
+$ npm install
+</code></pre>
+<h2 id="writing-a-test">Writing a test</h2>
+<p>See the <a href="#wizard">Wizard</a> example to understand how to author tests for your interactive app. Specifically, note how the <code>@test</code> attribute and
+the <code>run_tests()</code> function is used.</p>
+<pre><code class="py">
+@test
+def test_wizard(t):
+    t.visit('/demo')
+    t.locate('step1').click()
+    t.locate('text').should('have.text', 'What is your name?')
+    t.locate('nickname').clear().type('Fred')
+    t.locate('step2').click()
+    t.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
+    t.locate('feeling').clear().type('quirky')
+    t.locate('step3').click()
+    t.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
+
+
+if len(sys.argv) &gt; 1 and sys.argv[1] == 'test':
+    run_tests()
+else:
+    listen('/demo', main)
+
+</code></pre>
+<p>See <a href="https://docs.cypress.io/guides/references/assertions.html#Common-Assertions">Assertions</a> to understand how the Cypress API works.</p>
+<h2 id="running-your-test">Running your test</h2>
+<h3 id="step-1-start-the-q-server-as-usual">Step 1: Start the Q server as usual</h3>
+<pre><code>$ q
+</code></pre>
+<h3 id="step-2-start-the-q-test-bridge">Step 2: Start the Q test bridge</h3>
+<p>The Q test bridge is built into your Q server executable, and helps run your Python tests on Cypress.</p>
+<p>In a new terminal window, run the Q executable with the <code>-cypress</code> command line argument.</p>
+<pre><code>$ qd -cypress
+</code></pre>
+<p>Optionally, use the <code>-cypress-dir</code> and <code>-cypress-bridge-address</code> command line arguments if you need additional control over the test bridge (run <code>qd -help</code> for details).</p>
+<h3 id="step-3-run-your-test">Step 3: Run your test</h3>
+<p>From your app's <code>venv</code>, run:</p>
+<pre><code>$ python examples/wizard.py test
+</code></pre>
+<p>Running the above command translates your Python test to Javascript and sends it to the Q test bridge. You should now see your test executing in the terminal window that belongs your test bridge.</p>
+<h3 id="step-4-optional-explore-your-executed-tests">Step 4: (Optional) Explore your executed tests</h3>
+<p>All your executed tests are stored in your <code>test/cypress/integration</code> directory. To view past results and re-run tests, simply launch Cypress like this:</p>
+<pre><code>$ cd path/to/q
+$ cd test
+$ ./node_modules/.bin/cypress open
+</code></pre>
+<p>You can then use the Cypres user interface to browse and execute individual tests interactively.</p>
 <h1 id="examples">Examples</h1>
 <h2 id="hello-world">Hello World!</h2>
 <p>A simple example to get you started with Q.</p>
@@ -506,9 +584,32 @@ async def new_todo(q: Q):
 if __name__ == '__main__':
     listen('/demo', main)
 </code></pre>
+<h2 id="breadcrumbs">Breadcrumbs</h2>
+<p>Breadcrumbs should be used as a navigational aid in your app or site.
+They indicate the current page’s location within a hierarchy and help
+the user understand where they are in relation to the rest of that hierarchy.
+They also afford one-click access to higher levels of that hierarchy.
+Breadcrumbs are typically placed, in horizontal form, under the masthead
+or navigation of an experience, above the primary content area.</p>
+<pre><code class="py">from h2o_q import site, ui
+
+page = site['/demo']
+
+page['breadcrumbs'] = ui.breadcrumbs_card(
+    box='1 1 4 -1',
+    items=[
+        ui.breadcrumb(name='#menu1', label='Menu 1'),
+        ui.breadcrumb(name='#menu2', label='Menu 2'),
+        ui.breadcrumb(name='#menu3', label='Menu 3'),
+    ],
+)
+
+page.save()
+</code></pre>
 <h2 id="wizard">Wizard</h2>
 <p>Create a multi-step wizard using form cards.</p>
-<pre><code class="py">from h2o_q import Q, ui, listen
+<pre><code class="py">import sys
+from h2o_q import Q, ui, listen, test, run_tests
 
 
 async def main(q: Q):
@@ -548,7 +649,65 @@ async def main(q: Q):
     await q.page.save()
 
 
-listen('/demo', main)
+@test
+def test_wizard(t):
+    t.visit('/demo')
+    t.locate('step1').click()
+    t.locate('text').should('have.text', 'What is your name?')
+    t.locate('nickname').clear().type('Fred')
+    t.locate('step2').click()
+    t.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
+    t.locate('feeling').clear().type('quirky')
+    t.locate('step3').click()
+    t.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
+
+
+if len(sys.argv) &gt; 1 and sys.argv[1] == 'test':
+    run_tests()
+else:
+    listen('/demo', main)
+</code></pre>
+<h2 id="stepper">Stepper</h2>
+<p>Use Stepper to show progress through numbered steps.</p>
+<pre><code class="py">from h2o_q import Q, listen, ui
+
+
+async def main(q: Q):
+    q.page['basic-stepper'] = ui.form_card(
+        box='1 1 4 1',
+        items=[
+          ui.stepper(name='basic-stepper', items=[
+            ui.step(label='Step 1'),
+            ui.step(label='Step 2'),
+            ui.step(label='Step 3'),
+          ])
+        ]
+    )
+    q.page['icon-stepper'] = ui.form_card(
+        box='1 2 4 1',
+        items=[
+          ui.stepper(name='icon-stepper', items=[
+            ui.step(label='Step 1', icon='MailLowImportance'),
+            ui.step(label='Step 2', icon='TaskManagerMirrored'),
+            ui.step(label='Step 3', icon='Cafe'),
+          ])
+        ]
+    )
+    q.page['almost-done-stepper'] = ui.form_card(
+        box='1 3 4 1',
+        items=[
+          ui.stepper(name='almost-done-stepper', items=[
+            ui.step(label='Step 1', done=True),
+            ui.step(label='Step 2', done=True),
+            ui.step(label='Step 3'),
+          ])
+        ]
+    )
+    await q.page.save()
+
+
+if __name__ == '__main__':
+    listen('/demo', main)
 </code></pre>
 <h2 id="stat-small">Stat / Small</h2>
 <p>Create a stat card displaying a single value.</p>
@@ -595,8 +754,8 @@ c = page.add(f'example', ui.large_stat_card(
     box='1 1 2 2',
     title=fake.cryptocurrency_name(),
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    aux_value='={{intl quux style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-    data=dict(qux=val, quux=pc * 100),
+    aux_value='={{intl quux style=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+    data=dict(qux=val, quux=pc),
     caption=' '.join(fake.sentences()),
 ))
 page.save()
@@ -605,7 +764,7 @@ while True:
     time.sleep(1)
     val, pc = f.next()
     c.data.qux = val
-    c.data.quux = pc * 100
+    c.data.quux = pc
     page.save()
 </code></pre>
 <h2 id="stat-gauge-wide">Stat / Gauge / Wide</h2>
@@ -626,10 +785,10 @@ c = page.add(f'example', ui.wide_gauge_stat_card(
     box='1 1 2 1',
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    aux_value='={{intl bar style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+    aux_value='={{intl bar style=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     plot_color='$red',
     progress=pc,
-    data=dict(foo=val, bar=pc * 100),
+    data=dict(foo=val, bar=pc),
 ))
 page.save()
 
@@ -637,7 +796,7 @@ while True:
     time.sleep(1)
     val, pc = f.next()
     c.data.foo = val
-    c.data.bar = pc * 100
+    c.data.bar = pc
     c.progress = pc
     page.save()
 </code></pre>
@@ -659,10 +818,10 @@ c = page.add(f'example', ui.tall_gauge_stat_card(
     box='1 1 1 2',
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    aux_value='={{intl bar style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+    aux_value='={{intl bar style=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     plot_color='$red',
     progress=pc,
-    data=dict(foo=val, bar=pc * 100),
+    data=dict(foo=val, bar=pc),
 ))
 page.save()
 
@@ -670,7 +829,7 @@ while True:
     time.sleep(1)
     val, pc = f.next()
     c.data.foo = val
-    c.data.bar = pc * 100
+    c.data.bar = pc
     c.progress = pc
     page.save()
 </code></pre>
@@ -692,10 +851,10 @@ c = page.add(f'example', ui.wide_bar_stat_card(
     box='1 1 2 1',
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    aux_value='={{intl bar style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+    aux_value='={{intl bar style=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     plot_color='$red',
     progress=pc,
-    data=dict(foo=val, bar=pc * 100),
+    data=dict(foo=val, bar=pc),
 ))
 page.save()
 
@@ -703,7 +862,7 @@ while True:
     time.sleep(1)
     val, pc = f.next()
     c.data.foo = val
-    c.data.bar = pc * 100
+    c.data.bar = pc
     c.progress = pc
     page.save()
 </code></pre>
@@ -726,11 +885,11 @@ c = page.add(f'example', ui.large_bar_stat_card(
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     value_caption='This Month',
-    aux_value='={{intl bar style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+    aux_value='={{intl bar style=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value_caption='Previous Month',
     plot_color='$red',
     progress=pc,
-    data=dict(foo=val, bar=pc * 100),
+    data=dict(foo=val, bar=pc),
     caption=' '.join(fake.sentences(2)),
 ))
 page.save()
@@ -739,7 +898,7 @@ while True:
     time.sleep(1)
     val, pc = f.next()
     c.data.foo = val
-    c.data.bar = pc * 100
+    c.data.bar = pc
     c.progress = pc
     page.save()
 </code></pre>
@@ -844,8 +1003,8 @@ for i in range(len(curves)):
         box=f'1 {i + 1} 2 1',
         title=fake.cryptocurrency_name(),
         value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-        aux_value='={{intl quux style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-        data=dict(qux=val, quux=pc),
+        aux_value='={{intl quux style=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+        data=dict(qux=val, quux=pc / 100),
         plot_category='foo',
         plot_type='area',
         plot_value='qux',
@@ -862,7 +1021,7 @@ while True:
     for f, c in cards:
         cat, val, pc = f.next()
         c.data.qux = val
-        c.data.quux = pc
+        c.data.quux = pc / 100
         c.plot_data[-1] = [cat, val]
     page.save()
 </code></pre>
@@ -884,8 +1043,8 @@ c = page.add(f'example', ui.wide_series_stat_card(
     box='1 1 2 1',
     title=fake.cryptocurrency_name(),
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    aux_value='={{intl quux style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-    data=dict(qux=val, quux=pc),
+    aux_value='={{intl quux style=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+    data=dict(qux=val, quux=pc / 100),
     plot_category='foo',
     plot_type='interval',
     plot_value='qux',
@@ -899,7 +1058,7 @@ while True:
     time.sleep(1)
     cat, val, pc = f.next()
     c.data.qux = val
-    c.data.quux = pc
+    c.data.quux = pc / 100
     c.plot_data[-1] = [cat, val]
     page.save()
 </code></pre>
@@ -925,8 +1084,8 @@ for i in range(len(curves)):
         box=f'{i + 1} 1 1 2',
         title=fake.cryptocurrency_name(),
         value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-        aux_value='={{intl quux style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-        data=dict(qux=val, quux=pc),
+        aux_value='={{intl quux style=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+        data=dict(qux=val, quux=pc / 100),
         plot_type='area',
         plot_category='foo',
         plot_value='qux',
@@ -943,7 +1102,7 @@ while True:
     for f, c in cards:
         cat, val, pc = f.next()
         c.data.qux = val
-        c.data.quux = pc
+        c.data.quux = pc / 100
         c.plot_data[-1] = [cat, val]
     page.save()
 </code></pre>
@@ -965,8 +1124,8 @@ c = page.add(f'example', ui.tall_series_stat_card(
     box='1 1 1 2',
     title=fake.cryptocurrency_name(),
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    aux_value='={{intl quux style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-    data=dict(qux=val, quux=pc),
+    aux_value='={{intl quux style=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+    data=dict(qux=val, quux=pc / 100),
     plot_category='foo',
     plot_type='interval',
     plot_value='qux',
@@ -980,7 +1139,7 @@ while True:
     time.sleep(1)
     cat, val, pc = f.next()
     c.data.qux = val
-    c.data.quux = pc
+    c.data.quux = pc / 100
     c.plot_data[-1] = [cat, val]
     page.save()
 </code></pre>
@@ -1038,7 +1197,7 @@ def create_dashboard(update_freq=0.0):
             box=f'{6 + i} 1 1 1',
             title=fake.cryptocurrency_code(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            data=dict(qux=val, quux=pc),
+            data=dict(qux=val, quux=pc / 100),
             plot_category='foo',
             plot_value='qux',
             plot_color=next_color(),
@@ -1056,8 +1215,8 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 2 2 1',
             title=fake.cryptocurrency_name(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl quux style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-            data=dict(qux=val, quux=pc),
+            aux_value='={{intl quux style=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+            data=dict(qux=val, quux=pc / 100),
             plot_category='foo',
             plot_value='qux',
             plot_color=next_color(),
@@ -1075,7 +1234,7 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 3 2 1',
             title=fake.cryptocurrency_name(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl quux style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+            aux_value='={{intl quux style=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
             data=dict(qux=val, quux=pc),
             plot_type='interval',
             plot_category='foo',
@@ -1094,10 +1253,10 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 4 1 2',
             title=fake.cryptocurrency_name(),
             value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl bar style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+            aux_value='={{intl bar style=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             plot_color=next_color(),
             progress=pc,
-            data=dict(foo=val, bar=pc * 100),
+            data=dict(foo=val, bar=pc / 100),
         ))
         large_pcs.append((f, c))
 
@@ -1109,7 +1268,7 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 6 1 2',
             title=fake.cryptocurrency_name(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl quux style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+            aux_value='={{intl quux style=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
             data=dict(qux=val, quux=pc),
             plot_type='area',
             plot_category='foo',
@@ -1129,10 +1288,10 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 8 2 1',
             title=fake.cryptocurrency_name(),
             value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl bar style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+            aux_value='={{intl bar style=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             plot_color=next_color(),
             progress=pc,
-            data=dict(foo=val, bar=pc * 100),
+            data=dict(foo=val, bar=pc / 100),
         ))
         small_pcs.append((f, c))
 
@@ -1144,10 +1303,10 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 8 2 1',
             title=fake.cryptocurrency_name(),
             value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl bar style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+            aux_value='={{intl bar style=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             plot_color=next_color(),
             progress=pc,
-            data=dict(foo=val, bar=pc * 100),
+            data=dict(foo=val, bar=pc / 100),
         ))
         small_pbs.append((f, c))
 
@@ -1159,8 +1318,8 @@ def create_dashboard(update_freq=0.0):
             box=f'{i} 9 2 2',
             title=fake.cryptocurrency_name(),
             value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-            aux_value='={{intl quux style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-            data=dict(qux=val, quux=pc * 100),
+            aux_value='={{intl quux style=&quot;percent&quot; minimum_fraction_digits=1 maximum_fraction_digits=1}}',
+            data=dict(qux=val, quux=pc / 100),
             caption=' '.join(fake.sentences()),
         ))
         large_cards.append((f, c))
@@ -1174,11 +1333,11 @@ def create_dashboard(update_freq=0.0):
             title=fake.cryptocurrency_name(),
             value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             value_caption='This Month',
-            aux_value='={{intl bar style=&quot;unit&quot; unit=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+            aux_value='={{intl bar style=&quot;percent&quot; minimum_fraction_digits=2 maximum_fraction_digits=2}}',
             aux_value_caption='Previous Month',
             plot_color=next_color(),
             progress=pc,
-            data=dict(foo=val, bar=pc * 100),
+            data=dict(foo=val, bar=pc / 100),
             caption=' '.join(fake.sentences(2)),
         ))
         large_pbs.append((f, c))
@@ -1195,54 +1354,54 @@ def create_dashboard(update_freq=0.0):
         for f, c in simples_colored:
             cat, val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc
+            c.data.quux = pc / 100
             c.plot_data[-1] = [cat, val]
 
         for f, c in lines:
             cat, val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc
+            c.data.quux = pc / 100
             c.plot_data[-1] = [cat, val]
 
         for f, c in bars:
             cat, val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc
+            c.data.quux = pc / 100
             c.plot_data[-1] = [cat, val]
 
         for f, c in large_lines:
             cat, val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc
+            c.data.quux = pc / 100
             c.plot_data[-1] = [cat, val]
 
         for f, c in large_pcs:
             val, pc = f.next()
             c.data.foo = val
-            c.data.bar = pc * 100
+            c.data.bar = pc
             c.progress = pc
 
         for f, c in small_pcs:
             val, pc = f.next()
             c.data.foo = val
-            c.data.bar = pc * 100
+            c.data.bar = pc
             c.progress = pc
 
         for f, c in small_pbs:
             val, pc = f.next()
             c.data.foo = val
-            c.data.bar = pc * 100
+            c.data.bar = pc
             c.progress = pc
 
         for f, c in large_cards:
             val, pc = f.next()
             c.data.qux = val
-            c.data.quux = pc * 100
+            c.data.quux = pc
 
         for f, c in large_pbs:
             val, pc = f.next()
             c.data.foo = val
-            c.data.bar = pc * 100
+            c.data.bar = pc
             c.progress = pc
 
         page.save()
@@ -1528,6 +1687,37 @@ async def main(q: Q):
 if __name__ == '__main__':
     listen('/demo', main)
 </code></pre>
+<h2 id="form-textbox-trigger">Form / Textbox / trigger</h2>
+<p>Use a textbox with a trigger flag to allow users to sync user input after typing.</p>
+<pre><code class="py">from h2o_q import Q, listen, ui
+
+def convert_to_piglatin(pigLatin: str):
+  if pigLatin is None:
+    return ''
+  wordList = pigLatin.lower().strip().split(&quot; &quot;)
+  pigLatin = []
+  for word in wordList:
+      if word[0] in 'aeiou':
+          pigLatin.append(f'{word}yay')
+      else:
+          for letter in word:
+              if letter in 'aeiou':
+                  pigLatin.append(f'{word[word.index(letter):]}{word[:word.index(letter)]}ay')
+                  break
+  return &quot; &quot;.join(pigLatin)
+
+
+async def main(q: Q):
+    q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+        ui.text(f'Pig latin translation={convert_to_piglatin(q.args.translation)}'),
+        ui.textbox(name='translation', label='Text for translation', multiline=True, trigger=True),
+    ])
+    await q.page.save()
+
+
+if __name__ == '__main__':
+    listen('/demo', main)
+</code></pre>
 <h2 id="form-button">Form / Button</h2>
 <p>Use buttons to enable a user to commit a change or complete steps in a task.</p>
 <pre><code class="py">from h2o_q import Q, listen, ui
@@ -1645,6 +1835,64 @@ async def main(q: Q):
             ui.checklist(name='checklist', label='Choices',
                          choices=[ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']]),
             ui.button(name='show_inputs', label='Submit', primary=True),
+        ])
+    await q.page.save()
+
+
+if __name__ == '__main__':
+    listen('/demo', main)
+</code></pre>
+<h2 id="form-picker">Form / Picker</h2>
+<p>Use pickers to allow users to select one or more choices, such as tags or files, from a list.</p>
+<pre><code class="py">from h2o_q import Q, listen, ui
+
+
+async def main(q: Q):
+    if q.args.show_inputs:
+        q.page['example'].items = [
+            ui.text(f'selected={q.args.picker}'),
+            ui.button(name='show_form', label='Back', primary=True),
+        ]
+    else:
+        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+          ui.picker(name='picker', label='Picker showcase', choices=[
+            ui.choice(name='spam', label='Spam'),
+            ui.choice(name='eggs', label= 'Eggs'),
+            ui.choice(name='ham', label= 'Ham'),
+            ui.choice(name='cheese', label='Cheese'),
+            ui.choice(name='beans', label='Beans'),
+            ui.choice(name='toast', label='Toast'),
+          ]),
+          ui.button(name='show_inputs', label='Submit', primary=True),
+        ])
+    await q.page.save()
+
+
+if __name__ == '__main__':
+    listen('/demo', main)
+</code></pre>
+<h2 id="form-picker-selection">Form / Picker / Selection</h2>
+<p>Pre-select choices while displaying a picker.</p>
+<pre><code class="py">from h2o_q import Q, listen, ui
+
+
+async def main(q: Q):
+    if q.args.show_inputs:
+        q.page['example'].items = [
+            ui.text(f'selected={q.args.picker}'),
+            ui.button(name='show_form', label='Back', primary=True),
+        ]
+    else:
+        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+          ui.picker(name='picker', label='Picker with initial values', choices=[
+            ui.choice(name='spam', label='Spam'),
+            ui.choice(name='eggs', label= 'Eggs'),
+            ui.choice(name='ham', label= 'Ham'),
+            ui.choice(name='cheese', label='Cheese'),
+            ui.choice(name='beans', label='Beans'),
+            ui.choice(name='toast', label='Toast'),
+          ], values=['spam','eggs']),
+          ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
 
@@ -1801,7 +2049,7 @@ if __name__ == '__main__':
     listen('/demo', main)
 </code></pre>
 <h2 id="form-slider">Form / Slider</h2>
-<p>Use a slider to allow users to set a value withing a specific range.</p>
+<p>Use a slider to allow users to set a value within a specific range.</p>
 <pre><code class="py">from h2o_q import Q, listen, ui
 
 
@@ -1819,6 +2067,33 @@ async def main(q: Q):
             ui.slider(name='slider_zero', label='Origin from zero', min=-10, max=10, step=1, value=-3),
             ui.slider(name='slider_disabled', label='Disabled slider', min=0, max=100, step=10, value=30,
                       disabled=True),
+            ui.button(name='show_inputs', label='Submit', primary=True),
+        ])
+    await q.page.save()
+
+
+if __name__ == '__main__':
+    listen('/demo', main)
+</code></pre>
+<h2 id="form-range-slider">Form / Range Slider</h2>
+<p>Use a range slider to allow users to select a value range (from, to).</p>
+<pre><code class="py">from h2o_q import Q, listen, ui
+
+
+async def main(q: Q):
+    if q.args.show_inputs:
+        q.page['example'].items = [
+            ui.text(f'range_slider={q.args.range_slider}'),
+            ui.text(f'range_slider_step={q.args.range_slider_step}'),
+            ui.text(f'range_slider_disabled={q.args.range_slider_disabled}'),
+            ui.button(name='show_form', label='Back', primary=True),
+        ]
+    else:
+        q.page['example'] = ui.form_card(box='1 1 4 10', items=[
+            ui.range_slider(name='range_slider', label='Default slider'),
+            ui.range_slider(name='range_slider_step', label='Step slider', min=0, max=1000, step=100, min_value=0, max_value=100),
+            ui.range_slider(name='range_slider_disabled', label='Disabled slider', min=0, max=100, step=10, min_value=0, 
+              max_value=70, disabled=True),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
@@ -1971,6 +2246,39 @@ page['example'] = ui.form_card(
     ]
 )
 
+page.save()
+</code></pre>
+<h2 id="image">Image</h2>
+<p>Use an image card to display a base64-encoded image.</p>
+<pre><code class="py">from h2o_q import site, ui
+import io
+import base64
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(19680801)
+
+n = 25
+plt.figure(figsize=(3, 3))
+plt.scatter(
+    np.random.rand(n), np.random.rand(n),
+    s=(30 * np.random.rand(n)) ** 2,
+    c=np.random.rand(n),
+    alpha=0.5,
+)
+
+buf = io.BytesIO()
+plt.savefig(buf, format='png')
+buf.seek(0)
+image = base64.b64encode(buf.read()).decode('utf-8')
+
+page = site['/demo']
+page['example'] = ui.image_card(
+    box='1 1 3 5',
+    title='An image',
+    type='png',
+    image=image,
+)
 page.save()
 </code></pre>
 <h2 id="form-frame">Form / Frame</h2>
@@ -3864,6 +4172,55 @@ page.add('external', ui.vega_card(
 
 page.save()
 </code></pre>
+<h2 id="plot-vega-lite-update">Plot / Vega-lite / Update</h2>
+<p>Periodically update a Vega-lite plot.</p>
+<pre><code class="py">from h2o_q import site, data, ui
+import random
+import time
+
+page = site['/demo']
+
+spec = '''
+{
+  &quot;description&quot;: &quot;A simple bar plot with embedded data.&quot;,
+  &quot;mark&quot;: &quot;bar&quot;,
+  &quot;encoding&quot;: {
+    &quot;x&quot;: {&quot;field&quot;: &quot;a&quot;, &quot;type&quot;: &quot;ordinal&quot;},
+    &quot;y&quot;: {&quot;field&quot;: &quot;b&quot;, &quot;type&quot;: &quot;quantitative&quot;}
+  }
+}
+'''
+
+
+# Generate random datum between 1 and 100
+def rnd(): return random.randint(1, 100)
+
+
+# Get data rows for our plot.
+# Typically, this data would be read from some external data source.
+def poll():
+    return [
+        [&quot;A&quot;, rnd()], [&quot;B&quot;, rnd()], [&quot;C&quot;, rnd()],
+        [&quot;D&quot;, rnd()], [&quot;E&quot;, rnd()], [&quot;F&quot;, rnd()],
+        [&quot;G&quot;, rnd()], [&quot;H&quot;, rnd()], [&quot;I&quot;, rnd()]
+    ]
+
+
+vis = page.add('external', ui.vega_card(
+    box='1 1 2 4',
+    title='Plot with external data',
+    specification=spec,
+    data=data(fields=[&quot;a&quot;, &quot;b&quot;], rows=poll()),
+))
+
+page.save()
+
+while True:
+    time.sleep(1)
+    # Update the plot's data rows
+    vis.data = poll()
+    page.save()
+</code></pre>
 <h2 id="plot-altair">Plot / Altair</h2>
 <p>Use Altair to create plot specifications for the Vega card.</p>
 <pre><code class="py">import altair
@@ -3981,6 +4338,70 @@ async def main(q: Q):
 
     # Display our plot in our markdown card
     q.page['plot'].content = f'![plot]({image_path})'
+
+    # Save page
+    await q.page.save()
+
+
+listen('/demo', main)
+</code></pre>
+<h2 id="plot-plotly">Plot / Plotly</h2>
+<p>Use plotly to create plots. Also demonstrates how to provide live control over plots.</p>
+<pre><code class="py">import numpy as np
+from plotly import graph_objects as go
+from plotly import io as pio
+
+from h2o_q import ui, listen, Q
+
+np.random.seed(19680801)
+
+
+async def main(q: Q):
+    if not q.client.initialized:  # First visit
+        q.client.initialized = True
+        q.client.points = 25
+        q.client.plotly_controls = False
+
+        q.page['controls'] = ui.form_card(
+            box='1 1 4 2',
+            items=[
+                ui.text_xl(&quot;Lets make some interactive plots with plotly&quot;),
+                ui.slider(name='points', label='Points', min=5, max=50, step=1, value=q.client.points, trigger=True),
+                ui.toggle(name='plotly_controls', label='Plotly Controls', trigger=True),
+            ]
+        )
+        q.page['plot'] = ui.frame_card(box='1 3 4 5', title='', content='')
+
+    if q.args.points:
+        q.client.points = q.args.points
+
+    if q.args.plotly_controls is not None:
+        q.client.plotly_controls = q.args.plotly_controls
+
+    n = q.client.points
+
+    # Create plot with plotly
+    fig = go.Figure(data=go.Scatter(
+        x=np.random.rand(n),
+        y=np.random.rand(n),
+        mode='markers',
+        marker=dict(size=(8 * np.random.rand(n)) ** 2,
+                    color=np.random.rand(n)),
+        opacity=0.8,
+    ))
+    _ = fig.update_layout(
+        width=4 * 134 - 10,
+        height=5 * 76 - 10,
+        margin=dict(l=10, r=10, t=10, b=10),
+        paper_bgcolor='rgb(255, 255, 255)',
+        plot_bgcolor='rgb(255, 255, 255)',
+    )
+    config = {'scrollZoom': q.client.plotly_controls,
+              'showLink': q.client.plotly_controls,
+              'displayModeBar': q.client.plotly_controls}
+    html = pio.to_html(fig, validate=False, include_plotlyjs='cdn', config=config)
+
+    q.page['plot'].content = html
 
     # Save page
     await q.page.save()
@@ -4619,12 +5040,17 @@ realtime state synchronization between Python and web browsers.
 from .core import Site, site, Page, Ref, data, pack, configure, Expando, expando_to_dict, clone_expando, copy_expando
 from .server import listen, Q
 from .db import TeleDBError, TeleDB
-from .types import *</code></pre>
+from .types import *
+from .test import test, run_tests</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
+<dt><code class="name"><a title="h2o_q.autoreload" href="autoreload.html">h2o_q.autoreload</a></code></dt>
+<dd>
+<div class="desc"><p>Automatically restart the server when a source file is modified.</p></div>
+</dd>
 <dt><code class="name"><a title="h2o_q.core" href="core.html">h2o_q.core</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -4638,6 +5064,10 @@ from .types import *</code></pre>
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="h2o_q.server" href="server.html">h2o_q.server</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="h2o_q.test" href="test.html">h2o_q.test</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -4669,10 +5099,28 @@ from .types import *</code></pre>
 <li><a href="#breaking-changes">Breaking changes</a></li>
 </ul>
 </li>
+<li><a href="#authoring-functional-tests">Authoring functional tests</a><ul>
+<li><a href="#prerequisites">Prerequisites</a><ul>
+<li><a href="#step-1-install-nodejs">Step 1: Install Node.js</a></li>
+<li><a href="#step-2-set-up-cypress">Step 2: Set up Cypress</a></li>
+</ul>
+</li>
+<li><a href="#writing-a-test">Writing a test</a></li>
+<li><a href="#running-your-test">Running your test</a><ul>
+<li><a href="#step-1-start-the-q-server-as-usual">Step 1: Start the Q server as usual</a></li>
+<li><a href="#step-2-start-the-q-test-bridge">Step 2: Start the Q test bridge</a></li>
+<li><a href="#step-3-run-your-test">Step 3: Run your test</a></li>
+<li><a href="#step-4-optional-explore-your-executed-tests">Step 4: (Optional) Explore your executed tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#examples">Examples</a><ul>
 <li><a href="#hello-world">Hello World!</a></li>
 <li><a href="#to-do-list-app">To-do List App</a></li>
+<li><a href="#breadcrumbs">Breadcrumbs</a></li>
 <li><a href="#wizard">Wizard</a></li>
+<li><a href="#stepper">Stepper</a></li>
 <li><a href="#stat-small">Stat / Small</a></li>
 <li><a href="#stat-large">Stat / Large</a></li>
 <li><a href="#stat-gauge-wide">Stat / Gauge / Wide</a></li>
@@ -4696,22 +5144,27 @@ from .types import *</code></pre>
 <li><a href="#form-progress-updating">Form / Progress / Updating</a></li>
 <li><a href="#form-message-bar">Form / Message Bar</a></li>
 <li><a href="#form-textbox">Form / Textbox</a></li>
+<li><a href="#form-textbox-trigger">Form / Textbox / trigger</a></li>
 <li><a href="#form-button">Form / Button</a></li>
 <li><a href="#form-buttons">Form / Buttons</a></li>
 <li><a href="#form-checkbox">Form / Checkbox</a></li>
 <li><a href="#form-checklist">Form / Checklist</a></li>
+<li><a href="#form-picker">Form / Picker</a></li>
+<li><a href="#form-picker-selection">Form / Picker / Selection</a></li>
 <li><a href="#form-dropdown">Form / Dropdown</a></li>
 <li><a href="#form-choice-group">Form / Choice Group</a></li>
 <li><a href="#form-combobox">Form / Combobox</a></li>
 <li><a href="#form-toggle">Form / Toggle</a></li>
 <li><a href="#form-spinbox">Form / Spinbox</a></li>
 <li><a href="#form-slider">Form / Slider</a></li>
+<li><a href="#form-range-slider">Form / Range Slider</a></li>
 <li><a href="#form-date-picker">Form / Date Picker</a></li>
 <li><a href="#form-color-picker">Form / Color Picker</a></li>
 <li><a href="#form-swatch-picker">Form / Swatch Picker</a></li>
 <li><a href="#form-tabs">Form / Tabs</a></li>
 <li><a href="#form-separator">Form / Separator</a></li>
 <li><a href="#form-file-upload">Form / File Upload</a></li>
+<li><a href="#image">Image</a></li>
 <li><a href="#form-frame">Form / Frame</a></li>
 <li><a href="#form-frame-path">Form / Frame / Path</a></li>
 <li><a href="#frame">Frame</a></li>
@@ -4784,9 +5237,11 @@ from .types import *</code></pre>
 <li><a href="#plot-polygon">Plot / Polygon</a></li>
 <li><a href="#plot-histogram">Plot / Histogram</a></li>
 <li><a href="#plot-vega-lite">Plot / Vega-lite</a></li>
+<li><a href="#plot-vega-lite-update">Plot / Vega-lite / Update</a></li>
 <li><a href="#plot-altair">Plot / Altair</a></li>
 <li><a href="#plot-bokeh">Plot / Bokeh</a></li>
 <li><a href="#plot-matplotlib">Plot / Matplotlib</a></li>
+<li><a href="#plot-plotly">Plot / Plotly</a></li>
 <li><a href="#plot-d3js">Plot / D3.js</a></li>
 <li><a href="#pixel-art">Pixel Art</a></li>
 <li><a href="#uploads">Uploads</a></li>
@@ -4813,10 +5268,12 @@ from .types import *</code></pre>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
+<li><code><a title="h2o_q.autoreload" href="autoreload.html">h2o_q.autoreload</a></code></li>
 <li><code><a title="h2o_q.core" href="core.html">h2o_q.core</a></code></li>
 <li><code><a title="h2o_q.db" href="db.html">h2o_q.db</a></code></li>
 <li><code><a title="h2o_q.graphics" href="graphics.html">h2o_q.graphics</a></code></li>
 <li><code><a title="h2o_q.server" href="server.html">h2o_q.server</a></code></li>
+<li><code><a title="h2o_q.test" href="test.html">h2o_q.test</a></code></li>
 <li><code><a title="h2o_q.types" href="types.html">h2o_q.types</a></code></li>
 <li><code><a title="h2o_q.ui" href="ui.html">h2o_q.ui</a></code></li>
 </ul>

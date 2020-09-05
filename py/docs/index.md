@@ -1,6 +1,21 @@
 
 # Change Log
-- [v0.1.4](https://github.com/h2oai/qd/releases/tag/v0.1.3) - Aug 10, 2020
+- [v0.1.5](https://github.com/h2oai/qd/releases/tag/v0.1.5) - Sep 10, 2020
+    - Added
+        - Picker component.
+        - Breadcrumbs component.
+        - Range slider component.
+        - Stepper component.
+        - Allow backend to handle changes to textboxes as you type.
+        - Select / deselect all controls for multivalued dropdown component.
+        - Examples for using plotly plots.
+        - Example for updating vega plots.
+        - OS-specific installations instructions.
+        - Cypress test framework support.
+    - Fixed
+        - Add .exe extension o Windows executable.
+        - Percentage formatting in Safari.
+- [v0.1.4](https://github.com/h2oai/qd/releases/tag/v0.1.4) - Aug 10, 2020
     - Fixed
         - Frame heights are not respected with total height of frames exceeds containing card size
 - [v0.1.3](https://github.com/h2oai/qd/releases/tag/v0.1.3) - Aug 10, 2020

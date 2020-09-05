@@ -94,6 +94,24 @@ height: 110px;
 
 from .types import *
 
+def breadcrumb(
+        name: str,
+        label: str,
+) -&gt; Breadcrumb:
+    &#34;&#34;&#34;Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
+
+    Args:
+        name: The name of this item. Prefix the name with a &#39;#&#39; to trigger hash-change navigation.
+        label: The label to display.
+    Returns:
+        A `h2o_q.types.Breadcrumb` instance.
+    &#34;&#34;&#34;
+    return Breadcrumb(
+        name,
+        label,
+    )
+
+
 def command(
         name: str,
         label: Optional[str] = None,
@@ -123,6 +141,33 @@ def command(
         icon,
         items,
         data,
+    )
+
+
+def breadcrumbs_card(
+        box: str,
+        items: List[Breadcrumb],
+        commands: Optional[List[Command]] = None,
+) -&gt; BreadcrumbsCard:
+    &#34;&#34;&#34;Create a card containing breadcrumbs.
+    Breadcrumbs should be used as a navigational aid in your app or site.
+    They indicate the current page’s location within a hierarchy and help
+    the user understand where they are in relation to the rest of that hierarchy.
+    They also afford one-click access to higher levels of that hierarchy.
+    Breadcrumbs are typically placed, in horizontal form, under the masthead
+    or navigation of an experience, above the primary content area.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.BreadcrumbsCard` instance.
+    &#34;&#34;&#34;
+    return BreadcrumbsCard(
+        box,
+        items,
+        commands,
     )
 
 
@@ -403,6 +448,7 @@ def textbox(
         readonly: Optional[bool] = None,
         multiline: Optional[bool] = None,
         password: Optional[bool] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a text box.
@@ -426,6 +472,7 @@ def textbox(
         readonly: True if the text box is a read-only field.
         multiline: True if the text box should allow multi-line text entry.
         password: True if the text box should hide text content.
+        trigger: True if the form should be submitted when the text value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Textbox` instance.
@@ -445,6 +492,7 @@ def textbox(
         readonly,
         multiline,
         password,
+        trigger,
         tooltip,
     ))
 
@@ -1178,6 +1226,130 @@ def frame(
     ))
 
 
+def picker(
+        name: str,
+        choices: List[Choice],
+        label: Optional[str] = None,
+        values: Optional[List[str]] = None,
+        max_choices: Optional[int] = None,
+        disabled: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a picker.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Use a picker to allow the user to quickly search for or manage a few tags or files.
+
+    Args:
+        name: An identifying name for this component.
+        choices: The choices to be presented.
+        label: Text to be displayed above the component.
+        values: The names of the selected choices.
+        max_choices: Maximum number of selectable choices. Defaults to no limit.
+        disabled: Controls whether the picker should be disabled or not.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Picker` instance.
+    &#34;&#34;&#34;
+    return Component(picker=Picker(
+        name,
+        choices,
+        label,
+        values,
+        max_choices,
+        disabled,
+        tooltip,
+    ))
+
+
+def range_slider(
+        name: str,
+        label: Optional[str] = None,
+        min: Optional[float] = None,
+        max: Optional[float] = None,
+        step: Optional[float] = None,
+        min_value: Optional[float] = None,
+        max_value: Optional[float] = None,
+        disabled: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a range slider.
+
+    A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
+    current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+    Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
+
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        min: The minimum value of the slider. Defaults to 0.
+        max: The maximum value of the slider. Defaults to 100.
+        step: The difference between two adjacent values of the slider.
+        min_value: The lower bound of the selected range.
+        max_value: The upper bound of the selected range.
+        disabled: True if this field is disabled.
+        trigger: True if the form should be submitted when the slider value changes.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.RangeSlider` instance.
+    &#34;&#34;&#34;
+    return Component(range_slider=RangeSlider(
+        name,
+        label,
+        min,
+        max,
+        step,
+        min_value,
+        max_value,
+        disabled,
+        trigger,
+        tooltip,
+    ))
+
+
+def step(
+        label: str,
+        icon: Optional[str] = None,
+        done: Optional[bool] = None,
+) -&gt; Step:
+    &#34;&#34;&#34;Create a step for a stepper.
+
+    Args:
+        label: Text displayed below icon.
+        icon: Icon to be displayed.
+        done: Indicates whether this step has already been completed.
+    Returns:
+        A `h2o_q.types.Step` instance.
+    &#34;&#34;&#34;
+    return Step(
+        label,
+        icon,
+        done,
+    )
+
+
+def stepper(
+        name: str,
+        items: List[Step],
+        tooltip: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a component that displays a sequence of steps in a process.
+    The steps keep users informed about where they are in the process and how much is left to complete.
+
+    Args:
+        name: An identifying name for this component.
+        items: The sequence of steps to be displayed.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Stepper` instance.
+    &#34;&#34;&#34;
+    return Component(stepper=Stepper(
+        name,
+        items,
+        tooltip,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         text_xl: Optional[TextXl] = None,
@@ -1208,6 +1380,9 @@ def component(
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
         frame: Optional[Frame] = None,
+        picker: Optional[Picker] = None,
+        range_slider: Optional[RangeSlider] = None,
+        stepper: Optional[Stepper] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a component.
 
@@ -1241,6 +1416,9 @@ def component(
         tabs: Tabs.
         expander: Expander.
         frame: Frame
+        picker: Picker
+        range_slider: RangeSlider
+        stepper: Stepper
     Returns:
         A `h2o_q.types.Component` instance.
     &#34;&#34;&#34;
@@ -1274,6 +1452,9 @@ def component(
         tabs,
         expander,
         frame,
+        picker,
+        range_slider,
+        stepper,
     )
 
 
@@ -1859,8 +2040,8 @@ def mark(
         label_offset_x: Horizontal distance between label and mark.
         label_offset_y: Vertical distance between label and mark.
         label_rotation: Label rotation angle, in degrees, or &#39;none&#39; to disable automatic rotation. The default behavior is &#39;auto&#39; for automatic rotation.
-        label_position: Label position relative to the mark.
-        label_overlap: Strategy to use if labels overlap.
+        label_position: Label position relative to the mark. One of &#39;top&#39;, &#39;bottom&#39;, &#39;middle&#39;, &#39;left&#39;, &#39;right&#39;.
+        label_overlap: Strategy to use if labels overlap. One of &#39;hide&#39;, &#39;overlap&#39;, &#39;constrain&#39;.
         label_fill_color: Label fill color.
         label_fill_opacity: Label fill opacity.
         label_stroke_color: Label stroke color.
@@ -2403,6 +2584,95 @@ def wide_series_stat_card(
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="h2o_q.ui.breadcrumb"><code class="name flex">
+<span>def <span class="ident">breadcrumb</span></span>(<span>name: str, label: str) ‑> <a title="h2o_q.types.Breadcrumb" href="types.html#h2o_q.types.Breadcrumb">Breadcrumb</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a breadcrumb for a <code><a title="h2o_q.types.BreadcrumbsCard" href="types.html#h2o_q.types.BreadcrumbsCard">BreadcrumbsCard</a></code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>name</code></strong></dt>
+<dd>The name of this item. Prefix the name with a '#' to trigger hash-change navigation.</dd>
+<dt><strong><code>label</code></strong></dt>
+<dd>The label to display.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.Breadcrumb" href="types.html#h2o_q.types.Breadcrumb">Breadcrumb</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def breadcrumb(
+        name: str,
+        label: str,
+) -&gt; Breadcrumb:
+    &#34;&#34;&#34;Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
+
+    Args:
+        name: The name of this item. Prefix the name with a &#39;#&#39; to trigger hash-change navigation.
+        label: The label to display.
+    Returns:
+        A `h2o_q.types.Breadcrumb` instance.
+    &#34;&#34;&#34;
+    return Breadcrumb(
+        name,
+        label,
+    )</code></pre>
+</details>
+</dd>
+<dt id="h2o_q.ui.breadcrumbs_card"><code class="name flex">
+<span>def <span class="ident">breadcrumbs_card</span></span>(<span>box: str, items: List[<a title="h2o_q.types.Breadcrumb" href="types.html#h2o_q.types.Breadcrumb">Breadcrumb</a>], commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.BreadcrumbsCard" href="types.html#h2o_q.types.BreadcrumbsCard">BreadcrumbsCard</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a card containing breadcrumbs.
+Breadcrumbs should be used as a navigational aid in your app or site.
+They indicate the current page’s location within a hierarchy and help
+the user understand where they are in relation to the rest of that hierarchy.
+They also afford one-click access to higher levels of that hierarchy.
+Breadcrumbs are typically placed, in horizontal form, under the masthead
+or navigation of an experience, above the primary content area.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>box</code></strong></dt>
+<dd>A string indicating how to place this component on the page.</dd>
+<dt><strong><code>items</code></strong></dt>
+<dd>A list of <code><a title="h2o_q.types.Breadcrumb" href="types.html#h2o_q.types.Breadcrumb">Breadcrumb</a></code> instances to display. See <code><a title="h2o_q.ui.breadcrumb" href="#h2o_q.ui.breadcrumb">breadcrumb()</a></code></dd>
+<dt><strong><code>commands</code></strong></dt>
+<dd>Contextual menu commands for this component.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.BreadcrumbsCard" href="types.html#h2o_q.types.BreadcrumbsCard">BreadcrumbsCard</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def breadcrumbs_card(
+        box: str,
+        items: List[Breadcrumb],
+        commands: Optional[List[Command]] = None,
+) -&gt; BreadcrumbsCard:
+    &#34;&#34;&#34;Create a card containing breadcrumbs.
+    Breadcrumbs should be used as a navigational aid in your app or site.
+    They indicate the current page’s location within a hierarchy and help
+    the user understand where they are in relation to the rest of that hierarchy.
+    They also afford one-click access to higher levels of that hierarchy.
+    Breadcrumbs are typically placed, in horizontal form, under the masthead
+    or navigation of an experience, above the primary content area.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.BreadcrumbsCard` instance.
+    &#34;&#34;&#34;
+    return BreadcrumbsCard(
+        box,
+        items,
+        commands,
+    )</code></pre>
+</details>
+</dd>
 <dt id="h2o_q.ui.button"><code class="name flex">
 <span>def <span class="ident">button</span></span>(<span>name: str, label: Union[str, NoneType] = None, caption: Union[str, NoneType] = None, value: Union[str, NoneType] = None, primary: Union[bool, NoneType] = None, disabled: Union[bool, NoneType] = None, link: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
@@ -2982,7 +3252,7 @@ When collapsed the user can select a new value by typing.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.component"><code class="name flex">
-<span>def <span class="ident">component</span></span>(<span>text: Union[<a title="h2o_q.types.Text" href="types.html#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="types.html#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="types.html#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="types.html#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="types.html#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="types.html#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="types.html#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="types.html#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="types.html#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="types.html#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="types.html#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="types.html#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="types.html#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="types.html#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="types.html#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="types.html#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="types.html#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="types.html#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="types.html#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="types.html#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="types.html#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="types.html#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="types.html#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="types.html#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="types.html#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="types.html#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="types.html#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="types.html#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="types.html#h2o_q.types.Frame">Frame</a>, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">component</span></span>(<span>text: Union[<a title="h2o_q.types.Text" href="types.html#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="types.html#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="types.html#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="types.html#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="types.html#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="types.html#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="types.html#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="types.html#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="types.html#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="types.html#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="types.html#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="types.html#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="types.html#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="types.html#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="types.html#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="types.html#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="types.html#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="types.html#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="types.html#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="types.html#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="types.html#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="types.html#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="types.html#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="types.html#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="types.html#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="types.html#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="types.html#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="types.html#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="types.html#h2o_q.types.Frame">Frame</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="types.html#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="types.html#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="types.html#h2o_q.types.Stepper">Stepper</a>, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a component.</p>
@@ -3046,6 +3316,12 @@ When collapsed the user can select a new value by typing.</p>
 <dd>Expander.</dd>
 <dt><strong><code>frame</code></strong></dt>
 <dd>Frame</dd>
+<dt><strong><code>picker</code></strong></dt>
+<dd>Picker</dd>
+<dt><strong><code>range_slider</code></strong></dt>
+<dd>RangeSlider</dd>
+<dt><strong><code>stepper</code></strong></dt>
+<dd>Stepper</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>A <code><a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></code> instance.</p></div>
@@ -3083,6 +3359,9 @@ When collapsed the user can select a new value by typing.</p>
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
         frame: Optional[Frame] = None,
+        picker: Optional[Picker] = None,
+        range_slider: Optional[RangeSlider] = None,
+        stepper: Optional[Stepper] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a component.
 
@@ -3116,6 +3395,9 @@ When collapsed the user can select a new value by typing.</p>
         tabs: Tabs.
         expander: Expander.
         frame: Frame
+        picker: Picker
+        range_slider: RangeSlider
+        stepper: Stepper
     Returns:
         A `h2o_q.types.Component` instance.
     &#34;&#34;&#34;
@@ -3149,6 +3431,9 @@ When collapsed the user can select a new value by typing.</p>
         tabs,
         expander,
         frame,
+        picker,
+        range_slider,
+        stepper,
     )</code></pre>
 </details>
 </dd>
@@ -4327,9 +4612,9 @@ A plot can contain multiple such layers of marks.</p>
 <dt><strong><code>label_rotation</code></strong></dt>
 <dd>Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.</dd>
 <dt><strong><code>label_position</code></strong></dt>
-<dd>Label position relative to the mark.</dd>
+<dd>Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'.</dd>
 <dt><strong><code>label_overlap</code></strong></dt>
-<dd>Strategy to use if labels overlap.</dd>
+<dd>Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'.</dd>
 <dt><strong><code>label_fill_color</code></strong></dt>
 <dd>Label fill color.</dd>
 <dt><strong><code>label_fill_opacity</code></strong></dt>
@@ -4464,8 +4749,8 @@ A plot can contain multiple such layers of marks.</p>
         label_offset_x: Horizontal distance between label and mark.
         label_offset_y: Vertical distance between label and mark.
         label_rotation: Label rotation angle, in degrees, or &#39;none&#39; to disable automatic rotation. The default behavior is &#39;auto&#39; for automatic rotation.
-        label_position: Label position relative to the mark.
-        label_overlap: Strategy to use if labels overlap.
+        label_position: Label position relative to the mark. One of &#39;top&#39;, &#39;bottom&#39;, &#39;middle&#39;, &#39;left&#39;, &#39;right&#39;.
+        label_overlap: Strategy to use if labels overlap. One of &#39;hide&#39;, &#39;overlap&#39;, &#39;constrain&#39;.
         label_fill_color: Label fill color.
         label_fill_opacity: Label fill opacity.
         label_stroke_color: Label stroke color.
@@ -4859,6 +5144,71 @@ It is used to control attributes of the active page.</p>
     )</code></pre>
 </details>
 </dd>
+<dt id="h2o_q.ui.picker"><code class="name flex">
+<span>def <span class="ident">picker</span></span>(<span>name: str, choices: List[<a title="h2o_q.types.Choice" href="types.html#h2o_q.types.Choice">Choice</a>], label: Union[str, NoneType] = None, values: Union[List[str], NoneType] = None, max_choices: Union[int, NoneType] = None, disabled: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a picker.
+Pickers are used to select one or more choices, such as tags or files, from a list.
+Use a picker to allow the user to quickly search for or manage a few tags or files.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>name</code></strong></dt>
+<dd>An identifying name for this component.</dd>
+<dt><strong><code>choices</code></strong></dt>
+<dd>The choices to be presented.</dd>
+<dt><strong><code>label</code></strong></dt>
+<dd>Text to be displayed above the component.</dd>
+<dt><strong><code>values</code></strong></dt>
+<dd>The names of the selected choices.</dd>
+<dt><strong><code>max_choices</code></strong></dt>
+<dd>Maximum number of selectable choices. Defaults to no limit.</dd>
+<dt><strong><code>disabled</code></strong></dt>
+<dd>Controls whether the picker should be disabled or not.</dd>
+<dt><strong><code>tooltip</code></strong></dt>
+<dd>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.Picker" href="types.html#h2o_q.types.Picker">Picker</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def picker(
+        name: str,
+        choices: List[Choice],
+        label: Optional[str] = None,
+        values: Optional[List[str]] = None,
+        max_choices: Optional[int] = None,
+        disabled: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a picker.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Use a picker to allow the user to quickly search for or manage a few tags or files.
+
+    Args:
+        name: An identifying name for this component.
+        choices: The choices to be presented.
+        label: Text to be displayed above the component.
+        values: The names of the selected choices.
+        max_choices: Maximum number of selectable choices. Defaults to no limit.
+        disabled: Controls whether the picker should be disabled or not.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Picker` instance.
+    &#34;&#34;&#34;
+    return Component(picker=Picker(
+        name,
+        choices,
+        label,
+        values,
+        max_choices,
+        disabled,
+        tooltip,
+    ))</code></pre>
+</details>
+</dd>
 <dt id="h2o_q.ui.pixel_art_card"><code class="name flex">
 <span>def <span class="ident">pixel_art_card</span></span>(<span>box: str, title: str, data: Union[dict, str], commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.PixelArtCard" href="types.html#h2o_q.types.PixelArtCard">PixelArtCard</a></span>
 </code></dt>
@@ -5062,6 +5412,89 @@ Instead change the label to reflect the change if necessary. Bars moving backwar
         label,
         caption,
         value,
+        tooltip,
+    ))</code></pre>
+</details>
+</dd>
+<dt id="h2o_q.ui.range_slider"><code class="name flex">
+<span>def <span class="ident">range_slider</span></span>(<span>name: str, label: Union[str, NoneType] = None, min: Union[float, NoneType] = None, max: Union[float, NoneType] = None, step: Union[float, NoneType] = None, min_value: Union[float, NoneType] = None, max_value: Union[float, NoneType] = None, disabled: Union[bool, NoneType] = None, trigger: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a range slider.</p>
+<p>A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
+current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>name</code></strong></dt>
+<dd>An identifying name for this component.</dd>
+<dt><strong><code>label</code></strong></dt>
+<dd>Text to be displayed alongside the component.</dd>
+<dt><strong><code>min</code></strong></dt>
+<dd>The minimum value of the slider. Defaults to 0.</dd>
+<dt><strong><code>max</code></strong></dt>
+<dd>The maximum value of the slider. Defaults to 100.</dd>
+<dt><strong><code>step</code></strong></dt>
+<dd>The difference between two adjacent values of the slider.</dd>
+<dt><strong><code>min_value</code></strong></dt>
+<dd>The lower bound of the selected range.</dd>
+<dt><strong><code>max_value</code></strong></dt>
+<dd>The upper bound of the selected range.</dd>
+<dt><strong><code>disabled</code></strong></dt>
+<dd>True if this field is disabled.</dd>
+<dt><strong><code>trigger</code></strong></dt>
+<dd>True if the form should be submitted when the slider value changes.</dd>
+<dt><strong><code>tooltip</code></strong></dt>
+<dd>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.RangeSlider" href="types.html#h2o_q.types.RangeSlider">RangeSlider</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def range_slider(
+        name: str,
+        label: Optional[str] = None,
+        min: Optional[float] = None,
+        max: Optional[float] = None,
+        step: Optional[float] = None,
+        min_value: Optional[float] = None,
+        max_value: Optional[float] = None,
+        disabled: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a range slider.
+
+    A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
+    current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+    Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
+
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed alongside the component.
+        min: The minimum value of the slider. Defaults to 0.
+        max: The maximum value of the slider. Defaults to 100.
+        step: The difference between two adjacent values of the slider.
+        min_value: The lower bound of the selected range.
+        max_value: The upper bound of the selected range.
+        disabled: True if this field is disabled.
+        trigger: True if the form should be submitted when the slider value changes.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.RangeSlider` instance.
+    &#34;&#34;&#34;
+    return Component(range_slider=RangeSlider(
+        name,
+        label,
+        min,
+        max,
+        step,
+        min_value,
+        max_value,
+        disabled,
+        trigger,
         tooltip,
     ))</code></pre>
 </details>
@@ -5451,6 +5884,90 @@ It is mainly used for numeric values, but other values are supported too.</p>
         step,
         value,
         disabled,
+        tooltip,
+    ))</code></pre>
+</details>
+</dd>
+<dt id="h2o_q.ui.step"><code class="name flex">
+<span>def <span class="ident">step</span></span>(<span>label: str, icon: Union[str, NoneType] = None, done: Union[bool, NoneType] = None) ‑> <a title="h2o_q.types.Step" href="types.html#h2o_q.types.Step">Step</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a step for a stepper.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>label</code></strong></dt>
+<dd>Text displayed below icon.</dd>
+<dt><strong><code>icon</code></strong></dt>
+<dd>Icon to be displayed.</dd>
+<dt><strong><code>done</code></strong></dt>
+<dd>Indicates whether this step has already been completed.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.Step" href="types.html#h2o_q.types.Step">Step</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def step(
+        label: str,
+        icon: Optional[str] = None,
+        done: Optional[bool] = None,
+) -&gt; Step:
+    &#34;&#34;&#34;Create a step for a stepper.
+
+    Args:
+        label: Text displayed below icon.
+        icon: Icon to be displayed.
+        done: Indicates whether this step has already been completed.
+    Returns:
+        A `h2o_q.types.Step` instance.
+    &#34;&#34;&#34;
+    return Step(
+        label,
+        icon,
+        done,
+    )</code></pre>
+</details>
+</dd>
+<dt id="h2o_q.ui.stepper"><code class="name flex">
+<span>def <span class="ident">stepper</span></span>(<span>name: str, items: List[<a title="h2o_q.types.Step" href="types.html#h2o_q.types.Step">Step</a>], tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a component that displays a sequence of steps in a process.
+The steps keep users informed about where they are in the process and how much is left to complete.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>name</code></strong></dt>
+<dd>An identifying name for this component.</dd>
+<dt><strong><code>items</code></strong></dt>
+<dd>The sequence of steps to be displayed.</dd>
+<dt><strong><code>tooltip</code></strong></dt>
+<dd>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.Stepper" href="types.html#h2o_q.types.Stepper">Stepper</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stepper(
+        name: str,
+        items: List[Step],
+        tooltip: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a component that displays a sequence of steps in a process.
+    The steps keep users informed about where they are in the process and how much is left to complete.
+
+    Args:
+        name: An identifying name for this component.
+        items: The sequence of steps to be displayed.
+        tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+    Returns:
+        A `h2o_q.types.Stepper` instance.
+    &#34;&#34;&#34;
+    return Component(stepper=Stepper(
+        name,
+        items,
         tooltip,
     ))</code></pre>
 </details>
@@ -6161,7 +6678,7 @@ submission.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.textbox"><code class="name flex">
-<span>def <span class="ident">textbox</span></span>(<span>name: str, label: Union[str, NoneType] = None, placeholder: Union[str, NoneType] = None, value: Union[str, NoneType] = None, mask: Union[str, NoneType] = None, icon: Union[str, NoneType] = None, prefix: Union[str, NoneType] = None, suffix: Union[str, NoneType] = None, error: Union[str, NoneType] = None, required: Union[bool, NoneType] = None, disabled: Union[bool, NoneType] = None, readonly: Union[bool, NoneType] = None, multiline: Union[bool, NoneType] = None, password: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">textbox</span></span>(<span>name: str, label: Union[str, NoneType] = None, placeholder: Union[str, NoneType] = None, value: Union[str, NoneType] = None, mask: Union[str, NoneType] = None, icon: Union[str, NoneType] = None, prefix: Union[str, NoneType] = None, suffix: Union[str, NoneType] = None, error: Union[str, NoneType] = None, required: Union[bool, NoneType] = None, disabled: Union[bool, NoneType] = None, readonly: Union[bool, NoneType] = None, multiline: Union[bool, NoneType] = None, password: Union[bool, NoneType] = None, trigger: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a text box.</p>
@@ -6198,6 +6715,8 @@ The text displays on the screen in a simple, uniform format.</p>
 <dd>True if the text box should allow multi-line text entry.</dd>
 <dt><strong><code>password</code></strong></dt>
 <dd>True if the text box should hide text content.</dd>
+<dt><strong><code>trigger</code></strong></dt>
+<dd>True if the form should be submitted when the text value changes.</dd>
 <dt><strong><code>tooltip</code></strong></dt>
 <dd>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</dd>
 </dl>
@@ -6222,6 +6741,7 @@ The text displays on the screen in a simple, uniform format.</p>
         readonly: Optional[bool] = None,
         multiline: Optional[bool] = None,
         password: Optional[bool] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a text box.
@@ -6245,6 +6765,7 @@ The text displays on the screen in a simple, uniform format.</p>
         readonly: True if the text box is a read-only field.
         multiline: True if the text box should allow multi-line text entry.
         password: True if the text box should hide text content.
+        trigger: True if the form should be submitted when the text value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Textbox` instance.
@@ -6264,6 +6785,7 @@ The text displays on the screen in a simple, uniform format.</p>
         readonly,
         multiline,
         password,
+        trigger,
         tooltip,
     ))</code></pre>
 </details>
@@ -6681,6 +7203,8 @@ In other words, if a physical switch would work for the action, a Toggle is prob
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="h2o_q.ui.breadcrumb" href="#h2o_q.ui.breadcrumb">breadcrumb</a></code></li>
+<li><code><a title="h2o_q.ui.breadcrumbs_card" href="#h2o_q.ui.breadcrumbs_card">breadcrumbs_card</a></code></li>
 <li><code><a title="h2o_q.ui.button" href="#h2o_q.ui.button">button</a></code></li>
 <li><code><a title="h2o_q.ui.buttons" href="#h2o_q.ui.buttons">buttons</a></code></li>
 <li><code><a title="h2o_q.ui.checkbox" href="#h2o_q.ui.checkbox">checkbox</a></code></li>
@@ -6717,16 +7241,20 @@ In other words, if a physical switch would work for the action, a Toggle is prob
 <li><code><a title="h2o_q.ui.nav_card" href="#h2o_q.ui.nav_card">nav_card</a></code></li>
 <li><code><a title="h2o_q.ui.nav_group" href="#h2o_q.ui.nav_group">nav_group</a></code></li>
 <li><code><a title="h2o_q.ui.nav_item" href="#h2o_q.ui.nav_item">nav_item</a></code></li>
+<li><code><a title="h2o_q.ui.picker" href="#h2o_q.ui.picker">picker</a></code></li>
 <li><code><a title="h2o_q.ui.pixel_art_card" href="#h2o_q.ui.pixel_art_card">pixel_art_card</a></code></li>
 <li><code><a title="h2o_q.ui.plot" href="#h2o_q.ui.plot">plot</a></code></li>
 <li><code><a title="h2o_q.ui.plot_card" href="#h2o_q.ui.plot_card">plot_card</a></code></li>
 <li><code><a title="h2o_q.ui.progress" href="#h2o_q.ui.progress">progress</a></code></li>
+<li><code><a title="h2o_q.ui.range_slider" href="#h2o_q.ui.range_slider">range_slider</a></code></li>
 <li><code><a title="h2o_q.ui.repeat_card" href="#h2o_q.ui.repeat_card">repeat_card</a></code></li>
 <li><code><a title="h2o_q.ui.separator" href="#h2o_q.ui.separator">separator</a></code></li>
 <li><code><a title="h2o_q.ui.slider" href="#h2o_q.ui.slider">slider</a></code></li>
 <li><code><a title="h2o_q.ui.small_series_stat_card" href="#h2o_q.ui.small_series_stat_card">small_series_stat_card</a></code></li>
 <li><code><a title="h2o_q.ui.small_stat_card" href="#h2o_q.ui.small_stat_card">small_stat_card</a></code></li>
 <li><code><a title="h2o_q.ui.spinbox" href="#h2o_q.ui.spinbox">spinbox</a></code></li>
+<li><code><a title="h2o_q.ui.step" href="#h2o_q.ui.step">step</a></code></li>
+<li><code><a title="h2o_q.ui.stepper" href="#h2o_q.ui.stepper">stepper</a></code></li>
 <li><code><a title="h2o_q.ui.tab" href="#h2o_q.ui.tab">tab</a></code></li>
 <li><code><a title="h2o_q.ui.tab_card" href="#h2o_q.ui.tab_card">tab_card</a></code></li>
 <li><code><a title="h2o_q.ui.table" href="#h2o_q.ui.table">table</a></code></li>

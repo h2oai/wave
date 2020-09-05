@@ -104,6 +104,47 @@ PackedData = Union[Data, str]
 def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}
 
 
+class Breadcrumb:
+    &#34;&#34;&#34;Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            name: str,
+            label: str,
+    ):
+        self.name = name
+        &#34;&#34;&#34;The name of this item. Prefix the name with a &#39;#&#39; to trigger hash-change navigation.&#34;&#34;&#34;
+        self.label = label
+        &#34;&#34;&#34;The label to display.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.name is None:
+            raise ValueError(&#39;Breadcrumb.name is required.&#39;)
+        if self.label is None:
+            raise ValueError(&#39;Breadcrumb.label is required.&#39;)
+        return _dump(
+            name=self.name,
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Breadcrumb&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_name: Any = __d.get(&#39;name&#39;)
+        if __d_name is None:
+            raise ValueError(&#39;Breadcrumb.name is required.&#39;)
+        __d_label: Any = __d.get(&#39;label&#39;)
+        if __d_label is None:
+            raise ValueError(&#39;Breadcrumb.label is required.&#39;)
+        name: str = __d_name
+        label: str = __d_label
+        return Breadcrumb(
+            name,
+            label,
+        )
+
+
 class Command:
     &#34;&#34;&#34;Create a command.
 
@@ -168,6 +209,61 @@ class Command:
             icon,
             items,
             data,
+        )
+
+
+class BreadcrumbsCard:
+    &#34;&#34;&#34;Create a card containing breadcrumbs.
+    Breadcrumbs should be used as a navigational aid in your app or site.
+    They indicate the current page’s location within a hierarchy and help
+    the user understand where they are in relation to the rest of that hierarchy.
+    They also afford one-click access to higher levels of that hierarchy.
+    Breadcrumbs are typically placed, in horizontal form, under the masthead
+    or navigation of an experience, above the primary content area.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            box: str,
+            items: List[Breadcrumb],
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        &#34;&#34;&#34;A string indicating how to place this component on the page.&#34;&#34;&#34;
+        self.items = items
+        &#34;&#34;&#34;A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`&#34;&#34;&#34;
+        self.commands = commands
+        &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.box is None:
+            raise ValueError(&#39;BreadcrumbsCard.box is required.&#39;)
+        if self.items is None:
+            raise ValueError(&#39;BreadcrumbsCard.items is required.&#39;)
+        return _dump(
+            view=&#39;breadcrumbs&#39;,
+            box=self.box,
+            items=[__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;BreadcrumbsCard&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_box: Any = __d.get(&#39;box&#39;)
+        if __d_box is None:
+            raise ValueError(&#39;BreadcrumbsCard.box is required.&#39;)
+        __d_items: Any = __d.get(&#39;items&#39;)
+        if __d_items is None:
+            raise ValueError(&#39;BreadcrumbsCard.items is required.&#39;)
+        __d_commands: Any = __d.get(&#39;commands&#39;)
+        box: str = __d_box
+        items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return BreadcrumbsCard(
+            box,
+            items,
+            commands,
         )
 
 
@@ -714,6 +810,7 @@ class Textbox:
             readonly: Optional[bool] = None,
             multiline: Optional[bool] = None,
             password: Optional[bool] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -744,6 +841,8 @@ class Textbox:
         &#34;&#34;&#34;True if the text box should allow multi-line text entry.&#34;&#34;&#34;
         self.password = password
         &#34;&#34;&#34;True if the text box should hide text content.&#34;&#34;&#34;
+        self.trigger = trigger
+        &#34;&#34;&#34;True if the form should be submitted when the text value changes.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -766,6 +865,7 @@ class Textbox:
             readonly=self.readonly,
             multiline=self.multiline,
             password=self.password,
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -788,6 +888,7 @@ class Textbox:
         __d_readonly: Any = __d.get(&#39;readonly&#39;)
         __d_multiline: Any = __d.get(&#39;multiline&#39;)
         __d_password: Any = __d.get(&#39;password&#39;)
+        __d_trigger: Any = __d.get(&#39;trigger&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -803,6 +904,7 @@ class Textbox:
         readonly: Optional[bool] = __d_readonly
         multiline: Optional[bool] = __d_multiline
         password: Optional[bool] = __d_password
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return Textbox(
             name,
@@ -819,6 +921,7 @@ class Textbox:
             readonly,
             multiline,
             password,
+            trigger,
             tooltip,
         )
 
@@ -2278,6 +2381,274 @@ class Frame:
         )
 
 
+class Picker:
+    &#34;&#34;&#34;Create a picker.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Use a picker to allow the user to quickly search for or manage a few tags or files.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            name: str,
+            choices: List[Choice],
+            label: Optional[str] = None,
+            values: Optional[List[str]] = None,
+            max_choices: Optional[int] = None,
+            disabled: Optional[bool] = None,
+            tooltip: Optional[str] = None,
+    ):
+        self.name = name
+        &#34;&#34;&#34;An identifying name for this component.&#34;&#34;&#34;
+        self.choices = choices
+        &#34;&#34;&#34;The choices to be presented.&#34;&#34;&#34;
+        self.label = label
+        &#34;&#34;&#34;Text to be displayed above the component.&#34;&#34;&#34;
+        self.values = values
+        &#34;&#34;&#34;The names of the selected choices.&#34;&#34;&#34;
+        self.max_choices = max_choices
+        &#34;&#34;&#34;Maximum number of selectable choices. Defaults to no limit.&#34;&#34;&#34;
+        self.disabled = disabled
+        &#34;&#34;&#34;Controls whether the picker should be disabled or not.&#34;&#34;&#34;
+        self.tooltip = tooltip
+        &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.name is None:
+            raise ValueError(&#39;Picker.name is required.&#39;)
+        if self.choices is None:
+            raise ValueError(&#39;Picker.choices is required.&#39;)
+        return _dump(
+            name=self.name,
+            choices=[__e.dump() for __e in self.choices],
+            label=self.label,
+            values=self.values,
+            max_choices=self.max_choices,
+            disabled=self.disabled,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Picker&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_name: Any = __d.get(&#39;name&#39;)
+        if __d_name is None:
+            raise ValueError(&#39;Picker.name is required.&#39;)
+        __d_choices: Any = __d.get(&#39;choices&#39;)
+        if __d_choices is None:
+            raise ValueError(&#39;Picker.choices is required.&#39;)
+        __d_label: Any = __d.get(&#39;label&#39;)
+        __d_values: Any = __d.get(&#39;values&#39;)
+        __d_max_choices: Any = __d.get(&#39;max_choices&#39;)
+        __d_disabled: Any = __d.get(&#39;disabled&#39;)
+        __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        name: str = __d_name
+        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
+        label: Optional[str] = __d_label
+        values: Optional[List[str]] = __d_values
+        max_choices: Optional[int] = __d_max_choices
+        disabled: Optional[bool] = __d_disabled
+        tooltip: Optional[str] = __d_tooltip
+        return Picker(
+            name,
+            choices,
+            label,
+            values,
+            max_choices,
+            disabled,
+            tooltip,
+        )
+
+
+class RangeSlider:
+    &#34;&#34;&#34;Create a range slider.
+
+    A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
+    current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+    Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            name: str,
+            label: Optional[str] = None,
+            min: Optional[float] = None,
+            max: Optional[float] = None,
+            step: Optional[float] = None,
+            min_value: Optional[float] = None,
+            max_value: Optional[float] = None,
+            disabled: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+            tooltip: Optional[str] = None,
+    ):
+        self.name = name
+        &#34;&#34;&#34;An identifying name for this component.&#34;&#34;&#34;
+        self.label = label
+        &#34;&#34;&#34;Text to be displayed alongside the component.&#34;&#34;&#34;
+        self.min = min
+        &#34;&#34;&#34;The minimum value of the slider. Defaults to 0.&#34;&#34;&#34;
+        self.max = max
+        &#34;&#34;&#34;The maximum value of the slider. Defaults to 100.&#34;&#34;&#34;
+        self.step = step
+        &#34;&#34;&#34;The difference between two adjacent values of the slider.&#34;&#34;&#34;
+        self.min_value = min_value
+        &#34;&#34;&#34;The lower bound of the selected range.&#34;&#34;&#34;
+        self.max_value = max_value
+        &#34;&#34;&#34;The upper bound of the selected range.&#34;&#34;&#34;
+        self.disabled = disabled
+        &#34;&#34;&#34;True if this field is disabled.&#34;&#34;&#34;
+        self.trigger = trigger
+        &#34;&#34;&#34;True if the form should be submitted when the slider value changes.&#34;&#34;&#34;
+        self.tooltip = tooltip
+        &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.name is None:
+            raise ValueError(&#39;RangeSlider.name is required.&#39;)
+        return _dump(
+            name=self.name,
+            label=self.label,
+            min=self.min,
+            max=self.max,
+            step=self.step,
+            min_value=self.min_value,
+            max_value=self.max_value,
+            disabled=self.disabled,
+            trigger=self.trigger,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;RangeSlider&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_name: Any = __d.get(&#39;name&#39;)
+        if __d_name is None:
+            raise ValueError(&#39;RangeSlider.name is required.&#39;)
+        __d_label: Any = __d.get(&#39;label&#39;)
+        __d_min: Any = __d.get(&#39;min&#39;)
+        __d_max: Any = __d.get(&#39;max&#39;)
+        __d_step: Any = __d.get(&#39;step&#39;)
+        __d_min_value: Any = __d.get(&#39;min_value&#39;)
+        __d_max_value: Any = __d.get(&#39;max_value&#39;)
+        __d_disabled: Any = __d.get(&#39;disabled&#39;)
+        __d_trigger: Any = __d.get(&#39;trigger&#39;)
+        __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        name: str = __d_name
+        label: Optional[str] = __d_label
+        min: Optional[float] = __d_min
+        max: Optional[float] = __d_max
+        step: Optional[float] = __d_step
+        min_value: Optional[float] = __d_min_value
+        max_value: Optional[float] = __d_max_value
+        disabled: Optional[bool] = __d_disabled
+        trigger: Optional[bool] = __d_trigger
+        tooltip: Optional[str] = __d_tooltip
+        return RangeSlider(
+            name,
+            label,
+            min,
+            max,
+            step,
+            min_value,
+            max_value,
+            disabled,
+            trigger,
+            tooltip,
+        )
+
+
+class Step:
+    &#34;&#34;&#34;Create a step for a stepper.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            label: str,
+            icon: Optional[str] = None,
+            done: Optional[bool] = None,
+    ):
+        self.label = label
+        &#34;&#34;&#34;Text displayed below icon.&#34;&#34;&#34;
+        self.icon = icon
+        &#34;&#34;&#34;Icon to be displayed.&#34;&#34;&#34;
+        self.done = done
+        &#34;&#34;&#34;Indicates whether this step has already been completed.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.label is None:
+            raise ValueError(&#39;Step.label is required.&#39;)
+        return _dump(
+            label=self.label,
+            icon=self.icon,
+            done=self.done,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Step&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_label: Any = __d.get(&#39;label&#39;)
+        if __d_label is None:
+            raise ValueError(&#39;Step.label is required.&#39;)
+        __d_icon: Any = __d.get(&#39;icon&#39;)
+        __d_done: Any = __d.get(&#39;done&#39;)
+        label: str = __d_label
+        icon: Optional[str] = __d_icon
+        done: Optional[bool] = __d_done
+        return Step(
+            label,
+            icon,
+            done,
+        )
+
+
+class Stepper:
+    &#34;&#34;&#34;Create a component that displays a sequence of steps in a process.
+    The steps keep users informed about where they are in the process and how much is left to complete.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            name: str,
+            items: List[Step],
+            tooltip: Optional[str] = None,
+    ):
+        self.name = name
+        &#34;&#34;&#34;An identifying name for this component.&#34;&#34;&#34;
+        self.items = items
+        &#34;&#34;&#34;The sequence of steps to be displayed.&#34;&#34;&#34;
+        self.tooltip = tooltip
+        &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.name is None:
+            raise ValueError(&#39;Stepper.name is required.&#39;)
+        if self.items is None:
+            raise ValueError(&#39;Stepper.items is required.&#39;)
+        return _dump(
+            name=self.name,
+            items=[__e.dump() for __e in self.items],
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Stepper&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_name: Any = __d.get(&#39;name&#39;)
+        if __d_name is None:
+            raise ValueError(&#39;Stepper.name is required.&#39;)
+        __d_items: Any = __d.get(&#39;items&#39;)
+        if __d_items is None:
+            raise ValueError(&#39;Stepper.items is required.&#39;)
+        __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        name: str = __d_name
+        items: List[Step] = [Step.load(__e) for __e in __d_items]
+        tooltip: Optional[str] = __d_tooltip
+        return Stepper(
+            name,
+            items,
+            tooltip,
+        )
+
+
 class Component:
     &#34;&#34;&#34;Create a component.
     &#34;&#34;&#34;
@@ -2312,6 +2683,9 @@ class Component:
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
             frame: Optional[Frame] = None,
+            picker: Optional[Picker] = None,
+            range_slider: Optional[RangeSlider] = None,
+            stepper: Optional[Stepper] = None,
     ):
         self.text = text
         &#34;&#34;&#34;Text block.&#34;&#34;&#34;
@@ -2371,6 +2745,12 @@ class Component:
         &#34;&#34;&#34;Expander.&#34;&#34;&#34;
         self.frame = frame
         &#34;&#34;&#34;Frame&#34;&#34;&#34;
+        self.picker = picker
+        &#34;&#34;&#34;Picker&#34;&#34;&#34;
+        self.range_slider = range_slider
+        &#34;&#34;&#34;RangeSlider&#34;&#34;&#34;
+        self.stepper = stepper
+        &#34;&#34;&#34;Stepper&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -2404,6 +2784,9 @@ class Component:
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
             frame=None if self.frame is None else self.frame.dump(),
+            picker=None if self.picker is None else self.picker.dump(),
+            range_slider=None if self.range_slider is None else self.range_slider.dump(),
+            stepper=None if self.stepper is None else self.stepper.dump(),
         )
 
     @staticmethod
@@ -2438,6 +2821,9 @@ class Component:
         __d_tabs: Any = __d.get(&#39;tabs&#39;)
         __d_expander: Any = __d.get(&#39;expander&#39;)
         __d_frame: Any = __d.get(&#39;frame&#39;)
+        __d_picker: Any = __d.get(&#39;picker&#39;)
+        __d_range_slider: Any = __d.get(&#39;range_slider&#39;)
+        __d_stepper: Any = __d.get(&#39;stepper&#39;)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -2467,6 +2853,9 @@ class Component:
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
+        picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
+        range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
+        stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
         return Component(
             text,
             text_xl,
@@ -2497,6 +2886,9 @@ class Component:
             tabs,
             expander,
             frame,
+            picker,
+            range_slider,
+            stepper,
         )
 
 
@@ -3838,9 +4230,9 @@ class Mark:
         self.label_rotation = label_rotation
         &#34;&#34;&#34;Label rotation angle, in degrees, or &#39;none&#39; to disable automatic rotation. The default behavior is &#39;auto&#39; for automatic rotation.&#34;&#34;&#34;
         self.label_position = label_position
-        &#34;&#34;&#34;Label position relative to the mark.&#34;&#34;&#34;
+        &#34;&#34;&#34;Label position relative to the mark. One of &#39;top&#39;, &#39;bottom&#39;, &#39;middle&#39;, &#39;left&#39;, &#39;right&#39;.&#34;&#34;&#34;
         self.label_overlap = label_overlap
-        &#34;&#34;&#34;Strategy to use if labels overlap.&#34;&#34;&#34;
+        &#34;&#34;&#34;Strategy to use if labels overlap. One of &#39;hide&#39;, &#39;overlap&#39;, &#39;constrain&#39;.&#34;&#34;&#34;
         self.label_fill_color = label_fill_color
         &#34;&#34;&#34;Label fill color.&#34;&#34;&#34;
         self.label_fill_opacity = label_fill_opacity
@@ -5284,6 +5676,265 @@ class WideSeriesStatCard:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
+<dt id="h2o_q.types.Breadcrumb"><code class="flex name class">
+<span>class <span class="ident">Breadcrumb</span></span>
+<span>(</span><span>name: str, label: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a breadcrumb for a <code><a title="h2o_q.types.BreadcrumbsCard" href="#h2o_q.types.BreadcrumbsCard">BreadcrumbsCard</a></code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Breadcrumb:
+    &#34;&#34;&#34;Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            name: str,
+            label: str,
+    ):
+        self.name = name
+        &#34;&#34;&#34;The name of this item. Prefix the name with a &#39;#&#39; to trigger hash-change navigation.&#34;&#34;&#34;
+        self.label = label
+        &#34;&#34;&#34;The label to display.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.name is None:
+            raise ValueError(&#39;Breadcrumb.name is required.&#39;)
+        if self.label is None:
+            raise ValueError(&#39;Breadcrumb.label is required.&#39;)
+        return _dump(
+            name=self.name,
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Breadcrumb&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_name: Any = __d.get(&#39;name&#39;)
+        if __d_name is None:
+            raise ValueError(&#39;Breadcrumb.name is required.&#39;)
+        __d_label: Any = __d.get(&#39;label&#39;)
+        if __d_label is None:
+            raise ValueError(&#39;Breadcrumb.label is required.&#39;)
+        name: str = __d_name
+        label: str = __d_label
+        return Breadcrumb(
+            name,
+            label,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.Breadcrumb.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_Breadcrumb__d: Dict) ‑> <a title="h2o_q.types.Breadcrumb" href="#h2o_q.types.Breadcrumb">Breadcrumb</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;Breadcrumb&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_name: Any = __d.get(&#39;name&#39;)
+    if __d_name is None:
+        raise ValueError(&#39;Breadcrumb.name is required.&#39;)
+    __d_label: Any = __d.get(&#39;label&#39;)
+    if __d_label is None:
+        raise ValueError(&#39;Breadcrumb.label is required.&#39;)
+    name: str = __d_name
+    label: str = __d_label
+    return Breadcrumb(
+        name,
+        label,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.Breadcrumb.label"><code class="name">var <span class="ident">label</span></code></dt>
+<dd>
+<div class="desc"><p>The label to display.</p></div>
+</dd>
+<dt id="h2o_q.types.Breadcrumb.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"><p>The name of this item. Prefix the name with a '#' to trigger hash-change navigation.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.Breadcrumb.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.name is None:
+        raise ValueError(&#39;Breadcrumb.name is required.&#39;)
+    if self.label is None:
+        raise ValueError(&#39;Breadcrumb.label is required.&#39;)
+    return _dump(
+        name=self.name,
+        label=self.label,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="h2o_q.types.BreadcrumbsCard"><code class="flex name class">
+<span>class <span class="ident">BreadcrumbsCard</span></span>
+<span>(</span><span>box: str, items: List[<a title="h2o_q.types.Breadcrumb" href="#h2o_q.types.Breadcrumb">Breadcrumb</a>], commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a card containing breadcrumbs.
+Breadcrumbs should be used as a navigational aid in your app or site.
+They indicate the current page’s location within a hierarchy and help
+the user understand where they are in relation to the rest of that hierarchy.
+They also afford one-click access to higher levels of that hierarchy.
+Breadcrumbs are typically placed, in horizontal form, under the masthead
+or navigation of an experience, above the primary content area.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BreadcrumbsCard:
+    &#34;&#34;&#34;Create a card containing breadcrumbs.
+    Breadcrumbs should be used as a navigational aid in your app or site.
+    They indicate the current page’s location within a hierarchy and help
+    the user understand where they are in relation to the rest of that hierarchy.
+    They also afford one-click access to higher levels of that hierarchy.
+    Breadcrumbs are typically placed, in horizontal form, under the masthead
+    or navigation of an experience, above the primary content area.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            box: str,
+            items: List[Breadcrumb],
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        &#34;&#34;&#34;A string indicating how to place this component on the page.&#34;&#34;&#34;
+        self.items = items
+        &#34;&#34;&#34;A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`&#34;&#34;&#34;
+        self.commands = commands
+        &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.box is None:
+            raise ValueError(&#39;BreadcrumbsCard.box is required.&#39;)
+        if self.items is None:
+            raise ValueError(&#39;BreadcrumbsCard.items is required.&#39;)
+        return _dump(
+            view=&#39;breadcrumbs&#39;,
+            box=self.box,
+            items=[__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;BreadcrumbsCard&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_box: Any = __d.get(&#39;box&#39;)
+        if __d_box is None:
+            raise ValueError(&#39;BreadcrumbsCard.box is required.&#39;)
+        __d_items: Any = __d.get(&#39;items&#39;)
+        if __d_items is None:
+            raise ValueError(&#39;BreadcrumbsCard.items is required.&#39;)
+        __d_commands: Any = __d.get(&#39;commands&#39;)
+        box: str = __d_box
+        items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return BreadcrumbsCard(
+            box,
+            items,
+            commands,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.BreadcrumbsCard.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_BreadcrumbsCard__d: Dict) ‑> <a title="h2o_q.types.BreadcrumbsCard" href="#h2o_q.types.BreadcrumbsCard">BreadcrumbsCard</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;BreadcrumbsCard&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_box: Any = __d.get(&#39;box&#39;)
+    if __d_box is None:
+        raise ValueError(&#39;BreadcrumbsCard.box is required.&#39;)
+    __d_items: Any = __d.get(&#39;items&#39;)
+    if __d_items is None:
+        raise ValueError(&#39;BreadcrumbsCard.items is required.&#39;)
+    __d_commands: Any = __d.get(&#39;commands&#39;)
+    box: str = __d_box
+    items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
+    commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+    return BreadcrumbsCard(
+        box,
+        items,
+        commands,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.BreadcrumbsCard.box"><code class="name">var <span class="ident">box</span></code></dt>
+<dd>
+<div class="desc"><p>A string indicating how to place this component on the page.</p></div>
+</dd>
+<dt id="h2o_q.types.BreadcrumbsCard.commands"><code class="name">var <span class="ident">commands</span></code></dt>
+<dd>
+<div class="desc"><p>Contextual menu commands for this component.</p></div>
+</dd>
+<dt id="h2o_q.types.BreadcrumbsCard.items"><code class="name">var <span class="ident">items</span></code></dt>
+<dd>
+<div class="desc"><p>A list of <code><a title="h2o_q.types.Breadcrumb" href="#h2o_q.types.Breadcrumb">Breadcrumb</a></code> instances to display. See <code><a title="h2o_q.ui.breadcrumb" href="ui.html#h2o_q.ui.breadcrumb">breadcrumb()</a></code></p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.BreadcrumbsCard.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.box is None:
+        raise ValueError(&#39;BreadcrumbsCard.box is required.&#39;)
+    if self.items is None:
+        raise ValueError(&#39;BreadcrumbsCard.items is required.&#39;)
+    return _dump(
+        view=&#39;breadcrumbs&#39;,
+        box=self.box,
+        items=[__e.dump() for __e in self.items],
+        commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="h2o_q.types.Button"><code class="flex name class">
 <span>class <span class="ident">Button</span></span>
 <span>(</span><span>name: str, label: Union[str, NoneType] = None, caption: Union[str, NoneType] = None, value: Union[str, NoneType] = None, primary: Union[bool, NoneType] = None, disabled: Union[bool, NoneType] = None, link: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
@@ -6823,7 +7474,7 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
 </dd>
 <dt id="h2o_q.types.Component"><code class="flex name class">
 <span>class <span class="ident">Component</span></span>
-<span>(</span><span>text: Union[<a title="h2o_q.types.Text" href="#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="#h2o_q.types.Frame">Frame</a>, NoneType] = None)</span>
+<span>(</span><span>text: Union[<a title="h2o_q.types.Text" href="#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="#h2o_q.types.Frame">Frame</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="#h2o_q.types.Stepper">Stepper</a>, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a component.</p></div>
@@ -6865,6 +7516,9 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
             frame: Optional[Frame] = None,
+            picker: Optional[Picker] = None,
+            range_slider: Optional[RangeSlider] = None,
+            stepper: Optional[Stepper] = None,
     ):
         self.text = text
         &#34;&#34;&#34;Text block.&#34;&#34;&#34;
@@ -6924,6 +7578,12 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         &#34;&#34;&#34;Expander.&#34;&#34;&#34;
         self.frame = frame
         &#34;&#34;&#34;Frame&#34;&#34;&#34;
+        self.picker = picker
+        &#34;&#34;&#34;Picker&#34;&#34;&#34;
+        self.range_slider = range_slider
+        &#34;&#34;&#34;RangeSlider&#34;&#34;&#34;
+        self.stepper = stepper
+        &#34;&#34;&#34;Stepper&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -6957,6 +7617,9 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
             frame=None if self.frame is None else self.frame.dump(),
+            picker=None if self.picker is None else self.picker.dump(),
+            range_slider=None if self.range_slider is None else self.range_slider.dump(),
+            stepper=None if self.stepper is None else self.stepper.dump(),
         )
 
     @staticmethod
@@ -6991,6 +7654,9 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         __d_tabs: Any = __d.get(&#39;tabs&#39;)
         __d_expander: Any = __d.get(&#39;expander&#39;)
         __d_frame: Any = __d.get(&#39;frame&#39;)
+        __d_picker: Any = __d.get(&#39;picker&#39;)
+        __d_range_slider: Any = __d.get(&#39;range_slider&#39;)
+        __d_stepper: Any = __d.get(&#39;stepper&#39;)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -7020,6 +7686,9 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
+        picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
+        range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
+        stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
         return Component(
             text,
             text_xl,
@@ -7050,6 +7719,9 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             tabs,
             expander,
             frame,
+            picker,
+            range_slider,
+            stepper,
         )</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -7095,6 +7767,9 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
     __d_tabs: Any = __d.get(&#39;tabs&#39;)
     __d_expander: Any = __d.get(&#39;expander&#39;)
     __d_frame: Any = __d.get(&#39;frame&#39;)
+    __d_picker: Any = __d.get(&#39;picker&#39;)
+    __d_range_slider: Any = __d.get(&#39;range_slider&#39;)
+    __d_stepper: Any = __d.get(&#39;stepper&#39;)
     text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
     text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
     text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -7124,6 +7799,9 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
     tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
     expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
     frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
+    picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
+    range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
+    stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
     return Component(
         text,
         text_xl,
@@ -7154,6 +7832,9 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
         tabs,
         expander,
         frame,
+        picker,
+        range_slider,
+        stepper,
     )</code></pre>
 </details>
 </dd>
@@ -7220,9 +7901,17 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 <dd>
 <div class="desc"><p>Message bar.</p></div>
 </dd>
+<dt id="h2o_q.types.Component.picker"><code class="name">var <span class="ident">picker</span></code></dt>
+<dd>
+<div class="desc"><p>Picker</p></div>
+</dd>
 <dt id="h2o_q.types.Component.progress"><code class="name">var <span class="ident">progress</span></code></dt>
 <dd>
 <div class="desc"><p>Progress bar.</p></div>
+</dd>
+<dt id="h2o_q.types.Component.range_slider"><code class="name">var <span class="ident">range_slider</span></code></dt>
+<dd>
+<div class="desc"><p>RangeSlider</p></div>
 </dd>
 <dt id="h2o_q.types.Component.separator"><code class="name">var <span class="ident">separator</span></code></dt>
 <dd>
@@ -7235,6 +7924,10 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 <dt id="h2o_q.types.Component.spinbox"><code class="name">var <span class="ident">spinbox</span></code></dt>
 <dd>
 <div class="desc"><p>Spinbox.</p></div>
+</dd>
+<dt id="h2o_q.types.Component.stepper"><code class="name">var <span class="ident">stepper</span></code></dt>
+<dd>
+<div class="desc"><p>Stepper</p></div>
 </dd>
 <dt id="h2o_q.types.Component.table"><code class="name">var <span class="ident">table</span></code></dt>
 <dd>
@@ -7320,6 +8013,9 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
         tabs=None if self.tabs is None else self.tabs.dump(),
         expander=None if self.expander is None else self.expander.dump(),
         frame=None if self.frame is None else self.frame.dump(),
+        picker=None if self.picker is None else self.picker.dump(),
+        range_slider=None if self.range_slider is None else self.range_slider.dump(),
+        stepper=None if self.stepper is None else self.stepper.dump(),
     )</code></pre>
 </details>
 </dd>
@@ -10891,9 +11587,9 @@ A plot can contain multiple such layers of marks.</p></div>
         self.label_rotation = label_rotation
         &#34;&#34;&#34;Label rotation angle, in degrees, or &#39;none&#39; to disable automatic rotation. The default behavior is &#39;auto&#39; for automatic rotation.&#34;&#34;&#34;
         self.label_position = label_position
-        &#34;&#34;&#34;Label position relative to the mark.&#34;&#34;&#34;
+        &#34;&#34;&#34;Label position relative to the mark. One of &#39;top&#39;, &#39;bottom&#39;, &#39;middle&#39;, &#39;left&#39;, &#39;right&#39;.&#34;&#34;&#34;
         self.label_overlap = label_overlap
-        &#34;&#34;&#34;Strategy to use if labels overlap.&#34;&#34;&#34;
+        &#34;&#34;&#34;Strategy to use if labels overlap. One of &#39;hide&#39;, &#39;overlap&#39;, &#39;constrain&#39;.&#34;&#34;&#34;
         self.label_fill_color = label_fill_color
         &#34;&#34;&#34;Label fill color.&#34;&#34;&#34;
         self.label_fill_opacity = label_fill_opacity
@@ -11408,11 +12104,11 @@ def load(__d: Dict) -&gt; &#39;Mark&#39;:
 </dd>
 <dt id="h2o_q.types.Mark.label_overlap"><code class="name">var <span class="ident">label_overlap</span></code></dt>
 <dd>
-<div class="desc"><p>Strategy to use if labels overlap.</p></div>
+<div class="desc"><p>Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'.</p></div>
 </dd>
 <dt id="h2o_q.types.Mark.label_position"><code class="name">var <span class="ident">label_position</span></code></dt>
 <dd>
-<div class="desc"><p>Label position relative to the mark.</p></div>
+<div class="desc"><p>Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'.</p></div>
 </dd>
 <dt id="h2o_q.types.Mark.label_rotation"><code class="name">var <span class="ident">label_rotation</span></code></dt>
 <dd>
@@ -12594,6 +13290,200 @@ def load(__d: Dict) -&gt; &#39;NavItem&#39;:
 </dd>
 </dl>
 </dd>
+<dt id="h2o_q.types.Picker"><code class="flex name class">
+<span>class <span class="ident">Picker</span></span>
+<span>(</span><span>name: str, choices: List[<a title="h2o_q.types.Choice" href="#h2o_q.types.Choice">Choice</a>], label: Union[str, NoneType] = None, values: Union[List[str], NoneType] = None, max_choices: Union[int, NoneType] = None, disabled: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a picker.
+Pickers are used to select one or more choices, such as tags or files, from a list.
+Use a picker to allow the user to quickly search for or manage a few tags or files.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Picker:
+    &#34;&#34;&#34;Create a picker.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Use a picker to allow the user to quickly search for or manage a few tags or files.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            name: str,
+            choices: List[Choice],
+            label: Optional[str] = None,
+            values: Optional[List[str]] = None,
+            max_choices: Optional[int] = None,
+            disabled: Optional[bool] = None,
+            tooltip: Optional[str] = None,
+    ):
+        self.name = name
+        &#34;&#34;&#34;An identifying name for this component.&#34;&#34;&#34;
+        self.choices = choices
+        &#34;&#34;&#34;The choices to be presented.&#34;&#34;&#34;
+        self.label = label
+        &#34;&#34;&#34;Text to be displayed above the component.&#34;&#34;&#34;
+        self.values = values
+        &#34;&#34;&#34;The names of the selected choices.&#34;&#34;&#34;
+        self.max_choices = max_choices
+        &#34;&#34;&#34;Maximum number of selectable choices. Defaults to no limit.&#34;&#34;&#34;
+        self.disabled = disabled
+        &#34;&#34;&#34;Controls whether the picker should be disabled or not.&#34;&#34;&#34;
+        self.tooltip = tooltip
+        &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.name is None:
+            raise ValueError(&#39;Picker.name is required.&#39;)
+        if self.choices is None:
+            raise ValueError(&#39;Picker.choices is required.&#39;)
+        return _dump(
+            name=self.name,
+            choices=[__e.dump() for __e in self.choices],
+            label=self.label,
+            values=self.values,
+            max_choices=self.max_choices,
+            disabled=self.disabled,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Picker&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_name: Any = __d.get(&#39;name&#39;)
+        if __d_name is None:
+            raise ValueError(&#39;Picker.name is required.&#39;)
+        __d_choices: Any = __d.get(&#39;choices&#39;)
+        if __d_choices is None:
+            raise ValueError(&#39;Picker.choices is required.&#39;)
+        __d_label: Any = __d.get(&#39;label&#39;)
+        __d_values: Any = __d.get(&#39;values&#39;)
+        __d_max_choices: Any = __d.get(&#39;max_choices&#39;)
+        __d_disabled: Any = __d.get(&#39;disabled&#39;)
+        __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        name: str = __d_name
+        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
+        label: Optional[str] = __d_label
+        values: Optional[List[str]] = __d_values
+        max_choices: Optional[int] = __d_max_choices
+        disabled: Optional[bool] = __d_disabled
+        tooltip: Optional[str] = __d_tooltip
+        return Picker(
+            name,
+            choices,
+            label,
+            values,
+            max_choices,
+            disabled,
+            tooltip,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.Picker.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_Picker__d: Dict) ‑> <a title="h2o_q.types.Picker" href="#h2o_q.types.Picker">Picker</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;Picker&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_name: Any = __d.get(&#39;name&#39;)
+    if __d_name is None:
+        raise ValueError(&#39;Picker.name is required.&#39;)
+    __d_choices: Any = __d.get(&#39;choices&#39;)
+    if __d_choices is None:
+        raise ValueError(&#39;Picker.choices is required.&#39;)
+    __d_label: Any = __d.get(&#39;label&#39;)
+    __d_values: Any = __d.get(&#39;values&#39;)
+    __d_max_choices: Any = __d.get(&#39;max_choices&#39;)
+    __d_disabled: Any = __d.get(&#39;disabled&#39;)
+    __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+    name: str = __d_name
+    choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
+    label: Optional[str] = __d_label
+    values: Optional[List[str]] = __d_values
+    max_choices: Optional[int] = __d_max_choices
+    disabled: Optional[bool] = __d_disabled
+    tooltip: Optional[str] = __d_tooltip
+    return Picker(
+        name,
+        choices,
+        label,
+        values,
+        max_choices,
+        disabled,
+        tooltip,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.Picker.choices"><code class="name">var <span class="ident">choices</span></code></dt>
+<dd>
+<div class="desc"><p>The choices to be presented.</p></div>
+</dd>
+<dt id="h2o_q.types.Picker.disabled"><code class="name">var <span class="ident">disabled</span></code></dt>
+<dd>
+<div class="desc"><p>Controls whether the picker should be disabled or not.</p></div>
+</dd>
+<dt id="h2o_q.types.Picker.label"><code class="name">var <span class="ident">label</span></code></dt>
+<dd>
+<div class="desc"><p>Text to be displayed above the component.</p></div>
+</dd>
+<dt id="h2o_q.types.Picker.max_choices"><code class="name">var <span class="ident">max_choices</span></code></dt>
+<dd>
+<div class="desc"><p>Maximum number of selectable choices. Defaults to no limit.</p></div>
+</dd>
+<dt id="h2o_q.types.Picker.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"><p>An identifying name for this component.</p></div>
+</dd>
+<dt id="h2o_q.types.Picker.tooltip"><code class="name">var <span class="ident">tooltip</span></code></dt>
+<dd>
+<div class="desc"><p>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</p></div>
+</dd>
+<dt id="h2o_q.types.Picker.values"><code class="name">var <span class="ident">values</span></code></dt>
+<dd>
+<div class="desc"><p>The names of the selected choices.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.Picker.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.name is None:
+        raise ValueError(&#39;Picker.name is required.&#39;)
+    if self.choices is None:
+        raise ValueError(&#39;Picker.choices is required.&#39;)
+    return _dump(
+        name=self.name,
+        choices=[__e.dump() for __e in self.choices],
+        label=self.label,
+        values=self.values,
+        max_choices=self.max_choices,
+        disabled=self.disabled,
+        tooltip=self.tooltip,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="h2o_q.types.PixelArtCard"><code class="flex name class">
 <span>class <span class="ident">PixelArtCard</span></span>
 <span>(</span><span>box: str, title: str, data: Union[dict, str], commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
@@ -13183,6 +14073,240 @@ def load(__d: Dict) -&gt; &#39;Progress&#39;:
         label=self.label,
         caption=self.caption,
         value=self.value,
+        tooltip=self.tooltip,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="h2o_q.types.RangeSlider"><code class="flex name class">
+<span>class <span class="ident">RangeSlider</span></span>
+<span>(</span><span>name: str, label: Union[str, NoneType] = None, min: Union[float, NoneType] = None, max: Union[float, NoneType] = None, step: Union[float, NoneType] = None, min_value: Union[float, NoneType] = None, max_value: Union[float, NoneType] = None, disabled: Union[bool, NoneType] = None, trigger: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a range slider.</p>
+<p>A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
+current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RangeSlider:
+    &#34;&#34;&#34;Create a range slider.
+
+    A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
+    current setting in the total range of content. It is displayed as a horizontal track with options on either side.
+    Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            name: str,
+            label: Optional[str] = None,
+            min: Optional[float] = None,
+            max: Optional[float] = None,
+            step: Optional[float] = None,
+            min_value: Optional[float] = None,
+            max_value: Optional[float] = None,
+            disabled: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+            tooltip: Optional[str] = None,
+    ):
+        self.name = name
+        &#34;&#34;&#34;An identifying name for this component.&#34;&#34;&#34;
+        self.label = label
+        &#34;&#34;&#34;Text to be displayed alongside the component.&#34;&#34;&#34;
+        self.min = min
+        &#34;&#34;&#34;The minimum value of the slider. Defaults to 0.&#34;&#34;&#34;
+        self.max = max
+        &#34;&#34;&#34;The maximum value of the slider. Defaults to 100.&#34;&#34;&#34;
+        self.step = step
+        &#34;&#34;&#34;The difference between two adjacent values of the slider.&#34;&#34;&#34;
+        self.min_value = min_value
+        &#34;&#34;&#34;The lower bound of the selected range.&#34;&#34;&#34;
+        self.max_value = max_value
+        &#34;&#34;&#34;The upper bound of the selected range.&#34;&#34;&#34;
+        self.disabled = disabled
+        &#34;&#34;&#34;True if this field is disabled.&#34;&#34;&#34;
+        self.trigger = trigger
+        &#34;&#34;&#34;True if the form should be submitted when the slider value changes.&#34;&#34;&#34;
+        self.tooltip = tooltip
+        &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.name is None:
+            raise ValueError(&#39;RangeSlider.name is required.&#39;)
+        return _dump(
+            name=self.name,
+            label=self.label,
+            min=self.min,
+            max=self.max,
+            step=self.step,
+            min_value=self.min_value,
+            max_value=self.max_value,
+            disabled=self.disabled,
+            trigger=self.trigger,
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;RangeSlider&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_name: Any = __d.get(&#39;name&#39;)
+        if __d_name is None:
+            raise ValueError(&#39;RangeSlider.name is required.&#39;)
+        __d_label: Any = __d.get(&#39;label&#39;)
+        __d_min: Any = __d.get(&#39;min&#39;)
+        __d_max: Any = __d.get(&#39;max&#39;)
+        __d_step: Any = __d.get(&#39;step&#39;)
+        __d_min_value: Any = __d.get(&#39;min_value&#39;)
+        __d_max_value: Any = __d.get(&#39;max_value&#39;)
+        __d_disabled: Any = __d.get(&#39;disabled&#39;)
+        __d_trigger: Any = __d.get(&#39;trigger&#39;)
+        __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        name: str = __d_name
+        label: Optional[str] = __d_label
+        min: Optional[float] = __d_min
+        max: Optional[float] = __d_max
+        step: Optional[float] = __d_step
+        min_value: Optional[float] = __d_min_value
+        max_value: Optional[float] = __d_max_value
+        disabled: Optional[bool] = __d_disabled
+        trigger: Optional[bool] = __d_trigger
+        tooltip: Optional[str] = __d_tooltip
+        return RangeSlider(
+            name,
+            label,
+            min,
+            max,
+            step,
+            min_value,
+            max_value,
+            disabled,
+            trigger,
+            tooltip,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.RangeSlider.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_RangeSlider__d: Dict) ‑> <a title="h2o_q.types.RangeSlider" href="#h2o_q.types.RangeSlider">RangeSlider</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;RangeSlider&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_name: Any = __d.get(&#39;name&#39;)
+    if __d_name is None:
+        raise ValueError(&#39;RangeSlider.name is required.&#39;)
+    __d_label: Any = __d.get(&#39;label&#39;)
+    __d_min: Any = __d.get(&#39;min&#39;)
+    __d_max: Any = __d.get(&#39;max&#39;)
+    __d_step: Any = __d.get(&#39;step&#39;)
+    __d_min_value: Any = __d.get(&#39;min_value&#39;)
+    __d_max_value: Any = __d.get(&#39;max_value&#39;)
+    __d_disabled: Any = __d.get(&#39;disabled&#39;)
+    __d_trigger: Any = __d.get(&#39;trigger&#39;)
+    __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+    name: str = __d_name
+    label: Optional[str] = __d_label
+    min: Optional[float] = __d_min
+    max: Optional[float] = __d_max
+    step: Optional[float] = __d_step
+    min_value: Optional[float] = __d_min_value
+    max_value: Optional[float] = __d_max_value
+    disabled: Optional[bool] = __d_disabled
+    trigger: Optional[bool] = __d_trigger
+    tooltip: Optional[str] = __d_tooltip
+    return RangeSlider(
+        name,
+        label,
+        min,
+        max,
+        step,
+        min_value,
+        max_value,
+        disabled,
+        trigger,
+        tooltip,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.RangeSlider.disabled"><code class="name">var <span class="ident">disabled</span></code></dt>
+<dd>
+<div class="desc"><p>True if this field is disabled.</p></div>
+</dd>
+<dt id="h2o_q.types.RangeSlider.label"><code class="name">var <span class="ident">label</span></code></dt>
+<dd>
+<div class="desc"><p>Text to be displayed alongside the component.</p></div>
+</dd>
+<dt id="h2o_q.types.RangeSlider.max"><code class="name">var <span class="ident">max</span></code></dt>
+<dd>
+<div class="desc"><p>The maximum value of the slider. Defaults to 100.</p></div>
+</dd>
+<dt id="h2o_q.types.RangeSlider.max_value"><code class="name">var <span class="ident">max_value</span></code></dt>
+<dd>
+<div class="desc"><p>The upper bound of the selected range.</p></div>
+</dd>
+<dt id="h2o_q.types.RangeSlider.min"><code class="name">var <span class="ident">min</span></code></dt>
+<dd>
+<div class="desc"><p>The minimum value of the slider. Defaults to 0.</p></div>
+</dd>
+<dt id="h2o_q.types.RangeSlider.min_value"><code class="name">var <span class="ident">min_value</span></code></dt>
+<dd>
+<div class="desc"><p>The lower bound of the selected range.</p></div>
+</dd>
+<dt id="h2o_q.types.RangeSlider.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"><p>An identifying name for this component.</p></div>
+</dd>
+<dt id="h2o_q.types.RangeSlider.step"><code class="name">var <span class="ident">step</span></code></dt>
+<dd>
+<div class="desc"><p>The difference between two adjacent values of the slider.</p></div>
+</dd>
+<dt id="h2o_q.types.RangeSlider.tooltip"><code class="name">var <span class="ident">tooltip</span></code></dt>
+<dd>
+<div class="desc"><p>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</p></div>
+</dd>
+<dt id="h2o_q.types.RangeSlider.trigger"><code class="name">var <span class="ident">trigger</span></code></dt>
+<dd>
+<div class="desc"><p>True if the form should be submitted when the slider value changes.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.RangeSlider.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.name is None:
+        raise ValueError(&#39;RangeSlider.name is required.&#39;)
+    return _dump(
+        name=self.name,
+        label=self.label,
+        min=self.min,
+        max=self.max,
+        step=self.step,
+        min_value=self.min_value,
+        max_value=self.max_value,
+        disabled=self.disabled,
+        trigger=self.trigger,
         tooltip=self.tooltip,
     )</code></pre>
 </details>
@@ -14348,6 +15472,260 @@ def load(__d: Dict) -&gt; &#39;Spinbox&#39;:
         step=self.step,
         value=self.value,
         disabled=self.disabled,
+        tooltip=self.tooltip,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="h2o_q.types.Step"><code class="flex name class">
+<span>class <span class="ident">Step</span></span>
+<span>(</span><span>label: str, icon: Union[str, NoneType] = None, done: Union[bool, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a step for a stepper.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Step:
+    &#34;&#34;&#34;Create a step for a stepper.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            label: str,
+            icon: Optional[str] = None,
+            done: Optional[bool] = None,
+    ):
+        self.label = label
+        &#34;&#34;&#34;Text displayed below icon.&#34;&#34;&#34;
+        self.icon = icon
+        &#34;&#34;&#34;Icon to be displayed.&#34;&#34;&#34;
+        self.done = done
+        &#34;&#34;&#34;Indicates whether this step has already been completed.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.label is None:
+            raise ValueError(&#39;Step.label is required.&#39;)
+        return _dump(
+            label=self.label,
+            icon=self.icon,
+            done=self.done,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Step&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_label: Any = __d.get(&#39;label&#39;)
+        if __d_label is None:
+            raise ValueError(&#39;Step.label is required.&#39;)
+        __d_icon: Any = __d.get(&#39;icon&#39;)
+        __d_done: Any = __d.get(&#39;done&#39;)
+        label: str = __d_label
+        icon: Optional[str] = __d_icon
+        done: Optional[bool] = __d_done
+        return Step(
+            label,
+            icon,
+            done,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.Step.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_Step__d: Dict) ‑> <a title="h2o_q.types.Step" href="#h2o_q.types.Step">Step</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;Step&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_label: Any = __d.get(&#39;label&#39;)
+    if __d_label is None:
+        raise ValueError(&#39;Step.label is required.&#39;)
+    __d_icon: Any = __d.get(&#39;icon&#39;)
+    __d_done: Any = __d.get(&#39;done&#39;)
+    label: str = __d_label
+    icon: Optional[str] = __d_icon
+    done: Optional[bool] = __d_done
+    return Step(
+        label,
+        icon,
+        done,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.Step.done"><code class="name">var <span class="ident">done</span></code></dt>
+<dd>
+<div class="desc"><p>Indicates whether this step has already been completed.</p></div>
+</dd>
+<dt id="h2o_q.types.Step.icon"><code class="name">var <span class="ident">icon</span></code></dt>
+<dd>
+<div class="desc"><p>Icon to be displayed.</p></div>
+</dd>
+<dt id="h2o_q.types.Step.label"><code class="name">var <span class="ident">label</span></code></dt>
+<dd>
+<div class="desc"><p>Text displayed below icon.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.Step.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.label is None:
+        raise ValueError(&#39;Step.label is required.&#39;)
+    return _dump(
+        label=self.label,
+        icon=self.icon,
+        done=self.done,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="h2o_q.types.Stepper"><code class="flex name class">
+<span>class <span class="ident">Stepper</span></span>
+<span>(</span><span>name: str, items: List[<a title="h2o_q.types.Step" href="#h2o_q.types.Step">Step</a>], tooltip: Union[str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a component that displays a sequence of steps in a process.
+The steps keep users informed about where they are in the process and how much is left to complete.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Stepper:
+    &#34;&#34;&#34;Create a component that displays a sequence of steps in a process.
+    The steps keep users informed about where they are in the process and how much is left to complete.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            name: str,
+            items: List[Step],
+            tooltip: Optional[str] = None,
+    ):
+        self.name = name
+        &#34;&#34;&#34;An identifying name for this component.&#34;&#34;&#34;
+        self.items = items
+        &#34;&#34;&#34;The sequence of steps to be displayed.&#34;&#34;&#34;
+        self.tooltip = tooltip
+        &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.name is None:
+            raise ValueError(&#39;Stepper.name is required.&#39;)
+        if self.items is None:
+            raise ValueError(&#39;Stepper.items is required.&#39;)
+        return _dump(
+            name=self.name,
+            items=[__e.dump() for __e in self.items],
+            tooltip=self.tooltip,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Stepper&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_name: Any = __d.get(&#39;name&#39;)
+        if __d_name is None:
+            raise ValueError(&#39;Stepper.name is required.&#39;)
+        __d_items: Any = __d.get(&#39;items&#39;)
+        if __d_items is None:
+            raise ValueError(&#39;Stepper.items is required.&#39;)
+        __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        name: str = __d_name
+        items: List[Step] = [Step.load(__e) for __e in __d_items]
+        tooltip: Optional[str] = __d_tooltip
+        return Stepper(
+            name,
+            items,
+            tooltip,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.Stepper.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_Stepper__d: Dict) ‑> <a title="h2o_q.types.Stepper" href="#h2o_q.types.Stepper">Stepper</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;Stepper&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_name: Any = __d.get(&#39;name&#39;)
+    if __d_name is None:
+        raise ValueError(&#39;Stepper.name is required.&#39;)
+    __d_items: Any = __d.get(&#39;items&#39;)
+    if __d_items is None:
+        raise ValueError(&#39;Stepper.items is required.&#39;)
+    __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+    name: str = __d_name
+    items: List[Step] = [Step.load(__e) for __e in __d_items]
+    tooltip: Optional[str] = __d_tooltip
+    return Stepper(
+        name,
+        items,
+        tooltip,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.Stepper.items"><code class="name">var <span class="ident">items</span></code></dt>
+<dd>
+<div class="desc"><p>The sequence of steps to be displayed.</p></div>
+</dd>
+<dt id="h2o_q.types.Stepper.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"><p>An identifying name for this component.</p></div>
+</dd>
+<dt id="h2o_q.types.Stepper.tooltip"><code class="name">var <span class="ident">tooltip</span></code></dt>
+<dd>
+<div class="desc"><p>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.Stepper.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.name is None:
+        raise ValueError(&#39;Stepper.name is required.&#39;)
+    if self.items is None:
+        raise ValueError(&#39;Stepper.items is required.&#39;)
+    return _dump(
+        name=self.name,
+        items=[__e.dump() for __e in self.items],
         tooltip=self.tooltip,
     )</code></pre>
 </details>
@@ -16542,7 +17920,7 @@ def load(__d: Dict) -&gt; &#39;TextXs&#39;:
 </dd>
 <dt id="h2o_q.types.Textbox"><code class="flex name class">
 <span>class <span class="ident">Textbox</span></span>
-<span>(</span><span>name: str, label: Union[str, NoneType] = None, placeholder: Union[str, NoneType] = None, value: Union[str, NoneType] = None, mask: Union[str, NoneType] = None, icon: Union[str, NoneType] = None, prefix: Union[str, NoneType] = None, suffix: Union[str, NoneType] = None, error: Union[str, NoneType] = None, required: Union[bool, NoneType] = None, disabled: Union[bool, NoneType] = None, readonly: Union[bool, NoneType] = None, multiline: Union[bool, NoneType] = None, password: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
+<span>(</span><span>name: str, label: Union[str, NoneType] = None, placeholder: Union[str, NoneType] = None, value: Union[str, NoneType] = None, mask: Union[str, NoneType] = None, icon: Union[str, NoneType] = None, prefix: Union[str, NoneType] = None, suffix: Union[str, NoneType] = None, error: Union[str, NoneType] = None, required: Union[bool, NoneType] = None, disabled: Union[bool, NoneType] = None, readonly: Union[bool, NoneType] = None, multiline: Union[bool, NoneType] = None, password: Union[bool, NoneType] = None, trigger: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a text box.</p>
@@ -16576,6 +17954,7 @@ The text displays on the screen in a simple, uniform format.</p></div>
             readonly: Optional[bool] = None,
             multiline: Optional[bool] = None,
             password: Optional[bool] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -16606,6 +17985,8 @@ The text displays on the screen in a simple, uniform format.</p></div>
         &#34;&#34;&#34;True if the text box should allow multi-line text entry.&#34;&#34;&#34;
         self.password = password
         &#34;&#34;&#34;True if the text box should hide text content.&#34;&#34;&#34;
+        self.trigger = trigger
+        &#34;&#34;&#34;True if the form should be submitted when the text value changes.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -16628,6 +18009,7 @@ The text displays on the screen in a simple, uniform format.</p></div>
             readonly=self.readonly,
             multiline=self.multiline,
             password=self.password,
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -16650,6 +18032,7 @@ The text displays on the screen in a simple, uniform format.</p></div>
         __d_readonly: Any = __d.get(&#39;readonly&#39;)
         __d_multiline: Any = __d.get(&#39;multiline&#39;)
         __d_password: Any = __d.get(&#39;password&#39;)
+        __d_trigger: Any = __d.get(&#39;trigger&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -16665,6 +18048,7 @@ The text displays on the screen in a simple, uniform format.</p></div>
         readonly: Optional[bool] = __d_readonly
         multiline: Optional[bool] = __d_multiline
         password: Optional[bool] = __d_password
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return Textbox(
             name,
@@ -16681,6 +18065,7 @@ The text displays on the screen in a simple, uniform format.</p></div>
             readonly,
             multiline,
             password,
+            trigger,
             tooltip,
         )</code></pre>
 </details>
@@ -16714,6 +18099,7 @@ def load(__d: Dict) -&gt; &#39;Textbox&#39;:
     __d_readonly: Any = __d.get(&#39;readonly&#39;)
     __d_multiline: Any = __d.get(&#39;multiline&#39;)
     __d_password: Any = __d.get(&#39;password&#39;)
+    __d_trigger: Any = __d.get(&#39;trigger&#39;)
     __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
     name: str = __d_name
     label: Optional[str] = __d_label
@@ -16729,6 +18115,7 @@ def load(__d: Dict) -&gt; &#39;Textbox&#39;:
     readonly: Optional[bool] = __d_readonly
     multiline: Optional[bool] = __d_multiline
     password: Optional[bool] = __d_password
+    trigger: Optional[bool] = __d_trigger
     tooltip: Optional[str] = __d_tooltip
     return Textbox(
         name,
@@ -16745,6 +18132,7 @@ def load(__d: Dict) -&gt; &#39;Textbox&#39;:
         readonly,
         multiline,
         password,
+        trigger,
         tooltip,
     )</code></pre>
 </details>
@@ -16808,6 +18196,10 @@ def load(__d: Dict) -&gt; &#39;Textbox&#39;:
 <dd>
 <div class="desc"><p>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</p></div>
 </dd>
+<dt id="h2o_q.types.Textbox.trigger"><code class="name">var <span class="ident">trigger</span></code></dt>
+<dd>
+<div class="desc"><p>True if the form should be submitted when the text value changes.</p></div>
+</dd>
 <dt id="h2o_q.types.Textbox.value"><code class="name">var <span class="ident">value</span></code></dt>
 <dd>
 <div class="desc"><p>Text to be displayed inside the text box.</p></div>
@@ -16843,6 +18235,7 @@ def load(__d: Dict) -&gt; &#39;Textbox&#39;:
         readonly=self.readonly,
         multiline=self.multiline,
         password=self.password,
+        trigger=self.trigger,
         tooltip=self.tooltip,
     )</code></pre>
 </details>
@@ -18155,6 +19548,25 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
+<h4><code><a title="h2o_q.types.Breadcrumb" href="#h2o_q.types.Breadcrumb">Breadcrumb</a></code></h4>
+<ul class="">
+<li><code><a title="h2o_q.types.Breadcrumb.dump" href="#h2o_q.types.Breadcrumb.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.Breadcrumb.label" href="#h2o_q.types.Breadcrumb.label">label</a></code></li>
+<li><code><a title="h2o_q.types.Breadcrumb.load" href="#h2o_q.types.Breadcrumb.load">load</a></code></li>
+<li><code><a title="h2o_q.types.Breadcrumb.name" href="#h2o_q.types.Breadcrumb.name">name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="h2o_q.types.BreadcrumbsCard" href="#h2o_q.types.BreadcrumbsCard">BreadcrumbsCard</a></code></h4>
+<ul class="">
+<li><code><a title="h2o_q.types.BreadcrumbsCard.box" href="#h2o_q.types.BreadcrumbsCard.box">box</a></code></li>
+<li><code><a title="h2o_q.types.BreadcrumbsCard.commands" href="#h2o_q.types.BreadcrumbsCard.commands">commands</a></code></li>
+<li><code><a title="h2o_q.types.BreadcrumbsCard.dump" href="#h2o_q.types.BreadcrumbsCard.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.BreadcrumbsCard.items" href="#h2o_q.types.BreadcrumbsCard.items">items</a></code></li>
+<li><code><a title="h2o_q.types.BreadcrumbsCard.load" href="#h2o_q.types.BreadcrumbsCard.load">load</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="h2o_q.types.Button" href="#h2o_q.types.Button">Button</a></code></h4>
 <ul class="two-column">
 <li><code><a title="h2o_q.types.Button.caption" href="#h2o_q.types.Button.caption">caption</a></code></li>
@@ -18287,10 +19699,13 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.Component.link" href="#h2o_q.types.Component.link">link</a></code></li>
 <li><code><a title="h2o_q.types.Component.load" href="#h2o_q.types.Component.load">load</a></code></li>
 <li><code><a title="h2o_q.types.Component.message_bar" href="#h2o_q.types.Component.message_bar">message_bar</a></code></li>
+<li><code><a title="h2o_q.types.Component.picker" href="#h2o_q.types.Component.picker">picker</a></code></li>
 <li><code><a title="h2o_q.types.Component.progress" href="#h2o_q.types.Component.progress">progress</a></code></li>
+<li><code><a title="h2o_q.types.Component.range_slider" href="#h2o_q.types.Component.range_slider">range_slider</a></code></li>
 <li><code><a title="h2o_q.types.Component.separator" href="#h2o_q.types.Component.separator">separator</a></code></li>
 <li><code><a title="h2o_q.types.Component.slider" href="#h2o_q.types.Component.slider">slider</a></code></li>
 <li><code><a title="h2o_q.types.Component.spinbox" href="#h2o_q.types.Component.spinbox">spinbox</a></code></li>
+<li><code><a title="h2o_q.types.Component.stepper" href="#h2o_q.types.Component.stepper">stepper</a></code></li>
 <li><code><a title="h2o_q.types.Component.table" href="#h2o_q.types.Component.table">table</a></code></li>
 <li><code><a title="h2o_q.types.Component.tabs" href="#h2o_q.types.Component.tabs">tabs</a></code></li>
 <li><code><a title="h2o_q.types.Component.text" href="#h2o_q.types.Component.text">text</a></code></li>
@@ -18677,6 +20092,20 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 </ul>
 </li>
 <li>
+<h4><code><a title="h2o_q.types.Picker" href="#h2o_q.types.Picker">Picker</a></code></h4>
+<ul class="two-column">
+<li><code><a title="h2o_q.types.Picker.choices" href="#h2o_q.types.Picker.choices">choices</a></code></li>
+<li><code><a title="h2o_q.types.Picker.disabled" href="#h2o_q.types.Picker.disabled">disabled</a></code></li>
+<li><code><a title="h2o_q.types.Picker.dump" href="#h2o_q.types.Picker.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.Picker.label" href="#h2o_q.types.Picker.label">label</a></code></li>
+<li><code><a title="h2o_q.types.Picker.load" href="#h2o_q.types.Picker.load">load</a></code></li>
+<li><code><a title="h2o_q.types.Picker.max_choices" href="#h2o_q.types.Picker.max_choices">max_choices</a></code></li>
+<li><code><a title="h2o_q.types.Picker.name" href="#h2o_q.types.Picker.name">name</a></code></li>
+<li><code><a title="h2o_q.types.Picker.tooltip" href="#h2o_q.types.Picker.tooltip">tooltip</a></code></li>
+<li><code><a title="h2o_q.types.Picker.values" href="#h2o_q.types.Picker.values">values</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="h2o_q.types.PixelArtCard" href="#h2o_q.types.PixelArtCard">PixelArtCard</a></code></h4>
 <ul class="two-column">
 <li><code><a title="h2o_q.types.PixelArtCard.box" href="#h2o_q.types.PixelArtCard.box">box</a></code></li>
@@ -18716,6 +20145,23 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.Progress.load" href="#h2o_q.types.Progress.load">load</a></code></li>
 <li><code><a title="h2o_q.types.Progress.tooltip" href="#h2o_q.types.Progress.tooltip">tooltip</a></code></li>
 <li><code><a title="h2o_q.types.Progress.value" href="#h2o_q.types.Progress.value">value</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="h2o_q.types.RangeSlider" href="#h2o_q.types.RangeSlider">RangeSlider</a></code></h4>
+<ul class="two-column">
+<li><code><a title="h2o_q.types.RangeSlider.disabled" href="#h2o_q.types.RangeSlider.disabled">disabled</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.dump" href="#h2o_q.types.RangeSlider.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.label" href="#h2o_q.types.RangeSlider.label">label</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.load" href="#h2o_q.types.RangeSlider.load">load</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.max" href="#h2o_q.types.RangeSlider.max">max</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.max_value" href="#h2o_q.types.RangeSlider.max_value">max_value</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.min" href="#h2o_q.types.RangeSlider.min">min</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.min_value" href="#h2o_q.types.RangeSlider.min_value">min_value</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.name" href="#h2o_q.types.RangeSlider.name">name</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.step" href="#h2o_q.types.RangeSlider.step">step</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.tooltip" href="#h2o_q.types.RangeSlider.tooltip">tooltip</a></code></li>
+<li><code><a title="h2o_q.types.RangeSlider.trigger" href="#h2o_q.types.RangeSlider.trigger">trigger</a></code></li>
 </ul>
 </li>
 <li>
@@ -18798,6 +20244,26 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.Spinbox.step" href="#h2o_q.types.Spinbox.step">step</a></code></li>
 <li><code><a title="h2o_q.types.Spinbox.tooltip" href="#h2o_q.types.Spinbox.tooltip">tooltip</a></code></li>
 <li><code><a title="h2o_q.types.Spinbox.value" href="#h2o_q.types.Spinbox.value">value</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="h2o_q.types.Step" href="#h2o_q.types.Step">Step</a></code></h4>
+<ul class="">
+<li><code><a title="h2o_q.types.Step.done" href="#h2o_q.types.Step.done">done</a></code></li>
+<li><code><a title="h2o_q.types.Step.dump" href="#h2o_q.types.Step.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.Step.icon" href="#h2o_q.types.Step.icon">icon</a></code></li>
+<li><code><a title="h2o_q.types.Step.label" href="#h2o_q.types.Step.label">label</a></code></li>
+<li><code><a title="h2o_q.types.Step.load" href="#h2o_q.types.Step.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="h2o_q.types.Stepper" href="#h2o_q.types.Stepper">Stepper</a></code></h4>
+<ul class="">
+<li><code><a title="h2o_q.types.Stepper.dump" href="#h2o_q.types.Stepper.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.Stepper.items" href="#h2o_q.types.Stepper.items">items</a></code></li>
+<li><code><a title="h2o_q.types.Stepper.load" href="#h2o_q.types.Stepper.load">load</a></code></li>
+<li><code><a title="h2o_q.types.Stepper.name" href="#h2o_q.types.Stepper.name">name</a></code></li>
+<li><code><a title="h2o_q.types.Stepper.tooltip" href="#h2o_q.types.Stepper.tooltip">tooltip</a></code></li>
 </ul>
 </li>
 <li>
@@ -18982,6 +20448,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.Textbox.required" href="#h2o_q.types.Textbox.required">required</a></code></li>
 <li><code><a title="h2o_q.types.Textbox.suffix" href="#h2o_q.types.Textbox.suffix">suffix</a></code></li>
 <li><code><a title="h2o_q.types.Textbox.tooltip" href="#h2o_q.types.Textbox.tooltip">tooltip</a></code></li>
+<li><code><a title="h2o_q.types.Textbox.trigger" href="#h2o_q.types.Textbox.trigger">trigger</a></code></li>
 <li><code><a title="h2o_q.types.Textbox.value" href="#h2o_q.types.Textbox.value">value</a></code></li>
 </ul>
 </li>
