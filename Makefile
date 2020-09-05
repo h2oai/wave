@@ -60,6 +60,9 @@ release-os:
 	rsync -a ui/build/ build/$(REL)/www
 	rsync -a py/build/docs/h2o_q build/$(REL)/ && mv build/$(REL)/h2o_q build/$(REL)/docs
 	rsync -a py/examples build/$(REL)/
+	rm -rf test/cypress/integration/*.js
+	rm -rf test/cypress/screenshots/*.*
+	rsync --exclude node_modules -a test build/$(REL)/
 	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd$(EXE_EXT) cmd/qd/main.go
 	cp readme-$(OS).txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
