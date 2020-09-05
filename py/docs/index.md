@@ -1,6 +1,6 @@
 
 # Change Log
-- [v0.1.5](https://github.com/h2oai/qd/releases/tag/v0.1.5) - Sep 10, 2020
+- [v0.2.0](https://github.com/h2oai/qd/releases/tag/v0.2.0) - Sep 4, 2020
     - Added
         - Picker component.
         - Breadcrumbs component.
