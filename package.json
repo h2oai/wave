@@ -1,0 +1,24 @@
+{
+  "name": "qd",
+  "version": "1.0.0",
+  "dependencies": {},
+  "@comment devDependencies": [
+    "@testing-library/jest-dom - needs to be in the root in order to be properly checked",
+    "with Typescript in precommit hook"
+  ],
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.3.0"
+  },
+  "scripts": {
+    "lint-staged:typescript": "cd ui && npx tsc --jsx react --esModuleInterop --noEmit",
+    "lint-staged:eslint": "cd ui && npx eslint",
+    "lint-staged:tests": "cd ui && npx jest --findRelatedTests --bail"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/h2oai/qd/issues"
+  },
+  "homepage": "https://h2oai.github.io/qd"
+}
