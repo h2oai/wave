@@ -941,6 +941,8 @@ def table_column(
         label: str,
         sortable: Optional[bool] = None,
         searchable: Optional[bool] = None,
+        filterable: Optional[bool] = None,
+        table_cell_type: Optional[str] = None,
 ) -> TableColumn:
     """Create a table column.
 
@@ -948,7 +950,9 @@ def table_column(
         name: An identifying name for this column.
         label: The text displayed on the column header.
         sortable: Indicates whether the column is sortable.
-        searchable: Indicates whether the column is searchable.
+        searchable: Indicates whether the column should be included when typing into searchbox.
+        filterable: Indicates whether values of this option should serve as filters in filtering dropdown.
+        table_cell_type: Defines cell content to be rendered instead of a simple text. One of 'progress', 'done'.
     Returns:
         A `h2o_q.types.TableColumn` instance.
     """
@@ -957,6 +961,8 @@ def table_column(
         label,
         sortable,
         searchable,
+        filterable,
+        table_cell_type,
     )
 
 

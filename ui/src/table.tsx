@@ -1,8 +1,10 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
+import { B, bond, S, qd, box, Dict, U } from './qd'
 import { stylesheet } from 'typestyle'
-import { B, bond, box, qd, S } from './qd'
-import { rem } from './theme'
+import { rem, getTheme } from './theme'
+import { ProgressArc } from './parts/progress_arc'
+import { grid } from './layout'
 
 /** Create a table column. */
 interface TableColumn {
@@ -12,8 +14,12 @@ interface TableColumn {
   label: S
   /** Indicates whether the column is sortable. */
   sortable?: B
-  /** Indicates whether the column is searchable. */
+  /** Indicates whether the column should be included when typing into searchbox. */
   searchable?: B
+  /** Indicates whether values of this option should serve as filters in filtering dropdown. */
+  filterable?: B
+  /** Defines cell content to be rendered instead of a simple text. */
+  table_cell_type?: 'progress' | 'done'
 }
 
 /** Create a table row. */
@@ -23,6 +29,11 @@ interface TableRow {
   /** The cells in this row (displayed left to right). */
   cells: S[]
 }
+
+// TODO: Csv export.
+// TODO: Initial column resizing logic.
+// TODO: Multiple group by.
+// TODO: Allow showing only selected columns.
 
 /**
  * Create an interactive table.
@@ -53,74 +64,291 @@ export interface Table {
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
-const css = stylesheet({
-  sortableHeader: {
-    $nest: {
-      '.ms-DetailsHeader-cellName': {
-        display: 'flex',
-        flexDirection: 'row-reverse',
-      }
+
+interface QColumn extends Fluent.IColumn {
+  cellType?: S
+  isSortable?: B
+}
+
+const
+  theme = getTheme(),
+  styles: Partial<Fluent.IDetailsListStyles> = {
+    contentWrapper: {
+      height: '70vh',
+      overflowX: 'hidden',
     }
   },
-  sortingIcon: {
-    marginLeft: 10,
-    fontSize: rem(1.1)
-  }
-})
+  css = stylesheet({
+    sortableHeader: {
+      $nest: {
+        '.ms-DetailsHeader-cellName': {
+          display: 'flex',
+          flexDirection: 'row-reverse',
+        }
+      }
+    },
+    sortingIcon: {
+      marginLeft: 10,
+      fontSize: rem(1.1)
+    },
+    percentContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+      position: 'absolute',
+      left: 12,
+      top: 10,
+      width: grid.unitInnerHeight,
+      height: grid.unitInnerHeight,
+    },
+    percent: {
+      ...theme.font.s12,
+      opacity: 0.5,
+    },
+    // Fix - incorrect width recalculated after changing to "group by mode" - collapse icon in header
+    // causes horizontal overflow for whole table.
+    hideCellGroupCollapse: {
+      $nest: {
+        'div[class*="cellIsGroupExpander"]': {
+          display: 'none'
+        }
+      }
+    }
+  }),
+  groupByF = function <T extends Dict<any>>(arr: T[], key: S): Dict<any> {
+    return arr.reduce((rv, x: T) => {
+      (rv[x[key]] = rv[x[key]] || []).push(x)
+      return rv
+    }, {} as Dict<any>)
+  },
+  formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 export const
   XTable = bond(({ model: m }: { model: Table }) => {
     qd.args[m.name] = []
     const
-      items = box(m.rows.map(r => {
+      items = m.rows.map(r => {
         const item: any = { __key__: r.name }
         for (let i = 0, n = r.cells.length; i < n; i++) {
           const col = m.columns[i]
           item[col.name] = r.cells[i]
         }
         return item
-      })),
-      filteredItemsB = box(items()),
-      onFilterChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr?: S) => {
-        if (searchStr === undefined) return
-        if (searchStr === '') filteredItemsB(items())
+      }),
+      filteredItemsB = box(items),
+      searchableKeys = m.columns.filter(({ searchable }) => searchable).map(({ name }) => name),
+      searchStrB = box(''),
+      selectedFiltersB = box<{ [key: string]: S[] } | null>(null),
+      colContextMenuList = box<Fluent.IContextualMenuProps | null>(null),
+      groupsB = box<Fluent.IGroup[] | undefined>(undefined),
+      groupByKeyB = box<S | null>(null),
+      groupByOptions: Fluent.IDropdownOption[] = [{ key: '*', text: 'Nothing' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))],
+      onSearchChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr?: S) => {
+        searchStrB(searchStr ? searchStr.toLowerCase() : '')
 
-        else filteredItemsB([])
+        if (!searchStr && !selectedFiltersB()) {
+          filteredItemsB(items)
+          return
+        }
+
+        filter()
+        search()
+      },
+      search = () => {
+        const searchStr = searchStrB()
+        if (!searchStr) return
+
+        filteredItemsB(filteredItemsB().filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(searchStr))))
+      },
+      onFilterChange = (filterKey: S, filterVal: S) => (_e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => {
+        const filters = selectedFiltersB() || {}
+
+        if (checked) {
+          if (filters[filterKey]) filters[filterKey].push(filterVal)
+          else filters[filterKey] = [filterVal]
+        }
+        else filters[filterKey] = filters[filterKey].filter(f => f !== filterVal)
+        selectedFiltersB(Object.values(filters).every(v => !v.length) ? null : { ...filters })
+
+        filter()
+        search()
+      },
+      filter = () => {
+        const selectedFilters = selectedFiltersB()
+
+        // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
+        // TODO: Make filter options in dropdowns dynamic. 
+        const filteredItems = selectedFilters
+          ? items.filter(i => Object.keys(selectedFilters)
+            .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey]
+              .some(filterVal => i[filterKey] === filterVal)
+            )
+          )
+          : items
+        filteredItemsB(filteredItems)
+      },
+      reset = () => {
+        selectedFiltersB(null)
+        searchStrB('')
+
+        groupsB(undefined)
+        groupByKeyB('*')
+
+        filter()
+        search()
+      },
+      sort = (column: QColumn) => {
+        const sortAsc = column.iconName === 'SortDown'
+        column.iconName = sortAsc ? 'SortUp' : 'SortDown'
+
+        filteredItemsB([...filteredItemsB()].sort((a, b) => {
+          let itemA = a[column.key]
+          let itemB = b[column.key]
+
+          if (typeof itemA === typeof 'string' && typeof itemB === typeof 'string') {
+            itemA = (itemA as S).toLowerCase()
+            itemB = (itemB as S).toLowerCase()
+            return sortAsc
+              ? itemB > itemA ? -1 : 1
+              : itemB > itemA ? 1 : -1
+          }
+          else if (typeof itemA === typeof 'number' && typeof itemB === typeof 'number') {
+            return sortAsc ? itemA - itemB : itemB - itemA
+          }
+
+          return 0
+        }))
+        columnsB(columnsB().map((col) => column.key === col.key ? column : col))
+      },
+      download = () => {
+        // TODO: Prompt a dialog for name, encoding, etc.
+        const
+          data = items.map(i => Object.values(i).join(',')).join('\n'),
+          a = document.createElement('a'),
+          blob = new Blob([data], { type: "octet/stream" }),
+          url = window.URL.createObjectURL(blob)
+
+        a.href = url
+        a.download = 'exported_data.csv'
+        a.click()
+
+        window.URL.revokeObjectURL(url)
+      },
+      onRenderMenuList = (props?: Fluent.IContextualMenuListProps) => {
+        if (!props) return null
+
+        return (
+          <div style={{ padding: 10 }}>
+            <Fluent.Text variant='mediumPlus' styles={{ root: { paddingTop: 10, paddingBottom: 10, fontWeight: 'bold' } }} block>Show only</Fluent.Text>
+            {
+              props.items.map(({ key, name, data }) => {
+                const selectedFilters = selectedFiltersB()
+                const checked = !!name && !!selectedFilters && selectedFilters[data] && selectedFilters[data].includes(name)
+                return (
+                  <Fluent.Checkbox
+                    key={key}
+                    label={name}
+                    defaultChecked={checked}
+                    onChange={onFilterChange(data || '', name || '')}
+                    styles={{ root: { marginBottom: 5 } }}
+                  />
+                )
+              })
+            }
+          </div>
+        )
+      },
+      onDismissContextMenu = () => colContextMenuList(null),
+      onColumnContextMenu = (col: Fluent.IColumn, e: React.MouseEvent<HTMLElement>) => {
+        colContextMenuList({
+          items: Array.from(new Set(items.map(i => i[col.fieldName || col.key])))
+            .map(option => ({ key: option, name: option, data: col.fieldName || col.key })),
+          target: e.target as HTMLElement,
+          directionalHint: Fluent.DirectionalHint.bottomLeftEdge,
+          gapSpace: 10,
+          isBeakVisible: true,
+          onRenderMenuList,
+          onDismiss: onDismissContextMenu,
+        })
+      },
+      onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
+        if (!option) return
+        if (option.key === '*') {
+          reset()
+          return
+        }
+
+        let prevSum = 0
+        const groupedBy = groupByF(filteredItemsB(), option.key as S)
+        const groupedByKeys = Object.keys(groupedBy)
+        const groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => {
+          if (i !== 0) {
+            const prevKey = groupedByKeys[i - 1]
+            prevSum += groupedBy[prevKey].length
+          }
+          return { key, name: key, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: true }
+        })
+
+        reset()
+        filteredItemsB(Object.values(groupedBy).flatMap(arr => arr))
+        groupByKeyB(option.key as S)
+        groupsB(groups)
       },
       onRenderDetailsHeader = (props?: Fluent.IDetailsHeaderProps) => {
         if (!props) return <span />
 
         return (
           <>
-            <Fluent.TextField label='Filter' onChange={onFilterChange} styles={{ root: { width: '50%', float: 'right' } }} />
-            <Fluent.DetailsHeader {...props} />
+            <Fluent.Stack horizontal horizontalAlign='space-between'>
+              <Fluent.Dropdown label='Group by' defaultSelectedKey='*' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />
+              <Fluent.TextField label='Filter' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%', float: 'right' } }} />
+            </Fluent.Stack>
+            <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groupsB() ? css.hideCellGroupCollapse : ''} />
           </>
         )
       },
-      onSortColumnClick = (_ev: React.MouseEvent<HTMLElement>, column: Fluent.IColumn) => {
-        const sortAsc = column.iconName === 'SortDown'
-        column.iconName = sortAsc ? 'SortUp' : 'SortDown'
+      commandBarItems: Fluent.ICommandBarItemProps[] = [
+        { key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download },
+        { key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset },
+      ],
+      onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
+        if (!props) return <span />
 
-        items([...items()].sort((a, b) => {
-          const itemA = String(a[column.key]).toLowerCase()
-          const itemB = String(b[column.key]).toLowerCase()
-
-          if (sortAsc) return itemB > itemA ? -1 : 1
-          else return itemB > itemA ? 1 : -1
-
-        }))
-        columnsB(columnsB().map((col) => column.key === col.key ? column : col))
+        return (
+          <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
+            <Fluent.Text variant='smallPlus' block >Rows:
+              <b style={{ paddingLeft: 5 }}>{formatNum(filteredItemsB().length)} of {formatNum(items.length)}</b>
+            </Fluent.Text>
+            <Fluent.CommandBar items={commandBarItems} />
+            {/* <Fluent.DefaultButton text='Reset table' iconProps={{ iconName: 'Refresh' }} onClick={reset} /> */}
+          </Fluent.Stack>
+        )
       },
-      columnsB = box(m.columns.map((c): Fluent.IColumn => ({
+      onRenderRow = (props?: Fluent.IDetailsRowProps) => {
+        if (!props) return <span />
+
+        return <Fluent.DetailsRow {...props} styles={{ cell: { alignSelf: 'center' } }} />
+      },
+      onColumnClick = (e: React.MouseEvent<HTMLElement>, column: QColumn) => {
+        const isMenuClicked = (e.target as HTMLElement).getAttribute('data-icon-name') === 'ChevronDown'
+
+        if (isMenuClicked) onColumnContextMenu(column, e)
+        else if (column.isSortable && !groupsB()) sort(column)
+      },
+      columnsB = box(m.columns.map((c): QColumn => ({
         key: c.name,
         name: c.label,
         fieldName: c.name,
-        isResizable: true,
+        minWidth: (window.innerWidth - 300) / m.columns.length,
         headerClassName: c.sortable ? css.sortableHeader : undefined,
         iconClassName: c.sortable ? css.sortingIcon : undefined,
         iconName: c.sortable ? 'SortDown' : undefined,
-        onColumnClick: c.sortable ? onSortColumnClick : undefined,
-        minWidth: 150,
+        onColumnClick: onColumnClick,
+        columnActionsMode: c.filterable ? Fluent.ColumnActionsMode.hasDropdown : Fluent.ColumnActionsMode.clickable,
+        cellType: c.table_cell_type,
+        isSortable: c.sortable,
+        isResizable: true,
       }))),
       primaryColumnKey = columnsB()[0].key,
       selection = new Fluent.Selection({
@@ -132,7 +360,7 @@ export const
         qd.args[m.name] = [item.__key__]
         qd.sync()
       },
-      onRenderItemColumn = (item?: any, _index?: number, column?: Fluent.IColumn) => {
+      onRenderItemColumn = (item?: any, _index?: number, column?: QColumn) => {
         if (!item || !column) return <span />
 
         const v = item[column.fieldName as any]
@@ -144,38 +372,53 @@ export const
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }
 
-        return <span>{v}</span>
+        switch (column.cellType) {
+          case 'progress': {
+            const progress = item[column.key]
+            return (
+              <div style={{ display: 'flex' }}>
+                <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color('red')} value={progress / 100} />
+                <div className={css.percentContainer}>
+                  <div className={css.percent}>{`${Math.round(progress)}%`}</div>
+                </div>
+              </div>
+            )
+          }
+          case 'done': {
+            const isDone = item[column.key]
+            return <Fluent.Icon iconName={isDone ? 'BoxCheckmarkSolid' : 'BoxMultiplySolid'} styles={{ root: { fontSize: '1.2rem' } }} />
+          }
+          default: return <span>{v}</span>
+        }
       },
+      DataTable = () => (
+        <>
+          <Fluent.DetailsList
+            styles={styles}
+            items={filteredItemsB()}
+            columns={columnsB()}
+            layoutMode={Fluent.DetailsListLayoutMode.justified}
+            groups={groupsB()}
+            selection={selection}
+            selectionMode={m.multiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
+            selectionPreservedOnEmptyClick
+            onItemInvoked={m.multiple ? undefined : onItemInvoked}
+            onRenderRow={onRenderRow}
+            onRenderItemColumn={onRenderItemColumn}
+            onRenderDetailsHeader={onRenderDetailsHeader}
+            onRenderDetailsFooter={onRenderDetailsFooter}
+          />
+          {colContextMenuList() && <Fluent.ContextualMenu {...(colContextMenuList() as Fluent.IContextualMenuProps)} />}
+        </>
+      ),
       render = () => (
         <div data-test={m.name}>
           {
             m.multiple
-              ? (
-                <Fluent.MarqueeSelection selection={selection}>
-                  <Fluent.DetailsList
-                    items={filteredItemsB()}
-                    columns={columnsB()}
-                    layoutMode={Fluent.DetailsListLayoutMode.justified}
-                    selection={selection}
-                    selectionMode={Fluent.SelectionMode.multiple}
-                    selectionPreservedOnEmptyClick={true}
-                  />
-                </Fluent.MarqueeSelection>
-              ) : (
-                <Fluent.DetailsList
-                  items={filteredItemsB()}
-                  columns={columnsB()}
-                  layoutMode={Fluent.DetailsListLayoutMode.justified}
-                  selection={selection}
-                  selectionMode={Fluent.SelectionMode.none}
-                  selectionPreservedOnEmptyClick={true}
-                  onItemInvoked={onItemInvoked}
-                  onRenderItemColumn={onRenderItemColumn}
-                  onRenderDetailsHeader={onRenderDetailsHeader}
-                />
-              )
+              ? <Fluent.MarqueeSelection selection={selection}><DataTable /></Fluent.MarqueeSelection>
+              : <DataTable />
           }
         </div>
       )
-    return { render, columnsB, itemsB: items, filteredItemsB }
+    return { render, columnsB, filteredItemsB, selectedFiltersB, searchStrB, colContextMenuList, groupsB, groupByKeyB }
   })

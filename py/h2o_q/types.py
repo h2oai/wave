@@ -1892,6 +1892,8 @@ class TableColumn:
             label: str,
             sortable: Optional[bool] = None,
             searchable: Optional[bool] = None,
+            filterable: Optional[bool] = None,
+            table_cell_type: Optional[str] = None,
     ):
         self.name = name
         """An identifying name for this column."""
@@ -1900,7 +1902,11 @@ class TableColumn:
         self.sortable = sortable
         """Indicates whether the column is sortable."""
         self.searchable = searchable
-        """Indicates whether the column is searchable."""
+        """Indicates whether the column should be included when typing into searchbox."""
+        self.filterable = filterable
+        """Indicates whether values of this option should serve as filters in filtering dropdown."""
+        self.table_cell_type = table_cell_type
+        """Defines cell content to be rendered instead of a simple text. One of 'progress', 'done'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1913,6 +1919,8 @@ class TableColumn:
             label=self.label,
             sortable=self.sortable,
             searchable=self.searchable,
+            filterable=self.filterable,
+            table_cell_type=self.table_cell_type,
         )
 
     @staticmethod
@@ -1926,15 +1934,21 @@ class TableColumn:
             raise ValueError('TableColumn.label is required.')
         __d_sortable: Any = __d.get('sortable')
         __d_searchable: Any = __d.get('searchable')
+        __d_filterable: Any = __d.get('filterable')
+        __d_table_cell_type: Any = __d.get('table_cell_type')
         name: str = __d_name
         label: str = __d_label
         sortable: Optional[bool] = __d_sortable
         searchable: Optional[bool] = __d_searchable
+        filterable: Optional[bool] = __d_filterable
+        table_cell_type: Optional[str] = __d_table_cell_type
         return TableColumn(
             name,
             label,
             sortable,
             searchable,
+            filterable,
+            table_cell_type,
         )
 
 
