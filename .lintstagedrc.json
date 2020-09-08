@@ -6,5 +6,8 @@
   ],
   "*.go": [
     "golint -set_exit_status"
+  ],
+  "*.md": [
+    "./node_modules/markdownlint-cli/markdownlint.js"
   ]
 }
