@@ -1370,6 +1370,23 @@ ui_stepper <- function(
   return(.o)
 }
 
+#' Create a Vega-lite plot for display inside a form.
+#'
+#' @param specification The Vega-lite specification.
+#' @param data Data for the plot, if any.
+#' @return A VegaPlot instance.
+ui_vega_plot <- function(
+  specification,
+  data = NULL) {
+  .guard_scalar("specification", "character", specification)
+  # TODO Validate data: Rec
+  .o <- list(vega_plot=list(
+    specification=specification,
+    data=data))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
 #' Create a component.
 #'
 #' @param text Text block.
@@ -1400,10 +1417,11 @@ ui_stepper <- function(
 #' @param link Link.
 #' @param tabs Tabs.
 #' @param expander Expander.
-#' @param frame Frame
-#' @param picker Picker
-#' @param range_slider RangeSlider
-#' @param stepper Stepper
+#' @param frame Frame.
+#' @param picker Picker.
+#' @param range_slider Range Slider.
+#' @param stepper Stepper.
+#' @param vega_plot Vega-lite Plot.
 #' @return A Component instance.
 ui_component <- function(
   text = NULL,
@@ -1437,7 +1455,8 @@ ui_component <- function(
   frame = NULL,
   picker = NULL,
   range_slider = NULL,
-  stepper = NULL) {
+  stepper = NULL,
+  vega_plot = NULL) {
   .guard_scalar("text", "h2oq_Text", text)
   .guard_scalar("text_xl", "h2oq_TextXl", text_xl)
   .guard_scalar("text_l", "h2oq_TextL", text_l)
@@ -1470,6 +1489,7 @@ ui_component <- function(
   .guard_scalar("picker", "h2oq_Picker", picker)
   .guard_scalar("range_slider", "h2oq_RangeSlider", range_slider)
   .guard_scalar("stepper", "h2oq_Stepper", stepper)
+  .guard_scalar("vega_plot", "h2oq_VegaPlot", vega_plot)
   .o <- list(
     text=text,
     text_xl=text_xl,
@@ -1502,7 +1522,8 @@ ui_component <- function(
     frame=frame,
     picker=picker,
     range_slider=range_slider,
-    stepper=stepper)
+    stepper=stepper,
+    vega_plot=vega_plot)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }

@@ -2559,6 +2559,43 @@ class Stepper:
         )
 
 
+class VegaPlot:
+    """Create a Vega-lite plot for display inside a form.
+    """
+    def __init__(
+            self,
+            specification: str,
+            data: Optional[PackedRecord] = None,
+    ):
+        self.specification = specification
+        """The Vega-lite specification."""
+        self.data = data
+        """Data for the plot, if any."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.specification is None:
+            raise ValueError('VegaPlot.specification is required.')
+        return _dump(
+            specification=self.specification,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'VegaPlot':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_specification: Any = __d.get('specification')
+        if __d_specification is None:
+            raise ValueError('VegaPlot.specification is required.')
+        __d_data: Any = __d.get('data')
+        specification: str = __d_specification
+        data: Optional[PackedRecord] = __d_data
+        return VegaPlot(
+            specification,
+            data,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -2596,6 +2633,7 @@ class Component:
             picker: Optional[Picker] = None,
             range_slider: Optional[RangeSlider] = None,
             stepper: Optional[Stepper] = None,
+            vega_plot: Optional[VegaPlot] = None,
     ):
         self.text = text
         """Text block."""
@@ -2654,13 +2692,15 @@ class Component:
         self.expander = expander
         """Expander."""
         self.frame = frame
-        """Frame"""
+        """Frame."""
         self.picker = picker
-        """Picker"""
+        """Picker."""
         self.range_slider = range_slider
-        """RangeSlider"""
+        """Range Slider."""
         self.stepper = stepper
-        """Stepper"""
+        """Stepper."""
+        self.vega_plot = vega_plot
+        """Vega-lite Plot."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2697,6 +2737,7 @@ class Component:
             picker=None if self.picker is None else self.picker.dump(),
             range_slider=None if self.range_slider is None else self.range_slider.dump(),
             stepper=None if self.stepper is None else self.stepper.dump(),
+            vega_plot=None if self.vega_plot is None else self.vega_plot.dump(),
         )
 
     @staticmethod
@@ -2734,6 +2775,7 @@ class Component:
         __d_picker: Any = __d.get('picker')
         __d_range_slider: Any = __d.get('range_slider')
         __d_stepper: Any = __d.get('stepper')
+        __d_vega_plot: Any = __d.get('vega_plot')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -2766,6 +2808,7 @@ class Component:
         picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
         range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
         stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
+        vega_plot: Optional[VegaPlot] = None if __d_vega_plot is None else VegaPlot.load(__d_vega_plot)
         return Component(
             text,
             text_xl,
@@ -2799,6 +2842,7 @@ class Component:
             picker,
             range_slider,
             stepper,
+            vega_plot,
         )
 
 

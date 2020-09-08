@@ -20,8 +20,16 @@ const
     },
   })
 
+/** Create a Vega-lite plot for display inside a form. */
+export interface VegaPlot {
+  /** The Vega-lite specification. */
+  specification: S
+  /** Data for the plot, if any. */
+  data?: Rec
+}
+
 export const
-  VegaLite = bond(({ spec, data }: { spec: any, data?: any[] }) => {
+  VegaLite = bond((state: { spec: S, data?: Rec }) => {
     const
       ref = React.createRef<HTMLDivElement>(),
       init = async () => {
@@ -29,6 +37,10 @@ export const
           window.setTimeout(init, 500)
           return
         }
+
+        const
+          spec = JSON.parse(state.spec),
+          data = unpack<any[]>(state.data)
 
         if (data) spec.data = { values: data }
         try {
@@ -42,9 +54,10 @@ export const
           console.error(e)
         }
       },
-      render = () => {
-        return <div className={css.plot} ref={ref} />
-      }
+      render = () => (
+        <div ref={ref} />
+      )
+
     return { init, render }
   })
 
@@ -62,11 +75,12 @@ export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       render = () => {
-        const data = unpack<any[]>(state.data)
         return (
           <div data-test='vega' className={css.card}>
             <div className={css.title}>{state.title}</div>
-            <VegaLite key={xid()} spec={JSON.parse(state.specification)} data={data} />
+            <div className={css.plot}>
+              <VegaLite key={xid()} spec={state.specification} data={state.data} />
+            </div>
           </div>
         )
       }

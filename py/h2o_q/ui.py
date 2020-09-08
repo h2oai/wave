@@ -1260,6 +1260,24 @@ def stepper(
     ))
 
 
+def vega_plot(
+        specification: str,
+        data: Optional[PackedRecord] = None,
+) -> Component:
+    """Create a Vega-lite plot for display inside a form.
+
+    Args:
+        specification: The Vega-lite specification.
+        data: Data for the plot, if any.
+    Returns:
+        A `h2o_q.types.VegaPlot` instance.
+    """
+    return Component(vega_plot=VegaPlot(
+        specification,
+        data,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         text_xl: Optional[TextXl] = None,
@@ -1293,6 +1311,7 @@ def component(
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
         stepper: Optional[Stepper] = None,
+        vega_plot: Optional[VegaPlot] = None,
 ) -> Component:
     """Create a component.
 
@@ -1325,10 +1344,11 @@ def component(
         link: Link.
         tabs: Tabs.
         expander: Expander.
-        frame: Frame
-        picker: Picker
-        range_slider: RangeSlider
-        stepper: Stepper
+        frame: Frame.
+        picker: Picker.
+        range_slider: Range Slider.
+        stepper: Stepper.
+        vega_plot: Vega-lite Plot.
     Returns:
         A `h2o_q.types.Component` instance.
     """
@@ -1365,6 +1385,7 @@ def component(
         picker,
         range_slider,
         stepper,
+        vega_plot,
     )
 
 

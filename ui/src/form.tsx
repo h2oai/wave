@@ -30,6 +30,7 @@ import { XToolTip } from './tooltip';
 import { Picker, XPicker } from './picker';
 import { RangeSlider, XRangeSlider } from './range_slider';
 import { Stepper, XStepper } from './stepper';
+import { VegaPlot, VegaLite } from './vega';
 
 /** Create a component. */
 export interface Component {
@@ -89,14 +90,16 @@ export interface Component {
   tabs?: Tabs
   /** Expander. */
   expander?: Expander
-  /** Frame */
+  /** Frame. */
   frame?: Frame
-  /** Picker */
+  /** Picker.*/
   picker?: Picker
-  /** RangeSlider */
+  /** Range Slider. */
   range_slider?: RangeSlider
-  /** Stepper */
+  /** Stepper. */
   stepper?: Stepper
+  /** Vega-lite Plot. */
+  vega_plot?: VegaPlot
 }
 
 /** Create a form. */
@@ -154,6 +157,7 @@ const
     if (m.picker) return <XToolTip content={m.picker.tooltip}><XPicker model={m.picker} /></XToolTip>
     if (m.range_slider) return <XToolTip content={m.range_slider.tooltip}><XRangeSlider model={m.range_slider} /></XToolTip>
     if (m.stepper) return <XToolTip content={m.stepper.tooltip}><XStepper model={m.stepper} /></XToolTip>
+    if (m.vega_plot) return <VegaLite spec={m.vega_plot.specification} data={m.vega_plot.data} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
