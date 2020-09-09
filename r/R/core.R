@@ -23,7 +23,7 @@ plan(list(multisession,multisession))
         ifelse(var != "", return(var), return(object[2]))
 }
 
-.default_internal_address = 'ws://localhost:55556'
+.default_internal_address = 'ws://localhost:55555'
 
 #' Configure the environmental variables
 #' This is a (hidden) internal function
@@ -211,8 +211,7 @@ page.load <- function(page_name,...){
 #' page.save(test_page,"/example")
 page.save <- function(page_instance,page_name,...){
         page(page_name,fun_flag=TRUE)
-        data <- jsonlite::toJSON(list(d=lapply(test_page,function(x){list(k=x[[1]],d=x[[2]])})),auto_unbox=TRUE)
-#        data <- jsonlite::toJSON(list(d=list(list(k=page_instance[[1]]$key,d=page_instance[[1]]$value))),auto_unbox=TRUE)
+        data <- jsonlite::toJSON(list(d=lapply(page_instance,function(x){list(k=x[[1]],d=x[[2]])})),auto_unbox=TRUE)
         return(.site.save(page_name,data,...))
 }
 
