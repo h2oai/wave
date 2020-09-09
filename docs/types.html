@@ -2649,6 +2649,547 @@ class Stepper:
         )
 
 
+class Mark:
+    &#34;&#34;&#34;Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
+    A plot can contain multiple such layers of marks.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            coord: Optional[str] = None,
+            type: Optional[str] = None,
+            x: Optional[Value] = None,
+            x0: Optional[Value] = None,
+            x1: Optional[Value] = None,
+            x2: Optional[Value] = None,
+            x_min: Optional[float] = None,
+            x_max: Optional[float] = None,
+            x_nice: Optional[bool] = None,
+            x_scale: Optional[str] = None,
+            x_title: Optional[str] = None,
+            y: Optional[Value] = None,
+            y0: Optional[Value] = None,
+            y1: Optional[Value] = None,
+            y2: Optional[Value] = None,
+            y_min: Optional[float] = None,
+            y_max: Optional[float] = None,
+            y_nice: Optional[bool] = None,
+            y_scale: Optional[str] = None,
+            y_title: Optional[str] = None,
+            color: Optional[str] = None,
+            color_range: Optional[str] = None,
+            shape: Optional[str] = None,
+            shape_range: Optional[str] = None,
+            size: Optional[Value] = None,
+            size_range: Optional[str] = None,
+            stack: Optional[str] = None,
+            dodge: Optional[str] = None,
+            curve: Optional[str] = None,
+            fill_color: Optional[str] = None,
+            fill_opacity: Optional[float] = None,
+            stroke_color: Optional[str] = None,
+            stroke_opacity: Optional[float] = None,
+            stroke_size: Optional[float] = None,
+            stroke_dash: Optional[str] = None,
+            label: Optional[str] = None,
+            label_offset: Optional[float] = None,
+            label_offset_x: Optional[float] = None,
+            label_offset_y: Optional[float] = None,
+            label_rotation: Optional[str] = None,
+            label_position: Optional[str] = None,
+            label_overlap: Optional[str] = None,
+            label_fill_color: Optional[str] = None,
+            label_fill_opacity: Optional[float] = None,
+            label_stroke_color: Optional[str] = None,
+            label_stroke_opacity: Optional[float] = None,
+            label_stroke_size: Optional[float] = None,
+            label_font_size: Optional[float] = None,
+            label_font_weight: Optional[str] = None,
+            label_line_height: Optional[float] = None,
+            label_align: Optional[str] = None,
+            ref_stroke_color: Optional[str] = None,
+            ref_stroke_opacity: Optional[float] = None,
+            ref_stroke_size: Optional[float] = None,
+            ref_stroke_dash: Optional[str] = None,
+    ):
+        self.coord = coord
+        &#34;&#34;&#34;Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of &#39;rect&#39;, &#39;cartesian&#39;, &#39;polar&#39;, &#39;theta&#39;, &#39;helix&#39;.&#34;&#34;&#34;
+        self.type = type
+        &#34;&#34;&#34;Graphical geometry. One of &#39;interval&#39;, &#39;line&#39;, &#39;path&#39;, &#39;point&#39;, &#39;area&#39;, &#39;polygon&#39;, &#39;schema&#39;, &#39;edge&#39;, &#39;heatmap&#39;.&#34;&#34;&#34;
+        self.x = x
+        &#34;&#34;&#34;X field or value.&#34;&#34;&#34;
+        self.x0 = x0
+        &#34;&#34;&#34;X base field or value.&#34;&#34;&#34;
+        self.x1 = x1
+        &#34;&#34;&#34;X bin lower bound field or value. For histograms.&#34;&#34;&#34;
+        self.x2 = x2
+        &#34;&#34;&#34;X bin upper bound field or value. For histograms.&#34;&#34;&#34;
+        self.x_min = x_min
+        &#34;&#34;&#34;X axis scale minimum.&#34;&#34;&#34;
+        self.x_max = x_max
+        &#34;&#34;&#34;X axis scale maximum.&#34;&#34;&#34;
+        self.x_nice = x_nice
+        &#34;&#34;&#34;Whether to nice X axis scale ticks.&#34;&#34;&#34;
+        self.x_scale = x_scale
+        &#34;&#34;&#34;X axis scale type. One of &#39;linear&#39;, &#39;cat&#39;, &#39;category&#39;, &#39;identity&#39;, &#39;log&#39;, &#39;pow&#39;, &#39;time&#39;, &#39;timeCat&#39;, &#39;quantize&#39;, &#39;quantile&#39;.&#34;&#34;&#34;
+        self.x_title = x_title
+        &#34;&#34;&#34;X axis title.&#34;&#34;&#34;
+        self.y = y
+        &#34;&#34;&#34;Y field or value.&#34;&#34;&#34;
+        self.y0 = y0
+        &#34;&#34;&#34;Y base field or value.&#34;&#34;&#34;
+        self.y1 = y1
+        &#34;&#34;&#34;Y bin lower bound field or value. For histograms.&#34;&#34;&#34;
+        self.y2 = y2
+        &#34;&#34;&#34;Y bin upper bound field or value. For histograms.&#34;&#34;&#34;
+        self.y_min = y_min
+        &#34;&#34;&#34;Y axis scale minimum.&#34;&#34;&#34;
+        self.y_max = y_max
+        &#34;&#34;&#34;Y axis scale maximum.&#34;&#34;&#34;
+        self.y_nice = y_nice
+        &#34;&#34;&#34;Whether to nice Y axis scale ticks.&#34;&#34;&#34;
+        self.y_scale = y_scale
+        &#34;&#34;&#34;Y axis scale type. One of &#39;linear&#39;, &#39;cat&#39;, &#39;category&#39;, &#39;identity&#39;, &#39;log&#39;, &#39;pow&#39;, &#39;time&#39;, &#39;timeCat&#39;, &#39;quantize&#39;, &#39;quantile&#39;.&#34;&#34;&#34;
+        self.y_title = y_title
+        &#34;&#34;&#34;Y axis title.&#34;&#34;&#34;
+        self.color = color
+        &#34;&#34;&#34;Mark color field or value.&#34;&#34;&#34;
+        self.color_range = color_range
+        &#34;&#34;&#34;Mark color range for multi-series plots. A string containing space-separated colors, e.g. `&#39;#fee8c8 #fdbb84 #e34a33&#39;`&#34;&#34;&#34;
+        self.shape = shape
+        &#34;&#34;&#34;Mark shape field or value for `point` mark types. Possible values are &#39;circle&#39;, &#39;square&#39;, &#39;bowtie&#39;, &#39;diamond&#39;, &#39;hexagon&#39;, &#39;triangle&#39;, &#39;triangle-down&#39;, &#39;cross&#39;, &#39;tick&#39;, &#39;plus&#39;, &#39;hyphen&#39;, &#39;line&#39;.&#34;&#34;&#34;
+        self.shape_range = shape_range
+        &#34;&#34;&#34;Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `&#39;circle square diamond&#39;`&#34;&#34;&#34;
+        self.size = size
+        &#34;&#34;&#34;Mark size field or value.&#34;&#34;&#34;
+        self.size_range = size_range
+        &#34;&#34;&#34;Mark size range. A string containing space-separated integers, e.g. `&#39;4 30&#39;`&#34;&#34;&#34;
+        self.stack = stack
+        &#34;&#34;&#34;Field to stack marks by, or &#39;auto&#39; to infer.&#34;&#34;&#34;
+        self.dodge = dodge
+        &#34;&#34;&#34;Field to dodge marks by, or &#39;auto&#39; to infer.&#34;&#34;&#34;
+        self.curve = curve
+        &#34;&#34;&#34;Curve type for `line` and `area` mark types. One of &#39;none&#39;, &#39;smooth&#39;, &#39;step-before&#39;, &#39;step&#39;, &#39;step-after&#39;.&#34;&#34;&#34;
+        self.fill_color = fill_color
+        &#34;&#34;&#34;Mark fill color.&#34;&#34;&#34;
+        self.fill_opacity = fill_opacity
+        &#34;&#34;&#34;Mark fill opacity.&#34;&#34;&#34;
+        self.stroke_color = stroke_color
+        &#34;&#34;&#34;Mark stroke color.&#34;&#34;&#34;
+        self.stroke_opacity = stroke_opacity
+        &#34;&#34;&#34;Mark stroke opacity.&#34;&#34;&#34;
+        self.stroke_size = stroke_size
+        &#34;&#34;&#34;Mark stroke size.&#34;&#34;&#34;
+        self.stroke_dash = stroke_dash
+        &#34;&#34;&#34;Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].&#34;&#34;&#34;
+        self.label = label
+        &#34;&#34;&#34;Label field or value.&#34;&#34;&#34;
+        self.label_offset = label_offset
+        &#34;&#34;&#34;Distance between label and mark.&#34;&#34;&#34;
+        self.label_offset_x = label_offset_x
+        &#34;&#34;&#34;Horizontal distance between label and mark.&#34;&#34;&#34;
+        self.label_offset_y = label_offset_y
+        &#34;&#34;&#34;Vertical distance between label and mark.&#34;&#34;&#34;
+        self.label_rotation = label_rotation
+        &#34;&#34;&#34;Label rotation angle, in degrees, or &#39;none&#39; to disable automatic rotation. The default behavior is &#39;auto&#39; for automatic rotation.&#34;&#34;&#34;
+        self.label_position = label_position
+        &#34;&#34;&#34;Label position relative to the mark. One of &#39;top&#39;, &#39;bottom&#39;, &#39;middle&#39;, &#39;left&#39;, &#39;right&#39;.&#34;&#34;&#34;
+        self.label_overlap = label_overlap
+        &#34;&#34;&#34;Strategy to use if labels overlap. One of &#39;hide&#39;, &#39;overlap&#39;, &#39;constrain&#39;.&#34;&#34;&#34;
+        self.label_fill_color = label_fill_color
+        &#34;&#34;&#34;Label fill color.&#34;&#34;&#34;
+        self.label_fill_opacity = label_fill_opacity
+        &#34;&#34;&#34;Label fill opacity.&#34;&#34;&#34;
+        self.label_stroke_color = label_stroke_color
+        &#34;&#34;&#34;Label stroke color.&#34;&#34;&#34;
+        self.label_stroke_opacity = label_stroke_opacity
+        &#34;&#34;&#34;Label stroke opacity.&#34;&#34;&#34;
+        self.label_stroke_size = label_stroke_size
+        &#34;&#34;&#34;Label stroke size (line width or pen thickness).&#34;&#34;&#34;
+        self.label_font_size = label_font_size
+        &#34;&#34;&#34;Label font size.&#34;&#34;&#34;
+        self.label_font_weight = label_font_weight
+        &#34;&#34;&#34;Label font weight.&#34;&#34;&#34;
+        self.label_line_height = label_line_height
+        &#34;&#34;&#34;Label line height.&#34;&#34;&#34;
+        self.label_align = label_align
+        &#34;&#34;&#34;Label text alignment. One of &#39;left&#39;, &#39;right&#39;, &#39;center&#39;, &#39;start&#39;, &#39;end&#39;.&#34;&#34;&#34;
+        self.ref_stroke_color = ref_stroke_color
+        &#34;&#34;&#34;Reference line stroke color.&#34;&#34;&#34;
+        self.ref_stroke_opacity = ref_stroke_opacity
+        &#34;&#34;&#34;Reference line stroke opacity.&#34;&#34;&#34;
+        self.ref_stroke_size = ref_stroke_size
+        &#34;&#34;&#34;Reference line stroke size (line width or pen thickness).&#34;&#34;&#34;
+        self.ref_stroke_dash = ref_stroke_dash
+        &#34;&#34;&#34;Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        return _dump(
+            coord=self.coord,
+            type=self.type,
+            x=self.x,
+            x0=self.x0,
+            x1=self.x1,
+            x2=self.x2,
+            x_min=self.x_min,
+            x_max=self.x_max,
+            x_nice=self.x_nice,
+            x_scale=self.x_scale,
+            x_title=self.x_title,
+            y=self.y,
+            y0=self.y0,
+            y1=self.y1,
+            y2=self.y2,
+            y_min=self.y_min,
+            y_max=self.y_max,
+            y_nice=self.y_nice,
+            y_scale=self.y_scale,
+            y_title=self.y_title,
+            color=self.color,
+            color_range=self.color_range,
+            shape=self.shape,
+            shape_range=self.shape_range,
+            size=self.size,
+            size_range=self.size_range,
+            stack=self.stack,
+            dodge=self.dodge,
+            curve=self.curve,
+            fill_color=self.fill_color,
+            fill_opacity=self.fill_opacity,
+            stroke_color=self.stroke_color,
+            stroke_opacity=self.stroke_opacity,
+            stroke_size=self.stroke_size,
+            stroke_dash=self.stroke_dash,
+            label=self.label,
+            label_offset=self.label_offset,
+            label_offset_x=self.label_offset_x,
+            label_offset_y=self.label_offset_y,
+            label_rotation=self.label_rotation,
+            label_position=self.label_position,
+            label_overlap=self.label_overlap,
+            label_fill_color=self.label_fill_color,
+            label_fill_opacity=self.label_fill_opacity,
+            label_stroke_color=self.label_stroke_color,
+            label_stroke_opacity=self.label_stroke_opacity,
+            label_stroke_size=self.label_stroke_size,
+            label_font_size=self.label_font_size,
+            label_font_weight=self.label_font_weight,
+            label_line_height=self.label_line_height,
+            label_align=self.label_align,
+            ref_stroke_color=self.ref_stroke_color,
+            ref_stroke_opacity=self.ref_stroke_opacity,
+            ref_stroke_size=self.ref_stroke_size,
+            ref_stroke_dash=self.ref_stroke_dash,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Mark&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_coord: Any = __d.get(&#39;coord&#39;)
+        __d_type: Any = __d.get(&#39;type&#39;)
+        __d_x: Any = __d.get(&#39;x&#39;)
+        __d_x0: Any = __d.get(&#39;x0&#39;)
+        __d_x1: Any = __d.get(&#39;x1&#39;)
+        __d_x2: Any = __d.get(&#39;x2&#39;)
+        __d_x_min: Any = __d.get(&#39;x_min&#39;)
+        __d_x_max: Any = __d.get(&#39;x_max&#39;)
+        __d_x_nice: Any = __d.get(&#39;x_nice&#39;)
+        __d_x_scale: Any = __d.get(&#39;x_scale&#39;)
+        __d_x_title: Any = __d.get(&#39;x_title&#39;)
+        __d_y: Any = __d.get(&#39;y&#39;)
+        __d_y0: Any = __d.get(&#39;y0&#39;)
+        __d_y1: Any = __d.get(&#39;y1&#39;)
+        __d_y2: Any = __d.get(&#39;y2&#39;)
+        __d_y_min: Any = __d.get(&#39;y_min&#39;)
+        __d_y_max: Any = __d.get(&#39;y_max&#39;)
+        __d_y_nice: Any = __d.get(&#39;y_nice&#39;)
+        __d_y_scale: Any = __d.get(&#39;y_scale&#39;)
+        __d_y_title: Any = __d.get(&#39;y_title&#39;)
+        __d_color: Any = __d.get(&#39;color&#39;)
+        __d_color_range: Any = __d.get(&#39;color_range&#39;)
+        __d_shape: Any = __d.get(&#39;shape&#39;)
+        __d_shape_range: Any = __d.get(&#39;shape_range&#39;)
+        __d_size: Any = __d.get(&#39;size&#39;)
+        __d_size_range: Any = __d.get(&#39;size_range&#39;)
+        __d_stack: Any = __d.get(&#39;stack&#39;)
+        __d_dodge: Any = __d.get(&#39;dodge&#39;)
+        __d_curve: Any = __d.get(&#39;curve&#39;)
+        __d_fill_color: Any = __d.get(&#39;fill_color&#39;)
+        __d_fill_opacity: Any = __d.get(&#39;fill_opacity&#39;)
+        __d_stroke_color: Any = __d.get(&#39;stroke_color&#39;)
+        __d_stroke_opacity: Any = __d.get(&#39;stroke_opacity&#39;)
+        __d_stroke_size: Any = __d.get(&#39;stroke_size&#39;)
+        __d_stroke_dash: Any = __d.get(&#39;stroke_dash&#39;)
+        __d_label: Any = __d.get(&#39;label&#39;)
+        __d_label_offset: Any = __d.get(&#39;label_offset&#39;)
+        __d_label_offset_x: Any = __d.get(&#39;label_offset_x&#39;)
+        __d_label_offset_y: Any = __d.get(&#39;label_offset_y&#39;)
+        __d_label_rotation: Any = __d.get(&#39;label_rotation&#39;)
+        __d_label_position: Any = __d.get(&#39;label_position&#39;)
+        __d_label_overlap: Any = __d.get(&#39;label_overlap&#39;)
+        __d_label_fill_color: Any = __d.get(&#39;label_fill_color&#39;)
+        __d_label_fill_opacity: Any = __d.get(&#39;label_fill_opacity&#39;)
+        __d_label_stroke_color: Any = __d.get(&#39;label_stroke_color&#39;)
+        __d_label_stroke_opacity: Any = __d.get(&#39;label_stroke_opacity&#39;)
+        __d_label_stroke_size: Any = __d.get(&#39;label_stroke_size&#39;)
+        __d_label_font_size: Any = __d.get(&#39;label_font_size&#39;)
+        __d_label_font_weight: Any = __d.get(&#39;label_font_weight&#39;)
+        __d_label_line_height: Any = __d.get(&#39;label_line_height&#39;)
+        __d_label_align: Any = __d.get(&#39;label_align&#39;)
+        __d_ref_stroke_color: Any = __d.get(&#39;ref_stroke_color&#39;)
+        __d_ref_stroke_opacity: Any = __d.get(&#39;ref_stroke_opacity&#39;)
+        __d_ref_stroke_size: Any = __d.get(&#39;ref_stroke_size&#39;)
+        __d_ref_stroke_dash: Any = __d.get(&#39;ref_stroke_dash&#39;)
+        coord: Optional[str] = __d_coord
+        type: Optional[str] = __d_type
+        x: Optional[Value] = __d_x
+        x0: Optional[Value] = __d_x0
+        x1: Optional[Value] = __d_x1
+        x2: Optional[Value] = __d_x2
+        x_min: Optional[float] = __d_x_min
+        x_max: Optional[float] = __d_x_max
+        x_nice: Optional[bool] = __d_x_nice
+        x_scale: Optional[str] = __d_x_scale
+        x_title: Optional[str] = __d_x_title
+        y: Optional[Value] = __d_y
+        y0: Optional[Value] = __d_y0
+        y1: Optional[Value] = __d_y1
+        y2: Optional[Value] = __d_y2
+        y_min: Optional[float] = __d_y_min
+        y_max: Optional[float] = __d_y_max
+        y_nice: Optional[bool] = __d_y_nice
+        y_scale: Optional[str] = __d_y_scale
+        y_title: Optional[str] = __d_y_title
+        color: Optional[str] = __d_color
+        color_range: Optional[str] = __d_color_range
+        shape: Optional[str] = __d_shape
+        shape_range: Optional[str] = __d_shape_range
+        size: Optional[Value] = __d_size
+        size_range: Optional[str] = __d_size_range
+        stack: Optional[str] = __d_stack
+        dodge: Optional[str] = __d_dodge
+        curve: Optional[str] = __d_curve
+        fill_color: Optional[str] = __d_fill_color
+        fill_opacity: Optional[float] = __d_fill_opacity
+        stroke_color: Optional[str] = __d_stroke_color
+        stroke_opacity: Optional[float] = __d_stroke_opacity
+        stroke_size: Optional[float] = __d_stroke_size
+        stroke_dash: Optional[str] = __d_stroke_dash
+        label: Optional[str] = __d_label
+        label_offset: Optional[float] = __d_label_offset
+        label_offset_x: Optional[float] = __d_label_offset_x
+        label_offset_y: Optional[float] = __d_label_offset_y
+        label_rotation: Optional[str] = __d_label_rotation
+        label_position: Optional[str] = __d_label_position
+        label_overlap: Optional[str] = __d_label_overlap
+        label_fill_color: Optional[str] = __d_label_fill_color
+        label_fill_opacity: Optional[float] = __d_label_fill_opacity
+        label_stroke_color: Optional[str] = __d_label_stroke_color
+        label_stroke_opacity: Optional[float] = __d_label_stroke_opacity
+        label_stroke_size: Optional[float] = __d_label_stroke_size
+        label_font_size: Optional[float] = __d_label_font_size
+        label_font_weight: Optional[str] = __d_label_font_weight
+        label_line_height: Optional[float] = __d_label_line_height
+        label_align: Optional[str] = __d_label_align
+        ref_stroke_color: Optional[str] = __d_ref_stroke_color
+        ref_stroke_opacity: Optional[float] = __d_ref_stroke_opacity
+        ref_stroke_size: Optional[float] = __d_ref_stroke_size
+        ref_stroke_dash: Optional[str] = __d_ref_stroke_dash
+        return Mark(
+            coord,
+            type,
+            x,
+            x0,
+            x1,
+            x2,
+            x_min,
+            x_max,
+            x_nice,
+            x_scale,
+            x_title,
+            y,
+            y0,
+            y1,
+            y2,
+            y_min,
+            y_max,
+            y_nice,
+            y_scale,
+            y_title,
+            color,
+            color_range,
+            shape,
+            shape_range,
+            size,
+            size_range,
+            stack,
+            dodge,
+            curve,
+            fill_color,
+            fill_opacity,
+            stroke_color,
+            stroke_opacity,
+            stroke_size,
+            stroke_dash,
+            label,
+            label_offset,
+            label_offset_x,
+            label_offset_y,
+            label_rotation,
+            label_position,
+            label_overlap,
+            label_fill_color,
+            label_fill_opacity,
+            label_stroke_color,
+            label_stroke_opacity,
+            label_stroke_size,
+            label_font_size,
+            label_font_weight,
+            label_line_height,
+            label_align,
+            ref_stroke_color,
+            ref_stroke_opacity,
+            ref_stroke_size,
+            ref_stroke_dash,
+        )
+
+
+class Plot:
+    &#34;&#34;&#34;Create a plot. A plot is composed of one or more graphical mark layers.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            marks: List[Mark],
+    ):
+        self.marks = marks
+        &#34;&#34;&#34;The graphical mark layers contained in this plot.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.marks is None:
+            raise ValueError(&#39;Plot.marks is required.&#39;)
+        return _dump(
+            marks=[__e.dump() for __e in self.marks],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Plot&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_marks: Any = __d.get(&#39;marks&#39;)
+        if __d_marks is None:
+            raise ValueError(&#39;Plot.marks is required.&#39;)
+        marks: List[Mark] = [Mark.load(__e) for __e in __d_marks]
+        return Plot(
+            marks,
+        )
+
+
+class Visualization:
+    &#34;&#34;&#34;Create a visualization for display inside a form.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            plot: Plot,
+            data: PackedRecord,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+    ):
+        self.plot = plot
+        &#34;&#34;&#34;The plot to be rendered in this visualization.&#34;&#34;&#34;
+        self.data = data
+        &#34;&#34;&#34;Data for this visualization.&#34;&#34;&#34;
+        self.width = width
+        &#34;&#34;&#34;The width of the visualization. Defaults to 100%.&#34;&#34;&#34;
+        self.height = height
+        &#34;&#34;&#34;The height of the visualization. Defaults to 300px.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.plot is None:
+            raise ValueError(&#39;Visualization.plot is required.&#39;)
+        if self.data is None:
+            raise ValueError(&#39;Visualization.data is required.&#39;)
+        return _dump(
+            plot=self.plot.dump(),
+            data=self.data,
+            width=self.width,
+            height=self.height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Visualization&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_plot: Any = __d.get(&#39;plot&#39;)
+        if __d_plot is None:
+            raise ValueError(&#39;Visualization.plot is required.&#39;)
+        __d_data: Any = __d.get(&#39;data&#39;)
+        if __d_data is None:
+            raise ValueError(&#39;Visualization.data is required.&#39;)
+        __d_width: Any = __d.get(&#39;width&#39;)
+        __d_height: Any = __d.get(&#39;height&#39;)
+        plot: Plot = Plot.load(__d_plot)
+        data: PackedRecord = __d_data
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        return Visualization(
+            plot,
+            data,
+            width,
+            height,
+        )
+
+
+class VegaVisualization:
+    &#34;&#34;&#34;Create a Vega-lite plot for display inside a form.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            specification: str,
+            data: Optional[PackedRecord] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+    ):
+        self.specification = specification
+        &#34;&#34;&#34;The Vega-lite specification.&#34;&#34;&#34;
+        self.data = data
+        &#34;&#34;&#34;Data for the plot, if any.&#34;&#34;&#34;
+        self.width = width
+        &#34;&#34;&#34;The width of the visualization. Defaults to 100%.&#34;&#34;&#34;
+        self.height = height
+        &#34;&#34;&#34;The height of the visualization. Defaults to 300px.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.specification is None:
+            raise ValueError(&#39;VegaVisualization.specification is required.&#39;)
+        return _dump(
+            specification=self.specification,
+            data=self.data,
+            width=self.width,
+            height=self.height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;VegaVisualization&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_specification: Any = __d.get(&#39;specification&#39;)
+        if __d_specification is None:
+            raise ValueError(&#39;VegaVisualization.specification is required.&#39;)
+        __d_data: Any = __d.get(&#39;data&#39;)
+        __d_width: Any = __d.get(&#39;width&#39;)
+        __d_height: Any = __d.get(&#39;height&#39;)
+        specification: str = __d_specification
+        data: Optional[PackedRecord] = __d_data
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        return VegaVisualization(
+            specification,
+            data,
+            width,
+            height,
+        )
+
+
 class Component:
     &#34;&#34;&#34;Create a component.
     &#34;&#34;&#34;
@@ -2686,6 +3227,8 @@ class Component:
             picker: Optional[Picker] = None,
             range_slider: Optional[RangeSlider] = None,
             stepper: Optional[Stepper] = None,
+            visualization: Optional[Visualization] = None,
+            vega_visualization: Optional[VegaVisualization] = None,
     ):
         self.text = text
         &#34;&#34;&#34;Text block.&#34;&#34;&#34;
@@ -2744,13 +3287,17 @@ class Component:
         self.expander = expander
         &#34;&#34;&#34;Expander.&#34;&#34;&#34;
         self.frame = frame
-        &#34;&#34;&#34;Frame&#34;&#34;&#34;
+        &#34;&#34;&#34;Frame.&#34;&#34;&#34;
         self.picker = picker
-        &#34;&#34;&#34;Picker&#34;&#34;&#34;
+        &#34;&#34;&#34;Picker.&#34;&#34;&#34;
         self.range_slider = range_slider
-        &#34;&#34;&#34;RangeSlider&#34;&#34;&#34;
+        &#34;&#34;&#34;Range Slider.&#34;&#34;&#34;
         self.stepper = stepper
-        &#34;&#34;&#34;Stepper&#34;&#34;&#34;
+        &#34;&#34;&#34;Stepper.&#34;&#34;&#34;
+        self.visualization = visualization
+        &#34;&#34;&#34;Visualization.&#34;&#34;&#34;
+        self.vega_visualization = vega_visualization
+        &#34;&#34;&#34;Vega-lite Visualization.&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -2787,6 +3334,8 @@ class Component:
             picker=None if self.picker is None else self.picker.dump(),
             range_slider=None if self.range_slider is None else self.range_slider.dump(),
             stepper=None if self.stepper is None else self.stepper.dump(),
+            visualization=None if self.visualization is None else self.visualization.dump(),
+            vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
         )
 
     @staticmethod
@@ -2824,6 +3373,8 @@ class Component:
         __d_picker: Any = __d.get(&#39;picker&#39;)
         __d_range_slider: Any = __d.get(&#39;range_slider&#39;)
         __d_stepper: Any = __d.get(&#39;stepper&#39;)
+        __d_visualization: Any = __d.get(&#39;visualization&#39;)
+        __d_vega_visualization: Any = __d.get(&#39;vega_visualization&#39;)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -2856,6 +3407,8 @@ class Component:
         picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
         range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
         stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
+        visualization: Optional[Visualization] = None if __d_visualization is None else Visualization.load(__d_visualization)
+        vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
         return Component(
             text,
             text_xl,
@@ -2889,6 +3442,8 @@ class Component:
             picker,
             range_slider,
             stepper,
+            visualization,
+            vega_visualization,
         )
 
 
@@ -4084,441 +4639,6 @@ class PixelArtCard:
             title,
             data,
             commands,
-        )
-
-
-class Mark:
-    &#34;&#34;&#34;Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
-    A plot can contain multiple such layers of marks.
-    &#34;&#34;&#34;
-    def __init__(
-            self,
-            coord: Optional[str] = None,
-            type: Optional[str] = None,
-            x: Optional[Value] = None,
-            x0: Optional[Value] = None,
-            x1: Optional[Value] = None,
-            x2: Optional[Value] = None,
-            x_min: Optional[float] = None,
-            x_max: Optional[float] = None,
-            x_nice: Optional[bool] = None,
-            x_scale: Optional[str] = None,
-            x_title: Optional[str] = None,
-            y: Optional[Value] = None,
-            y0: Optional[Value] = None,
-            y1: Optional[Value] = None,
-            y2: Optional[Value] = None,
-            y_min: Optional[float] = None,
-            y_max: Optional[float] = None,
-            y_nice: Optional[bool] = None,
-            y_scale: Optional[str] = None,
-            y_title: Optional[str] = None,
-            color: Optional[str] = None,
-            color_range: Optional[str] = None,
-            shape: Optional[str] = None,
-            shape_range: Optional[str] = None,
-            size: Optional[Value] = None,
-            size_range: Optional[str] = None,
-            stack: Optional[str] = None,
-            dodge: Optional[str] = None,
-            curve: Optional[str] = None,
-            fill_color: Optional[str] = None,
-            fill_opacity: Optional[float] = None,
-            stroke_color: Optional[str] = None,
-            stroke_opacity: Optional[float] = None,
-            stroke_size: Optional[float] = None,
-            stroke_dash: Optional[str] = None,
-            label: Optional[str] = None,
-            label_offset: Optional[float] = None,
-            label_offset_x: Optional[float] = None,
-            label_offset_y: Optional[float] = None,
-            label_rotation: Optional[str] = None,
-            label_position: Optional[str] = None,
-            label_overlap: Optional[str] = None,
-            label_fill_color: Optional[str] = None,
-            label_fill_opacity: Optional[float] = None,
-            label_stroke_color: Optional[str] = None,
-            label_stroke_opacity: Optional[float] = None,
-            label_stroke_size: Optional[float] = None,
-            label_font_size: Optional[float] = None,
-            label_font_weight: Optional[str] = None,
-            label_line_height: Optional[float] = None,
-            label_align: Optional[str] = None,
-            ref_stroke_color: Optional[str] = None,
-            ref_stroke_opacity: Optional[float] = None,
-            ref_stroke_size: Optional[float] = None,
-            ref_stroke_dash: Optional[str] = None,
-    ):
-        self.coord = coord
-        &#34;&#34;&#34;Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of &#39;rect&#39;, &#39;cartesian&#39;, &#39;polar&#39;, &#39;theta&#39;, &#39;helix&#39;.&#34;&#34;&#34;
-        self.type = type
-        &#34;&#34;&#34;Graphical geometry. One of &#39;interval&#39;, &#39;line&#39;, &#39;path&#39;, &#39;point&#39;, &#39;area&#39;, &#39;polygon&#39;, &#39;schema&#39;, &#39;edge&#39;, &#39;heatmap&#39;.&#34;&#34;&#34;
-        self.x = x
-        &#34;&#34;&#34;X field or value.&#34;&#34;&#34;
-        self.x0 = x0
-        &#34;&#34;&#34;X base field or value.&#34;&#34;&#34;
-        self.x1 = x1
-        &#34;&#34;&#34;X bin lower bound field or value. For histograms.&#34;&#34;&#34;
-        self.x2 = x2
-        &#34;&#34;&#34;X bin upper bound field or value. For histograms.&#34;&#34;&#34;
-        self.x_min = x_min
-        &#34;&#34;&#34;X axis scale minimum.&#34;&#34;&#34;
-        self.x_max = x_max
-        &#34;&#34;&#34;X axis scale maximum.&#34;&#34;&#34;
-        self.x_nice = x_nice
-        &#34;&#34;&#34;Whether to nice X axis scale ticks.&#34;&#34;&#34;
-        self.x_scale = x_scale
-        &#34;&#34;&#34;X axis scale type. One of &#39;linear&#39;, &#39;cat&#39;, &#39;category&#39;, &#39;identity&#39;, &#39;log&#39;, &#39;pow&#39;, &#39;time&#39;, &#39;timeCat&#39;, &#39;quantize&#39;, &#39;quantile&#39;.&#34;&#34;&#34;
-        self.x_title = x_title
-        &#34;&#34;&#34;X axis title.&#34;&#34;&#34;
-        self.y = y
-        &#34;&#34;&#34;Y field or value.&#34;&#34;&#34;
-        self.y0 = y0
-        &#34;&#34;&#34;Y base field or value.&#34;&#34;&#34;
-        self.y1 = y1
-        &#34;&#34;&#34;Y bin lower bound field or value. For histograms.&#34;&#34;&#34;
-        self.y2 = y2
-        &#34;&#34;&#34;Y bin upper bound field or value. For histograms.&#34;&#34;&#34;
-        self.y_min = y_min
-        &#34;&#34;&#34;Y axis scale minimum.&#34;&#34;&#34;
-        self.y_max = y_max
-        &#34;&#34;&#34;Y axis scale maximum.&#34;&#34;&#34;
-        self.y_nice = y_nice
-        &#34;&#34;&#34;Whether to nice Y axis scale ticks.&#34;&#34;&#34;
-        self.y_scale = y_scale
-        &#34;&#34;&#34;Y axis scale type. One of &#39;linear&#39;, &#39;cat&#39;, &#39;category&#39;, &#39;identity&#39;, &#39;log&#39;, &#39;pow&#39;, &#39;time&#39;, &#39;timeCat&#39;, &#39;quantize&#39;, &#39;quantile&#39;.&#34;&#34;&#34;
-        self.y_title = y_title
-        &#34;&#34;&#34;Y axis title.&#34;&#34;&#34;
-        self.color = color
-        &#34;&#34;&#34;Mark color field or value.&#34;&#34;&#34;
-        self.color_range = color_range
-        &#34;&#34;&#34;Mark color range for multi-series plots. A string containing space-separated colors, e.g. `&#39;#fee8c8 #fdbb84 #e34a33&#39;`&#34;&#34;&#34;
-        self.shape = shape
-        &#34;&#34;&#34;Mark shape field or value for `point` mark types. Possible values are &#39;circle&#39;, &#39;square&#39;, &#39;bowtie&#39;, &#39;diamond&#39;, &#39;hexagon&#39;, &#39;triangle&#39;, &#39;triangle-down&#39;, &#39;cross&#39;, &#39;tick&#39;, &#39;plus&#39;, &#39;hyphen&#39;, &#39;line&#39;.&#34;&#34;&#34;
-        self.shape_range = shape_range
-        &#34;&#34;&#34;Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `&#39;circle square diamond&#39;`&#34;&#34;&#34;
-        self.size = size
-        &#34;&#34;&#34;Mark size field or value.&#34;&#34;&#34;
-        self.size_range = size_range
-        &#34;&#34;&#34;Mark size range. A string containing space-separated integers, e.g. `&#39;4 30&#39;`&#34;&#34;&#34;
-        self.stack = stack
-        &#34;&#34;&#34;Field to stack marks by, or &#39;auto&#39; to infer.&#34;&#34;&#34;
-        self.dodge = dodge
-        &#34;&#34;&#34;Field to dodge marks by, or &#39;auto&#39; to infer.&#34;&#34;&#34;
-        self.curve = curve
-        &#34;&#34;&#34;Curve type for `line` and `area` mark types. One of &#39;none&#39;, &#39;smooth&#39;, &#39;step-before&#39;, &#39;step&#39;, &#39;step-after&#39;.&#34;&#34;&#34;
-        self.fill_color = fill_color
-        &#34;&#34;&#34;Mark fill color.&#34;&#34;&#34;
-        self.fill_opacity = fill_opacity
-        &#34;&#34;&#34;Mark fill opacity.&#34;&#34;&#34;
-        self.stroke_color = stroke_color
-        &#34;&#34;&#34;Mark stroke color.&#34;&#34;&#34;
-        self.stroke_opacity = stroke_opacity
-        &#34;&#34;&#34;Mark stroke opacity.&#34;&#34;&#34;
-        self.stroke_size = stroke_size
-        &#34;&#34;&#34;Mark stroke size.&#34;&#34;&#34;
-        self.stroke_dash = stroke_dash
-        &#34;&#34;&#34;Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].&#34;&#34;&#34;
-        self.label = label
-        &#34;&#34;&#34;Label field or value.&#34;&#34;&#34;
-        self.label_offset = label_offset
-        &#34;&#34;&#34;Distance between label and mark.&#34;&#34;&#34;
-        self.label_offset_x = label_offset_x
-        &#34;&#34;&#34;Horizontal distance between label and mark.&#34;&#34;&#34;
-        self.label_offset_y = label_offset_y
-        &#34;&#34;&#34;Vertical distance between label and mark.&#34;&#34;&#34;
-        self.label_rotation = label_rotation
-        &#34;&#34;&#34;Label rotation angle, in degrees, or &#39;none&#39; to disable automatic rotation. The default behavior is &#39;auto&#39; for automatic rotation.&#34;&#34;&#34;
-        self.label_position = label_position
-        &#34;&#34;&#34;Label position relative to the mark. One of &#39;top&#39;, &#39;bottom&#39;, &#39;middle&#39;, &#39;left&#39;, &#39;right&#39;.&#34;&#34;&#34;
-        self.label_overlap = label_overlap
-        &#34;&#34;&#34;Strategy to use if labels overlap. One of &#39;hide&#39;, &#39;overlap&#39;, &#39;constrain&#39;.&#34;&#34;&#34;
-        self.label_fill_color = label_fill_color
-        &#34;&#34;&#34;Label fill color.&#34;&#34;&#34;
-        self.label_fill_opacity = label_fill_opacity
-        &#34;&#34;&#34;Label fill opacity.&#34;&#34;&#34;
-        self.label_stroke_color = label_stroke_color
-        &#34;&#34;&#34;Label stroke color.&#34;&#34;&#34;
-        self.label_stroke_opacity = label_stroke_opacity
-        &#34;&#34;&#34;Label stroke opacity.&#34;&#34;&#34;
-        self.label_stroke_size = label_stroke_size
-        &#34;&#34;&#34;Label stroke size (line width or pen thickness).&#34;&#34;&#34;
-        self.label_font_size = label_font_size
-        &#34;&#34;&#34;Label font size.&#34;&#34;&#34;
-        self.label_font_weight = label_font_weight
-        &#34;&#34;&#34;Label font weight.&#34;&#34;&#34;
-        self.label_line_height = label_line_height
-        &#34;&#34;&#34;Label line height.&#34;&#34;&#34;
-        self.label_align = label_align
-        &#34;&#34;&#34;Label text alignment. One of &#39;left&#39;, &#39;right&#39;, &#39;center&#39;, &#39;start&#39;, &#39;end&#39;.&#34;&#34;&#34;
-        self.ref_stroke_color = ref_stroke_color
-        &#34;&#34;&#34;Reference line stroke color.&#34;&#34;&#34;
-        self.ref_stroke_opacity = ref_stroke_opacity
-        &#34;&#34;&#34;Reference line stroke opacity.&#34;&#34;&#34;
-        self.ref_stroke_size = ref_stroke_size
-        &#34;&#34;&#34;Reference line stroke size (line width or pen thickness).&#34;&#34;&#34;
-        self.ref_stroke_dash = ref_stroke_dash
-        &#34;&#34;&#34;Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].&#34;&#34;&#34;
-
-    def dump(self) -&gt; Dict:
-        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
-        return _dump(
-            coord=self.coord,
-            type=self.type,
-            x=self.x,
-            x0=self.x0,
-            x1=self.x1,
-            x2=self.x2,
-            x_min=self.x_min,
-            x_max=self.x_max,
-            x_nice=self.x_nice,
-            x_scale=self.x_scale,
-            x_title=self.x_title,
-            y=self.y,
-            y0=self.y0,
-            y1=self.y1,
-            y2=self.y2,
-            y_min=self.y_min,
-            y_max=self.y_max,
-            y_nice=self.y_nice,
-            y_scale=self.y_scale,
-            y_title=self.y_title,
-            color=self.color,
-            color_range=self.color_range,
-            shape=self.shape,
-            shape_range=self.shape_range,
-            size=self.size,
-            size_range=self.size_range,
-            stack=self.stack,
-            dodge=self.dodge,
-            curve=self.curve,
-            fill_color=self.fill_color,
-            fill_opacity=self.fill_opacity,
-            stroke_color=self.stroke_color,
-            stroke_opacity=self.stroke_opacity,
-            stroke_size=self.stroke_size,
-            stroke_dash=self.stroke_dash,
-            label=self.label,
-            label_offset=self.label_offset,
-            label_offset_x=self.label_offset_x,
-            label_offset_y=self.label_offset_y,
-            label_rotation=self.label_rotation,
-            label_position=self.label_position,
-            label_overlap=self.label_overlap,
-            label_fill_color=self.label_fill_color,
-            label_fill_opacity=self.label_fill_opacity,
-            label_stroke_color=self.label_stroke_color,
-            label_stroke_opacity=self.label_stroke_opacity,
-            label_stroke_size=self.label_stroke_size,
-            label_font_size=self.label_font_size,
-            label_font_weight=self.label_font_weight,
-            label_line_height=self.label_line_height,
-            label_align=self.label_align,
-            ref_stroke_color=self.ref_stroke_color,
-            ref_stroke_opacity=self.ref_stroke_opacity,
-            ref_stroke_size=self.ref_stroke_size,
-            ref_stroke_dash=self.ref_stroke_dash,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -&gt; &#39;Mark&#39;:
-        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
-        __d_coord: Any = __d.get(&#39;coord&#39;)
-        __d_type: Any = __d.get(&#39;type&#39;)
-        __d_x: Any = __d.get(&#39;x&#39;)
-        __d_x0: Any = __d.get(&#39;x0&#39;)
-        __d_x1: Any = __d.get(&#39;x1&#39;)
-        __d_x2: Any = __d.get(&#39;x2&#39;)
-        __d_x_min: Any = __d.get(&#39;x_min&#39;)
-        __d_x_max: Any = __d.get(&#39;x_max&#39;)
-        __d_x_nice: Any = __d.get(&#39;x_nice&#39;)
-        __d_x_scale: Any = __d.get(&#39;x_scale&#39;)
-        __d_x_title: Any = __d.get(&#39;x_title&#39;)
-        __d_y: Any = __d.get(&#39;y&#39;)
-        __d_y0: Any = __d.get(&#39;y0&#39;)
-        __d_y1: Any = __d.get(&#39;y1&#39;)
-        __d_y2: Any = __d.get(&#39;y2&#39;)
-        __d_y_min: Any = __d.get(&#39;y_min&#39;)
-        __d_y_max: Any = __d.get(&#39;y_max&#39;)
-        __d_y_nice: Any = __d.get(&#39;y_nice&#39;)
-        __d_y_scale: Any = __d.get(&#39;y_scale&#39;)
-        __d_y_title: Any = __d.get(&#39;y_title&#39;)
-        __d_color: Any = __d.get(&#39;color&#39;)
-        __d_color_range: Any = __d.get(&#39;color_range&#39;)
-        __d_shape: Any = __d.get(&#39;shape&#39;)
-        __d_shape_range: Any = __d.get(&#39;shape_range&#39;)
-        __d_size: Any = __d.get(&#39;size&#39;)
-        __d_size_range: Any = __d.get(&#39;size_range&#39;)
-        __d_stack: Any = __d.get(&#39;stack&#39;)
-        __d_dodge: Any = __d.get(&#39;dodge&#39;)
-        __d_curve: Any = __d.get(&#39;curve&#39;)
-        __d_fill_color: Any = __d.get(&#39;fill_color&#39;)
-        __d_fill_opacity: Any = __d.get(&#39;fill_opacity&#39;)
-        __d_stroke_color: Any = __d.get(&#39;stroke_color&#39;)
-        __d_stroke_opacity: Any = __d.get(&#39;stroke_opacity&#39;)
-        __d_stroke_size: Any = __d.get(&#39;stroke_size&#39;)
-        __d_stroke_dash: Any = __d.get(&#39;stroke_dash&#39;)
-        __d_label: Any = __d.get(&#39;label&#39;)
-        __d_label_offset: Any = __d.get(&#39;label_offset&#39;)
-        __d_label_offset_x: Any = __d.get(&#39;label_offset_x&#39;)
-        __d_label_offset_y: Any = __d.get(&#39;label_offset_y&#39;)
-        __d_label_rotation: Any = __d.get(&#39;label_rotation&#39;)
-        __d_label_position: Any = __d.get(&#39;label_position&#39;)
-        __d_label_overlap: Any = __d.get(&#39;label_overlap&#39;)
-        __d_label_fill_color: Any = __d.get(&#39;label_fill_color&#39;)
-        __d_label_fill_opacity: Any = __d.get(&#39;label_fill_opacity&#39;)
-        __d_label_stroke_color: Any = __d.get(&#39;label_stroke_color&#39;)
-        __d_label_stroke_opacity: Any = __d.get(&#39;label_stroke_opacity&#39;)
-        __d_label_stroke_size: Any = __d.get(&#39;label_stroke_size&#39;)
-        __d_label_font_size: Any = __d.get(&#39;label_font_size&#39;)
-        __d_label_font_weight: Any = __d.get(&#39;label_font_weight&#39;)
-        __d_label_line_height: Any = __d.get(&#39;label_line_height&#39;)
-        __d_label_align: Any = __d.get(&#39;label_align&#39;)
-        __d_ref_stroke_color: Any = __d.get(&#39;ref_stroke_color&#39;)
-        __d_ref_stroke_opacity: Any = __d.get(&#39;ref_stroke_opacity&#39;)
-        __d_ref_stroke_size: Any = __d.get(&#39;ref_stroke_size&#39;)
-        __d_ref_stroke_dash: Any = __d.get(&#39;ref_stroke_dash&#39;)
-        coord: Optional[str] = __d_coord
-        type: Optional[str] = __d_type
-        x: Optional[Value] = __d_x
-        x0: Optional[Value] = __d_x0
-        x1: Optional[Value] = __d_x1
-        x2: Optional[Value] = __d_x2
-        x_min: Optional[float] = __d_x_min
-        x_max: Optional[float] = __d_x_max
-        x_nice: Optional[bool] = __d_x_nice
-        x_scale: Optional[str] = __d_x_scale
-        x_title: Optional[str] = __d_x_title
-        y: Optional[Value] = __d_y
-        y0: Optional[Value] = __d_y0
-        y1: Optional[Value] = __d_y1
-        y2: Optional[Value] = __d_y2
-        y_min: Optional[float] = __d_y_min
-        y_max: Optional[float] = __d_y_max
-        y_nice: Optional[bool] = __d_y_nice
-        y_scale: Optional[str] = __d_y_scale
-        y_title: Optional[str] = __d_y_title
-        color: Optional[str] = __d_color
-        color_range: Optional[str] = __d_color_range
-        shape: Optional[str] = __d_shape
-        shape_range: Optional[str] = __d_shape_range
-        size: Optional[Value] = __d_size
-        size_range: Optional[str] = __d_size_range
-        stack: Optional[str] = __d_stack
-        dodge: Optional[str] = __d_dodge
-        curve: Optional[str] = __d_curve
-        fill_color: Optional[str] = __d_fill_color
-        fill_opacity: Optional[float] = __d_fill_opacity
-        stroke_color: Optional[str] = __d_stroke_color
-        stroke_opacity: Optional[float] = __d_stroke_opacity
-        stroke_size: Optional[float] = __d_stroke_size
-        stroke_dash: Optional[str] = __d_stroke_dash
-        label: Optional[str] = __d_label
-        label_offset: Optional[float] = __d_label_offset
-        label_offset_x: Optional[float] = __d_label_offset_x
-        label_offset_y: Optional[float] = __d_label_offset_y
-        label_rotation: Optional[str] = __d_label_rotation
-        label_position: Optional[str] = __d_label_position
-        label_overlap: Optional[str] = __d_label_overlap
-        label_fill_color: Optional[str] = __d_label_fill_color
-        label_fill_opacity: Optional[float] = __d_label_fill_opacity
-        label_stroke_color: Optional[str] = __d_label_stroke_color
-        label_stroke_opacity: Optional[float] = __d_label_stroke_opacity
-        label_stroke_size: Optional[float] = __d_label_stroke_size
-        label_font_size: Optional[float] = __d_label_font_size
-        label_font_weight: Optional[str] = __d_label_font_weight
-        label_line_height: Optional[float] = __d_label_line_height
-        label_align: Optional[str] = __d_label_align
-        ref_stroke_color: Optional[str] = __d_ref_stroke_color
-        ref_stroke_opacity: Optional[float] = __d_ref_stroke_opacity
-        ref_stroke_size: Optional[float] = __d_ref_stroke_size
-        ref_stroke_dash: Optional[str] = __d_ref_stroke_dash
-        return Mark(
-            coord,
-            type,
-            x,
-            x0,
-            x1,
-            x2,
-            x_min,
-            x_max,
-            x_nice,
-            x_scale,
-            x_title,
-            y,
-            y0,
-            y1,
-            y2,
-            y_min,
-            y_max,
-            y_nice,
-            y_scale,
-            y_title,
-            color,
-            color_range,
-            shape,
-            shape_range,
-            size,
-            size_range,
-            stack,
-            dodge,
-            curve,
-            fill_color,
-            fill_opacity,
-            stroke_color,
-            stroke_opacity,
-            stroke_size,
-            stroke_dash,
-            label,
-            label_offset,
-            label_offset_x,
-            label_offset_y,
-            label_rotation,
-            label_position,
-            label_overlap,
-            label_fill_color,
-            label_fill_opacity,
-            label_stroke_color,
-            label_stroke_opacity,
-            label_stroke_size,
-            label_font_size,
-            label_font_weight,
-            label_line_height,
-            label_align,
-            ref_stroke_color,
-            ref_stroke_opacity,
-            ref_stroke_size,
-            ref_stroke_dash,
-        )
-
-
-class Plot:
-    &#34;&#34;&#34;Create a plot. A plot is composed of one or more graphical mark layers.
-    &#34;&#34;&#34;
-    def __init__(
-            self,
-            marks: List[Mark],
-    ):
-        self.marks = marks
-        &#34;&#34;&#34;The graphical mark layers contained in this plot.&#34;&#34;&#34;
-
-    def dump(self) -&gt; Dict:
-        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
-        if self.marks is None:
-            raise ValueError(&#39;Plot.marks is required.&#39;)
-        return _dump(
-            marks=[__e.dump() for __e in self.marks],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -&gt; &#39;Plot&#39;:
-        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
-        __d_marks: Any = __d.get(&#39;marks&#39;)
-        if __d_marks is None:
-            raise ValueError(&#39;Plot.marks is required.&#39;)
-        marks: List[Mark] = [Mark.load(__e) for __e in __d_marks]
-        return Plot(
-            marks,
         )
 
 
@@ -7474,7 +7594,7 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
 </dd>
 <dt id="h2o_q.types.Component"><code class="flex name class">
 <span>class <span class="ident">Component</span></span>
-<span>(</span><span>text: Union[<a title="h2o_q.types.Text" href="#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="#h2o_q.types.Frame">Frame</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="#h2o_q.types.Stepper">Stepper</a>, NoneType] = None)</span>
+<span>(</span><span>text: Union[<a title="h2o_q.types.Text" href="#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="#h2o_q.types.Frame">Frame</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="#h2o_q.types.Stepper">Stepper</a>, NoneType] = None, visualization: Union[<a title="h2o_q.types.Visualization" href="#h2o_q.types.Visualization">Visualization</a>, NoneType] = None, vega_visualization: Union[<a title="h2o_q.types.VegaVisualization" href="#h2o_q.types.VegaVisualization">VegaVisualization</a>, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a component.</p></div>
@@ -7519,6 +7639,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             picker: Optional[Picker] = None,
             range_slider: Optional[RangeSlider] = None,
             stepper: Optional[Stepper] = None,
+            visualization: Optional[Visualization] = None,
+            vega_visualization: Optional[VegaVisualization] = None,
     ):
         self.text = text
         &#34;&#34;&#34;Text block.&#34;&#34;&#34;
@@ -7577,13 +7699,17 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         self.expander = expander
         &#34;&#34;&#34;Expander.&#34;&#34;&#34;
         self.frame = frame
-        &#34;&#34;&#34;Frame&#34;&#34;&#34;
+        &#34;&#34;&#34;Frame.&#34;&#34;&#34;
         self.picker = picker
-        &#34;&#34;&#34;Picker&#34;&#34;&#34;
+        &#34;&#34;&#34;Picker.&#34;&#34;&#34;
         self.range_slider = range_slider
-        &#34;&#34;&#34;RangeSlider&#34;&#34;&#34;
+        &#34;&#34;&#34;Range Slider.&#34;&#34;&#34;
         self.stepper = stepper
-        &#34;&#34;&#34;Stepper&#34;&#34;&#34;
+        &#34;&#34;&#34;Stepper.&#34;&#34;&#34;
+        self.visualization = visualization
+        &#34;&#34;&#34;Visualization.&#34;&#34;&#34;
+        self.vega_visualization = vega_visualization
+        &#34;&#34;&#34;Vega-lite Visualization.&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -7620,6 +7746,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             picker=None if self.picker is None else self.picker.dump(),
             range_slider=None if self.range_slider is None else self.range_slider.dump(),
             stepper=None if self.stepper is None else self.stepper.dump(),
+            visualization=None if self.visualization is None else self.visualization.dump(),
+            vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
         )
 
     @staticmethod
@@ -7657,6 +7785,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         __d_picker: Any = __d.get(&#39;picker&#39;)
         __d_range_slider: Any = __d.get(&#39;range_slider&#39;)
         __d_stepper: Any = __d.get(&#39;stepper&#39;)
+        __d_visualization: Any = __d.get(&#39;visualization&#39;)
+        __d_vega_visualization: Any = __d.get(&#39;vega_visualization&#39;)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -7689,6 +7819,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
         range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
         stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
+        visualization: Optional[Visualization] = None if __d_visualization is None else Visualization.load(__d_visualization)
+        vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
         return Component(
             text,
             text_xl,
@@ -7722,6 +7854,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             picker,
             range_slider,
             stepper,
+            visualization,
+            vega_visualization,
         )</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -7770,6 +7904,8 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
     __d_picker: Any = __d.get(&#39;picker&#39;)
     __d_range_slider: Any = __d.get(&#39;range_slider&#39;)
     __d_stepper: Any = __d.get(&#39;stepper&#39;)
+    __d_visualization: Any = __d.get(&#39;visualization&#39;)
+    __d_vega_visualization: Any = __d.get(&#39;vega_visualization&#39;)
     text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
     text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
     text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -7802,6 +7938,8 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
     picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
     range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
     stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
+    visualization: Optional[Visualization] = None if __d_visualization is None else Visualization.load(__d_visualization)
+    vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
     return Component(
         text,
         text_xl,
@@ -7835,6 +7973,8 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
         picker,
         range_slider,
         stepper,
+        visualization,
+        vega_visualization,
     )</code></pre>
 </details>
 </dd>
@@ -7887,7 +8027,7 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 </dd>
 <dt id="h2o_q.types.Component.frame"><code class="name">var <span class="ident">frame</span></code></dt>
 <dd>
-<div class="desc"><p>Frame</p></div>
+<div class="desc"><p>Frame.</p></div>
 </dd>
 <dt id="h2o_q.types.Component.label"><code class="name">var <span class="ident">label</span></code></dt>
 <dd>
@@ -7903,7 +8043,7 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 </dd>
 <dt id="h2o_q.types.Component.picker"><code class="name">var <span class="ident">picker</span></code></dt>
 <dd>
-<div class="desc"><p>Picker</p></div>
+<div class="desc"><p>Picker.</p></div>
 </dd>
 <dt id="h2o_q.types.Component.progress"><code class="name">var <span class="ident">progress</span></code></dt>
 <dd>
@@ -7911,7 +8051,7 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 </dd>
 <dt id="h2o_q.types.Component.range_slider"><code class="name">var <span class="ident">range_slider</span></code></dt>
 <dd>
-<div class="desc"><p>RangeSlider</p></div>
+<div class="desc"><p>Range Slider.</p></div>
 </dd>
 <dt id="h2o_q.types.Component.separator"><code class="name">var <span class="ident">separator</span></code></dt>
 <dd>
@@ -7927,7 +8067,7 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 </dd>
 <dt id="h2o_q.types.Component.stepper"><code class="name">var <span class="ident">stepper</span></code></dt>
 <dd>
-<div class="desc"><p>Stepper</p></div>
+<div class="desc"><p>Stepper.</p></div>
 </dd>
 <dt id="h2o_q.types.Component.table"><code class="name">var <span class="ident">table</span></code></dt>
 <dd>
@@ -7968,6 +8108,14 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 <dt id="h2o_q.types.Component.toggle"><code class="name">var <span class="ident">toggle</span></code></dt>
 <dd>
 <div class="desc"><p>Toggle.</p></div>
+</dd>
+<dt id="h2o_q.types.Component.vega_visualization"><code class="name">var <span class="ident">vega_visualization</span></code></dt>
+<dd>
+<div class="desc"><p>Vega-lite Visualization.</p></div>
+</dd>
+<dt id="h2o_q.types.Component.visualization"><code class="name">var <span class="ident">visualization</span></code></dt>
+<dd>
+<div class="desc"><p>Visualization.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -8016,6 +8164,8 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
         picker=None if self.picker is None else self.picker.dump(),
         range_slider=None if self.range_slider is None else self.range_slider.dump(),
         stepper=None if self.stepper is None else self.stepper.dump(),
+        visualization=None if self.visualization is None else self.visualization.dump(),
+        vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
     )</code></pre>
 </details>
 </dd>
@@ -18754,6 +18904,288 @@ def load(__d: Dict) -&gt; &#39;VegaCard&#39;:
 </dd>
 </dl>
 </dd>
+<dt id="h2o_q.types.VegaVisualization"><code class="flex name class">
+<span>class <span class="ident">VegaVisualization</span></span>
+<span>(</span><span>specification: str, data: Union[dict, str, NoneType] = None, width: Union[str, NoneType] = None, height: Union[str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a Vega-lite plot for display inside a form.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class VegaVisualization:
+    &#34;&#34;&#34;Create a Vega-lite plot for display inside a form.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            specification: str,
+            data: Optional[PackedRecord] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+    ):
+        self.specification = specification
+        &#34;&#34;&#34;The Vega-lite specification.&#34;&#34;&#34;
+        self.data = data
+        &#34;&#34;&#34;Data for the plot, if any.&#34;&#34;&#34;
+        self.width = width
+        &#34;&#34;&#34;The width of the visualization. Defaults to 100%.&#34;&#34;&#34;
+        self.height = height
+        &#34;&#34;&#34;The height of the visualization. Defaults to 300px.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.specification is None:
+            raise ValueError(&#39;VegaVisualization.specification is required.&#39;)
+        return _dump(
+            specification=self.specification,
+            data=self.data,
+            width=self.width,
+            height=self.height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;VegaVisualization&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_specification: Any = __d.get(&#39;specification&#39;)
+        if __d_specification is None:
+            raise ValueError(&#39;VegaVisualization.specification is required.&#39;)
+        __d_data: Any = __d.get(&#39;data&#39;)
+        __d_width: Any = __d.get(&#39;width&#39;)
+        __d_height: Any = __d.get(&#39;height&#39;)
+        specification: str = __d_specification
+        data: Optional[PackedRecord] = __d_data
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        return VegaVisualization(
+            specification,
+            data,
+            width,
+            height,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.VegaVisualization.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_VegaVisualization__d: Dict) ‑> <a title="h2o_q.types.VegaVisualization" href="#h2o_q.types.VegaVisualization">VegaVisualization</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;VegaVisualization&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_specification: Any = __d.get(&#39;specification&#39;)
+    if __d_specification is None:
+        raise ValueError(&#39;VegaVisualization.specification is required.&#39;)
+    __d_data: Any = __d.get(&#39;data&#39;)
+    __d_width: Any = __d.get(&#39;width&#39;)
+    __d_height: Any = __d.get(&#39;height&#39;)
+    specification: str = __d_specification
+    data: Optional[PackedRecord] = __d_data
+    width: Optional[str] = __d_width
+    height: Optional[str] = __d_height
+    return VegaVisualization(
+        specification,
+        data,
+        width,
+        height,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.VegaVisualization.data"><code class="name">var <span class="ident">data</span></code></dt>
+<dd>
+<div class="desc"><p>Data for the plot, if any.</p></div>
+</dd>
+<dt id="h2o_q.types.VegaVisualization.height"><code class="name">var <span class="ident">height</span></code></dt>
+<dd>
+<div class="desc"><p>The height of the visualization. Defaults to 300px.</p></div>
+</dd>
+<dt id="h2o_q.types.VegaVisualization.specification"><code class="name">var <span class="ident">specification</span></code></dt>
+<dd>
+<div class="desc"><p>The Vega-lite specification.</p></div>
+</dd>
+<dt id="h2o_q.types.VegaVisualization.width"><code class="name">var <span class="ident">width</span></code></dt>
+<dd>
+<div class="desc"><p>The width of the visualization. Defaults to 100%.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.VegaVisualization.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.specification is None:
+        raise ValueError(&#39;VegaVisualization.specification is required.&#39;)
+    return _dump(
+        specification=self.specification,
+        data=self.data,
+        width=self.width,
+        height=self.height,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="h2o_q.types.Visualization"><code class="flex name class">
+<span>class <span class="ident">Visualization</span></span>
+<span>(</span><span>plot: <a title="h2o_q.types.Plot" href="#h2o_q.types.Plot">Plot</a>, data: Union[dict, str], width: Union[str, NoneType] = None, height: Union[str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a visualization for display inside a form.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Visualization:
+    &#34;&#34;&#34;Create a visualization for display inside a form.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            plot: Plot,
+            data: PackedRecord,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+    ):
+        self.plot = plot
+        &#34;&#34;&#34;The plot to be rendered in this visualization.&#34;&#34;&#34;
+        self.data = data
+        &#34;&#34;&#34;Data for this visualization.&#34;&#34;&#34;
+        self.width = width
+        &#34;&#34;&#34;The width of the visualization. Defaults to 100%.&#34;&#34;&#34;
+        self.height = height
+        &#34;&#34;&#34;The height of the visualization. Defaults to 300px.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.plot is None:
+            raise ValueError(&#39;Visualization.plot is required.&#39;)
+        if self.data is None:
+            raise ValueError(&#39;Visualization.data is required.&#39;)
+        return _dump(
+            plot=self.plot.dump(),
+            data=self.data,
+            width=self.width,
+            height=self.height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Visualization&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_plot: Any = __d.get(&#39;plot&#39;)
+        if __d_plot is None:
+            raise ValueError(&#39;Visualization.plot is required.&#39;)
+        __d_data: Any = __d.get(&#39;data&#39;)
+        if __d_data is None:
+            raise ValueError(&#39;Visualization.data is required.&#39;)
+        __d_width: Any = __d.get(&#39;width&#39;)
+        __d_height: Any = __d.get(&#39;height&#39;)
+        plot: Plot = Plot.load(__d_plot)
+        data: PackedRecord = __d_data
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        return Visualization(
+            plot,
+            data,
+            width,
+            height,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.Visualization.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_Visualization__d: Dict) ‑> <a title="h2o_q.types.Visualization" href="#h2o_q.types.Visualization">Visualization</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;Visualization&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_plot: Any = __d.get(&#39;plot&#39;)
+    if __d_plot is None:
+        raise ValueError(&#39;Visualization.plot is required.&#39;)
+    __d_data: Any = __d.get(&#39;data&#39;)
+    if __d_data is None:
+        raise ValueError(&#39;Visualization.data is required.&#39;)
+    __d_width: Any = __d.get(&#39;width&#39;)
+    __d_height: Any = __d.get(&#39;height&#39;)
+    plot: Plot = Plot.load(__d_plot)
+    data: PackedRecord = __d_data
+    width: Optional[str] = __d_width
+    height: Optional[str] = __d_height
+    return Visualization(
+        plot,
+        data,
+        width,
+        height,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.Visualization.data"><code class="name">var <span class="ident">data</span></code></dt>
+<dd>
+<div class="desc"><p>Data for this visualization.</p></div>
+</dd>
+<dt id="h2o_q.types.Visualization.height"><code class="name">var <span class="ident">height</span></code></dt>
+<dd>
+<div class="desc"><p>The height of the visualization. Defaults to 300px.</p></div>
+</dd>
+<dt id="h2o_q.types.Visualization.plot"><code class="name">var <span class="ident">plot</span></code></dt>
+<dd>
+<div class="desc"><p>The plot to be rendered in this visualization.</p></div>
+</dd>
+<dt id="h2o_q.types.Visualization.width"><code class="name">var <span class="ident">width</span></code></dt>
+<dd>
+<div class="desc"><p>The width of the visualization. Defaults to 100%.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.Visualization.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.plot is None:
+        raise ValueError(&#39;Visualization.plot is required.&#39;)
+    if self.data is None:
+        raise ValueError(&#39;Visualization.data is required.&#39;)
+    return _dump(
+        plot=self.plot.dump(),
+        data=self.data,
+        width=self.width,
+        height=self.height,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="h2o_q.types.WideBarStatCard"><code class="flex name class">
 <span>class <span class="ident">WideBarStatCard</span></span>
 <span>(</span><span>box: str, title: str, value: str, aux_value: str, progress: float, plot_color: Union[str, NoneType] = None, data: Union[dict, str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
@@ -19716,6 +20148,8 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.Component.text_xs" href="#h2o_q.types.Component.text_xs">text_xs</a></code></li>
 <li><code><a title="h2o_q.types.Component.textbox" href="#h2o_q.types.Component.textbox">textbox</a></code></li>
 <li><code><a title="h2o_q.types.Component.toggle" href="#h2o_q.types.Component.toggle">toggle</a></code></li>
+<li><code><a title="h2o_q.types.Component.vega_visualization" href="#h2o_q.types.Component.vega_visualization">vega_visualization</a></code></li>
+<li><code><a title="h2o_q.types.Component.visualization" href="#h2o_q.types.Component.visualization">visualization</a></code></li>
 </ul>
 </li>
 <li>
@@ -20487,6 +20921,28 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.VegaCard.load" href="#h2o_q.types.VegaCard.load">load</a></code></li>
 <li><code><a title="h2o_q.types.VegaCard.specification" href="#h2o_q.types.VegaCard.specification">specification</a></code></li>
 <li><code><a title="h2o_q.types.VegaCard.title" href="#h2o_q.types.VegaCard.title">title</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="h2o_q.types.VegaVisualization" href="#h2o_q.types.VegaVisualization">VegaVisualization</a></code></h4>
+<ul class="two-column">
+<li><code><a title="h2o_q.types.VegaVisualization.data" href="#h2o_q.types.VegaVisualization.data">data</a></code></li>
+<li><code><a title="h2o_q.types.VegaVisualization.dump" href="#h2o_q.types.VegaVisualization.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.VegaVisualization.height" href="#h2o_q.types.VegaVisualization.height">height</a></code></li>
+<li><code><a title="h2o_q.types.VegaVisualization.load" href="#h2o_q.types.VegaVisualization.load">load</a></code></li>
+<li><code><a title="h2o_q.types.VegaVisualization.specification" href="#h2o_q.types.VegaVisualization.specification">specification</a></code></li>
+<li><code><a title="h2o_q.types.VegaVisualization.width" href="#h2o_q.types.VegaVisualization.width">width</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="h2o_q.types.Visualization" href="#h2o_q.types.Visualization">Visualization</a></code></h4>
+<ul class="two-column">
+<li><code><a title="h2o_q.types.Visualization.data" href="#h2o_q.types.Visualization.data">data</a></code></li>
+<li><code><a title="h2o_q.types.Visualization.dump" href="#h2o_q.types.Visualization.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.Visualization.height" href="#h2o_q.types.Visualization.height">height</a></code></li>
+<li><code><a title="h2o_q.types.Visualization.load" href="#h2o_q.types.Visualization.load">load</a></code></li>
+<li><code><a title="h2o_q.types.Visualization.plot" href="#h2o_q.types.Visualization.plot">plot</a></code></li>
+<li><code><a title="h2o_q.types.Visualization.width" href="#h2o_q.types.Visualization.width">width</a></code></li>
 </ul>
 </li>
 <li>

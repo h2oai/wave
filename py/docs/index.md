@@ -1,5 +1,9 @@
 
 # Change Log
+- [v0.3.0](https://github.com/h2oai/qd/releases/tag/v0.3.0) - Sep 8, 2020
+    - Added
+        - Native plots inside form cards - `ui.visualization()`.
+        - Vega plots inside form cards - `ui.vega_visualization()`.
 - [v0.2.0](https://github.com/h2oai/qd/releases/tag/v0.2.0) - Sep 4, 2020
     - Added
         - Picker component.

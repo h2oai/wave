@@ -95,6 +95,14 @@ analytical and decision-support applications.</p>
 realtime state synchronization between Python and web browsers.</p>
 <h1 id="change-log">Change Log</h1>
 <ul>
+<li><a href="https://github.com/h2oai/qd/releases/tag/v0.3.0">v0.3.0</a> - Sep 8, 2020<ul>
+<li>Added<ul>
+<li>Native plots inside form cards - <code><a title="h2o_q.ui.visualization" href="ui.html#h2o_q.ui.visualization">visualization()</a></code>.</li>
+<li>Vega plots inside form cards - <code><a title="h2o_q.ui.vega_visualization" href="ui.html#h2o_q.ui.vega_visualization">vega_visualization()</a></code>.</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="https://github.com/h2oai/qd/releases/tag/v0.2.0">v0.2.0</a> - Sep 4, 2020<ul>
 <li>Added<ul>
 <li>Picker component.</li>
@@ -4113,6 +4121,33 @@ v.data = [(i * 10, i * 10 + 10, x) for i, (c, x, dx) in enumerate([f.next() for 
 
 page.save()
 </code></pre>
+<h2 id="plot-form">Plot / Form</h2>
+<p>Display a plot inside a form.</p>
+<pre><code class="py">from synth import FakeCategoricalSeries
+from h2o_q import site, data, ui
+
+page = site['/demo']
+
+n = 20
+f = FakeCategoricalSeries()
+v = page.add('example', ui.form_card(
+    box='1 1 4 5',
+    items=[
+        ui.text_xl('Example 1'),
+        ui.visualization(
+            plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)]),
+            data=data(fields='product price', rows=[(c, x) for c, x, _ in [f.next() for _ in range(n)]], pack=True),
+        ),
+        ui.text_xl('Example 2'),
+        ui.visualization(
+            plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)]),
+            data=data(fields='product price', rows=[(c, x) for c, x, _ in [f.next() for _ in range(n)]], pack=True),
+        ),
+    ],
+))
+
+page.save()
+</code></pre>
 <h2 id="plot-vega-lite">Plot / Vega-lite</h2>
 <p>Make a plot using Vega-lite.</p>
 <pre><code class="py">from h2o_q import site, data, ui
@@ -4220,6 +4255,63 @@ while True:
     # Update the plot's data rows
     vis.data = poll()
     page.save()
+</code></pre>
+<h2 id="plot-vega-lite-form">Plot / Vega-lite / Form</h2>
+<p>Display a Vega-lite plot inside a form card</p>
+<pre><code class="py">from h2o_q import site, data, ui
+import random
+import time
+
+page = site['/demo']
+
+spec = '''
+{
+  &quot;description&quot;: &quot;A simple bar plot with embedded data.&quot;,
+  &quot;mark&quot;: &quot;bar&quot;,
+  &quot;encoding&quot;: {
+    &quot;x&quot;: {&quot;field&quot;: &quot;a&quot;, &quot;type&quot;: &quot;ordinal&quot;},
+    &quot;y&quot;: {&quot;field&quot;: &quot;b&quot;, &quot;type&quot;: &quot;quantitative&quot;}
+  }
+}
+'''
+
+
+# Get data rows for our plot.
+# Typically, this data would be read from some external data source.
+def poll():
+    return [
+        [&quot;A&quot;, rnd()], [&quot;B&quot;, rnd()], [&quot;C&quot;, rnd()],
+        [&quot;D&quot;, rnd()], [&quot;E&quot;, rnd()], [&quot;F&quot;, rnd()],
+        [&quot;G&quot;, rnd()], [&quot;H&quot;, rnd()], [&quot;I&quot;, rnd()]
+    ]
+
+
+# Generate random datum between 1 and 100
+def rnd(): return random.randint(1, 100)
+
+
+page['example'] = ui.form_card(
+    box='1 1 2 -1',
+    items=[
+        ui.text_xl('Example 1'),
+        ui.vega_visualization(
+            specification=spec,
+            data=data(fields=[&quot;a&quot;, &quot;b&quot;], rows=poll(), pack=True),
+        ),
+        ui.text_xl('Example 2'),
+        ui.vega_visualization(
+            specification=spec,
+            data=data(fields=[&quot;a&quot;, &quot;b&quot;], rows=poll(), pack=True),
+        ),
+        ui.text_xl('Example 3'),
+        ui.vega_visualization(
+            specification=spec,
+            data=data(fields=[&quot;a&quot;, &quot;b&quot;], rows=poll(), pack=True),
+        ),
+    ],
+)
+
+page.save()
 </code></pre>
 <h2 id="plot-altair">Plot / Altair</h2>
 <p>Use Altair to create plot specifications for the Vega card.</p>
@@ -5236,8 +5328,10 @@ from .test import test, run_tests</code></pre>
 <li><a href="#plot-area-line-groups">Plot / Area + Line / Groups</a></li>
 <li><a href="#plot-polygon">Plot / Polygon</a></li>
 <li><a href="#plot-histogram">Plot / Histogram</a></li>
+<li><a href="#plot-form">Plot / Form</a></li>
 <li><a href="#plot-vega-lite">Plot / Vega-lite</a></li>
 <li><a href="#plot-vega-lite-update">Plot / Vega-lite / Update</a></li>
+<li><a href="#plot-vega-lite-form">Plot / Vega-lite / Form</a></li>
 <li><a href="#plot-altair">Plot / Altair</a></li>
 <li><a href="#plot-bokeh">Plot / Bokeh</a></li>
 <li><a href="#plot-matplotlib">Plot / Matplotlib</a></li>

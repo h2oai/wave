@@ -1350,6 +1350,247 @@ def stepper(
     ))
 
 
+def mark(
+        coord: Optional[str] = None,
+        type: Optional[str] = None,
+        x: Optional[Value] = None,
+        x0: Optional[Value] = None,
+        x1: Optional[Value] = None,
+        x2: Optional[Value] = None,
+        x_min: Optional[float] = None,
+        x_max: Optional[float] = None,
+        x_nice: Optional[bool] = None,
+        x_scale: Optional[str] = None,
+        x_title: Optional[str] = None,
+        y: Optional[Value] = None,
+        y0: Optional[Value] = None,
+        y1: Optional[Value] = None,
+        y2: Optional[Value] = None,
+        y_min: Optional[float] = None,
+        y_max: Optional[float] = None,
+        y_nice: Optional[bool] = None,
+        y_scale: Optional[str] = None,
+        y_title: Optional[str] = None,
+        color: Optional[str] = None,
+        color_range: Optional[str] = None,
+        shape: Optional[str] = None,
+        shape_range: Optional[str] = None,
+        size: Optional[Value] = None,
+        size_range: Optional[str] = None,
+        stack: Optional[str] = None,
+        dodge: Optional[str] = None,
+        curve: Optional[str] = None,
+        fill_color: Optional[str] = None,
+        fill_opacity: Optional[float] = None,
+        stroke_color: Optional[str] = None,
+        stroke_opacity: Optional[float] = None,
+        stroke_size: Optional[float] = None,
+        stroke_dash: Optional[str] = None,
+        label: Optional[str] = None,
+        label_offset: Optional[float] = None,
+        label_offset_x: Optional[float] = None,
+        label_offset_y: Optional[float] = None,
+        label_rotation: Optional[str] = None,
+        label_position: Optional[str] = None,
+        label_overlap: Optional[str] = None,
+        label_fill_color: Optional[str] = None,
+        label_fill_opacity: Optional[float] = None,
+        label_stroke_color: Optional[str] = None,
+        label_stroke_opacity: Optional[float] = None,
+        label_stroke_size: Optional[float] = None,
+        label_font_size: Optional[float] = None,
+        label_font_weight: Optional[str] = None,
+        label_line_height: Optional[float] = None,
+        label_align: Optional[str] = None,
+        ref_stroke_color: Optional[str] = None,
+        ref_stroke_opacity: Optional[float] = None,
+        ref_stroke_size: Optional[float] = None,
+        ref_stroke_dash: Optional[str] = None,
+) -&gt; Mark:
+    &#34;&#34;&#34;Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
+    A plot can contain multiple such layers of marks.
+
+    Args:
+        coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of &#39;rect&#39;, &#39;cartesian&#39;, &#39;polar&#39;, &#39;theta&#39;, &#39;helix&#39;.
+        type: Graphical geometry. One of &#39;interval&#39;, &#39;line&#39;, &#39;path&#39;, &#39;point&#39;, &#39;area&#39;, &#39;polygon&#39;, &#39;schema&#39;, &#39;edge&#39;, &#39;heatmap&#39;.
+        x: X field or value.
+        x0: X base field or value.
+        x1: X bin lower bound field or value. For histograms.
+        x2: X bin upper bound field or value. For histograms.
+        x_min: X axis scale minimum.
+        x_max: X axis scale maximum.
+        x_nice: Whether to nice X axis scale ticks.
+        x_scale: X axis scale type. One of &#39;linear&#39;, &#39;cat&#39;, &#39;category&#39;, &#39;identity&#39;, &#39;log&#39;, &#39;pow&#39;, &#39;time&#39;, &#39;timeCat&#39;, &#39;quantize&#39;, &#39;quantile&#39;.
+        x_title: X axis title.
+        y: Y field or value.
+        y0: Y base field or value.
+        y1: Y bin lower bound field or value. For histograms.
+        y2: Y bin upper bound field or value. For histograms.
+        y_min: Y axis scale minimum.
+        y_max: Y axis scale maximum.
+        y_nice: Whether to nice Y axis scale ticks.
+        y_scale: Y axis scale type. One of &#39;linear&#39;, &#39;cat&#39;, &#39;category&#39;, &#39;identity&#39;, &#39;log&#39;, &#39;pow&#39;, &#39;time&#39;, &#39;timeCat&#39;, &#39;quantize&#39;, &#39;quantile&#39;.
+        y_title: Y axis title.
+        color: Mark color field or value.
+        color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `&#39;#fee8c8 #fdbb84 #e34a33&#39;`
+        shape: Mark shape field or value for `point` mark types. Possible values are &#39;circle&#39;, &#39;square&#39;, &#39;bowtie&#39;, &#39;diamond&#39;, &#39;hexagon&#39;, &#39;triangle&#39;, &#39;triangle-down&#39;, &#39;cross&#39;, &#39;tick&#39;, &#39;plus&#39;, &#39;hyphen&#39;, &#39;line&#39;.
+        shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `&#39;circle square diamond&#39;`
+        size: Mark size field or value.
+        size_range: Mark size range. A string containing space-separated integers, e.g. `&#39;4 30&#39;`
+        stack: Field to stack marks by, or &#39;auto&#39; to infer.
+        dodge: Field to dodge marks by, or &#39;auto&#39; to infer.
+        curve: Curve type for `line` and `area` mark types. One of &#39;none&#39;, &#39;smooth&#39;, &#39;step-before&#39;, &#39;step&#39;, &#39;step-after&#39;.
+        fill_color: Mark fill color.
+        fill_opacity: Mark fill opacity.
+        stroke_color: Mark stroke color.
+        stroke_opacity: Mark stroke opacity.
+        stroke_size: Mark stroke size.
+        stroke_dash: Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+        label: Label field or value.
+        label_offset: Distance between label and mark.
+        label_offset_x: Horizontal distance between label and mark.
+        label_offset_y: Vertical distance between label and mark.
+        label_rotation: Label rotation angle, in degrees, or &#39;none&#39; to disable automatic rotation. The default behavior is &#39;auto&#39; for automatic rotation.
+        label_position: Label position relative to the mark. One of &#39;top&#39;, &#39;bottom&#39;, &#39;middle&#39;, &#39;left&#39;, &#39;right&#39;.
+        label_overlap: Strategy to use if labels overlap. One of &#39;hide&#39;, &#39;overlap&#39;, &#39;constrain&#39;.
+        label_fill_color: Label fill color.
+        label_fill_opacity: Label fill opacity.
+        label_stroke_color: Label stroke color.
+        label_stroke_opacity: Label stroke opacity.
+        label_stroke_size: Label stroke size (line width or pen thickness).
+        label_font_size: Label font size.
+        label_font_weight: Label font weight.
+        label_line_height: Label line height.
+        label_align: Label text alignment. One of &#39;left&#39;, &#39;right&#39;, &#39;center&#39;, &#39;start&#39;, &#39;end&#39;.
+        ref_stroke_color: Reference line stroke color.
+        ref_stroke_opacity: Reference line stroke opacity.
+        ref_stroke_size: Reference line stroke size (line width or pen thickness).
+        ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+    Returns:
+        A `h2o_q.types.Mark` instance.
+    &#34;&#34;&#34;
+    return Mark(
+        coord,
+        type,
+        x,
+        x0,
+        x1,
+        x2,
+        x_min,
+        x_max,
+        x_nice,
+        x_scale,
+        x_title,
+        y,
+        y0,
+        y1,
+        y2,
+        y_min,
+        y_max,
+        y_nice,
+        y_scale,
+        y_title,
+        color,
+        color_range,
+        shape,
+        shape_range,
+        size,
+        size_range,
+        stack,
+        dodge,
+        curve,
+        fill_color,
+        fill_opacity,
+        stroke_color,
+        stroke_opacity,
+        stroke_size,
+        stroke_dash,
+        label,
+        label_offset,
+        label_offset_x,
+        label_offset_y,
+        label_rotation,
+        label_position,
+        label_overlap,
+        label_fill_color,
+        label_fill_opacity,
+        label_stroke_color,
+        label_stroke_opacity,
+        label_stroke_size,
+        label_font_size,
+        label_font_weight,
+        label_line_height,
+        label_align,
+        ref_stroke_color,
+        ref_stroke_opacity,
+        ref_stroke_size,
+        ref_stroke_dash,
+    )
+
+
+def plot(
+        marks: List[Mark],
+) -&gt; Plot:
+    &#34;&#34;&#34;Create a plot. A plot is composed of one or more graphical mark layers.
+
+    Args:
+        marks: The graphical mark layers contained in this plot.
+    Returns:
+        A `h2o_q.types.Plot` instance.
+    &#34;&#34;&#34;
+    return Plot(
+        marks,
+    )
+
+
+def visualization(
+        plot: Plot,
+        data: PackedRecord,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a visualization for display inside a form.
+
+    Args:
+        plot: The plot to be rendered in this visualization.
+        data: Data for this visualization.
+        width: The width of the visualization. Defaults to 100%.
+        height: The height of the visualization. Defaults to 300px.
+    Returns:
+        A `h2o_q.types.Visualization` instance.
+    &#34;&#34;&#34;
+    return Component(visualization=Visualization(
+        plot,
+        data,
+        width,
+        height,
+    ))
+
+
+def vega_visualization(
+        specification: str,
+        data: Optional[PackedRecord] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a Vega-lite plot for display inside a form.
+
+    Args:
+        specification: The Vega-lite specification.
+        data: Data for the plot, if any.
+        width: The width of the visualization. Defaults to 100%.
+        height: The height of the visualization. Defaults to 300px.
+    Returns:
+        A `h2o_q.types.VegaVisualization` instance.
+    &#34;&#34;&#34;
+    return Component(vega_visualization=VegaVisualization(
+        specification,
+        data,
+        width,
+        height,
+    ))
+
+
 def component(
         text: Optional[Text] = None,
         text_xl: Optional[TextXl] = None,
@@ -1383,6 +1624,8 @@ def component(
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
         stepper: Optional[Stepper] = None,
+        visualization: Optional[Visualization] = None,
+        vega_visualization: Optional[VegaVisualization] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a component.
 
@@ -1415,10 +1658,12 @@ def component(
         link: Link.
         tabs: Tabs.
         expander: Expander.
-        frame: Frame
-        picker: Picker
-        range_slider: RangeSlider
-        stepper: Stepper
+        frame: Frame.
+        picker: Picker.
+        range_slider: Range Slider.
+        stepper: Stepper.
+        visualization: Visualization.
+        vega_visualization: Vega-lite Visualization.
     Returns:
         A `h2o_q.types.Component` instance.
     &#34;&#34;&#34;
@@ -1455,6 +1700,8 @@ def component(
         picker,
         range_slider,
         stepper,
+        visualization,
+        vega_visualization,
     )
 
 
@@ -1936,199 +2183,6 @@ def pixel_art_card(
         title,
         data,
         commands,
-    )
-
-
-def mark(
-        coord: Optional[str] = None,
-        type: Optional[str] = None,
-        x: Optional[Value] = None,
-        x0: Optional[Value] = None,
-        x1: Optional[Value] = None,
-        x2: Optional[Value] = None,
-        x_min: Optional[float] = None,
-        x_max: Optional[float] = None,
-        x_nice: Optional[bool] = None,
-        x_scale: Optional[str] = None,
-        x_title: Optional[str] = None,
-        y: Optional[Value] = None,
-        y0: Optional[Value] = None,
-        y1: Optional[Value] = None,
-        y2: Optional[Value] = None,
-        y_min: Optional[float] = None,
-        y_max: Optional[float] = None,
-        y_nice: Optional[bool] = None,
-        y_scale: Optional[str] = None,
-        y_title: Optional[str] = None,
-        color: Optional[str] = None,
-        color_range: Optional[str] = None,
-        shape: Optional[str] = None,
-        shape_range: Optional[str] = None,
-        size: Optional[Value] = None,
-        size_range: Optional[str] = None,
-        stack: Optional[str] = None,
-        dodge: Optional[str] = None,
-        curve: Optional[str] = None,
-        fill_color: Optional[str] = None,
-        fill_opacity: Optional[float] = None,
-        stroke_color: Optional[str] = None,
-        stroke_opacity: Optional[float] = None,
-        stroke_size: Optional[float] = None,
-        stroke_dash: Optional[str] = None,
-        label: Optional[str] = None,
-        label_offset: Optional[float] = None,
-        label_offset_x: Optional[float] = None,
-        label_offset_y: Optional[float] = None,
-        label_rotation: Optional[str] = None,
-        label_position: Optional[str] = None,
-        label_overlap: Optional[str] = None,
-        label_fill_color: Optional[str] = None,
-        label_fill_opacity: Optional[float] = None,
-        label_stroke_color: Optional[str] = None,
-        label_stroke_opacity: Optional[float] = None,
-        label_stroke_size: Optional[float] = None,
-        label_font_size: Optional[float] = None,
-        label_font_weight: Optional[str] = None,
-        label_line_height: Optional[float] = None,
-        label_align: Optional[str] = None,
-        ref_stroke_color: Optional[str] = None,
-        ref_stroke_opacity: Optional[float] = None,
-        ref_stroke_size: Optional[float] = None,
-        ref_stroke_dash: Optional[str] = None,
-) -&gt; Mark:
-    &#34;&#34;&#34;Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
-    A plot can contain multiple such layers of marks.
-
-    Args:
-        coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of &#39;rect&#39;, &#39;cartesian&#39;, &#39;polar&#39;, &#39;theta&#39;, &#39;helix&#39;.
-        type: Graphical geometry. One of &#39;interval&#39;, &#39;line&#39;, &#39;path&#39;, &#39;point&#39;, &#39;area&#39;, &#39;polygon&#39;, &#39;schema&#39;, &#39;edge&#39;, &#39;heatmap&#39;.
-        x: X field or value.
-        x0: X base field or value.
-        x1: X bin lower bound field or value. For histograms.
-        x2: X bin upper bound field or value. For histograms.
-        x_min: X axis scale minimum.
-        x_max: X axis scale maximum.
-        x_nice: Whether to nice X axis scale ticks.
-        x_scale: X axis scale type. One of &#39;linear&#39;, &#39;cat&#39;, &#39;category&#39;, &#39;identity&#39;, &#39;log&#39;, &#39;pow&#39;, &#39;time&#39;, &#39;timeCat&#39;, &#39;quantize&#39;, &#39;quantile&#39;.
-        x_title: X axis title.
-        y: Y field or value.
-        y0: Y base field or value.
-        y1: Y bin lower bound field or value. For histograms.
-        y2: Y bin upper bound field or value. For histograms.
-        y_min: Y axis scale minimum.
-        y_max: Y axis scale maximum.
-        y_nice: Whether to nice Y axis scale ticks.
-        y_scale: Y axis scale type. One of &#39;linear&#39;, &#39;cat&#39;, &#39;category&#39;, &#39;identity&#39;, &#39;log&#39;, &#39;pow&#39;, &#39;time&#39;, &#39;timeCat&#39;, &#39;quantize&#39;, &#39;quantile&#39;.
-        y_title: Y axis title.
-        color: Mark color field or value.
-        color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `&#39;#fee8c8 #fdbb84 #e34a33&#39;`
-        shape: Mark shape field or value for `point` mark types. Possible values are &#39;circle&#39;, &#39;square&#39;, &#39;bowtie&#39;, &#39;diamond&#39;, &#39;hexagon&#39;, &#39;triangle&#39;, &#39;triangle-down&#39;, &#39;cross&#39;, &#39;tick&#39;, &#39;plus&#39;, &#39;hyphen&#39;, &#39;line&#39;.
-        shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `&#39;circle square diamond&#39;`
-        size: Mark size field or value.
-        size_range: Mark size range. A string containing space-separated integers, e.g. `&#39;4 30&#39;`
-        stack: Field to stack marks by, or &#39;auto&#39; to infer.
-        dodge: Field to dodge marks by, or &#39;auto&#39; to infer.
-        curve: Curve type for `line` and `area` mark types. One of &#39;none&#39;, &#39;smooth&#39;, &#39;step-before&#39;, &#39;step&#39;, &#39;step-after&#39;.
-        fill_color: Mark fill color.
-        fill_opacity: Mark fill opacity.
-        stroke_color: Mark stroke color.
-        stroke_opacity: Mark stroke opacity.
-        stroke_size: Mark stroke size.
-        stroke_dash: Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
-        label: Label field or value.
-        label_offset: Distance between label and mark.
-        label_offset_x: Horizontal distance between label and mark.
-        label_offset_y: Vertical distance between label and mark.
-        label_rotation: Label rotation angle, in degrees, or &#39;none&#39; to disable automatic rotation. The default behavior is &#39;auto&#39; for automatic rotation.
-        label_position: Label position relative to the mark. One of &#39;top&#39;, &#39;bottom&#39;, &#39;middle&#39;, &#39;left&#39;, &#39;right&#39;.
-        label_overlap: Strategy to use if labels overlap. One of &#39;hide&#39;, &#39;overlap&#39;, &#39;constrain&#39;.
-        label_fill_color: Label fill color.
-        label_fill_opacity: Label fill opacity.
-        label_stroke_color: Label stroke color.
-        label_stroke_opacity: Label stroke opacity.
-        label_stroke_size: Label stroke size (line width or pen thickness).
-        label_font_size: Label font size.
-        label_font_weight: Label font weight.
-        label_line_height: Label line height.
-        label_align: Label text alignment. One of &#39;left&#39;, &#39;right&#39;, &#39;center&#39;, &#39;start&#39;, &#39;end&#39;.
-        ref_stroke_color: Reference line stroke color.
-        ref_stroke_opacity: Reference line stroke opacity.
-        ref_stroke_size: Reference line stroke size (line width or pen thickness).
-        ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
-    Returns:
-        A `h2o_q.types.Mark` instance.
-    &#34;&#34;&#34;
-    return Mark(
-        coord,
-        type,
-        x,
-        x0,
-        x1,
-        x2,
-        x_min,
-        x_max,
-        x_nice,
-        x_scale,
-        x_title,
-        y,
-        y0,
-        y1,
-        y2,
-        y_min,
-        y_max,
-        y_nice,
-        y_scale,
-        y_title,
-        color,
-        color_range,
-        shape,
-        shape_range,
-        size,
-        size_range,
-        stack,
-        dodge,
-        curve,
-        fill_color,
-        fill_opacity,
-        stroke_color,
-        stroke_opacity,
-        stroke_size,
-        stroke_dash,
-        label,
-        label_offset,
-        label_offset_x,
-        label_offset_y,
-        label_rotation,
-        label_position,
-        label_overlap,
-        label_fill_color,
-        label_fill_opacity,
-        label_stroke_color,
-        label_stroke_opacity,
-        label_stroke_size,
-        label_font_size,
-        label_font_weight,
-        label_line_height,
-        label_align,
-        ref_stroke_color,
-        ref_stroke_opacity,
-        ref_stroke_size,
-        ref_stroke_dash,
-    )
-
-
-def plot(
-        marks: List[Mark],
-) -&gt; Plot:
-    &#34;&#34;&#34;Create a plot. A plot is composed of one or more graphical mark layers.
-
-    Args:
-        marks: The graphical mark layers contained in this plot.
-    Returns:
-        A `h2o_q.types.Plot` instance.
-    &#34;&#34;&#34;
-    return Plot(
-        marks,
     )
 
 
@@ -3252,7 +3306,7 @@ When collapsed the user can select a new value by typing.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.component"><code class="name flex">
-<span>def <span class="ident">component</span></span>(<span>text: Union[<a title="h2o_q.types.Text" href="types.html#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="types.html#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="types.html#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="types.html#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="types.html#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="types.html#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="types.html#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="types.html#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="types.html#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="types.html#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="types.html#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="types.html#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="types.html#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="types.html#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="types.html#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="types.html#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="types.html#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="types.html#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="types.html#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="types.html#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="types.html#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="types.html#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="types.html#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="types.html#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="types.html#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="types.html#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="types.html#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="types.html#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="types.html#h2o_q.types.Frame">Frame</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="types.html#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="types.html#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="types.html#h2o_q.types.Stepper">Stepper</a>, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">component</span></span>(<span>text: Union[<a title="h2o_q.types.Text" href="types.html#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="types.html#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="types.html#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="types.html#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="types.html#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="types.html#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="types.html#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="types.html#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="types.html#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="types.html#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="types.html#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="types.html#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="types.html#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="types.html#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="types.html#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="types.html#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="types.html#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="types.html#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="types.html#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="types.html#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="types.html#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="types.html#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="types.html#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="types.html#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="types.html#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="types.html#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="types.html#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="types.html#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="types.html#h2o_q.types.Frame">Frame</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="types.html#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="types.html#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="types.html#h2o_q.types.Stepper">Stepper</a>, NoneType] = None, visualization: Union[<a title="h2o_q.types.Visualization" href="types.html#h2o_q.types.Visualization">Visualization</a>, NoneType] = None, vega_visualization: Union[<a title="h2o_q.types.VegaVisualization" href="types.html#h2o_q.types.VegaVisualization">VegaVisualization</a>, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a component.</p>
@@ -3315,13 +3369,17 @@ When collapsed the user can select a new value by typing.</p>
 <dt><strong><code>expander</code></strong></dt>
 <dd>Expander.</dd>
 <dt><strong><code>frame</code></strong></dt>
-<dd>Frame</dd>
+<dd>Frame.</dd>
 <dt><strong><code>picker</code></strong></dt>
-<dd>Picker</dd>
+<dd>Picker.</dd>
 <dt><strong><code>range_slider</code></strong></dt>
-<dd>RangeSlider</dd>
+<dd>Range Slider.</dd>
 <dt><strong><code>stepper</code></strong></dt>
-<dd>Stepper</dd>
+<dd>Stepper.</dd>
+<dt><strong><code>visualization</code></strong></dt>
+<dd>Visualization.</dd>
+<dt><strong><code>vega_visualization</code></strong></dt>
+<dd>Vega-lite Visualization.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>A <code><a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></code> instance.</p></div>
@@ -3362,6 +3420,8 @@ When collapsed the user can select a new value by typing.</p>
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
         stepper: Optional[Stepper] = None,
+        visualization: Optional[Visualization] = None,
+        vega_visualization: Optional[VegaVisualization] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a component.
 
@@ -3394,10 +3454,12 @@ When collapsed the user can select a new value by typing.</p>
         link: Link.
         tabs: Tabs.
         expander: Expander.
-        frame: Frame
-        picker: Picker
-        range_slider: RangeSlider
-        stepper: Stepper
+        frame: Frame.
+        picker: Picker.
+        range_slider: Range Slider.
+        stepper: Stepper.
+        visualization: Visualization.
+        vega_visualization: Vega-lite Visualization.
     Returns:
         A `h2o_q.types.Component` instance.
     &#34;&#34;&#34;
@@ -3434,6 +3496,8 @@ When collapsed the user can select a new value by typing.</p>
         picker,
         range_slider,
         stepper,
+        visualization,
+        vega_visualization,
     )</code></pre>
 </details>
 </dd>
@@ -6961,6 +7025,98 @@ In other words, if a physical switch would work for the action, a Toggle is prob
     )</code></pre>
 </details>
 </dd>
+<dt id="h2o_q.ui.vega_visualization"><code class="name flex">
+<span>def <span class="ident">vega_visualization</span></span>(<span>specification: str, data: Union[dict, str, NoneType] = None, width: Union[str, NoneType] = None, height: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a Vega-lite plot for display inside a form.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>specification</code></strong></dt>
+<dd>The Vega-lite specification.</dd>
+<dt><strong><code>data</code></strong></dt>
+<dd>Data for the plot, if any.</dd>
+<dt><strong><code>width</code></strong></dt>
+<dd>The width of the visualization. Defaults to 100%.</dd>
+<dt><strong><code>height</code></strong></dt>
+<dd>The height of the visualization. Defaults to 300px.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.VegaVisualization" href="types.html#h2o_q.types.VegaVisualization">VegaVisualization</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vega_visualization(
+        specification: str,
+        data: Optional[PackedRecord] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a Vega-lite plot for display inside a form.
+
+    Args:
+        specification: The Vega-lite specification.
+        data: Data for the plot, if any.
+        width: The width of the visualization. Defaults to 100%.
+        height: The height of the visualization. Defaults to 300px.
+    Returns:
+        A `h2o_q.types.VegaVisualization` instance.
+    &#34;&#34;&#34;
+    return Component(vega_visualization=VegaVisualization(
+        specification,
+        data,
+        width,
+        height,
+    ))</code></pre>
+</details>
+</dd>
+<dt id="h2o_q.ui.visualization"><code class="name flex">
+<span>def <span class="ident">visualization</span></span>(<span>plot: <a title="h2o_q.types.Plot" href="types.html#h2o_q.types.Plot">Plot</a>, data: Union[dict, str], width: Union[str, NoneType] = None, height: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a visualization for display inside a form.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>plot</code></strong></dt>
+<dd>The plot to be rendered in this visualization.</dd>
+<dt><strong><code>data</code></strong></dt>
+<dd>Data for this visualization.</dd>
+<dt><strong><code>width</code></strong></dt>
+<dd>The width of the visualization. Defaults to 100%.</dd>
+<dt><strong><code>height</code></strong></dt>
+<dd>The height of the visualization. Defaults to 300px.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.Visualization" href="types.html#h2o_q.types.Visualization">Visualization</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def visualization(
+        plot: Plot,
+        data: PackedRecord,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Create a visualization for display inside a form.
+
+    Args:
+        plot: The plot to be rendered in this visualization.
+        data: Data for this visualization.
+        width: The width of the visualization. Defaults to 100%.
+        height: The height of the visualization. Defaults to 300px.
+    Returns:
+        A `h2o_q.types.Visualization` instance.
+    &#34;&#34;&#34;
+    return Component(visualization=Visualization(
+        plot,
+        data,
+        width,
+        height,
+    ))</code></pre>
+</details>
+</dd>
 <dt id="h2o_q.ui.wide_bar_stat_card"><code class="name flex">
 <span>def <span class="ident">wide_bar_stat_card</span></span>(<span>box: str, title: str, value: str, aux_value: str, progress: float, plot_color: Union[str, NoneType] = None, data: Union[dict, str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.WideBarStatCard" href="types.html#h2o_q.types.WideBarStatCard">WideBarStatCard</a></span>
 </code></dt>
@@ -7274,6 +7430,8 @@ In other words, if a physical switch would work for the action, a Toggle is prob
 <li><code><a title="h2o_q.ui.toggle" href="#h2o_q.ui.toggle">toggle</a></code></li>
 <li><code><a title="h2o_q.ui.toolbar_card" href="#h2o_q.ui.toolbar_card">toolbar_card</a></code></li>
 <li><code><a title="h2o_q.ui.vega_card" href="#h2o_q.ui.vega_card">vega_card</a></code></li>
+<li><code><a title="h2o_q.ui.vega_visualization" href="#h2o_q.ui.vega_visualization">vega_visualization</a></code></li>
+<li><code><a title="h2o_q.ui.visualization" href="#h2o_q.ui.visualization">visualization</a></code></li>
 <li><code><a title="h2o_q.ui.wide_bar_stat_card" href="#h2o_q.ui.wide_bar_stat_card">wide_bar_stat_card</a></code></li>
 <li><code><a title="h2o_q.ui.wide_gauge_stat_card" href="#h2o_q.ui.wide_gauge_stat_card">wide_gauge_stat_card</a></code></li>
 <li><code><a title="h2o_q.ui.wide_series_stat_card" href="#h2o_q.ui.wide_series_stat_card">wide_series_stat_card</a></code></li>
