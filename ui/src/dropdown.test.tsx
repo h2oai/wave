@@ -91,14 +91,13 @@ describe('Dropdown.tsx', () => {
     expect(T.qd.args[name]).toMatchObject(['A', 'B'])
   })
 
-  it('Returns empty array on deselect', () => {
-    const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A', 'B'] }} />)
+  it('Shows correct selection in UI on select', () => {
+    const { getByTestId, getByText, getAllByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'] }} />)
 
     fireEvent.click(getByTestId(name))
-    fireEvent.click(getByText('Choice A').parentElement!)
-    fireEvent.click(getByText('Choice B').parentElement!)
+    fireEvent.click(getAllByText('Choice B')[0].parentElement!)
 
-    expect(T.qd.args[name]).toMatchObject([])
+    expect(getByText('Choice A, Choice B')).toBeInTheDocument()
   })
 
   it('Selects all options on Select all', () => {
