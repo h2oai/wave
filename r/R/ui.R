@@ -1370,19 +1370,303 @@ ui_stepper <- function(
   return(.o)
 }
 
+#' Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
+#' A plot can contain multiple such layers of marks.
+#'
+#' @param coord Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`.
+#'   One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
+#' @param type Graphical geometry.
+#'   One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
+#' @param x X field or value.
+#' @param x0 X base field or value.
+#' @param x1 X bin lower bound field or value. For histograms.
+#' @param x2 X bin upper bound field or value. For histograms.
+#' @param x_min X axis scale minimum.
+#' @param x_max X axis scale maximum.
+#' @param x_nice Whether to nice X axis scale ticks.
+#' @param x_scale X axis scale type.
+#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+#' @param x_title X axis title.
+#' @param y Y field or value.
+#' @param y0 Y base field or value.
+#' @param y1 Y bin lower bound field or value. For histograms.
+#' @param y2 Y bin upper bound field or value. For histograms.
+#' @param y_min Y axis scale minimum.
+#' @param y_max Y axis scale maximum.
+#' @param y_nice Whether to nice Y axis scale ticks.
+#' @param y_scale Y axis scale type.
+#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+#' @param y_title Y axis title.
+#' @param color Mark color field or value.
+#' @param color_range Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
+#' @param shape Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
+#' @param shape_range Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
+#' @param size Mark size field or value.
+#' @param size_range Mark size range. A string containing space-separated integers, e.g. `'4 30'`
+#' @param stack Field to stack marks by, or 'auto' to infer.
+#' @param dodge Field to dodge marks by, or 'auto' to infer.
+#' @param curve Curve type for `line` and `area` mark types.
+#'   One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
+#' @param fill_color Mark fill color.
+#' @param fill_opacity Mark fill opacity.
+#' @param stroke_color Mark stroke color.
+#' @param stroke_opacity Mark stroke opacity.
+#' @param stroke_size Mark stroke size.
+#' @param stroke_dash Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+#' @param label Label field or value.
+#' @param label_offset Distance between label and mark.
+#' @param label_offset_x Horizontal distance between label and mark.
+#' @param label_offset_y Vertical distance between label and mark.
+#' @param label_rotation Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
+#' @param label_position Label position relative to the mark.
+#'   One of 'top', 'bottom', 'middle', 'left', 'right'.
+#' @param label_overlap Strategy to use if labels overlap.
+#'   One of 'hide', 'overlap', 'constrain'.
+#' @param label_fill_color Label fill color.
+#' @param label_fill_opacity Label fill opacity.
+#' @param label_stroke_color Label stroke color.
+#' @param label_stroke_opacity Label stroke opacity.
+#' @param label_stroke_size Label stroke size (line width or pen thickness).
+#' @param label_font_size Label font size.
+#' @param label_font_weight Label font weight.
+#' @param label_line_height Label line height.
+#' @param label_align Label text alignment.
+#'   One of 'left', 'right', 'center', 'start', 'end'.
+#' @param ref_stroke_color Reference line stroke color.
+#' @param ref_stroke_opacity Reference line stroke opacity.
+#' @param ref_stroke_size Reference line stroke size (line width or pen thickness).
+#' @param ref_stroke_dash Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+#' @return A Mark instance.
+ui_mark <- function(
+  coord = NULL,
+  type = NULL,
+  x = NULL,
+  x0 = NULL,
+  x1 = NULL,
+  x2 = NULL,
+  x_min = NULL,
+  x_max = NULL,
+  x_nice = NULL,
+  x_scale = NULL,
+  x_title = NULL,
+  y = NULL,
+  y0 = NULL,
+  y1 = NULL,
+  y2 = NULL,
+  y_min = NULL,
+  y_max = NULL,
+  y_nice = NULL,
+  y_scale = NULL,
+  y_title = NULL,
+  color = NULL,
+  color_range = NULL,
+  shape = NULL,
+  shape_range = NULL,
+  size = NULL,
+  size_range = NULL,
+  stack = NULL,
+  dodge = NULL,
+  curve = NULL,
+  fill_color = NULL,
+  fill_opacity = NULL,
+  stroke_color = NULL,
+  stroke_opacity = NULL,
+  stroke_size = NULL,
+  stroke_dash = NULL,
+  label = NULL,
+  label_offset = NULL,
+  label_offset_x = NULL,
+  label_offset_y = NULL,
+  label_rotation = NULL,
+  label_position = NULL,
+  label_overlap = NULL,
+  label_fill_color = NULL,
+  label_fill_opacity = NULL,
+  label_stroke_color = NULL,
+  label_stroke_opacity = NULL,
+  label_stroke_size = NULL,
+  label_font_size = NULL,
+  label_font_weight = NULL,
+  label_line_height = NULL,
+  label_align = NULL,
+  ref_stroke_color = NULL,
+  ref_stroke_opacity = NULL,
+  ref_stroke_size = NULL,
+  ref_stroke_dash = NULL) {
+  # TODO Validate coord
+  # TODO Validate type
+  # TODO Validate x: V
+  # TODO Validate x0: V
+  # TODO Validate x1: V
+  # TODO Validate x2: V
+  .guard_scalar("x_min", "numeric", x_min)
+  .guard_scalar("x_max", "numeric", x_max)
+  .guard_scalar("x_nice", "logical", x_nice)
+  # TODO Validate x_scale
+  .guard_scalar("x_title", "character", x_title)
+  # TODO Validate y: V
+  # TODO Validate y0: V
+  # TODO Validate y1: V
+  # TODO Validate y2: V
+  .guard_scalar("y_min", "numeric", y_min)
+  .guard_scalar("y_max", "numeric", y_max)
+  .guard_scalar("y_nice", "logical", y_nice)
+  # TODO Validate y_scale
+  .guard_scalar("y_title", "character", y_title)
+  .guard_scalar("color", "character", color)
+  .guard_scalar("color_range", "character", color_range)
+  .guard_scalar("shape", "character", shape)
+  .guard_scalar("shape_range", "character", shape_range)
+  # TODO Validate size: V
+  .guard_scalar("size_range", "character", size_range)
+  .guard_scalar("stack", "character", stack)
+  .guard_scalar("dodge", "character", dodge)
+  # TODO Validate curve
+  .guard_scalar("fill_color", "character", fill_color)
+  .guard_scalar("fill_opacity", "numeric", fill_opacity)
+  .guard_scalar("stroke_color", "character", stroke_color)
+  .guard_scalar("stroke_opacity", "numeric", stroke_opacity)
+  .guard_scalar("stroke_size", "numeric", stroke_size)
+  .guard_scalar("stroke_dash", "character", stroke_dash)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("label_offset", "numeric", label_offset)
+  .guard_scalar("label_offset_x", "numeric", label_offset_x)
+  .guard_scalar("label_offset_y", "numeric", label_offset_y)
+  .guard_scalar("label_rotation", "character", label_rotation)
+  # TODO Validate label_position
+  # TODO Validate label_overlap
+  .guard_scalar("label_fill_color", "character", label_fill_color)
+  .guard_scalar("label_fill_opacity", "numeric", label_fill_opacity)
+  .guard_scalar("label_stroke_color", "character", label_stroke_color)
+  .guard_scalar("label_stroke_opacity", "numeric", label_stroke_opacity)
+  .guard_scalar("label_stroke_size", "numeric", label_stroke_size)
+  .guard_scalar("label_font_size", "numeric", label_font_size)
+  .guard_scalar("label_font_weight", "character", label_font_weight)
+  .guard_scalar("label_line_height", "numeric", label_line_height)
+  # TODO Validate label_align
+  .guard_scalar("ref_stroke_color", "character", ref_stroke_color)
+  .guard_scalar("ref_stroke_opacity", "numeric", ref_stroke_opacity)
+  .guard_scalar("ref_stroke_size", "numeric", ref_stroke_size)
+  .guard_scalar("ref_stroke_dash", "character", ref_stroke_dash)
+  .o <- list(
+    coord=coord,
+    type=type,
+    x=x,
+    x0=x0,
+    x1=x1,
+    x2=x2,
+    x_min=x_min,
+    x_max=x_max,
+    x_nice=x_nice,
+    x_scale=x_scale,
+    x_title=x_title,
+    y=y,
+    y0=y0,
+    y1=y1,
+    y2=y2,
+    y_min=y_min,
+    y_max=y_max,
+    y_nice=y_nice,
+    y_scale=y_scale,
+    y_title=y_title,
+    color=color,
+    color_range=color_range,
+    shape=shape,
+    shape_range=shape_range,
+    size=size,
+    size_range=size_range,
+    stack=stack,
+    dodge=dodge,
+    curve=curve,
+    fill_color=fill_color,
+    fill_opacity=fill_opacity,
+    stroke_color=stroke_color,
+    stroke_opacity=stroke_opacity,
+    stroke_size=stroke_size,
+    stroke_dash=stroke_dash,
+    label=label,
+    label_offset=label_offset,
+    label_offset_x=label_offset_x,
+    label_offset_y=label_offset_y,
+    label_rotation=label_rotation,
+    label_position=label_position,
+    label_overlap=label_overlap,
+    label_fill_color=label_fill_color,
+    label_fill_opacity=label_fill_opacity,
+    label_stroke_color=label_stroke_color,
+    label_stroke_opacity=label_stroke_opacity,
+    label_stroke_size=label_stroke_size,
+    label_font_size=label_font_size,
+    label_font_weight=label_font_weight,
+    label_line_height=label_line_height,
+    label_align=label_align,
+    ref_stroke_color=ref_stroke_color,
+    ref_stroke_opacity=ref_stroke_opacity,
+    ref_stroke_size=ref_stroke_size,
+    ref_stroke_dash=ref_stroke_dash)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Mark"))
+  return(.o)
+}
+
+#' Create a plot. A plot is composed of one or more graphical mark layers.
+#'
+#' @param marks The graphical mark layers contained in this plot.
+#' @return A Plot instance.
+ui_plot <- function(
+  marks) {
+  .guard_vector("marks", "h2oq_Mark", marks)
+  .o <- list(
+    marks=marks)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Plot"))
+  return(.o)
+}
+
+#' Create a visualization for display inside a form.
+#'
+#' @param plot The plot to be rendered in this visualization.
+#' @param data Data for this visualization.
+#' @param width The width of the visualization. Defaults to 100%.
+#' @param height The height of the visualization. Defaults to 300px.
+#' @return A Visualization instance.
+ui_visualization <- function(
+  plot,
+  data,
+  width = NULL,
+  height = NULL) {
+  .guard_scalar("plot", "h2oq_Plot", plot)
+  # TODO Validate data: Rec
+  .guard_scalar("width", "character", width)
+  .guard_scalar("height", "character", height)
+  .o <- list(visualization=list(
+    plot=plot,
+    data=data,
+    width=width,
+    height=height))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
 #' Create a Vega-lite plot for display inside a form.
 #'
 #' @param specification The Vega-lite specification.
 #' @param data Data for the plot, if any.
-#' @return A VegaPlot instance.
-ui_vega_plot <- function(
+#' @param width The width of the visualization. Defaults to 100%.
+#' @param height The height of the visualization. Defaults to 300px.
+#' @return A VegaVisualization instance.
+ui_vega_visualization <- function(
   specification,
-  data = NULL) {
+  data = NULL,
+  width = NULL,
+  height = NULL) {
   .guard_scalar("specification", "character", specification)
   # TODO Validate data: Rec
-  .o <- list(vega_plot=list(
+  .guard_scalar("width", "character", width)
+  .guard_scalar("height", "character", height)
+  .o <- list(vega_visualization=list(
     specification=specification,
-    data=data))
+    data=data,
+    width=width,
+    height=height))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -1421,7 +1705,8 @@ ui_vega_plot <- function(
 #' @param picker Picker.
 #' @param range_slider Range Slider.
 #' @param stepper Stepper.
-#' @param vega_plot Vega-lite Plot.
+#' @param visualization Visualization.
+#' @param vega_visualization Vega-lite Visualization.
 #' @return A Component instance.
 ui_component <- function(
   text = NULL,
@@ -1456,7 +1741,8 @@ ui_component <- function(
   picker = NULL,
   range_slider = NULL,
   stepper = NULL,
-  vega_plot = NULL) {
+  visualization = NULL,
+  vega_visualization = NULL) {
   .guard_scalar("text", "h2oq_Text", text)
   .guard_scalar("text_xl", "h2oq_TextXl", text_xl)
   .guard_scalar("text_l", "h2oq_TextL", text_l)
@@ -1489,7 +1775,8 @@ ui_component <- function(
   .guard_scalar("picker", "h2oq_Picker", picker)
   .guard_scalar("range_slider", "h2oq_RangeSlider", range_slider)
   .guard_scalar("stepper", "h2oq_Stepper", stepper)
-  .guard_scalar("vega_plot", "h2oq_VegaPlot", vega_plot)
+  .guard_scalar("visualization", "h2oq_Visualization", visualization)
+  .guard_scalar("vega_visualization", "h2oq_VegaVisualization", vega_visualization)
   .o <- list(
     text=text,
     text_xl=text_xl,
@@ -1523,7 +1810,8 @@ ui_component <- function(
     picker=picker,
     range_slider=range_slider,
     stepper=stepper,
-    vega_plot=vega_plot)
+    visualization=visualization,
+    vega_visualization=vega_visualization)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -2048,257 +2336,6 @@ ui_pixel_art_card <- function(
     data=data,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_PixelArtCard"))
-  return(.o)
-}
-
-#' Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
-#' A plot can contain multiple such layers of marks.
-#'
-#' @param coord Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`.
-#'   One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
-#' @param type Graphical geometry.
-#'   One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
-#' @param x X field or value.
-#' @param x0 X base field or value.
-#' @param x1 X bin lower bound field or value. For histograms.
-#' @param x2 X bin upper bound field or value. For histograms.
-#' @param x_min X axis scale minimum.
-#' @param x_max X axis scale maximum.
-#' @param x_nice Whether to nice X axis scale ticks.
-#' @param x_scale X axis scale type.
-#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
-#' @param x_title X axis title.
-#' @param y Y field or value.
-#' @param y0 Y base field or value.
-#' @param y1 Y bin lower bound field or value. For histograms.
-#' @param y2 Y bin upper bound field or value. For histograms.
-#' @param y_min Y axis scale minimum.
-#' @param y_max Y axis scale maximum.
-#' @param y_nice Whether to nice Y axis scale ticks.
-#' @param y_scale Y axis scale type.
-#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
-#' @param y_title Y axis title.
-#' @param color Mark color field or value.
-#' @param color_range Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
-#' @param shape Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
-#' @param shape_range Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
-#' @param size Mark size field or value.
-#' @param size_range Mark size range. A string containing space-separated integers, e.g. `'4 30'`
-#' @param stack Field to stack marks by, or 'auto' to infer.
-#' @param dodge Field to dodge marks by, or 'auto' to infer.
-#' @param curve Curve type for `line` and `area` mark types.
-#'   One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
-#' @param fill_color Mark fill color.
-#' @param fill_opacity Mark fill opacity.
-#' @param stroke_color Mark stroke color.
-#' @param stroke_opacity Mark stroke opacity.
-#' @param stroke_size Mark stroke size.
-#' @param stroke_dash Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
-#' @param label Label field or value.
-#' @param label_offset Distance between label and mark.
-#' @param label_offset_x Horizontal distance between label and mark.
-#' @param label_offset_y Vertical distance between label and mark.
-#' @param label_rotation Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
-#' @param label_position Label position relative to the mark.
-#'   One of 'top', 'bottom', 'middle', 'left', 'right'.
-#' @param label_overlap Strategy to use if labels overlap.
-#'   One of 'hide', 'overlap', 'constrain'.
-#' @param label_fill_color Label fill color.
-#' @param label_fill_opacity Label fill opacity.
-#' @param label_stroke_color Label stroke color.
-#' @param label_stroke_opacity Label stroke opacity.
-#' @param label_stroke_size Label stroke size (line width or pen thickness).
-#' @param label_font_size Label font size.
-#' @param label_font_weight Label font weight.
-#' @param label_line_height Label line height.
-#' @param label_align Label text alignment.
-#'   One of 'left', 'right', 'center', 'start', 'end'.
-#' @param ref_stroke_color Reference line stroke color.
-#' @param ref_stroke_opacity Reference line stroke opacity.
-#' @param ref_stroke_size Reference line stroke size (line width or pen thickness).
-#' @param ref_stroke_dash Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
-#' @return A Mark instance.
-ui_mark <- function(
-  coord = NULL,
-  type = NULL,
-  x = NULL,
-  x0 = NULL,
-  x1 = NULL,
-  x2 = NULL,
-  x_min = NULL,
-  x_max = NULL,
-  x_nice = NULL,
-  x_scale = NULL,
-  x_title = NULL,
-  y = NULL,
-  y0 = NULL,
-  y1 = NULL,
-  y2 = NULL,
-  y_min = NULL,
-  y_max = NULL,
-  y_nice = NULL,
-  y_scale = NULL,
-  y_title = NULL,
-  color = NULL,
-  color_range = NULL,
-  shape = NULL,
-  shape_range = NULL,
-  size = NULL,
-  size_range = NULL,
-  stack = NULL,
-  dodge = NULL,
-  curve = NULL,
-  fill_color = NULL,
-  fill_opacity = NULL,
-  stroke_color = NULL,
-  stroke_opacity = NULL,
-  stroke_size = NULL,
-  stroke_dash = NULL,
-  label = NULL,
-  label_offset = NULL,
-  label_offset_x = NULL,
-  label_offset_y = NULL,
-  label_rotation = NULL,
-  label_position = NULL,
-  label_overlap = NULL,
-  label_fill_color = NULL,
-  label_fill_opacity = NULL,
-  label_stroke_color = NULL,
-  label_stroke_opacity = NULL,
-  label_stroke_size = NULL,
-  label_font_size = NULL,
-  label_font_weight = NULL,
-  label_line_height = NULL,
-  label_align = NULL,
-  ref_stroke_color = NULL,
-  ref_stroke_opacity = NULL,
-  ref_stroke_size = NULL,
-  ref_stroke_dash = NULL) {
-  # TODO Validate coord
-  # TODO Validate type
-  # TODO Validate x: V
-  # TODO Validate x0: V
-  # TODO Validate x1: V
-  # TODO Validate x2: V
-  .guard_scalar("x_min", "numeric", x_min)
-  .guard_scalar("x_max", "numeric", x_max)
-  .guard_scalar("x_nice", "logical", x_nice)
-  # TODO Validate x_scale
-  .guard_scalar("x_title", "character", x_title)
-  # TODO Validate y: V
-  # TODO Validate y0: V
-  # TODO Validate y1: V
-  # TODO Validate y2: V
-  .guard_scalar("y_min", "numeric", y_min)
-  .guard_scalar("y_max", "numeric", y_max)
-  .guard_scalar("y_nice", "logical", y_nice)
-  # TODO Validate y_scale
-  .guard_scalar("y_title", "character", y_title)
-  .guard_scalar("color", "character", color)
-  .guard_scalar("color_range", "character", color_range)
-  .guard_scalar("shape", "character", shape)
-  .guard_scalar("shape_range", "character", shape_range)
-  # TODO Validate size: V
-  .guard_scalar("size_range", "character", size_range)
-  .guard_scalar("stack", "character", stack)
-  .guard_scalar("dodge", "character", dodge)
-  # TODO Validate curve
-  .guard_scalar("fill_color", "character", fill_color)
-  .guard_scalar("fill_opacity", "numeric", fill_opacity)
-  .guard_scalar("stroke_color", "character", stroke_color)
-  .guard_scalar("stroke_opacity", "numeric", stroke_opacity)
-  .guard_scalar("stroke_size", "numeric", stroke_size)
-  .guard_scalar("stroke_dash", "character", stroke_dash)
-  .guard_scalar("label", "character", label)
-  .guard_scalar("label_offset", "numeric", label_offset)
-  .guard_scalar("label_offset_x", "numeric", label_offset_x)
-  .guard_scalar("label_offset_y", "numeric", label_offset_y)
-  .guard_scalar("label_rotation", "character", label_rotation)
-  # TODO Validate label_position
-  # TODO Validate label_overlap
-  .guard_scalar("label_fill_color", "character", label_fill_color)
-  .guard_scalar("label_fill_opacity", "numeric", label_fill_opacity)
-  .guard_scalar("label_stroke_color", "character", label_stroke_color)
-  .guard_scalar("label_stroke_opacity", "numeric", label_stroke_opacity)
-  .guard_scalar("label_stroke_size", "numeric", label_stroke_size)
-  .guard_scalar("label_font_size", "numeric", label_font_size)
-  .guard_scalar("label_font_weight", "character", label_font_weight)
-  .guard_scalar("label_line_height", "numeric", label_line_height)
-  # TODO Validate label_align
-  .guard_scalar("ref_stroke_color", "character", ref_stroke_color)
-  .guard_scalar("ref_stroke_opacity", "numeric", ref_stroke_opacity)
-  .guard_scalar("ref_stroke_size", "numeric", ref_stroke_size)
-  .guard_scalar("ref_stroke_dash", "character", ref_stroke_dash)
-  .o <- list(
-    coord=coord,
-    type=type,
-    x=x,
-    x0=x0,
-    x1=x1,
-    x2=x2,
-    x_min=x_min,
-    x_max=x_max,
-    x_nice=x_nice,
-    x_scale=x_scale,
-    x_title=x_title,
-    y=y,
-    y0=y0,
-    y1=y1,
-    y2=y2,
-    y_min=y_min,
-    y_max=y_max,
-    y_nice=y_nice,
-    y_scale=y_scale,
-    y_title=y_title,
-    color=color,
-    color_range=color_range,
-    shape=shape,
-    shape_range=shape_range,
-    size=size,
-    size_range=size_range,
-    stack=stack,
-    dodge=dodge,
-    curve=curve,
-    fill_color=fill_color,
-    fill_opacity=fill_opacity,
-    stroke_color=stroke_color,
-    stroke_opacity=stroke_opacity,
-    stroke_size=stroke_size,
-    stroke_dash=stroke_dash,
-    label=label,
-    label_offset=label_offset,
-    label_offset_x=label_offset_x,
-    label_offset_y=label_offset_y,
-    label_rotation=label_rotation,
-    label_position=label_position,
-    label_overlap=label_overlap,
-    label_fill_color=label_fill_color,
-    label_fill_opacity=label_fill_opacity,
-    label_stroke_color=label_stroke_color,
-    label_stroke_opacity=label_stroke_opacity,
-    label_stroke_size=label_stroke_size,
-    label_font_size=label_font_size,
-    label_font_weight=label_font_weight,
-    label_line_height=label_line_height,
-    label_align=label_align,
-    ref_stroke_color=ref_stroke_color,
-    ref_stroke_opacity=ref_stroke_opacity,
-    ref_stroke_size=ref_stroke_size,
-    ref_stroke_dash=ref_stroke_dash)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Mark"))
-  return(.o)
-}
-
-#' Create a plot. A plot is composed of one or more graphical mark layers.
-#'
-#' @param marks The graphical mark layers contained in this plot.
-#' @return A Plot instance.
-ui_plot <- function(
-  marks) {
-  .guard_vector("marks", "h2oq_Mark", marks)
-  .o <- list(
-    marks=marks)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Plot"))
   return(.o)
 }
 

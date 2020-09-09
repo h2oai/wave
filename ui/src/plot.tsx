@@ -689,18 +689,20 @@ const
     },
   })
 
-/** Create a card displaying a plot. */
-interface State {
-  /** The title for this card. */
-  title: S
-  /** Data for this card. */
-  data: Rec
-  /** The plot to be displayed in this card. */
+/** Create a visualization for display inside a form. */
+export interface Visualization {
+  /** The plot to be rendered in this visualization. */
   plot: Plot
+  /** Data for this visualization. */
+  data: Rec
+  /** The width of the visualization. Defaults to 100%. */
+  width?: S
+  /** The height of the visualization. Defaults to 300px. */
+  height?: S
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  XVisualization = bond(({ model }: { model: Visualization }) => {
     let
       currentChart: Chart | null = null,
       currentPlot: Plot | null = null
@@ -710,9 +712,8 @@ export const
         const el = container.current
         if (!el) return
         const
-          s = state,
-          raw_data = unpack<any[]>(s.data),
-          raw_plot = unpack<Plot>(s.plot),
+          raw_data = unpack<any[]>(model.data),
+          raw_plot = unpack<Plot>(model.plot),
           marks = raw_plot.marks.map(refactorMark),
           plot: Plot = { marks: marks },
           space = spaceTypeOf(raw_data, marks),
@@ -729,20 +730,48 @@ export const
         const el = container.current
         if (!el || !currentChart || !currentPlot) return
         const
-          s = state,
-          raw_data = unpack(s.data) as any[],
+          raw_data = unpack(model.data) as any[],
           data = refactorData(raw_data, currentPlot.marks)
         currentChart.changeData(data)
       },
       render = () => {
+        const
+          { width, height } = model,
+          style: React.CSSProperties = (width === 'auto' && height === 'auto')
+            ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
+            : { width: width || 'auto', height: height || '300px' }
+        return (
+          <div style={style} ref={container} />
+        )
+      }
+    return { init, update, render }
+  })
+
+/** Create a card displaying a plot. */
+interface State {
+  /** The title for this card. */
+  title: S
+  /** Data for this card. */
+  data: Rec
+  /** The plot to be displayed in this card. */
+  plot: Plot
+}
+
+export const
+  View = bond(({ state, changed }: Card<State>) => {
+    const
+      render = () => {
+        const { title, plot, data } = state
         return (
           <div data-test='plot' className={css.card}>
-            <div className={css.title}>{state.title || 'Untitled'}</div>
-            <div className={css.plot} ref={container} />
+            <div className={css.title}>{title || 'Untitled'}</div>
+            <div className={css.plot}>
+              <XVisualization model={{ plot, data, width: 'auto', height: 'auto' }} />
+            </div>
           </div>
         )
       }
-    return { init, update, render, changed }
+    return { render, changed }
   })
 
 cards.register('plot', View)

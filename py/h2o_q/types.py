@@ -2559,40 +2559,544 @@ class Stepper:
         )
 
 
-class VegaPlot:
+class Mark:
+    """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
+    A plot can contain multiple such layers of marks.
+    """
+    def __init__(
+            self,
+            coord: Optional[str] = None,
+            type: Optional[str] = None,
+            x: Optional[Value] = None,
+            x0: Optional[Value] = None,
+            x1: Optional[Value] = None,
+            x2: Optional[Value] = None,
+            x_min: Optional[float] = None,
+            x_max: Optional[float] = None,
+            x_nice: Optional[bool] = None,
+            x_scale: Optional[str] = None,
+            x_title: Optional[str] = None,
+            y: Optional[Value] = None,
+            y0: Optional[Value] = None,
+            y1: Optional[Value] = None,
+            y2: Optional[Value] = None,
+            y_min: Optional[float] = None,
+            y_max: Optional[float] = None,
+            y_nice: Optional[bool] = None,
+            y_scale: Optional[str] = None,
+            y_title: Optional[str] = None,
+            color: Optional[str] = None,
+            color_range: Optional[str] = None,
+            shape: Optional[str] = None,
+            shape_range: Optional[str] = None,
+            size: Optional[Value] = None,
+            size_range: Optional[str] = None,
+            stack: Optional[str] = None,
+            dodge: Optional[str] = None,
+            curve: Optional[str] = None,
+            fill_color: Optional[str] = None,
+            fill_opacity: Optional[float] = None,
+            stroke_color: Optional[str] = None,
+            stroke_opacity: Optional[float] = None,
+            stroke_size: Optional[float] = None,
+            stroke_dash: Optional[str] = None,
+            label: Optional[str] = None,
+            label_offset: Optional[float] = None,
+            label_offset_x: Optional[float] = None,
+            label_offset_y: Optional[float] = None,
+            label_rotation: Optional[str] = None,
+            label_position: Optional[str] = None,
+            label_overlap: Optional[str] = None,
+            label_fill_color: Optional[str] = None,
+            label_fill_opacity: Optional[float] = None,
+            label_stroke_color: Optional[str] = None,
+            label_stroke_opacity: Optional[float] = None,
+            label_stroke_size: Optional[float] = None,
+            label_font_size: Optional[float] = None,
+            label_font_weight: Optional[str] = None,
+            label_line_height: Optional[float] = None,
+            label_align: Optional[str] = None,
+            ref_stroke_color: Optional[str] = None,
+            ref_stroke_opacity: Optional[float] = None,
+            ref_stroke_size: Optional[float] = None,
+            ref_stroke_dash: Optional[str] = None,
+    ):
+        self.coord = coord
+        """Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'."""
+        self.type = type
+        """Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'."""
+        self.x = x
+        """X field or value."""
+        self.x0 = x0
+        """X base field or value."""
+        self.x1 = x1
+        """X bin lower bound field or value. For histograms."""
+        self.x2 = x2
+        """X bin upper bound field or value. For histograms."""
+        self.x_min = x_min
+        """X axis scale minimum."""
+        self.x_max = x_max
+        """X axis scale maximum."""
+        self.x_nice = x_nice
+        """Whether to nice X axis scale ticks."""
+        self.x_scale = x_scale
+        """X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'."""
+        self.x_title = x_title
+        """X axis title."""
+        self.y = y
+        """Y field or value."""
+        self.y0 = y0
+        """Y base field or value."""
+        self.y1 = y1
+        """Y bin lower bound field or value. For histograms."""
+        self.y2 = y2
+        """Y bin upper bound field or value. For histograms."""
+        self.y_min = y_min
+        """Y axis scale minimum."""
+        self.y_max = y_max
+        """Y axis scale maximum."""
+        self.y_nice = y_nice
+        """Whether to nice Y axis scale ticks."""
+        self.y_scale = y_scale
+        """Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'."""
+        self.y_title = y_title
+        """Y axis title."""
+        self.color = color
+        """Mark color field or value."""
+        self.color_range = color_range
+        """Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`"""
+        self.shape = shape
+        """Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'."""
+        self.shape_range = shape_range
+        """Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`"""
+        self.size = size
+        """Mark size field or value."""
+        self.size_range = size_range
+        """Mark size range. A string containing space-separated integers, e.g. `'4 30'`"""
+        self.stack = stack
+        """Field to stack marks by, or 'auto' to infer."""
+        self.dodge = dodge
+        """Field to dodge marks by, or 'auto' to infer."""
+        self.curve = curve
+        """Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'."""
+        self.fill_color = fill_color
+        """Mark fill color."""
+        self.fill_opacity = fill_opacity
+        """Mark fill opacity."""
+        self.stroke_color = stroke_color
+        """Mark stroke color."""
+        self.stroke_opacity = stroke_opacity
+        """Mark stroke opacity."""
+        self.stroke_size = stroke_size
+        """Mark stroke size."""
+        self.stroke_dash = stroke_dash
+        """Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]."""
+        self.label = label
+        """Label field or value."""
+        self.label_offset = label_offset
+        """Distance between label and mark."""
+        self.label_offset_x = label_offset_x
+        """Horizontal distance between label and mark."""
+        self.label_offset_y = label_offset_y
+        """Vertical distance between label and mark."""
+        self.label_rotation = label_rotation
+        """Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation."""
+        self.label_position = label_position
+        """Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'."""
+        self.label_overlap = label_overlap
+        """Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'."""
+        self.label_fill_color = label_fill_color
+        """Label fill color."""
+        self.label_fill_opacity = label_fill_opacity
+        """Label fill opacity."""
+        self.label_stroke_color = label_stroke_color
+        """Label stroke color."""
+        self.label_stroke_opacity = label_stroke_opacity
+        """Label stroke opacity."""
+        self.label_stroke_size = label_stroke_size
+        """Label stroke size (line width or pen thickness)."""
+        self.label_font_size = label_font_size
+        """Label font size."""
+        self.label_font_weight = label_font_weight
+        """Label font weight."""
+        self.label_line_height = label_line_height
+        """Label line height."""
+        self.label_align = label_align
+        """Label text alignment. One of 'left', 'right', 'center', 'start', 'end'."""
+        self.ref_stroke_color = ref_stroke_color
+        """Reference line stroke color."""
+        self.ref_stroke_opacity = ref_stroke_opacity
+        """Reference line stroke opacity."""
+        self.ref_stroke_size = ref_stroke_size
+        """Reference line stroke size (line width or pen thickness)."""
+        self.ref_stroke_dash = ref_stroke_dash
+        """Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        return _dump(
+            coord=self.coord,
+            type=self.type,
+            x=self.x,
+            x0=self.x0,
+            x1=self.x1,
+            x2=self.x2,
+            x_min=self.x_min,
+            x_max=self.x_max,
+            x_nice=self.x_nice,
+            x_scale=self.x_scale,
+            x_title=self.x_title,
+            y=self.y,
+            y0=self.y0,
+            y1=self.y1,
+            y2=self.y2,
+            y_min=self.y_min,
+            y_max=self.y_max,
+            y_nice=self.y_nice,
+            y_scale=self.y_scale,
+            y_title=self.y_title,
+            color=self.color,
+            color_range=self.color_range,
+            shape=self.shape,
+            shape_range=self.shape_range,
+            size=self.size,
+            size_range=self.size_range,
+            stack=self.stack,
+            dodge=self.dodge,
+            curve=self.curve,
+            fill_color=self.fill_color,
+            fill_opacity=self.fill_opacity,
+            stroke_color=self.stroke_color,
+            stroke_opacity=self.stroke_opacity,
+            stroke_size=self.stroke_size,
+            stroke_dash=self.stroke_dash,
+            label=self.label,
+            label_offset=self.label_offset,
+            label_offset_x=self.label_offset_x,
+            label_offset_y=self.label_offset_y,
+            label_rotation=self.label_rotation,
+            label_position=self.label_position,
+            label_overlap=self.label_overlap,
+            label_fill_color=self.label_fill_color,
+            label_fill_opacity=self.label_fill_opacity,
+            label_stroke_color=self.label_stroke_color,
+            label_stroke_opacity=self.label_stroke_opacity,
+            label_stroke_size=self.label_stroke_size,
+            label_font_size=self.label_font_size,
+            label_font_weight=self.label_font_weight,
+            label_line_height=self.label_line_height,
+            label_align=self.label_align,
+            ref_stroke_color=self.ref_stroke_color,
+            ref_stroke_opacity=self.ref_stroke_opacity,
+            ref_stroke_size=self.ref_stroke_size,
+            ref_stroke_dash=self.ref_stroke_dash,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Mark':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_coord: Any = __d.get('coord')
+        __d_type: Any = __d.get('type')
+        __d_x: Any = __d.get('x')
+        __d_x0: Any = __d.get('x0')
+        __d_x1: Any = __d.get('x1')
+        __d_x2: Any = __d.get('x2')
+        __d_x_min: Any = __d.get('x_min')
+        __d_x_max: Any = __d.get('x_max')
+        __d_x_nice: Any = __d.get('x_nice')
+        __d_x_scale: Any = __d.get('x_scale')
+        __d_x_title: Any = __d.get('x_title')
+        __d_y: Any = __d.get('y')
+        __d_y0: Any = __d.get('y0')
+        __d_y1: Any = __d.get('y1')
+        __d_y2: Any = __d.get('y2')
+        __d_y_min: Any = __d.get('y_min')
+        __d_y_max: Any = __d.get('y_max')
+        __d_y_nice: Any = __d.get('y_nice')
+        __d_y_scale: Any = __d.get('y_scale')
+        __d_y_title: Any = __d.get('y_title')
+        __d_color: Any = __d.get('color')
+        __d_color_range: Any = __d.get('color_range')
+        __d_shape: Any = __d.get('shape')
+        __d_shape_range: Any = __d.get('shape_range')
+        __d_size: Any = __d.get('size')
+        __d_size_range: Any = __d.get('size_range')
+        __d_stack: Any = __d.get('stack')
+        __d_dodge: Any = __d.get('dodge')
+        __d_curve: Any = __d.get('curve')
+        __d_fill_color: Any = __d.get('fill_color')
+        __d_fill_opacity: Any = __d.get('fill_opacity')
+        __d_stroke_color: Any = __d.get('stroke_color')
+        __d_stroke_opacity: Any = __d.get('stroke_opacity')
+        __d_stroke_size: Any = __d.get('stroke_size')
+        __d_stroke_dash: Any = __d.get('stroke_dash')
+        __d_label: Any = __d.get('label')
+        __d_label_offset: Any = __d.get('label_offset')
+        __d_label_offset_x: Any = __d.get('label_offset_x')
+        __d_label_offset_y: Any = __d.get('label_offset_y')
+        __d_label_rotation: Any = __d.get('label_rotation')
+        __d_label_position: Any = __d.get('label_position')
+        __d_label_overlap: Any = __d.get('label_overlap')
+        __d_label_fill_color: Any = __d.get('label_fill_color')
+        __d_label_fill_opacity: Any = __d.get('label_fill_opacity')
+        __d_label_stroke_color: Any = __d.get('label_stroke_color')
+        __d_label_stroke_opacity: Any = __d.get('label_stroke_opacity')
+        __d_label_stroke_size: Any = __d.get('label_stroke_size')
+        __d_label_font_size: Any = __d.get('label_font_size')
+        __d_label_font_weight: Any = __d.get('label_font_weight')
+        __d_label_line_height: Any = __d.get('label_line_height')
+        __d_label_align: Any = __d.get('label_align')
+        __d_ref_stroke_color: Any = __d.get('ref_stroke_color')
+        __d_ref_stroke_opacity: Any = __d.get('ref_stroke_opacity')
+        __d_ref_stroke_size: Any = __d.get('ref_stroke_size')
+        __d_ref_stroke_dash: Any = __d.get('ref_stroke_dash')
+        coord: Optional[str] = __d_coord
+        type: Optional[str] = __d_type
+        x: Optional[Value] = __d_x
+        x0: Optional[Value] = __d_x0
+        x1: Optional[Value] = __d_x1
+        x2: Optional[Value] = __d_x2
+        x_min: Optional[float] = __d_x_min
+        x_max: Optional[float] = __d_x_max
+        x_nice: Optional[bool] = __d_x_nice
+        x_scale: Optional[str] = __d_x_scale
+        x_title: Optional[str] = __d_x_title
+        y: Optional[Value] = __d_y
+        y0: Optional[Value] = __d_y0
+        y1: Optional[Value] = __d_y1
+        y2: Optional[Value] = __d_y2
+        y_min: Optional[float] = __d_y_min
+        y_max: Optional[float] = __d_y_max
+        y_nice: Optional[bool] = __d_y_nice
+        y_scale: Optional[str] = __d_y_scale
+        y_title: Optional[str] = __d_y_title
+        color: Optional[str] = __d_color
+        color_range: Optional[str] = __d_color_range
+        shape: Optional[str] = __d_shape
+        shape_range: Optional[str] = __d_shape_range
+        size: Optional[Value] = __d_size
+        size_range: Optional[str] = __d_size_range
+        stack: Optional[str] = __d_stack
+        dodge: Optional[str] = __d_dodge
+        curve: Optional[str] = __d_curve
+        fill_color: Optional[str] = __d_fill_color
+        fill_opacity: Optional[float] = __d_fill_opacity
+        stroke_color: Optional[str] = __d_stroke_color
+        stroke_opacity: Optional[float] = __d_stroke_opacity
+        stroke_size: Optional[float] = __d_stroke_size
+        stroke_dash: Optional[str] = __d_stroke_dash
+        label: Optional[str] = __d_label
+        label_offset: Optional[float] = __d_label_offset
+        label_offset_x: Optional[float] = __d_label_offset_x
+        label_offset_y: Optional[float] = __d_label_offset_y
+        label_rotation: Optional[str] = __d_label_rotation
+        label_position: Optional[str] = __d_label_position
+        label_overlap: Optional[str] = __d_label_overlap
+        label_fill_color: Optional[str] = __d_label_fill_color
+        label_fill_opacity: Optional[float] = __d_label_fill_opacity
+        label_stroke_color: Optional[str] = __d_label_stroke_color
+        label_stroke_opacity: Optional[float] = __d_label_stroke_opacity
+        label_stroke_size: Optional[float] = __d_label_stroke_size
+        label_font_size: Optional[float] = __d_label_font_size
+        label_font_weight: Optional[str] = __d_label_font_weight
+        label_line_height: Optional[float] = __d_label_line_height
+        label_align: Optional[str] = __d_label_align
+        ref_stroke_color: Optional[str] = __d_ref_stroke_color
+        ref_stroke_opacity: Optional[float] = __d_ref_stroke_opacity
+        ref_stroke_size: Optional[float] = __d_ref_stroke_size
+        ref_stroke_dash: Optional[str] = __d_ref_stroke_dash
+        return Mark(
+            coord,
+            type,
+            x,
+            x0,
+            x1,
+            x2,
+            x_min,
+            x_max,
+            x_nice,
+            x_scale,
+            x_title,
+            y,
+            y0,
+            y1,
+            y2,
+            y_min,
+            y_max,
+            y_nice,
+            y_scale,
+            y_title,
+            color,
+            color_range,
+            shape,
+            shape_range,
+            size,
+            size_range,
+            stack,
+            dodge,
+            curve,
+            fill_color,
+            fill_opacity,
+            stroke_color,
+            stroke_opacity,
+            stroke_size,
+            stroke_dash,
+            label,
+            label_offset,
+            label_offset_x,
+            label_offset_y,
+            label_rotation,
+            label_position,
+            label_overlap,
+            label_fill_color,
+            label_fill_opacity,
+            label_stroke_color,
+            label_stroke_opacity,
+            label_stroke_size,
+            label_font_size,
+            label_font_weight,
+            label_line_height,
+            label_align,
+            ref_stroke_color,
+            ref_stroke_opacity,
+            ref_stroke_size,
+            ref_stroke_dash,
+        )
+
+
+class Plot:
+    """Create a plot. A plot is composed of one or more graphical mark layers.
+    """
+    def __init__(
+            self,
+            marks: List[Mark],
+    ):
+        self.marks = marks
+        """The graphical mark layers contained in this plot."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.marks is None:
+            raise ValueError('Plot.marks is required.')
+        return _dump(
+            marks=[__e.dump() for __e in self.marks],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Plot':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_marks: Any = __d.get('marks')
+        if __d_marks is None:
+            raise ValueError('Plot.marks is required.')
+        marks: List[Mark] = [Mark.load(__e) for __e in __d_marks]
+        return Plot(
+            marks,
+        )
+
+
+class Visualization:
+    """Create a visualization for display inside a form.
+    """
+    def __init__(
+            self,
+            plot: Plot,
+            data: PackedRecord,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+    ):
+        self.plot = plot
+        """The plot to be rendered in this visualization."""
+        self.data = data
+        """Data for this visualization."""
+        self.width = width
+        """The width of the visualization. Defaults to 100%."""
+        self.height = height
+        """The height of the visualization. Defaults to 300px."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.plot is None:
+            raise ValueError('Visualization.plot is required.')
+        if self.data is None:
+            raise ValueError('Visualization.data is required.')
+        return _dump(
+            plot=self.plot.dump(),
+            data=self.data,
+            width=self.width,
+            height=self.height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Visualization':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_plot: Any = __d.get('plot')
+        if __d_plot is None:
+            raise ValueError('Visualization.plot is required.')
+        __d_data: Any = __d.get('data')
+        if __d_data is None:
+            raise ValueError('Visualization.data is required.')
+        __d_width: Any = __d.get('width')
+        __d_height: Any = __d.get('height')
+        plot: Plot = Plot.load(__d_plot)
+        data: PackedRecord = __d_data
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        return Visualization(
+            plot,
+            data,
+            width,
+            height,
+        )
+
+
+class VegaVisualization:
     """Create a Vega-lite plot for display inside a form.
     """
     def __init__(
             self,
             specification: str,
             data: Optional[PackedRecord] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
     ):
         self.specification = specification
         """The Vega-lite specification."""
         self.data = data
         """Data for the plot, if any."""
+        self.width = width
+        """The width of the visualization. Defaults to 100%."""
+        self.height = height
+        """The height of the visualization. Defaults to 300px."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.specification is None:
-            raise ValueError('VegaPlot.specification is required.')
+            raise ValueError('VegaVisualization.specification is required.')
         return _dump(
             specification=self.specification,
             data=self.data,
+            width=self.width,
+            height=self.height,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'VegaPlot':
+    def load(__d: Dict) -> 'VegaVisualization':
         """Creates an instance of this class using the contents of a dict."""
         __d_specification: Any = __d.get('specification')
         if __d_specification is None:
-            raise ValueError('VegaPlot.specification is required.')
+            raise ValueError('VegaVisualization.specification is required.')
         __d_data: Any = __d.get('data')
+        __d_width: Any = __d.get('width')
+        __d_height: Any = __d.get('height')
         specification: str = __d_specification
         data: Optional[PackedRecord] = __d_data
-        return VegaPlot(
+        width: Optional[str] = __d_width
+        height: Optional[str] = __d_height
+        return VegaVisualization(
             specification,
             data,
+            width,
+            height,
         )
 
 
@@ -2633,7 +3137,8 @@ class Component:
             picker: Optional[Picker] = None,
             range_slider: Optional[RangeSlider] = None,
             stepper: Optional[Stepper] = None,
-            vega_plot: Optional[VegaPlot] = None,
+            visualization: Optional[Visualization] = None,
+            vega_visualization: Optional[VegaVisualization] = None,
     ):
         self.text = text
         """Text block."""
@@ -2699,8 +3204,10 @@ class Component:
         """Range Slider."""
         self.stepper = stepper
         """Stepper."""
-        self.vega_plot = vega_plot
-        """Vega-lite Plot."""
+        self.visualization = visualization
+        """Visualization."""
+        self.vega_visualization = vega_visualization
+        """Vega-lite Visualization."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2737,7 +3244,8 @@ class Component:
             picker=None if self.picker is None else self.picker.dump(),
             range_slider=None if self.range_slider is None else self.range_slider.dump(),
             stepper=None if self.stepper is None else self.stepper.dump(),
-            vega_plot=None if self.vega_plot is None else self.vega_plot.dump(),
+            visualization=None if self.visualization is None else self.visualization.dump(),
+            vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
         )
 
     @staticmethod
@@ -2775,7 +3283,8 @@ class Component:
         __d_picker: Any = __d.get('picker')
         __d_range_slider: Any = __d.get('range_slider')
         __d_stepper: Any = __d.get('stepper')
-        __d_vega_plot: Any = __d.get('vega_plot')
+        __d_visualization: Any = __d.get('visualization')
+        __d_vega_visualization: Any = __d.get('vega_visualization')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -2808,7 +3317,8 @@ class Component:
         picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
         range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
         stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
-        vega_plot: Optional[VegaPlot] = None if __d_vega_plot is None else VegaPlot.load(__d_vega_plot)
+        visualization: Optional[Visualization] = None if __d_visualization is None else Visualization.load(__d_visualization)
+        vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
         return Component(
             text,
             text_xl,
@@ -2842,7 +3352,8 @@ class Component:
             picker,
             range_slider,
             stepper,
-            vega_plot,
+            visualization,
+            vega_visualization,
         )
 
 
@@ -4038,441 +4549,6 @@ class PixelArtCard:
             title,
             data,
             commands,
-        )
-
-
-class Mark:
-    """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
-    A plot can contain multiple such layers of marks.
-    """
-    def __init__(
-            self,
-            coord: Optional[str] = None,
-            type: Optional[str] = None,
-            x: Optional[Value] = None,
-            x0: Optional[Value] = None,
-            x1: Optional[Value] = None,
-            x2: Optional[Value] = None,
-            x_min: Optional[float] = None,
-            x_max: Optional[float] = None,
-            x_nice: Optional[bool] = None,
-            x_scale: Optional[str] = None,
-            x_title: Optional[str] = None,
-            y: Optional[Value] = None,
-            y0: Optional[Value] = None,
-            y1: Optional[Value] = None,
-            y2: Optional[Value] = None,
-            y_min: Optional[float] = None,
-            y_max: Optional[float] = None,
-            y_nice: Optional[bool] = None,
-            y_scale: Optional[str] = None,
-            y_title: Optional[str] = None,
-            color: Optional[str] = None,
-            color_range: Optional[str] = None,
-            shape: Optional[str] = None,
-            shape_range: Optional[str] = None,
-            size: Optional[Value] = None,
-            size_range: Optional[str] = None,
-            stack: Optional[str] = None,
-            dodge: Optional[str] = None,
-            curve: Optional[str] = None,
-            fill_color: Optional[str] = None,
-            fill_opacity: Optional[float] = None,
-            stroke_color: Optional[str] = None,
-            stroke_opacity: Optional[float] = None,
-            stroke_size: Optional[float] = None,
-            stroke_dash: Optional[str] = None,
-            label: Optional[str] = None,
-            label_offset: Optional[float] = None,
-            label_offset_x: Optional[float] = None,
-            label_offset_y: Optional[float] = None,
-            label_rotation: Optional[str] = None,
-            label_position: Optional[str] = None,
-            label_overlap: Optional[str] = None,
-            label_fill_color: Optional[str] = None,
-            label_fill_opacity: Optional[float] = None,
-            label_stroke_color: Optional[str] = None,
-            label_stroke_opacity: Optional[float] = None,
-            label_stroke_size: Optional[float] = None,
-            label_font_size: Optional[float] = None,
-            label_font_weight: Optional[str] = None,
-            label_line_height: Optional[float] = None,
-            label_align: Optional[str] = None,
-            ref_stroke_color: Optional[str] = None,
-            ref_stroke_opacity: Optional[float] = None,
-            ref_stroke_size: Optional[float] = None,
-            ref_stroke_dash: Optional[str] = None,
-    ):
-        self.coord = coord
-        """Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'."""
-        self.type = type
-        """Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'."""
-        self.x = x
-        """X field or value."""
-        self.x0 = x0
-        """X base field or value."""
-        self.x1 = x1
-        """X bin lower bound field or value. For histograms."""
-        self.x2 = x2
-        """X bin upper bound field or value. For histograms."""
-        self.x_min = x_min
-        """X axis scale minimum."""
-        self.x_max = x_max
-        """X axis scale maximum."""
-        self.x_nice = x_nice
-        """Whether to nice X axis scale ticks."""
-        self.x_scale = x_scale
-        """X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'."""
-        self.x_title = x_title
-        """X axis title."""
-        self.y = y
-        """Y field or value."""
-        self.y0 = y0
-        """Y base field or value."""
-        self.y1 = y1
-        """Y bin lower bound field or value. For histograms."""
-        self.y2 = y2
-        """Y bin upper bound field or value. For histograms."""
-        self.y_min = y_min
-        """Y axis scale minimum."""
-        self.y_max = y_max
-        """Y axis scale maximum."""
-        self.y_nice = y_nice
-        """Whether to nice Y axis scale ticks."""
-        self.y_scale = y_scale
-        """Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'."""
-        self.y_title = y_title
-        """Y axis title."""
-        self.color = color
-        """Mark color field or value."""
-        self.color_range = color_range
-        """Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`"""
-        self.shape = shape
-        """Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'."""
-        self.shape_range = shape_range
-        """Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`"""
-        self.size = size
-        """Mark size field or value."""
-        self.size_range = size_range
-        """Mark size range. A string containing space-separated integers, e.g. `'4 30'`"""
-        self.stack = stack
-        """Field to stack marks by, or 'auto' to infer."""
-        self.dodge = dodge
-        """Field to dodge marks by, or 'auto' to infer."""
-        self.curve = curve
-        """Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'."""
-        self.fill_color = fill_color
-        """Mark fill color."""
-        self.fill_opacity = fill_opacity
-        """Mark fill opacity."""
-        self.stroke_color = stroke_color
-        """Mark stroke color."""
-        self.stroke_opacity = stroke_opacity
-        """Mark stroke opacity."""
-        self.stroke_size = stroke_size
-        """Mark stroke size."""
-        self.stroke_dash = stroke_dash
-        """Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]."""
-        self.label = label
-        """Label field or value."""
-        self.label_offset = label_offset
-        """Distance between label and mark."""
-        self.label_offset_x = label_offset_x
-        """Horizontal distance between label and mark."""
-        self.label_offset_y = label_offset_y
-        """Vertical distance between label and mark."""
-        self.label_rotation = label_rotation
-        """Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation."""
-        self.label_position = label_position
-        """Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'."""
-        self.label_overlap = label_overlap
-        """Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'."""
-        self.label_fill_color = label_fill_color
-        """Label fill color."""
-        self.label_fill_opacity = label_fill_opacity
-        """Label fill opacity."""
-        self.label_stroke_color = label_stroke_color
-        """Label stroke color."""
-        self.label_stroke_opacity = label_stroke_opacity
-        """Label stroke opacity."""
-        self.label_stroke_size = label_stroke_size
-        """Label stroke size (line width or pen thickness)."""
-        self.label_font_size = label_font_size
-        """Label font size."""
-        self.label_font_weight = label_font_weight
-        """Label font weight."""
-        self.label_line_height = label_line_height
-        """Label line height."""
-        self.label_align = label_align
-        """Label text alignment. One of 'left', 'right', 'center', 'start', 'end'."""
-        self.ref_stroke_color = ref_stroke_color
-        """Reference line stroke color."""
-        self.ref_stroke_opacity = ref_stroke_opacity
-        """Reference line stroke opacity."""
-        self.ref_stroke_size = ref_stroke_size
-        """Reference line stroke size (line width or pen thickness)."""
-        self.ref_stroke_dash = ref_stroke_dash
-        """Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        return _dump(
-            coord=self.coord,
-            type=self.type,
-            x=self.x,
-            x0=self.x0,
-            x1=self.x1,
-            x2=self.x2,
-            x_min=self.x_min,
-            x_max=self.x_max,
-            x_nice=self.x_nice,
-            x_scale=self.x_scale,
-            x_title=self.x_title,
-            y=self.y,
-            y0=self.y0,
-            y1=self.y1,
-            y2=self.y2,
-            y_min=self.y_min,
-            y_max=self.y_max,
-            y_nice=self.y_nice,
-            y_scale=self.y_scale,
-            y_title=self.y_title,
-            color=self.color,
-            color_range=self.color_range,
-            shape=self.shape,
-            shape_range=self.shape_range,
-            size=self.size,
-            size_range=self.size_range,
-            stack=self.stack,
-            dodge=self.dodge,
-            curve=self.curve,
-            fill_color=self.fill_color,
-            fill_opacity=self.fill_opacity,
-            stroke_color=self.stroke_color,
-            stroke_opacity=self.stroke_opacity,
-            stroke_size=self.stroke_size,
-            stroke_dash=self.stroke_dash,
-            label=self.label,
-            label_offset=self.label_offset,
-            label_offset_x=self.label_offset_x,
-            label_offset_y=self.label_offset_y,
-            label_rotation=self.label_rotation,
-            label_position=self.label_position,
-            label_overlap=self.label_overlap,
-            label_fill_color=self.label_fill_color,
-            label_fill_opacity=self.label_fill_opacity,
-            label_stroke_color=self.label_stroke_color,
-            label_stroke_opacity=self.label_stroke_opacity,
-            label_stroke_size=self.label_stroke_size,
-            label_font_size=self.label_font_size,
-            label_font_weight=self.label_font_weight,
-            label_line_height=self.label_line_height,
-            label_align=self.label_align,
-            ref_stroke_color=self.ref_stroke_color,
-            ref_stroke_opacity=self.ref_stroke_opacity,
-            ref_stroke_size=self.ref_stroke_size,
-            ref_stroke_dash=self.ref_stroke_dash,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Mark':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_coord: Any = __d.get('coord')
-        __d_type: Any = __d.get('type')
-        __d_x: Any = __d.get('x')
-        __d_x0: Any = __d.get('x0')
-        __d_x1: Any = __d.get('x1')
-        __d_x2: Any = __d.get('x2')
-        __d_x_min: Any = __d.get('x_min')
-        __d_x_max: Any = __d.get('x_max')
-        __d_x_nice: Any = __d.get('x_nice')
-        __d_x_scale: Any = __d.get('x_scale')
-        __d_x_title: Any = __d.get('x_title')
-        __d_y: Any = __d.get('y')
-        __d_y0: Any = __d.get('y0')
-        __d_y1: Any = __d.get('y1')
-        __d_y2: Any = __d.get('y2')
-        __d_y_min: Any = __d.get('y_min')
-        __d_y_max: Any = __d.get('y_max')
-        __d_y_nice: Any = __d.get('y_nice')
-        __d_y_scale: Any = __d.get('y_scale')
-        __d_y_title: Any = __d.get('y_title')
-        __d_color: Any = __d.get('color')
-        __d_color_range: Any = __d.get('color_range')
-        __d_shape: Any = __d.get('shape')
-        __d_shape_range: Any = __d.get('shape_range')
-        __d_size: Any = __d.get('size')
-        __d_size_range: Any = __d.get('size_range')
-        __d_stack: Any = __d.get('stack')
-        __d_dodge: Any = __d.get('dodge')
-        __d_curve: Any = __d.get('curve')
-        __d_fill_color: Any = __d.get('fill_color')
-        __d_fill_opacity: Any = __d.get('fill_opacity')
-        __d_stroke_color: Any = __d.get('stroke_color')
-        __d_stroke_opacity: Any = __d.get('stroke_opacity')
-        __d_stroke_size: Any = __d.get('stroke_size')
-        __d_stroke_dash: Any = __d.get('stroke_dash')
-        __d_label: Any = __d.get('label')
-        __d_label_offset: Any = __d.get('label_offset')
-        __d_label_offset_x: Any = __d.get('label_offset_x')
-        __d_label_offset_y: Any = __d.get('label_offset_y')
-        __d_label_rotation: Any = __d.get('label_rotation')
-        __d_label_position: Any = __d.get('label_position')
-        __d_label_overlap: Any = __d.get('label_overlap')
-        __d_label_fill_color: Any = __d.get('label_fill_color')
-        __d_label_fill_opacity: Any = __d.get('label_fill_opacity')
-        __d_label_stroke_color: Any = __d.get('label_stroke_color')
-        __d_label_stroke_opacity: Any = __d.get('label_stroke_opacity')
-        __d_label_stroke_size: Any = __d.get('label_stroke_size')
-        __d_label_font_size: Any = __d.get('label_font_size')
-        __d_label_font_weight: Any = __d.get('label_font_weight')
-        __d_label_line_height: Any = __d.get('label_line_height')
-        __d_label_align: Any = __d.get('label_align')
-        __d_ref_stroke_color: Any = __d.get('ref_stroke_color')
-        __d_ref_stroke_opacity: Any = __d.get('ref_stroke_opacity')
-        __d_ref_stroke_size: Any = __d.get('ref_stroke_size')
-        __d_ref_stroke_dash: Any = __d.get('ref_stroke_dash')
-        coord: Optional[str] = __d_coord
-        type: Optional[str] = __d_type
-        x: Optional[Value] = __d_x
-        x0: Optional[Value] = __d_x0
-        x1: Optional[Value] = __d_x1
-        x2: Optional[Value] = __d_x2
-        x_min: Optional[float] = __d_x_min
-        x_max: Optional[float] = __d_x_max
-        x_nice: Optional[bool] = __d_x_nice
-        x_scale: Optional[str] = __d_x_scale
-        x_title: Optional[str] = __d_x_title
-        y: Optional[Value] = __d_y
-        y0: Optional[Value] = __d_y0
-        y1: Optional[Value] = __d_y1
-        y2: Optional[Value] = __d_y2
-        y_min: Optional[float] = __d_y_min
-        y_max: Optional[float] = __d_y_max
-        y_nice: Optional[bool] = __d_y_nice
-        y_scale: Optional[str] = __d_y_scale
-        y_title: Optional[str] = __d_y_title
-        color: Optional[str] = __d_color
-        color_range: Optional[str] = __d_color_range
-        shape: Optional[str] = __d_shape
-        shape_range: Optional[str] = __d_shape_range
-        size: Optional[Value] = __d_size
-        size_range: Optional[str] = __d_size_range
-        stack: Optional[str] = __d_stack
-        dodge: Optional[str] = __d_dodge
-        curve: Optional[str] = __d_curve
-        fill_color: Optional[str] = __d_fill_color
-        fill_opacity: Optional[float] = __d_fill_opacity
-        stroke_color: Optional[str] = __d_stroke_color
-        stroke_opacity: Optional[float] = __d_stroke_opacity
-        stroke_size: Optional[float] = __d_stroke_size
-        stroke_dash: Optional[str] = __d_stroke_dash
-        label: Optional[str] = __d_label
-        label_offset: Optional[float] = __d_label_offset
-        label_offset_x: Optional[float] = __d_label_offset_x
-        label_offset_y: Optional[float] = __d_label_offset_y
-        label_rotation: Optional[str] = __d_label_rotation
-        label_position: Optional[str] = __d_label_position
-        label_overlap: Optional[str] = __d_label_overlap
-        label_fill_color: Optional[str] = __d_label_fill_color
-        label_fill_opacity: Optional[float] = __d_label_fill_opacity
-        label_stroke_color: Optional[str] = __d_label_stroke_color
-        label_stroke_opacity: Optional[float] = __d_label_stroke_opacity
-        label_stroke_size: Optional[float] = __d_label_stroke_size
-        label_font_size: Optional[float] = __d_label_font_size
-        label_font_weight: Optional[str] = __d_label_font_weight
-        label_line_height: Optional[float] = __d_label_line_height
-        label_align: Optional[str] = __d_label_align
-        ref_stroke_color: Optional[str] = __d_ref_stroke_color
-        ref_stroke_opacity: Optional[float] = __d_ref_stroke_opacity
-        ref_stroke_size: Optional[float] = __d_ref_stroke_size
-        ref_stroke_dash: Optional[str] = __d_ref_stroke_dash
-        return Mark(
-            coord,
-            type,
-            x,
-            x0,
-            x1,
-            x2,
-            x_min,
-            x_max,
-            x_nice,
-            x_scale,
-            x_title,
-            y,
-            y0,
-            y1,
-            y2,
-            y_min,
-            y_max,
-            y_nice,
-            y_scale,
-            y_title,
-            color,
-            color_range,
-            shape,
-            shape_range,
-            size,
-            size_range,
-            stack,
-            dodge,
-            curve,
-            fill_color,
-            fill_opacity,
-            stroke_color,
-            stroke_opacity,
-            stroke_size,
-            stroke_dash,
-            label,
-            label_offset,
-            label_offset_x,
-            label_offset_y,
-            label_rotation,
-            label_position,
-            label_overlap,
-            label_fill_color,
-            label_fill_opacity,
-            label_stroke_color,
-            label_stroke_opacity,
-            label_stroke_size,
-            label_font_size,
-            label_font_weight,
-            label_line_height,
-            label_align,
-            ref_stroke_color,
-            ref_stroke_opacity,
-            ref_stroke_size,
-            ref_stroke_dash,
-        )
-
-
-class Plot:
-    """Create a plot. A plot is composed of one or more graphical mark layers.
-    """
-    def __init__(
-            self,
-            marks: List[Mark],
-    ):
-        self.marks = marks
-        """The graphical mark layers contained in this plot."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.marks is None:
-            raise ValueError('Plot.marks is required.')
-        return _dump(
-            marks=[__e.dump() for __e in self.marks],
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'Plot':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_marks: Any = __d.get('marks')
-        if __d_marks is None:
-            raise ValueError('Plot.marks is required.')
-        marks: List[Mark] = [Mark.load(__e) for __e in __d_marks]
-        return Plot(
-            marks,
         )
 
 

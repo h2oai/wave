@@ -33,21 +33,21 @@ def poll():
 def rnd(): return random.randint(1, 100)
 
 
-page['form'] = ui.form_card(
+page['example'] = ui.form_card(
     box='1 1 2 -1',
     items=[
         ui.text_xl('Example 1'),
-        ui.vega_plot(
+        ui.vega_visualization(
             specification=spec,
             data=data(fields=["a", "b"], rows=poll(), pack=True),
         ),
         ui.text_xl('Example 2'),
-        ui.vega_plot(
+        ui.vega_visualization(
             specification=spec,
             data=data(fields=["a", "b"], rows=poll(), pack=True),
         ),
         ui.text_xl('Example 3'),
-        ui.vega_plot(
+        ui.vega_visualization(
             specification=spec,
             data=data(fields=["a", "b"], rows=poll(), pack=True),
         ),

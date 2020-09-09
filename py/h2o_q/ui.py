@@ -1260,21 +1260,244 @@ def stepper(
     ))
 
 
-def vega_plot(
+def mark(
+        coord: Optional[str] = None,
+        type: Optional[str] = None,
+        x: Optional[Value] = None,
+        x0: Optional[Value] = None,
+        x1: Optional[Value] = None,
+        x2: Optional[Value] = None,
+        x_min: Optional[float] = None,
+        x_max: Optional[float] = None,
+        x_nice: Optional[bool] = None,
+        x_scale: Optional[str] = None,
+        x_title: Optional[str] = None,
+        y: Optional[Value] = None,
+        y0: Optional[Value] = None,
+        y1: Optional[Value] = None,
+        y2: Optional[Value] = None,
+        y_min: Optional[float] = None,
+        y_max: Optional[float] = None,
+        y_nice: Optional[bool] = None,
+        y_scale: Optional[str] = None,
+        y_title: Optional[str] = None,
+        color: Optional[str] = None,
+        color_range: Optional[str] = None,
+        shape: Optional[str] = None,
+        shape_range: Optional[str] = None,
+        size: Optional[Value] = None,
+        size_range: Optional[str] = None,
+        stack: Optional[str] = None,
+        dodge: Optional[str] = None,
+        curve: Optional[str] = None,
+        fill_color: Optional[str] = None,
+        fill_opacity: Optional[float] = None,
+        stroke_color: Optional[str] = None,
+        stroke_opacity: Optional[float] = None,
+        stroke_size: Optional[float] = None,
+        stroke_dash: Optional[str] = None,
+        label: Optional[str] = None,
+        label_offset: Optional[float] = None,
+        label_offset_x: Optional[float] = None,
+        label_offset_y: Optional[float] = None,
+        label_rotation: Optional[str] = None,
+        label_position: Optional[str] = None,
+        label_overlap: Optional[str] = None,
+        label_fill_color: Optional[str] = None,
+        label_fill_opacity: Optional[float] = None,
+        label_stroke_color: Optional[str] = None,
+        label_stroke_opacity: Optional[float] = None,
+        label_stroke_size: Optional[float] = None,
+        label_font_size: Optional[float] = None,
+        label_font_weight: Optional[str] = None,
+        label_line_height: Optional[float] = None,
+        label_align: Optional[str] = None,
+        ref_stroke_color: Optional[str] = None,
+        ref_stroke_opacity: Optional[float] = None,
+        ref_stroke_size: Optional[float] = None,
+        ref_stroke_dash: Optional[str] = None,
+) -> Mark:
+    """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
+    A plot can contain multiple such layers of marks.
+
+    Args:
+        coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
+        type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
+        x: X field or value.
+        x0: X base field or value.
+        x1: X bin lower bound field or value. For histograms.
+        x2: X bin upper bound field or value. For histograms.
+        x_min: X axis scale minimum.
+        x_max: X axis scale maximum.
+        x_nice: Whether to nice X axis scale ticks.
+        x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+        x_title: X axis title.
+        y: Y field or value.
+        y0: Y base field or value.
+        y1: Y bin lower bound field or value. For histograms.
+        y2: Y bin upper bound field or value. For histograms.
+        y_min: Y axis scale minimum.
+        y_max: Y axis scale maximum.
+        y_nice: Whether to nice Y axis scale ticks.
+        y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+        y_title: Y axis title.
+        color: Mark color field or value.
+        color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
+        shape: Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
+        shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
+        size: Mark size field or value.
+        size_range: Mark size range. A string containing space-separated integers, e.g. `'4 30'`
+        stack: Field to stack marks by, or 'auto' to infer.
+        dodge: Field to dodge marks by, or 'auto' to infer.
+        curve: Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
+        fill_color: Mark fill color.
+        fill_opacity: Mark fill opacity.
+        stroke_color: Mark stroke color.
+        stroke_opacity: Mark stroke opacity.
+        stroke_size: Mark stroke size.
+        stroke_dash: Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+        label: Label field or value.
+        label_offset: Distance between label and mark.
+        label_offset_x: Horizontal distance between label and mark.
+        label_offset_y: Vertical distance between label and mark.
+        label_rotation: Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
+        label_position: Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'.
+        label_overlap: Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'.
+        label_fill_color: Label fill color.
+        label_fill_opacity: Label fill opacity.
+        label_stroke_color: Label stroke color.
+        label_stroke_opacity: Label stroke opacity.
+        label_stroke_size: Label stroke size (line width or pen thickness).
+        label_font_size: Label font size.
+        label_font_weight: Label font weight.
+        label_line_height: Label line height.
+        label_align: Label text alignment. One of 'left', 'right', 'center', 'start', 'end'.
+        ref_stroke_color: Reference line stroke color.
+        ref_stroke_opacity: Reference line stroke opacity.
+        ref_stroke_size: Reference line stroke size (line width or pen thickness).
+        ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
+    Returns:
+        A `h2o_q.types.Mark` instance.
+    """
+    return Mark(
+        coord,
+        type,
+        x,
+        x0,
+        x1,
+        x2,
+        x_min,
+        x_max,
+        x_nice,
+        x_scale,
+        x_title,
+        y,
+        y0,
+        y1,
+        y2,
+        y_min,
+        y_max,
+        y_nice,
+        y_scale,
+        y_title,
+        color,
+        color_range,
+        shape,
+        shape_range,
+        size,
+        size_range,
+        stack,
+        dodge,
+        curve,
+        fill_color,
+        fill_opacity,
+        stroke_color,
+        stroke_opacity,
+        stroke_size,
+        stroke_dash,
+        label,
+        label_offset,
+        label_offset_x,
+        label_offset_y,
+        label_rotation,
+        label_position,
+        label_overlap,
+        label_fill_color,
+        label_fill_opacity,
+        label_stroke_color,
+        label_stroke_opacity,
+        label_stroke_size,
+        label_font_size,
+        label_font_weight,
+        label_line_height,
+        label_align,
+        ref_stroke_color,
+        ref_stroke_opacity,
+        ref_stroke_size,
+        ref_stroke_dash,
+    )
+
+
+def plot(
+        marks: List[Mark],
+) -> Plot:
+    """Create a plot. A plot is composed of one or more graphical mark layers.
+
+    Args:
+        marks: The graphical mark layers contained in this plot.
+    Returns:
+        A `h2o_q.types.Plot` instance.
+    """
+    return Plot(
+        marks,
+    )
+
+
+def visualization(
+        plot: Plot,
+        data: PackedRecord,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+) -> Component:
+    """Create a visualization for display inside a form.
+
+    Args:
+        plot: The plot to be rendered in this visualization.
+        data: Data for this visualization.
+        width: The width of the visualization. Defaults to 100%.
+        height: The height of the visualization. Defaults to 300px.
+    Returns:
+        A `h2o_q.types.Visualization` instance.
+    """
+    return Component(visualization=Visualization(
+        plot,
+        data,
+        width,
+        height,
+    ))
+
+
+def vega_visualization(
         specification: str,
         data: Optional[PackedRecord] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
 ) -> Component:
     """Create a Vega-lite plot for display inside a form.
 
     Args:
         specification: The Vega-lite specification.
         data: Data for the plot, if any.
+        width: The width of the visualization. Defaults to 100%.
+        height: The height of the visualization. Defaults to 300px.
     Returns:
-        A `h2o_q.types.VegaPlot` instance.
+        A `h2o_q.types.VegaVisualization` instance.
     """
-    return Component(vega_plot=VegaPlot(
+    return Component(vega_visualization=VegaVisualization(
         specification,
         data,
+        width,
+        height,
     ))
 
 
@@ -1311,7 +1534,8 @@ def component(
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
         stepper: Optional[Stepper] = None,
-        vega_plot: Optional[VegaPlot] = None,
+        visualization: Optional[Visualization] = None,
+        vega_visualization: Optional[VegaVisualization] = None,
 ) -> Component:
     """Create a component.
 
@@ -1348,7 +1572,8 @@ def component(
         picker: Picker.
         range_slider: Range Slider.
         stepper: Stepper.
-        vega_plot: Vega-lite Plot.
+        visualization: Visualization.
+        vega_visualization: Vega-lite Visualization.
     Returns:
         A `h2o_q.types.Component` instance.
     """
@@ -1385,7 +1610,8 @@ def component(
         picker,
         range_slider,
         stepper,
-        vega_plot,
+        visualization,
+        vega_visualization,
     )
 
 
@@ -1867,199 +2093,6 @@ def pixel_art_card(
         title,
         data,
         commands,
-    )
-
-
-def mark(
-        coord: Optional[str] = None,
-        type: Optional[str] = None,
-        x: Optional[Value] = None,
-        x0: Optional[Value] = None,
-        x1: Optional[Value] = None,
-        x2: Optional[Value] = None,
-        x_min: Optional[float] = None,
-        x_max: Optional[float] = None,
-        x_nice: Optional[bool] = None,
-        x_scale: Optional[str] = None,
-        x_title: Optional[str] = None,
-        y: Optional[Value] = None,
-        y0: Optional[Value] = None,
-        y1: Optional[Value] = None,
-        y2: Optional[Value] = None,
-        y_min: Optional[float] = None,
-        y_max: Optional[float] = None,
-        y_nice: Optional[bool] = None,
-        y_scale: Optional[str] = None,
-        y_title: Optional[str] = None,
-        color: Optional[str] = None,
-        color_range: Optional[str] = None,
-        shape: Optional[str] = None,
-        shape_range: Optional[str] = None,
-        size: Optional[Value] = None,
-        size_range: Optional[str] = None,
-        stack: Optional[str] = None,
-        dodge: Optional[str] = None,
-        curve: Optional[str] = None,
-        fill_color: Optional[str] = None,
-        fill_opacity: Optional[float] = None,
-        stroke_color: Optional[str] = None,
-        stroke_opacity: Optional[float] = None,
-        stroke_size: Optional[float] = None,
-        stroke_dash: Optional[str] = None,
-        label: Optional[str] = None,
-        label_offset: Optional[float] = None,
-        label_offset_x: Optional[float] = None,
-        label_offset_y: Optional[float] = None,
-        label_rotation: Optional[str] = None,
-        label_position: Optional[str] = None,
-        label_overlap: Optional[str] = None,
-        label_fill_color: Optional[str] = None,
-        label_fill_opacity: Optional[float] = None,
-        label_stroke_color: Optional[str] = None,
-        label_stroke_opacity: Optional[float] = None,
-        label_stroke_size: Optional[float] = None,
-        label_font_size: Optional[float] = None,
-        label_font_weight: Optional[str] = None,
-        label_line_height: Optional[float] = None,
-        label_align: Optional[str] = None,
-        ref_stroke_color: Optional[str] = None,
-        ref_stroke_opacity: Optional[float] = None,
-        ref_stroke_size: Optional[float] = None,
-        ref_stroke_dash: Optional[str] = None,
-) -> Mark:
-    """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
-    A plot can contain multiple such layers of marks.
-
-    Args:
-        coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
-        type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
-        x: X field or value.
-        x0: X base field or value.
-        x1: X bin lower bound field or value. For histograms.
-        x2: X bin upper bound field or value. For histograms.
-        x_min: X axis scale minimum.
-        x_max: X axis scale maximum.
-        x_nice: Whether to nice X axis scale ticks.
-        x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
-        x_title: X axis title.
-        y: Y field or value.
-        y0: Y base field or value.
-        y1: Y bin lower bound field or value. For histograms.
-        y2: Y bin upper bound field or value. For histograms.
-        y_min: Y axis scale minimum.
-        y_max: Y axis scale maximum.
-        y_nice: Whether to nice Y axis scale ticks.
-        y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
-        y_title: Y axis title.
-        color: Mark color field or value.
-        color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
-        shape: Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
-        shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
-        size: Mark size field or value.
-        size_range: Mark size range. A string containing space-separated integers, e.g. `'4 30'`
-        stack: Field to stack marks by, or 'auto' to infer.
-        dodge: Field to dodge marks by, or 'auto' to infer.
-        curve: Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
-        fill_color: Mark fill color.
-        fill_opacity: Mark fill opacity.
-        stroke_color: Mark stroke color.
-        stroke_opacity: Mark stroke opacity.
-        stroke_size: Mark stroke size.
-        stroke_dash: Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
-        label: Label field or value.
-        label_offset: Distance between label and mark.
-        label_offset_x: Horizontal distance between label and mark.
-        label_offset_y: Vertical distance between label and mark.
-        label_rotation: Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
-        label_position: Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'.
-        label_overlap: Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'.
-        label_fill_color: Label fill color.
-        label_fill_opacity: Label fill opacity.
-        label_stroke_color: Label stroke color.
-        label_stroke_opacity: Label stroke opacity.
-        label_stroke_size: Label stroke size (line width or pen thickness).
-        label_font_size: Label font size.
-        label_font_weight: Label font weight.
-        label_line_height: Label line height.
-        label_align: Label text alignment. One of 'left', 'right', 'center', 'start', 'end'.
-        ref_stroke_color: Reference line stroke color.
-        ref_stroke_opacity: Reference line stroke opacity.
-        ref_stroke_size: Reference line stroke size (line width or pen thickness).
-        ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
-    Returns:
-        A `h2o_q.types.Mark` instance.
-    """
-    return Mark(
-        coord,
-        type,
-        x,
-        x0,
-        x1,
-        x2,
-        x_min,
-        x_max,
-        x_nice,
-        x_scale,
-        x_title,
-        y,
-        y0,
-        y1,
-        y2,
-        y_min,
-        y_max,
-        y_nice,
-        y_scale,
-        y_title,
-        color,
-        color_range,
-        shape,
-        shape_range,
-        size,
-        size_range,
-        stack,
-        dodge,
-        curve,
-        fill_color,
-        fill_opacity,
-        stroke_color,
-        stroke_opacity,
-        stroke_size,
-        stroke_dash,
-        label,
-        label_offset,
-        label_offset_x,
-        label_offset_y,
-        label_rotation,
-        label_position,
-        label_overlap,
-        label_fill_color,
-        label_fill_opacity,
-        label_stroke_color,
-        label_stroke_opacity,
-        label_stroke_size,
-        label_font_size,
-        label_font_weight,
-        label_line_height,
-        label_align,
-        ref_stroke_color,
-        ref_stroke_opacity,
-        ref_stroke_size,
-        ref_stroke_dash,
-    )
-
-
-def plot(
-        marks: List[Mark],
-) -> Plot:
-    """Create a plot. A plot is composed of one or more graphical mark layers.
-
-    Args:
-        marks: The graphical mark layers contained in this plot.
-    Returns:
-        A `h2o_q.types.Plot` instance.
-    """
-    return Plot(
-        marks,
     )
 
 

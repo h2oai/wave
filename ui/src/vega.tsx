@@ -21,15 +21,19 @@ const
   })
 
 /** Create a Vega-lite plot for display inside a form. */
-export interface VegaPlot {
+export interface VegaVisualization {
   /** The Vega-lite specification. */
   specification: S
   /** Data for the plot, if any. */
   data?: Rec
+  /** The width of the visualization. Defaults to 100%. */
+  width?: S
+  /** The height of the visualization. Defaults to 300px. */
+  height?: S
 }
 
 export const
-  VegaLite = bond((state: { spec: S, data?: Rec }) => {
+  XVegaVisualization = bond(({ model: state }: { model: VegaVisualization }) => {
     const
       ref = React.createRef<HTMLDivElement>(),
       init = async () => {
@@ -39,7 +43,7 @@ export const
         }
 
         const
-          spec = JSON.parse(state.spec),
+          spec = JSON.parse(state.specification),
           data = unpack<any[]>(state.data)
 
         if (data) spec.data = { values: data }
@@ -54,9 +58,16 @@ export const
           console.error(e)
         }
       },
-      render = () => (
-        <div ref={ref} />
-      )
+      render = () => {
+        const
+          { width, height } = state,
+          style: React.CSSProperties = (width === 'auto' && height === 'auto')
+            ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
+            : { width: width || 'auto', height: height || 'auto' }
+        return (
+          <div style={style} ref={ref} />
+        )
+      }
 
     return { init, render }
   })
@@ -79,7 +90,7 @@ export const
           <div data-test='vega' className={css.card}>
             <div className={css.title}>{state.title}</div>
             <div className={css.plot}>
-              <VegaLite key={xid()} spec={state.specification} data={state.data} />
+              <XVegaVisualization key={xid()} model={{ specification: state.specification, data: state.data, width: 'auto', height: 'auto' }} />
             </div>
           </div>
         )
