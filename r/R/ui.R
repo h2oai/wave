@@ -1031,6 +1031,49 @@ ui_file_upload <- function(
   return(.o)
 }
 
+#' Some doc.
+#'
+#' @param aa No documentation available.
+#' @return A ProgressTableCellType instance.
+ui_progress_table_cell_type <- function(
+  aa = NULL) {
+  .guard_scalar("aa", "character", aa)
+  .o <- list(progress=list(
+    aa=aa))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
+  return(.o)
+}
+
+#' Create a custom cell for boolean values. Show checked icon for true and X icon for false.
+#'
+#' @param aa No documentation available.
+#' @return A DoneTableCellType instance.
+ui_done_table_cell_type <- function(
+  aa = NULL) {
+  .guard_scalar("aa", "character", aa)
+  .o <- list(done=list(
+    aa=aa))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
+  return(.o)
+}
+
+#' Defines cell content to be rendered instead of a simple text.
+#'
+#' @param progress No documentation available.
+#' @param done No documentation available.
+#' @return A TableCellType instance.
+ui_table_cell_type <- function(
+  progress = NULL,
+  done = NULL) {
+  .guard_scalar("progress", "h2oq_ProgressTableCellType", progress)
+  .guard_scalar("done", "h2oq_DoneTableCellType", done)
+  .o <- list(
+    progress=progress,
+    done=done)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
+  return(.o)
+}
+
 #' Create a table column.
 #'
 #' @param name An identifying name for this column.
@@ -1039,7 +1082,6 @@ ui_file_upload <- function(
 #' @param searchable Indicates whether the column should be included when typing into searchbox.
 #' @param filterable Indicates whether values of this option should serve as filters in filtering dropdown.
 #' @param table_cell_type Defines cell content to be rendered instead of a simple text.
-#'   One of 'progress', 'done'.
 #' @return A TableColumn instance.
 ui_table_column <- function(
   name,
@@ -1053,7 +1095,7 @@ ui_table_column <- function(
   .guard_scalar("sortable", "logical", sortable)
   .guard_scalar("searchable", "logical", searchable)
   .guard_scalar("filterable", "logical", filterable)
-  # TODO Validate table_cell_type
+  .guard_scalar("table_cell_type", "h2oq_TableCellType", table_cell_type)
   .o <- list(
     name=name,
     label=label,

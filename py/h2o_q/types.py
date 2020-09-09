@@ -1883,6 +1883,91 @@ class FileUpload:
         )
 
 
+class ProgressTableCellType:
+    """Some doc.
+    """
+    def __init__(
+            self,
+            aa: Optional[str] = None,
+    ):
+        self.aa = aa
+        """No documentation available."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        return _dump(
+            aa=self.aa,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ProgressTableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_aa: Any = __d.get('aa')
+        aa: Optional[str] = __d_aa
+        return ProgressTableCellType(
+            aa,
+        )
+
+
+class DoneTableCellType:
+    """Create a custom cell for boolean values. Show checked icon for true and X icon for false.
+    """
+    def __init__(
+            self,
+            aa: Optional[str] = None,
+    ):
+        self.aa = aa
+        """No documentation available."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        return _dump(
+            aa=self.aa,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'DoneTableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_aa: Any = __d.get('aa')
+        aa: Optional[str] = __d_aa
+        return DoneTableCellType(
+            aa,
+        )
+
+
+class TableCellType:
+    """Defines cell content to be rendered instead of a simple text.
+    """
+    def __init__(
+            self,
+            progress: Optional[ProgressTableCellType] = None,
+            done: Optional[DoneTableCellType] = None,
+    ):
+        self.progress = progress
+        """No documentation available."""
+        self.done = done
+        """No documentation available."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        return _dump(
+            progress=None if self.progress is None else self.progress.dump(),
+            done=None if self.done is None else self.done.dump(),
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_progress: Any = __d.get('progress')
+        __d_done: Any = __d.get('done')
+        progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
+        done: Optional[DoneTableCellType] = None if __d_done is None else DoneTableCellType.load(__d_done)
+        return TableCellType(
+            progress,
+            done,
+        )
+
+
 class TableColumn:
     """Create a table column.
     """
@@ -1893,7 +1978,7 @@ class TableColumn:
             sortable: Optional[bool] = None,
             searchable: Optional[bool] = None,
             filterable: Optional[bool] = None,
-            table_cell_type: Optional[str] = None,
+            table_cell_type: Optional[TableCellType] = None,
     ):
         self.name = name
         """An identifying name for this column."""
@@ -1906,7 +1991,7 @@ class TableColumn:
         self.filterable = filterable
         """Indicates whether values of this option should serve as filters in filtering dropdown."""
         self.table_cell_type = table_cell_type
-        """Defines cell content to be rendered instead of a simple text. One of 'progress', 'done'."""
+        """Defines cell content to be rendered instead of a simple text."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1920,7 +2005,7 @@ class TableColumn:
             sortable=self.sortable,
             searchable=self.searchable,
             filterable=self.filterable,
-            table_cell_type=self.table_cell_type,
+            table_cell_type=None if self.table_cell_type is None else self.table_cell_type.dump(),
         )
 
     @staticmethod
@@ -1941,7 +2026,7 @@ class TableColumn:
         sortable: Optional[bool] = __d_sortable
         searchable: Optional[bool] = __d_searchable
         filterable: Optional[bool] = __d_filterable
-        table_cell_type: Optional[str] = __d_table_cell_type
+        table_cell_type: Optional[TableCellType] = None if __d_table_cell_type is None else TableCellType.load(__d_table_cell_type)
         return TableColumn(
             name,
             label,

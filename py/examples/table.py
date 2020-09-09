@@ -23,7 +23,7 @@ class Issue:
 
 
 # Create some issues
-issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=10, done=(i%2 == 0), sth=('Off' if i%2 == 0 else 'On')) for i in range(100000)]
+issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=10, done=(i%2 == 0), sth=('Off' if i%2 == 0 else 'On')) for i in range(20)]
 
 # Build a lookup of issues for convenience
 issue_lookup = {issue.id: issue for issue in issues}
@@ -33,9 +33,9 @@ columns = [
     ui.table_column(name='text', label='Issue', sortable=True, searchable=True),
     ui.table_column(name='status', label='Status', filterable=True),
     ui.table_column(name='sth', label='Something', filterable=True),
-    ui.table_column(name='done', label='Done', table_cell_type='done'),
+    ui.table_column(name='done', label='Done', table_cell_type=ui.table_cell_type(done=ui.done_table_cell_type())),
     ui.table_column(name='views', label='Views', sortable=True),
-    ui.table_column(name='progress', label='Progress', table_cell_type='progress'),
+    ui.table_column(name='progress', label='Progress', table_cell_type=ui.table_cell_type(progress=ui.progress_table_cell_type())),
 ]
 
 

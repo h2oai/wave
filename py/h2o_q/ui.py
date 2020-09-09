@@ -936,13 +936,61 @@ def file_upload(
     ))
 
 
+def progress_table_cell_type(
+        aa: Optional[str] = None,
+) -> TableCellType:
+    """Some doc.
+
+    Args:
+        aa: No documentation available.
+    Returns:
+        A `h2o_q.types.ProgressTableCellType` instance.
+    """
+    return TableCellType(progress=ProgressTableCellType(
+        aa,
+    ))
+
+
+def done_table_cell_type(
+        aa: Optional[str] = None,
+) -> TableCellType:
+    """Create a custom cell for boolean values. Show checked icon for true and X icon for false.
+
+    Args:
+        aa: No documentation available.
+    Returns:
+        A `h2o_q.types.DoneTableCellType` instance.
+    """
+    return TableCellType(done=DoneTableCellType(
+        aa,
+    ))
+
+
+def table_cell_type(
+        progress: Optional[ProgressTableCellType] = None,
+        done: Optional[DoneTableCellType] = None,
+) -> TableCellType:
+    """Defines cell content to be rendered instead of a simple text.
+
+    Args:
+        progress: No documentation available.
+        done: No documentation available.
+    Returns:
+        A `h2o_q.types.TableCellType` instance.
+    """
+    return TableCellType(
+        progress,
+        done,
+    )
+
+
 def table_column(
         name: str,
         label: str,
         sortable: Optional[bool] = None,
         searchable: Optional[bool] = None,
         filterable: Optional[bool] = None,
-        table_cell_type: Optional[str] = None,
+        table_cell_type: Optional[TableCellType] = None,
 ) -> TableColumn:
     """Create a table column.
 
@@ -952,7 +1000,7 @@ def table_column(
         sortable: Indicates whether the column is sortable.
         searchable: Indicates whether the column should be included when typing into searchbox.
         filterable: Indicates whether values of this option should serve as filters in filtering dropdown.
-        table_cell_type: Defines cell content to be rendered instead of a simple text. One of 'progress', 'done'.
+        table_cell_type: Defines cell content to be rendered instead of a simple text.
     Returns:
         A `h2o_q.types.TableColumn` instance.
     """

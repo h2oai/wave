@@ -2,9 +2,15 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, S, qd, box, Dict, U } from './qd'
 import { stylesheet } from 'typestyle'
-import { rem, getTheme } from './theme'
-import { ProgressArc } from './parts/progress_arc'
-import { grid } from './layout'
+import { rem } from './theme'
+import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
+import { DoneTableCellType, XDoneTableCellType } from "./done_table_cell_type";
+
+/** Defines cell content to be rendered instead of a simple text. */
+interface TableCellType {
+  progress?: ProgressTableCellType
+  done?: DoneTableCellType
+}
 
 /** Create a table column. */
 interface TableColumn {
@@ -19,7 +25,7 @@ interface TableColumn {
   /** Indicates whether values of this option should serve as filters in filtering dropdown. */
   filterable?: B
   /** Defines cell content to be rendered instead of a simple text. */
-  table_cell_type?: 'progress' | 'done'
+  table_cell_type?: TableCellType
 }
 
 /** Create a table row. */
@@ -30,7 +36,6 @@ interface TableRow {
   cells: S[]
 }
 
-// TODO: Csv export.
 // TODO: Initial column resizing logic.
 // TODO: Multiple group by.
 // TODO: Allow showing only selected columns.
@@ -65,17 +70,19 @@ export interface Table {
   tooltip?: S
 }
 
-interface QColumn extends Fluent.IColumn {
-  cellType?: S
+type QColumn = Fluent.IColumn & {
+  cellType?: TableCellType
   isSortable?: B
 }
 
 const
-  theme = getTheme(),
   styles: Partial<Fluent.IDetailsListStyles> = {
+    headerWrapper: {
+      overflowX: 'hidden'
+    },
     contentWrapper: {
       height: '70vh',
-      overflowX: 'hidden',
+      overflowX: 'auto',
     }
   },
   css = stylesheet({
@@ -90,21 +97,6 @@ const
     sortingIcon: {
       marginLeft: 10,
       fontSize: rem(1.1)
-    },
-    percentContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'column',
-      position: 'absolute',
-      left: 12,
-      top: 10,
-      width: grid.unitInnerHeight,
-      height: grid.unitInnerHeight,
-    },
-    percent: {
-      ...theme.font.s12,
-      opacity: 0.5,
     },
     // Fix - incorrect width recalculated after changing to "group by mode" - collapse icon in header
     // causes horizontal overflow for whole table.
@@ -321,7 +313,6 @@ export const
               <b style={{ paddingLeft: 5 }}>{formatNum(filteredItemsB().length)} of {formatNum(items.length)}</b>
             </Fluent.Text>
             <Fluent.CommandBar items={commandBarItems} />
-            {/* <Fluent.DefaultButton text='Reset table' iconProps={{ iconName: 'Refresh' }} onClick={reset} /> */}
           </Fluent.Stack>
         )
       },
@@ -360,11 +351,11 @@ export const
         qd.args[m.name] = [item.__key__]
         qd.sync()
       },
-      onRenderItemColumn = (item?: any, _index?: number, column?: QColumn) => {
-        if (!item || !column) return <span />
+      onRenderItemColumn = (item?: any, _index?: number, col?: QColumn) => {
+        if (!item || !col) return <span />
 
-        const v = item[column.fieldName as any]
-        if (column.key === primaryColumnKey) {
+        const v = item[col.fieldName as S]
+        if (col.key === primaryColumnKey) {
           const onClick = () => {
             qd.args[m.name] = [item.__key__]
             qd.sync()
@@ -372,24 +363,10 @@ export const
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }
 
-        switch (column.cellType) {
-          case 'progress': {
-            const progress = item[column.key]
-            return (
-              <div style={{ display: 'flex' }}>
-                <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color('red')} value={progress / 100} />
-                <div className={css.percentContainer}>
-                  <div className={css.percent}>{`${Math.round(progress)}%`}</div>
-                </div>
-              </div>
-            )
-          }
-          case 'done': {
-            const isDone = item[column.key]
-            return <Fluent.Icon iconName={isDone ? 'BoxCheckmarkSolid' : 'BoxMultiplySolid'} styles={{ root: { fontSize: '1.2rem' } }} />
-          }
-          default: return <span>{v}</span>
-        }
+        if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
+        else if (col.cellType?.done) return <XDoneTableCellType model={col.cellType.done} isDone={item[col.key]} />
+
+        return <span>{v}</span>
       },
       DataTable = () => (
         <>
