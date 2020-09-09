@@ -9,5 +9,8 @@
   ],
   "*.md": [
     "./node_modules/markdownlint-cli/markdownlint.js"
+  ],
+  "*.py": [
+    "./venv/bin/pylint"
   ]
 }

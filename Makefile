@@ -10,6 +10,13 @@ setup: ## Set up development dependencies
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
 	cd tools/qgen && $(MAKE) setup build
+	$(MAKE) setup-lint
+
+setup-lint: ## Setup linters
+	npm ci
+	python3 -m venv venv
+	./venv/bin/python -m pip install --upgrade pip
+	./venv/bin/python -m pip install pylint
 
 clean: ## Clean
 	rm -rf build
@@ -17,6 +24,7 @@ clean: ## Clean
 	cd py && $(MAKE) clean
 	cd tools/qgen && $(MAKE) clean
 	rm -f qd
+	rm -rf venv
 
 .PHONY: build
 build: build-ui build-server ## Build everything
