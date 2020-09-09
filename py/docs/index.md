@@ -1,5 +1,8 @@
 
 # Change Log
+- [v0.3.1](https://github.com/h2oai/qd/releases/tag/v0.3.1) - Sep 8, 2020
+    - Fixed
+        - Multiselect dropdown checkboxes do not respond when clicked.
 - [v0.3.0](https://github.com/h2oai/qd/releases/tag/v0.3.0) - Sep 8, 2020
     - Added
         - Native plots inside form cards - `ui.visualization()`.
