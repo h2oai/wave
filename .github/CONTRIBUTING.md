@@ -1,6 +1,7 @@
 # Q Contributing Guide
 
-Hi! We are really excited that you are interested in contributing to Q. Before submitting your contribution, please make sure to take a moment and read through the following guidelines:
+Hi! We are really excited that you are interested in contributing to Q.
+Before submitting your contribution, please make sure to take a moment and read through the following guidelines:
 
 - [Code of Conduct](https://github.com/h2oai/qd/tree/master/.github/CODE_OF_CONDUCT.md)
 - [Issue Reporting Guidelines](#issue-reporting-guidelines)
@@ -22,6 +23,10 @@ Hi! We are really excited that you are interested in contributing to Q. Before s
 ## Pull Request Guidelines
 
 - All development should be done in dedicated branches. **Do not submit PRs against the `master` branch.**
+
+- Branch name should be named feat/issue-${ISSUE_NUMBER} or fix/issue-${ISSUE_NUMBER}. If your branch name ends with
+a number, our `githooks/commit-msg.js` will assume it is an issue number and append `#${ISSUE_NUMBER}` to your commit message
+automatically. This links the commit to the corresponding issue.
 
 - Work in the `src` folder and **DO NOT** checkin `dist` in the commits.
 
@@ -48,21 +53,27 @@ After cloning the repo, run:
 TODO: System requirements (protobuf, twirp etc.)
 
 ``` bash
-$ make all
+make all
 ```
 
 After successful setup, you need to run:
+
 - Q server (Go server) with command
+
 ``` bash
-$ make run
+make run
 ```
+
 - Q app (this will run `tour.py`, but can be any app)
+
 ``` bash
-$ cd py && ./venv/bin/python examples/wizard.py
+cd py && ./venv/bin/python examples/wizard.py
 ```
+
 - Hot reload webpack server (for easier UI development)
+
 ``` bash
-$ make run-ui
+make run-ui
 ```
 
 After that you can go to `http://localhost:55555/tour` (`http://localhost:3000/tour` if you enabled hot reload server).
@@ -70,18 +81,20 @@ After that you can go to `http://localhost:55555/tour` (`http://localhost:3000/t
 ### Committing Changes
 
 Commit messages must follow [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/). After commit, we have hooks in place that will:
+
 - Lint commit message format.
-- Lint staged files based on their extension. Linting supported for `.ts`, `.tsx`, `.go`, `.py`, `.md` files. 
+- Lint staged files based on their extension. Linting supported for `.ts`, `.tsx`, `.go`, `.py`, `.md` files.
 - Run accompanying unit tests if found.
 - Run Typescript compiler for typescript files.
 
 If any of these checks fails, the commit is aborted and you have to fix the errors first.
 
 Make sure your commit message also ends with an issue number (e.g. fix: Typo #11).
+
 ### Commonly used make targets
 
 ``` bash
-# Compiles Typescript API to Python API. 
+# Compiles Typescript API to Python API.
 $ make generate
 
 # Starts Q server.
@@ -116,4 +129,4 @@ $ make run-cypress-bridge
 - **`ui`**: contains UI components written in React + Typescrip that are later translated to Python
   - **`config`** contains webpack configuration
   - **`eslint`** contains custom eslint rules for `ts` and `tsx` files
-  It is required to run `npm ci` after changing `linter.js` in order for changes to take effect. 
+  It is required to run `npm ci` after changing `linter.js` in order for changes to take effect.
