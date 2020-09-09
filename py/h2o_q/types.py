@@ -1884,28 +1884,29 @@ class FileUpload:
 
 
 class ProgressTableCellType:
-    """Some doc.
+    """Create a custom cell for progress values. The value of the model must be
+    a valid percentage (between 0 - 100).
     """
     def __init__(
             self,
-            aa: Optional[str] = None,
+            thickness: Optional[int] = None,
     ):
-        self.aa = aa
-        """No documentation available."""
+        self.thickness = thickness
+        """Specify thickness for a progress arc. Default value is 2."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         return _dump(
-            aa=self.aa,
+            thickness=self.thickness,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'ProgressTableCellType':
         """Creates an instance of this class using the contents of a dict."""
-        __d_aa: Any = __d.get('aa')
-        aa: Optional[str] = __d_aa
+        __d_thickness: Any = __d.get('thickness')
+        thickness: Optional[int] = __d_thickness
         return ProgressTableCellType(
-            aa,
+            thickness,
         )
 
 

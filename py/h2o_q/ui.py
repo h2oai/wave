@@ -937,17 +937,18 @@ def file_upload(
 
 
 def progress_table_cell_type(
-        aa: Optional[str] = None,
+        thickness: Optional[int] = None,
 ) -> TableCellType:
-    """Some doc.
+    """Create a custom cell for progress values. The value of the model must be
+    a valid percentage (between 0 - 100).
 
     Args:
-        aa: No documentation available.
+        thickness: Specify thickness for a progress arc. Default value is 2.
     Returns:
         A `h2o_q.types.ProgressTableCellType` instance.
     """
     return TableCellType(progress=ProgressTableCellType(
-        aa,
+        thickness,
     ))
 
 

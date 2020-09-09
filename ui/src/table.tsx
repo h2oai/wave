@@ -134,7 +134,7 @@ export const
       selectedFiltersB = box<{ [key: string]: S[] } | null>(null),
       colContextMenuList = box<Fluent.IContextualMenuProps | null>(null),
       groupsB = box<Fluent.IGroup[] | undefined>(undefined),
-      groupByKeyB = box<S | null>(null),
+      groupByKeyB = box('*'),
       groupByOptions: Fluent.IDropdownOption[] = [{ key: '*', text: 'Nothing' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))],
       onSearchChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr?: S) => {
         searchStrB(searchStr ? searchStr.toLowerCase() : '')
@@ -149,7 +149,7 @@ export const
       },
       search = () => {
         const searchStr = searchStrB()
-        if (!searchStr) return
+        if (!searchStr || !searchableKeys.length) return
 
         filteredItemsB(filteredItemsB().filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(searchStr))))
       },
@@ -293,8 +293,8 @@ export const
         return (
           <>
             <Fluent.Stack horizontal horizontalAlign='space-between'>
-              <Fluent.Dropdown label='Group by' defaultSelectedKey='*' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />
-              <Fluent.TextField label='Filter' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%', float: 'right' } }} />
+              <Fluent.Dropdown label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />
+              <Fluent.TextField data-test='search' label='Filter' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%', float: 'right' } }} />
             </Fluent.Stack>
             <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groupsB() ? css.hideCellGroupCollapse : ''} />
           </>

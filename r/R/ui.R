@@ -1031,15 +1031,16 @@ ui_file_upload <- function(
   return(.o)
 }
 
-#' Some doc.
+#' Create a custom cell for progress values. The value of the model must be
+#' a valid percentage (between 0 - 100).
 #'
-#' @param aa No documentation available.
+#' @param thickness Specify thickness for a progress arc. Default value is 2.
 #' @return A ProgressTableCellType instance.
 ui_progress_table_cell_type <- function(
-  aa = NULL) {
-  .guard_scalar("aa", "character", aa)
+  thickness = NULL) {
+  .guard_scalar("thickness", "numeric", thickness)
   .o <- list(progress=list(
-    aa=aa))
+    thickness=thickness))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
   return(.o)
 }

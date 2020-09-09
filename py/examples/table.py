@@ -23,7 +23,7 @@ class Issue:
 
 
 # Create some issues
-issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=10, done=(i%2 == 0), sth=('Off' if i%2 == 0 else 'On')) for i in range(20)]
+issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=10, done=(i%2 == 0), sth=('Off' if i%2 == 0 else 'On')) for i in range(100000)]
 
 # Build a lookup of issues for convenience
 issue_lookup = {issue.id: issue for issue in issues}
