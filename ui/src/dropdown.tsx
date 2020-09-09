@@ -69,7 +69,9 @@ export const
             } else {
               selection.delete(name)
             }
-            qd.args[m.name] = Array.from(selection)
+            const selectedOpts = Array.from(selection)
+            qd.args[m.name] = selectedOpts
+            selectedOptionsB(selectedOpts)
           } else {
             qd.args[m.name] = name
           }
