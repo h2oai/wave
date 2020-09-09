@@ -1,4 +1,5 @@
 source("../core.R") 
+source("../ui.R")
 
 value_list = c("$85.00","$100","$343.43","$1.00","$10","$30","$54")
 test_page <- page("/page_demo")

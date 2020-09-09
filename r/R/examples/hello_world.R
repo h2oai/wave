@@ -1,4 +1,5 @@
 source("../core.R") 
+source("../ui.R") 
 
 test_page <- page("/page_demo")
 
