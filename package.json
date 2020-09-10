@@ -15,7 +15,7 @@
     "markdownlint-cli": "^0.23.2"
   },
   "scripts": {
-    "lint-staged:typescript": "cd ui && npx tsc --jsx react --esModuleInterop --noEmit",
+    "lint-staged:typescript": "cd ui && npx tsc --jsx react --esModuleInterop --noEmit --resolveJsonModule",
     "lint-staged:eslint": "cd ui && npx eslint",
     "lint-staged:tests": "cd ui && npx jest --findRelatedTests --bail"
   },
