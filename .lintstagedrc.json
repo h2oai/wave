@@ -11,6 +11,6 @@
     "./node_modules/markdownlint-cli/markdownlint.js"
   ],
   "*.py": [
-    "./venv/bin/pylint"
+    "./py/venv/bin/pylint"
   ]
 }
