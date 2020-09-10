@@ -1976,6 +1976,8 @@ class TableColumn:
             self,
             name: str,
             label: str,
+            min_width: Optional[int] = None,
+            max_width: Optional[int] = None,
             sortable: Optional[bool] = None,
             searchable: Optional[bool] = None,
             filterable: Optional[bool] = None,
@@ -1985,6 +1987,10 @@ class TableColumn:
         """An identifying name for this column."""
         self.label = label
         """The text displayed on the column header."""
+        self.min_width = min_width
+        """Sets minimum width for this column."""
+        self.max_width = max_width
+        """Sets maximum width for this column."""
         self.sortable = sortable
         """Indicates whether the column is sortable."""
         self.searchable = searchable
@@ -2003,6 +2009,8 @@ class TableColumn:
         return _dump(
             name=self.name,
             label=self.label,
+            min_width=self.min_width,
+            max_width=self.max_width,
             sortable=self.sortable,
             searchable=self.searchable,
             filterable=self.filterable,
@@ -2018,12 +2026,16 @@ class TableColumn:
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('TableColumn.label is required.')
+        __d_min_width: Any = __d.get('min_width')
+        __d_max_width: Any = __d.get('max_width')
         __d_sortable: Any = __d.get('sortable')
         __d_searchable: Any = __d.get('searchable')
         __d_filterable: Any = __d.get('filterable')
         __d_table_cell_type: Any = __d.get('table_cell_type')
         name: str = __d_name
         label: str = __d_label
+        min_width: Optional[int] = __d_min_width
+        max_width: Optional[int] = __d_max_width
         sortable: Optional[bool] = __d_sortable
         searchable: Optional[bool] = __d_searchable
         filterable: Optional[bool] = __d_filterable
@@ -2031,6 +2043,8 @@ class TableColumn:
         return TableColumn(
             name,
             label,
+            min_width,
+            max_width,
             sortable,
             searchable,
             filterable,

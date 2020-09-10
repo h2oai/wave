@@ -10,32 +10,26 @@ _id = 0
 
 
 class Issue:
-    def __init__(self, text: str, status: str, progress: int, done: bool, sth: str):
+    def __init__(self, text: str, status: str):
         global _id
         _id += 1
         self.id = f'I{_id}'
         self.text = text
         self.status = status
         self.views = 0
-        self.progress = progress
-        self.done = done
-        self.sth = sth
 
 
 # Create some issues
-issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=10, done=(i%2 == 0), sth=('Off' if i%2 == 0 else 'On')) for i in range(100000)]
+issues = [Issue(text=fake.sentence(), status='Open') for i in range(12)]
 
 # Build a lookup of issues for convenience
 issue_lookup = {issue.id: issue for issue in issues}
 
 # Create columns for our issue table.
 columns = [
-    ui.table_column(name='text', label='Issue', sortable=True, searchable=True),
-    ui.table_column(name='status', label='Status', filterable=True),
-    ui.table_column(name='sth', label='Something', filterable=True),
-    ui.table_column(name='done', label='Done', table_cell_type=ui.table_cell_type(done=ui.done_table_cell_type())),
-    ui.table_column(name='views', label='Views', sortable=True),
-    ui.table_column(name='progress', label='Progress', table_cell_type=ui.table_cell_type(progress=ui.progress_table_cell_type())),
+    ui.table_column(name='text', label='Issue'),
+    ui.table_column(name='status', label='Status'),
+    ui.table_column(name='views', label='Views'),
 ]
 
 
@@ -43,7 +37,7 @@ def make_issue_table(allow_multiple_selection=False):
     return ui.table(
         name='issues',
         columns=columns,
-        rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, issue.sth, issue.done, str(issue.views), issue.progress]) for issue in issues],
+        rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, str(issue.views)]) for issue in issues],
         multiple=allow_multiple_selection,
     )
 
@@ -65,7 +59,7 @@ async def edit_multiple(q: Q):
 
 async def show_issues(q: Q):
     q.page['form'] = ui.form_card(
-        box='1 1 -1 -1',
+        box='1 1 4 -1',
         items=[
             make_issue_table(),
             ui.buttons([ui.button(name='edit_multiple', label='Edit Multiple...', primary=True)]),

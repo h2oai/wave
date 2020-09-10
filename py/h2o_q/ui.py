@@ -988,6 +988,8 @@ def table_cell_type(
 def table_column(
         name: str,
         label: str,
+        min_width: Optional[int] = None,
+        max_width: Optional[int] = None,
         sortable: Optional[bool] = None,
         searchable: Optional[bool] = None,
         filterable: Optional[bool] = None,
@@ -998,6 +1000,8 @@ def table_column(
     Args:
         name: An identifying name for this column.
         label: The text displayed on the column header.
+        min_width: Sets minimum width for this column.
+        max_width: Sets maximum width for this column.
         sortable: Indicates whether the column is sortable.
         searchable: Indicates whether the column should be included when typing into searchbox.
         filterable: Indicates whether values of this option should serve as filters in filtering dropdown.
@@ -1008,6 +1012,8 @@ def table_column(
     return TableColumn(
         name,
         label,
+        min_width,
+        max_width,
         sortable,
         searchable,
         filterable,

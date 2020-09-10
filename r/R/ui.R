@@ -1079,6 +1079,8 @@ ui_table_cell_type <- function(
 #'
 #' @param name An identifying name for this column.
 #' @param label The text displayed on the column header.
+#' @param min_width Sets minimum width for this column.
+#' @param max_width Sets maximum width for this column.
 #' @param sortable Indicates whether the column is sortable.
 #' @param searchable Indicates whether the column should be included when typing into searchbox.
 #' @param filterable Indicates whether values of this option should serve as filters in filtering dropdown.
@@ -1087,12 +1089,16 @@ ui_table_cell_type <- function(
 ui_table_column <- function(
   name,
   label,
+  min_width = NULL,
+  max_width = NULL,
   sortable = NULL,
   searchable = NULL,
   filterable = NULL,
   table_cell_type = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
+  .guard_scalar("min_width", "numeric", min_width)
+  .guard_scalar("max_width", "numeric", max_width)
   .guard_scalar("sortable", "logical", sortable)
   .guard_scalar("searchable", "logical", searchable)
   .guard_scalar("filterable", "logical", filterable)
@@ -1100,6 +1106,8 @@ ui_table_column <- function(
   .o <- list(
     name=name,
     label=label,
+    min_width=min_width,
+    max_width=max_width,
     sortable=sortable,
     searchable=searchable,
     filterable=filterable,

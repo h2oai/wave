@@ -18,6 +18,10 @@ interface TableColumn {
   name: S
   /** The text displayed on the column header. */
   label: S
+  /** Sets minimum width for this column. */
+  min_width?: U
+  /** Sets maximum width for this column. */
+  max_width?: U
   /** Indicates whether the column is sortable. */
   sortable?: B
   /** Indicates whether the column should be included when typing into searchbox. */
@@ -36,9 +40,6 @@ interface TableRow {
   cells: S[]
 }
 
-// TODO: Initial column resizing logic.
-// TODO: Multiple group by.
-// TODO: Allow showing only selected columns.
 
 /**
  * Create an interactive table.
@@ -166,11 +167,11 @@ export const
         filter()
         search()
       },
+      // TODO: Make filter options in dropdowns dynamic. 
       filter = () => {
         const selectedFilters = selectedFiltersB()
 
         // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
-        // TODO: Make filter options in dropdowns dynamic. 
         const filteredItems = selectedFilters
           ? items.filter(i => Object.keys(selectedFilters)
             .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey]
@@ -293,7 +294,7 @@ export const
         return (
           <>
             <Fluent.Stack horizontal horizontalAlign='space-between'>
-              <Fluent.Dropdown label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />
+              <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />
               <Fluent.TextField data-test='search' label='Filter' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%', float: 'right' } }} />
             </Fluent.Stack>
             <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groupsB() ? css.hideCellGroupCollapse : ''} />
@@ -331,7 +332,8 @@ export const
         key: c.name,
         name: c.label,
         fieldName: c.name,
-        minWidth: (window.innerWidth - 300) / m.columns.length,
+        minWidth: c.min_width || 150,
+        maxWidth: c.max_width,
         headerClassName: c.sortable ? css.sortableHeader : undefined,
         iconClassName: c.sortable ? css.sortingIcon : undefined,
         iconName: c.sortable ? 'SortDown' : undefined,
