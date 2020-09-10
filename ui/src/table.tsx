@@ -77,15 +77,6 @@ type QColumn = Fluent.IColumn & {
 }
 
 const
-  styles: Partial<Fluent.IDetailsListStyles> = {
-    headerWrapper: {
-      overflowX: 'hidden'
-    },
-    contentWrapper: {
-      height: '70vh',
-      overflowX: 'auto',
-    }
-  },
   css = stylesheet({
     sortableHeader: {
       $nest: {
@@ -99,7 +90,7 @@ const
       marginLeft: 10,
       fontSize: rem(1.1)
     },
-    // Fix - incorrect width recalculated after changing to "group by mode" - collapse icon in header
+    // HACK: incorrect width recalculated after changing to "group by mode" - collapse icon in header
     // causes horizontal overflow for whole table.
     hideCellGroupCollapse: {
       $nest: {
@@ -292,13 +283,9 @@ export const
         if (!props) return <span />
 
         return (
-          <>
-            <Fluent.Stack horizontal horizontalAlign='space-between'>
-              <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />
-              <Fluent.TextField data-test='search' label='Filter' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%', float: 'right' } }} />
-            </Fluent.Stack>
+          <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
             <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groupsB() ? css.hideCellGroupCollapse : ''} />
-          </>
+          </Fluent.Sticky>
         )
       },
       commandBarItems: Fluent.ICommandBarItemProps[] = [
@@ -309,18 +296,20 @@ export const
         if (!props) return <span />
 
         return (
-          <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
-            <Fluent.Text variant='smallPlus' block >Rows:
+          <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Footer} isScrollSynced>
+            <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
+              <Fluent.Text variant='smallPlus' block >Rows:
               <b style={{ paddingLeft: 5 }}>{formatNum(filteredItemsB().length)} of {formatNum(items.length)}</b>
-            </Fluent.Text>
-            <Fluent.CommandBar items={commandBarItems} />
-          </Fluent.Stack>
+              </Fluent.Text>
+              <Fluent.CommandBar items={commandBarItems} />
+            </Fluent.Stack>
+          </Fluent.Sticky>
         )
       },
       onRenderRow = (props?: Fluent.IDetailsRowProps) => {
         if (!props) return <span />
 
-        return <Fluent.DetailsRow {...props} styles={{ cell: { alignSelf: 'center' } }} />
+        return <Fluent.DetailsRow {...props} styles={{ cell: { alignSelf: 'center' }, root: { width: '100%' } }} />
       },
       onColumnClick = (e: React.MouseEvent<HTMLElement>, column: QColumn) => {
         const isMenuClicked = (e.target as HTMLElement).getAttribute('data-icon-name') === 'ChevronDown'
@@ -373,10 +362,11 @@ export const
       DataTable = () => (
         <>
           <Fluent.DetailsList
-            styles={styles}
+            styles={{ contentWrapper: { minHeight: '78vh' } }}
             items={filteredItemsB()}
             columns={columnsB()}
-            layoutMode={Fluent.DetailsListLayoutMode.justified}
+            layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
+            constrainMode={Fluent.ConstrainMode.unconstrained}
             groups={groupsB()}
             selection={selection}
             selectionMode={m.multiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
@@ -391,12 +381,18 @@ export const
         </>
       ),
       render = () => (
-        <div data-test={m.name}>
-          {
-            m.multiple
-              ? <Fluent.MarqueeSelection selection={selection}><DataTable /></Fluent.MarqueeSelection>
-              : <DataTable />
-          }
+        <div data-test={m.name} style={{ position: 'relative', height: '95vh' }}>
+          <Fluent.Stack horizontal horizontalAlign='space-between' >
+            <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />
+            <Fluent.TextField data-test='search' label='Filter' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%', float: 'right' } }} />
+          </Fluent.Stack>
+          <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: 60 } }}>
+            {
+              m.multiple
+                ? <Fluent.MarqueeSelection selection={selection}><DataTable /></Fluent.MarqueeSelection>
+                : <DataTable />
+            }
+          </Fluent.ScrollablePane>
         </div>
       )
     return { render, columnsB, filteredItemsB, selectedFiltersB, searchStrB, colContextMenuList, groupsB, groupByKeyB }
