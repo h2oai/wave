@@ -50,8 +50,6 @@ automatically. This links the commit to the corresponding issue.
 You will need [Node.js](http://nodejs.org) **version 10+**, [Go](https://golang.org/) **version 10+**, [Python](https://www.python.org/) **version 3.7**
 After cloning the repo, run:
 
-TODO: System requirements (protobuf, twirp etc.)
-
 ``` bash
 make all
 ```
@@ -113,8 +111,6 @@ $ make run-cypress-bridge
 ## Project Structure
 
 - **`data`**: contains data created by a Q-app itself (e.g. file upload files)
-
-- **`db`**: TODO: Specify
 
 - **`docs`**: contains documentation page related files
 

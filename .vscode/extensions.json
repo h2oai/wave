@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
-    "zxh404.vscode-proto3",
     "ms-python.python",
     "golang.Go",
     "DavidAnson.vscode-markdownlint"
