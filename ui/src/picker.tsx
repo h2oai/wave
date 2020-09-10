@@ -1,6 +1,6 @@
 import * as Fluent from '@fluentui/react';
 import React from 'react';
-import { bond, S, U, B, qd } from './qd';
+import { bond, S, U, B, qd, box } from './qd';
 import { Choice } from './choice_group';
 
 /**
@@ -33,14 +33,17 @@ const pickerSuggestionsProps: Fluent.IBasePickerSuggestionsProps = {
 export const XPicker = bond(({ model: m }: { model: Picker }) => {
   const
     tags: Fluent.ITag[] = m.choices.map(({ name, label }) => ({ key: name, name: label || name })),
-    initialSelectedTags = m.values?.map(val => ({ key: val, name: val })),
+    selectedTagsB = box<Fluent.ITag[]>(m.values?.map(val => ({ key: val, name: val }))),
     filterSuggestedTags = (filterText: string, selectedTags?: Fluent.ITag[]) => {
       if (!filterText) return []
       const isAlreadySelected = (t: Fluent.ITag) => selectedTags && selectedTags.includes(t)
       const isStringMatch = (name: string) => name.toLowerCase().includes(filterText.toLowerCase())
       return tags.filter(t => isStringMatch(t.name) && !isAlreadySelected(t))
     },
-    onChange = (items?: Fluent.ITag[]) => qd.args[m.name] = items ? items.map(({ key }) => key) : null,
+    onChange = (items?: Fluent.ITag[]) => {
+      selectedTagsB(items || [])
+      qd.args[m.name] = items ? items.map(({ key }) => key) : null
+    },
     init = () => qd.args[m.name] = m.values || null,
     render = () => (
       <>
@@ -52,11 +55,11 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
           onChange={onChange}
           pickerSuggestionsProps={pickerSuggestionsProps}
           itemLimit={m.max_choices}
-          selectedItems={initialSelectedTags}
+          selectedItems={selectedTagsB()}
           disabled={m.disabled}
         />
       </>
     )
 
-  return { init, render }
+  return { init, render, selectedTagsB }
 })

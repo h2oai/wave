@@ -39,6 +39,28 @@ describe('Picker.tsx', () => {
     expect(getByText(name)).toBeInTheDocument()
   })
 
+  it('Shows correct values - init values specified', () => {
+    const { queryAllByRole } = render(<XPicker model={{ ...pickerProps, values: [name] }} />)
+    expect(queryAllByRole('listitem')).toHaveLength(1)
+  })
+
+  it('Shows correct values - value picked', () => {
+    const { getByRole, queryAllByRole } = render(<XPicker model={pickerProps} />)
+    const input = (getByRole('textbox') as HTMLInputElement);
+    expect(queryAllByRole('listitem')).toHaveLength(0)
+
+    typeToInput(input, name)
+    fireEvent.click(getByRole('option').querySelector('button')!)
+    expect(queryAllByRole('listitem')).toHaveLength(1)
+  })
+
+  it('Shows correct values - value removed', () => {
+    const { getByRole, queryAllByRole } = render(<XPicker model={{ ...pickerProps, values: [name] }} />)
+    expect(queryAllByRole('listitem')).toHaveLength(1)
+    fireEvent.click(getByRole('listitem').querySelector('.ms-TagItem-close')!)
+    expect(queryAllByRole('listitem')).toHaveLength(0)
+  })
+
   it('Does not render label if not specified', () => {
     const { queryByText } = render(<XPicker model={pickerProps} />)
     expect(queryByText(name)).not.toBeInTheDocument()
@@ -49,10 +71,10 @@ describe('Picker.tsx', () => {
     const input = getByRole('textbox') as HTMLInputElement
 
     typeToInput(input, name)
-    expect(getAllByRole('option').length).toBe(1)
+    expect(getAllByRole('option')).toHaveLength(1)
 
     typeToInput(input, 'i')
-    expect(getAllByRole('option').length).toBe(2)
+    expect(getAllByRole('option')).toHaveLength(2)
   })
 
   it('Filters correctly - different case', () => {
@@ -60,9 +82,9 @@ describe('Picker.tsx', () => {
     const input = getByRole('textbox') as HTMLInputElement
 
     typeToInput(input, 'PICKER')
-    expect(getAllByRole('option').length).toBe(1)
+    expect(getAllByRole('option')).toHaveLength(1)
     typeToInput(input, 'Picker')
-    expect(getAllByRole('option').length).toBe(1)
+    expect(getAllByRole('option')).toHaveLength(1)
   })
 
   it('Filters correctly - does not offer already selected', () => {
