@@ -18,6 +18,8 @@ export interface Checklist {
   values?: S[]
   /** The choices to be presented. */
   choices?: Choice[]
+  /** True if the form should be submitted when the checklist value changes. */
+  trigger?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -30,7 +32,7 @@ const
   }),
   XChecklistItem = bond(({ name, label, disabled, selectedB }: { name: S, label: S, disabled: B, selectedB: Box<B> }) => {
     const
-      onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => selectedB(checked === true),
+      onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => selectedB(!!checked),
       render = () => {
         return (
           <Fluent.Checkbox
@@ -61,6 +63,7 @@ export const
         const vs: S[] = []
         for (const c of choices) if (c.selectedB()) vs.push(c.choice.name)
         qd.args[m.name] = vs
+        if (m.trigger) qd.sync()
       },
       select = (value: B) => {
         _pause = true
@@ -73,7 +76,7 @@ export const
       render = () => {
         const
           items = choices.map(({ choice, selectedB }, i) => (
-            <XChecklistItem name={`checkbox-${i + 1}`} key={i} label={choice.label || choice.name} disabled={choice.disabled || false} selectedB={selectedB} />
+            <XChecklistItem name={`checkbox-${i + 1}`} key={i} label={choice.label || choice.name} disabled={!!choice.disabled} selectedB={selectedB} />
           ))
         return (
           <div data-test={m.name}>

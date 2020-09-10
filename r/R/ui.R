@@ -618,6 +618,7 @@ ui_choice_group <- function(
 #' @param label Text to be displayed above the component.
 #' @param values The names of the selected choices.
 #' @param choices The choices to be presented.
+#' @param trigger True if the form should be submitted when the checklist value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checklist instance.
 ui_checklist <- function(
@@ -625,17 +626,20 @@ ui_checklist <- function(
   label = NULL,
   values = NULL,
   choices = NULL,
+  trigger = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_vector("values", "character", values)
   .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(checklist=list(
     name=name,
     label=label,
     values=values,
     choices=choices,
+    trigger=trigger,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
