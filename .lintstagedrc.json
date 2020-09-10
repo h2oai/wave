@@ -1,5 +1,5 @@
 {
-  "*.tsx": [
+  "*.(ts|tsx)": [
     "npm run lint-staged:typescript",
     "npm run lint-staged:eslint",
     "npm run lint-staged:tests"
