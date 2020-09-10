@@ -1,10 +1,10 @@
-import React from 'react';
-import * as Fluent from '@fluentui/react';
-import { bond, box, S, qd, B, U, F } from './qd';
-import InputRange, { Range } from 'react-input-range';
+import React from 'react'
+import * as Fluent from '@fluentui/react'
+import { bond, box, S, qd, B, U, F } from './qd'
+import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
-import { stylesheet } from 'typestyle';
-import { palette } from './theme';
+import { stylesheet } from 'typestyle'
+import { palette } from './theme'
 
 const
   css = stylesheet({

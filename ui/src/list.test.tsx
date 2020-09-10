@@ -1,7 +1,7 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { View } from './list';
-import * as T from './qd';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { View } from './list'
+import * as T from './qd'
 
 const
   name = 'list',

@@ -2,7 +2,7 @@ import React from 'react'
 import { bond, Card, S } from './qd'
 import { cards } from './layout'
 
-const
+export const
   View = bond(({ state, changed }: Card<Record<S, unknown>>) => {
     const
       render = () => (

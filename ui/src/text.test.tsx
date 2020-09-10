@@ -1,8 +1,8 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { XText, Text } from './text';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { XText, Text } from './text'
 
-const name = 'text';
+const name = 'text'
 const textProps: Text = { content: name }
 
 describe('Text.tsx', () => {

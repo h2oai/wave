@@ -1,7 +1,7 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { GridLayout } from './layout';
-import * as T from './qd';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { GridLayout } from './layout'
+import * as T from './qd'
 
 const
   name = 'layout',

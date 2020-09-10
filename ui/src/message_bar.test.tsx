@@ -1,7 +1,7 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { XMessageBar, MessageBar } from './message_bar';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { XMessageBar, MessageBar } from './message_bar'
+import { initializeIcons } from '@fluentui/react'
 
 const
   name = 'message_bar',

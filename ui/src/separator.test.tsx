@@ -1,6 +1,6 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { XSeparator, Separator } from './separator';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { XSeparator, Separator } from './separator'
 
 const
   name = 'separator',

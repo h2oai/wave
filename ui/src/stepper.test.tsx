@@ -1,7 +1,7 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { XStepper, Stepper } from './stepper';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { XStepper, Stepper } from './stepper'
+import { initializeIcons } from '@fluentui/react'
 
 let stepperProps: Stepper
 

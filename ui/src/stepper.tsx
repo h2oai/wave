@@ -1,8 +1,8 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { bond, S, B, U } from './qd';
-import { stylesheet } from 'typestyle';
-import { getTheme, rem } from './theme';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { bond, S, B, U } from './qd'
+import { stylesheet } from 'typestyle'
+import { getTheme, rem } from './theme'
 
 /**
  * Create a step for a stepper.

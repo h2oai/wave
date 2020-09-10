@@ -1,6 +1,6 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { XProgress, Progress } from './progress';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { XProgress, Progress } from './progress'
 
 const
   name = 'progress',
