@@ -1129,6 +1129,7 @@ class Checklist:
             label: Optional[str] = None,
             values: Optional[List[str]] = None,
             choices: Optional[List[Choice]] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1139,6 +1140,8 @@ class Checklist:
         """The names of the selected choices."""
         self.choices = choices
         """The choices to be presented."""
+        self.trigger = trigger
+        """True if the form should be submitted when the checklist value changes."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1151,6 +1154,7 @@ class Checklist:
             label=self.label,
             values=self.values,
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -1163,17 +1167,20 @@ class Checklist:
         __d_label: Any = __d.get('label')
         __d_values: Any = __d.get('values')
         __d_choices: Any = __d.get('choices')
+        __d_trigger: Any = __d.get('trigger')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
         values: Optional[List[str]] = __d_values
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return Checklist(
             name,
             label,
             values,
             choices,
+            trigger,
             tooltip,
         )
 

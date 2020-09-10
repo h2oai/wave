@@ -558,6 +558,7 @@ def checklist(
         label: Optional[str] = None,
         values: Optional[List[str]] = None,
         choices: Optional[List[Choice]] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a set of checkboxes.
@@ -569,6 +570,7 @@ def checklist(
         label: Text to be displayed above the component.
         values: The names of the selected choices.
         choices: The choices to be presented.
+        trigger: True if the form should be submitted when the checklist value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Checklist` instance.
@@ -578,6 +580,7 @@ def checklist(
         label,
         values,
         choices,
+        trigger,
         tooltip,
     ))
 
