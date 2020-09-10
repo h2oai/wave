@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { bond, F, U } from './qd';
+import { bond, F, S } from './qd';
 import { ProgressArc } from './parts/progress_arc';
 import { grid } from './layout';
 import { stylesheet } from 'typestyle';
@@ -34,15 +34,15 @@ const
  * a valid percentage (between 0 - 100).
 */
 export interface ProgressTableCellType {
-  /** Specify thickness for a progress arc. Default value is 2. */
-  thickness?: U
+  /** An identifying name for this component. */
+  name: S
 }
 
 export const XProgressTableCellType = bond(({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => {
   const
     render = () => (
-      <div className={css.container}>
-        <ProgressArc size={grid.unitInnerHeight} thickness={m.thickness || 2} color={theme.color('red')} value={progress / 100} />
+      <div data-test={m.name} className={css.container}>
+        <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color('red')} value={progress / 100} />
         <div className={css.percentContainer}>
           <div className={css.percent}>{`${Math.round(progress)}%`}</div>
         </div>

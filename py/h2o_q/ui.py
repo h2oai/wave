@@ -937,33 +937,33 @@ def file_upload(
 
 
 def progress_table_cell_type(
-        thickness: Optional[int] = None,
+        name: str,
 ) -> TableCellType:
     """Create a custom cell for progress values. The value of the model must be
     a valid percentage (between 0 - 100).
 
     Args:
-        thickness: Specify thickness for a progress arc. Default value is 2.
+        name: An identifying name for this component.
     Returns:
         A `h2o_q.types.ProgressTableCellType` instance.
     """
     return TableCellType(progress=ProgressTableCellType(
-        thickness,
+        name,
     ))
 
 
 def done_table_cell_type(
-        aa: Optional[str] = None,
+        name: str,
 ) -> TableCellType:
     """Create a custom cell for boolean values. Show checked icon for true and X icon for false.
 
     Args:
-        aa: No documentation available.
+        name: An identifying name for this component.
     Returns:
         A `h2o_q.types.DoneTableCellType` instance.
     """
     return TableCellType(done=DoneTableCellType(
-        aa,
+        name,
     ))
 
 

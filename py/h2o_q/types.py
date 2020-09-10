@@ -1889,24 +1889,28 @@ class ProgressTableCellType:
     """
     def __init__(
             self,
-            thickness: Optional[int] = None,
+            name: str,
     ):
-        self.thickness = thickness
-        """Specify thickness for a progress arc. Default value is 2."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('ProgressTableCellType.name is required.')
         return _dump(
-            thickness=self.thickness,
+            name=self.name,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'ProgressTableCellType':
         """Creates an instance of this class using the contents of a dict."""
-        __d_thickness: Any = __d.get('thickness')
-        thickness: Optional[int] = __d_thickness
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('ProgressTableCellType.name is required.')
+        name: str = __d_name
         return ProgressTableCellType(
-            thickness,
+            name,
         )
 
 
@@ -1915,24 +1919,28 @@ class DoneTableCellType:
     """
     def __init__(
             self,
-            aa: Optional[str] = None,
+            name: str,
     ):
-        self.aa = aa
-        """No documentation available."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('DoneTableCellType.name is required.')
         return _dump(
-            aa=self.aa,
+            name=self.name,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'DoneTableCellType':
         """Creates an instance of this class using the contents of a dict."""
-        __d_aa: Any = __d.get('aa')
-        aa: Optional[str] = __d_aa
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('DoneTableCellType.name is required.')
+        name: str = __d_name
         return DoneTableCellType(
-            aa,
+            name,
         )
 
 

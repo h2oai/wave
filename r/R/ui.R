@@ -1034,26 +1034,26 @@ ui_file_upload <- function(
 #' Create a custom cell for progress values. The value of the model must be
 #' a valid percentage (between 0 - 100).
 #'
-#' @param thickness Specify thickness for a progress arc. Default value is 2.
+#' @param name An identifying name for this component.
 #' @return A ProgressTableCellType instance.
 ui_progress_table_cell_type <- function(
-  thickness = NULL) {
-  .guard_scalar("thickness", "numeric", thickness)
+  name) {
+  .guard_scalar("name", "character", name)
   .o <- list(progress=list(
-    thickness=thickness))
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
   return(.o)
 }
 
 #' Create a custom cell for boolean values. Show checked icon for true and X icon for false.
 #'
-#' @param aa No documentation available.
+#' @param name An identifying name for this component.
 #' @return A DoneTableCellType instance.
 ui_done_table_cell_type <- function(
-  aa = NULL) {
-  .guard_scalar("aa", "character", aa)
+  name) {
+  .guard_scalar("name", "character", name)
   .o <- list(done=list(
-    aa=aa))
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
   return(.o)
 }
