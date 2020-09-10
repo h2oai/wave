@@ -81,7 +81,7 @@ describe('Checklist.tsx', () => {
     expect(syncMock).toHaveBeenCalled()
   })
 
-  it('Calls sync - select all', () => {
+  it('Calls sync - deselect all', () => {
     const syncMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
