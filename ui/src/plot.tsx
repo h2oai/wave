@@ -1,5 +1,5 @@
 import { Chart, registerInteraction } from '@antv/g2';
-import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, ChartCfg } from '@antv/g2/lib/interface';
+import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, ChartCfg, AxisOption } from '@antv/g2/lib/interface';
 import React from 'react';
 import { stylesheet } from 'typestyle';
 import { Fmt, parseFormat } from './intl';
@@ -577,34 +577,46 @@ const
     if (isS(align)) s.textAlign = align
     return Object.keys(s).length ? s : undefined
   },
-  makeScales = (marks: MarkExt[]): Record<S, ScaleOption> => {
-    const o: Record<S, ScaleOption> = {}
+  makeScales = (marks: MarkExt[]): [Record<S, ScaleOption>, Record<S, AxisOption>] => {
+    const
+      scales: Record<S, ScaleOption> = {},
+      axes: Record<S, AxisOption> = {}
 
     for (const m of marks) {
       if (m.x_field) {
-        o[m.x_field] = makeScale(m.x_scale, m.x_format, m.x_title, m.x_min, m.x_max, m.x_nice)
+        const [x_scale, x_axis] = makeScale(m.x_scale, m.x_format, m.x_title, m.x_min, m.x_max, m.x_nice)
+        scales[m.x_field] = x_scale
+        if (x_axis) axes[m.x_field] = x_axis
         break
       }
     }
 
     for (const m of marks) {
       if (m.y_field) {
-        o[m.y_field] = makeScale(m.y_scale, m.y_format, m.y_title, m.y_min, m.y_max, m.y_nice)
+        const [y_scale, y_axis] = makeScale(m.y_scale, m.y_format, m.y_title, m.y_min, m.y_max, m.y_nice)
+        scales[m.y_field] = y_scale
+        if (y_axis) axes[m.y_field] = y_axis
         break
       }
     }
 
-    return o
+    return [scales, axes]
   },
-  makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): ScaleOption => {
-    const o: ScaleOption = {}
-    if (isS(typ)) o.type = typ as any
-    if (format) o.formatter = (v: any) => format(undefined, v)
-    if (isS(title)) o.alias = title
-    if (isF(min)) o.min = min
-    if (isF(max)) o.max = max
-    o.nice = isB(nice) ? nice : true
-    return o
+  makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): [ScaleOption, AxisOption | null] => {
+    const scale: ScaleOption = {}
+    let axis: AxisOption | null = null
+    if (isS(typ)) scale.type = typ as any
+    if (format) scale.formatter = (v: any) => format(undefined, v)
+    if (isS(title)) {
+      scale.alias = title
+      // HACK ALERT!
+      // The scale alias is not rendered by G2 unless the axis title is non-empty.
+      axis = { title: {} }
+    }
+    if (isF(min)) scale.min = min
+    if (isF(max)) scale.max = max
+    scale.nice = isB(nice) ? nice : true
+    return [scale, axis]
   },
   getCoordType = (marks: Mark[]): S | undefined => {
     for (const { coord } of marks) if (isS(coord)) return coord
@@ -650,7 +662,7 @@ const
     // WARNING: makeCoord() must be called before other functions.
     const
       coordinate = makeCoord(space, marks), // WARNING: this call may transpose x/y in-place.
-      scales = makeScales(marks),
+      [scales, axes] = makeScales(marks),
       [geometries, annotations] = makeMarks(marks)
 
     return {
@@ -660,6 +672,7 @@ const
         animate: false,
         coordinate,
         scales,
+        axes,
         geometries,
         annotations,
         interactions: [
