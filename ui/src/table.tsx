@@ -4,12 +4,12 @@ import { B, bond, S, qd, box, Dict, U } from './qd'
 import { stylesheet } from 'typestyle'
 import { rem } from './theme'
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
-import { DoneTableCellType, XDoneTableCellType } from "./done_table_cell_type";
+import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type";
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {
   progress?: ProgressTableCellType
-  done?: DoneTableCellType
+  icon?: IconTableCellType
 }
 
 /** Create a table column. */
@@ -18,18 +18,18 @@ interface TableColumn {
   name: S
   /** The text displayed on the column header. */
   label: S
-  /** Sets minimum width for this column. */
+  /** The minimum width of this column. */
   min_width?: U
-  /** Sets maximum width for this column. */
+  /** The maximum width of this column. */
   max_width?: U
   /** Indicates whether the column is sortable. */
   sortable?: B
-  /** Indicates whether the column should be included when typing into searchbox. */
+  /** Indicates whether the contents of this column can be searched through. Enables a search box for the table if true. */
   searchable?: B
-  /** Indicates whether values of this option should serve as filters in filtering dropdown. */
+  /** Indicates whether the contents of this column are displayed as filters in a dropdown. */
   filterable?: B
-  /** Defines cell content to be rendered instead of a simple text. */
-  table_cell_type?: TableCellType
+  /** Defines how to render each cell in this column. Defaults to plain text. */
+  cell_type?: TableCellType
 }
 
 /** Create a table row. */
@@ -67,6 +67,8 @@ export interface Table {
   rows: TableRow[]
   /** True to allow multiple rows to be selected. */
   multiple?: B
+  /** True to allow group by feature. */
+  groupable?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -127,7 +129,7 @@ export const
       colContextMenuList = box<Fluent.IContextualMenuProps | null>(null),
       groupsB = box<Fluent.IGroup[] | undefined>(undefined),
       groupByKeyB = box('*'),
-      groupByOptions: Fluent.IDropdownOption[] = [{ key: '*', text: 'Nothing' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))],
+      groupByOptions: Fluent.IDropdownOption[] = m.groupable ? [{ key: '*', text: 'Nothing' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [],
       onSearchChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr?: S) => {
         searchStrB(searchStr ? searchStr.toLowerCase() : '')
 
@@ -328,7 +330,7 @@ export const
         iconName: c.sortable ? 'SortDown' : undefined,
         onColumnClick: onColumnClick,
         columnActionsMode: c.filterable ? Fluent.ColumnActionsMode.hasDropdown : Fluent.ColumnActionsMode.clickable,
-        cellType: c.table_cell_type,
+        cellType: c.cell_type,
         isSortable: c.sortable,
         isResizable: true,
       }))),
@@ -354,8 +356,10 @@ export const
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }
 
-        if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
-        else if (col.cellType?.done) return <XDoneTableCellType model={col.cellType.done} isDone={item[col.key]} />
+        // @ts-ignore
+        if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress.progress} progress={item[col.key]} />
+        // @ts-ignore
+        else if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon.icon} icon={item[col.key]} />
 
         return <span>{v}</span>
       },
@@ -383,8 +387,8 @@ export const
       render = () => (
         <div data-test={m.name} style={{ position: 'relative', height: '95vh' }}>
           <Fluent.Stack horizontal horizontalAlign='space-between' >
-            <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />
-            <Fluent.TextField data-test='search' label='Filter' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%', float: 'right' } }} />
+            {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
+            {searchableKeys.length && <Fluent.TextField data-test='search' label='Filter' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%' } }} />}
           </Fluent.Stack>
           <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: 60 } }}>
             {

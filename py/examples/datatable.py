@@ -24,7 +24,7 @@ class Issue:
 
 
 # Create some issues
-issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=10, done=(i%2 == 0), sth=('Off' if i%2 == 0 else 'On')) for i in range(100)]
+issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=0.5, done=('BoxCheckmarkSolid' if i%2 == 0 else 'BoxMultiplySolid'), sth=('Off' if i%2 == 0 else 'On')) for i in range(100)]
 
 # Build a lookup of issues for convenience
 issue_lookup = {issue.id: issue for issue in issues}
@@ -34,15 +34,16 @@ columns = [
     ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width=300),
     ui.table_column(name='status', label='Status', filterable=True),
     ui.table_column(name='sth', label='Something', filterable=True),
-    ui.table_column(name='done', label='Done', table_cell_type=ui.table_cell_type(done=ui.done_table_cell_type(name='done'))),
+    ui.table_column(name='done', label='Done', cell_type=ui.table_cell_type(icon=ui.icon_table_cell_type(color='black'))),
     ui.table_column(name='views', label='Views', sortable=True),
-    ui.table_column(name='progress', label='Progress', table_cell_type=ui.table_cell_type(progress=ui.progress_table_cell_type(name='progress'))),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.table_cell_type(progress=ui.progress_table_cell_type(color='blue'))),
 ]
 
 async def main(q: Q):
   q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
     ui.table(
         name='issues',
+        groupable=True,
         columns=columns,
         rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, issue.sth, issue.done, str(issue.views), issue.progress]) for issue in issues],
     )

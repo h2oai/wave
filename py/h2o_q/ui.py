@@ -937,51 +937,52 @@ def file_upload(
 
 
 def progress_table_cell_type(
-        name: str,
+        color: str,
 ) -> TableCellType:
-    """Create a custom cell for progress values. The value of the model must be
-    a valid percentage (between 0 - 100).
+    """Create a cell type that renders a column's cells as progress bars instead of plain text.
+    If set on a column, the cell value must be between 0.0 and 1.0.
 
     Args:
-        name: An identifying name for this component.
+        color: Color of the progress arc.
     Returns:
         A `h2o_q.types.ProgressTableCellType` instance.
     """
     return TableCellType(progress=ProgressTableCellType(
-        name,
+        color,
     ))
 
 
-def done_table_cell_type(
-        name: str,
+def icon_table_cell_type(
+        color: Optional[str] = None,
 ) -> TableCellType:
-    """Create a custom cell for boolean values. Show checked icon for true and X icon for false.
+    """Create a cell type that renders a column's cells as icons instead of plain text.
+    If set on a column, the cell value is interpreted as the name of the icon to be displayed.
 
     Args:
-        name: An identifying name for this component.
+        color: Icon color.
     Returns:
-        A `h2o_q.types.DoneTableCellType` instance.
+        A `h2o_q.types.IconTableCellType` instance.
     """
-    return TableCellType(done=DoneTableCellType(
-        name,
+    return TableCellType(icon=IconTableCellType(
+        color,
     ))
 
 
 def table_cell_type(
         progress: Optional[ProgressTableCellType] = None,
-        done: Optional[DoneTableCellType] = None,
+        icon: Optional[IconTableCellType] = None,
 ) -> TableCellType:
     """Defines cell content to be rendered instead of a simple text.
 
     Args:
         progress: No documentation available.
-        done: No documentation available.
+        icon: No documentation available.
     Returns:
         A `h2o_q.types.TableCellType` instance.
     """
     return TableCellType(
         progress,
-        done,
+        icon,
     )
 
 
@@ -993,19 +994,19 @@ def table_column(
         sortable: Optional[bool] = None,
         searchable: Optional[bool] = None,
         filterable: Optional[bool] = None,
-        table_cell_type: Optional[TableCellType] = None,
+        cell_type: Optional[Union[TableCellType, str]] = None,
 ) -> TableColumn:
     """Create a table column.
 
     Args:
         name: An identifying name for this column.
         label: The text displayed on the column header.
-        min_width: Sets minimum width for this column.
-        max_width: Sets maximum width for this column.
+        min_width: The minimum width of this column.
+        max_width: The maximum width of this column.
         sortable: Indicates whether the column is sortable.
-        searchable: Indicates whether the column should be included when typing into searchbox.
-        filterable: Indicates whether values of this option should serve as filters in filtering dropdown.
-        table_cell_type: Defines cell content to be rendered instead of a simple text.
+        searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
+        filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
+        cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_q.types.TableColumn` instance.
     """
@@ -1017,7 +1018,7 @@ def table_column(
         sortable,
         searchable,
         filterable,
-        table_cell_type,
+        cell_type,
     )
 
 
@@ -1044,6 +1045,7 @@ def table(
         columns: List[TableColumn],
         rows: List[TableRow],
         multiple: Optional[bool] = None,
+        groupable: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create an interactive table.
@@ -1067,6 +1069,7 @@ def table(
         columns: The columns in this table.
         rows: The rows in this table.
         multiple: True to allow multiple rows to be selected.
+        groupable: True to allow group by feature.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.
@@ -1076,6 +1079,7 @@ def table(
         columns,
         rows,
         multiple,
+        groupable,
         tooltip,
     ))
 

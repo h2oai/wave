@@ -1884,63 +1884,60 @@ class FileUpload:
 
 
 class ProgressTableCellType:
-    """Create a custom cell for progress values. The value of the model must be
-    a valid percentage (between 0 - 100).
+    """Create a cell type that renders a column's cells as progress bars instead of plain text.
+    If set on a column, the cell value must be between 0.0 and 1.0.
     """
     def __init__(
             self,
-            name: str,
+            color: str,
     ):
-        self.name = name
-        """An identifying name for this component."""
+        self.color = color
+        """Color of the progress arc."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('ProgressTableCellType.name is required.')
+        if self.color is None:
+            raise ValueError('ProgressTableCellType.color is required.')
         return _dump(
-            name=self.name,
+            color=self.color,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'ProgressTableCellType':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('ProgressTableCellType.name is required.')
-        name: str = __d_name
+        __d_color: Any = __d.get('color')
+        if __d_color is None:
+            raise ValueError('ProgressTableCellType.color is required.')
+        color: str = __d_color
         return ProgressTableCellType(
-            name,
+            color,
         )
 
 
-class DoneTableCellType:
-    """Create a custom cell for boolean values. Show checked icon for true and X icon for false.
+class IconTableCellType:
+    """Create a cell type that renders a column's cells as icons instead of plain text.
+    If set on a column, the cell value is interpreted as the name of the icon to be displayed.
     """
     def __init__(
             self,
-            name: str,
+            color: Optional[str] = None,
     ):
-        self.name = name
-        """An identifying name for this component."""
+        self.color = color
+        """Icon color."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('DoneTableCellType.name is required.')
         return _dump(
-            name=self.name,
+            color=self.color,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'DoneTableCellType':
+    def load(__d: Dict) -> 'IconTableCellType':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('DoneTableCellType.name is required.')
-        name: str = __d_name
-        return DoneTableCellType(
-            name,
+        __d_color: Any = __d.get('color')
+        color: Optional[str] = __d_color
+        return IconTableCellType(
+            color,
         )
 
 
@@ -1950,30 +1947,30 @@ class TableCellType:
     def __init__(
             self,
             progress: Optional[ProgressTableCellType] = None,
-            done: Optional[DoneTableCellType] = None,
+            icon: Optional[IconTableCellType] = None,
     ):
         self.progress = progress
         """No documentation available."""
-        self.done = done
+        self.icon = icon
         """No documentation available."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         return _dump(
             progress=None if self.progress is None else self.progress.dump(),
-            done=None if self.done is None else self.done.dump(),
+            icon=None if self.icon is None else self.icon.dump(),
         )
 
     @staticmethod
     def load(__d: Dict) -> 'TableCellType':
         """Creates an instance of this class using the contents of a dict."""
         __d_progress: Any = __d.get('progress')
-        __d_done: Any = __d.get('done')
+        __d_icon: Any = __d.get('icon')
         progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
-        done: Optional[DoneTableCellType] = None if __d_done is None else DoneTableCellType.load(__d_done)
+        icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
         return TableCellType(
             progress,
-            done,
+            icon,
         )
 
 
@@ -1989,24 +1986,24 @@ class TableColumn:
             sortable: Optional[bool] = None,
             searchable: Optional[bool] = None,
             filterable: Optional[bool] = None,
-            table_cell_type: Optional[TableCellType] = None,
+            cell_type: Optional[Union[TableCellType, str]] = None,
     ):
         self.name = name
         """An identifying name for this column."""
         self.label = label
         """The text displayed on the column header."""
         self.min_width = min_width
-        """Sets minimum width for this column."""
+        """The minimum width of this column."""
         self.max_width = max_width
-        """Sets maximum width for this column."""
+        """The maximum width of this column."""
         self.sortable = sortable
         """Indicates whether the column is sortable."""
         self.searchable = searchable
-        """Indicates whether the column should be included when typing into searchbox."""
+        """Indicates whether the contents of this column can be searched through. Enables a search box for the table if true."""
         self.filterable = filterable
-        """Indicates whether values of this option should serve as filters in filtering dropdown."""
-        self.table_cell_type = table_cell_type
-        """Defines cell content to be rendered instead of a simple text."""
+        """Indicates whether the contents of this column are displayed as filters in a dropdown."""
+        self.cell_type = cell_type
+        """Defines how to render each cell in this column. Defaults to plain text."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2022,7 +2019,7 @@ class TableColumn:
             sortable=self.sortable,
             searchable=self.searchable,
             filterable=self.filterable,
-            table_cell_type=None if self.table_cell_type is None else self.table_cell_type.dump(),
+            cell_type=None if self.cell_type is None else self.cell_type if isinstance(self.cell_type, str) else self.cell_type.dump(),
         )
 
     @staticmethod
@@ -2039,7 +2036,7 @@ class TableColumn:
         __d_sortable: Any = __d.get('sortable')
         __d_searchable: Any = __d.get('searchable')
         __d_filterable: Any = __d.get('filterable')
-        __d_table_cell_type: Any = __d.get('table_cell_type')
+        __d_cell_type: Any = __d.get('cell_type')
         name: str = __d_name
         label: str = __d_label
         min_width: Optional[int] = __d_min_width
@@ -2047,7 +2044,7 @@ class TableColumn:
         sortable: Optional[bool] = __d_sortable
         searchable: Optional[bool] = __d_searchable
         filterable: Optional[bool] = __d_filterable
-        table_cell_type: Optional[TableCellType] = None if __d_table_cell_type is None else TableCellType.load(__d_table_cell_type)
+        cell_type: Optional[Union[TableCellType, str]] = __d_cell_type if isinstance(__d_cell_type, str) else None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         return TableColumn(
             name,
             label,
@@ -2056,7 +2053,7 @@ class TableColumn:
             sortable,
             searchable,
             filterable,
-            table_cell_type,
+            cell_type,
         )
 
 
@@ -2124,6 +2121,7 @@ class Table:
             columns: List[TableColumn],
             rows: List[TableRow],
             multiple: Optional[bool] = None,
+            groupable: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2134,6 +2132,8 @@ class Table:
         """The rows in this table."""
         self.multiple = multiple
         """True to allow multiple rows to be selected."""
+        self.groupable = groupable
+        """True to allow group by feature."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2150,6 +2150,7 @@ class Table:
             columns=[__e.dump() for __e in self.columns],
             rows=[__e.dump() for __e in self.rows],
             multiple=self.multiple,
+            groupable=self.groupable,
             tooltip=self.tooltip,
         )
 
@@ -2166,17 +2167,20 @@ class Table:
         if __d_rows is None:
             raise ValueError('Table.rows is required.')
         __d_multiple: Any = __d.get('multiple')
+        __d_groupable: Any = __d.get('groupable')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
         multiple: Optional[bool] = __d_multiple
+        groupable: Optional[bool] = __d_groupable
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
             columns,
             rows,
             multiple,
+            groupable,
             tooltip,
         )
 

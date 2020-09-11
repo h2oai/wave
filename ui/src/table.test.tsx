@@ -139,7 +139,7 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(2)
     })
 
-    it('Does not search when no col is searchable', () => {
+    it('Does not render search when no col is searchable', () => {
       tableProps = {
         ...tableProps, columns: [
           { name: 'colname1', label: 'col1' },
@@ -147,11 +147,8 @@ describe('Table.tsx', () => {
         ]
       }
 
-      const { getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
-      fireEvent.change(getByTestId('search'), { target: { value: '1' } })
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 1)
+      const { queryByTestId } = render(<XTable model={tableProps} />)
+      expect(queryByTestId('search')).not.toBeInTheDocument()
     })
   })
 
@@ -290,6 +287,12 @@ describe('Table.tsx', () => {
     })
   })
   describe('Group by', () => {
+    beforeEach(() => {
+      tableProps = {
+        ...tableProps,
+        groupable: true
+      }
+    })
     it('Renders grouped list after selection', () => {
       const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
 

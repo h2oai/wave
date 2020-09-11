@@ -1031,29 +1031,30 @@ ui_file_upload <- function(
   return(.o)
 }
 
-#' Create a custom cell for progress values. The value of the model must be
-#' a valid percentage (between 0 - 100).
+#' Create a cell type that renders a column's cells as progress bars instead of plain text.
+#' If set on a column, the cell value must be between 0.0 and 1.0.
 #'
-#' @param name An identifying name for this component.
+#' @param color Color of the progress arc.
 #' @return A ProgressTableCellType instance.
 ui_progress_table_cell_type <- function(
-  name) {
-  .guard_scalar("name", "character", name)
+  color) {
+  .guard_scalar("color", "character", color)
   .o <- list(progress=list(
-    name=name))
+    color=color))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
   return(.o)
 }
 
-#' Create a custom cell for boolean values. Show checked icon for true and X icon for false.
+#' Create a cell type that renders a column's cells as icons instead of plain text.
+#' If set on a column, the cell value is interpreted as the name of the icon to be displayed.
 #'
-#' @param name An identifying name for this component.
-#' @return A DoneTableCellType instance.
-ui_done_table_cell_type <- function(
-  name) {
-  .guard_scalar("name", "character", name)
-  .o <- list(done=list(
-    name=name))
+#' @param color Icon color.
+#' @return A IconTableCellType instance.
+ui_icon_table_cell_type <- function(
+  color = NULL) {
+  .guard_scalar("color", "character", color)
+  .o <- list(icon=list(
+    color=color))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
   return(.o)
 }
@@ -1061,16 +1062,16 @@ ui_done_table_cell_type <- function(
 #' Defines cell content to be rendered instead of a simple text.
 #'
 #' @param progress No documentation available.
-#' @param done No documentation available.
+#' @param icon No documentation available.
 #' @return A TableCellType instance.
 ui_table_cell_type <- function(
   progress = NULL,
-  done = NULL) {
+  icon = NULL) {
   .guard_scalar("progress", "h2oq_ProgressTableCellType", progress)
-  .guard_scalar("done", "h2oq_DoneTableCellType", done)
+  .guard_scalar("icon", "h2oq_IconTableCellType", icon)
   .o <- list(
     progress=progress,
-    done=done)
+    icon=icon)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
   return(.o)
 }
@@ -1079,12 +1080,12 @@ ui_table_cell_type <- function(
 #'
 #' @param name An identifying name for this column.
 #' @param label The text displayed on the column header.
-#' @param min_width Sets minimum width for this column.
-#' @param max_width Sets maximum width for this column.
+#' @param min_width The minimum width of this column.
+#' @param max_width The maximum width of this column.
 #' @param sortable Indicates whether the column is sortable.
-#' @param searchable Indicates whether the column should be included when typing into searchbox.
-#' @param filterable Indicates whether values of this option should serve as filters in filtering dropdown.
-#' @param table_cell_type Defines cell content to be rendered instead of a simple text.
+#' @param searchable Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
+#' @param filterable Indicates whether the contents of this column are displayed as filters in a dropdown.
+#' @param cell_type Defines how to render each cell in this column. Defaults to plain text.
 #' @return A TableColumn instance.
 ui_table_column <- function(
   name,
@@ -1094,7 +1095,7 @@ ui_table_column <- function(
   sortable = NULL,
   searchable = NULL,
   filterable = NULL,
-  table_cell_type = NULL) {
+  cell_type = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("min_width", "numeric", min_width)
@@ -1102,7 +1103,7 @@ ui_table_column <- function(
   .guard_scalar("sortable", "logical", sortable)
   .guard_scalar("searchable", "logical", searchable)
   .guard_scalar("filterable", "logical", filterable)
-  .guard_scalar("table_cell_type", "h2oq_TableCellType", table_cell_type)
+  .guard_scalar("cell_type", "h2oq_TableCellType", cell_type)
   .o <- list(
     name=name,
     label=label,
@@ -1111,7 +1112,7 @@ ui_table_column <- function(
     sortable=sortable,
     searchable=searchable,
     filterable=filterable,
-    table_cell_type=table_cell_type)
+    cell_type=cell_type)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableColumn"))
   return(.o)
 }
@@ -1153,6 +1154,7 @@ ui_table_row <- function(
 #' @param columns The columns in this table.
 #' @param rows The rows in this table.
 #' @param multiple True to allow multiple rows to be selected.
+#' @param groupable True to allow group by feature.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(
@@ -1160,17 +1162,20 @@ ui_table <- function(
   columns,
   rows,
   multiple = NULL,
+  groupable = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "h2oq_TableColumn", columns)
   .guard_vector("rows", "h2oq_TableRow", rows)
   .guard_scalar("multiple", "logical", multiple)
+  .guard_scalar("groupable", "logical", groupable)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(table=list(
     name=name,
     columns=columns,
     rows=rows,
     multiple=multiple,
+    groupable=groupable,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)

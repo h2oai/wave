@@ -30,21 +30,21 @@ const
   })
 
 /**
- * Create a custom cell for progress values. The value of the model must be
- * a valid percentage (between 0 - 100).
+ * Create a cell type that renders a column's cells as progress bars instead of plain text.
+ * If set on a column, the cell value must be between 0.0 and 1.0.
 */
 export interface ProgressTableCellType {
-  /** An identifying name for this component. */
-  name: S
+  /** Color of the progress arc. */
+  color: S
 }
 
 export const XProgressTableCellType = bond(({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => {
   const
     render = () => (
-      <div data-test={m.name} className={css.container}>
-        <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color('red')} value={progress / 100} />
+      <div className={css.container}>
+        <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(m.color || 'red')} value={progress} />
         <div className={css.percentContainer}>
-          <div className={css.percent}>{`${Math.round(progress)}%`}</div>
+          <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
         </div>
       </div>
     )
