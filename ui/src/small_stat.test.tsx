@@ -1,7 +1,7 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { View } from './small_stat';
-import * as T from './qd';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { View } from './small_stat'
+import * as T from './qd'
 
 const
   name = 'small_stat',

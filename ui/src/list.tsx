@@ -1,8 +1,8 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { cards, Repeat } from './layout';
-import { bond, Card, Rec, S, Data } from './qd';
-import { getTheme } from './theme';
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { cards, Repeat } from './layout'
+import { bond, Card, Rec, S, Data } from './qd'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),

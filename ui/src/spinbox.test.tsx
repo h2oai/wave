@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XSpinbox, Spinbox } from './spinbox';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XSpinbox, Spinbox } from './spinbox'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'spinbox';
+const name = 'spinbox'
 const spinboxProps: Spinbox = { name }
 
 const mouseEvent = { clientX: 0, clientY: 0 }

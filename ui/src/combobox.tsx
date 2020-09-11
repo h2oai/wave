@@ -1,6 +1,6 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { B, bond, box, S, qd } from './qd';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { B, bond, box, S, qd } from './qd'
 
 /**
  * Create a combobox.

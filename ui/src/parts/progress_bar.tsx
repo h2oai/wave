@@ -1,6 +1,6 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { F, S, U } from '../qd';
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { F, S, U } from '../qd'
 
 const css = stylesheet({
   body: {

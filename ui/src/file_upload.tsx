@@ -1,8 +1,8 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { B, bond, box, S, qd, U, xid, F } from './qd';
-import { getTheme, centerMixin, dashed, clas } from './theme';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { B, bond, box, S, qd, U, xid, F } from './qd'
+import { getTheme, centerMixin, dashed, clas } from './theme'
 
 /**
  * Create a file upload component.
@@ -137,9 +137,9 @@ export const
         }
       },
       onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
+        const files = e.target.files
         if (!files?.length) return
-        const fileArr = Array.from(files);
+        const fileArr = Array.from(files)
 
         const errMsg = validateFiles(fileArr)
         if (errMsg) {
@@ -160,7 +160,7 @@ export const
       },
       onDrop = (e: React.DragEvent<HTMLFormElement>) => {
         onIsNotDragging(e)
-        const files = e.dataTransfer.files;
+        const files = e.dataTransfer.files
         if (!files.length || errorB() || successMsgB()) return
         const fileArr = Array.from(files)
 

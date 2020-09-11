@@ -1,7 +1,7 @@
-import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react';
-import React from 'react';
-import { cards } from './layout';
-import { bond, Card, qd, S } from './qd';
+import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
+import React from 'react'
+import { cards } from './layout'
+import { bond, Card, qd, S } from './qd'
 
 /**
  * Create a command.
@@ -36,6 +36,7 @@ interface State {
 
 const
   overflowProps: IButtonProps = { ariaLabel: 'More' },
+  toCommands = (commands: Command[]) => commands.map(toCommand),
   toCommand = ({ name, label, caption, icon, items }: Command): ICommandBarItemProps => {
     qd.args[name] = false
     const onClick = () => {
@@ -55,8 +56,7 @@ const
       subMenuProps: items ? { items: toCommands(items) } : undefined,
       onClick,
     }
-  },
-  toCommands = (commands: Command[]) => commands.map(toCommand)
+  }
 
 export const
   View = bond(({ state, changed }: Card<State>) => {

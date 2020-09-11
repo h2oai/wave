@@ -1,8 +1,8 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { B, Card, unpack, Rec, S, Data, xid, box, bond } from './qd';
-import { cards, CardView, Format } from './layout';
-import { getTheme } from './theme';
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { B, Card, unpack, Rec, S, Data, xid, box, bond } from './qd'
+import { cards, CardView, Format } from './layout'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),

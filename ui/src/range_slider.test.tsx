@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XRangeSlider, RangeSlider } from './range_slider';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XRangeSlider, RangeSlider } from './range_slider'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'rangeSlider';
+const name = 'rangeSlider'
 const rangeSliderProps: RangeSlider = { name, min: 0, max: 100 }
 const defaultRect = { left: 0, top: 0, right: 0, bottom: 0, width: 100, height: 40 } as DOMRect
 const mouseEvent = { clientX: 50, clientY: 0 }

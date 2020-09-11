@@ -1,8 +1,8 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { XLabel, Label } from './label';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { XLabel, Label } from './label'
 
-const name = 'label';
+const name = 'label'
 const labelProps: Label = { label: name }
 
 describe('Label.tsx', () => {

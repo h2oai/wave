@@ -1,7 +1,7 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { B, bond, S, qd } from './qd';
-import { px } from './theme';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { B, bond, S, qd } from './qd'
+import { px } from './theme'
 
 /**
  * Create a checkbox.

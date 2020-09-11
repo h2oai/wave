@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XButtons, Buttons } from './button';
-import * as T from './qd';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XButtons, Buttons } from './button'
+import * as T from './qd'
 
-const name = 'test-btn';
-const hashName = `#${name}`;
+const name = 'test-btn'
+const hashName = `#${name}`
 const btnProps: Buttons = { items: [{ button: { name, label: name } }] }
 const btnPropsNameHash: Buttons = { items: [{ button: { name: hashName, label: name } }] }
 describe('Button.tsx', () => {

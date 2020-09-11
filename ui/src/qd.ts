@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 
 //
 // Dataflow
@@ -96,16 +96,15 @@ export function by(...args: any[]): any {
   const
     m = args.length - 1,
     xs = args.slice(0, m) as Boxed<any>[],
-    // tslint:disable-next-line:ban-types
     f = args[m] as Function,
-    y = box(f(...xs.map(x => x())))
+    yB = box(f(...xs.map(x => x())))
 
-  xs.forEach(x => x.on(_ => y(f(...xs.map(x => x())))))
-  return y
+  xs.forEach(x => x.on(_ => yB(f(...xs.map(x => x())))))
+  return yB
 }
 
 export function watch<T>(x: Box<T>, label?: string): Disposable {
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   return on(x, label ? ((x: T) => console.log(label, x)) : ((x: T) => console.log(x)))
 }
 
@@ -130,6 +129,7 @@ export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) =>
       super(props)
 
       const
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         self = this,
         model = ctor(props),
         arrows: Disposable[] = []
@@ -275,8 +275,8 @@ interface FixBuf extends DataBuf {
   seti(i: U, v: any): void
   geti(i: U): Cur | null
 }
-interface CycBuf extends DataBuf { }
-interface MapBuf extends DataBuf { }
+type CycBuf = DataBuf
+type MapBuf = DataBuf
 
 let guid = 0
 export const
@@ -561,7 +561,7 @@ const
   loadCard = (key: S, c: CardD): C => {
     const
       data: Dict<any> = {},
-      changed = box<B>(),
+      changedB = box<B>(),
       ctor = (c: CardD) => {
         const { d, b } = c
         for (let k in d) {
@@ -601,7 +601,7 @@ const
         }
       }
     ctor(c)
-    return { id: xid(), name: key, state: data, changed, set }
+    return { id: xid(), name: key, state: data, changed: changedB, set }
   },
   gset = (x: any, k: S, v: any) => {
     if (x == null) return
@@ -631,7 +631,7 @@ const
     const
       key = xid(),
       cards: Dict<C> = {},
-      changed = box<B>(),
+      changedB = box<B>(),
       add = (k: S, card: C) => {
         cards[k] = card
         dirty = true
@@ -654,7 +654,7 @@ const
       },
       sync = () => {
         if (dirty) {
-          changed(true)
+          changedB(true)
         } else {
           for (const k in dirties) {
             const c = cards[k]
@@ -665,7 +665,7 @@ const
         dirties = {} // reset
       }
 
-    return { key, changed, add, get, set, list, drop, sync }
+    return { key, changed: changedB, add, get, set, list, drop, sync }
   },
   load = ({ c }: PageD): Page => {
     const page = newPage()
@@ -792,7 +792,7 @@ const
   },
   reconnect = (address: S, handle: SockHandler) => {
     const retry = () => reconnect(address, handle)
-    let sock = new WebSocket(address)
+    const sock = new WebSocket(address)
     sock.onopen = function () {
       qd.socket = sock
       handle({ t: SockEventType.Message, type: SockMessageType.Info, message: 'Connected' })

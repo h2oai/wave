@@ -1,18 +1,6 @@
-import Handlebars from 'handlebars';
-import { createIntl, createIntlCache } from 'react-intl';
-import { B, S } from './qd';
-
-Handlebars.registerHelper('intl', (v: any, { hash: opts }: any) => {
-  opts = kvToOpts(opts)
-  const t = opts.type
-  return t === 'date'
-    ? intl.formatDate(v, opts)
-    : t === 'time'
-      ? intl.formatTime(v, opts)
-      : t === 'number' || typeof v === 'number'
-        ? intl.formatNumber(v, opts)
-        : v
-})
+import Handlebars from 'handlebars'
+import { createIntl, createIntlCache } from 'react-intl'
+import { B, S } from './qd'
 
 const intlCache = createIntlCache() // prevents memory leaks per docs
 export const intl = createIntl({
@@ -44,7 +32,17 @@ const
   },
   isBareExpr = (s: S): B => /^\w+$/.test(s)
 
-
+Handlebars.registerHelper('intl', (v: any, { hash: opts }: any) => {
+  opts = kvToOpts(opts)
+  const t = opts.type
+  return t === 'date'
+    ? intl.formatDate(v, opts)
+    : t === 'time'
+      ? intl.formatTime(v, opts)
+      : t === 'number' || typeof v === 'number'
+        ? intl.formatNumber(v, opts)
+        : v
+})
 
 export type Fmt = (datum: any, value?: any) => S
 
@@ -69,7 +67,7 @@ export const
 
     return null
   },
-  compile = (s: S) => Handlebars.compile(s),
+  compile = (s: S): any => Handlebars.compile(s),
   format = (s: S, data: any): S => {
     if (isBareExpr(s)) s = '{{' + s + '}}'
     const t = compile(s)

@@ -1,11 +1,12 @@
-import { Chart, registerInteraction } from '@antv/g2';
-import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, ChartCfg, AxisOption } from '@antv/g2/lib/interface';
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { Fmt, parseFormat } from './intl';
-import { cards } from './layout';
-import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V } from './qd';
-import { getTheme } from './theme';
+/* eslint-disable @typescript-eslint/camelcase */
+import { Chart, registerInteraction } from '@antv/g2'
+import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, ChartCfg, AxisOption } from '@antv/g2/lib/interface'
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { Fmt, parseFormat } from './intl'
+import { cards } from './layout'
+import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V } from './qd'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),
@@ -32,182 +33,182 @@ enum SpaceT { CC, DD, TT, CD, DC, TC, CT, TD, DT }
 */
 interface Mark {
   /** Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. */
-  coord?: 'rect' | 'cartesian' | 'polar' | 'theta' | 'helix'
+  coord?: 'rect' | 'cartesian' | 'polar' | 'theta' | 'helix';
   /** Graphical geometry. */
-  type?: 'interval' | 'line' | 'path' | 'point' | 'area' | 'polygon' | 'schema' | 'edge' | 'heatmap'
+  type?: 'interval' | 'line' | 'path' | 'point' | 'area' | 'polygon' | 'schema' | 'edge' | 'heatmap';
   /** X field or value. */
-  x?: V
+  x?: V;
   /** X base field or value. */
-  x0?: V
+  x0?: V;
   /** X bin lower bound field or value. For histograms. */
-  x1?: V
+  x1?: V;
   /** X bin upper bound field or value. For histograms. */
-  x2?: V
+  x2?: V;
   /** X axis scale minimum. */
-  x_min?: F
+  x_min?: F;
   /** X axis scale maximum. */
-  x_max?: F
+  x_max?: F;
   /** Whether to nice X axis scale ticks. */
-  x_nice?: B
+  x_nice?: B;
   /** X axis scale type. */
-  x_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'time' | 'timeCat' | 'quantize' | 'quantile'
+  x_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'time' | 'timeCat' | 'quantize' | 'quantile';
   /** X axis title. */
-  x_title?: S
+  x_title?: S;
   /** Y field or value. */
-  y?: V
+  y?: V;
   /** Y base field or value. */
-  y0?: V
+  y0?: V;
   /** Y bin lower bound field or value. For histograms. */
-  y1?: V
+  y1?: V;
   /** Y bin upper bound field or value. For histograms. */
-  y2?: V
+  y2?: V;
   /** Y axis scale minimum. */
-  y_min?: F
+  y_min?: F;
   /** Y axis scale maximum. */
-  y_max?: F
+  y_max?: F;
   /** Whether to nice Y axis scale ticks. */
-  y_nice?: B
+  y_nice?: B;
   /** Y axis scale type. */
-  y_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'time' | 'timeCat' | 'quantize' | 'quantile'
+  y_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'time' | 'timeCat' | 'quantize' | 'quantile';
   /** Y axis title. */
-  y_title?: S
+  y_title?: S;
   /** Mark color field or value. */
-  color?: S
+  color?: S;
   /** Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'` */
-  color_range?: S
+  color_range?: S;
   /** Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'. */
-  shape?: S
+  shape?: S;
   /** Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'` */
-  shape_range?: S
+  shape_range?: S;
   /** Mark size field or value. */
-  size?: V
+  size?: V;
   /** Mark size range. A string containing space-separated integers, e.g. `'4 30'` */
-  size_range?: S
+  size_range?: S;
   /** Field to stack marks by, or 'auto' to infer. */
-  stack?: S
+  stack?: S;
   /** Field to dodge marks by, or 'auto' to infer. */
-  dodge?: S
+  dodge?: S;
   /** Curve type for `line` and `area` mark types. */
-  curve?: 'none' | 'smooth' | 'step-before' | 'step' | 'step-after'
+  curve?: 'none' | 'smooth' | 'step-before' | 'step' | 'step-after';
   /** Mark fill color. */
-  fill_color?: S
+  fill_color?: S;
   /** Mark fill opacity. */
-  fill_opacity?: F
+  fill_opacity?: F;
   /** Mark stroke color. */
-  stroke_color?: S
+  stroke_color?: S;
   /** Mark stroke opacity. */
-  stroke_opacity?: F
+  stroke_opacity?: F;
   /** Mark stroke size. */
-  stroke_size?: F
+  stroke_size?: F;
   /** Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]. */
-  stroke_dash?: S
+  stroke_dash?: S;
   /** Label field or value. */
-  label?: S
+  label?: S;
   /** Distance between label and mark. */
-  label_offset?: F
+  label_offset?: F;
   /** Horizontal distance between label and mark. */
-  label_offset_x?: F
+  label_offset_x?: F;
   /** Vertical distance between label and mark. */
-  label_offset_y?: F
+  label_offset_y?: F;
   /** Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation. */
-  label_rotation?: S
+  label_rotation?: S;
   /** Label position relative to the mark. */
-  label_position?: 'top' | 'bottom' | 'middle' | 'left' | 'right'
+  label_position?: 'top' | 'bottom' | 'middle' | 'left' | 'right';
   /** Strategy to use if labels overlap. */
-  label_overlap?: 'hide' | 'overlap' | 'constrain'
+  label_overlap?: 'hide' | 'overlap' | 'constrain';
   /** Label fill color. */
-  label_fill_color?: S
+  label_fill_color?: S;
   /** Label fill opacity. */
-  label_fill_opacity?: F
+  label_fill_opacity?: F;
   /** Label stroke color. */
-  label_stroke_color?: S
+  label_stroke_color?: S;
   /** Label stroke opacity. */
-  label_stroke_opacity?: F
+  label_stroke_opacity?: F;
   /** Label stroke size (line width or pen thickness). */
-  label_stroke_size?: F
+  label_stroke_size?: F;
   /** Label font size. */
-  label_font_size?: F
+  label_font_size?: F;
   /** Label font weight. */
-  label_font_weight?: S
+  label_font_weight?: S;
   /** Label line height. */
-  label_line_height?: F
+  label_line_height?: F;
   /** Label text alignment. */
-  label_align?: 'left' | 'right' | 'center' | 'start' | 'end'
+  label_align?: 'left' | 'right' | 'center' | 'start' | 'end';
   /** Reference line stroke color. */
-  ref_stroke_color?: S
+  ref_stroke_color?: S;
   /** Reference line stroke opacity. */
-  ref_stroke_opacity?: F
+  ref_stroke_opacity?: F;
   /** Reference line stroke size (line width or pen thickness). */
-  ref_stroke_size?: F
+  ref_stroke_size?: F;
   /** Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]. */
-  ref_stroke_dash?: S
+  ref_stroke_dash?: S;
 }
 
 /** Extended mark attributes. Not exposed to API. */
 interface MarkExt extends Mark {
   /** Field. */
-  x_field?: S
+  x_field?: S;
   /** Format string. */
-  x_format?: Fmt
+  x_format?: Fmt;
   /** Field. */
-  x0_field?: S
+  x0_field?: S;
   /** Format string. */
-  x0_format?: Fmt
+  x0_format?: Fmt;
   /** Field. */
-  x1_field?: S
+  x1_field?: S;
   /** Format string. */
-  x1_format?: Fmt
+  x1_format?: Fmt;
   /** Field. */
-  x2_field?: S
+  x2_field?: S;
   /** Format string. */
-  x2_format?: Fmt
+  x2_format?: Fmt;
   /** Field. */
-  y_field?: S
+  y_field?: S;
   /** Format string. */
-  y_format?: Fmt
+  y_format?: Fmt;
   /** Field. */
-  y0_field?: S
+  y0_field?: S;
   /** Format string. */
-  y0_format?: Fmt
+  y0_format?: Fmt;
   /** Field. */
-  y1_field?: S
+  y1_field?: S;
   /** Format string. */
-  y1_format?: Fmt
+  y1_format?: Fmt;
   /** Field. */
-  y2_field?: S
+  y2_field?: S;
   /** Format string. */
-  y2_format?: Fmt
+  y2_format?: Fmt;
   /** Field. */
-  color_field?: S
+  color_field?: S;
   /** Format string. */
-  color_format?: Fmt
+  color_format?: Fmt;
   /** Field. */
-  shape_field?: S
+  shape_field?: S;
   /** Format string. */
-  shape_format?: Fmt
+  shape_format?: Fmt;
   /** Format string. */
-  size_format?: Fmt
+  size_format?: Fmt;
   /** Field. */
-  size_field?: S
+  size_field?: S;
   /** Field. */
-  dodge_field?: S
+  dodge_field?: S;
   /** Field. */
-  label_field?: S
+  label_field?: S;
   /** Format string. */
-  label_format?: Fmt
+  label_format?: Fmt;
 }
 
 /** Create a plot. A plot is composed of one or more graphical mark layers. */
 export interface Plot {
   /** The graphical mark layers contained in this plot. */
-  marks: Mark[]
+  marks: Mark[];
 }
 
 registerInteraction('drag-move', {
   start: [{ trigger: 'plot:mousedown', action: 'scale-translate:start' }],
   processing: [{ trigger: 'plot:mousemove', action: 'scale-translate:translate', throttle: { wait: 100, leading: true, trailing: false } }],
   end: [{ trigger: 'plot:mouseup', action: 'scale-translate:end' }],
-});
+})
 
 // TODO not in use
 export const
@@ -705,13 +706,13 @@ const
 /** Create a visualization for display inside a form. */
 export interface Visualization {
   /** The plot to be rendered in this visualization. */
-  plot: Plot
+  plot: Plot;
   /** Data for this visualization. */
-  data: Rec
+  data: Rec;
   /** The width of the visualization. Defaults to 100%. */
-  width?: S
+  width?: S;
   /** The height of the visualization. Defaults to 300px. */
-  height?: S
+  height?: S;
 }
 
 export const
@@ -763,11 +764,11 @@ export const
 /** Create a card displaying a plot. */
 interface State {
   /** The title for this card. */
-  title: S
+  title: S;
   /** Data for this card. */
-  data: Rec
+  data: Rec;
   /** The plot to be displayed in this card. */
-  plot: Plot
+  plot: Plot;
 }
 
 export const

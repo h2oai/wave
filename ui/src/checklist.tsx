@@ -1,8 +1,8 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { Choice } from './choice_group';
-import { B, bond, box, Box, on, S, qd } from './qd';
-import { px } from './theme';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { Choice } from './choice_group'
+import { B, bond, box, Box, on, S, qd } from './qd'
+import { px } from './theme'
 
 /**
  * Create a set of checkboxes.

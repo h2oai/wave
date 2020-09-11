@@ -1,11 +1,12 @@
-import React from 'react';
-import { render, fireEvent, createEvent, wait } from '@testing-library/react';
-import { XFileUpload, FileUpload } from './file_upload';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent, createEvent, wait } from '@testing-library/react'
+import { XFileUpload, FileUpload } from './file_upload'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
 const name = 'fileUpload'
 const fileUploadProps: FileUpload = { name }
+interface FileObj { name: T.S; size?: T.F }
 
 describe('FileUpload.tsx', () => {
   beforeAll(() => initializeIcons())
@@ -14,7 +15,7 @@ describe('FileUpload.tsx', () => {
     T.qd.args[name] = null
   })
 
-  const createChangeEvent = (files: {}[]) => ({ target: { files } })
+  const createChangeEvent = (files: FileObj[]) => ({ target: { files } })
   const mockXhrRequest = (data: any, status = 200) => {
     const xhrMockObj = {
       open: jest.fn(),
@@ -23,11 +24,11 @@ describe('FileUpload.tsx', () => {
       status,
       upload: jest.fn(),
       responseText: JSON.stringify(data),
-    };
+    }
     // @ts-ignore
-    window.XMLHttpRequest = jest.fn().mockImplementation(() => xhrMockObj);
+    window.XMLHttpRequest = jest.fn().mockImplementation(() => xhrMockObj)
     // @ts-ignore
-    setTimeout(() => { xhrMockObj['onreadystatechange'](); }, 0);
+    setTimeout(() => { xhrMockObj['onreadystatechange']() }, 0)
   }
 
   it('Renders data-test attr', () => {
@@ -56,7 +57,7 @@ describe('FileUpload.tsx', () => {
     const syncMock = jest.fn()
     T.qd.sync = syncMock
 
-    mockXhrRequest({ files: [{ name: 'file.txt' }] });
+    mockXhrRequest({ files: [{ name: 'file.txt' }] })
 
     const { getByTestId, getByText } = render(<XFileUpload model={{ ...fileUploadProps, label: 'upload' }} />)
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
@@ -67,7 +68,7 @@ describe('FileUpload.tsx', () => {
   })
 
   it('Shows success screen on success upload', async () => {
-    mockXhrRequest({ files: [{ name: 'file.txt' }] });
+    mockXhrRequest({ files: [{ name: 'file.txt' }] })
 
     const { getByTestId, getByText } = render(<XFileUpload model={{ ...fileUploadProps, label: 'upload' }} />)
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
@@ -77,7 +78,7 @@ describe('FileUpload.tsx', () => {
   })
 
   it('Shows error screen on error upload', async () => {
-    mockXhrRequest(null, 500);
+    mockXhrRequest(null, 500)
 
     const { getByTestId, getByText } = render(<XFileUpload model={{ ...fileUploadProps, label: 'upload' }} />)
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
@@ -136,7 +137,7 @@ describe('FileUpload.tsx', () => {
   // Used a nasty hack instead.
   describe('Drag & Drop', () => {
 
-    const createDropEvent = (targetElement: HTMLElement, files: {}[]) => {
+    const createDropEvent = (targetElement: HTMLElement, files: FileObj[]) => {
       const fileDropEvent = createEvent.drop(targetElement)
       Object.defineProperty(fileDropEvent, 'dataTransfer', { value: { files } })
       return fileDropEvent

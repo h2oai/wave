@@ -1,8 +1,8 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { View } from './meta';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { View } from './meta'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 import * as N from './notification'
 
 const

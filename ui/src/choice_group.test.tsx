@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XChoiceGroup, ChoiceGroup } from './choice_group';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XChoiceGroup, ChoiceGroup } from './choice_group'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'choiceGroup';
+const name = 'choiceGroup'
 const choiceGroupProps: ChoiceGroup = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }
 describe('ChoiceGroup.tsx', () => {
   beforeAll(() => initializeIcons())

@@ -1,7 +1,7 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { View } from './wide_bar_stat';
-import * as T from './qd';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { View } from './wide_bar_stat'
+import * as T from './qd'
 
 const
   title = 'wide_bar_stat',

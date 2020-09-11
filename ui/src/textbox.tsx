@@ -1,7 +1,7 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { B, bond, S, qd } from './qd';
-import { debounce } from 'vega';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { B, bond, S, qd } from './qd'
+import { debounce } from 'vega'
 
 /**
  * Create a text box.

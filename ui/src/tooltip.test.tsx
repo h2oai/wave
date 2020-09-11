@@ -1,9 +1,9 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { XToolTip } from './tooltip';
-import { initializeIcons } from '@fluentui/react';
+import React from 'react'
+import { render } from '@testing-library/react'
+import { XToolTip } from './tooltip'
+import { initializeIcons } from '@fluentui/react'
 
-const name = 'tooltip';
+const name = 'tooltip'
 const tooltipProps = { children: <div />, content: 'content' }
 
 describe('Tooltip.tsx', () => {

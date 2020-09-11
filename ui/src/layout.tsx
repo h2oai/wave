@@ -1,9 +1,9 @@
-import { default as React } from 'react';
-import { stylesheet } from 'typestyle';
-import { CardMenu } from './card_menu';
-import { format, isFormatExpr } from './intl';
-import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd';
-import { getTheme, margin } from './theme';
+import { default as React } from 'react'
+import { stylesheet } from 'typestyle'
+import { CardMenu } from './card_menu'
+import { format, isFormatExpr } from './intl'
+import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd'
+import { getTheme, margin } from './theme'
 
 type Slot = {
   left: U
@@ -14,7 +14,17 @@ type Slot = {
   bottom?: U
 }
 
+const
+  newCardRegistry = () => {
+    const
+      m: Dict<typeof React.Component> = {},
+      register = (name: S, ctor: typeof React.Component) => m[name] = ctor,
+      lookup = (name: S) => m[name] || m['']
+    return { register, lookup }
+  }
+
 export const
+  cards = newCardRegistry(),
   substitute = (formatString?: S, data?: Rec, defaultValue: any = null) => {
     return (formatString !== undefined && formatString !== null)
       ? isFormatExpr(formatString)
@@ -29,7 +39,7 @@ export const
     return x === null ? x : <>{x}</>
   },
   CardView = ({ card }: { card: Card<any> }) => {
-    let Tag = cards.lookup(card.state.view)
+    const Tag = cards.lookup(card.state.view)
     return <Tag {...card} />
   },
   Repeat = ({ view, props, data }: { view: S | any, props: any, data: any }) => {
@@ -43,17 +53,6 @@ export const
     })
     return <>{items}</>
   }
-
-const
-  newCardRegistry = () => {
-    const
-      m: Dict<typeof React.Component> = {},
-      register = (name: S, ctor: typeof React.Component) => m[name] = ctor,
-      lookup = (name: S) => m[name] || m['']
-    return { register, lookup }
-  }
-
-export const cards = newCardRegistry()
 
 type Size = [U, U]
 

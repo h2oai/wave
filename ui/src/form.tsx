@@ -1,114 +1,114 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { Button, Buttons, XButtons, XStandAloneButton } from './button';
-import { Checkbox, XCheckbox } from './checkbox';
-import { Checklist, XChecklist } from './checklist';
-import { ChoiceGroup, XChoiceGroup } from './choice_group';
-import { ColorPicker, XColorPicker } from './color_picker';
-import { Combobox, XCombobox } from './combobox';
-import { DatePicker, XDatePicker } from './date_picker';
-import { Dropdown, XDropdown } from './dropdown';
-import { Expander, XExpander } from './expander';
-import { FileUpload, XFileUpload } from './file_upload';
-import { Frame, XFrame } from './frame';
-import { Label, XLabel } from './label';
-import { cards } from './layout';
-import { Link, XLink } from './link';
-import { MessageBar, XMessageBar } from './message_bar';
-import { Progress, XProgress } from './progress';
-import { bond, Card, Packed, unpack, xid } from './qd';
-import { Separator, XSeparator } from './separator';
-import { Slider, XSlider } from './slider';
-import { Spinbox, XSpinbox } from './spinbox';
-import { Table, XTable } from './table';
-import { Tabs, XTabs } from './tabs';
-import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text';
-import { Textbox, XTextbox } from './textbox';
-import { getTheme } from './theme';
-import { Toggle, XToggle } from './toggle';
-import { XToolTip } from './tooltip';
-import { Picker, XPicker } from './picker';
-import { RangeSlider, XRangeSlider } from './range_slider';
-import { Stepper, XStepper } from './stepper';
-import { VegaVisualization, XVegaVisualization } from './vega';
-import { Visualization, XVisualization } from './plot';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { Button, Buttons, XButtons, XStandAloneButton } from './button'
+import { Checkbox, XCheckbox } from './checkbox'
+import { Checklist, XChecklist } from './checklist'
+import { ChoiceGroup, XChoiceGroup } from './choice_group'
+import { ColorPicker, XColorPicker } from './color_picker'
+import { Combobox, XCombobox } from './combobox'
+import { DatePicker, XDatePicker } from './date_picker'
+import { Dropdown, XDropdown } from './dropdown'
+import { Expander, XExpander } from './expander'
+import { FileUpload, XFileUpload } from './file_upload'
+import { Frame, XFrame } from './frame'
+import { Label, XLabel } from './label'
+import { cards } from './layout'
+import { Link, XLink } from './link'
+import { MessageBar, XMessageBar } from './message_bar'
+import { Picker, XPicker } from './picker'
+import { Visualization, XVisualization } from './plot'
+import { Progress, XProgress } from './progress'
+import { bond, Card, Packed, unpack, xid } from './qd'
+import { RangeSlider, XRangeSlider } from './range_slider'
+import { Separator, XSeparator } from './separator'
+import { Slider, XSlider } from './slider'
+import { Spinbox, XSpinbox } from './spinbox'
+import { Stepper, XStepper } from './stepper'
+import { Table, XTable } from './table'
+import { Tabs, XTabs } from './tabs'
+import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
+import { Textbox, XTextbox } from './textbox'
+import { getTheme } from './theme'
+import { Toggle, XToggle } from './toggle'
+import { XToolTip } from './tooltip'
+import { VegaVisualization, XVegaVisualization } from './vega'
 
 /** Create a component. */
 export interface Component {
   /** Text block. */
-  text?: Text
+  text?: Text;
   /** Extra-large sized text block. */
-  text_xl?: TextXl
+  text_xl?: TextXl;
   /** Large sized text block. */
-  text_l?: TextL
+  text_l?: TextL;
   /** Medium sized text block. */
-  text_m?: TextM
+  text_m?: TextM;
   /** Small sized text block. */
-  text_s?: TextS
+  text_s?: TextS;
   /** Extra-small sized text block. */
-  text_xs?: TextXs
+  text_xs?: TextXs;
   /** Label. */
-  label?: Label
+  label?: Label;
   /** Separator. */
-  separator?: Separator
+  separator?: Separator;
   /** Progress bar. */
-  progress?: Progress
+  progress?: Progress;
   /** Message bar. */
-  message_bar?: MessageBar
+  message_bar?: MessageBar;
   /** Textbox. */
-  textbox?: Textbox
+  textbox?: Textbox;
   /** Checkbox. */
-  checkbox?: Checkbox
+  checkbox?: Checkbox;
   /** Toggle. */
-  toggle?: Toggle
+  toggle?: Toggle;
   /** Choice group. */
-  choice_group?: ChoiceGroup
+  choice_group?: ChoiceGroup;
   /** Checklist. */
-  checklist?: Checklist
+  checklist?: Checklist;
   /** Dropdown. */
-  dropdown?: Dropdown
+  dropdown?: Dropdown;
   /** Combobox. */
-  combobox?: Combobox
+  combobox?: Combobox;
   /** Slider. */
-  slider?: Slider
+  slider?: Slider;
   /** Spinbox. */
-  spinbox?: Spinbox
+  spinbox?: Spinbox;
   /** Date picker. */
-  date_picker?: DatePicker
+  date_picker?: DatePicker;
   /** Color picker. */
-  color_picker?: ColorPicker
+  color_picker?: ColorPicker;
   /** Button. */
-  button?: Button
+  button?: Button;
   /** Button set. */
-  buttons?: Buttons
+  buttons?: Buttons;
   /** File upload. */
-  file_upload?: FileUpload
+  file_upload?: FileUpload;
   /** Table. */
-  table?: Table
+  table?: Table;
   /** Link. */
-  link?: Link
+  link?: Link;
   /** Tabs. */
-  tabs?: Tabs
+  tabs?: Tabs;
   /** Expander. */
-  expander?: Expander
+  expander?: Expander;
   /** Frame. */
-  frame?: Frame
+  frame?: Frame;
   /** Picker.*/
-  picker?: Picker
+  picker?: Picker;
   /** Range Slider. */
-  range_slider?: RangeSlider
+  range_slider?: RangeSlider;
   /** Stepper. */
-  stepper?: Stepper
+  stepper?: Stepper;
   /** Visualization. */
-  visualization?: Visualization
+  visualization?: Visualization;
   /** Vega-lite Visualization. */
-  vega_visualization?: VegaVisualization
+  vega_visualization?: VegaVisualization;
 }
 
 /** Create a form. */
 interface State {
   /** The components in this form. */
-  items: Packed<Component[]>
+  items: Packed<Component[]>;
 }
 
 

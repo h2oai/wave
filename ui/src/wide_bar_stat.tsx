@@ -1,9 +1,9 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { cards, Format } from './layout';
-import { bond, Card, unpack, F, Rec, S } from './qd';
-import { getTheme } from './theme';
-import { ProgressBar } from './parts/progress_bar';
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { cards, Format } from './layout'
+import { ProgressBar } from './parts/progress_bar'
+import { bond, Card, F, Rec, S, unpack } from './qd'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),

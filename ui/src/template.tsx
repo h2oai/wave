@@ -1,8 +1,8 @@
-import Handlebars from 'handlebars';
-import React from 'react';
-import { cards, substitute } from './layout';
-import { MarkupCard } from './markup';
-import { bond, Card, Rec, S, unpack } from './qd';
+import Handlebars from 'handlebars'
+import React from 'react'
+import { cards, substitute } from './layout'
+import { MarkupCard } from './markup'
+import { bond, Card, Rec, S, unpack } from './qd'
 
 /** Render dynamic content using a HTML template.*/
 interface State {
