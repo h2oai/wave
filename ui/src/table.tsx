@@ -356,10 +356,8 @@ export const
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }
 
-        // @ts-ignore
-        if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress.progress} progress={item[col.key]} />
-        // @ts-ignore
-        else if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon.icon} icon={item[col.key]} />
+        if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
+        else if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
 
         return <span>{v}</span>
       },

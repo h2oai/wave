@@ -34,9 +34,9 @@ columns = [
     ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width=300),
     ui.table_column(name='status', label='Status', filterable=True),
     ui.table_column(name='sth', label='Something', filterable=True),
-    ui.table_column(name='done', label='Done', cell_type=ui.table_cell_type(icon=ui.icon_table_cell_type(color='black'))),
+    ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type(color='black')),
     ui.table_column(name='views', label='Views', sortable=True),
-    ui.table_column(name='progress', label='Progress', cell_type=ui.table_cell_type(progress=ui.progress_table_cell_type(color='blue'))),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type(color='blue')),
 ]
 
 async def main(q: Q):
