@@ -994,7 +994,7 @@ def table_column(
         sortable: Optional[bool] = None,
         searchable: Optional[bool] = None,
         filterable: Optional[bool] = None,
-        cell_type: Optional[Union[TableCellType, str]] = None,
+        cell_type: Optional[TableCellType] = None,
 ) -> TableColumn:
     """Create a table column.
 

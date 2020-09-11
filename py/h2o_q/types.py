@@ -1986,7 +1986,7 @@ class TableColumn:
             sortable: Optional[bool] = None,
             searchable: Optional[bool] = None,
             filterable: Optional[bool] = None,
-            cell_type: Optional[Union[TableCellType, str]] = None,
+            cell_type: Optional[TableCellType] = None,
     ):
         self.name = name
         """An identifying name for this column."""
@@ -2019,7 +2019,7 @@ class TableColumn:
             sortable=self.sortable,
             searchable=self.searchable,
             filterable=self.filterable,
-            cell_type=None if self.cell_type is None else self.cell_type if isinstance(self.cell_type, str) else self.cell_type.dump(),
+            cell_type=None if self.cell_type is None else self.cell_type.dump(),
         )
 
     @staticmethod
@@ -2044,7 +2044,7 @@ class TableColumn:
         sortable: Optional[bool] = __d_sortable
         searchable: Optional[bool] = __d_searchable
         filterable: Optional[bool] = __d_filterable
-        cell_type: Optional[Union[TableCellType, str]] = __d_cell_type if isinstance(__d_cell_type, str) else None if __d_cell_type is None else TableCellType.load(__d_cell_type)
+        cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         return TableColumn(
             name,
             label,
