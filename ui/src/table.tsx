@@ -397,5 +397,5 @@ export const
           </Fluent.ScrollablePane>
         </div>
       )
-    return { render, columnsB, filteredItemsB, selectedFiltersB, searchStrB, colContextMenuList: colContextMenuListB, groupsB, groupByKeyB }
+    return { render, columnsB, filteredItemsB, selectedFiltersB, searchStrB, colContextMenuListB, groupsB, groupByKeyB }
   })
