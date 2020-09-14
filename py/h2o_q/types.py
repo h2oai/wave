@@ -2436,7 +2436,7 @@ class Frame:
 
 class Picker:
     """Create a picker.
-    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
     Use a picker to allow the user to quickly search for or manage a few tags or files.
     """
     def __init__(
