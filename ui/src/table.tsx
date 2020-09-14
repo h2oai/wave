@@ -4,7 +4,7 @@ import { B, bond, S, qd, box, Dict, U } from './qd'
 import { stylesheet } from 'typestyle'
 import { rem } from './theme'
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
-import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type";
+import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {
@@ -108,7 +108,7 @@ const
       return rv
     }, {} as Dict<any>)
   },
-  formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 export const
   XTable = bond(({ model: m }: { model: Table }) => {
@@ -126,7 +126,7 @@ export const
       searchableKeys = m.columns.filter(({ searchable }) => searchable).map(({ name }) => name),
       searchStrB = box(''),
       selectedFiltersB = box<{ [key: string]: S[] } | null>(null),
-      colContextMenuList = box<Fluent.IContextualMenuProps | null>(null),
+      colContextMenuListB = box<Fluent.IContextualMenuProps | null>(null),
       groupsB = box<Fluent.IGroup[] | undefined>(undefined),
       groupByKeyB = box('*'),
       groupByOptions: Fluent.IDropdownOption[] = m.groupable ? [{ key: '*', text: 'Nothing' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [],
@@ -245,9 +245,9 @@ export const
           </div>
         )
       },
-      onDismissContextMenu = () => colContextMenuList(null),
+      onDismissContextMenu = () => colContextMenuListB(null),
       onColumnContextMenu = (col: Fluent.IColumn, e: React.MouseEvent<HTMLElement>) => {
-        colContextMenuList({
+        colContextMenuListB({
           items: Array.from(new Set(items.map(i => i[col.fieldName || col.key])))
             .map(option => ({ key: option, name: option, data: col.fieldName || col.key })),
           target: e.target as HTMLElement,
@@ -379,7 +379,7 @@ export const
             onRenderDetailsHeader={onRenderDetailsHeader}
             onRenderDetailsFooter={onRenderDetailsFooter}
           />
-          {colContextMenuList() && <Fluent.ContextualMenu {...(colContextMenuList() as Fluent.IContextualMenuProps)} />}
+          {colContextMenuListB() && <Fluent.ContextualMenu {...(colContextMenuListB() as Fluent.IContextualMenuProps)} />}
         </>
       ),
       render = () => (
@@ -397,5 +397,5 @@ export const
           </Fluent.ScrollablePane>
         </div>
       )
-    return { render, columnsB, filteredItemsB, selectedFiltersB, searchStrB, colContextMenuList, groupsB, groupByKeyB }
+    return { render, columnsB, filteredItemsB, selectedFiltersB, searchStrB, colContextMenuList: colContextMenuListB, groupsB, groupByKeyB }
   })

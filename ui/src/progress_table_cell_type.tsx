@@ -1,10 +1,10 @@
 
-import React from 'react';
-import { bond, F, S } from './qd';
-import { ProgressArc } from './parts/progress_arc';
-import { grid } from './layout';
-import { stylesheet } from 'typestyle';
-import { getTheme } from './theme';
+import React from 'react'
+import { bond, F, S } from './qd'
+import { ProgressArc } from './parts/progress_arc'
+import { grid } from './layout'
+import { stylesheet } from 'typestyle'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),

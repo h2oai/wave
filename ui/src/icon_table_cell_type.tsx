@@ -1,6 +1,6 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { bond, S } from './qd';
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { bond, S } from './qd'
 
 /**
  * Create a cell type that renders a column's cells as icons instead of plain text.
