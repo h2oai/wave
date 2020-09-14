@@ -22,7 +22,7 @@
 
 dump_object <- function(x) {
   if(is(x, .h2oq_obj)) {
-    .to_json(x)
+    to_json(x)
   } else {
     stop("cannot dump")
   }
@@ -1037,7 +1037,7 @@ ui_file_upload <- function(
 #' @param color Color of the progress arc.
 #' @return A ProgressTableCellType instance.
 ui_progress_table_cell_type <- function(
-  color) {
+  color = NULL) {
   .guard_scalar("color", "character", color)
   .o <- list(progress=list(
     color=color))

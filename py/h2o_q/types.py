@@ -1889,15 +1889,13 @@ class ProgressTableCellType:
     """
     def __init__(
             self,
-            color: str,
+            color: Optional[str] = None,
     ):
         self.color = color
         """Color of the progress arc."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.color is None:
-            raise ValueError('ProgressTableCellType.color is required.')
         return _dump(
             color=self.color,
         )
@@ -1906,9 +1904,7 @@ class ProgressTableCellType:
     def load(__d: Dict) -> 'ProgressTableCellType':
         """Creates an instance of this class using the contents of a dict."""
         __d_color: Any = __d.get('color')
-        if __d_color is None:
-            raise ValueError('ProgressTableCellType.color is required.')
-        color: str = __d_color
+        color: Optional[str] = __d_color
         return ProgressTableCellType(
             color,
         )

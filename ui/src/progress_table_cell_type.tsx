@@ -35,7 +35,7 @@ const
 */
 export interface ProgressTableCellType {
   /** Color of the progress arc. */
-  color: S
+  color?: S
 }
 
 export const XProgressTableCellType = bond(({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => {
