@@ -113,7 +113,7 @@ export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
       <>
         {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
         <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
-          <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} value={valueB()} onChange={onChange} />
+          <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={valueB()} onChange={onChange} />
         </div>
       </>
     )
