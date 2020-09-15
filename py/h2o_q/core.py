@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import os.path
+import sys
 from typing import List, Dict, Union, Tuple, Any, Optional
 
 import requests
@@ -243,7 +244,18 @@ def _can_dump(x: Any):
     return hasattr(x, 'dump') and callable(x.dump)
 
 
+def _is_numpy_obj(x: Any) -> bool:
+    if 'numpy' in sys.modules:
+        np = sys.modules['numpy']
+        if isinstance(x, (np.ndarray, np.dtype, np.integer, np.floating)):
+            return True
+    return False
+
+
 def _dump(xs: Any):
+    if _is_numpy_obj(xs):
+        raise ValueError('NumPy objects are not serializable by Q')
+
     if isinstance(xs, (list, tuple)):
         return [_dump(x) for x in xs]
     elif isinstance(xs, dict):
