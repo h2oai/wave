@@ -14,7 +14,7 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install setuptools wheel twine requests websockets sphinx sphinx_rtd_theme pytest pylint seleniumbase
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
-	./venv/bin/seleniumbase install chromedriver latest 
+	./venv/bin/seleniumbase install chromedriver latest
 
 .PHONY: docs
 docs: sync-examples ## Build API docs
