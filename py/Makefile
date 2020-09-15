@@ -11,9 +11,10 @@ publish: ## Publish package to PyPI
 setup: ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
-	./venv/bin/python -m pip install setuptools wheel twine requests websockets sphinx sphinx_rtd_theme pytest pylint
+	./venv/bin/python -m pip install setuptools wheel twine requests websockets sphinx sphinx_rtd_theme pytest pylint seleniumbase
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
+	./venv/bin/seleniumbase install chromedriver latest 
 
 .PHONY: docs
 docs: sync-examples ## Build API docs
@@ -37,6 +38,13 @@ release: build docs examples ## Prepare release artifacts
 clean: purge ## Clean
 	rm -rf docs/build h2o_q-api-docs.zip venv
 	rm -f examples.tar.gz
+
+test:
+	pytest
+
+test-ci:
+	mkdir -p reports
+	pytest --headless --junit-xml=reports/report.xml --html=reports/report.html
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

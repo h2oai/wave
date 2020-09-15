@@ -20,3 +20,4 @@ from .server import listen, Q
 from .db import TeleDBError, TeleDB
 from .types import *
 from .test import test, run_tests
+from .uitest import Test, with_app
