@@ -45,17 +45,18 @@ export interface Textbox {
   tooltip?: S
 }
 
+const DEBOUNCE_TIMEOUT = 500
 export const
   XTextbox = bond(({ model: m }: { model: Textbox }) => {
     qd.args[m.name] = m.value || ''
     const
       icon: Fluent.IIconProps | undefined = m.icon && m.icon.length ? { iconName: m.icon } : undefined,
-      onChange = debounce(500, (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
+      onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
         v = v || (e.target as HTMLInputElement).value
 
         qd.args[m.name] = (v !== undefined && v !== null) ? v : (m.value || '')
         if (m.trigger) qd.sync()
-      }),
+      },
       password = m.password ? 'password' : undefined,
       render = () => m.mask
         ? (
@@ -68,7 +69,7 @@ export const
             required={m.required}
             disabled={m.disabled}
             readOnly={m.readonly}
-            onChange={onChange}
+            onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
           />
         )
         : (
@@ -86,7 +87,7 @@ export const
             readOnly={m.readonly}
             multiline={m.multiline}
             type={password}
-            onChange={onChange}
+            onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
           />
         )
 

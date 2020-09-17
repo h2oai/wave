@@ -65,8 +65,9 @@ describe('Textbox.tsx', () => {
     T.qd.sync = syncMock
 
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
-    jest.runOnlyPendingTimers()
 
+    expect(syncMock).not.toBeCalled() // Not called immediately, but after specified timeout.
+    jest.runOnlyPendingTimers()
     expect(syncMock).toBeCalled()
   })
 
@@ -78,6 +79,6 @@ describe('Textbox.tsx', () => {
 
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
 
-    expect(syncMock).toBeCalledTimes(0)
+    expect(syncMock).not.toBeCalled()
   })
 })
