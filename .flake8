@@ -1,0 +1,9 @@
+[flake8]
+ignore = E241,E265,E302,E303,E701,D105,D202,W503,I100,I201,I202
+exclude =
+  py/h2o_q/ui.py
+  py/h2o_q/types.py
+
+import-order-style = smarkets
+inline-quotes = "
+application-import-names =
