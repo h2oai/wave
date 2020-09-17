@@ -1,5 +1,18 @@
 
 # Change Log
+- [v0.4.0](https://github.com/h2oai/qd/releases/tag/v0.4.0) - Sep 16, 2020
+    - Added
+        - Trigger attribute to checklist component.
+    - Changed
+        - Allow same min and max values for the range slider component.
+        - App tests are now automatically and directly translated to Cypress tests when loaded.
+    - Fixed
+        - Allow removing selected options from the picker component.
+        - Render axis title properly when specified.
+        - Raise informative error message if attempting to use Numpy objects in components.
+    - Removed
+        - Cypress test bridge removed from server.
+        - `run_tests` API.
 - [v0.3.1](https://github.com/h2oai/qd/releases/tag/v0.3.1) - Sep 8, 2020
     - Fixed
         - Multiselect dropdown checkboxes do not respond when clicked.

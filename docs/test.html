@@ -88,8 +88,9 @@ height: 110px;
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import json
-import requests
+<pre><code class="python">import os
+import os.path
+import json
 
 _nest_depth = 2
 
@@ -141,14 +142,25 @@ class _TestElement:
     def __enter__(self):
         _write(f&#39;.within(() =&gt; {{&#39;)
         _indent()
-        return _TestSequence()
+        return Cypress()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         _dedent()
         _write(f&#39;\n{_tab()}}})&#39;)
 
 
-class _TestSequence:
+class Cypress:
+    &#34;&#34;&#34;Represents a Cypress test translator.
+    &#34;&#34;&#34;
+
+    def run(self, f):
+        &#34;&#34;&#34; Includes all steps from the given test into the current test.
+
+        Args:
+            f: A Python function containing Cypress test steps.
+        &#34;&#34;&#34;
+        f(self)
+
     def __getattr__(self, fn):
         def method(*args):
             f = f&#39;cy.{fn}&#39;
@@ -158,34 +170,27 @@ class _TestSequence:
         return method
 
 
-_all_tests = []
+_cypress_dir = os.environ.get(&#39;CYPRESS_INTEGRATION_TEST_DIR&#39;)
 
 
-def test(f):
-    _all_tests.append(f)
-    return f
+def cypress(description: str):
+    def tag(f):
+        if _cypress_dir:
+            _translate_test(description, f)
+        return f
+
+    return tag
 
 
-def run_tests():
-    suites = dict()
-    for f in _all_tests:
-        suite_name = f.__module__
-        if suite_name not in suites:
-            suites[suite_name] = []
+def _translate_test(description: str, f):
+    f(Cypress())
+    code = _read()
 
-        f(_TestSequence())
-
-        test_name = f.__name__
-        test_code = _read()
-
-        suites[suite_name].append((test_name, test_code))
-
-    specs = []
-    for name, tests in suites.items():
-        its = &#34;\n\n&#34;.join([f&#39;  it({_js(test_name)}, () =&gt; {{\n{test_code}\n  }})&#39; for (test_name, test_code) in tests])
-        specs.append(dict(name=name, code=f&#39;context({_js(name)}, () =&gt; {{\n{its}\n}})&#39;))
-
-    requests.post(&#34;http://localhost:55550/&#34;, json=dict(specs=specs))</code></pre>
+    test_name = f.__name__
+    test_filename = f&#39;{f.__module__}.{test_name}.spec.js&#39;
+    test_body = f&#39;describe({_js(description)}, () =&gt; {{\nit({_js(test_name)}, () =&gt; {{\n{code}\n  }})\n}})&#39;
+    with open(os.path.join(_cypress_dir, test_filename), &#39;w&#39;) as js_file:
+        js_file.write(test_body)</code></pre>
 </details>
 </section>
 <section>
@@ -195,8 +200,8 @@ def run_tests():
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="h2o_q.test.run_tests"><code class="name flex">
-<span>def <span class="ident">run_tests</span></span>(<span>)</span>
+<dt id="h2o_q.test.cypress"><code class="name flex">
+<span>def <span class="ident">cypress</span></span>(<span>description: str)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -204,45 +209,77 @@ def run_tests():
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def run_tests():
-    suites = dict()
-    for f in _all_tests:
-        suite_name = f.__module__
-        if suite_name not in suites:
-            suites[suite_name] = []
+<pre><code class="python">def cypress(description: str):
+    def tag(f):
+        if _cypress_dir:
+            _translate_test(description, f)
+        return f
 
-        f(_TestSequence())
-
-        test_name = f.__name__
-        test_code = _read()
-
-        suites[suite_name].append((test_name, test_code))
-
-    specs = []
-    for name, tests in suites.items():
-        its = &#34;\n\n&#34;.join([f&#39;  it({_js(test_name)}, () =&gt; {{\n{test_code}\n  }})&#39; for (test_name, test_code) in tests])
-        specs.append(dict(name=name, code=f&#39;context({_js(name)}, () =&gt; {{\n{its}\n}})&#39;))
-
-    requests.post(&#34;http://localhost:55550/&#34;, json=dict(specs=specs))</code></pre>
-</details>
-</dd>
-<dt id="h2o_q.test.test"><code class="name flex">
-<span>def <span class="ident">test</span></span>(<span>f)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def test(f):
-    _all_tests.append(f)
-    return f</code></pre>
+    return tag</code></pre>
 </details>
 </dd>
 </dl>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="h2o_q.test.Cypress"><code class="flex name class">
+<span>class <span class="ident">Cypress</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents a Cypress test translator.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cypress:
+    &#34;&#34;&#34;Represents a Cypress test translator.
+    &#34;&#34;&#34;
+
+    def run(self, f):
+        &#34;&#34;&#34; Includes all steps from the given test into the current test.
+
+        Args:
+            f: A Python function containing Cypress test steps.
+        &#34;&#34;&#34;
+        f(self)
+
+    def __getattr__(self, fn):
+        def method(*args):
+            f = f&#39;cy.{fn}&#39;
+            _write(f&#39;\n{_tab()}{_js_call(f, *args)}&#39;)
+            return _TestElement()
+
+        return method</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.test.Cypress.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self, f)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Includes all steps from the given test into the current test.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>f</code></strong></dt>
+<dd>A Python function containing Cypress test steps.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(self, f):
+    &#34;&#34;&#34; Includes all steps from the given test into the current test.
+
+    Args:
+        f: A Python function containing Cypress test steps.
+    &#34;&#34;&#34;
+    f(self)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -259,8 +296,17 @@ def run_tests():
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="h2o_q.test.run_tests" href="#h2o_q.test.run_tests">run_tests</a></code></li>
-<li><code><a title="h2o_q.test.test" href="#h2o_q.test.test">test</a></code></li>
+<li><code><a title="h2o_q.test.cypress" href="#h2o_q.test.cypress">cypress</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="h2o_q.test.Cypress" href="#h2o_q.test.Cypress">Cypress</a></code></h4>
+<ul class="">
+<li><code><a title="h2o_q.test.Cypress.run" href="#h2o_q.test.Cypress.run">run</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -648,6 +648,7 @@ def checklist(
         label: Optional[str] = None,
         values: Optional[List[str]] = None,
         choices: Optional[List[Choice]] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a set of checkboxes.
@@ -659,6 +660,7 @@ def checklist(
         label: Text to be displayed above the component.
         values: The names of the selected choices.
         choices: The choices to be presented.
+        trigger: True if the form should be submitted when the checklist value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Checklist` instance.
@@ -668,6 +670,7 @@ def checklist(
         label,
         values,
         choices,
+        trigger,
         tooltip,
     ))
 
@@ -2934,7 +2937,7 @@ choices that are not mutually exclusive.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.checklist"><code class="name flex">
-<span>def <span class="ident">checklist</span></span>(<span>name: str, label: Union[str, NoneType] = None, values: Union[List[str], NoneType] = None, choices: Union[List[<a title="h2o_q.types.Choice" href="types.html#h2o_q.types.Choice">Choice</a>], NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">checklist</span></span>(<span>name: str, label: Union[str, NoneType] = None, values: Union[List[str], NoneType] = None, choices: Union[List[<a title="h2o_q.types.Choice" href="types.html#h2o_q.types.Choice">Choice</a>], NoneType] = None, trigger: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a set of checkboxes.
@@ -2950,6 +2953,8 @@ choices that are not mutually exclusive.</p>
 <dd>The names of the selected choices.</dd>
 <dt><strong><code>choices</code></strong></dt>
 <dd>The choices to be presented.</dd>
+<dt><strong><code>trigger</code></strong></dt>
+<dd>True if the form should be submitted when the checklist value changes.</dd>
 <dt><strong><code>tooltip</code></strong></dt>
 <dd>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</dd>
 </dl>
@@ -2964,6 +2969,7 @@ choices that are not mutually exclusive.</p>
         label: Optional[str] = None,
         values: Optional[List[str]] = None,
         choices: Optional[List[Choice]] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a set of checkboxes.
@@ -2975,6 +2981,7 @@ choices that are not mutually exclusive.</p>
         label: Text to be displayed above the component.
         values: The names of the selected choices.
         choices: The choices to be presented.
+        trigger: True if the form should be submitted when the checklist value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Checklist` instance.
@@ -2984,6 +2991,7 @@ choices that are not mutually exclusive.</p>
         label,
         values,
         choices,
+        trigger,
         tooltip,
     ))</code></pre>
 </details>

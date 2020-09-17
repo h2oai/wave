@@ -1219,6 +1219,7 @@ class Checklist:
             label: Optional[str] = None,
             values: Optional[List[str]] = None,
             choices: Optional[List[Choice]] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1229,6 +1230,8 @@ class Checklist:
         &#34;&#34;&#34;The names of the selected choices.&#34;&#34;&#34;
         self.choices = choices
         &#34;&#34;&#34;The choices to be presented.&#34;&#34;&#34;
+        self.trigger = trigger
+        &#34;&#34;&#34;True if the form should be submitted when the checklist value changes.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -1241,6 +1244,7 @@ class Checklist:
             label=self.label,
             values=self.values,
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -1253,17 +1257,20 @@ class Checklist:
         __d_label: Any = __d.get(&#39;label&#39;)
         __d_values: Any = __d.get(&#39;values&#39;)
         __d_choices: Any = __d.get(&#39;choices&#39;)
+        __d_trigger: Any = __d.get(&#39;trigger&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         name: str = __d_name
         label: Optional[str] = __d_label
         values: Optional[List[str]] = __d_values
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return Checklist(
             name,
             label,
             values,
             choices,
+            trigger,
             tooltip,
         )
 
@@ -6576,7 +6583,7 @@ def load(__d: Dict) -&gt; &#39;Checkbox&#39;:
 </dd>
 <dt id="h2o_q.types.Checklist"><code class="flex name class">
 <span>class <span class="ident">Checklist</span></span>
-<span>(</span><span>name: str, label: Union[str, NoneType] = None, values: Union[List[str], NoneType] = None, choices: Union[List[<a title="h2o_q.types.Choice" href="#h2o_q.types.Choice">Choice</a>], NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
+<span>(</span><span>name: str, label: Union[str, NoneType] = None, values: Union[List[str], NoneType] = None, choices: Union[List[<a title="h2o_q.types.Choice" href="#h2o_q.types.Choice">Choice</a>], NoneType] = None, trigger: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a set of checkboxes.
@@ -6597,6 +6604,7 @@ choices that are not mutually exclusive.</p></div>
             label: Optional[str] = None,
             values: Optional[List[str]] = None,
             choices: Optional[List[Choice]] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -6607,6 +6615,8 @@ choices that are not mutually exclusive.</p></div>
         &#34;&#34;&#34;The names of the selected choices.&#34;&#34;&#34;
         self.choices = choices
         &#34;&#34;&#34;The choices to be presented.&#34;&#34;&#34;
+        self.trigger = trigger
+        &#34;&#34;&#34;True if the form should be submitted when the checklist value changes.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -6619,6 +6629,7 @@ choices that are not mutually exclusive.</p></div>
             label=self.label,
             values=self.values,
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -6631,17 +6642,20 @@ choices that are not mutually exclusive.</p></div>
         __d_label: Any = __d.get(&#39;label&#39;)
         __d_values: Any = __d.get(&#39;values&#39;)
         __d_choices: Any = __d.get(&#39;choices&#39;)
+        __d_trigger: Any = __d.get(&#39;trigger&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         name: str = __d_name
         label: Optional[str] = __d_label
         values: Optional[List[str]] = __d_values
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return Checklist(
             name,
             label,
             values,
             choices,
+            trigger,
             tooltip,
         )</code></pre>
 </details>
@@ -6665,17 +6679,20 @@ def load(__d: Dict) -&gt; &#39;Checklist&#39;:
     __d_label: Any = __d.get(&#39;label&#39;)
     __d_values: Any = __d.get(&#39;values&#39;)
     __d_choices: Any = __d.get(&#39;choices&#39;)
+    __d_trigger: Any = __d.get(&#39;trigger&#39;)
     __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
     name: str = __d_name
     label: Optional[str] = __d_label
     values: Optional[List[str]] = __d_values
     choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
+    trigger: Optional[bool] = __d_trigger
     tooltip: Optional[str] = __d_tooltip
     return Checklist(
         name,
         label,
         values,
         choices,
+        trigger,
         tooltip,
     )</code></pre>
 </details>
@@ -6698,6 +6715,10 @@ def load(__d: Dict) -&gt; &#39;Checklist&#39;:
 <dt id="h2o_q.types.Checklist.tooltip"><code class="name">var <span class="ident">tooltip</span></code></dt>
 <dd>
 <div class="desc"><p>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</p></div>
+</dd>
+<dt id="h2o_q.types.Checklist.trigger"><code class="name">var <span class="ident">trigger</span></code></dt>
+<dd>
+<div class="desc"><p>True if the form should be submitted when the checklist value changes.</p></div>
 </dd>
 <dt id="h2o_q.types.Checklist.values"><code class="name">var <span class="ident">values</span></code></dt>
 <dd>
@@ -6724,6 +6745,7 @@ def load(__d: Dict) -&gt; &#39;Checklist&#39;:
         label=self.label,
         values=self.values,
         choices=None if self.choices is None else [__e.dump() for __e in self.choices],
+        trigger=self.trigger,
         tooltip=self.tooltip,
     )</code></pre>
 </details>
@@ -20044,6 +20066,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.Checklist.load" href="#h2o_q.types.Checklist.load">load</a></code></li>
 <li><code><a title="h2o_q.types.Checklist.name" href="#h2o_q.types.Checklist.name">name</a></code></li>
 <li><code><a title="h2o_q.types.Checklist.tooltip" href="#h2o_q.types.Checklist.tooltip">tooltip</a></code></li>
+<li><code><a title="h2o_q.types.Checklist.trigger" href="#h2o_q.types.Checklist.trigger">trigger</a></code></li>
 <li><code><a title="h2o_q.types.Checklist.values" href="#h2o_q.types.Checklist.values">values</a></code></li>
 </ul>
 </li>

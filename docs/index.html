@@ -95,6 +95,29 @@ analytical and decision-support applications.</p>
 realtime state synchronization between Python and web browsers.</p>
 <h1 id="change-log">Change Log</h1>
 <ul>
+<li><a href="https://github.com/h2oai/qd/releases/tag/v0.4.0">v0.4.0</a> - Sep 16, 2020<ul>
+<li>Added<ul>
+<li>Trigger attribute to checklist component.</li>
+</ul>
+</li>
+<li>Changed<ul>
+<li>Allow same min and max values for the range slider component.</li>
+<li>App tests are now automatically and directly translated to Cypress tests when loaded.</li>
+</ul>
+</li>
+<li>Fixed<ul>
+<li>Allow removing selected options from the picker component.</li>
+<li>Render axis title properly when specified.</li>
+<li>Raise informative error message if attempting to use Numpy objects in components.</li>
+</ul>
+</li>
+<li>Removed<ul>
+<li>Cypress test bridge removed from server.</li>
+<li><code>run_tests</code> API.</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="https://github.com/h2oai/qd/releases/tag/v0.3.1">v0.3.1</a> - Sep 8, 2020<ul>
 <li>Fixed<ul>
 <li>Multiselect dropdown checkboxes do not respond when clicked.</li>
@@ -454,51 +477,42 @@ $ cd test
 $ npm install
 </code></pre>
 <h2 id="writing-a-test">Writing a test</h2>
-<p>See the <a href="#wizard">Wizard</a> example to understand how to author tests for your interactive app. Specifically, note how the <code>@test</code> attribute and
-the <code>run_tests()</code> function is used.</p>
-<pre><code class="py">
-@test
-def test_wizard(t):
-    t.visit('/demo')
-    t.locate('step1').click()
-    t.locate('text').should('have.text', 'What is your name?')
-    t.locate('nickname').clear().type('Fred')
-    t.locate('step2').click()
-    t.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
-    t.locate('feeling').clear().type('quirky')
-    t.locate('step3').click()
-    t.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
+<p>See the <a href="#wizard">Wizard</a> example to understand how to author tests for your interactive app. Specifically, note how the <code>@cypress</code> attribute is used. Refer to the <a href="https://docs.cypress.io/api/api/table-of-contents.html">Cypress API</a> to learn how to author assertions.</p>
+<pre><code class="py">from h2o_q import cypress
 
-
-if len(sys.argv) &gt; 1 and sys.argv[1] == 'test':
-    run_tests()
-else:
-    listen('/demo', main)
+@cypress('Walk through the wizard')
+def test_wizard(cy):
+    cy.visit('/demo')
+    cy.locate('step1').click()
+    cy.locate('text').should('have.text', 'What is your name?')
+    cy.locate('nickname').clear().type('Fred')
+    cy.locate('step2').click()
+    cy.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
+    cy.locate('feeling').clear().type('quirky')
+    cy.locate('step3').click()
+    cy.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
 
 </code></pre>
-<p>See <a href="https://docs.cypress.io/guides/references/assertions.html#Common-Assertions">Assertions</a> to understand how the Cypress API works.</p>
 <h2 id="running-your-test">Running your test</h2>
-<h3 id="step-1-start-the-q-server-as-usual">Step 1: Start the Q server as usual</h3>
-<pre><code>$ q
-</code></pre>
-<h3 id="step-2-start-the-q-test-bridge">Step 2: Start the Q test bridge</h3>
-<p>The Q test bridge is built into your Q server executable, and helps run your Python tests on Cypress.</p>
-<p>In a new terminal window, run the Q executable with the <code>-cypress</code> command line argument.</p>
-<pre><code>$ qd -cypress
-</code></pre>
-<p>Optionally, use the <code>-cypress-dir</code> and <code>-cypress-bridge-address</code> command line arguments if you need additional control over the test bridge (run <code>qd -help</code> for details).</p>
-<h3 id="step-3-run-your-test">Step 3: Run your test</h3>
-<p>From your app's <code>venv</code>, run:</p>
-<pre><code>$ python examples/wizard.py test
-</code></pre>
-<p>Running the above command translates your Python test to Javascript and sends it to the Q test bridge. You should now see your test executing in the terminal window that belongs your test bridge.</p>
-<h3 id="step-4-optional-explore-your-executed-tests">Step 4: (Optional) Explore your executed tests</h3>
-<p>All your executed tests are stored in your <code>test/cypress/integration</code> directory. To view past results and re-run tests, simply launch Cypress like this:</p>
+<h3 id="step-1-start-the-cypress-test-runner">Step 1: Start the Cypress test runner</h3>
 <pre><code>$ cd path/to/q
 $ cd test
 $ ./node_modules/.bin/cypress open
 </code></pre>
-<p>You can then use the Cypres user interface to browse and execute individual tests interactively.</p>
+<h3 id="step-2-start-the-q-server-as-usual">Step 2: Start the Q server as usual</h3>
+<pre><code>$ ./qd
+</code></pre>
+<h3 id="step-3-translate-your-python-tests-to-javascript">Step 3: Translate your Python tests to Javascript</h3>
+<p>To translate your Python tests to Javascript, execute the Python module or file containing your tests like this:</p>
+<pre><code>$ CYPRESS_INTEGRATION_TEST_DIR=path/to/q/test/cypress/integration ./venv/bin/python examples/wizard.py
+</code></pre>
+<p>The <code>CYPRESS_INTEGRATION_TEST_DIR</code> environment variable indicates where the Q SDK should write translated files to. This must be set to the <code>cypress/integration</code> directory.</p>
+<p>Alternatively, you can set the <code>CYPRESS_INTEGRATION_TEST_DIR</code> environment variable in your shell (or IDE) to simplify running your test file:</p>
+<pre><code>$ export CYPRESS_INTEGRATION_TEST_DIR=path/to/q/test/cypress/integration
+$ ./venv/bin/python examples/wizard.py
+</code></pre>
+<h3 id="step-4-run-your-tests">Step 4: Run your tests</h3>
+<p>At this point, you should find all your tests displayed in the Cypress UI. Simply click on a test to run it. Happy testing!</p>
 <h1 id="examples">Examples</h1>
 <h2 id="hello-world">Hello World!</h2>
 <p>A simple example to get you started with Q.</p>
@@ -623,8 +637,7 @@ page.save()
 </code></pre>
 <h2 id="wizard">Wizard</h2>
 <p>Create a multi-step wizard using form cards.</p>
-<pre><code class="py">import sys
-from h2o_q import Q, ui, listen, test, run_tests
+<pre><code class="py">from h2o_q import Q, ui, listen, cypress, Cypress
 
 
 async def main(q: Q):
@@ -664,23 +677,20 @@ async def main(q: Q):
     await q.page.save()
 
 
-@test
-def test_wizard(t):
-    t.visit('/demo')
-    t.locate('step1').click()
-    t.locate('text').should('have.text', 'What is your name?')
-    t.locate('nickname').clear().type('Fred')
-    t.locate('step2').click()
-    t.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
-    t.locate('feeling').clear().type('quirky')
-    t.locate('step3').click()
-    t.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
+@cypress('Walk through the wizard')
+def try_walk_through(cy: Cypress):
+    cy.visit('/demo')
+    cy.locate('step1').click()
+    cy.locate('text').should('have.text', 'What is your name?')
+    cy.locate('nickname').clear().type('Fred')
+    cy.locate('step2').click()
+    cy.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
+    cy.locate('feeling').clear().type('quirky')
+    cy.locate('step3').click()
+    cy.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
 
 
-if len(sys.argv) &gt; 1 and sys.argv[1] == 'test':
-    run_tests()
-else:
-    listen('/demo', main)
+listen('/demo', main)
 </code></pre>
 <h2 id="stepper">Stepper</h2>
 <p>Use Stepper to show progress through numbered steps.</p>
@@ -4128,6 +4138,26 @@ v.data = [(i * 10, i * 10 + 10, x) for i, (c, x, dx) in enumerate([f.next() for 
 
 page.save()
 </code></pre>
+<h2 id="plot-axis-titles">Plot / Axis Titles</h2>
+<p>Display custom axis titles on a plot.</p>
+<pre><code class="py">from synth import FakeTimeSeries
+from h2o_q import site, data, ui
+
+page = site['/demo']
+
+n = 50
+f = FakeTimeSeries()
+v = page.add('example', ui.plot_card(
+    box='1 1 4 5',
+    title='Line',
+    data=data('date price', n),
+    plot=ui.plot(
+        [ui.mark(type='line', x_scale='time', x='=date', y='=price', y_min=0, x_title='Date', y_title='Price')])
+))
+v.data = [(t, x) for t, x, dx in [f.next() for _ in range(n)]]
+
+page.save()
+</code></pre>
 <h2 id="plot-form">Plot / Form</h2>
 <p>Display a plot inside a form.</p>
 <pre><code class="py">from synth import FakeCategoricalSeries
@@ -5140,7 +5170,7 @@ from .core import Site, site, Page, Ref, data, pack, configure, Expando, expando
 from .server import listen, Q
 from .db import TeleDBError, TeleDB
 from .types import *
-from .test import test, run_tests</code></pre>
+from .test import cypress, Cypress</code></pre>
 </details>
 </section>
 <section>
@@ -5206,10 +5236,10 @@ from .test import test, run_tests</code></pre>
 </li>
 <li><a href="#writing-a-test">Writing a test</a></li>
 <li><a href="#running-your-test">Running your test</a><ul>
-<li><a href="#step-1-start-the-q-server-as-usual">Step 1: Start the Q server as usual</a></li>
-<li><a href="#step-2-start-the-q-test-bridge">Step 2: Start the Q test bridge</a></li>
-<li><a href="#step-3-run-your-test">Step 3: Run your test</a></li>
-<li><a href="#step-4-optional-explore-your-executed-tests">Step 4: (Optional) Explore your executed tests</a></li>
+<li><a href="#step-1-start-the-cypress-test-runner">Step 1: Start the Cypress test runner</a></li>
+<li><a href="#step-2-start-the-q-server-as-usual">Step 2: Start the Q server as usual</a></li>
+<li><a href="#step-3-translate-your-python-tests-to-javascript">Step 3: Translate your Python tests to Javascript</a></li>
+<li><a href="#step-4-run-your-tests">Step 4: Run your tests</a></li>
 </ul>
 </li>
 </ul>
@@ -5335,6 +5365,7 @@ from .test import test, run_tests</code></pre>
 <li><a href="#plot-area-line-groups">Plot / Area + Line / Groups</a></li>
 <li><a href="#plot-polygon">Plot / Polygon</a></li>
 <li><a href="#plot-histogram">Plot / Histogram</a></li>
+<li><a href="#plot-axis-titles">Plot / Axis Titles</a></li>
 <li><a href="#plot-form">Plot / Form</a></li>
 <li><a href="#plot-vega-lite">Plot / Vega-lite</a></li>
 <li><a href="#plot-vega-lite-update">Plot / Vega-lite / Update</a></li>

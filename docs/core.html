@@ -92,6 +92,7 @@ height: 110px;
 import logging
 import os
 import os.path
+import sys
 from typing import List, Dict, Union, Tuple, Any, Optional
 
 import requests
@@ -333,7 +334,18 @@ def _can_dump(x: Any):
     return hasattr(x, &#39;dump&#39;) and callable(x.dump)
 
 
+def _is_numpy_obj(x: Any) -&gt; bool:
+    if &#39;numpy&#39; in sys.modules:
+        np = sys.modules[&#39;numpy&#39;]
+        if isinstance(x, (np.ndarray, np.dtype, np.integer, np.floating)):
+            return True
+    return False
+
+
 def _dump(xs: Any):
+    if _is_numpy_obj(xs):
+        raise ValueError(&#39;NumPy objects are not serializable by Q&#39;)
+
     if isinstance(xs, (list, tuple)):
         return [_dump(x) for x in xs]
     elif isinstance(xs, dict):
