@@ -354,67 +354,29 @@ $ npm install
 
 ## Writing a test
 
-See the [Wizard](#wizard) example to understand how to author tests for your interactive app. Specifically, note how the `@test` attribute and  the `run_tests()` function is used.
+See the [Wizard](#wizard) example to understand how to author tests for your interactive app. Specifically, note how the `@cypress` attribute is used. Refer to the [Cypress API](https://docs.cypress.io/api/api/table-of-contents.html) to learn how to author assertions.
 
 
 ```py
+from h2o_q import cypress
 
-@test
-def test_wizard(t):
-    t.visit('/demo')
-    t.locate('step1').click()
-    t.locate('text').should('have.text', 'What is your name?')
-    t.locate('nickname').clear().type('Fred')
-    t.locate('step2').click()
-    t.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
-    t.locate('feeling').clear().type('quirky')
-    t.locate('step3').click()
-    t.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
-
-
-if len(sys.argv) > 1 and sys.argv[1] == 'test':
-    run_tests()
-else:
-    listen('/demo', main)
+@cypress('Walk through the wizard')
+def test_wizard(cy):
+    cy.visit('/demo')
+    cy.locate('step1').click()
+    cy.locate('text').should('have.text', 'What is your name?')
+    cy.locate('nickname').clear().type('Fred')
+    cy.locate('step2').click()
+    cy.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
+    cy.locate('feeling').clear().type('quirky')
+    cy.locate('step3').click()
+    cy.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
 
 ```
-
-See [Assertions](https://docs.cypress.io/guides/references/assertions.html#Common-Assertions) to understand how the Cypress API works.
 
 ## Running your test
 
-### Step 1: Start the Q server as usual
-
-```
-$ q
-```
-
-### Step 2: Start the Q test bridge
-
-The Q test bridge is built into your Q server executable, and helps run your Python tests on Cypress.
-
-In a new terminal window, run the Q executable with the `-cypress` command line argument.
-
-```
-$ qd -cypress
-```
-
-Optionally, use the `-cypress-dir` and `-cypress-bridge-address` command line arguments if you need additional control over the test bridge (run `qd -help` for details).
-
-### Step 3: Run your test
-
-From your app's `venv`, run:
-
-```
-$ python examples/wizard.py test
-```
-
-Running the above command translates your Python test to Javascript and sends it to the Q test bridge. You should now see your test executing in the terminal window that belongs your test bridge.
-
-### Step 4: (Optional) Explore your executed tests
-
-All your executed tests are stored in your `test/cypress/integration` directory. To view past results and re-run tests, simply launch Cypress like this:
-
+### Step 1: Start the Cypress test runner
 
 ```
 $ cd path/to/q
@@ -422,6 +384,31 @@ $ cd test
 $ ./node_modules/.bin/cypress open
 ```
 
-You can then use the Cypres user interface to browse and execute individual tests interactively.
+### Step 2: Start the Q server as usual
+
+```
+$ ./qd
+```
+
+### Step 3: Translate your Python tests to Javascript
+
+To translate your Python tests to Javascript, execute the Python module or file containing your tests like this:
+
+```
+$ CYPRESS_INTEGRATION_TEST_DIR=path/to/q/test/cypress/integration ./venv/bin/python examples/wizard.py
+```
+The `CYPRESS_INTEGRATION_TEST_DIR` environment variable indicates where the Q SDK should write translated files to. This must be set to the `cypress/integration` directory.
+
+Alternatively, you can set the `CYPRESS_INTEGRATION_TEST_DIR` environment variable in your shell (or IDE) to simplify running your test file:
+
+```
+$ export CYPRESS_INTEGRATION_TEST_DIR=path/to/q/test/cypress/integration
+$ ./venv/bin/python examples/wizard.py
+```
+
+### Step 4: Run your tests
+
+At this point, you should find all your tests displayed in the Cypress UI. Simply click on a test to run it. Happy testing!
+
 
 .. include:: ../docs/examples.md

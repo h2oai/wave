@@ -19,4 +19,4 @@ from .core import Site, site, Page, Ref, data, pack, configure, Expando, expando
 from .server import listen, Q
 from .db import TeleDBError, TeleDB
 from .types import *
-from .test import test, run_tests
+from .test import cypress, Cypress

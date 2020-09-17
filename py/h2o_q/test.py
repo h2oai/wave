@@ -1,5 +1,6 @@
+import os
+import os.path
 import json
-import requests
 
 _nest_depth = 2
 
@@ -51,14 +52,25 @@ class _TestElement:
     def __enter__(self):
         _write(f'.within(() => {{')
         _indent()
-        return _TestSequence()
+        return Cypress()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         _dedent()
         _write(f'\n{_tab()}}})')
 
 
-class _TestSequence:
+class Cypress:
+    """Represents a Cypress test translator.
+    """
+
+    def run(self, f):
+        """ Includes all steps from the given test into the current test.
+
+        Args:
+            f: A Python function containing Cypress test steps.
+        """
+        f(self)
+
     def __getattr__(self, fn):
         def method(*args):
             f = f'cy.{fn}'
@@ -68,31 +80,24 @@ class _TestSequence:
         return method
 
 
-_all_tests = []
+_cypress_dir = os.environ.get('CYPRESS_INTEGRATION_TEST_DIR')
 
 
-def test(f):
-    _all_tests.append(f)
-    return f
+def cypress(description: str):
+    def tag(f):
+        if _cypress_dir:
+            _translate_test(description, f)
+        return f
+
+    return tag
 
 
-def run_tests():
-    suites = dict()
-    for f in _all_tests:
-        suite_name = f.__module__
-        if suite_name not in suites:
-            suites[suite_name] = []
+def _translate_test(description: str, f):
+    f(Cypress())
+    code = _read()
 
-        f(_TestSequence())
-
-        test_name = f.__name__
-        test_code = _read()
-
-        suites[suite_name].append((test_name, test_code))
-
-    specs = []
-    for name, tests in suites.items():
-        its = "\n\n".join([f'  it({_js(test_name)}, () => {{\n{test_code}\n  }})' for (test_name, test_code) in tests])
-        specs.append(dict(name=name, code=f'context({_js(name)}, () => {{\n{its}\n}})'))
-
-    requests.post("http://localhost:55550/", json=dict(specs=specs))
+    test_name = f.__name__
+    test_filename = f'{f.__module__}.{test_name}.spec.js'
+    test_body = f'describe({_js(description)}, () => {{\nit({_js(test_name)}, () => {{\n{code}\n  }})\n}})'
+    with open(os.path.join(_cypress_dir, test_filename), 'w') as js_file:
+        js_file.write(test_body)

@@ -1,8 +1,7 @@
 # Wizard
 # Create a multi-step wizard using form cards.
 # ---
-import sys
-from h2o_q import Q, ui, listen, test, run_tests
+from h2o_q import Q, ui, listen, cypress, Cypress
 
 
 async def main(q: Q):
@@ -42,20 +41,17 @@ async def main(q: Q):
     await q.page.save()
 
 
-@test
-def test_wizard(t):
-    t.visit('/demo')
-    t.locate('step1').click()
-    t.locate('text').should('have.text', 'What is your name?')
-    t.locate('nickname').clear().type('Fred')
-    t.locate('step2').click()
-    t.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
-    t.locate('feeling').clear().type('quirky')
-    t.locate('step3').click()
-    t.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
+@cypress('Walk through the wizard')
+def try_walk_through(cy: Cypress):
+    cy.visit('/demo')
+    cy.locate('step1').click()
+    cy.locate('text').should('have.text', 'What is your name?')
+    cy.locate('nickname').clear().type('Fred')
+    cy.locate('step2').click()
+    cy.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
+    cy.locate('feeling').clear().type('quirky')
+    cy.locate('step3').click()
+    cy.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
 
 
-if len(sys.argv) > 1 and sys.argv[1] == 'test':
-    run_tests()
-else:
-    listen('/demo', main)
+listen('/demo', main)
