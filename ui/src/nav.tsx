@@ -1,6 +1,6 @@
 import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
 import React from 'react'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 import { bond, Card, S, qd } from './qd'
 
 /** Create a navigation item. */

@@ -2464,7 +2464,7 @@ ui_markup_card <- function(
 #' @param title The title of the page.
 #' @param refresh Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
 #' @param notification Display a desktop notification to the user.
-#' @param redirect Redirect the page to a new URL.
+#' @param redirect No documentation available.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 ui_meta_card <- function(

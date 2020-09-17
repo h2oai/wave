@@ -1,6 +1,6 @@
 import markdownit from 'markdown-it'
 import React from 'react'
-import { cards, substitute } from './layout'
+import { cards, substitute } from './grid_layout'
 import { bond, Card, Rec, S, unpack } from './qd'
 import { MarkupCard } from './markup'
 

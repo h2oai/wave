@@ -1,7 +1,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 import { bond, Card, Rec, S, unpack, xid } from './qd'
 import { getTheme } from './theme'
 

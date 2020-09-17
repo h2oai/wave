@@ -4743,7 +4743,7 @@ class MetaCard:
         self.notification = notification
         """Display a desktop notification to the user."""
         self.redirect = redirect
-        """Redirect the page to a new URL."""
+        """No documentation available."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

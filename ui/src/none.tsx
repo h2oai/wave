@@ -1,6 +1,6 @@
 import React from 'react'
 import { bond, Card, S } from './qd'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 
 export const
   View = bond(({ name, state, changed }: Card<Record<S, unknown>>) => {

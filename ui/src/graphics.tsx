@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 import React from 'react'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 import { bond, Card, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd'
 
 

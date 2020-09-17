@@ -1,6 +1,6 @@
 import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react'
 import React from 'react'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 import { Tab } from './tabs'
 import { bond, Card, qd, B, S } from './qd'
 

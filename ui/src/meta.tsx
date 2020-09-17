@@ -1,5 +1,5 @@
 import React from 'react'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 import { bond, Card, on, S, U, qd } from './qd'
 import { showNotification } from './notification'
 
@@ -18,16 +18,19 @@ interface State {
   notification?: S
   /** Redirect the page to a new URL. */
   redirect?: S
+  /** Pick a layout mode. Defaults to Grid. */
+  layout?: S
 }
 
 export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       init = () => {
-        const { title, refresh, notification, redirect } = state
+        const { title, refresh, notification, redirect, layout } = state
         if (title) window.document.title = title
         if (typeof refresh === 'number') qd.refreshRateB(refresh)
         if (notification) showNotification(notification)
+        if (layout) qd.layoutB(layout)
         if (redirect) {
           try {
             const url = new URL(redirect)
@@ -41,7 +44,7 @@ export const
           }
         }
       },
-      render = () => (<></>)
+      render = () => <></>
     on(changed, init)
     return { init, render }
   })

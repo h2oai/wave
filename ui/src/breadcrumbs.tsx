@@ -1,6 +1,6 @@
 import { Breadcrumb } from '@fluentui/react'
 import React from 'react'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 import { bond, Card, S, qd } from './qd'
 
 /** Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`. */

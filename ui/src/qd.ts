@@ -231,7 +231,7 @@ interface CycBufD {
 
 export interface Page {
   key: S
-  changed: Box<B>
+  changedB: Box<B>
   add(k: S, c: C): void
   get(k: S): C | undefined
   set(k: S, v: any): void
@@ -368,17 +368,6 @@ const
   }
 
 const
-  keysOf = <T extends {}>(d: Dict<T>): S[] => {
-    const a: S[] = []
-    for (const k in d) a.push(k)
-    return a
-  },
-  valuesOf = <T extends {}>(d: Dict<T>): T[] => {
-    const a: T[] = []
-    for (const k in d) a.push(d[k])
-    return a
-
-  },
   isMap = (x: any): B => {
     // for JSON data only: anything not null, string, number, bool, array
     if (x === null || x === undefined) return false
@@ -525,7 +514,7 @@ const
         return tup ? newCur(t, tup) : null
       },
       list = (): Rec[] => {
-        const keys = keysOf(tups)
+        const keys = Object.keys(tups)
         keys.sort()
         const xs: Rec[] = []
         for (const k of keys) xs.push(t.make(tups[k]))
@@ -637,7 +626,7 @@ const
         dirty = true
       },
       get = (k: S): C | undefined => cards[k],
-      list = (): C[] => valuesOf(cards),
+      list = (): C[] => Object.values(cards),
       drop = (k: S) => delete cards[k],
       set = (k: S, v: any) => {
         const ks = k.split(/\s+/g)
@@ -665,7 +654,7 @@ const
         dirties = {} // reset
       }
 
-    return { key, changed: changedB, add, get, set, list, drop, sync }
+    return { key, changedB, add, get, set, list, drop, sync }
   },
   load = ({ c }: PageD): Page => {
     const page = newPage()
@@ -715,6 +704,7 @@ export interface Qd {
   readonly path: S
   readonly args: Rec
   readonly refreshRateB: Box<U>
+  readonly layoutB: Box<S>
   socket: WebSocket | null
   page(): PageRef
   sync(): void
@@ -735,6 +725,7 @@ export const qd: Qd = {
   path: window.location.pathname,
   args: {},
   refreshRateB: box(-1),
+  layoutB: box(''),
   socket: null,
   page: (path?: S): PageRef => {
     path = path || qd.path

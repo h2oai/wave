@@ -4,7 +4,7 @@ import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, Coordin
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V } from './qd'
 import { getTheme } from './theme'
 
@@ -703,6 +703,7 @@ const
 const
   css = stylesheet({
     card: {
+      position: 'relative'
     },
     title: {
       ...theme.font.s12,
@@ -762,12 +763,8 @@ export const
       render = () => {
         const
           { width, height } = model,
-          style: React.CSSProperties = (width === 'auto' && height === 'auto')
-            ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
-            : { width: width || 'auto', height: height || '300px' }
-        return (
-          <div style={style} ref={container} />
-        )
+          style: React.CSSProperties = { width: width || 'auto', height: height || '300px', minHeight: 350 }
+        return <div style={style} ref={container} />
       }
     return { init, update, render }
   })
@@ -790,9 +787,7 @@ export const
         return (
           <div data-test={name} className={css.card}>
             <div className={css.title}>{title || 'Untitled'}</div>
-            <div className={css.plot}>
-              <XVisualization model={{ plot, data, width: 'auto', height: 'auto' }} />
-            </div>
+            <XVisualization model={{ plot, data, width: 'auto', height: 'auto' }} />
           </div>
         )
       }

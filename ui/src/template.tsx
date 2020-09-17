@@ -1,6 +1,6 @@
 import Handlebars from 'handlebars'
 import React from 'react'
-import { cards, substitute } from './layout'
+import { cards, substitute } from './grid_layout'
 import { MarkupCard, XMarkup } from './markup'
 import { bond, Card, Rec, S, unpack } from './qd'
 

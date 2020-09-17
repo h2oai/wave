@@ -1,9 +1,10 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { GridLayout } from './layout'
+import { GridLayout } from './grid_layout'
 import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, qd } from './qd'
 import { getTheme, pc, clas } from './theme'
 import { Spinner, SpinnerSize } from '@fluentui/react'
+import { FlexLayout } from './flex_layout'
 
 const
   theme = getTheme(),
@@ -53,6 +54,12 @@ const
         connect('/_s', onSocket)
         window.addEventListener('hashchange', onHashChanged)
       },
+      getLayout = (page: Page) => {
+        switch (qd.layoutB()) {
+          case 'flex': return <FlexLayout page={page} />
+          default: return <GridLayout page={page} />
+        }
+      },
       render = () => {
         const { page, error } = contentB()
         // TODO prettier error section
@@ -64,17 +71,11 @@ const
         }
         if (!page) return <Spinner className={css.centerFullHeight} size={SpinnerSize.large} label='Loading ...' />
 
-        return (
-          <div className={css.app}>
-            <GridLayout key={page.key} page={page} />
-          </div>
-        )
+        return <div className={css.app}>{getLayout(page)}</div>
       },
-      dispose = () => {
-        window.removeEventListener('hashchange', onHashChanged)
-      }
+      dispose = () => window.removeEventListener('hashchange', onHashChanged)
 
-    return { init, render, dispose, contentB }
+    return { init, render, dispose, contentB, layoutMode: qd.layoutB }
   })
 
 export default App
