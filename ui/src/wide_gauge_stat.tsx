@@ -1,6 +1,6 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format, grid } from './layout'
+import { cards, Format, grid } from './grid_layout'
 import { bond, Card, unpack, F, Rec, S } from './qd'
 import { getTheme } from './theme'
 import { ProgressArc } from './parts/progress_arc'
@@ -12,6 +12,7 @@ const
       display: 'flex',
     },
     left: {
+      position: 'relative',
       width: grid.unitInnerHeight,
       height: grid.unitInnerHeight,
       marginRight: grid.gap,

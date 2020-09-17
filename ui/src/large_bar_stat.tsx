@@ -1,6 +1,6 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format } from './layout'
+import { cards, Format } from './grid_layout'
 import { bond, Card, unpack, F, Rec, S } from './qd'
 import { getTheme } from './theme'
 import { ProgressBar } from './parts/progress_bar'

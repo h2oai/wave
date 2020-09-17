@@ -14,7 +14,7 @@ def create_fake_row(g, f, n):
 n = 30
 f1, f2, f3 = FakeScatter(), FakeScatter(), FakeScatter()
 v = page.add('example', ui.plot_card(
-    box='1 1 4 5',
+    box='1 2 4 5',
     title='Point, groups',
     data=data('product price performance', n * 3),
     plot=ui.plot([ui.mark(type='point', x='=price', y='=performance', color='=product', shape='circle')])

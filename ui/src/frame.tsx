@@ -1,6 +1,6 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 import { bond, Card, S, xid } from './qd'
 import { getTheme } from './theme'
 

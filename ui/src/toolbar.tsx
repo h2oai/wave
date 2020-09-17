@@ -1,6 +1,6 @@
 import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
-import { cards } from './layout'
+import { cards } from './grid_layout'
 import { bond, Card, qd, S } from './qd'
 
 /**

@@ -1,5 +1,5 @@
 import React from 'react'
-import { cards, Repeat } from './layout'
+import { cards, Repeat } from './grid_layout'
 import { bond, Card, Dict, Rec, S, Data } from './qd'
 
 /**
