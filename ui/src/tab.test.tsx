@@ -15,7 +15,7 @@ const
     changed: T.box(false)
   }
 
-describe('Meta.tsx', () => {
+describe('Tab.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     T.qd.args[name] = null

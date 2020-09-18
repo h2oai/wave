@@ -2,9 +2,10 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { GridLayout } from './grid_layout'
 import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, qd } from './qd'
-import { getTheme, pc, clas } from './theme'
+import { getTheme, pc, clas, topNavBreakpoint } from './theme'
 import { Spinner, SpinnerSize } from '@fluentui/react'
 import { FlexLayout } from './flex_layout'
+import { TopNav } from './top_nav'
 
 const
   theme = getTheme(),
@@ -17,6 +18,12 @@ const
       display: 'flex',
       justifyContent: 'center',
       overflow: 'auto'
+    },
+    appWithTopNav: {
+      top: 81,
+      $nest: {
+        ...topNavBreakpoint({ marginBottom: 75 })
+      }
     },
     centerFullHeight: {
       height: pc(100),
@@ -62,6 +69,7 @@ const
       },
       render = () => {
         const { page, error } = contentB()
+
         // TODO prettier error section
         if (error) {
           const errorMessage = error === 'not_found'
@@ -71,11 +79,17 @@ const
         }
         if (!page) return <Spinner className={css.centerFullHeight} size={SpinnerSize.large} label='Loading ...' />
 
-        return <div className={css.app}>{getLayout(page)}</div>
+        const topNav = qd.topNavB()
+        return (
+          <>
+            {topNav && <TopNav {...topNav} />}
+            <main className={clas(css.app, topNav ? css.appWithTopNav : '')}>{getLayout(page)}</main>
+          </>
+        )
       },
       dispose = () => window.removeEventListener('hashchange', onHashChanged)
 
-    return { init, render, dispose, contentB, layoutMode: qd.layoutB }
+    return { init, render, dispose, contentB, layoutMode: qd.layoutB, topNav: qd.topNavB }
   })
 
 export default App

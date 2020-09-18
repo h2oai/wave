@@ -17,7 +17,12 @@ from synth import FakeScatter
 
 page = site['/demo']
 
-page['meta'] = ui.meta_card(box='', layout='flex')
+page['meta'] = ui.meta_card(box='', layout='flex', top_nav=ui.top_nav(title='My app', subtitle='Try it, you will not regret', items=[
+        ui.tab(name='#menu/spam', label='Spam', icon='Inbox'),
+        ui.tab(name='#menu/ham', label='Ham', icon='EatDrink'),
+        ui.tab(name='#menu/eggs', label='Eggs', icon='CollegeFootball'),
+        ui.tab(name='#about', label='About', icon='FeedbackRequestSolid'),
+    ]))
 
 
 fake = Faker()
@@ -26,7 +31,7 @@ f = FakePercent()
 # Gauges
 val, pc = f.next()
 page['gauge1'] = ui.wide_gauge_stat_card(
-    box='0.33',
+    box='1',
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
@@ -36,7 +41,7 @@ page['gauge1'] = ui.wide_gauge_stat_card(
 )
 val, pc = f.next()
 page['gauge2'] = ui.wide_gauge_stat_card(
-    box='0.33',
+    box='1',
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
@@ -46,7 +51,7 @@ page['gauge2'] = ui.wide_gauge_stat_card(
 )
 val, pc = f.next()
 page['gauge3'] = ui.wide_gauge_stat_card(
-    box='0.33',
+    box='1|',
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
@@ -60,7 +65,7 @@ n = 10
 k = 5
 f = FakeMultiCategoricalSeries(groups=k)
 v = page.add('plot1', ui.plot_card(
-    box='0.5',
+    box='1',
     title='Intervals, stacked',
     data=data('country product price', n * k),
     plot=ui.plot([ui.mark(type='interval', x='=price', y='=product', color='=country', stack='auto', y_min=0)])
@@ -73,7 +78,7 @@ def create_fake_row(g, f, n):
 n = 30
 f1, f2, f3 = FakeScatter(), FakeScatter(), FakeScatter()
 v = page.add('plot2',ui.plot_card(
-    box='0.5',
+    box='1|',
     title='Point, groups',
     data=data('product price performance', n * 3),
     plot=ui.plot([ui.mark(type='point', x='=price', y='=performance', color='=product', shape='circle')])
