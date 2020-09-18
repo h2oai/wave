@@ -15,7 +15,7 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  TabComponent = (state: State) => {
     const
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
@@ -27,15 +27,14 @@ export const
         qd.args[name] = true
         qd.sync()
       },
-      render = () => {
-        const
-          linkFormat = state.link ? PivotLinkFormat.links : PivotLinkFormat.tabs,
-          items = state.items.map(({ name, label, icon }) => (
-            <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
-          ))
-        return <Pivot data-test='tab' linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
-
-      }
+      linkFormat = state.link ? PivotLinkFormat.links : PivotLinkFormat.tabs,
+      items = state.items.map(({ name, label, icon }) => (
+        <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
+      ))
+    return <Pivot data-test='tab' linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
+  },
+  View = bond(({ state, changed }: Card<State>) => {
+    const render = () => <TabComponent {...state} />
     return { render, changed }
   })
 

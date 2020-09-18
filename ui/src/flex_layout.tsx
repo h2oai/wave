@@ -13,6 +13,9 @@ const
       display: 'flex',
       flexWrap: 'wrap',
       justifyContent: 'space-evenly',
+      backgroundColor: colors.page,
+      height: 'min-content',
+      width: pc(100)
     },
     slot: {
       backgroundColor: colors.card,
@@ -23,9 +26,6 @@ const
       margin: gap,
       padding: 15
     },
-    page: {
-      width: pc(100)
-    }
   })
 
 export const
@@ -36,7 +36,7 @@ export const
         placement = placement.endsWith('|') ? placement.slice(0, -1) : placement
         if (placement === '') return { flexGrow: 1, flexBasis: pc(100) }
         if (placement.endsWith('px')) return { width: placement }
-        if (!isNaN(+placement)) return { minWidth: `calc(${pc(+placement * 100)} - ${gap * 5}px)`, flexGrow: 1 }
+        if (!isNaN(+placement)) return { flexGrow: +placement }
         return undefined
       },
       render = () => {
@@ -54,11 +54,8 @@ export const
               </React.Fragment>
             )
             )
-        return (
-          <div data-test={page.key} className={css.page}>
-            <div className={css.flex}>{children}</div>
-          </div>
-        )
+        return <div data-test={page.key} className={css.flex}>{children}</div>
+
       }
     return { render, changedB }
   })

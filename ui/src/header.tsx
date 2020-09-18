@@ -10,7 +10,6 @@ const
   iconSize = 36,
   css = stylesheet({
     card: {
-      position: 'absolute', left: 0, top: 0, right: 0, bottom: 0,
       display: 'flex',
       alignItems: 'center',
     },
@@ -55,18 +54,19 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
-    const render = () => (
-      <div data-test='header' className={css.card}>
-        <div className={css.lhs}>
-          <FontIcon className={css.icon} style={{ color: theme.color(state.icon_color) }} iconName={state.icon || 'WebComponents'} />
-        </div>
-        <div className={css.rhs}>
-          <div className={css.title}>{state.title}</div>
-          <div className={css.subtitle}>{state.subtitle}</div>
-        </div>
+  Header = (s: State) => (
+    <div data-test='header' className={css.card}>
+      <div className={css.lhs}>
+        <FontIcon className={css.icon} style={{ color: theme.color(s.icon_color) }} iconName={s.icon || 'WebComponents'} />
       </div>
-    )
+      <div className={css.rhs}>
+        <div className={css.title}>{s.title}</div>
+        <div className={css.subtitle}>{s.subtitle}</div>
+      </div>
+    </div>
+  ),
+  View = bond(({ state, changed }: Card<State>) => {
+    const render = () => <Header {...state} />
     return { render, changed }
   })
 

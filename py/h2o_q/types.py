@@ -4586,6 +4586,72 @@ class MarkupCard:
         )
 
 
+class TopNav:
+    """No documentation available.
+    """
+    def __init__(
+            self,
+            title: str,
+            subtitle: str,
+            items: List[Tab],
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+    ):
+        self.title = title
+        """The title."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.items = items
+        """Navigation tabs links to be displayed in top nav."""
+        self.icon = icon
+        """The icon type, displayed to the left."""
+        self.icon_color = icon_color
+        """The icon's color."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.title is None:
+            raise ValueError('TopNav.title is required.')
+        if self.subtitle is None:
+            raise ValueError('TopNav.subtitle is required.')
+        if self.items is None:
+            raise ValueError('TopNav.items is required.')
+        return _dump(
+            title=self.title,
+            subtitle=self.subtitle,
+            items=[__e.dump() for __e in self.items],
+            icon=self.icon,
+            icon_color=self.icon_color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TopNav':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('TopNav.title is required.')
+        __d_subtitle: Any = __d.get('subtitle')
+        if __d_subtitle is None:
+            raise ValueError('TopNav.subtitle is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('TopNav.items is required.')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
+        title: str = __d_title
+        subtitle: str = __d_subtitle
+        items: List[Tab] = [Tab.load(__e) for __e in __d_items]
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
+        return TopNav(
+            title,
+            subtitle,
+            items,
+            icon,
+            icon_color,
+        )
+
+
 class MetaCard:
     """Represents page-global state.
 
@@ -4598,7 +4664,12 @@ class MetaCard:
             title: Optional[str] = None,
             refresh: Optional[int] = None,
             notification: Optional[str] = None,
+<<<<<<< HEAD
             redirect: Optional[str] = None,
+=======
+            layout: Optional[str] = None,
+            top_nav: Optional[TopNav] = None,
+>>>>>>> feat: topNav for mobile and desktop for flex layout #40
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -4609,8 +4680,15 @@ class MetaCard:
         """Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use)."""
         self.notification = notification
         """Display a desktop notification to the user."""
+<<<<<<< HEAD
         self.redirect = redirect
         """No documentation available."""
+=======
+        self.layout = layout
+        """Pick a layout mode. Defaults to Grid."""
+        self.top_nav = top_nav
+        """Create a fixed-top navbar."""
+>>>>>>> feat: topNav for mobile and desktop for flex layout #40
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -4624,7 +4702,12 @@ class MetaCard:
             title=self.title,
             refresh=self.refresh,
             notification=self.notification,
+<<<<<<< HEAD
             redirect=self.redirect,
+=======
+            layout=self.layout,
+            top_nav=None if self.top_nav is None else self.top_nav.dump(),
+>>>>>>> feat: topNav for mobile and desktop for flex layout #40
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4637,20 +4720,35 @@ class MetaCard:
         __d_title: Any = __d.get('title')
         __d_refresh: Any = __d.get('refresh')
         __d_notification: Any = __d.get('notification')
+<<<<<<< HEAD
         __d_redirect: Any = __d.get('redirect')
+=======
+        __d_layout: Any = __d.get('layout')
+        __d_top_nav: Any = __d.get('top_nav')
+>>>>>>> feat: topNav for mobile and desktop for flex layout #40
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
         refresh: Optional[int] = __d_refresh
         notification: Optional[str] = __d_notification
+<<<<<<< HEAD
         redirect: Optional[str] = __d_redirect
+=======
+        layout: Optional[str] = __d_layout
+        top_nav: Optional[TopNav] = None if __d_top_nav is None else TopNav.load(__d_top_nav)
+>>>>>>> feat: topNav for mobile and desktop for flex layout #40
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
             title,
             refresh,
             notification,
+<<<<<<< HEAD
             redirect,
+=======
+            layout,
+            top_nav,
+>>>>>>> feat: topNav for mobile and desktop for flex layout #40
             commands,
         )
 
