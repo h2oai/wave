@@ -52,11 +52,6 @@ const
 
 export const
   XStepper = bond(({ model: m }: { model: Stepper }) => {
-    m.items.forEach((s, i) => {
-      if (i > 0 && !m.items[i - 1].done && s.done) {
-        throw new Error(`Step ${i} cannot be done because step ${i - 1} is not.`)
-      }
-    })
     const
       steps = m.items,
       disabledStyles = (stepIdx: U) => stepIdx > 0 && !steps[stepIdx - 1].done ? css.disabled : '',
