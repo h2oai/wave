@@ -1,5 +1,14 @@
 
 # Change Log
+- [v0.5.0](https://github.com/h2oai/qd/releases/tag/v0.5.0) - Sep 18, 2020
+    - Added
+        - Example for controlling cards with tabs.
+        - Cypress test runner for CI.
+        - Search, sort, filter, group-by, export and custom cell types for table component.
+    - Changed
+        - Remove semantic validation for stepper component.
+    - Fixed
+        - Value synchronization bug in textbox component.
 - [v0.4.0](https://github.com/h2oai/qd/releases/tag/v0.4.0) - Sep 16, 2020
     - Added
         - Trigger attribute to checklist component.

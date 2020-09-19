@@ -1026,21 +1026,89 @@ def file_upload(
     ))
 
 
+def progress_table_cell_type(
+        color: Optional[str] = None,
+) -&gt; TableCellType:
+    &#34;&#34;&#34;Create a cell type that renders a column&#39;s cells as progress bars instead of plain text.
+    If set on a column, the cell value must be between 0.0 and 1.0.
+
+    Args:
+        color: Color of the progress arc.
+    Returns:
+        A `h2o_q.types.ProgressTableCellType` instance.
+    &#34;&#34;&#34;
+    return TableCellType(progress=ProgressTableCellType(
+        color,
+    ))
+
+
+def icon_table_cell_type(
+        color: Optional[str] = None,
+) -&gt; TableCellType:
+    &#34;&#34;&#34;Create a cell type that renders a column&#39;s cells as icons instead of plain text.
+    If set on a column, the cell value is interpreted as the name of the icon to be displayed.
+
+    Args:
+        color: Icon color.
+    Returns:
+        A `h2o_q.types.IconTableCellType` instance.
+    &#34;&#34;&#34;
+    return TableCellType(icon=IconTableCellType(
+        color,
+    ))
+
+
+def table_cell_type(
+        progress: Optional[ProgressTableCellType] = None,
+        icon: Optional[IconTableCellType] = None,
+) -&gt; TableCellType:
+    &#34;&#34;&#34;Defines cell content to be rendered instead of a simple text.
+
+    Args:
+        progress: No documentation available.
+        icon: No documentation available.
+    Returns:
+        A `h2o_q.types.TableCellType` instance.
+    &#34;&#34;&#34;
+    return TableCellType(
+        progress,
+        icon,
+    )
+
+
 def table_column(
         name: str,
         label: str,
+        min_width: Optional[int] = None,
+        max_width: Optional[int] = None,
+        sortable: Optional[bool] = None,
+        searchable: Optional[bool] = None,
+        filterable: Optional[bool] = None,
+        cell_type: Optional[TableCellType] = None,
 ) -&gt; TableColumn:
     &#34;&#34;&#34;Create a table column.
 
     Args:
         name: An identifying name for this column.
         label: The text displayed on the column header.
+        min_width: The minimum width of this column.
+        max_width: The maximum width of this column.
+        sortable: Indicates whether the column is sortable.
+        searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
+        filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
+        cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_q.types.TableColumn` instance.
     &#34;&#34;&#34;
     return TableColumn(
         name,
         label,
+        min_width,
+        max_width,
+        sortable,
+        searchable,
+        filterable,
+        cell_type,
     )
 
 
@@ -1067,6 +1135,7 @@ def table(
         columns: List[TableColumn],
         rows: List[TableRow],
         multiple: Optional[bool] = None,
+        groupable: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create an interactive table.
@@ -1090,6 +1159,7 @@ def table(
         columns: The columns in this table.
         rows: The rows in this table.
         multiple: True to allow multiple rows to be selected.
+        groupable: True to allow group by feature.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.
@@ -1099,6 +1169,7 @@ def table(
         columns,
         rows,
         multiple,
+        groupable,
         tooltip,
     ))
 
@@ -1239,7 +1310,7 @@ def picker(
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a picker.
-    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
     Use a picker to allow the user to quickly search for or manage a few tags or files.
 
     Args:
@@ -4158,6 +4229,39 @@ Create a card containing other cards laid out using a one-dimensional model with
     )</code></pre>
 </details>
 </dd>
+<dt id="h2o_q.ui.icon_table_cell_type"><code class="name flex">
+<span>def <span class="ident">icon_table_cell_type</span></span>(<span>color: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.TableCellType" href="types.html#h2o_q.types.TableCellType">TableCellType</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a cell type that renders a column's cells as icons instead of plain text.
+If set on a column, the cell value is interpreted as the name of the icon to be displayed.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>color</code></strong></dt>
+<dd>Icon color.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.IconTableCellType" href="types.html#h2o_q.types.IconTableCellType">IconTableCellType</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def icon_table_cell_type(
+        color: Optional[str] = None,
+) -&gt; TableCellType:
+    &#34;&#34;&#34;Create a cell type that renders a column&#39;s cells as icons instead of plain text.
+    If set on a column, the cell value is interpreted as the name of the icon to be displayed.
+
+    Args:
+        color: Icon color.
+    Returns:
+        A `h2o_q.types.IconTableCellType` instance.
+    &#34;&#34;&#34;
+    return TableCellType(icon=IconTableCellType(
+        color,
+    ))</code></pre>
+</details>
+</dd>
 <dt id="h2o_q.ui.image_card"><code class="name flex">
 <span>def <span class="ident">image_card</span></span>(<span>box: str, title: str, type: str, image: str, data: Union[dict, str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.ImageCard" href="types.html#h2o_q.types.ImageCard">ImageCard</a></span>
 </code></dt>
@@ -5221,7 +5325,7 @@ It is used to control attributes of the active page.</p>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a picker.
-Pickers are used to select one or more choices, such as tags or files, from a list.
+Pickers are used to select one or more choices, such as tags or files, from a list.
 Use a picker to allow the user to quickly search for or manage a few tags or files.</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -5256,7 +5360,7 @@ Use a picker to allow the user to quickly search for or manage a few tags or fil
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create a picker.
-    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
     Use a picker to allow the user to quickly search for or manage a few tags or files.
 
     Args:
@@ -5485,6 +5589,39 @@ Instead change the label to reflect the change if necessary. Bars moving backwar
         caption,
         value,
         tooltip,
+    ))</code></pre>
+</details>
+</dd>
+<dt id="h2o_q.ui.progress_table_cell_type"><code class="name flex">
+<span>def <span class="ident">progress_table_cell_type</span></span>(<span>color: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.TableCellType" href="types.html#h2o_q.types.TableCellType">TableCellType</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a cell type that renders a column's cells as progress bars instead of plain text.
+If set on a column, the cell value must be between 0.0 and 1.0.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>color</code></strong></dt>
+<dd>Color of the progress arc.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.ProgressTableCellType" href="types.html#h2o_q.types.ProgressTableCellType">ProgressTableCellType</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def progress_table_cell_type(
+        color: Optional[str] = None,
+) -&gt; TableCellType:
+    &#34;&#34;&#34;Create a cell type that renders a column&#39;s cells as progress bars instead of plain text.
+    If set on a column, the cell value must be between 0.0 and 1.0.
+
+    Args:
+        color: Color of the progress arc.
+    Returns:
+        A `h2o_q.types.ProgressTableCellType` instance.
+    &#34;&#34;&#34;
+    return TableCellType(progress=ProgressTableCellType(
+        color,
     ))</code></pre>
 </details>
 </dd>
@@ -6132,7 +6269,7 @@ The steps keep users informed about where they are in the process and how much i
 </details>
 </dd>
 <dt id="h2o_q.ui.table"><code class="name flex">
-<span>def <span class="ident">table</span></span>(<span>name: str, columns: List[<a title="h2o_q.types.TableColumn" href="types.html#h2o_q.types.TableColumn">TableColumn</a>], rows: List[<a title="h2o_q.types.TableRow" href="types.html#h2o_q.types.TableRow">TableRow</a>], multiple: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">table</span></span>(<span>name: str, columns: List[<a title="h2o_q.types.TableColumn" href="types.html#h2o_q.types.TableColumn">TableColumn</a>], rows: List[<a title="h2o_q.types.TableRow" href="types.html#h2o_q.types.TableRow">TableRow</a>], multiple: Union[bool, NoneType] = None, groupable: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an interactive table.</p>
@@ -6157,6 +6294,8 @@ submission.</p>
 <dd>The rows in this table.</dd>
 <dt><strong><code>multiple</code></strong></dt>
 <dd>True to allow multiple rows to be selected.</dd>
+<dt><strong><code>groupable</code></strong></dt>
+<dd>True to allow group by feature.</dd>
 <dt><strong><code>tooltip</code></strong></dt>
 <dd>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</dd>
 </dl>
@@ -6171,6 +6310,7 @@ submission.</p>
         columns: List[TableColumn],
         rows: List[TableRow],
         multiple: Optional[bool] = None,
+        groupable: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create an interactive table.
@@ -6194,6 +6334,7 @@ submission.</p>
         columns: The columns in this table.
         rows: The rows in this table.
         multiple: True to allow multiple rows to be selected.
+        groupable: True to allow group by feature.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.
@@ -6203,12 +6344,49 @@ submission.</p>
         columns,
         rows,
         multiple,
+        groupable,
         tooltip,
     ))</code></pre>
 </details>
 </dd>
+<dt id="h2o_q.ui.table_cell_type"><code class="name flex">
+<span>def <span class="ident">table_cell_type</span></span>(<span>progress: Union[<a title="h2o_q.types.ProgressTableCellType" href="types.html#h2o_q.types.ProgressTableCellType">ProgressTableCellType</a>, NoneType] = None, icon: Union[<a title="h2o_q.types.IconTableCellType" href="types.html#h2o_q.types.IconTableCellType">IconTableCellType</a>, NoneType] = None) ‑> <a title="h2o_q.types.TableCellType" href="types.html#h2o_q.types.TableCellType">TableCellType</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Defines cell content to be rendered instead of a simple text.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>progress</code></strong></dt>
+<dd>No documentation available.</dd>
+<dt><strong><code>icon</code></strong></dt>
+<dd>No documentation available.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.TableCellType" href="types.html#h2o_q.types.TableCellType">TableCellType</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def table_cell_type(
+        progress: Optional[ProgressTableCellType] = None,
+        icon: Optional[IconTableCellType] = None,
+) -&gt; TableCellType:
+    &#34;&#34;&#34;Defines cell content to be rendered instead of a simple text.
+
+    Args:
+        progress: No documentation available.
+        icon: No documentation available.
+    Returns:
+        A `h2o_q.types.TableCellType` instance.
+    &#34;&#34;&#34;
+    return TableCellType(
+        progress,
+        icon,
+    )</code></pre>
+</details>
+</dd>
 <dt id="h2o_q.ui.table_column"><code class="name flex">
-<span>def <span class="ident">table_column</span></span>(<span>name: str, label: str) ‑> <a title="h2o_q.types.TableColumn" href="types.html#h2o_q.types.TableColumn">TableColumn</a></span>
+<span>def <span class="ident">table_column</span></span>(<span>name: str, label: str, min_width: Union[int, NoneType] = None, max_width: Union[int, NoneType] = None, sortable: Union[bool, NoneType] = None, searchable: Union[bool, NoneType] = None, filterable: Union[bool, NoneType] = None, cell_type: Union[<a title="h2o_q.types.TableCellType" href="types.html#h2o_q.types.TableCellType">TableCellType</a>, NoneType] = None) ‑> <a title="h2o_q.types.TableColumn" href="types.html#h2o_q.types.TableColumn">TableColumn</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a table column.</p>
@@ -6218,6 +6396,18 @@ submission.</p>
 <dd>An identifying name for this column.</dd>
 <dt><strong><code>label</code></strong></dt>
 <dd>The text displayed on the column header.</dd>
+<dt><strong><code>min_width</code></strong></dt>
+<dd>The minimum width of this column.</dd>
+<dt><strong><code>max_width</code></strong></dt>
+<dd>The maximum width of this column.</dd>
+<dt><strong><code>sortable</code></strong></dt>
+<dd>Indicates whether the column is sortable.</dd>
+<dt><strong><code>searchable</code></strong></dt>
+<dd>Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.</dd>
+<dt><strong><code>filterable</code></strong></dt>
+<dd>Indicates whether the contents of this column are displayed as filters in a dropdown.</dd>
+<dt><strong><code>cell_type</code></strong></dt>
+<dd>Defines how to render each cell in this column. Defaults to plain text.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>A <code><a title="h2o_q.types.TableColumn" href="types.html#h2o_q.types.TableColumn">TableColumn</a></code> instance.</p></div>
@@ -6228,18 +6418,36 @@ submission.</p>
 <pre><code class="python">def table_column(
         name: str,
         label: str,
+        min_width: Optional[int] = None,
+        max_width: Optional[int] = None,
+        sortable: Optional[bool] = None,
+        searchable: Optional[bool] = None,
+        filterable: Optional[bool] = None,
+        cell_type: Optional[TableCellType] = None,
 ) -&gt; TableColumn:
     &#34;&#34;&#34;Create a table column.
 
     Args:
         name: An identifying name for this column.
         label: The text displayed on the column header.
+        min_width: The minimum width of this column.
+        max_width: The maximum width of this column.
+        sortable: Indicates whether the column is sortable.
+        searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
+        filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
+        cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_q.types.TableColumn` instance.
     &#34;&#34;&#34;
     return TableColumn(
         name,
         label,
+        min_width,
+        max_width,
+        sortable,
+        searchable,
+        filterable,
+        cell_type,
     )</code></pre>
 </details>
 </dd>
@@ -7390,6 +7598,7 @@ In other words, if a physical switch would work for the action, a Toggle is prob
 <li><code><a title="h2o_q.ui.graphics_card" href="#h2o_q.ui.graphics_card">graphics_card</a></code></li>
 <li><code><a title="h2o_q.ui.grid_card" href="#h2o_q.ui.grid_card">grid_card</a></code></li>
 <li><code><a title="h2o_q.ui.header_card" href="#h2o_q.ui.header_card">header_card</a></code></li>
+<li><code><a title="h2o_q.ui.icon_table_cell_type" href="#h2o_q.ui.icon_table_cell_type">icon_table_cell_type</a></code></li>
 <li><code><a title="h2o_q.ui.image_card" href="#h2o_q.ui.image_card">image_card</a></code></li>
 <li><code><a title="h2o_q.ui.label" href="#h2o_q.ui.label">label</a></code></li>
 <li><code><a title="h2o_q.ui.large_bar_stat_card" href="#h2o_q.ui.large_bar_stat_card">large_bar_stat_card</a></code></li>
@@ -7410,6 +7619,7 @@ In other words, if a physical switch would work for the action, a Toggle is prob
 <li><code><a title="h2o_q.ui.plot" href="#h2o_q.ui.plot">plot</a></code></li>
 <li><code><a title="h2o_q.ui.plot_card" href="#h2o_q.ui.plot_card">plot_card</a></code></li>
 <li><code><a title="h2o_q.ui.progress" href="#h2o_q.ui.progress">progress</a></code></li>
+<li><code><a title="h2o_q.ui.progress_table_cell_type" href="#h2o_q.ui.progress_table_cell_type">progress_table_cell_type</a></code></li>
 <li><code><a title="h2o_q.ui.range_slider" href="#h2o_q.ui.range_slider">range_slider</a></code></li>
 <li><code><a title="h2o_q.ui.repeat_card" href="#h2o_q.ui.repeat_card">repeat_card</a></code></li>
 <li><code><a title="h2o_q.ui.separator" href="#h2o_q.ui.separator">separator</a></code></li>
@@ -7422,6 +7632,7 @@ In other words, if a physical switch would work for the action, a Toggle is prob
 <li><code><a title="h2o_q.ui.tab" href="#h2o_q.ui.tab">tab</a></code></li>
 <li><code><a title="h2o_q.ui.tab_card" href="#h2o_q.ui.tab_card">tab_card</a></code></li>
 <li><code><a title="h2o_q.ui.table" href="#h2o_q.ui.table">table</a></code></li>
+<li><code><a title="h2o_q.ui.table_cell_type" href="#h2o_q.ui.table_cell_type">table_cell_type</a></code></li>
 <li><code><a title="h2o_q.ui.table_column" href="#h2o_q.ui.table_column">table_column</a></code></li>
 <li><code><a title="h2o_q.ui.table_row" href="#h2o_q.ui.table_row">table_row</a></code></li>
 <li><code><a title="h2o_q.ui.tabs" href="#h2o_q.ui.tabs">tabs</a></code></li>

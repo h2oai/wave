@@ -1973,6 +1973,93 @@ class FileUpload:
         )
 
 
+class ProgressTableCellType:
+    &#34;&#34;&#34;Create a cell type that renders a column&#39;s cells as progress bars instead of plain text.
+    If set on a column, the cell value must be between 0.0 and 1.0.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            color: Optional[str] = None,
+    ):
+        self.color = color
+        &#34;&#34;&#34;Color of the progress arc.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        return _dump(
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;ProgressTableCellType&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_color: Any = __d.get(&#39;color&#39;)
+        color: Optional[str] = __d_color
+        return ProgressTableCellType(
+            color,
+        )
+
+
+class IconTableCellType:
+    &#34;&#34;&#34;Create a cell type that renders a column&#39;s cells as icons instead of plain text.
+    If set on a column, the cell value is interpreted as the name of the icon to be displayed.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            color: Optional[str] = None,
+    ):
+        self.color = color
+        &#34;&#34;&#34;Icon color.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        return _dump(
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;IconTableCellType&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_color: Any = __d.get(&#39;color&#39;)
+        color: Optional[str] = __d_color
+        return IconTableCellType(
+            color,
+        )
+
+
+class TableCellType:
+    &#34;&#34;&#34;Defines cell content to be rendered instead of a simple text.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            progress: Optional[ProgressTableCellType] = None,
+            icon: Optional[IconTableCellType] = None,
+    ):
+        self.progress = progress
+        &#34;&#34;&#34;No documentation available.&#34;&#34;&#34;
+        self.icon = icon
+        &#34;&#34;&#34;No documentation available.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        return _dump(
+            progress=None if self.progress is None else self.progress.dump(),
+            icon=None if self.icon is None else self.icon.dump(),
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;TableCellType&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_progress: Any = __d.get(&#39;progress&#39;)
+        __d_icon: Any = __d.get(&#39;icon&#39;)
+        progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
+        icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
+        return TableCellType(
+            progress,
+            icon,
+        )
+
+
 class TableColumn:
     &#34;&#34;&#34;Create a table column.
     &#34;&#34;&#34;
@@ -1980,11 +2067,29 @@ class TableColumn:
             self,
             name: str,
             label: str,
+            min_width: Optional[int] = None,
+            max_width: Optional[int] = None,
+            sortable: Optional[bool] = None,
+            searchable: Optional[bool] = None,
+            filterable: Optional[bool] = None,
+            cell_type: Optional[TableCellType] = None,
     ):
         self.name = name
         &#34;&#34;&#34;An identifying name for this column.&#34;&#34;&#34;
         self.label = label
         &#34;&#34;&#34;The text displayed on the column header.&#34;&#34;&#34;
+        self.min_width = min_width
+        &#34;&#34;&#34;The minimum width of this column.&#34;&#34;&#34;
+        self.max_width = max_width
+        &#34;&#34;&#34;The maximum width of this column.&#34;&#34;&#34;
+        self.sortable = sortable
+        &#34;&#34;&#34;Indicates whether the column is sortable.&#34;&#34;&#34;
+        self.searchable = searchable
+        &#34;&#34;&#34;Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.&#34;&#34;&#34;
+        self.filterable = filterable
+        &#34;&#34;&#34;Indicates whether the contents of this column are displayed as filters in a dropdown.&#34;&#34;&#34;
+        self.cell_type = cell_type
+        &#34;&#34;&#34;Defines how to render each cell in this column. Defaults to plain text.&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -1995,6 +2100,12 @@ class TableColumn:
         return _dump(
             name=self.name,
             label=self.label,
+            min_width=self.min_width,
+            max_width=self.max_width,
+            sortable=self.sortable,
+            searchable=self.searchable,
+            filterable=self.filterable,
+            cell_type=None if self.cell_type is None else self.cell_type.dump(),
         )
 
     @staticmethod
@@ -2006,11 +2117,29 @@ class TableColumn:
         __d_label: Any = __d.get(&#39;label&#39;)
         if __d_label is None:
             raise ValueError(&#39;TableColumn.label is required.&#39;)
+        __d_min_width: Any = __d.get(&#39;min_width&#39;)
+        __d_max_width: Any = __d.get(&#39;max_width&#39;)
+        __d_sortable: Any = __d.get(&#39;sortable&#39;)
+        __d_searchable: Any = __d.get(&#39;searchable&#39;)
+        __d_filterable: Any = __d.get(&#39;filterable&#39;)
+        __d_cell_type: Any = __d.get(&#39;cell_type&#39;)
         name: str = __d_name
         label: str = __d_label
+        min_width: Optional[int] = __d_min_width
+        max_width: Optional[int] = __d_max_width
+        sortable: Optional[bool] = __d_sortable
+        searchable: Optional[bool] = __d_searchable
+        filterable: Optional[bool] = __d_filterable
+        cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         return TableColumn(
             name,
             label,
+            min_width,
+            max_width,
+            sortable,
+            searchable,
+            filterable,
+            cell_type,
         )
 
 
@@ -2078,6 +2207,7 @@ class Table:
             columns: List[TableColumn],
             rows: List[TableRow],
             multiple: Optional[bool] = None,
+            groupable: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2088,6 +2218,8 @@ class Table:
         &#34;&#34;&#34;The rows in this table.&#34;&#34;&#34;
         self.multiple = multiple
         &#34;&#34;&#34;True to allow multiple rows to be selected.&#34;&#34;&#34;
+        self.groupable = groupable
+        &#34;&#34;&#34;True to allow group by feature.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -2104,6 +2236,7 @@ class Table:
             columns=[__e.dump() for __e in self.columns],
             rows=[__e.dump() for __e in self.rows],
             multiple=self.multiple,
+            groupable=self.groupable,
             tooltip=self.tooltip,
         )
 
@@ -2120,17 +2253,20 @@ class Table:
         if __d_rows is None:
             raise ValueError(&#39;Table.rows is required.&#39;)
         __d_multiple: Any = __d.get(&#39;multiple&#39;)
+        __d_groupable: Any = __d.get(&#39;groupable&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
         multiple: Optional[bool] = __d_multiple
+        groupable: Optional[bool] = __d_groupable
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
             columns,
             rows,
             multiple,
+            groupable,
             tooltip,
         )
 
@@ -2390,7 +2526,7 @@ class Frame:
 
 class Picker:
     &#34;&#34;&#34;Create a picker.
-    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
     Use a picker to allow the user to quickly search for or manage a few tags or files.
     &#34;&#34;&#34;
     def __init__(
@@ -10155,6 +10291,92 @@ def load(__d: Dict) -&gt; &#39;HeaderCard&#39;:
 </dd>
 </dl>
 </dd>
+<dt id="h2o_q.types.IconTableCellType"><code class="flex name class">
+<span>class <span class="ident">IconTableCellType</span></span>
+<span>(</span><span>color: Union[str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a cell type that renders a column's cells as icons instead of plain text.
+If set on a column, the cell value is interpreted as the name of the icon to be displayed.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IconTableCellType:
+    &#34;&#34;&#34;Create a cell type that renders a column&#39;s cells as icons instead of plain text.
+    If set on a column, the cell value is interpreted as the name of the icon to be displayed.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            color: Optional[str] = None,
+    ):
+        self.color = color
+        &#34;&#34;&#34;Icon color.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        return _dump(
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;IconTableCellType&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_color: Any = __d.get(&#39;color&#39;)
+        color: Optional[str] = __d_color
+        return IconTableCellType(
+            color,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.IconTableCellType.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_IconTableCellType__d: Dict) ‑> <a title="h2o_q.types.IconTableCellType" href="#h2o_q.types.IconTableCellType">IconTableCellType</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;IconTableCellType&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_color: Any = __d.get(&#39;color&#39;)
+    color: Optional[str] = __d_color
+    return IconTableCellType(
+        color,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.IconTableCellType.color"><code class="name">var <span class="ident">color</span></code></dt>
+<dd>
+<div class="desc"><p>Icon color.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.IconTableCellType.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    return _dump(
+        color=self.color,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="h2o_q.types.ImageCard"><code class="flex name class">
 <span>class <span class="ident">ImageCard</span></span>
 <span>(</span><span>box: str, title: str, type: str, image: str, data: Union[dict, str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
@@ -13468,7 +13690,7 @@ def load(__d: Dict) -&gt; &#39;NavItem&#39;:
 </code></dt>
 <dd>
 <div class="desc"><p>Create a picker.
-Pickers are used to select one or more choices, such as tags or files, from a list.
+Pickers are used to select one or more choices, such as tags or files, from a list.
 Use a picker to allow the user to quickly search for or manage a few tags or files.</p></div>
 <details class="source">
 <summary>
@@ -13476,7 +13698,7 @@ Use a picker to allow the user to quickly search for or manage a few tags or fil
 </summary>
 <pre><code class="python">class Picker:
     &#34;&#34;&#34;Create a picker.
-    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
     Use a picker to allow the user to quickly search for or manage a few tags or files.
     &#34;&#34;&#34;
     def __init__(
@@ -14246,6 +14468,92 @@ def load(__d: Dict) -&gt; &#39;Progress&#39;:
         caption=self.caption,
         value=self.value,
         tooltip=self.tooltip,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="h2o_q.types.ProgressTableCellType"><code class="flex name class">
+<span>class <span class="ident">ProgressTableCellType</span></span>
+<span>(</span><span>color: Union[str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a cell type that renders a column's cells as progress bars instead of plain text.
+If set on a column, the cell value must be between 0.0 and 1.0.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ProgressTableCellType:
+    &#34;&#34;&#34;Create a cell type that renders a column&#39;s cells as progress bars instead of plain text.
+    If set on a column, the cell value must be between 0.0 and 1.0.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            color: Optional[str] = None,
+    ):
+        self.color = color
+        &#34;&#34;&#34;Color of the progress arc.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        return _dump(
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;ProgressTableCellType&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_color: Any = __d.get(&#39;color&#39;)
+        color: Optional[str] = __d_color
+        return ProgressTableCellType(
+            color,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.ProgressTableCellType.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_ProgressTableCellType__d: Dict) ‑> <a title="h2o_q.types.ProgressTableCellType" href="#h2o_q.types.ProgressTableCellType">ProgressTableCellType</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;ProgressTableCellType&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_color: Any = __d.get(&#39;color&#39;)
+    color: Optional[str] = __d_color
+    return ProgressTableCellType(
+        color,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.ProgressTableCellType.color"><code class="name">var <span class="ident">color</span></code></dt>
+<dd>
+<div class="desc"><p>Color of the progress arc.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.ProgressTableCellType.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    return _dump(
+        color=self.color,
     )</code></pre>
 </details>
 </dd>
@@ -16175,7 +16483,7 @@ def load(__d: Dict) -&gt; &#39;TabCard&#39;:
 </dd>
 <dt id="h2o_q.types.Table"><code class="flex name class">
 <span>class <span class="ident">Table</span></span>
-<span>(</span><span>name: str, columns: List[<a title="h2o_q.types.TableColumn" href="#h2o_q.types.TableColumn">TableColumn</a>], rows: List[<a title="h2o_q.types.TableRow" href="#h2o_q.types.TableRow">TableRow</a>], multiple: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
+<span>(</span><span>name: str, columns: List[<a title="h2o_q.types.TableColumn" href="#h2o_q.types.TableColumn">TableColumn</a>], rows: List[<a title="h2o_q.types.TableRow" href="#h2o_q.types.TableRow">TableRow</a>], multiple: Union[bool, NoneType] = None, groupable: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an interactive table.</p>
@@ -16217,6 +16525,7 @@ submission.</p></div>
             columns: List[TableColumn],
             rows: List[TableRow],
             multiple: Optional[bool] = None,
+            groupable: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -16227,6 +16536,8 @@ submission.</p></div>
         &#34;&#34;&#34;The rows in this table.&#34;&#34;&#34;
         self.multiple = multiple
         &#34;&#34;&#34;True to allow multiple rows to be selected.&#34;&#34;&#34;
+        self.groupable = groupable
+        &#34;&#34;&#34;True to allow group by feature.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -16243,6 +16554,7 @@ submission.</p></div>
             columns=[__e.dump() for __e in self.columns],
             rows=[__e.dump() for __e in self.rows],
             multiple=self.multiple,
+            groupable=self.groupable,
             tooltip=self.tooltip,
         )
 
@@ -16259,17 +16571,20 @@ submission.</p></div>
         if __d_rows is None:
             raise ValueError(&#39;Table.rows is required.&#39;)
         __d_multiple: Any = __d.get(&#39;multiple&#39;)
+        __d_groupable: Any = __d.get(&#39;groupable&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
         multiple: Optional[bool] = __d_multiple
+        groupable: Optional[bool] = __d_groupable
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
             columns,
             rows,
             multiple,
+            groupable,
             tooltip,
         )</code></pre>
 </details>
@@ -16297,17 +16612,20 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
     if __d_rows is None:
         raise ValueError(&#39;Table.rows is required.&#39;)
     __d_multiple: Any = __d.get(&#39;multiple&#39;)
+    __d_groupable: Any = __d.get(&#39;groupable&#39;)
     __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
     name: str = __d_name
     columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
     rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
     multiple: Optional[bool] = __d_multiple
+    groupable: Optional[bool] = __d_groupable
     tooltip: Optional[str] = __d_tooltip
     return Table(
         name,
         columns,
         rows,
         multiple,
+        groupable,
         tooltip,
     )</code></pre>
 </details>
@@ -16318,6 +16636,10 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
 <dt id="h2o_q.types.Table.columns"><code class="name">var <span class="ident">columns</span></code></dt>
 <dd>
 <div class="desc"><p>The columns in this table.</p></div>
+</dd>
+<dt id="h2o_q.types.Table.groupable"><code class="name">var <span class="ident">groupable</span></code></dt>
+<dd>
+<div class="desc"><p>True to allow group by feature.</p></div>
 </dd>
 <dt id="h2o_q.types.Table.multiple"><code class="name">var <span class="ident">multiple</span></code></dt>
 <dd>
@@ -16360,7 +16682,107 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
         columns=[__e.dump() for __e in self.columns],
         rows=[__e.dump() for __e in self.rows],
         multiple=self.multiple,
+        groupable=self.groupable,
         tooltip=self.tooltip,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="h2o_q.types.TableCellType"><code class="flex name class">
+<span>class <span class="ident">TableCellType</span></span>
+<span>(</span><span>progress: Union[<a title="h2o_q.types.ProgressTableCellType" href="#h2o_q.types.ProgressTableCellType">ProgressTableCellType</a>, NoneType] = None, icon: Union[<a title="h2o_q.types.IconTableCellType" href="#h2o_q.types.IconTableCellType">IconTableCellType</a>, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Defines cell content to be rendered instead of a simple text.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TableCellType:
+    &#34;&#34;&#34;Defines cell content to be rendered instead of a simple text.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            progress: Optional[ProgressTableCellType] = None,
+            icon: Optional[IconTableCellType] = None,
+    ):
+        self.progress = progress
+        &#34;&#34;&#34;No documentation available.&#34;&#34;&#34;
+        self.icon = icon
+        &#34;&#34;&#34;No documentation available.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        return _dump(
+            progress=None if self.progress is None else self.progress.dump(),
+            icon=None if self.icon is None else self.icon.dump(),
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;TableCellType&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_progress: Any = __d.get(&#39;progress&#39;)
+        __d_icon: Any = __d.get(&#39;icon&#39;)
+        progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
+        icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
+        return TableCellType(
+            progress,
+            icon,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.TableCellType.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_TableCellType__d: Dict) ‑> <a title="h2o_q.types.TableCellType" href="#h2o_q.types.TableCellType">TableCellType</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;TableCellType&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_progress: Any = __d.get(&#39;progress&#39;)
+    __d_icon: Any = __d.get(&#39;icon&#39;)
+    progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
+    icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
+    return TableCellType(
+        progress,
+        icon,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.TableCellType.icon"><code class="name">var <span class="ident">icon</span></code></dt>
+<dd>
+<div class="desc"><p>No documentation available.</p></div>
+</dd>
+<dt id="h2o_q.types.TableCellType.progress"><code class="name">var <span class="ident">progress</span></code></dt>
+<dd>
+<div class="desc"><p>No documentation available.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.TableCellType.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    return _dump(
+        progress=None if self.progress is None else self.progress.dump(),
+        icon=None if self.icon is None else self.icon.dump(),
     )</code></pre>
 </details>
 </dd>
@@ -16368,7 +16790,7 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
 </dd>
 <dt id="h2o_q.types.TableColumn"><code class="flex name class">
 <span>class <span class="ident">TableColumn</span></span>
-<span>(</span><span>name: str, label: str)</span>
+<span>(</span><span>name: str, label: str, min_width: Union[int, NoneType] = None, max_width: Union[int, NoneType] = None, sortable: Union[bool, NoneType] = None, searchable: Union[bool, NoneType] = None, filterable: Union[bool, NoneType] = None, cell_type: Union[<a title="h2o_q.types.TableCellType" href="#h2o_q.types.TableCellType">TableCellType</a>, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a table column.</p></div>
@@ -16383,11 +16805,29 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
             self,
             name: str,
             label: str,
+            min_width: Optional[int] = None,
+            max_width: Optional[int] = None,
+            sortable: Optional[bool] = None,
+            searchable: Optional[bool] = None,
+            filterable: Optional[bool] = None,
+            cell_type: Optional[TableCellType] = None,
     ):
         self.name = name
         &#34;&#34;&#34;An identifying name for this column.&#34;&#34;&#34;
         self.label = label
         &#34;&#34;&#34;The text displayed on the column header.&#34;&#34;&#34;
+        self.min_width = min_width
+        &#34;&#34;&#34;The minimum width of this column.&#34;&#34;&#34;
+        self.max_width = max_width
+        &#34;&#34;&#34;The maximum width of this column.&#34;&#34;&#34;
+        self.sortable = sortable
+        &#34;&#34;&#34;Indicates whether the column is sortable.&#34;&#34;&#34;
+        self.searchable = searchable
+        &#34;&#34;&#34;Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.&#34;&#34;&#34;
+        self.filterable = filterable
+        &#34;&#34;&#34;Indicates whether the contents of this column are displayed as filters in a dropdown.&#34;&#34;&#34;
+        self.cell_type = cell_type
+        &#34;&#34;&#34;Defines how to render each cell in this column. Defaults to plain text.&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -16398,6 +16838,12 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
         return _dump(
             name=self.name,
             label=self.label,
+            min_width=self.min_width,
+            max_width=self.max_width,
+            sortable=self.sortable,
+            searchable=self.searchable,
+            filterable=self.filterable,
+            cell_type=None if self.cell_type is None else self.cell_type.dump(),
         )
 
     @staticmethod
@@ -16409,11 +16855,29 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
         __d_label: Any = __d.get(&#39;label&#39;)
         if __d_label is None:
             raise ValueError(&#39;TableColumn.label is required.&#39;)
+        __d_min_width: Any = __d.get(&#39;min_width&#39;)
+        __d_max_width: Any = __d.get(&#39;max_width&#39;)
+        __d_sortable: Any = __d.get(&#39;sortable&#39;)
+        __d_searchable: Any = __d.get(&#39;searchable&#39;)
+        __d_filterable: Any = __d.get(&#39;filterable&#39;)
+        __d_cell_type: Any = __d.get(&#39;cell_type&#39;)
         name: str = __d_name
         label: str = __d_label
+        min_width: Optional[int] = __d_min_width
+        max_width: Optional[int] = __d_max_width
+        sortable: Optional[bool] = __d_sortable
+        searchable: Optional[bool] = __d_searchable
+        filterable: Optional[bool] = __d_filterable
+        cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         return TableColumn(
             name,
             label,
+            min_width,
+            max_width,
+            sortable,
+            searchable,
+            filterable,
+            cell_type,
         )</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -16436,24 +16900,66 @@ def load(__d: Dict) -&gt; &#39;TableColumn&#39;:
     __d_label: Any = __d.get(&#39;label&#39;)
     if __d_label is None:
         raise ValueError(&#39;TableColumn.label is required.&#39;)
+    __d_min_width: Any = __d.get(&#39;min_width&#39;)
+    __d_max_width: Any = __d.get(&#39;max_width&#39;)
+    __d_sortable: Any = __d.get(&#39;sortable&#39;)
+    __d_searchable: Any = __d.get(&#39;searchable&#39;)
+    __d_filterable: Any = __d.get(&#39;filterable&#39;)
+    __d_cell_type: Any = __d.get(&#39;cell_type&#39;)
     name: str = __d_name
     label: str = __d_label
+    min_width: Optional[int] = __d_min_width
+    max_width: Optional[int] = __d_max_width
+    sortable: Optional[bool] = __d_sortable
+    searchable: Optional[bool] = __d_searchable
+    filterable: Optional[bool] = __d_filterable
+    cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
     return TableColumn(
         name,
         label,
+        min_width,
+        max_width,
+        sortable,
+        searchable,
+        filterable,
+        cell_type,
     )</code></pre>
 </details>
 </dd>
 </dl>
 <h3>Instance variables</h3>
 <dl>
+<dt id="h2o_q.types.TableColumn.cell_type"><code class="name">var <span class="ident">cell_type</span></code></dt>
+<dd>
+<div class="desc"><p>Defines how to render each cell in this column. Defaults to plain text.</p></div>
+</dd>
+<dt id="h2o_q.types.TableColumn.filterable"><code class="name">var <span class="ident">filterable</span></code></dt>
+<dd>
+<div class="desc"><p>Indicates whether the contents of this column are displayed as filters in a dropdown.</p></div>
+</dd>
 <dt id="h2o_q.types.TableColumn.label"><code class="name">var <span class="ident">label</span></code></dt>
 <dd>
 <div class="desc"><p>The text displayed on the column header.</p></div>
 </dd>
+<dt id="h2o_q.types.TableColumn.max_width"><code class="name">var <span class="ident">max_width</span></code></dt>
+<dd>
+<div class="desc"><p>The maximum width of this column.</p></div>
+</dd>
+<dt id="h2o_q.types.TableColumn.min_width"><code class="name">var <span class="ident">min_width</span></code></dt>
+<dd>
+<div class="desc"><p>The minimum width of this column.</p></div>
+</dd>
 <dt id="h2o_q.types.TableColumn.name"><code class="name">var <span class="ident">name</span></code></dt>
 <dd>
 <div class="desc"><p>An identifying name for this column.</p></div>
+</dd>
+<dt id="h2o_q.types.TableColumn.searchable"><code class="name">var <span class="ident">searchable</span></code></dt>
+<dd>
+<div class="desc"><p>Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.</p></div>
+</dd>
+<dt id="h2o_q.types.TableColumn.sortable"><code class="name">var <span class="ident">sortable</span></code></dt>
+<dd>
+<div class="desc"><p>Indicates whether the column is sortable.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -16476,6 +16982,12 @@ def load(__d: Dict) -&gt; &#39;TableColumn&#39;:
     return _dump(
         name=self.name,
         label=self.label,
+        min_width=self.min_width,
+        max_width=self.max_width,
+        sortable=self.sortable,
+        searchable=self.searchable,
+        filterable=self.filterable,
+        cell_type=None if self.cell_type is None else self.cell_type.dump(),
     )</code></pre>
 </details>
 </dd>
@@ -20319,6 +20831,14 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 </ul>
 </li>
 <li>
+<h4><code><a title="h2o_q.types.IconTableCellType" href="#h2o_q.types.IconTableCellType">IconTableCellType</a></code></h4>
+<ul class="">
+<li><code><a title="h2o_q.types.IconTableCellType.color" href="#h2o_q.types.IconTableCellType.color">color</a></code></li>
+<li><code><a title="h2o_q.types.IconTableCellType.dump" href="#h2o_q.types.IconTableCellType.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.IconTableCellType.load" href="#h2o_q.types.IconTableCellType.load">load</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="h2o_q.types.ImageCard" href="#h2o_q.types.ImageCard">ImageCard</a></code></h4>
 <ul class="two-column">
 <li><code><a title="h2o_q.types.ImageCard.box" href="#h2o_q.types.ImageCard.box">box</a></code></li>
@@ -20605,6 +21125,14 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 </ul>
 </li>
 <li>
+<h4><code><a title="h2o_q.types.ProgressTableCellType" href="#h2o_q.types.ProgressTableCellType">ProgressTableCellType</a></code></h4>
+<ul class="">
+<li><code><a title="h2o_q.types.ProgressTableCellType.color" href="#h2o_q.types.ProgressTableCellType.color">color</a></code></li>
+<li><code><a title="h2o_q.types.ProgressTableCellType.dump" href="#h2o_q.types.ProgressTableCellType.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.ProgressTableCellType.load" href="#h2o_q.types.ProgressTableCellType.load">load</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="h2o_q.types.RangeSlider" href="#h2o_q.types.RangeSlider">RangeSlider</a></code></h4>
 <ul class="two-column">
 <li><code><a title="h2o_q.types.RangeSlider.disabled" href="#h2o_q.types.RangeSlider.disabled">disabled</a></code></li>
@@ -20749,6 +21277,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <ul class="two-column">
 <li><code><a title="h2o_q.types.Table.columns" href="#h2o_q.types.Table.columns">columns</a></code></li>
 <li><code><a title="h2o_q.types.Table.dump" href="#h2o_q.types.Table.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.Table.groupable" href="#h2o_q.types.Table.groupable">groupable</a></code></li>
 <li><code><a title="h2o_q.types.Table.load" href="#h2o_q.types.Table.load">load</a></code></li>
 <li><code><a title="h2o_q.types.Table.multiple" href="#h2o_q.types.Table.multiple">multiple</a></code></li>
 <li><code><a title="h2o_q.types.Table.name" href="#h2o_q.types.Table.name">name</a></code></li>
@@ -20757,12 +21286,27 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 </ul>
 </li>
 <li>
-<h4><code><a title="h2o_q.types.TableColumn" href="#h2o_q.types.TableColumn">TableColumn</a></code></h4>
+<h4><code><a title="h2o_q.types.TableCellType" href="#h2o_q.types.TableCellType">TableCellType</a></code></h4>
 <ul class="">
+<li><code><a title="h2o_q.types.TableCellType.dump" href="#h2o_q.types.TableCellType.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.TableCellType.icon" href="#h2o_q.types.TableCellType.icon">icon</a></code></li>
+<li><code><a title="h2o_q.types.TableCellType.load" href="#h2o_q.types.TableCellType.load">load</a></code></li>
+<li><code><a title="h2o_q.types.TableCellType.progress" href="#h2o_q.types.TableCellType.progress">progress</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="h2o_q.types.TableColumn" href="#h2o_q.types.TableColumn">TableColumn</a></code></h4>
+<ul class="two-column">
+<li><code><a title="h2o_q.types.TableColumn.cell_type" href="#h2o_q.types.TableColumn.cell_type">cell_type</a></code></li>
 <li><code><a title="h2o_q.types.TableColumn.dump" href="#h2o_q.types.TableColumn.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.TableColumn.filterable" href="#h2o_q.types.TableColumn.filterable">filterable</a></code></li>
 <li><code><a title="h2o_q.types.TableColumn.label" href="#h2o_q.types.TableColumn.label">label</a></code></li>
 <li><code><a title="h2o_q.types.TableColumn.load" href="#h2o_q.types.TableColumn.load">load</a></code></li>
+<li><code><a title="h2o_q.types.TableColumn.max_width" href="#h2o_q.types.TableColumn.max_width">max_width</a></code></li>
+<li><code><a title="h2o_q.types.TableColumn.min_width" href="#h2o_q.types.TableColumn.min_width">min_width</a></code></li>
 <li><code><a title="h2o_q.types.TableColumn.name" href="#h2o_q.types.TableColumn.name">name</a></code></li>
+<li><code><a title="h2o_q.types.TableColumn.searchable" href="#h2o_q.types.TableColumn.searchable">searchable</a></code></li>
+<li><code><a title="h2o_q.types.TableColumn.sortable" href="#h2o_q.types.TableColumn.sortable">sortable</a></code></li>
 </ul>
 </li>
 <li>

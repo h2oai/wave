@@ -95,6 +95,23 @@ analytical and decision-support applications.</p>
 realtime state synchronization between Python and web browsers.</p>
 <h1 id="change-log">Change Log</h1>
 <ul>
+<li><a href="https://github.com/h2oai/qd/releases/tag/v0.5.0">v0.5.0</a> - Sep 18, 2020<ul>
+<li>Added<ul>
+<li>Example for controlling cards with tabs.</li>
+<li>Cypress test runner for CI.</li>
+<li>Search, sort, filter, group-by, export and custom cell types for table component.</li>
+</ul>
+</li>
+<li>Changed<ul>
+<li>Remove semantic validation for stepper component.</li>
+</ul>
+</li>
+<li>Fixed<ul>
+<li>Value synchronization bug in textbox component.</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="https://github.com/h2oai/qd/releases/tag/v0.4.0">v0.4.0</a> - Sep 16, 2020<ul>
 <li>Added<ul>
 <li>Trigger attribute to checklist component.</li>
@@ -2789,6 +2806,61 @@ async def main(q: Q):
 
 listen('/demo', main)
 </code></pre>
+<h2 id="datatable">Datatable</h2>
+<p>Use a datatable to show large datasets.
+Current features include sorting by column, filtering, searching, groupby, data export.</p>
+<pre><code class="py">from h2o_q import Q, listen, ui
+from faker import Faker
+
+fake = Faker()
+
+_id = 0
+
+
+class Issue:
+    def __init__(self, text: str, status: str, progress: int, done: bool, sth: str):
+        global _id
+        _id += 1
+        self.id = f'I{_id}'
+        self.text = text
+        self.status = status
+        self.views = 0
+        self.progress = progress
+        self.done = done
+        self.sth = sth
+
+
+# Create some issues
+issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=0.5, done=('BoxCheckmarkSolid' if i%2 == 0 else 'BoxMultiplySolid'), sth=('Off' if i%2 == 0 else 'On')) for i in range(100)]
+
+# Build a lookup of issues for convenience
+issue_lookup = {issue.id: issue for issue in issues}
+
+# Create columns for our issue table.
+columns = [
+    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width=300),
+    ui.table_column(name='status', label='Status', filterable=True),
+    ui.table_column(name='sth', label='Something', filterable=True),
+    ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
+    ui.table_column(name='views', label='Views', sortable=True),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
+]
+
+async def main(q: Q):
+  q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
+    ui.table(
+        name='issues',
+        groupable=True,
+        columns=columns,
+        rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, issue.sth, issue.done, str(issue.views), issue.progress]) for issue in issues],
+    )
+    ]
+  )
+  await q.page.save()
+
+
+listen('/demo', main)
+</code></pre>
 <h2 id="nav">Nav</h2>
 <p>Use nav cards to display sidebar navigation.</p>
 <pre><code class="py">from h2o_q import site, ui
@@ -2884,6 +2956,49 @@ page['tabs'] = ui.tab_card(
 )
 
 page.save()
+</code></pre>
+<h2 id="tabs">Tabs</h2>
+<p>Navigate between two or more tabs.
+Delete the cards when switching between tabs.</p>
+<pre><code class="py">from h2o_q import Q, listen, ui
+
+TABS = 'abcde'
+
+
+async def display_tab(q):
+    q.page[f'example_{q.client.tab}'] = ui.markup_card(
+        box='1 2 4 3',
+        title=q.client.tab.upper(),
+        content='\n'.join([''.join([q.client.tab] * 10) for _ in range(50)])
+    )
+    await q.page.save()
+
+
+async def remove_cards(q: Q):
+    for tab in TABS:
+        del q.page[f'example_{tab}']
+    await q.page.save()
+
+
+async def main(q: Q):
+    if not q.client.initialized:
+        q.client.tab = 'a'
+        q.page['tabs'] = ui.tab_card(  # Initialize once
+            box='1 1 4 1',
+            items=[ui.tab(name=f'#{t}', label=t.upper()) for t in TABS]
+        )
+        q.client.initialized = True
+
+    if q.args['#']:
+        q.client.tab = str(q.args['#'])
+
+    await remove_cards(q)
+    await display_tab(q)
+    await q.page.save()
+
+
+if __name__ == '__main__':
+    listen('/demo', main)
 </code></pre>
 <h2 id="header">Header</h2>
 <p>Use a header card to display a page header.</p>
@@ -5308,10 +5423,12 @@ from .test import cypress, Cypress</code></pre>
 <li><a href="#markdown-data">Markdown / Data</a></li>
 <li><a href="#markup">Markup</a></li>
 <li><a href="#table">Table</a></li>
+<li><a href="#datatable">Datatable</a></li>
 <li><a href="#nav">Nav</a></li>
 <li><a href="#toolbar">Toolbar</a></li>
 <li><a href="#tab">Tab</a></li>
 <li><a href="#tab-links">Tab / Links</a></li>
+<li><a href="#tabs">Tabs</a></li>
 <li><a href="#header">Header</a></li>
 <li><a href="#routing">Routing</a></li>
 <li><a href="#routing-toolbar">Routing / Toolbar</a></li>
