@@ -92,7 +92,7 @@ def main():
         "-t",
         "--test-dir",
         help="test directory where cypress is installed",
-        default="../test",
+        default=".",
         type=dir_argument,
     )
     parser.add_argument(
