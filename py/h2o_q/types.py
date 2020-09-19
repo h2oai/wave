@@ -1883,6 +1883,93 @@ class FileUpload:
         )
 
 
+class ProgressTableCellType:
+    """Create a cell type that renders a column's cells as progress bars instead of plain text.
+    If set on a column, the cell value must be between 0.0 and 1.0.
+    """
+    def __init__(
+            self,
+            color: Optional[str] = None,
+    ):
+        self.color = color
+        """Color of the progress arc."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        return _dump(
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ProgressTableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_color: Any = __d.get('color')
+        color: Optional[str] = __d_color
+        return ProgressTableCellType(
+            color,
+        )
+
+
+class IconTableCellType:
+    """Create a cell type that renders a column's cells as icons instead of plain text.
+    If set on a column, the cell value is interpreted as the name of the icon to be displayed.
+    """
+    def __init__(
+            self,
+            color: Optional[str] = None,
+    ):
+        self.color = color
+        """Icon color."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        return _dump(
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'IconTableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_color: Any = __d.get('color')
+        color: Optional[str] = __d_color
+        return IconTableCellType(
+            color,
+        )
+
+
+class TableCellType:
+    """Defines cell content to be rendered instead of a simple text.
+    """
+    def __init__(
+            self,
+            progress: Optional[ProgressTableCellType] = None,
+            icon: Optional[IconTableCellType] = None,
+    ):
+        self.progress = progress
+        """No documentation available."""
+        self.icon = icon
+        """No documentation available."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        return _dump(
+            progress=None if self.progress is None else self.progress.dump(),
+            icon=None if self.icon is None else self.icon.dump(),
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_progress: Any = __d.get('progress')
+        __d_icon: Any = __d.get('icon')
+        progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
+        icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
+        return TableCellType(
+            progress,
+            icon,
+        )
+
+
 class TableColumn:
     """Create a table column.
     """
@@ -1890,11 +1977,29 @@ class TableColumn:
             self,
             name: str,
             label: str,
+            min_width: Optional[int] = None,
+            max_width: Optional[int] = None,
+            sortable: Optional[bool] = None,
+            searchable: Optional[bool] = None,
+            filterable: Optional[bool] = None,
+            cell_type: Optional[TableCellType] = None,
     ):
         self.name = name
         """An identifying name for this column."""
         self.label = label
         """The text displayed on the column header."""
+        self.min_width = min_width
+        """The minimum width of this column."""
+        self.max_width = max_width
+        """The maximum width of this column."""
+        self.sortable = sortable
+        """Indicates whether the column is sortable."""
+        self.searchable = searchable
+        """Indicates whether the contents of this column can be searched through. Enables a search box for the table if true."""
+        self.filterable = filterable
+        """Indicates whether the contents of this column are displayed as filters in a dropdown."""
+        self.cell_type = cell_type
+        """Defines how to render each cell in this column. Defaults to plain text."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1905,6 +2010,12 @@ class TableColumn:
         return _dump(
             name=self.name,
             label=self.label,
+            min_width=self.min_width,
+            max_width=self.max_width,
+            sortable=self.sortable,
+            searchable=self.searchable,
+            filterable=self.filterable,
+            cell_type=None if self.cell_type is None else self.cell_type.dump(),
         )
 
     @staticmethod
@@ -1916,11 +2027,29 @@ class TableColumn:
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('TableColumn.label is required.')
+        __d_min_width: Any = __d.get('min_width')
+        __d_max_width: Any = __d.get('max_width')
+        __d_sortable: Any = __d.get('sortable')
+        __d_searchable: Any = __d.get('searchable')
+        __d_filterable: Any = __d.get('filterable')
+        __d_cell_type: Any = __d.get('cell_type')
         name: str = __d_name
         label: str = __d_label
+        min_width: Optional[int] = __d_min_width
+        max_width: Optional[int] = __d_max_width
+        sortable: Optional[bool] = __d_sortable
+        searchable: Optional[bool] = __d_searchable
+        filterable: Optional[bool] = __d_filterable
+        cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         return TableColumn(
             name,
             label,
+            min_width,
+            max_width,
+            sortable,
+            searchable,
+            filterable,
+            cell_type,
         )
 
 
@@ -1988,6 +2117,7 @@ class Table:
             columns: List[TableColumn],
             rows: List[TableRow],
             multiple: Optional[bool] = None,
+            groupable: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1998,6 +2128,8 @@ class Table:
         """The rows in this table."""
         self.multiple = multiple
         """True to allow multiple rows to be selected."""
+        self.groupable = groupable
+        """True to allow group by feature."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2014,6 +2146,7 @@ class Table:
             columns=[__e.dump() for __e in self.columns],
             rows=[__e.dump() for __e in self.rows],
             multiple=self.multiple,
+            groupable=self.groupable,
             tooltip=self.tooltip,
         )
 
@@ -2030,17 +2163,20 @@ class Table:
         if __d_rows is None:
             raise ValueError('Table.rows is required.')
         __d_multiple: Any = __d.get('multiple')
+        __d_groupable: Any = __d.get('groupable')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
         multiple: Optional[bool] = __d_multiple
+        groupable: Optional[bool] = __d_groupable
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
             columns,
             rows,
             multiple,
+            groupable,
             tooltip,
         )
 
@@ -2300,7 +2436,7 @@ class Frame:
 
 class Picker:
     """Create a picker.
-    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
     Use a picker to allow the user to quickly search for or manage a few tags or files.
     """
     def __init__(

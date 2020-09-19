@@ -936,21 +936,89 @@ def file_upload(
     ))
 
 
+def progress_table_cell_type(
+        color: Optional[str] = None,
+) -> TableCellType:
+    """Create a cell type that renders a column's cells as progress bars instead of plain text.
+    If set on a column, the cell value must be between 0.0 and 1.0.
+
+    Args:
+        color: Color of the progress arc.
+    Returns:
+        A `h2o_q.types.ProgressTableCellType` instance.
+    """
+    return TableCellType(progress=ProgressTableCellType(
+        color,
+    ))
+
+
+def icon_table_cell_type(
+        color: Optional[str] = None,
+) -> TableCellType:
+    """Create a cell type that renders a column's cells as icons instead of plain text.
+    If set on a column, the cell value is interpreted as the name of the icon to be displayed.
+
+    Args:
+        color: Icon color.
+    Returns:
+        A `h2o_q.types.IconTableCellType` instance.
+    """
+    return TableCellType(icon=IconTableCellType(
+        color,
+    ))
+
+
+def table_cell_type(
+        progress: Optional[ProgressTableCellType] = None,
+        icon: Optional[IconTableCellType] = None,
+) -> TableCellType:
+    """Defines cell content to be rendered instead of a simple text.
+
+    Args:
+        progress: No documentation available.
+        icon: No documentation available.
+    Returns:
+        A `h2o_q.types.TableCellType` instance.
+    """
+    return TableCellType(
+        progress,
+        icon,
+    )
+
+
 def table_column(
         name: str,
         label: str,
+        min_width: Optional[int] = None,
+        max_width: Optional[int] = None,
+        sortable: Optional[bool] = None,
+        searchable: Optional[bool] = None,
+        filterable: Optional[bool] = None,
+        cell_type: Optional[TableCellType] = None,
 ) -> TableColumn:
     """Create a table column.
 
     Args:
         name: An identifying name for this column.
         label: The text displayed on the column header.
+        min_width: The minimum width of this column.
+        max_width: The maximum width of this column.
+        sortable: Indicates whether the column is sortable.
+        searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
+        filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
+        cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_q.types.TableColumn` instance.
     """
     return TableColumn(
         name,
         label,
+        min_width,
+        max_width,
+        sortable,
+        searchable,
+        filterable,
+        cell_type,
     )
 
 
@@ -977,6 +1045,7 @@ def table(
         columns: List[TableColumn],
         rows: List[TableRow],
         multiple: Optional[bool] = None,
+        groupable: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create an interactive table.
@@ -1000,6 +1069,7 @@ def table(
         columns: The columns in this table.
         rows: The rows in this table.
         multiple: True to allow multiple rows to be selected.
+        groupable: True to allow group by feature.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.
@@ -1009,6 +1079,7 @@ def table(
         columns,
         rows,
         multiple,
+        groupable,
         tooltip,
     ))
 
@@ -1149,7 +1220,7 @@ def picker(
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a picker.
-    Pickers are used to select one or more choices, such as tags or files, from a list.
+    Pickers are used to select one or more choices, such as tags or files, from a list.
     Use a picker to allow the user to quickly search for or manage a few tags or files.
 
     Args:

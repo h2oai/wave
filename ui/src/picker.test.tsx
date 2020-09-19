@@ -46,7 +46,7 @@ describe('Picker.tsx', () => {
 
   it('Shows correct values - value picked', () => {
     const { getByRole, queryAllByRole } = render(<XPicker model={pickerProps} />)
-    const input = (getByRole('textbox') as HTMLInputElement);
+    const input = (getByRole('textbox') as HTMLInputElement)
     expect(queryAllByRole('listitem')).toHaveLength(0)
 
     typeToInput(input, name)

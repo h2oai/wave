@@ -22,7 +22,7 @@
 
 dump_object <- function(x) {
   if(is(x, .h2oq_obj)) {
-    .to_json(x)
+    to_json(x)
   } else {
     stop("cannot dump")
   }
@@ -1031,19 +1031,88 @@ ui_file_upload <- function(
   return(.o)
 }
 
+#' Create a cell type that renders a column's cells as progress bars instead of plain text.
+#' If set on a column, the cell value must be between 0.0 and 1.0.
+#'
+#' @param color Color of the progress arc.
+#' @return A ProgressTableCellType instance.
+ui_progress_table_cell_type <- function(
+  color = NULL) {
+  .guard_scalar("color", "character", color)
+  .o <- list(progress=list(
+    color=color))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
+  return(.o)
+}
+
+#' Create a cell type that renders a column's cells as icons instead of plain text.
+#' If set on a column, the cell value is interpreted as the name of the icon to be displayed.
+#'
+#' @param color Icon color.
+#' @return A IconTableCellType instance.
+ui_icon_table_cell_type <- function(
+  color = NULL) {
+  .guard_scalar("color", "character", color)
+  .o <- list(icon=list(
+    color=color))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
+  return(.o)
+}
+
+#' Defines cell content to be rendered instead of a simple text.
+#'
+#' @param progress No documentation available.
+#' @param icon No documentation available.
+#' @return A TableCellType instance.
+ui_table_cell_type <- function(
+  progress = NULL,
+  icon = NULL) {
+  .guard_scalar("progress", "h2oq_ProgressTableCellType", progress)
+  .guard_scalar("icon", "h2oq_IconTableCellType", icon)
+  .o <- list(
+    progress=progress,
+    icon=icon)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
+  return(.o)
+}
+
 #' Create a table column.
 #'
 #' @param name An identifying name for this column.
 #' @param label The text displayed on the column header.
+#' @param min_width The minimum width of this column.
+#' @param max_width The maximum width of this column.
+#' @param sortable Indicates whether the column is sortable.
+#' @param searchable Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
+#' @param filterable Indicates whether the contents of this column are displayed as filters in a dropdown.
+#' @param cell_type Defines how to render each cell in this column. Defaults to plain text.
 #' @return A TableColumn instance.
 ui_table_column <- function(
   name,
-  label) {
+  label,
+  min_width = NULL,
+  max_width = NULL,
+  sortable = NULL,
+  searchable = NULL,
+  filterable = NULL,
+  cell_type = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
+  .guard_scalar("min_width", "numeric", min_width)
+  .guard_scalar("max_width", "numeric", max_width)
+  .guard_scalar("sortable", "logical", sortable)
+  .guard_scalar("searchable", "logical", searchable)
+  .guard_scalar("filterable", "logical", filterable)
+  .guard_scalar("cell_type", "h2oq_TableCellType", cell_type)
   .o <- list(
     name=name,
-    label=label)
+    label=label,
+    min_width=min_width,
+    max_width=max_width,
+    sortable=sortable,
+    searchable=searchable,
+    filterable=filterable,
+    cell_type=cell_type)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableColumn"))
   return(.o)
 }
@@ -1085,6 +1154,7 @@ ui_table_row <- function(
 #' @param columns The columns in this table.
 #' @param rows The rows in this table.
 #' @param multiple True to allow multiple rows to be selected.
+#' @param groupable True to allow group by feature.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(
@@ -1092,17 +1162,20 @@ ui_table <- function(
   columns,
   rows,
   multiple = NULL,
+  groupable = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "h2oq_TableColumn", columns)
   .guard_vector("rows", "h2oq_TableRow", rows)
   .guard_scalar("multiple", "logical", multiple)
+  .guard_scalar("groupable", "logical", groupable)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(table=list(
     name=name,
     columns=columns,
     rows=rows,
     multiple=multiple,
+    groupable=groupable,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
@@ -1240,7 +1313,7 @@ ui_frame <- function(
 }
 
 #' Create a picker.
-#' Pickers are used to select one or more choices, such as tags or files, from a list.
+#' Pickers are used to select one or more choices, such as tags or files, from a list.
 #' Use a picker to allow the user to quickly search for or manage a few tags or files.
 #'
 #' @param name An identifying name for this component.
