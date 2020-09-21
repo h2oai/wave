@@ -156,19 +156,19 @@ export const
 
         if (!searchStr && !selectedFiltersB()) {
           filteredItemsB(items)
-          if (groupsB()) groupsB([...groupsB() as Fluent.IGroup[]])
+          if (groupsB()) initGroups()
           return
         }
 
         filter()
         search()
+        if (groupsB()) initGroups()
       },
       search = () => {
         const searchStr = searchStrB().toLowerCase()
         if (!searchStr || !searchableKeys.length) return
 
         filteredItemsB(filteredItemsB().filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(searchStr))))
-        if (groupsB()) groupsB([...groupsB() as Fluent.IGroup[]])
       },
       onFilterChange = (filterKey: S, filterVal: S) => (_e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => {
         const filters = selectedFiltersB() || {}
@@ -182,6 +182,7 @@ export const
 
         filter()
         search()
+        if (groupsB()) initGroups()
       },
       // TODO: Make filter options in dropdowns dynamic. 
       filter = () => {
@@ -214,11 +215,10 @@ export const
 
         if (groupsB()) {
           filteredItemsB(groupsB()?.reduce((acc, group) =>
-            [...acc, ...filteredItemsB().slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))]
-            , [] as any[]) || [])
-        } else {
-          filteredItemsB([...filteredItemsB()].sort(sortingF(column, sortAsc)))
+            [...acc, ...filteredItemsB().slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
+            [] as any[]) || [])
         }
+        else filteredItemsB([...filteredItemsB()].sort(sortingF(column, sortAsc)))
 
         columnsB(columnsB().map((col) => column.key === col.key ? column : col))
       },
@@ -273,15 +273,9 @@ export const
           onDismiss: onDismissContextMenu,
         })
       },
-      onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
-        if (!option) return
-        if (option.key === '*') {
-          reset()
-          return
-        }
-
+      makeGroups = () => {
         let prevSum = 0
-        const groupedBy = groupByF(filteredItemsB(), option.key as S)
+        const groupedBy = groupByF(filteredItemsB(), groupByKeyB())
         const groupedByKeys = Object.keys(groupedBy)
         const groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => {
           if (i !== 0) {
@@ -291,10 +285,23 @@ export const
           return { key, name: key, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: true }
         })
 
-        reset()
+        return { groupedBy, groups }
+      },
+      initGroups = () => {
+        const { groupedBy, groups } = makeGroups()
         filteredItemsB(Object.values(groupedBy).flatMap(arr => arr))
-        groupByKeyB(option.key as S)
         groupsB(groups)
+      },
+      onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
+        if (!option) return
+        if (option.key === '*') {
+          reset()
+          return
+        }
+
+        reset()
+        groupByKeyB(option.key as S)
+        initGroups()
       },
       onRenderDetailsHeader = (props?: Fluent.IDetailsHeaderProps) => {
         if (!props) return <span />

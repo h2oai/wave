@@ -286,13 +286,20 @@ describe('Table.tsx', () => {
       expect(getAllByRole('row')).toHaveLength(3)
     })
   })
+
   describe('Group by', () => {
     beforeEach(() => {
       tableProps = {
         ...tableProps,
-        groupable: true
+        groupable: true,
+        rows: [
+          { name: 'rowname1', cells: [cell11, 'Group1'] },
+          { name: 'rowname2', cells: [cell21, 'Group1'] },
+          { name: 'rowname2', cells: [cell31, 'Group2'] }
+        ]
       }
     })
+
     it('Renders grouped list after selection', () => {
       const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
 
@@ -301,5 +308,78 @@ describe('Table.tsx', () => {
 
       expect(container.querySelectorAll('.ms-GroupedList-group')).toHaveLength(tableProps.rows.length)
     })
+
+    it('Sorts grouped list', () => {
+      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+
+      let gridcell1 = getAllByRole('gridcell')[0]
+      expect(gridcell1.textContent).toBe(cell11)
+
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
+
+      gridcell1 = getAllByRole('gridcell')[0]
+      expect(gridcell1.textContent).toBe(cell21)
+    })
+
+    it('Searches grouped list', () => {
+
+      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+
+      // Header row is row as well so expect + 1.
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
+      expect(getAllByRole('row')).toHaveLength(1)
+    })
+
+    it('Filters grouped list - single option', () => {
+      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('Group2')[1].parentElement!)
+      expect(getAllByRole('row')).toHaveLength(1)
+    })
+
+    it('Filters grouped list - multiple options', () => {
+      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('Group1')[1].parentElement!)
+      fireEvent.click(getAllByText('Group2')[0].parentElement!)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+    })
+
+    it('Filters grouped list - multiple options', () => {
+      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col2')[1]!)
+      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
+
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
+      fireEvent.click(getAllByText('Group1')[1].parentElement!)
+      fireEvent.click(getAllByText('Group2')[0].parentElement!)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+    })
+
   })
+
 })
