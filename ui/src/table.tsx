@@ -69,6 +69,10 @@ export interface Table {
   multiple?: B
   /** True to allow group by feature. */
   groupable?: B
+  /** True to show the table footer. */
+  footer?: B
+  /** Table height in px. */
+  height?: U
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -108,6 +112,23 @@ const
       return rv
     }, {} as Dict<any>)
   },
+  sortingF = (column: QColumn, sortAsc: B) => (a: any, b: any) => {
+    let itemA = a[column.key]
+    let itemB = b[column.key]
+
+    if (typeof itemA === typeof 'string' && typeof itemB === typeof 'string') {
+      itemA = (itemA as S).toLowerCase()
+      itemB = (itemB as S).toLowerCase()
+      return sortAsc
+        ? itemB > itemA ? -1 : 1
+        : itemB > itemA ? 1 : -1
+    }
+    else if (typeof itemA === typeof 'number' && typeof itemB === typeof 'number') {
+      return sortAsc ? itemA - itemB : itemB - itemA
+    }
+
+    return 0
+  },
   formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 export const
@@ -131,10 +152,11 @@ export const
       groupByKeyB = box('*'),
       groupByOptions: Fluent.IDropdownOption[] = m.groupable ? [{ key: '*', text: 'Nothing' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [],
       onSearchChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr?: S) => {
-        searchStrB(searchStr ? searchStr.toLowerCase() : '')
+        searchStrB(searchStr || '')
 
         if (!searchStr && !selectedFiltersB()) {
           filteredItemsB(items)
+          if (groupsB()) groupsB([...groupsB() as Fluent.IGroup[]])
           return
         }
 
@@ -142,10 +164,11 @@ export const
         search()
       },
       search = () => {
-        const searchStr = searchStrB()
+        const searchStr = searchStrB().toLowerCase()
         if (!searchStr || !searchableKeys.length) return
 
         filteredItemsB(filteredItemsB().filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(searchStr))))
+        if (groupsB()) groupsB([...groupsB() as Fluent.IGroup[]])
       },
       onFilterChange = (filterKey: S, filterVal: S) => (_e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => {
         const filters = selectedFiltersB() || {}
@@ -172,6 +195,7 @@ export const
             )
           )
           : items
+
         filteredItemsB(filteredItems)
       },
       reset = () => {
@@ -188,23 +212,14 @@ export const
         const sortAsc = column.iconName === 'SortDown'
         column.iconName = sortAsc ? 'SortUp' : 'SortDown'
 
-        filteredItemsB([...filteredItemsB()].sort((a, b) => {
-          let itemA = a[column.key]
-          let itemB = b[column.key]
+        if (groupsB()) {
+          filteredItemsB(groupsB()?.reduce((acc, group) =>
+            [...acc, ...filteredItemsB().slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))]
+            , [] as any[]) || [])
+        } else {
+          filteredItemsB([...filteredItemsB()].sort(sortingF(column, sortAsc)))
+        }
 
-          if (typeof itemA === typeof 'string' && typeof itemB === typeof 'string') {
-            itemA = (itemA as S).toLowerCase()
-            itemB = (itemB as S).toLowerCase()
-            return sortAsc
-              ? itemB > itemA ? -1 : 1
-              : itemB > itemA ? 1 : -1
-          }
-          else if (typeof itemA === typeof 'number' && typeof itemB === typeof 'number') {
-            return sortAsc ? itemA - itemB : itemB - itemA
-          }
-
-          return 0
-        }))
         columnsB(columnsB().map((col) => column.key === col.key ? column : col))
       },
       download = () => {
@@ -317,7 +332,7 @@ export const
         const isMenuClicked = (e.target as HTMLElement).getAttribute('data-icon-name') === 'ChevronDown'
 
         if (isMenuClicked) onColumnContextMenu(column, e)
-        else if (column.isSortable && !groupsB()) sort(column)
+        else if (column.isSortable) sort(column)
       },
       columnsB = box(m.columns.map((c): QColumn => ({
         key: c.name,
@@ -348,7 +363,7 @@ export const
         if (!item || !col) return <span />
 
         const v = item[col.fieldName as S]
-        if (col.key === primaryColumnKey) {
+        if (col.key === primaryColumnKey && !m.multiple) {
           const onClick = () => {
             qd.args[m.name] = [item.__key__]
             qd.sync()
@@ -364,7 +379,7 @@ export const
       DataTable = () => (
         <>
           <Fluent.DetailsList
-            styles={{ contentWrapper: { minHeight: '78vh' } }}
+            styles={{ contentWrapper: { minHeight: m.height ? (m.height - 100) : 400 } }}
             items={filteredItemsB()}
             columns={columnsB()}
             layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
@@ -377,18 +392,18 @@ export const
             onRenderRow={onRenderRow}
             onRenderItemColumn={onRenderItemColumn}
             onRenderDetailsHeader={onRenderDetailsHeader}
-            onRenderDetailsFooter={onRenderDetailsFooter}
+            onRenderDetailsFooter={m.footer ? onRenderDetailsFooter : undefined}
           />
           {colContextMenuListB() && <Fluent.ContextualMenu {...(colContextMenuListB() as Fluent.IContextualMenuProps)} />}
         </>
       ),
       render = () => (
-        <div data-test={m.name} style={{ position: 'relative', height: '95vh' }}>
+        <div data-test={m.name} style={{ position: 'relative', height: m.height || 500 }}>
           <Fluent.Stack horizontal horizontalAlign='space-between' >
             {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
-            {searchableKeys.length && <Fluent.TextField data-test='search' label='Filter' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%' } }} />}
+            {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%' } }} />}
           </Fluent.Stack>
-          <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: 60 } }}>
+          <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: m.groupable || searchableKeys.length ? 60 : 0 } }}>
             {
               m.multiple
                 ? <Fluent.MarqueeSelection selection={selection}><DataTable /></Fluent.MarqueeSelection>

@@ -38,7 +38,7 @@ def make_issue_table(allow_multiple_selection=False):
         name='issues',
         columns=columns,
         rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, str(issue.views)]) for issue in issues],
-        multiple=allow_multiple_selection,
+        multiple=allow_multiple_selection
     )
 
 

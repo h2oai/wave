@@ -2118,6 +2118,8 @@ class Table:
             rows: List[TableRow],
             multiple: Optional[bool] = None,
             groupable: Optional[bool] = None,
+            footer: Optional[bool] = None,
+            height: Optional[int] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2130,6 +2132,10 @@ class Table:
         """True to allow multiple rows to be selected."""
         self.groupable = groupable
         """True to allow group by feature."""
+        self.footer = footer
+        """True to show the table footer."""
+        self.height = height
+        """Table height."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2147,6 +2153,8 @@ class Table:
             rows=[__e.dump() for __e in self.rows],
             multiple=self.multiple,
             groupable=self.groupable,
+            footer=self.footer,
+            height=self.height,
             tooltip=self.tooltip,
         )
 
@@ -2164,12 +2172,16 @@ class Table:
             raise ValueError('Table.rows is required.')
         __d_multiple: Any = __d.get('multiple')
         __d_groupable: Any = __d.get('groupable')
+        __d_footer: Any = __d.get('footer')
+        __d_height: Any = __d.get('height')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
         multiple: Optional[bool] = __d_multiple
         groupable: Optional[bool] = __d_groupable
+        footer: Optional[bool] = __d_footer
+        height: Optional[int] = __d_height
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
@@ -2177,6 +2189,8 @@ class Table:
             rows,
             multiple,
             groupable,
+            footer,
+            height,
             tooltip,
         )
 

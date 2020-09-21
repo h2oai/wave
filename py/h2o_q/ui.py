@@ -1046,6 +1046,8 @@ def table(
         rows: List[TableRow],
         multiple: Optional[bool] = None,
         groupable: Optional[bool] = None,
+        footer: Optional[bool] = None,
+        height: Optional[int] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create an interactive table.
@@ -1070,6 +1072,8 @@ def table(
         rows: The rows in this table.
         multiple: True to allow multiple rows to be selected.
         groupable: True to allow group by feature.
+        footer: True to show the table footer.
+        height: Table height.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.
@@ -1080,6 +1084,8 @@ def table(
         rows,
         multiple,
         groupable,
+        footer,
+        height,
         tooltip,
     ))
 

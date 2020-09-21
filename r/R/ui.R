@@ -22,7 +22,7 @@
 
 dump_object <- function(x) {
   if(is(x, .h2oq_obj)) {
-    to_json(x)
+    .to_json(x)
   } else {
     stop("cannot dump")
   }
@@ -1155,6 +1155,8 @@ ui_table_row <- function(
 #' @param rows The rows in this table.
 #' @param multiple True to allow multiple rows to be selected.
 #' @param groupable True to allow group by feature.
+#' @param footer True to show the table footer.
+#' @param height Table height.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(
@@ -1163,12 +1165,16 @@ ui_table <- function(
   rows,
   multiple = NULL,
   groupable = NULL,
+  footer = NULL,
+  height = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "h2oq_TableColumn", columns)
   .guard_vector("rows", "h2oq_TableRow", rows)
   .guard_scalar("multiple", "logical", multiple)
   .guard_scalar("groupable", "logical", groupable)
+  .guard_scalar("footer", "logical", footer)
+  .guard_scalar("height", "numeric", height)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(table=list(
     name=name,
@@ -1176,6 +1182,8 @@ ui_table <- function(
     rows=rows,
     multiple=multiple,
     groupable=groupable,
+    footer=footer,
+    height=height,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)

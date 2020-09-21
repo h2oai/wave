@@ -24,7 +24,12 @@ class Issue:
 
 
 # Create some issues
-issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=0.5, done=('BoxCheckmarkSolid' if i%2 == 0 else 'BoxMultiplySolid'), sth=('Off' if i%2 == 0 else 'On')) for i in range(100)]
+issues = [Issue(
+    text=fake.sentence(),
+    status=('Closed' if i % 2 == 0 else 'Open'),
+    progress=0.5,
+    done=('BoxCheckmarkSolid' if i % 2 == 0 else 'BoxMultiplySolid'),
+    sth=('Off' if i % 2 == 0 else 'On')) for i in range(100)]
 
 # Build a lookup of issues for convenience
 issue_lookup = {issue.id: issue for issue in issues}
@@ -39,17 +44,24 @@ columns = [
     ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
 ]
 
+
 async def main(q: Q):
-  q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
-    ui.table(
-        name='issues',
-        groupable=True,
-        columns=columns,
-        rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, issue.sth, issue.done, str(issue.views), issue.progress]) for issue in issues],
+    q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
+        ui.table(
+            name='issues',
+            groupable=True,
+            columns=columns,
+            rows=[ui.table_row(
+              name=issue.id,
+              cells=[
+                issue.text, issue.status, issue.sth, issue.done, str(issue.views), issue.progress]) for issue in issues
+              ],
+            footer=True,
+            height=800
+        )
+      ]
     )
-    ]
-  )
-  await q.page.save()
+    await q.page.save()
 
 
 listen('/demo', main)
