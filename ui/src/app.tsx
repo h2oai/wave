@@ -14,7 +14,8 @@ const
       backgroundColor: theme.colors.page,
       color: theme.colors.text,
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      overflow: 'auto'
     },
     centerFullHeight: {
       height: pc(100),
