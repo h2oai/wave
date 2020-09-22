@@ -1156,7 +1156,7 @@ ui_table_row <- function(
 #' @param multiple True to allow multiple rows to be selected.
 #' @param groupable True to allow group by feature.
 #' @param footer True to show the table footer.
-#' @param height Table height.
+#' @param height Table height in px.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(

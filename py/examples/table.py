@@ -1,8 +1,9 @@
 # Table
-# Use a table to create master-detail views. This example demonstrates how to create a simple issue tracker.
+# Use a table to display tabular data.
 # ---
-from h2o_q import Q, listen, ui
+import random
 from faker import Faker
+from h2o_q import Q, listen, ui
 
 fake = Faker()
 
@@ -10,131 +11,54 @@ _id = 0
 
 
 class Issue:
-    def __init__(self, text: str, status: str):
+    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str):
         global _id
         _id += 1
         self.id = f'I{_id}'
         self.text = text
         self.status = status
         self.views = 0
+        self.progress = progress
+        self.icon = icon
+        self.notifications = notifications
 
 
 # Create some issues
-issues = [Issue(text=fake.sentence(), status='Open') for i in range(12)]
-
-# Build a lookup of issues for convenience
-issue_lookup = {issue.id: issue for issue in issues}
+issues = [
+    Issue(
+        text=fake.sentence(),
+        status=('Closed' if i % 2 == 0 else 'Open'),
+        progress=random.random(),
+        icon=('BoxCheckmarkSolid' if random.random() > 0.5 else 'BoxMultiplySolid'),
+        notifications=('Off' if random.random() > 0.5 else 'On')) for i in range(100)
+]
 
 # Create columns for our issue table.
 columns = [
-    ui.table_column(name='text', label='Issue'),
-    ui.table_column(name='status', label='Status'),
-    ui.table_column(name='views', label='Views'),
+    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width=300),
+    ui.table_column(name='status', label='Status', filterable=True),
+    ui.table_column(name='notifications', label='Notifications', filterable=True),
+    ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
+    ui.table_column(name='views', label='Views', sortable=True),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
 ]
 
 
-def make_issue_table(allow_multiple_selection=False):
-    return ui.table(
-        name='issues',
-        columns=columns,
-        rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, str(issue.views)]) for issue in issues],
-        multiple=allow_multiple_selection
-    )
-
-
-async def edit_multiple(q: Q):
-    q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
-        items=[
-            make_issue_table(allow_multiple_selection=True),  # This time, allow multiple selections
-            ui.buttons([
-                ui.button(name='reopen_issues', label='Reopen Selected', primary=True),
-                ui.button(name='close_issues', label='Close Selected', primary=True),
-                ui.button(name='back', label='Back to safety')
-            ]),
-        ]
-    )
-    await q.page.save()
-
-
-async def show_issues(q: Q):
-    q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
-        items=[
-            make_issue_table(),
-            ui.buttons([ui.button(name='edit_multiple', label='Edit Multiple...', primary=True)]),
-        ]
-    )
-    await q.page.save()
-
-
-async def show_issue(q: Q, issue_id: str):
-    issue = issue_lookup[issue_id]
-    issue.views += 1
-
-    q.client.active_issue_id = issue_id
-
-    q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
-        items=[
-            ui.text_xl(f'Issue {issue.id}'),
-            ui.text(issue.text),
-            ui.text_xs(f'({issue.views} views)'),
-            ui.buttons([
-                ui.button(
-                    name='close_issue' if issue.status == 'Open' else 'reopen_issue',
-                    label="Close Issue" if issue.status == 'Open' else "Reopen Issue",
-                    primary=True,
-                ),
-                ui.button(name='back', label='Back'),
-            ]),
-        ]
-    )
-
-    await q.page.save()
-
-
-async def close_issue(q: Q):
-    issue = issue_lookup[q.client.active_issue_id]
-    issue.status = 'Closed'
-    await show_issues(q)
-
-
-async def close_issues(q: Q):
-    for issue_id in q.args.issues:
-        issue = issue_lookup[issue_id]
-        issue.status = 'Closed'
-    await show_issues(q)
-
-
-async def reopen_issue(q: Q):
-    issue = issue_lookup[q.client.active_issue_id]
-    issue.status = 'Open'
-    await show_issues(q)
-
-
-async def reopen_issues(q: Q):
-    for issue_id in q.args.issues:
-        issue = issue_lookup[issue_id]
-        issue.status = 'Open'
-    await show_issues(q)
-
-
 async def main(q: Q):
-    if q.args.edit_multiple:
-        await edit_multiple(q)
-    elif q.args.reopen_issues:
-        await reopen_issues(q)
-    elif q.args.close_issues:
-        await close_issues(q)
-    elif q.args.reopen_issue:
-        await reopen_issue(q)
-    elif q.args.close_issue:
-        await close_issue(q)
-    elif q.args.issues:  # An issue was clicked on
-        await show_issue(q, q.args.issues[0])
-    else:
-        await show_issues(q)
+    q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
+        ui.table(
+            name='issues',
+            columns=columns,
+            rows=[ui.table_row(
+                name=issue.id,
+                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
+                issue in issues],
+            groupable=True,
+            footer=True,
+            height=800
+        )
+    ])
+    await q.page.save()
 
 
 listen('/demo', main)

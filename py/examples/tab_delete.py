@@ -1,4 +1,4 @@
-# Tabs
+# Tabs / Navigation
 # Navigate between two or more tabs.
 # Delete the cards when switching between tabs.
 # ---

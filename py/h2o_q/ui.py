@@ -1073,7 +1073,7 @@ def table(
         multiple: True to allow multiple rows to be selected.
         groupable: True to allow group by feature.
         footer: True to show the table footer.
-        height: Table height.
+        height: Table height in px.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.

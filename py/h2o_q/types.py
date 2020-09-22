@@ -2135,7 +2135,7 @@ class Table:
         self.footer = footer
         """True to show the table footer."""
         self.height = height
-        """Table height."""
+        """Table height in px."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
