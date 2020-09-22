@@ -20,14 +20,14 @@ def _get_env(key: str, value: Any):
     return os.environ.get(f'H2O_Q_{key}', value)
 
 
-_default_internal_address = 'ws://localhost:0'
+_default_internal_address = 'ws://127.0.0.1:0'
 
 
 class _Config:
     def __init__(self):
         self.internal_address = _get_env('INTERNAL_ADDRESS', _default_internal_address)
         self.external_address = _get_env('EXTERNAL_ADDRESS', self.internal_address)
-        self.hub_address = _get_env('ADDRESS', 'http://localhost:55555')
+        self.hub_address = _get_env('ADDRESS', 'http://127.0.0.1:55555')
         self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
         self.shutdown_timeout: int = int(_get_env('SHUTDOWN_TIMEOUT', '3'))  # seconds
