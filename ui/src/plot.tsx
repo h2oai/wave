@@ -76,6 +76,8 @@ interface Mark {
   color?: S;
   /** Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'` */
   color_range?: S;
+  /** Mark domain for color range. A list of values in a field to match color range, e.g. `['high', 'medium', 'low']` */
+  color_domain?: S[];
   /** Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'. */
   shape?: S;
   /** Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'` */
@@ -454,7 +456,7 @@ const
   },
   makeGeom = ({
     type, x_field, y_field,
-    color_field, color_range, color,
+    color_field, color_range, color_domain, color,
     shape_field, shape_range, shape,
     size_field, size_range, size,
     stack,
@@ -479,7 +481,11 @@ const
     if (adjust.length) o.adjust = adjust
     if (isS(x_field) && isS(y_field)) o.position = { fields: [x_field, y_field] }
     if (isS(color_field)) {
-      o.color = { fields: [color_field], values: isS(color_range) ? split(color_range) : cat10 }
+      const values = isS(color_range) ? split(color_range) : cat10
+      o.color = { fields: [color_field], values }
+      if (color_domain?.length && color_domain.length == values.length) {
+        o.color.callback = (x: any) => values[color_domain.indexOf(x)]
+      }
     } else {
       o.color = isS(color) ? color : theme.colors.gray
     }

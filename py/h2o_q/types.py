@@ -2744,6 +2744,7 @@ class Mark:
             y_title: Optional[str] = None,
             color: Optional[str] = None,
             color_range: Optional[str] = None,
+            color_domain: Optional[List[str]] = None,
             shape: Optional[str] = None,
             shape_range: Optional[str] = None,
             size: Optional[Value] = None,
@@ -2822,6 +2823,8 @@ class Mark:
         """Mark color field or value."""
         self.color_range = color_range
         """Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`"""
+        self.color_domain = color_domain
+        """Mark domain for color range. A list of values in a field to match color range, e.g. `['high', 'medium', 'low']`"""
         self.shape = shape
         """Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'."""
         self.shape_range = shape_range
@@ -2914,6 +2917,7 @@ class Mark:
             y_title=self.y_title,
             color=self.color,
             color_range=self.color_range,
+            color_domain=self.color_domain,
             shape=self.shape,
             shape_range=self.shape_range,
             size=self.size,
@@ -2974,6 +2978,7 @@ class Mark:
         __d_y_title: Any = __d.get('y_title')
         __d_color: Any = __d.get('color')
         __d_color_range: Any = __d.get('color_range')
+        __d_color_domain: Any = __d.get('color_domain')
         __d_shape: Any = __d.get('shape')
         __d_shape_range: Any = __d.get('shape_range')
         __d_size: Any = __d.get('size')
@@ -3029,6 +3034,7 @@ class Mark:
         y_title: Optional[str] = __d_y_title
         color: Optional[str] = __d_color
         color_range: Optional[str] = __d_color_range
+        color_domain: Optional[List[str]] = __d_color_domain
         shape: Optional[str] = __d_shape
         shape_range: Optional[str] = __d_shape_range
         size: Optional[Value] = __d_size
@@ -3085,6 +3091,7 @@ class Mark:
             y_title,
             color,
             color_range,
+            color_domain,
             shape,
             shape_range,
             size,
