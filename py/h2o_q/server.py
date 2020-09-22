@@ -155,7 +155,7 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
 async def _start_server(host: Optional[str], port: int, mode: str, route: str, stop_server):
     async with websockets.serve(_serve, host, port) as server:
         if (port is None) or (port == 0):  # assume development mode; ports auto-assigned for convenience
-            assigned_host, assigned_port = server.sockets[0].getsockname()
+            assigned_host, assigned_port = server.sockets[0].getsockname()[0:2]
             assigned_address = f'ws://{assigned_host}:{assigned_port}'
             _config.internal_address = assigned_address
             _config.external_address = assigned_address
