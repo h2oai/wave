@@ -1484,6 +1484,7 @@ ui_stepper <- function(
 #' @param y_title Y axis title.
 #' @param color Mark color field or value.
 #' @param color_range Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
+#' @param color_domain The unique values in the data (labels or categories or classes) to map colors to, e.g. `['high', 'medium', 'low']`. If this is not provided, the unique values are automatically inferred from the `color` attribute.
 #' @param shape Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
 #' @param shape_range Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
 #' @param size Mark size field or value.
@@ -1545,6 +1546,7 @@ ui_mark <- function(
   y_title = NULL,
   color = NULL,
   color_range = NULL,
+  color_domain = NULL,
   shape = NULL,
   shape_range = NULL,
   size = NULL,
@@ -1600,6 +1602,7 @@ ui_mark <- function(
   .guard_scalar("y_title", "character", y_title)
   .guard_scalar("color", "character", color)
   .guard_scalar("color_range", "character", color_range)
+  .guard_vector("color_domain", "character", color_domain)
   .guard_scalar("shape", "character", shape)
   .guard_scalar("shape_range", "character", shape_range)
   # TODO Validate size: V
@@ -1656,6 +1659,7 @@ ui_mark <- function(
     y_title=y_title,
     color=color,
     color_range=color_range,
+    color_domain=color_domain,
     shape=shape,
     shape_range=shape_range,
     size=size,
