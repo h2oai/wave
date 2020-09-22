@@ -4454,6 +4454,7 @@ class MetaCard:
             title: Optional[str] = None,
             refresh: Optional[int] = None,
             notification: Optional[str] = None,
+            redirect: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -4464,6 +4465,8 @@ class MetaCard:
         """Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use)."""
         self.notification = notification
         """Display a desktop notification to the user."""
+        self.redirect = redirect
+        """Redirect the page to a new URL."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -4477,6 +4480,7 @@ class MetaCard:
             title=self.title,
             refresh=self.refresh,
             notification=self.notification,
+            redirect=self.redirect,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4489,17 +4493,20 @@ class MetaCard:
         __d_title: Any = __d.get('title')
         __d_refresh: Any = __d.get('refresh')
         __d_notification: Any = __d.get('notification')
+        __d_redirect: Any = __d.get('redirect')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
         refresh: Optional[int] = __d_refresh
         notification: Optional[str] = __d_notification
+        redirect: Optional[str] = __d_redirect
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
             title,
             refresh,
             notification,
+            redirect,
             commands,
         )
 

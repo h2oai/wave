@@ -16,16 +16,30 @@ interface State {
   refresh?: U
   /** Display a desktop notification to the user. */
   notification?: S
+  /** Redirect the page to a new URL. */
+  redirect?: S
 }
 
 export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       init = () => {
-        const { title, refresh, notification } = state
+        const { title, refresh, notification, redirect } = state
         if (title) window.document.title = title
         if (typeof refresh === 'number') qd.refreshRateB(refresh)
         if (notification) showNotification(notification)
+        if (redirect) {
+          try {
+            const url = new URL(redirect)
+            if (redirect === url.hash) {
+              window.location.hash = redirect
+            } else {
+              window.location.replace(redirect)
+            }
+          } catch (e) {
+            console.error(`Could not redirect: ${redirect} is an invalid URL`)
+          }
+        }
       },
       render = () => (<></>)
     on(changed, init)
