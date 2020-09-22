@@ -76,7 +76,7 @@ interface Mark {
   color?: S;
   /** Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'` */
   color_range?: S;
-  /** Mark domain for color range. A list of values in a field to match color range, e.g. `['high', 'medium', 'low']` */
+  /** The unique values in the data (labels or categories or classes) to map colors to, e.g. `['high', 'medium', 'low']`. If this is not provided, the unique values are automatically inferred from the `color` attribute. */
   color_domain?: S[];
   /** Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'. */
   shape?: S;
@@ -481,10 +481,14 @@ const
     if (adjust.length) o.adjust = adjust
     if (isS(x_field) && isS(y_field)) o.position = { fields: [x_field, y_field] }
     if (isS(color_field)) {
-      const values = isS(color_range) ? split(color_range) : cat10
-      o.color = { fields: [color_field], values }
-      if (color_domain?.length && color_domain.length == values.length) {
-        o.color.callback = (x: S) => values[color_domain.indexOf(x)]
+      const colors = isS(color_range) ? split(color_range) : cat10
+      o.color = { fields: [color_field], values: colors }
+      if (color_domain && color_domain.length == colors.length) {
+        const domain_colors = color_domain.reduce((acc, value, i) => {
+          acc[value] = colors[i]
+          return acc
+        }, {} as Dict<S>)
+        o.color.callback = (x: S) => domain_colors[x]
       }
     } else {
       o.color = isS(color) ? color : theme.colors.gray
