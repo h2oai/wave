@@ -1424,7 +1424,7 @@ def mark(
         y_title: Y axis title.
         color: Mark color field or value.
         color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
-        color_domain: Mark domain for color range. A list of values in a field to match color range, e.g. `['high', 'medium', 'low']`
+        color_domain: The unique values in the data (labels or categories or classes) to map colors to, e.g. `['high', 'medium', 'low']`. If this is not provided, the unique values are automatically inferred from the `color` attribute.
         shape: Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.
         shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'`
         size: Mark size field or value.
