@@ -51,6 +51,7 @@ const
       key: name,
       text: label,
       ariaLabel: caption || label,
+      title: caption,
       iconOnly: !label,
       iconProps: icon ? { iconName: icon } : undefined,
       subMenuProps: items ? { items: toCommands(items) } : undefined,
