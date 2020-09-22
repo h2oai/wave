@@ -152,8 +152,21 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
                 logger.exception('Failed transmitting unhandled exception')
 
 
-async def _start_server(host: Optional[str], port: int, stop_server):
-    async with websockets.serve(_serve, host, port):
+async def _start_server(host: Optional[str], port: int, mode: str, route: str, stop_server):
+    async with websockets.serve(_serve, host, port) as server:
+        if (port is None) or (port == 0):  # assume development mode; ports auto-assigned for convenience
+            assigned_host, assigned_port = server.sockets[0].getsockname()
+            assigned_address = f'ws://{assigned_host}:{assigned_port}'
+            _config.internal_address = assigned_address
+            _config.external_address = assigned_address
+        logger.debug(f'Announcing server at {_config.external_address} ...')
+        requests.post(
+            _config.hub_address,
+            data=marshal(dict(mode=mode, url=route, host=_config.external_address)),
+            headers=_content_type_json,
+            auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
+        )
+        logger.debug('Announcement: success!')
         await stop_server
         _server.stop()
 
@@ -178,19 +191,10 @@ def listen(route: str, handle: HandleAsync, mode=UNICAST):
     logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
     logger.info(f'Shutdown Timeout{_config.shutdown_timeout}')
 
-    logger.debug('Announcing server...')
-    requests.post(
-        _config.hub_address,
-        data=marshal(dict(mode=mode, url=route, host=_config.external_address)),
-        headers=_content_type_json,
-        auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
-    )
-    logger.debug('Announcement: success!')
-
     el = asyncio.get_event_loop()
     stop_server = el.create_future()
     el.add_signal_handler(signal.SIGINT, stop_server.set_result, None)
     el.add_signal_handler(signal.SIGTERM, stop_server.set_result, None)
     internal_address = urlparse(_config.internal_address)
     logger.info(f'Listening on host "{internal_address.hostname}", port "{internal_address.port}"...')
-    el.run_until_complete(_start_server(internal_address.hostname, internal_address.port, stop_server))
+    el.run_until_complete(_start_server(internal_address.hostname, internal_address.port, mode, route, stop_server))

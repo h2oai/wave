@@ -20,7 +20,7 @@ def _get_env(key: str, value: Any):
     return os.environ.get(f'H2O_Q_{key}', value)
 
 
-_default_internal_address = 'ws://localhost:55556'
+_default_internal_address = 'ws://localhost:0'
 
 
 class _Config:

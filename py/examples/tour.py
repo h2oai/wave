@@ -195,7 +195,6 @@ if __name__ == '__main__':
     example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
                          not line.strip().startswith('#')]
     catalog = load_examples(example_filenames)
-    configure(internal_address='ws://localhost:55554')
     print('----------------------------------------')
     print(' Welcome to the H2O Q Interactive Tour!')
     print('')
