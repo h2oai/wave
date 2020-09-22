@@ -145,36 +145,42 @@ def text(
 def text_xl(
         content: str,
         tooltip: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -> Component:
     """Create extra-large sized text content.
 
     Args:
         content: The text content.
         tooltip: Tooltip message.
+        commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.TextXl` instance.
     """
     return Component(text_xl=TextXl(
         content,
         tooltip,
+        commands,
     ))
 
 
 def text_l(
         content: str,
         tooltip: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -> Component:
     """Create large sized text content.
 
     Args:
         content: The text content.
         tooltip: Tooltip message.
+        commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.TextL` instance.
     """
     return Component(text_l=TextL(
         content,
         tooltip,
+        commands,
     ))
 
 

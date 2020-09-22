@@ -95,7 +95,7 @@ const
     console.warn(`Warning: ${s}`)
     warnings++
   },
-  reservedWords = ['view', 'box', 'commands'],
+  reservedWords = ['view', 'box'],
   boxComment = 'A string indicating how to place this component on the page.',
   commandsComment = 'Contextual menu commands for this component.',
   noComment = 'No documentation available.',

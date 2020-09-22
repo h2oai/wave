@@ -163,7 +163,7 @@ export const
             return (
               <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height }}>
                 <CardView card={c} />
-                <CardMenu card={c} />
+                { c.state.commands && c.state.commands.length ? <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} /> : null}
               </div>
             )
           })

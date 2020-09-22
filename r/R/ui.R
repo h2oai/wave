@@ -184,15 +184,19 @@ ui_text <- function(
 #'
 #' @param content The text content.
 #' @param tooltip Tooltip message.
+#' @param commands Contextual menu commands for this component.
 #' @return A TextXl instance.
 ui_text_xl <- function(
   content,
-  tooltip = NULL) {
+  tooltip = NULL,
+  commands = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(text_xl=list(
     content=content,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    commands=commands))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -201,15 +205,19 @@ ui_text_xl <- function(
 #'
 #' @param content The text content.
 #' @param tooltip Tooltip message.
+#' @param commands Contextual menu commands for this component.
 #' @return A TextL instance.
 ui_text_l <- function(
   content,
-  tooltip = NULL) {
+  tooltip = NULL,
+  commands = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(text_l=list(
     content=content,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    commands=commands))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }

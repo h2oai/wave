@@ -2,14 +2,13 @@ import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react'
 import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { Command } from './toolbar'
-import { bond, box, qd, Card } from './qd'
+import { bond, box, qd, Box, B, S } from './qd'
 
 const
   css = stylesheet({
     menu: {
       position: 'absolute',
-      top: 5, // should be 0 logically, but adjusted here to suit the MoreVertical icon.
-      right: 0,
+      top: 0, right: 0,
       $nest: {
         '>div:first-child': {
           width: 32, height: 32,
@@ -50,21 +49,18 @@ const
   }
 
 export const
-  CardMenu = bond(({ card }: { card: Card<any> }) => {
+  CardMenu = bond(({ name, commands, changedB }: { name: S, commands: Command[], changedB?: Box<B> }) => {
     const
-      { state, changed } = card,
       target = React.createRef<HTMLDivElement>(),
       hiddenB = box(true),
       show = () => hiddenB(false),
       hide = () => hiddenB(true),
       render = () => {
-        const commands: Command[] | undefined = state.commands
-        if (!commands || !commands.length) return <></>
         const
           hidden = hiddenB(),
           items = commands.map(toContextMenuItem)
         return (
-          <div className={css.menu} data-test={card.name}>
+          <div className={css.menu} data-test={name}>
             <div className={css.target} ref={target} onClick={show}>
               <Icon className={css.icon} iconName='MoreVertical' />
             </div>
@@ -72,5 +68,5 @@ export const
           </div>
         )
       }
-    return { render, changed, hiddenB }
+    return { render, changedB, hiddenB }
   })

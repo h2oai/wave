@@ -328,11 +328,14 @@ class TextXl:
             self,
             content: str,
             tooltip: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.content = content
         """The text content."""
         self.tooltip = tooltip
         """Tooltip message."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -341,6 +344,7 @@ class TextXl:
         return _dump(
             content=self.content,
             tooltip=self.tooltip,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -350,11 +354,14 @@ class TextXl:
         if __d_content is None:
             raise ValueError('TextXl.content is required.')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_commands: Any = __d.get('commands')
         content: str = __d_content
         tooltip: Optional[str] = __d_tooltip
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TextXl(
             content,
             tooltip,
+            commands,
         )
 
 
@@ -365,11 +372,14 @@ class TextL:
             self,
             content: str,
             tooltip: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.content = content
         """The text content."""
         self.tooltip = tooltip
         """Tooltip message."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -378,6 +388,7 @@ class TextL:
         return _dump(
             content=self.content,
             tooltip=self.tooltip,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -387,11 +398,14 @@ class TextL:
         if __d_content is None:
             raise ValueError('TextL.content is required.')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_commands: Any = __d.get('commands')
         content: str = __d_content
         tooltip: Optional[str] = __d_tooltip
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TextL(
             content,
             tooltip,
+            commands,
         )
 
 
