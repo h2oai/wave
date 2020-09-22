@@ -19,9 +19,9 @@ interface TableColumn {
   /** The text displayed on the column header. */
   label: S
   /** The minimum width of this column. */
-  min_width?: U
+  min_width?: S
   /** The maximum width of this column. */
-  max_width?: U
+  max_width?: S
   /** Indicates whether the column is sortable. */
   sortable?: B
   /** Indicates whether the contents of this column can be searched through. Enables a search box for the table if true. */
@@ -69,10 +69,14 @@ export interface Table {
   multiple?: B
   /** True to allow group by feature. */
   groupable?: B
-  /** True to show the table footer. */
-  footer?: B
-  /** Table height in px. */
-  height?: U
+  /** Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False. */
+  downloadable?: B
+  /** Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False. */
+  resettable?: B
+  /** Indicates whether a Total in footer should be displayed to inform about currently filtered out items. Defaults to False. */
+  total_displayable?: B
+  /** The height of the table. */
+  height?: S
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -134,6 +138,7 @@ const
 export const
   XTable = bond(({ model: m }: { model: Table }) => {
     qd.args[m.name] = []
+    if (!isNaN(Number(m.height))) m.height = undefined
     const
       items = m.rows.map(r => {
         const item: any = { __key__: r.name }
@@ -150,7 +155,7 @@ export const
       colContextMenuListB = box<Fluent.IContextualMenuProps | null>(null),
       groupsB = box<Fluent.IGroup[] | undefined>(undefined),
       groupByKeyB = box('*'),
-      groupByOptions: Fluent.IDropdownOption[] = m.groupable ? [{ key: '*', text: 'Nothing' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [],
+      groupByOptions: Fluent.IDropdownOption[] = m.groupable ? [{ key: '*', text: 'No Grouping' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [],
       onSearchChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr?: S) => {
         searchStrB(searchStr || '')
 
@@ -312,20 +317,25 @@ export const
           </Fluent.Sticky>
         )
       },
-      commandBarItems: Fluent.ICommandBarItemProps[] = [
-        { key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download },
-        { key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset },
-      ],
+
       onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
-        if (!props) return <span />
+        if (!props || (!m.downloadable && !m.resettable && !m.total_displayable)) return null
+
+        const footerItems: Fluent.ICommandBarItemProps[] = []
+        if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download })
+        if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset })
 
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Footer} isScrollSynced>
-            <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
-              <Fluent.Text variant='smallPlus' block >Rows:
-              <b style={{ paddingLeft: 5 }}>{formatNum(filteredItemsB().length)} of {formatNum(items.length)}</b>
-              </Fluent.Text>
-              <Fluent.CommandBar items={commandBarItems} />
+            <Fluent.Stack horizontal horizontalAlign={m.total_displayable ? 'space-between' : 'end'} verticalAlign='center'>
+              {
+                m.total_displayable && (
+                  <Fluent.Text variant='smallPlus' block >Rows:
+                    <b style={{ paddingLeft: 5 }}>{formatNum(filteredItemsB().length)} of {formatNum(items.length)}</b>
+                  </Fluent.Text>
+                )
+              }
+              <Fluent.CommandBar items={footerItems} />
             </Fluent.Stack>
           </Fluent.Sticky>
         )
@@ -345,8 +355,8 @@ export const
         key: c.name,
         name: c.label,
         fieldName: c.name,
-        minWidth: c.min_width || 150,
-        maxWidth: c.max_width,
+        minWidth: c.min_width ? +c.min_width : 150,
+        maxWidth: c.max_width ? +c.max_width : undefined,
         headerClassName: c.sortable ? css.sortableHeader : undefined,
         iconClassName: c.sortable ? css.sortingIcon : undefined,
         iconName: c.sortable ? 'SortDown' : undefined,
@@ -386,7 +396,7 @@ export const
       DataTable = () => (
         <>
           <Fluent.DetailsList
-            styles={{ contentWrapper: { minHeight: m.height ? (m.height - 100) : 400 } }}
+            styles={{ contentWrapper: { minHeight: m.height ? (Number(m.height) - 100) : 400 } }}
             items={filteredItemsB()}
             columns={columnsB()}
             layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
@@ -399,13 +409,13 @@ export const
             onRenderRow={onRenderRow}
             onRenderItemColumn={onRenderItemColumn}
             onRenderDetailsHeader={onRenderDetailsHeader}
-            onRenderDetailsFooter={m.footer ? onRenderDetailsFooter : undefined}
+            onRenderDetailsFooter={onRenderDetailsFooter}
           />
           {colContextMenuListB() && <Fluent.ContextualMenu {...(colContextMenuListB() as Fluent.IContextualMenuProps)} />}
         </>
       ),
       render = () => (
-        <div data-test={m.name} style={{ position: 'relative', height: m.height || 500 }}>
+        <div data-test={m.name} style={{ position: 'relative', height: Number(m.height) || 500 }}>
           <Fluent.Stack horizontal horizontalAlign='space-between' >
             {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
             {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%' } }} />}

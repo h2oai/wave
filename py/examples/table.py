@@ -35,7 +35,7 @@ issues = [
 
 # Create columns for our issue table.
 columns = [
-    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width=300),
+    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width='300'),
     ui.table_column(name='status', label='Status', filterable=True),
     ui.table_column(name='notifications', label='Notifications', filterable=True),
     ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
@@ -54,8 +54,10 @@ async def main(q: Q):
                 cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
                 issue in issues],
             groupable=True,
-            footer=True,
-            height=800
+            downloadable=True,
+            resettable=True,
+            total_displayable=True,
+            height='800'
         )
     ])
     await q.page.save()

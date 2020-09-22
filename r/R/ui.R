@@ -1098,8 +1098,8 @@ ui_table_column <- function(
   cell_type = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
-  .guard_scalar("min_width", "numeric", min_width)
-  .guard_scalar("max_width", "numeric", max_width)
+  .guard_scalar("min_width", "character", min_width)
+  .guard_scalar("max_width", "character", max_width)
   .guard_scalar("sortable", "logical", sortable)
   .guard_scalar("searchable", "logical", searchable)
   .guard_scalar("filterable", "logical", filterable)
@@ -1155,8 +1155,10 @@ ui_table_row <- function(
 #' @param rows The rows in this table.
 #' @param multiple True to allow multiple rows to be selected.
 #' @param groupable True to allow group by feature.
-#' @param footer True to show the table footer.
-#' @param height Table height in px.
+#' @param downloadable Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
+#' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
+#' @param total_displayable Indicates whether a Total in footer should be displayed to inform about currently filtered out items. Defaults to False.
+#' @param height The height of the table.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(
@@ -1165,7 +1167,9 @@ ui_table <- function(
   rows,
   multiple = NULL,
   groupable = NULL,
-  footer = NULL,
+  downloadable = NULL,
+  resettable = NULL,
+  total_displayable = NULL,
   height = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1173,8 +1177,10 @@ ui_table <- function(
   .guard_vector("rows", "h2oq_TableRow", rows)
   .guard_scalar("multiple", "logical", multiple)
   .guard_scalar("groupable", "logical", groupable)
-  .guard_scalar("footer", "logical", footer)
-  .guard_scalar("height", "numeric", height)
+  .guard_scalar("downloadable", "logical", downloadable)
+  .guard_scalar("resettable", "logical", resettable)
+  .guard_scalar("total_displayable", "logical", total_displayable)
+  .guard_scalar("height", "character", height)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(table=list(
     name=name,
@@ -1182,7 +1188,9 @@ ui_table <- function(
     rows=rows,
     multiple=multiple,
     groupable=groupable,
-    footer=footer,
+    downloadable=downloadable,
+    resettable=resettable,
+    total_displayable=total_displayable,
     height=height,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))

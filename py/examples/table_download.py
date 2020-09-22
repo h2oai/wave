@@ -53,7 +53,7 @@ async def main(q: Q):
                 name=issue.id,
                 cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
                 issue in issues],
-            footer=True,
+            downloadable=True,
         )
     ])
     await q.page.save()
