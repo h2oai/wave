@@ -77,6 +77,8 @@ export interface Table {
   total_displayable?: B
   /** The height of the table. */
   height?: S
+  /** The key of the primary column that should be clickable and renders as a link. Defaults to first column. */
+  primary_column_key?: S
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -366,7 +368,7 @@ export const
         isSortable: c.sortable,
         isResizable: true,
       }))),
-      primaryColumnKey = columnsB()[0].key,
+      primaryColumnKey = m.primary_column_key || columnsB()[0].key,
       selection = new Fluent.Selection({
         onSelectionChanged: () => {
           qd.args[m.name] = selection.getSelection().map(item => (item as any).__key__)

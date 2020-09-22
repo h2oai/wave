@@ -1159,6 +1159,7 @@ ui_table_row <- function(
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
 #' @param total_displayable Indicates whether a Total in footer should be displayed to inform about currently filtered out items. Defaults to False.
 #' @param height The height of the table.
+#' @param primary_column_key The key of the primary column that should be clickable and renders as a link. Defaults to first column.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(
@@ -1171,6 +1172,7 @@ ui_table <- function(
   resettable = NULL,
   total_displayable = NULL,
   height = NULL,
+  primary_column_key = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "h2oq_TableColumn", columns)
@@ -1181,6 +1183,7 @@ ui_table <- function(
   .guard_scalar("resettable", "logical", resettable)
   .guard_scalar("total_displayable", "logical", total_displayable)
   .guard_scalar("height", "character", height)
+  .guard_scalar("primary_column_key", "character", primary_column_key)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(table=list(
     name=name,
@@ -1192,6 +1195,7 @@ ui_table <- function(
     resettable=resettable,
     total_displayable=total_displayable,
     height=height,
+    primary_column_key=primary_column_key,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)

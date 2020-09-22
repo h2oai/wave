@@ -1050,6 +1050,7 @@ def table(
         resettable: Optional[bool] = None,
         total_displayable: Optional[bool] = None,
         height: Optional[str] = None,
+        primary_column_key: Optional[str] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create an interactive table.
@@ -1078,6 +1079,7 @@ def table(
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
         total_displayable: Indicates whether a Total in footer should be displayed to inform about currently filtered out items. Defaults to False.
         height: The height of the table.
+        primary_column_key: The key of the primary column that should be clickable and renders as a link. Defaults to first column.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.
@@ -1092,6 +1094,7 @@ def table(
         resettable,
         total_displayable,
         height,
+        primary_column_key,
         tooltip,
     ))
 

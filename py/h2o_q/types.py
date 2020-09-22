@@ -2122,6 +2122,7 @@ class Table:
             resettable: Optional[bool] = None,
             total_displayable: Optional[bool] = None,
             height: Optional[str] = None,
+            primary_column_key: Optional[str] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2142,6 +2143,8 @@ class Table:
         """Indicates whether a Total in footer should be displayed to inform about currently filtered out items. Defaults to False."""
         self.height = height
         """The height of the table."""
+        self.primary_column_key = primary_column_key
+        """The key of the primary column that should be clickable and renders as a link. Defaults to first column."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2163,6 +2166,7 @@ class Table:
             resettable=self.resettable,
             total_displayable=self.total_displayable,
             height=self.height,
+            primary_column_key=self.primary_column_key,
             tooltip=self.tooltip,
         )
 
@@ -2184,6 +2188,7 @@ class Table:
         __d_resettable: Any = __d.get('resettable')
         __d_total_displayable: Any = __d.get('total_displayable')
         __d_height: Any = __d.get('height')
+        __d_primary_column_key: Any = __d.get('primary_column_key')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
@@ -2194,6 +2199,7 @@ class Table:
         resettable: Optional[bool] = __d_resettable
         total_displayable: Optional[bool] = __d_total_displayable
         height: Optional[str] = __d_height
+        primary_column_key: Optional[str] = __d_primary_column_key
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
@@ -2205,6 +2211,7 @@ class Table:
             resettable,
             total_displayable,
             height,
+            primary_column_key,
             tooltip,
         )
 

@@ -53,7 +53,7 @@ describe('Table.tsx', () => {
       T.qd.sync = syncMock
 
       const { getByText } = render(<XTable model={tableProps} />)
-      fireEvent.doubleClick(getByText(cell21))
+      fireEvent.click(getByText(cell21))
 
       expect(T.qd.args[name]).toMatchObject(['rowname2'])
       expect(syncMock).toHaveBeenCalled()
@@ -67,6 +67,19 @@ describe('Table.tsx', () => {
       fireEvent.click(checkboxes[2])
 
       expect(T.qd.args[name]).toMatchObject(['rowname1', 'rowname2'])
+    })
+
+    it('Clickable column - primary_column set', () => {
+      const syncMock = jest.fn()
+      T.qd.sync = syncMock
+
+      const { getByText } = render(<XTable model={{ ...tableProps, primary_column_key: 'colname2' }} />)
+      fireEvent.click(getByText(cell21))
+      expect(syncMock).not.toHaveBeenCalled()
+
+      fireEvent.click(getByText('1'))
+      expect(T.qd.args[name]).toMatchObject(['rowname2'])
+      expect(syncMock).toHaveBeenCalled()
     })
   })
 
