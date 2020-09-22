@@ -484,7 +484,7 @@ const
       const values = isS(color_range) ? split(color_range) : cat10
       o.color = { fields: [color_field], values }
       if (color_domain?.length && color_domain.length == values.length) {
-        o.color.callback = (x: any) => values[color_domain.indexOf(x)]
+        o.color.callback = (x: S) => values[color_domain.indexOf(x)]
       }
     } else {
       o.color = isS(color) ? color : theme.colors.gray
