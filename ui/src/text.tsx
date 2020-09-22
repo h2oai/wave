@@ -1,9 +1,9 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Markdown, MarkdownInline } from './markdown'
+import { Markdown } from './markdown'
 import { Dict, S } from './qd'
-import { border, getTheme, padding, pc } from './theme'
+import { border, getTheme, padding, palette, pc } from './theme'
 
 /** Create text content. */
 export interface Text {
@@ -60,6 +60,14 @@ const
   css = stylesheet({
     markdown: {
       $nest: {
+        a: {
+          color: palette.themePrimary,
+          $nest: {
+            '&:hover': {
+              textDecoration: 'none',
+            },
+          },
+        },
         table: {
           width: pc(100),
           borderCollapse: 'collapse',
@@ -89,9 +97,10 @@ const
 export const
   XText = ({ content, size }: { content: S, size?: S }) => {
     const
-      name = 'text' + (size ? `-${size}` : ''),
-      md = content.indexOf('\n') >= 0
-        ? <div className={css.markdown}><Markdown source={content} /></div>
-        : <MarkdownInline source={content} />
-    return <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block>{md}</Fluent.Text>
+      name = 'text' + (size ? `-${size}` : '')
+    return (
+      <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block>
+        <div className={css.markdown}><Markdown source={content} /></div>
+      </Fluent.Text>
+    )
   }

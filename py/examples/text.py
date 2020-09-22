@@ -28,6 +28,10 @@ Image:
 
 ![Monty Python](https://upload.wikimedia.org/wikipedia/en/c/cb/Flyingcircus_2.jpg)
 
+Links:
+
+Here's a [link to an image](https://upload.wikimedia.org/wikipedia/en/c/cb/Flyingcircus_2.jpg).
+
 Table:
 
 | Column 1 | Column 2 | Column 3 |
