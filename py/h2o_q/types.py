@@ -1991,11 +1991,12 @@ class TableColumn:
             self,
             name: str,
             label: str,
-            min_width: Optional[int] = None,
-            max_width: Optional[int] = None,
+            min_width: Optional[str] = None,
+            max_width: Optional[str] = None,
             sortable: Optional[bool] = None,
             searchable: Optional[bool] = None,
             filterable: Optional[bool] = None,
+            link: Optional[bool] = None,
             cell_type: Optional[TableCellType] = None,
     ):
         self.name = name
@@ -2012,6 +2013,8 @@ class TableColumn:
         """Indicates whether the contents of this column can be searched through. Enables a search box for the table if true."""
         self.filterable = filterable
         """Indicates whether the contents of this column are displayed as filters in a dropdown."""
+        self.link = link
+        """Indicates whether the table cell should be displayed as a clickable link."""
         self.cell_type = cell_type
         """Defines how to render each cell in this column. Defaults to plain text."""
 
@@ -2029,6 +2032,7 @@ class TableColumn:
             sortable=self.sortable,
             searchable=self.searchable,
             filterable=self.filterable,
+            link=self.link,
             cell_type=None if self.cell_type is None else self.cell_type.dump(),
         )
 
@@ -2046,14 +2050,16 @@ class TableColumn:
         __d_sortable: Any = __d.get('sortable')
         __d_searchable: Any = __d.get('searchable')
         __d_filterable: Any = __d.get('filterable')
+        __d_link: Any = __d.get('link')
         __d_cell_type: Any = __d.get('cell_type')
         name: str = __d_name
         label: str = __d_label
-        min_width: Optional[int] = __d_min_width
-        max_width: Optional[int] = __d_max_width
+        min_width: Optional[str] = __d_min_width
+        max_width: Optional[str] = __d_max_width
         sortable: Optional[bool] = __d_sortable
         searchable: Optional[bool] = __d_searchable
         filterable: Optional[bool] = __d_filterable
+        link: Optional[bool] = __d_link
         cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         return TableColumn(
             name,
@@ -2063,6 +2069,7 @@ class TableColumn:
             sortable,
             searchable,
             filterable,
+            link,
             cell_type,
         )
 
@@ -2132,6 +2139,9 @@ class Table:
             rows: List[TableRow],
             multiple: Optional[bool] = None,
             groupable: Optional[bool] = None,
+            downloadable: Optional[bool] = None,
+            resettable: Optional[bool] = None,
+            height: Optional[str] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2144,6 +2154,12 @@ class Table:
         """True to allow multiple rows to be selected."""
         self.groupable = groupable
         """True to allow group by feature."""
+        self.downloadable = downloadable
+        """Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False."""
+        self.resettable = resettable
+        """Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False."""
+        self.height = height
+        """The height of the table."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2161,6 +2177,9 @@ class Table:
             rows=[__e.dump() for __e in self.rows],
             multiple=self.multiple,
             groupable=self.groupable,
+            downloadable=self.downloadable,
+            resettable=self.resettable,
+            height=self.height,
             tooltip=self.tooltip,
         )
 
@@ -2178,12 +2197,18 @@ class Table:
             raise ValueError('Table.rows is required.')
         __d_multiple: Any = __d.get('multiple')
         __d_groupable: Any = __d.get('groupable')
+        __d_downloadable: Any = __d.get('downloadable')
+        __d_resettable: Any = __d.get('resettable')
+        __d_height: Any = __d.get('height')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
         multiple: Optional[bool] = __d_multiple
         groupable: Optional[bool] = __d_groupable
+        downloadable: Optional[bool] = __d_downloadable
+        resettable: Optional[bool] = __d_resettable
+        height: Optional[str] = __d_height
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
@@ -2191,6 +2216,9 @@ class Table:
             rows,
             multiple,
             groupable,
+            downloadable,
+            resettable,
+            height,
             tooltip,
         )
 

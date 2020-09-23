@@ -1,5 +1,5 @@
-# Table
-# Use a table to display tabular data.
+# Table / Sort
+# Allow sorting a table by specific columns.
 # ---
 import random
 from faker import Faker
@@ -35,9 +35,9 @@ issues = [
 
 # Create columns for our issue table.
 columns = [
-    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width='300'),
-    ui.table_column(name='status', label='Status', filterable=True),
-    ui.table_column(name='notifications', label='Notifications', filterable=True),
+    ui.table_column(name='text', label='Issue', sortable=True, ),
+    ui.table_column(name='status', label='Status'),
+    ui.table_column(name='notifications', label='Notifications'),
     ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
     ui.table_column(name='views', label='Views', sortable=True),
     ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
@@ -53,10 +53,6 @@ async def main(q: Q):
                 name=issue.id,
                 cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
                 issue in issues],
-            groupable=True,
-            downloadable=True,
-            resettable=True,
-            height='800px'
         )
     ])
     await q.page.save()

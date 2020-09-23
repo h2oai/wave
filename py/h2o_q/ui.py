@@ -995,11 +995,12 @@ def table_cell_type(
 def table_column(
         name: str,
         label: str,
-        min_width: Optional[int] = None,
-        max_width: Optional[int] = None,
+        min_width: Optional[str] = None,
+        max_width: Optional[str] = None,
         sortable: Optional[bool] = None,
         searchable: Optional[bool] = None,
         filterable: Optional[bool] = None,
+        link: Optional[bool] = None,
         cell_type: Optional[TableCellType] = None,
 ) -> TableColumn:
     """Create a table column.
@@ -1012,6 +1013,7 @@ def table_column(
         sortable: Indicates whether the column is sortable.
         searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
         filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
+        link: Indicates whether the table cell should be displayed as a clickable link.
         cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_q.types.TableColumn` instance.
@@ -1024,6 +1026,7 @@ def table_column(
         sortable,
         searchable,
         filterable,
+        link,
         cell_type,
     )
 
@@ -1052,6 +1055,9 @@ def table(
         rows: List[TableRow],
         multiple: Optional[bool] = None,
         groupable: Optional[bool] = None,
+        downloadable: Optional[bool] = None,
+        resettable: Optional[bool] = None,
+        height: Optional[str] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create an interactive table.
@@ -1076,6 +1082,9 @@ def table(
         rows: The rows in this table.
         multiple: True to allow multiple rows to be selected.
         groupable: True to allow group by feature.
+        downloadable: Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
+        resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
+        height: The height of the table.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.
@@ -1086,6 +1095,9 @@ def table(
         rows,
         multiple,
         groupable,
+        downloadable,
+        resettable,
+        height,
         tooltip,
     ))
 

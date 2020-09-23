@@ -1093,6 +1093,7 @@ ui_table_cell_type <- function(
 #' @param sortable Indicates whether the column is sortable.
 #' @param searchable Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
 #' @param filterable Indicates whether the contents of this column are displayed as filters in a dropdown.
+#' @param link Indicates whether the table cell should be displayed as a clickable link.
 #' @param cell_type Defines how to render each cell in this column. Defaults to plain text.
 #' @return A TableColumn instance.
 ui_table_column <- function(
@@ -1103,14 +1104,16 @@ ui_table_column <- function(
   sortable = NULL,
   searchable = NULL,
   filterable = NULL,
+  link = NULL,
   cell_type = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
-  .guard_scalar("min_width", "numeric", min_width)
-  .guard_scalar("max_width", "numeric", max_width)
+  .guard_scalar("min_width", "character", min_width)
+  .guard_scalar("max_width", "character", max_width)
   .guard_scalar("sortable", "logical", sortable)
   .guard_scalar("searchable", "logical", searchable)
   .guard_scalar("filterable", "logical", filterable)
+  .guard_scalar("link", "logical", link)
   .guard_scalar("cell_type", "h2oq_TableCellType", cell_type)
   .o <- list(
     name=name,
@@ -1120,6 +1123,7 @@ ui_table_column <- function(
     sortable=sortable,
     searchable=searchable,
     filterable=filterable,
+    link=link,
     cell_type=cell_type)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableColumn"))
   return(.o)
@@ -1163,6 +1167,9 @@ ui_table_row <- function(
 #' @param rows The rows in this table.
 #' @param multiple True to allow multiple rows to be selected.
 #' @param groupable True to allow group by feature.
+#' @param downloadable Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
+#' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
+#' @param height The height of the table.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(
@@ -1171,12 +1178,18 @@ ui_table <- function(
   rows,
   multiple = NULL,
   groupable = NULL,
+  downloadable = NULL,
+  resettable = NULL,
+  height = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "h2oq_TableColumn", columns)
   .guard_vector("rows", "h2oq_TableRow", rows)
   .guard_scalar("multiple", "logical", multiple)
   .guard_scalar("groupable", "logical", groupable)
+  .guard_scalar("downloadable", "logical", downloadable)
+  .guard_scalar("resettable", "logical", resettable)
+  .guard_scalar("height", "character", height)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(table=list(
     name=name,
@@ -1184,6 +1197,9 @@ ui_table <- function(
     rows=rows,
     multiple=multiple,
     groupable=groupable,
+    downloadable=downloadable,
+    resettable=resettable,
+    height=height,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
