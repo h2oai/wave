@@ -133,7 +133,12 @@ const
 
     return 0
   },
-  formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+  toCSV = (data: any[][]): S => data.map(row => {
+    const line = JSON.stringify(row)
+    return line.substr(1, line.length - 2)
+  }).join('\n')
+
 
 export const
   XTable = bond(({ model: m }: { model: Table }) => {
@@ -229,7 +234,7 @@ export const
       download = () => {
         // TODO: Prompt a dialog for name, encoding, etc.
         const
-          data = items.map(i => Object.values(i).join(',')).join('\n'),
+          data = toCSV(items.map(i => Object.values(i))),
           a = document.createElement('a'),
           blob = new Blob([data], { type: "octet/stream" }),
           url = window.URL.createObjectURL(blob)
