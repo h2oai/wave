@@ -55,6 +55,10 @@ run-cypress: ## Run Cypress
 generate: ## Generate driver bindings
 	cd tools/qgen && $(MAKE) run
 
+.PHONY: docs
+docs: ## Generate docs
+	cd py && $(MAKE) docs
+
 release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make release)"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os

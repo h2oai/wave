@@ -512,6 +512,43 @@ copy_expando(q.args, q.client, exclude_keys=['back2', 'select_target', 'restart'
 </code></pre>
 <p><strong>Changed: No need to JSON-serialize values to preserve them between requests.</strong></p>
 <p><code>q.args.foo=</code> only supported JSON-serialized values. No such restrictions exist for the <code>q.app</code>, <code>q.user</code> and <code>q.client</code> containers. You could, for example, load a Pandas dataframe and set <code>q.user.df = my_df</code>, and the dataframe will be accessible across requests for the lifetime of the app.</p>
+<h1 id="configuration">Configuration</h1>
+<h2 id="q-server">Q Server</h2>
+<p>Execute <code>qd -help</code> to see all available command line options:</p>
+<pre><code>$ ./qd -help
+Usage of ./qd:
+  -access-key-id string
+        default access key ID (default &quot;access_key_id&quot;)
+  -access-key-secret string
+        default access key secret (default &quot;access_key_secret&quot;)
+  -compact string
+        compact AOF log
+  -data-dir string
+        directory to store site data (default &quot;./data&quot;)
+  -debug
+        enable debug mode (profiling, inspection, etc.)
+  -init string
+        initialize site content from AOF log
+  -listen string
+        listen on this address (default &quot;:55555&quot;)
+  -tls-cert-file string
+        path to certificate file (TLS only)
+  -tls-key-file string
+        path to private key file (TLS only)
+  -version
+        print version and exit
+  -web-dir string
+        directory to serve web assets from (default &quot;./www&quot;)
+</code></pre>
+<h2 id="python-app">Python App</h2>
+<p>You can use the following environment variables to control your app's server:</p>
+<ul>
+<li><code>H2O_Q_INTERNAL_ADDRESS</code>: The local host/port on which the app server should listen. Defaults to <code>ws://127.0.0.1:0</code>. For example, if you want your app to listen on a specific port, execute your app using <code>H2O_Q_INTERNAL_ADDRESS=ws://127.0.0.1:666666 ./venv/bin/python my_app.py</code> (replace <code>66666</code> with a port number of your choice).</li>
+<li><code>H2O_Q_EXTERNAL_ADDRESS</code>: The public host/port of the app server. Defaults to <code>ws://127.0.0.1:0</code>. Set this variable if you are running your Q server and your app on different machine or containers.</li>
+<li><code>H2O_Q_ADDRESS</code>: The public host/port of the Q server. Set this variable if you are running the Q server on a remote machine or container.</li>
+<li><code>H2O_Q_ACCESS_KEY_ID</code>: The API access key ID to use for communicating with the Q server.</li>
+<li><code>H2O_Q_ACCESS_KEY_SECRET</code>: The API access key secret to use for communicating with the Q server.</li>
+</ul>
 <h1 id="authoring-functional-tests">Authoring functional tests</h1>
 <p>Q supports authoring functional tests in Python for the <a href="https://www.cypress.io/">Cypress</a> test framework. This feature lets you automate browser-based point-and-click tests for your app.</p>
 <h2 id="prerequisites">Prerequisites</h2>
@@ -5842,6 +5879,11 @@ from .test import cypress, Cypress</code></pre>
 <li><a href="#migration-guide">Migration Guide</a><ul>
 <li><a href="#what-has-changed">What has changed?</a></li>
 <li><a href="#breaking-changes">Breaking changes</a></li>
+</ul>
+</li>
+<li><a href="#configuration">Configuration</a><ul>
+<li><a href="#q-server">Q Server</a></li>
+<li><a href="#python-app">Python App</a></li>
 </ul>
 </li>
 <li><a href="#authoring-functional-tests">Authoring functional tests</a><ul>
