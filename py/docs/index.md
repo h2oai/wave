@@ -1,5 +1,27 @@
 
 # Change Log
+- [v0.6.0](https://github.com/h2oai/qd/releases/tag/v0.6.0) - Sep 23, 2020
+    - Added
+        - Apps when launched now automatically use an available free port instead of `55556`.
+        - Client-side redirects to URLs and hashes using `meta_card.redirect`.
+        - Context menus inside forms: `ui.text_xl()` and `ui.text_l()` now support optional context menus.
+        - Plots now support specifying data values for predictable color encoding and legends.
+        - `ui.markup` component for rendering HTML inline in forms.
+        - `ui.template` component for rendering templated HTML inline in forms.
+        - The height of tables can now be controlled using the `height` attribute.
+        - Both sorting and group-by now work on the same table column if specified.
+        - Lots of examples on how to use `ui.table` sorting, grouping, search, download, etc.
+        - Ability to specify which column in a `ui.table` is the primary column, or disable altogether.
+    - Changed
+        - `ui.text()` now unconditionally allows embedded HTML tags.
+        - App host now defaults to `127.0.0.1` instead of `localhost`.
+        - Footer display in `ui.table` is now inferred from usage and displayed automatically.
+        - The `min_width` and `max_width` attributes for table columns are now strings (consistency).
+    - Fixed
+        - Background color rendering bug when page overflows after loading.
+        - Render tooltip properly on toolbar command buttons.
+        - `ui.table()` rendering bug: remove stray `0`.
+        - Python error stack trace, if any, is displayed on top of all other cards on page.
 - [v0.5.0](https://github.com/h2oai/qd/releases/tag/v0.5.0) - Sep 18, 2020
     - Added
         - Example for controlling cards with tabs.

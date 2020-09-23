@@ -235,36 +235,42 @@ def text(
 def text_xl(
         content: str,
         tooltip: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create extra-large sized text content.
 
     Args:
         content: The text content.
         tooltip: Tooltip message.
+        commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.TextXl` instance.
     &#34;&#34;&#34;
     return Component(text_xl=TextXl(
         content,
         tooltip,
+        commands,
     ))
 
 
 def text_l(
         content: str,
         tooltip: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create large sized text content.
 
     Args:
         content: The text content.
         tooltip: Tooltip message.
+        commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.TextL` instance.
     &#34;&#34;&#34;
     return Component(text_l=TextL(
         content,
         tooltip,
+        commands,
     ))
 
 
@@ -1079,11 +1085,12 @@ def table_cell_type(
 def table_column(
         name: str,
         label: str,
-        min_width: Optional[int] = None,
-        max_width: Optional[int] = None,
+        min_width: Optional[str] = None,
+        max_width: Optional[str] = None,
         sortable: Optional[bool] = None,
         searchable: Optional[bool] = None,
         filterable: Optional[bool] = None,
+        link: Optional[bool] = None,
         cell_type: Optional[TableCellType] = None,
 ) -&gt; TableColumn:
     &#34;&#34;&#34;Create a table column.
@@ -1091,11 +1098,12 @@ def table_column(
     Args:
         name: An identifying name for this column.
         label: The text displayed on the column header.
-        min_width: The minimum width of this column.
-        max_width: The maximum width of this column.
+        min_width: The minimum width of this column, e.g. &#39;50px&#39;. Only `px` units are supported at this time.
+        max_width: The maximum width of this column, e.g. &#39;100px&#39;. Only `px` units are supported at this time.
         sortable: Indicates whether the column is sortable.
         searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
         filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
+        link: Indicates whether each cell in this column should be displayed as a clickable link.
         cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_q.types.TableColumn` instance.
@@ -1108,6 +1116,7 @@ def table_column(
         sortable,
         searchable,
         filterable,
+        link,
         cell_type,
     )
 
@@ -1136,6 +1145,9 @@ def table(
         rows: List[TableRow],
         multiple: Optional[bool] = None,
         groupable: Optional[bool] = None,
+        downloadable: Optional[bool] = None,
+        resettable: Optional[bool] = None,
+        height: Optional[str] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create an interactive table.
@@ -1160,6 +1172,9 @@ def table(
         rows: The rows in this table.
         multiple: True to allow multiple rows to be selected.
         groupable: True to allow group by feature.
+        downloadable: Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
+        resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
+        height: The height of the table, e.g. &#39;400px&#39;, &#39;50%&#39;, etc.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.
@@ -1170,6 +1185,9 @@ def table(
         rows,
         multiple,
         groupable,
+        downloadable,
+        resettable,
+        height,
         tooltip,
     ))
 
@@ -1297,6 +1315,39 @@ def frame(
         content,
         width,
         height,
+    ))
+
+
+def markup(
+        content: str,
+) -&gt; Component:
+    &#34;&#34;&#34;Render HTML content.
+
+    Args:
+        content: The HTML content.
+    Returns:
+        A `h2o_q.types.Markup` instance.
+    &#34;&#34;&#34;
+    return Component(markup=Markup(
+        content,
+    ))
+
+
+def template(
+        content: str,
+        data: Optional[PackedRecord] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Render dynamic content using a HTML template.
+
+    Args:
+        content: The Handlebars template. https://handlebarsjs.com/guide/
+        data: Data for the Handlebars template
+    Returns:
+        A `h2o_q.types.Template` instance.
+    &#34;&#34;&#34;
+    return Component(template=Template(
+        content,
+        data,
     ))
 
 
@@ -1447,6 +1498,7 @@ def mark(
         y_title: Optional[str] = None,
         color: Optional[str] = None,
         color_range: Optional[str] = None,
+        color_domain: Optional[List[str]] = None,
         shape: Optional[str] = None,
         shape_range: Optional[str] = None,
         size: Optional[Value] = None,
@@ -1507,6 +1559,7 @@ def mark(
         y_title: Y axis title.
         color: Mark color field or value.
         color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `&#39;#fee8c8 #fdbb84 #e34a33&#39;`
+        color_domain: The unique values in the data (labels or categories or classes) to map colors to, e.g. `[&#39;high&#39;, &#39;medium&#39;, &#39;low&#39;]`. If this is not provided, the unique values are automatically inferred from the `color` attribute.
         shape: Mark shape field or value for `point` mark types. Possible values are &#39;circle&#39;, &#39;square&#39;, &#39;bowtie&#39;, &#39;diamond&#39;, &#39;hexagon&#39;, &#39;triangle&#39;, &#39;triangle-down&#39;, &#39;cross&#39;, &#39;tick&#39;, &#39;plus&#39;, &#39;hyphen&#39;, &#39;line&#39;.
         shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `&#39;circle square diamond&#39;`
         size: Mark size field or value.
@@ -1566,6 +1619,7 @@ def mark(
         y_title,
         color,
         color_range,
+        color_domain,
         shape,
         shape_range,
         size,
@@ -1695,6 +1749,8 @@ def component(
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
         frame: Optional[Frame] = None,
+        markup: Optional[Markup] = None,
+        template: Optional[Template] = None,
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
         stepper: Optional[Stepper] = None,
@@ -1733,6 +1789,8 @@ def component(
         tabs: Tabs.
         expander: Expander.
         frame: Frame.
+        markup: Markup
+        template: Template
         picker: Picker.
         range_slider: Range Slider.
         stepper: Stepper.
@@ -1771,6 +1829,8 @@ def component(
         tabs,
         expander,
         frame,
+        markup,
+        template,
         picker,
         range_slider,
         stepper,
@@ -2154,6 +2214,7 @@ def meta_card(
         title: Optional[str] = None,
         refresh: Optional[int] = None,
         notification: Optional[str] = None,
+        redirect: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -&gt; MetaCard:
     &#34;&#34;&#34;Represents page-global state.
@@ -2166,6 +2227,7 @@ def meta_card(
         title: The title of the page.
         refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
         notification: Display a desktop notification to the user.
+        redirect: Redirect the page to a new URL.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.MetaCard` instance.
@@ -2175,6 +2237,7 @@ def meta_card(
         title,
         refresh,
         notification,
+        redirect,
         commands,
     )
 
@@ -3385,7 +3448,7 @@ When collapsed the user can select a new value by typing.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.component"><code class="name flex">
-<span>def <span class="ident">component</span></span>(<span>text: Union[<a title="h2o_q.types.Text" href="types.html#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="types.html#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="types.html#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="types.html#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="types.html#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="types.html#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="types.html#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="types.html#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="types.html#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="types.html#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="types.html#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="types.html#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="types.html#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="types.html#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="types.html#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="types.html#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="types.html#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="types.html#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="types.html#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="types.html#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="types.html#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="types.html#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="types.html#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="types.html#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="types.html#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="types.html#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="types.html#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="types.html#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="types.html#h2o_q.types.Frame">Frame</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="types.html#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="types.html#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="types.html#h2o_q.types.Stepper">Stepper</a>, NoneType] = None, visualization: Union[<a title="h2o_q.types.Visualization" href="types.html#h2o_q.types.Visualization">Visualization</a>, NoneType] = None, vega_visualization: Union[<a title="h2o_q.types.VegaVisualization" href="types.html#h2o_q.types.VegaVisualization">VegaVisualization</a>, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">component</span></span>(<span>text: Union[<a title="h2o_q.types.Text" href="types.html#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="types.html#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="types.html#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="types.html#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="types.html#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="types.html#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="types.html#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="types.html#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="types.html#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="types.html#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="types.html#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="types.html#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="types.html#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="types.html#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="types.html#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="types.html#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="types.html#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="types.html#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="types.html#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="types.html#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="types.html#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="types.html#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="types.html#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="types.html#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="types.html#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="types.html#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="types.html#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="types.html#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="types.html#h2o_q.types.Frame">Frame</a>, NoneType] = None, markup: Union[<a title="h2o_q.types.Markup" href="types.html#h2o_q.types.Markup">Markup</a>, NoneType] = None, template: Union[<a title="h2o_q.types.Template" href="types.html#h2o_q.types.Template">Template</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="types.html#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="types.html#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="types.html#h2o_q.types.Stepper">Stepper</a>, NoneType] = None, visualization: Union[<a title="h2o_q.types.Visualization" href="types.html#h2o_q.types.Visualization">Visualization</a>, NoneType] = None, vega_visualization: Union[<a title="h2o_q.types.VegaVisualization" href="types.html#h2o_q.types.VegaVisualization">VegaVisualization</a>, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a component.</p>
@@ -3449,6 +3512,10 @@ When collapsed the user can select a new value by typing.</p>
 <dd>Expander.</dd>
 <dt><strong><code>frame</code></strong></dt>
 <dd>Frame.</dd>
+<dt><strong><code>markup</code></strong></dt>
+<dd>Markup</dd>
+<dt><strong><code>template</code></strong></dt>
+<dd>Template</dd>
 <dt><strong><code>picker</code></strong></dt>
 <dd>Picker.</dd>
 <dt><strong><code>range_slider</code></strong></dt>
@@ -3496,6 +3563,8 @@ When collapsed the user can select a new value by typing.</p>
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
         frame: Optional[Frame] = None,
+        markup: Optional[Markup] = None,
+        template: Optional[Template] = None,
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
         stepper: Optional[Stepper] = None,
@@ -3534,6 +3603,8 @@ When collapsed the user can select a new value by typing.</p>
         tabs: Tabs.
         expander: Expander.
         frame: Frame.
+        markup: Markup
+        template: Template
         picker: Picker.
         range_slider: Range Slider.
         stepper: Stepper.
@@ -3572,6 +3643,8 @@ When collapsed the user can select a new value by typing.</p>
         tabs,
         expander,
         frame,
+        markup,
+        template,
         picker,
         range_slider,
         stepper,
@@ -4700,7 +4773,7 @@ Create a card containing other cards laid out in the form of a list (vertically,
 </details>
 </dd>
 <dt id="h2o_q.ui.mark"><code class="name flex">
-<span>def <span class="ident">mark</span></span>(<span>coord: Union[str, NoneType] = None, type: Union[str, NoneType] = None, x: Union[str, float, int, NoneType] = None, x0: Union[str, float, int, NoneType] = None, x1: Union[str, float, int, NoneType] = None, x2: Union[str, float, int, NoneType] = None, x_min: Union[float, NoneType] = None, x_max: Union[float, NoneType] = None, x_nice: Union[bool, NoneType] = None, x_scale: Union[str, NoneType] = None, x_title: Union[str, NoneType] = None, y: Union[str, float, int, NoneType] = None, y0: Union[str, float, int, NoneType] = None, y1: Union[str, float, int, NoneType] = None, y2: Union[str, float, int, NoneType] = None, y_min: Union[float, NoneType] = None, y_max: Union[float, NoneType] = None, y_nice: Union[bool, NoneType] = None, y_scale: Union[str, NoneType] = None, y_title: Union[str, NoneType] = None, color: Union[str, NoneType] = None, color_range: Union[str, NoneType] = None, shape: Union[str, NoneType] = None, shape_range: Union[str, NoneType] = None, size: Union[str, float, int, NoneType] = None, size_range: Union[str, NoneType] = None, stack: Union[str, NoneType] = None, dodge: Union[str, NoneType] = None, curve: Union[str, NoneType] = None, fill_color: Union[str, NoneType] = None, fill_opacity: Union[float, NoneType] = None, stroke_color: Union[str, NoneType] = None, stroke_opacity: Union[float, NoneType] = None, stroke_size: Union[float, NoneType] = None, stroke_dash: Union[str, NoneType] = None, label: Union[str, NoneType] = None, label_offset: Union[float, NoneType] = None, label_offset_x: Union[float, NoneType] = None, label_offset_y: Union[float, NoneType] = None, label_rotation: Union[str, NoneType] = None, label_position: Union[str, NoneType] = None, label_overlap: Union[str, NoneType] = None, label_fill_color: Union[str, NoneType] = None, label_fill_opacity: Union[float, NoneType] = None, label_stroke_color: Union[str, NoneType] = None, label_stroke_opacity: Union[float, NoneType] = None, label_stroke_size: Union[float, NoneType] = None, label_font_size: Union[float, NoneType] = None, label_font_weight: Union[str, NoneType] = None, label_line_height: Union[float, NoneType] = None, label_align: Union[str, NoneType] = None, ref_stroke_color: Union[str, NoneType] = None, ref_stroke_opacity: Union[float, NoneType] = None, ref_stroke_size: Union[float, NoneType] = None, ref_stroke_dash: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Mark" href="types.html#h2o_q.types.Mark">Mark</a></span>
+<span>def <span class="ident">mark</span></span>(<span>coord: Union[str, NoneType] = None, type: Union[str, NoneType] = None, x: Union[str, float, int, NoneType] = None, x0: Union[str, float, int, NoneType] = None, x1: Union[str, float, int, NoneType] = None, x2: Union[str, float, int, NoneType] = None, x_min: Union[float, NoneType] = None, x_max: Union[float, NoneType] = None, x_nice: Union[bool, NoneType] = None, x_scale: Union[str, NoneType] = None, x_title: Union[str, NoneType] = None, y: Union[str, float, int, NoneType] = None, y0: Union[str, float, int, NoneType] = None, y1: Union[str, float, int, NoneType] = None, y2: Union[str, float, int, NoneType] = None, y_min: Union[float, NoneType] = None, y_max: Union[float, NoneType] = None, y_nice: Union[bool, NoneType] = None, y_scale: Union[str, NoneType] = None, y_title: Union[str, NoneType] = None, color: Union[str, NoneType] = None, color_range: Union[str, NoneType] = None, color_domain: Union[List[str], NoneType] = None, shape: Union[str, NoneType] = None, shape_range: Union[str, NoneType] = None, size: Union[str, float, int, NoneType] = None, size_range: Union[str, NoneType] = None, stack: Union[str, NoneType] = None, dodge: Union[str, NoneType] = None, curve: Union[str, NoneType] = None, fill_color: Union[str, NoneType] = None, fill_opacity: Union[float, NoneType] = None, stroke_color: Union[str, NoneType] = None, stroke_opacity: Union[float, NoneType] = None, stroke_size: Union[float, NoneType] = None, stroke_dash: Union[str, NoneType] = None, label: Union[str, NoneType] = None, label_offset: Union[float, NoneType] = None, label_offset_x: Union[float, NoneType] = None, label_offset_y: Union[float, NoneType] = None, label_rotation: Union[str, NoneType] = None, label_position: Union[str, NoneType] = None, label_overlap: Union[str, NoneType] = None, label_fill_color: Union[str, NoneType] = None, label_fill_opacity: Union[float, NoneType] = None, label_stroke_color: Union[str, NoneType] = None, label_stroke_opacity: Union[float, NoneType] = None, label_stroke_size: Union[float, NoneType] = None, label_font_size: Union[float, NoneType] = None, label_font_weight: Union[str, NoneType] = None, label_line_height: Union[float, NoneType] = None, label_align: Union[str, NoneType] = None, ref_stroke_color: Union[str, NoneType] = None, ref_stroke_opacity: Union[float, NoneType] = None, ref_stroke_size: Union[float, NoneType] = None, ref_stroke_dash: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Mark" href="types.html#h2o_q.types.Mark">Mark</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
@@ -4751,6 +4824,8 @@ A plot can contain multiple such layers of marks.</p>
 <dd>Mark color field or value.</dd>
 <dt><strong><code>color_range</code></strong></dt>
 <dd>Mark color range for multi-series plots. A string containing space-separated colors, e.g. <code>'#fee8c8 #fdbb84 #e34a33'</code></dd>
+<dt><strong><code>color_domain</code></strong></dt>
+<dd>The unique values in the data (labels or categories or classes) to map colors to, e.g. <code>['high', 'medium', 'low']</code>. If this is not provided, the unique values are automatically inferred from the <code>color</code> attribute.</dd>
 <dt><strong><code>shape</code></strong></dt>
 <dd>Mark shape field or value for <code>point</code> mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'.</dd>
 <dt><strong><code>shape_range</code></strong></dt>
@@ -4847,6 +4922,7 @@ A plot can contain multiple such layers of marks.</p>
         y_title: Optional[str] = None,
         color: Optional[str] = None,
         color_range: Optional[str] = None,
+        color_domain: Optional[List[str]] = None,
         shape: Optional[str] = None,
         shape_range: Optional[str] = None,
         size: Optional[Value] = None,
@@ -4907,6 +4983,7 @@ A plot can contain multiple such layers of marks.</p>
         y_title: Y axis title.
         color: Mark color field or value.
         color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `&#39;#fee8c8 #fdbb84 #e34a33&#39;`
+        color_domain: The unique values in the data (labels or categories or classes) to map colors to, e.g. `[&#39;high&#39;, &#39;medium&#39;, &#39;low&#39;]`. If this is not provided, the unique values are automatically inferred from the `color` attribute.
         shape: Mark shape field or value for `point` mark types. Possible values are &#39;circle&#39;, &#39;square&#39;, &#39;bowtie&#39;, &#39;diamond&#39;, &#39;hexagon&#39;, &#39;triangle&#39;, &#39;triangle-down&#39;, &#39;cross&#39;, &#39;tick&#39;, &#39;plus&#39;, &#39;hyphen&#39;, &#39;line&#39;.
         shape_range: Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `&#39;circle square diamond&#39;`
         size: Mark size field or value.
@@ -4966,6 +5043,7 @@ A plot can contain multiple such layers of marks.</p>
         y_title,
         color,
         color_range,
+        color_domain,
         shape,
         shape_range,
         size,
@@ -5062,6 +5140,37 @@ Copyright, reserved, trademark, quotes, etc. are replaced with language-neutral 
     )</code></pre>
 </details>
 </dd>
+<dt id="h2o_q.ui.markup"><code class="name flex">
+<span>def <span class="ident">markup</span></span>(<span>content: str) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Render HTML content.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>content</code></strong></dt>
+<dd>The HTML content.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.Markup" href="types.html#h2o_q.types.Markup">Markup</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def markup(
+        content: str,
+) -&gt; Component:
+    &#34;&#34;&#34;Render HTML content.
+
+    Args:
+        content: The HTML content.
+    Returns:
+        A `h2o_q.types.Markup` instance.
+    &#34;&#34;&#34;
+    return Component(markup=Markup(
+        content,
+    ))</code></pre>
+</details>
+</dd>
 <dt id="h2o_q.ui.markup_card"><code class="name flex">
 <span>def <span class="ident">markup_card</span></span>(<span>box: str, title: str, content: str, commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.MarkupCard" href="types.html#h2o_q.types.MarkupCard">MarkupCard</a></span>
 </code></dt>
@@ -5152,7 +5261,7 @@ therefore does not need to block other activities.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.meta_card"><code class="name flex">
-<span>def <span class="ident">meta_card</span></span>(<span>box: str, title: Union[str, NoneType] = None, refresh: Union[int, NoneType] = None, notification: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.MetaCard" href="types.html#h2o_q.types.MetaCard">MetaCard</a></span>
+<span>def <span class="ident">meta_card</span></span>(<span>box: str, title: Union[str, NoneType] = None, refresh: Union[int, NoneType] = None, notification: Union[str, NoneType] = None, redirect: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.MetaCard" href="types.html#h2o_q.types.MetaCard">MetaCard</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents page-global state.</p>
@@ -5168,6 +5277,8 @@ It is used to control attributes of the active page.</p>
 <dd>Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).</dd>
 <dt><strong><code>notification</code></strong></dt>
 <dd>Display a desktop notification to the user.</dd>
+<dt><strong><code>redirect</code></strong></dt>
+<dd>Redirect the page to a new URL.</dd>
 <dt><strong><code>commands</code></strong></dt>
 <dd>Contextual menu commands for this component.</dd>
 </dl>
@@ -5182,6 +5293,7 @@ It is used to control attributes of the active page.</p>
         title: Optional[str] = None,
         refresh: Optional[int] = None,
         notification: Optional[str] = None,
+        redirect: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -&gt; MetaCard:
     &#34;&#34;&#34;Represents page-global state.
@@ -5194,6 +5306,7 @@ It is used to control attributes of the active page.</p>
         title: The title of the page.
         refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
         notification: Display a desktop notification to the user.
+        redirect: Redirect the page to a new URL.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.MetaCard` instance.
@@ -5203,6 +5316,7 @@ It is used to control attributes of the active page.</p>
         title,
         refresh,
         notification,
+        redirect,
         commands,
     )</code></pre>
 </details>
@@ -6269,7 +6383,7 @@ The steps keep users informed about where they are in the process and how much i
 </details>
 </dd>
 <dt id="h2o_q.ui.table"><code class="name flex">
-<span>def <span class="ident">table</span></span>(<span>name: str, columns: List[<a title="h2o_q.types.TableColumn" href="types.html#h2o_q.types.TableColumn">TableColumn</a>], rows: List[<a title="h2o_q.types.TableRow" href="types.html#h2o_q.types.TableRow">TableRow</a>], multiple: Union[bool, NoneType] = None, groupable: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">table</span></span>(<span>name: str, columns: List[<a title="h2o_q.types.TableColumn" href="types.html#h2o_q.types.TableColumn">TableColumn</a>], rows: List[<a title="h2o_q.types.TableRow" href="types.html#h2o_q.types.TableRow">TableRow</a>], multiple: Union[bool, NoneType] = None, groupable: Union[bool, NoneType] = None, downloadable: Union[bool, NoneType] = None, resettable: Union[bool, NoneType] = None, height: Union[str, NoneType] = None, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an interactive table.</p>
@@ -6296,6 +6410,12 @@ submission.</p>
 <dd>True to allow multiple rows to be selected.</dd>
 <dt><strong><code>groupable</code></strong></dt>
 <dd>True to allow group by feature.</dd>
+<dt><strong><code>downloadable</code></strong></dt>
+<dd>Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.</dd>
+<dt><strong><code>resettable</code></strong></dt>
+<dd>Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.</dd>
+<dt><strong><code>height</code></strong></dt>
+<dd>The height of the table, e.g. '400px', '50%', etc.</dd>
 <dt><strong><code>tooltip</code></strong></dt>
 <dd>An optional tooltip message displayed when a user clicks the help icon to the right of the component.</dd>
 </dl>
@@ -6311,6 +6431,9 @@ submission.</p>
         rows: List[TableRow],
         multiple: Optional[bool] = None,
         groupable: Optional[bool] = None,
+        downloadable: Optional[bool] = None,
+        resettable: Optional[bool] = None,
+        height: Optional[str] = None,
         tooltip: Optional[str] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create an interactive table.
@@ -6335,6 +6458,9 @@ submission.</p>
         rows: The rows in this table.
         multiple: True to allow multiple rows to be selected.
         groupable: True to allow group by feature.
+        downloadable: Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
+        resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
+        height: The height of the table, e.g. &#39;400px&#39;, &#39;50%&#39;, etc.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.
@@ -6345,6 +6471,9 @@ submission.</p>
         rows,
         multiple,
         groupable,
+        downloadable,
+        resettable,
+        height,
         tooltip,
     ))</code></pre>
 </details>
@@ -6386,7 +6515,7 @@ submission.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.table_column"><code class="name flex">
-<span>def <span class="ident">table_column</span></span>(<span>name: str, label: str, min_width: Union[int, NoneType] = None, max_width: Union[int, NoneType] = None, sortable: Union[bool, NoneType] = None, searchable: Union[bool, NoneType] = None, filterable: Union[bool, NoneType] = None, cell_type: Union[<a title="h2o_q.types.TableCellType" href="types.html#h2o_q.types.TableCellType">TableCellType</a>, NoneType] = None) ‑> <a title="h2o_q.types.TableColumn" href="types.html#h2o_q.types.TableColumn">TableColumn</a></span>
+<span>def <span class="ident">table_column</span></span>(<span>name: str, label: str, min_width: Union[str, NoneType] = None, max_width: Union[str, NoneType] = None, sortable: Union[bool, NoneType] = None, searchable: Union[bool, NoneType] = None, filterable: Union[bool, NoneType] = None, link: Union[bool, NoneType] = None, cell_type: Union[<a title="h2o_q.types.TableCellType" href="types.html#h2o_q.types.TableCellType">TableCellType</a>, NoneType] = None) ‑> <a title="h2o_q.types.TableColumn" href="types.html#h2o_q.types.TableColumn">TableColumn</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a table column.</p>
@@ -6397,15 +6526,17 @@ submission.</p>
 <dt><strong><code>label</code></strong></dt>
 <dd>The text displayed on the column header.</dd>
 <dt><strong><code>min_width</code></strong></dt>
-<dd>The minimum width of this column.</dd>
+<dd>The minimum width of this column, e.g. '50px'. Only <code>px</code> units are supported at this time.</dd>
 <dt><strong><code>max_width</code></strong></dt>
-<dd>The maximum width of this column.</dd>
+<dd>The maximum width of this column, e.g. '100px'. Only <code>px</code> units are supported at this time.</dd>
 <dt><strong><code>sortable</code></strong></dt>
 <dd>Indicates whether the column is sortable.</dd>
 <dt><strong><code>searchable</code></strong></dt>
 <dd>Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.</dd>
 <dt><strong><code>filterable</code></strong></dt>
 <dd>Indicates whether the contents of this column are displayed as filters in a dropdown.</dd>
+<dt><strong><code>link</code></strong></dt>
+<dd>Indicates whether each cell in this column should be displayed as a clickable link.</dd>
 <dt><strong><code>cell_type</code></strong></dt>
 <dd>Defines how to render each cell in this column. Defaults to plain text.</dd>
 </dl>
@@ -6418,11 +6549,12 @@ submission.</p>
 <pre><code class="python">def table_column(
         name: str,
         label: str,
-        min_width: Optional[int] = None,
-        max_width: Optional[int] = None,
+        min_width: Optional[str] = None,
+        max_width: Optional[str] = None,
         sortable: Optional[bool] = None,
         searchable: Optional[bool] = None,
         filterable: Optional[bool] = None,
+        link: Optional[bool] = None,
         cell_type: Optional[TableCellType] = None,
 ) -&gt; TableColumn:
     &#34;&#34;&#34;Create a table column.
@@ -6430,11 +6562,12 @@ submission.</p>
     Args:
         name: An identifying name for this column.
         label: The text displayed on the column header.
-        min_width: The minimum width of this column.
-        max_width: The maximum width of this column.
+        min_width: The minimum width of this column, e.g. &#39;50px&#39;. Only `px` units are supported at this time.
+        max_width: The maximum width of this column, e.g. &#39;100px&#39;. Only `px` units are supported at this time.
         sortable: Indicates whether the column is sortable.
         searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
         filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
+        link: Indicates whether each cell in this column should be displayed as a clickable link.
         cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_q.types.TableColumn` instance.
@@ -6447,6 +6580,7 @@ submission.</p>
         sortable,
         searchable,
         filterable,
+        link,
         cell_type,
     )</code></pre>
 </details>
@@ -6685,6 +6819,42 @@ submission.</p>
     )</code></pre>
 </details>
 </dd>
+<dt id="h2o_q.ui.template"><code class="name flex">
+<span>def <span class="ident">template</span></span>(<span>content: str, data: Union[dict, str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Render dynamic content using a HTML template.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>content</code></strong></dt>
+<dd>The Handlebars template. <a href="https://handlebarsjs.com/guide/">https://handlebarsjs.com/guide/</a></dd>
+<dt><strong><code>data</code></strong></dt>
+<dd>Data for the Handlebars template</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A <code><a title="h2o_q.types.Template" href="types.html#h2o_q.types.Template">Template</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def template(
+        content: str,
+        data: Optional[PackedRecord] = None,
+) -&gt; Component:
+    &#34;&#34;&#34;Render dynamic content using a HTML template.
+
+    Args:
+        content: The Handlebars template. https://handlebarsjs.com/guide/
+        data: Data for the Handlebars template
+    Returns:
+        A `h2o_q.types.Template` instance.
+    &#34;&#34;&#34;
+    return Component(template=Template(
+        content,
+        data,
+    ))</code></pre>
+</details>
+</dd>
 <dt id="h2o_q.ui.template_card"><code class="name flex">
 <span>def <span class="ident">template_card</span></span>(<span>box: str, title: str, content: str, data: Union[dict, str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.TemplateCard" href="types.html#h2o_q.types.TemplateCard">TemplateCard</a></span>
 </code></dt>
@@ -6778,7 +6948,7 @@ submission.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.text_l"><code class="name flex">
-<span>def <span class="ident">text_l</span></span>(<span>content: str, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">text_l</span></span>(<span>content: str, tooltip: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create large sized text content.</p>
@@ -6788,6 +6958,8 @@ submission.</p>
 <dd>The text content.</dd>
 <dt><strong><code>tooltip</code></strong></dt>
 <dd>Tooltip message.</dd>
+<dt><strong><code>commands</code></strong></dt>
+<dd>Contextual menu commands for this component.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>A <code><a title="h2o_q.types.TextL" href="types.html#h2o_q.types.TextL">TextL</a></code> instance.</p></div>
@@ -6798,18 +6970,21 @@ submission.</p>
 <pre><code class="python">def text_l(
         content: str,
         tooltip: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create large sized text content.
 
     Args:
         content: The text content.
         tooltip: Tooltip message.
+        commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.TextL` instance.
     &#34;&#34;&#34;
     return Component(text_l=TextL(
         content,
         tooltip,
+        commands,
     ))</code></pre>
 </details>
 </dd>
@@ -6886,7 +7061,7 @@ submission.</p>
 </details>
 </dd>
 <dt id="h2o_q.ui.text_xl"><code class="name flex">
-<span>def <span class="ident">text_xl</span></span>(<span>content: str, tooltip: Union[str, NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
+<span>def <span class="ident">text_xl</span></span>(<span>content: str, tooltip: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="types.html#h2o_q.types.Command">Command</a>], NoneType] = None) ‑> <a title="h2o_q.types.Component" href="types.html#h2o_q.types.Component">Component</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create extra-large sized text content.</p>
@@ -6896,6 +7071,8 @@ submission.</p>
 <dd>The text content.</dd>
 <dt><strong><code>tooltip</code></strong></dt>
 <dd>Tooltip message.</dd>
+<dt><strong><code>commands</code></strong></dt>
+<dd>Contextual menu commands for this component.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>A <code><a title="h2o_q.types.TextXl" href="types.html#h2o_q.types.TextXl">TextXl</a></code> instance.</p></div>
@@ -6906,18 +7083,21 @@ submission.</p>
 <pre><code class="python">def text_xl(
         content: str,
         tooltip: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
 ) -&gt; Component:
     &#34;&#34;&#34;Create extra-large sized text content.
 
     Args:
         content: The text content.
         tooltip: Tooltip message.
+        commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.TextXl` instance.
     &#34;&#34;&#34;
     return Component(text_xl=TextXl(
         content,
         tooltip,
+        commands,
     ))</code></pre>
 </details>
 </dd>
@@ -7608,6 +7788,7 @@ In other words, if a physical switch would work for the action, a Toggle is prob
 <li><code><a title="h2o_q.ui.list_item1_card" href="#h2o_q.ui.list_item1_card">list_item1_card</a></code></li>
 <li><code><a title="h2o_q.ui.mark" href="#h2o_q.ui.mark">mark</a></code></li>
 <li><code><a title="h2o_q.ui.markdown_card" href="#h2o_q.ui.markdown_card">markdown_card</a></code></li>
+<li><code><a title="h2o_q.ui.markup" href="#h2o_q.ui.markup">markup</a></code></li>
 <li><code><a title="h2o_q.ui.markup_card" href="#h2o_q.ui.markup_card">markup_card</a></code></li>
 <li><code><a title="h2o_q.ui.message_bar" href="#h2o_q.ui.message_bar">message_bar</a></code></li>
 <li><code><a title="h2o_q.ui.meta_card" href="#h2o_q.ui.meta_card">meta_card</a></code></li>
@@ -7638,6 +7819,7 @@ In other words, if a physical switch would work for the action, a Toggle is prob
 <li><code><a title="h2o_q.ui.tabs" href="#h2o_q.ui.tabs">tabs</a></code></li>
 <li><code><a title="h2o_q.ui.tall_gauge_stat_card" href="#h2o_q.ui.tall_gauge_stat_card">tall_gauge_stat_card</a></code></li>
 <li><code><a title="h2o_q.ui.tall_series_stat_card" href="#h2o_q.ui.tall_series_stat_card">tall_series_stat_card</a></code></li>
+<li><code><a title="h2o_q.ui.template" href="#h2o_q.ui.template">template</a></code></li>
 <li><code><a title="h2o_q.ui.template_card" href="#h2o_q.ui.template_card">template_card</a></code></li>
 <li><code><a title="h2o_q.ui.text" href="#h2o_q.ui.text">text</a></code></li>
 <li><code><a title="h2o_q.ui.text_l" href="#h2o_q.ui.text_l">text_l</a></code></li>

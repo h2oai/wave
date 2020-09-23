@@ -1088,12 +1088,12 @@ ui_table_cell_type <- function(
 #'
 #' @param name An identifying name for this column.
 #' @param label The text displayed on the column header.
-#' @param min_width The minimum width of this column.
-#' @param max_width The maximum width of this column.
+#' @param min_width The minimum width of this column, e.g. '50px'. Only `px` units are supported at this time.
+#' @param max_width The maximum width of this column, e.g. '100px'. Only `px` units are supported at this time.
 #' @param sortable Indicates whether the column is sortable.
 #' @param searchable Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
 #' @param filterable Indicates whether the contents of this column are displayed as filters in a dropdown.
-#' @param link Indicates whether the table cell should be displayed as a clickable link.
+#' @param link Indicates whether each cell in this column should be displayed as a clickable link.
 #' @param cell_type Defines how to render each cell in this column. Defaults to plain text.
 #' @return A TableColumn instance.
 ui_table_column <- function(
@@ -1169,7 +1169,7 @@ ui_table_row <- function(
 #' @param groupable True to allow group by feature.
 #' @param downloadable Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
-#' @param height The height of the table.
+#' @param height The height of the table, e.g. '400px', '50%', etc.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(

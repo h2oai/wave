@@ -95,6 +95,36 @@ analytical and decision-support applications.</p>
 realtime state synchronization between Python and web browsers.</p>
 <h1 id="change-log">Change Log</h1>
 <ul>
+<li><a href="https://github.com/h2oai/qd/releases/tag/v0.6.0">v0.6.0</a> - Sep 23, 2020<ul>
+<li>Added<ul>
+<li>Apps when launched now automatically use an available free port instead of <code>55556</code>.</li>
+<li>Client-side redirects to URLs and hashes using <code>meta_card.redirect</code>.</li>
+<li>Context menus inside forms: <code><a title="h2o_q.ui.text_xl" href="ui.html#h2o_q.ui.text_xl">text_xl()</a></code> and <code><a title="h2o_q.ui.text_l" href="ui.html#h2o_q.ui.text_l">text_l()</a></code> now support optional context menus.</li>
+<li>Plots now support specifying data values for predictable color encoding and legends.</li>
+<li><code><a title="h2o_q.ui.markup" href="ui.html#h2o_q.ui.markup">markup()</a></code> component for rendering HTML inline in forms.</li>
+<li><code><a title="h2o_q.ui.template" href="ui.html#h2o_q.ui.template">template()</a></code> component for rendering templated HTML inline in forms.</li>
+<li>The height of tables can now be controlled using the <code>height</code> attribute.</li>
+<li>Both sorting and group-by now work on the same table column if specified.</li>
+<li>Lots of examples on how to use <code><a title="h2o_q.ui.table" href="ui.html#h2o_q.ui.table">table()</a></code> sorting, grouping, search, download, etc.</li>
+<li>Ability to specify which column in a <code><a title="h2o_q.ui.table" href="ui.html#h2o_q.ui.table">table()</a></code> is the primary column, or disable altogether.</li>
+</ul>
+</li>
+<li>Changed<ul>
+<li><code><a title="h2o_q.ui.text" href="ui.html#h2o_q.ui.text">text()</a></code> now unconditionally allows embedded HTML tags.</li>
+<li>App host now defaults to <code>127.0.0.1</code> instead of <code>localhost</code>.</li>
+<li>Footer display in <code><a title="h2o_q.ui.table" href="ui.html#h2o_q.ui.table">table()</a></code> is now inferred from usage and displayed automatically.</li>
+<li>The <code>min_width</code> and <code>max_width</code> attributes for table columns are now strings (consistency).</li>
+</ul>
+</li>
+<li>Fixed<ul>
+<li>Background color rendering bug when page overflows after loading.</li>
+<li>Render tooltip properly on toolbar command buttons.</li>
+<li><code><a title="h2o_q.ui.table" href="ui.html#h2o_q.ui.table">table()</a></code> rendering bug: remove stray <code>0</code>.</li>
+<li>Python error stack trace, if any, is displayed on top of all other cards on page.</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="https://github.com/h2oai/qd/releases/tag/v0.5.0">v0.5.0</a> - Sep 18, 2020<ul>
 <li>Added<ul>
 <li>Example for controlling cards with tabs.</li>
@@ -705,6 +735,146 @@ def try_walk_through(cy: Cypress):
     cy.locate('feeling').clear().type('quirky')
     cy.locate('step3').click()
     cy.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
+
+
+listen('/demo', main)
+</code></pre>
+<h2 id="table">Table</h2>
+<p>Use a table to create master-detail views. This example demonstrates how to create a simple issue tracker.</p>
+<pre><code class="py">from h2o_q import Q, listen, ui
+from faker import Faker
+
+fake = Faker()
+
+_id = 0
+
+
+class Issue:
+    def __init__(self, text: str, status: str):
+        global _id
+        _id += 1
+        self.id = f'I{_id}'
+        self.text = text
+        self.status = status
+        self.views = 0
+
+
+# Create some issues
+issues = [Issue(text=fake.sentence(), status='Open') for i in range(12)]
+
+# Build a lookup of issues for convenience
+issue_lookup = {issue.id: issue for issue in issues}
+
+# Create columns for our issue table.
+columns = [
+    ui.table_column(name='text', label='Issue'),
+    ui.table_column(name='status', label='Status'),
+    ui.table_column(name='views', label='Views'),
+]
+
+
+def make_issue_table(allow_multiple_selection=False):
+    return ui.table(
+        name='issues',
+        columns=columns,
+        rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, str(issue.views)]) for issue in issues],
+        multiple=allow_multiple_selection
+    )
+
+
+async def edit_multiple(q: Q):
+    q.page['form'] = ui.form_card(
+        box='1 1 4 -1',
+        items=[
+            make_issue_table(allow_multiple_selection=True),  # This time, allow multiple selections
+            ui.buttons([
+                ui.button(name='reopen_issues', label='Reopen Selected', primary=True),
+                ui.button(name='close_issues', label='Close Selected', primary=True),
+                ui.button(name='back', label='Back to safety')
+            ]),
+        ]
+    )
+    await q.page.save()
+
+
+async def show_issues(q: Q):
+    q.page['form'] = ui.form_card(
+        box='1 1 4 -1',
+        items=[
+            make_issue_table(),
+            ui.buttons([ui.button(name='edit_multiple', label='Edit Multiple...', primary=True)]),
+        ]
+    )
+    await q.page.save()
+
+
+async def show_issue(q: Q, issue_id: str):
+    issue = issue_lookup[issue_id]
+    issue.views += 1
+
+    q.client.active_issue_id = issue_id
+
+    q.page['form'] = ui.form_card(
+        box='1 1 4 -1',
+        items=[
+            ui.text_xl(f'Issue {issue.id}'),
+            ui.text(issue.text),
+            ui.text_xs(f'({issue.views} views)'),
+            ui.buttons([
+                ui.button(
+                    name='close_issue' if issue.status == 'Open' else 'reopen_issue',
+                    label=&quot;Close Issue&quot; if issue.status == 'Open' else &quot;Reopen Issue&quot;,
+                    primary=True,
+                ),
+                ui.button(name='back', label='Back'),
+            ]),
+        ]
+    )
+
+    await q.page.save()
+
+
+async def close_issue(q: Q):
+    issue = issue_lookup[q.client.active_issue_id]
+    issue.status = 'Closed'
+    await show_issues(q)
+
+
+async def close_issues(q: Q):
+    for issue_id in q.args.issues:
+        issue = issue_lookup[issue_id]
+        issue.status = 'Closed'
+    await show_issues(q)
+
+
+async def reopen_issue(q: Q):
+    issue = issue_lookup[q.client.active_issue_id]
+    issue.status = 'Open'
+    await show_issues(q)
+
+
+async def reopen_issues(q: Q):
+    for issue_id in q.args.issues:
+        issue = issue_lookup[issue_id]
+        issue.status = 'Open'
+    await show_issues(q)
+
+
+async def main(q: Q):
+    if q.args.edit_multiple:
+        await edit_multiple(q)
+    elif q.args.reopen_issues:
+        await reopen_issues(q)
+    elif q.args.close_issues:
+        await close_issues(q)
+    elif q.args.reopen_issue:
+        await reopen_issue(q)
+    elif q.args.close_issue:
+        await close_issue(q)
+    elif q.args.issues:  # An issue was clicked on
+        await show_issue(q, q.args.issues[0])
+    else:
+        await show_issues(q)
 
 
 listen('/demo', main)
@@ -1546,6 +1716,10 @@ Image:
 
 ![Monty Python](https://upload.wikimedia.org/wikipedia/en/c/cb/Flyingcircus_2.jpg)
 
+Links:
+
+Here's a [link to an image](https://upload.wikimedia.org/wikipedia/en/c/cb/Flyingcircus_2.jpg).
+
 Table:
 
 | Column 1 | Column 2 | Column 3 |
@@ -2290,39 +2464,6 @@ page['example'] = ui.form_card(
 
 page.save()
 </code></pre>
-<h2 id="image">Image</h2>
-<p>Use an image card to display a base64-encoded image.</p>
-<pre><code class="py">from h2o_q import site, ui
-import io
-import base64
-import numpy as np
-import matplotlib.pyplot as plt
-
-np.random.seed(19680801)
-
-n = 25
-plt.figure(figsize=(3, 3))
-plt.scatter(
-    np.random.rand(n), np.random.rand(n),
-    s=(30 * np.random.rand(n)) ** 2,
-    c=np.random.rand(n),
-    alpha=0.5,
-)
-
-buf = io.BytesIO()
-plt.savefig(buf, format='png')
-buf.seek(0)
-image = base64.b64encode(buf.read()).decode('utf-8')
-
-page = site['/demo']
-page['example'] = ui.image_card(
-    box='1 1 3 5',
-    title='An image',
-    type='png',
-    image=image,
-)
-page.save()
-</code></pre>
 <h2 id="form-frame">Form / Frame</h2>
 <p>Use a frame component in a form card to display HTML content inline.</p>
 <pre><code class="py">from h2o_q import site, ui
@@ -2360,6 +2501,163 @@ page['example'] = ui.form_card(
     ]
 )
 
+page.save()
+</code></pre>
+<h2 id="form-menu">Form / Menu</h2>
+<p>Display context menus inside forms.</p>
+<pre><code class="py">import json
+from h2o_q import Q, listen, ui, data
+
+# Vega lite spec for a bar plot, defaults to linear scale.
+spec_linear_scale = json.dumps(dict(
+    mark='bar',
+    encoding=dict(
+        x=dict(field='a', type='ordinal'),
+        y=dict(field='b', type='quantitative')
+    )
+))
+
+# Vega lite spec for a bar plot, log scaled.
+spec_log_scale = json.dumps(dict(
+    mark='bar',
+    encoding=dict(
+        x=dict(field='a', type='ordinal'),
+        y=dict(field='b', type='quantitative', scale=dict(type='log'))
+    )
+))
+
+# Data for our plot.
+plot_data = data(fields=[&quot;a&quot;, &quot;b&quot;], rows=[
+    [&quot;A&quot;, 28], [&quot;B&quot;, 55], [&quot;C&quot;, 43],
+    [&quot;D&quot;, 91], [&quot;E&quot;, 81], [&quot;F&quot;, 53],
+    [&quot;G&quot;, 19], [&quot;H&quot;, 87], [&quot;I&quot;, 52]
+], pack=True)
+
+# Create a couple of context menu commands.
+log_scale_command = ui.command(
+    name='to_log_scale',
+    label='Log Scale',
+    icon='LineChart',
+)
+linear_scale_command = ui.command(
+    name='to_linear_scale',
+    label='Linear Scale',
+    icon='LineChart',
+)
+
+
+async def main(q: Q):
+    if q.client.plot_added:  # Have we already added a plot?
+        example = q.page['example']
+        if q.args.to_log_scale:
+            # Change to log scale
+            example.items[0].text_l.content = 'Plot (Log Scale)'
+            example.items[0].text_l.commands = [linear_scale_command]
+            example.items[1].vega_visualization.specification = spec_log_scale
+        else:
+            # Change to linear scale
+            example.items[0].text_l.content = 'Plot (Linear Scale)'
+            example.items[0].text_l.commands = [log_scale_command]
+            example.items[1].vega_visualization.specification = spec_linear_scale
+    else:  # Add a new plot
+        q.page['example'] = ui.form_card(
+            box='1 1 2 8',
+            items=[
+                ui.text_l(content='Plot (Linear Scale)', commands=[log_scale_command]),
+                ui.vega_visualization(specification=spec_linear_scale, data=plot_data, height='300px'),
+            ],
+        )
+        # Flag to indicate that we've added a plot
+        q.client.plot_added = True
+
+    await q.page.save()
+
+
+if __name__ == '__main__':
+    listen('/demo', main)
+</code></pre>
+<h2 id="form-template">Form / Template</h2>
+<p>Use a template component to render dynamic content using a HTML template.</p>
+<pre><code class="py">from h2o_q import site, pack, ui
+
+page = site['/demo']
+page.drop()
+
+menu = '''
+&lt;ol&gt;
+{{#each dishes}}
+&lt;li&gt;&lt;strong&gt;{{name}}&lt;/strong&gt; costs {{price}}&lt;/li&gt;
+{{/each}}
+&lt;/ol
+'''
+
+c = page.add('template_example', ui.form_card(
+    box=f'1 1 2 2',
+    items=[
+        ui.template(
+            content=menu,
+            data=pack(dict(dishes=[
+                dict(name='Spam', price='$2.00'),
+                dict(name='Ham', price='$3.45'),
+                dict(name='Eggs', price='$1.75'),
+            ]))
+        )
+    ]))
+page.save()
+</code></pre>
+<h2 id="form-markup">Form / Markup</h2>
+<p>Use a markup component to display formatted content using HTML.</p>
+<pre><code class="py">from h2o_q import site, ui
+
+page = site['/demo']
+
+menu = '''
+&lt;ol&gt;
+    &lt;li&gt;Spam&lt;/li&gt;
+    &lt;li&gt;Ham&lt;/li&gt;
+    &lt;li&gt;Eggs&lt;/li&gt;
+&lt;/ol&gt;
+'''
+
+page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[
+        ui.markup(content=menu)
+    ]
+)
+page.save()
+</code></pre>
+<h2 id="image">Image</h2>
+<p>Use an image card to display a base64-encoded image.</p>
+<pre><code class="py">from h2o_q import site, ui
+import io
+import base64
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(19680801)
+
+n = 25
+plt.figure(figsize=(3, 3))
+plt.scatter(
+    np.random.rand(n), np.random.rand(n),
+    s=(30 * np.random.rand(n)) ** 2,
+    c=np.random.rand(n),
+    alpha=0.5,
+)
+
+buf = io.BytesIO()
+plt.savefig(buf, format='png')
+buf.seek(0)
+image = base64.b64encode(buf.read()).decode('utf-8')
+
+page = site['/demo']
+page['example'] = ui.image_card(
+    box='1 1 3 5',
+    title='An image',
+    type='png',
+    image=image,
+)
 page.save()
 </code></pre>
 <h2 id="frame">Frame</h2>
@@ -2666,10 +2964,11 @@ page['example'] = ui.markup_card(
 )
 page.save()
 </code></pre>
-<h2 id="table">Table</h2>
-<p>Use a table to create master-detail views. This example demonstrates how to create a simple issue tracker.</p>
-<pre><code class="py">from h2o_q import Q, listen, ui
+<h2 id="table_1">Table</h2>
+<p>Use a table to display tabular data.</p>
+<pre><code class="py">import random
 from faker import Faker
+from h2o_q import Q, listen, ui
 
 fake = Faker()
 
@@ -2677,148 +2976,7 @@ _id = 0
 
 
 class Issue:
-    def __init__(self, text: str, status: str):
-        global _id
-        _id += 1
-        self.id = f'I{_id}'
-        self.text = text
-        self.status = status
-        self.views = 0
-
-
-# Create some issues
-issues = [Issue(text=fake.sentence(), status='Open') for i in range(12)]
-
-# Build a lookup of issues for convenience
-issue_lookup = {issue.id: issue for issue in issues}
-
-# Create columns for our issue table.
-columns = [
-    ui.table_column(name='text', label='Issue'),
-    ui.table_column(name='status', label='Status'),
-    ui.table_column(name='views', label='Views'),
-]
-
-
-def make_issue_table(allow_multiple_selection=False):
-    return ui.table(
-        name='issues',
-        columns=columns,
-        rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, str(issue.views)]) for issue in issues],
-        multiple=allow_multiple_selection,
-    )
-
-
-async def edit_multiple(q: Q):
-    q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
-        items=[
-            make_issue_table(allow_multiple_selection=True),  # This time, allow multiple selections
-            ui.buttons([
-                ui.button(name='reopen_issues', label='Reopen Selected', primary=True),
-                ui.button(name='close_issues', label='Close Selected', primary=True),
-                ui.button(name='back', label='Back to safety')
-            ]),
-        ]
-    )
-    await q.page.save()
-
-
-async def show_issues(q: Q):
-    q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
-        items=[
-            make_issue_table(),
-            ui.buttons([ui.button(name='edit_multiple', label='Edit Multiple...', primary=True)]),
-        ]
-    )
-    await q.page.save()
-
-
-async def show_issue(q: Q, issue_id: str):
-    issue = issue_lookup[issue_id]
-    issue.views += 1
-
-    q.client.active_issue_id = issue_id
-
-    q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
-        items=[
-            ui.text_xl(f'Issue {issue.id}'),
-            ui.text(issue.text),
-            ui.text_xs(f'({issue.views} views)'),
-            ui.buttons([
-                ui.button(
-                    name='close_issue' if issue.status == 'Open' else 'reopen_issue',
-                    label=&quot;Close Issue&quot; if issue.status == 'Open' else &quot;Reopen Issue&quot;,
-                    primary=True,
-                ),
-                ui.button(name='back', label='Back'),
-            ]),
-        ]
-    )
-
-    await q.page.save()
-
-
-async def close_issue(q: Q):
-    issue = issue_lookup[q.client.active_issue_id]
-    issue.status = 'Closed'
-    await show_issues(q)
-
-
-async def close_issues(q: Q):
-    for issue_id in q.args.issues:
-        issue = issue_lookup[issue_id]
-        issue.status = 'Closed'
-    await show_issues(q)
-
-
-async def reopen_issue(q: Q):
-    issue = issue_lookup[q.client.active_issue_id]
-    issue.status = 'Open'
-    await show_issues(q)
-
-
-async def reopen_issues(q: Q):
-    for issue_id in q.args.issues:
-        issue = issue_lookup[issue_id]
-        issue.status = 'Open'
-    await show_issues(q)
-
-
-async def main(q: Q):
-    if q.args.edit_multiple:
-        await edit_multiple(q)
-    elif q.args.reopen_issues:
-        await reopen_issues(q)
-    elif q.args.close_issues:
-        await close_issues(q)
-    elif q.args.reopen_issue:
-        await reopen_issue(q)
-    elif q.args.close_issue:
-        await close_issue(q)
-    elif q.args.issues:  # An issue was clicked on
-        await show_issue(q, q.args.issues[0])
-    else:
-        await show_issues(q)
-
-
-listen('/demo', main)
-</code></pre>
-<h2 id="datatable">Datatable</h2>
-<p>Use a datatable to show large datasets.
-Current features include sorting by column, filtering, searching, groupby, data export.</p>
-<pre><code class="py">from h2o_q import Q, listen, ui
-from faker import Faker
-
-fake = Faker()
-
-_id = 0
-
-
-class Issue:
-    def __init__(self, text: str, status: str, progress: int, done: bool, sth: str):
+    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str):
         global _id
         _id += 1
         self.id = f'I{_id}'
@@ -2826,37 +2984,353 @@ class Issue:
         self.status = status
         self.views = 0
         self.progress = progress
-        self.done = done
-        self.sth = sth
+        self.icon = icon
+        self.notifications = notifications
 
 
 # Create some issues
-issues = [Issue(text=fake.sentence(), status=('Closed' if i%2 == 0 else 'Open'), progress=0.5, done=('BoxCheckmarkSolid' if i%2 == 0 else 'BoxMultiplySolid'), sth=('Off' if i%2 == 0 else 'On')) for i in range(100)]
-
-# Build a lookup of issues for convenience
-issue_lookup = {issue.id: issue for issue in issues}
+issues = [
+    Issue(
+        text=fake.sentence(),
+        status=('Closed' if i % 2 == 0 else 'Open'),
+        progress=random.random(),
+        icon=('BoxCheckmarkSolid' if random.random() &gt; 0.5 else 'BoxMultiplySolid'),
+        notifications=('Off' if random.random() &gt; 0.5 else 'On')) for i in range(100)
+]
 
 # Create columns for our issue table.
 columns = [
-    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width=300),
+    ui.table_column(name='text', label='Issue', sortable=True, searchable=True, max_width='300'),
     ui.table_column(name='status', label='Status', filterable=True),
-    ui.table_column(name='sth', label='Something', filterable=True),
+    ui.table_column(name='notifications', label='Notifications', filterable=True),
     ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
     ui.table_column(name='views', label='Views', sortable=True),
     ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
 ]
 
+
 async def main(q: Q):
-  q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
-    ui.table(
-        name='issues',
-        groupable=True,
-        columns=columns,
-        rows=[ui.table_row(name=issue.id, cells=[issue.text, issue.status, issue.sth, issue.done, str(issue.views), issue.progress]) for issue in issues],
-    )
-    ]
-  )
-  await q.page.save()
+    q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
+        ui.table(
+            name='issues',
+            columns=columns,
+            rows=[ui.table_row(
+                name=issue.id,
+                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
+                issue in issues],
+            groupable=True,
+            downloadable=True,
+            resettable=True,
+            height='800px'
+        )
+    ])
+    await q.page.save()
+
+
+listen('/demo', main)
+</code></pre>
+<h2 id="table-sort">Table / Sort</h2>
+<p>Allow sorting a table by specific columns.</p>
+<pre><code class="py">import random
+from faker import Faker
+from h2o_q import Q, listen, ui
+
+fake = Faker()
+
+_id = 0
+
+
+class Issue:
+    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str):
+        global _id
+        _id += 1
+        self.id = f'I{_id}'
+        self.text = text
+        self.status = status
+        self.views = 0
+        self.progress = progress
+        self.icon = icon
+        self.notifications = notifications
+
+
+# Create some issues
+issues = [
+    Issue(
+        text=fake.sentence(),
+        status=('Closed' if i % 2 == 0 else 'Open'),
+        progress=random.random(),
+        icon=('BoxCheckmarkSolid' if random.random() &gt; 0.5 else 'BoxMultiplySolid'),
+        notifications=('Off' if random.random() &gt; 0.5 else 'On')) for i in range(100)
+]
+
+# Create columns for our issue table.
+columns = [
+    ui.table_column(name='text', label='Issue', sortable=True, ),
+    ui.table_column(name='status', label='Status'),
+    ui.table_column(name='notifications', label='Notifications'),
+    ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
+    ui.table_column(name='views', label='Views', sortable=True),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
+]
+
+
+async def main(q: Q):
+    q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
+        ui.table(
+            name='issues',
+            columns=columns,
+            rows=[ui.table_row(
+                name=issue.id,
+                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
+                issue in issues],
+        )
+    ])
+    await q.page.save()
+
+
+listen('/demo', main)
+</code></pre>
+<h2 id="table-search">Table / Search</h2>
+<p>Enable searching a table across specific columns.</p>
+<pre><code class="py">import random
+from faker import Faker
+from h2o_q import Q, listen, ui
+
+fake = Faker()
+
+_id = 0
+
+
+class Issue:
+    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str):
+        global _id
+        _id += 1
+        self.id = f'I{_id}'
+        self.text = text
+        self.status = status
+        self.views = 0
+        self.progress = progress
+        self.icon = icon
+        self.notifications = notifications
+
+
+# Create some issues
+issues = [
+    Issue(
+        text=fake.sentence(),
+        status=('Closed' if i % 2 == 0 else 'Open'),
+        progress=random.random(),
+        icon=('BoxCheckmarkSolid' if random.random() &gt; 0.5 else 'BoxMultiplySolid'),
+        notifications=('Off' if random.random() &gt; 0.5 else 'On')) for i in range(100)
+]
+
+# Create columns for our issue table.
+columns = [
+    ui.table_column(name='text', label='Issue', searchable=True),
+    ui.table_column(name='status', label='Status'),
+    ui.table_column(name='notifications', label='Notifications'),
+    ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
+    ui.table_column(name='views', label='Views'),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
+]
+
+
+async def main(q: Q):
+    q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
+        ui.table(
+            name='issues',
+            columns=columns,
+            rows=[ui.table_row(
+                name=issue.id,
+                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
+                issue in issues],
+        )
+    ])
+    await q.page.save()
+
+
+listen('/demo', main)
+</code></pre>
+<h2 id="table-filter">Table / Filter</h2>
+<p>Enable filtering values for specific columns.</p>
+<pre><code class="py">import random
+from faker import Faker
+from h2o_q import Q, listen, ui
+
+fake = Faker()
+
+_id = 0
+
+
+class Issue:
+    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str):
+        global _id
+        _id += 1
+        self.id = f'I{_id}'
+        self.text = text
+        self.status = status
+        self.views = 0
+        self.progress = progress
+        self.icon = icon
+        self.notifications = notifications
+
+
+# Create some issues
+issues = [
+    Issue(
+        text=fake.sentence(),
+        status=('Closed' if i % 2 == 0 else 'Open'),
+        progress=random.random(),
+        icon=('BoxCheckmarkSolid' if random.random() &gt; 0.5 else 'BoxMultiplySolid'),
+        notifications=('Off' if random.random() &gt; 0.5 else 'On')) for i in range(100)
+]
+
+# Create columns for our issue table.
+columns = [
+    ui.table_column(name='text', label='Issue'),
+    ui.table_column(name='status', label='Status', filterable=True),
+    ui.table_column(name='notifications', label='Notifications', filterable=True),
+    ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
+    ui.table_column(name='views', label='Views'),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
+]
+
+
+async def main(q: Q):
+    q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
+        ui.table(
+            name='issues',
+            columns=columns,
+            rows=[ui.table_row(
+                name=issue.id,
+                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
+                issue in issues]
+        )
+    ])
+    await q.page.save()
+
+
+listen('/demo', main)
+</code></pre>
+<h2 id="table-download">Table / Download</h2>
+<p>Allow downloading a table's data as CSV file.</p>
+<pre><code class="py">import random
+from faker import Faker
+from h2o_q import Q, listen, ui
+
+fake = Faker()
+
+_id = 0
+
+
+class Issue:
+    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str):
+        global _id
+        _id += 1
+        self.id = f'I{_id}'
+        self.text = text
+        self.status = status
+        self.views = 0
+        self.progress = progress
+        self.icon = icon
+        self.notifications = notifications
+
+
+# Create some issues
+issues = [
+    Issue(
+        text=fake.sentence(),
+        status=('Closed' if i % 2 == 0 else 'Open'),
+        progress=random.random(),
+        icon=('BoxCheckmarkSolid' if random.random() &gt; 0.5 else 'BoxMultiplySolid'),
+        notifications=('Off' if random.random() &gt; 0.5 else 'On')) for i in range(100)
+]
+
+# Create columns for our issue table.
+columns = [
+    ui.table_column(name='text', label='Issue'),
+    ui.table_column(name='status', label='Status'),
+    ui.table_column(name='notifications', label='Notifications'),
+    ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
+    ui.table_column(name='views', label='Views'),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
+]
+
+
+async def main(q: Q):
+    q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
+        ui.table(
+            name='issues',
+            columns=columns,
+            rows=[ui.table_row(
+                name=issue.id,
+                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
+                issue in issues],
+            downloadable=True,
+        )
+    ])
+    await q.page.save()
+
+
+listen('/demo', main)
+</code></pre>
+<h2 id="table-group-by">Table / Group by</h2>
+<p>Allow grouping a table by column values.</p>
+<pre><code class="py">import random
+from faker import Faker
+from h2o_q import Q, listen, ui
+
+fake = Faker()
+
+_id = 0
+
+
+class Issue:
+    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str):
+        global _id
+        _id += 1
+        self.id = f'I{_id}'
+        self.text = text
+        self.status = status
+        self.views = 0
+        self.progress = progress
+        self.icon = icon
+        self.notifications = notifications
+
+
+# Create some issues
+issues = [
+    Issue(
+        text=fake.sentence(),
+        status=('Closed' if i % 2 == 0 else 'Open'),
+        progress=random.random(),
+        icon=('BoxCheckmarkSolid' if random.random() &gt; 0.5 else 'BoxMultiplySolid'),
+        notifications=('Off' if random.random() &gt; 0.5 else 'On')) for i in range(100)
+]
+
+# Create columns for our issue table.
+columns = [
+    ui.table_column(name='text', label='Issue'),
+    ui.table_column(name='status', label='Status'),
+    ui.table_column(name='notifications', label='Notifications'),
+    ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
+    ui.table_column(name='views', label='Views'),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
+]
+
+
+async def main(q: Q):
+    q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
+        ui.table(
+            name='issues',
+            columns=columns,
+            rows=[ui.table_row(
+                name=issue.id,
+                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
+                issue in issues],
+            groupable=True,
+        )])
+    await q.page.save()
 
 
 listen('/demo', main)
@@ -2957,7 +3431,7 @@ page['tabs'] = ui.tab_card(
 
 page.save()
 </code></pre>
-<h2 id="tabs">Tabs</h2>
+<h2 id="tabs-navigation">Tabs / Navigation</h2>
 <p>Navigate between two or more tabs.
 Delete the cards when switching between tabs.</p>
 <pre><code class="py">from h2o_q import Q, listen, ui
@@ -4903,6 +5377,33 @@ page['example'] = ui.markdown_card(
 
 page.save()
 </code></pre>
+<h2 id="meta-redirect">Meta / Redirect</h2>
+<p>Redirect the page to a new URL or hash.</p>
+<pre><code class="py">import time
+
+from h2o_q import site, ui
+
+page = site['/demo']
+
+page['meta'] = ui.meta_card(box='')
+
+page['example'] = ui.markdown_card(
+    box='1 1 2 2',
+    title='Redirect a page',
+    content='This page should redirect to Wikipedia in a few seconds. Wait for it...',
+)
+page.save()
+
+time.sleep(3)
+# Redirect to a hash.
+page['meta'].redirect = '#widgets'
+page.save()
+
+time.sleep(3)
+# Redirect to a URL.
+page['meta'].redirect = 'https://www.wikipedia.org'
+page.save()
+</code></pre>
 <h2 id="mode-broadcast-global">Mode / Broadcast / Global</h2>
 <p>Launch the server in broadcast mode to synchronize browser state across users. Global variables can be used to manage state.
 <a href="/demo">Open this link</a> in multiple browsers and watch them synchronize in realtime.</p>
@@ -5364,6 +5865,7 @@ from .test import cypress, Cypress</code></pre>
 <li><a href="#to-do-list-app">To-do List App</a></li>
 <li><a href="#breadcrumbs">Breadcrumbs</a></li>
 <li><a href="#wizard">Wizard</a></li>
+<li><a href="#table">Table</a></li>
 <li><a href="#stepper">Stepper</a></li>
 <li><a href="#stat-small">Stat / Small</a></li>
 <li><a href="#stat-large">Stat / Large</a></li>
@@ -5408,9 +5910,12 @@ from .test import cypress, Cypress</code></pre>
 <li><a href="#form-tabs">Form / Tabs</a></li>
 <li><a href="#form-separator">Form / Separator</a></li>
 <li><a href="#form-file-upload">Form / File Upload</a></li>
-<li><a href="#image">Image</a></li>
 <li><a href="#form-frame">Form / Frame</a></li>
 <li><a href="#form-frame-path">Form / Frame / Path</a></li>
+<li><a href="#form-menu">Form / Menu</a></li>
+<li><a href="#form-template">Form / Template</a></li>
+<li><a href="#form-markup">Form / Markup</a></li>
+<li><a href="#image">Image</a></li>
 <li><a href="#frame">Frame</a></li>
 <li><a href="#frame-path">Frame / Path</a></li>
 <li><a href="#lists">Lists</a></li>
@@ -5422,13 +5927,17 @@ from .test import cypress, Cypress</code></pre>
 <li><a href="#markdown">Markdown</a></li>
 <li><a href="#markdown-data">Markdown / Data</a></li>
 <li><a href="#markup">Markup</a></li>
-<li><a href="#table">Table</a></li>
-<li><a href="#datatable">Datatable</a></li>
+<li><a href="#table_1">Table</a></li>
+<li><a href="#table-sort">Table / Sort</a></li>
+<li><a href="#table-search">Table / Search</a></li>
+<li><a href="#table-filter">Table / Filter</a></li>
+<li><a href="#table-download">Table / Download</a></li>
+<li><a href="#table-group-by">Table / Group by</a></li>
 <li><a href="#nav">Nav</a></li>
 <li><a href="#toolbar">Toolbar</a></li>
 <li><a href="#tab">Tab</a></li>
 <li><a href="#tab-links">Tab / Links</a></li>
-<li><a href="#tabs">Tabs</a></li>
+<li><a href="#tabs-navigation">Tabs / Navigation</a></li>
 <li><a href="#header">Header</a></li>
 <li><a href="#routing">Routing</a></li>
 <li><a href="#routing-toolbar">Routing / Toolbar</a></li>
@@ -5500,6 +6009,7 @@ from .test import cypress, Cypress</code></pre>
 <li><a href="#meta-title">Meta / Title</a></li>
 <li><a href="#meta-notification">Meta / Notification</a></li>
 <li><a href="#meta-refresh">Meta / Refresh</a></li>
+<li><a href="#meta-redirect">Meta / Redirect</a></li>
 <li><a href="#mode-broadcast-global">Mode / Broadcast / Global</a></li>
 <li><a href="#mode-broadcast">Mode / Broadcast</a></li>
 <li><a href="#mode-multicast">Mode / Multicast</a></li>

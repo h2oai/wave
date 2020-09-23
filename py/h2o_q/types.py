@@ -2004,9 +2004,9 @@ class TableColumn:
         self.label = label
         """The text displayed on the column header."""
         self.min_width = min_width
-        """The minimum width of this column."""
+        """The minimum width of this column, e.g. '50px'. Only `px` units are supported at this time."""
         self.max_width = max_width
-        """The maximum width of this column."""
+        """The maximum width of this column, e.g. '100px'. Only `px` units are supported at this time."""
         self.sortable = sortable
         """Indicates whether the column is sortable."""
         self.searchable = searchable
@@ -2014,7 +2014,7 @@ class TableColumn:
         self.filterable = filterable
         """Indicates whether the contents of this column are displayed as filters in a dropdown."""
         self.link = link
-        """Indicates whether the table cell should be displayed as a clickable link."""
+        """Indicates whether each cell in this column should be displayed as a clickable link."""
         self.cell_type = cell_type
         """Defines how to render each cell in this column. Defaults to plain text."""
 
@@ -2159,7 +2159,7 @@ class Table:
         self.resettable = resettable
         """Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False."""
         self.height = height
-        """The height of the table."""
+        """The height of the table, e.g. '400px', '50%', etc."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 

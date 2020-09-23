@@ -1008,12 +1008,12 @@ def table_column(
     Args:
         name: An identifying name for this column.
         label: The text displayed on the column header.
-        min_width: The minimum width of this column.
-        max_width: The maximum width of this column.
+        min_width: The minimum width of this column, e.g. '50px'. Only `px` units are supported at this time.
+        max_width: The maximum width of this column, e.g. '100px'. Only `px` units are supported at this time.
         sortable: Indicates whether the column is sortable.
         searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
         filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
-        link: Indicates whether the table cell should be displayed as a clickable link.
+        link: Indicates whether each cell in this column should be displayed as a clickable link.
         cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_q.types.TableColumn` instance.
@@ -1084,7 +1084,7 @@ def table(
         groupable: True to allow group by feature.
         downloadable: Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
-        height: The height of the table.
+        height: The height of the table, e.g. '400px', '50%', etc.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.Table` instance.

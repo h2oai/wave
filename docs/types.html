@@ -418,11 +418,14 @@ class TextXl:
             self,
             content: str,
             tooltip: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.content = content
         &#34;&#34;&#34;The text content.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;Tooltip message.&#34;&#34;&#34;
+        self.commands = commands
+        &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -431,6 +434,7 @@ class TextXl:
         return _dump(
             content=self.content,
             tooltip=self.tooltip,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -440,11 +444,14 @@ class TextXl:
         if __d_content is None:
             raise ValueError(&#39;TextXl.content is required.&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        __d_commands: Any = __d.get(&#39;commands&#39;)
         content: str = __d_content
         tooltip: Optional[str] = __d_tooltip
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TextXl(
             content,
             tooltip,
+            commands,
         )
 
 
@@ -455,11 +462,14 @@ class TextL:
             self,
             content: str,
             tooltip: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.content = content
         &#34;&#34;&#34;The text content.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;Tooltip message.&#34;&#34;&#34;
+        self.commands = commands
+        &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -468,6 +478,7 @@ class TextL:
         return _dump(
             content=self.content,
             tooltip=self.tooltip,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -477,11 +488,14 @@ class TextL:
         if __d_content is None:
             raise ValueError(&#39;TextL.content is required.&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        __d_commands: Any = __d.get(&#39;commands&#39;)
         content: str = __d_content
         tooltip: Optional[str] = __d_tooltip
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TextL(
             content,
             tooltip,
+            commands,
         )
 
 
@@ -2067,11 +2081,12 @@ class TableColumn:
             self,
             name: str,
             label: str,
-            min_width: Optional[int] = None,
-            max_width: Optional[int] = None,
+            min_width: Optional[str] = None,
+            max_width: Optional[str] = None,
             sortable: Optional[bool] = None,
             searchable: Optional[bool] = None,
             filterable: Optional[bool] = None,
+            link: Optional[bool] = None,
             cell_type: Optional[TableCellType] = None,
     ):
         self.name = name
@@ -2079,15 +2094,17 @@ class TableColumn:
         self.label = label
         &#34;&#34;&#34;The text displayed on the column header.&#34;&#34;&#34;
         self.min_width = min_width
-        &#34;&#34;&#34;The minimum width of this column.&#34;&#34;&#34;
+        &#34;&#34;&#34;The minimum width of this column, e.g. &#39;50px&#39;. Only `px` units are supported at this time.&#34;&#34;&#34;
         self.max_width = max_width
-        &#34;&#34;&#34;The maximum width of this column.&#34;&#34;&#34;
+        &#34;&#34;&#34;The maximum width of this column, e.g. &#39;100px&#39;. Only `px` units are supported at this time.&#34;&#34;&#34;
         self.sortable = sortable
         &#34;&#34;&#34;Indicates whether the column is sortable.&#34;&#34;&#34;
         self.searchable = searchable
         &#34;&#34;&#34;Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.&#34;&#34;&#34;
         self.filterable = filterable
         &#34;&#34;&#34;Indicates whether the contents of this column are displayed as filters in a dropdown.&#34;&#34;&#34;
+        self.link = link
+        &#34;&#34;&#34;Indicates whether each cell in this column should be displayed as a clickable link.&#34;&#34;&#34;
         self.cell_type = cell_type
         &#34;&#34;&#34;Defines how to render each cell in this column. Defaults to plain text.&#34;&#34;&#34;
 
@@ -2105,6 +2122,7 @@ class TableColumn:
             sortable=self.sortable,
             searchable=self.searchable,
             filterable=self.filterable,
+            link=self.link,
             cell_type=None if self.cell_type is None else self.cell_type.dump(),
         )
 
@@ -2122,14 +2140,16 @@ class TableColumn:
         __d_sortable: Any = __d.get(&#39;sortable&#39;)
         __d_searchable: Any = __d.get(&#39;searchable&#39;)
         __d_filterable: Any = __d.get(&#39;filterable&#39;)
+        __d_link: Any = __d.get(&#39;link&#39;)
         __d_cell_type: Any = __d.get(&#39;cell_type&#39;)
         name: str = __d_name
         label: str = __d_label
-        min_width: Optional[int] = __d_min_width
-        max_width: Optional[int] = __d_max_width
+        min_width: Optional[str] = __d_min_width
+        max_width: Optional[str] = __d_max_width
         sortable: Optional[bool] = __d_sortable
         searchable: Optional[bool] = __d_searchable
         filterable: Optional[bool] = __d_filterable
+        link: Optional[bool] = __d_link
         cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         return TableColumn(
             name,
@@ -2139,6 +2159,7 @@ class TableColumn:
             sortable,
             searchable,
             filterable,
+            link,
             cell_type,
         )
 
@@ -2208,6 +2229,9 @@ class Table:
             rows: List[TableRow],
             multiple: Optional[bool] = None,
             groupable: Optional[bool] = None,
+            downloadable: Optional[bool] = None,
+            resettable: Optional[bool] = None,
+            height: Optional[str] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2220,6 +2244,12 @@ class Table:
         &#34;&#34;&#34;True to allow multiple rows to be selected.&#34;&#34;&#34;
         self.groupable = groupable
         &#34;&#34;&#34;True to allow group by feature.&#34;&#34;&#34;
+        self.downloadable = downloadable
+        &#34;&#34;&#34;Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.&#34;&#34;&#34;
+        self.resettable = resettable
+        &#34;&#34;&#34;Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.&#34;&#34;&#34;
+        self.height = height
+        &#34;&#34;&#34;The height of the table, e.g. &#39;400px&#39;, &#39;50%&#39;, etc.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -2237,6 +2267,9 @@ class Table:
             rows=[__e.dump() for __e in self.rows],
             multiple=self.multiple,
             groupable=self.groupable,
+            downloadable=self.downloadable,
+            resettable=self.resettable,
+            height=self.height,
             tooltip=self.tooltip,
         )
 
@@ -2254,12 +2287,18 @@ class Table:
             raise ValueError(&#39;Table.rows is required.&#39;)
         __d_multiple: Any = __d.get(&#39;multiple&#39;)
         __d_groupable: Any = __d.get(&#39;groupable&#39;)
+        __d_downloadable: Any = __d.get(&#39;downloadable&#39;)
+        __d_resettable: Any = __d.get(&#39;resettable&#39;)
+        __d_height: Any = __d.get(&#39;height&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
         multiple: Optional[bool] = __d_multiple
         groupable: Optional[bool] = __d_groupable
+        downloadable: Optional[bool] = __d_downloadable
+        resettable: Optional[bool] = __d_resettable
+        height: Optional[str] = __d_height
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
@@ -2267,6 +2306,9 @@ class Table:
             rows,
             multiple,
             groupable,
+            downloadable,
+            resettable,
+            height,
             tooltip,
         )
 
@@ -2521,6 +2563,73 @@ class Frame:
             content,
             width,
             height,
+        )
+
+
+class Markup:
+    &#34;&#34;&#34;Render HTML content.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            content: str,
+    ):
+        self.content = content
+        &#34;&#34;&#34;The HTML content.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.content is None:
+            raise ValueError(&#39;Markup.content is required.&#39;)
+        return _dump(
+            content=self.content,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Markup&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_content: Any = __d.get(&#39;content&#39;)
+        if __d_content is None:
+            raise ValueError(&#39;Markup.content is required.&#39;)
+        content: str = __d_content
+        return Markup(
+            content,
+        )
+
+
+class Template:
+    &#34;&#34;&#34;Render dynamic content using a HTML template.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            content: str,
+            data: Optional[PackedRecord] = None,
+    ):
+        self.content = content
+        &#34;&#34;&#34;The Handlebars template. https://handlebarsjs.com/guide/&#34;&#34;&#34;
+        self.data = data
+        &#34;&#34;&#34;Data for the Handlebars template&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.content is None:
+            raise ValueError(&#39;Template.content is required.&#39;)
+        return _dump(
+            content=self.content,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Template&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_content: Any = __d.get(&#39;content&#39;)
+        if __d_content is None:
+            raise ValueError(&#39;Template.content is required.&#39;)
+        __d_data: Any = __d.get(&#39;data&#39;)
+        content: str = __d_content
+        data: Optional[PackedRecord] = __d_data
+        return Template(
+            content,
+            data,
         )
 
 
@@ -2820,6 +2929,7 @@ class Mark:
             y_title: Optional[str] = None,
             color: Optional[str] = None,
             color_range: Optional[str] = None,
+            color_domain: Optional[List[str]] = None,
             shape: Optional[str] = None,
             shape_range: Optional[str] = None,
             size: Optional[Value] = None,
@@ -2898,6 +3008,8 @@ class Mark:
         &#34;&#34;&#34;Mark color field or value.&#34;&#34;&#34;
         self.color_range = color_range
         &#34;&#34;&#34;Mark color range for multi-series plots. A string containing space-separated colors, e.g. `&#39;#fee8c8 #fdbb84 #e34a33&#39;`&#34;&#34;&#34;
+        self.color_domain = color_domain
+        &#34;&#34;&#34;The unique values in the data (labels or categories or classes) to map colors to, e.g. `[&#39;high&#39;, &#39;medium&#39;, &#39;low&#39;]`. If this is not provided, the unique values are automatically inferred from the `color` attribute.&#34;&#34;&#34;
         self.shape = shape
         &#34;&#34;&#34;Mark shape field or value for `point` mark types. Possible values are &#39;circle&#39;, &#39;square&#39;, &#39;bowtie&#39;, &#39;diamond&#39;, &#39;hexagon&#39;, &#39;triangle&#39;, &#39;triangle-down&#39;, &#39;cross&#39;, &#39;tick&#39;, &#39;plus&#39;, &#39;hyphen&#39;, &#39;line&#39;.&#34;&#34;&#34;
         self.shape_range = shape_range
@@ -2990,6 +3102,7 @@ class Mark:
             y_title=self.y_title,
             color=self.color,
             color_range=self.color_range,
+            color_domain=self.color_domain,
             shape=self.shape,
             shape_range=self.shape_range,
             size=self.size,
@@ -3050,6 +3163,7 @@ class Mark:
         __d_y_title: Any = __d.get(&#39;y_title&#39;)
         __d_color: Any = __d.get(&#39;color&#39;)
         __d_color_range: Any = __d.get(&#39;color_range&#39;)
+        __d_color_domain: Any = __d.get(&#39;color_domain&#39;)
         __d_shape: Any = __d.get(&#39;shape&#39;)
         __d_shape_range: Any = __d.get(&#39;shape_range&#39;)
         __d_size: Any = __d.get(&#39;size&#39;)
@@ -3105,6 +3219,7 @@ class Mark:
         y_title: Optional[str] = __d_y_title
         color: Optional[str] = __d_color
         color_range: Optional[str] = __d_color_range
+        color_domain: Optional[List[str]] = __d_color_domain
         shape: Optional[str] = __d_shape
         shape_range: Optional[str] = __d_shape_range
         size: Optional[Value] = __d_size
@@ -3161,6 +3276,7 @@ class Mark:
             y_title,
             color,
             color_range,
+            color_domain,
             shape,
             shape_range,
             size,
@@ -3367,6 +3483,8 @@ class Component:
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
             frame: Optional[Frame] = None,
+            markup: Optional[Markup] = None,
+            template: Optional[Template] = None,
             picker: Optional[Picker] = None,
             range_slider: Optional[RangeSlider] = None,
             stepper: Optional[Stepper] = None,
@@ -3431,6 +3549,10 @@ class Component:
         &#34;&#34;&#34;Expander.&#34;&#34;&#34;
         self.frame = frame
         &#34;&#34;&#34;Frame.&#34;&#34;&#34;
+        self.markup = markup
+        &#34;&#34;&#34;Markup&#34;&#34;&#34;
+        self.template = template
+        &#34;&#34;&#34;Template&#34;&#34;&#34;
         self.picker = picker
         &#34;&#34;&#34;Picker.&#34;&#34;&#34;
         self.range_slider = range_slider
@@ -3474,6 +3596,8 @@ class Component:
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
             frame=None if self.frame is None else self.frame.dump(),
+            markup=None if self.markup is None else self.markup.dump(),
+            template=None if self.template is None else self.template.dump(),
             picker=None if self.picker is None else self.picker.dump(),
             range_slider=None if self.range_slider is None else self.range_slider.dump(),
             stepper=None if self.stepper is None else self.stepper.dump(),
@@ -3513,6 +3637,8 @@ class Component:
         __d_tabs: Any = __d.get(&#39;tabs&#39;)
         __d_expander: Any = __d.get(&#39;expander&#39;)
         __d_frame: Any = __d.get(&#39;frame&#39;)
+        __d_markup: Any = __d.get(&#39;markup&#39;)
+        __d_template: Any = __d.get(&#39;template&#39;)
         __d_picker: Any = __d.get(&#39;picker&#39;)
         __d_range_slider: Any = __d.get(&#39;range_slider&#39;)
         __d_stepper: Any = __d.get(&#39;stepper&#39;)
@@ -3547,6 +3673,8 @@ class Component:
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
+        markup: Optional[Markup] = None if __d_markup is None else Markup.load(__d_markup)
+        template: Optional[Template] = None if __d_template is None else Template.load(__d_template)
         picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
         range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
         stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
@@ -3582,6 +3710,8 @@ class Component:
             tabs,
             expander,
             frame,
+            markup,
+            template,
             picker,
             range_slider,
             stepper,
@@ -4544,6 +4674,7 @@ class MetaCard:
             title: Optional[str] = None,
             refresh: Optional[int] = None,
             notification: Optional[str] = None,
+            redirect: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -4554,6 +4685,8 @@ class MetaCard:
         &#34;&#34;&#34;Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).&#34;&#34;&#34;
         self.notification = notification
         &#34;&#34;&#34;Display a desktop notification to the user.&#34;&#34;&#34;
+        self.redirect = redirect
+        &#34;&#34;&#34;Redirect the page to a new URL.&#34;&#34;&#34;
         self.commands = commands
         &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
 
@@ -4567,6 +4700,7 @@ class MetaCard:
             title=self.title,
             refresh=self.refresh,
             notification=self.notification,
+            redirect=self.redirect,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4579,17 +4713,20 @@ class MetaCard:
         __d_title: Any = __d.get(&#39;title&#39;)
         __d_refresh: Any = __d.get(&#39;refresh&#39;)
         __d_notification: Any = __d.get(&#39;notification&#39;)
+        __d_redirect: Any = __d.get(&#39;redirect&#39;)
         __d_commands: Any = __d.get(&#39;commands&#39;)
         box: str = __d_box
         title: Optional[str] = __d_title
         refresh: Optional[int] = __d_refresh
         notification: Optional[str] = __d_notification
+        redirect: Optional[str] = __d_redirect
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
             title,
             refresh,
             notification,
+            redirect,
             commands,
         )
 
@@ -7752,7 +7889,7 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
 </dd>
 <dt id="h2o_q.types.Component"><code class="flex name class">
 <span>class <span class="ident">Component</span></span>
-<span>(</span><span>text: Union[<a title="h2o_q.types.Text" href="#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="#h2o_q.types.Frame">Frame</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="#h2o_q.types.Stepper">Stepper</a>, NoneType] = None, visualization: Union[<a title="h2o_q.types.Visualization" href="#h2o_q.types.Visualization">Visualization</a>, NoneType] = None, vega_visualization: Union[<a title="h2o_q.types.VegaVisualization" href="#h2o_q.types.VegaVisualization">VegaVisualization</a>, NoneType] = None)</span>
+<span>(</span><span>text: Union[<a title="h2o_q.types.Text" href="#h2o_q.types.Text">Text</a>, NoneType] = None, text_xl: Union[<a title="h2o_q.types.TextXl" href="#h2o_q.types.TextXl">TextXl</a>, NoneType] = None, text_l: Union[<a title="h2o_q.types.TextL" href="#h2o_q.types.TextL">TextL</a>, NoneType] = None, text_m: Union[<a title="h2o_q.types.TextM" href="#h2o_q.types.TextM">TextM</a>, NoneType] = None, text_s: Union[<a title="h2o_q.types.TextS" href="#h2o_q.types.TextS">TextS</a>, NoneType] = None, text_xs: Union[<a title="h2o_q.types.TextXs" href="#h2o_q.types.TextXs">TextXs</a>, NoneType] = None, label: Union[<a title="h2o_q.types.Label" href="#h2o_q.types.Label">Label</a>, NoneType] = None, separator: Union[<a title="h2o_q.types.Separator" href="#h2o_q.types.Separator">Separator</a>, NoneType] = None, progress: Union[<a title="h2o_q.types.Progress" href="#h2o_q.types.Progress">Progress</a>, NoneType] = None, message_bar: Union[<a title="h2o_q.types.MessageBar" href="#h2o_q.types.MessageBar">MessageBar</a>, NoneType] = None, textbox: Union[<a title="h2o_q.types.Textbox" href="#h2o_q.types.Textbox">Textbox</a>, NoneType] = None, checkbox: Union[<a title="h2o_q.types.Checkbox" href="#h2o_q.types.Checkbox">Checkbox</a>, NoneType] = None, toggle: Union[<a title="h2o_q.types.Toggle" href="#h2o_q.types.Toggle">Toggle</a>, NoneType] = None, choice_group: Union[<a title="h2o_q.types.ChoiceGroup" href="#h2o_q.types.ChoiceGroup">ChoiceGroup</a>, NoneType] = None, checklist: Union[<a title="h2o_q.types.Checklist" href="#h2o_q.types.Checklist">Checklist</a>, NoneType] = None, dropdown: Union[<a title="h2o_q.types.Dropdown" href="#h2o_q.types.Dropdown">Dropdown</a>, NoneType] = None, combobox: Union[<a title="h2o_q.types.Combobox" href="#h2o_q.types.Combobox">Combobox</a>, NoneType] = None, slider: Union[<a title="h2o_q.types.Slider" href="#h2o_q.types.Slider">Slider</a>, NoneType] = None, spinbox: Union[<a title="h2o_q.types.Spinbox" href="#h2o_q.types.Spinbox">Spinbox</a>, NoneType] = None, date_picker: Union[<a title="h2o_q.types.DatePicker" href="#h2o_q.types.DatePicker">DatePicker</a>, NoneType] = None, color_picker: Union[<a title="h2o_q.types.ColorPicker" href="#h2o_q.types.ColorPicker">ColorPicker</a>, NoneType] = None, button: Union[<a title="h2o_q.types.Button" href="#h2o_q.types.Button">Button</a>, NoneType] = None, buttons: Union[<a title="h2o_q.types.Buttons" href="#h2o_q.types.Buttons">Buttons</a>, NoneType] = None, file_upload: Union[<a title="h2o_q.types.FileUpload" href="#h2o_q.types.FileUpload">FileUpload</a>, NoneType] = None, table: Union[<a title="h2o_q.types.Table" href="#h2o_q.types.Table">Table</a>, NoneType] = None, link: Union[<a title="h2o_q.types.Link" href="#h2o_q.types.Link">Link</a>, NoneType] = None, tabs: Union[<a title="h2o_q.types.Tabs" href="#h2o_q.types.Tabs">Tabs</a>, NoneType] = None, expander: Union[<a title="h2o_q.types.Expander" href="#h2o_q.types.Expander">Expander</a>, NoneType] = None, frame: Union[<a title="h2o_q.types.Frame" href="#h2o_q.types.Frame">Frame</a>, NoneType] = None, markup: Union[<a title="h2o_q.types.Markup" href="#h2o_q.types.Markup">Markup</a>, NoneType] = None, template: Union[<a title="h2o_q.types.Template" href="#h2o_q.types.Template">Template</a>, NoneType] = None, picker: Union[<a title="h2o_q.types.Picker" href="#h2o_q.types.Picker">Picker</a>, NoneType] = None, range_slider: Union[<a title="h2o_q.types.RangeSlider" href="#h2o_q.types.RangeSlider">RangeSlider</a>, NoneType] = None, stepper: Union[<a title="h2o_q.types.Stepper" href="#h2o_q.types.Stepper">Stepper</a>, NoneType] = None, visualization: Union[<a title="h2o_q.types.Visualization" href="#h2o_q.types.Visualization">Visualization</a>, NoneType] = None, vega_visualization: Union[<a title="h2o_q.types.VegaVisualization" href="#h2o_q.types.VegaVisualization">VegaVisualization</a>, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a component.</p></div>
@@ -7794,6 +7931,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             tabs: Optional[Tabs] = None,
             expander: Optional[Expander] = None,
             frame: Optional[Frame] = None,
+            markup: Optional[Markup] = None,
+            template: Optional[Template] = None,
             picker: Optional[Picker] = None,
             range_slider: Optional[RangeSlider] = None,
             stepper: Optional[Stepper] = None,
@@ -7858,6 +7997,10 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         &#34;&#34;&#34;Expander.&#34;&#34;&#34;
         self.frame = frame
         &#34;&#34;&#34;Frame.&#34;&#34;&#34;
+        self.markup = markup
+        &#34;&#34;&#34;Markup&#34;&#34;&#34;
+        self.template = template
+        &#34;&#34;&#34;Template&#34;&#34;&#34;
         self.picker = picker
         &#34;&#34;&#34;Picker.&#34;&#34;&#34;
         self.range_slider = range_slider
@@ -7901,6 +8044,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             tabs=None if self.tabs is None else self.tabs.dump(),
             expander=None if self.expander is None else self.expander.dump(),
             frame=None if self.frame is None else self.frame.dump(),
+            markup=None if self.markup is None else self.markup.dump(),
+            template=None if self.template is None else self.template.dump(),
             picker=None if self.picker is None else self.picker.dump(),
             range_slider=None if self.range_slider is None else self.range_slider.dump(),
             stepper=None if self.stepper is None else self.stepper.dump(),
@@ -7940,6 +8085,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         __d_tabs: Any = __d.get(&#39;tabs&#39;)
         __d_expander: Any = __d.get(&#39;expander&#39;)
         __d_frame: Any = __d.get(&#39;frame&#39;)
+        __d_markup: Any = __d.get(&#39;markup&#39;)
+        __d_template: Any = __d.get(&#39;template&#39;)
         __d_picker: Any = __d.get(&#39;picker&#39;)
         __d_range_slider: Any = __d.get(&#39;range_slider&#39;)
         __d_stepper: Any = __d.get(&#39;stepper&#39;)
@@ -7974,6 +8121,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
         tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
+        markup: Optional[Markup] = None if __d_markup is None else Markup.load(__d_markup)
+        template: Optional[Template] = None if __d_template is None else Template.load(__d_template)
         picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
         range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
         stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
@@ -8009,6 +8158,8 @@ def load(__d: Dict) -&gt; &#39;Command&#39;:
             tabs,
             expander,
             frame,
+            markup,
+            template,
             picker,
             range_slider,
             stepper,
@@ -8059,6 +8210,8 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
     __d_tabs: Any = __d.get(&#39;tabs&#39;)
     __d_expander: Any = __d.get(&#39;expander&#39;)
     __d_frame: Any = __d.get(&#39;frame&#39;)
+    __d_markup: Any = __d.get(&#39;markup&#39;)
+    __d_template: Any = __d.get(&#39;template&#39;)
     __d_picker: Any = __d.get(&#39;picker&#39;)
     __d_range_slider: Any = __d.get(&#39;range_slider&#39;)
     __d_stepper: Any = __d.get(&#39;stepper&#39;)
@@ -8093,6 +8246,8 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
     tabs: Optional[Tabs] = None if __d_tabs is None else Tabs.load(__d_tabs)
     expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
     frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
+    markup: Optional[Markup] = None if __d_markup is None else Markup.load(__d_markup)
+    template: Optional[Template] = None if __d_template is None else Template.load(__d_template)
     picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
     range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
     stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
@@ -8128,6 +8283,8 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
         tabs,
         expander,
         frame,
+        markup,
+        template,
         picker,
         range_slider,
         stepper,
@@ -8195,6 +8352,10 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 <dd>
 <div class="desc"><p>Link.</p></div>
 </dd>
+<dt id="h2o_q.types.Component.markup"><code class="name">var <span class="ident">markup</span></code></dt>
+<dd>
+<div class="desc"><p>Markup</p></div>
+</dd>
 <dt id="h2o_q.types.Component.message_bar"><code class="name">var <span class="ident">message_bar</span></code></dt>
 <dd>
 <div class="desc"><p>Message bar.</p></div>
@@ -8234,6 +8395,10 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
 <dt id="h2o_q.types.Component.tabs"><code class="name">var <span class="ident">tabs</span></code></dt>
 <dd>
 <div class="desc"><p>Tabs.</p></div>
+</dd>
+<dt id="h2o_q.types.Component.template"><code class="name">var <span class="ident">template</span></code></dt>
+<dd>
+<div class="desc"><p>Template</p></div>
 </dd>
 <dt id="h2o_q.types.Component.text"><code class="name">var <span class="ident">text</span></code></dt>
 <dd>
@@ -8319,6 +8484,8 @@ def load(__d: Dict) -&gt; &#39;Component&#39;:
         tabs=None if self.tabs is None else self.tabs.dump(),
         expander=None if self.expander is None else self.expander.dump(),
         frame=None if self.frame is None else self.frame.dump(),
+        markup=None if self.markup is None else self.markup.dump(),
+        template=None if self.template is None else self.template.dump(),
         picker=None if self.picker is None else self.picker.dump(),
         range_slider=None if self.range_slider is None else self.range_slider.dump(),
         stepper=None if self.stepper is None else self.stepper.dump(),
@@ -11829,7 +11996,7 @@ def load(__d: Dict) -&gt; &#39;ListItem1Card&#39;:
 </dd>
 <dt id="h2o_q.types.Mark"><code class="flex name class">
 <span>class <span class="ident">Mark</span></span>
-<span>(</span><span>coord: Union[str, NoneType] = None, type: Union[str, NoneType] = None, x: Union[str, float, int, NoneType] = None, x0: Union[str, float, int, NoneType] = None, x1: Union[str, float, int, NoneType] = None, x2: Union[str, float, int, NoneType] = None, x_min: Union[float, NoneType] = None, x_max: Union[float, NoneType] = None, x_nice: Union[bool, NoneType] = None, x_scale: Union[str, NoneType] = None, x_title: Union[str, NoneType] = None, y: Union[str, float, int, NoneType] = None, y0: Union[str, float, int, NoneType] = None, y1: Union[str, float, int, NoneType] = None, y2: Union[str, float, int, NoneType] = None, y_min: Union[float, NoneType] = None, y_max: Union[float, NoneType] = None, y_nice: Union[bool, NoneType] = None, y_scale: Union[str, NoneType] = None, y_title: Union[str, NoneType] = None, color: Union[str, NoneType] = None, color_range: Union[str, NoneType] = None, shape: Union[str, NoneType] = None, shape_range: Union[str, NoneType] = None, size: Union[str, float, int, NoneType] = None, size_range: Union[str, NoneType] = None, stack: Union[str, NoneType] = None, dodge: Union[str, NoneType] = None, curve: Union[str, NoneType] = None, fill_color: Union[str, NoneType] = None, fill_opacity: Union[float, NoneType] = None, stroke_color: Union[str, NoneType] = None, stroke_opacity: Union[float, NoneType] = None, stroke_size: Union[float, NoneType] = None, stroke_dash: Union[str, NoneType] = None, label: Union[str, NoneType] = None, label_offset: Union[float, NoneType] = None, label_offset_x: Union[float, NoneType] = None, label_offset_y: Union[float, NoneType] = None, label_rotation: Union[str, NoneType] = None, label_position: Union[str, NoneType] = None, label_overlap: Union[str, NoneType] = None, label_fill_color: Union[str, NoneType] = None, label_fill_opacity: Union[float, NoneType] = None, label_stroke_color: Union[str, NoneType] = None, label_stroke_opacity: Union[float, NoneType] = None, label_stroke_size: Union[float, NoneType] = None, label_font_size: Union[float, NoneType] = None, label_font_weight: Union[str, NoneType] = None, label_line_height: Union[float, NoneType] = None, label_align: Union[str, NoneType] = None, ref_stroke_color: Union[str, NoneType] = None, ref_stroke_opacity: Union[float, NoneType] = None, ref_stroke_size: Union[float, NoneType] = None, ref_stroke_dash: Union[str, NoneType] = None)</span>
+<span>(</span><span>coord: Union[str, NoneType] = None, type: Union[str, NoneType] = None, x: Union[str, float, int, NoneType] = None, x0: Union[str, float, int, NoneType] = None, x1: Union[str, float, int, NoneType] = None, x2: Union[str, float, int, NoneType] = None, x_min: Union[float, NoneType] = None, x_max: Union[float, NoneType] = None, x_nice: Union[bool, NoneType] = None, x_scale: Union[str, NoneType] = None, x_title: Union[str, NoneType] = None, y: Union[str, float, int, NoneType] = None, y0: Union[str, float, int, NoneType] = None, y1: Union[str, float, int, NoneType] = None, y2: Union[str, float, int, NoneType] = None, y_min: Union[float, NoneType] = None, y_max: Union[float, NoneType] = None, y_nice: Union[bool, NoneType] = None, y_scale: Union[str, NoneType] = None, y_title: Union[str, NoneType] = None, color: Union[str, NoneType] = None, color_range: Union[str, NoneType] = None, color_domain: Union[List[str], NoneType] = None, shape: Union[str, NoneType] = None, shape_range: Union[str, NoneType] = None, size: Union[str, float, int, NoneType] = None, size_range: Union[str, NoneType] = None, stack: Union[str, NoneType] = None, dodge: Union[str, NoneType] = None, curve: Union[str, NoneType] = None, fill_color: Union[str, NoneType] = None, fill_opacity: Union[float, NoneType] = None, stroke_color: Union[str, NoneType] = None, stroke_opacity: Union[float, NoneType] = None, stroke_size: Union[float, NoneType] = None, stroke_dash: Union[str, NoneType] = None, label: Union[str, NoneType] = None, label_offset: Union[float, NoneType] = None, label_offset_x: Union[float, NoneType] = None, label_offset_y: Union[float, NoneType] = None, label_rotation: Union[str, NoneType] = None, label_position: Union[str, NoneType] = None, label_overlap: Union[str, NoneType] = None, label_fill_color: Union[str, NoneType] = None, label_fill_opacity: Union[float, NoneType] = None, label_stroke_color: Union[str, NoneType] = None, label_stroke_opacity: Union[float, NoneType] = None, label_stroke_size: Union[float, NoneType] = None, label_font_size: Union[float, NoneType] = None, label_font_weight: Union[str, NoneType] = None, label_line_height: Union[float, NoneType] = None, label_align: Union[str, NoneType] = None, ref_stroke_color: Union[str, NoneType] = None, ref_stroke_opacity: Union[float, NoneType] = None, ref_stroke_size: Union[float, NoneType] = None, ref_stroke_dash: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
@@ -11866,6 +12033,7 @@ A plot can contain multiple such layers of marks.</p></div>
             y_title: Optional[str] = None,
             color: Optional[str] = None,
             color_range: Optional[str] = None,
+            color_domain: Optional[List[str]] = None,
             shape: Optional[str] = None,
             shape_range: Optional[str] = None,
             size: Optional[Value] = None,
@@ -11944,6 +12112,8 @@ A plot can contain multiple such layers of marks.</p></div>
         &#34;&#34;&#34;Mark color field or value.&#34;&#34;&#34;
         self.color_range = color_range
         &#34;&#34;&#34;Mark color range for multi-series plots. A string containing space-separated colors, e.g. `&#39;#fee8c8 #fdbb84 #e34a33&#39;`&#34;&#34;&#34;
+        self.color_domain = color_domain
+        &#34;&#34;&#34;The unique values in the data (labels or categories or classes) to map colors to, e.g. `[&#39;high&#39;, &#39;medium&#39;, &#39;low&#39;]`. If this is not provided, the unique values are automatically inferred from the `color` attribute.&#34;&#34;&#34;
         self.shape = shape
         &#34;&#34;&#34;Mark shape field or value for `point` mark types. Possible values are &#39;circle&#39;, &#39;square&#39;, &#39;bowtie&#39;, &#39;diamond&#39;, &#39;hexagon&#39;, &#39;triangle&#39;, &#39;triangle-down&#39;, &#39;cross&#39;, &#39;tick&#39;, &#39;plus&#39;, &#39;hyphen&#39;, &#39;line&#39;.&#34;&#34;&#34;
         self.shape_range = shape_range
@@ -12036,6 +12206,7 @@ A plot can contain multiple such layers of marks.</p></div>
             y_title=self.y_title,
             color=self.color,
             color_range=self.color_range,
+            color_domain=self.color_domain,
             shape=self.shape,
             shape_range=self.shape_range,
             size=self.size,
@@ -12096,6 +12267,7 @@ A plot can contain multiple such layers of marks.</p></div>
         __d_y_title: Any = __d.get(&#39;y_title&#39;)
         __d_color: Any = __d.get(&#39;color&#39;)
         __d_color_range: Any = __d.get(&#39;color_range&#39;)
+        __d_color_domain: Any = __d.get(&#39;color_domain&#39;)
         __d_shape: Any = __d.get(&#39;shape&#39;)
         __d_shape_range: Any = __d.get(&#39;shape_range&#39;)
         __d_size: Any = __d.get(&#39;size&#39;)
@@ -12151,6 +12323,7 @@ A plot can contain multiple such layers of marks.</p></div>
         y_title: Optional[str] = __d_y_title
         color: Optional[str] = __d_color
         color_range: Optional[str] = __d_color_range
+        color_domain: Optional[List[str]] = __d_color_domain
         shape: Optional[str] = __d_shape
         shape_range: Optional[str] = __d_shape_range
         size: Optional[Value] = __d_size
@@ -12207,6 +12380,7 @@ A plot can contain multiple such layers of marks.</p></div>
             y_title,
             color,
             color_range,
+            color_domain,
             shape,
             shape_range,
             size,
@@ -12278,6 +12452,7 @@ def load(__d: Dict) -&gt; &#39;Mark&#39;:
     __d_y_title: Any = __d.get(&#39;y_title&#39;)
     __d_color: Any = __d.get(&#39;color&#39;)
     __d_color_range: Any = __d.get(&#39;color_range&#39;)
+    __d_color_domain: Any = __d.get(&#39;color_domain&#39;)
     __d_shape: Any = __d.get(&#39;shape&#39;)
     __d_shape_range: Any = __d.get(&#39;shape_range&#39;)
     __d_size: Any = __d.get(&#39;size&#39;)
@@ -12333,6 +12508,7 @@ def load(__d: Dict) -&gt; &#39;Mark&#39;:
     y_title: Optional[str] = __d_y_title
     color: Optional[str] = __d_color
     color_range: Optional[str] = __d_color_range
+    color_domain: Optional[List[str]] = __d_color_domain
     shape: Optional[str] = __d_shape
     shape_range: Optional[str] = __d_shape_range
     size: Optional[Value] = __d_size
@@ -12389,6 +12565,7 @@ def load(__d: Dict) -&gt; &#39;Mark&#39;:
         y_title,
         color,
         color_range,
+        color_domain,
         shape,
         shape_range,
         size,
@@ -12431,6 +12608,10 @@ def load(__d: Dict) -&gt; &#39;Mark&#39;:
 <dt id="h2o_q.types.Mark.color"><code class="name">var <span class="ident">color</span></code></dt>
 <dd>
 <div class="desc"><p>Mark color field or value.</p></div>
+</dd>
+<dt id="h2o_q.types.Mark.color_domain"><code class="name">var <span class="ident">color_domain</span></code></dt>
+<dd>
+<div class="desc"><p>The unique values in the data (labels or categories or classes) to map colors to, e.g. <code>['high', 'medium', 'low']</code>. If this is not provided, the unique values are automatically inferred from the <code>color</code> attribute.</p></div>
 </dd>
 <dt id="h2o_q.types.Mark.color_range"><code class="name">var <span class="ident">color_range</span></code></dt>
 <dd>
@@ -12685,6 +12866,7 @@ def load(__d: Dict) -&gt; &#39;Mark&#39;:
         y_title=self.y_title,
         color=self.color,
         color_range=self.color_range,
+        color_domain=self.color_domain,
         shape=self.shape,
         shape_range=self.shape_range,
         size=self.size,
@@ -12897,6 +13079,98 @@ def load(__d: Dict) -&gt; &#39;MarkdownCard&#39;:
         content=self.content,
         data=self.data,
         commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="h2o_q.types.Markup"><code class="flex name class">
+<span>class <span class="ident">Markup</span></span>
+<span>(</span><span>content: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Render HTML content.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Markup:
+    &#34;&#34;&#34;Render HTML content.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            content: str,
+    ):
+        self.content = content
+        &#34;&#34;&#34;The HTML content.&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.content is None:
+            raise ValueError(&#39;Markup.content is required.&#39;)
+        return _dump(
+            content=self.content,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Markup&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_content: Any = __d.get(&#39;content&#39;)
+        if __d_content is None:
+            raise ValueError(&#39;Markup.content is required.&#39;)
+        content: str = __d_content
+        return Markup(
+            content,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.Markup.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_Markup__d: Dict) ‑> <a title="h2o_q.types.Markup" href="#h2o_q.types.Markup">Markup</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;Markup&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_content: Any = __d.get(&#39;content&#39;)
+    if __d_content is None:
+        raise ValueError(&#39;Markup.content is required.&#39;)
+    content: str = __d_content
+    return Markup(
+        content,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.Markup.content"><code class="name">var <span class="ident">content</span></code></dt>
+<dd>
+<div class="desc"><p>The HTML content.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.Markup.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.content is None:
+        raise ValueError(&#39;Markup.content is required.&#39;)
+    return _dump(
+        content=self.content,
     )</code></pre>
 </details>
 </dd>
@@ -13165,7 +13439,7 @@ def load(__d: Dict) -&gt; &#39;MessageBar&#39;:
 </dd>
 <dt id="h2o_q.types.MetaCard"><code class="flex name class">
 <span>class <span class="ident">MetaCard</span></span>
-<span>(</span><span>box: str, title: Union[str, NoneType] = None, refresh: Union[int, NoneType] = None, notification: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
+<span>(</span><span>box: str, title: Union[str, NoneType] = None, refresh: Union[int, NoneType] = None, notification: Union[str, NoneType] = None, redirect: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Represents page-global state.</p>
@@ -13187,6 +13461,7 @@ It is used to control attributes of the active page.</p></div>
             title: Optional[str] = None,
             refresh: Optional[int] = None,
             notification: Optional[str] = None,
+            redirect: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -13197,6 +13472,8 @@ It is used to control attributes of the active page.</p></div>
         &#34;&#34;&#34;Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).&#34;&#34;&#34;
         self.notification = notification
         &#34;&#34;&#34;Display a desktop notification to the user.&#34;&#34;&#34;
+        self.redirect = redirect
+        &#34;&#34;&#34;Redirect the page to a new URL.&#34;&#34;&#34;
         self.commands = commands
         &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
 
@@ -13210,6 +13487,7 @@ It is used to control attributes of the active page.</p></div>
             title=self.title,
             refresh=self.refresh,
             notification=self.notification,
+            redirect=self.redirect,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -13222,17 +13500,20 @@ It is used to control attributes of the active page.</p></div>
         __d_title: Any = __d.get(&#39;title&#39;)
         __d_refresh: Any = __d.get(&#39;refresh&#39;)
         __d_notification: Any = __d.get(&#39;notification&#39;)
+        __d_redirect: Any = __d.get(&#39;redirect&#39;)
         __d_commands: Any = __d.get(&#39;commands&#39;)
         box: str = __d_box
         title: Optional[str] = __d_title
         refresh: Optional[int] = __d_refresh
         notification: Optional[str] = __d_notification
+        redirect: Optional[str] = __d_redirect
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
             title,
             refresh,
             notification,
+            redirect,
             commands,
         )</code></pre>
 </details>
@@ -13256,17 +13537,20 @@ def load(__d: Dict) -&gt; &#39;MetaCard&#39;:
     __d_title: Any = __d.get(&#39;title&#39;)
     __d_refresh: Any = __d.get(&#39;refresh&#39;)
     __d_notification: Any = __d.get(&#39;notification&#39;)
+    __d_redirect: Any = __d.get(&#39;redirect&#39;)
     __d_commands: Any = __d.get(&#39;commands&#39;)
     box: str = __d_box
     title: Optional[str] = __d_title
     refresh: Optional[int] = __d_refresh
     notification: Optional[str] = __d_notification
+    redirect: Optional[str] = __d_redirect
     commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
     return MetaCard(
         box,
         title,
         refresh,
         notification,
+        redirect,
         commands,
     )</code></pre>
 </details>
@@ -13285,6 +13569,10 @@ def load(__d: Dict) -&gt; &#39;MetaCard&#39;:
 <dt id="h2o_q.types.MetaCard.notification"><code class="name">var <span class="ident">notification</span></code></dt>
 <dd>
 <div class="desc"><p>Display a desktop notification to the user.</p></div>
+</dd>
+<dt id="h2o_q.types.MetaCard.redirect"><code class="name">var <span class="ident">redirect</span></code></dt>
+<dd>
+<div class="desc"><p>Redirect the page to a new URL.</p></div>
 </dd>
 <dt id="h2o_q.types.MetaCard.refresh"><code class="name">var <span class="ident">refresh</span></code></dt>
 <dd>
@@ -13316,6 +13604,7 @@ def load(__d: Dict) -&gt; &#39;MetaCard&#39;:
         title=self.title,
         refresh=self.refresh,
         notification=self.notification,
+        redirect=self.redirect,
         commands=None if self.commands is None else [__e.dump() for __e in self.commands],
     )</code></pre>
 </details>
@@ -16483,7 +16772,7 @@ def load(__d: Dict) -&gt; &#39;TabCard&#39;:
 </dd>
 <dt id="h2o_q.types.Table"><code class="flex name class">
 <span>class <span class="ident">Table</span></span>
-<span>(</span><span>name: str, columns: List[<a title="h2o_q.types.TableColumn" href="#h2o_q.types.TableColumn">TableColumn</a>], rows: List[<a title="h2o_q.types.TableRow" href="#h2o_q.types.TableRow">TableRow</a>], multiple: Union[bool, NoneType] = None, groupable: Union[bool, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
+<span>(</span><span>name: str, columns: List[<a title="h2o_q.types.TableColumn" href="#h2o_q.types.TableColumn">TableColumn</a>], rows: List[<a title="h2o_q.types.TableRow" href="#h2o_q.types.TableRow">TableRow</a>], multiple: Union[bool, NoneType] = None, groupable: Union[bool, NoneType] = None, downloadable: Union[bool, NoneType] = None, resettable: Union[bool, NoneType] = None, height: Union[str, NoneType] = None, tooltip: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an interactive table.</p>
@@ -16526,6 +16815,9 @@ submission.</p></div>
             rows: List[TableRow],
             multiple: Optional[bool] = None,
             groupable: Optional[bool] = None,
+            downloadable: Optional[bool] = None,
+            resettable: Optional[bool] = None,
+            height: Optional[str] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -16538,6 +16830,12 @@ submission.</p></div>
         &#34;&#34;&#34;True to allow multiple rows to be selected.&#34;&#34;&#34;
         self.groupable = groupable
         &#34;&#34;&#34;True to allow group by feature.&#34;&#34;&#34;
+        self.downloadable = downloadable
+        &#34;&#34;&#34;Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.&#34;&#34;&#34;
+        self.resettable = resettable
+        &#34;&#34;&#34;Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.&#34;&#34;&#34;
+        self.height = height
+        &#34;&#34;&#34;The height of the table, e.g. &#39;400px&#39;, &#39;50%&#39;, etc.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;An optional tooltip message displayed when a user clicks the help icon to the right of the component.&#34;&#34;&#34;
 
@@ -16555,6 +16853,9 @@ submission.</p></div>
             rows=[__e.dump() for __e in self.rows],
             multiple=self.multiple,
             groupable=self.groupable,
+            downloadable=self.downloadable,
+            resettable=self.resettable,
+            height=self.height,
             tooltip=self.tooltip,
         )
 
@@ -16572,12 +16873,18 @@ submission.</p></div>
             raise ValueError(&#39;Table.rows is required.&#39;)
         __d_multiple: Any = __d.get(&#39;multiple&#39;)
         __d_groupable: Any = __d.get(&#39;groupable&#39;)
+        __d_downloadable: Any = __d.get(&#39;downloadable&#39;)
+        __d_resettable: Any = __d.get(&#39;resettable&#39;)
+        __d_height: Any = __d.get(&#39;height&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
         rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
         multiple: Optional[bool] = __d_multiple
         groupable: Optional[bool] = __d_groupable
+        downloadable: Optional[bool] = __d_downloadable
+        resettable: Optional[bool] = __d_resettable
+        height: Optional[str] = __d_height
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
@@ -16585,6 +16892,9 @@ submission.</p></div>
             rows,
             multiple,
             groupable,
+            downloadable,
+            resettable,
+            height,
             tooltip,
         )</code></pre>
 </details>
@@ -16613,12 +16923,18 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
         raise ValueError(&#39;Table.rows is required.&#39;)
     __d_multiple: Any = __d.get(&#39;multiple&#39;)
     __d_groupable: Any = __d.get(&#39;groupable&#39;)
+    __d_downloadable: Any = __d.get(&#39;downloadable&#39;)
+    __d_resettable: Any = __d.get(&#39;resettable&#39;)
+    __d_height: Any = __d.get(&#39;height&#39;)
     __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
     name: str = __d_name
     columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
     rows: List[TableRow] = [TableRow.load(__e) for __e in __d_rows]
     multiple: Optional[bool] = __d_multiple
     groupable: Optional[bool] = __d_groupable
+    downloadable: Optional[bool] = __d_downloadable
+    resettable: Optional[bool] = __d_resettable
+    height: Optional[str] = __d_height
     tooltip: Optional[str] = __d_tooltip
     return Table(
         name,
@@ -16626,6 +16942,9 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
         rows,
         multiple,
         groupable,
+        downloadable,
+        resettable,
+        height,
         tooltip,
     )</code></pre>
 </details>
@@ -16637,9 +16956,17 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
 <dd>
 <div class="desc"><p>The columns in this table.</p></div>
 </dd>
+<dt id="h2o_q.types.Table.downloadable"><code class="name">var <span class="ident">downloadable</span></code></dt>
+<dd>
+<div class="desc"><p>Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.</p></div>
+</dd>
 <dt id="h2o_q.types.Table.groupable"><code class="name">var <span class="ident">groupable</span></code></dt>
 <dd>
 <div class="desc"><p>True to allow group by feature.</p></div>
+</dd>
+<dt id="h2o_q.types.Table.height"><code class="name">var <span class="ident">height</span></code></dt>
+<dd>
+<div class="desc"><p>The height of the table, e.g. '400px', '50%', etc.</p></div>
 </dd>
 <dt id="h2o_q.types.Table.multiple"><code class="name">var <span class="ident">multiple</span></code></dt>
 <dd>
@@ -16648,6 +16975,10 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
 <dt id="h2o_q.types.Table.name"><code class="name">var <span class="ident">name</span></code></dt>
 <dd>
 <div class="desc"><p>An identifying name for this component.</p></div>
+</dd>
+<dt id="h2o_q.types.Table.resettable"><code class="name">var <span class="ident">resettable</span></code></dt>
+<dd>
+<div class="desc"><p>Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.</p></div>
 </dd>
 <dt id="h2o_q.types.Table.rows"><code class="name">var <span class="ident">rows</span></code></dt>
 <dd>
@@ -16683,6 +17014,9 @@ def load(__d: Dict) -&gt; &#39;Table&#39;:
         rows=[__e.dump() for __e in self.rows],
         multiple=self.multiple,
         groupable=self.groupable,
+        downloadable=self.downloadable,
+        resettable=self.resettable,
+        height=self.height,
         tooltip=self.tooltip,
     )</code></pre>
 </details>
@@ -16790,7 +17124,7 @@ def load(__d: Dict) -&gt; &#39;TableCellType&#39;:
 </dd>
 <dt id="h2o_q.types.TableColumn"><code class="flex name class">
 <span>class <span class="ident">TableColumn</span></span>
-<span>(</span><span>name: str, label: str, min_width: Union[int, NoneType] = None, max_width: Union[int, NoneType] = None, sortable: Union[bool, NoneType] = None, searchable: Union[bool, NoneType] = None, filterable: Union[bool, NoneType] = None, cell_type: Union[<a title="h2o_q.types.TableCellType" href="#h2o_q.types.TableCellType">TableCellType</a>, NoneType] = None)</span>
+<span>(</span><span>name: str, label: str, min_width: Union[str, NoneType] = None, max_width: Union[str, NoneType] = None, sortable: Union[bool, NoneType] = None, searchable: Union[bool, NoneType] = None, filterable: Union[bool, NoneType] = None, link: Union[bool, NoneType] = None, cell_type: Union[<a title="h2o_q.types.TableCellType" href="#h2o_q.types.TableCellType">TableCellType</a>, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create a table column.</p></div>
@@ -16805,11 +17139,12 @@ def load(__d: Dict) -&gt; &#39;TableCellType&#39;:
             self,
             name: str,
             label: str,
-            min_width: Optional[int] = None,
-            max_width: Optional[int] = None,
+            min_width: Optional[str] = None,
+            max_width: Optional[str] = None,
             sortable: Optional[bool] = None,
             searchable: Optional[bool] = None,
             filterable: Optional[bool] = None,
+            link: Optional[bool] = None,
             cell_type: Optional[TableCellType] = None,
     ):
         self.name = name
@@ -16817,15 +17152,17 @@ def load(__d: Dict) -&gt; &#39;TableCellType&#39;:
         self.label = label
         &#34;&#34;&#34;The text displayed on the column header.&#34;&#34;&#34;
         self.min_width = min_width
-        &#34;&#34;&#34;The minimum width of this column.&#34;&#34;&#34;
+        &#34;&#34;&#34;The minimum width of this column, e.g. &#39;50px&#39;. Only `px` units are supported at this time.&#34;&#34;&#34;
         self.max_width = max_width
-        &#34;&#34;&#34;The maximum width of this column.&#34;&#34;&#34;
+        &#34;&#34;&#34;The maximum width of this column, e.g. &#39;100px&#39;. Only `px` units are supported at this time.&#34;&#34;&#34;
         self.sortable = sortable
         &#34;&#34;&#34;Indicates whether the column is sortable.&#34;&#34;&#34;
         self.searchable = searchable
         &#34;&#34;&#34;Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.&#34;&#34;&#34;
         self.filterable = filterable
         &#34;&#34;&#34;Indicates whether the contents of this column are displayed as filters in a dropdown.&#34;&#34;&#34;
+        self.link = link
+        &#34;&#34;&#34;Indicates whether each cell in this column should be displayed as a clickable link.&#34;&#34;&#34;
         self.cell_type = cell_type
         &#34;&#34;&#34;Defines how to render each cell in this column. Defaults to plain text.&#34;&#34;&#34;
 
@@ -16843,6 +17180,7 @@ def load(__d: Dict) -&gt; &#39;TableCellType&#39;:
             sortable=self.sortable,
             searchable=self.searchable,
             filterable=self.filterable,
+            link=self.link,
             cell_type=None if self.cell_type is None else self.cell_type.dump(),
         )
 
@@ -16860,14 +17198,16 @@ def load(__d: Dict) -&gt; &#39;TableCellType&#39;:
         __d_sortable: Any = __d.get(&#39;sortable&#39;)
         __d_searchable: Any = __d.get(&#39;searchable&#39;)
         __d_filterable: Any = __d.get(&#39;filterable&#39;)
+        __d_link: Any = __d.get(&#39;link&#39;)
         __d_cell_type: Any = __d.get(&#39;cell_type&#39;)
         name: str = __d_name
         label: str = __d_label
-        min_width: Optional[int] = __d_min_width
-        max_width: Optional[int] = __d_max_width
+        min_width: Optional[str] = __d_min_width
+        max_width: Optional[str] = __d_max_width
         sortable: Optional[bool] = __d_sortable
         searchable: Optional[bool] = __d_searchable
         filterable: Optional[bool] = __d_filterable
+        link: Optional[bool] = __d_link
         cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         return TableColumn(
             name,
@@ -16877,6 +17217,7 @@ def load(__d: Dict) -&gt; &#39;TableCellType&#39;:
             sortable,
             searchable,
             filterable,
+            link,
             cell_type,
         )</code></pre>
 </details>
@@ -16905,14 +17246,16 @@ def load(__d: Dict) -&gt; &#39;TableColumn&#39;:
     __d_sortable: Any = __d.get(&#39;sortable&#39;)
     __d_searchable: Any = __d.get(&#39;searchable&#39;)
     __d_filterable: Any = __d.get(&#39;filterable&#39;)
+    __d_link: Any = __d.get(&#39;link&#39;)
     __d_cell_type: Any = __d.get(&#39;cell_type&#39;)
     name: str = __d_name
     label: str = __d_label
-    min_width: Optional[int] = __d_min_width
-    max_width: Optional[int] = __d_max_width
+    min_width: Optional[str] = __d_min_width
+    max_width: Optional[str] = __d_max_width
     sortable: Optional[bool] = __d_sortable
     searchable: Optional[bool] = __d_searchable
     filterable: Optional[bool] = __d_filterable
+    link: Optional[bool] = __d_link
     cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
     return TableColumn(
         name,
@@ -16922,6 +17265,7 @@ def load(__d: Dict) -&gt; &#39;TableColumn&#39;:
         sortable,
         searchable,
         filterable,
+        link,
         cell_type,
     )</code></pre>
 </details>
@@ -16941,13 +17285,17 @@ def load(__d: Dict) -&gt; &#39;TableColumn&#39;:
 <dd>
 <div class="desc"><p>The text displayed on the column header.</p></div>
 </dd>
+<dt id="h2o_q.types.TableColumn.link"><code class="name">var <span class="ident">link</span></code></dt>
+<dd>
+<div class="desc"><p>Indicates whether each cell in this column should be displayed as a clickable link.</p></div>
+</dd>
 <dt id="h2o_q.types.TableColumn.max_width"><code class="name">var <span class="ident">max_width</span></code></dt>
 <dd>
-<div class="desc"><p>The maximum width of this column.</p></div>
+<div class="desc"><p>The maximum width of this column, e.g. '100px'. Only <code>px</code> units are supported at this time.</p></div>
 </dd>
 <dt id="h2o_q.types.TableColumn.min_width"><code class="name">var <span class="ident">min_width</span></code></dt>
 <dd>
-<div class="desc"><p>The minimum width of this column.</p></div>
+<div class="desc"><p>The minimum width of this column, e.g. '50px'. Only <code>px</code> units are supported at this time.</p></div>
 </dd>
 <dt id="h2o_q.types.TableColumn.name"><code class="name">var <span class="ident">name</span></code></dt>
 <dd>
@@ -16987,6 +17335,7 @@ def load(__d: Dict) -&gt; &#39;TableColumn&#39;:
         sortable=self.sortable,
         searchable=self.searchable,
         filterable=self.filterable,
+        link=self.link,
         cell_type=None if self.cell_type is None else self.cell_type.dump(),
     )</code></pre>
 </details>
@@ -17775,6 +18124,113 @@ def load(__d: Dict) -&gt; &#39;TallSeriesStatCard&#39;:
 </dd>
 </dl>
 </dd>
+<dt id="h2o_q.types.Template"><code class="flex name class">
+<span>class <span class="ident">Template</span></span>
+<span>(</span><span>content: str, data: Union[dict, str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Render dynamic content using a HTML template.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Template:
+    &#34;&#34;&#34;Render dynamic content using a HTML template.
+    &#34;&#34;&#34;
+    def __init__(
+            self,
+            content: str,
+            data: Optional[PackedRecord] = None,
+    ):
+        self.content = content
+        &#34;&#34;&#34;The Handlebars template. https://handlebarsjs.com/guide/&#34;&#34;&#34;
+        self.data = data
+        &#34;&#34;&#34;Data for the Handlebars template&#34;&#34;&#34;
+
+    def dump(self) -&gt; Dict:
+        &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+        if self.content is None:
+            raise ValueError(&#39;Template.content is required.&#39;)
+        return _dump(
+            content=self.content,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -&gt; &#39;Template&#39;:
+        &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+        __d_content: Any = __d.get(&#39;content&#39;)
+        if __d_content is None:
+            raise ValueError(&#39;Template.content is required.&#39;)
+        __d_data: Any = __d.get(&#39;data&#39;)
+        content: str = __d_content
+        data: Optional[PackedRecord] = __d_data
+        return Template(
+            content,
+            data,
+        )</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="h2o_q.types.Template.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>_Template__d: Dict) ‑> <a title="h2o_q.types.Template" href="#h2o_q.types.Template">Template</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates an instance of this class using the contents of a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def load(__d: Dict) -&gt; &#39;Template&#39;:
+    &#34;&#34;&#34;Creates an instance of this class using the contents of a dict.&#34;&#34;&#34;
+    __d_content: Any = __d.get(&#39;content&#39;)
+    if __d_content is None:
+        raise ValueError(&#39;Template.content is required.&#39;)
+    __d_data: Any = __d.get(&#39;data&#39;)
+    content: str = __d_content
+    data: Optional[PackedRecord] = __d_data
+    return Template(
+        content,
+        data,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="h2o_q.types.Template.content"><code class="name">var <span class="ident">content</span></code></dt>
+<dd>
+<div class="desc"><p>The Handlebars template. <a href="https://handlebarsjs.com/guide/">https://handlebarsjs.com/guide/</a></p></div>
+</dd>
+<dt id="h2o_q.types.Template.data"><code class="name">var <span class="ident">data</span></code></dt>
+<dd>
+<div class="desc"><p>Data for the Handlebars template</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="h2o_q.types.Template.dump"><code class="name flex">
+<span>def <span class="ident">dump</span></span>(<span>self) ‑> Dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the contents of this object as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump(self) -&gt; Dict:
+    &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
+    if self.content is None:
+        raise ValueError(&#39;Template.content is required.&#39;)
+    return _dump(
+        content=self.content,
+        data=self.data,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 <dt id="h2o_q.types.TemplateCard"><code class="flex name class">
 <span>class <span class="ident">TemplateCard</span></span>
 <span>(</span><span>box: str, title: str, content: str, data: Union[dict, str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
@@ -18069,7 +18525,7 @@ def load(__d: Dict) -&gt; &#39;Text&#39;:
 </dd>
 <dt id="h2o_q.types.TextL"><code class="flex name class">
 <span>class <span class="ident">TextL</span></span>
-<span>(</span><span>content: str, tooltip: Union[str, NoneType] = None)</span>
+<span>(</span><span>content: str, tooltip: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create large sized text content.</p></div>
@@ -18084,11 +18540,14 @@ def load(__d: Dict) -&gt; &#39;Text&#39;:
             self,
             content: str,
             tooltip: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.content = content
         &#34;&#34;&#34;The text content.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;Tooltip message.&#34;&#34;&#34;
+        self.commands = commands
+        &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -18097,6 +18556,7 @@ def load(__d: Dict) -&gt; &#39;Text&#39;:
         return _dump(
             content=self.content,
             tooltip=self.tooltip,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -18106,11 +18566,14 @@ def load(__d: Dict) -&gt; &#39;Text&#39;:
         if __d_content is None:
             raise ValueError(&#39;TextL.content is required.&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        __d_commands: Any = __d.get(&#39;commands&#39;)
         content: str = __d_content
         tooltip: Optional[str] = __d_tooltip
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TextL(
             content,
             tooltip,
+            commands,
         )</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -18131,17 +18594,24 @@ def load(__d: Dict) -&gt; &#39;TextL&#39;:
     if __d_content is None:
         raise ValueError(&#39;TextL.content is required.&#39;)
     __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+    __d_commands: Any = __d.get(&#39;commands&#39;)
     content: str = __d_content
     tooltip: Optional[str] = __d_tooltip
+    commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
     return TextL(
         content,
         tooltip,
+        commands,
     )</code></pre>
 </details>
 </dd>
 </dl>
 <h3>Instance variables</h3>
 <dl>
+<dt id="h2o_q.types.TextL.commands"><code class="name">var <span class="ident">commands</span></code></dt>
+<dd>
+<div class="desc"><p>Contextual menu commands for this component.</p></div>
+</dd>
 <dt id="h2o_q.types.TextL.content"><code class="name">var <span class="ident">content</span></code></dt>
 <dd>
 <div class="desc"><p>The text content.</p></div>
@@ -18169,6 +18639,7 @@ def load(__d: Dict) -&gt; &#39;TextL&#39;:
     return _dump(
         content=self.content,
         tooltip=self.tooltip,
+        commands=None if self.commands is None else [__e.dump() for __e in self.commands],
     )</code></pre>
 </details>
 </dd>
@@ -18390,7 +18861,7 @@ def load(__d: Dict) -&gt; &#39;TextS&#39;:
 </dd>
 <dt id="h2o_q.types.TextXl"><code class="flex name class">
 <span>class <span class="ident">TextXl</span></span>
-<span>(</span><span>content: str, tooltip: Union[str, NoneType] = None)</span>
+<span>(</span><span>content: str, tooltip: Union[str, NoneType] = None, commands: Union[List[<a title="h2o_q.types.Command" href="#h2o_q.types.Command">Command</a>], NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create extra-large sized text content.</p></div>
@@ -18405,11 +18876,14 @@ def load(__d: Dict) -&gt; &#39;TextS&#39;:
             self,
             content: str,
             tooltip: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
     ):
         self.content = content
         &#34;&#34;&#34;The text content.&#34;&#34;&#34;
         self.tooltip = tooltip
         &#34;&#34;&#34;Tooltip message.&#34;&#34;&#34;
+        self.commands = commands
+        &#34;&#34;&#34;Contextual menu commands for this component.&#34;&#34;&#34;
 
     def dump(self) -&gt; Dict:
         &#34;&#34;&#34;Returns the contents of this object as a dict.&#34;&#34;&#34;
@@ -18418,6 +18892,7 @@ def load(__d: Dict) -&gt; &#39;TextS&#39;:
         return _dump(
             content=self.content,
             tooltip=self.tooltip,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
     @staticmethod
@@ -18427,11 +18902,14 @@ def load(__d: Dict) -&gt; &#39;TextS&#39;:
         if __d_content is None:
             raise ValueError(&#39;TextXl.content is required.&#39;)
         __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+        __d_commands: Any = __d.get(&#39;commands&#39;)
         content: str = __d_content
         tooltip: Optional[str] = __d_tooltip
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TextXl(
             content,
             tooltip,
+            commands,
         )</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -18452,17 +18930,24 @@ def load(__d: Dict) -&gt; &#39;TextXl&#39;:
     if __d_content is None:
         raise ValueError(&#39;TextXl.content is required.&#39;)
     __d_tooltip: Any = __d.get(&#39;tooltip&#39;)
+    __d_commands: Any = __d.get(&#39;commands&#39;)
     content: str = __d_content
     tooltip: Optional[str] = __d_tooltip
+    commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
     return TextXl(
         content,
         tooltip,
+        commands,
     )</code></pre>
 </details>
 </dd>
 </dl>
 <h3>Instance variables</h3>
 <dl>
+<dt id="h2o_q.types.TextXl.commands"><code class="name">var <span class="ident">commands</span></code></dt>
+<dd>
+<div class="desc"><p>Contextual menu commands for this component.</p></div>
+</dd>
 <dt id="h2o_q.types.TextXl.content"><code class="name">var <span class="ident">content</span></code></dt>
 <dd>
 <div class="desc"><p>The text content.</p></div>
@@ -18490,6 +18975,7 @@ def load(__d: Dict) -&gt; &#39;TextXl&#39;:
     return _dump(
         content=self.content,
         tooltip=self.tooltip,
+        commands=None if self.commands is None else [__e.dump() for __e in self.commands],
     )</code></pre>
 </details>
 </dd>
@@ -20665,6 +21151,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.Component.label" href="#h2o_q.types.Component.label">label</a></code></li>
 <li><code><a title="h2o_q.types.Component.link" href="#h2o_q.types.Component.link">link</a></code></li>
 <li><code><a title="h2o_q.types.Component.load" href="#h2o_q.types.Component.load">load</a></code></li>
+<li><code><a title="h2o_q.types.Component.markup" href="#h2o_q.types.Component.markup">markup</a></code></li>
 <li><code><a title="h2o_q.types.Component.message_bar" href="#h2o_q.types.Component.message_bar">message_bar</a></code></li>
 <li><code><a title="h2o_q.types.Component.picker" href="#h2o_q.types.Component.picker">picker</a></code></li>
 <li><code><a title="h2o_q.types.Component.progress" href="#h2o_q.types.Component.progress">progress</a></code></li>
@@ -20675,6 +21162,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.Component.stepper" href="#h2o_q.types.Component.stepper">stepper</a></code></li>
 <li><code><a title="h2o_q.types.Component.table" href="#h2o_q.types.Component.table">table</a></code></li>
 <li><code><a title="h2o_q.types.Component.tabs" href="#h2o_q.types.Component.tabs">tabs</a></code></li>
+<li><code><a title="h2o_q.types.Component.template" href="#h2o_q.types.Component.template">template</a></code></li>
 <li><code><a title="h2o_q.types.Component.text" href="#h2o_q.types.Component.text">text</a></code></li>
 <li><code><a title="h2o_q.types.Component.text_l" href="#h2o_q.types.Component.text_l">text_l</a></code></li>
 <li><code><a title="h2o_q.types.Component.text_m" href="#h2o_q.types.Component.text_m">text_m</a></code></li>
@@ -20938,6 +21426,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <h4><code><a title="h2o_q.types.Mark" href="#h2o_q.types.Mark">Mark</a></code></h4>
 <ul class="">
 <li><code><a title="h2o_q.types.Mark.color" href="#h2o_q.types.Mark.color">color</a></code></li>
+<li><code><a title="h2o_q.types.Mark.color_domain" href="#h2o_q.types.Mark.color_domain">color_domain</a></code></li>
 <li><code><a title="h2o_q.types.Mark.color_range" href="#h2o_q.types.Mark.color_range">color_range</a></code></li>
 <li><code><a title="h2o_q.types.Mark.coord" href="#h2o_q.types.Mark.coord">coord</a></code></li>
 <li><code><a title="h2o_q.types.Mark.curve" href="#h2o_q.types.Mark.curve">curve</a></code></li>
@@ -21009,6 +21498,14 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 </ul>
 </li>
 <li>
+<h4><code><a title="h2o_q.types.Markup" href="#h2o_q.types.Markup">Markup</a></code></h4>
+<ul class="">
+<li><code><a title="h2o_q.types.Markup.content" href="#h2o_q.types.Markup.content">content</a></code></li>
+<li><code><a title="h2o_q.types.Markup.dump" href="#h2o_q.types.Markup.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.Markup.load" href="#h2o_q.types.Markup.load">load</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="h2o_q.types.MarkupCard" href="#h2o_q.types.MarkupCard">MarkupCard</a></code></h4>
 <ul class="two-column">
 <li><code><a title="h2o_q.types.MarkupCard.box" href="#h2o_q.types.MarkupCard.box">box</a></code></li>
@@ -21036,6 +21533,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.MetaCard.dump" href="#h2o_q.types.MetaCard.dump">dump</a></code></li>
 <li><code><a title="h2o_q.types.MetaCard.load" href="#h2o_q.types.MetaCard.load">load</a></code></li>
 <li><code><a title="h2o_q.types.MetaCard.notification" href="#h2o_q.types.MetaCard.notification">notification</a></code></li>
+<li><code><a title="h2o_q.types.MetaCard.redirect" href="#h2o_q.types.MetaCard.redirect">redirect</a></code></li>
 <li><code><a title="h2o_q.types.MetaCard.refresh" href="#h2o_q.types.MetaCard.refresh">refresh</a></code></li>
 <li><code><a title="h2o_q.types.MetaCard.title" href="#h2o_q.types.MetaCard.title">title</a></code></li>
 </ul>
@@ -21276,11 +21774,14 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <h4><code><a title="h2o_q.types.Table" href="#h2o_q.types.Table">Table</a></code></h4>
 <ul class="two-column">
 <li><code><a title="h2o_q.types.Table.columns" href="#h2o_q.types.Table.columns">columns</a></code></li>
+<li><code><a title="h2o_q.types.Table.downloadable" href="#h2o_q.types.Table.downloadable">downloadable</a></code></li>
 <li><code><a title="h2o_q.types.Table.dump" href="#h2o_q.types.Table.dump">dump</a></code></li>
 <li><code><a title="h2o_q.types.Table.groupable" href="#h2o_q.types.Table.groupable">groupable</a></code></li>
+<li><code><a title="h2o_q.types.Table.height" href="#h2o_q.types.Table.height">height</a></code></li>
 <li><code><a title="h2o_q.types.Table.load" href="#h2o_q.types.Table.load">load</a></code></li>
 <li><code><a title="h2o_q.types.Table.multiple" href="#h2o_q.types.Table.multiple">multiple</a></code></li>
 <li><code><a title="h2o_q.types.Table.name" href="#h2o_q.types.Table.name">name</a></code></li>
+<li><code><a title="h2o_q.types.Table.resettable" href="#h2o_q.types.Table.resettable">resettable</a></code></li>
 <li><code><a title="h2o_q.types.Table.rows" href="#h2o_q.types.Table.rows">rows</a></code></li>
 <li><code><a title="h2o_q.types.Table.tooltip" href="#h2o_q.types.Table.tooltip">tooltip</a></code></li>
 </ul>
@@ -21301,6 +21802,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li><code><a title="h2o_q.types.TableColumn.dump" href="#h2o_q.types.TableColumn.dump">dump</a></code></li>
 <li><code><a title="h2o_q.types.TableColumn.filterable" href="#h2o_q.types.TableColumn.filterable">filterable</a></code></li>
 <li><code><a title="h2o_q.types.TableColumn.label" href="#h2o_q.types.TableColumn.label">label</a></code></li>
+<li><code><a title="h2o_q.types.TableColumn.link" href="#h2o_q.types.TableColumn.link">link</a></code></li>
 <li><code><a title="h2o_q.types.TableColumn.load" href="#h2o_q.types.TableColumn.load">load</a></code></li>
 <li><code><a title="h2o_q.types.TableColumn.max_width" href="#h2o_q.types.TableColumn.max_width">max_width</a></code></li>
 <li><code><a title="h2o_q.types.TableColumn.min_width" href="#h2o_q.types.TableColumn.min_width">min_width</a></code></li>
@@ -21364,6 +21866,15 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 </ul>
 </li>
 <li>
+<h4><code><a title="h2o_q.types.Template" href="#h2o_q.types.Template">Template</a></code></h4>
+<ul class="">
+<li><code><a title="h2o_q.types.Template.content" href="#h2o_q.types.Template.content">content</a></code></li>
+<li><code><a title="h2o_q.types.Template.data" href="#h2o_q.types.Template.data">data</a></code></li>
+<li><code><a title="h2o_q.types.Template.dump" href="#h2o_q.types.Template.dump">dump</a></code></li>
+<li><code><a title="h2o_q.types.Template.load" href="#h2o_q.types.Template.load">load</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="h2o_q.types.TemplateCard" href="#h2o_q.types.TemplateCard">TemplateCard</a></code></h4>
 <ul class="two-column">
 <li><code><a title="h2o_q.types.TemplateCard.box" href="#h2o_q.types.TemplateCard.box">box</a></code></li>
@@ -21388,6 +21899,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li>
 <h4><code><a title="h2o_q.types.TextL" href="#h2o_q.types.TextL">TextL</a></code></h4>
 <ul class="">
+<li><code><a title="h2o_q.types.TextL.commands" href="#h2o_q.types.TextL.commands">commands</a></code></li>
 <li><code><a title="h2o_q.types.TextL.content" href="#h2o_q.types.TextL.content">content</a></code></li>
 <li><code><a title="h2o_q.types.TextL.dump" href="#h2o_q.types.TextL.dump">dump</a></code></li>
 <li><code><a title="h2o_q.types.TextL.load" href="#h2o_q.types.TextL.load">load</a></code></li>
@@ -21415,6 +21927,7 @@ def load(__d: Dict) -&gt; &#39;WideSeriesStatCard&#39;:
 <li>
 <h4><code><a title="h2o_q.types.TextXl" href="#h2o_q.types.TextXl">TextXl</a></code></h4>
 <ul class="">
+<li><code><a title="h2o_q.types.TextXl.commands" href="#h2o_q.types.TextXl.commands">commands</a></code></li>
 <li><code><a title="h2o_q.types.TextXl.content" href="#h2o_q.types.TextXl.content">content</a></code></li>
 <li><code><a title="h2o_q.types.TextXl.dump" href="#h2o_q.types.TextXl.dump">dump</a></code></li>
 <li><code><a title="h2o_q.types.TextXl.load" href="#h2o_q.types.TextXl.load">load</a></code></li>

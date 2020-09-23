@@ -7,4 +7,4 @@ matplotlib
 plotly
 altair
 vega-datasets
-h2o_q==0.5.0
+h2o_q==0.6.0
