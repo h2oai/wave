@@ -56,8 +56,7 @@ async def main(q: Q):
             groupable=True,
             downloadable=True,
             resettable=True,
-            total_displayable=True,
-            height='800'
+            height='800px'
         )
     ])
     await q.page.save()

@@ -69,11 +69,18 @@ describe('Table.tsx', () => {
       expect(T.qd.args[name]).toMatchObject(['rowname1', 'rowname2'])
     })
 
-    it('Clickable column - primary_column set', () => {
+    it('Clicks a column - link set on second col', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1' },
+          { name: 'colname2', label: 'Col2', link: true },
+        ]
+      }
       const syncMock = jest.fn()
       T.qd.sync = syncMock
 
-      const { getByText } = render(<XTable model={{ ...tableProps, primary_column_key: 'colname2' }} />)
+      const { getByText } = render(<XTable model={tableProps} />)
       fireEvent.click(getByText(cell21))
       expect(syncMock).not.toHaveBeenCalled()
 
@@ -81,6 +88,24 @@ describe('Table.tsx', () => {
       expect(T.qd.args[name]).toMatchObject(['rowname2'])
       expect(syncMock).toHaveBeenCalled()
     })
+  })
+
+  it('Does not click a column - link exlpicitly turned off', () => {
+    tableProps = {
+      ...tableProps,
+      columns: [
+        { name: 'colname1', label: 'Col1', link: false },
+        { name: 'colname2', label: 'Col2' },
+      ]
+    }
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+
+    const { getByText } = render(<XTable model={tableProps} />)
+
+    fireEvent.click(getByText(cell21))
+    expect(syncMock).not.toHaveBeenCalled()
+    expect(T.qd.args[name]).toMatchObject([])
   })
 
   describe('sort', () => {
