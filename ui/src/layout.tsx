@@ -158,10 +158,12 @@ export const
             const
               placement = grid.place(c.state.box),
               { left, top, right, bottom, width, height } = placement,
-              display = placement === badPlacement ? 'none' : 'block'
+              display = placement === badPlacement ? 'none' : 'block',
+              zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
+
             c.size = { width: width || 0, height: height || 0 } // TODO compute width from grid width; height cannot be relied upon
             return (
-              <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height }}>
+              <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height, zIndex }}>
                 <CardView card={c} />
                 <CardMenu card={c} />
               </div>
