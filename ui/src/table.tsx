@@ -18,9 +18,9 @@ interface TableColumn {
   name: S
   /** The text displayed on the column header. */
   label: S
-  /** The minimum width of this column. */
+  /** The minimum width of this column, e.g. '50px'. Only `px` units are supported at this time. */
   min_width?: S
-  /** The maximum width of this column. */
+  /** The maximum width of this column, e.g. '100px'. Only `px` units are supported at this time. */
   max_width?: S
   /** Indicates whether the column is sortable. */
   sortable?: B
@@ -28,7 +28,7 @@ interface TableColumn {
   searchable?: B
   /** Indicates whether the contents of this column are displayed as filters in a dropdown. */
   filterable?: B
-  /** Indicates whether the table cell should be displayed as a clickable link. */
+  /** Indicates whether each cell in this column should be displayed as a clickable link. */
   link?: B
   /** Defines how to render each cell in this column. Defaults to plain text. */
   cell_type?: TableCellType
@@ -75,7 +75,7 @@ export interface Table {
   downloadable?: B
   /** Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False. */
   resettable?: B
-  /** The height of the table. */
+  /** The height of the table, e.g. '400px', '50%', etc. */
   height?: S
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -188,7 +188,7 @@ export const
         search()
         if (groupsB()) initGroups()
       },
-      // TODO: Make filter options in dropdowns dynamic. 
+      // TODO: Make filter options in dropdowns dynamic.
       filter = () => {
         const selectedFilters = selectedFiltersB()
 
