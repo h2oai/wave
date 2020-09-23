@@ -2477,6 +2477,44 @@ class Markup:
             content,
         )
 
+
+class Template:
+    """Render dynamic content using a HTML template.
+    """
+    def __init__(
+            self,
+            content: str,
+            data: Optional[PackedRecord] = None,
+    ):
+        self.content = content
+        """The Handlebars template. https://handlebarsjs.com/guide/"""
+        self.data = data
+        """Data for the Handlebars template"""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.content is None:
+            raise ValueError('Template.content is required.')
+        return _dump(
+            content=self.content,
+            data=self.data,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Template':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        if __d_content is None:
+            raise ValueError('Template.content is required.')
+        __d_data: Any = __d.get('data')
+        content: str = __d_content
+        data: Optional[PackedRecord] = __d_data
+        return Template(
+            content,
+            data,
+        )
+
+
 class Picker:
     """Create a picker.
     Pickers are used to select one or more choices, such as tags or files, from a list.
@@ -3328,6 +3366,7 @@ class Component:
             expander: Optional[Expander] = None,
             frame: Optional[Frame] = None,
             markup: Optional[Markup] = None,
+            template: Optional[Template] = None,
             picker: Optional[Picker] = None,
             range_slider: Optional[RangeSlider] = None,
             stepper: Optional[Stepper] = None,
@@ -3394,6 +3433,8 @@ class Component:
         """Frame."""
         self.markup = markup
         """Markup"""
+        self.template = template
+        """Template"""
         self.picker = picker
         """Picker."""
         self.range_slider = range_slider
@@ -3438,6 +3479,7 @@ class Component:
             expander=None if self.expander is None else self.expander.dump(),
             frame=None if self.frame is None else self.frame.dump(),
             markup=None if self.markup is None else self.markup.dump(),
+            template=None if self.template is None else self.template.dump(),
             picker=None if self.picker is None else self.picker.dump(),
             range_slider=None if self.range_slider is None else self.range_slider.dump(),
             stepper=None if self.stepper is None else self.stepper.dump(),
@@ -3478,6 +3520,7 @@ class Component:
         __d_expander: Any = __d.get('expander')
         __d_frame: Any = __d.get('frame')
         __d_markup: Any = __d.get('markup')
+        __d_template: Any = __d.get('template')
         __d_picker: Any = __d.get('picker')
         __d_range_slider: Any = __d.get('range_slider')
         __d_stepper: Any = __d.get('stepper')
@@ -3513,6 +3556,7 @@ class Component:
         expander: Optional[Expander] = None if __d_expander is None else Expander.load(__d_expander)
         frame: Optional[Frame] = None if __d_frame is None else Frame.load(__d_frame)
         markup: Optional[Markup] = None if __d_markup is None else Markup.load(__d_markup)
+        template: Optional[Template] = None if __d_template is None else Template.load(__d_template)
         picker: Optional[Picker] = None if __d_picker is None else Picker.load(__d_picker)
         range_slider: Optional[RangeSlider] = None if __d_range_slider is None else RangeSlider.load(__d_range_slider)
         stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
@@ -3549,6 +3593,7 @@ class Component:
             expander,
             frame,
             markup,
+            template,
             picker,
             range_slider,
             stepper,

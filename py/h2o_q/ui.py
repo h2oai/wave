@@ -1230,6 +1230,25 @@ def markup(
         content,
     ))
 
+
+def template(
+        content: str,
+        data: Optional[PackedRecord] = None,
+) -> Component:
+    """Render dynamic content using a HTML template.
+
+    Args:
+        content: The Handlebars template. https://handlebarsjs.com/guide/
+        data: Data for the Handlebars template
+    Returns:
+        A `h2o_q.types.Template` instance.
+    """
+    return Component(template=Template(
+        content,
+        data,
+    ))
+
+
 def picker(
         name: str,
         choices: List[Choice],
@@ -1629,6 +1648,7 @@ def component(
         expander: Optional[Expander] = None,
         frame: Optional[Frame] = None,
         markup: Optional[Markup] = None,
+        template: Optional[Template] = None,
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
         stepper: Optional[Stepper] = None,
@@ -1668,6 +1688,7 @@ def component(
         expander: Expander.
         frame: Frame.
         markup: Markup
+        template: Template
         picker: Picker.
         range_slider: Range Slider.
         stepper: Stepper.
@@ -1707,6 +1728,7 @@ def component(
         expander,
         frame,
         markup,
+        template,
         picker,
         range_slider,
         stepper,

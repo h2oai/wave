@@ -1333,6 +1333,23 @@ ui_markup <- function(
   return(.o)
 }
 
+#' Render dynamic content using a HTML template.
+#'
+#' @param content The Handlebars template. https://handlebarsjs.com/guide/
+#' @param data Data for the Handlebars template
+#' @return A Template instance.
+ui_template <- function(
+  content,
+  data = NULL) {
+  .guard_scalar("content", "character", content)
+  # TODO Validate data: Rec
+  .o <- list(template=list(
+    content=content,
+    data=data))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
 #' Create a picker.
 #' Pickers are used to select one or more choices, such as tags or files, from a list.
 #' Use a picker to allow the user to quickly search for or manage a few tags or files.
@@ -1805,6 +1822,7 @@ ui_vega_visualization <- function(
 #' @param expander Expander.
 #' @param frame Frame.
 #' @param markup Markup
+#' @param template Template
 #' @param picker Picker.
 #' @param range_slider Range Slider.
 #' @param stepper Stepper.
@@ -1842,6 +1860,7 @@ ui_component <- function(
   expander = NULL,
   frame = NULL,
   markup = NULL,
+  template = NULL,
   picker = NULL,
   range_slider = NULL,
   stepper = NULL,
@@ -1877,6 +1896,7 @@ ui_component <- function(
   .guard_scalar("expander", "h2oq_Expander", expander)
   .guard_scalar("frame", "h2oq_Frame", frame)
   .guard_scalar("markup", "h2oq_Markup", markup)
+  .guard_scalar("template", "h2oq_Template", template)
   .guard_scalar("picker", "h2oq_Picker", picker)
   .guard_scalar("range_slider", "h2oq_RangeSlider", range_slider)
   .guard_scalar("stepper", "h2oq_Stepper", stepper)
@@ -1913,6 +1933,7 @@ ui_component <- function(
     expander=expander,
     frame=frame,
     markup=markup,
+    template=template,
     picker=picker,
     range_slider=range_slider,
     stepper=stepper,

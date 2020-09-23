@@ -27,6 +27,7 @@ import { Spinbox, XSpinbox } from './spinbox'
 import { Stepper, XStepper } from './stepper'
 import { Table, XTable } from './table'
 import { Tabs, XTabs } from './tabs'
+import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
 import { getTheme } from './theme'
@@ -96,6 +97,8 @@ export interface Component {
   frame?: Frame;
   /** Markup */
   markup?: Markup
+  /** Template */
+  template?: Template
   /** Picker.*/
   picker?: Picker;
   /** Range Slider. */
@@ -161,6 +164,7 @@ const
     if (m.expander) return <XExpander model={m.expander} />
     if (m.frame) return <XFrame model={m.frame} />
     if (m.markup) return <XMarkup model={m.markup} />
+    if (m.template) return <XTemplate model={m.template} />
     if (m.picker) return <XToolTip content={m.picker.tooltip}><XPicker model={m.picker} /></XToolTip>
     if (m.range_slider) return <XToolTip content={m.range_slider.tooltip}><XRangeSlider model={m.range_slider} /></XToolTip>
     if (m.stepper) return <XToolTip content={m.stepper.tooltip}><XStepper model={m.stepper} /></XToolTip>
