@@ -49,6 +49,8 @@ plan(list(multisession,multisession))
         .config$hub_access_key_secret <<- .get.env.var(c('ACCESS_KEY_SECRET','access_key_secret'))
         .config$shutdown_timeout <<- as.integer(.get.env.var(c('SHUTDOWN_TIMEOUT','3')))
 }
+
+.Config()
         
 
 #' Function to check if the object is a primitive.
@@ -82,6 +84,22 @@ plan(list(multisession,multisession))
                              5. \"logical\"\n"
                              ,object) )
 }
+}
+
+data.dump <- function(fields,size,data=NULL){
+        f = fields
+        n = size
+        d = data
+        if(!is.null(d)){
+                if(is.list(d)) o <- list(m=list(f=f,d=d))
+                else if(n < 0) o <- list(c=list(f=f,d=d))
+                else o <- list(f=list(f=f, d=d))
+        }
+        else if(n==0) o <- list(m=list(f=f))
+        else if(n < 0) o <- list(c=list(f=f,n=n))
+        else o <- list(f=list(f=f,n=n))
+        class(o) <- "h2o_q_data"
+        return(o)
 }
 
 #' Function to create a new page or check the existence of a page
@@ -142,7 +160,7 @@ page <- function(page_name,fun_flag=FALSE,...){
 page.add <- function(page_instance,page_name,card_name,FUN,...){
         page(page_name,fun_flag=TRUE)
         o <- FUN
-        o$view = str_match(deparse(substitute(FUN)),"ui_(.*)_card")[2]
+        o$view = gsub("^ui_(\\w+)_card(.*)","\\1",(deparse(substitute(FUN))))[1]
 
         if(nchar(o$view) == 0){
                 stop(sprintf("%s, is not a known card. Content on the page need to be a card",card_name))
@@ -150,12 +168,31 @@ page.add <- function(page_instance,page_name,card_name,FUN,...){
         if("list" %notin% class(o)){
                 stop(sprintf("%s, card needs to be a list",card_name))
         }
+
+        data = list()
+        bufs = list()
+        for(i in names(o)){
+                    if(class(o[[i]]) == "h2o_q_data"){
+                               data[[i]] <- length(bufs)
+                               class(o[[i]]) <- NULL
+                               bufs[[length(bufs)+1]] <- o[[i]]
+                             }
+}
+
+        for(k in names(data)){
+                o[[k]] <- NULL
+                o[[paste0("~",k)]] <- data[[k]]
+        }
+
         .opage <- list()
         .opage$key = card_name
         .opage$value = o
-        page_instance[[length(page_instance)+1]] <- .opage
+        if(length(bufs) > 0) .opage$b = bufs
+
+        page_instance[[card_name]] <- .opage
         return(page_instance)
 }
+
 
 #' Function to load/get the data on a page in JSON format
 #' A page name needs to be passed to the function to get back the 
@@ -211,7 +248,7 @@ page.load <- function(page_name,...){
 #' page.save(test_page,"/example")
 page.save <- function(page_instance,page_name,...){
         page(page_name,fun_flag=TRUE)
-        data <- jsonlite::toJSON(list(d=lapply(page_instance,function(x){list(k=x[[1]],d=x[[2]])})),auto_unbox=TRUE)
+        data <- jsonlite::toJSON(list(d=lapply(unname(page_instance),function(x){if(length(x) == 3){list(k=x[[1]],d=x[[2]],b=x[[3]])}else{list(k=x[[1]],d=x[[2]])}})),auto_unbox=TRUE)
         return(.site.save(page_name,data,...))
 }
 
