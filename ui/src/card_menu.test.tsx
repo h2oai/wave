@@ -14,7 +14,7 @@ describe('CardMenu.tsx', () => {
   })
 
   it('Renders menu when commands are specified', () => {
-    const { queryByTestId } = render(<CardMenu name={name}, commands={[{ name }]} changedB={box(false)} />)
+    const { queryByTestId } = render(<CardMenu name={name} commands={[{ name }]} changedB={box(false)} />)
     expect(queryByTestId(name)).toBeTruthy()
   })
 })
