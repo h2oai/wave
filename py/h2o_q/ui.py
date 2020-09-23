@@ -1216,6 +1216,20 @@ def frame(
     ))
 
 
+def markup(
+        content: str,
+) -> Component:
+    """Render HTML content.
+
+    Args:
+        content: The HTML content.
+    Returns:
+        A `h2o_q.types.Markup` instance.
+    """
+    return Component(markup=Markup(
+        content,
+    ))
+
 def picker(
         name: str,
         choices: List[Choice],
@@ -1614,6 +1628,7 @@ def component(
         tabs: Optional[Tabs] = None,
         expander: Optional[Expander] = None,
         frame: Optional[Frame] = None,
+        markup: Optional[Markup] = None,
         picker: Optional[Picker] = None,
         range_slider: Optional[RangeSlider] = None,
         stepper: Optional[Stepper] = None,
@@ -1652,6 +1667,7 @@ def component(
         tabs: Tabs.
         expander: Expander.
         frame: Frame.
+        markup: Markup
         picker: Picker.
         range_slider: Range Slider.
         stepper: Stepper.
@@ -1690,6 +1706,7 @@ def component(
         tabs,
         expander,
         frame,
+        markup,
         picker,
         range_slider,
         stepper,

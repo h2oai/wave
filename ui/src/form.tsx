@@ -14,6 +14,7 @@ import { Frame, XFrame } from './frame'
 import { Label, XLabel } from './label'
 import { cards } from './layout'
 import { Link, XLink } from './link'
+import { Markup, XMarkup } from './markup'
 import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
@@ -93,6 +94,8 @@ export interface Component {
   expander?: Expander;
   /** Frame. */
   frame?: Frame;
+  /** Markup */
+  markup?: Markup
   /** Picker.*/
   picker?: Picker;
   /** Range Slider. */
@@ -157,6 +160,7 @@ const
     if (m.button) return <XToolTip content={m.button.tooltip} showIcon={false} expand={false}><XStandAloneButton model={m.button} /></XToolTip>
     if (m.expander) return <XExpander model={m.expander} />
     if (m.frame) return <XFrame model={m.frame} />
+    if (m.markup) return <XMarkup model={m.markup} />
     if (m.picker) return <XToolTip content={m.picker.tooltip}><XPicker model={m.picker} /></XToolTip>
     if (m.range_slider) return <XToolTip content={m.range_slider.tooltip}><XRangeSlider model={m.range_slider} /></XToolTip>
     if (m.stepper) return <XToolTip content={m.stepper.tooltip}><XStepper model={m.stepper} /></XToolTip>

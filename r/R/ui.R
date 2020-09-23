@@ -1320,6 +1320,19 @@ ui_frame <- function(
   return(.o)
 }
 
+#' Render HTML content.
+#'
+#' @param content The HTML content.
+#' @return A Markup instance.
+ui_markup <- function(
+  content) {
+  .guard_scalar("content", "character", content)
+  .o <- list(markup=list(
+    content=content))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
 #' Create a picker.
 #' Pickers are used to select one or more choices, such as tags or files, from a list.
 #' Use a picker to allow the user to quickly search for or manage a few tags or files.
@@ -1791,6 +1804,7 @@ ui_vega_visualization <- function(
 #' @param tabs Tabs.
 #' @param expander Expander.
 #' @param frame Frame.
+#' @param markup Markup
 #' @param picker Picker.
 #' @param range_slider Range Slider.
 #' @param stepper Stepper.
@@ -1827,6 +1841,7 @@ ui_component <- function(
   tabs = NULL,
   expander = NULL,
   frame = NULL,
+  markup = NULL,
   picker = NULL,
   range_slider = NULL,
   stepper = NULL,
@@ -1861,6 +1876,7 @@ ui_component <- function(
   .guard_scalar("tabs", "h2oq_Tabs", tabs)
   .guard_scalar("expander", "h2oq_Expander", expander)
   .guard_scalar("frame", "h2oq_Frame", frame)
+  .guard_scalar("markup", "h2oq_Markup", markup)
   .guard_scalar("picker", "h2oq_Picker", picker)
   .guard_scalar("range_slider", "h2oq_RangeSlider", range_slider)
   .guard_scalar("stepper", "h2oq_Stepper", stepper)
@@ -1896,6 +1912,7 @@ ui_component <- function(
     tabs=tabs,
     expander=expander,
     frame=frame,
+    markup=markup,
     picker=picker,
     range_slider=range_slider,
     stepper=stepper,

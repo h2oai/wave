@@ -18,6 +18,12 @@ const
   })
 
 /** Render HTML content. */
+export interface Markup {
+  /** The HTML content. */
+  content: S
+}
+
+/** Render HTML content. */
 interface State {
   /** The title for this card.*/
   title: S
@@ -26,18 +32,16 @@ interface State {
 }
 
 export const
-  Markup = ({ content }: { content: S }) => {
+  XMarkup = ({ model: { content } }: { model: Markup }) => {
     const html = { __html: content }
     return <div dangerouslySetInnerHTML={html} />
   },
   MarkupCard = ({ title, content }: { title: S, content: S }) => (
     <div data-test='markup' className={title ? css.titledCard : css.untitledCard}>
       {title && <div className={css.title}>{title}</div>}
-      <Markup content={content} />
+      <XMarkup model={{ content }} />
     </div>
-  )
-
-export const
+  ),
   View = bond(({ state, changed }: Card<State>) => {
     const render = () => <MarkupCard title={state.title} content={state.content} />
     return { render, changed }
