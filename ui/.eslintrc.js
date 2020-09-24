@@ -1,4 +1,4 @@
-{
+module.exports = {
   "parser": "@typescript-eslint/parser",
   "settings": {
     "react": {
@@ -38,7 +38,7 @@
     "q/card-variable-name": "error",
     "react/display-name": "off",
     "no-console": [
-      "error",
+      process.env.NODE_ENV === 'production' ? "error" : "warn",
       {
         "allow": [
           "warn",
@@ -46,6 +46,7 @@
         ]
       }
     ],
+    "no-debugger": process.env.NODE_ENV === 'production' ? "error" : "warn",
     "semi": [
       "error",
       "never",
