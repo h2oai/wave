@@ -1654,6 +1654,7 @@ class DatePicker:
             placeholder: Optional[str] = None,
             value: Optional[str] = None,
             disabled: Optional[bool] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1666,6 +1667,8 @@ class DatePicker:
         """The date value in YYYY-MM-DD format."""
         self.disabled = disabled
         """True if this field is disabled."""
+        self.trigger = trigger
+        """True if the form should be submitted when the datepicker value changes."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1679,6 +1682,7 @@ class DatePicker:
             placeholder=self.placeholder,
             value=self.value,
             disabled=self.disabled,
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -1692,12 +1696,14 @@ class DatePicker:
         __d_placeholder: Any = __d.get('placeholder')
         __d_value: Any = __d.get('value')
         __d_disabled: Any = __d.get('disabled')
+        __d_trigger: Any = __d.get('trigger')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
         placeholder: Optional[str] = __d_placeholder
         value: Optional[str] = __d_value
         disabled: Optional[bool] = __d_disabled
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return DatePicker(
             name,
@@ -1705,6 +1711,7 @@ class DatePicker:
             placeholder,
             value,
             disabled,
+            trigger,
             tooltip,
         )
 

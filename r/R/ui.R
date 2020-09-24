@@ -914,6 +914,7 @@ ui_spinbox <- function(
 #' @param placeholder A string that provides a brief hint to the user as to what kind of information is expected in the field.
 #' @param value The date value in YYYY-MM-DD format.
 #' @param disabled True if this field is disabled.
+#' @param trigger True if the form should be submitted when the datepicker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A DatePicker instance.
 ui_date_picker <- function(
@@ -922,12 +923,14 @@ ui_date_picker <- function(
   placeholder = NULL,
   value = NULL,
   disabled = NULL,
+  trigger = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
   .guard_scalar("value", "character", value)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(date_picker=list(
     name=name,
@@ -935,6 +938,7 @@ ui_date_picker <- function(
     placeholder=placeholder,
     value=value,
     disabled=disabled,
+    trigger=trigger,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)

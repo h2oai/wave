@@ -816,6 +816,7 @@ def date_picker(
         placeholder: Optional[str] = None,
         value: Optional[str] = None,
         disabled: Optional[bool] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a date picker.
@@ -828,6 +829,7 @@ def date_picker(
         placeholder: A string that provides a brief hint to the user as to what kind of information is expected in the field.
         value: The date value in YYYY-MM-DD format.
         disabled: True if this field is disabled.
+        trigger: True if the form should be submitted when the datepicker value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.DatePicker` instance.
@@ -838,6 +840,7 @@ def date_picker(
         placeholder,
         value,
         disabled,
+        trigger,
         tooltip,
     ))
 
