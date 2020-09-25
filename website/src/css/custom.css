@@ -38,8 +38,11 @@
   --ifm-color-primary-lightest: #000000;
   --ifm-h1-font-size: 2rem;
   --ifm-h1-font-weight: 800;
-  --ifm-h2-font-size: 1rem;
+  --ifm-h2-font-size: 1.3rem;
   --ifm-h3-font-size: 1rem;
+  --ifm-h4-font-size: 1rem;
+  --ifm-h5-font-size: 1rem;
+  --ifm-h6-font-size: 1rem;
   --ifm-footer-background-color: #000000;
   --ifm-hr-border-color: #f9f9f9;
   --ifm-navbar-background-color: #000000;
@@ -60,19 +63,20 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
-.markdown > h2,
+ /* bug workaround: does not respect --ifm-h2-font-size */
+.markdown > h2 {
+  font-size: 1.3rem!important;
+}
 .markdown > h3,
 .markdown > h4,
 .markdown > h5,
-.markdown > h6
-{
+.markdown > h6 {
   font-size: 1rem!important;
 }
 h1,
 article header h1,
 article header h2,
-.markdown > h1
-{
+.markdown > h1 {
   font-size: 2rem!important;
   letter-spacing: -0.04em;
 }
