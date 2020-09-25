@@ -32,7 +32,7 @@ const
       opacity: 0
     },
     upload: {
-      height: 300,
+      height: 180,
       ...centerMixin(),
       flexDirection: 'column',
       boxSizing: 'border-box',
