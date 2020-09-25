@@ -1,6 +1,19 @@
+const examples = require('./examples');
+
 module.exports = {
   someSidebar: {
-    Docusaurus: ['doc1', 'doc2', 'doc3'],
-    Features: ['mdx'],
+    Guide: [
+      'doc1', 
+      'doc2', 
+      'doc3',
+      'testing',
+    ],
+    Examples: examples,
+    Migrating: [
+      'migrating-0',
+    ],
+    Meta: [
+      'change-log',
+    ],
   },
 };
