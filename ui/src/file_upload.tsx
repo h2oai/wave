@@ -37,7 +37,6 @@ const
       ...centerMixin(),
       flexDirection: 'column',
       boxSizing: 'border-box',
-      margin: 5,
     },
     uploadDragging: {
       border: dashed(2, colors.text),
@@ -63,7 +62,7 @@ const
       top: -15,
       right: 0,
       cursor: 'pointer'
-    }
+    },
   })
 const convertMegabytesToBytes = (bytes: F) => bytes * 1024 * 1024
 export const

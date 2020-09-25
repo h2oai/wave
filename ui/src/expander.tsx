@@ -59,7 +59,13 @@ export const
 
         return (
           <div data-test='expander' className={className}>
-            <Fluent.Separator alignContent="start"><Fluent.ActionButton title={actionTitle} iconProps={expanderIcon} onClick={onClick}>{m.label}</Fluent.ActionButton></Fluent.Separator>
+            <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
+              <Fluent.ActionButton
+                title={actionTitle}
+                iconProps={expanderIcon}
+                onClick={onClick}
+                styles={{ root: { paddingLeft: 0 }, icon: { marginLeft: 0 } }}>{m.label}</Fluent.ActionButton>
+            </Fluent.Separator>
             <div>
               <XComponents items={m.items || []} />
             </div>

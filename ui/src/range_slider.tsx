@@ -4,13 +4,12 @@ import { bond, box, S, qd, B, U, F } from './qd'
 import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import { stylesheet } from 'typestyle'
-import { palette } from './theme'
+import { palette, padding } from './theme'
 
 const
   css = stylesheet({
     container: {
-      paddingLeft: 8,
-      paddingRight: 8,
+      padding: padding(0, 8),
       $nest: {
         '.input-range': {
           marginTop: 20,
