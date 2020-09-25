@@ -5173,6 +5173,7 @@ class TabCard:
             self,
             box: str,
             items: List[Tab],
+            value: Optional[str] = None,
             link: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
@@ -5180,6 +5181,8 @@ class TabCard:
         """A string indicating how to place this component on the page."""
         self.items = items
         """Items to render."""
+        self.value = value
+        """The name of the tab to select."""
         self.link = link
         """True if tabs should be rendered as links and not a standard tab."""
         self.commands = commands
@@ -5195,6 +5198,7 @@ class TabCard:
             view='tab',
             box=self.box,
             items=[__e.dump() for __e in self.items],
+            value=self.value,
             link=self.link,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
@@ -5208,15 +5212,18 @@ class TabCard:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('TabCard.items is required.')
+        __d_value: Any = __d.get('value')
         __d_link: Any = __d.get('link')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: List[Tab] = [Tab.load(__e) for __e in __d_items]
+        value: Optional[str] = __d_value
         link: Optional[bool] = __d_link
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TabCard(
             box,
             items,
+            value,
             link,
             commands,
         )

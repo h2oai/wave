@@ -2637,21 +2637,25 @@ ui_small_stat_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items Items to render.
+#' @param value The name of the tab to select.
 #' @param link True if tabs should be rendered as links and not a standard tab.
 #' @param commands Contextual menu commands for this component.
 #' @return A TabCard instance.
 ui_tab_card <- function(
   box,
   items,
+  value = NULL,
   link = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_Tab", items)
+  .guard_scalar("value", "character", value)
   .guard_scalar("link", "logical", link)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
+    value=value,
     link=link,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TabCard"))
