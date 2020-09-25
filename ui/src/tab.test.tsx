@@ -56,4 +56,11 @@ describe('Meta.tsx', () => {
     expect(window.location.hash).toBe(hashName)
   })
 
+  it('Sets default tab', () => {
+    const items = [{ name: 'tab1' }, { name: 'tab2' }]
+    const { getAllByRole } = render(<View {...{ ...tabProps, state: { items, value: 'tab2' } }} />)
+
+    expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+  })
+
 })
