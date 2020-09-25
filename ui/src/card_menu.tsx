@@ -35,6 +35,10 @@ const
   toContextMenuItem = (c: Command): IContextualMenuItem => {
     const
       onClick = () => {
+        if (c.name.startsWith('#')) {
+          window.location.hash = c.name.substr(1)
+          return
+        }
         qd.args[c.name] = c.data === undefined ? true : c.data
         qd.sync()
       }
