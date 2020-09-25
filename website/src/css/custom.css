@@ -1,4 +1,5 @@
 /* stylelint-disable docusaurus/copyright-header */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap');
 /**
  * Any CSS included here will be global. The classic template
  * bundles Infima by default. Infima is a CSS framework designed to
@@ -22,4 +23,107 @@
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
+}
+
+/* Custom */
+
+:root {
+  --h2o-yellow: #ffe52b;
+  --ifm-color-primary: #000000;
+  --ifm-color-primary-dark: #000000;
+  --ifm-color-primary-darker: #000000;
+  --ifm-color-primary-darkest: #000000;
+  --ifm-color-primary-light: #000000;
+  --ifm-color-primary-lighter: #000000;
+  --ifm-color-primary-lightest: #000000;
+  --ifm-h1-font-size: 2rem;
+  --ifm-h1-font-weight: 800;
+  --ifm-h2-font-size: 1rem;
+  --ifm-h3-font-size: 1rem;
+  --ifm-footer-background-color: #000000;
+  --ifm-hr-border-color: #f9f9f9;
+  --ifm-navbar-background-color: #000000;
+  --ifm-navbar-shadow: none;
+  --ifm-navbar-link-color: #fff;
+  --ifm-navbar-link-hover-color: var(--h2o-yellow);
+  --ifm-footer-link-color: #fff;
+  --ifm-footer-link-hover-color: var(--h2o-yellow);
+  --ifm-hero-background-color: var(--h2o-yellow);
+  --ifm-menu-color: var(--ifm-toc-link-color);
+  --ifm-menu-color-active: #000000;
+  --ifm-menu-color-background-active: var(--h2o-yellow);
+  --ifm-global-radius: 0;
+  /* --ifm-menu-link-padding-vertical: 0; */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.markdown > h2,
+.markdown > h3,
+.markdown > h4,
+.markdown > h5,
+.markdown > h6
+{
+  font-size: 1rem!important;
+}
+h1,
+article header h1,
+article header h2,
+.markdown > h1
+{
+  font-size: 2rem!important;
+  letter-spacing: -0.04em;
+}
+.markdown a:link {
+  border-bottom: 1px solid #000;
+  text-decoration: none;
+}
+.markdown a:hover {
+  text-decoration: none;
+}
+.footer {
+  background-color: #000000!important;
+}
+.hero {
+  background-color: var(--h2o-yellow);
+  background-image: url(/img/hero.jpg);
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+  color: #000;
+  padding: 8rem 0!important;
+}
+.hero__title {
+  font-weight: 800;
+  font-size: 4rem!important;
+  letter-spacing: -0.05em;
+  margin-bottom: 0;
+}
+.hero__subtitle {
+  letter-spacing: -0.04em;
+}
+.hero .button {
+  border: none;
+  background: #000;
+  color: #fff!important;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.navbar {
+  font-size: 0.85rem;
+}
+
+/* Mega-hacks */
+
+.docSidebarContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage- {
+  background: #f9f9f9;
+  border: none!important;
+}
+html[data-theme='dark'] .docSidebarContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage- {
+  background: inherit;
+}
+.menu__link {
+  border-radius: 0;
 }
