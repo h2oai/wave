@@ -797,7 +797,8 @@ const
       qd.socket = sock
       handle({ t: SockEventType.Message, type: SockMessageType.Info, message: 'Connected' })
       backoff = 1
-      sock.send(`+ ${qd.path} `) // protocol: t<sep>addr<sep>data
+      const hash = window.location.hash
+      sock.send(`+ ${qd.path} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
     }
     sock.onclose = function () {
       const refreshRate = qd.refreshRateB()

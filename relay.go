@@ -27,6 +27,11 @@ type Relay struct {
 	quit   chan struct{} // quit routing
 }
 
+// Boot represents the initial message sent when a relay is established
+type Boot struct {
+	Hash string `json:"#,omitempty"` // location hash
+}
+
 func toRelayMode(mode string) RelayMode {
 	switch mode {
 	case "broadcast":

@@ -27,7 +27,7 @@ type Msg struct {
 
 var (
 	msgSep     = []byte{' '}
-	boot       = []byte("{}")
+	emptyJSON  = []byte("{}")
 	invalidMsg = Msg{t: badMsgT}
 )
 

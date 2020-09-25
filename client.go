@@ -2,6 +2,7 @@ package qd
 
 import (
 	"bytes"
+	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
@@ -86,6 +87,13 @@ func (c *Client) listen() {
 					c.subscribe(c.username) // user-level
 				case broadcastMode:
 					c.subscribe(m.addr) // system-level
+				}
+
+				boot := emptyJSON
+				if len(m.data) > 0 { // location hash
+					if j, err := json.Marshal(Boot{Hash: string(m.data)}); err == nil {
+						boot = j
+					}
 				}
 				relay.relay(c.format(boot))
 				continue
