@@ -43,9 +43,12 @@ async def main(q: Q):
         ])
         q.client.initialized = True
     else:
-        table = q.page['form'].items[1].table
+        items = q.page['form'].items
+        search_box = items[0].textbox
+        table = items[1].table
         term: str = q.args.search
         term = term.strip() if term else ''
+        search_box.value = term
         table.rows = df_to_rows(search_df(addresses, term) if len(term) else addresses)
 
     await q.page.save()
