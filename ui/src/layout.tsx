@@ -165,7 +165,7 @@ export const
             return (
               <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height, zIndex }}>
                 <CardView card={c} />
-                { c.state.commands && c.state.commands.length ? <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} /> : null}
+                {c.state.commands?.length ? <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} /> : null}
               </div>
             )
           })
