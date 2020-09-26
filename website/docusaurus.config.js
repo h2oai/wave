@@ -80,13 +80,11 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
           editUrl:
             'https://github.com/h2oai/qd/edit/master/website/',
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
           editUrl:
             'https://github.com/h2oai/docusaurus/edit/master/website/blog/',
         },

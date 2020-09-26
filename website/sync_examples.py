@@ -1,4 +1,5 @@
 import os.path
+import json
 from typing import List
 
 website_dir = os.path.realpath(os.path.dirname(__file__))
@@ -68,9 +69,8 @@ def main():
         md = e.to_md()
         write_file(os.path.join(example_md_dir, f'{e.slug}.md'), md)
 
-    examples_js = "module.exports = [\n" + ',\n'.join(
-        [f"  'examples/{e.slug}'" for e in examples]) + '\n];'
-    write_file(os.path.join(website_dir, 'examples.js'), examples_js)
+    example_items = [dict(slug=e.slug, title=e.title) for e in examples]
+    write_file(os.path.join(website_dir, 'examples.js'), f'module.exports={json.dumps(example_items)}')
 
 
 if __name__ == '__main__':

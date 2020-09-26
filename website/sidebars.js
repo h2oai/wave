@@ -8,7 +8,7 @@ module.exports = {
       'doc3',
       'testing',
     ],
-    Examples: examples,
+    Examples: examples.map(e => `examples/${e.slug}`),
     Migrating: [
       'migrating-0',
     ],
