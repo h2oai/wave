@@ -29,7 +29,14 @@ const
   css = stylesheet({
     toolbar: {
       margin: margin(5, 0)
-    }
+    },
+    items: {
+      $nest: {
+        '> *': {
+          margin: '10px 0',
+        }
+      },
+    },
   }),
   XChecklistItem = bond(({ name, label, disabled, selectedB }: { name: S, label: S, disabled: B, selectedB: Box<B> }) => {
     const
@@ -83,9 +90,11 @@ export const
           <div data-test={m.name}>
             <Fluent.Label>{m.label}</Fluent.Label>
             <div className={css.toolbar}>
-              <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+              <Fluent.Text variant='small'>
+                <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+              </Fluent.Text>
             </div>
-            <div>{items}</div>
+            <div className={css.items}>{items}</div>
           </div>
         )
       }
