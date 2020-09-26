@@ -755,7 +755,7 @@ class Turtle:
         """
         return self._rotate(degrees)
 
-    def pu(self, close: any) -> 'Turtle':
+    def pu(self, close: bool) -> 'Turtle':
         """
         Pen up.
 

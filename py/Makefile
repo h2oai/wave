@@ -11,14 +11,14 @@ publish: ## Publish package to PyPI
 setup: ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
-	./venv/bin/python -m pip install setuptools wheel twine requests websockets sphinx sphinx_rtd_theme pytest flake8
+	./venv/bin/python -m pip install setuptools wheel twine requests websockets pdoc3 pytest flake8
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
 
 .PHONY: docs
-docs: sync-examples ## Build API docs
-	./venv/bin/pdoc --force --html --template-dir docs/templates --output-dir build/docs h2o_q
-	cp ../q.png build/docs/h2o_q/
+docs: ## Build API docs
+	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_q
+	mv build/docs/h2o_q/* ../website/docs/api/
 
 purge: ## Purge previous build
 	rm -rf build dist h2o_q.egg-info
@@ -26,10 +26,6 @@ purge: ## Purge previous build
 .PHONY: examples
 examples:
 	sed -i -r -e "s/h2o_q.+/h2o_q==$(VERSION)/" examples/requirements.txt
-
-sync-examples:
-	rm -f docs/example*.md
-	./venv/bin/python docs/sync_examples.py
 
 .PHONY: release
 release: build docs examples ## Prepare release artifacts
