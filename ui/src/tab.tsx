@@ -2,12 +2,14 @@ import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react'
 import React from 'react'
 import { cards } from './layout'
 import { Tab } from './tabs'
-import { bond, Card, qd, B } from './qd'
+import { bond, Card, qd, B, S } from './qd'
 
 /** Create a card containing tabs for navigation. */
 interface State {
   /** Items to render. */
   items: Tab[]
+  /** The name of the tab to select. */
+  value?: S
   /** True if tabs should be rendered as links and not a standard tab. */
   link?: B
 }
@@ -31,7 +33,7 @@ export const
           items = state.items.map(({ name, label, icon }) => (
             <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
           ))
-        return <Pivot data-test='tab' linkFormat={linkFormat} onLinkClick={onLinkClick}>{items}</Pivot>
+        return <Pivot data-test='tab' linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
 
       }
     return { render, changed }

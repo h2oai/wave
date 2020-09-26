@@ -2366,6 +2366,7 @@ def small_stat_card(
 def tab_card(
         box: str,
         items: List[Tab],
+        value: Optional[str] = None,
         link: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> TabCard:
@@ -2374,6 +2375,7 @@ def tab_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: Items to render.
+        value: The name of the tab to select.
         link: True if tabs should be rendered as links and not a standard tab.
         commands: Contextual menu commands for this component.
     Returns:
@@ -2382,6 +2384,7 @@ def tab_card(
     return TabCard(
         box,
         items,
+        value,
         link,
         commands,
     )
