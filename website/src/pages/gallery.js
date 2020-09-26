@@ -22,6 +22,7 @@ function Gallery() {
       <main>
         <div className='container margin-vert--lg padding-vert--lg'>
           <h1>Gallery</h1>
+          <p>Welcome to the H2O Q Gallery! Each of these {examples.length} examples are as concise as possible, and demonstrate specific features of Q for your inspiration and learning.</p>
           <div className='gallery'>
             {examples.map(e => <Preview key={e.slug} title={e.title} slug={e.slug} />)}
           </div>

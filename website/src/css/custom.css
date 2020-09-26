@@ -154,3 +154,25 @@ html[data-theme='dark'] .docSidebarContainer_node_modules-\@docusaurus-theme-cla
   background-position: right bottom;
   border: 1px solid #999;
 }
+
+.api {
+  margin-bottom: 4rem;
+}
+.api h3 {
+  color: var(--h2o-yellow);
+  color: #fff;
+  background: #777;
+  padding: 5px 10px;
+}
+.api__body {
+  margin: 0 0 0 1rem;
+}
+.api__signature {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: var(--ifm-code-font-size);
+  background-color: var(--ifm-code-background);
+  padding: var(--ifm-code-padding-vertical) var(--ifm-code-padding-horizontal);
+}
+.api__description {
+  margin: 1rem 0;
+}

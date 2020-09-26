@@ -9,6 +9,15 @@ module.exports = {
       'testing',
     ],
     Examples: examples.map(e => `examples/${e.slug}`),
+    API: [
+      'api/index',
+      'api/core',
+      'api/ui',
+      'api/server',
+      'api/graphics',
+      'api/types',
+      'api/test',
+    ],
     Migrating: [
       'migrating-0',
     ],
