@@ -39,29 +39,37 @@ def rnd(): return random.randint(1, 100)
 
 async def main(q: Q):
     q.page['example'] = ui.form_card(box='1 1 4 10', items=[
-        ui.text_xl(content='Text XL'),
-        ui.text_l(content='Text L'),
-        ui.text_m(content='Text M'),
-        ui.text_s(content='Text S'),
-        ui.text_xs(content='Text XS'),
-        ui.label(label='Label'),
-        ui.separator(label='Separator'),
-        ui.progress(label='Progress'),
-        ui.message_bar(text='Message bar'),
+        ui.text_xl(content='Extra-large text, for headings.'),
+        ui.text_l(content='Large text, for sub-headings.'),
+        ui.text_m(content='Body text, for paragraphs and other content.'),
+        ui.text_s(content='Small text, for small print.'),
+        ui.text_xs(content='Extra-small text, for really small print.'),
+        ui.separator(label='A separator sections forms'),
+        ui.progress(label='A progress bar'),
+        ui.progress(label='A progress bar'),
+        ui.message_bar(type='success', text='Message bar'),
+        ui.message_bar(type='success', text='Message bar'),
         ui.textbox(name='textbox', label='Textbox'),
-        ui.checkbox(name='checkbox', label='Checkbox'),
+        ui.label(label='Checkboxes'),
+        ui.checkbox(name='checkbox1', label='A checkbox'),
+        ui.checkbox(name='checkbox1', label='Another checkbox'),
+        ui.checkbox(name='checkbox1', label='Yet another checkbox'),
         ui.toggle(name='toggle', label='Toggle'),
         ui.choice_group(name='choice_group', label='Choice group', choices=[
-          ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']]
-        ),
+            ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
+        ]),
         ui.checklist(name='checklist', label='Checklist', choices=[
-          ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']]
-        ),
+            ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
+        ]),
         ui.dropdown(name='dropdown', label='Dropdown', choices=[
-          ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']]
-        ),
+            ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
+        ]),
+        ui.dropdown(name='dropdown', label='Multi-valued Dropdown', values=[], choices=[
+            ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
+        ]),
         ui.combobox(name='combobox', label='Combobox', choices=['Choice 1', 'Choice 2', 'Choice 3']),
         ui.slider(name='slider', label='Slider'),
+        ui.range_slider(name='range_slider', label='Range slider', max=99),
         ui.spinbox(name='spinbox', label='Spinbox'),
         ui.date_picker(name='date_picker', label='Date picker'),
         ui.color_picker(name='color_picker', label='Color picker'),
@@ -101,7 +109,6 @@ async def main(q: Q):
             ui.choice('choice2', label='Choice 2'),
             ui.choice('choice3', label='Choice 3'),
         ]),
-        ui.range_slider(name='range_slider', label='Range slider', max=99),
         ui.stepper(name='stepper', items=[
             ui.step(label='Step 1', icon='MailLowImportance'),
             ui.step(label='Step 2', icon='TaskManagerMirrored'),
