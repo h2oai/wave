@@ -2,8 +2,6 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { Choice } from './choice_group'
 import { B, bond, S, qd, box } from './qd'
-import { stylesheet } from 'typestyle'
-import { rem } from './theme'
 
 /**
  * Create a dropdown.
@@ -40,14 +38,6 @@ export interface Dropdown {
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
-
-
-const css = stylesheet({
-  links: {
-    paddingTop: 10,
-    fontSize: rem(0.8)
-  }
-})
 
 export const
   XDropdown = bond(({ model: m }: { model: Dropdown }) => {
@@ -100,13 +90,7 @@ export const
         onChange()
       },
       render = () =>
-        <>
-          {
-            isMultivalued &&
-            <div className={css.links}>
-              <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
-            </div>
-          }
+        <div>
           <Fluent.Dropdown
             data-test={m.name}
             label={m.label}
@@ -119,7 +103,15 @@ export const
             selectedKeys={isMultivalued ? selectedOptionsB() : undefined}
             onChange={onChange}
           />
-        </>
+          {
+            isMultivalued &&
+            <div>
+              <Fluent.Text variant='small'>
+                <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+              </Fluent.Text>
+            </div>
+          }
+        </div>
 
     return { render, selectedOptionsB }
   })
