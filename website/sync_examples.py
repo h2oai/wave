@@ -4,6 +4,7 @@ from typing import List
 
 website_dir = os.path.realpath(os.path.dirname(__file__))
 example_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardir, 'py', 'examples'))
+thumbnail_dir = os.path.join(website_dir, 'static', 'img', 'examples')
 
 
 class Example:
@@ -68,6 +69,8 @@ def main():
     for e in examples:
         md = e.to_md()
         write_file(os.path.join(example_md_dir, f'{e.slug}.md'), md)
+        if not os.path.exists(os.path.join(thumbnail_dir, f'{e.slug}.png')):
+            print(f'*** ALERT: no thumbnail found for example "{e.slug}"')
 
     example_items = [dict(slug=e.slug, title=e.title) for e in examples]
     write_file(os.path.join(website_dir, 'examples.js'), f'module.exports={json.dumps(example_items)}')

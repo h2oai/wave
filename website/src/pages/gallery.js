@@ -6,11 +6,11 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 const examples = require('../../examples');
 
 export const Preview = ({ slug, title }) => {
-  const 
+  const
     exampleUrl = useBaseUrl(`docs/examples/${slug}`),
     imgUrl = useBaseUrl(`img/examples/${slug}.png`)
   return (
-    <a href={exampleUrl}><div style={{backgroundImage: `url(${imgUrl})`}}></div>{title}</a>
+    <a href={exampleUrl}><div style={{ backgroundImage: `url(${imgUrl})` }}></div>{title}</a>
   )
 };
 
