@@ -895,16 +895,19 @@ def button(
 
 def buttons(
         items: List[Component],
+        justify: Optional[str] = None,
 ) -> Component:
     """Create a set of buttons to be layed out horizontally.
 
     Args:
         items: The button in this set.
+        justify: Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'.
     Returns:
         A `h2o_q.types.Buttons` instance.
     """
     return Component(buttons=Buttons(
         items,
+        justify,
     ))
 
 
