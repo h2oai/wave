@@ -411,10 +411,23 @@ export const
 
         return <span>{v}</span>
       },
+      computeHeight = () => {
+        if (m.height) return m.height
+        if (items.length > 10) return 500
+
+        const
+          topToolbarHeight = searchableKeys.length || m.groupable ? 60 : 0,
+          headerHeight = 60,
+          rowHeight = m.columns.some(c => c.cell_type)
+            ? m.columns.some(c => c.cell_type?.progress) ? 68 : 50
+            : 43,
+          footerHeight = m.downloadable || m.resettable || searchableKeys.length ? 44 : 0
+
+        return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight
+      },
       DataTable = () => (
         <>
           <Fluent.DetailsList
-            styles={{ contentWrapper: { minHeight: m.height ? `calc(${m.height} - 100px)` : 400 } }}
             items={filteredItemsB()}
             columns={columnsB()}
             layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
@@ -433,7 +446,7 @@ export const
         </>
       ),
       render = () => (
-        <div data-test={m.name} style={{ position: 'relative', height: m.height || 500 }}>
+        <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
           <Fluent.Stack horizontal horizontalAlign='space-between' >
             {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
             {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%' } }} />}

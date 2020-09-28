@@ -36,6 +36,64 @@ describe('Table.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  describe('Height compute', () => {
+
+    it('Computes properly for simple table - header, rows', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1' },
+          { name: 'colname2', label: 'Col2' },
+        ],
+      }
+      const { getByTestId } = render(<XTable model={tableProps} />)
+      expect(getByTestId(name).style.height).toBe('189px')
+
+    })
+
+    it('Computes properly for searchable table - toptoolbar, header, rows, footer', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1', searchable: true },
+          { name: 'colname2', label: 'Col2' },
+        ],
+      }
+      const { getByTestId } = render(<XTable model={tableProps} />)
+      expect(getByTestId(name).style.height).toBe('293px')
+    })
+
+    it('Computes properly for custom progress cell - toptoolbar, header, rows, footer', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1', searchable: true },
+          { name: 'colname2', label: 'Col2', cell_type: { progress: {} } },
+        ],
+      }
+      const { getByTestId } = render(<XTable model={tableProps} />)
+      expect(getByTestId(name).style.height).toBe('368px')
+    })
+
+    it('Computes properly for custom icon cell - toptoolbar, header, rows, footer', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1', searchable: true },
+          { name: 'colname2', label: 'Col2', cell_type: { icon: {} } },
+        ],
+        rows: [
+          { name: 'rowname1', cells: [cell11, 'BoxMultiplySolid'] },
+          { name: 'rowname2', cells: [cell21, 'BoxMultiplySolid'] },
+          { name: 'rowname2', cells: [cell31, 'BoxMultiplySolid'] }
+        ]
+      }
+      const { getByTestId } = render(<XTable model={tableProps} />)
+      expect(getByTestId(name).style.height).toBe('314px')
+    })
+
+  })
+
   describe('Q calls', () => {
     it('Sets args and calls sync on doubleclick', () => {
       const syncMock = jest.fn()
