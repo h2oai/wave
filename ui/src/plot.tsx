@@ -614,15 +614,16 @@ const
     return [scales, axes]
   },
   makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): [ScaleOption, AxisOption | null] => {
-    const scale: ScaleOption = {}
-    let axis: AxisOption | null = null
+    const
+      scale: ScaleOption = {},
+       axis: AxisOption = { label: { autoHide: false } } // Bug in G2? `autoHide` should be set to false by default (it is not).
     if (isS(typ)) scale.type = typ as any
     if (format) scale.formatter = (v: any) => format(undefined, v)
     if (isS(title)) {
       scale.alias = title
       // HACK ALERT!
       // The scale alias is not rendered by G2 unless the axis title is non-empty.
-      axis = { title: {} }
+      axis.title = {}
     }
     if (isF(min)) scale.min = min
     if (isF(max)) scale.max = max
