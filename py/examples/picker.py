@@ -12,15 +12,15 @@ async def main(q: Q):
         ]
     else:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
-          ui.picker(name='picker', label='Picker showcase', choices=[
-            ui.choice(name='spam', label='Spam'),
-            ui.choice(name='eggs', label= 'Eggs'),
-            ui.choice(name='ham', label= 'Ham'),
-            ui.choice(name='cheese', label='Cheese'),
-            ui.choice(name='beans', label='Beans'),
-            ui.choice(name='toast', label='Toast'),
-          ]),
-          ui.button(name='show_inputs', label='Submit', primary=True),
+            ui.picker(name='picker', label='Place an order (try Spam, Eggs or Ham):', choices=[
+                ui.choice(name='spam', label='Spam'),
+                ui.choice(name='eggs', label='Eggs'),
+                ui.choice(name='ham', label='Ham'),
+                ui.choice(name='cheese', label='Cheese'),
+                ui.choice(name='beans', label='Beans'),
+                ui.choice(name='toast', label='Toast'),
+            ]),
+            ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
 

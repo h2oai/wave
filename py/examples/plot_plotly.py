@@ -20,7 +20,6 @@ async def main(q: Q):
         q.page['controls'] = ui.form_card(
             box='1 1 4 2',
             items=[
-                ui.text_xl("Lets make some interactive plots with plotly"),
                 ui.slider(name='points', label='Points', min=5, max=50, step=1, value=q.client.points, trigger=True),
                 ui.toggle(name='plotly_controls', label='Plotly Controls', trigger=True),
             ]

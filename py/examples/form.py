@@ -48,7 +48,6 @@ async def main(q: Q):
         ui.progress(label='A progress bar'),
         ui.progress(label='A progress bar'),
         ui.message_bar(type='success', text='Message bar'),
-        ui.message_bar(type='success', text='Message bar'),
         ui.textbox(name='textbox', label='Textbox'),
         ui.label(label='Checkboxes'),
         ui.checkbox(name='checkbox1', label='A checkbox'),
