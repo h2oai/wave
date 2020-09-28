@@ -10,7 +10,7 @@ export const Preview = ({ slug, title }) => {
     exampleUrl = useBaseUrl(`docs/examples/${slug}`),
     imgUrl = useBaseUrl(`img/examples/${slug}.png`)
   return (
-    <a href={exampleUrl}><div style={{ backgroundImage: `url(${imgUrl})` }}></div>{title}</a>
+    <a href={exampleUrl}><div className='cover' style={{ backgroundImage: `url(${imgUrl})` }}></div>{title}</a>
   )
 };
 

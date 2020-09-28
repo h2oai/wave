@@ -25,6 +25,8 @@ title: {self.title}
 
 {self.description}
 
+<div className='cover' style={{{{ backgroundImage: 'url(/img/examples/{self.slug}.png)' }}}} />
+
 ```py
 {self.code}
 ```
