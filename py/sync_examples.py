@@ -2,8 +2,8 @@ import os.path
 import json
 from typing import List
 
-website_dir = os.path.realpath(os.path.dirname(__file__))
-example_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardir, 'py', 'examples'))
+example_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), 'examples'))
+website_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardir, 'website'))
 thumbnail_dir = os.path.join(website_dir, 'static', 'img', 'examples')
 
 
