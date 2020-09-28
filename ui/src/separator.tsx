@@ -2,13 +2,11 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { S } from './qd'
-import { px } from './theme'
 
 const
   css = stylesheet({
     separator: {
       boxSizing: 'border-box',
-      paddingTop: px(20),
     },
   })
 

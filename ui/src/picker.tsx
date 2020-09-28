@@ -46,7 +46,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
     },
     init = () => qd.args[m.name] = m.values || null,
     render = () => (
-      <>
+      <div>
         {m.label && <Fluent.Text>{m.label}</Fluent.Text>}
         <Fluent.TagPicker
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
@@ -58,7 +58,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
           selectedItems={selectedTagsB()}
           disabled={m.disabled}
         />
-      </>
+      </div>
     )
 
   return { init, render, selectedTagsB }

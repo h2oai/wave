@@ -112,7 +112,7 @@ export const
         <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block>
           <div className={css.markdown}><Markdown source={content} /></div>
         </Fluent.Text>
-        { commands && commands.length ? <CardMenu name={name} commands={commands} /> : null}
+        {!!commands?.length && <CardMenu name={name} commands={commands} />}
       </div>
     )
   }

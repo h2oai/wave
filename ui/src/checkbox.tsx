@@ -1,7 +1,6 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, S, qd } from './qd'
-import { px } from './theme'
 
 /**
  * Create a checkbox.
@@ -36,13 +35,6 @@ export interface Checkbox {
   tooltip?: S
 }
 
-const
-  checkboxStyles: Partial<Fluent.ICheckboxStyles> = {
-    root: {
-      marginBottom: px(10),
-    }
-  }
-
 export const
   XCheckbox = bond(({ model: m }: { model: Checkbox }) => {
     qd.args[m.name] = !!m.value
@@ -61,7 +53,6 @@ export const
               defaultIndeterminate={true}
               onChange={onChange}
               disabled={m.disabled}
-              styles={checkboxStyles}
             />
           )
           : (
@@ -72,7 +63,6 @@ export const
               defaultChecked={m.value}
               onChange={onChange}
               disabled={m.disabled}
-              styles={checkboxStyles}
             />
           )
 

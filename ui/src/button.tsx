@@ -3,7 +3,6 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
 import { B, bond, S, qd } from './qd'
-import { padding } from './theme'
 import { XToolTip } from './tooltip'
 
 /**
@@ -53,7 +52,6 @@ const
   css = stylesheet({
     buttons: {
       boxSizing: 'border-box',
-      padding: padding(20, 0)
     },
   })
 

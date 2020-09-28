@@ -30,7 +30,7 @@ const
 
 export const
   XMessageBar = ({ model: m }: { model: MessageBar }) => (
-    m.text && m.text.length
+    m.text?.length
       ? (
         <Fluent.MessageBar
           data-test='message_bar'

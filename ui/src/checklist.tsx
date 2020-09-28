@@ -2,7 +2,8 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { Choice } from './choice_group'
 import { B, bond, box, Box, on, S, qd } from './qd'
-import { px } from './theme'
+import { margin } from './theme'
+import { stylesheet } from 'typestyle'
 
 /**
  * Create a set of checkboxes.
@@ -25,10 +26,17 @@ export interface Checklist {
 }
 
 const
-  checklistItemStyles = () => ({
-    root: {
-      marginBottom: px(4),
-    }
+  css = stylesheet({
+    toolbar: {
+      margin: margin(5, 0)
+    },
+    items: {
+      $nest: {
+        '> *': {
+          margin: '10px 0',
+        }
+      },
+    },
   }),
   XChecklistItem = bond(({ name, label, disabled, selectedB }: { name: S, label: S, disabled: B, selectedB: Box<B> }) => {
     const
@@ -41,7 +49,7 @@ const
             checked={selectedB()}
             onChange={onChange}
             disabled={disabled}
-            styles={checklistItemStyles}
+            styles={{ root: { marginBottom: 4 } }}
           />
         )
       }
@@ -81,10 +89,12 @@ export const
         return (
           <div data-test={m.name}>
             <Fluent.Label>{m.label}</Fluent.Label>
-            <div>
-              <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+            <div className={css.toolbar}>
+              <Fluent.Text variant='small'>
+                <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+              </Fluent.Text>
             </div>
-            <div>{items}</div>
+            <div className={css.items}>{items}</div>
           </div>
         )
       }

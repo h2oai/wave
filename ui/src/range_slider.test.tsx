@@ -13,6 +13,11 @@ describe('rangeSlider.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XRangeSlider model={rangeSliderProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
   it('Sets args - init', () => {
     render(<XRangeSlider model={rangeSliderProps} />)
     expect(T.qd.args[name]).toMatchObject([0, 100])

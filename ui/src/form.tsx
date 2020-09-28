@@ -30,10 +30,11 @@ import { Tabs, XTabs } from './tabs'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
-import { getTheme } from './theme'
+import { getTheme, margin } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
+import { stylesheet } from 'typestyle'
 
 /** Create a component. */
 export interface Component {
@@ -120,16 +121,22 @@ interface State {
 
 const
   theme = getTheme(),
-  defaults: Partial<State> = {
-    items: []
-  }
+  defaults: Partial<State> = { items: [] },
+  css = stylesheet({
+    formComponent: {
+      $nest: {
+        '> *': {
+          margin: margin(10, 0)
+        }
+      }
+    }
+  })
 
 
 export const
   XComponents = ({ items }: { items: Component[] }) => {
     const components = items.map(m => <XComponent key={xid()} model={m} />)
-    // TODO gap 10px between fields
-    return <>{components}</>
+    return <div className={css.formComponent}>{components}</div>
   }
 
 const
