@@ -21,6 +21,8 @@ export interface FileUpload {
   max_file_size?: F
   /** Maximum allowed size (Mb) for all files combined. Defaults to no limit. */
   max_size?: F
+  /** The height of the file upload, e.g. '400px', '50%', etc. */
+  height?: S
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -32,7 +34,6 @@ const
       opacity: 0
     },
     upload: {
-      height: 300,
       ...centerMixin(),
       flexDirection: 'column',
       boxSizing: 'border-box',
@@ -268,6 +269,7 @@ export const
           <div>
             <form
               className={uploadClasses}
+              style={{ height: model.height || 300 }}
               onDragStart={onIsDragging}
               onDragEnter={onIsDragging}
               onDragEnd={onIsNotDragging}
@@ -278,7 +280,6 @@ export const
               {getUploadBodyComponent()}
             </form>
             <Fluent.PrimaryButton
-              styles={{ root: { float: 'right' } }}
               disabled={!!percentCompleteB() || !filesB().length}
               text={model.label}
               onClick={upload} />

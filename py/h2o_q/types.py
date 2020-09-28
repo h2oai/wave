@@ -1836,6 +1836,7 @@ class FileUpload:
             file_extensions: Optional[List[str]] = None,
             max_file_size: Optional[float] = None,
             max_size: Optional[float] = None,
+            height: Optional[str] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1850,6 +1851,8 @@ class FileUpload:
         """Maximum allowed size (Mb) per file. Defaults to no limit."""
         self.max_size = max_size
         """Maximum allowed size (Mb) for all files combined. Defaults to no limit."""
+        self.height = height
+        """The height of the file upload, e.g. '400px', '50%', etc."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1864,6 +1867,7 @@ class FileUpload:
             file_extensions=self.file_extensions,
             max_file_size=self.max_file_size,
             max_size=self.max_size,
+            height=self.height,
             tooltip=self.tooltip,
         )
 
@@ -1878,6 +1882,7 @@ class FileUpload:
         __d_file_extensions: Any = __d.get('file_extensions')
         __d_max_file_size: Any = __d.get('max_file_size')
         __d_max_size: Any = __d.get('max_size')
+        __d_height: Any = __d.get('height')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -1885,6 +1890,7 @@ class FileUpload:
         file_extensions: Optional[List[str]] = __d_file_extensions
         max_file_size: Optional[float] = __d_max_file_size
         max_size: Optional[float] = __d_max_size
+        height: Optional[str] = __d_height
         tooltip: Optional[str] = __d_tooltip
         return FileUpload(
             name,
@@ -1893,6 +1899,7 @@ class FileUpload:
             file_extensions,
             max_file_size,
             max_size,
+            height,
             tooltip,
         )
 

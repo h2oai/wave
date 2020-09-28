@@ -915,6 +915,7 @@ def file_upload(
         file_extensions: Optional[List[str]] = None,
         max_file_size: Optional[float] = None,
         max_size: Optional[float] = None,
+        height: Optional[str] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a file upload component.
@@ -927,6 +928,7 @@ def file_upload(
         file_extensions: List of allowed file extensions, e.g. `pdf`, `docx`, etc.
         max_file_size: Maximum allowed size (Mb) per file. Defaults to no limit.
         max_size: Maximum allowed size (Mb) for all files combined. Defaults to no limit.
+        height: The height of the file upload, e.g. '400px', '50%', etc.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_q.types.FileUpload` instance.
@@ -938,6 +940,7 @@ def file_upload(
         file_extensions,
         max_file_size,
         max_size,
+        height,
         tooltip,
     ))
 

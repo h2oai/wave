@@ -1010,6 +1010,7 @@ ui_buttons <- function(
 #' @param file_extensions List of allowed file extensions, e.g. `pdf`, `docx`, etc.
 #' @param max_file_size Maximum allowed size (Mb) per file. Defaults to no limit.
 #' @param max_size Maximum allowed size (Mb) for all files combined. Defaults to no limit.
+#' @param height The height of the file upload, e.g. '400px', '50%', etc.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A FileUpload instance.
 ui_file_upload <- function(
@@ -1019,6 +1020,7 @@ ui_file_upload <- function(
   file_extensions = NULL,
   max_file_size = NULL,
   max_size = NULL,
+  height = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
@@ -1026,6 +1028,7 @@ ui_file_upload <- function(
   .guard_vector("file_extensions", "character", file_extensions)
   .guard_scalar("max_file_size", "numeric", max_file_size)
   .guard_scalar("max_size", "numeric", max_size)
+  .guard_scalar("height", "character", height)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(file_upload=list(
     name=name,
@@ -1034,6 +1037,7 @@ ui_file_upload <- function(
     file_extensions=file_extensions,
     max_file_size=max_file_size,
     max_size=max_size,
+    height=height,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
