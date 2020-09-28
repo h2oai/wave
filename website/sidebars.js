@@ -6,6 +6,7 @@ module.exports = {
       'doc1', 
       'doc2', 
       'doc3',
+      'configuration',
       'testing',
     ],
     Examples: examples.map(e => `examples/${e.slug}`),

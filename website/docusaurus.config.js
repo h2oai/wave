@@ -20,7 +20,7 @@ module.exports = {
         { to: 'docs/examples/hello-world', label: 'Examples', position: 'left' },
         { to: 'api', label: 'API', position: 'left' },
         { to: 'blog', label: 'Blog', position: 'left' },
-        { to: 'https://github.com/h2oai/qd', label: 'Download', position: 'right', },
+        { to: 'https://github.com/h2oai/qd/releases/latest', label: 'Download', position: 'right', },
         { href: 'https://github.com/h2oai/qd', label: 'GitHub', position: 'right', },
       ],
     },
