@@ -8,12 +8,15 @@ import { palette, padding } from './theme'
 
 const
   css = stylesheet({
+    wrapper: {
+      marginTop: '-10px !important'
+    },
     container: {
       padding: padding(0, 8),
       $nest: {
         '.input-range': {
-          marginTop: 20,
-          marginBottom: 25,
+          marginTop: 15,
+          marginBottom: 35,
           $nest: {
             '&__slider': {
               borderWidth: 2,
@@ -109,7 +112,7 @@ export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
       if (m.trigger) qd.sync()
     },
     render = () => (
-      <div data-test={m.name}>
+      <div data-test={m.name} className={css.wrapper}>
         {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
         <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
           <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={valueB()} onChange={onChange} />
