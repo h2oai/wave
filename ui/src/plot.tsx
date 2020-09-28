@@ -616,7 +616,7 @@ const
   makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): [ScaleOption, AxisOption | null] => {
     const
       scale: ScaleOption = {},
-       axis: AxisOption = { label: { autoHide: false } } // Bug in G2? `autoHide` should be set to false by default (it is not).
+      axis: AxisOption = { label: { autoHide: false } } // Bug in G2? `autoHide` should be set to false by default (it is not).
     if (isS(typ)) scale.type = typ as any
     if (format) scale.formatter = (v: any) => format(undefined, v)
     if (isS(title)) {
