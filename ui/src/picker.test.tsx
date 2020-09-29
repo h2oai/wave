@@ -5,10 +5,8 @@ import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
 
 const name = 'picker'
-const pickerProps: Picker = {
-  name,
-  choices: [{ name }, { name: 'something else' }]
-}
+let pickerProps: Picker
+
 const typeToInput = (input: HTMLInputElement, value: string) => {
   input.focus()
   input.value = value
@@ -17,7 +15,13 @@ const typeToInput = (input: HTMLInputElement, value: string) => {
 
 describe('Picker.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(() => {
+    pickerProps = {
+      name,
+      choices: [{ name }, { name: 'something else' }]
+    }
+    T.qd.args[name] = null
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XPicker model={pickerProps} />)
@@ -39,9 +43,24 @@ describe('Picker.tsx', () => {
     expect(getByText(name)).toBeInTheDocument()
   })
 
-  it('Shows correct values - init values specified', () => {
+  it('Shows correct values count - init values specified', () => {
     const { queryAllByRole } = render(<XPicker model={{ ...pickerProps, values: [name] }} />)
     expect(queryAllByRole('listitem')).toHaveLength(1)
+  })
+
+  it('Shows correct label - init values specified', () => {
+    const label = 'Label'
+    pickerProps = {
+      ...pickerProps,
+      choices: [{ name, label }]
+    }
+    const { queryByText } = render(<XPicker model={{ ...pickerProps, values: [name] }} />)
+    expect(queryByText(label)).toBeInTheDocument()
+  })
+
+  it('Shows nothing when values not among choices - init values specified', () => {
+    const { queryAllByRole } = render(<XPicker model={{ ...pickerProps, values: ['non-existent'] }} />)
+    expect(queryAllByRole('listitem')).toHaveLength(0)
   })
 
   it('Shows correct values - value picked', () => {

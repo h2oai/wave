@@ -33,7 +33,11 @@ const pickerSuggestionsProps: Fluent.IBasePickerSuggestionsProps = {
 export const XPicker = bond(({ model: m }: { model: Picker }) => {
   const
     tags: Fluent.ITag[] = m.choices.map(({ name, label }) => ({ key: name, name: label || name })),
-    selectedTagsB = box<Fluent.ITag[]>(m.values?.map(val => ({ key: val, name: val }))),
+    selectedTagsB = box<Fluent.ITag[]>(
+      m.choices
+        .filter(({ name }) => m.values?.includes(name))
+        .map(({ name, label }) => ({ key: name, name: label || name }))
+    ),
     filterSuggestedTags = (filterText: string, selectedTags?: Fluent.ITag[]) => {
       if (!filterText) return []
       const isAlreadySelected = (t: Fluent.ITag) => selectedTags && selectedTags.includes(t)
