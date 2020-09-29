@@ -120,14 +120,14 @@ const
     let itemA = a[column.key]
     let itemB = b[column.key]
 
-    if (typeof itemA === typeof 'string' && typeof itemB === typeof 'string') {
+    if (typeof itemA === 'string' && typeof itemB === 'string') {
       itemA = (itemA as S).toLowerCase()
       itemB = (itemB as S).toLowerCase()
       return sortAsc
         ? itemB > itemA ? -1 : 1
         : itemB > itemA ? 1 : -1
     }
-    else if (typeof itemA === typeof 'number' && typeof itemB === typeof 'number') {
+    else if (typeof itemA === 'number' && typeof itemB === 'number') {
       return sortAsc ? itemA - itemB : itemB - itemA
     }
 
