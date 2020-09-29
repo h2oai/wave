@@ -46,8 +46,8 @@ const
         const h = window.location.hash
         if (h && h.length > 1) {
           qd.args['#'] = h.substr(1)
-          qd.sync()
         }
+        qd.sync()
       },
       init = () => {
         connect('/_s', onSocket)
