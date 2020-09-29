@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { B, bond, S, qd } from './qd'
+import { B, bond, S, qd, Dict } from './qd'
 import { XToolTip } from './tooltip'
 
 /**
@@ -46,14 +46,24 @@ export interface Button {
 export interface Buttons {
   /** The button in this set. */
   items: Component[]
+  /** Specifies how to lay out buttons horizontally. */
+  justify?: 'start' | 'end' | 'center' | 'between' | 'around'
 }
+
 
 const
   css = stylesheet({
     buttons: {
       boxSizing: 'border-box',
     },
-  })
+  }),
+  justifications: Dict<Fluent.Alignment> = {
+    start: 'start',
+    end: 'end',
+    center: 'center',
+    between: 'space-between',
+    around: 'space-around',
+  }
 
 const
   XButton = bond(({ model: m }: { model: Button }) => {
@@ -92,7 +102,11 @@ export const
               <XButton model={b}>{b.label}</XButton>
             </XToolTip>
           ))
-        return <div data-test='buttons' className={css.buttons}><Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack></div>
+        return (
+          <div data-test='buttons' className={css.buttons}>
+            <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
+          </div>
+        )
       }
     return { render }
   }),

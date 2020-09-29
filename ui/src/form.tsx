@@ -191,7 +191,8 @@ export const
         return (
           <div data-test='form'>
             <XComponents items={items} />
-          </div>)
+          </div>
+        )
       }
     return { render, changed }
   })

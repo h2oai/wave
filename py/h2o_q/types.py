@@ -1800,9 +1800,12 @@ class Buttons:
     def __init__(
             self,
             items: List['Component'],
+            justify: Optional[str] = None,
     ):
         self.items = items
         """The button in this set."""
+        self.justify = justify
+        """Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1810,6 +1813,7 @@ class Buttons:
             raise ValueError('Buttons.items is required.')
         return _dump(
             items=[__e.dump() for __e in self.items],
+            justify=self.justify,
         )
 
     @staticmethod
@@ -1818,9 +1822,12 @@ class Buttons:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('Buttons.items is required.')
+        __d_justify: Any = __d.get('justify')
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        justify: Optional[str] = __d_justify
         return Buttons(
             items,
+            justify,
         )
 
 
