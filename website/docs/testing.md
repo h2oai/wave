@@ -33,13 +33,13 @@ from h2o_q import cypress
 def test_wizard(cy):
     cy.visit('/demo')
     cy.locate('step1').click()
-    cy.locate('text').should('have.text', 'What is your name?')
+    cy.locate('text').should('contain.text', 'What is your name?')
     cy.locate('nickname').clear().type('Fred')
     cy.locate('step2').click()
-    cy.locate('text').should('have.text', 'Hi Fred! How do you feel right now?')
+    cy.locate('text').should('contain.text', 'Hi Fred! How do you feel right now?')
     cy.locate('feeling').clear().type('quirky')
     cy.locate('step3').click()
-    cy.locate('text').should('have.text', 'What a coincidence, Fred! I feel quirky too!')
+    cy.locate('text').should('contain.text', 'What a coincidence, Fred! I feel quirky too!')
 
 ```
 
