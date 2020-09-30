@@ -2132,7 +2132,7 @@ def top_nav(
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
 ) -> TopNav:
-    """No documentation available.
+    """Navigation component that is fixed at the top.
 
     Args:
         title: The title.
@@ -2157,12 +2157,9 @@ def meta_card(
         title: Optional[str] = None,
         refresh: Optional[int] = None,
         notification: Optional[str] = None,
-<<<<<<< HEAD
         redirect: Optional[str] = None,
-=======
         layout: Optional[str] = None,
         top_nav: Optional[TopNav] = None,
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2175,12 +2172,9 @@ def meta_card(
         title: The title of the page.
         refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
         notification: Display a desktop notification to the user.
-<<<<<<< HEAD
-        redirect: No documentation available.
-=======
+        redirect: Redirect the page to a new URL.
         layout: Pick a layout mode. Defaults to Grid.
         top_nav: Create a fixed-top navbar.
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.MetaCard` instance.
@@ -2190,12 +2184,9 @@ def meta_card(
         title,
         refresh,
         notification,
-<<<<<<< HEAD
         redirect,
-=======
         layout,
         top_nav,
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
         commands,
     )
 

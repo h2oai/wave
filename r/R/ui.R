@@ -2379,7 +2379,7 @@ ui_markup_card <- function(
   return(.o)
 }
 
-#' No documentation available.
+#' Navigation component that is fixed at the top.
 #'
 #' @param title The title.
 #' @param subtitle The subtitle, displayed below the title.
@@ -2417,12 +2417,9 @@ ui_top_nav <- function(
 #' @param title The title of the page.
 #' @param refresh Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
 #' @param notification Display a desktop notification to the user.
-<<<<<<< HEAD
-#' @param redirect No documentation available.
-=======
+#' @param redirect Redirect the page to a new URL.
 #' @param layout Pick a layout mode. Defaults to Grid.
 #' @param top_nav Create a fixed-top navbar.
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 ui_meta_card <- function(
@@ -2430,35 +2427,26 @@ ui_meta_card <- function(
   title = NULL,
   refresh = NULL,
   notification = NULL,
-<<<<<<< HEAD
   redirect = NULL,
-=======
   layout = NULL,
   top_nav = NULL,
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("refresh", "numeric", refresh)
   .guard_scalar("notification", "character", notification)
-<<<<<<< HEAD
   .guard_scalar("redirect", "character", redirect)
-=======
   .guard_scalar("layout", "character", layout)
   .guard_scalar("top_nav", "h2oq_TopNav", top_nav)
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
     refresh=refresh,
     notification=notification,
-<<<<<<< HEAD
     redirect=redirect,
-=======
     layout=layout,
     top_nav=top_nav,
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
   return(.o)
