@@ -1,11 +1,10 @@
-import React from 'react'
-import { bond, S } from './qd'
-import { Tab } from './tabs'
-import { Header } from './header'
 import * as Fluent from '@fluentui/react'
-import { TabComponent } from './tab'
+import React from 'react'
 import { stylesheet } from 'typestyle'
-import { getTheme, pc, border, topNavBreakpoint } from './theme'
+import { Header } from './header'
+import { bond, S, box } from './qd'
+import { border, getTheme, pc, topNavBreakpoint, padding } from './theme'
+import { View as Toolbar, Command } from "./toolbar"
 
 const
   { colors } = getTheme(),
@@ -25,28 +24,32 @@ const
         })
       }
     },
-    tabs: {
+    toolbar: {
       $nest: {
         ...topNavBreakpoint({
           position: 'fixed',
           bottom: 0,
           left: 0,
           zIndex: 1,
-          padding: '15px 5px',
+          padding: padding(15, 0, 10, 0),
           width: pc(100),
           background: colors.card,
           borderTop: border(1, colors.page),
           $nest: {
-            '.ms-Pivot': {
-              display: 'flex',
+            '.ms-CommandBar-primaryCommand': {
               justifyContent: 'space-evenly'
             },
-            '.ms-Pivot-icon, .ms-Pivot-text': {
-              display: 'block',
-              lineHeight: 'initial'
+            '.ms-CommandBar': {
+              padding: 0,
             },
-            'button': {
-              display: 'block'
+            '.ms-Button-flexContainer': {
+              flexDirection: 'column'
+            },
+            '.ms-Button-textContainer': {
+              paddingTop: 10
+            },
+            '.ms-Button-icon': {
+              fontSize: 20
             }
           }
         })
@@ -63,7 +66,7 @@ export interface TopNav {
   /** The subtitle, displayed below the title. */
   subtitle: S
   /** Navigation tabs links to be displayed in top nav. */
-  items: Tab[]
+  items: Command[]
   /** The icon type, displayed to the left. */
   icon?: S
   /** The icon's color. */
@@ -72,11 +75,22 @@ export interface TopNav {
 
 export const TopNav = bond(({ title, subtitle, icon, icon_color, items }: TopNav) => {
   const
+    // commands: Fluent.ICommandBarItemProps[] = items.map(({name, label, icon}) => {
+
+    //   const onClick = () => {
+
+    //   }
+    //   return {
+    //     text: label,
+    //     iconProps: {iconName: icon},
+    //     onClick
+    //   }
+    // }),
     render = () => (
-      <Fluent.Stack className={css.topNav} horizontal horizontalAlign='space-between'>
+      <Fluent.Stack className={css.topNav} horizontal horizontalAlign='space-between' verticalAlign='center'>
         <Header title={title} subtitle={subtitle} icon={icon} icon_color={icon_color} />
-        <div className={css.tabs}>
-          <TabComponent items={items} link={true} />
+        <div className={css.toolbar}>
+          <Toolbar name='Toolbar' state={{ items }} changed={box(false)} />
         </div>
       </Fluent.Stack>
     )

@@ -2471,7 +2471,7 @@ ui_top_nav <- function(
   icon_color = NULL) {
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
-  .guard_vector("items", "h2oq_Tab", items)
+  .guard_vector("items", "h2oq_Command", items)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
   .o <- list(

@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { grid } from './layout'
+import { grid } from './grid_layout'
 import { ProgressArc } from './parts/progress_arc'
 import { F, S } from './qd'
 import { getTheme } from './theme'

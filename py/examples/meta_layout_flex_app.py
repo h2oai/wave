@@ -18,10 +18,10 @@ from synth import FakeScatter
 page = site['/demo']
 
 page['meta'] = ui.meta_card(box='', layout='flex', top_nav=ui.top_nav(title='My app', subtitle='Try it, you will not regret', items=[
-        ui.tab(name='#menu/spam', label='Spam', icon='Inbox'),
-        ui.tab(name='#menu/ham', label='Ham', icon='EatDrink'),
-        ui.tab(name='#menu/eggs', label='Eggs', icon='CollegeFootball'),
-        ui.tab(name='#about', label='About', icon='FeedbackRequestSolid'),
+        ui.command(name='#menu/spam', label='Spam', icon='Inbox'),
+        ui.command(name='#menu/ham', label='Ham', icon='EatDrink'),
+        ui.command(name='#menu/eggs', label='Eggs', icon='CollegeFootball'),
+        ui.command(name='#about', label='About', icon='FeedbackRequestSolid'),
     ]))
 
 
