@@ -116,22 +116,23 @@ const
       return rv
     }, {} as Dict<any>)
   },
-  sortingF = (column: QColumn, sortAsc: B) => (a: any, b: any) => {
-    let itemA = a[column.key]
-    let itemB = b[column.key]
+  sortingF = (column: QColumn, sortAsc: B) => (rowA: any, rowB: any) => {
+    let a = rowA[column.key], b = rowB[column.key]
+    const ta = typeof a, tb = typeof b
 
-    if (typeof itemA === typeof 'string' && typeof itemB === typeof 'string') {
-      itemA = (itemA as S).toLowerCase()
-      itemB = (itemB as S).toLowerCase()
-      return sortAsc
-        ? itemB > itemA ? -1 : 1
-        : itemB > itemA ? 1 : -1
+    if (ta === tb) {
+      switch (ta) {
+        case 'number':
+          return sortAsc ? a - b : b - a
+        case 'string':
+          a = a.toLowerCase()
+          b = b.toLowerCase()
+          break
+      }
     }
-    else if (typeof itemA === typeof 'number' && typeof itemB === typeof 'number') {
-      return sortAsc ? itemA - itemB : itemB - itemA
-    }
-
-    return 0
+    return sortAsc
+      ? b > a ? -1 : 1
+      : b > a ? 1 : -1
   },
   formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
   toCSV = (data: any[][]): S => data.map(row => {
