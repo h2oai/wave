@@ -4720,7 +4720,7 @@ class MarkupCard:
 
 
 class TopNav:
-    """No documentation available.
+    """Navigation component that is fixed at the top.
     """
     def __init__(
             self,
@@ -4797,12 +4797,9 @@ class MetaCard:
             title: Optional[str] = None,
             refresh: Optional[int] = None,
             notification: Optional[str] = None,
-<<<<<<< HEAD
             redirect: Optional[str] = None,
-=======
             layout: Optional[str] = None,
             top_nav: Optional[TopNav] = None,
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -4813,15 +4810,12 @@ class MetaCard:
         """Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use)."""
         self.notification = notification
         """Display a desktop notification to the user."""
-<<<<<<< HEAD
         self.redirect = redirect
-        """No documentation available."""
-=======
+        """Redirect the page to a new URL."""
         self.layout = layout
         """Pick a layout mode. Defaults to Grid."""
         self.top_nav = top_nav
         """Create a fixed-top navbar."""
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -4835,12 +4829,9 @@ class MetaCard:
             title=self.title,
             refresh=self.refresh,
             notification=self.notification,
-<<<<<<< HEAD
             redirect=self.redirect,
-=======
             layout=self.layout,
             top_nav=None if self.top_nav is None else self.top_nav.dump(),
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4853,35 +4844,26 @@ class MetaCard:
         __d_title: Any = __d.get('title')
         __d_refresh: Any = __d.get('refresh')
         __d_notification: Any = __d.get('notification')
-<<<<<<< HEAD
         __d_redirect: Any = __d.get('redirect')
-=======
         __d_layout: Any = __d.get('layout')
         __d_top_nav: Any = __d.get('top_nav')
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
         refresh: Optional[int] = __d_refresh
         notification: Optional[str] = __d_notification
-<<<<<<< HEAD
         redirect: Optional[str] = __d_redirect
-=======
         layout: Optional[str] = __d_layout
         top_nav: Optional[TopNav] = None if __d_top_nav is None else TopNav.load(__d_top_nav)
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
             title,
             refresh,
             notification,
-<<<<<<< HEAD
             redirect,
-=======
             layout,
             top_nav,
->>>>>>> feat: topNav for mobile and desktop for flex layout #40
             commands,
         )
 
