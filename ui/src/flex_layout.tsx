@@ -34,7 +34,7 @@ export const
       { changedB } = page,
       getStyle = (placement: S): CSSProperties | undefined => {
         placement = placement.endsWith('|') ? placement.slice(0, -1) : placement
-        if (placement === '') return { flexGrow: 1, flexBasis: pc(100) }
+        if (placement === '') return { flexGrow: 1, flexBasis: 200 }
         if (placement.endsWith('px')) return { width: placement }
         if (!isNaN(+placement)) return { flexGrow: +placement }
         return undefined

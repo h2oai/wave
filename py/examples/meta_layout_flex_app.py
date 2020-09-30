@@ -1,7 +1,7 @@
 # Meta / Layout / Flex / App
-# 
+#
 # Allows building responsive layouts.
-# 
+#
 # Specify layout prop as flex and use card's box prop as a min width setter. Card's box prop
 # now takes valid percentage value in range [0,1]. Please note that box will have no effect 
 # when card's content is longer that width specified.
@@ -31,7 +31,7 @@ f = FakePercent()
 # Gauges
 val, pc = f.next()
 page['gauge1'] = ui.wide_gauge_stat_card(
-    box='1',
+    box='',
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
@@ -41,7 +41,7 @@ page['gauge1'] = ui.wide_gauge_stat_card(
 )
 val, pc = f.next()
 page['gauge2'] = ui.wide_gauge_stat_card(
-    box='1',
+    box='',
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
@@ -51,7 +51,7 @@ page['gauge2'] = ui.wide_gauge_stat_card(
 )
 val, pc = f.next()
 page['gauge3'] = ui.wide_gauge_stat_card(
-    box='1|',
+    box='|',
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
@@ -65,20 +65,22 @@ n = 10
 k = 5
 f = FakeMultiCategoricalSeries(groups=k)
 v = page.add('plot1', ui.plot_card(
-    box='1',
+    box='',
     title='Intervals, stacked',
     data=data('country product price', n * k),
     plot=ui.plot([ui.mark(type='interval', x='=price', y='=product', color='=country', stack='auto', y_min=0)])
 ))
 v.data = [(g, t, x) for x in [f.next() for _ in range(n)] for g, t, x, dx in x]
 
+
 def create_fake_row(g, f, n):
     return [(g, x, y) for x, y in [f.next() for _ in range(n)]]
 
+
 n = 30
 f1, f2, f3 = FakeScatter(), FakeScatter(), FakeScatter()
-v = page.add('plot2',ui.plot_card(
-    box='1|',
+v = page.add('plot2', ui.plot_card(
+    box='|',
     title='Point, groups',
     data=data('product price performance', n * 3),
     plot=ui.plot([ui.mark(type='point', x='=price', y='=performance', color='=product', shape='circle')])
@@ -88,6 +90,7 @@ v.data = create_fake_row('G1', f1, n) + create_fake_row('G2', f1, n) + create_fa
 
 # Table
 _id = 0
+
 
 class Issue:
     def __init__(self, text: str, status: str):
@@ -115,7 +118,5 @@ page['table'] = ui.form_card(box='', items=[ui.table(
           multiple=False)]
         )
 
-
- 
 
 page.save()

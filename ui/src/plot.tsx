@@ -763,7 +763,7 @@ export const
       render = () => {
         const
           { width, height } = model,
-          style: React.CSSProperties = { width: width || 'auto', height: height || '300px', minHeight: 350 }
+          style: React.CSSProperties = { width: width || 'auto', height: height || '300px', minHeight: 300 }
         return <div style={style} ref={container} />
       }
     return { init, update, render }
