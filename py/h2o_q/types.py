@@ -4586,72 +4586,6 @@ class MarkupCard:
         )
 
 
-class TopNav:
-    """Navigation component that is fixed at the top.
-    """
-    def __init__(
-            self,
-            title: str,
-            subtitle: str,
-            items: List[Command],
-            icon: Optional[str] = None,
-            icon_color: Optional[str] = None,
-    ):
-        self.title = title
-        """The title."""
-        self.subtitle = subtitle
-        """The subtitle, displayed below the title."""
-        self.items = items
-        """Navigation tabs links to be displayed in top nav."""
-        self.icon = icon
-        """The icon type, displayed to the left."""
-        self.icon_color = icon_color
-        """The icon's color."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.title is None:
-            raise ValueError('TopNav.title is required.')
-        if self.subtitle is None:
-            raise ValueError('TopNav.subtitle is required.')
-        if self.items is None:
-            raise ValueError('TopNav.items is required.')
-        return _dump(
-            title=self.title,
-            subtitle=self.subtitle,
-            items=[__e.dump() for __e in self.items],
-            icon=self.icon,
-            icon_color=self.icon_color,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'TopNav':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('TopNav.title is required.')
-        __d_subtitle: Any = __d.get('subtitle')
-        if __d_subtitle is None:
-            raise ValueError('TopNav.subtitle is required.')
-        __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('TopNav.items is required.')
-        __d_icon: Any = __d.get('icon')
-        __d_icon_color: Any = __d.get('icon_color')
-        title: str = __d_title
-        subtitle: str = __d_subtitle
-        items: List[Command] = [Command.load(__e) for __e in __d_items]
-        icon: Optional[str] = __d_icon
-        icon_color: Optional[str] = __d_icon_color
-        return TopNav(
-            title,
-            subtitle,
-            items,
-            icon,
-            icon_color,
-        )
-
-
 class MetaCard:
     """Represents page-global state.
 
@@ -4666,7 +4600,6 @@ class MetaCard:
             notification: Optional[str] = None,
             redirect: Optional[str] = None,
             layout: Optional[str] = None,
-            top_nav: Optional[TopNav] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -4681,8 +4614,6 @@ class MetaCard:
         """Redirect the page to a new URL."""
         self.layout = layout
         """Pick a layout mode. Defaults to Grid."""
-        self.top_nav = top_nav
-        """Create a fixed-top navbar."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -4698,7 +4629,6 @@ class MetaCard:
             notification=self.notification,
             redirect=self.redirect,
             layout=self.layout,
-            top_nav=None if self.top_nav is None else self.top_nav.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4713,7 +4643,6 @@ class MetaCard:
         __d_notification: Any = __d.get('notification')
         __d_redirect: Any = __d.get('redirect')
         __d_layout: Any = __d.get('layout')
-        __d_top_nav: Any = __d.get('top_nav')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
@@ -4721,7 +4650,6 @@ class MetaCard:
         notification: Optional[str] = __d_notification
         redirect: Optional[str] = __d_redirect
         layout: Optional[str] = __d_layout
-        top_nav: Optional[TopNav] = None if __d_top_nav is None else TopNav.load(__d_top_nav)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -4730,7 +4658,6 @@ class MetaCard:
             notification,
             redirect,
             layout,
-            top_nav,
             commands,
         )
 
@@ -5680,6 +5607,91 @@ class ToolbarCard:
             items,
             secondary_items,
             overflow_items,
+            commands,
+        )
+
+
+class TopNavCard:
+    """Navigation component that is fixed at the top.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            subtitle: str,
+            items: List[Command],
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.items = items
+        """Navigation tabs links to be displayed in top nav."""
+        self.icon = icon
+        """The icon type, displayed to the left."""
+        self.icon_color = icon_color
+        """The icon's color."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('TopNavCard.box is required.')
+        if self.title is None:
+            raise ValueError('TopNavCard.title is required.')
+        if self.subtitle is None:
+            raise ValueError('TopNavCard.subtitle is required.')
+        if self.items is None:
+            raise ValueError('TopNavCard.items is required.')
+        return _dump(
+            view='top_nav',
+            box=self.box,
+            title=self.title,
+            subtitle=self.subtitle,
+            items=[__e.dump() for __e in self.items],
+            icon=self.icon,
+            icon_color=self.icon_color,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TopNavCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('TopNavCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('TopNavCard.title is required.')
+        __d_subtitle: Any = __d.get('subtitle')
+        if __d_subtitle is None:
+            raise ValueError('TopNavCard.subtitle is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('TopNavCard.items is required.')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        subtitle: str = __d_subtitle
+        items: List[Command] = [Command.load(__e) for __e in __d_items]
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return TopNavCard(
+            box,
+            title,
+            subtitle,
+            items,
+            icon,
+            icon_color,
             commands,
         )
 

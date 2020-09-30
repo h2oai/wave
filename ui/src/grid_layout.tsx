@@ -154,21 +154,23 @@ export const
       { changedB } = page,
       render = () => {
         const
-          children = page.list().map(c => {
-            const
-              placement = grid.place(c.state.box),
-              { left, top, right, bottom, width, height } = placement,
-              display = placement === badPlacement ? 'none' : 'block',
-              zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
+          children = page.list()
+            .filter(c => c.state.view !== 'top_nav')
+            .map(c => {
+              const
+                placement = grid.place(c.state.box),
+                { left, top, right, bottom, width, height } = placement,
+                display = placement === badPlacement ? 'none' : 'block',
+                zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
 
-            c.size = { width: width || 0, height: height || 0 } // TODO compute width from grid width; height cannot be relied upon
-            return (
-              <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height, zIndex }}>
-                <CardView card={c} />
-                {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
-              </div>
-            )
-          })
+              c.size = { width: width || 0, height: height || 0 } // TODO compute width from grid width; height cannot be relied upon
+              return (
+                <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height, zIndex }}>
+                  <CardView card={c} />
+                  {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
+                </div>
+              )
+            })
         return (
           <div data-test={page.key} className={css.grid}>
             {children}

@@ -5,7 +5,7 @@ import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType,
 import { getTheme, pc, clas, topNavBreakpoint } from './theme'
 import { Spinner, SpinnerSize } from '@fluentui/react'
 import { FlexLayout } from './flex_layout'
-import { TopNav } from './top_nav'
+import { View as TopNav } from './top_nav'
 
 const
   theme = getTheme(),
@@ -79,7 +79,7 @@ const
         }
         if (!page) return <Spinner className={css.centerFullHeight} size={SpinnerSize.large} label='Loading ...' />
 
-        const topNav = qd.topNavB()
+        const topNav = page.list().find(c => c.state.view === 'top_nav') as any
         return (
           <>
             {topNav && <TopNav {...topNav} />}
@@ -89,7 +89,7 @@ const
       },
       dispose = () => window.removeEventListener('hashchange', onHashChanged)
 
-    return { init, render, dispose, contentB, layoutMode: qd.layoutB, topNav: qd.topNavB }
+    return { init, render, dispose, contentB, layoutMode: qd.layoutB }
   })
 
 export default App

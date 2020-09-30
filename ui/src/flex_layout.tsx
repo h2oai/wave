@@ -58,7 +58,7 @@ export const
         let currentRow = 1
         const
           children = page.list()
-            .filter(c => c.name !== 'meta')
+            .filter(c => c.name !== 'meta' && c.state.view !== 'top_nav')
             .sort(pageSortingF)
             .map(c => {
               const
