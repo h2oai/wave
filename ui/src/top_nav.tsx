@@ -2,9 +2,10 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Header } from './header'
-import { bond, S, box } from './qd'
+import { bond, S, box, Card } from './qd'
 import { border, getTheme, pc, topNavBreakpoint, padding } from './theme'
 import { View as Toolbar, Command } from "./toolbar"
+import { cards } from './grid_layout'
 
 const
   { colors } = getTheme(),
@@ -60,7 +61,7 @@ const
 /**
  * Navigation component that is fixed at the top.
  */
-export interface TopNav {
+interface State {
   /** The title. */
   title: S
   /** The subtitle, displayed below the title. */
@@ -73,26 +74,17 @@ export interface TopNav {
   icon_color?: S
 }
 
-export const TopNav = bond(({ title, subtitle, icon, icon_color, items }: TopNav) => {
+export const View = bond(({ state, changed }: Card<State>) => {
   const
-    // commands: Fluent.ICommandBarItemProps[] = items.map(({name, label, icon}) => {
-
-    //   const onClick = () => {
-
-    //   }
-    //   return {
-    //     text: label,
-    //     iconProps: {iconName: icon},
-    //     onClick
-    //   }
-    // }),
     render = () => (
       <Fluent.Stack className={css.topNav} horizontal horizontalAlign='space-between' verticalAlign='center'>
-        <Header title={title} subtitle={subtitle} icon={icon} icon_color={icon_color} />
+        <Header title={state.title} subtitle={state.subtitle} icon={state.icon} icon_color={state.icon_color} />
         <div className={css.toolbar}>
-          <Toolbar name='Toolbar' state={{ items }} changed={box(false)} />
+          <Toolbar name='Toolbar' state={{ items: state.items }} changed={box(false)} />
         </div>
       </Fluent.Stack>
     )
-  return { render }
+  return { render, changed }
 })
+
+cards.register('top_nav', View)

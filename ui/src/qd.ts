@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { TopNav } from './top_nav'
 
 //
 // Dataflow
@@ -706,7 +705,6 @@ export interface Qd {
   readonly args: Rec
   readonly refreshRateB: Box<U>
   readonly layoutB: Box<S>
-  readonly topNavB: Box<TopNav | null>
   socket: WebSocket | null
   page(): PageRef
   sync(): void
@@ -728,7 +726,6 @@ export const qd: Qd = {
   args: {},
   refreshRateB: box(-1),
   layoutB: box(''),
-  topNavB: box(null),
   socket: null,
   page: (path?: S): PageRef => {
     path = path || qd.path

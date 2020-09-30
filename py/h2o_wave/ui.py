@@ -2182,33 +2182,6 @@ def markup_card(
     )
 
 
-def top_nav(
-        title: str,
-        subtitle: str,
-        items: List[Command],
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
-) -> TopNav:
-    """Navigation component that is fixed at the top.
-
-    Args:
-        title: The title.
-        subtitle: The subtitle, displayed below the title.
-        items: Navigation tabs links to be displayed in top nav.
-        icon: The icon type, displayed to the left.
-        icon_color: The icon's color.
-    Returns:
-        A `h2o_q.types.TopNav` instance.
-    """
-    return TopNav(
-        title,
-        subtitle,
-        items,
-        icon,
-        icon_color,
-    )
-
-
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2216,7 +2189,6 @@ def meta_card(
         notification: Optional[str] = None,
         redirect: Optional[str] = None,
         layout: Optional[str] = None,
-        top_nav: Optional[TopNav] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2231,7 +2203,6 @@ def meta_card(
         notification: Display a desktop notification to the user.
         redirect: Redirect the page to a new URL.
         layout: Pick a layout mode. Defaults to Grid.
-        top_nav: Create a fixed-top navbar.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2243,7 +2214,6 @@ def meta_card(
         notification,
         redirect,
         layout,
-        top_nav,
         commands,
     )
 
@@ -2623,6 +2593,39 @@ def toolbar_card(
         items,
         secondary_items,
         overflow_items,
+        commands,
+    )
+
+
+def top_nav_card(
+        box: str,
+        title: str,
+        subtitle: str,
+        items: List[Command],
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> TopNavCard:
+    """Navigation component that is fixed at the top.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title.
+        subtitle: The subtitle, displayed below the title.
+        items: Navigation tabs links to be displayed in top nav.
+        icon: The icon type, displayed to the left.
+        icon_color: The icon's color.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.TopNavCard` instance.
+    """
+    return TopNavCard(
+        box,
+        title,
+        subtitle,
+        items,
+        icon,
+        icon_color,
         commands,
     )
 

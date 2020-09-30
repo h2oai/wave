@@ -2455,35 +2455,6 @@ ui_markup_card <- function(
   return(.o)
 }
 
-#' Navigation component that is fixed at the top.
-#'
-#' @param title The title.
-#' @param subtitle The subtitle, displayed below the title.
-#' @param items Navigation tabs links to be displayed in top nav.
-#' @param icon The icon type, displayed to the left.
-#' @param icon_color The icon's color.
-#' @return A TopNav instance.
-ui_top_nav <- function(
-  title,
-  subtitle,
-  items,
-  icon = NULL,
-  icon_color = NULL) {
-  .guard_scalar("title", "character", title)
-  .guard_scalar("subtitle", "character", subtitle)
-  .guard_vector("items", "h2oq_Command", items)
-  .guard_scalar("icon", "character", icon)
-  .guard_scalar("icon_color", "character", icon_color)
-  .o <- list(
-    title=title,
-    subtitle=subtitle,
-    items=items,
-    icon=icon,
-    icon_color=icon_color)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TopNav"))
-  return(.o)
-}
-
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -2495,7 +2466,6 @@ ui_top_nav <- function(
 #' @param notification Display a desktop notification to the user.
 #' @param redirect Redirect the page to a new URL.
 #' @param layout Pick a layout mode. Defaults to Grid.
-#' @param top_nav Create a fixed-top navbar.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 ui_meta_card <- function(
@@ -2505,7 +2475,6 @@ ui_meta_card <- function(
   notification = NULL,
   redirect = NULL,
   layout = NULL,
-  top_nav = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -2513,7 +2482,6 @@ ui_meta_card <- function(
   .guard_scalar("notification", "character", notification)
   .guard_scalar("redirect", "character", redirect)
   .guard_scalar("layout", "character", layout)
-  .guard_scalar("top_nav", "h2oq_TopNav", top_nav)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
@@ -2522,7 +2490,6 @@ ui_meta_card <- function(
     notification=notification,
     redirect=redirect,
     layout=layout,
-    top_nav=top_nav,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
   return(.o)
@@ -2943,6 +2910,43 @@ ui_toolbar_card <- function(
     overflow_items=overflow_items,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ToolbarCard"))
+  return(.o)
+}
+
+#' Navigation component that is fixed at the top.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title.
+#' @param subtitle The subtitle, displayed below the title.
+#' @param items Navigation tabs links to be displayed in top nav.
+#' @param icon The icon type, displayed to the left.
+#' @param icon_color The icon's color.
+#' @param commands Contextual menu commands for this component.
+#' @return A TopNavCard instance.
+ui_top_nav_card <- function(
+  box,
+  title,
+  subtitle,
+  items,
+  icon = NULL,
+  icon_color = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_vector("items", "h2oq_Command", items)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("icon_color", "character", icon_color)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    subtitle=subtitle,
+    items=items,
+    icon=icon,
+    icon_color=icon_color,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TopNavCard"))
   return(.o)
 }
 

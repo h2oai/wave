@@ -17,14 +17,14 @@ from synth import FakeScatter
 
 page = site['/demo']
 
-page['meta'] = ui.meta_card(box='', layout='flex', top_nav=ui.top_nav(
-        title='My app', subtitle='Try it, you will not regret', items=[
-            ui.command(name='#menu/spam', label='Spam', icon='Inbox'),
-            ui.command(name='#menu/ham', label='Ham', icon='EatDrink'),
-            ui.command(name='#menu/eggs', label='Eggs', icon='CollegeFootball'),
-            ui.command(name='#about', label='About', icon='FeedbackRequestSolid'),
-        ]))
+page['meta'] = ui.meta_card(box='', layout='flex')
 
+page['nav'] = ui.top_nav_card(box='', title='My app', subtitle='Try it, you will not regret', items=[
+    ui.command(name='#menu/spam', label='Spam', icon='Inbox'),
+    ui.command(name='#menu/ham', label='Ham', icon='EatDrink'),
+    ui.command(name='#menu/eggs', label='Eggs', icon='CollegeFootball'),
+    ui.command(name='#about', label='About', icon='FeedbackRequestSolid'),
+])
 
 fake = Faker()
 f = FakePercent()
