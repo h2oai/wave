@@ -2,7 +2,7 @@
 import React from 'react'
 import { bond, F, S } from './qd'
 import { ProgressArc } from './parts/progress_arc'
-import { grid } from './layout'
+import { grid } from './grid_layout'
 import { stylesheet } from 'typestyle'
 import { getTheme } from './theme'
 

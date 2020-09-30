@@ -2128,7 +2128,7 @@ def markup_card(
 def top_nav(
         title: str,
         subtitle: str,
-        items: List[Tab],
+        items: List[Command],
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
 ) -> TopNav:

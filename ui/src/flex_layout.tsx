@@ -47,7 +47,7 @@ export const
               <React.Fragment key={c.id}>
                 <div className={css.slot} style={getStyle(c.state.box)}>
                   <CardView card={c} />
-                  <CardMenu card={c} />
+                  {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
                 </div>
                 {/* Serves as a line break. */}
                 {(c.state.box as S).endsWith('|') && <div style={{ width: pc(100) }}></div>}

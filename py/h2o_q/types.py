@@ -4593,7 +4593,7 @@ class TopNav:
             self,
             title: str,
             subtitle: str,
-            items: List[Tab],
+            items: List[Command],
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
     ):
@@ -4640,7 +4640,7 @@ class TopNav:
         __d_icon_color: Any = __d.get('icon_color')
         title: str = __d_title
         subtitle: str = __d_subtitle
-        items: List[Tab] = [Tab.load(__e) for __e in __d_items]
+        items: List[Command] = [Command.load(__e) for __e in __d_items]
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
         return TopNav(
