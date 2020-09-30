@@ -73,6 +73,7 @@ release-os:
 	rsync -a py/examples build/$(REL)/
 	rm -rf test/cypress/integration/*.js
 	rm -rf test/cypress/screenshots/*.*
+	rm -rf test/cypress/videos/*.*
 	rsync --exclude node_modules -a test build/$(REL)/
 	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd$(EXE_EXT) cmd/qd/main.go
 	cp readme-$(OS).txt build/$(REL)/readme.txt
