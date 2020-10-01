@@ -44,7 +44,6 @@
   --ifm-h5-font-size: 1rem;
   --ifm-h6-font-size: 1rem;
   --ifm-footer-background-color: #000000;
-  --ifm-hr-border-color: #f9f9f9;
   --ifm-navbar-background-color: #000000;
   --ifm-navbar-shadow: none;
   --ifm-navbar-link-color: #fff;
@@ -135,12 +134,8 @@ html[data-theme='dark'] .docSidebarContainer_node_modules-\@docusaurus-theme-cla
 
 /* Custom */
 
-.gallery > a {
-  display: inline-block;
-  padding: 1rem;
-  font-size: 0.85rem;
-}
 .cover {
+  width: 360px;
   height: 140px;
   background-size: cover;
   background-position: left top;
@@ -153,7 +148,12 @@ html[data-theme='dark'] .docSidebarContainer_node_modules-\@docusaurus-theme-cla
   background-position: right bottom;
   border: 1px solid #999;
 }
-.gallery div {
+.gallery > a {
+  display: inline-block;
+  padding: 1rem;
+  font-size: 0.85rem;
+}
+.gallery .cover {
   width: 180px;
   height: 140px;
   margin-top: 0rem;
