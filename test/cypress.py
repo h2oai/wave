@@ -6,7 +6,7 @@ from shutil import rmtree
 from subprocess import PIPE, Popen
 from tempfile import mkdtemp
 from time import sleep
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 
 class Process:
@@ -49,29 +49,46 @@ class TempDir:
         rmtree(self.dir_name)
 
 
-def run_app_with_test(app_file: str, test_path: str, sleep_time: int):
-    with TempDir(os.path.join(test_path, "cypress/integration")) as spec_dir:
-        with Process(
-            cmd=["python", app_file],
-            env={"CYPRESS_INTEGRATION_TEST_DIR": spec_dir},
-            sleep_time=sleep_time,
-        ):
-            specs = [f for f in os.listdir(spec_dir) if f.endswith(".spec.js")]
-            if not specs:
-                logging.warning(
-                    f"No cypress specs generated in {spec_dir}, "
-                    f"does {app_file} has any tests defined?"
+def run_app_with_test(
+    app_file: str,
+    test_dir: str,
+    sleep_time: int,
+    browser: Optional[str],
+    qd_path: Optional[str],
+    qd_web_dir: Optional[str],
+    **kwargs
+):
+    def do_run():
+        with TempDir(os.path.join(test_dir, "cypress/integration")) as spec_dir:
+            with Process(
+                cmd=["python", app_file],
+                env={"CYPRESS_INTEGRATION_TEST_DIR": spec_dir},
+                sleep_time=sleep_time,
+            ):
+                specs = [f for f in os.listdir(spec_dir) if f.endswith(".spec.js")]
+                if not specs:
+                    logging.warning(
+                        f"No cypress specs generated in {spec_dir}, "
+                        f"does {app_file} has any tests defined?"
+                    )
+                    return
+                app_name = os.path.splitext(os.path.basename(app_file))[0]
+                cypress = "./node_modules/cypress/bin/cypress"
+                browser_arg = f"--browser {browser}" if browser else ""
+                logging.info(f"Starting cypress to run spec(s): {specs}")
+                os.chdir(test_dir)
+                os.system(
+                    f"{cypress} run --spec {spec_dir}/*.spec.js "
+                    f"--reporter junit {browser_arg} "
+                    f'--reporter-options "mochaFile=cypress/reports/{app_name}.xml"'
                 )
-                return
-            app_name = os.path.splitext(os.path.basename(app_file))[0]
-            cypress = "./node_modules/cypress/bin/cypress"
-            logging.info(f"Starting cypress to run spec(s): {specs}")
-            os.chdir(test_path)
-            os.system(
-                f"{cypress} run --spec {spec_dir}/*.spec.js "
-                "--reporter junit "
-                f'--reporter-options "mochaFile=cypress/reports/{app_name}.xml"'
-            )
+
+    if qd_path:
+        cmd = [qd_path, "-web-dir", qd_web_dir] if qd_web_dir else [qd_path]
+        with Process(cmd=cmd, sleep_time=sleep_time):
+            do_run()
+    else:
+        do_run()
 
 
 def file_argument(file_name: str):
@@ -101,6 +118,7 @@ def main():
         help="how long should the test wait for app to start",
         type=int,
         default=5,
+        dest="sleep_time"
     )
     parser.add_argument(
         "-l",
@@ -108,13 +126,37 @@ def main():
         help="log level",
         default="info",
     )
+    parser.add_argument(
+        "-b",
+        "--browser",
+        help=(
+            "runs Cypress in the browser with the given name."
+            " if a filesystem path is supplied, Cypress will "
+            "attempt to use the browser at that path."
+        ),
+    )
+
+    parser.add_argument(
+        "-q",
+        "--qd-path",
+        type=file_argument,
+        help="optionally start QD from the given path",
+    )
+
+    parser.add_argument(
+        "-w",
+        "--qd-web-dir",
+        type=dir_argument,
+        help='directory to serve QD web assets from (default "./www")',
+    )
+
     parser.add_argument("app_file", help="Q app python file", type=file_argument)
     args = parser.parse_args()
     logging.basicConfig(
         level=args.log_level.upper(),
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
-    run_app_with_test(args.app_file, args.test_dir, args.seconds)
+    run_app_with_test(**vars(args))
 
 
 if __name__ == "__main__":
