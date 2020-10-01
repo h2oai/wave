@@ -56,7 +56,12 @@ const
       render = () => {
         const { page, error } = contentB()
         // TODO prettier error section
-        if (error) return <div className={clas(css.centerFullHeight, css.app)}>{error}</div>
+        if (error) {
+          const errorMessage = error === 'not_found'
+            ? (<Spinner label='Waiting for content...' size={SpinnerSize.large} />)
+            : error
+          return <div className={clas(css.centerFullHeight, css.app)}>{errorMessage}</div>
+        }
         if (!page) return <Spinner className={css.centerFullHeight} size={SpinnerSize.large} label='Loading ...' />
 
         return (
