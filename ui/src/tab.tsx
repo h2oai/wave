@@ -15,7 +15,7 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
@@ -33,7 +33,7 @@ export const
           items = state.items.map(({ name, label, icon }) => (
             <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
           ))
-        return <Pivot data-test='tab' linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
+        return <Pivot data-test={name} linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
 
       }
     return { render, changed }
