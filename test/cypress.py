@@ -129,7 +129,11 @@ def main():
     parser.add_argument(
         "-b",
         "--browser",
-        help="which browser cypress should use",
+        help=(
+            "runs Cypress in the browser with the given name."
+            " if a filesystem path is supplied, Cypress will "
+            "attempt to use the browser at that path."
+        ),
     )
 
     parser.add_argument(
