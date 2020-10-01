@@ -75,13 +75,13 @@ interface State {
 }
 
 export const
-  View = bond(({ state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Card<State>) => {
     const
       render = () => {
         const data = unpack(s.data)
 
         return (
-          <div data-test='wide_gauge_stat' className={css.card}>
+          <div data-test={name} className={css.card}>
             <div className={css.left}>
               <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
               <div className={css.percentContainer}>

@@ -53,7 +53,7 @@ const defaults: Partial<State> = {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
         const
@@ -61,7 +61,7 @@ export const
           data = unpack(s.data)
 
         return (
-          <div data-test='list_item_1' className={css.item}>
+          <div data-test={name} className={css.item}>
             <div className={css.left}>
               <div className={css.title}>
                 <Format data={data} format={s.title} />

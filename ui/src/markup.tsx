@@ -36,14 +36,14 @@ export const
     const html = { __html: content }
     return <div dangerouslySetInnerHTML={html} />
   },
-  MarkupCard = ({ title, content }: { title: S, content: S }) => (
-    <div data-test='markup' className={title ? css.titledCard : css.untitledCard}>
+  MarkupCard = ({ name, title, content }: { name: S, title: S, content: S }) => (
+    <div data-test={name} className={title ? css.titledCard : css.untitledCard}>
       {title && <div className={css.title}>{title}</div>}
       <XMarkup model={{ content }} />
     </div>
   ),
-  View = bond(({ state, changed }: Card<State>) => {
-    const render = () => <MarkupCard title={state.title} content={state.content} />
+  View = bond(({ name, state, changed }: Card<State>) => {
+    const render = () => <MarkupCard name={name} title={state.title} content={state.content} />
     return { render, changed }
   })
 

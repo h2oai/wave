@@ -181,7 +181,7 @@ const
   }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
         const
@@ -189,7 +189,7 @@ export const
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
-          <div data-test='form'>
+          <div data-test={name}>
             <XComponents items={items} />
           </div>
         )

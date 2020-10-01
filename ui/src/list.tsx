@@ -43,11 +43,11 @@ interface State {
 }
 
 export const
-  View = bond(({ state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Card<State>) => {
     const
       render = () => {
         return (
-          <div data-test='list' className={css.card}>
+          <div data-test={name} className={css.card}>
             <div className={css.title}>{s.title}</div>
             <div className={css.body}>
               <Repeat view={s.item_view} props={s.item_props} data={s.data} />

@@ -28,17 +28,16 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
         const data = unpack(state.data)
         return (
-          <div data-test='markdown'>
-            <MarkupCard
-              title={substitute(state.title, data)}
-              content={markdown.render(substitute(state.content, data))}
-            />
-          </div>
+          <MarkupCard
+            name={name}
+            title={substitute(state.title, data)}
+            content={markdown.render(substitute(state.content, data))}
+          />
         )
       }
     return { render, changed }
