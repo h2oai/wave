@@ -54,7 +54,8 @@ def run_app_with_test(
     test_dir: str,
     sleep_time: int,
     browser: Optional[str],
-    start_qd: bool,
+    qd_path: Optional[str],
+    qd_web_dir: Optional[str],
     **kwargs
 ):
     def do_run():
@@ -82,11 +83,9 @@ def run_app_with_test(
                     f'--reporter-options "mochaFile=cypress/reports/{app_name}.xml"'
                 )
 
-    if start_qd:
-        parent_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        qd_path = os.path.join(parent_path, 'qd')
-        web_dir = os.path.join(parent_path, 'ui/build')
-        with Process(cmd=[qd_path, "-web-dir", web_dir], sleep_time=sleep_time):
+    if qd_path:
+        cmd = [qd_path, "-web-dir", qd_web_dir] if qd_web_dir else [qd_path]
+        with Process(cmd=cmd, sleep_time=sleep_time):
             do_run()
     else:
         do_run()
@@ -133,7 +132,19 @@ def main():
         help="which browser cypress should use",
     )
 
-    parser.add_argument("-q", "--start-qd", default=False, action="store_true")
+    parser.add_argument(
+        "-q",
+        "--qd-path",
+        type=file_argument,
+        help="optionally start QD from the given path",
+    )
+
+    parser.add_argument(
+        "-w",
+        "--qd-web-dir",
+        type=dir_argument,
+        help='directory to serve QD web assets from (default "./www")',
+    )
 
     parser.add_argument("app_file", help="Q app python file", type=file_argument)
     args = parser.parse_args()
