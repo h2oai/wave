@@ -1,5 +1,5 @@
-# Table
-# Use a table to create master-detail views. This example demonstrates how to create a simple issue tracker.
+# Issue Tracker
+# Implement a simple issue tracker using a table to create master-detail views.
 # ---
 from h2o_q import Q, listen, ui
 from faker import Faker
