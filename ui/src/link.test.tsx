@@ -5,11 +5,16 @@ import { initializeIcons } from '@fluentui/react'
 
 const
   name = 'link',
-  linkProps: Link = { path: name }
+  linkProps: Link = { name, path: name }
 
 describe('Link.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => { jest.clearAllMocks() })
+
+  it('Does not render data-test attr', () => {
+    const { container } = render(<XLink model={{}} />)
+    expect(container.querySelectorAll('[data-test]')).toHaveLength(0)
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XLink model={linkProps} />)

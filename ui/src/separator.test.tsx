@@ -4,9 +4,14 @@ import { XSeparator, Separator } from './separator'
 
 const
   name = 'separator',
-  separatorProps: Separator = { label: name }
+  separatorProps: Separator = { name, label: name }
 
 describe('Separator.tsx', () => {
+
+  it('Does not render data-test attr', () => {
+    const { container } = render(<XSeparator model={{}} />)
+    expect(container.querySelectorAll('[data-test]')).toHaveLength(0)
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XSeparator model={separatorProps} />)

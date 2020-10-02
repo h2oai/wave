@@ -23,6 +23,8 @@ const
  * Create a new inline frame (an `iframe`).
  */
 export interface Frame {
+  /** An identifying name for this component. */
+  name?: S
   /** The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html` */
   path?: S
   /** The HTML content of the page. A string containing `<html>...</html>`. */
@@ -58,8 +60,8 @@ const
   )
 
 // HACK: Applying width/height styles directly on iframe don't work in Chrome/FF; so wrap in div instead.
-export const XFrame = ({ model: { path, content, width, height } }: { model: Frame }) => (
-  <div style={{ width: width || '100%', height: height || 150 }}>
+export const XFrame = ({ model: { name, path, content, width, height } }: { model: Frame }) => (
+  <div data-test={name} style={{ width: width || '100%', height: height || 150 }}>
     <InlineFrame path={path} content={content} />
   </div>
 )

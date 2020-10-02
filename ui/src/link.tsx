@@ -10,6 +10,8 @@ import { B, bond, S } from './qd'
  * All other kinds of paths are treated as external hyperlinks.
  */
 export interface Link {
+  /** An identifying name for this component. */
+  name?: S
   /** The text to be displayed. If blank, the `path` is used as the label. */
   label?: S
   /** The path or URL to link to. */
@@ -32,8 +34,8 @@ export const
       render = () => {
         // TODO target="_blank"
         return m.button
-          ? <div><Fluent.DefaultButton data-test='link' text={label} disabled={m.disabled} onClick={onClick} /></div>
-          : <div><Fluent.Link data-test='link' href={m.path} download={m.download || undefined} disabled={m.disabled}>{label}</Fluent.Link></div>
+          ? <div><Fluent.DefaultButton data-test={m.name} text={label} disabled={m.disabled} onClick={onClick} /></div>
+          : <div><Fluent.Link data-test={m.name} href={m.path} download={m.download || undefined} disabled={m.disabled}>{label}</Fluent.Link></div>
       }
     return { render }
   })

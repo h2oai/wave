@@ -14,6 +14,8 @@ import { B, S } from './qd'
 export interface Label {
   /**  The text displayed on the label.*/
   label: S
+  /** An identifying name for this component. */
+  name?: S
   /** True if the field is required. */
   required?: B
   /** True if the label should be disabled. */
@@ -30,10 +32,10 @@ const
 
 export const
   XLabel = ({ model }: { model: Label }) => {
-    const { label, required, disabled } = { ...defaults, ...model }
+    const { name, label, required, disabled } = { ...defaults, ...model }
     return (
       <Fluent.Label
-        data-test='label'
+        data-test={name}
         required={required}
         disabled={disabled}
       >{label}</Fluent.Label>

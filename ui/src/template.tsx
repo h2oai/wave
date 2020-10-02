@@ -8,6 +8,8 @@ import { bond, Card, Rec, S, unpack } from './qd'
 export interface Template {
   /** The Handlebars template. https://handlebarsjs.com/guide/ */
   content: S
+  /** An identifying name for this component. */
+  name?: S
   /** Data for the Handlebars template */
   data?: Rec
 }
@@ -28,7 +30,7 @@ export const
       template = Handlebars.compile(m.content || ''),
       render = () => {
         const data = unpack(m.data)
-        return <XMarkup model={{ content: template(data || {}) }} />
+        return <div data-test={m.name}><XMarkup model={{ content: template(data || {}) }} /></div>
       }
     return { render }
   }),

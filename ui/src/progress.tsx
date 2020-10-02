@@ -26,6 +26,8 @@ import { F, S } from './qd'
 export interface Progress {
   /** The text displayed above the bar. */
   label: S
+  /** An identifying name for this component. */
+  name?: S
   /** The text displayed below the bar. */
   caption?: S
   /** The progress, between 0.0 and 1.0, or -1 (default) if indeterminate. */
@@ -42,9 +44,9 @@ const
 export const
   XProgress = ({ model }: { model: Progress }) => {
     const
-      { label, caption, value } = { ...defaults, ...model }
+      { name, label, caption, value } = { ...defaults, ...model }
     return (
-      <div data-test='progress'>
+      <div data-test={name}>
         <Fluent.ProgressIndicator
           label={label}
           description={caption}

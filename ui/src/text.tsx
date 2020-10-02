@@ -11,6 +11,8 @@ import { Command } from './toolbar'
 export interface Text {
   /** The text content. */
   content: S
+  /** An identifying name for this component. */
+  name?: S
   /** The font size of the text content. */
   size?: 'xl' | 'l' | 'm' | 's' | 'xs'
   /** Tooltip message. */
@@ -21,6 +23,8 @@ export interface Text {
 export interface TextXl {
   /** The text content. */
   content: S
+  /** An identifying name for this component. */
+  name?: S
   /** Tooltip message. */
   tooltip?: S
   /** Contextual menu commands for this component. */
@@ -31,6 +35,8 @@ export interface TextXl {
 export interface TextL {
   /** The text content. */
   content: S
+  /** An identifying name for this component. */
+  name?: S
   /** Tooltip message. */
   tooltip?: S
   /** Contextual menu commands for this component. */
@@ -41,6 +47,8 @@ export interface TextL {
 export interface TextM {
   /** The text content. */
   content: S
+  /** An identifying name for this component. */
+  name?: S
   /** Tooltip message. */
   tooltip?: S
 }
@@ -49,6 +57,8 @@ export interface TextM {
 export interface TextS {
   /** The text content. */
   content: S
+  /** An identifying name for this component. */
+  name?: S
   /** Tooltip message. */
   tooltip?: S
 }
@@ -57,6 +67,8 @@ export interface TextS {
 export interface TextXs {
   /** The text content. */
   content: S
+  /** An identifying name for this component. */
+  name?: S
   /** Tooltip message. */
   tooltip?: S
 }
@@ -104,15 +116,14 @@ const
   toTextVariant = (s: S) => textVariants[s] || 'mediumPlus'
 
 export const
-  XText = ({ content, size, commands }: { content: S, size?: S, commands?: Command[] }) => {
-    const
-      name = 'text' + (size ? `-${size}` : '')
+  XText = ({ content, name, size, commands }: { content: S, name?: S, size?: S, commands?: Command[] }) => {
+    const menuName = name ? `${name}-menu` : name
     return (
       <div className={css.text}>
         <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block>
           <div className={css.markdown}><Markdown source={content} /></div>
         </Fluent.Text>
-        {!!commands?.length && <CardMenu name={name} commands={commands} />}
+        {!!commands?.length && <CardMenu name={menuName} commands={commands} />}
       </div>
     )
   }

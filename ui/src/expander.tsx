@@ -58,7 +58,7 @@ export const
           className = isOpenB() ? css.expanderOpen : css.expanderClosed
 
         return (
-          <div data-test='expander' className={className}>
+          <div data-test={m.name} className={className}>
             <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
               <Fluent.ActionButton
                 title={actionTitle}
