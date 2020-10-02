@@ -1,5 +1,5 @@
 OS?=linux
-VERSION?=dev
+VERSION ?= $(shell cat VERSION)
 BUILD_DATE?=$(shell date '+%Y%m%d%H%M%S')
 REL=qd-$(VERSION)-$(OS)-amd64
 LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
@@ -7,10 +7,10 @@ LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
 all: clean setup build ## Setup and build everything
 
 setup: ## Set up development dependencies
+	$(MAKE) setup-lint
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
 	cd tools/qgen && $(MAKE) setup build
-	$(MAKE) setup-lint
 
 setup-lint: ## Setup linters
 	npm ci
@@ -42,6 +42,13 @@ build-server: ## Build server for current OS/Arch
 
 build-py: ## Build wheel
 	cd py && $(MAKE) release
+
+build-docker:
+	docker build \
+		--build-arg uid=$(shell id -u) \
+		--build-arg gid=$(shell id -g) \
+		-t qd-test:$(VERSION) \
+		.
 
 run: ## Run server
 	go run cmd/qd/main.go -web-dir ./ui/build -debug

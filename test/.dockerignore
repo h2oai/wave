@@ -1,0 +1,5 @@
+/node_modules
+/cypress/screenshots
+/cypress/videos
+/cypress/integration/*.js
+/cypress/reports
