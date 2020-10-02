@@ -42,7 +42,7 @@ const
  *
  * Either a path or content can be provided as arguments.
  */
-interface State {
+export interface State {
   /** The title. */
   title: S
   /** The subtitle, displayed below the title. */
@@ -55,7 +55,7 @@ interface State {
 
 export const
   Header = (s: State) => (
-    <div data-test='header' className={css.card}>
+    <header data-test='header' className={css.card}>
       <div className={css.lhs}>
         <FontIcon className={css.icon} style={{ color: theme.color(s.icon_color) }} iconName={s.icon || 'WebComponents'} />
       </div>
@@ -63,7 +63,7 @@ export const
         <div className={css.title}>{s.title}</div>
         <div className={css.subtitle}>{s.subtitle}</div>
       </div>
-    </div>
+    </header>
   ),
   View = bond(({ state, changed }: Card<State>) => {
     const render = () => <Header {...state} />

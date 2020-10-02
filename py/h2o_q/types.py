@@ -4996,6 +4996,117 @@ class RepeatCard:
         )
 
 
+class SideNavHeader:
+    """No documentation available.
+    """
+    def __init__(
+            self,
+            title: str,
+            subtitle: str,
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+    ):
+        self.title = title
+        """The title."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.icon = icon
+        """The icon type, displayed to the left."""
+        self.icon_color = icon_color
+        """The icon's color."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.title is None:
+            raise ValueError('SideNavHeader.title is required.')
+        if self.subtitle is None:
+            raise ValueError('SideNavHeader.subtitle is required.')
+        return _dump(
+            title=self.title,
+            subtitle=self.subtitle,
+            icon=self.icon,
+            icon_color=self.icon_color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'SideNavHeader':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('SideNavHeader.title is required.')
+        __d_subtitle: Any = __d.get('subtitle')
+        if __d_subtitle is None:
+            raise ValueError('SideNavHeader.subtitle is required.')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
+        title: str = __d_title
+        subtitle: str = __d_subtitle
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
+        return SideNavHeader(
+            title,
+            subtitle,
+            icon,
+            icon_color,
+        )
+
+
+class SideNavCard:
+    """No documentation available.
+    """
+    def __init__(
+            self,
+            box: str,
+            items: List[NavGroup],
+            header: Optional[SideNavHeader] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.items = items
+        """The navigation groups contained in this pane."""
+        self.header = header
+        """Render a branding header as part of the side navigation."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('SideNavCard.box is required.')
+        if self.items is None:
+            raise ValueError('SideNavCard.items is required.')
+        return _dump(
+            view='side_nav',
+            box=self.box,
+            items=[__e.dump() for __e in self.items],
+            header=None if self.header is None else self.header.dump(),
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'SideNavCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('SideNavCard.box is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('SideNavCard.items is required.')
+        __d_header: Any = __d.get('header')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
+        header: Optional[SideNavHeader] = None if __d_header is None else SideNavHeader.load(__d_header)
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return SideNavCard(
+            box,
+            items,
+            header,
+            commands,
+        )
+
+
 class SmallSeriesStatCard:
     """Create a small stat card displaying a primary value and a series plot.
     """

@@ -22,7 +22,10 @@ const
       $nest: {
         ...topNavBreakpoint({
           justifyContent: 'center'
-        })
+        }),
+        '~ nav': {
+          top: 80
+        }
       }
     },
     toolbar: {
@@ -61,7 +64,7 @@ const
 /**
  * Navigation component that is fixed at the top.
  */
-interface State {
+export interface State {
   /** The title. */
   title: S
   /** The subtitle, displayed below the title. */
@@ -79,9 +82,13 @@ export const View = bond(({ state, changed }: Card<State>) => {
     render = () => (
       <Fluent.Stack className={css.topNav} horizontal horizontalAlign='space-between' verticalAlign='center'>
         <Header title={state.title} subtitle={state.subtitle} icon={state.icon} icon_color={state.icon_color} />
-        <div className={css.toolbar}>
-          <Toolbar name='Toolbar' state={{ items: state.items }} changed={box(false)} />
-        </div>
+        {
+          !!state.items.length && (
+            <div className={css.toolbar}>
+              <Toolbar name='Toolbar' state={{ items: state.items }} changed={box(false)} />
+            </div>
+          )
+        }
       </Fluent.Stack>
     )
   return { render, changed }
