@@ -2634,6 +2634,56 @@ ui_repeat_card <- function(
   return(.o)
 }
 
+#' No documentation available.
+#'
+#' @param title The title.
+#' @param subtitle The subtitle, displayed below the title.
+#' @param icon The icon type, displayed to the left.
+#' @param icon_color The icon's color.
+#' @return A SideNavHeader instance.
+ui_side_nav_header <- function(
+  title,
+  subtitle,
+  icon = NULL,
+  icon_color = NULL) {
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("icon_color", "character", icon_color)
+  .o <- list(
+    title=title,
+    subtitle=subtitle,
+    icon=icon,
+    icon_color=icon_color)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SideNavHeader"))
+  return(.o)
+}
+
+#' No documentation available.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param items The navigation groups contained in this pane.
+#' @param header Render a branding header as part of the side navigation.
+#' @param commands Contextual menu commands for this component.
+#' @return A SideNavCard instance.
+ui_side_nav_card <- function(
+  box,
+  items,
+  header = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "h2oq_NavGroup", items)
+  .guard_scalar("header", "h2oq_SideNavHeader", header)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    items=items,
+    header=header,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SideNavCard"))
+  return(.o)
+}
+
 #' Create a small stat card displaying a primary value and a series plot.
 #'
 #' @param box A string indicating how to place this component on the page.

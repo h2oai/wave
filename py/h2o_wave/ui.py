@@ -2354,6 +2354,54 @@ def repeat_card(
     )
 
 
+def side_nav_header(
+        title: str,
+        subtitle: str,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+) -> SideNavHeader:
+    """No documentation available.
+
+    Args:
+        title: The title.
+        subtitle: The subtitle, displayed below the title.
+        icon: The icon type, displayed to the left.
+        icon_color: The icon's color.
+    Returns:
+        A `h2o_q.types.SideNavHeader` instance.
+    """
+    return SideNavHeader(
+        title,
+        subtitle,
+        icon,
+        icon_color,
+    )
+
+
+def side_nav_card(
+        box: str,
+        items: List[NavGroup],
+        header: Optional[SideNavHeader] = None,
+        commands: Optional[List[Command]] = None,
+) -> SideNavCard:
+    """No documentation available.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: The navigation groups contained in this pane.
+        header: Render a branding header as part of the side navigation.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_q.types.SideNavCard` instance.
+    """
+    return SideNavCard(
+        box,
+        items,
+        header,
+        commands,
+    )
+
+
 def small_series_stat_card(
         box: str,
         title: str,

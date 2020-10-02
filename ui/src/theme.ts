@@ -55,7 +55,8 @@ export const
   rgba = (r: U, g: U, b: U, a: F) => `rgba(${r},${g},${b},${a.toFixed(1)})`,
   gray = (b: U) => { const h = b.toString(16); return `#${h}${h}${h}` },
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
-  topNavBreakpoint = (cssProps: NestedCSSProperties) => ({ '@media screen and (max-width: 500px)': cssProps })
+  topNavBreakpoint = (css: NestedCSSProperties) => ({ '@media screen and (max-width: 600px)': css }),
+  mobileBreakpoint = (css: NestedCSSProperties) => ({ '@media screen and (max-width: 600px)': css })
 
 const
   black: RGB = { r: 0, g: 0, b: 0 },

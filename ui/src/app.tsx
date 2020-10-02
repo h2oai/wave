@@ -1,11 +1,12 @@
+import { Spinner, SpinnerSize } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { GridLayout } from './grid_layout'
-import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, qd } from './qd'
-import { getTheme, pc, clas, topNavBreakpoint } from './theme'
-import { Spinner, SpinnerSize } from '@fluentui/react'
 import { FlexLayout } from './flex_layout'
-import { View as TopNav } from './top_nav'
+import { GridLayout } from './grid_layout'
+import { bond, box, Card, connect, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
+import { View as SideNav } from './side_nav'
+import { clas, getTheme, mobileBreakpoint, pc, topNavBreakpoint } from './theme'
+import { State as TopNavState, View as TopNav } from './top_nav'
 
 const
   theme = getTheme(),
@@ -20,10 +21,14 @@ const
       overflow: 'auto'
     },
     appWithTopNav: {
-      top: 81,
+      top: 80,
       $nest: {
         ...topNavBreakpoint({ marginBottom: 75 })
       }
+    },
+    appWithSideNav: {
+      marginLeft: 300,
+      transition: 'margin-left .5s'
     },
     centerFullHeight: {
       height: pc(100),
@@ -32,8 +37,23 @@ const
       alignItems: 'center',
       backgroundColor: theme.colors.page,
       color: theme.colors.text,
+    },
+    mobileTopSideNav: {
+      display: 'none',
+      $nest: {
+        ...mobileBreakpoint({
+          display: 'block'
+        })
+      }
     }
-  })
+  }),
+  MobileTopSideNav = (state: TopNavState) => {
+    return (
+      <div className={css.mobileTopSideNav}>
+        <TopNav {...{ name: 'mobile-side-nav', state, changed: box(false) }} />
+      </div>
+    )
+  }
 
 
 const
@@ -79,11 +99,18 @@ const
         }
         if (!page) return <Spinner className={css.centerFullHeight} size={SpinnerSize.large} label='Loading ...' />
 
-        const topNav = page.list().find(c => c.state.view === 'top_nav') as any
+        const
+          topNav = page.list().find(c => c.state.view === 'top_nav') as Card<any>,
+          sideNav = page.list().find(c => c.state.view === 'side_nav') as Card<any>,
+          topNavClass = topNav ? css.appWithTopNav : '',
+          sideNavClass = sideNav ? css.appWithSideNav : ''
+
         return (
           <>
             {topNav && <TopNav {...topNav} />}
-            <main className={clas(css.app, topNav ? css.appWithTopNav : '')}>{getLayout(page)}</main>
+            {sideNav && <SideNav {...sideNav} />}
+            {sideNav && !topNav && <MobileTopSideNav {...{ ...sideNav!.state.header, items: [] } as TopNavState} />}
+            <main className={clas(css.app, topNavClass, sideNavClass)}>{getLayout(page)}</main>
           </>
         )
       },

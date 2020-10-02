@@ -12,7 +12,7 @@ interface NavItem {
 }
 
 /** Create a group of navigation items. */
-interface NavGroup {
+export interface NavGroup {
   /** The label to display for this group. */
   label: S
   /** The navigation items contained in this group. */
@@ -20,7 +20,7 @@ interface NavGroup {
 }
 
 /** Create a card containing a navigation pane. */
-interface State {
+export interface State {
   /** The navigation groups contained in this pane. */
   items: NavGroup[]
 }

@@ -161,7 +161,7 @@ export const
                 placement = grid.place(c.state.box),
                 { left, top, right, bottom, width, height } = placement,
                 display = placement === badPlacement ? 'none' : 'block',
-                zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
+                zIndex = c.name === '__unhandled_error__' ? 999 : 'initial'
 
               c.size = { width: width || 0, height: height || 0 } // TODO compute width from grid width; height cannot be relied upon
               return (
