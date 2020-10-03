@@ -1,4 +1,4 @@
-# Uploads / UI
+# Uploads / Download
 # Accept files from the user and downloads them locally.
 # ---
 
