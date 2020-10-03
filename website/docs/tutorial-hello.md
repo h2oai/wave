@@ -35,9 +35,11 @@ python3 -m venv venv
 
 ## Step 3: Write your program
 
-Next, open your preferred text editor, create `$HOME/q-apps/hello_world.py`, and copy-paste this in:
+Next, open your preferred text editor, create a Python script called `hello_world.py` in the `$HOME/q-apps` directory, and copy-paste the following. 
 
-```py
+For now, don't worry too much about what this program is doing. We'll get to that shortly.
+
+```py title="$HOME/q-apps/hello_world.py"
 from h2o_q import site, ui
 
 # Grab a reference to the page at route '/hello'
@@ -54,7 +56,6 @@ page['quote'] = ui.markdown_card(
 page.save()
 ```
 
-For now, don't worry too much about what this program is doing. We'll get to that shortly.
 
 ## Step 4: Run your program
 
@@ -128,19 +129,19 @@ cd $HOME/q-apps
 
 ### Grab a reference to our page
 
-```py 
+```py title=">>>"
 from h2o_q import site
 page = site['/hello']
 ```
 
 ### Grab a reference to our card
 
-```py 
+```py title=">>>"
 quote = page['quote']
 ```
 
 ### Change the title
-```py 
+```py title=">>>"
 quote.title = 'Hello Again!'
 page.save()
 ```
@@ -149,7 +150,7 @@ page.save()
 
 ### Change the content
 
-```py 
+```py title=">>>"
 quote.content = "D'oh! - *Homer Simpson*"
 page.save()
 ```
@@ -158,12 +159,12 @@ page.save()
 
 ### Quit your REPL
 
-```py
+```py title=">>>"
 quit()
 ```
 
-## Summmary
+## Summary
 
 What we just did - add content from one program and make edits to it from another - illustrates another important aspect of Q's programming model: *The Q server retains content*. Your `hello_world.py` program did its thing and exited. So did your REPL. But your content was retained for the viewing pleasure of future visitors to `/hello`.  
 
-Next, we'll take the principles we learnt from this tutorial and apply it towards a supposedly spirited folk song involving arithmetic progressions.
+Next, we'll take the principles we learned from this tutorial and apply it towards a supposedly spirited folk song involving arithmetic progressions.
