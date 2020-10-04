@@ -6,6 +6,10 @@ import StartQ from './_start_q.md'
 
 In this section, we'll learn how to author our first H2O Q program from scratch, and understand the basics of how to display content in a web browser.
 
+:::note
+These tutorials assume that you have some familiarity with the Python programming language. You don't have to be an expert, but it might be harder to learn both H2O Q and Python at the same time.
+:::
+
 ## Step 1: Start the Q Server
 
 <StartQ/>
