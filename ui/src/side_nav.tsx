@@ -118,7 +118,16 @@ const
 export const View = bond((card: Card<State>) => {
   const
     isCollapsedB = box(window.innerWidth <= 600),
-    toggleCollapse = () => isCollapsedB(!isCollapsedB()),
+    toggleCollapse = () => {
+      isCollapsedB(!isCollapsedB())
+      // Trigger resize event in order to inform plots they should resize themselves to fit the new parent container.
+      // The timeout is specified due to animation and has to be synced with it.
+      setTimeout(() => {
+        const event = document.createEvent('HTMLEvents')
+        event.initEvent('resize', true, false)
+        document.dispatchEvent(event)
+      }, 501)
+    },
     render = () => (
       <>
         <nav className={clas(css.sideNav, isCollapsedB() ? css.collapsed : '')}>
