@@ -7,7 +7,7 @@ Your H2O Q release download ships with [over 150 examples](/gallery).
 
 You can play around with these examples in your browser using `tour.py`, a Python script (itself a Q app) located in `examples/`:
 
-```
+```none title="Contents of $HOME/q"
 q/
 ├── docs/           
 ├── examples/       <-- Examples live here.

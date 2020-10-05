@@ -84,7 +84,7 @@ Notice how the technique to modify and save pages in a Q app is different from t
 | Access card named `foo` | `card = page['foo']` | `card = q.page['foo']` |
 | Save page | `page.save()` | `await q.page.save()` |
 
-In a Q app, we always access the page using the *event context* `q`. The event context carries useful information about the active UI event, including who issued the event, what information was entered, which buttons were clicked, and so on; and `q.page` always refers to the page located at the route you passed to `listen()` (in this case, `/counter`).
+In a Q app, we always access the page using the *runtime context* `q`. The runtime context carries useful information about the active UI event, including who issued the event, what information was entered, which buttons were clicked, and so on; and `q.page` always refers to the page located at the route you passed to `listen()` (in this case, `/counter`).
 
 Restart your app (`^C` and run it again):
 

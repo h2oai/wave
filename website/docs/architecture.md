@@ -2,6 +2,8 @@
 title: Architecture
 ---
 
+XXX add links to subpages
+
 H2O Q is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python without using HTML, Javascript or CSS.
 
 It excels at capturing data, visualizations, and graphics from multiple sources, and broadcasting them live over the web.
@@ -92,7 +94,9 @@ Q apps sport a websocket server under the hood. When a Q app is launched, it ann
 
 ## How is it different?
 
-The Q server retains content. This is an important concept to understand, and the primary reason why Q is different from a typical web framework. A Q script can update content and exit, and the Q server will continue serving that content. Different parts of the same page can be updated by different scripts running on different devices. Also, all content is live (or reactive) all the time: browsers always display up-to-date content without the need to reload.
+The Q server retains content. This is an important concept to understand, and the primary reason why Q is different from a typical web framework. A Q script can update content and exit, and the Q server will happily continue serving that content. In other words, no Python process needs to be around if a new user arrives after you script has exited. 
+
+Different parts of the same page can be updated by different scripts running on different devices. Also, all content is live (or reactive) all the time: browsers always display up-to-date content without the need to reload.
 
 ---
 
