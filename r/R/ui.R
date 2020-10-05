@@ -2558,7 +2558,7 @@ ui_repeat_card <- function(
   return(.o)
 }
 
-#' No documentation available.
+#' Render a header inside top part of the side navigation.
 #'
 #' @param title The title.
 #' @param subtitle The subtitle, displayed below the title.
@@ -2887,38 +2887,51 @@ ui_toolbar_card <- function(
   return(.o)
 }
 
+#' Render a header inside top part of the side navigation.
+#'
+#' @param title The title.
+#' @param subtitle The subtitle, displayed below the title.
+#' @param icon The icon type, displayed to the left.
+#' @param icon_color The icon's color.
+#' @return A TopNavHeader instance.
+ui_top_nav_header <- function(
+  title,
+  subtitle,
+  icon = NULL,
+  icon_color = NULL) {
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("icon_color", "character", icon_color)
+  .o <- list(
+    title=title,
+    subtitle=subtitle,
+    icon=icon,
+    icon_color=icon_color)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TopNavHeader"))
+  return(.o)
+}
+
 #' Navigation component that is fixed at the top.
 #'
 #' @param box A string indicating how to place this component on the page.
-#' @param title The title.
-#' @param subtitle The subtitle, displayed below the title.
+#' @param header The header displayed in the top left corner.
 #' @param items Navigation tabs links to be displayed in top nav.
-#' @param icon The icon type, displayed to the left.
-#' @param icon_color The icon's color.
 #' @param commands Contextual menu commands for this component.
 #' @return A TopNavCard instance.
 ui_top_nav_card <- function(
   box,
-  title,
-  subtitle,
+  header,
   items,
-  icon = NULL,
-  icon_color = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_scalar("title", "character", title)
-  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("header", "h2oq_TopNavHeader", header)
   .guard_vector("items", "h2oq_Command", items)
-  .guard_scalar("icon", "character", icon)
-  .guard_scalar("icon_color", "character", icon_color)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
-    title=title,
-    subtitle=subtitle,
+    header=header,
     items=items,
-    icon=icon,
-    icon_color=icon_color,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TopNavCard"))
   return(.o)

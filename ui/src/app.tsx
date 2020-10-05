@@ -5,7 +5,7 @@ import { FlexLayout } from './flex_layout'
 import { GridLayout } from './grid_layout'
 import { bond, box, Card, connect, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { View as SideNav } from './side_nav'
-import { clas, getTheme, mobileBreakpoint, pc, topNavBreakpoint } from './theme'
+import { clas, getTheme, mobileBreakpoint, pc, topNavHeight, sideNavWidth } from './theme'
 import { State as TopNavState, View as TopNav } from './top_nav'
 
 const
@@ -21,13 +21,13 @@ const
       overflow: 'auto'
     },
     appWithTopNav: {
-      top: 80,
+      top: topNavHeight,
       $nest: {
-        ...topNavBreakpoint({ marginBottom: 75 })
+        ...mobileBreakpoint({ marginBottom: 75 })
       }
     },
     appWithSideNav: {
-      marginLeft: 300,
+      marginLeft: sideNavWidth,
       transition: 'margin-left .5s'
     },
     centerFullHeight: {
