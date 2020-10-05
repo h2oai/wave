@@ -19,12 +19,20 @@ page = site['/demo']
 
 page['meta'] = ui.meta_card(box='', layout='flex')
 
-page['nav'] = ui.top_nav_card(box='', title='My app', subtitle='Try it, you will not regret', items=[
-    ui.command(name='#menu/spam', label='Spam', icon='Inbox'),
-    ui.command(name='#menu/ham', label='Ham', icon='EatDrink'),
-    ui.command(name='#menu/eggs', label='Eggs', icon='CollegeFootball'),
-    ui.command(name='#about', label='About', icon='FeedbackRequestSolid'),
-])
+page['nav'] = ui.top_nav_card(
+    box='',
+    header=ui.top_nav_header(title='My app', subtitle='Try it, you will not regret'),
+    items=[
+        ui.command(name='#menu/spam', label='Spam', icon='Inbox'),
+        ui.command(name='#menu/ham', label='Ham', icon='EatDrink'),
+        ui.command(name='#menu/eggs', label='Eggs', icon='CollegeFootball'),
+        ui.command(name='#menu/rum', label='Rum', icon='CollegeFootball'),
+        ui.command(name='#menu/Gum', label='Gum', icon='CollegeFootball'),
+        ui.command(name='#menu/salami', label='Salami', icon='CollegeFootball'),
+        ui.command(name='#menu/pepper', label='Pepper', icon='CollegeFootball'),
+        ui.command(name='#about', label='About', icon='FeedbackRequestSolid'),
+    ]
+)
 page['side'] = ui.side_nav_card(box='', items=[
     ui.nav_group('Menu', items=[
           ui.nav_item(name='#menu/spam', label='Spam'),

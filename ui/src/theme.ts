@@ -55,7 +55,6 @@ export const
   rgba = (r: U, g: U, b: U, a: F) => `rgba(${r},${g},${b},${a.toFixed(1)})`,
   gray = (b: U) => { const h = b.toString(16); return `#${h}${h}${h}` },
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
-  topNavBreakpoint = (css: NestedCSSProperties) => ({ '@media screen and (max-width: 600px)': css }),
   mobileBreakpoint = (css: NestedCSSProperties) => ({ '@media screen and (max-width: 600px)': css })
 
 const
@@ -285,4 +284,7 @@ export const
   },
   defaultFontStyle = {
     fontFamily: 'Inter',
-  }
+  },
+  topNavHeight = 80,
+  sideNavWidth = 300,
+  collapsedSideNavWidth = 40

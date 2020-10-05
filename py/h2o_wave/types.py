@@ -5130,7 +5130,7 @@ class RepeatCard:
 
 
 class SideNavHeader:
-    """No documentation available.
+    """Render a header inside top part of the side navigation.
     """
     def __init__(
             self,
@@ -5855,31 +5855,77 @@ class ToolbarCard:
         )
 
 
+class TopNavHeader:
+    """Render a header inside top part of the side navigation.
+    """
+    def __init__(
+            self,
+            title: str,
+            subtitle: str,
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+    ):
+        self.title = title
+        """The title."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.icon = icon
+        """The icon type, displayed to the left."""
+        self.icon_color = icon_color
+        """The icon's color."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.title is None:
+            raise ValueError('TopNavHeader.title is required.')
+        if self.subtitle is None:
+            raise ValueError('TopNavHeader.subtitle is required.')
+        return _dump(
+            title=self.title,
+            subtitle=self.subtitle,
+            icon=self.icon,
+            icon_color=self.icon_color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TopNavHeader':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('TopNavHeader.title is required.')
+        __d_subtitle: Any = __d.get('subtitle')
+        if __d_subtitle is None:
+            raise ValueError('TopNavHeader.subtitle is required.')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
+        title: str = __d_title
+        subtitle: str = __d_subtitle
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
+        return TopNavHeader(
+            title,
+            subtitle,
+            icon,
+            icon_color,
+        )
+
+
 class TopNavCard:
     """Navigation component that is fixed at the top.
     """
     def __init__(
             self,
             box: str,
-            title: str,
-            subtitle: str,
+            header: TopNavHeader,
             items: List[Command],
-            icon: Optional[str] = None,
-            icon_color: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
-        self.title = title
-        """The title."""
-        self.subtitle = subtitle
-        """The subtitle, displayed below the title."""
+        self.header = header
+        """The header displayed in the top left corner."""
         self.items = items
         """Navigation tabs links to be displayed in top nav."""
-        self.icon = icon
-        """The icon type, displayed to the left."""
-        self.icon_color = icon_color
-        """The icon's color."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -5887,20 +5933,15 @@ class TopNavCard:
         """Returns the contents of this object as a dict."""
         if self.box is None:
             raise ValueError('TopNavCard.box is required.')
-        if self.title is None:
-            raise ValueError('TopNavCard.title is required.')
-        if self.subtitle is None:
-            raise ValueError('TopNavCard.subtitle is required.')
+        if self.header is None:
+            raise ValueError('TopNavCard.header is required.')
         if self.items is None:
             raise ValueError('TopNavCard.items is required.')
         return _dump(
             view='top_nav',
             box=self.box,
-            title=self.title,
-            subtitle=self.subtitle,
+            header=self.header.dump(),
             items=[__e.dump() for __e in self.items],
-            icon=self.icon,
-            icon_color=self.icon_color,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -5910,32 +5951,21 @@ class TopNavCard:
         __d_box: Any = __d.get('box')
         if __d_box is None:
             raise ValueError('TopNavCard.box is required.')
-        __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('TopNavCard.title is required.')
-        __d_subtitle: Any = __d.get('subtitle')
-        if __d_subtitle is None:
-            raise ValueError('TopNavCard.subtitle is required.')
+        __d_header: Any = __d.get('header')
+        if __d_header is None:
+            raise ValueError('TopNavCard.header is required.')
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('TopNavCard.items is required.')
-        __d_icon: Any = __d.get('icon')
-        __d_icon_color: Any = __d.get('icon_color')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
-        title: str = __d_title
-        subtitle: str = __d_subtitle
+        header: TopNavHeader = TopNavHeader.load(__d_header)
         items: List[Command] = [Command.load(__e) for __e in __d_items]
-        icon: Optional[str] = __d_icon
-        icon_color: Optional[str] = __d_icon_color
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TopNavCard(
             box,
-            title,
-            subtitle,
+            header,
             items,
-            icon,
-            icon_color,
             commands,
         )
 

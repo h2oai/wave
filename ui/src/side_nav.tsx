@@ -5,7 +5,7 @@ import { cards } from './grid_layout'
 import { Header, State as HeaderState } from "./header"
 import { NavGroup, View as Nav } from "./nav"
 import { bond, box, Card, S } from './qd'
-import { clas, getTheme, mobileBreakpoint, pc } from './theme'
+import { clas, getTheme, mobileBreakpoint, pc, sideNavWidth, collapsedSideNavWidth, topNavHeight } from './theme'
 
 const
   { colors } = getTheme(),
@@ -16,35 +16,32 @@ const
       zIndex: 1,
       background: colors.card,
       transition: 'transform .5s',
-      width: 300,
+      width: sideNavWidth,
       $nest: {
         '> div': {
-          paddingRight: 40
+          paddingRight: collapsedSideNavWidth
         },
         ...mobileBreakpoint({
           $nest: {
             '~ main': {
               marginLeft: 0,
-              top: 80
+              top: topNavHeight
             },
-            '&': {
-              top: 80
-            }
           }
         })
       }
     },
     collapsed: {
-      transform: 'translateX(-260px)',
+      transform: `translateX(-${sideNavWidth - collapsedSideNavWidth}px)`,
       $nest: {
         '~ main': {
-          marginLeft: 40
+          marginLeft: collapsedSideNavWidth
         },
         ...mobileBreakpoint({
-          transform: 'translateX(-300px)',
+          transform: `translateX(-${sideNavWidth}px)`,
           $nest: {
             '~ main': {
-              marginLeft: 0,
+              marginLeft: 0
             }
           }
         })
@@ -74,7 +71,7 @@ const
     },
     sideNavHeader: {
       textAlign: 'center',
-      margin: 40,
+      margin: collapsedSideNavWidth,
       $nest: {
         ...mobileBreakpoint({
           display: 'none'
@@ -86,6 +83,9 @@ const
     },
   })
 
+/**
+ * Render a header inside top part of the side navigation.
+ */
 interface SideNavHeader {
   /** The title. */
   title: S

@@ -2360,7 +2360,7 @@ def side_nav_header(
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
 ) -> SideNavHeader:
-    """No documentation available.
+    """Render a header inside top part of the side navigation.
 
     Args:
         title: The title.
@@ -2645,35 +2645,50 @@ def toolbar_card(
     )
 
 
-def top_nav_card(
-        box: str,
+def top_nav_header(
         title: str,
         subtitle: str,
-        items: List[Command],
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
+) -> TopNavHeader:
+    """Render a header inside top part of the side navigation.
+
+    Args:
+        title: The title.
+        subtitle: The subtitle, displayed below the title.
+        icon: The icon type, displayed to the left.
+        icon_color: The icon's color.
+    Returns:
+        A `h2o_q.types.TopNavHeader` instance.
+    """
+    return TopNavHeader(
+        title,
+        subtitle,
+        icon,
+        icon_color,
+    )
+
+
+def top_nav_card(
+        box: str,
+        header: TopNavHeader,
+        items: List[Command],
         commands: Optional[List[Command]] = None,
 ) -> TopNavCard:
     """Navigation component that is fixed at the top.
 
     Args:
         box: A string indicating how to place this component on the page.
-        title: The title.
-        subtitle: The subtitle, displayed below the title.
+        header: The header displayed in the top left corner.
         items: Navigation tabs links to be displayed in top nav.
-        icon: The icon type, displayed to the left.
-        icon_color: The icon's color.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_q.types.TopNavCard` instance.
     """
     return TopNavCard(
         box,
-        title,
-        subtitle,
+        header,
         items,
-        icon,
-        icon_color,
         commands,
     )
 

@@ -3,7 +3,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Header } from './header'
 import { bond, S, box, Card } from './qd'
-import { border, getTheme, pc, topNavBreakpoint, padding } from './theme'
+import { border, getTheme, pc, mobileBreakpoint, padding, topNavHeight } from './theme'
 import { View as Toolbar, Command } from "./toolbar"
 import { cards } from './grid_layout'
 
@@ -20,17 +20,17 @@ const
       background: colors.card,
       borderBottom: border(1, colors.page),
       $nest: {
-        ...topNavBreakpoint({
+        ...mobileBreakpoint({
           justifyContent: 'center'
         }),
         '~ nav': {
-          top: 80
+          top: topNavHeight
         }
       }
     },
     toolbar: {
       $nest: {
-        ...topNavBreakpoint({
+        ...mobileBreakpoint({
           position: 'fixed',
           bottom: 0,
           left: 0,
@@ -62,26 +62,34 @@ const
   })
 
 /**
- * Navigation component that is fixed at the top.
+ * Render a header inside top part of the side navigation.
  */
-export interface State {
+interface TopNavHeader {
   /** The title. */
   title: S
   /** The subtitle, displayed below the title. */
   subtitle: S
-  /** Navigation tabs links to be displayed in top nav. */
-  items: Command[]
   /** The icon type, displayed to the left. */
   icon?: S
   /** The icon's color. */
   icon_color?: S
 }
 
+/**
+ * Navigation component that is fixed at the top.
+ */
+export interface State {
+  /** The header displayed in the top left corner. */
+  header: TopNavHeader
+  /** Navigation tabs links to be displayed in top nav. */
+  items: Command[]
+}
+
 export const View = bond(({ state, changed }: Card<State>) => {
   const
     render = () => (
       <Fluent.Stack className={css.topNav} horizontal horizontalAlign='space-between' verticalAlign='center'>
-        <Header title={state.title} subtitle={state.subtitle} icon={state.icon} icon_color={state.icon_color} />
+        <Header title={state.header.title} subtitle={state.header.subtitle} icon={state.header.icon} icon_color={state.header.icon_color} />
         {
           !!state.items.length && (
             <div className={css.toolbar}>
