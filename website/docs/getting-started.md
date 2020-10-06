@@ -11,7 +11,7 @@ H2O Q is a software stack for building beautiful, low-latency, realtime, browser
 
 It excels at capturing data, visualizations, and graphics from multiple sources, and broadcasting them live over the web.
 
-XXX dashboard animation
+<video controls loop><source src='assets/getting-started__dashboard.mp4' type='video/mp4'/></video>
 
 ## What can I do with it?
 
@@ -38,17 +38,45 @@ This simplicity makes it fast, fun and easy to rapidly build and deploy interact
 
 The API is concise and elegant, freeing you to create in broad strokes, tackling high level ideas first, and polishing up the details later.
 
-```py
-# A bean counter in XXX lines of code:
+## Show me some code!
 
-# XXX
+Here's a bean counter. Clicking the button increments the bean count:
+
+<video controls loop><source src='assets/getting-started__beans.mp4' type='video/mp4'/></video>
+
+And here's how it's written:
+
+```py {8-9,16}
+from h2o_q import Q, listen, ui
+
+bean_count = 0
+
+async def serve(q: Q):
+    global bean_count
+    # Was the 'increment' button clicked?
+    if q.args.increment:
+        bean_count += 1
+
+    # Display a form on the page
+    q.page['beans'] = ui.form_card(
+        box='1 1 1 2',
+        items=[
+            ui.text_xl('Beans!'),
+            ui.button(name='increment', label=f'{bean_count} beans'),
+        ],
+    )
+    
+    # Save the page
+    await q.page.save()
+
+listen('/counter', serve)
 ```
 
 ## What's included?
 
 The SDK ships batteries-included with a wide variety of user interface widgets and charts. You also get to use your favorite Python libraries seamlessly - anything that works in a Jupyter notebook works in H2O Q - including Altair, Bokeh, H2O, Keras, Matplotlib, Plotly, PyTorch, Seaborn, TensorFlow, Vega-lite, and others. H2O Q lets you use and broadcast results from all these libraries, in realtime.
 
-H2O Q is not only a programming toolkit but a programmable content server  as well: it can capture, retain, and relay information efficiently in realtime. The content server (or simply, "Q Server") is written in Go, a ~10MB static executable without runtime dependencies[^2]. It currently ships with a Python language driver, but is language-agnostic (an R language driver is under development).
+H2O Q is not only a programming toolkit but a programmable content server  as well: it can capture, retain, and relay information efficiently in realtime. The content server (or *Q Server*) is written in Go, a ~10MB static executable without runtime dependencies[^2]. It currently ships with a Python language driver, but is language-agnostic (an R language driver is under development).
 
 The Q Server stores all the content and acts as a hub between your user's web browser and your apps. Therefore, it must be up and running before you launch Q apps. Typically, you only need one Q Server to serve several apps.
 
