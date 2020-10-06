@@ -25,10 +25,11 @@ To run the tour, as with any Q app, we need to start both the Q server (`qd`) an
 
 ## Step 2: Run the tour
 
-Now that the Q server is running, open another terminal window to launch the tour. 
+To run the tour, create a [virtual environment](https://docs.python.org/3/tutorial/venv.html), install the tour's dependencies, and finally execute `tour.py`.  
 
-To do this, we first create a [virtual environment](https://docs.python.org/3/tutorial/venv.html), install the tour's dependencies, and finally execute `tour.py`.  
-
+:::important
+Do this from a new terminal window!
+:::
 
 ```shell 
 cd $HOME/q
@@ -46,7 +47,7 @@ XXX screenshot of tour
 `tour.py` is an ordinary Q app that runs other apps. The tour itself runs at the route `/tour`, and each of the examples runs at `/demo`. 
 
 :::tip
-To play with the current tour example in isolation, simply open a new browser tab and head to [http://localhost:55555/demo](http://localhost:55555/demo).
+To play with the tour's active example in isolation, simply open a new browser tab and head to [http://localhost:55555/demo](http://localhost:55555/demo).
 :::
 
 ## Wrapping up
