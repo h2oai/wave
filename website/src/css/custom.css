@@ -153,16 +153,25 @@ video {
   background-position: right bottom;
   border: 1px solid #999;
 }
-.gallery > a {
+a.thumbnail:link {
   display: inline-block;
   padding: 1rem;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  border: none;
 }
-.gallery .cover {
-  width: 180px;
-  height: 140px;
-  margin-top: 0rem;
-  margin-bottom: 0.3rem;
+a.thumbnail>div {
+  width: 160px;
+  height: 120px;
+  background-size: cover;
+  background-position: left top;
+  overflow: hidden;
+  transition: background-position 2s;
+  border: 1px solid #ccc;
+  margin: 0rem 0 0.3rem 0;
+}
+a.thumbnail>div:hover {
+  background-position: right bottom;
+  border: 1px solid #999;
 }
 
 .api {

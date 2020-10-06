@@ -3,7 +3,7 @@ title: A Tour of Q
 ---
 import StartQ from './_start_q.md'
 
-Your H2O Q release download ships with [over 150 examples](/gallery).
+Your H2O Q release download ships with [over 150 examples](examples).
 
 You can play around with these examples in your browser using `tour.py`, a Python script (itself a Q app) located in `examples/`:
 

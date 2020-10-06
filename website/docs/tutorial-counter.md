@@ -6,7 +6,7 @@ In the previous tutorials, we've been authoring [Q scripts](scripts.md). A Q scr
 
 In the fine tradition of keeping tutorials succinct and useful, we'll author a little app that counts beans of the virtual kind, or, a bean counter, not to be confused with dubiously intentioned financial officers.
 
-<video controls loop><source src='assets/tutorial-counter__demo.mp4' type='video/mp4'/></video>
+<video controls loop><source src={require('./assets/tutorial-counter__demo.mp4').default} type='video/mp4'/></video>
 
 This tutorial outlines the basics of how to handle events, update the UI, manage state and easily add realtime sync capabilities to your app. It's probably the most important tutorial to wrap your head around if you're interesting in authoring interactive applications.
 
@@ -154,7 +154,7 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/counter](http://localhost:55555/counter). Your button should now count beans when clicked:
 
-<video controls loop><source src='assets/tutorial-counter__demo.mp4' type='video/mp4'/></video>
+<video controls loop><source src={require('./assets/tutorial-counter__demo.mp4').default} type='video/mp4'/></video>
 
 ## Step 4: Make it more efficient
 
@@ -207,7 +207,7 @@ In the above steps, we learned about `q.args` (request arguments submitted from 
 
 Before we do that, try accessing [http://localhost:55555/counter](http://localhost:55555/counter) from two different browser tabs and playing with them. You'll notice that each browser tab (or, each client) maintains separate bean counts.
 
-<video controls loop><source src='assets/tutorial-counter__client.mp4' type='video/mp4'/></video>
+<video controls loop><source src={require('./assets/tutorial-counter__client.mp4').default} type='video/mp4'/></video>
 
 Maintaining separate bean counts per client is one way to count beans. You can also maintain bean counts at the user level and the app level. 
 
@@ -259,7 +259,7 @@ listen('/counter', serve)
  
 If we run this app, we'll see that the counts are being maintained across browser tabs, but the updated counts don't show up immediately across all tabs. Instead, they show up only when you interact with the other tabs, or reload them. 
 
-<video controls loop><source src='assets/tutorial-counter__user-nosync.mp4' type='video/mp4'/></video>
+<video controls loop><source src={require('./assets/tutorial-counter__user-nosync.mp4').default} type='video/mp4'/></video>
 
 This would be considered normal behavior for a typical web application, and most users familiar with the interwebs are also familiar with the reload button, but we can do better, because having to hit the reload button to get updates is about as exciting as waiting for paint to dry.
 
@@ -302,7 +302,7 @@ The default server mode for apps is `unicast`, which means "don't sync across cl
 Re-running our app proves that the user-level bean count indeed syncs across tabs:
 
 
-<video controls loop><source src='assets/tutorial-counter__user-sync.mp4' type='video/mp4'/></video>
+<video controls loop><source src={require('./assets/tutorial-counter__user-sync.mp4').default} type='video/mp4'/></video>
 
  
 ## Step 7: App-level realtime sync

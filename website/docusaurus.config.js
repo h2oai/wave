@@ -18,10 +18,10 @@ module.exports = {
         src: 'img/logo.svg',
       },
       items: [
-        { to: 'gallery', label: 'Gallery', position: 'left' },
-        { to: 'docs/', activeBasePath: 'docs', label: 'Get Started', position: 'left', },
+        { to: 'docs/examples', label: 'Gallery', position: 'left' },
+        { to: 'docs/getting-started', label: 'Get Started', position: 'left', },
         { to: 'docs/guide', label: 'Guide', position: 'left', },
-        { to: 'docs/examples', label: 'Examples', position: 'left' },
+        { to: 'docs/enterprise', label: 'Enterprise', position: 'left', },
         { to: 'docs/api/index', label: 'API', position: 'left' },
         // { to: 'blog', label: 'Blog', position: 'left' },
         { to: 'https://github.com/h2oai/qd/releases/latest', label: 'Download', position: 'right', },
@@ -36,11 +36,11 @@ module.exports = {
           items: [
             {
               label: 'Gallery',
-              to: 'gallery',
+              to: 'docs/examples',
             },
             {
               label: 'Get Started',
-              to: 'docs/',
+              to: 'docs/getting-started',
               activeBasePath: 'docs',
             },
             {
@@ -48,8 +48,8 @@ module.exports = {
               to: 'docs/guide',
             },
             {
-              label: 'Examples',
-              to: 'docs/examples',
+              label: 'Enterprise',
+              to: 'docs/enterprise',
             },
             {
               label: 'API',

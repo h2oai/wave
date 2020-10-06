@@ -82,7 +82,7 @@ Let's explore these topics one by one.
 
 ### Using a stats card
 
-The Q SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](gallery) for more). 
+The Q SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](examples) for more). 
 
 In this case, we use `small_series_stats_card()`, which displays a value and a time series visualization.
 
@@ -195,7 +195,7 @@ Point your browser to [http://localhost:55555/monitor](http://localhost:55555/mo
 
 ## Exercise
 
-Explore other kinds of cards in the [Gallery](/gallery) and display additional stats gleaned from `psutil` (network, disk, processes, etc.).
+Explore other kinds of cards in the [Gallery](examples) and display additional stats gleaned from `psutil` (network, disk, processes, etc.).
 
 ## Summary
 

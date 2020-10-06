@@ -23,7 +23,7 @@ title: {self.title}
 
 {self.description}
 
-<div className='cover' style={{{{ backgroundImage: 'url(assets/{self.slug}.png)' }}}} />
+<div className='cover' style={{{{ backgroundImage: 'url(' + require('./assets/{self.slug}.png').default + ')' }}}} />
 
 ```py
 {self.code}
@@ -58,7 +58,7 @@ def load_example(filename: str) -> Example:
     title, description = strip_comment(header[0]), [strip_comment(x) for x in header[1:]]
     return Example(filename, title, '\n'.join(description), code)
 
-def build_index(examples: List[Example]):
+def make_toc(examples: List[Example]):
     return f'''---
 title: Contents
 slug: /examples
@@ -66,6 +66,15 @@ slug: /examples
 
 ''' + '\n'.join([f'- [{e.title}](examples/{e.slug}): {e.subtitle}' for e in examples])
 
+def make_gallery_thumbnail(e: Example):
+    return f"<a class='thumbnail' href='examples/{e.slug}'><div style={{{{backgroundImage:'url(' + require('./assets/{e.slug}.png').default + ')'}}}}></div>{e.title}</a>"
+
+def make_gallery(examples: List[Example]):
+    return f'''---
+title: Gallery
+slug: /examples
+---
+''' + '\n' + '\n\n'.join([make_gallery_thumbnail(e) for e in examples])
 
 def main():
     filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
@@ -84,7 +93,8 @@ def main():
     example_items = [dict(slug=e.slug) for e in examples]
     example_items.insert(0, dict(slug='index'))
     write_file(os.path.join(website_dir, 'examples.js'), f'module.exports={json.dumps(example_items)}')
-    write_file(os.path.join(example_md_dir, 'index.md'), build_index(examples))
+    # write_file(os.path.join(example_md_dir, 'index.md'), make_toc(examples))
+    write_file(os.path.join(example_md_dir, 'index.md'), make_gallery(examples))
 
 
 if __name__ == '__main__':

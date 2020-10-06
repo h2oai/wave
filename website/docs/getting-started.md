@@ -1,6 +1,5 @@
 ---
 title: Introduction
-slug: /
 ---
 
 H2O Q lets you build and deploy amazing realtime analytics with dramatically less effort.
@@ -11,7 +10,7 @@ H2O Q is a software stack for building beautiful, low-latency, realtime, browser
 
 It excels at capturing data, visualizations, and graphics from multiple sources, and broadcasting them live over the web.
 
-<video controls loop><source src='assets/getting-started__dashboard.mp4' type='video/mp4'/></video>
+<video controls loop><source src={require('./assets/getting-started__dashboard.mp4').default} type='video/mp4'/></video>
 
 ## What can I do with it?
 
@@ -42,7 +41,7 @@ The API is concise and elegant, freeing you to create in broad strokes, tackling
 
 Here's a bean counter. Clicking the button increments the bean count:
 
-<video controls loop><source src='assets/getting-started__beans.mp4' type='video/mp4'/></video>
+<video controls loop><source src={require('./assets/getting-started__beans.mp4').default} type='video/mp4'/></video>
 
 And here's how it's written:
 

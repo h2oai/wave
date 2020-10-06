@@ -25,3 +25,5 @@ yarn-error.log*
 /examples.js
 /docs/examples/*.md
 /docs/api/*.md
+/serve-linux
+/serve-darwin
