@@ -58,5 +58,9 @@ Functions can be applied to placeholders using the general form `{{function_name
 
 ## Functions
 
-Expressions currently support only one function, `intl`, which provides language-sensitive number, date, and time formatting using the [ECMAScript Internationalization API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl).
+Expressions currently support only one function, `intl`, which provides language-sensitive number, date, and time formatting using the [ECMAScript Internationalization API](https://tc39.es/ecma402/).
+
+:::tip
+Options in the [Internationalization API](https://tc39.es/ecma402/) are `camelCased`, but you can use both `camelCased` and `snake_cased` options in data-binding expressions. For example, both `maximum_fraction_digits` and `maximumFractionDigits` are valid.
+:::
 
