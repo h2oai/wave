@@ -2,6 +2,7 @@
 title: Introduction
 slug: /
 ---
+import useBaseUrl from '@docusaurus/useBaseUrl'
 
 H2O Q lets you build and deploy amazing realtime analytics with dramatically less effort.
 
@@ -11,7 +12,7 @@ H2O Q is a software stack for building beautiful, low-latency, realtime, browser
 
 It excels at capturing data, visualizations, and graphics from multiple sources, and broadcasting them live over the web.
 
-<video controls loop><source src='assets/getting-started__dashboard.mp4' type='video/mp4'/></video>
+<video controls loop><source src={useBaseUrl('assets/docs/getting-started__dashboard.mp4')} type='video/mp4'/></video>
 
 ## What can I do with it?
 
@@ -28,13 +29,13 @@ You can also use H2O Q when you find yourself reaching for a web application fra
 
 ## How do I use it?
 
-H2O Q's mental model is simple, but powerful[^1]: 
+H2O Q's mental model is simple, but powerful[^1]:
 1. Your instance holds a collection of pages.
-2. To change a page, simply grab a reference to a page, change it, and save it. 
+2. To change a page, simply grab a reference to a page, change it, and save it.
 
 That's it. Your changes are now visible to everyone.
 
-This simplicity makes it fast, fun and easy to rapidly build and deploy interactive applications without having to reason about client/server, HTTP request/response, browser quirks, and front-end development. 
+This simplicity makes it fast, fun and easy to rapidly build and deploy interactive applications without having to reason about client/server, HTTP request/response, browser quirks, and front-end development.
 
 The API is concise and elegant, freeing you to create in broad strokes, tackling high level ideas first, and polishing up the details later.
 
@@ -42,7 +43,7 @@ The API is concise and elegant, freeing you to create in broad strokes, tackling
 
 Here's a bean counter. Clicking the button increments the bean count:
 
-<video controls loop><source src='assets/getting-started__beans.mp4' type='video/mp4'/></video>
+<video controls loop><source src={useBaseUrl('assets/docs/getting-started__beans.mp4')} type='video/mp4'/></video>
 
 And here's how it's written:
 
@@ -65,7 +66,7 @@ async def serve(q: Q):
             ui.button(name='increment', label=f'{bean_count} beans'),
         ],
     )
-    
+
     # Save the page
     await q.page.save()
 
@@ -80,7 +81,7 @@ H2O Q is not only a programming toolkit but a programmable content server  as we
 
 The Q Server stores all the content and acts as a hub between your user's web browser and your apps. Therefore, it must be up and running before you launch Q apps. Typically, you only need one Q Server to serve several apps.
 
-``` 
+```
                                       +---------+
                        +--------------> app1.py |
                        |              +---------+

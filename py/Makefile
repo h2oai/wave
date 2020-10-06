@@ -18,7 +18,9 @@ setup: ## Install dependencies
 .PHONY: docs
 docs: ## Build API docs
 	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_q
+	mkdir -p ../website/docs/api
 	mv build/docs/h2o_q/* ../website/docs/api/
+	mkdir -p ../website/docs/examples
 	./venv/bin/python sync_examples.py
 
 purge: ## Purge previous build

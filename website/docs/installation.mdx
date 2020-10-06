@@ -1,6 +1,7 @@
 ---
 title: Installation
 ---
+import useBaseUrl from '@docusaurus/useBaseUrl'
 
 To set up H2O Q, simply download and extract a release (~8MB). The release ships with a precompiled binary executable, so no explicit installation step is necessary.
 
@@ -12,7 +13,7 @@ H2O Q runs on Linux, macOS, and Windows, having Python 3.6.1 or later.
 
 ### Step 1: Download
 
-[Download the H2O Q SDK](https://github.com/h2oai/qd/releases/latest) for your platform. 
+[Download the H2O Q SDK](https://github.com/h2oai/qd/releases/latest) for your platform.
 
 ### Step 2: Extract
 
@@ -59,14 +60,14 @@ Start the H2O Q server.
 ```
 
 ```
-2020/10/01 01:27:35 # 
+2020/10/01 01:27:35 #
 2020/10/01 01:27:35 #              __
 2020/10/01 01:27:35 #   ____ _____/ /
 2020/10/01 01:27:35 #  / __ `/ __  /
 2020/10/01 01:27:35 # / /_/ / /_/ /
 2020/10/01 01:27:35 # \__, /\__,_/
 2020/10/01 01:27:35 #   /_/
-2020/10/01 01:27:35 # 
+2020/10/01 01:27:35 #
 2020/10/01 01:27:35 # {"address":":55555","t":"listen","webroot":"/home/elp/q/www"}
 
 ```
@@ -75,9 +76,9 @@ Start the H2O Q server.
 
 Finally, point your web browser to [http://localhost:55555/](http://localhost:55555/). You should see an empty page with a spinner that looks like this:
 
-![spinner](assets/installation__waiting.png)
+<p><img alt="spinner" src={useBaseUrl('assets/docs/installation__waiting.png')} /></p>
 
-Congratulations! H2O Q is now running, but doesn't have any content yet (hence the spinner). 
+Congratulations! H2O Q is now running, but doesn't have any content yet (hence the spinner).
 
 In the next few sections, we'll add some content and see what the fuss is all about.
 

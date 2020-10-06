@@ -1,18 +1,19 @@
 ---
 title: Data Buffers
 ---
+import useBaseUrl from '@docusaurus/useBaseUrl'
 
-*Data buffers* are in-memory data structures designed to hold a card's tabular data. 
+*Data buffers* are in-memory data structures designed to hold a card's tabular data.
 
-Data buffers make it convenient to separate data (what is displayed) from presentation (how it is displayed). You can declare a card once, and update its underlying data buffer multiple times. A card can hold zero or more data buffers. 
+Data buffers make it convenient to separate data (what is displayed) from presentation (how it is displayed). You can declare a card once, and update its underlying data buffer multiple times. A card can hold zero or more data buffers.
 
 ## Cards and buffers
 
 Data buffers are tabular data structures containing columns and rows. Different cards utilize data buffers in different ways. For example, the plot in the [ui.small_series_stat_card()](api/ui#small_series_stat_card) uses a data buffer called `plot_data` to hold time series data.
 
-![CPU Usage](assets/buffers__series-card.png)
+<p><img alt="CPU Usage" src={useBaseUrl('assets/docs/buffers__series-card.png')} /></p>
 
-```py {5-7} 
+```py {5-7}
 card = ui.small_series_stat_card(
     box=f'1 1 1 1',
     title='CPU',
@@ -27,7 +28,7 @@ In the above snippet, `data('time usage', -15)` defines a placeholder for a tabl
 
 Appending *rows* (*tuples* or *records*) to the data buffer make the card plot those rows.
 
-```py {2} 
+```py {2}
 while True:
     card.plot_data[-1] = [get_time(), get_usage()]
     time.sleep(1)
@@ -65,7 +66,7 @@ Use the `data()` function to declare a data buffer. The Q server uses this decla
     - A positive row count creates an array buffer.
     - A negative row count creates a cyclic buffer.
     - A zero row count (or `None`) creates a map buffer.
-- `rows`: A `dict` or `list` of rows to initialize the data buffer with. Each row can be a list or tuple. 
+- `rows`: A `dict` or `list` of rows to initialize the data buffer with. Each row can be a list or tuple.
     - For array or cyclic buffers, pass a list of rows.
     - For map buffers, pass a dict with strings as keys and rows as values.
 
@@ -73,7 +74,7 @@ Use the `data()` function to declare a data buffer. The Q server uses this decla
 
 Declare a 5-row buffer with columns `donut` and `price`.
 
-```py 
+```py
 # Array buffer
 b = data(fields='donut price', size=5)
 
@@ -85,7 +86,7 @@ b = data(fields='donut price')
 ```
 
 Declare and initialize a 5-row buffer with columns `donut` and `price`.
-```py 
+```py
 # Array buffer
 b = data(fields='donut price', size=5, rows=[
     ['cream', 3.99],
@@ -115,7 +116,7 @@ b = data(fields='donut price', rows=dict(
 ```
 
 Modify a buffer row
-```py 
+```py
 # Array buffer
 b[2] = ['cinnamon', 2.99]
 
@@ -128,7 +129,7 @@ b['cin'] = ['cinnamon', 2.99]
 
 Modify a buffer value
 
-```py 
+```py
 # Array buffer
 b[2] = ['cinnamon', 2.99]
 

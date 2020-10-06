@@ -2,7 +2,7 @@
 title: Graphics
 ---
 
-H2O Q provides a versatile API for rendering vector graphics (SVG) backed by [data buffers](buffers.md).
+H2O Q provides a versatile API for rendering vector graphics (SVG) backed by [data buffers](buffers.mdx).
 
 Use the graphics card [ui.graphics_card()](http://localhost:3000/docs/api/ui#graphics_card) to render graphics.
 
@@ -60,7 +60,7 @@ The `path()` function is special: it can draw arbitrary shapes. This is because 
 
 Here's a path that represents a red square:
 
-```py 
+```py
 g.path(d='m 25 25 h 50 v 50 h -50 z', fill='red')
 ```
 
@@ -85,7 +85,7 @@ Authoring `path()` drawing commands by hand is tedious, so Q provides two utilit
 
 `p()` creates a path generator with convenience methods to draw step by step. For example, the following two lines are equivalent:
 
-```py 
+```py
 red_square = g.path(d='m 25 25 h 50 v 50 h -50 z', fill='red')
 red_square = g.p().m(25, 25).h(50).v(50).h(-50).z().path(fill='red')
 ```
@@ -143,13 +143,13 @@ The upper-cased commands use absolute coordinates. The lower-cased commands use 
 
 ### Example
 
-Here is an example from [Python's turtle module](https://docs.python.org/3/library/turtle.html): 
+Here is an example from [Python's turtle module](https://docs.python.org/3/library/turtle.html):
 
 ![star](https://docs.python.org/3/_images/turtle-star.png)
 
 Here is the above example recreated in Q:
 
-```py 
+```py
 from turtle import *
 color('red', 'yellow')
 begin_fill()

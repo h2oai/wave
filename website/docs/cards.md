@@ -12,7 +12,7 @@ To learn how to add, update or remove cards from a page, see [Pages](pages.md).
 
 ### Forms
 
-The form card is the most versatile and commonly used card in Q apps. 
+The form card is the most versatile and commonly used card in Q apps.
 
 Use a form card to display input [components](components.md) like textboxes, dropdowns, date-pickers, and so on. The form card displays its components one below the other, stacked vertically. You can lay out several form cards on a page to build out intricate user interfaces.
 
@@ -52,13 +52,13 @@ See [ui.frame_card()](api/ui.md/#frame_card).
 
 ### Image
 
-Use an image card to display an image on your page, either by specifying the image's path or by providing base64-encoded image data. 
+Use an image card to display an image on your page, either by specifying the image's path or by providing base64-encoded image data.
 
 See [ui.image_card()](api/ui.md/#image_card).
 
 ## Control
 
-Use control cards to provide links or commands to allow users to navigate between different sections, or surface top-level actions applicable across your user interface.  
+Use control cards to provide links or commands to allow users to navigate between different sections, or surface top-level actions applicable across your user interface.
 
 ### Header
 
@@ -85,7 +85,7 @@ See [ui.tab_card()](api/ui.md/#tab_card).
 
 ### Toolbar
 
-Use a toolbar to display top-level commands that operate on the content of your app. 
+Use a toolbar to display top-level commands that operate on the content of your app.
 
 See [ui.toolbar_card()](api/ui.md/#toolbar_card).
 
@@ -107,13 +107,13 @@ See [ui.vega_card()](api/ui.md/#vega_card).
 
 ### Graphics
 
-Use a graphics card to render vector graphics and turtle graphics backed by [data buffers](buffers.md).
+Use a graphics card to render vector graphics and turtle graphics backed by [data buffers](buffers.mdx).
 
 See [ui.graphics_card()](api/ui.md/#graphics_card).
 
 ## Stats
 
-Use stats cards for a quick and easy way to display live values and graphics (or [sparklines](https://en.wikipedia.org/wiki/Sparkline)). These cards are backed by [data buffers](buffers.md), and provide an efficient mechanism to display values that change rapidly over time.
+Use stats cards for a quick and easy way to display live values and graphics (or [sparklines](https://en.wikipedia.org/wiki/Sparkline)). These cards are backed by [data buffers](buffers.mdx), and provide an efficient mechanism to display values that change rapidly over time.
 
 | Card | Use |
 |---|---|

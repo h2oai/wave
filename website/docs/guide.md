@@ -3,15 +3,15 @@ title: Introduction
 slug: /guide
 ---
 
-Welcome to the H2O Q Guide! If you prefer to learn concepts step by step, you've come to the right place. 
+Welcome to the H2O Q Guide! If you prefer to learn concepts step by step, you've come to the right place.
 
 :::info
-If you haven't already, it's worthwhile reading the [Getting Started](getting-started.md) page, which offers a 5-minute overview of what H2O Q is all about.
+If you haven't already, it's worthwhile reading the [Getting Started](getting-started.mdx) page, which offers a 5-minute overview of what H2O Q is all about.
 :::
 
 ## Before you start
 
-If you prefer to learn by doing, [start with our tutorials](tutorial-hello.md) - they're short and simple, illustrate the most important concepts in a beginner-friendly way, and are the best way to get hands-on with H2O Q. Like any unfamiliar technology, H2O Q has a slight learning curve, but you will get the hang of it with practice and patience. 
+If you prefer to learn by doing, [start with our tutorials](tutorial-hello.mdx) - they're short and simple, illustrate the most important concepts in a beginner-friendly way, and are the best way to get hands-on with H2O Q. Like any unfamiliar technology, H2O Q has a slight learning curve, but you will get the hang of it with practice and patience.
 
 ## Who is this for?
 

@@ -21,9 +21,11 @@ class Example:
 title: {self.title}
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
 {self.description}
 
-<div className='cover' style={{{{ backgroundImage: 'url(assets/{self.slug}.png)' }}}} />
+<div className='cover' style={{{{ backgroundImage: 'url(' + useBaseUrl('assets/docs/examples/{self.slug}.png') + ')' }}}} />
 
 ```py
 {self.code}
@@ -74,10 +76,10 @@ def main():
     examples = [load_example(filename) for filename in filenames]
 
     example_md_dir = os.path.join(website_dir, 'docs', 'examples')
-    thumbnail_dir = os.path.join(example_md_dir, 'assets')
+    thumbnail_dir = os.path.join(website_dir, 'static', 'assets', 'docs', 'examples')
     for e in examples:
         md = e.to_md()
-        write_file(os.path.join(example_md_dir, f'{e.slug}.md'), md)
+        write_file(os.path.join(example_md_dir, f'{e.slug}.mdx'), md)
         if not os.path.exists(os.path.join(thumbnail_dir, f'{e.slug}.png')):
             print(f'*** ALERT: no thumbnail found for example "{e.slug}"')
 

@@ -1,18 +1,19 @@
 ---
 title: "Tutorial: Bean Counter"
 ---
+import useBaseUrl from '@docusaurus/useBaseUrl'
 
 In the previous tutorials, we've been authoring [Q scripts](scripts.md). A Q script is a perfectly fine and dandy way to modify pages in Q and build dashboards. However, to build *interactive applications* in Q - user interfaces that can dynamically respond to *events* (the user's actions) -  [Q apps](apps.md) are the way to go.
 
 In the fine tradition of keeping tutorials succinct and useful, we'll author a little app that counts beans of the virtual kind, or, a bean counter, not to be confused with dubiously intentioned financial officers.
 
-<video controls loop><source src='assets/tutorial-counter__demo.mp4' type='video/mp4'/></video>
+<video controls loop><source src={useBaseUrl('assets/docs/tutorial-counter__demo.mp4')} type='video/mp4'/></video>
 
 This tutorial outlines the basics of how to handle events, update the UI, manage state and easily add realtime sync capabilities to your app. It's probably the most important tutorial to wrap your head around if you're interesting in authoring interactive applications.
 
 ## Prerequisites
 
-This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.mdx) and complete steps 1 and 2.
 
 ## Step 1: Start listening
 
@@ -50,7 +51,7 @@ At this point, your app will be up and running, but it doesn't do anything yet. 
 
 Let's add a button to our app. Out goal is to increment and display the bean count each time the button is clicked.
 
-To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](components.md) (also called *widgets*). In this case our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome. 
+To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](components.md) (also called *widgets*). In this case our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome.
 
 ```py {5-18} title="$HOME/q-apps/counter.py"
 from h2o_q import Q, listen, ui
@@ -95,9 +96,9 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/counter](http://localhost:55555/counter). You should see a nice big button, waiting to be clicked on:
 
-![Button](assets/tutorial-counter__1.png)
+<p><img alt="button" src={useBaseUrl('assets/docs/tutorial-counter__1.png')} /></p>
 
-If you click on the button, you'll notice that it doesn't do anything. This is because we haven't handled button clicks yet. Instead, when you click the button, the events are sent to your `serve()` function, but the `serve()` function blindly adds the form (with the button) to the page all over again and saves it, causing the page to display the same form all over again. Let's fix this next. 
+If you click on the button, you'll notice that it doesn't do anything. This is because we haven't handled button clicks yet. Instead, when you click the button, the events are sent to your `serve()` function, but the `serve()` function blindly adds the form (with the button) to the page all over again and saves it, causing the page to display the same form all over again. Let's fix this next.
 
 ## Step 3: Handle button clicks
 
@@ -129,7 +130,7 @@ async def serve(q: Q):
 listen('/counter', serve)
 ```
 
-The above edit introduces two important concepts: `q.client` and `q.args`. 
+The above edit introduces two important concepts: `q.client` and `q.args`.
 
 - `q.client` is a dictionary-like object for storing and retrieving arbitrary information related to the active *client* (a browser tab or browser session). Anything you put into `q.client` while handling a event can be read back while handling a subsequent event, provided the subsequent event originates from the same client. In our case, we read `q.client.bean_count` to get the bean count. If it's unavailable (which means this is a new client), we default the bean count to `0`.
 - `q.args`, also a dictionary-like object, carries *event arguments*, which contains information about what the user did. In our case, if the user clicked on our button (named `increment`), `q.args.increment` will be `True`. If not, `q.args.increment` will be `None`. Therefore, if `q.args.increment` is `True`, we increment the client's `bean_count`. If not, we do nothing.
@@ -154,7 +155,7 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/counter](http://localhost:55555/counter). Your button should now count beans when clicked:
 
-<video controls loop><source src='assets/tutorial-counter__demo.mp4' type='video/mp4'/></video>
+<video controls loop><source src={useBaseUrl('assets/docs/tutorial-counter__demo.mp4')} type='video/mp4'/></video>
 
 ## Step 4: Make it more efficient
 
@@ -197,19 +198,19 @@ async def serve(q: Q):
 listen('/counter', serve)
 ```
 
-In the above edit, we check for an arbitrary flag in `q.client` called `initialized`. 
+In the above edit, we check for an arbitrary flag in `q.client` called `initialized`.
 - If the flag is not set, we assume that the request is originating from new, empty client. If so, we set `initialized` to `True` (to make a note to ourselves that the client is not empty anymore), then add our form card to the page.
 - If the flag is already set, we assume that the form card (and the button inside it) are already on the page, and simply update the button's caption with the new bean count.
 
 ## Intermission: Understanding state
 
-In the above steps, we learned about `q.args` (request arguments submitted from the browser) and `q.client` (arbitrary information associated with the client). Let's expand on these and introduce two new concepts: `q.user` and `q.app`. 
+In the above steps, we learned about `q.args` (request arguments submitted from the browser) and `q.client` (arbitrary information associated with the client). Let's expand on these and introduce two new concepts: `q.user` and `q.app`.
 
 Before we do that, try accessing [http://localhost:55555/counter](http://localhost:55555/counter) from two different browser tabs and playing with them. You'll notice that each browser tab (or, each client) maintains separate bean counts.
 
-<video controls loop><source src='assets/tutorial-counter__client.mp4' type='video/mp4'/></video>
+<video controls loop><source src={useBaseUrl('assets/docs/tutorial-counter__client.mp4')} type='video/mp4'/></video>
 
-Maintaining separate bean counts per client is one way to count beans. You can also maintain bean counts at the user level and the app level. 
+Maintaining separate bean counts per client is one way to count beans. You can also maintain bean counts at the user level and the app level.
 
 In real world apps, the decision on whether to store information at the client, user, or app level depends on the problem you're trying to solve. For example, if you were building an online store, you'd probably want to store product inventory at the app level and shopping carts at the user level. Most other kinds of information - search results, past orders, or product details - are best stored at the client-level (searching for products in one tab and having search results appear in another tab would drive even your most loyal customers up the wall).
 
@@ -221,12 +222,12 @@ In most apps, you'll end up using a mix of `q.client`, `q.user` and `q.app` to c
 3. The same browser tab.
 
 In other words, your Q app is multi-user by default, but how the app manages data at the app-level, at the user-level and at the client-level is up to you.
- 
+
 ## Step 6: User-level realtime sync
 
 To maintain bean counts at the user level, all we have to do store `bean_count` in `q.user` instead of `q.client`.
- 
- 
+
+
 ```py {5,7} title="$HOME/q-apps/counter.py"
 from h2o_q import Q, listen, ui
 
@@ -256,10 +257,10 @@ async def serve(q: Q):
 
 listen('/counter', serve)
 ```
- 
-If we run this app, we'll see that the counts are being maintained across browser tabs, but the updated counts don't show up immediately across all tabs. Instead, they show up only when you interact with the other tabs, or reload them. 
 
-<video controls loop><source src='assets/tutorial-counter__user-nosync.mp4' type='video/mp4'/></video>
+If we run this app, we'll see that the counts are being maintained across browser tabs, but the updated counts don't show up immediately across all tabs. Instead, they show up only when you interact with the other tabs, or reload them.
+
+<video controls loop><source src={useBaseUrl('assets/docs/tutorial-counter__user-nosync.mp4')} type='video/mp4'/></video>
 
 This would be considered normal behavior for a typical web application, and most users familiar with the interwebs are also familiar with the reload button, but we can do better, because having to hit the reload button to get updates is about as exciting as waiting for paint to dry.
 
@@ -302,14 +303,14 @@ The default server mode for apps is `unicast`, which means "don't sync across cl
 Re-running our app proves that the user-level bean count indeed syncs across tabs:
 
 
-<video controls loop><source src='assets/tutorial-counter__user-sync.mp4' type='video/mp4'/></video>
+<video controls loop><source src={useBaseUrl('assets/docs/tutorial-counter__user-sync.mp4')} type='video/mp4'/></video>
 
- 
+
 ## Step 7: App-level realtime sync
- 
+
 Going from user-level bean counting to app-level bean counting is easy: simply store `bean_count` on `q.app` instead of `q.user`, and switch the server mode to `broadcast`:
 
- 
+
 ```py {5,7,27} title="$HOME/q-apps/counter.py"
 from h2o_q import Q, listen, ui
 

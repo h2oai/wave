@@ -9,9 +9,9 @@ A Q script is the simplest way to publish content in Q, especially live web cont
 A Q script is one kind of program you can author to interact with Q. The other kind is a [Q App](apps.md). The primary difference between an app and a script is that apps are interactive (able to handle user interactions) and scripts are not. If you are not interested in handling user interactions, and only want to publish content, use a Q script.
 
 
-Here is the skeleton of a Q script ([example](tutorial-hello.md)):
+Here is the skeleton of a Q script ([example](tutorial-hello.mdx)):
 
-```py 
+```py
 from h2o_q import site, ui
 
 # Grab a reference to a page
@@ -24,9 +24,9 @@ page['qux'] = ui.some_card()
 page.save()
 ```
 
-Here is the skeleton of a Q script that continuously updates a page ([example](tutorial-monitor.md)):
+Here is the skeleton of a Q script that continuously updates a page ([example](tutorial-monitor.mdx)):
 
-```py 
+```py
 import time
 from h2o_q import site, ui
 
@@ -43,10 +43,10 @@ while True:
 
     # Update card's data
     card.data[-1] = [cpu_percent, mem_usage, disk_usage]
-    
+
     # Save the page
     page.save()
-    
+
     # Wait a second
     time.sleep(1)
 ```

@@ -6,7 +6,7 @@ This section illustrates how to lay out cards on a page.
 
 ## Grid system
 
-By default, every page has a grid system in place, designed to fit HD displays (1920 x 1080 pixels). The grid has 12 columns and 10 rows. A column is 134 pixels wide. A row is 76 pixels high. The gap between rows and columns is set to 15 pixels. 
+By default, every page has a grid system in place, designed to fit HD displays (1920 x 1080 pixels). The grid has 12 columns and 10 rows. A column is 134 pixels wide. A row is 76 pixels high. The gap between rows and columns is set to 15 pixels.
 
 ## The box attribute
 
@@ -44,11 +44,11 @@ A fixed grid like this ensures that your page layout looks exactly the same on e
 
 ## Other layout options
 
-A fixed grid system is great for dashboards, but limiting for apps that require more flexibility, including the ability to responsively fit various display sizes. 
+A fixed grid system is great for dashboards, but limiting for apps that require more flexibility, including the ability to responsively fit various display sizes.
 
 We are working on additional layout mechanisms, slated for release by the end of 2020.
 
 ## See also
 
-[Positioning](examples/layout.md) and [Sizing](examples/layout-size.md) examples.
+[Positioning](examples/layout.mdx) and [Sizing](examples/layout-size.mdx) examples.
 

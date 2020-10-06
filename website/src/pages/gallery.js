@@ -8,7 +8,7 @@ const examples = require('../../examples').slice(1);
 export const Preview = ({ slug, title }) => {
   const
     exampleUrl = useBaseUrl(`docs/examples/${slug}`),
-    imgUrl = useBaseUrl(`docs/examples/assets/${slug}.png`)
+    imgUrl = useBaseUrl(`assets/docs/examples/${slug}.png`)
   return (
     <a href={exampleUrl}><div className='cover' style={{ backgroundImage: `url(${imgUrl})` }}></div>{title}</a>
   )
