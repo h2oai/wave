@@ -2,15 +2,51 @@ const examples = require('./examples');
 
 module.exports = {
   someSidebar: {
-    Guide: [
-      'doc1', 
-      'doc2', 
-      'doc3',
-      'configuration',
-      'testing',
+    'Prologue': [
+      'change-log',
+      'migrating-0',
+      'contributing',
     ],
-    Examples: examples.map(e => `examples/${e.slug}`),
-    API: [
+    'Getting Started': [
+      'getting-started',
+      'installation',
+      'tour',
+      'tutorial-hello',
+      'tutorial-beer',
+      'tutorial-monitor',
+      'tutorial-counter',
+      'tutorial-todo',
+    ],
+    'Guide': [
+      'guide',
+      'architecture',
+      'scripts',
+      'apps',
+      'pages',
+      'layout',
+      'cards',
+      'buffers',
+      'components',
+      'arguments',
+      'state',
+      'routing',
+      'realtime',
+      'expressions',
+      'files',
+      'plotting',
+      'graphics',
+      'logging',
+      'development',
+      'browser-testing',
+      'configuration',
+      'backup',
+      'troubleshooting',
+    ],
+    'Enterprise': [
+      'enterprise/index',
+    ],
+    'Examples': examples.map(e => `examples/${e.slug}`),
+    'API': [
       'api/index',
       'api/core',
       'api/ui',
@@ -18,12 +54,6 @@ module.exports = {
       'api/graphics',
       'api/types',
       'api/test',
-    ],
-    Migrating: [
-      'migrating-0',
-    ],
-    Meta: [
-      'change-log',
     ],
   },
 };
