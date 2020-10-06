@@ -8,6 +8,9 @@ module.exports = {
   organizationName: 'h2oai', // Usually your GitHub org/user name.
   projectName: 'docusaurus', // Usually your repo name.
   themeConfig: {
+//    prism: {
+//      theme: require('prism-react-renderer/themes/nightOwlLight'),
+//    },
     navbar: {
       title: 'H2O Q',
       logo: {
@@ -16,10 +19,11 @@ module.exports = {
       },
       items: [
         { to: 'gallery', label: 'Gallery', position: 'left' },
-        { to: 'docs/', activeBasePath: 'docs', label: 'Guide', position: 'left', },
-        { to: 'docs/examples/hello-world', label: 'Examples', position: 'left' },
-        { to: 'api', label: 'API', position: 'left' },
-        { to: 'blog', label: 'Blog', position: 'left' },
+        { to: 'docs/', activeBasePath: 'docs', label: 'Get Started', position: 'left', },
+        { to: 'docs/guide', label: 'Guide', position: 'left', },
+        { to: 'docs/examples', label: 'Examples', position: 'left' },
+        { to: 'docs/api/index', label: 'API', position: 'left' },
+        // { to: 'blog', label: 'Blog', position: 'left' },
         { to: 'https://github.com/h2oai/qd/releases/latest', label: 'Download', position: 'right', },
         { href: 'https://github.com/h2oai/qd', label: 'GitHub', position: 'right', },
       ],
@@ -28,15 +32,28 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Learn',
           items: [
             {
-              label: 'Style Guide',
-              to: 'docs/',
+              label: 'Gallery',
+              to: 'gallery',
             },
             {
-              label: 'Second Doc',
-              to: 'docs/doc2/',
+              label: 'Get Started',
+              to: 'docs/',
+              activeBasePath: 'docs',
+            },
+            {
+              label: 'Guide',
+              to: 'docs/guide',
+            },
+            {
+              label: 'Examples',
+              to: 'docs/examples',
+            },
+            {
+              label: 'API',
+              to: 'docs/api/index',
             },
           ],
         },
@@ -53,16 +70,20 @@ module.exports = {
             },
             {
               label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              href: 'https://twitter.com/h2oai',
             },
           ],
         },
         {
           title: 'More',
           items: [
+            // {
+            // label: 'Blog',
+            // to: 'blog',
+            // },
             {
-              label: 'Blog',
-              to: 'blog',
+              label: 'Download',
+              href: 'https://github.com/h2oai/qd/releases/latest',
             },
             {
               label: 'GitHub',

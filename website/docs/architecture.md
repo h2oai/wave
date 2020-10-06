@@ -2,8 +2,6 @@
 title: Architecture
 ---
 
-XXX add links to subpages
-
 H2O Q is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python without using HTML, Javascript or CSS.
 
 It excels at capturing data, visualizations, and graphics from multiple sources, and broadcasting them live over the web.
@@ -44,7 +42,7 @@ The browser-based client's job is to render content on the user interface, and t
 
 ## How does it work?
 
-The Q server stores all content in a page cache called a *site*. A site is a collection of *pages*. Each page has an address, called its *route*. A page is composed of *cards*. A card holds content, and any tabular data associated with the content, called *data buffers*. 
+The Q server stores all content in a page cache called a *site*. A site is a collection of [pages](pages.md). Each page has an address, called its *route*. A page is composed of [cards](cards.md). A card holds content, and any tabular data associated with the content, called [data buffers](buffers.md). 
 
 When a browser is pointed to a route, it pulls a copy of the page, creates a *replica* locally, and renders the content on the user interface.
 
@@ -87,8 +85,8 @@ The language driver (the `h2o-q` PyPI package) maintains an illusion that server
 
 
 The language driver can be used by two kinds of Python programs: *Q apps* and *Q scripts*. 
-- Q apps are interactive programs that can update content and respond to user actions.
-- Q scripts are simpler, non-interactive (batch) programs: they can update content, but not respond to user actions. 
+- [Q apps](apps.md) are interactive programs that can update content and respond to user actions.
+- [Q scripts](scripts.md) are simpler, non-interactive (batch) programs: they can update content, but not respond to user actions. 
 
 Q apps sport a websocket server under the hood. When a Q app is launched, it announces its existence to the Q server, and the Q server establishes a *relay* with the Q app. When a browser tries to connect to an app, the Q server acts as a hub, relaying information back and forth between the browser and the app. 
 

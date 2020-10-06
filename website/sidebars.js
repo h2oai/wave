@@ -40,7 +40,6 @@ module.exports = {
       'browser-testing',
       'configuration',
       'backup',
-      'troubleshooting',
     ],
     'Enterprise': [
       'enterprise/index',

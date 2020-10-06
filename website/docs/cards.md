@@ -2,9 +2,6 @@
 title: Cards
 ---
 
-XXX Screenshots
-XXX Links to examples
-
 A *card* represents a block of content on a [Page](pages.md). This section lists the different kinds of cards available to you. Each of the cards below serve a different purpose.
 
 :::info
@@ -129,8 +126,6 @@ Use stats cards for a quick and easy way to display live values and graphics (or
 | [ui.wide_bar_stat_card()](./api/ui#wide_bar_stat_card) | Wide stat card; displays a primary value, an auxiliary value and a progress bar. |
 | [ui.wide_gauge_stat_card()](./api/ui#wide_gauge_stat_card) | Wide stat card; displays a primary value, an auxiliary value and a progress gauge. |
 | [ui.wide_series_stat_card()](./api/ui#wide_series_stat_card) | Wide stat card; displays a primary value, an auxiliary value and a series plot. |
-
-XXX Screenshots for cards
 
 ## Meta
 

@@ -42,7 +42,7 @@ python3 -m venv venv
 
 Go to [http://localhost:55555/tour](http://localhost:55555/tour) to access the tour. 
 
-XXX screenshot of tour
+![tour](assets/tour__tour.png)
 
 `tour.py` is an ordinary Q app that runs other apps. The tour itself runs at the route `/tour`, and each of the examples runs at `/demo`. 
 

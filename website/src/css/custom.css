@@ -134,6 +134,11 @@ html[data-theme='dark'] .docSidebarContainer_node_modules-\@docusaurus-theme-cla
 
 /* Custom */
 
+video {
+  max-width: 100%;
+  height: auto;
+}
+
 .cover {
   width: 360px;
   height: 140px;
