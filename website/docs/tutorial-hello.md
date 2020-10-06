@@ -72,13 +72,13 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/hello](http://localhost:55555/hello), and pause to reflect on a particularly pithy quote from the venerable Homer Simpson. 
 
-![Hello World 1](./assets/tutorial-hello__1.png)
+![Hello World 1](assets/tutorial-hello__1.png)
 
 ## Step 6: Understand your program
 
 Let's walk through this program step by step.
 
-This program (technically a [script](./scripts)), illustrates the core of Q's programming model, or, "How to think in Q."
+This program (technically a [script](scripts.md)), illustrates the core of Q's programming model, or, "How to think in Q."
  
 1. Your Q server instance holds a collection of pages.
 2. To change a page, simply grab a reference to a page, change it, and save it. 
@@ -116,7 +116,7 @@ Finally, we call `save()` on the `page`, which broadcasts our changes to all con
 ```py
 page.save()
 ```
-![Hello World 1](./assets/tutorial-hello__1.png)
+![Hello World 1](assets/tutorial-hello__1.png)
 
 So far, so good.
 
@@ -150,7 +150,7 @@ quote.title = 'Hello Again!'
 page.save()
 ```
 
-![Hello World 2](./assets/tutorial-hello__2.png)
+![Hello World 2](assets/tutorial-hello__2.png)
 
 ### Change the content
 
@@ -159,7 +159,7 @@ quote.content = "D'oh! - *Homer Simpson*"
 page.save()
 ```
 
-![Hello World 3](./assets/tutorial-hello__3.png)
+![Hello World 3](assets/tutorial-hello__3.png)
 
 ### Quit your REPL
 

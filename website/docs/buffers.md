@@ -8,7 +8,7 @@ Data buffers make it convenient to separate data (what is displayed) from presen
 
 ## Cards and buffers
 
-Data buffers are tabular data structures containing columns and rows. Different cards utilize data buffers in different ways. For example, the plot in the [ui.small_series_stat_card()](./api/ui#small_series_stat_card) uses a data buffer called `plot_data` to hold time series data.
+Data buffers are tabular data structures containing columns and rows. Different cards utilize data buffers in different ways. For example, the plot in the [ui.small_series_stat_card()](api/ui#small_series_stat_card) uses a data buffer called `plot_data` to hold time series data.
 
 ![CPU Usage](assets/buffers__series-card.png)
 

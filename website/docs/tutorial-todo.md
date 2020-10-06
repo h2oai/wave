@@ -4,7 +4,7 @@ title: "Tutorial: Todo List"
 
 In this tutorial, we'll build something a bit more substantial and useful: a to-do list with realtime sync, in under 75 lines of (well-formatted, well-commented) code.
 
-More importantly, this tutorial will not introduce any new concepts. Everything you need to know about authoring interactive apps using H2O Q is already covered in the [previous tutorial](./tutorial-counter.md). From this point on, it's mostly a matter of [abstraction](https://htdp.org/2020-8-1/Book/part_three.html), which is a fancy term for how you solve the problem at hand using short, simple, clear, elegant, modular functions that [do one thing and do it well](https://en.wikipedia.org/wiki/Unix_philosophy). 
+More importantly, this tutorial will not introduce any new concepts. Everything you need to know about authoring interactive apps using H2O Q is already covered in the [previous tutorial](tutorial-counter.md). From this point on, it's mostly a matter of [abstraction](https://htdp.org/2020-8-1/Book/part_three.html), which is a fancy term for how you solve the problem at hand using short, simple, clear, elegant, modular functions that [do one thing and do it well](https://en.wikipedia.org/wiki/Unix_philosophy). 
 
 Above all, prefer brevity and clarity. [The best code is no code at all](https://blog.codinghorror.com/the-best-code-is-no-code-at-all/).
 
@@ -107,7 +107,7 @@ Next, we turn each incomplete to-do item into a checkbox (using `ui.checkbox()`)
 Also, we want each checkbox to raise an event immediately when checked, so we set its `trigger` attribute to `True`.
 
 :::tip
-Several [components](./components.md) have a `trigger` attribute. Normally, an event is triggered only when a command-like component (a button, menu, or tab) is clicked. If you want a component to immediately trigger an event when changed, set `trigger` to `True`.
+Several [components](components.md) have a `trigger` attribute. Normally, an event is triggered only when a command-like component (a button, menu, or tab) is clicked. If you want a component to immediately trigger an event when changed, set `trigger` to `True`.
 :::
 
 ```py {1,30-37} title="$HOME/q-apps/todo.py"
@@ -214,7 +214,7 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/todo](http://localhost:55555/todo).
 
-![todo](./assets/tutorial-todo__1.png)
+![todo](assets/tutorial-todo__1.png)
 
 You should be able to see your todo list in all its glory. Unfortunately, checking any of the items seems to have no effect. Let's fix that next.
 
@@ -280,7 +280,7 @@ listen('/todo', serve)
 
 Restart your app and reload your browser. You should now be able to check/uncheck the items in your todo list. 
 
-<video controls loop><source src='./assets/tutorial-todo__2.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-todo__2.mp4' type='video/mp4'/></video>
 
 Next, let's see how to add new items to the list.
 
@@ -360,7 +360,7 @@ listen('/todo', serve)
 
 Restart your app and reload your browser. You should now be able to bring up the new to-do form. 
 
-<video controls loop><source src='./assets/tutorial-todo__3.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-todo__3.mp4' type='video/mp4'/></video>
 
 ## Step 8: Add to-do and return
 
@@ -449,7 +449,7 @@ listen('/todo', serve)
 
 Restart your app and reload your browser. You should now be able to add new to-do items to your list. Congratulations!
 
-<video controls loop><source src='./assets/tutorial-todo__4.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-todo__4.mp4' type='video/mp4'/></video>
 
 ## Step 9: Make it realtime
 
@@ -460,7 +460,7 @@ listen('/todo', serve, mode='multicast')
 ```
 Restart your app, and try opening [http://localhost:55555/todo](http://localhost:55555/todo) from multiple browser tabs:
 
-<video controls loop><source src='./assets/tutorial-todo__5.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-todo__5.mp4' type='video/mp4'/></video>
 
 
 Groovy!
@@ -481,9 +481,9 @@ A little housekeeping goes a long way: add a "Clear" button on the main page to 
 
 Congratulations! You've completed all the tutorials (hopefully). There are three paths you can take from here:
 
-- [Gallery](../gallery). 150+ examples that cover everything that the H2O Q has to offer.
-- [Guide](./guide). In-depth look at each of Q's features.
-- [API](./api). Reference-level documentation for the Python API.
+- [Gallery](gallery). 150+ examples that cover everything that the H2O Q has to offer.
+- [Guide](guide). In-depth look at each of Q's features.
+- [API](api/index). Reference-level documentation for the Python API.
 
 Happy hacking!
  

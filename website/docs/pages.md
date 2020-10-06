@@ -2,7 +2,7 @@
 title: Pages
 ---
 
-The Q server stores and manages content. Content is stored in a page cache, called a *site*. A Q server contains exactly one site. A site holds a collection of *pages*. A page is composed of *cards*. Cards hold content and [data buffers](./buffers.md).
+The Q server stores and manages content. Content is stored in a page cache, called a *site*. A Q server contains exactly one site. A site holds a collection of *pages*. A page is composed of *cards*. Cards hold content and [data buffers](buffers.md).
 
 To reference a site from within a Q script, import `site`.
 

@@ -18,9 +18,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-"""Automatically restart the server when a source file is modified.
-"""
-
 import os
 import sys
 import asyncio

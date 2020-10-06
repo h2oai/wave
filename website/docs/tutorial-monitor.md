@@ -2,18 +2,18 @@
 title: "Tutorial: System Monitor"
 ---
 
-In this tutorial, we'll put our learnings from the [first](./tutorial-hello.md) and [second](./tutorial-beer.md) tutorials to some real-world use: a simple system monitoring tool that displays CPU, memory and network stats on a web page. 
+In this tutorial, we'll put our learnings from the [first](tutorial-hello.md) and [second](tutorial-beer.md) tutorials to some real-world use: a simple system monitoring tool that displays CPU, memory and network stats on a web page. 
 
-![CPU](./assets/tutorial-monitor__cpu_mem.png)
+![CPU](assets/tutorial-monitor__cpu_mem.png)
 
 For example, if you have a spare 256-node Raspberry Pi cluster lying somewhere, you can run this program to each node and monitor your entire cluster's system utilization from one place. How cool is that?
 
-We'll also introduce a new concept, called [data buffers](./buffers.md), which allows you to use the Q server to store *rows* (also called *tuples* or *records*) of information - much like how you would use tables in a database, or dataframes in Python or R - to deal with structured data.
+We'll also introduce a new concept, called [data buffers](buffers.md), which allows you to use the Q server to store *rows* (also called *tuples* or *records*) of information - much like how you would use tables in a database, or dataframes in Python or R - to deal with structured data.
 
 
 ## Prerequisites
 
-This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](./tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
 
 ## Step 1: Install dependencies
 
@@ -68,11 +68,11 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/monitor](http://localhost:55555/monitor).
 
-![CPU](./assets/tutorial-monitor__cpu.png)
+![CPU](assets/tutorial-monitor__cpu.png)
 
 ## Step 4: Understand your program
 
-You'll notice that the above program is quite similar to the program we wrote during the [Beer Wall](./tutorial-beer.md) tutorial, with three important differences (see highlighted lines above):
+You'll notice that the above program is quite similar to the program we wrote during the [Beer Wall](tutorial-beer.md) tutorial, with three important differences (see highlighted lines above):
 
 1. We use a `ui.small_series_stat_card()` instead of a `ui.markdown_card()`.
 2. The card is capable of dealing with multiple rows of data.
@@ -82,7 +82,7 @@ Let's explore these topics one by one.
 
 ### Using a stats card
 
-The Q SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](/gallery) for more). 
+The Q SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](gallery) for more). 
 
 In this case, we use `small_series_stats_card()`, which displays a value and a time series visualization.
 
@@ -92,10 +92,10 @@ cpu_card = page.add('cpu_stats', ui.small_series_stat_card(...)
 
 ### Declaring a data buffer
 
-The stats card is capable of rendering its visualization using a [data buffer](./buffers.md). A data buffer is similar to a database table in that it has a predefined structure (columns and rows), but is write-only (you cannot query information; only insert, update or delete them).
+The stats card is capable of rendering its visualization using a [data buffer](buffers.md). A data buffer is similar to a database table in that it has a predefined structure (columns and rows), but is write-only (you cannot query information; only insert, update or delete them).
 
 :::info
-The [data buffer](./buffers.md) topic covers different types of buffers in more detail.
+The [data buffer](buffers.md) topic covers different types of buffers in more detail.
 :::
 
 In this case, we declare a *cyclic buffer*, a [FIFO](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)) data structure that holds a fixed number of rows, and can only be appended to. Our buffer holds at most 15 rows, and has exactly two columns: `tick` (a one-up integer) and `usage` (the CPU usage).
@@ -191,7 +191,7 @@ cd $HOME/q-apps
 ```
 Point your browser to [http://localhost:55555/monitor](http://localhost:55555/monitor). You should now see both CPU and memory stats live:
 
-![CPU](./assets/tutorial-monitor__cpu_mem.png)
+![CPU](assets/tutorial-monitor__cpu_mem.png)
 
 ## Exercise
 
@@ -201,5 +201,5 @@ Explore other kinds of cards in the [Gallery](/gallery) and display additional s
 
 In this tutorial, we learned how to use stats cards to display live information. The knowledge you've gained from these first few tutorials should be enough to design and deploy live dashboards using H2O Q. You will also have noticed that you don't need to keep your Python program running all the time to continue displaying your pages. You can terminate your Python program any time, and the Q server will happily display the last known state of all your pages.
 
-The programs you've been authoring till now are one kind of programs, called [Q scripts](./scripts.md). Q scripts are not interactive. They can modify pages on the Q server, but cannot respond to user actions, like handling button clicks, menu commands, dropdown changes, and so on. To handle user interactions, you need to author [Q Apps](./apps.md), which are long-running programs (*servers* or *services*) that are capable of modifying pages in response to user actions. Let's see how to do that in the next tutorial. 
+The programs you've been authoring till now are one kind of programs, called [Q scripts](scripts.md). Q scripts are not interactive. They can modify pages on the Q server, but cannot respond to user actions, like handling button clicks, menu commands, dropdown changes, and so on. To handle user interactions, you need to author [Q Apps](apps.md), which are long-running programs (*servers* or *services*) that are capable of modifying pages in response to user actions. Let's see how to do that in the next tutorial. 
 

@@ -1,6 +1,6 @@
 # Mode / Multicast
 # Launch the server in multicast mode to synchronize browser state across a user's clients.
-# [Open this link](/demo) in multiple browsers and watch them synchronize in realtime.
+# Open `/demo` in multiple browsers and watch them synchronize in realtime.
 # ---
 from h2o_q import Q, listen, ui, pack
 

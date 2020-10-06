@@ -1,6 +1,6 @@
 # Mode / Broadcast
 # Launch the server in broadcast mode to synchronize browser state across users.
-# [Open this link](/demo) in multiple browsers and watch them synchronize in realtime.
+# Open `/demo` in multiple browsers and watch them synchronize in realtime.
 # ---
 from h2o_q import Q, listen, ui, pack
 

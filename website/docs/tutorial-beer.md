@@ -14,19 +14,19 @@ The program we'll be writing is a verse generator for the runaway mid-20th centu
 >
 > ...
 
-<video controls loop><source src='./assets/tutorial-beer__demo.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-beer__demo.mp4' type='video/mp4'/></video>
 
-Our program will be analogous to [our "Hello, World!" program](./tutorial-hello.md), with the addition of a loop. We'll generate a verse every second, and observe the verse change in the browser in realtime. After that, we'll take a stab at making our program a bit more efficient, introducing how [expressions](./expressions.md) work.
+Our program will be analogous to [our "Hello, World!" program](tutorial-hello.md), with the addition of a loop. We'll generate a verse every second, and observe the verse change in the browser in realtime. After that, we'll take a stab at making our program a bit more efficient, introducing how [expressions](expressions.md) work.
 
 (Incidentally, Donald Knuth proved that this song has a complexity of `O(log N)` in ["The Complexity of Songs"](http://www.cs.bme.hu/~friedl/alg/knuth_song_complexity.pdf), but we won't let that little detail deter us for now.)
 
 ## Prerequisites
 
-This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](./tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
 
 ## Step 1: Write your program
 
-Our program looks like this. It's mostly similar to the one in the  [Hello World tutorial](./tutorial-hello.md), with one exception: we're setting the markdown card's content inside a `for` loop.
+Our program looks like this. It's mostly similar to the one in the  [Hello World tutorial](tutorial-hello.md), with one exception: we're setting the markdown card's content inside a `for` loop.
 
 ```py {13-18} title="$HOME/q-apps/beer_wall.py"
 import time
@@ -61,7 +61,7 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/beer](http://localhost:55555/beer), and watch the verses fly by.
 
-<video controls loop><source src='./assets/tutorial-beer__demo.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-beer__demo.mp4' type='video/mp4'/></video>
 
 ## Step 4: Make it more efficient
 

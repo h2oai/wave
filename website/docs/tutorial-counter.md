@@ -2,17 +2,17 @@
 title: "Tutorial: Bean Counter"
 ---
 
-In the previous tutorials, we've been authoring [Q scripts](./scripts.md). A Q script is a perfectly fine and dandy way to modify pages in Q and build dashboards. However, to build *interactive applications* in Q - user interfaces that can dynamically respond to *events* (the user's actions) -  [Q apps](./apps.md) are the way to go.
+In the previous tutorials, we've been authoring [Q scripts](scripts.md). A Q script is a perfectly fine and dandy way to modify pages in Q and build dashboards. However, to build *interactive applications* in Q - user interfaces that can dynamically respond to *events* (the user's actions) -  [Q apps](apps.md) are the way to go.
 
 In the fine tradition of keeping tutorials succinct and useful, we'll author a little app that counts beans of the virtual kind, or, a bean counter, not to be confused with dubiously intentioned financial officers.
 
-<video controls loop><source src='./assets/tutorial-counter__demo.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-counter__demo.mp4' type='video/mp4'/></video>
 
 This tutorial outlines the basics of how to handle events, update the UI, manage state and easily add realtime sync capabilities to your app. It's probably the most important tutorial to wrap your head around if you're interesting in authoring interactive applications.
 
 ## Prerequisites
 
-This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](./tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
 
 ## Step 1: Start listening
 
@@ -50,7 +50,7 @@ At this point, your app will be up and running, but it doesn't do anything yet. 
 
 Let's add a button to our app. Out goal is to increment and display the bean count each time the button is clicked.
 
-To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](./components.md) (also called *widgets*). In this case our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome. 
+To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](components.md) (also called *widgets*). In this case our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome. 
 
 ```py {5-18} title="$HOME/q-apps/counter.py"
 from h2o_q import Q, listen, ui
@@ -95,7 +95,7 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/counter](http://localhost:55555/counter). You should see a nice big button, waiting to be clicked on:
 
-![Button](./assets/tutorial-counter__1.png)
+![Button](assets/tutorial-counter__1.png)
 
 If you click on the button, you'll notice that it doesn't do anything. This is because we haven't handled button clicks yet. Instead, when you click the button, the events are sent to your `serve()` function, but the `serve()` function blindly adds the form (with the button) to the page all over again and saves it, causing the page to display the same form all over again. Let's fix this next. 
 
@@ -139,7 +139,7 @@ From now on, any time you see the term 'client', recall that it's a technical te
 :::
 
 :::info
-Each component in the Q component library populates `q.args` with its own value. For more information, see [Components](./components.md).
+Each component in the Q component library populates `q.args` with its own value. For more information, see [Components](components.md).
 :::
 
 
@@ -154,7 +154,7 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/counter](http://localhost:55555/counter). Your button should now count beans when clicked:
 
-<video controls loop><source src='./assets/tutorial-counter__demo.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-counter__demo.mp4' type='video/mp4'/></video>
 
 ## Step 4: Make it more efficient
 
@@ -207,7 +207,7 @@ In the above steps, we learned about `q.args` (request arguments submitted from 
 
 Before we do that, try accessing [http://localhost:55555/counter](http://localhost:55555/counter) from two different browser tabs and playing with them. You'll notice that each browser tab (or, each client) maintains separate bean counts.
 
-<video controls loop><source src='./assets/tutorial-counter__client.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-counter__client.mp4' type='video/mp4'/></video>
 
 Maintaining separate bean counts per client is one way to count beans. You can also maintain bean counts at the user level and the app level. 
 
@@ -259,7 +259,7 @@ listen('/counter', serve)
  
 If we run this app, we'll see that the counts are being maintained across browser tabs, but the updated counts don't show up immediately across all tabs. Instead, they show up only when you interact with the other tabs, or reload them. 
 
-<video controls loop><source src='./assets/tutorial-counter__user-nosync.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-counter__user-nosync.mp4' type='video/mp4'/></video>
 
 This would be considered normal behavior for a typical web application, and most users familiar with the interwebs are also familiar with the reload button, but we can do better, because having to hit the reload button to get updates is about as exciting as waiting for paint to dry.
 
@@ -302,7 +302,7 @@ The default server mode for apps is `unicast`, which means "don't sync across cl
 Re-running our app proves that the user-level bean count indeed syncs across tabs:
 
 
-<video controls loop><source src='./assets/tutorial-counter__user-sync.mp4' type='video/mp4'/></video>
+<video controls loop><source src='assets/tutorial-counter__user-sync.mp4' type='video/mp4'/></video>
 
  
 ## Step 7: App-level realtime sync

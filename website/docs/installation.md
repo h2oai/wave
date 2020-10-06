@@ -75,7 +75,7 @@ Start the H2O Q server.
 
 Finally, point your web browser to [http://localhost:55555/](http://localhost:55555/). You should see an empty page with a spinner that looks like this:
 
-![spinner](./assets/installation__waiting.png)
+![spinner](assets/installation__waiting.png)
 
 Congratulations! H2O Q is now running, but doesn't have any content yet (hence the spinner). 
 
