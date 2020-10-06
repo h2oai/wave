@@ -23,5 +23,5 @@ yarn-error.log*
 
 # Generated content
 /examples.js
-/docs/examples
+/docs/examples/*.md
 /docs/api/*.md

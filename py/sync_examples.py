@@ -4,7 +4,6 @@ from typing import List
 
 example_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), 'examples'))
 website_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardir, 'website'))
-thumbnail_dir = os.path.join(website_dir, 'static', 'img', 'examples')
 
 
 class Example:
@@ -24,7 +23,7 @@ title: {self.title}
 
 {self.description}
 
-<div className='cover' style={{{{ backgroundImage: 'url(/img/examples/{self.slug}.png)' }}}} />
+<div className='cover' style={{{{ backgroundImage: 'url(assets/{self.slug}.png)' }}}} />
 
 ```py
 {self.code}
@@ -75,6 +74,7 @@ def main():
     examples = [load_example(filename) for filename in filenames]
 
     example_md_dir = os.path.join(website_dir, 'docs', 'examples')
+    thumbnail_dir = os.path.join(example_md_dir, 'assets')
     for e in examples:
         md = e.to_md()
         write_file(os.path.join(example_md_dir, f'{e.slug}.md'), md)

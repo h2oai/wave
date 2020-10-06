@@ -3,12 +3,12 @@ import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-const examples = require('../../examples');
+const examples = require('../../examples').slice(1);
 
 export const Preview = ({ slug, title }) => {
   const
     exampleUrl = useBaseUrl(`docs/examples/${slug}`),
-    imgUrl = useBaseUrl(`img/examples/${slug}.png`)
+    imgUrl = useBaseUrl(`docs/examples/assets/${slug}.png`)
   return (
     <a href={exampleUrl}><div className='cover' style={{ backgroundImage: `url(${imgUrl})` }}></div>{title}</a>
   )
