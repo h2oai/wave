@@ -43,7 +43,9 @@ page['side'] = ui.side_nav_card(box='', items=[
         ui.nav_item(name='#about', label='About'),
         ui.nav_item(name='#support', label='Support'),
     ])
-])
+  ],
+  header=ui.side_nav_header(title='My app', subtitle='Try it, you will not regret')
+)
 
 fake = Faker()
 f = FakePercent()

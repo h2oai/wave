@@ -22,11 +22,12 @@ const
           paddingRight: collapsedSideNavWidth
         },
         ...mobileBreakpoint({
+          top: topNavHeight,
           $nest: {
             '~ main': {
               marginLeft: 0,
               top: topNavHeight
-            },
+            }
           }
         })
       }
