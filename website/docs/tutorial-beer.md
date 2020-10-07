@@ -14,7 +14,7 @@ The program we'll be writing is a verse generator for the runaway mid-20th centu
 >
 > ...
 
-<video controls loop><source src={require('./assets/tutorial-beer__demo.mp4').default} type='video/mp4'/></video>
+<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-beer__demo.mp4').default} type='video/mp4'/></video>
 
 Our program will be analogous to [our "Hello, World!" program](tutorial-hello.md), with the addition of a loop. We'll generate a verse every second, and observe the verse change in the browser in realtime. After that, we'll take a stab at making our program a bit more efficient, introducing how [expressions](expressions.md) work.
 
@@ -61,7 +61,7 @@ cd $HOME/q-apps
 
 Point your browser to [http://localhost:55555/beer](http://localhost:55555/beer), and watch the verses fly by.
 
-<video controls loop><source src={require('./assets/tutorial-beer__demo.mp4').default} type='video/mp4'/></video>
+<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-beer__demo.mp4').default} type='video/mp4'/></video>
 
 ## Step 4: Make it more efficient
 

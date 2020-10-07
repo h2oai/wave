@@ -280,7 +280,7 @@ listen('/todo', serve)
 
 Restart your app and reload your browser. You should now be able to check/uncheck the items in your todo list. 
 
-<video controls loop><source src={require('./assets/tutorial-todo__2.mp4').default} type='video/mp4'/></video>
+<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__2.mp4').default} type='video/mp4'/></video>
 
 Next, let's see how to add new items to the list.
 
@@ -360,7 +360,7 @@ listen('/todo', serve)
 
 Restart your app and reload your browser. You should now be able to bring up the new to-do form. 
 
-<video controls loop><source src={require('./assets/tutorial-todo__3.mp4').default} type='video/mp4'/></video>
+<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__3.mp4').default} type='video/mp4'/></video>
 
 ## Step 8: Add to-do and return
 
@@ -449,7 +449,7 @@ listen('/todo', serve)
 
 Restart your app and reload your browser. You should now be able to add new to-do items to your list. Congratulations!
 
-<video controls loop><source src={require('./assets/tutorial-todo__4.mp4').default} type='video/mp4'/></video>
+<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__4.mp4').default} type='video/mp4'/></video>
 
 ## Step 9: Make it realtime
 
@@ -460,7 +460,7 @@ listen('/todo', serve, mode='multicast')
 ```
 Restart your app, and try opening [http://localhost:55555/todo](http://localhost:55555/todo) from multiple browser tabs:
 
-<video controls loop><source src={require('./assets/tutorial-todo__5.mp4').default} type='video/mp4'/></video>
+<video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__5.mp4').default} type='video/mp4'/></video>
 
 
 Groovy!
