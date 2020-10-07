@@ -109,7 +109,7 @@ const
           <>
             {topNav && <TopNav {...topNav} />}
             {sideNav && <SideNav {...sideNav} />}
-            {sideNav && !topNav && <MobileTopSideNav {...{ ...sideNav!.state.header, items: [] } as TopNavState} />}
+            {sideNav && !topNav && <MobileTopSideNav {...{ ...sideNav!.state, items: [] } as TopNavState} />}
             <main className={clas(css.app, topNavClass, sideNavClass)}>{getLayout(page)}</main>
           </>
         )

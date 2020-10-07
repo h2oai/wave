@@ -54,6 +54,9 @@ const
             },
             '.ms-Button-icon': {
               fontSize: 20
+            },
+            '.ms-OverflowSet-item': {
+              padding: padding(0, 10)
             }
           }
         })
