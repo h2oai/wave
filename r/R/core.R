@@ -187,7 +187,7 @@ page.add <- function(page_instance,page_name,card_name,FUN,...){
         .opage <- list()
         .opage$key = card_name
         .opage$value = o
-        if(length(bufs) > 0) .opage$b = bufs
+        if(length(bufs) > 0) .opage$.b = bufs
 
         page_instance[[card_name]] <- .opage
         return(page_instance)
@@ -209,6 +209,10 @@ page.load <- function(page_name,...){
         return(site.load(page_name,...))
 }
 
+
+.delta_name_change <- function(x){
+        return(gsub("\\."," ",gsub("\\.value\\."," ",x)))
+}
 #' Function to provide the difference between two instances of a page. 
 #' The existing and the new instances of the page. 
 #' The returning data is passed to the page.save() function
@@ -234,6 +238,34 @@ page.load <- function(page_name,...){
         return(.page_changes)
 }
 
+glist <- function(...){
+        o <- list(...)
+        class(o) <- append(class(o),c("h2o_q_guarded_list"))
+        return(o)
+}
+
+is.glist <- function(lname,...){
+        if("h2o_q_guarded_list" %in% class(lname)) return(TRUE)
+        else return(FALSE)
+}
+
+page_frame <- function(page,...){
+        o <- lapply(page,
+                    function(x){
+                            if(is.list(x)) page_frame(x)
+                            else x <- NULL
+                    })
+        class(o) <- c("h2o_q_delta_data",class(o))
+        return(o)
+}
+
+is.list.empty <- function(x){
+        o <- unique(unlist(lapply(x,function(x){if(is.list(x)) return(is.list.empty(x)) else return(is.null(x))})))
+        if(length(o) > 1) return(FALSE)
+        else return(o)
+}
+
+
 #' Function to save the page, push the page to the Qd server
 #' The function requires the page instance created, and the name of the page. 
 #'
@@ -248,7 +280,18 @@ page.load <- function(page_name,...){
 #' page.save(test_page,"/example")
 page.save <- function(page_instance,page_name,...){
         page(page_name,fun_flag=TRUE)
-        data <- jsonlite::toJSON(list(d=lapply(unname(page_instance),function(x){if(length(x) == 3){list(k=x[[1]],d=x[[2]],b=x[[3]])}else{list(k=x[[1]],d=x[[2]])}})),auto_unbox=TRUE)
+        if("h2o_q_delta_data" %in% class(page_instance)) {
+                unlist_o_all <- unlist(lapply(page_instance,function(x){unlist(x,recursive=F,use.names=T)}),recursive=F,use.names=T)
+                unlist_o_unguarded <- as.list(unlist(lapply(unlist_o_all,function(x){if(!is.glist(x)) return(x)}),use.names=T))
+                unlist_o_guarded <- lapply(unlist_o_all,function(x){if(is.glist(x)) return(x)})
+                unlist_o_guarded <- unlist_o_guarded[!sapply(unlist_o_guarded,is.null)]
+                unlist_o <- c(unlist_o_guarded,unlist_o_unguarded)
+                print(str(unlist_o))
+                data <- jsonlite::toJSON(list(d=lapply(names(unlist_o),function(x){list(k=.delta_name_change(x),v=unlist_o[[x]])})),auto_unbox=TRUE)
+        }
+        else {data <- jsonlite::toJSON(list(d=lapply(unname(page_instance),function(x){if(length(x) == 3){list(k=x[[1]],d=x[[2]],b=x[[3]])}else{list(k=x[[1]],d=x[[2]])}})),auto_unbox=TRUE)
+        assign(deparse(substitute(page_instance)),page_frame(page_instance),env=parent.frame())
+        }
         return(.site.save(page_name,data,...))
 }
 
