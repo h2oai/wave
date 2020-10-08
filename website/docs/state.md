@@ -2,7 +2,7 @@
 title: State
 ---
 
-How you manage your Q app's state depends on your app's requirements. In most cases, an app's data is best stored in a database or data store of some kind. But sometimes it's convenient to store run-time information in your app's memory, especially during prototyping when you trying to iterate quickly and refine ideas.
+How you manage your Q app's state depends on your app's requirements. In most cases, an app's data is best stored in a database or data store of some kind. But sometimes it's convenient to store run-time information in your app's memory, especially during prototyping when you're trying to iterate quickly and refine ideas.
 
 In a Q app, you can store run-time information at three levels:
 - **App-level:** Information shared across all users.
@@ -11,7 +11,7 @@ In a Q app, you can store run-time information at three levels:
 
 In real world apps, the decision on whether to store information at the client, user, or app level depends on the problem you're trying to solve. For example, if you were building an online store, you'd probably want to store product inventory at the app level and shopping carts at the user level. Most other kinds of information - search results, past orders, or product details - are best stored at the client-level (searching for products in one tab and having search results appear in another tab would drive even your most loyal customers up the wall).
 
-In other words, your Q app is multi-user by default, but how your app manages data at the app-level, at the user-level and at the client-level is up to you.
+In other words, your Q app is multi-user by default, but how your app manages data at the app-level, at the user-level, and at the client-level is up to you.
 
 The Q app runtime context `q` (of type [Q](api/server#q)) carries `q.app`, `q.user`, and `q.client`, three dictionary-like objects for storing information at the app-level, user-level, and client-level, respectively. 
 
