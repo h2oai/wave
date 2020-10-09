@@ -121,7 +121,12 @@ const
   }
 
 export const
-  grid = newGrid(134, 76, 12, 10, 15) // approx 1800x930
+  gap = 15,
+  cols = 12,
+  rows = 10,
+  uw = window.innerWidth < 1000 ? 134 : (window.innerWidth - ((cols + 1) * gap)) / cols,
+  uh = window.innerWidth < 1000 ? 76 : (window.innerHeight - ((rows + 1) * gap)) / rows,
+  grid = newGrid(uw, uh, cols, rows, gap)
 
 const
   theme = getTheme(),
