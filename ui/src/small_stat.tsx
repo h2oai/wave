@@ -9,6 +9,7 @@ const
   css = stylesheet({
     card: {
       display: 'flex',
+      justifyContent: 'center',
       flexDirection: 'column',
     },
     title: {

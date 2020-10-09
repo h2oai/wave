@@ -2,14 +2,14 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './grid_layout'
 import { bond, Card, unpack, F, Rec, S } from './qd'
-import { getTheme } from './theme'
+import { getTheme, centerMixin } from './theme'
 import { ProgressArc } from './parts/progress_arc'
 
 const
   theme = getTheme(),
   css = stylesheet({
     card: {
-      display: 'flex',
+      ...centerMixin(),
     },
     left: {
       position: 'relative',
@@ -18,9 +18,7 @@ const
       marginRight: grid.gap,
     },
     percentContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      ...centerMixin(),
       flexDirection: 'column',
       position: 'absolute',
       left: 0,
@@ -36,7 +34,6 @@ const
       flexGrow: 1,
       display: 'flex',
       flexDirection: 'column',
-      // justifyContent: 'space-between',
     },
     title: {
       ...theme.font.s12,

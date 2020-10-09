@@ -8,14 +8,14 @@ const
   theme = getTheme(),
   css = stylesheet({
     card: {
-      position: 'absolute', left: 0, top: 0, right: 0, bottom: 0,
+      position: 'relative', left: 0, top: 0, right: 0, bottom: 0, height: '100%', minHeight: 300
     },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
     body: {
-      position: 'absolute', left: 0, top: 20, right: 0, bottom: 0,
+      position: 'absolute', left: 15, top: 40, right: 15, bottom: 15,
     },
   })
 

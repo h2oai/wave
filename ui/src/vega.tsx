@@ -3,20 +3,23 @@ import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards } from './grid_layout'
 import { bond, Card, Rec, S, unpack, xid } from './qd'
-import { getTheme } from './theme'
+import { getTheme, pc, px, centerMixin } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
     card: {
+      height: pc(100),
+      minHeight: 300
     },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
+      paddingBottom: 5
     },
     plot: {
-      position: 'absolute',
-      left: 0, top: 30, right: 0, bottom: 0,
+      position: 'relative',
+      height: `calc(${pc(100)} - ${px(22)})`
     },
   })
 
@@ -49,12 +52,25 @@ export const
           data = unpack<any[]>(state.data)
 
         if (data) spec.data = { values: data }
+
         try {
           await vegaEmbed(ref.current, spec, {
             mode: 'vega-lite',
             defaultStyle: false,
             renderer: 'canvas',
             actions: false,
+            config: {
+              autosize: {
+                type: 'fit',
+                resize: true
+              },
+              view: {
+                discreteWidth: ref.current.clientWidth || undefined,
+                discreteHeight: ref.current.clientHeight || undefined,
+                continuousWidth: ref.current.clientWidth || 200,
+                continuousHeight: ref.current.clientHeight || 200,
+              }
+            }
           })
         } catch (e) {
           console.error(e)
@@ -64,11 +80,10 @@ export const
         const
           { name, width, height } = state,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
-            ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
+            ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, width: pc(100), height: pc(100) }
             : { width: width || 'auto', height: height || 'auto' }
-        return (
-          <div data-test={name} style={style} ref={ref} />
-        )
+
+        return <div data-test={name} style={{ ...style, ...centerMixin() }} ref={ref} />
       }
 
     return { init, render }

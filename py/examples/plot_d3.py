@@ -38,7 +38,7 @@ html = html_template.format(script_path=d3_js_script_path, data=json.dumps(data)
 
 page = site['/demo']
 page['example'] = ui.frame_card(
-    box='1 1 5 8',
+    box='1 1 4 9',
     title='D3 Chord Diagram',
     content=html,
 )
