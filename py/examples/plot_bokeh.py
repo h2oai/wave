@@ -15,7 +15,8 @@ y = 2 + 2 * np.random.standard_normal(n)
 p = figure(
     match_aspect=True,
     tools="wheel_zoom,reset",
-    background_fill_color='#440154'
+    background_fill_color='#440154',
+    sizing_mode='stretch_both'
 )
 p.grid.visible = False
 r, bins = p.hexbin(x, y, size=0.5, hover_color="pink", hover_alpha=0.8)
@@ -32,7 +33,7 @@ html = file_html(p, CDN, "plot")
 
 page = site['/demo']
 page['example'] = ui.frame_card(
-    box='1 1 5 8',
+    box='1 1 4 8',
     title='Hexbin for 500 points',
     content=html,
 )

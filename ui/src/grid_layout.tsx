@@ -3,7 +3,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
 import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd'
-import { getTheme, margin } from './theme'
+import { getTheme, margin, pc } from './theme'
 
 type Slot = {
   left: U
@@ -142,7 +142,11 @@ const
       $nest: {
         '>*:first-child': {
           position: 'absolute',
-          left: grid.gap, top: grid.gap, right: grid.gap, bottom: grid.gap,
+          top: 0,
+          bottom: 0,
+          padding: 10,
+          width: pc(100),
+          boxSizing: 'border-box'
         }
       }
     }

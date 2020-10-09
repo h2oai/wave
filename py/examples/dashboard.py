@@ -34,31 +34,6 @@ def next_curve():
 def create_dashboard(update_freq=0.0):
     page = site['/demo']
 
-    page['nav'] = ui.top_nav_card(
-        box='',
-        header=ui.top_nav_header(title='My app', subtitle='Try it, you will not regret'),
-        items=[
-            ui.command(name='#menu/spam', label='Spam', icon='Inbox'),
-            ui.command(name='#menu/ham', label='Ham', icon='EatDrink'),
-            ui.command(name='#menu/eggs', label='Eggs', icon='CollegeFootball'),
-            ui.command(name='#menu/rum', label='Rum', icon='CollegeFootball'),
-            ui.command(name='#menu/Gum', label='Gum', icon='CollegeFootball'),
-            ui.command(name='#menu/salami', label='Salami', icon='CollegeFootball'),
-            ui.command(name='#menu/pepper', label='Pepper', icon='CollegeFootball'),
-            ui.command(name='#about', label='About', icon='FeedbackRequestSolid'),
-        ]
-    )
-    page['side'] = ui.side_nav_card(box='', items=[
-        ui.nav_group('Menu', items=[
-              ui.nav_item(name='#menu/spam', label='Spam'),
-              ui.nav_item(name='#menu/ham', label='Ham'),
-              ui.nav_item(name='#menu/eggs', label='Eggs'),
-        ]),
-        ui.nav_group('Help', items=[
-            ui.nav_item(name='#about', label='About'),
-            ui.nav_item(name='#support', label='Support'),
-        ])
-    ])
     simples = []
     for i in range(1, 7):
         f = FakePercent()

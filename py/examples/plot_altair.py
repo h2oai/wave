@@ -10,12 +10,12 @@ spec = altair.Chart(data.cars()).mark_circle(size=60).encode(
     y='Miles_per_Gallon',
     color='Origin',
     tooltip=['Name', 'Origin', 'Horsepower', 'Miles_per_Gallon']
-).interactive().to_json()
+).properties(width='container', height='container').interactive().to_json()
 
 page = site['/demo']
 
 page['example'] = ui.vega_card(
-    box='1 1 4 5',
+    box='1 1 4 8',
     title='Altair Example',
     specification=spec,
 )

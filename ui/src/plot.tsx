@@ -6,7 +6,7 @@ import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards } from './grid_layout'
 import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V } from './qd'
-import { getTheme } from './theme'
+import { getTheme, pc, px } from './theme'
 
 const
   theme = getTheme(),
@@ -703,15 +703,14 @@ const
 const
   css = stylesheet({
     card: {
-      position: 'relative'
+      position: 'relative',
+      height: `calc(${pc(100)} - ${px(10)})`
     },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
-    },
-    plot: {
-      position: 'absolute',
-      left: 0, top: 30, right: 0, bottom: 0,
+      lineHeight: 'initial',
+      paddingBottom: 10
     },
   })
 
@@ -763,7 +762,7 @@ export const
       render = () => {
         const
           { width, height } = model,
-          style: React.CSSProperties = { width: width || 'auto', height: height || '300px', minHeight: 300 }
+          style: React.CSSProperties = { width: width || 'auto', height: height || `calc(${pc(100)} - ${px(20)})`, minHeight: 300 }
         return <div style={style} ref={container} />
       }
     return { init, update, render }
@@ -787,7 +786,7 @@ export const
         return (
           <div data-test='plot' className={css.card}>
             <div className={css.title}>{title || 'Untitled'}</div>
-            <XVisualization model={{ plot, data, width: 'auto', height: 'auto' }} />
+            <XVisualization model={{ plot, data, width: 'auto' }} />
           </div>
         )
       }

@@ -44,8 +44,6 @@ async def main(q: Q):
         opacity=0.8,
     ))
     _ = fig.update_layout(
-        width=4 * 134 - 10,
-        height=5 * 76 - 10,
         margin=dict(l=10, r=10, t=10, b=10),
         paper_bgcolor='rgb(255, 255, 255)',
         plot_bgcolor='rgb(255, 255, 255)',

@@ -2,7 +2,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './grid_layout'
 import { bond, Card, unpack, F, Rec, S, Data } from './qd'
-import { getTheme } from './theme'
+import { getTheme, centerMixin } from './theme'
 import { MicroBars } from './parts/microbars'
 import { MicroArea } from './parts/microline'
 
@@ -12,7 +12,7 @@ const
   plotHeight = grid.unitInnerHeight,
   css = stylesheet({
     card: {
-      display: 'flex',
+      ...centerMixin()
     },
     left: {
       width: plotWidth,

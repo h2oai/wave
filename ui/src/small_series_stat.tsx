@@ -27,8 +27,8 @@ const
     },
     plot: {
       position: 'absolute',
-      left: -grid.gap,
-      bottom: -grid.gap,
+      left: 0,
+      bottom: 0,
       height: plotHeight,
     },
   })
