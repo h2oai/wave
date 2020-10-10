@@ -9,7 +9,7 @@ import styles from './styles.module.css';
 const features = [
   {
     title: 'Know Python?',
-    imageUrl: 'img/undraw_proud_coder.svg',
+    icon: 'fab fa-python',
     description: (
       <>
         No HTML, CSS, Javascript skills required. Build rich, interactive web apps using pure Python.
@@ -18,7 +18,7 @@ const features = [
   },
   {
     title: 'Realtime Sync',
-    imageUrl: 'img/undraw_file_sync.svg',
+    icon: 'fas fa-stopwatch',
     description: (
       <>
         Broadcast live information, visualizations and graphics using Q's low-latency realtime server.
@@ -27,7 +27,7 @@ const features = [
   },
   {
     title: 'Collaborative Content',
-    imageUrl: 'img/undraw_online_connection.svg',
+    icon: 'fas fa-users',
     description: (
       <>
         Instant control over every connected web browser using a simple and intuitive programming model.
@@ -36,7 +36,7 @@ const features = [
   },
   {
     title: 'Develop Quickly',
-    imageUrl: 'img/undraw_dev_productivity.svg',
+    icon: 'fas fa-laptop-code',
     description: (
       <>
         Preview your app live as you code. Dramatically reduce the time and effort to build web apps.
@@ -45,7 +45,7 @@ const features = [
   },
   {
     title: 'Deploy Instantly',
-    imageUrl: 'img/undraw_sharing_articles.svg',
+    icon: 'fas fa-upload',
     description: (
       <>
         Easily share your apps with end-users, get feedback, improve and iterate.
@@ -54,24 +54,19 @@ const features = [
   },
   {
     title: 'Run Anywhere',
-    imageUrl: 'img/undraw_going_up.svg',
+    icon: 'fas fa-terminal',
     description: (
       <>
         ~10MB static executables for Linux, Windows, OSX, BSD, Solaris on AMD64, 386, ARM, PPC. Run it on a RPi Zero for great good!
       </>
     ),
   }
-];
+]
 
-function Feature({ imageUrl, title, description }) {
-  const imgUrl = useBaseUrl(imageUrl);
+function Feature({ icon, title, description }) {
   return (
     <div className={clsx('col col--4', styles.feature)}>
-      {imgUrl && (
-        <div className="text--center">
-          <img className={styles.featureImage} src={imgUrl} alt={title} />
-        </div>
-      )}
+      <div><i class={icon}></i></div>
       <h3>{title}</h3>
       <p>{description}</p>
     </div>
@@ -87,7 +82,7 @@ function Home() {
       description="Description will go into a meta tag in <head />">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
-          <h1 className="hero__title">H<sub>2</sub>O Q</h1>
+          <h1 className="hero__title">Realtime Web Apps and Dashboards for Python</h1>
           <p className="hero__subtitle">{siteConfig.tagline}</p>
           <div className={styles.buttons}>
             <Link
@@ -96,7 +91,7 @@ function Home() {
                 styles.getStarted,
               )}
               to={useBaseUrl('docs/getting-started')}>
-              Get Started ->
+              Get Started
             </Link>
           </div>
         </div>

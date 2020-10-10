@@ -1,16 +1,16 @@
 module.exports = {
   title: 'H2O Q',
-  tagline: 'Realtime web apps and dashboards for Python',
+  tagline: 'From the makers of H2O',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'h2oai', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  projectName: 'q', // Usually your repo name.
   themeConfig: {
-//    prism: {
-//      theme: require('prism-react-renderer/themes/nightOwlLight'),
-//    },
+    //    prism: {
+    //      theme: require('prism-react-renderer/themes/nightOwlLight'),
+    //    },
     navbar: {
       title: 'H2O Q',
       logo: {
@@ -23,6 +23,7 @@ module.exports = {
         { to: 'docs/guide', label: 'Guide', position: 'left', },
         { to: 'docs/enterprise', label: 'Enterprise', position: 'left', },
         { to: 'docs/api/index', label: 'API', position: 'left' },
+        // TODO
         // { to: 'blog', label: 'Blog', position: 'left' },
         { to: 'https://github.com/h2oai/qd/releases/latest', label: 'Download', position: 'right', },
         { href: 'https://github.com/h2oai/qd', label: 'GitHub', position: 'right', },
@@ -78,8 +79,8 @@ module.exports = {
           title: 'More',
           items: [
             // {
-            // label: 'Blog',
-            // to: 'blog',
+            //   label: 'Blog',
+            //   to: 'blog',
             // },
             {
               label: 'Download',
@@ -101,13 +102,12 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl:
-            'https://github.com/h2oai/qd/edit/master/website/',
+          editUrl: 'https://github.com/h2oai/qd/edit/master/website/',
         },
         blog: {
           showReadingTime: true,
-          editUrl:
-            'https://github.com/h2oai/docusaurus/edit/master/website/blog/',
+          // TODO
+          editUrl: 'https://github.com/facebook/docusaurus/edit/master/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

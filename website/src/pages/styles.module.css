@@ -31,7 +31,11 @@
   width: 100%;
 }
 
-.featureImage {
-  height: 200px;
-  width: 200px;
+.feature h3 {
+  letter-spacing: -0.03em;
+}
+
+.feature>div {
+  font-size: 5em;
+  color: #aaa;
 }
