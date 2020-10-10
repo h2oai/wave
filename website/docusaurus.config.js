@@ -2,7 +2,7 @@ module.exports = {
   title: 'H2O Q',
   tagline: 'From the makers of H2O',
   url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  baseUrl: '/qd/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'h2oai', // Usually your GitHub org/user name.

@@ -70,6 +70,7 @@ release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make r
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
+	$(MAKE) build-docs
 	$(MAKE) release-docs
 
 release-os:
@@ -86,8 +87,11 @@ release-os:
 	cp readme-$(OS).txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
+build-docs:
+	cd website && npm run build
+
 release-docs:
-	rm -rf docs && rsync -a py/build/docs/h2o_q . && mv h2o_q docs
+	rm -rf docs && mkdir docs && rsync -a website/build/ docs/
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
