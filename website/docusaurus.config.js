@@ -11,6 +11,9 @@ module.exports = {
     //    prism: {
     //      theme: require('prism-react-renderer/themes/nightOwlLight'),
     //    },
+    prism: {
+      additionalLanguages: ['toml'],
+    },
     navbar: {
       title: 'H2O Q',
       logo: {
