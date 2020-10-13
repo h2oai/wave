@@ -92,18 +92,22 @@ ui_command <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param items A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A BreadcrumbsCard instance.
 ui_breadcrumbs_card <- function(
   box,
   items,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_Breadcrumb", items)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     items=items,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_BreadcrumbsCard"))
   return(.o)
 }
@@ -124,6 +128,7 @@ ui_breadcrumbs_card <- function(
 #' @param wrap Wrapping strategy.
 #'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A FlexCard instance.
 ui_flex_card <- function(
   box,
@@ -134,7 +139,8 @@ ui_flex_card <- function(
   justify = NULL,
   align = NULL,
   wrap = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("item_view", "character", item_view)
   # TODO Validate item_props: Rec
@@ -144,6 +150,7 @@ ui_flex_card <- function(
   # TODO Validate align
   # TODO Validate wrap
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     item_view=item_view,
@@ -153,7 +160,8 @@ ui_flex_card <- function(
     justify=justify,
     align=align,
     wrap=wrap,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FlexCard"))
   return(.o)
 }
@@ -1973,18 +1981,22 @@ ui_component <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param items The components in this form.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A FormCard instance.
 ui_form_card <- function(
   box,
   items,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_Component", items)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     items=items,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FormCard"))
   return(.o)
 }
@@ -1998,24 +2010,28 @@ ui_form_card <- function(
 #' @param path The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
 #' @param content The HTML content of the page. A string containing `<html>...</html>`
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A FrameCard instance.
 ui_frame_card <- function(
   box,
   title,
   path = NULL,
   content = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("path", "character", path)
   .guard_scalar("content", "character", content)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     path=path,
     content=content,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FrameCard"))
   return(.o)
 }
@@ -2034,6 +2050,7 @@ ui_frame_card <- function(
 #' @param height The displayed height of the rectangular viewport.
 #'   (Not the height of its coordinate system.)
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A GraphicsCard instance.
 ui_graphics_card <- function(
   box,
@@ -2042,7 +2059,8 @@ ui_graphics_card <- function(
   scene = NULL,
   width = NULL,
   height = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("view_box", "character", view_box)
   # TODO Validate stage: Recs
@@ -2050,6 +2068,7 @@ ui_graphics_card <- function(
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     view_box=view_box,
@@ -2057,7 +2076,8 @@ ui_graphics_card <- function(
     scene=scene,
     width=width,
     height=height,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_GraphicsCard"))
   return(.o)
 }
@@ -2069,24 +2089,28 @@ ui_graphics_card <- function(
 #' @param cells EXPERIMENTAL. DO NOT USE.
 #' @param data EXPERIMENTAL. DO NOT USE.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A GridCard instance.
 ui_grid_card <- function(
   box,
   title,
   cells,
   data,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   # TODO Validate cells: Data
   # TODO Validate data: Data
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     cells=cells,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_GridCard"))
   return(.o)
 }
@@ -2101,6 +2125,7 @@ ui_grid_card <- function(
 #' @param icon The icon type, displayed to the left.
 #' @param icon_color The icon's color.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A HeaderCard instance.
 ui_header_card <- function(
   box,
@@ -2108,20 +2133,23 @@ ui_header_card <- function(
   subtitle,
   icon = NULL,
   icon_color = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     subtitle=subtitle,
     icon=icon,
     icon_color=icon_color,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_HeaderCard"))
   return(.o)
 }
@@ -2134,6 +2162,7 @@ ui_header_card <- function(
 #' @param image Image data, base64-encoded.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A ImageCard instance.
 ui_image_card <- function(
   box,
@@ -2141,21 +2170,103 @@ ui_image_card <- function(
   type,
   image,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     type=type,
     image=image,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ImageCard"))
+  return(.o)
+}
+
+#' Specify a button that leads a user to his first step in your app.
+#'
+#' @param label Label displayed on a button.
+#' @param name Route link to go to after clicking. Has to start with #.
+#' @return A CallToActionButton instance.
+ui_call_to_action_button <- function(
+  label,
+  name) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("name", "character", name)
+  .o <- list(
+    label=label,
+    name=name)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_CallToActionButton"))
+  return(.o)
+}
+
+#' Creates a feature section you can use to provide a reasons for using your app
+#'
+#' @param icon Feature icon.
+#' @param title Feature title.
+#' @param description Feature description.
+#' @return A Feature instance.
+ui_feature <- function(
+  icon,
+  title,
+  description) {
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("description", "character", description)
+  .o <- list(
+    icon=icon,
+    title=title,
+    description=description)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Feature"))
+  return(.o)
+}
+
+#' Create a landing page card.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param header Landing page header.
+#' @param subheader Landing page subheader.
+#' @param image App image name located in www folder.
+#' @param call_to_action_button Call to action button to guide user to the next step in using your app.
+#' @param features The navigation groups contained in this pane.
+#' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
+#' @return A LandingPageCard instance.
+ui_landing_page_card <- function(
+  box,
+  header,
+  subheader,
+  image,
+  call_to_action_button,
+  features = NULL,
+  commands = NULL,
+  chromeless = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("header", "character", header)
+  .guard_scalar("subheader", "character", subheader)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("call_to_action_button", "h2oq_CallToActionButton", call_to_action_button)
+  .guard_vector("features", "h2oq_Feature", features)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
+  .o <- list(
+    box=box,
+    header=header,
+    subheader=subheader,
+    image=image,
+    call_to_action_button=call_to_action_button,
+    features=features,
+    commands=commands,
+    chromeless=chromeless)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_LandingPageCard"))
   return(.o)
 }
 
@@ -2172,6 +2283,7 @@ ui_image_card <- function(
 #' @param plot_color The color of the progress bar.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A LargeBarStatCard instance.
 ui_large_bar_stat_card <- function(
   box,
@@ -2184,7 +2296,8 @@ ui_large_bar_stat_card <- function(
   progress,
   plot_color = NULL,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("caption", "character", caption)
@@ -2196,6 +2309,7 @@ ui_large_bar_stat_card <- function(
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -2207,7 +2321,8 @@ ui_large_bar_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_LargeBarStatCard"))
   return(.o)
 }
@@ -2221,6 +2336,7 @@ ui_large_bar_stat_card <- function(
 #' @param caption The caption displayed below the primary value.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A LargeStatCard instance.
 ui_large_stat_card <- function(
   box,
@@ -2229,7 +2345,8 @@ ui_large_stat_card <- function(
   aux_value,
   caption,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
@@ -2237,6 +2354,7 @@ ui_large_stat_card <- function(
   .guard_scalar("caption", "character", caption)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -2244,7 +2362,8 @@ ui_large_stat_card <- function(
     aux_value=aux_value,
     caption=caption,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_LargeStatCard"))
   return(.o)
 }
@@ -2258,6 +2377,7 @@ ui_large_stat_card <- function(
 #' @param item_props The child card properties.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A ListCard instance.
 ui_list_card <- function(
   box,
@@ -2265,20 +2385,23 @@ ui_list_card <- function(
   item_view,
   item_props,
   data,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("item_view", "character", item_view)
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     item_view=item_view,
     item_props=item_props,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ListCard"))
   return(.o)
 }
@@ -2292,6 +2415,7 @@ ui_list_card <- function(
 #' @param aux_value EXPERIMENTAL. DO NOT USE.
 #' @param data EXPERIMENTAL. DO NOT USE.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A ListItem1Card instance.
 ui_list_item1_card <- function(
   box,
@@ -2300,7 +2424,8 @@ ui_list_item1_card <- function(
   value,
   aux_value,
   data,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("caption", "character", caption)
@@ -2308,6 +2433,7 @@ ui_list_item1_card <- function(
   .guard_scalar("aux_value", "character", aux_value)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -2315,7 +2441,8 @@ ui_list_item1_card <- function(
     value=value,
     aux_value=aux_value,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ListItem1Card"))
   return(.o)
 }
@@ -2332,24 +2459,28 @@ ui_list_item1_card <- function(
 #' @param content The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
 #' @param data Additional data for the card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A MarkdownCard instance.
 ui_markdown_card <- function(
   box,
   title,
   content,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     content=content,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MarkdownCard"))
   return(.o)
 }
@@ -2360,21 +2491,25 @@ ui_markdown_card <- function(
 #' @param title The title for this card.
 #' @param content The HTML content.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A MarkupCard instance.
 ui_markup_card <- function(
   box,
   title,
   content,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     content=content,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MarkupCard"))
   return(.o)
 }
@@ -2391,6 +2526,7 @@ ui_markup_card <- function(
 #' @param redirect Redirect the page to a new URL.
 #' @param layout Pick a layout mode. Defaults to Grid.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A MetaCard instance.
 ui_meta_card <- function(
   box,
@@ -2399,7 +2535,8 @@ ui_meta_card <- function(
   notification = NULL,
   redirect = NULL,
   layout = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("refresh", "numeric", refresh)
@@ -2407,6 +2544,7 @@ ui_meta_card <- function(
   .guard_scalar("redirect", "character", redirect)
   .guard_scalar("layout", "character", layout)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -2414,7 +2552,8 @@ ui_meta_card <- function(
     notification=notification,
     redirect=redirect,
     layout=layout,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
   return(.o)
 }
@@ -2458,18 +2597,22 @@ ui_nav_group <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param items The navigation groups contained in this pane.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A NavCard instance.
 ui_nav_card <- function(
   box,
   items,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_NavGroup", items)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     items=items,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavCard"))
   return(.o)
 }
@@ -2480,21 +2623,25 @@ ui_nav_card <- function(
 #' @param title The title for this card.
 #' @param data The data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A PixelArtCard instance.
 ui_pixel_art_card <- function(
   box,
   title,
   data,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_PixelArtCard"))
   return(.o)
 }
@@ -2506,24 +2653,28 @@ ui_pixel_art_card <- function(
 #' @param data Data for this card.
 #' @param plot The plot to be displayed in this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A PlotCard instance.
 ui_plot_card <- function(
   box,
   title,
   data,
   plot,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
   .guard_scalar("plot", "h2oq_Plot", plot)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     data=data,
     plot=plot,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_PlotCard"))
   return(.o)
 }
@@ -2536,24 +2687,28 @@ ui_plot_card <- function(
 #' @param item_props The child card properties.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A RepeatCard instance.
 ui_repeat_card <- function(
   box,
   item_view,
   item_props,
   data,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("item_view", "character", item_view)
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     item_view=item_view,
     item_props=item_props,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_RepeatCard"))
   return(.o)
 }
@@ -2589,21 +2744,25 @@ ui_side_nav_header <- function(
 #' @param items The navigation groups contained in this pane.
 #' @param header Render a branding header as part of the side navigation.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A SideNavCard instance.
 ui_side_nav_card <- function(
   box,
   items,
   header = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_NavGroup", items)
   .guard_scalar("header", "h2oq_SideNavHeader", header)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     items=items,
     header=header,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SideNavCard"))
   return(.o)
 }
@@ -2624,6 +2783,7 @@ ui_side_nav_card <- function(
 #' @param plot_color The plot's color.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A SmallSeriesStatCard instance.
 ui_small_series_stat_card <- function(
   box,
@@ -2637,7 +2797,8 @@ ui_small_series_stat_card <- function(
   plot_curve = NULL,
   plot_color = NULL,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
@@ -2650,6 +2811,7 @@ ui_small_series_stat_card <- function(
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -2662,7 +2824,8 @@ ui_small_series_stat_card <- function(
     plot_curve=plot_curve,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SmallSeriesStatCard"))
   return(.o)
 }
@@ -2674,24 +2837,28 @@ ui_small_series_stat_card <- function(
 #' @param value The primary value displayed.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A SmallStatCard instance.
 ui_small_stat_card <- function(
   box,
   title,
   value,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     value=value,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SmallStatCard"))
   return(.o)
 }
@@ -2703,24 +2870,28 @@ ui_small_stat_card <- function(
 #' @param value The name of the tab to select.
 #' @param link True if tabs should be rendered as links and not a standard tab.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A TabCard instance.
 ui_tab_card <- function(
   box,
   items,
   value = NULL,
   link = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_Tab", items)
   .guard_scalar("value", "character", value)
   .guard_scalar("link", "logical", link)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     items=items,
     value=value,
     link=link,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TabCard"))
   return(.o)
 }
@@ -2735,6 +2906,7 @@ ui_tab_card <- function(
 #' @param plot_color The color of the progress gauge.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A TallGaugeStatCard instance.
 ui_tall_gauge_stat_card <- function(
   box,
@@ -2744,7 +2916,8 @@ ui_tall_gauge_stat_card <- function(
   progress,
   plot_color = NULL,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
@@ -2753,6 +2926,7 @@ ui_tall_gauge_stat_card <- function(
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -2761,7 +2935,8 @@ ui_tall_gauge_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TallGaugeStatCard"))
   return(.o)
 }
@@ -2783,6 +2958,7 @@ ui_tall_gauge_stat_card <- function(
 #' @param plot_color The plot's color.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A TallSeriesStatCard instance.
 ui_tall_series_stat_card <- function(
   box,
@@ -2797,7 +2973,8 @@ ui_tall_series_stat_card <- function(
   plot_curve = NULL,
   plot_color = NULL,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
@@ -2811,6 +2988,7 @@ ui_tall_series_stat_card <- function(
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -2824,7 +3002,8 @@ ui_tall_series_stat_card <- function(
     plot_curve=plot_curve,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TallSeriesStatCard"))
   return(.o)
 }
@@ -2836,24 +3015,28 @@ ui_tall_series_stat_card <- function(
 #' @param content The Handlebars template. https://handlebarsjs.com/guide/
 #' @param data Data for the Handlebars template
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A TemplateCard instance.
 ui_template_card <- function(
   box,
   title,
   content,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     content=content,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TemplateCard"))
   return(.o)
 }
@@ -2865,24 +3048,28 @@ ui_template_card <- function(
 #' @param secondary_items Items to render on the right side (or left, in RTL).
 #' @param overflow_items Items to render in an overflow menu.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A ToolbarCard instance.
 ui_toolbar_card <- function(
   box,
   items,
   secondary_items = NULL,
   overflow_items = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_Command", items)
   .guard_vector("secondary_items", "h2oq_Command", secondary_items)
   .guard_vector("overflow_items", "h2oq_Command", overflow_items)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     items=items,
     secondary_items=secondary_items,
     overflow_items=overflow_items,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ToolbarCard"))
   return(.o)
 }
@@ -2918,21 +3105,25 @@ ui_top_nav_header <- function(
 #' @param header The header displayed in the top left corner.
 #' @param items Navigation tabs links to be displayed in top nav.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A TopNavCard instance.
 ui_top_nav_card <- function(
   box,
   header,
   items,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("header", "h2oq_TopNavHeader", header)
   .guard_vector("items", "h2oq_Command", items)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     header=header,
     items=items,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TopNavCard"))
   return(.o)
 }
@@ -2944,24 +3135,28 @@ ui_top_nav_card <- function(
 #' @param specification The Vega-lite specification.
 #' @param data Data for the plot, if any.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A VegaCard instance.
 ui_vega_card <- function(
   box,
   title,
   specification,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("specification", "character", specification)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
     specification=specification,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_VegaCard"))
   return(.o)
 }
@@ -2976,6 +3171,7 @@ ui_vega_card <- function(
 #' @param plot_color The color of the progress bar.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A WideBarStatCard instance.
 ui_wide_bar_stat_card <- function(
   box,
@@ -2985,7 +3181,8 @@ ui_wide_bar_stat_card <- function(
   progress,
   plot_color = NULL,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
@@ -2994,6 +3191,7 @@ ui_wide_bar_stat_card <- function(
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -3002,7 +3200,8 @@ ui_wide_bar_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideBarStatCard"))
   return(.o)
 }
@@ -3017,6 +3216,7 @@ ui_wide_bar_stat_card <- function(
 #' @param plot_color The color of the progress gauge.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A WideGaugeStatCard instance.
 ui_wide_gauge_stat_card <- function(
   box,
@@ -3026,7 +3226,8 @@ ui_wide_gauge_stat_card <- function(
   progress,
   plot_color = NULL,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
@@ -3035,6 +3236,7 @@ ui_wide_gauge_stat_card <- function(
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -3043,7 +3245,8 @@ ui_wide_gauge_stat_card <- function(
     progress=progress,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideGaugeStatCard"))
   return(.o)
 }
@@ -3065,6 +3268,7 @@ ui_wide_gauge_stat_card <- function(
 #' @param plot_color The plot's color.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
+#' @param chromeless A boolean indicating whether card styling (chrome) should be turned off.
 #' @return A WideSeriesStatCard instance.
 ui_wide_series_stat_card <- function(
   box,
@@ -3079,7 +3283,8 @@ ui_wide_series_stat_card <- function(
   plot_curve = NULL,
   plot_color = NULL,
   data = NULL,
-  commands = NULL) {
+  commands = NULL,
+  chromeless = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
@@ -3093,6 +3298,7 @@ ui_wide_series_stat_card <- function(
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("chromeless", "logical", chromeless)
   .o <- list(
     box=box,
     title=title,
@@ -3106,7 +3312,8 @@ ui_wide_series_stat_card <- function(
     plot_curve=plot_curve,
     plot_color=plot_color,
     data=data,
-    commands=commands)
+    commands=commands,
+    chromeless=chromeless)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideSeriesStatCard"))
   return(.o)
 }

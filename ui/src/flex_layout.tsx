@@ -1,8 +1,8 @@
 import React, { CSSProperties } from 'react'
-import { CardMenu } from './card_menu'
-import { bond, Page, S, C } from './qd'
-import { CardView } from './grid_layout'
 import { stylesheet } from 'typestyle'
+import { CardMenu } from './card_menu'
+import { CardView } from './grid_layout'
+import { bond, C, Page, S } from './qd'
 import { getTheme, pc } from './theme'
 
 const
@@ -25,6 +25,9 @@ const
       overflow: 'auto',
       margin: gap,
       padding: 15
+    },
+    chromeless: {
+      margin: gap
     },
   }),
   pageSortingF = (cardA: C, cardB: C) => {
@@ -70,7 +73,7 @@ export const
               return (
                 <React.Fragment key={c.id}>
                   {hasLinebreak && <FlexLinebreak />}
-                  <div className={css.slot} style={getStyle(c.state.box)}>
+                  <div className={c.state.chromeless ? css.chromeless : css.slot} style={getStyle(c.state.box)}>
                     <CardView card={c} />
                     {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
                   </div>

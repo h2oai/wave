@@ -136,6 +136,7 @@ class BreadcrumbsCard:
             box: str,
             items: List[Breadcrumb],
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -143,6 +144,8 @@ class BreadcrumbsCard:
         """A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`"""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -155,6 +158,7 @@ class BreadcrumbsCard:
             box=self.box,
             items=[__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -167,13 +171,16 @@ class BreadcrumbsCard:
         if __d_items is None:
             raise ValueError('BreadcrumbsCard.items is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return BreadcrumbsCard(
             box,
             items,
             commands,
+            chromeless,
         )
 
 
@@ -192,6 +199,7 @@ class FlexCard:
             align: Optional[str] = None,
             wrap: Optional[str] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -211,6 +219,8 @@ class FlexCard:
         """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -233,6 +243,7 @@ class FlexCard:
             align=self.align,
             wrap=self.wrap,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -255,6 +266,7 @@ class FlexCard:
         __d_align: Any = __d.get('align')
         __d_wrap: Any = __d.get('wrap')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
@@ -264,6 +276,7 @@ class FlexCard:
         align: Optional[str] = __d_align
         wrap: Optional[str] = __d_wrap
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return FlexCard(
             box,
             item_view,
@@ -274,6 +287,7 @@ class FlexCard:
             align,
             wrap,
             commands,
+            chromeless,
         )
 
 
@@ -3652,6 +3666,7 @@ class FormCard:
             box: str,
             items: Union[List[Component], str],
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -3659,6 +3674,8 @@ class FormCard:
         """The components in this form."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3671,6 +3688,7 @@ class FormCard:
             box=self.box,
             items=self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -3683,13 +3701,16 @@ class FormCard:
         if __d_items is None:
             raise ValueError('FormCard.items is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return FormCard(
             box,
             items,
             commands,
+            chromeless,
         )
 
 
@@ -3705,6 +3726,7 @@ class FrameCard:
             path: Optional[str] = None,
             content: Optional[str] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -3716,6 +3738,8 @@ class FrameCard:
         """The HTML content of the page. A string containing `<html>...</html>`"""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3730,6 +3754,7 @@ class FrameCard:
             path=self.path,
             content=self.content,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -3744,17 +3769,20 @@ class FrameCard:
         __d_path: Any = __d.get('path')
         __d_content: Any = __d.get('content')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         path: Optional[str] = __d_path
         content: Optional[str] = __d_content
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return FrameCard(
             box,
             title,
             path,
             content,
             commands,
+            chromeless,
         )
 
 
@@ -3770,6 +3798,7 @@ class GraphicsCard:
             width: Optional[str] = None,
             height: Optional[str] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -3785,6 +3814,8 @@ class GraphicsCard:
         """The displayed height of the rectangular viewport. (Not the height of its coordinate system.)"""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3801,6 +3832,7 @@ class GraphicsCard:
             width=self.width,
             height=self.height,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -3817,6 +3849,7 @@ class GraphicsCard:
         __d_width: Any = __d.get('width')
         __d_height: Any = __d.get('height')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         view_box: str = __d_view_box
         stage: Optional[PackedRecords] = __d_stage
@@ -3824,6 +3857,7 @@ class GraphicsCard:
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return GraphicsCard(
             box,
             view_box,
@@ -3832,6 +3866,7 @@ class GraphicsCard:
             width,
             height,
             commands,
+            chromeless,
         )
 
 
@@ -3845,6 +3880,7 @@ class GridCard:
             cells: PackedData,
             data: PackedData,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -3856,6 +3892,8 @@ class GridCard:
         """EXPERIMENTAL. DO NOT USE."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3874,6 +3912,7 @@ class GridCard:
             cells=self.cells,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -3892,17 +3931,20 @@ class GridCard:
         if __d_data is None:
             raise ValueError('GridCard.data is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         cells: PackedData = __d_cells
         data: PackedData = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return GridCard(
             box,
             title,
             cells,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -3919,6 +3961,7 @@ class HeaderCard:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -3932,6 +3975,8 @@ class HeaderCard:
         """The icon's color."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3949,6 +3994,7 @@ class HeaderCard:
             icon=self.icon,
             icon_color=self.icon_color,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -3966,12 +4012,14 @@ class HeaderCard:
         __d_icon: Any = __d.get('icon')
         __d_icon_color: Any = __d.get('icon_color')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         subtitle: str = __d_subtitle
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return HeaderCard(
             box,
             title,
@@ -3979,6 +4027,7 @@ class HeaderCard:
             icon,
             icon_color,
             commands,
+            chromeless,
         )
 
 
@@ -3993,6 +4042,7 @@ class ImageCard:
             image: str,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4006,6 +4056,8 @@ class ImageCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4025,6 +4077,7 @@ class ImageCard:
             image=self.image,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4044,12 +4097,14 @@ class ImageCard:
             raise ValueError('ImageCard.image is required.')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         type: str = __d_type
         image: str = __d_image
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return ImageCard(
             box,
             title,
@@ -4057,6 +4112,196 @@ class ImageCard:
             image,
             data,
             commands,
+            chromeless,
+        )
+
+
+class CallToActionButton:
+    """Specify a button that leads a user to his first step in your app.
+    """
+    def __init__(
+            self,
+            label: str,
+            name: str,
+    ):
+        self.label = label
+        """Label displayed on a button."""
+        self.name = name
+        """Route link to go to after clicking. Has to start with #."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('CallToActionButton.label is required.')
+        if self.name is None:
+            raise ValueError('CallToActionButton.name is required.')
+        return _dump(
+            label=self.label,
+            name=self.name,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'CallToActionButton':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('CallToActionButton.label is required.')
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('CallToActionButton.name is required.')
+        label: str = __d_label
+        name: str = __d_name
+        return CallToActionButton(
+            label,
+            name,
+        )
+
+
+class Feature:
+    """Creates a feature section you can use to provide a reasons for using your app
+    """
+    def __init__(
+            self,
+            icon: str,
+            title: str,
+            description: str,
+    ):
+        self.icon = icon
+        """Feature icon."""
+        self.title = title
+        """Feature title."""
+        self.description = description
+        """Feature description."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.icon is None:
+            raise ValueError('Feature.icon is required.')
+        if self.title is None:
+            raise ValueError('Feature.title is required.')
+        if self.description is None:
+            raise ValueError('Feature.description is required.')
+        return _dump(
+            icon=self.icon,
+            title=self.title,
+            description=self.description,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Feature':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_icon: Any = __d.get('icon')
+        if __d_icon is None:
+            raise ValueError('Feature.icon is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('Feature.title is required.')
+        __d_description: Any = __d.get('description')
+        if __d_description is None:
+            raise ValueError('Feature.description is required.')
+        icon: str = __d_icon
+        title: str = __d_title
+        description: str = __d_description
+        return Feature(
+            icon,
+            title,
+            description,
+        )
+
+
+class LandingPageCard:
+    """Create a landing page card.
+    """
+    def __init__(
+            self,
+            box: str,
+            header: str,
+            subheader: str,
+            image: str,
+            call_to_action_button: CallToActionButton,
+            features: Optional[List[Feature]] = None,
+            commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.header = header
+        """Landing page header."""
+        self.subheader = subheader
+        """Landing page subheader."""
+        self.image = image
+        """App image name located in www folder."""
+        self.call_to_action_button = call_to_action_button
+        """Call to action button to guide user to the next step in using your app."""
+        self.features = features
+        """The navigation groups contained in this pane."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('LandingPageCard.box is required.')
+        if self.header is None:
+            raise ValueError('LandingPageCard.header is required.')
+        if self.subheader is None:
+            raise ValueError('LandingPageCard.subheader is required.')
+        if self.image is None:
+            raise ValueError('LandingPageCard.image is required.')
+        if self.call_to_action_button is None:
+            raise ValueError('LandingPageCard.call_to_action_button is required.')
+        return _dump(
+            view='landing_page',
+            box=self.box,
+            header=self.header,
+            subheader=self.subheader,
+            image=self.image,
+            call_to_action_button=self.call_to_action_button.dump(),
+            features=None if self.features is None else [__e.dump() for __e in self.features],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'LandingPageCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('LandingPageCard.box is required.')
+        __d_header: Any = __d.get('header')
+        if __d_header is None:
+            raise ValueError('LandingPageCard.header is required.')
+        __d_subheader: Any = __d.get('subheader')
+        if __d_subheader is None:
+            raise ValueError('LandingPageCard.subheader is required.')
+        __d_image: Any = __d.get('image')
+        if __d_image is None:
+            raise ValueError('LandingPageCard.image is required.')
+        __d_call_to_action_button: Any = __d.get('call_to_action_button')
+        if __d_call_to_action_button is None:
+            raise ValueError('LandingPageCard.call_to_action_button is required.')
+        __d_features: Any = __d.get('features')
+        __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
+        box: str = __d_box
+        header: str = __d_header
+        subheader: str = __d_subheader
+        image: str = __d_image
+        call_to_action_button: CallToActionButton = CallToActionButton.load(__d_call_to_action_button)
+        features: Optional[List[Feature]] = None if __d_features is None else [Feature.load(__e) for __e in __d_features]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
+        return LandingPageCard(
+            box,
+            header,
+            subheader,
+            image,
+            call_to_action_button,
+            features,
+            commands,
+            chromeless,
         )
 
 
@@ -4076,6 +4321,7 @@ class LargeBarStatCard:
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4099,6 +4345,8 @@ class LargeBarStatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4131,6 +4379,7 @@ class LargeBarStatCard:
             plot_color=self.plot_color,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4163,6 +4412,7 @@ class LargeBarStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
@@ -4174,6 +4424,7 @@ class LargeBarStatCard:
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return LargeBarStatCard(
             box,
             title,
@@ -4186,6 +4437,7 @@ class LargeBarStatCard:
             plot_color,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -4201,6 +4453,7 @@ class LargeStatCard:
             caption: str,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4216,6 +4469,8 @@ class LargeStatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4238,6 +4493,7 @@ class LargeStatCard:
             caption=self.caption,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4260,6 +4516,7 @@ class LargeStatCard:
             raise ValueError('LargeStatCard.caption is required.')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -4267,6 +4524,7 @@ class LargeStatCard:
         caption: str = __d_caption
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return LargeStatCard(
             box,
             title,
@@ -4275,6 +4533,7 @@ class LargeStatCard:
             caption,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -4290,6 +4549,7 @@ class ListCard:
             item_props: PackedRecord,
             data: PackedData,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4303,6 +4563,8 @@ class ListCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4324,6 +4586,7 @@ class ListCard:
             item_props=self.item_props,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4345,12 +4608,14 @@ class ListCard:
         if __d_data is None:
             raise ValueError('ListCard.data is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
         data: PackedData = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return ListCard(
             box,
             title,
@@ -4358,6 +4623,7 @@ class ListCard:
             item_props,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -4373,6 +4639,7 @@ class ListItem1Card:
             aux_value: str,
             data: PackedRecord,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4388,6 +4655,8 @@ class ListItem1Card:
         """EXPERIMENTAL. DO NOT USE."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4412,6 +4681,7 @@ class ListItem1Card:
             aux_value=self.aux_value,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4436,6 +4706,7 @@ class ListItem1Card:
         if __d_data is None:
             raise ValueError('ListItem1Card.data is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
@@ -4443,6 +4714,7 @@ class ListItem1Card:
         aux_value: str = __d_aux_value
         data: PackedRecord = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return ListItem1Card(
             box,
             title,
@@ -4451,6 +4723,7 @@ class ListItem1Card:
             aux_value,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -4469,6 +4742,7 @@ class MarkdownCard:
             content: str,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4480,6 +4754,8 @@ class MarkdownCard:
         """Additional data for the card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4496,6 +4772,7 @@ class MarkdownCard:
             content=self.content,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4512,17 +4789,20 @@ class MarkdownCard:
             raise ValueError('MarkdownCard.content is required.')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return MarkdownCard(
             box,
             title,
             content,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -4535,6 +4815,7 @@ class MarkupCard:
             title: str,
             content: str,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4544,6 +4825,8 @@ class MarkupCard:
         """The HTML content."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4559,6 +4842,7 @@ class MarkupCard:
             title=self.title,
             content=self.content,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4574,15 +4858,18 @@ class MarkupCard:
         if __d_content is None:
             raise ValueError('MarkupCard.content is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return MarkupCard(
             box,
             title,
             content,
             commands,
+            chromeless,
         )
 
 
@@ -4601,6 +4888,7 @@ class MetaCard:
             redirect: Optional[str] = None,
             layout: Optional[str] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4616,6 +4904,8 @@ class MetaCard:
         """Pick a layout mode. Defaults to Grid."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4630,6 +4920,7 @@ class MetaCard:
             redirect=self.redirect,
             layout=self.layout,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4644,6 +4935,7 @@ class MetaCard:
         __d_redirect: Any = __d.get('redirect')
         __d_layout: Any = __d.get('layout')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: Optional[str] = __d_title
         refresh: Optional[int] = __d_refresh
@@ -4651,6 +4943,7 @@ class MetaCard:
         redirect: Optional[str] = __d_redirect
         layout: Optional[str] = __d_layout
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return MetaCard(
             box,
             title,
@@ -4659,6 +4952,7 @@ class MetaCard:
             redirect,
             layout,
             commands,
+            chromeless,
         )
 
 
@@ -4752,6 +5046,7 @@ class NavCard:
             box: str,
             items: List[NavGroup],
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4759,6 +5054,8 @@ class NavCard:
         """The navigation groups contained in this pane."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4771,6 +5068,7 @@ class NavCard:
             box=self.box,
             items=[__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4783,13 +5081,16 @@ class NavCard:
         if __d_items is None:
             raise ValueError('NavCard.items is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return NavCard(
             box,
             items,
             commands,
+            chromeless,
         )
 
 
@@ -4802,6 +5103,7 @@ class PixelArtCard:
             title: str,
             data: PackedRecord,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4811,6 +5113,8 @@ class PixelArtCard:
         """The data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4826,6 +5130,7 @@ class PixelArtCard:
             title=self.title,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4841,15 +5146,18 @@ class PixelArtCard:
         if __d_data is None:
             raise ValueError('PixelArtCard.data is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return PixelArtCard(
             box,
             title,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -4863,6 +5171,7 @@ class PlotCard:
             data: PackedRecord,
             plot: Plot,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4874,6 +5183,8 @@ class PlotCard:
         """The plot to be displayed in this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4892,6 +5203,7 @@ class PlotCard:
             data=self.data,
             plot=self.plot.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4910,17 +5222,20 @@ class PlotCard:
         if __d_plot is None:
             raise ValueError('PlotCard.plot is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
         plot: Plot = Plot.load(__d_plot)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return PlotCard(
             box,
             title,
             data,
             plot,
             commands,
+            chromeless,
         )
 
 
@@ -4935,6 +5250,7 @@ class RepeatCard:
             item_props: PackedRecord,
             data: PackedData,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -4946,6 +5262,8 @@ class RepeatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4964,6 +5282,7 @@ class RepeatCard:
             item_props=self.item_props,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -4982,17 +5301,20 @@ class RepeatCard:
         if __d_data is None:
             raise ValueError('RepeatCard.data is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
         data: PackedData = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return RepeatCard(
             box,
             item_view,
             item_props,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -5060,6 +5382,7 @@ class SideNavCard:
             items: List[NavGroup],
             header: Optional[SideNavHeader] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5069,6 +5392,8 @@ class SideNavCard:
         """Render a branding header as part of the side navigation."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5082,6 +5407,7 @@ class SideNavCard:
             items=[__e.dump() for __e in self.items],
             header=None if self.header is None else self.header.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5095,15 +5421,18 @@ class SideNavCard:
             raise ValueError('SideNavCard.items is required.')
         __d_header: Any = __d.get('header')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
         header: Optional[SideNavHeader] = None if __d_header is None else SideNavHeader.load(__d_header)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return SideNavCard(
             box,
             items,
             header,
             commands,
+            chromeless,
         )
 
 
@@ -5124,6 +5453,7 @@ class SmallSeriesStatCard:
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5149,6 +5479,8 @@ class SmallSeriesStatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5176,6 +5508,7 @@ class SmallSeriesStatCard:
             plot_color=self.plot_color,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5203,6 +5536,7 @@ class SmallSeriesStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -5215,6 +5549,7 @@ class SmallSeriesStatCard:
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return SmallSeriesStatCard(
             box,
             title,
@@ -5228,6 +5563,7 @@ class SmallSeriesStatCard:
             plot_color,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -5241,6 +5577,7 @@ class SmallStatCard:
             value: str,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5252,6 +5589,8 @@ class SmallStatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5268,6 +5607,7 @@ class SmallStatCard:
             value=self.value,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5284,17 +5624,20 @@ class SmallStatCard:
             raise ValueError('SmallStatCard.value is required.')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return SmallStatCard(
             box,
             title,
             value,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -5308,6 +5651,7 @@ class TabCard:
             value: Optional[str] = None,
             link: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5319,6 +5663,8 @@ class TabCard:
         """True if tabs should be rendered as links and not a standard tab."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5333,6 +5679,7 @@ class TabCard:
             value=self.value,
             link=self.link,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5347,17 +5694,20 @@ class TabCard:
         __d_value: Any = __d.get('value')
         __d_link: Any = __d.get('link')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         items: List[Tab] = [Tab.load(__e) for __e in __d_items]
         value: Optional[str] = __d_value
         link: Optional[bool] = __d_link
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return TabCard(
             box,
             items,
             value,
             link,
             commands,
+            chromeless,
         )
 
 
@@ -5374,6 +5724,7 @@ class TallGaugeStatCard:
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5391,6 +5742,8 @@ class TallGaugeStatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5414,6 +5767,7 @@ class TallGaugeStatCard:
             plot_color=self.plot_color,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5437,6 +5791,7 @@ class TallGaugeStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -5445,6 +5800,7 @@ class TallGaugeStatCard:
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return TallGaugeStatCard(
             box,
             title,
@@ -5454,6 +5810,7 @@ class TallGaugeStatCard:
             plot_color,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -5475,6 +5832,7 @@ class TallSeriesStatCard:
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5502,6 +5860,8 @@ class TallSeriesStatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5532,6 +5892,7 @@ class TallSeriesStatCard:
             plot_color=self.plot_color,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5562,6 +5923,7 @@ class TallSeriesStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -5575,6 +5937,7 @@ class TallSeriesStatCard:
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return TallSeriesStatCard(
             box,
             title,
@@ -5589,6 +5952,7 @@ class TallSeriesStatCard:
             plot_color,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -5602,6 +5966,7 @@ class TemplateCard:
             content: str,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5613,6 +5978,8 @@ class TemplateCard:
         """Data for the Handlebars template"""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5629,6 +5996,7 @@ class TemplateCard:
             content=self.content,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5645,17 +6013,20 @@ class TemplateCard:
             raise ValueError('TemplateCard.content is required.')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return TemplateCard(
             box,
             title,
             content,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -5669,6 +6040,7 @@ class ToolbarCard:
             secondary_items: Optional[List[Command]] = None,
             overflow_items: Optional[List[Command]] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5680,6 +6052,8 @@ class ToolbarCard:
         """Items to render in an overflow menu."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5694,6 +6068,7 @@ class ToolbarCard:
             secondary_items=None if self.secondary_items is None else [__e.dump() for __e in self.secondary_items],
             overflow_items=None if self.overflow_items is None else [__e.dump() for __e in self.overflow_items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5708,17 +6083,20 @@ class ToolbarCard:
         __d_secondary_items: Any = __d.get('secondary_items')
         __d_overflow_items: Any = __d.get('overflow_items')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         items: List[Command] = [Command.load(__e) for __e in __d_items]
         secondary_items: Optional[List[Command]] = None if __d_secondary_items is None else [Command.load(__e) for __e in __d_secondary_items]
         overflow_items: Optional[List[Command]] = None if __d_overflow_items is None else [Command.load(__e) for __e in __d_overflow_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return ToolbarCard(
             box,
             items,
             secondary_items,
             overflow_items,
             commands,
+            chromeless,
         )
 
 
@@ -5786,6 +6164,7 @@ class TopNavCard:
             header: TopNavHeader,
             items: List[Command],
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5795,6 +6174,8 @@ class TopNavCard:
         """Navigation tabs links to be displayed in top nav."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5810,6 +6191,7 @@ class TopNavCard:
             header=self.header.dump(),
             items=[__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5825,15 +6207,18 @@ class TopNavCard:
         if __d_items is None:
             raise ValueError('TopNavCard.items is required.')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         header: TopNavHeader = TopNavHeader.load(__d_header)
         items: List[Command] = [Command.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return TopNavCard(
             box,
             header,
             items,
             commands,
+            chromeless,
         )
 
 
@@ -5847,6 +6232,7 @@ class VegaCard:
             specification: str,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5858,6 +6244,8 @@ class VegaCard:
         """Data for the plot, if any."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5874,6 +6262,7 @@ class VegaCard:
             specification=self.specification,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5890,17 +6279,20 @@ class VegaCard:
             raise ValueError('VegaCard.specification is required.')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         specification: str = __d_specification
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return VegaCard(
             box,
             title,
             specification,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -5917,6 +6309,7 @@ class WideBarStatCard:
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -5934,6 +6327,8 @@ class WideBarStatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5957,6 +6352,7 @@ class WideBarStatCard:
             plot_color=self.plot_color,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -5980,6 +6376,7 @@ class WideBarStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -5988,6 +6385,7 @@ class WideBarStatCard:
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return WideBarStatCard(
             box,
             title,
@@ -5997,6 +6395,7 @@ class WideBarStatCard:
             plot_color,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -6013,6 +6412,7 @@ class WideGaugeStatCard:
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6030,6 +6430,8 @@ class WideGaugeStatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6053,6 +6455,7 @@ class WideGaugeStatCard:
             plot_color=self.plot_color,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -6076,6 +6479,7 @@ class WideGaugeStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -6084,6 +6488,7 @@ class WideGaugeStatCard:
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return WideGaugeStatCard(
             box,
             title,
@@ -6093,6 +6498,7 @@ class WideGaugeStatCard:
             plot_color,
             data,
             commands,
+            chromeless,
         )
 
 
@@ -6114,6 +6520,7 @@ class WideSeriesStatCard:
             plot_color: Optional[str] = None,
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
+            chromeless: Optional[bool] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6141,6 +6548,8 @@ class WideSeriesStatCard:
         """Data for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.chromeless = chromeless
+        """A boolean indicating whether card styling (chrome) should be turned off."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6171,6 +6580,7 @@ class WideSeriesStatCard:
             plot_color=self.plot_color,
             data=self.data,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            chromeless=self.chromeless,
         )
 
     @staticmethod
@@ -6201,6 +6611,7 @@ class WideSeriesStatCard:
         __d_plot_color: Any = __d.get('plot_color')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
+        __d_chromeless: Any = __d.get('chromeless')
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -6214,6 +6625,7 @@ class WideSeriesStatCard:
         plot_color: Optional[str] = __d_plot_color
         data: Optional[PackedRecord] = __d_data
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        chromeless: Optional[bool] = __d_chromeless
         return WideSeriesStatCard(
             box,
             title,
@@ -6228,4 +6640,5 @@ class WideSeriesStatCard:
             plot_color,
             data,
             commands,
+            chromeless,
         )

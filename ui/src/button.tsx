@@ -65,7 +65,7 @@ const
     around: 'space-around',
   }
 
-const
+export const
   XButton = bond(({ model: m }: { model: Button }) => {
     qd.args[m.name] = false
     const

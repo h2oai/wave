@@ -98,6 +98,7 @@ const
   reservedWords = ['view', 'box'],
   boxComment = 'A string indicating how to place this component on the page.',
   commandsComment = 'Contextual menu commands for this component.',
+  chromelessComment = 'A boolean indicating whether card styling (chrome) should be turned off.',
   noComment = 'No documentation available.',
   toLookup = (xs: S[]): Dict<B> => {
     const d: Dict<B> = {}
@@ -228,7 +229,10 @@ const
           // All cards can optionally have a contextual menu.
           if (isRoot) members.push({ t: MemberT.Repeated, name: 'commands', typeName: 'Command', isOptional: true, comments: [commandsComment], isPacked: false })
 
-          const isUnion = !members.filter(m => !m.isOptional).length // all members are optional?
+          // All cards can optionally have a way of disabling card styling.
+          if (isRoot) members.push({ t: MemberT.Singular, name: 'chromeless', typeName: 'B', isOptional: true, comments: [chromelessComment], isPacked: false })
+
+          const isUnion = members.every(m => m.isOptional) // all members are optional?
           file.types.push({ name: typeName, file: file.name, comments, members, isRoot, isUnion })
       }
     })

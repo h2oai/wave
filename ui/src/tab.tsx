@@ -33,7 +33,15 @@ export const
           items = state.items.map(({ name, label, icon }) => (
             <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
           ))
-        return <Pivot data-test='tab' linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
+        return (
+          <Pivot
+            data-test='tab'
+            linkFormat={linkFormat}
+            onLinkClick={onLinkClick}
+            styles={{ link: { background: 'inherit' } }}
+            defaultSelectedKey={state.value}
+          >{items}</Pivot>
+        )
 
       }
     return { render, changed }

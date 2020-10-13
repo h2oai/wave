@@ -58,6 +58,7 @@ def breadcrumbs_card(
         box: str,
         items: List[Breadcrumb],
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> BreadcrumbsCard:
     """Create a card containing breadcrumbs.
     Breadcrumbs should be used as a navigational aid in your app or site.
@@ -71,6 +72,7 @@ def breadcrumbs_card(
         box: A string indicating how to place this component on the page.
         items: A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.BreadcrumbsCard` instance.
     """
@@ -78,6 +80,7 @@ def breadcrumbs_card(
         box,
         items,
         commands,
+        chromeless,
     )
 
 
@@ -91,6 +94,7 @@ def flex_card(
         align: Optional[str] = None,
         wrap: Optional[str] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> FlexCard:
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
@@ -105,6 +109,7 @@ def flex_card(
         align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'.
         wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.FlexCard` instance.
     """
@@ -118,6 +123,7 @@ def flex_card(
         align,
         wrap,
         commands,
+        chromeless,
     )
 
 
@@ -1759,6 +1765,7 @@ def form_card(
         box: str,
         items: Union[List[Component], str],
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> FormCard:
     """Create a form.
 
@@ -1766,6 +1773,7 @@ def form_card(
         box: A string indicating how to place this component on the page.
         items: The components in this form.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.FormCard` instance.
     """
@@ -1773,6 +1781,7 @@ def form_card(
         box,
         items,
         commands,
+        chromeless,
     )
 
 
@@ -1782,6 +1791,7 @@ def frame_card(
         path: Optional[str] = None,
         content: Optional[str] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> FrameCard:
     """Render a card containing a HTML page inside an inline frame (an `iframe`).
 
@@ -1793,6 +1803,7 @@ def frame_card(
         path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
         content: The HTML content of the page. A string containing `<html>...</html>`
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.FrameCard` instance.
     """
@@ -1802,6 +1813,7 @@ def frame_card(
         path,
         content,
         commands,
+        chromeless,
     )
 
 
@@ -1813,6 +1825,7 @@ def graphics_card(
         width: Optional[str] = None,
         height: Optional[str] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> GraphicsCard:
     """Create a card for displaying vector graphics.
 
@@ -1824,6 +1837,7 @@ def graphics_card(
         width: The displayed width of the rectangular viewport. (Not the width of its coordinate system.)
         height: The displayed height of the rectangular viewport. (Not the height of its coordinate system.)
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.GraphicsCard` instance.
     """
@@ -1835,6 +1849,7 @@ def graphics_card(
         width,
         height,
         commands,
+        chromeless,
     )
 
 
@@ -1844,6 +1859,7 @@ def grid_card(
         cells: PackedData,
         data: PackedData,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> GridCard:
     """EXPERIMENTAL. DO NOT USE.
 
@@ -1853,6 +1869,7 @@ def grid_card(
         cells: EXPERIMENTAL. DO NOT USE.
         data: EXPERIMENTAL. DO NOT USE.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.GridCard` instance.
     """
@@ -1862,6 +1879,7 @@ def grid_card(
         cells,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -1872,6 +1890,7 @@ def header_card(
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> HeaderCard:
     """Render a card containing a HTML page inside an inline frame (iframe).
 
@@ -1884,6 +1903,7 @@ def header_card(
         icon: The icon type, displayed to the left.
         icon_color: The icon's color.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.HeaderCard` instance.
     """
@@ -1894,6 +1914,7 @@ def header_card(
         icon,
         icon_color,
         commands,
+        chromeless,
     )
 
 
@@ -1904,6 +1925,7 @@ def image_card(
         image: str,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> ImageCard:
     """Create a card that displays a base64-encoded image.
 
@@ -1914,6 +1936,7 @@ def image_card(
         image: Image data, base64-encoded.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.ImageCard` instance.
     """
@@ -1924,6 +1947,82 @@ def image_card(
         image,
         data,
         commands,
+        chromeless,
+    )
+
+
+def call_to_action_button(
+        label: str,
+        name: str,
+) -> CallToActionButton:
+    """Specify a button that leads a user to his first step in your app.
+
+    Args:
+        label: Label displayed on a button.
+        name: Route link to go to after clicking. Has to start with #.
+    Returns:
+        A `h2o_q.types.CallToActionButton` instance.
+    """
+    return CallToActionButton(
+        label,
+        name,
+    )
+
+
+def feature(
+        icon: str,
+        title: str,
+        description: str,
+) -> Feature:
+    """Creates a feature section you can use to provide a reasons for using your app
+
+    Args:
+        icon: Feature icon.
+        title: Feature title.
+        description: Feature description.
+    Returns:
+        A `h2o_q.types.Feature` instance.
+    """
+    return Feature(
+        icon,
+        title,
+        description,
+    )
+
+
+def landing_page_card(
+        box: str,
+        header: str,
+        subheader: str,
+        image: str,
+        call_to_action_button: CallToActionButton,
+        features: Optional[List[Feature]] = None,
+        commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
+) -> LandingPageCard:
+    """Create a landing page card.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        header: Landing page header.
+        subheader: Landing page subheader.
+        image: App image name located in www folder.
+        call_to_action_button: Call to action button to guide user to the next step in using your app.
+        features: The navigation groups contained in this pane.
+        commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
+    Returns:
+        A `h2o_q.types.LandingPageCard` instance.
+    """
+    return LandingPageCard(
+        box,
+        header,
+        subheader,
+        image,
+        call_to_action_button,
+        features,
+        commands,
+        chromeless,
     )
 
 
@@ -1939,6 +2038,7 @@ def large_bar_stat_card(
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> LargeBarStatCard:
     """Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
 
@@ -1954,6 +2054,7 @@ def large_bar_stat_card(
         plot_color: The color of the progress bar.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.LargeBarStatCard` instance.
     """
@@ -1969,6 +2070,7 @@ def large_bar_stat_card(
         plot_color,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -1980,6 +2082,7 @@ def large_stat_card(
         caption: str,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> LargeStatCard:
     """Create a stat card displaying a primary value, an auxiliary value and a caption.
 
@@ -1991,6 +2094,7 @@ def large_stat_card(
         caption: The caption displayed below the primary value.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.LargeStatCard` instance.
     """
@@ -2002,6 +2106,7 @@ def large_stat_card(
         caption,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2012,6 +2117,7 @@ def list_card(
         item_props: PackedRecord,
         data: PackedData,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> ListCard:
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards laid out in the form of a list (vertically, top-to-bottom).
@@ -2023,6 +2129,7 @@ def list_card(
         item_props: The child card properties.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.ListCard` instance.
     """
@@ -2033,6 +2140,7 @@ def list_card(
         item_props,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2044,6 +2152,7 @@ def list_item1_card(
         aux_value: str,
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> ListItem1Card:
     """EXPERIMENTAL. DO NOT USE.
 
@@ -2055,6 +2164,7 @@ def list_item1_card(
         aux_value: EXPERIMENTAL. DO NOT USE.
         data: EXPERIMENTAL. DO NOT USE.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.ListItem1Card` instance.
     """
@@ -2066,6 +2176,7 @@ def list_item1_card(
         aux_value,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2075,6 +2186,7 @@ def markdown_card(
         content: str,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> MarkdownCard:
     """Create a card that renders Markdown content.
 
@@ -2089,6 +2201,7 @@ def markdown_card(
         content: The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
         data: Additional data for the card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.MarkdownCard` instance.
     """
@@ -2098,6 +2211,7 @@ def markdown_card(
         content,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2106,6 +2220,7 @@ def markup_card(
         title: str,
         content: str,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> MarkupCard:
     """Render HTML content.
 
@@ -2114,6 +2229,7 @@ def markup_card(
         title: The title for this card.
         content: The HTML content.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.MarkupCard` instance.
     """
@@ -2122,6 +2238,7 @@ def markup_card(
         title,
         content,
         commands,
+        chromeless,
     )
 
 
@@ -2133,6 +2250,7 @@ def meta_card(
         redirect: Optional[str] = None,
         layout: Optional[str] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> MetaCard:
     """Represents page-global state.
 
@@ -2147,6 +2265,7 @@ def meta_card(
         redirect: Redirect the page to a new URL.
         layout: Pick a layout mode. Defaults to Grid.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.MetaCard` instance.
     """
@@ -2158,6 +2277,7 @@ def meta_card(
         redirect,
         layout,
         commands,
+        chromeless,
     )
 
 
@@ -2201,6 +2321,7 @@ def nav_card(
         box: str,
         items: List[NavGroup],
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> NavCard:
     """Create a card containing a navigation pane.
 
@@ -2208,6 +2329,7 @@ def nav_card(
         box: A string indicating how to place this component on the page.
         items: The navigation groups contained in this pane.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.NavCard` instance.
     """
@@ -2215,6 +2337,7 @@ def nav_card(
         box,
         items,
         commands,
+        chromeless,
     )
 
 
@@ -2223,6 +2346,7 @@ def pixel_art_card(
         title: str,
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> PixelArtCard:
     """Create a card displaying a collaborative Pixel art tool, just for kicks.
 
@@ -2231,6 +2355,7 @@ def pixel_art_card(
         title: The title for this card.
         data: The data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.PixelArtCard` instance.
     """
@@ -2239,6 +2364,7 @@ def pixel_art_card(
         title,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2248,6 +2374,7 @@ def plot_card(
         data: PackedRecord,
         plot: Plot,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> PlotCard:
     """Create a card displaying a plot.
 
@@ -2257,6 +2384,7 @@ def plot_card(
         data: Data for this card.
         plot: The plot to be displayed in this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.PlotCard` instance.
     """
@@ -2266,6 +2394,7 @@ def plot_card(
         data,
         plot,
         commands,
+        chromeless,
     )
 
 
@@ -2275,6 +2404,7 @@ def repeat_card(
         item_props: PackedRecord,
         data: PackedData,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> RepeatCard:
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards.
@@ -2285,6 +2415,7 @@ def repeat_card(
         item_props: The child card properties.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.RepeatCard` instance.
     """
@@ -2294,6 +2425,7 @@ def repeat_card(
         item_props,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2326,6 +2458,7 @@ def side_nav_card(
         items: List[NavGroup],
         header: Optional[SideNavHeader] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> SideNavCard:
     """No documentation available.
 
@@ -2334,6 +2467,7 @@ def side_nav_card(
         items: The navigation groups contained in this pane.
         header: Render a branding header as part of the side navigation.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.SideNavCard` instance.
     """
@@ -2342,6 +2476,7 @@ def side_nav_card(
         items,
         header,
         commands,
+        chromeless,
     )
 
 
@@ -2358,6 +2493,7 @@ def small_series_stat_card(
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> SmallSeriesStatCard:
     """Create a small stat card displaying a primary value and a series plot.
 
@@ -2374,6 +2510,7 @@ def small_series_stat_card(
         plot_color: The plot's color.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.SmallSeriesStatCard` instance.
     """
@@ -2390,6 +2527,7 @@ def small_series_stat_card(
         plot_color,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2399,6 +2537,7 @@ def small_stat_card(
         value: str,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> SmallStatCard:
     """Create a stat card displaying a single value.
 
@@ -2408,6 +2547,7 @@ def small_stat_card(
         value: The primary value displayed.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.SmallStatCard` instance.
     """
@@ -2417,6 +2557,7 @@ def small_stat_card(
         value,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2426,6 +2567,7 @@ def tab_card(
         value: Optional[str] = None,
         link: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> TabCard:
     """Create a card containing tabs for navigation.
 
@@ -2435,6 +2577,7 @@ def tab_card(
         value: The name of the tab to select.
         link: True if tabs should be rendered as links and not a standard tab.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.TabCard` instance.
     """
@@ -2444,6 +2587,7 @@ def tab_card(
         value,
         link,
         commands,
+        chromeless,
     )
 
 
@@ -2456,6 +2600,7 @@ def tall_gauge_stat_card(
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> TallGaugeStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
 
@@ -2468,6 +2613,7 @@ def tall_gauge_stat_card(
         plot_color: The color of the progress gauge.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.TallGaugeStatCard` instance.
     """
@@ -2480,6 +2626,7 @@ def tall_gauge_stat_card(
         plot_color,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2497,6 +2644,7 @@ def tall_series_stat_card(
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> TallSeriesStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
 
@@ -2514,6 +2662,7 @@ def tall_series_stat_card(
         plot_color: The plot's color.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.TallSeriesStatCard` instance.
     """
@@ -2531,6 +2680,7 @@ def tall_series_stat_card(
         plot_color,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2540,6 +2690,7 @@ def template_card(
         content: str,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> TemplateCard:
     """Render dynamic content using a HTML template.
 
@@ -2549,6 +2700,7 @@ def template_card(
         content: The Handlebars template. https://handlebarsjs.com/guide/
         data: Data for the Handlebars template
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.TemplateCard` instance.
     """
@@ -2558,6 +2710,7 @@ def template_card(
         content,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2567,6 +2720,7 @@ def toolbar_card(
         secondary_items: Optional[List[Command]] = None,
         overflow_items: Optional[List[Command]] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> ToolbarCard:
     """Create a card containing a toolbar.
 
@@ -2576,6 +2730,7 @@ def toolbar_card(
         secondary_items: Items to render on the right side (or left, in RTL).
         overflow_items: Items to render in an overflow menu.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.ToolbarCard` instance.
     """
@@ -2585,6 +2740,7 @@ def toolbar_card(
         secondary_items,
         overflow_items,
         commands,
+        chromeless,
     )
 
 
@@ -2617,6 +2773,7 @@ def top_nav_card(
         header: TopNavHeader,
         items: List[Command],
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> TopNavCard:
     """Navigation component that is fixed at the top.
 
@@ -2625,6 +2782,7 @@ def top_nav_card(
         header: The header displayed in the top left corner.
         items: Navigation tabs links to be displayed in top nav.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.TopNavCard` instance.
     """
@@ -2633,6 +2791,7 @@ def top_nav_card(
         header,
         items,
         commands,
+        chromeless,
     )
 
 
@@ -2642,6 +2801,7 @@ def vega_card(
         specification: str,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> VegaCard:
     """Create a card containing a Vega-lite plot.
 
@@ -2651,6 +2811,7 @@ def vega_card(
         specification: The Vega-lite specification.
         data: Data for the plot, if any.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.VegaCard` instance.
     """
@@ -2660,6 +2821,7 @@ def vega_card(
         specification,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2672,6 +2834,7 @@ def wide_bar_stat_card(
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> WideBarStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a progress bar.
 
@@ -2684,6 +2847,7 @@ def wide_bar_stat_card(
         plot_color: The color of the progress bar.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.WideBarStatCard` instance.
     """
@@ -2696,6 +2860,7 @@ def wide_bar_stat_card(
         plot_color,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2708,6 +2873,7 @@ def wide_gauge_stat_card(
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> WideGaugeStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a progress gauge.
 
@@ -2720,6 +2886,7 @@ def wide_gauge_stat_card(
         plot_color: The color of the progress gauge.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.WideGaugeStatCard` instance.
     """
@@ -2732,6 +2899,7 @@ def wide_gauge_stat_card(
         plot_color,
         data,
         commands,
+        chromeless,
     )
 
 
@@ -2749,6 +2917,7 @@ def wide_series_stat_card(
         plot_color: Optional[str] = None,
         data: Optional[PackedRecord] = None,
         commands: Optional[List[Command]] = None,
+        chromeless: Optional[bool] = None,
 ) -> WideSeriesStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
 
@@ -2766,6 +2935,7 @@ def wide_series_stat_card(
         plot_color: The plot's color.
         data: Data for this card.
         commands: Contextual menu commands for this component.
+        chromeless: A boolean indicating whether card styling (chrome) should be turned off.
     Returns:
         A `h2o_q.types.WideSeriesStatCard` instance.
     """
@@ -2783,4 +2953,5 @@ def wide_series_stat_card(
         plot_color,
         data,
         commands,
+        chromeless,
     )
