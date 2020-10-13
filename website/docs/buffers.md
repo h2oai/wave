@@ -60,7 +60,7 @@ Use the `data()` function to declare a data buffer. The Q server uses this decla
 
 `data()` takes multiple arguments:
 
-- `fields`: The names of columns, in order; a space-separate string or a list or a tuple (`foo bar` or `['foo', 'bar']` or `('foo', 'bar')`.
+- `fields`: The names of columns, in order; a space-separated string or a list or a tuple (`'foo bar'` or `['foo', 'bar']` or `('foo', 'bar')`.
 - `size`: The number of rows to allocate.
     - A positive row count creates an array buffer.
     - A negative row count creates a cyclic buffer.
@@ -114,7 +114,8 @@ b = data(fields='donut price', rows=dict(
 ))
 ```
 
-Modify a buffer row
+Modify a buffer row:
+
 ```py 
 # Array buffer
 b[2] = ['cinnamon', 2.99]
@@ -122,21 +123,26 @@ b[2] = ['cinnamon', 2.99]
 # Cyclic buffer
 b[-1] = ['fruit', 2.99] # replaces ['sugar', 1.99]
 
-# Map buffer
+# Map buffer (the following two forms are equivalent)
 b['cin'] = ['cinnamon', 2.99]
+b.cin = ['cinnamon', 2.99]
 ```
 
-Modify a buffer value
+Modify a buffer value:
 
 ```py 
-# Array buffer
-b[2] = ['cinnamon', 2.99]
+# Array buffer (the following two forms are equivalent)
+b[2]['price'] = 2.99
+b[2].price = 2.99
 
-# Cyclic buffer
+# Cyclic buffer (the following two forms are equivalent)
 b[-1]['price'] = 2.99 # last donut on menu now costs 2.99
+b[-1].price = 2.99
 
-# Map buffer
-b['cin'] = ['cinnamon', 2.99]
+# Map buffer (the following three forms are equivalent)
+b['cin']['price'] = 2.99
+b['cin'].price = 2.99
+b.cin.price = 2.99
 ```
 
 
