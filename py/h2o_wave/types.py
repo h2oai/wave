@@ -1870,10 +1870,13 @@ class Buttons:
     def __init__(
             self,
             items: List['Component'],
+            name: Optional[str] = None,
             justify: Optional[str] = None,
     ):
         self.items = items
         """The button in this set."""
+        self.name = name
+        """An identifying name for this component."""
         self.justify = justify
         """Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'."""
 
@@ -1883,6 +1886,7 @@ class Buttons:
             raise ValueError('Buttons.items is required.')
         return _dump(
             items=[__e.dump() for __e in self.items],
+            name=self.name,
             justify=self.justify,
         )
 
@@ -1892,11 +1896,14 @@ class Buttons:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('Buttons.items is required.')
+        __d_name: Any = __d.get('name')
         __d_justify: Any = __d.get('justify')
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        name: Optional[str] = __d_name
         justify: Optional[str] = __d_justify
         return Buttons(
             items,
+            name,
             justify,
         )
 

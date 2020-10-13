@@ -46,6 +46,8 @@ export interface Button {
 export interface Buttons {
   /** The button in this set. */
   items: Component[]
+  /** An identifying name for this component. */
+  name?: S
   /** Specifies how to lay out buttons horizontally. */
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
 }
@@ -79,7 +81,7 @@ const
       },
       render = () => {
         if (m.link) {
-          return (<Fluent.Link data-test='link' disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>)
+          return (<Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>)
         }
         return m.caption?.length
           ? m.primary
@@ -103,7 +105,7 @@ export const
             </XToolTip>
           ))
         return (
-          <div data-test='buttons' className={css.buttons}>
+          <div data-test={m.name} className={css.buttons}>
             <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
           </div>
         )
@@ -111,5 +113,5 @@ export const
     return { render }
   }),
   XStandAloneButton = ({ model: m }: { model: Button }) => (
-    <div data-test={m.name} className={css.buttons}><XButton key={m.name} model={m}>{m.label}</XButton></div>
+    <div className={css.buttons}><XButton key={m.name} model={m}>{m.label}</XButton></div>
   )

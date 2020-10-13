@@ -1031,16 +1031,20 @@ ui_button <- function(
 #' Create a set of buttons to be layed out horizontally.
 #'
 #' @param items The button in this set.
+#' @param name An identifying name for this component.
 #' @param justify Specifies how to lay out buttons horizontally.
 #'   One of 'start', 'end', 'center', 'between', 'around'.
 #' @return A Buttons instance.
 ui_buttons <- function(
   items,
+  name = NULL,
   justify = NULL) {
   .guard_vector("items", "h2oq_Component", items)
+  .guard_scalar("name", "character", name)
   # TODO Validate justify
   .o <- list(buttons=list(
     items=items,
+    name=name,
     justify=justify))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)

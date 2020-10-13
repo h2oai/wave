@@ -14,7 +14,17 @@ describe('Button.tsx', () => {
     jest.clearAllMocks()
   })
 
-  it('Renders data-test attr', () => {
+  it('Renders data-test attr for Buttons', () => {
+    const { queryByTestId } = render(<XButtons model={{ items: [], name }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
+  it('Does not render data-test attr for Buttons', () => {
+    const { container } = render(<XButtons model={{ items: [] }} />)
+    expect(container.querySelectorAll('[data-test]')).toHaveLength(0)
+  })
+
+  it('Renders data-test attr for Button', () => {
     const { queryByTestId } = render(<XButtons model={btnProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
@@ -90,12 +100,12 @@ describe('Button.tsx', () => {
     const btnLinkProps: Buttons = { items: [{ button: { name, label: name, link: true } }] }
     const { getByTestId } = render(<XButtons model={btnLinkProps} />)
 
-    expect(getByTestId('link')).toBeTruthy()
+    expect(getByTestId(name)).toHaveClass('ms-Link')
   })
 
   it('Does not render a link when not specified', () => {
     const { queryByTestId } = render(<XButtons model={btnProps} />)
 
-    expect(queryByTestId('link')).toBeFalsy()
+    expect(queryByTestId(name)).not.toHaveClass('ms-Link')
   })
 })
