@@ -91,7 +91,7 @@ export const
             )
           })
         return (
-          <div data-test='pixel_art' className={css.card}>
+          <div data-test={name} className={css.card}>
             <div className={css.title}>{s.title}</div>
             <div className={css.canvas}>{pixels}</div>
             <div className={css.swatches}>

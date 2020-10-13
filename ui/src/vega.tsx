@@ -83,11 +83,11 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
         return (
-          <div data-test='vega' className={css.card}>
+          <div data-test={name} className={css.card}>
             <div className={css.title}>{state.title}</div>
             <div className={css.plot}>
               <XVegaVisualization key={xid()} model={{ specification: state.specification, data: state.data, width: 'auto', height: 'auto' }} />

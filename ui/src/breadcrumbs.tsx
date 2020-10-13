@@ -15,8 +15,8 @@ interface Breadcrumb {
  * Breadcrumbs should be used as a navigational aid in your app or site.
  * They indicate the current page’s location within a hierarchy and help
  * the user understand where they are in relation to the rest of that hierarchy.
- * They also afford one-click access to higher levels of that hierarchy. 
- * Breadcrumbs are typically placed, in horizontal form, under the masthead 
+ * They also afford one-click access to higher levels of that hierarchy.
+ * Breadcrumbs are typically placed, in horizontal form, under the masthead
  * or navigation of an experience, above the primary content area.
  */
 interface State {
@@ -25,7 +25,7 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       items = state.items.map(({ name, label }) => ({
         key: name,
@@ -40,7 +40,7 @@ export const
         }
       }
       )),
-      render = () => <Breadcrumb data-test='breadcrumbs' items={items} />
+      render = () => <Breadcrumb data-test={name} items={items} />
 
     return { render, changed }
   })

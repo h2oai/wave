@@ -65,9 +65,9 @@ export const XFrame = ({ model: { path, content, width, height } }: { model: Fra
 )
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const render = () => (
-      <div data-test='frame' className={css.card}>
+      <div data-test={name} className={css.card}>
         <div className={css.title}>{state.title}</div>
         <div className={css.body}>
           <InlineFrame path={state.path} content={state.content} />

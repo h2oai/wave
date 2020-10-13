@@ -55,9 +55,9 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const render = () => (
-      <div data-test='header' className={css.card}>
+      <div data-test={name} className={css.card}>
         <div className={css.lhs}>
           <FontIcon className={css.icon} style={{ color: theme.color(state.icon_color) }} iconName={state.icon || 'WebComponents'} />
         </div>

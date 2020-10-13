@@ -32,16 +32,12 @@ export const
       }
     return { render }
   }),
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       template = Handlebars.compile(state.content || ''),
       render = () => {
         const data = unpack(state.data)
-        return (
-          <div data-test='template'>
-            <MarkupCard title={substitute(state.title, data)} content={template(data || {})} />
-          </div>
-        )
+        return <MarkupCard name={name} title={substitute(state.title, data)} content={template(data || {})} />
       }
     return { render, changed }
   })

@@ -60,7 +60,7 @@ const
   }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
         const
@@ -71,7 +71,7 @@ export const
         return (
           <div>
             <CommandBar
-              data-test='toolbar'
+              data-test={name}
               items={commands}
               overflowItems={overflowCommands}
               overflowButtonProps={overflowProps}

@@ -85,7 +85,7 @@ const
   get2 = (d: any) => d[2]
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     type El = { d: S, o: S }
 
     const
@@ -153,7 +153,7 @@ export const
             ...(o ? JSON.parse(o) : {}),
           }, i)) : []
         return (
-          <div data-test='graphics'>
+          <div data-test={name}>
             <svg viewBox={view_box} width={width} height={height}>
               <g>{stageEls}</g>
               <g>{sceneEls}</g>
