@@ -42,7 +42,7 @@ linear_scale_command = ui.command(
 )
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if q.client.plot_added:  # Have we already added a plot?
         example = q.page['example']
         if q.args.to_log_scale:
@@ -69,5 +69,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

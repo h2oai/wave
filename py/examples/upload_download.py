@@ -7,7 +7,7 @@ import os
 import os.path
 from h2o_q import Q, listen, ui
 
-async def main(q: Q):
+async def serve(q: Q):
     links = q.args.user_files
     if links:
         items = [ui.text_xl('Files uploaded!')]
@@ -33,5 +33,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

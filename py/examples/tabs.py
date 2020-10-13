@@ -10,7 +10,7 @@ tabs = [
 ]
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if q.args.menu:
         q.page['example'].items = [
             ui.tabs(name='menu', value=q.args.menu, items=tabs),
@@ -30,5 +30,4 @@ def get_tab_content(category: str):
     return ui.checklist(name='items', choices=[ui.choice(name=item, label=item) for item in items])
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

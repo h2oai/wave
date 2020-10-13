@@ -6,7 +6,7 @@ from h2o_q import Q, listen, ui
 combobox_choices = ['Cyan', 'Magenta', 'Yellow', 'Black']
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'combobox={q.args.combobox}'),
@@ -27,5 +27,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

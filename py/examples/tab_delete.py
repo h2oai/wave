@@ -22,7 +22,7 @@ async def remove_cards(q: Q):
     await q.page.save()
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if not q.client.initialized:
         q.client.tab = 'a'
         q.page['tabs'] = ui.tab_card(  # Initialize once
@@ -39,5 +39,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

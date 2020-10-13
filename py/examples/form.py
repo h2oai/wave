@@ -37,7 +37,7 @@ n = 20
 def rnd(): return random.randint(1, 100)
 
 
-async def main(q: Q):
+async def serve(q: Q):
     q.page['example'] = ui.form_card(box='1 1 4 10', items=[
         ui.text_xl(content='Extra-large text, for headings.'),
         ui.text_l(content='Large text, for sub-headings.'),
@@ -130,5 +130,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

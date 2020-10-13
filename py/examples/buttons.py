@@ -4,7 +4,7 @@
 from h2o_q import Q, listen, ui
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if 'standard_button' in q.args:
         q.page['example'].items = [
             ui.text(f'primary_button={q.args.primary_button}'),
@@ -23,5 +23,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

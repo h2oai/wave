@@ -11,7 +11,7 @@ choices = [
 ]
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'selected={q.args.choice_group}'),
@@ -25,5 +25,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

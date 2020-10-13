@@ -4,7 +4,7 @@
 from h2o_q import Q, listen, ui, pack
 
 
-async def main(q: Q):
+async def serve(q: Q):
     count = q.client.count or 0
     if 'increment' in q.args:
         count += 1
@@ -21,5 +21,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

@@ -12,7 +12,7 @@ def write_csv(filename, rows):
         f.write('\n'.join([','.join([str(x) for x in row]) for row in rows]))
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if q.args.generate_csv:
         # Generate
         write_csv('squares.csv', [[x, x * x] for x in range(1, 1 + q.args.row_count)])
@@ -37,5 +37,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

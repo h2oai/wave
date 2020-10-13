@@ -44,7 +44,7 @@ columns = [
 ]
 
 
-async def main(q: Q):
+async def serve(q: Q):
     q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
         ui.table(
             name='issues',
@@ -58,4 +58,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-listen('/demo', main)
+listen('/demo', serve)

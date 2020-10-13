@@ -13,7 +13,7 @@ def make_link_list(links):
     return '\n'.join([f'- [{os.path.basename(link)}]({link})' for link in links])
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if q.args.user_files:
         q.page['example'].items = [
             ui.text_xl('Files uploaded!'),
@@ -28,5 +28,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

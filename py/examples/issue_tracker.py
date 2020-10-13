@@ -120,7 +120,7 @@ async def reopen_issues(q: Q):
     await show_issues(q)
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if q.args.edit_multiple:
         await edit_multiple(q)
     elif q.args.reopen_issues:
@@ -137,4 +137,4 @@ async def main(q: Q):
         await show_issues(q)
 
 
-listen('/demo', main)
+listen('/demo', serve)

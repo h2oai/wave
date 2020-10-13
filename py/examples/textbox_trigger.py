@@ -20,7 +20,7 @@ def to_pig_latin(text: str):
     return " ".join(text)
 
 
-async def main(q: Q):
+async def serve(q: Q):
     q.page['example'] = ui.form_card(box='1 1 4 10', items=[
         ui.textbox(name='text', label='English', value=q.args.text or '', multiline=True, trigger=True),
         ui.label('Pig Latin'),
@@ -29,5 +29,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

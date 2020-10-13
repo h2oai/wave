@@ -8,7 +8,7 @@
 from h2o_q import Q, listen, ui
 
 
-async def main(q: Q):
+async def serve(q: Q):
     hash = q.args['#']
     if hash:
         blurb = q.page['blurb']
@@ -38,5 +38,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

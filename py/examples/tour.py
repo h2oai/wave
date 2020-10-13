@@ -179,7 +179,7 @@ async def show_example(q: Q, example: Example):
     await q.page.save()
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if not q.client.initialized:
         q.client.initialized = True
         await setup_page(q)
@@ -200,4 +200,4 @@ if __name__ == '__main__':
     print('')
     print(' Go to http://localhost:55555/tour')
     print('----------------------------------------')
-    listen('/tour', main)
+    listen('/tour', serve)

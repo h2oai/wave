@@ -4,7 +4,7 @@
 from h2o_q import Q, listen, ui
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'spinbox={q.args.spinbox}'),
@@ -21,5 +21,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

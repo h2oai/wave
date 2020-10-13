@@ -69,7 +69,7 @@ def create_grid(n_rows, n_cols, fill, width, height, stroke, stroke_width):
     return grid
 
 
-def main(pattern):
+def render(pattern):
     page = site['/demo']
 
     page_cols = 4
@@ -158,10 +158,5 @@ def make_glider_gun(r, c):
     ]
 
 
-def app():
-    glider_gun = make_glider_gun(2, 2)
-    main(glider_gun)
+render(make_glider_gun(2, 2))
 
-
-if __name__ == '__main__':
-    app()

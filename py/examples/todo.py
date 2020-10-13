@@ -17,7 +17,7 @@ class TodoItem:
         self.text = text
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if q.args.new_todo:  # Display an input form.
         await new_todo(q)
     elif q.args.add_todo:  # Add an item.
@@ -75,5 +75,4 @@ async def new_todo(q: Q):
     await q.page.save()
 
 
-if __name__ == '__main__':
-    listen('/demo', main)
+listen('/demo', serve)

@@ -31,7 +31,7 @@ def search_df(df: pd.DataFrame, term: str):
     return df[str_cols.apply(lambda column: column.str.contains(term, case=False, na=False)).any(axis=1)]
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if not q.client.initialized:
         q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
             ui.textbox(name='search', label='Search', placeholder='Enter a keyword...', trigger=True),
@@ -54,4 +54,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-listen('/demo', main)
+listen('/demo', serve)

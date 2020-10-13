@@ -31,7 +31,7 @@ def make_hilbert_curve(width: float, depth: int):
     return t.d()
 
 
-async def main(q: Q):
+async def serve(q: Q):
     hilbert_curve = make_hilbert_curve(300, q.args.depth or 5)
 
     if not q.client.initialized:
@@ -53,4 +53,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-listen('/demo', main)
+listen('/demo', serve)

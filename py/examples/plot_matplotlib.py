@@ -11,7 +11,7 @@ from h2o_q import ui, listen, Q
 np.random.seed(19680801)
 
 
-async def main(q: Q):
+async def serve(q: Q):
     if not q.client.initialized:  # First visit
         q.client.initialized = True
         q.client.points = 25
@@ -59,4 +59,4 @@ async def main(q: Q):
     await q.page.save()
 
 
-listen('/demo', main)
+listen('/demo', serve)
