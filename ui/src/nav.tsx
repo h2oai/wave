@@ -26,7 +26,7 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
         const groups = state.items.map((g): INavLinkGroup => ({
@@ -45,7 +45,7 @@ export const
             }
           }))
         }))
-        return <div data-test='nav'><Nav groups={groups} /></div>
+        return <div data-test={name}><Nav groups={groups} /></div>
       }
     return { render, changed }
   })

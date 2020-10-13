@@ -50,13 +50,13 @@ interface State {
 }
 
 export const
-  View = bond(({ state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Card<State>) => {
     const
       render = () => {
         const data = unpack(s.data)
 
         return (
-          <div data-test='wide_bar_stat' className={css.card}>
+          <div data-test={name} className={css.card}>
             <div className={css.title}>
               <Format data={data} format={s.title} />
             </div>

@@ -783,12 +783,12 @@ interface State {
 }
 
 export const
-  View = bond(({ state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
         const { title, plot, data } = state
         return (
-          <div data-test='plot' className={css.card}>
+          <div data-test={name} className={css.card}>
             <div className={css.title}>{title || 'Untitled'}</div>
             <div className={css.plot}>
               <XVisualization model={{ plot, data, width: 'auto', height: 'auto' }} />
