@@ -13,6 +13,7 @@ from requests.auth import HTTPBasicAuth
 from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite
 from .ui import markdown_card
 
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
@@ -48,6 +49,7 @@ class Query:
             app_state: Expando,
             user_state: Expando,
             client_state: Expando,
+            auth: Expando,
             args: Expando,
     ):
         self.mode = mode
@@ -68,6 +70,8 @@ class Query:
         """The username of the user who initiated the active request."""
         self.route = route
         """The route served by the server."""
+        self.auth = auth
+        """The username and subject ID of the user who initiated the active request."""
 
     async def sleep(self, delay):
         await asyncio.sleep(delay)
@@ -102,42 +106,46 @@ class _Server:
 _server: Optional[_Server] = None
 
 
-def _parse_request(req: str):
+def _parse_request(req: str) -> Tuple[str, str, str, str]:
     username = ''
+    subject = ''
     client_id = ''
 
     # format:
-    # u:username\nc:client_id\n\nbody
+    # u:username\ns:subject\nc:client_id\n\nbody
 
     head, body = req.split('\n\n', maxsplit=1)
-    for line in req.splitlines():
+    for line in head.splitlines():
         kv = line.split(':', maxsplit=1)
         if len(kv) == 2:
             k, v = kv
             if k == 'u':
                 username = v
+            elif k == 's':
+                subject = v
             elif k == 'c':
                 client_id = v
 
-    return username, client_id, body
+    return username, subject, client_id, body
 
 
 async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
     site = AsyncSite(ws)
     async for req in ws:
-        username, client_id, args = _parse_request(req)
+        username, subject, client_id, args = _parse_request(req)
         logger.debug(f'user: {username}, client: {client_id}')
         logger.debug(args)
         app_state, user_state, client_state = _server.state
         q = Q(
             site=site,
             mode=_server.mode,
-            username=username,
+            username=username,  # Deprecated?
             client_id=client_id,
             route=_server.route,
             app_state=app_state,
             user_state=_session_for(user_state, username),
             client_state=_session_for(client_state, client_id),
+            auth=Expando({'username': username, 'subject': subject}),
             args=Expando(unmarshal(args)),
         )
         # noinspection PyBroadException,PyPep8
@@ -196,7 +204,7 @@ def listen(route: str, handle: HandleAsync, mode=UNICAST):
     logger.info(f'Hub Address: {_config.hub_address}')
     logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
     logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
-    logger.info(f'Shutdown Timeout{_config.shutdown_timeout}')
+    logger.info(f'Shutdown Timeout [seconds]: {_config.shutdown_timeout}')
 
     el = asyncio.get_event_loop()
     stop_server = el.create_future()

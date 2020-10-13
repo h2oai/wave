@@ -2,8 +2,10 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { GridLayout } from './layout'
 import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, qd } from './qd'
+import Login from './login'
 import { getTheme, pc, clas } from './theme'
 import { Spinner, SpinnerSize } from '@fluentui/react'
+import { Switch, Route, BrowserRouter } from 'react-router-dom'
 
 const
   theme = getTheme(),
@@ -75,6 +77,32 @@ const
       }
 
     return { init, render, dispose, contentB }
+  }),
+  Router = bond(() => {
+    const
+      routes = [
+        {
+          path: '/login',
+          exact: true,
+          render: () => <Login />,
+        },
+        {
+          path: '/',
+          exact: false,
+          render: () => <App />
+        },
+      ],
+      render = () => {
+        return (
+          <BrowserRouter>
+            <Switch>
+              {routes.map((r, i) => <Route key={i} path={r.path} exact={r.exact} render={r.render} />)}
+            </Switch>
+          </BrowserRouter>
+        )
+      }
+
+    return { render }
   })
 
-export default App
+export default Router

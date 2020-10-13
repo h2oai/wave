@@ -36,15 +36,16 @@ var (
 type Client struct {
 	id       string          // unique id
 	addr     string          // remote address
-	username string          // username, or blank
+	username string          // username, or "default-user"
+	subject  string          // oidc subject identifier
 	broker   *Broker         // broker
 	conn     *websocket.Conn // connection
 	urls     []string        // watched page urls
 	send     chan []byte     // send data
 }
 
-func newClient(addr, username string, broker *Broker, conn *websocket.Conn) *Client {
-	return &Client{uuid.New().String(), addr, username, broker, conn, nil, make(chan []byte, 256)}
+func newClient(addr, username, subject string, broker *Broker, conn *websocket.Conn) *Client {
+	return &Client{uuid.New().String(), addr, username, subject, broker, conn, nil, make(chan []byte, 256)}
 }
 
 func (c *Client) listen() {
@@ -174,6 +175,7 @@ func (c *Client) quit() {
 
 var (
 	usernameHeader = []byte("u:")
+	subjectHeader  = []byte("s:")
 	clientIDHeader = []byte("c:")
 	relayBodySep   = []byte("\n\n")
 )
@@ -183,6 +185,10 @@ func (c *Client) format(data []byte) []byte {
 
 	buf.Write(usernameHeader)
 	buf.WriteString(c.username)
+	buf.WriteByte('\n')
+
+	buf.Write(subjectHeader)
+	buf.WriteString(c.subject)
 	buf.WriteByte('\n')
 
 	buf.Write(clientIDHeader)

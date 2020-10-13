@@ -40,23 +40,25 @@ func echo(m Log) {
 
 // WebServer represents a web server (d'oh).
 type WebServer struct {
-	site   *Site
-	broker *Broker
-	fs     http.Handler
-	users  map[string][]byte
+	site     *Site
+	broker   *Broker
+	fs       http.Handler
+	users    map[string][]byte
+	sessions OIDCSessions
 }
 
 const (
 	contentTypeJSON = "application/json"
 )
 
-func newWebServer(site *Site, broker *Broker, users map[string][]byte, www string) *WebServer {
+func newWebServer(site *Site, broker *Broker, users map[string][]byte, sessions OIDCSessions, www string) *WebServer {
 	return &WebServer{
 		site,
 		broker,
 		// http.StripPrefix("/fs", http.FileServer(http.Dir(www))),
 		fallback("/", http.FileServer(http.Dir(www))),
 		users,
+		sessions,
 	}
 }
 
@@ -106,7 +108,6 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.broker.patch(url, data)
 
 	case http.MethodGet: // reads
-		// TODO auth
 		switch r.Header.Get("Content-Type") {
 		case contentTypeJSON: // data
 			page := s.site.at(url)
@@ -125,6 +126,18 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", contentTypeJSON)
 			w.Write(data)
 		default: // template
+			cookie, err := r.Cookie(oidcSessionKey)
+			if err != nil {
+				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+				return
+			}
+			sessionID := cookie.Value
+			_, ok := s.sessions[sessionID]
+			if !ok {
+				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+				return
+			}
+			// Request for manifest.json doesn't contain cookies = will not be served.
 			s.fs.ServeHTTP(w, r)
 		}
 	case http.MethodPost: // all other APIs
@@ -374,6 +387,11 @@ type ServerConf struct {
 	CertFile        string
 	KeyFile         string
 	Debug           bool
+
+	ClientID     string
+	ClientSecret string
+	ProviderURL  string
+	RedirectURL  string
 }
 
 // Run runs the HTTP server.
@@ -386,6 +404,9 @@ func Run(conf ServerConf) {
 
 	// FIXME RBAC
 	users := map[string][]byte{conf.AccessKeyID: accessKeyHash}
+
+	// FIXME SESSIONS
+	sessions := OIDCSessions{}
 
 	if len(conf.Compact) > 0 {
 		compactSite(conf.Compact)
@@ -404,11 +425,15 @@ func Run(conf ServerConf) {
 		http.Handle("/_d/site", newDebugHandler(broker))
 	}
 
-	http.Handle("/_s", newSocketServer(broker))
+	http.Handle("/_s", newSocketServer(broker, sessions))
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))   // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir)) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, users, sessions, conf.WebDir))
+
+	// OIDC
+	http.Handle("/auth/init", newOIDCInitHandler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
+	http.Handle("/oauth2/callback", newOAuth2Handler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
 
 	for _, line := range strings.Split(logo, "\n") {
 		log.Println("#", line)
