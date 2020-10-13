@@ -407,8 +407,8 @@ export const
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }
 
-        if (col.cellType?.progress) return <XProgressTableCellType key={item[col.key]} model={col.cellType.progress} progress={item[col.key]} />
-        else if (col.cellType?.icon) return <XIconTableCellType key={item[col.key]} model={col.cellType.icon} icon={item[col.key]} />
+        if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
+        else if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
 
         return <span>{v}</span>
       },

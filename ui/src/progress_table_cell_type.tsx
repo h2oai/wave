@@ -1,9 +1,9 @@
 
 import React from 'react'
-import { bond, F, S } from './qd'
-import { ProgressArc } from './parts/progress_arc'
-import { grid } from './layout'
 import { stylesheet } from 'typestyle'
+import { grid } from './layout'
+import { ProgressArc } from './parts/progress_arc'
+import { F, S } from './qd'
 import { getTheme } from './theme'
 
 const
@@ -38,16 +38,11 @@ export interface ProgressTableCellType {
   color?: S
 }
 
-export const XProgressTableCellType = bond(({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => {
-  const
-    render = () => (
-      <div className={css.container}>
-        <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(m.color || 'red')} value={progress} />
-        <div className={css.percentContainer}>
-          <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
-        </div>
-      </div>
-    )
-
-  return { render }
-})
+export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
+  <div className={css.container}>
+    <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(m.color || 'red')} value={progress} />
+    <div className={css.percentContainer}>
+      <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
+    </div>
+  </div>
+)
