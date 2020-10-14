@@ -13,7 +13,6 @@ from requests.auth import HTTPBasicAuth
 from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite
 from .ui import markdown_card
 
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
@@ -71,7 +70,7 @@ class Query:
         self.route = route
         """The route served by the server."""
         self.auth = auth
-        """The username and subject ID of the user who initiated the active request."""
+        """The username and subject ID of the authenticated user."""
 
     async def sleep(self, delay):
         await asyncio.sleep(delay)
@@ -139,7 +138,7 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
         q = Q(
             site=site,
             mode=_server.mode,
-            username=username,  # Deprecated?
+            username=username,
             client_id=client_id,
             route=_server.route,
             app_state=app_state,

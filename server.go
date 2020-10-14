@@ -40,26 +40,44 @@ func echo(m Log) {
 
 // WebServer represents a web server (d'oh).
 type WebServer struct {
-	site     *Site
-	broker   *Broker
-	fs       http.Handler
-	users    map[string][]byte
-	sessions OIDCSessions
+	site   *Site
+	broker *Broker
+	fs     http.Handler
+	users  map[string][]byte
 }
 
 const (
 	contentTypeJSON = "application/json"
 )
 
-func newWebServer(site *Site, broker *Broker, users map[string][]byte, sessions OIDCSessions, www string) *WebServer {
-	return &WebServer{
-		site,
-		broker,
-		// http.StripPrefix("/fs", http.FileServer(http.Dir(www))),
-		fallback("/", http.FileServer(http.Dir(www))),
-		users,
-		sessions,
+func newWebServer(site *Site, broker *Broker, users map[string][]byte, OIDCEnabled bool, sessions OIDCSessions, www string) *WebServer {
+	fs := fallback("/", http.FileServer(http.Dir(www)))
+	if OIDCEnabled {
+		fs = checkSession(sessions, fs)
 	}
+	return &WebServer{site, broker, fs, users}
+}
+
+func checkSession(sessions OIDCSessions, h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if len(path.Ext(r.URL.Path)) > 0 || r.URL.Path == "/_login" {
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		cookie, err := r.Cookie(oidcSessionKey)
+		if err != nil {
+			http.Redirect(w, r, "/_login", http.StatusFound)
+			return
+		}
+		sessionID := cookie.Value
+		_, ok := sessions[sessionID]
+		if !ok {
+			http.Redirect(w, r, "/_login", http.StatusFound)
+			return
+		}
+		h.ServeHTTP(w, r)
+	})
 }
 
 func fallback(prefix string, h http.Handler) http.Handler {
@@ -126,18 +144,6 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", contentTypeJSON)
 			w.Write(data)
 		default: // template
-			cookie, err := r.Cookie(oidcSessionKey)
-			if err != nil {
-				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-				return
-			}
-			sessionID := cookie.Value
-			_, ok := s.sessions[sessionID]
-			if !ok {
-				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-				return
-			}
-			// Request for manifest.json doesn't contain cookies = will not be served.
 			s.fs.ServeHTTP(w, r)
 		}
 	case http.MethodPost: // all other APIs
@@ -387,11 +393,11 @@ type ServerConf struct {
 	CertFile        string
 	KeyFile         string
 	Debug           bool
-
-	ClientID     string
-	ClientSecret string
-	ProviderURL  string
-	RedirectURL  string
+	OIDCEnabled     bool
+	ClientID        string
+	ClientSecret    string
+	ProviderURL     string
+	RedirectURL     string
 }
 
 // Run runs the HTTP server.
@@ -425,15 +431,16 @@ func Run(conf ServerConf) {
 		http.Handle("/_d/site", newDebugHandler(broker))
 	}
 
+	if conf.OIDCEnabled {
+		http.Handle("/auth/init", newOIDCInitHandler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
+		http.Handle("/oauth2/callback", newOAuth2Handler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
+	}
+
 	http.Handle("/_s", newSocketServer(broker, sessions))
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))   // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir)) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, sessions, conf.WebDir))
-
-	// OIDC
-	http.Handle("/auth/init", newOIDCInitHandler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
-	http.Handle("/oauth2/callback", newOAuth2Handler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
+	http.Handle("/", newWebServer(site, broker, users, conf.OIDCEnabled, sessions, conf.WebDir))
 
 	for _, line := range strings.Split(logo, "\n") {
 		log.Println("#", line)

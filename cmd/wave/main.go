@@ -36,8 +36,7 @@ func main() {
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
-
-	// Change names and desc
+	flag.BoolVar(&conf.OIDCEnabled, "oidc", false, "enable oidc authentication")
 	flag.StringVar(&conf.ClientID, "client-id", "", "OIDC client id")
 	flag.StringVar(&conf.ClientSecret, "client-secret", "", "OIDC client secret")
 	flag.StringVar(&conf.ProviderURL, "provider-url", "", "OIDC provider url")

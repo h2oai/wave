@@ -22,6 +22,7 @@ type OIDCSession struct {
 	refreshToken string
 	subject      string
 	username     string
+	successURL   string
 }
 
 func generateRandomKey(byteCount int) (string, error) {
@@ -83,10 +84,15 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	successURL := "/"
+	if nextValues, ok := r.URL.Query()["next"]; ok {
+		successURL = nextValues[0]
+	}
+
 	// Session ID stored in cookie.
 	sessionID := uuid.New().String()
 
-	h.sessions[sessionID] = OIDCSession{state: state, nonce: nonce}
+	h.sessions[sessionID] = OIDCSession{state: state, nonce: nonce, successURL: successURL}
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 	cookie := http.Cookie{Name: oidcSessionKey, Value: sessionID, Path: "/", Expires: expiration}
 	http.SetCookie(w, &cookie)
@@ -210,5 +216,5 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	h.sessions[sessionID] = session
 
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, session.successURL, http.StatusFound)
 }
