@@ -1,6 +1,5 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { bond } from './qd'
 import { CompoundButton } from '@fluentui/react'
 
 const
@@ -16,19 +15,19 @@ const
   })
 
 const
-  Login = bond(() => {
+  Login = () => {
     const
-      render = () => (
-        <div className={css.login}>
-          <form action="/auth/init" method="POST">
-            <CompoundButton type="default" secondaryText="using OpenID Connect.">
-              Log In
-            </CompoundButton>
-          </form>
-        </div>
-      )
-
-    return { render }
-  })
+      queryString = window.location.search,
+      action = `/auth/init${queryString}`
+    return (
+      <div className={css.login}>
+        <form action={action} method="POST">
+          <CompoundButton type="default" secondaryText="using OpenID Connect.">
+            Log In
+          </CompoundButton>
+        </form>
+      </div>
+    )
+  }
 
 export default Login

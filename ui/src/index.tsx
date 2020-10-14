@@ -1,7 +1,7 @@
 import { initializeIcons, loadTheme } from '@fluentui/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Router from './app'
+import Router from './router'
 import './cards'
 import './index.css'
 import * as serviceWorker from './serviceWorker'
