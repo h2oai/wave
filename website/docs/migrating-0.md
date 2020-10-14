@@ -164,7 +164,7 @@ ui.notebook([ui.notebook_section([
 After: Note the parameter name change `frame_cell(source=...)` to `frame(content=...)`.
 
 ```py
-ui.form_cell(
+ui.form_card(
   box='1 5 2 4',
   items=[
     ui.text(content='Foo'),
