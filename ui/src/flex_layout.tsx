@@ -3,7 +3,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { CardView } from './grid_layout'
 import { bond, C, Page, S } from './qd'
-import { getTheme, pc } from './theme'
+import { getTheme, pc, margin } from './theme'
 
 const
   { colors } = getTheme(),
@@ -15,7 +15,8 @@ const
       justifyContent: 'space-evenly',
       backgroundColor: colors.page,
       height: 'min-content',
-      width: pc(100)
+      width: pc(100),
+      margin: margin(gap, 0, gap, gap)
     },
     slot: {
       backgroundColor: colors.card,
@@ -23,12 +24,15 @@ const
       borderRadius: 3,
       boxShadow: `0px 3px 5px ${colors.text0}`,
       overflow: 'auto',
-      margin: gap,
-      padding: 15
+      margin: margin(0, gap, gap, 0),
+      padding: 15,
     },
     chromeless: {
-      margin: gap
+      margin: margin(0, gap, gap, 0),
     },
+    separator: {
+      width: pc(100),
+    }
   }),
   pageSortingF = (cardA: C, cardB: C) => {
     const
@@ -39,7 +43,7 @@ const
 
     return b > a ? -1 : 1
   },
-  FlexLinebreak = () => <div style={{ width: pc(100) }}></div>
+  FlexLinebreak = () => <div className={css.separator}></div>
 
 export const
   FlexLayout = bond(({ page }: { page: Page }) => {

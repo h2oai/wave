@@ -101,12 +101,16 @@ def create_fake_plot2(q: Q, box: str, key: str):
 
 def get_tab_content(q: Q):
     if q.args.tab_point_groups:
-        create_fake_plot2(q, '1 2', 'plot4')
-        create_fake_plot2(q, '2 2', 'plot2')
+        create_fake_plot2(q, '1 2', 'plot2')
+        create_fake_plot2(q, '2 2', 'plot4')
+        create_fake_plot2(q, '1 3', 'plot6')
+        create_fake_plot2(q, '2 3', 'plot8')
         tab_card.value = 'tab_point_groups'
     else:
         create_fake_plot1(q, '1 2', 'plot1')
         create_fake_plot1(q, '2 2', 'plot3')
+        create_fake_plot1(q, '1 3', 'plot5')
+        create_fake_plot1(q, '2 3', 'plot7')
         tab_card.value = 'tab_intervals'
 
 
@@ -122,6 +126,10 @@ async def main(q: Q):
     del q.page['plot2']
     del q.page['plot3']
     del q.page['plot4']
+    del q.page['plot5']
+    del q.page['plot6']
+    del q.page['plot7']
+    del q.page['plot8']
 
     hash = q.args['#']
     if hash == 'home':
