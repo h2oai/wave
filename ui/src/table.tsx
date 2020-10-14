@@ -77,6 +77,8 @@ export interface Table {
   resettable?: B
   /** The height of the table, e.g. '400px', '50%', etc. */
   height?: S
+  /** The names of the initially selected rows. Multiple must be set to true in order to make this prop work. */
+  values?: S[]
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -146,7 +148,7 @@ export const
     qd.args[m.name] = []
     const
       items = m.rows.map(r => {
-        const item: any = { __key__: r.name }
+        const item: any = { __key__: r.name, key: r.name }
         for (let i = 0, n = r.cells.length; i < n; i++) {
           const col = m.columns[i]
           item[col.name] = r.cells[i]
@@ -391,6 +393,12 @@ export const
           qd.args[m.name] = selection.getSelection().map(item => (item as any).__key__)
         }
       }),
+      init = () => {
+        if (m.multiple && m.values) {
+          m.values.forEach(v => selection.setKeySelected(v, true, false))
+          qd.args[m.name] = m.values
+        }
+      },
       onItemInvoked = (item: any) => {
         qd.args[m.name] = [item.__key__]
         qd.sync()
@@ -431,8 +439,8 @@ export const
           <Fluent.DetailsList
             items={filteredItemsB()}
             columns={columnsB()}
-            layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
             constrainMode={Fluent.ConstrainMode.unconstrained}
+            layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
             groups={groupsB()}
             selection={selection}
             selectionMode={m.multiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
@@ -461,5 +469,5 @@ export const
           </Fluent.ScrollablePane>
         </div>
       )
-    return { render, columnsB, filteredItemsB, selectedFiltersB, searchStrB, colContextMenuListB, groupsB, groupByKeyB }
+    return { init, render, columnsB, filteredItemsB, selectedFiltersB, searchStrB, colContextMenuListB, groupsB, groupByKeyB }
   })

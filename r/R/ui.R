@@ -1235,6 +1235,7 @@ ui_table_row <- function(
 #' @param downloadable Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
 #' @param height The height of the table, e.g. '400px', '50%', etc.
+#' @param values The names of the initially selected rows. Multiple must be set to true in order to make this prop work.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(
@@ -1246,6 +1247,7 @@ ui_table <- function(
   downloadable = NULL,
   resettable = NULL,
   height = NULL,
+  values = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("columns", "h2oq_TableColumn", columns)
@@ -1255,6 +1257,7 @@ ui_table <- function(
   .guard_scalar("downloadable", "logical", downloadable)
   .guard_scalar("resettable", "logical", resettable)
   .guard_scalar("height", "character", height)
+  .guard_vector("values", "character", values)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(table=list(
     name=name,
@@ -1265,6 +1268,7 @@ ui_table <- function(
     downloadable=downloadable,
     resettable=resettable,
     height=height,
+    values=values,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)

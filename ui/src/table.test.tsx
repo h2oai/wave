@@ -24,7 +24,7 @@ describe('Table.tsx', () => {
       rows: [
         { name: 'rowname1', cells: [cell11, '2'] },
         { name: 'rowname2', cells: [cell21, '1'] },
-        { name: 'rowname2', cells: [cell31, '3'] }
+        { name: 'rowname3', cells: [cell31, '3'] }
       ]
     }
     jest.clearAllMocks()
@@ -95,6 +95,16 @@ describe('Table.tsx', () => {
   })
 
   describe('Q calls', () => {
+    it('Sets args on init - values not specified', () => {
+      render(<XTable model={tableProps} />)
+      expect(T.qd.args[name]).toMatchObject([])
+    })
+
+    it('Sets args on init - values specified', () => {
+      render(<XTable model={{ ...tableProps, values: ['rowname1'], multiple: true }} />)
+      expect(T.qd.args[name]).toMatchObject(['rowname1'])
+    })
+
     it('Sets args and calls sync on doubleclick', () => {
       const syncMock = jest.fn()
       T.qd.sync = syncMock
@@ -411,7 +421,7 @@ describe('Table.tsx', () => {
         rows: [
           { name: 'rowname1', cells: [cell11, 'Group1'] },
           { name: 'rowname2', cells: [cell21, 'Group1'] },
-          { name: 'rowname2', cells: [cell31, 'Group2'] }
+          { name: 'rowname3', cells: [cell31, 'Group2'] }
         ]
       }
     })
