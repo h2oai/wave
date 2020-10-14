@@ -167,7 +167,7 @@ describe('Table.tsx', () => {
   })
 
   describe('sort', () => {
-    it('Sorts by collumn - string', () => {
+    it('Sorts by column - string', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
       let gridcell1 = getAllByRole('gridcell')[0]
@@ -179,7 +179,27 @@ describe('Table.tsx', () => {
       expect(gridcell1.textContent).toBe(cell21)
     })
 
-    it('Sorts by collumn - number', () => {
+    it('Sorts by column and rerenders icon col', () => {
+      tableProps = {
+        ...tableProps,
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true },
+          { name: 'colname2', label: 'Col2', cell_type: { icon: {} } },
+        ],
+        rows: [
+          { name: 'rowname1', cells: [cell11, 'BoxMultiplySolid'] },
+          { name: 'rowname2', cells: [cell21, 'BoxCheckmarkSolid'] },
+          { name: 'rowname2', cells: [cell31, 'BoxMultiplySolid'] }
+        ]
+      }
+      const { container, getAllByRole } = render(<XTable model={tableProps} />)
+
+      expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe('BoxMultiplySolid')
+      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
+      expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe('BoxCheckmarkSolid')
+    })
+
+    it('Sorts by column - number', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
       let gridcell1 = getAllByRole('gridcell')[1]
