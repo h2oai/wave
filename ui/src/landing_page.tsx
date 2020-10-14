@@ -46,7 +46,7 @@ const CTAButton = ({ ctaButton }: CTAButtonProps) => {
       window.location.hash = ctaButton.name.substr(1)
     }
   }
-  return <Fluent.PrimaryButton styles={{ root: { height: 60, width: 240, fontSize: 20 } }} text={ctaButton.label} onClick={onClick} />
+  return <Fluent.PrimaryButton data-test='call-to-action' styles={{ root: { height: 60, width: 240, fontSize: 20 } }} text={ctaButton.label} onClick={onClick} />
 }
 
 export const View = bond(({ state, changed }: Card<State>) => {

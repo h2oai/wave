@@ -10,7 +10,7 @@
 # Feel free to add or remove anything that doesn't suit your needs.
 # ---
 
-from h2o_q import Q, listen, ui, data
+from h2o_q import Q, listen, ui, data, cypress, Cypress
 from synth import FakeMultiCategoricalSeries, FakeScatter
 
 
@@ -49,7 +49,6 @@ home_page = ui.landing_page_card(
 tab_card = ui.tab_card(
   box='1 1',
   chromeless=True,
-  value='tab_intervals',
   items=[
       ui.tab(name='tab_intervals', label='Intervals', icon='StackedLineChart'),
       ui.tab(name='tab_point_groups', label='Point Groups', icon='DiagnosticDataBarTooltip')
@@ -104,11 +103,11 @@ def get_tab_content(q: Q):
     if q.args.tab_point_groups:
         create_fake_plot2(q, '1 2', 'plot4')
         create_fake_plot2(q, '2 2', 'plot2')
-        tab_card.value = 'tab_intervals'
+        tab_card.value = 'tab_point_groups'
     else:
         create_fake_plot1(q, '1 2', 'plot1')
         create_fake_plot1(q, '2 2', 'plot3')
-        tab_card.value = 'tab_point_groups'
+        tab_card.value = 'tab_intervals'
 
 
 async def main(q: Q):
@@ -172,11 +171,29 @@ async def main(q: Q):
           ])
           ])
     elif hash == 'results' or q.args.tab_intervals or q.args.tab_point_groups:
-        q.page['tabs'] = tab_card
         get_tab_content(q)
+        q.page['tabs'] = tab_card
     else:
         q.page['main-content'] = home_page
     await q.page.save()
+
+
+@cypress('Walk through the app')
+def app_walk_through(cy: Cypress):
+    cy.visit('/demo')
+    cy.locate('call-to-action').click()
+    cy.url().should('include', '/demo#new-analysis')
+    cy.locate('title').type('Sir')
+    cy.locate('wizard_step_2').click()
+    cy.locate('nickname').type('John')
+    cy.locate('wizard_step_3').click()
+    cy.locate('surname').type('Doe')
+    cy.locate('#results').click()
+    cy.url().should('include', '/demo#results')
+    cy.locate('plot').should('contain.text', 'Intervals, stacked')
+    # TODO: Add data-test attr to PivotItems to make them selectable.
+    cy.locate('tab').get('button[name=\'Point Groups\']').click()
+    cy.locate('plot').should('contain.text', 'Point, groups')
 
 
 if __name__ == '__main__':
