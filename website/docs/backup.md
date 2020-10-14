@@ -11,7 +11,7 @@ The Q server logs all content changes to stdout. The changes are written in a fo
 To capture the log, redirect `stderr` to a file when you launch the server:
 
 ```shell
-./qd > backup.log
+./qd 2> backup.log
 ```
 
 To recover state, feed the log file back in the next time you launch the server:
@@ -23,12 +23,12 @@ To recover state, feed the log file back in the next time you launch the server:
 To recover state and continue capturing the log, use:
 
 ```shell 
-./qd -init backup.log > other.log
+./qd -init backup.log 2> other.log
 ```
 
 If you end up with a big log file, you can compact it like this:
 
 ```shell 
-./qd -compact big.log > small.log
+./qd -compact big.log 2> small.log
 ```
 
