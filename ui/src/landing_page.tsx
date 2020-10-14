@@ -69,7 +69,7 @@ export const View = bond(({ state, changed }: Card<State>) => {
             </div>
           </Fluent.StackItem>
           <Fluent.StackItem styles={{ root: { margin: '0 auto' } }}>
-            <Fluent.Image src={state.image} styles={{ image: { width: pc(100), height: 'auto' } }} />
+            <Fluent.Image src={state.image} styles={{ image: { width: pc(100), maxWidth: 650, height: 'auto' } }} />
           </Fluent.StackItem>
         </Fluent.Stack>
         <Fluent.Stack horizontal wrap horizontalAlign='center' styles={{ root: { margin: margin(30, 0) } }}>

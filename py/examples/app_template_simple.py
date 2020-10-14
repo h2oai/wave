@@ -18,11 +18,13 @@ home_page = ui.landing_page_card(
     header='AI like never before',
     box='1 1',
     subheader='''
-    Times when you needed a dedicated team of web developersm, DevOps people and who knows who else
+    Times when you needed a dedicated team of web developers, DevOps people and who knows who else
     are finally over. Build a professionally looking web with your data visualizations in a few hours
-    instead of months. Qd is finally here!
+    instead of months. Wave is finally here!
     ''',
-    image='/app.png',
+    image='''
+    https://42f2671d685f51e10fc6-b9fcecea3e50b3b59bdc28dead054ebc.ssl.cf5.rackcdn.com/illustrations/wireframing_nxyi.svg
+    ''',
     call_to_action_button=ui.call_to_action_button(name='#new-analysis', label='Let\'s get started!'),
     features=[
       ui.feature(
