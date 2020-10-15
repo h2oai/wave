@@ -16,7 +16,7 @@ Here's a short example that renders a scatterplot of random values between [0, 1
 
 ```py
 import random
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

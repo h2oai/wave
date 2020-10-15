@@ -8,12 +8,12 @@ In this tutorial, we'll put our learnings from the [first](tutorial-hello.md) an
 
 For example, if you have a spare 256-node Raspberry Pi cluster lying somewhere, you can run this program to each node and monitor your entire cluster's system utilization from one place. How cool is that?
 
-We'll also introduce a new concept, called [data buffers](buffers.md), which allows you to use the Q server to store *rows* (also called *tuples* or *records*) of information - much like how you would use tables in a database, or dataframes in Python or R - to deal with structured data.
+We'll also introduce a new concept, called [data buffers](buffers.md), which allows you to use the Wave server to store *rows* (also called *tuples* or *records*) of information - much like how you would use tables in a database, or dataframes in Python or R - to deal with structured data.
 
 
 ## Prerequisites
 
-This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
 
 ## Step 1: Install dependencies
 
@@ -31,7 +31,7 @@ Here's what our program looks like:
 ```py {7,12,25} title="$HOME/wave-apps/system_monitor.py" 
 import time
 import psutil
-from h2o_q import site, ui, data
+from h2o_wave import site, ui, data
 
 page = site['/monitor']
 
@@ -82,7 +82,7 @@ Let's explore these topics one by one.
 
 ### Using a stats card
 
-The Q SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](examples) for more). 
+The Wave SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](examples) for more). 
 
 In this case, we use `small_series_stats_card()`, which displays a value and a time series visualization.
 
@@ -139,7 +139,7 @@ As a final step, we can duplicate parts of our program to create another card th
 ```py {18-28,38-40} title="$HOME/wave-apps/system_monitor.py" 
 import time
 import psutil
-from h2o_q import site, ui, data
+from h2o_wave import site, ui, data
 
 page = site['/monitor']
 
@@ -199,7 +199,7 @@ Explore other kinds of cards in the [Gallery](examples) and display additional s
 
 ## Summary
 
-In this tutorial, we learned how to use stats cards to display live information. The knowledge you've gained from these first few tutorials should be enough to design and deploy live dashboards using H2O Wave. You will also have noticed that you don't need to keep your Python program running all the time to continue displaying your pages. You can terminate your Python program any time, and the Q server will happily display the last known state of all your pages.
+In this tutorial, we learned how to use stats cards to display live information. The knowledge you've gained from these first few tutorials should be enough to design and deploy live dashboards using H2O Wave. You will also have noticed that you don't need to keep your Python program running all the time to continue displaying your pages. You can terminate your Python program any time, and the Wave server will happily display the last known state of all your pages.
 
-The programs you've been authoring till now are one kind of programs, called [Q scripts](scripts.md). Q scripts are not interactive. They can modify pages on the Q server, but cannot respond to user actions, like handling button clicks, menu commands, dropdown changes, and so on. To handle user interactions, you need to author [Q Apps](apps.md), which are long-running programs (*servers* or *services*) that are capable of modifying pages in response to user actions. Let's see how to do that in the next tutorial. 
+The programs you've been authoring till now are one kind of programs, called [Wave scripts](scripts.md). Wave scripts are not interactive. They can modify pages on the Wave server, but cannot respond to user actions, like handling button clicks, menu commands, dropdown changes, and so on. To handle user interactions, you need to author [Wave Apps](apps.md), which are long-running programs (*servers* or *services*) that are capable of modifying pages in response to user actions. Let's see how to do that in the next tutorial. 
 

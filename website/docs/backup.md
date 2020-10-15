@@ -6,7 +6,7 @@ title: Backup and Recovery
 This feature is experimental. Do not rely on this in production!
 :::
 
-The Q server logs all content changes to `stderr`. The changes are written in a format that can be read back in. This means that you can replay the log from beginning to end to recover the server's state (content, pages, everything). The log is, literally, a change log.
+The Wave server logs all content changes to `stderr`. The changes are written in a format that can be read back in. This means that you can replay the log from beginning to end to recover the server's state (content, pages, everything). The log is, literally, a change log.
 
 To capture the log, redirect `stderr` to a file when you launch the server:
 

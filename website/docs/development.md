@@ -15,14 +15,14 @@ At the time of writing, PyCharm's type-checking and error-detection is superior 
 The simplest way to get started in either PyCharm or Visual Studio Code is the same: 
 1. Create a working directory.
 2. Set up a Python [virtual environment](https://docs.python.org/3/tutorial/venv.html).
-3. Install the `h2o-q` package.
+3. Install the `h2o-wave` package.
 4. Open the directory in your IDE.
 
 ```shell 
 mkdir $HOME/wave-apps
 cd $HOME/wave-apps
 python3 -m venv venv
-./venv/bin/pip install h2o-q
+./venv/bin/pip install h2o-wave
 ```
 
 ## Using PyCharm 
@@ -46,7 +46,7 @@ python3 -m venv venv
 ## A hello world sample
 
 ```py title="$HOME/wave-apps/hello_world.py"
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 # Grab a reference to the page at route '/hello'
 page = site['/hello']

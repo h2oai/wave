@@ -26,7 +26,7 @@ See the [Wizard](#wizard) example to understand how to author tests for your int
 
 
 ```py
-from h2o_q import cypress
+from h2o_wave import cypress
 
 @cypress('Walk through the wizard')
 def test_wizard(cy):
@@ -52,7 +52,7 @@ $ cd test
 $ ./node_modules/.bin/cypress open
 ```
 
-#### Step 2: Start the Q server as usual
+#### Step 2: Start the Wave server as usual
 
 ```
 $ ./wave
@@ -65,7 +65,7 @@ To translate your Python tests to Javascript, execute the Python module or file 
 ```
 $ CYPRESS_INTEGRATION_TEST_DIR=path/to/q/test/cypress/integration ./venv/bin/python examples/wizard.py
 ```
-The `CYPRESS_INTEGRATION_TEST_DIR` environment variable indicates where the Q SDK should write translated files to. This must be set to the `cypress/integration` directory.
+The `CYPRESS_INTEGRATION_TEST_DIR` environment variable indicates where the Wave SDK should write translated files to. This must be set to the `cypress/integration` directory.
 
 Alternatively, you can set the `CYPRESS_INTEGRATION_TEST_DIR` environment variable in your shell (or IDE) to simplify running your test file:
 

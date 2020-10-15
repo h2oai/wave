@@ -19,7 +19,7 @@ Use `ui.stage()` and `ui.scene()` to create the stage and the scene:
 Here's an example that draws a clock with a circular `face` placed on the `stage`, and `hour`, `min` and `sec` hands placed in the `scene`:
 
 ```py
-from h2o_q import site, ui, graphics as g
+from h2o_wave import site, ui, graphics as g
 
 page = site['/demo']
 page['example'] = ui.graphics_card(
@@ -163,7 +163,7 @@ done()
 ```
 
 ```py {3-6}
-from h2o_q import site, ui, graphics as g
+from h2o_wave import site, ui, graphics as g
 
 t = g.turtle().f(100).r(90).pd()
 for _ in range(36):

@@ -46,7 +46,7 @@ Here's a bean counter. Clicking the button increments the bean count:
 And here's how it's written:
 
 ```py {8-9,16}
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 bean_count = 0
 

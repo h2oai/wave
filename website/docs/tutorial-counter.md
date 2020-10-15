@@ -19,7 +19,7 @@ This tutorial assumes your Wave server is up and running, and you have a working
 The first step towards listening to events from the UI is to, literally, `listen`.
 
 ```py title="$HOME/wave-apps/counter.py"
-from h2o_q import Q, listen
+from h2o_wave import Q, listen
 
 async def serve(q: Q):
     pass
@@ -53,7 +53,7 @@ Let's add a button to our app. Out goal is to increment and display the bean cou
 To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](components.md) (also called *widgets*). In this case our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome. 
 
 ```py {5-18} title="$HOME/wave-apps/counter.py"
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):
@@ -104,7 +104,7 @@ If you click on the button, you'll notice that it doesn't do anything. This is b
 Add a condition to check if the button is clicked, and if so, increment the bean count.
 
 ```py {5-7} title="$HOME/wave-apps/counter.py"
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):
@@ -161,14 +161,14 @@ Point your browser to [http://localhost:55555/counter](http://localhost:55555/co
 Our program is accurate, but not necessarily efficient. On every button-click, it is recreating the form card and the button over and over again instead of updating the existing button's caption with the current bean count. You can observe how chatty the app is by gaping in abject horror at the Wave server's log.
 
 :::info
-To view the Wave server's log, switch to the terminal window running the Q server.
+To view the Wave server's log, switch to the terminal window running the Wave server.
 :::
 
 Let's wrinkle our noses in disgust and fix this gross inefficiency right away to make our little bean counter web-scale for great good.
 
 
 ```py {9-10,22-23} title="$HOME/wave-apps/counter.py"
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):
@@ -220,7 +220,7 @@ In most apps, you'll end up using a mix of `q.client`, `q.user` and `q.app` to c
 2. Different browser tabs belonging to the same user (possibly from different devices).
 3. The same browser tab.
 
-In other words, your Q app is multi-user by default, but how the app manages data at the app-level, at the user-level and at the client-level is up to you.
+In other words, your Wave app is multi-user by default, but how the app manages data at the app-level, at the user-level and at the client-level is up to you.
  
 ## Step 6: User-level realtime sync
 
@@ -228,7 +228,7 @@ To maintain bean counts at the user level, all we have to do store `bean_count` 
  
  
 ```py {5,7} title="$HOME/wave-apps/counter.py"
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):
@@ -266,7 +266,7 @@ This would be considered normal behavior for a typical web application, and most
 This is easier done than said - simply change the server mode to `multicast` to enable realtime sync across clients:
 
 ```py {27} title="$HOME/wave-apps/counter.py"
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):
@@ -311,7 +311,7 @@ Going from user-level bean counting to app-level bean counting is easy: simply s
 
  
 ```py {5,7,27} title="$HOME/wave-apps/counter.py"
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

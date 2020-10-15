@@ -15,7 +15,7 @@ We'll start with a basic skeleton, and then work our way up from there.
 The first step is to `listen()`. Also, we want the landing page to show a list of to-dos, so we'll throw in an empty `show_todos()` function for now, and call it from `serve()`.
 
 ```py title="$HOME/wave-apps/todo.py"
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):
@@ -35,7 +35,7 @@ listen('/todo', serve)
 A to-do item has some basic attributes: an ID, some text content, and whether it's completed or not. Let's define a `class` for that, with a global one-up `id`.
 
 ```py {3-13} title="$HOME/wave-apps/todo.py"
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 _id = 0
 
@@ -70,7 +70,7 @@ Here, we attempt to fetch the list from `q.user`, and create one if it doesn't e
 
 ```py {1,23-28} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 _id = 0
 
@@ -112,7 +112,7 @@ Several [components](components.md) have a `trigger` attribute. Normally, an eve
 
 ```py {1,30-37} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 _id = 0
 
@@ -161,7 +161,7 @@ We also turn each completed to-do item into another list of checkboxes, checked 
 
 ```py {31,38-39} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 _id = 0
 
@@ -229,7 +229,7 @@ So, we iterate through all the to-do items set their `done` attribute based on t
 
 ```py {30-33} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 _id = 0
 
@@ -293,7 +293,7 @@ In the `new_todo()` function, we display a new form containing a textbox (using 
 
 ```py {18-21,45,52-61} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 _id = 0
 
@@ -372,7 +372,7 @@ In this example, for clarity, we named the both the buttons and their correspond
 
 ```py {20-21,54-59} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 _id = 0
 

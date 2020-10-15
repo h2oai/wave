@@ -34,7 +34,7 @@ python3 -m venv venv
 ### Install the H2O Wave Python driver
 
 ```shell 
-./venv/bin/pip install h2o-q
+./venv/bin/pip install h2o-wave
 ```
 
 ## Step 3: Write your program
@@ -44,7 +44,7 @@ Next, open your preferred text editor, create a Python script called `hello_worl
 For now, don't worry too much about what this program is doing. We'll get to that shortly.
 
 ```py title="$HOME/wave-apps/hello_world.py"
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 # Grab a reference to the page at route '/hello'
 page = site['/hello']
@@ -134,7 +134,7 @@ cd $HOME/wave-apps
 ### Grab a reference to our page
 
 ```py title=">>>"
-from h2o_q import site
+from h2o_wave import site
 page = site['/hello']
 ```
 

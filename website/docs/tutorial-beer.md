@@ -30,7 +30,7 @@ Our program looks like this. It's mostly similar to the one in the  [Hello World
 
 ```py {13-18} title="$HOME/wave-apps/beer_wall.py"
 import time
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/beer']
 
@@ -112,7 +112,7 @@ Our final program looks like the listing below. You'll notice that the size of o
 
 ```py
 import time
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/beer']
 

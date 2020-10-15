@@ -6,7 +6,7 @@ title: Change Log
 
 H2O Wave and its Python driver follow [Semantic Versioning](https://semver.org/). Major releases ship every six months (~February and ~August), while minor and patch releases may ship as often as every week. Minor and patch releases should never contain breaking changes.
 
-When referencing the [`h2o-q` package](https://pypi.org/project/h2o-q/) from your `requirements.txt` or `setup.py`, you should always use a version constraint such as `>=4.2, <5` (any version 4.2 or greater, but less than 5), since major releases of H2O Wave do include breaking changes.
+When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) from your `requirements.txt` or `setup.py`, you should always use a version constraint such as `>=4.2, <5` (any version 4.2 or greater, but less than 5), since major releases of H2O Wave do include breaking changes.
 
 ## Support Policy
 
@@ -98,18 +98,18 @@ Aug 10, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.1.4)
 ## v0.1.3
 Aug 10, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.1.3)
 - Fixed
-  - `h2o_q.ui.link()` now has a `download` attribute to work around a [Firefox bug](https://bugzilla.mozilla.org/show_bug.cgi?id=858538).
+  - `h2o_wave.ui.link()` now has a `download` attribute to work around a [Firefox bug](https://bugzilla.mozilla.org/show_bug.cgi?id=858538).
   - Race condition in the interactive tour that caused some examples to not preview properly.
 
 ## v0.1.2
 Aug 7, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.1.2)
 - Added
-  - API for `h2o_q.core.Expando` copy, clone and item/attribute deletion.
+  - API for `h2o_wave.core.Expando` copy, clone and item/attribute deletion.
   - Migration guide.
   - Example for setting browser window title.
-  - API and example for Header card: `h2o_q.ui.header_card()`.
-  - Export `h2o_q.core.Ref` from `h2o_q`.
-  - API and examples for inline frames inside form cards: `h2o_q.ui.frame()`.
+  - API and example for Header card: `h2o_wave.ui.header_card()`.
+  - Export `h2o_wave.core.Ref` from `h2o_wave`.
+  - API and examples for inline frames inside form cards: `h2o_wave.ui.frame()`.
 - Changed
   - Renamed env var prefix for settings to `H2O_Q_`.
 - Fixed

@@ -9,7 +9,7 @@ Before you begin, it is highly recommended that you [download](https://github.co
 
 From an app-development perspective, the most important change is that Wave is more of a library rather than a framework.
 
-With the previous framework, the only way to execute an app was via the Q server. This limitation has been removed. The script/app you author is just a regular Python program in which you `import h2o_q` and execute via:
+With the previous framework, the only way to execute an app was via the Q server. This limitation has been removed. The script/app you author is just a regular Python program in which you `import h2o_wave` and execute via:
 
 - The command line: `python3 my_script.py`.
 - In the Python REPL.
@@ -27,7 +27,7 @@ From an information architecture perspective, control has been inverted: instead
 Instead, define a `async` request-handling function, say `main()`, and pass that function to `listen()`, like this:
 
 ```py
-from h2o_q import Q, listen
+from h2o_wave import Q, listen
 
 async def main(q: Q):
   pass
@@ -37,12 +37,12 @@ listen('/my/app/route', main)
 
 #### Removed: `q.wait()`, `q.show()`, `q.fail()`, `q.exit()`.
 
-The above four methods were the primary mechanism to make changes to your app's UI. They have all been replaced with a single `h2o_q.core.Page.save()` method.
+The above four methods were the primary mechanism to make changes to your app's UI. They have all been replaced with a single `h2o_wave.core.Page.save()` method.
 
 The new technique is:
 1. Access the page or card you want to modify.
 1. Modify the page or card.
-1. Call `h2o_q.core.Page.save()` to save your changes and update the browser page.
+1. Call `h2o_wave.core.Page.save()` to save your changes and update the browser page.
 
 Before:
 ```py
@@ -146,9 +146,9 @@ listen('/my/app/route', main)
 
 #### Removed: `q.dashboard()` and `q.notebook()`.
 
-Every page in Q is a dashboard page. Instead of creating a separate dashboard or notebook, simply add cards to a page and arrange it the way you want. Cards can be created by using one of the several `ui.*_card()` APIs. Also see the [dashboard](#dashboard), [layout](#layout-position) and [sizing](#layout-size) examples to learn how to lay out several cards on a page.
+Every page in Wave is a dashboard page. Instead of creating a separate dashboard or notebook, simply add cards to a page and arrange it the way you want. Cards can be created by using one of the several `ui.*_card()` APIs. Also see the [dashboard](#dashboard), [layout](#layout-position) and [sizing](#layout-size) examples to learn how to lay out several cards on a page.
 
-If you want to display a notebook-style vertical stack of markdown, html or other content, use `h2o_q.ui.text()` and `h2o_q.ui.frame()` contained inside a `h2o_q.ui.form_card()`, like this:
+If you want to display a notebook-style vertical stack of markdown, html or other content, use `h2o_wave.ui.text()` and `h2o_wave.ui.frame()` contained inside a `h2o_wave.ui.form_card()`, like this:
 
 Before:
 ```py
@@ -190,13 +190,13 @@ ui.buttons([ui.button(...), ui.button(...), ui.button(...)]) # Note enclosing [ 
 
 #### Changed: `q.upload()` changed to `q.site.upload()`.
 
-The `upload()` method has been moved to the `h2o_q.core.Site` instance, since each `h2o_q.core.Site` represents a distinct server, and makes it possible to control multiple sites from a single Python script.
+The `upload()` method has been moved to the `h2o_wave.core.Site` instance, since each `h2o_wave.core.Site` represents a distinct server, and makes it possible to control multiple sites from a single Python script.
 
 #### Changed: `q.args.foo=` changed to `q.client.foo=`.
 
 Setting attributes on `q.args` (e.g. `q.args.foo = 'bar'`) is no longer preserved between requests. This was the primary mechanism employed previously to preserve data between requests.
 
-Instead, Q provides 4 mechanisms for preserving data between requests:
+Instead, Wave provides 4 mechanisms for preserving data between requests:
 
 1. **Process-level**: Use global variables.
 1. **App-level**: Use `q.app.foo = 'bar'` to save; access `q.app.foo` to read it back again.
@@ -208,7 +208,7 @@ Here, *Client* refers to a distinct tab in a browser.
 If you want to rely on the old behavior of preserving `q.args` for the lifetime of the application, copy `q.args` to `q.client` like this:
 
 ```py
-from h2o_q import copy_expando
+from h2o_wave import copy_expando
 
 copy_expando(q.args, q.client, exclude_keys=['back2', 'select_target', 'restart'])
 ```

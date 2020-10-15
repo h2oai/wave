@@ -9,7 +9,7 @@ A Wave app can publish content and handle user interactions, unlike a [Wave scri
 Here is the skeleton of a Wave app:
 
 ```py 
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 async def serve(q: Q):
     # Modify the page

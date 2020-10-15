@@ -7,7 +7,7 @@ When a user interacts with [components](components.md) on a page - like typing i
 The event arguments can be read from `q.args`, a read-only dictionary-like object passed to your `listen()` handler:
 
 ```py {4-6}
-from h2o_q import Q, listen
+from h2o_wave import Q, listen
 
 async def serve(q: Q):
     print(q.args.foo)

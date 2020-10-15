@@ -9,7 +9,7 @@ slug: /enterprise/developer-guide
 Each q8s-compatible app has to be bundled as a zip archive (commonly used with suffix `.qz`)
 consisting of:
 
-* `q-app.toml` - to q8s configuration file
+* `wave-app.toml` - to q8s configuration file
 * `static/` - static asset directory, including the app icon (a png file starting with `icon`)
   and screenshots (files starting with `screenshot`)
 * `requirements.txt` - pip-managed dependencies of the app (can contain references to `.whl` files

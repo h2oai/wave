@@ -14,7 +14,7 @@ To enable realtime sync in a Wave app, pass the `mode` argument to `listen()`:
 - `mode='unicast'` disables sync. This is the default.
 
 ```py {6}
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 async def serve(q: Q):
     pass

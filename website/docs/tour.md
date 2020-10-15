@@ -17,9 +17,9 @@ q/
 └── wave              
 ```
 
-To run the tour, as with any Q app, we need to start both the Q server (`wave`) and the tour (`tour.py`). Let's go ahead and do that.
+To run the tour, as with any Wave app, we need to start both the Wave server (`wave`) and the tour (`tour.py`). Let's go ahead and do that.
 
-## Step 1: Start the Q server
+## Step 1: Start the Wave server
 
 <StartQ/>
 
@@ -44,7 +44,7 @@ Go to [http://localhost:55555/tour](http://localhost:55555/tour) to access the t
 
 ![tour](assets/tour__tour.png)
 
-`tour.py` is an ordinary Q app that runs other apps. The tour itself runs at the route `/tour`, and each of the examples runs at `/demo`. 
+`tour.py` is an ordinary Wave app that runs other apps. The tour itself runs at the route `/tour`, and each of the examples runs at `/demo`. 
 
 :::tip
 To play with the tour's active example in isolation, simply open a new browser tab and head to [http://localhost:55555/demo](http://localhost:55555/demo).
@@ -52,7 +52,7 @@ To play with the tour's active example in isolation, simply open a new browser t
 
 ## Wrapping up
 
-In this section, we started the Q server and then launched `tour.py` to experience the tour. In general, this is how you'd typically launch any app, including your own. There is nothing special about `tour.py`. In fact, to run any example, all you need to do is repeat the steps above in a new terminal window. For example, to run `todo.py`, simply run:
+In this section, we started the Wave server and then launched `tour.py` to experience the tour. In general, this is how you'd typically launch any app, including your own. There is nothing special about `tour.py`. In fact, to run any example, all you need to do is repeat the steps above in a new terminal window. For example, to run `todo.py`, simply run:
 
 ```shell 
 cd $HOME/q

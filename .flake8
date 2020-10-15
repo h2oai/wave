@@ -1,8 +1,8 @@
 [flake8]
 max-line-length = 120
 exclude =
-  py/h2o_q/ui.py
-  py/h2o_q/types.py
+  py/h2o_wave/ui.py
+  py/h2o_wave/types.py
 
 import-order-style = smarkets
 inline-quotes = "

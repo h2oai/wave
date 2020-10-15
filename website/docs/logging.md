@@ -7,7 +7,7 @@ Wave apps are plain Python programs. Use Python's built-in `logging` module to c
 Here's a basic configuration that logs a ISO8601 timestamp, log level, and message:
 
 ```py {3,4}
-from h2o_q import Q, listen
+from h2o_wave import Q, listen
 
 import logging
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s')
