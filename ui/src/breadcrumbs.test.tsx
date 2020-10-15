@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, wait } from '@testing-library/react'
 import { View } from './breadcrumbs'
 import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
@@ -8,22 +8,23 @@ const
   name = 'breadcrumbs',
   nameWithHash = `#${name}`,
   label = 'Menu 1',
-  breadcrumbsProps: T.Card<any> = {
-    name,
-    state: { items: [{ name, label }] },
-    changed: T.box(false)
-  },
   breadcrumbsPropsHash: T.Card<any> = {
     name,
     state: { items: [{ name: nameWithHash, label },] },
     changed: T.box(false)
   }
+let breadcrumbsProps: T.Card<any>
 
 describe('Breadcrumbs.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     T.qd.args[name] = null
     jest.clearAllMocks()
+    breadcrumbsProps = {
+      name,
+      state: { items: [{ name, label }] },
+      changed: T.box(false)
+    }
   })
 
   it('Renders data-test attr', () => {
@@ -63,6 +64,65 @@ describe('Breadcrumbs.tsx', () => {
     fireEvent.click(getByText(label))
 
     expect(window.location.hash).toBe(nameWithHash)
+  })
+
+  it('Renders correct label for single-word url - Auto mode', () => {
+    breadcrumbsProps = {
+      ...breadcrumbsProps,
+      state: { items: [{ name, label }], auto: true },
+    }
+    window.location.hash = 'spam/ham/eggs'
+    const { queryByText } = render(<View {...breadcrumbsProps} />)
+
+    // Capitalization is handled by CSS making it untestable via Jest.
+    expect(queryByText('spam')).toBeInTheDocument()
+    expect(queryByText('ham')).toBeInTheDocument()
+    expect(queryByText('eggs')).toBeInTheDocument()
+
+    window.location.hash = 'tuna/cheese/burger'
+    window.dispatchEvent(new HashChangeEvent("hashchange"))
+
+    expect(queryByText('spam')).not.toBeInTheDocument()
+    expect(queryByText('ham')).not.toBeInTheDocument()
+    expect(queryByText('eggs')).not.toBeInTheDocument()
+    expect(queryByText('tuna')).toBeInTheDocument()
+    expect(queryByText('cheese')).toBeInTheDocument()
+    expect(queryByText('burger')).toBeInTheDocument()
+  })
+
+  it('Renders correct label for multi-word url - Auto mode', () => {
+    breadcrumbsProps = {
+      ...breadcrumbsProps,
+      state: { items: [{ name, label }], auto: true },
+    }
+    window.location.hash = 'spam-ham/ham-ham/eggs-meggs'
+    const { queryByText } = render(<View {...breadcrumbsProps} />)
+
+    // Capitalization is handled by CSS making it untestable via Jest.
+    expect(queryByText('spam ham')).toBeInTheDocument()
+    expect(queryByText('ham ham')).toBeInTheDocument()
+    expect(queryByText('eggs meggs')).toBeInTheDocument()
+  })
+
+  it('Sets correct url on click - Auto mode', async () => {
+    breadcrumbsProps = {
+      ...breadcrumbsProps,
+      state: { items: [{ name, label }], auto: true },
+    }
+    window.location.hash = 'spam-ham/ham-ham/eggs-meggs'
+    const { getByText, queryByText } = render(<View {...breadcrumbsProps} />)
+
+    expect(queryByText('spam ham')).toBeInTheDocument()
+    expect(queryByText('ham ham')).toBeInTheDocument()
+    expect(queryByText('eggs meggs')).toBeInTheDocument()
+
+    fireEvent.click(getByText('spam ham'))
+    expect(window.location.hash).toBe('#spam-ham')
+
+    // Wait for DOM to get rerendered.
+    await wait(() => expect(queryByText('spam ham')).toBeInTheDocument(), { timeout: 1000 })
+    await wait(() => expect(queryByText('ham ham')).not.toBeInTheDocument(), { timeout: 1000 })
+    await wait(() => expect(queryByText('eggs meggs')).not.toBeInTheDocument(), { timeout: 1000 })
   })
 
 })

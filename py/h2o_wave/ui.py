@@ -57,6 +57,7 @@ def command(
 def breadcrumbs_card(
         box: str,
         items: List[Breadcrumb],
+        auto: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> BreadcrumbsCard:
     """Create a card containing breadcrumbs.
@@ -70,6 +71,7 @@ def breadcrumbs_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
+        auto: Turn off automatic breadcrumbs generator based on current URL.`
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.BreadcrumbsCard` instance.
@@ -77,6 +79,7 @@ def breadcrumbs_card(
     return BreadcrumbsCard(
         box,
         items,
+        auto,
         commands,
     )
 

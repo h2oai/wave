@@ -91,18 +91,22 @@ ui_command <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
+#' @param auto Turn off automatic breadcrumbs generator based on current URL.`
 #' @param commands Contextual menu commands for this component.
 #' @return A BreadcrumbsCard instance.
 ui_breadcrumbs_card <- function(
   box,
   items,
+  auto = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_Breadcrumb", items)
+  .guard_scalar("auto", "logical", auto)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
+    auto=auto,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_BreadcrumbsCard"))
   return(.o)

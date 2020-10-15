@@ -63,4 +63,23 @@ describe('Meta.tsx', () => {
     expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
   })
 
+  it('Sets correct tab according to hash', () => {
+    window.location.hash = 'tab2'
+    const items = [{ name: 'tab1' }, { name: '#tab2' }]
+    const { getAllByRole } = render(<View {...{ ...tabProps, state: { items } }} />)
+
+    expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+  })
+
+  it('Sets correct tab according to hash change', () => {
+    const items = [{ name: 'tab1' }, { name: '#tab2' }]
+    const { getAllByRole } = render(<View {...{ ...tabProps, state: { items } }} />)
+
+    window.location.hash = '#tab2'
+    window.dispatchEvent(new HashChangeEvent("hashchange"))
+
+    expect(getAllByRole('tab')[0]).not.toHaveClass('is-selected')
+    expect(getAllByRole('tab')[1]).toHaveClass('is-selected')
+  })
+
 })

@@ -1,7 +1,7 @@
-import { Breadcrumb } from '@fluentui/react'
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { cards } from './layout'
-import { bond, Card, S, qd } from './qd'
+import { B, bond, Card, qd, S, box } from './qd'
 
 /** Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`. */
 interface Breadcrumb {
@@ -22,12 +22,14 @@ interface Breadcrumb {
 interface State {
   /** A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()` */
   items: Breadcrumb[]
+  /** Turn off automatic breadcrumbs generator based on current URL.` */
+  auto?: B
 }
 
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
-      items = state.items.map(({ name, label }) => ({
+      mapToBreadcrumb = ({ name, label }: Breadcrumb) => ({
         key: name,
         text: label,
         onClick: () => {
@@ -38,11 +40,31 @@ export const
           qd.args[name] = true
           qd.sync()
         }
-      }
-      )),
-      render = () => <Breadcrumb data-test={name} items={items} />
+      }),
+      itemsB = box<Fluent.IBreadcrumbItem[]>([]),
+      onHashChanged = () => {
+        const items = window.location.hash.substr(1)
+          .split('/')
+          .map((url, i, urls) => {
+            const
+              basePath = urls.slice(0, i).join('/'),
+              name = basePath ? `#${basePath}/${url}` : `#${url}`
 
-    return { render, changed }
+            return mapToBreadcrumb({ name, label: url.replace(/-/g, ' ') })
+          })
+
+        itemsB(items)
+      },
+      init = () => {
+        if (state.auto) {
+          window.addEventListener('hashchange', onHashChanged)
+          onHashChanged()
+        } else itemsB(state.items.map(mapToBreadcrumb))
+      },
+      render = () => <Fluent.Breadcrumb data-test={name} styles={{ itemLink: { textTransform: 'capitalize' } }} items={itemsB()} />,
+      dispose = () => { if (state.auto) window.removeEventListener('hashchange', onHashChanged) }
+
+    return { init, render, changed, itemsB, dispose }
   })
 
 cards.register('breadcrumbs', View)

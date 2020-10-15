@@ -135,12 +135,15 @@ class BreadcrumbsCard:
             self,
             box: str,
             items: List[Breadcrumb],
+            auto: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
         """A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`"""
+        self.auto = auto
+        """Turn off automatic breadcrumbs generator based on current URL.`"""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -154,6 +157,7 @@ class BreadcrumbsCard:
             view='breadcrumbs',
             box=self.box,
             items=[__e.dump() for __e in self.items],
+            auto=self.auto,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -166,13 +170,16 @@ class BreadcrumbsCard:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('BreadcrumbsCard.items is required.')
+        __d_auto: Any = __d.get('auto')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
+        auto: Optional[bool] = __d_auto
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return BreadcrumbsCard(
             box,
             items,
+            auto,
             commands,
         )
 
