@@ -65,15 +65,20 @@ func checkSession(sessions OIDCSessions, h http.Handler) http.Handler {
 			return
 		}
 
+		u, _ := url.Parse("/_login")
+		q := u.Query()
+		q.Set("next", r.URL.Path)
+		u.RawQuery = q.Encode()
+
 		cookie, err := r.Cookie(oidcSessionKey)
 		if err != nil {
-			http.Redirect(w, r, "/_login", http.StatusFound)
+			http.Redirect(w, r, u.String(), http.StatusFound)
 			return
 		}
 		sessionID := cookie.Value
 		_, ok := sessions[sessionID]
 		if !ok {
-			http.Redirect(w, r, "/_login", http.StatusFound)
+			http.Redirect(w, r, u.String(), http.StatusFound)
 			return
 		}
 		h.ServeHTTP(w, r)
