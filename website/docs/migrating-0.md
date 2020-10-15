@@ -3,7 +3,7 @@ id: migrating-0
 title: Migrating from pre-alpha
 ---
 
-Before you begin, it is highly recommended that you [download](https://github.com/h2oai/qd/releases) a release and run the interactive `tour.py` that ships with the release to get a feel for what Wave programs look like in practice.
+Before you begin, it is highly recommended that you [download](https://github.com/h2oai/wave/releases) a release and run the interactive `tour.py` that ships with the release to get a feel for what Wave programs look like in practice.
 
 ## What has changed?
 

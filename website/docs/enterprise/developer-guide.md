@@ -202,7 +202,7 @@ $ q8s-cli instance logs c22222222-3333-4444-5555-666666666666
 2020/10/13 06:38:58 # \__, /\__,_/
 2020/10/13 06:38:58 #   /_/
 2020/10/13 06:38:58 #
-2020/10/13 06:38:58 # {"address":":55555","t":"listen","webroot":"/qd/www"}
+2020/10/13 06:38:58 # {"address":":55555","t":"listen","webroot":"/wave/www"}
 2020/10/13 06:38:58 # {"host":"ws://127.0.0.1:55556","route":"/","t":"relay"}
 ...
 ```
@@ -218,9 +218,9 @@ Then navigate to `http://localhost:55555/<your main route>`.
 
 ```sh
 $ q8s-cli exec
-{"level":"info","log_level":"debug","url":"file:///qz/q-peak.0.1.2.qz","app_root":"/app","venv_root":"/resources","server_path":"/qd/qd","py_module":"peak","tmp":"/tmp","startup_server":true,"version":"latest-20200929","time":"2020-10-13T06:42:21Z","message":"configuration"}
+{"level":"info","log_level":"debug","url":"file:///qz/q-peak.0.1.2.qz","app_root":"/app","venv_root":"/resources","server_path":"/wave/wave","py_module":"peak","tmp":"/tmp","startup_server":true,"version":"latest-20200929","time":"2020-10-13T06:42:21Z","message":"configuration"}
 {"level":"info","port":":55555","time":"2020-10-13T06:42:21Z","message":"starting launcher server"}
-{"level":"info","executable":"/qd/qd","time":"2020-10-13T06:42:21Z","message":"q executable found"}
+{"level":"info","executable":"/wave/wave","time":"2020-10-13T06:42:21Z","message":"q executable found"}
 ...
 ```
 

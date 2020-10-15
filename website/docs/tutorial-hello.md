@@ -20,8 +20,8 @@ Next, let's set up a working directory to author our program.
 
 ### Create a directory
 ```shell 
-mkdir $HOME/q-apps
-cd $HOME/q-apps
+mkdir $HOME/wave-apps
+cd $HOME/wave-apps
 ```
 
 ### Set up a virtual environment
@@ -39,11 +39,11 @@ python3 -m venv venv
 
 ## Step 3: Write your program
 
-Next, open your preferred text editor, create a Python script called `hello_world.py` in the `$HOME/q-apps` directory, and copy-paste the following. 
+Next, open your preferred text editor, create a Python script called `hello_world.py` in the `$HOME/wave-apps` directory, and copy-paste the following. 
 
 For now, don't worry too much about what this program is doing. We'll get to that shortly.
 
-```py title="$HOME/q-apps/hello_world.py"
+```py title="$HOME/wave-apps/hello_world.py"
 from h2o_q import site, ui
 
 # Grab a reference to the page at route '/hello'
@@ -64,7 +64,7 @@ page.save()
 ## Step 4: Run your program
 
 ```shell 
-cd $HOME/q-apps
+cd $HOME/wave-apps
 ./venv/bin/python hello_world.py
 ```
 
@@ -127,7 +127,7 @@ Finally, just for kicks, let's make some changes to our hello world page using a
 ### Start a Python REPL
 
 ```shell 
-cd $HOME/q-apps
+cd $HOME/wave-apps
 ./venv/bin/python
 ```
 

@@ -28,7 +28,7 @@ This tutorial assumes your Wave server is up and running, and you have a working
 
 Our program looks like this. It's mostly similar to the one in the  [Hello World tutorial](tutorial-hello.md), with one exception: we're setting the markdown card's content inside a `for` loop.
 
-```py {13-18} title="$HOME/q-apps/beer_wall.py"
+```py {13-18} title="$HOME/wave-apps/beer_wall.py"
 import time
 from h2o_q import site, ui
 
@@ -53,7 +53,7 @@ Take one down, pass it around, {i - 1} bottles of beer on the wall...
 ## Step 2: Run your program
 
 ```shell 
-cd $HOME/q-apps
+cd $HOME/wave-apps
 ./venv/bin/python beer_wall.py
 ```
 

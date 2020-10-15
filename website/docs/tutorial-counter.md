@@ -18,7 +18,7 @@ This tutorial assumes your Wave server is up and running, and you have a working
 
 The first step towards listening to events from the UI is to, literally, `listen`.
 
-```py title="$HOME/q-apps/counter.py"
+```py title="$HOME/wave-apps/counter.py"
 from h2o_q import Q, listen
 
 async def serve(q: Q):
@@ -40,7 +40,7 @@ It's important to understand that `serve()` is called on every event from the UI
 Next, run your app:
 
 ```shell
-cd $HOME/q-apps
+cd $HOME/wave-apps
 ./venv/bin/python counter.py
 ```
 
@@ -52,7 +52,7 @@ Let's add a button to our app. Out goal is to increment and display the bean cou
 
 To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](components.md) (also called *widgets*). In this case our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome. 
 
-```py {5-18} title="$HOME/q-apps/counter.py"
+```py {5-18} title="$HOME/wave-apps/counter.py"
 from h2o_q import Q, listen, ui
 
 
@@ -89,7 +89,7 @@ In a Wave app, we always access the page using the *query context* `q`. The quer
 Restart your app (`^C` and run it again):
 
 ```shell
-cd $HOME/q-apps
+cd $HOME/wave-apps
 ./venv/bin/python counter.py
 ```
 
@@ -103,7 +103,7 @@ If you click on the button, you'll notice that it doesn't do anything. This is b
 
 Add a condition to check if the button is clicked, and if so, increment the bean count.
 
-```py {5-7} title="$HOME/q-apps/counter.py"
+```py {5-7} title="$HOME/wave-apps/counter.py"
 from h2o_q import Q, listen, ui
 
 
@@ -148,7 +148,7 @@ Each component in the Wave component library populates `q.args` with its own val
 Go ahead and restart your app (`^C` and run it again):
 
 ```shell
-cd $HOME/q-apps
+cd $HOME/wave-apps
 ./venv/bin/python counter.py
 ```
 
@@ -167,7 +167,7 @@ To view the Wave server's log, switch to the terminal window running the Q serve
 Let's wrinkle our noses in disgust and fix this gross inefficiency right away to make our little bean counter web-scale for great good.
 
 
-```py {9-10,22-23} title="$HOME/q-apps/counter.py"
+```py {9-10,22-23} title="$HOME/wave-apps/counter.py"
 from h2o_q import Q, listen, ui
 
 
@@ -227,7 +227,7 @@ In other words, your Q app is multi-user by default, but how the app manages dat
 To maintain bean counts at the user level, all we have to do store `bean_count` in `q.user` instead of `q.client`.
  
  
-```py {5,7} title="$HOME/q-apps/counter.py"
+```py {5,7} title="$HOME/wave-apps/counter.py"
 from h2o_q import Q, listen, ui
 
 
@@ -265,7 +265,7 @@ This would be considered normal behavior for a typical web application, and most
 
 This is easier done than said - simply change the server mode to `multicast` to enable realtime sync across clients:
 
-```py {27} title="$HOME/q-apps/counter.py"
+```py {27} title="$HOME/wave-apps/counter.py"
 from h2o_q import Q, listen, ui
 
 
@@ -310,7 +310,7 @@ Re-running our app proves that the user-level bean count indeed syncs across tab
 Going from user-level bean counting to app-level bean counting is easy: simply store `bean_count` on `q.app` instead of `q.user`, and switch the server mode to `broadcast`:
 
  
-```py {5,7,27} title="$HOME/q-apps/counter.py"
+```py {5,7,27} title="$HOME/wave-apps/counter.py"
 from h2o_q import Q, listen, ui
 
 

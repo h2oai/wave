@@ -5,11 +5,11 @@ title: Configuration
 ## Configuring the server
 
 ### Command line options
-Execute `qd -help` to see all available command line options:
+Execute `wave -help` to see all available command line options:
 
 ```
-$ ./qd -help
-Usage of ./qd:
+$ ./wave -help
+Usage of ./wave:
   -access-key-id string
         default access key ID (default "access_key_id")
   -access-key-secret string

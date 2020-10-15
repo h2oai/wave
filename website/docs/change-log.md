@@ -13,7 +13,7 @@ When referencing the [`h2o-q` package](https://pypi.org/project/h2o-q/) from you
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
 ## v0.6.0
-Sep 23, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.6.0)
+Sep 23, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.6.0)
 - Added
   - Apps when launched now automatically use an available free port instead of `55556`.
   - Client-side redirects to URLs and hashes using `meta_card.redirect`.
@@ -37,7 +37,7 @@ Sep 23, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.6.0)
   - Python error stack trace, if any, is displayed on top of all other cards on page.
 
 ## v0.5.0
-Sep 18, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.5.0)
+Sep 18, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.5.0)
 - Added
   - Example for controlling cards with tabs.
   - Cypress test runner for CI.
@@ -48,7 +48,7 @@ Sep 18, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.5.0)
   - Value synchronization bug in textbox component.
 
 ## v0.4.0
-Sep 16, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.4.0)
+Sep 16, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.4.0)
 - Added
   - Trigger attribute to checklist component.
 - Changed
@@ -63,18 +63,18 @@ Sep 16, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.4.0)
   - `run_tests` API.
 
 ## v0.3.1
-Sep 8, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.3.1)
+Sep 8, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.3.1)
 - Fixed
   - Multiselect dropdown checkboxes do not respond when clicked.
 
 ## v0.3.0
-Sep 8, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.3.0)
+Sep 8, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.3.0)
 - Added
   - Native plots inside form cards - `ui.visualization()`.
   - Vega plots inside form cards - `ui.vega_visualization()`.
 
 ## v0.2.0
-Sep 4, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.2.0)
+Sep 4, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.2.0)
 - Added
   - Picker component.
   - Breadcrumbs component.
@@ -91,18 +91,18 @@ Sep 4, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.2.0)
   - Percentage formatting in Safari.
 
 ## v0.1.4
-Aug 10, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.1.4)
+Aug 10, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.1.4)
 - Fixed
   - Frame heights are not respected with total height of frames exceeds containing card size
 
 ## v0.1.3
-Aug 10, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.1.3)
+Aug 10, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.1.3)
 - Fixed
   - `h2o_q.ui.link()` now has a `download` attribute to work around a [Firefox bug](https://bugzilla.mozilla.org/show_bug.cgi?id=858538).
   - Race condition in the interactive tour that caused some examples to not preview properly.
 
 ## v0.1.2
-Aug 7, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.1.2)
+Aug 7, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.1.2)
 - Added
   - API for `h2o_q.core.Expando` copy, clone and item/attribute deletion.
   - Migration guide.
@@ -116,7 +116,7 @@ Aug 7, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.1.2)
   - Plot X/Y axis transpose bug.
 
 ## v0.1.1
-Jul 27, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.1.1)
+Jul 27, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.1.1)
 - Added
   - Options for file type and size to file upload component.
   - API for displaying desktop notifications.
@@ -131,7 +131,7 @@ Jul 27, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.1.1)
   - Re-rendering performance improvements.
 
 ## v0.1.0
-Jul 13, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.1.0)
+Jul 13, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.1.0)
 - Added
   - Example for displaying iframe content > 2MB.
   - Example for plotting using matplotlib.
@@ -145,7 +145,7 @@ Jul 13, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.1.0)
   - Unload API: `q.unload()` to delete uploaded files.
 
 ## v0.0.7
-Jul 12, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.0.7)
+Jul 12, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.0.7)
 - Added
   - Download API: `q.download()`.
   - Vega-lite support: `ui.vega_card()`.
@@ -166,7 +166,7 @@ Jul 12, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.0.7)
   - `ui.dashboard_card()` and `ui.notebook_card()`.
 
 ## v0.0.6
-Jul 6, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.0.6)
+Jul 6, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.0.6)
 - Added
   - Log network traffic when logging is set to debug mode.
   - Capture and display unhandled exceptions on the UI.
@@ -179,12 +179,12 @@ Jul 6, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.0.6)
   - `q.session` renamed to `q.user`
 
 ## v0.0.5
-Jun 29, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.0.5)
+Jun 29, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.0.5)
 - Added
   - Add configure() API to configure environment before launching.
 
 ## v0.0.4
-Jun 26, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.0.4)
+Jun 26, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.0.4)
 - Added
   - Multi-user and multi-client support: launch apps in `multicast` or `unicast` modes in addition to `broadcast` mode.
   - Client-specific data can now be stored and accessed via `q.client`, similar to `q.session` and `q.app`.
@@ -193,12 +193,12 @@ Jun 26, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.0.4)
   - Apps now lauch in `unicast` mode by default instead of `broadcast` mode.
 
 ## v0.0.3
-Jun 19, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.0.3)
+Jun 19, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.0.3)
 - Added
   - Make `Expando` data structure available for apps.
 
 ## v0.0.2
-Jun 17, 2020 - [Download](https://github.com/h2oai/qd/releases/tag/v0.0.2)
+Jun 17, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.0.2)
 - Initial version
 - v0.0.1
 - Package stub

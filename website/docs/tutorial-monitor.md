@@ -20,7 +20,7 @@ This tutorial assumes your Q server is up and running, and you have a working di
 We'll be using the excellent `psutil` package to read system stats. Let's go ahead and install that in our virtual environment:
 
 ```shell
-cd $HOME/q-apps
+cd $HOME/wave-apps
 ./venv/bin/pip install psutil
 ```
 
@@ -28,7 +28,7 @@ cd $HOME/q-apps
 
 Here's what our program looks like:
 
-```py {7,12,25} title="$HOME/q-apps/system_monitor.py" 
+```py {7,12,25} title="$HOME/wave-apps/system_monitor.py" 
 import time
 import psutil
 from h2o_q import site, ui, data
@@ -62,7 +62,7 @@ while True:
 ## Step 3: Run your program
 
 ```shell
-cd $HOME/q-apps
+cd $HOME/wave-apps
 ./venv/bin/python system_stats.py
 ```
 
@@ -136,7 +136,7 @@ Internally, the card's data buffer might look like in memory while in use:
 
 As a final step, we can duplicate parts of our program to create another card that displays memory stats. The two cards behave identically, except that one displays CPU usage and the other, memory.
 
-```py {18-28,38-40} title="$HOME/q-apps/system_monitor.py" 
+```py {18-28,38-40} title="$HOME/wave-apps/system_monitor.py" 
 import time
 import psutil
 from h2o_q import site, ui, data
@@ -186,7 +186,7 @@ while True:
 Terminate your program (`^C`) and restart it:
 
 ```shell
-cd $HOME/q-apps
+cd $HOME/wave-apps
 ./venv/bin/python system_stats.py
 ```
 Point your browser to [http://localhost:55555/monitor](http://localhost:55555/monitor). You should now see both CPU and memory stats live:

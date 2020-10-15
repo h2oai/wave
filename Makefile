@@ -1,7 +1,7 @@
 OS?=linux
 VERSION ?= $(shell cat VERSION)
 BUILD_DATE?=$(shell date '+%Y%m%d%H%M%S')
-REL=qd-$(VERSION)-$(OS)-amd64
+REL=wave-$(VERSION)-$(OS)-amd64
 LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
 
 all: clean setup build ## Setup and build everything
@@ -20,7 +20,7 @@ clean: ## Clean
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
 	cd tools/wavegen && $(MAKE) clean
-	rm -f qd
+	rm -f wave
 
 .PHONY: build
 build: build-ui build-server ## Build everything
@@ -38,7 +38,7 @@ test-ui-watch: ## Run UI unit tests in CI mode
 	cd ui && $(MAKE) test
 
 build-server: ## Build server for current OS/Arch
-	go build $(LDFLAGS) -o qd cmd/qd/main.go
+	go build $(LDFLAGS) -o wave cmd/wave/main.go
 
 build-py: ## Build wheel
 	cd py && $(MAKE) release
@@ -47,14 +47,14 @@ build-docker:
 	docker build \
 		--build-arg uid=$(shell id -u) \
 		--build-arg gid=$(shell id -g) \
-		-t qd-test:$(VERSION) \
+		-t wave-test:$(VERSION) \
 		.
 
 run: ## Run server
-	go run cmd/qd/main.go -web-dir ./ui/build -debug
+	go run cmd/wave/main.go -web-dir ./ui/build -debug
 
 run-cypress-bridge: ## Run Cypress proxy
-	go run cmd/qd/main.go -cypress
+	go run cmd/wave/main.go -cypress
 
 run-cypress: ## Run Cypress
 	cd test && ./node_modules/.bin/cypress open
@@ -83,7 +83,7 @@ release-os:
 	rm -rf test/cypress/screenshots/*.*
 	rm -rf test/cypress/videos/*.*
 	rsync --exclude node_modules -a test build/$(REL)/
-	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd$(EXE_EXT) cmd/qd/main.go
+	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/wave$(EXE_EXT) cmd/wave/main.go
 	cp readme-$(OS).txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 

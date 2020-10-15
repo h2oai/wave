@@ -12,21 +12,21 @@ H2O Wave runs on Linux, macOS, and Windows, having Python 3.6.1 or later.
 
 ### Step 1: Download
 
-[Download the H2O Wave SDK](https://github.com/h2oai/qd/releases/latest) for your platform. 
+[Download the H2O Wave SDK](https://github.com/h2oai/wave/releases/latest) for your platform. 
 
 ### Step 2: Extract
 
 Extract your download.
 
 ```shell
-tar -xzf qd-x.y.z-linux-amd64.tar.gz
+tar -xzf wave-x.y.z-linux-amd64.tar.gz
 ```
 ### Step 3: Move
 
 Move it to a convenient location, say `$HOME/q/`.
 
 ```shell
- mv qd-x.y.z-linux-amd64 $HOME/q
+ mv wave-x.y.z-linux-amd64 $HOME/q
 ```
 
 :::note
@@ -41,7 +41,7 @@ Inspect your `$HOME/q` directory. You should see the following content:
 ├── examples/       ... Examples
 ├── test/           ... Browser testing framework
 ├── www/            ... Wave server web root (do not modify!)
-└── qd              ... Wave server executable
+└── wave              ... Wave server executable
 ```
 
 ### Step 4: Run
@@ -55,7 +55,7 @@ cd $HOME/q
 Start the H2O Wave server.
 
 ```shell
-./qd
+./wave
 ```
 
 ```

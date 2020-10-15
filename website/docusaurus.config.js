@@ -2,7 +2,7 @@ module.exports = {
   title: 'H2O Wave',
   tagline: 'From the makers of H2O',
   url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/qd/',
+  baseUrl: '/wave/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'h2oai', // Usually your GitHub org/user name.
@@ -28,8 +28,8 @@ module.exports = {
         { to: 'docs/api/index', label: 'API', position: 'left' },
         // TODO
         // { to: 'blog', label: 'Blog', position: 'left' },
-        { to: 'https://github.com/h2oai/qd/releases/latest', label: 'Download', position: 'right', },
-        { href: 'https://github.com/h2oai/qd', label: 'GitHub', position: 'right', },
+        { to: 'https://github.com/h2oai/wave/releases/latest', label: 'Download', position: 'right', },
+        { href: 'https://github.com/h2oai/wave', label: 'GitHub', position: 'right', },
       ],
     },
     footer: {
@@ -87,11 +87,11 @@ module.exports = {
             // },
             {
               label: 'Download',
-              href: 'https://github.com/h2oai/qd/releases/latest',
+              href: 'https://github.com/h2oai/wave/releases/latest',
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/h2oai/qd',
+              href: 'https://github.com/h2oai/wave',
             },
           ],
         },
@@ -105,7 +105,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/h2oai/qd/edit/master/website/',
+          editUrl: 'https://github.com/h2oai/wave/edit/master/website/',
         },
         blog: {
           showReadingTime: true,

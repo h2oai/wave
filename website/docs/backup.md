@@ -11,24 +11,24 @@ The Q server logs all content changes to `stderr`. The changes are written in a 
 To capture the log, redirect `stderr` to a file when you launch the server:
 
 ```shell
-./qd 2> backup.log
+./wave 2> backup.log
 ```
 
 To recover state, feed the log file back in the next time you launch the server:
 
 ```shell 
-./qd -init backup.log
+./wave -init backup.log
 ```
 
 To recover state and continue capturing the log, use:
 
 ```shell 
-./qd -init backup.log 2> other.log
+./wave -init backup.log 2> other.log
 ```
 
 If you end up with a big log file, you can compact it like this:
 
 ```shell 
-./qd -compact big.log 2> small.log
+./wave -compact big.log 2> small.log
 ```
 

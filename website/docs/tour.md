@@ -14,10 +14,10 @@ q/
 |   └── tour.py     <-- The H2O Wave Tour.
 ├── test/           
 ├── www/            
-└── qd              
+└── wave              
 ```
 
-To run the tour, as with any Q app, we need to start both the Q server (`qd`) and the tour (`tour.py`). Let's go ahead and do that.
+To run the tour, as with any Q app, we need to start both the Q server (`wave`) and the tour (`tour.py`). Let's go ahead and do that.
 
 ## Step 1: Start the Q server
 

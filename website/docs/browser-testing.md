@@ -55,7 +55,7 @@ $ ./node_modules/.bin/cypress open
 #### Step 2: Start the Q server as usual
 
 ```
-$ ./qd
+$ ./wave
 ```
 
 #### Step 3: Translate your Python tests to Javascript

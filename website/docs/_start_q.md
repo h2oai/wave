@@ -1,8 +1,8 @@
-To start the Wave server, simply open a new terminal window execute `qd`.
+To start the Wave server, simply open a new terminal window execute `wave`.
 
 ```shell 
 cd $HOME/q
-./qd
+./wave
 ```
 
 ```

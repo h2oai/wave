@@ -4,7 +4,7 @@ title: Contributing
 
 We appreciate all contributions. If you are planning to contribute back bug-fixes, please do so without any further discussion.
 
-If you plan to contribute new features, please first [open an issue](https://github.com/h2oai/qd/issues/new/choose) and discuss the feature with us. Sending a PR without discussion might end up resulting in a rejected PR because we might be taking the software in a different direction than you might be aware of.
+If you plan to contribute new features, please first [open an issue](https://github.com/h2oai/wave/issues/new/choose) and discuss the feature with us. Sending a PR without discussion might end up resulting in a rejected PR because we might be taking the software in a different direction than you might be aware of.
 
 (Based on the [PyTorch Contribution Guide](https://pytorch.org/docs/stable/community/contribution_guide.html).)
 
@@ -30,7 +30,7 @@ Issues that are labeled first-new-issue, low, or medium priority provide the bes
 We aim to produce high quality documentation and tutorials. On rare occasions that content includes typos or bugs. If you find something you can fix, send us a pull request for consideration.
 
 ## Submitting pull requests
-You can view a list of all open issues [here](https://github.com/h2oai/qd/issues). Commenting on an issue is a great way to get the attention of the team. From here you can share your ideas and how you plan to resolve the issue.
+You can view a list of all open issues [here](https://github.com/h2oai/wave/issues). Commenting on an issue is a great way to get the attention of the team. From here you can share your ideas and how you plan to resolve the issue.
 
 For more challenging issues, the team will provide feedback and direction for how to best solve the issue.
 
