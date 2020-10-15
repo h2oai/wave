@@ -2,7 +2,7 @@
 title: Architecture
 ---
 
-H2O Q is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python without using HTML, Javascript or CSS.
+H2O Wave is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python without using HTML, Javascript or CSS.
 
 It excels at capturing data, visualizations, and graphics from multiple sources, and broadcasting them live over the web.
 
@@ -10,18 +10,18 @@ The stack is engineered from the ground-up for low-latency, realtime information
 
 ## Overview
 
-The H2O Q runtime operates over three tiers:
-- **A content server.** The Q server, a ~10MB static binary executable that runs anywhere[^1].
-- **A language driver.** The [h2o-q PyPI package](https://pypi.org/project/h2o-q/) used by Q scripts and apps.
+The H2O Wave runtime operates over three tiers:
+- **A content server.** The Wave server, a ~10MB static binary executable that runs anywhere[^1].
+- **A language driver.** The [h2o-q PyPI package](https://pypi.org/project/h2o-q/) used by Wave scripts and apps.
 - **A browser-based client.** The user interface and components.
 
 ```
 +---------+                        +---------+
-| Browser +---------+      +-------> app1.py |
+| Browser +---------+      +------>+ app1.py |
 +---------+         |      |       +---------+
                     v      |
 +---------+       +-+------+-+     +---------+
-| Browser +------>+ Q Server +-----> app2.py |
+| Browser +------>+  Server  +---->+ app2.py |
 +---------+       +-+------+-+     +---------+
                     ^      |
 +---------+         |      |       +---------+
@@ -29,20 +29,20 @@ The H2O Q runtime operates over three tiers:
 +---------+                        +---------+
 ```
 
-The Q server has three main functions:
+The Wave server has three main functions:
 - Store site content
 - Transmit content changes to browsers.
 - Transmit browser events to apps.
 
-In other words, the Q server is comparable to a in-memory realtime database, a HTTP web server and a proxy server, all rolled into one, with browsers (*clients*) downstream, and Q apps (or scripts) upstream.
+In other words, the Wave server is comparable to a in-memory realtime database, a HTTP web server and a proxy server, all rolled into one, with browsers (*clients*) downstream, and Wave apps (or scripts) upstream.
 
-The language driver (the [h2o-q PyPI package](https://pypi.org/project/h2o-q/)) provides the ability to manage content on the Q server. It's similar in function to a database driver, but unlike typical database drivers (which use SQL as a protocol), the Q driver provides an API closely integrated with the Python language that feels natural and idiomatic in practice.
+The language driver (the [h2o-q PyPI package](https://pypi.org/project/h2o-q/)) provides the ability to manage content on the Wave server. It's similar in function to a database driver, but unlike typical database drivers (which use SQL as a protocol), the Wave driver provides an API closely integrated with the Python language that feels natural and idiomatic in practice.
 
-The browser-based client's job is to render content on the user interface, and transmit user actions in the form of *events* back to the Q server.
+The browser-based client's job is to render content on the user interface, and transmit user actions in the form of *events* back to the Wave server.
 
 ## How does it work?
 
-The Q server stores all content in a page cache called a *site*. A site is a collection of [pages](pages.md). Each page has an address, called its *route*. A page is composed of [cards](cards.md). A card holds content, and any tabular data associated with the content, called [data buffers](buffers.md). 
+The Wave server stores all content in a page cache called a *site*. A site is a collection of [pages](pages.md). Each page has an address, called its *route*. A page is composed of [cards](cards.md). A card holds content, and any tabular data associated with the content, called [data buffers](buffers.md). 
 
 When a browser is pointed to a route, it pulls a copy of the page, creates a *replica* locally, and renders the content on the user interface.
 
@@ -63,7 +63,7 @@ The language driver (the `h2o-q` PyPI package) maintains an illusion that server
       |
       v
 +-----+------+
-|  Q Server  |
+|   Server   |
 |            |
 |  +------+  |
 |  | Page |  |
@@ -84,9 +84,9 @@ The language driver (the `h2o-q` PyPI package) maintains an illusion that server
 ```
 
 
-The language driver can be used by two kinds of Python programs: *Q apps* and *Q scripts*. 
-- [Q apps](apps.md) are interactive programs that can update content and respond to user actions.
-- [Q scripts](scripts.md) are simpler, non-interactive (batch) programs: they can update content, but not respond to user actions. 
+The language driver can be used by two kinds of Python programs: *Wave apps* and *Wave scripts*. 
+- [Wave apps](apps.md) are interactive programs that can update content and respond to user actions.
+- [Wave scripts](scripts.md) are simpler, non-interactive (batch) programs: they can update content, but not respond to user actions. 
 
 Q apps sport a websocket server under the hood. When a Q app is launched, it announces its existence to the Q server, and the Q server establishes a *relay* with the Q app. When a browser tries to connect to an app, the Q server acts as a hub, relaying information back and forth between the browser and the app. 
 

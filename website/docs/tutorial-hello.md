@@ -4,13 +4,13 @@ title: "Tutorial: Hello World"
 
 import StartQ from './_start_q.md'
 
-In this section, we'll learn how to author our first H2O Q program from scratch, and understand the basics of how to display content in a web browser.
+In this section, we'll learn how to author our first H2O Wave program from scratch, and understand the basics of how to display content in a web browser.
 
 :::note
-These tutorials assume that you have some familiarity with the Python programming language. You don't have to be an expert, but it might be harder to learn both H2O Q and Python at the same time.
+These tutorials assume that you have some familiarity with the Python programming language. You don't have to be an expert, but it might be harder to learn both H2O Wave and Python at the same time.
 :::
 
-## Step 1: Start the Q Server
+## Step 1: Start the Wave Server
 
 <StartQ/>
 
@@ -31,7 +31,7 @@ A [virtual environment](https://docs.python.org/3/tutorial/venv.html) helps us m
 python3 -m venv venv
 ```
 
-### Install the H2O Q Python driver
+### Install the H2O Wave Python driver
 
 ```shell 
 ./venv/bin/pip install h2o-q
@@ -78,9 +78,9 @@ Point your browser to [http://localhost:55555/hello](http://localhost:55555/hell
 
 Let's walk through this program step by step.
 
-This program (technically a [script](scripts.md)), illustrates the core of Q's programming model, or, "How to think in Q."
+This program (technically a [script](scripts.md)), illustrates the core of Wave's programming model, or, "How to think in Wave."
  
-1. Your Q server instance holds a collection of pages.
+1. Your Wave server instance holds a collection of pages.
 2. To change a page, simply grab a reference to a page, change it, and save it. 
 
 That's it. Your changes are now visible to everyone.
@@ -89,7 +89,7 @@ Let's understand this principle in practice using the little program we just cre
 
 ### Grab a reference to a page
 
-A `site` represents a dictionary of all the pages on the Q server. To get a reference to a page hosted at the route `/hello` (which translates to `http://localhost:55555/hello`), simply grab the value at key `/hello`. 
+A `site` represents a dictionary of all the pages on the Wave server. To get a reference to a page hosted at the route `/hello` (which translates to `http://localhost:55555/hello`), simply grab the value at key `/hello`. 
 
 ```py
 page = site['/hello']
@@ -169,6 +169,6 @@ quit()
 
 ## Summary
 
-What we just did - add content from one program and make edits to it from another - illustrates another important aspect of Q's programming model: *The Q server retains content*. Your `hello_world.py` program did its thing and exited. So did your REPL. But your content was retained for the viewing pleasure of future visitors to `/hello`.  
+What we just did - add content from one program and make edits to it from another - illustrates another important aspect of Wave's programming model: *The Wave server retains content*. Your `hello_world.py` program did its thing and exited. So did your REPL. But your content was retained for the viewing pleasure of future visitors to `/hello`.  
 
 Next, we'll take the principles we learned from this tutorial and apply it towards a supposedly spirited folk song involving arithmetic progressions.

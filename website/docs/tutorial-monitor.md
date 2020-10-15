@@ -199,7 +199,7 @@ Explore other kinds of cards in the [Gallery](examples) and display additional s
 
 ## Summary
 
-In this tutorial, we learned how to use stats cards to display live information. The knowledge you've gained from these first few tutorials should be enough to design and deploy live dashboards using H2O Q. You will also have noticed that you don't need to keep your Python program running all the time to continue displaying your pages. You can terminate your Python program any time, and the Q server will happily display the last known state of all your pages.
+In this tutorial, we learned how to use stats cards to display live information. The knowledge you've gained from these first few tutorials should be enough to design and deploy live dashboards using H2O Wave. You will also have noticed that you don't need to keep your Python program running all the time to continue displaying your pages. You can terminate your Python program any time, and the Q server will happily display the last known state of all your pages.
 
 The programs you've been authoring till now are one kind of programs, called [Q scripts](scripts.md). Q scripts are not interactive. They can modify pages on the Q server, but cannot respond to user actions, like handling button clicks, menu commands, dropdown changes, and so on. To handle user interactions, you need to author [Q Apps](apps.md), which are long-running programs (*servers* or *services*) that are capable of modifying pages in response to user actions. Let's see how to do that in the next tutorial. 
 

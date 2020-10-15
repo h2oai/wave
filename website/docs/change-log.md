@@ -4,9 +4,9 @@ title: Change Log
 
 ## Versioning
 
-H2O Q and its Python driver follow [Semantic Versioning](https://semver.org/). Major releases ship every six months (~February and ~August), while minor and patch releases may ship as often as every week. Minor and patch releases should never contain breaking changes.
+H2O Wave and its Python driver follow [Semantic Versioning](https://semver.org/). Major releases ship every six months (~February and ~August), while minor and patch releases may ship as often as every week. Minor and patch releases should never contain breaking changes.
 
-When referencing the [`h2o-q` package](https://pypi.org/project/h2o-q/) from your `requirements.txt` or `setup.py`, you should always use a version constraint such as `>=4.2, <5` (any version 4.2 or greater, but less than 5), since major releases of H2O Q do include breaking changes.
+When referencing the [`h2o-q` package](https://pypi.org/project/h2o-q/) from your `requirements.txt` or `setup.py`, you should always use a version constraint such as `>=4.2, <5` (any version 4.2 or greater, but less than 5), since major releases of H2O Wave do include breaking changes.
 
 ## Support Policy
 

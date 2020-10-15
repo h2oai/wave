@@ -56,7 +56,7 @@ Map buffers are convenient to use, but use more memory on the server compared to
 
 ## The data function
 
-Use the `data()` function to declare a data buffer. The Q server uses this declaration to allocate memory for the data buffer.
+Use the `data()` function to declare a data buffer. The Wave server uses this declaration to allocate memory for the data buffer.
 
 `data()` takes multiple arguments:
 

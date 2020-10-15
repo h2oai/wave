@@ -12,7 +12,7 @@ To learn how to add, update or remove cards from a page, see [Pages](pages.md).
 
 ### Forms
 
-The form card is the most versatile and commonly used card in Q apps. 
+The form card is the most versatile and commonly used card in Wave apps. 
 
 Use a form card to display input [components](components.md) like textboxes, dropdowns, date-pickers, and so on. The form card displays its components one below the other, stacked vertically. You can lay out several form cards on a page to build out intricate user interfaces.
 
@@ -95,7 +95,7 @@ Use these cards to display plots (or charts or graphs), or draw custom graphics.
 
 ### Plot
 
-Use a plot card to display visualizations defined using Q's native `plot()` API, based on the [Grammar of Graphics](https://www.springer.com/gp/book/9780387245447).
+Use a plot card to display visualizations defined using Wave's native `plot()` API, based on the [Grammar of Graphics](https://www.springer.com/gp/book/9780387245447).
 
 See [ui.plot_card()](api/ui.md/#plot_card).
 

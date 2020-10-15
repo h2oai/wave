@@ -2,7 +2,7 @@
 title: "Tutorial: Bean Counter"
 ---
 
-In the previous tutorials, we've been authoring [Q scripts](scripts.md). A Q script is a perfectly fine and dandy way to modify pages in Q and build dashboards. However, to build *interactive applications* in Q - user interfaces that can dynamically respond to *events* (the user's actions) -  [Q apps](apps.md) are the way to go.
+In the previous tutorials, we've been authoring [Wave scripts](scripts.md). A Wave script is a perfectly fine and dandy way to modify pages in Wave and build dashboards. However, to build *interactive applications* in Wave - user interfaces that can dynamically respond to *events* (the user's actions) -  [Wave apps](apps.md) are the way to go.
 
 In the fine tradition of keeping tutorials succinct and useful, we'll author a little app that counts beans of the virtual kind, or, a bean counter, not to be confused with dubiously intentioned financial officers.
 
@@ -12,7 +12,7 @@ This tutorial outlines the basics of how to handle events, update the UI, manage
 
 ## Prerequisites
 
-This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
 
 ## Step 1: Start listening
 
@@ -76,15 +76,15 @@ async def serve(q: Q):
 listen('/counter', serve)
 ```
 
-Notice how the technique to modify and save pages in a Q app is different from that of a Q script.
+Notice how the technique to modify and save pages in a Wave app is different from that of a Wave script.
 
-| Task | Q Script | Q App |
+| Task | Wave Script | Wave App |
 |---|---|---|
 | Access page at route `/foo` | `page = site['/foo']` | `page = q.page` |
 | Access card named `foo` | `card = page['foo']` | `card = q.page['foo']` |
 | Save page | `page.save()` | `await q.page.save()` |
 
-In a Q app, we always access the page using the *runtime context* `q`. The runtime context carries useful information about the active UI event, including who issued the event, what information was entered, which buttons were clicked, and so on; and `q.page` always refers to the page located at the route you passed to `listen()` (in this case, `/counter`).
+In a Wave app, we always access the page using the *query context* `q`. The query context carries useful information about the active UI event, including who issued the event, what information was entered, which buttons were clicked, and so on; and `q.page` always refers to the page located at the route you passed to `listen()` (in this case, `/counter`).
 
 Restart your app (`^C` and run it again):
 
@@ -139,7 +139,7 @@ From now on, any time you see the term 'client', recall that it's a technical te
 :::
 
 :::info
-Each component in the Q component library populates `q.args` with its own value. For more information, see [Components](components.md).
+Each component in the Wave component library populates `q.args` with its own value. For more information, see [Components](components.md).
 :::
 
 
@@ -158,10 +158,10 @@ Point your browser to [http://localhost:55555/counter](http://localhost:55555/co
 
 ## Step 4: Make it more efficient
 
-Our program is accurate, but not necessarily efficient. On every button-click, it is recreating the form card and the button over and over again instead of updating the existing button's caption with the current bean count. You can observe how chatty the app is by gaping in abject horror at the Q server's log.
+Our program is accurate, but not necessarily efficient. On every button-click, it is recreating the form card and the button over and over again instead of updating the existing button's caption with the current bean count. You can observe how chatty the app is by gaping in abject horror at the Wave server's log.
 
 :::info
-To view the Q server's log, switch to the terminal window running the Q server.
+To view the Wave server's log, switch to the terminal window running the Q server.
 :::
 
 Let's wrinkle our noses in disgust and fix this gross inefficiency right away to make our little bean counter web-scale for great good.

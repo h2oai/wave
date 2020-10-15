@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'H2O Q',
+  title: 'H2O Wave',
   tagline: 'From the makers of H2O',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/qd/',
@@ -15,9 +15,9 @@ module.exports = {
       additionalLanguages: ['toml'],
     },
     navbar: {
-      title: 'H2O Q',
+      title: 'H2O Wave',
       logo: {
-        alt: 'H2O Q',
+        alt: 'H2O Wave',
         src: 'img/logo.svg',
       },
       items: [

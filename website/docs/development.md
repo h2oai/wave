@@ -2,7 +2,7 @@
 title: Development
 ---
 
-H2O Q apps and scripts are plain Python programs. You can develop, debug and test them from the command-line, from the Python REPL, or from your favorite text editor.
+H2O Wave apps and scripts are plain Python programs. You can develop, debug and test them from the command-line, from the Python REPL, or from your favorite text editor.
 
 Both [PyCharm Community Edition](https://www.jetbrains.com/pycharm/download) and [Visual Studio Code](https://code.visualstudio.com/) are excellent for Python programming.
 

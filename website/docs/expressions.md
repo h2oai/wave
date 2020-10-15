@@ -2,7 +2,7 @@
 title: Data-binding
 ---
 
-Some cards in the Q SDK support *data-binding expressions*, a mini language that allows computing a card's attribute from the card's data.
+Some cards in the Wave SDK support *data-binding expressions*, a mini language that allows computing a card's attribute from the card's data.
 
 ## Rationale
 

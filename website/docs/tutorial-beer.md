@@ -2,7 +2,7 @@
 title: "Tutorial: Beer Wall"
 ---
 
-In this tutorial, we'll learn how to update a web page periodically and observe our changes live in the browser. Completing this tutorial should improve your understanding of how easy it is to use H2O Q to publish information in realtime.
+In this tutorial, we'll learn how to update a web page periodically and observe our changes live in the browser. Completing this tutorial should improve your understanding of how easy it is to use H2O Wave to publish information in realtime.
 
 The program we'll be writing is a verse generator for the runaway mid-20th century smash hit, [99 Bottles of Beer](https://en.wikipedia.org/wiki/99_Bottles_of_Beer), which looks something like this:
 
@@ -22,7 +22,7 @@ Our program will be analogous to [our "Hello, World!" program](tutorial-hello.md
 
 ## Prerequisites
 
-This tutorial assumes your Q server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
+This tutorial assumes your Wave server is up and running, and you have a working directory for authoring programs. If not, head over to the [Hello World tutorial](tutorial-hello.md) and complete steps 1 and 2.
 
 ## Step 1: Write your program
 
@@ -65,7 +65,7 @@ Point your browser to [http://localhost:55555/beer](http://localhost:55555/beer)
 
 ## Step 4: Make it more efficient
 
-Our program is accurate, but not necessarily efficient. Every second, it sends the entire verse in its entirety to the Q server, with only minuscule changes (`i` and `i-1`). You can observe this in the Q server's log (switch to the terminal window running the Q server to view the log):  
+Our program is accurate, but not necessarily efficient. Every second, it sends the entire verse in its entirety to the Wave server, with only minuscule changes (`i` and `i-1`). You can observe this in the Wave server's log (switch to the terminal window running the Wave server to view the log):  
 
 ```
 2020/10/02 12:13:43 * /beer {"d":[{"k":"wall content","v":"\n98 bottles of beer on the wall, 98 bottles of beer.\n\nTake one down, pass it around, 97 bottles of beer on the wall...\n"}]}
@@ -75,7 +75,7 @@ Our program is accurate, but not necessarily efficient. Every second, it sends t
 2020/10/02 12:13:48 * /beer {"d":[{"k":"wall content","v":"\n94 bottles of beer on the wall, 94 bottles of beer.\n\nTake one down, pass it around, 93 bottles of beer on the wall...\n"}]}
 ```
 
-We can do better. Instead of sending the verse over and over again, we can send the verse once with placeholders for `i` and `i-1`, and then send only `i` and `i-1` during subsequent updates. That will keep network traffic down to a minimum and allow the Q server to perform less work while sending your updates to your website's bajillion visitors.
+We can do better. Instead of sending the verse over and over again, we can send the verse once with placeholders for `i` and `i-1`, and then send only `i` and `i-1` during subsequent updates. That will keep network traffic down to a minimum and allow the Wave server to perform less work while sending your updates to your website's bajillion visitors.
 
 Here's how we approach this. First, when we create our markdown card, we set the content to an *expression* (or *formula*). An expression is a string that starts with `=` (similar to formulae in spreadsheet software). Our expression looks like this:
 
@@ -135,7 +135,7 @@ for i in range(99, 0, -1):
     time.sleep(1)
 ```
 
-Run your program again. You should see the same results in your browser as before, but you'll notice that the information flowing through the Q server is significantly less than before: 
+Run your program again. You should see the same results in your browser as before, but you'll notice that the information flowing through the Wave server is significantly less than before: 
 
 ``` 
 2020/10/02 13:53:11 * /beer {"d":[{"k":"wall data before","v":"98"},{"k":"wall data after","v":"97"}]}
@@ -148,6 +148,6 @@ Run your program again. You should see the same results in your browser as befor
 
 ## Summary
 
-In this tutorial, we learned how to send periodic updates to the Q server and observe changes in realtime. 
+In this tutorial, we learned how to send periodic updates to the Wave server and observe changes in realtime. 
 
 In the next tutorial, we'll put these principles to real-world use, popping up charts for a song instead of chart topping pop songs.

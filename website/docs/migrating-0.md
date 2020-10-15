@@ -3,11 +3,11 @@ id: migrating-0
 title: Migrating from pre-alpha
 ---
 
-Before you begin, it is highly recommended that you [download](https://github.com/h2oai/qd/releases) a release and run the interactive `tour.py` that ships with the release to get a feel for what Q programs look like in practice.
+Before you begin, it is highly recommended that you [download](https://github.com/h2oai/qd/releases) a release and run the interactive `tour.py` that ships with the release to get a feel for what Wave programs look like in practice.
 
 ## What has changed?
 
-From an app-development perspective, the most important change is that Q is more of a library rather than a framework.
+From an app-development perspective, the most important change is that Wave is more of a library rather than a framework.
 
 With the previous framework, the only way to execute an app was via the Q server. This limitation has been removed. The script/app you author is just a regular Python program in which you `import h2o_q` and execute via:
 
@@ -18,7 +18,7 @@ With the previous framework, the only way to execute an app was via the Q server
 
 This also means that you can apply breakpoints and debug or step-through your program in your debugger of choice.
 
-From an information architecture perspective, control has been inverted: instead of your app being an extension to Q's data/prep/search features, Q's features are now optional additions to your app, and your app takes center stage. Implementation-wise, instead of your app running in a sidebar inside of Q's UI, your app now occupies the entire UI.
+From an information architecture perspective, control has been inverted: instead of your app being an extension to Wave's data/prep/search features, Wave's features are now optional additions to your app, and your app takes center stage. Implementation-wise, instead of your app running in a sidebar inside of Q's UI, your app now occupies the entire UI.
 
 ## Breaking changes
 
@@ -91,7 +91,7 @@ await q.page.save()
 
 #### Removed: callback functions for request-handling.
 
-Q apps are 100% push-based, using duplex communication instead of a request/reply paradigm. There is no need to have a tangled mess of callbacks to handle UI events.
+Wave apps are 100% push-based, using duplex communication instead of a request/reply paradigm. There is no need to have a tangled mess of callbacks to handle UI events.
 
 Instead, all requests are routed to a single function, and you can decide how to organize your application logic by branching on `q.args.*`.
 

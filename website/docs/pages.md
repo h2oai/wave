@@ -2,9 +2,9 @@
 title: Pages
 ---
 
-The Q server stores and manages content. Content is stored in a page cache, called a *site*. A Q server contains exactly one site. A site holds a collection of *pages*. A page is composed of *cards*. Cards hold content and [data buffers](buffers.md).
+The Wave server stores and manages content. Content is stored in a page cache, called a *site*. A Wave server contains exactly one site. A site holds a collection of *pages*. A page is composed of *cards*. Cards hold content and [data buffers](buffers.md).
 
-To reference a site from within a Q script, import `site`.
+To reference a site from within a Wave script, import `site`.
 
 ```py 
 from h2o_q import site
@@ -12,7 +12,7 @@ from h2o_q import site
 
 `site` is a dictionary-like object. 
 
-To reference the current site from within a Q app, use `q.site`.
+To reference the current site from within a Wave app, use `q.site`.
 
 ```py
 async def serve(q: Q):
@@ -25,7 +25,7 @@ To reference a page hosted at `/foo`, use `site['/foo']`.
 page = site['/foo']
 ```
 
-To reference the current page in a Q app, use `q.page`.
+To reference the current page in a Wave app, use `q.page`.
 
 ```py
 async def serve(q: Q):

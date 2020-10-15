@@ -2,7 +2,7 @@
 title: Graphics
 ---
 
-H2O Q provides a versatile API for rendering vector graphics (SVG) backed by [data buffers](buffers.md).
+H2O Wave provides a versatile API for rendering vector graphics (SVG) backed by [data buffers](buffers.md).
 
 Use the graphics card [ui.graphics_card()](http://localhost:3000/docs/api/ui#graphics_card) to render graphics.
 
@@ -77,9 +77,9 @@ The drawing commands in the above example work like this:
 4. `h -50`: Draw a line 50px left
 5. `z`: Close the path (going back to where we started)
 
-The little drawing syntax above is part of the SVG specification, not something unique to Q.
+The little drawing syntax above is part of the SVG specification, not something unique to Wave.
 
-Authoring `path()` drawing commands by hand is tedious, so Q provides two utilities to make it easier: `p()` and `turtle()`.
+Authoring `path()` drawing commands by hand is tedious, so Wave provides two utilities to make it easier: `p()` and `turtle()`.
 
 ## Drawing with paths
 
@@ -147,7 +147,7 @@ Here is an example from [Python's turtle module](https://docs.python.org/3/libra
 
 ![star](https://docs.python.org/3/_images/turtle-star.png)
 
-Here is the above example recreated in Q:
+Here is the above example recreated in Wave:
 
 ```py 
 from turtle import *

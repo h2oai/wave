@@ -12,12 +12,12 @@ H2O AI Cloud, a.k.a. q8s, recognizes three actors:
 
 over two resource types:
 
-* **App**: runnable Q app package
+* **App**: runnable Wave app package
 * **App instance**: running instane of an app
 
 ## App
 
-App is a runnable Q app package with metadata, such as (grouped into categories):
+App is a runnable Wave app package with metadata, such as (grouped into categories):
 
 * Identity
   * a unique name and version identifier

@@ -2,7 +2,7 @@
 title: Browser Testing
 ---
 
-Q supports authoring functional tests in Python for the [Cypress](https://www.cypress.io/) test framework. This feature lets you automate browser-based point-and-click tests for your app.
+Wave supports authoring functional tests in Python for the [Cypress](https://www.cypress.io/) test framework. This feature lets you automate browser-based point-and-click tests for your app.
 
 ## Installation
 
@@ -12,7 +12,7 @@ Install a recent version of [Node.js](https://nodejs.org/en/).
 
 #### Step 2: Set up Cypress
 
-Using your terminal, go to your Q installation's `test` directory and install Cypress
+Using your terminal, go to your Wave installation's `test` directory and install Cypress
 
 ```
 $ cd path/to/q

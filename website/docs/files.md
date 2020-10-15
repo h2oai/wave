@@ -2,15 +2,15 @@
 title: Files
 ---
 
-Q provides four functions to manage files from your app:
-- `ui.file_upload()` allows uploading files from the browser to the Q server.
-- `q.site.upload()` uploads files from your app to the Q server.
-- `q.site.download()` downloads a file from the Q server to your app.
-- `q.site.unload()` deletes a file from the Q server.
+Wave provides four functions to manage files from your app:
+- `ui.file_upload()` allows uploading files from the browser to the Wave server.
+- `q.site.upload()` uploads files from your app to the Wave server.
+- `q.site.download()` downloads a file from the Wave server to your app.
+- `q.site.unload()` deletes a file from the Wave server.
 
 ## Accept file uploads
 
-Use a file upload component (`ui.file_upload()`) to accept file uploads from the browser. Files get uploaded from the browser and get stored on the Q server. Use `q.site.download()` to download files from the Q server to your app.
+Use a file upload component (`ui.file_upload()`) to accept file uploads from the browser. Files get uploaded from the browser and get stored on the Wave server. Use `q.site.download()` to download files from the Wave server to your app.
 
 ```py {8,12}
 from h2o_q import Q, listen, ui
@@ -33,12 +33,12 @@ listen('/uploads', serve)
 ```
 
 :::tip
-After a file is uploaded from the browser, it is stored forever on the Q server. If you don't need the file any longer, use `q.site.unload()` to delete it from the Q server. 
+After a file is uploaded from the browser, it is stored forever on the Wave server. If you don't need the file any longer, use `q.site.unload()` to delete it from the Wave server. 
 :::
 
 ## Provide file downloads
 
-Use `q.site.upload()` to upload files from your app to the Q server. Use the returned paths to display download links in the browser.
+Use `q.site.upload()` to upload files from your app to the Wave server. Use the returned paths to display download links in the browser.
 
 ```py {4,6}
 from h2o_q import Q, listen, ui

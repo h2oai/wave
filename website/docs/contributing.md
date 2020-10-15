@@ -16,13 +16,13 @@ If this is your first time contributing to an open source project, some aspects 
 - **There is a high bar for new functionality that is added.** Unlike in a corporate environment, where the person who wrote code implicitly "owns" it and can be expected to take care of it in the beginning of its lifetime, once a pull request is merged into an open source project, it immediately becomes the collective responsibility of all maintainers on the project. When we merge code, we are saying that we, the maintainers, are able to review subsequent changes and make a bugfix to the code. This naturally leads to a higher standard of contribution.
 
 ## Proposing new features
-New feature ideas are best discussed on a specific issue. Please include as much information as you can, any accompanying data, and your proposed solution. The H2O Q team and community frequently reviews new issues and comments where they think they can help. If you feel confident in your solution, go ahead and implement it.
+New feature ideas are best discussed on a specific issue. Please include as much information as you can, any accompanying data, and your proposed solution. The H2O Wave team and community frequently reviews new issues and comments where they think they can help. If you feel confident in your solution, go ahead and implement it.
 
 ## Reporting issues
 If you’ve identified an issue, first search through the list of existing issues on the repo. If you are unable to find a similar issue, then create a new one. Supply as much information you can to reproduce the problematic behavior. Also, include any additional insights like the behavior you expect.
 
 ## Implementing features
-If you want to fix a specific issue, it’s best to comment on the individual issue with your intent. However, we do not lock or assign issues except in cases where we have worked with the developer before. It’s best to strike up a conversation on the issue and discuss your proposed solution. The H2O Q team can provide guidance that saves you time.
+If you want to fix a specific issue, it’s best to comment on the individual issue with your intent. However, we do not lock or assign issues except in cases where we have worked with the developer before. It’s best to strike up a conversation on the issue and discuss your proposed solution. The H2O Wave team can provide guidance that saves you time.
 
 Issues that are labeled first-new-issue, low, or medium priority provide the best entrance point are great places to start.
 
@@ -43,11 +43,11 @@ Improve code readability helps everyone. It is often better to submit a small nu
 Additional test coverage is appreciated.  Help us make the codebase more robust.
 
 ## Security vulnerabilities
-If you discover a security vulnerability within H2O Q, please send an email to Prithvi Prabhu at prithvi@h2o.ai. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within H2O Wave, please send an email to Prithvi Prabhu at prithvi@h2o.ai. All security vulnerabilities will be promptly addressed.
 
 ## Code of Conduct
 
-This Code of Conduct provides community guidelines for a safe, respectful, productive, and collaborative place for any person who is willing to contribute to the H2O Q community. It applies to all "collaborative space", which is defined as community communications channels (such as mailing lists, submitted patches, commit comments, etc.).
+This Code of Conduct provides community guidelines for a safe, respectful, productive, and collaborative place for any person who is willing to contribute to the H2O Wave community. It applies to all "collaborative space", which is defined as community communications channels (such as mailing lists, submitted patches, commit comments, etc.).
 
 - Participants will be tolerant of opposing views.
 - Participants must ensure that their language and actions are free of personal attacks and disparaging personal remarks.

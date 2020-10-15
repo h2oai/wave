@@ -2,7 +2,7 @@
 title: Logging
 ---
 
-Q apps are plain Python programs. Use Python's built-in `logging` module to configure logging.
+Wave apps are plain Python programs. Use Python's built-in `logging` module to configure logging.
 
 Here's a basic configuration that logs a ISO8601 timestamp, log level, and message:
 

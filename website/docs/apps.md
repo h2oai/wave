@@ -1,12 +1,12 @@
 ---
-title: Q Apps
+title: Wave Apps
 ---
 
-A Q app is the primary mechanism to publish interactive web content in H2O Q.
+A Wave app is the primary mechanism to publish interactive web content in H2O Wave.
 
-A Q app can publish content and handle user interactions, unlike a [Q script](scripts.md), which can publish content but not handle user interactions.
+A Wave app can publish content and handle user interactions, unlike a [Wave script](scripts.md), which can publish content but not handle user interactions.
 
-Here is the skeleton of a Q app:
+Here is the skeleton of a Wave app:
 
 ```py 
 from h2o_q import Q, listen, ui
@@ -26,15 +26,15 @@ listen('/foo', serve)
 - The route your app is interested in (in the above case `/foo`).
 - The handler function to call when an event is received (in the above case, `serve`).
 
-`listen()` is a blocking call: it starts an event loop listening for user interaction events, and announces itself to the Q server. The Q server then starts routing any user actions happening at `/foo` to your app. 
+`listen()` is a blocking call: it starts an event loop listening for user interaction events, and announces itself to the Wave server. The Wave server then starts routing any user actions happening at `/foo` to your app. 
 
 The `serve()` function is called every time the user performs some action at the route `/foo` (access the page, reload it, click a button, access a menu, enter text, and so on). 
 
-The details about what action was performed, and who  performed the action, are available in the argument passed to `serve()`, the *runtime context* `q` (of type [Q](api/server#q)).
+The details about what action was performed, and who  performed the action, are available in the argument passed to `serve()`, the *query context* `q` (of type [Q](api/server#q)).
 
 ## Runtime context
 
-The runtime context `q` carries the following attributes:
+The query context `q` carries the following attributes:
 
 - `route`: The route at which the action was performed (in this case, `/foo`).
 - `page`: A reference to the current [page](pages.md) (in this case, the page hosted at `/foo`).
