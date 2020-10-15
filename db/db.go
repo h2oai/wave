@@ -1,4 +1,4 @@
-package qdb
+package surf
 
 import (
 	"encoding/json"
