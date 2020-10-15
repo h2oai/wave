@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/coreos/go-oidc"
@@ -134,7 +135,7 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Handle errors by provider.
+	// Handle errors from provider.
 	if err := r.URL.Query().Get("error"); err != "" {
 		errorDescription := r.URL.Query().Get("error_description")
 		echo(Log{"t": "oauth2_callback", "error": err, "description": errorDescription})
@@ -217,4 +218,58 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.sessions[sessionID] = session
 
 	http.Redirect(w, r, session.successURL, http.StatusFound)
+}
+
+type OIDCLogoutHandler struct {
+	sessions      OIDCSessions
+	endSessionURL string
+}
+
+func newOIDCLogoutHandler(sessions OIDCSessions, endSessionURL string) http.Handler {
+	return &OIDCLogoutHandler{sessions, endSessionURL}
+}
+
+func (h *OIDCLogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Request) {
+	if h.endSessionURL == "" {
+		http.Redirect(w, r, "/", http.StatusFound)
+	} else {
+		redirectURL, err := url.Parse(h.endSessionURL)
+		if err != nil {
+			echo(Log{"t": "logout_redirect_parse", "error": err.Error()})
+			return
+		}
+
+		query := redirectURL.Query()
+		query.Set("post_logout_redirect_uri", r.Host)
+		redirectURL.RawQuery = query.Encode()
+
+		http.Redirect(w, r, redirectURL.String(), http.StatusFound)
+	}
+}
+
+func (h *OIDCLogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+	// Retrieve saved session.
+	cookie, err := r.Cookie(oidcSessionKey)
+	if err != nil {
+		echo(Log{"t": "logout_cookie", "error": "not found"})
+		h.logoutRedirect(w, r)
+		return
+	}
+	sessionID := cookie.Value
+
+	// Delete cookie.
+	cookie.MaxAge = -1
+	http.SetCookie(w, cookie)
+
+	// Clean up session.
+	_, ok := h.sessions[sessionID]
+	if !ok {
+		echo(Log{"t": "logout_session", "error": "not found"})
+		h.logoutRedirect(w, r)
+		return
+	}
+	delete(h.sessions, sessionID)
+
+	h.logoutRedirect(w, r)
 }

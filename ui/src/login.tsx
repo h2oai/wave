@@ -18,7 +18,7 @@ const
   Login = () => {
     const
       queryString = window.location.search,
-      action = `/auth/init${queryString}`
+      action = `/_auth/init${queryString}`
     return (
       <div className={css.login}>
         <form action={action} method="POST">

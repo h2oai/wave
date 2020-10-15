@@ -41,6 +41,7 @@ func main() {
 	flag.StringVar(&conf.ClientSecret, "client-secret", "", "OIDC client secret")
 	flag.StringVar(&conf.ProviderURL, "provider-url", "", "OIDC provider url")
 	flag.StringVar(&conf.RedirectURL, "redirect-url", "", "OIDC redirect url")
+	flag.StringVar(&conf.EndSessionURL, "end-session-url", "", "OIDC end session url")
 
 	flag.Parse()
 

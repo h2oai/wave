@@ -403,6 +403,7 @@ type ServerConf struct {
 	ClientSecret    string
 	ProviderURL     string
 	RedirectURL     string
+	EndSessionURL   string
 }
 
 // Run runs the HTTP server.
@@ -437,8 +438,9 @@ func Run(conf ServerConf) {
 	}
 
 	if conf.OIDCEnabled {
-		http.Handle("/auth/init", newOIDCInitHandler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
-		http.Handle("/oauth2/callback", newOAuth2Handler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
+		http.Handle("/_auth/init", newOIDCInitHandler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
+		http.Handle("/_auth/callback", newOAuth2Handler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
+		http.Handle("/_logout", newOIDCLogoutHandler(sessions, conf.EndSessionURL))
 	}
 
 	http.Handle("/_s", newSocketServer(broker, sessions))
