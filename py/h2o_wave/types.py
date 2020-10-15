@@ -15,7 +15,7 @@ def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}
 
 
 class Breadcrumb:
-    """Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
+    """Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
     """
     def __init__(
             self,
@@ -140,7 +140,7 @@ class BreadcrumbsCard:
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
-        """A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`"""
+        """A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`"""
         self.commands = commands
         """Contextual menu commands for this component."""
 

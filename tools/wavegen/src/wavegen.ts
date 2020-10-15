@@ -249,7 +249,7 @@ const
   },
   processDir = (files: File[], dirpath: S) => {
     const
-      ignored = toLookup(fs.readFileSync(path.join(dirpath, '.qgen'), 'utf8').split('\n').map(x => x.trim())),
+      ignored = toLookup(fs.readFileSync(path.join(dirpath, '.wavegen'), 'utf8').split('\n').map(x => x.trim())),
       filenames = fs.readdirSync(dirpath)
     for (const filename of filenames) {
       if (ignored[filename]) continue
@@ -469,7 +469,7 @@ const
           p(`        ${m.name}: ` + m.comments.join(' '))
         }
         p(`    Returns:`)
-        p(`        A \`h2o_q.types.${type.name}\` instance.`)
+        p(`        A \`h2o_wave.types.${type.name}\` instance.`)
         p(`    """`)
         if (type.oneOf) {
           p(`    return ${type.oneOf.type.name}(${type.oneOf.name}=${type.name}(`)

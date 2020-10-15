@@ -10,7 +10,7 @@ setup: ## Set up development dependencies
 	$(MAKE) setup-lint
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
-	cd tools/qgen && $(MAKE) setup build
+	cd tools/wavegen && $(MAKE) setup build
 
 setup-lint: ## Setup linters
 	npm ci
@@ -19,7 +19,7 @@ clean: ## Clean
 	rm -rf build
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
-	cd tools/qgen && $(MAKE) clean
+	cd tools/wavegen && $(MAKE) clean
 	rm -f qd
 
 .PHONY: build
@@ -60,7 +60,7 @@ run-cypress: ## Run Cypress
 	cd test && ./node_modules/.bin/cypress open
 
 generate: ## Generate driver bindings
-	cd tools/qgen && $(MAKE) run
+	cd tools/wavegen && $(MAKE) run
 
 .PHONY: docs
 docs: ## Generate docs
