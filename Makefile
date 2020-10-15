@@ -77,7 +77,7 @@ release-os:
 	rm -rf build/$(REL)
 	mkdir -p build/$(REL)
 	rsync -a ui/build/ build/$(REL)/www
-	rsync -a py/build/docs/h2o_q build/$(REL)/ && mv build/$(REL)/h2o_q build/$(REL)/docs
+	rsync -a py/build/docs/h2o_wave build/$(REL)/ && mv build/$(REL)/h2o_wave build/$(REL)/docs
 	rsync -a py/examples build/$(REL)/
 	rm -rf test/cypress/integration/*.js
 	rm -rf test/cypress/screenshots/*.*

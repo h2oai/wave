@@ -1,4 +1,4 @@
-all: build ## Build h2o_q wheel
+all: build ## Build h2o_wave wheel
 
 .PHONY: build
 build: purge
@@ -17,23 +17,22 @@ setup: ## Install dependencies
 
 .PHONY: docs
 docs: ## Build API docs
-	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_q
-	mv build/docs/h2o_q/* ../website/docs/api/
+	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_wave
+	mv build/docs/h2o_wave/* ../website/docs/api/
 	./venv/bin/python sync_examples.py
 
 purge: ## Purge previous build
-	rm -rf build dist h2o_q.egg-info
+	rm -rf build dist h2o_wave.egg-info
 
 .PHONY: examples
 examples:
-	sed -i -r -e "s/h2o_q.+/h2o_q==$(VERSION)/" examples/requirements.txt
+	sed -i -r -e "s/h2o_wave.+/h2o_wave==$(VERSION)/" examples/requirements.txt
 
 .PHONY: release
 release: build docs examples ## Prepare release artifacts
 
 clean: purge ## Clean
-	rm -rf docs/build h2o_q-api-docs.zip venv
-	rm -f examples.tar.gz
+	rm -rf docs/build venv
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
