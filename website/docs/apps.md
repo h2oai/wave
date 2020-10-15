@@ -2,7 +2,7 @@
 title: Wave Apps
 ---
 
-A Wave app is the primary mechanism to publish interactive web content in H2O Wave.
+A Wave app is the primary mechanism to publish interactive web content in Wave.
 
 A Wave app can publish content and handle user interactions, unlike a [Wave script](scripts.md), which can publish content but not handle user interactions.
 

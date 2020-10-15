@@ -2,7 +2,7 @@
 title: Graphics
 ---
 
-H2O Wave provides a versatile API for rendering vector graphics (SVG) backed by [data buffers](buffers.md).
+Wave provides a versatile API for rendering vector graphics (SVG) backed by [data buffers](buffers.md).
 
 Use the graphics card [ui.graphics_card()](http://localhost:3000/docs/api/ui#graphics_card) to render graphics.
 

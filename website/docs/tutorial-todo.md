@@ -4,7 +4,7 @@ title: "Tutorial: Todo List"
 
 In this tutorial, we'll build something a bit more substantial and useful: a to-do list with realtime sync, in under 75 lines of (well-formatted, well-commented) code.
 
-More importantly, this tutorial will not introduce any new concepts. Everything you need to know about authoring interactive apps using H2O Wave is already covered in the [previous tutorial](tutorial-counter.md). From this point on, it's mostly a matter of [abstraction](https://htdp.org/2020-8-1/Book/part_three.html), which is a fancy term for how you solve the problem at hand using short, simple, clear, elegant, modular functions that [do one thing and do it well](https://en.wikipedia.org/wiki/Unix_philosophy). 
+More importantly, this tutorial will not introduce any new concepts. Everything you need to know about authoring interactive apps using Wave is already covered in the [previous tutorial](tutorial-counter.md). From this point on, it's mostly a matter of [abstraction](https://htdp.org/2020-8-1/Book/part_three.html), which is a fancy term for how you solve the problem at hand using short, simple, clear, elegant, modular functions that [do one thing and do it well](https://en.wikipedia.org/wiki/Unix_philosophy). 
 
 Above all, prefer brevity and clarity. [The best code is no code at all](https://blog.codinghorror.com/the-best-code-is-no-code-at-all/).
 
@@ -481,7 +481,7 @@ A little housekeeping goes a long way: add a "Clear" button on the main page to 
 
 Congratulations! You've completed all the tutorials (hopefully). There are three paths you can take from here:
 
-- [Gallery](examples). 150+ examples that cover everything that the H2O Wave has to offer.
+- [Gallery](examples). 150+ examples that cover everything that Wave has to offer.
 - [Guide](guide). In-depth look at each of Wave's features.
 - [API](api/index). Reference-level documentation for the Python API.
 

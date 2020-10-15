@@ -2,7 +2,7 @@
 title: "Tutorial: Beer Wall"
 ---
 
-In this tutorial, we'll learn how to update a web page periodically and observe our changes live in the browser. Completing this tutorial should improve your understanding of how easy it is to use H2O Wave to publish information in realtime.
+In this tutorial, we'll learn how to update a web page periodically and observe our changes live in the browser. Completing this tutorial should improve your understanding of how easy it is to use Wave to publish information in realtime.
 
 The program we'll be writing is a verse generator for the runaway mid-20th century smash hit, [99 Bottles of Beer](https://en.wikipedia.org/wiki/99_Bottles_of_Beer), which looks something like this:
 

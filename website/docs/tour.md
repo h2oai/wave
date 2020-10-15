@@ -3,15 +3,15 @@ title: A Tour of Wave
 ---
 import StartQ from './_start_q.md'
 
-Your H2O Wave release download ships with [over 150 examples](examples).
+Your Wave release download ships with [over 150 examples](examples).
 
 You can play around with these examples in your browser using `tour.py`, a Python script (itself a Wave app) located in `examples/`:
 
-```none title="Contents of $HOME/q"
+```none title="Contents of $HOME/wave"
 q/
 ├── docs/           
 ├── examples/       <-- Examples live here.
-|   └── tour.py     <-- The H2O Wave Tour.
+|   └── tour.py     <-- The Wave Tour.
 ├── test/           
 ├── www/            
 └── wave              
@@ -32,7 +32,7 @@ Do this from a new terminal window!
 :::
 
 ```shell 
-cd $HOME/q
+cd $HOME/wave
 python3 -m venv venv
 ./venv/bin/pip install -r examples/requirements.txt
 ./venv/bin/python examples/tour.py
@@ -55,7 +55,7 @@ To play with the tour's active example in isolation, simply open a new browser t
 In this section, we started the Wave server and then launched `tour.py` to experience the tour. In general, this is how you'd typically launch any app, including your own. There is nothing special about `tour.py`. In fact, to run any example, all you need to do is repeat the steps above in a new terminal window. For example, to run `todo.py`, simply run:
 
 ```shell 
-cd $HOME/q
+cd $HOME/wave
 ./venv/bin/python examples/todo.py
 ```
 

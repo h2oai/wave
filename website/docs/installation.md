@@ -23,17 +23,17 @@ tar -xzf wave-x.y.z-linux-amd64.tar.gz
 ```
 ### Step 3: Move
 
-Move it to a convenient location, say `$HOME/q/`.
+Move it to a convenient location, say `$HOME/wave/`.
 
 ```shell
- mv wave-x.y.z-linux-amd64 $HOME/q
+ mv wave-x.y.z-linux-amd64 $HOME/wave
 ```
 
 :::note
-If you have a previous version of H2O Wave installed, be sure to remove it before installing another. To remove it, simply delete the previous directory.
+If you have a previous version of Wave installed, be sure to remove it before installing another. To remove it, simply delete the previous directory.
 :::
 
-Inspect your `$HOME/q` directory. You should see the following content:
+Inspect your `$HOME/wave` directory. You should see the following content:
 
 ```
 .
@@ -46,13 +46,13 @@ Inspect your `$HOME/q` directory. You should see the following content:
 
 ### Step 4: Run
 
-Go to your H2O Wave directory.
+Go to your Wave directory.
 
 ```shell
-cd $HOME/q
+cd $HOME/wave
 ```
 
-Start the H2O Wave server.
+Start the Wave server.
 
 ```shell
 ./wave
@@ -67,7 +67,7 @@ Start the H2O Wave server.
 2020/10/01 01:27:35 # \__, /\__,_/
 2020/10/01 01:27:35 #   /_/
 2020/10/01 01:27:35 # 
-2020/10/01 01:27:35 # {"address":":55555","t":"listen","webroot":"/home/elp/q/www"}
+2020/10/01 01:27:35 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
 
 ```
 
@@ -77,7 +77,7 @@ Finally, point your web browser to [http://localhost:55555/](http://localhost:55
 
 ![spinner](assets/installation__waiting.png)
 
-Congratulations! H2O Wave is now running, but doesn't have any content yet (hence the spinner). 
+Congratulations! Wave is now running, but doesn't have any content yet (hence the spinner). 
 
 In the next few sections, we'll add some content and see what the fuss is all about.
 

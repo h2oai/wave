@@ -1,7 +1,7 @@
 To start the Wave server, simply open a new terminal window execute `wave`.
 
 ```shell 
-cd $HOME/q
+cd $HOME/wave
 ./wave
 ```
 
@@ -14,7 +14,7 @@ cd $HOME/q
 2020/10/01 01:27:35 # \__, /\__,_/
 2020/10/01 01:27:35 #   /_/
 2020/10/01 01:27:35 # 
-2020/10/01 01:27:35 # {"address":":55555","t":"listen","webroot":"/home/elp/q/www"}
+2020/10/01 01:27:35 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
 
 ```
 

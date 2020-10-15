@@ -10,7 +10,7 @@ The stack is engineered from the ground-up for low-latency, realtime information
 
 ## Overview
 
-The H2O Wave runtime operates over three tiers:
+The Wave runtime operates over three tiers:
 - **A content server.** The Wave server, a ~10MB static binary executable that runs anywhere[^1].
 - **A language driver.** The [h2o-wave PyPI package](https://pypi.org/project/h2o-wave/) used by Wave scripts and apps.
 - **A browser-based client.** The user interface and components.

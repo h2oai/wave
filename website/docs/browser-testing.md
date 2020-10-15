@@ -15,7 +15,7 @@ Install a recent version of [Node.js](https://nodejs.org/en/).
 Using your terminal, go to your Wave installation's `test` directory and install Cypress
 
 ```
-$ cd path/to/q
+$ cd path/to/wave
 $ cd test
 $ npm install
 ```
@@ -47,7 +47,7 @@ def test_wizard(cy):
 #### Step 1: Start the Cypress test runner
 
 ```
-$ cd path/to/q
+$ cd path/to/wave
 $ cd test
 $ ./node_modules/.bin/cypress open
 ```
@@ -63,14 +63,14 @@ $ ./wave
 To translate your Python tests to Javascript, execute the Python module or file containing your tests like this:
 
 ```
-$ CYPRESS_INTEGRATION_TEST_DIR=path/to/q/test/cypress/integration ./venv/bin/python examples/wizard.py
+$ CYPRESS_INTEGRATION_TEST_DIR=path/to/wave/test/cypress/integration ./venv/bin/python examples/wizard.py
 ```
 The `CYPRESS_INTEGRATION_TEST_DIR` environment variable indicates where the Wave SDK should write translated files to. This must be set to the `cypress/integration` directory.
 
 Alternatively, you can set the `CYPRESS_INTEGRATION_TEST_DIR` environment variable in your shell (or IDE) to simplify running your test file:
 
 ```
-$ export CYPRESS_INTEGRATION_TEST_DIR=path/to/q/test/cypress/integration
+$ export CYPRESS_INTEGRATION_TEST_DIR=path/to/wave/test/cypress/integration
 $ ./venv/bin/python examples/wizard.py
 ```
 

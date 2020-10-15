@@ -4,10 +4,10 @@ title: "Tutorial: Hello World"
 
 import StartQ from './_start_q.md'
 
-In this section, we'll learn how to author our first H2O Wave program from scratch, and understand the basics of how to display content in a web browser.
+In this section, we'll learn how to author our first Wave program from scratch, and understand the basics of how to display content in a web browser.
 
 :::note
-These tutorials assume that you have some familiarity with the Python programming language. You don't have to be an expert, but it might be harder to learn both H2O Wave and Python at the same time.
+These tutorials assume that you have some familiarity with the Python programming language. You don't have to be an expert, but it might be harder to learn both Wave and Python at the same time.
 :::
 
 ## Step 1: Start the Wave Server
@@ -31,7 +31,7 @@ A [virtual environment](https://docs.python.org/3/tutorial/venv.html) helps us m
 python3 -m venv venv
 ```
 
-### Install the H2O Wave Python driver
+### Install the Wave Python driver
 
 ```shell 
 ./venv/bin/pip install h2o-wave
