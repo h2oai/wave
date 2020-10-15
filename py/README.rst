@@ -1,5 +1,5 @@
 H2O Wave
-=====
+========
 
 H2O Wave is a lightweight software stack for programming interactive web applications
 entirely in Python (no HTML/Javascript/CSS) required.
@@ -55,11 +55,10 @@ Run ``hello.py``:
 Links
 -----
 
-* Website: https://www.h2o.ai/h2o-wave/
+* Website: https://h2oai.github.io/wave/
 * Releases: https://pypi.org/project/h2o-wave/
-* Documentation: https://h2oai.github.io/qd/
-* Code: https://github.com/h2oai/qd
-* Issue tracker: https://github.com/h2oai/qd/issues
+* Code: https://github.com/h2oai/wave
+* Issue tracker: https://github.com/h2oai/wave/issues
 
 .. _pip: https://pip.pypa.io/en/stable/quickstart/
 

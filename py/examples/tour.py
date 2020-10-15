@@ -82,7 +82,7 @@ def load_examples(filenames: List[str]) -> Dict[str, Example]:
     return examples
 
 
-app_title = 'H2O Wave SDK Tour'
+app_title = 'H2O Wave Tour'
 
 
 async def setup_page(q: Q):

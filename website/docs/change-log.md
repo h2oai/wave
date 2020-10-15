@@ -12,6 +12,27 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.7.0
+Oct 15, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.7.0)
+- Added
+  - Hash navigation using context menus.
+  - Allow handling location hash when an open app page is reloaded.
+  - Allow pre-selecting a tab in a tab_card.
+  - Allow setting a height on the file upload component.
+  - Allow justifying buttons left/center/right/spread.
+  - Add data-test attribute to all cards for browser testing.
+  - New documentation website, gallery, guides and tutorials.
+- Changed
+  - Fit table height to content height whenever possible.
+  - Improve spacing between form components.
+  - data-test attribute is set based on the names of cards.
+- Fixed
+  - Quote CSV data properly while downloading a table component's data.
+  - Don't auto-hide axis labels in plots when data is missing.
+  - Display labels instead of names when a pickers initial values are set.
+  - Handle numeric column sorting in the table component.
+  - Handle icon column sorting in the table component.
+
 ## v0.6.0
 Sep 23, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.6.0)
 - Added
