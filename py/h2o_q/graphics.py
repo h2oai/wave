@@ -10,7 +10,7 @@ from .core import pack, data as _data, Data, Ref, Expando, expando_to_dict
 def stage(**kwargs) -> str:
     """
     Create a stage. A stage holds static graphics elements that are rendered as part of the background (behind the scene).
-    The return value must be assigned to the `stage` property of a `h2o_q.types.GraphicsCard`.
+    The return value must be assigned to the `stage` property of a `h2o_wave.types.GraphicsCard`.
 
     Args:
         kwargs: Graphical elements to render as part of the stage.
@@ -23,12 +23,12 @@ def stage(**kwargs) -> str:
 def scene(**kwargs) -> Data:
     """
     Create a scene. A scene holds graphic elements whose attributes need to be changed dynamically (causing a re-render).
-    The return value must be assigned to the `scene` property of a `h2o_q.types.GraphicsCard`.
+    The return value must be assigned to the `scene` property of a `h2o_wave.types.GraphicsCard`.
 
     Args:
         kwargs: Graphical elements to render as part of the scene.
     Returns:
-        A `h2o_q.core.Data` instance.
+        A `h2o_wave.core.Data` instance.
     """
     return _data(fields='d o', rows={k: [json.dumps(expando_to_dict(v)), ''] for k, v in kwargs.items()})
 
@@ -50,7 +50,7 @@ def draw(element: Ref, **kwargs) -> Ref:
 def reset(element: Ref) -> Ref:
     """
     Schedule a redraw of the specified graphical element using its original attributes.
-    Calling this function clears any changes performed using the `h2o_q.graphics.draw` function.
+    Calling this function clears any changes performed using the `h2o_wave.graphics.draw` function.
 
     Args:
         element: A reference to a graphical element.
@@ -291,7 +291,7 @@ class Path:
     def path(self, **kwargs) -> Expando:
         """
         A SVG path element representing the commands in this ``Path`` instance.
-        Same as calling ``h2o_q.graphics.path(d=path.d())``
+        Same as calling ``h2o_wave.graphics.path(d=path.d())``
 
         Args:
             kwargs: Additional attributes for the SVG path element.
@@ -635,10 +635,10 @@ class Path:
 
 def p() -> Path:
     """
-    Create a new `h2o_q.graphics.Path`.
+    Create a new `h2o_wave.graphics.Path`.
 
     Returns:
-        A new `h2o_q.graphics.Path`.
+        A new `h2o_wave.graphics.Path`.
     """
     return Path()
 
@@ -829,13 +829,13 @@ class Turtle:
 
 def turtle(x=0.0, y=0.0, degrees=0.0) -> Turtle:
     """
-    Create a new `h2o_q.graphics.Turtle`.
+    Create a new `h2o_wave.graphics.Turtle`.
 
     Args:
         x: initial position x
         y: initial position y
         degrees: initial angle in degrees
     Returns:
-        A new `h2o_q.graphics.Turtle`.
+        A new `h2o_wave.graphics.Turtle`.
     """
     return Turtle(x, y, degrees)

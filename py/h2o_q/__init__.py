@@ -1,7 +1,7 @@
 """
-Python package `h2o_q` provides the Python driver for H2O Q.
+Python package `h2o_wave` provides the Python driver for H2O Wave.
 
-H2O Q is a lightweight software stack for programming interactive web applications
+H2O Wave is a lightweight software stack for programming interactive web applications
 entirely in Python (no HTML/Javascript/CSS) required.
 
 It is designed to make it fast, fun and easy to build low-latency, realtime,

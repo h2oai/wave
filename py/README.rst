@@ -1,7 +1,7 @@
-H2O Q
+H2O Wave
 =====
 
-H2O Q is a lightweight software stack for programming interactive web applications
+H2O Wave is a lightweight software stack for programming interactive web applications
 entirely in Python (no HTML/Javascript/CSS) required.
 
 It is designed to make it fast, fun and easy to build low-latency, realtime,
@@ -20,7 +20,7 @@ Install and update using `pip`_:
 
 .. code-block:: text
 
-    pip install -U h2o-q
+    pip install -U h2o-wave
 
 
 Hello world
@@ -30,7 +30,7 @@ Hello world
 
 .. code-block:: python
 
-    from h2o_q import site, ui
+    from h2o_wave import site, ui
 
     # Access the web page at http://localhost:55555/demo
     page = site['/demo']
@@ -55,8 +55,8 @@ Run ``hello.py``:
 Links
 -----
 
-* Website: https://www.h2o.ai/h2o-q/
-* Releases: https://pypi.org/project/h2o-q/
+* Website: https://www.h2o.ai/h2o-wave/
+* Releases: https://pypi.org/project/h2o-wave/
 * Documentation: https://h2oai.github.io/qd/
 * Code: https://github.com/h2oai/qd
 * Issue tracker: https://github.com/h2oai/qd/issues

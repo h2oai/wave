@@ -4,13 +4,13 @@ with open('README.rst', 'r') as readme:
     long_description = readme.read()
 
 setuptools.setup(
-    name='h2o_q',
+    name='h2o_wave',
     version='0.6.0',
     author='Prithvi Prabhu',
     author_email='prithvi@h2o.ai',
-    description='Python driver for H2O Q Realtime Apps',
+    description='Python driver for H2O Wave Realtime Apps',
     long_description=long_description,
-    url='https://h2o.ai/h2o-q/',
+    url='https://h2o.ai/h2o-wave/',
     packages=setuptools.find_packages(),
     classifiers=[
         'Programming Language :: Python :: 3',

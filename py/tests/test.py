@@ -1,7 +1,7 @@
 import sys
 import difflib
 import json
-from h2o_q import site, Page, data
+from h2o_wave import site, Page, data
 
 all_tests = []
 only_tests = []

@@ -1,4 +1,4 @@
-from h2o_q import Expando, expando_to_dict, clone_expando, copy_expando
+from h2o_wave import Expando, expando_to_dict, clone_expando, copy_expando
 
 
 def test_expando_empty():

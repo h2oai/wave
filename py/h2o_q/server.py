@@ -29,9 +29,13 @@ MULTICAST = 'multicast'
 BROADCAST = 'broadcast'
 
 
-class Q:
+class Query:
     """
-    Represents the application context.
+    Represents the query context.
+    The query context is passed to the `listen()` handler function whenever a query
+    arrives from the browser (page load, user interaction events, etc.).
+    The query context contains useful information about the query, including arguments
+    `args` (equivalent to URL query strings) and app-level, user-level and client-level state.
     """
 
     def __init__(
@@ -53,13 +57,13 @@ class Q:
         self.page = site[client_id if mode == UNICAST else username if mode == MULTICAST else route]
         """A reference to the current page."""
         self.app = app_state
-        """A `h2o_q.core.Expando` instance to hold application-specific state."""
+        """A `h2o_wave.core.Expando` instance to hold application-specific state."""
         self.user = user_state
-        """A `h2o_q.core.Expando` instance to hold user-specific state."""
+        """A `h2o_wave.core.Expando` instance to hold user-specific state."""
         self.client = client_state
-        """An `h2o_q.core.Expando` instance to hold client-specific state."""
+        """An `h2o_wave.core.Expando` instance to hold client-specific state."""
         self.args = args
-        """A `h2o_q.core.Expando` instance containing the active request."""
+        """A `h2o_wave.core.Expando` instance containing the active request."""
         self.username = username
         """The username of the user who initiated the active request."""
         self.route = route
@@ -68,6 +72,9 @@ class Q:
     async def sleep(self, delay):
         await asyncio.sleep(delay)
 
+
+Q = Query
+"""Alias for Query context."""
 
 HandleAsync = Callable[[Q], Awaitable[Any]]
 WebAppState = Tuple[Expando, Dict[str, Expando], Dict[str, Expando]]
@@ -89,7 +96,7 @@ class _Server:
             {k: expando_to_dict(v) for k, v in sessions.items()},
             {k: expando_to_dict(v) for k, v in clients.items()},
         )
-        pickle.dump(state, open('h2o_q.state', 'wb'))
+        pickle.dump(state, open('h2o_wave.state', 'wb'))
 
 
 _server: Optional[_Server] = None

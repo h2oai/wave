@@ -8,13 +8,13 @@ def breadcrumb(
         name: str,
         label: str,
 ) -> Breadcrumb:
-    """Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
+    """Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
 
     Args:
         name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
         label: The label to display.
     Returns:
-        A `h2o_q.types.Breadcrumb` instance.
+        A `h2o_wave.types.Breadcrumb` instance.
     """
     return Breadcrumb(
         name,
@@ -42,7 +42,7 @@ def command(
         items: Sub-commands, if any
         data: Data associated with this command, if any.
     Returns:
-        A `h2o_q.types.Command` instance.
+        A `h2o_wave.types.Command` instance.
     """
     return Command(
         name,
@@ -69,10 +69,10 @@ def breadcrumbs_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        items: A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`
+        items: A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.BreadcrumbsCard` instance.
+        A `h2o_wave.types.BreadcrumbsCard` instance.
     """
     return BreadcrumbsCard(
         box,
@@ -106,7 +106,7 @@ def flex_card(
         wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.FlexCard` instance.
+        A `h2o_wave.types.FlexCard` instance.
     """
     return FlexCard(
         box,
@@ -133,7 +133,7 @@ def text(
         size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'.
         tooltip: Tooltip message.
     Returns:
-        A `h2o_q.types.Text` instance.
+        A `h2o_wave.types.Text` instance.
     """
     return Component(text=Text(
         content,
@@ -154,7 +154,7 @@ def text_xl(
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.TextXl` instance.
+        A `h2o_wave.types.TextXl` instance.
     """
     return Component(text_xl=TextXl(
         content,
@@ -175,7 +175,7 @@ def text_l(
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.TextL` instance.
+        A `h2o_wave.types.TextL` instance.
     """
     return Component(text_l=TextL(
         content,
@@ -194,7 +194,7 @@ def text_m(
         content: The text content.
         tooltip: Tooltip message.
     Returns:
-        A `h2o_q.types.TextM` instance.
+        A `h2o_wave.types.TextM` instance.
     """
     return Component(text_m=TextM(
         content,
@@ -212,7 +212,7 @@ def text_s(
         content: The text content.
         tooltip: Tooltip message.
     Returns:
-        A `h2o_q.types.TextS` instance.
+        A `h2o_wave.types.TextS` instance.
     """
     return Component(text_s=TextS(
         content,
@@ -230,7 +230,7 @@ def text_xs(
         content: The text content.
         tooltip: Tooltip message.
     Returns:
-        A `h2o_q.types.TextXs` instance.
+        A `h2o_wave.types.TextXs` instance.
     """
     return Component(text_xs=TextXs(
         content,
@@ -258,7 +258,7 @@ def label(
         disabled: True if the label should be disabled.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Label` instance.
+        A `h2o_wave.types.Label` instance.
     """
     return Component(label=Label(
         label,
@@ -278,7 +278,7 @@ def separator(
     Args:
         label: The text displayed on the separator.
     Returns:
-        A `h2o_q.types.Separator` instance.
+        A `h2o_wave.types.Separator` instance.
     """
     return Component(separator=Separator(
         label,
@@ -317,7 +317,7 @@ def progress(
         value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Progress` instance.
+        A `h2o_wave.types.Progress` instance.
     """
     return Component(progress=Progress(
         label,
@@ -341,7 +341,7 @@ def message_bar(
         type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
         text: The text displayed on the message bar.
     Returns:
-        A `h2o_q.types.MessageBar` instance.
+        A `h2o_wave.types.MessageBar` instance.
     """
     return Component(message_bar=MessageBar(
         type,
@@ -391,7 +391,7 @@ def textbox(
         trigger: True if the form should be submitted when the text value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Textbox` instance.
+        A `h2o_wave.types.Textbox` instance.
     """
     return Component(textbox=Textbox(
         name,
@@ -446,7 +446,7 @@ def checkbox(
         trigger: True if the form should be submitted when the checkbox value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Checkbox` instance.
+        A `h2o_wave.types.Checkbox` instance.
     """
     return Component(checkbox=Checkbox(
         name,
@@ -484,7 +484,7 @@ def toggle(
         trigger: True if the form should be submitted when the toggle value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Toggle` instance.
+        A `h2o_wave.types.Toggle` instance.
     """
     return Component(toggle=Toggle(
         name,
@@ -508,7 +508,7 @@ def choice(
         label: Text to be displayed alongside the component.
         disabled: True if the checkbox is disabled.
     Returns:
-        A `h2o_q.types.Choice` instance.
+        A `h2o_wave.types.Choice` instance.
     """
     return Choice(
         name,
@@ -546,7 +546,7 @@ def choice_group(
         trigger: True if the form should be submitted when the selection changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.ChoiceGroup` instance.
+        A `h2o_wave.types.ChoiceGroup` instance.
     """
     return Component(choice_group=ChoiceGroup(
         name,
@@ -579,7 +579,7 @@ def checklist(
         trigger: True if the form should be submitted when the checklist value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Checklist` instance.
+        A `h2o_wave.types.Checklist` instance.
     """
     return Component(checklist=Checklist(
         name,
@@ -627,7 +627,7 @@ def dropdown(
         trigger: True if the form should be submitted when the dropdown value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Dropdown` instance.
+        A `h2o_wave.types.Dropdown` instance.
     """
     return Component(dropdown=Dropdown(
         name,
@@ -675,7 +675,7 @@ def combobox(
         disabled: True if this field is disabled.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Combobox` instance.
+        A `h2o_wave.types.Combobox` instance.
     """
     return Component(combobox=Combobox(
         name,
@@ -726,7 +726,7 @@ def slider(
         trigger: True if the form should be submitted when the slider value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Slider` instance.
+        A `h2o_wave.types.Slider` instance.
     """
     return Component(slider=Slider(
         name,
@@ -766,7 +766,7 @@ def spinbox(
         disabled: True if this field is disabled.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Spinbox` instance.
+        A `h2o_wave.types.Spinbox` instance.
     """
     return Component(spinbox=Spinbox(
         name,
@@ -800,7 +800,7 @@ def date_picker(
         disabled: True if this field is disabled.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.DatePicker` instance.
+        A `h2o_wave.types.DatePicker` instance.
     """
     return Component(date_picker=DatePicker(
         name,
@@ -831,7 +831,7 @@ def color_picker(
         choices: A list of colors (CSS-compatible strings) to limit color choices to.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.ColorPicker` instance.
+        A `h2o_wave.types.ColorPicker` instance.
     """
     return Component(color_picker=ColorPicker(
         name,
@@ -879,7 +879,7 @@ def button(
         link: True if the button should be rendered as link text and not a standard button.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Button` instance.
+        A `h2o_wave.types.Button` instance.
     """
     return Component(button=Button(
         name,
@@ -903,7 +903,7 @@ def buttons(
         items: The button in this set.
         justify: Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'.
     Returns:
-        A `h2o_q.types.Buttons` instance.
+        A `h2o_wave.types.Buttons` instance.
     """
     return Component(buttons=Buttons(
         items,
@@ -934,7 +934,7 @@ def file_upload(
         height: The height of the file upload, e.g. '400px', '50%', etc.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.FileUpload` instance.
+        A `h2o_wave.types.FileUpload` instance.
     """
     return Component(file_upload=FileUpload(
         name,
@@ -957,7 +957,7 @@ def progress_table_cell_type(
     Args:
         color: Color of the progress arc.
     Returns:
-        A `h2o_q.types.ProgressTableCellType` instance.
+        A `h2o_wave.types.ProgressTableCellType` instance.
     """
     return TableCellType(progress=ProgressTableCellType(
         color,
@@ -973,7 +973,7 @@ def icon_table_cell_type(
     Args:
         color: Icon color.
     Returns:
-        A `h2o_q.types.IconTableCellType` instance.
+        A `h2o_wave.types.IconTableCellType` instance.
     """
     return TableCellType(icon=IconTableCellType(
         color,
@@ -990,7 +990,7 @@ def table_cell_type(
         progress: No documentation available.
         icon: No documentation available.
     Returns:
-        A `h2o_q.types.TableCellType` instance.
+        A `h2o_wave.types.TableCellType` instance.
     """
     return TableCellType(
         progress,
@@ -1022,7 +1022,7 @@ def table_column(
         link: Indicates whether each cell in this column should be displayed as a clickable link.
         cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
-        A `h2o_q.types.TableColumn` instance.
+        A `h2o_wave.types.TableColumn` instance.
     """
     return TableColumn(
         name,
@@ -1047,7 +1047,7 @@ def table_row(
         name: An identifying name for this row.
         cells: The cells in this row (displayed left to right).
     Returns:
-        A `h2o_q.types.TableRow` instance.
+        A `h2o_wave.types.TableRow` instance.
     """
     return TableRow(
         name,
@@ -1093,7 +1093,7 @@ def table(
         height: The height of the table, e.g. '400px', '50%', etc.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Table` instance.
+        A `h2o_wave.types.Table` instance.
     """
     return Component(table=Table(
         name,
@@ -1130,7 +1130,7 @@ def link(
         button: True if the link should be rendered as a button.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Link` instance.
+        A `h2o_wave.types.Link` instance.
     """
     return Component(link=Link(
         label,
@@ -1154,7 +1154,7 @@ def tab(
         label: The text displayed on the tab.
         icon: The icon displayed on the tab.
     Returns:
-        A `h2o_q.types.Tab` instance.
+        A `h2o_wave.types.Tab` instance.
     """
     return Tab(
         name,
@@ -1175,7 +1175,7 @@ def tabs(
         value: The name of the tab to select.
         items: The tabs in this tab bar.
     Returns:
-        A `h2o_q.types.Tabs` instance.
+        A `h2o_wave.types.Tabs` instance.
     """
     return Component(tabs=Tabs(
         name,
@@ -1200,7 +1200,7 @@ def expander(
         expanded: True if expanded, False if collapsed.
         items: List of components to be hideable by the expander.
     Returns:
-        A `h2o_q.types.Expander` instance.
+        A `h2o_wave.types.Expander` instance.
     """
     return Component(expander=Expander(
         name,
@@ -1224,7 +1224,7 @@ def frame(
         width: The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.
         height: The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.
     Returns:
-        A `h2o_q.types.Frame` instance.
+        A `h2o_wave.types.Frame` instance.
     """
     return Component(frame=Frame(
         path,
@@ -1242,7 +1242,7 @@ def markup(
     Args:
         content: The HTML content.
     Returns:
-        A `h2o_q.types.Markup` instance.
+        A `h2o_wave.types.Markup` instance.
     """
     return Component(markup=Markup(
         content,
@@ -1259,7 +1259,7 @@ def template(
         content: The Handlebars template. https://handlebarsjs.com/guide/
         data: Data for the Handlebars template
     Returns:
-        A `h2o_q.types.Template` instance.
+        A `h2o_wave.types.Template` instance.
     """
     return Component(template=Template(
         content,
@@ -1289,7 +1289,7 @@ def picker(
         disabled: Controls whether the picker should be disabled or not.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Picker` instance.
+        A `h2o_wave.types.Picker` instance.
     """
     return Component(picker=Picker(
         name,
@@ -1332,7 +1332,7 @@ def range_slider(
         trigger: True if the form should be submitted when the slider value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.RangeSlider` instance.
+        A `h2o_wave.types.RangeSlider` instance.
     """
     return Component(range_slider=RangeSlider(
         name,
@@ -1360,7 +1360,7 @@ def step(
         icon: Icon to be displayed.
         done: Indicates whether this step has already been completed.
     Returns:
-        A `h2o_q.types.Step` instance.
+        A `h2o_wave.types.Step` instance.
     """
     return Step(
         label,
@@ -1382,7 +1382,7 @@ def stepper(
         items: The sequence of steps to be displayed.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
-        A `h2o_q.types.Stepper` instance.
+        A `h2o_wave.types.Stepper` instance.
     """
     return Component(stepper=Stepper(
         name,
@@ -1510,7 +1510,7 @@ def mark(
         ref_stroke_size: Reference line stroke size (line width or pen thickness).
         ref_stroke_dash: Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25].
     Returns:
-        A `h2o_q.types.Mark` instance.
+        A `h2o_wave.types.Mark` instance.
     """
     return Mark(
         coord,
@@ -1580,7 +1580,7 @@ def plot(
     Args:
         marks: The graphical mark layers contained in this plot.
     Returns:
-        A `h2o_q.types.Plot` instance.
+        A `h2o_wave.types.Plot` instance.
     """
     return Plot(
         marks,
@@ -1601,7 +1601,7 @@ def visualization(
         width: The width of the visualization. Defaults to 100%.
         height: The height of the visualization. Defaults to 300px.
     Returns:
-        A `h2o_q.types.Visualization` instance.
+        A `h2o_wave.types.Visualization` instance.
     """
     return Component(visualization=Visualization(
         plot,
@@ -1625,7 +1625,7 @@ def vega_visualization(
         width: The width of the visualization. Defaults to 100%.
         height: The height of the visualization. Defaults to 300px.
     Returns:
-        A `h2o_q.types.VegaVisualization` instance.
+        A `h2o_wave.types.VegaVisualization` instance.
     """
     return Component(vega_visualization=VegaVisualization(
         specification,
@@ -1713,7 +1713,7 @@ def component(
         visualization: Visualization.
         vega_visualization: Vega-lite Visualization.
     Returns:
-        A `h2o_q.types.Component` instance.
+        A `h2o_wave.types.Component` instance.
     """
     return Component(
         text,
@@ -1767,7 +1767,7 @@ def form_card(
         items: The components in this form.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.FormCard` instance.
+        A `h2o_wave.types.FormCard` instance.
     """
     return FormCard(
         box,
@@ -1794,7 +1794,7 @@ def frame_card(
         content: The HTML content of the page. A string containing `<html>...</html>`
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.FrameCard` instance.
+        A `h2o_wave.types.FrameCard` instance.
     """
     return FrameCard(
         box,
@@ -1825,7 +1825,7 @@ def graphics_card(
         height: The displayed height of the rectangular viewport. (Not the height of its coordinate system.)
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.GraphicsCard` instance.
+        A `h2o_wave.types.GraphicsCard` instance.
     """
     return GraphicsCard(
         box,
@@ -1854,7 +1854,7 @@ def grid_card(
         data: EXPERIMENTAL. DO NOT USE.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.GridCard` instance.
+        A `h2o_wave.types.GridCard` instance.
     """
     return GridCard(
         box,
@@ -1885,7 +1885,7 @@ def header_card(
         icon_color: The icon's color.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.HeaderCard` instance.
+        A `h2o_wave.types.HeaderCard` instance.
     """
     return HeaderCard(
         box,
@@ -1915,7 +1915,7 @@ def image_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.ImageCard` instance.
+        A `h2o_wave.types.ImageCard` instance.
     """
     return ImageCard(
         box,
@@ -1955,7 +1955,7 @@ def large_bar_stat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.LargeBarStatCard` instance.
+        A `h2o_wave.types.LargeBarStatCard` instance.
     """
     return LargeBarStatCard(
         box,
@@ -1992,7 +1992,7 @@ def large_stat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.LargeStatCard` instance.
+        A `h2o_wave.types.LargeStatCard` instance.
     """
     return LargeStatCard(
         box,
@@ -2024,7 +2024,7 @@ def list_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.ListCard` instance.
+        A `h2o_wave.types.ListCard` instance.
     """
     return ListCard(
         box,
@@ -2056,7 +2056,7 @@ def list_item1_card(
         data: EXPERIMENTAL. DO NOT USE.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.ListItem1Card` instance.
+        A `h2o_wave.types.ListItem1Card` instance.
     """
     return ListItem1Card(
         box,
@@ -2090,7 +2090,7 @@ def markdown_card(
         data: Additional data for the card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.MarkdownCard` instance.
+        A `h2o_wave.types.MarkdownCard` instance.
     """
     return MarkdownCard(
         box,
@@ -2115,7 +2115,7 @@ def markup_card(
         content: The HTML content.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.MarkupCard` instance.
+        A `h2o_wave.types.MarkupCard` instance.
     """
     return MarkupCard(
         box,
@@ -2146,7 +2146,7 @@ def meta_card(
         redirect: Redirect the page to a new URL.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.MetaCard` instance.
+        A `h2o_wave.types.MetaCard` instance.
     """
     return MetaCard(
         box,
@@ -2168,7 +2168,7 @@ def nav_item(
         name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
         label: The label to display.
     Returns:
-        A `h2o_q.types.NavItem` instance.
+        A `h2o_wave.types.NavItem` instance.
     """
     return NavItem(
         name,
@@ -2186,7 +2186,7 @@ def nav_group(
         label: The label to display for this group.
         items: The navigation items contained in this group.
     Returns:
-        A `h2o_q.types.NavGroup` instance.
+        A `h2o_wave.types.NavGroup` instance.
     """
     return NavGroup(
         label,
@@ -2206,7 +2206,7 @@ def nav_card(
         items: The navigation groups contained in this pane.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.NavCard` instance.
+        A `h2o_wave.types.NavCard` instance.
     """
     return NavCard(
         box,
@@ -2229,7 +2229,7 @@ def pixel_art_card(
         data: The data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.PixelArtCard` instance.
+        A `h2o_wave.types.PixelArtCard` instance.
     """
     return PixelArtCard(
         box,
@@ -2255,7 +2255,7 @@ def plot_card(
         plot: The plot to be displayed in this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.PlotCard` instance.
+        A `h2o_wave.types.PlotCard` instance.
     """
     return PlotCard(
         box,
@@ -2283,7 +2283,7 @@ def repeat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.RepeatCard` instance.
+        A `h2o_wave.types.RepeatCard` instance.
     """
     return RepeatCard(
         box,
@@ -2324,7 +2324,7 @@ def small_series_stat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.SmallSeriesStatCard` instance.
+        A `h2o_wave.types.SmallSeriesStatCard` instance.
     """
     return SmallSeriesStatCard(
         box,
@@ -2358,7 +2358,7 @@ def small_stat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.SmallStatCard` instance.
+        A `h2o_wave.types.SmallStatCard` instance.
     """
     return SmallStatCard(
         box,
@@ -2385,7 +2385,7 @@ def tab_card(
         link: True if tabs should be rendered as links and not a standard tab.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.TabCard` instance.
+        A `h2o_wave.types.TabCard` instance.
     """
     return TabCard(
         box,
@@ -2418,7 +2418,7 @@ def tall_gauge_stat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.TallGaugeStatCard` instance.
+        A `h2o_wave.types.TallGaugeStatCard` instance.
     """
     return TallGaugeStatCard(
         box,
@@ -2464,7 +2464,7 @@ def tall_series_stat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.TallSeriesStatCard` instance.
+        A `h2o_wave.types.TallSeriesStatCard` instance.
     """
     return TallSeriesStatCard(
         box,
@@ -2499,7 +2499,7 @@ def template_card(
         data: Data for the Handlebars template
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.TemplateCard` instance.
+        A `h2o_wave.types.TemplateCard` instance.
     """
     return TemplateCard(
         box,
@@ -2526,7 +2526,7 @@ def toolbar_card(
         overflow_items: Items to render in an overflow menu.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.ToolbarCard` instance.
+        A `h2o_wave.types.ToolbarCard` instance.
     """
     return ToolbarCard(
         box,
@@ -2553,7 +2553,7 @@ def vega_card(
         data: Data for the plot, if any.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.VegaCard` instance.
+        A `h2o_wave.types.VegaCard` instance.
     """
     return VegaCard(
         box,
@@ -2586,7 +2586,7 @@ def wide_bar_stat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.WideBarStatCard` instance.
+        A `h2o_wave.types.WideBarStatCard` instance.
     """
     return WideBarStatCard(
         box,
@@ -2622,7 +2622,7 @@ def wide_gauge_stat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.WideGaugeStatCard` instance.
+        A `h2o_wave.types.WideGaugeStatCard` instance.
     """
     return WideGaugeStatCard(
         box,
@@ -2668,7 +2668,7 @@ def wide_series_stat_card(
         data: Data for this card.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.WideSeriesStatCard` instance.
+        A `h2o_wave.types.WideSeriesStatCard` instance.
     """
     return WideSeriesStatCard(
         box,

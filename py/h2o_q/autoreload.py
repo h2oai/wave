@@ -39,11 +39,11 @@ import asyncio
 # line (Python >= 3.4) or by setting the $PYTHONPATH environment
 # variable (Python < 3.4) before re-execution so the new process will
 # see the correct path.  We attempt to address the latter problem when
-# h2o_q.autoreload is run as __main__.
+# h2o_wave.autoreload is run as __main__.
 
 if __name__ == "__main__":
     # This sys.path manipulation must come before our imports (as much
-    # as possible - if we introduced a h2o_q.sys or h2o_q.os
+    # as possible - if we introduced a h2o_wave.sys or h2o_wave.os
     # module we'd be in trouble), or else our imports would become
     # relative again despite the future import.
     #
@@ -63,7 +63,7 @@ import subprocess
 import weakref
 from typing import Callable, Dict, List, Optional, Any, Mapping
 
-logger = logging.getLogger('h2o_q.autoreload')
+logger = logging.getLogger('h2o_wave.autoreload')
 
 try:
     import signal
@@ -184,7 +184,7 @@ def start(check_time: int = 500) -> None:
         return
     _io_loops[io_loop] = True
     if len(_io_loops) > 1:
-        logger.warning("h2o_q.autoreload started more than once in the same process")
+        logger.warning("h2o_wave.autoreload started more than once in the same process")
     modify_times = {}  # type: Dict[str, float]
     callback = functools.partial(_reload_on_update, modify_times)
     scheduler = _Poll(callback, check_time)
@@ -320,8 +320,8 @@ def _reload() -> None:
 
 _USAGE = """\
 Usage:
-  python -m h2o_q -m module.to.run [args...]
-  python -m h2o_q path/to/script.py [args...]
+  python -m h2o_wave -m module.to.run [args...]
+  python -m h2o_wave path/to/script.py [args...]
 """
 
 
@@ -330,11 +330,11 @@ def main() -> None:
 
     Scripts may be specified by filename or module name::
 
-        python -m h2o_q -m h2o_q.test.runtests
-        python -m h2o_q h2o_q/test/runtests.py
+        python -m h2o_wave -m h2o_wave.test.runtests
+        python -m h2o_wave h2o_wave/test/runtests.py
 
     Running a script with this wrapper is similar to calling
-    `h2o_q.autoreload.wait` at the end of the script, but this wrapper
+    `h2o_wave.autoreload.wait` at the end of the script, but this wrapper
     can catch import-time problems like syntax errors that would otherwise
     prevent the script from reaching its call to `wait`.
     """
@@ -342,15 +342,15 @@ def main() -> None:
     # The main module can be tricky; set the variables both in our globals
     # (which may be __main__) and the real importable version.
 
-    import h2o_q.autoreload
+    import h2o_wave.autoreload
 
     global _autoreload_is_main
     global _original_argv, _original_spec
-    h2o_q.autoreload._autoreload_is_main = _autoreload_is_main = True
+    h2o_wave.autoreload._autoreload_is_main = _autoreload_is_main = True
     original_argv = sys.argv
-    h2o_q.autoreload._original_argv = _original_argv = original_argv
+    h2o_wave.autoreload._original_argv = _original_argv = original_argv
     original_spec = getattr(sys.modules["__main__"], "__spec__", None)
-    h2o_q.autoreload._original_spec = _original_spec = original_spec
+    h2o_wave.autoreload._original_spec = _original_spec = original_spec
     sys.argv = sys.argv[:]
     if len(sys.argv) >= 3 and sys.argv[1] == "-m":
         mode = "module"

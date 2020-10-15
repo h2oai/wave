@@ -268,7 +268,7 @@ def _dump(xs: Any):
 
 class Ref:
     """
-    Represents a local reference to an element on a `h2o_q.core.Page`.
+    Represents a local reference to an element on a `h2o_wave.core.Page`.
     Any changes made to this local reference are tracked and sent to the remote Q server when the page is saved.
     """
 
@@ -340,7 +340,7 @@ def data(
         pack=False,
 ) -> Union[Data, str]:
     """
-    Create a `h2o_q.core.Data` instance for associating data with cards.
+    Create a `h2o_wave.core.Data` instance for associating data with cards.
 
     ``data(fields, size)`` creates a placeholder for data and allocates memory on the Q server.
 
@@ -353,10 +353,10 @@ def data(
         size: The number of rows to allocate memory for. Positive for fixed buffers, negative for circular buffers and zero for variable length buffers.
         rows: The rows in this data.
         columns: The columns in this data.
-        pack: True to return a packed string representing the data instead of a `h2o_q.core.Data` placeholder.
+        pack: True to return a packed string representing the data instead of a `h2o_wave.core.Data` placeholder.
 
     Returns:
-        Either a `h2o_q.core.Data` placeholder or a packed string representing the data.
+        Either a `h2o_wave.core.Data` placeholder or a packed string representing the data.
     """
     if _is_str(fields):
         fields = fields.strip()
@@ -504,7 +504,7 @@ class Page(PageBase):
 
     def sync(self):
         """
-        DEPRECATED: Use `h2o_q.core.Page.save` instead.
+        DEPRECATED: Use `h2o_wave.core.Page.save` instead.
         """
         logger.warn('page.sync() is deprecated. Please use page.save() instead.')
         self.save()
@@ -521,7 +521,7 @@ class Page(PageBase):
 
 class AsyncPage(PageBase):
     """
-    Represents a reference to a remote Q page. Similar to `h2o_q.core.Page` except that this class exposes ``async`` methods.
+    Represents a reference to a remote Q page. Similar to `h2o_wave.core.Page` except that this class exposes ``async`` methods.
 
 
     Args:
@@ -545,7 +545,7 @@ class AsyncPage(PageBase):
 
     async def push(self):
         """
-        DEPRECATED: Use `h2o_q.core.AsyncPage.save` instead.
+        DEPRECATED: Use `h2o_wave.core.AsyncPage.save` instead.
         """
         logger.warn('page.push() is deprecated. Please use page.save() instead.')
         await self.save()
@@ -682,7 +682,7 @@ class Site:
 
 class AsyncSite:
     """
-    Represents a reference to the remote Q site. Similar to `h2o_q.core.Site` except that this class exposes ``async`` methods.
+    Represents a reference to the remote Q site. Similar to `h2o_wave.core.Site` except that this class exposes ``async`` methods.
     """
 
     def __init__(self, ws: websockets.WebSocketServerProtocol):
