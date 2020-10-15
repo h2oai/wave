@@ -77,7 +77,7 @@ export interface Table {
   resettable?: B
   /** The height of the table, e.g. '400px', '50%', etc. */
   height?: S
-  /** The names of the initially selected rows. Multiple must be set to true in order to make this prop work. */
+  /** The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`). */
   values?: S[]
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -148,17 +148,18 @@ export const
     qd.args[m.name] = []
     const
       items = m.rows.map(r => {
-        const item: any = { __key__: r.name, key: r.name }
+        const item: Fluent.IObjectWithKey & Dict<any> = { key: r.name }
         for (let i = 0, n = r.cells.length; i < n; i++) {
           const col = m.columns[i]
           item[col.name] = r.cells[i]
         }
         return item
       }),
+      isMultiple = m.values?.length || m.multiple,
       filteredItemsB = box(items),
       searchableKeys = m.columns.filter(({ searchable }) => searchable).map(({ name }) => name),
       searchStrB = box(''),
-      selectedFiltersB = box<{ [key: string]: S[] } | null>(null),
+      selectedFiltersB = box<Dict<S[]> | null>(null),
       colContextMenuListB = box<Fluent.IContextualMenuProps | null>(null),
       groupsB = box<Fluent.IGroup[] | undefined>(undefined),
       groupByKeyB = box('*'),
@@ -390,26 +391,26 @@ export const
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       selection = new Fluent.Selection({
         onSelectionChanged: () => {
-          qd.args[m.name] = selection.getSelection().map(item => (item as any).__key__)
+          qd.args[m.name] = selection.getSelection().map(item => item.key as S)
         }
       }),
       init = () => {
-        if (m.multiple && m.values) {
+        if (isMultiple && m.values) {
           m.values.forEach(v => selection.setKeySelected(v, true, false))
           qd.args[m.name] = m.values
         }
       },
-      onItemInvoked = (item: any) => {
-        qd.args[m.name] = [item.__key__]
+      onItemInvoked = (item: Fluent.IObjectWithKey & Dict<any>) => {
+        qd.args[m.name] = [item.key as S]
         qd.sync()
       },
-      onRenderItemColumn = (item?: any, _index?: number, col?: QColumn) => {
+      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: QColumn) => {
         if (!item || !col) return <span />
 
         const v = item[col.fieldName as S]
-        if (col.key === primaryColumnKey && !m.multiple) {
+        if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {
-            qd.args[m.name] = [item.__key__]
+            qd.args[m.name] = [item.key as S]
             qd.sync()
           }
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
@@ -443,9 +444,9 @@ export const
             layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
             groups={groupsB()}
             selection={selection}
-            selectionMode={m.multiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
+            selectionMode={isMultiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
             selectionPreservedOnEmptyClick
-            onItemInvoked={m.multiple ? undefined : onItemInvoked}
+            onItemInvoked={isMultiple ? undefined : onItemInvoked}
             onRenderRow={onRenderRow}
             onRenderItemColumn={onRenderItemColumn}
             onRenderDetailsHeader={onRenderDetailsHeader}
@@ -462,7 +463,7 @@ export const
           </Fluent.Stack>
           <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: m.groupable || searchableKeys.length ? 60 : 0 } }}>
             {
-              m.multiple
+              isMultiple
                 ? <Fluent.MarqueeSelection selection={selection}><DataTable /></Fluent.MarqueeSelection>
                 : <DataTable />
             }
