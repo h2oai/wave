@@ -1,4 +1,4 @@
-package qd
+package wave
 
 // CycBuf represents a cyclic buffer.
 type CycBuf struct {

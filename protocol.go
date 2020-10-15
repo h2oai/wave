@@ -1,4 +1,4 @@
-package qd
+package wave
 
 // OpsD represents the set of changes to be applied to a Page. This is a discriminated union.
 type OpsD struct {

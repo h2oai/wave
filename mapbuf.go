@@ -1,4 +1,4 @@
-package qd
+package wave
 
 // MapBuf represents a map (dictionary) buffer.
 type MapBuf struct {

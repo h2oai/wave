@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/h2oai/qd"
+	"github.com/h2oai/wave"
 )
 
 var (
@@ -21,7 +21,7 @@ func main() {
 	// TODO https://github.com/urfave/cli/blob/master/docs/v2/manual.md
 
 	var (
-		conf    qd.ServerConf
+		conf    wave.ServerConf
 		version bool
 	)
 
@@ -40,12 +40,12 @@ func main() {
 	flag.Parse()
 
 	if version {
-		fmt.Printf("Q Development Server\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
+		fmt.Printf("Wave Development Server\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
 		return
 	}
 
 	conf.WebDir, _ = filepath.Abs(conf.WebDir)
 	conf.DataDir, _ = filepath.Abs(conf.DataDir)
 
-	qd.Run(conf)
+	wave.Run(conf)
 }
