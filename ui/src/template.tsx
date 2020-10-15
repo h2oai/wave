@@ -8,10 +8,10 @@ import { bond, Card, Rec, S, unpack } from './qd'
 export interface Template {
   /** The Handlebars template. https://handlebarsjs.com/guide/ */
   content: S
-  /** An identifying name for this component. */
-  name?: S
   /** Data for the Handlebars template */
   data?: Rec
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Render dynamic content using a HTML template.*/

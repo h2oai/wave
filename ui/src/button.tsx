@@ -46,10 +46,10 @@ export interface Button {
 export interface Buttons {
   /** The button in this set. */
   items: Component[]
-  /** An identifying name for this component. */
-  name?: S
   /** Specifies how to lay out buttons horizontally. */
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
+  /** An identifying name for this component. */
+  name?: S
 }
 
 

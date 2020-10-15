@@ -26,14 +26,14 @@ import { F, S } from './qd'
 export interface Progress {
   /** The text displayed above the bar. */
   label: S
-  /** An identifying name for this component. */
-  name?: S
   /** The text displayed below the bar. */
   caption?: S
   /** The progress, between 0.0 and 1.0, or -1 (default) if indeterminate. */
   value?: F
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 const

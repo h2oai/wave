@@ -11,66 +11,66 @@ import { Command } from './toolbar'
 export interface Text {
   /** The text content. */
   content: S
-  /** An identifying name for this component. */
-  name?: S
   /** The font size of the text content. */
   size?: 'xl' | 'l' | 'm' | 's' | 'xs'
   /** Tooltip message. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create extra-large sized text content. */
 export interface TextXl {
   /** The text content. */
   content: S
-  /** An identifying name for this component. */
-  name?: S
   /** Tooltip message. */
   tooltip?: S
   /** Contextual menu commands for this component. */
   commands?: Command[]
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create large sized text content. */
 export interface TextL {
   /** The text content. */
   content: S
-  /** An identifying name for this component. */
-  name?: S
   /** Tooltip message. */
   tooltip?: S
   /** Contextual menu commands for this component. */
   commands?: Command[]
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create medium sized text content. */
 export interface TextM {
   /** The text content. */
   content: S
-  /** An identifying name for this component. */
-  name?: S
   /** Tooltip message. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create small sized text content. */
 export interface TextS {
   /** The text content. */
   content: S
-  /** An identifying name for this component. */
-  name?: S
   /** Tooltip message. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create extra-small sized text content. */
 export interface TextXs {
   /** The text content. */
   content: S
-  /** An identifying name for this component. */
-  name?: S
   /** Tooltip message. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 const

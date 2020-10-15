@@ -24,14 +24,14 @@ const
 export interface VegaVisualization {
   /** The Vega-lite specification. */
   specification: S
-  /** An identifying name for this component. */
-  name?: S
   /** Data for the plot, if any. */
   data?: Rec
   /** The width of the visualization. Defaults to 100%. */
   width?: S
   /** The height of the visualization. Defaults to 300px. */
   height?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 export const

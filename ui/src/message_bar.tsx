@@ -10,12 +10,12 @@ import { S } from './qd'
  * therefore does not need to block other activities.
  */
 export interface MessageBar {
-  /** An identifying name for this component. */
-  name?: S
   /** The icon and color of the message bar. */
   type?: 'info' | 'error' | 'warning' | 'success' | 'danger' | 'blocked'
   /** The text displayed on the message bar. */
   text?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 const

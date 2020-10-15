@@ -161,25 +161,25 @@ ui_flex_card <- function(
 #' Create text content.
 #'
 #' @param content The text content.
-#' @param name An identifying name for this component.
 #' @param size The font size of the text content.
 #'   One of 'xl', 'l', 'm', 's', 'xs'.
 #' @param tooltip Tooltip message.
+#' @param name An identifying name for this component.
 #' @return A Text instance.
 ui_text <- function(
   content,
-  name = NULL,
   size = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  name = NULL) {
   .guard_scalar("content", "character", content)
-  .guard_scalar("name", "character", name)
   # TODO Validate size
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("name", "character", name)
   .o <- list(text=list(
     content=content,
-    name=name,
     size=size,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -187,24 +187,24 @@ ui_text <- function(
 #' Create extra-large sized text content.
 #'
 #' @param content The text content.
-#' @param name An identifying name for this component.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
+#' @param name An identifying name for this component.
 #' @return A TextXl instance.
 ui_text_xl <- function(
   content,
-  name = NULL,
   tooltip = NULL,
-  commands = NULL) {
+  commands = NULL,
+  name = NULL) {
   .guard_scalar("content", "character", content)
-  .guard_scalar("name", "character", name)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("name", "character", name)
   .o <- list(text_xl=list(
     content=content,
-    name=name,
     tooltip=tooltip,
-    commands=commands))
+    commands=commands,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -212,24 +212,24 @@ ui_text_xl <- function(
 #' Create large sized text content.
 #'
 #' @param content The text content.
-#' @param name An identifying name for this component.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
+#' @param name An identifying name for this component.
 #' @return A TextL instance.
 ui_text_l <- function(
   content,
-  name = NULL,
   tooltip = NULL,
-  commands = NULL) {
+  commands = NULL,
+  name = NULL) {
   .guard_scalar("content", "character", content)
-  .guard_scalar("name", "character", name)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("name", "character", name)
   .o <- list(text_l=list(
     content=content,
-    name=name,
     tooltip=tooltip,
-    commands=commands))
+    commands=commands,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -237,20 +237,20 @@ ui_text_l <- function(
 #' Create medium sized text content.
 #'
 #' @param content The text content.
-#' @param name An identifying name for this component.
 #' @param tooltip Tooltip message.
+#' @param name An identifying name for this component.
 #' @return A TextM instance.
 ui_text_m <- function(
   content,
-  name = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  name = NULL) {
   .guard_scalar("content", "character", content)
-  .guard_scalar("name", "character", name)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("name", "character", name)
   .o <- list(text_m=list(
     content=content,
-    name=name,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -258,20 +258,20 @@ ui_text_m <- function(
 #' Create small sized text content.
 #'
 #' @param content The text content.
-#' @param name An identifying name for this component.
 #' @param tooltip Tooltip message.
+#' @param name An identifying name for this component.
 #' @return A TextS instance.
 ui_text_s <- function(
   content,
-  name = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  name = NULL) {
   .guard_scalar("content", "character", content)
-  .guard_scalar("name", "character", name)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("name", "character", name)
   .o <- list(text_s=list(
     content=content,
-    name=name,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -279,20 +279,20 @@ ui_text_s <- function(
 #' Create extra-small sized text content.
 #'
 #' @param content The text content.
-#' @param name An identifying name for this component.
 #' @param tooltip Tooltip message.
+#' @param name An identifying name for this component.
 #' @return A TextXs instance.
 ui_text_xs <- function(
   content,
-  name = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  name = NULL) {
   .guard_scalar("content", "character", content)
-  .guard_scalar("name", "character", name)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("name", "character", name)
   .o <- list(text_xs=list(
     content=content,
-    name=name,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -306,28 +306,28 @@ ui_text_xs <- function(
 #' the user of the component’s purpose.
 #'
 #' @param label The text displayed on the label.
-#' @param name An identifying name for this component.
 #' @param required True if the field is required.
 #' @param disabled True if the label should be disabled.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param name An identifying name for this component.
 #' @return A Label instance.
 ui_label <- function(
   label,
-  name = NULL,
   required = NULL,
   disabled = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  name = NULL) {
   .guard_scalar("label", "character", label)
-  .guard_scalar("name", "character", name)
   .guard_scalar("required", "logical", required)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("name", "character", name)
   .o <- list(label=list(
     label=label,
-    name=name,
     required=required,
     disabled=disabled,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -336,17 +336,17 @@ ui_label <- function(
 #' 
 #' A separator visually separates content into groups.
 #'
-#' @param name An identifying name for this component.
 #' @param label The text displayed on the separator.
+#' @param name An identifying name for this component.
 #' @return A Separator instance.
 ui_separator <- function(
-  name = NULL,
-  label = NULL) {
-  .guard_scalar("name", "character", name)
+  label = NULL,
+  name = NULL) {
   .guard_scalar("label", "character", label)
+  .guard_scalar("name", "character", name)
   .o <- list(separator=list(
-    name=name,
-    label=label))
+    label=label,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -372,28 +372,28 @@ ui_separator <- function(
 #' Instead change the label to reflect the change if necessary. Bars moving backwards reduce confidence in the service.
 #'
 #' @param label The text displayed above the bar.
-#' @param name An identifying name for this component.
 #' @param caption The text displayed below the bar.
 #' @param value The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param name An identifying name for this component.
 #' @return A Progress instance.
 ui_progress <- function(
   label,
-  name = NULL,
   caption = NULL,
   value = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  name = NULL) {
   .guard_scalar("label", "character", label)
-  .guard_scalar("name", "character", name)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("value", "numeric", value)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("name", "character", name)
   .o <- list(progress=list(
     label=label,
-    name=name,
     caption=caption,
     value=value,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -404,22 +404,22 @@ ui_progress <- function(
 #' You can use a message bar to tell the user about a situation that does not require their immediate attention and
 #' therefore does not need to block other activities.
 #'
-#' @param name An identifying name for this component.
 #' @param type The icon and color of the message bar.
 #'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
 #' @param text The text displayed on the message bar.
+#' @param name An identifying name for this component.
 #' @return A MessageBar instance.
 ui_message_bar <- function(
-  name = NULL,
   type = NULL,
-  text = NULL) {
-  .guard_scalar("name", "character", name)
+  text = NULL,
+  name = NULL) {
   # TODO Validate type
   .guard_scalar("text", "character", text)
+  .guard_scalar("name", "character", name)
   .o <- list(message_bar=list(
-    name=name,
     type=type,
-    text=text))
+    text=text,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -1031,21 +1031,21 @@ ui_button <- function(
 #' Create a set of buttons to be layed out horizontally.
 #'
 #' @param items The button in this set.
-#' @param name An identifying name for this component.
 #' @param justify Specifies how to lay out buttons horizontally.
 #'   One of 'start', 'end', 'center', 'between', 'around'.
+#' @param name An identifying name for this component.
 #' @return A Buttons instance.
 ui_buttons <- function(
   items,
-  name = NULL,
-  justify = NULL) {
+  justify = NULL,
+  name = NULL) {
   .guard_vector("items", "h2oq_Component", items)
-  .guard_scalar("name", "character", name)
   # TODO Validate justify
+  .guard_scalar("name", "character", name)
   .o <- list(buttons=list(
     items=items,
-    name=name,
-    justify=justify))
+    justify=justify,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -1095,17 +1095,17 @@ ui_file_upload <- function(
 #' Create a cell type that renders a column's cells as progress bars instead of plain text.
 #' If set on a column, the cell value must be between 0.0 and 1.0.
 #'
-#' @param name An identifying name for this component.
 #' @param color Color of the progress arc.
+#' @param name An identifying name for this component.
 #' @return A ProgressTableCellType instance.
 ui_progress_table_cell_type <- function(
-  name = NULL,
-  color = NULL) {
-  .guard_scalar("name", "character", name)
+  color = NULL,
+  name = NULL) {
   .guard_scalar("color", "character", color)
+  .guard_scalar("name", "character", name)
   .o <- list(progress=list(
-    name=name,
-    color=color))
+    color=color,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
   return(.o)
 }
@@ -1113,17 +1113,17 @@ ui_progress_table_cell_type <- function(
 #' Create a cell type that renders a column's cells as icons instead of plain text.
 #' If set on a column, the cell value is interpreted as the name of the icon to be displayed.
 #'
-#' @param name An identifying name for this component.
 #' @param color Icon color.
+#' @param name An identifying name for this component.
 #' @return A IconTableCellType instance.
 ui_icon_table_cell_type <- function(
-  name = NULL,
-  color = NULL) {
-  .guard_scalar("name", "character", name)
+  color = NULL,
+  name = NULL) {
   .guard_scalar("color", "character", color)
+  .guard_scalar("name", "character", name)
   .o <- list(icon=list(
-    name=name,
-    color=color))
+    color=color,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
   return(.o)
 }
@@ -1272,37 +1272,37 @@ ui_table <- function(
 #' Internal hyperlinks have paths that begin with a `/` and point to URLs within the Q UI.
 #' All other kinds of paths are treated as external hyperlinks.
 #'
-#' @param name An identifying name for this component.
 #' @param label The text to be displayed. If blank, the `path` is used as the label.
 #' @param path The path or URL to link to.
 #' @param disabled True if the link should be disabled.
 #' @param download True if the link should be used for file download.
 #' @param button True if the link should be rendered as a button.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param name An identifying name for this component.
 #' @return A Link instance.
 ui_link <- function(
-  name = NULL,
   label = NULL,
   path = NULL,
   disabled = NULL,
   download = NULL,
   button = NULL,
-  tooltip = NULL) {
-  .guard_scalar("name", "character", name)
+  tooltip = NULL,
+  name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("path", "character", path)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("download", "logical", download)
   .guard_scalar("button", "logical", button)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("name", "character", name)
   .o <- list(link=list(
-    name=name,
     label=label,
     path=path,
     disabled=disabled,
     download=download,
     button=button,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -1378,29 +1378,29 @@ ui_expander <- function(
 
 #' Create a new inline frame (an `iframe`).
 #'
-#' @param name An identifying name for this component.
 #' @param path The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
 #' @param content The HTML content of the page. A string containing `<html>...</html>`.
 #' @param width The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.
 #' @param height The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.
+#' @param name An identifying name for this component.
 #' @return A Frame instance.
 ui_frame <- function(
-  name = NULL,
   path = NULL,
   content = NULL,
   width = NULL,
-  height = NULL) {
-  .guard_scalar("name", "character", name)
+  height = NULL,
+  name = NULL) {
   .guard_scalar("path", "character", path)
   .guard_scalar("content", "character", content)
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
+  .guard_scalar("name", "character", name)
   .o <- list(frame=list(
-    name=name,
     path=path,
     content=content,
     width=width,
-    height=height))
+    height=height,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -1421,20 +1421,20 @@ ui_markup <- function(
 #' Render dynamic content using a HTML template.
 #'
 #' @param content The Handlebars template. https://handlebarsjs.com/guide/
-#' @param name An identifying name for this component.
 #' @param data Data for the Handlebars template
+#' @param name An identifying name for this component.
 #' @return A Template instance.
 ui_template <- function(
   content,
-  name = NULL,
-  data = NULL) {
+  data = NULL,
+  name = NULL) {
   .guard_scalar("content", "character", content)
-  .guard_scalar("name", "character", name)
   # TODO Validate data: Rec
+  .guard_scalar("name", "character", name)
   .o <- list(template=list(
     content=content,
-    name=name,
-    data=data))
+    data=data,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -1857,28 +1857,28 @@ ui_visualization <- function(
 #' Create a Vega-lite plot for display inside a form.
 #'
 #' @param specification The Vega-lite specification.
-#' @param name An identifying name for this component.
 #' @param data Data for the plot, if any.
 #' @param width The width of the visualization. Defaults to 100%.
 #' @param height The height of the visualization. Defaults to 300px.
+#' @param name An identifying name for this component.
 #' @return A VegaVisualization instance.
 ui_vega_visualization <- function(
   specification,
-  name = NULL,
   data = NULL,
   width = NULL,
-  height = NULL) {
+  height = NULL,
+  name = NULL) {
   .guard_scalar("specification", "character", specification)
-  .guard_scalar("name", "character", name)
   # TODO Validate data: Rec
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
+  .guard_scalar("name", "character", name)
   .o <- list(vega_visualization=list(
     specification=specification,
-    name=name,
     data=data,
     width=width,
-    height=height))
+    height=height,
+    name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }

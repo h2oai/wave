@@ -283,18 +283,18 @@ class Text:
     def __init__(
             self,
             content: str,
-            name: Optional[str] = None,
             size: Optional[str] = None,
             tooltip: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
-        self.name = name
-        """An identifying name for this component."""
         self.size = size
         """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'."""
         self.tooltip = tooltip
         """Tooltip message."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -302,9 +302,9 @@ class Text:
             raise ValueError('Text.content is required.')
         return _dump(
             content=self.content,
-            name=self.name,
             size=self.size,
             tooltip=self.tooltip,
+            name=self.name,
         )
 
     @staticmethod
@@ -313,18 +313,18 @@ class Text:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('Text.content is required.')
-        __d_name: Any = __d.get('name')
         __d_size: Any = __d.get('size')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_name: Any = __d.get('name')
         content: str = __d_content
-        name: Optional[str] = __d_name
         size: Optional[str] = __d_size
         tooltip: Optional[str] = __d_tooltip
+        name: Optional[str] = __d_name
         return Text(
             content,
-            name,
             size,
             tooltip,
+            name,
         )
 
 
@@ -334,18 +334,18 @@ class TextXl:
     def __init__(
             self,
             content: str,
-            name: Optional[str] = None,
             tooltip: Optional[str] = None,
             commands: Optional[List[Command]] = None,
+            name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
-        self.name = name
-        """An identifying name for this component."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -353,9 +353,9 @@ class TextXl:
             raise ValueError('TextXl.content is required.')
         return _dump(
             content=self.content,
-            name=self.name,
             tooltip=self.tooltip,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            name=self.name,
         )
 
     @staticmethod
@@ -364,18 +364,18 @@ class TextXl:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextXl.content is required.')
-        __d_name: Any = __d.get('name')
         __d_tooltip: Any = __d.get('tooltip')
         __d_commands: Any = __d.get('commands')
+        __d_name: Any = __d.get('name')
         content: str = __d_content
-        name: Optional[str] = __d_name
         tooltip: Optional[str] = __d_tooltip
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        name: Optional[str] = __d_name
         return TextXl(
             content,
-            name,
             tooltip,
             commands,
+            name,
         )
 
 
@@ -385,18 +385,18 @@ class TextL:
     def __init__(
             self,
             content: str,
-            name: Optional[str] = None,
             tooltip: Optional[str] = None,
             commands: Optional[List[Command]] = None,
+            name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
-        self.name = name
-        """An identifying name for this component."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
         """Contextual menu commands for this component."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -404,9 +404,9 @@ class TextL:
             raise ValueError('TextL.content is required.')
         return _dump(
             content=self.content,
-            name=self.name,
             tooltip=self.tooltip,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+            name=self.name,
         )
 
     @staticmethod
@@ -415,18 +415,18 @@ class TextL:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextL.content is required.')
-        __d_name: Any = __d.get('name')
         __d_tooltip: Any = __d.get('tooltip')
         __d_commands: Any = __d.get('commands')
+        __d_name: Any = __d.get('name')
         content: str = __d_content
-        name: Optional[str] = __d_name
         tooltip: Optional[str] = __d_tooltip
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        name: Optional[str] = __d_name
         return TextL(
             content,
-            name,
             tooltip,
             commands,
+            name,
         )
 
 
@@ -436,15 +436,15 @@ class TextM:
     def __init__(
             self,
             content: str,
-            name: Optional[str] = None,
             tooltip: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
-        self.name = name
-        """An identifying name for this component."""
         self.tooltip = tooltip
         """Tooltip message."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -452,8 +452,8 @@ class TextM:
             raise ValueError('TextM.content is required.')
         return _dump(
             content=self.content,
-            name=self.name,
             tooltip=self.tooltip,
+            name=self.name,
         )
 
     @staticmethod
@@ -462,15 +462,15 @@ class TextM:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextM.content is required.')
-        __d_name: Any = __d.get('name')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_name: Any = __d.get('name')
         content: str = __d_content
-        name: Optional[str] = __d_name
         tooltip: Optional[str] = __d_tooltip
+        name: Optional[str] = __d_name
         return TextM(
             content,
-            name,
             tooltip,
+            name,
         )
 
 
@@ -480,15 +480,15 @@ class TextS:
     def __init__(
             self,
             content: str,
-            name: Optional[str] = None,
             tooltip: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
-        self.name = name
-        """An identifying name for this component."""
         self.tooltip = tooltip
         """Tooltip message."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -496,8 +496,8 @@ class TextS:
             raise ValueError('TextS.content is required.')
         return _dump(
             content=self.content,
-            name=self.name,
             tooltip=self.tooltip,
+            name=self.name,
         )
 
     @staticmethod
@@ -506,15 +506,15 @@ class TextS:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextS.content is required.')
-        __d_name: Any = __d.get('name')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_name: Any = __d.get('name')
         content: str = __d_content
-        name: Optional[str] = __d_name
         tooltip: Optional[str] = __d_tooltip
+        name: Optional[str] = __d_name
         return TextS(
             content,
-            name,
             tooltip,
+            name,
         )
 
 
@@ -524,15 +524,15 @@ class TextXs:
     def __init__(
             self,
             content: str,
-            name: Optional[str] = None,
             tooltip: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
-        self.name = name
-        """An identifying name for this component."""
         self.tooltip = tooltip
         """Tooltip message."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -540,8 +540,8 @@ class TextXs:
             raise ValueError('TextXs.content is required.')
         return _dump(
             content=self.content,
-            name=self.name,
             tooltip=self.tooltip,
+            name=self.name,
         )
 
     @staticmethod
@@ -550,15 +550,15 @@ class TextXs:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextXs.content is required.')
-        __d_name: Any = __d.get('name')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_name: Any = __d.get('name')
         content: str = __d_content
-        name: Optional[str] = __d_name
         tooltip: Optional[str] = __d_tooltip
+        name: Optional[str] = __d_name
         return TextXs(
             content,
-            name,
             tooltip,
+            name,
         )
 
 
@@ -574,21 +574,21 @@ class Label:
     def __init__(
             self,
             label: str,
-            name: Optional[str] = None,
             required: Optional[bool] = None,
             disabled: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         self.label = label
         """The text displayed on the label."""
-        self.name = name
-        """An identifying name for this component."""
         self.required = required
         """True if the field is required."""
         self.disabled = disabled
         """True if the label should be disabled."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -596,10 +596,10 @@ class Label:
             raise ValueError('Label.label is required.')
         return _dump(
             label=self.label,
-            name=self.name,
             required=self.required,
             disabled=self.disabled,
             tooltip=self.tooltip,
+            name=self.name,
         )
 
     @staticmethod
@@ -608,21 +608,21 @@ class Label:
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('Label.label is required.')
-        __d_name: Any = __d.get('name')
         __d_required: Any = __d.get('required')
         __d_disabled: Any = __d.get('disabled')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_name: Any = __d.get('name')
         label: str = __d_label
-        name: Optional[str] = __d_name
         required: Optional[bool] = __d_required
         disabled: Optional[bool] = __d_disabled
         tooltip: Optional[str] = __d_tooltip
+        name: Optional[str] = __d_name
         return Label(
             label,
-            name,
             required,
             disabled,
             tooltip,
+            name,
         )
 
 
@@ -633,31 +633,31 @@ class Separator:
     """
     def __init__(
             self,
-            name: Optional[str] = None,
             label: Optional[str] = None,
+            name: Optional[str] = None,
     ):
-        self.name = name
-        """An identifying name for this component."""
         self.label = label
         """The text displayed on the separator."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         return _dump(
-            name=self.name,
             label=self.label,
+            name=self.name,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Separator':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
         __d_label: Any = __d.get('label')
-        name: Optional[str] = __d_name
+        __d_name: Any = __d.get('name')
         label: Optional[str] = __d_label
+        name: Optional[str] = __d_name
         return Separator(
-            name,
             label,
+            name,
         )
 
 
@@ -685,21 +685,21 @@ class Progress:
     def __init__(
             self,
             label: str,
-            name: Optional[str] = None,
             caption: Optional[str] = None,
             value: Optional[float] = None,
             tooltip: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         self.label = label
         """The text displayed above the bar."""
-        self.name = name
-        """An identifying name for this component."""
         self.caption = caption
         """The text displayed below the bar."""
         self.value = value
         """The progress, between 0.0 and 1.0, or -1 (default) if indeterminate."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -707,10 +707,10 @@ class Progress:
             raise ValueError('Progress.label is required.')
         return _dump(
             label=self.label,
-            name=self.name,
             caption=self.caption,
             value=self.value,
             tooltip=self.tooltip,
+            name=self.name,
         )
 
     @staticmethod
@@ -719,21 +719,21 @@ class Progress:
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('Progress.label is required.')
-        __d_name: Any = __d.get('name')
         __d_caption: Any = __d.get('caption')
         __d_value: Any = __d.get('value')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_name: Any = __d.get('name')
         label: str = __d_label
-        name: Optional[str] = __d_name
         caption: Optional[str] = __d_caption
         value: Optional[float] = __d_value
         tooltip: Optional[str] = __d_tooltip
+        name: Optional[str] = __d_name
         return Progress(
             label,
-            name,
             caption,
             value,
             tooltip,
+            name,
         )
 
 
@@ -746,38 +746,38 @@ class MessageBar:
     """
     def __init__(
             self,
-            name: Optional[str] = None,
             type: Optional[str] = None,
             text: Optional[str] = None,
+            name: Optional[str] = None,
     ):
-        self.name = name
-        """An identifying name for this component."""
         self.type = type
         """The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'."""
         self.text = text
         """The text displayed on the message bar."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         return _dump(
-            name=self.name,
             type=self.type,
             text=self.text,
+            name=self.name,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'MessageBar':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
         __d_type: Any = __d.get('type')
         __d_text: Any = __d.get('text')
-        name: Optional[str] = __d_name
+        __d_name: Any = __d.get('name')
         type: Optional[str] = __d_type
         text: Optional[str] = __d_text
+        name: Optional[str] = __d_name
         return MessageBar(
-            name,
             type,
             text,
+            name,
         )
 
 
@@ -1870,15 +1870,15 @@ class Buttons:
     def __init__(
             self,
             items: List['Component'],
-            name: Optional[str] = None,
             justify: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         self.items = items
         """The button in this set."""
-        self.name = name
-        """An identifying name for this component."""
         self.justify = justify
         """Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1886,8 +1886,8 @@ class Buttons:
             raise ValueError('Buttons.items is required.')
         return _dump(
             items=[__e.dump() for __e in self.items],
-            name=self.name,
             justify=self.justify,
+            name=self.name,
         )
 
     @staticmethod
@@ -1896,15 +1896,15 @@ class Buttons:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('Buttons.items is required.')
-        __d_name: Any = __d.get('name')
         __d_justify: Any = __d.get('justify')
+        __d_name: Any = __d.get('name')
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
-        name: Optional[str] = __d_name
         justify: Optional[str] = __d_justify
+        name: Optional[str] = __d_name
         return Buttons(
             items,
-            name,
             justify,
+            name,
         )
 
 
@@ -1994,31 +1994,31 @@ class ProgressTableCellType:
     """
     def __init__(
             self,
-            name: Optional[str] = None,
             color: Optional[str] = None,
+            name: Optional[str] = None,
     ):
-        self.name = name
-        """An identifying name for this component."""
         self.color = color
         """Color of the progress arc."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         return _dump(
-            name=self.name,
             color=self.color,
+            name=self.name,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'ProgressTableCellType':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
         __d_color: Any = __d.get('color')
-        name: Optional[str] = __d_name
+        __d_name: Any = __d.get('name')
         color: Optional[str] = __d_color
+        name: Optional[str] = __d_name
         return ProgressTableCellType(
-            name,
             color,
+            name,
         )
 
 
@@ -2028,31 +2028,31 @@ class IconTableCellType:
     """
     def __init__(
             self,
-            name: Optional[str] = None,
             color: Optional[str] = None,
+            name: Optional[str] = None,
     ):
-        self.name = name
-        """An identifying name for this component."""
         self.color = color
         """Icon color."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         return _dump(
-            name=self.name,
             color=self.color,
+            name=self.name,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'IconTableCellType':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
         __d_color: Any = __d.get('color')
-        name: Optional[str] = __d_name
+        __d_name: Any = __d.get('name')
         color: Optional[str] = __d_color
+        name: Optional[str] = __d_name
         return IconTableCellType(
-            name,
             color,
+            name,
         )
 
 
@@ -2337,16 +2337,14 @@ class Link:
     """
     def __init__(
             self,
-            name: Optional[str] = None,
             label: Optional[str] = None,
             path: Optional[str] = None,
             disabled: Optional[bool] = None,
             download: Optional[bool] = None,
             button: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            name: Optional[str] = None,
     ):
-        self.name = name
-        """An identifying name for this component."""
         self.label = label
         """The text to be displayed. If blank, the `path` is used as the label."""
         self.path = path
@@ -2359,44 +2357,46 @@ class Link:
         """True if the link should be rendered as a button."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         return _dump(
-            name=self.name,
             label=self.label,
             path=self.path,
             disabled=self.disabled,
             download=self.download,
             button=self.button,
             tooltip=self.tooltip,
+            name=self.name,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Link':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
         __d_label: Any = __d.get('label')
         __d_path: Any = __d.get('path')
         __d_disabled: Any = __d.get('disabled')
         __d_download: Any = __d.get('download')
         __d_button: Any = __d.get('button')
         __d_tooltip: Any = __d.get('tooltip')
-        name: Optional[str] = __d_name
+        __d_name: Any = __d.get('name')
         label: Optional[str] = __d_label
         path: Optional[str] = __d_path
         disabled: Optional[bool] = __d_disabled
         download: Optional[bool] = __d_download
         button: Optional[bool] = __d_button
         tooltip: Optional[str] = __d_tooltip
+        name: Optional[str] = __d_name
         return Link(
-            name,
             label,
             path,
             disabled,
             download,
             button,
             tooltip,
+            name,
         )
 
 
@@ -2546,14 +2546,12 @@ class Frame:
     """
     def __init__(
             self,
-            name: Optional[str] = None,
             path: Optional[str] = None,
             content: Optional[str] = None,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            name: Optional[str] = None,
     ):
-        self.name = name
-        """An identifying name for this component."""
         self.path = path
         """The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`"""
         self.content = content
@@ -2562,36 +2560,38 @@ class Frame:
         """The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`."""
         self.height = height
         """The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         return _dump(
-            name=self.name,
             path=self.path,
             content=self.content,
             width=self.width,
             height=self.height,
+            name=self.name,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Frame':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
         __d_path: Any = __d.get('path')
         __d_content: Any = __d.get('content')
         __d_width: Any = __d.get('width')
         __d_height: Any = __d.get('height')
-        name: Optional[str] = __d_name
+        __d_name: Any = __d.get('name')
         path: Optional[str] = __d_path
         content: Optional[str] = __d_content
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
+        name: Optional[str] = __d_name
         return Frame(
-            name,
             path,
             content,
             width,
             height,
+            name,
         )
 
 
@@ -2631,15 +2631,15 @@ class Template:
     def __init__(
             self,
             content: str,
-            name: Optional[str] = None,
             data: Optional[PackedRecord] = None,
+            name: Optional[str] = None,
     ):
         self.content = content
         """The Handlebars template. https://handlebarsjs.com/guide/"""
-        self.name = name
-        """An identifying name for this component."""
         self.data = data
         """Data for the Handlebars template"""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2647,8 +2647,8 @@ class Template:
             raise ValueError('Template.content is required.')
         return _dump(
             content=self.content,
-            name=self.name,
             data=self.data,
+            name=self.name,
         )
 
     @staticmethod
@@ -2657,15 +2657,15 @@ class Template:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('Template.content is required.')
-        __d_name: Any = __d.get('name')
         __d_data: Any = __d.get('data')
+        __d_name: Any = __d.get('name')
         content: str = __d_content
-        name: Optional[str] = __d_name
         data: Optional[PackedRecord] = __d_data
+        name: Optional[str] = __d_name
         return Template(
             content,
-            name,
             data,
+            name,
         )
 
 
@@ -3440,21 +3440,21 @@ class VegaVisualization:
     def __init__(
             self,
             specification: str,
-            name: Optional[str] = None,
             data: Optional[PackedRecord] = None,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         self.specification = specification
         """The Vega-lite specification."""
-        self.name = name
-        """An identifying name for this component."""
         self.data = data
         """Data for the plot, if any."""
         self.width = width
         """The width of the visualization. Defaults to 100%."""
         self.height = height
         """The height of the visualization. Defaults to 300px."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3462,10 +3462,10 @@ class VegaVisualization:
             raise ValueError('VegaVisualization.specification is required.')
         return _dump(
             specification=self.specification,
-            name=self.name,
             data=self.data,
             width=self.width,
             height=self.height,
+            name=self.name,
         )
 
     @staticmethod
@@ -3474,21 +3474,21 @@ class VegaVisualization:
         __d_specification: Any = __d.get('specification')
         if __d_specification is None:
             raise ValueError('VegaVisualization.specification is required.')
-        __d_name: Any = __d.get('name')
         __d_data: Any = __d.get('data')
         __d_width: Any = __d.get('width')
         __d_height: Any = __d.get('height')
+        __d_name: Any = __d.get('name')
         specification: str = __d_specification
-        name: Optional[str] = __d_name
         data: Optional[PackedRecord] = __d_data
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
+        name: Optional[str] = __d_name
         return VegaVisualization(
             specification,
-            name,
             data,
             width,
             height,
+            name,
         )
 
 

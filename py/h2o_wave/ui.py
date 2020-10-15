@@ -123,145 +123,145 @@ def flex_card(
 
 def text(
         content: str,
-        name: Optional[str] = None,
         size: Optional[str] = None,
         tooltip: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create text content.
 
     Args:
         content: The text content.
-        name: An identifying name for this component.
         size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'.
         tooltip: Tooltip message.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Text` instance.
     """
     return Component(text=Text(
         content,
-        name,
         size,
         tooltip,
+        name,
     ))
 
 
 def text_xl(
         content: str,
-        name: Optional[str] = None,
         tooltip: Optional[str] = None,
         commands: Optional[List[Command]] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create extra-large sized text content.
 
     Args:
         content: The text content.
-        name: An identifying name for this component.
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.TextXl` instance.
     """
     return Component(text_xl=TextXl(
         content,
-        name,
         tooltip,
         commands,
+        name,
     ))
 
 
 def text_l(
         content: str,
-        name: Optional[str] = None,
         tooltip: Optional[str] = None,
         commands: Optional[List[Command]] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create large sized text content.
 
     Args:
         content: The text content.
-        name: An identifying name for this component.
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.TextL` instance.
     """
     return Component(text_l=TextL(
         content,
-        name,
         tooltip,
         commands,
+        name,
     ))
 
 
 def text_m(
         content: str,
-        name: Optional[str] = None,
         tooltip: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create medium sized text content.
 
     Args:
         content: The text content.
-        name: An identifying name for this component.
         tooltip: Tooltip message.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.TextM` instance.
     """
     return Component(text_m=TextM(
         content,
-        name,
         tooltip,
+        name,
     ))
 
 
 def text_s(
         content: str,
-        name: Optional[str] = None,
         tooltip: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create small sized text content.
 
     Args:
         content: The text content.
-        name: An identifying name for this component.
         tooltip: Tooltip message.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.TextS` instance.
     """
     return Component(text_s=TextS(
         content,
-        name,
         tooltip,
+        name,
     ))
 
 
 def text_xs(
         content: str,
-        name: Optional[str] = None,
         tooltip: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create extra-small sized text content.
 
     Args:
         content: The text content.
-        name: An identifying name for this component.
         tooltip: Tooltip message.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.TextXs` instance.
     """
     return Component(text_xs=TextXs(
         content,
-        name,
         tooltip,
+        name,
     ))
 
 
 def label(
         label: str,
-        name: Optional[str] = None,
         required: Optional[bool] = None,
         disabled: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create a label.
 
@@ -273,48 +273,48 @@ def label(
 
     Args:
         label: The text displayed on the label.
-        name: An identifying name for this component.
         required: True if the field is required.
         disabled: True if the label should be disabled.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Label` instance.
     """
     return Component(label=Label(
         label,
-        name,
         required,
         disabled,
         tooltip,
+        name,
     ))
 
 
 def separator(
-        name: Optional[str] = None,
         label: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create a separator.
 
     A separator visually separates content into groups.
 
     Args:
-        name: An identifying name for this component.
         label: The text displayed on the separator.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Separator` instance.
     """
     return Component(separator=Separator(
-        name,
         label,
+        name,
     ))
 
 
 def progress(
         label: str,
-        name: Optional[str] = None,
         caption: Optional[str] = None,
         value: Optional[float] = None,
         tooltip: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create a progress bar.
 
@@ -338,26 +338,26 @@ def progress(
 
     Args:
         label: The text displayed above the bar.
-        name: An identifying name for this component.
         caption: The text displayed below the bar.
         value: The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Progress` instance.
     """
     return Component(progress=Progress(
         label,
-        name,
         caption,
         value,
         tooltip,
+        name,
     ))
 
 
 def message_bar(
-        name: Optional[str] = None,
         type: Optional[str] = None,
         text: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create a message bar.
 
@@ -366,16 +366,16 @@ def message_bar(
     therefore does not need to block other activities.
 
     Args:
-        name: An identifying name for this component.
         type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
         text: The text displayed on the message bar.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.MessageBar` instance.
     """
     return Component(message_bar=MessageBar(
-        name,
         type,
         text,
+        name,
     ))
 
 
@@ -925,22 +925,22 @@ def button(
 
 def buttons(
         items: List[Component],
-        name: Optional[str] = None,
         justify: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create a set of buttons to be layed out horizontally.
 
     Args:
         items: The button in this set.
-        name: An identifying name for this component.
         justify: Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Buttons` instance.
     """
     return Component(buttons=Buttons(
         items,
-        name,
         justify,
+        name,
     ))
 
 
@@ -982,40 +982,40 @@ def file_upload(
 
 
 def progress_table_cell_type(
-        name: Optional[str] = None,
         color: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> TableCellType:
     """Create a cell type that renders a column's cells as progress bars instead of plain text.
     If set on a column, the cell value must be between 0.0 and 1.0.
 
     Args:
-        name: An identifying name for this component.
         color: Color of the progress arc.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.ProgressTableCellType` instance.
     """
     return TableCellType(progress=ProgressTableCellType(
-        name,
         color,
+        name,
     ))
 
 
 def icon_table_cell_type(
-        name: Optional[str] = None,
         color: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> TableCellType:
     """Create a cell type that renders a column's cells as icons instead of plain text.
     If set on a column, the cell value is interpreted as the name of the icon to be displayed.
 
     Args:
-        name: An identifying name for this component.
         color: Icon color.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.IconTableCellType` instance.
     """
     return TableCellType(icon=IconTableCellType(
-        name,
         color,
+        name,
     ))
 
 
@@ -1148,13 +1148,13 @@ def table(
 
 
 def link(
-        name: Optional[str] = None,
         label: Optional[str] = None,
         path: Optional[str] = None,
         disabled: Optional[bool] = None,
         download: Optional[bool] = None,
         button: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create a hyperlink.
 
@@ -1163,24 +1163,24 @@ def link(
     All other kinds of paths are treated as external hyperlinks.
 
     Args:
-        name: An identifying name for this component.
         label: The text to be displayed. If blank, the `path` is used as the label.
         path: The path or URL to link to.
         disabled: True if the link should be disabled.
         download: True if the link should be used for file download.
         button: True if the link should be rendered as a button.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Link` instance.
     """
     return Component(link=Link(
-        name,
         label,
         path,
         disabled,
         download,
         button,
         tooltip,
+        name,
     ))
 
 
@@ -1253,29 +1253,29 @@ def expander(
 
 
 def frame(
-        name: Optional[str] = None,
         path: Optional[str] = None,
         content: Optional[str] = None,
         width: Optional[str] = None,
         height: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create a new inline frame (an `iframe`).
 
     Args:
-        name: An identifying name for this component.
         path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
         content: The HTML content of the page. A string containing `<html>...</html>`.
         width: The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.
         height: The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Frame` instance.
     """
     return Component(frame=Frame(
-        name,
         path,
         content,
         width,
         height,
+        name,
     ))
 
 
@@ -1296,22 +1296,22 @@ def markup(
 
 def template(
         content: str,
-        name: Optional[str] = None,
         data: Optional[PackedRecord] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Render dynamic content using a HTML template.
 
     Args:
         content: The Handlebars template. https://handlebarsjs.com/guide/
-        name: An identifying name for this component.
         data: Data for the Handlebars template
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Template` instance.
     """
     return Component(template=Template(
         content,
-        name,
         data,
+        name,
     ))
 
 
@@ -1661,28 +1661,28 @@ def visualization(
 
 def vega_visualization(
         specification: str,
-        name: Optional[str] = None,
         data: Optional[PackedRecord] = None,
         width: Optional[str] = None,
         height: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Component:
     """Create a Vega-lite plot for display inside a form.
 
     Args:
         specification: The Vega-lite specification.
-        name: An identifying name for this component.
         data: Data for the plot, if any.
         width: The width of the visualization. Defaults to 100%.
         height: The height of the visualization. Defaults to 300px.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.VegaVisualization` instance.
     """
     return Component(vega_visualization=VegaVisualization(
         specification,
-        name,
         data,
         width,
         height,
+        name,
     ))
 
 

@@ -16,10 +16,10 @@ const
  * A separator visually separates content into groups.
  */
 export interface Separator {
-  /** An identifying name for this component. */
-  name?: S
   /** The text displayed on the separator. */
   label?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 export const

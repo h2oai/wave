@@ -23,8 +23,6 @@ const
  * Create a new inline frame (an `iframe`).
  */
 export interface Frame {
-  /** An identifying name for this component. */
-  name?: S
   /** The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html` */
   path?: S
   /** The HTML content of the page. A string containing `<html>...</html>`. */
@@ -33,6 +31,8 @@ export interface Frame {
   width?: S
   /** The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`. */
   height?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /**

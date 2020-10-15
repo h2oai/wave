@@ -14,14 +14,14 @@ import { B, S } from './qd'
 export interface Label {
   /**  The text displayed on the label.*/
   label: S
-  /** An identifying name for this component. */
-  name?: S
   /** True if the field is required. */
   required?: B
   /** True if the label should be disabled. */
   disabled?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 const

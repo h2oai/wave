@@ -10,8 +10,6 @@ import { B, bond, S } from './qd'
  * All other kinds of paths are treated as external hyperlinks.
  */
 export interface Link {
-  /** An identifying name for this component. */
-  name?: S
   /** The text to be displayed. If blank, the `path` is used as the label. */
   label?: S
   /** The path or URL to link to. */
@@ -24,6 +22,8 @@ export interface Link {
   button?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 export const

@@ -7,10 +7,10 @@ import { S } from './qd'
  * If set on a column, the cell value is interpreted as the name of the icon to be displayed.
 */
 export interface IconTableCellType {
-  /** An identifying name for this component. */
-  name?: S
   /** Icon color. */
   color?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 export const XIconTableCellType = ({ model: m, icon }: { model: IconTableCellType, icon: S }) => (
