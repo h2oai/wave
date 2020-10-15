@@ -1,4 +1,4 @@
-To start the Wave server, simply open a new terminal window execute `wave`.
+To start the Wave server, simply open a new terminal window execute `wave` (or `wave.exe` on Windows).
 
 ```shell 
 cd $HOME/wave

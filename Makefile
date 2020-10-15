@@ -70,21 +70,20 @@ release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make r
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
-	$(MAKE) build-docs
-	$(MAKE) release-docs
+	$(MAKE) website
+	$(MAKE) publish
 
 release-os:
 	rm -rf build/$(REL)
 	mkdir -p build/$(REL)
 	rsync -a ui/build/ build/$(REL)/www
-	rsync -a py/build/docs/h2o_wave build/$(REL)/ && mv build/$(REL)/h2o_wave build/$(REL)/docs
 	rsync -a py/examples build/$(REL)/
 	rm -rf test/cypress/integration/*.js
 	rm -rf test/cypress/screenshots/*.*
 	rm -rf test/cypress/videos/*.*
 	rsync --exclude node_modules -a test build/$(REL)/
 	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/wave$(EXE_EXT) cmd/wave/main.go
-	cp readme-$(OS).txt build/$(REL)/readme.txt
+	cp readme.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
 .PHONY: website

@@ -38,6 +38,15 @@ python3 -m venv venv
 ./venv/bin/python examples/tour.py
 ```
 
+On Windows:
+
+```shell
+cd $HOME\wave
+python3 -m venv venv
+venv\Scripts\pip install -r examples\requirements.txt
+venv\Scripts\python examples\tour.py
+```
+
 ## Step 3: Enjoy the tour
 
 Go to [http://localhost:55555/tour](http://localhost:55555/tour) to access the tour. 

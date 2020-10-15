@@ -69,6 +69,10 @@ Start the Wave server.
 2020/10/15 12:04:40 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
 ```
 
+:::info
+On Windows, run `wave.exe` to start the server.
+:::
+
 ### Step 5: Verify
 
 Finally, point your web browser to [http://localhost:55555/](http://localhost:55555/). You should see an empty page with a spinner that looks like this:
