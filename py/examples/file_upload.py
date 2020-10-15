@@ -1,7 +1,7 @@
 # Form / File Upload
 # Use a file upload component to allow users to upload files.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

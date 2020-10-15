@@ -1,7 +1,7 @@
 # Toolbar
 # Use toolbars to provide commands that operate on the content of a page.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

@@ -1,8 +1,8 @@
 # Hello World!
 # A simple example to get you started with Q.
 # ---
-# Import `Site` and the `ui` module from the `h2o_q` package
-from h2o_q import site, ui
+# Import `Site` and the `ui` module from the `h2o_wave` package
+from h2o_wave import site, ui
 
 # Get the web page at route '/demo'.
 # If you're running this example on your local machine,

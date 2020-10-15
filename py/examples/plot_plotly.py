@@ -6,7 +6,7 @@ import numpy as np
 from plotly import graph_objects as go
 from plotly import io as pio
 
-from h2o_q import ui, listen, Q
+from h2o_wave import ui, listen, Q
 
 np.random.seed(19680801)
 

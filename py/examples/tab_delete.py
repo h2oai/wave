@@ -2,7 +2,7 @@
 # Navigate between two or more tabs.
 # Delete the cards when switching between tabs.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 TABS = 'abcde'
 

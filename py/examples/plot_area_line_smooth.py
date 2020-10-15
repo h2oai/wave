@@ -2,7 +2,7 @@
 # Make a combined area + line plot using a smooth curve.
 # ---
 from synth import FakeTimeSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

@@ -1,7 +1,7 @@
 # Form / Checkbox
 # Use checkboxes to switch between two mutually exclusive options.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

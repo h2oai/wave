@@ -1,7 +1,7 @@
 # To-do List App
 # A simple multi-user To-do list application.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 from typing import List
 
 _id = 0

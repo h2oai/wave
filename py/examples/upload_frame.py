@@ -3,7 +3,7 @@
 # ---
 import os
 import uuid
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 html_content = '''
 <!DOCTYPE html>

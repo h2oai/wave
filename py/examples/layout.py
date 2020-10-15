@@ -2,7 +2,7 @@
 # How to adjust the position of cards on a page.
 # ---
 
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 # Every page has a grid system in place.
 # The grid has 12 columns and 10 rows.

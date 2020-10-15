@@ -1,7 +1,7 @@
 # Form / Text / Sizes
 # Use text size variants to display formatted text using predefined font sizes.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

@@ -1,7 +1,7 @@
 # Form / Message Bar
 # Use message bars to indicate relevant status information.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

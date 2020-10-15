@@ -2,7 +2,7 @@
 # Make an area plot with an additional line layer on top.
 # ---
 from synth import FakeTimeSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

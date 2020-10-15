@@ -1,7 +1,7 @@
 # Form / Picker
 # Use pickers to allow users to select one or more choices, such as tags or files, from a list.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

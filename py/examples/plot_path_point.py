@@ -2,7 +2,7 @@
 # Make a path plot with an additional layer of points.
 # ---
 from synth import FakeScatter
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

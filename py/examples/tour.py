@@ -9,7 +9,7 @@ from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 
-from h2o_q import Q, configure, listen, ui
+from h2o_wave import Q, configure, listen, ui
 
 py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
@@ -82,7 +82,7 @@ def load_examples(filenames: List[str]) -> Dict[str, Example]:
     return examples
 
 
-app_title = 'H2O Q SDK Tour'
+app_title = 'H2O Wave SDK Tour'
 
 
 async def setup_page(q: Q):
@@ -196,7 +196,7 @@ if __name__ == '__main__':
                          not line.strip().startswith('#')]
     catalog = load_examples(example_filenames)
     print('----------------------------------------')
-    print(' Welcome to the H2O Q Interactive Tour!')
+    print(' Welcome to the H2O Wave Interactive Tour!')
     print('')
     print(' Go to http://localhost:55555/tour')
     print('----------------------------------------')

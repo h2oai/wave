@@ -1,7 +1,7 @@
 # Form / Picker / Selection
 # Pre-select choices while displaying a picker.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

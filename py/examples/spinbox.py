@@ -1,7 +1,7 @@
 # Form / Spinbox
 # Use a spinbox to allow users to incrementally adjust a value in small steps.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

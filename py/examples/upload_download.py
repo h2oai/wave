@@ -5,7 +5,7 @@
 
 import os
 import os.path
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 async def serve(q: Q):
     links = q.args.user_files

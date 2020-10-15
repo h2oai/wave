@@ -1,7 +1,7 @@
 # Table / Markdown
 # Display a table using markdown.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 air_passengers_fields = ['Year', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
 air_passengers_rows = [

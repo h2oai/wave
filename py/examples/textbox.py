@@ -1,7 +1,7 @@
 # Form / Textbox
 # Use a textbox to allow users to provide text inputs.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

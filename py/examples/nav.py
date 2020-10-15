@@ -1,7 +1,7 @@
 # Nav
 # Use nav cards to display sidebar navigation.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

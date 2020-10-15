@@ -1,7 +1,7 @@
 # Form / Range Slider
 # Use a range slider to allow users to select a value range (from, to).
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

@@ -1,7 +1,7 @@
 # Form / Date Picker
 # Use date pickers to allow users to pick dates.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

@@ -1,7 +1,7 @@
 # Graphics / Hilbert
 # Use turtle graphics recursively to draw Hilbert curves.
 # ---
-from h2o_q import ui, listen, Q, graphics as g
+from h2o_wave import ui, listen, Q, graphics as g
 
 
 def hilbert(t: g.Turtle, width: float, depth: int, reverse=False):  # recursive

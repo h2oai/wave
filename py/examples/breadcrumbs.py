@@ -6,7 +6,7 @@
 # Breadcrumbs are typically placed, in horizontal form, under the masthead 
 # or navigation of an experience, above the primary content area.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

@@ -2,7 +2,7 @@
 # A card that demonstrates collaborative editing in Q.
 # Open `/demo` in multiple browsers and watch them synchronize in realtime.
 # ---
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 page.drop()

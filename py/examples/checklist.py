@@ -1,7 +1,7 @@
 # Form / Checklist
 # Use a checklist to group a set of related checkboxes.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

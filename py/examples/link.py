@@ -1,7 +1,7 @@
 # Form / Link
 # Use links to allow navigation to internal and external URLs.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

@@ -2,7 +2,7 @@
 # Launch the server in multicast mode to synchronize browser state across a user's clients.
 # Open `/demo` in multiple browsers and watch them synchronize in realtime.
 # ---
-from h2o_q import Q, listen, ui, pack
+from h2o_wave import Q, listen, ui, pack
 
 
 async def serve(q: Q):

@@ -1,7 +1,7 @@
 # Plot / Vega-lite / Form
 # Display a Vega-lite plot inside a form card
 # ---
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 import random
 import time
 

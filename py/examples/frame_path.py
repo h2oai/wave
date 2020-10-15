@@ -1,7 +1,7 @@
 # Frame / Path
 # Use a frame card to display external web pages.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

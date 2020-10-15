@@ -1,7 +1,7 @@
 # Form / Separator
 # Use a separator to visually separate content into groups.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

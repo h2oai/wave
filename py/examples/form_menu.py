@@ -2,7 +2,7 @@
 # Display context menus inside forms.
 # ---
 import json
-from h2o_q import Q, listen, ui, data
+from h2o_wave import Q, listen, ui, data
 
 # Vega lite spec for a bar plot, defaults to linear scale.
 spec_linear_scale = json.dumps(dict(

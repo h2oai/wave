@@ -4,7 +4,7 @@
 # ---
 import time
 from copy import deepcopy
-from h2o_q import site, ui, graphics as g
+from h2o_wave import site, ui, graphics as g
 
 
 def get_neighbors(row, col):

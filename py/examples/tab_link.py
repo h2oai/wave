@@ -2,7 +2,7 @@
 # Use tab cards to display tabs on a page.
 # This examples render tabs styled as links.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

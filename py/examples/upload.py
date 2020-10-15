@@ -2,7 +2,7 @@
 # Upload files to the Q server.
 # ---
 import os
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 
 def write_csv(filename, rows):

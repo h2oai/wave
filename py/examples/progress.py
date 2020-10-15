@@ -1,7 +1,7 @@
 # Form / Progress
 # Use a progress bar to indicate completion status of an operation.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

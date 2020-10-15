@@ -1,7 +1,7 @@
 # Form / Button
 # Use buttons to enable a user to commit a change or complete steps in a task.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

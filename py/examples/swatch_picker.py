@@ -1,7 +1,7 @@
 # Form / Swatch Picker
 # Use a swatch picker to allow users to choose a from a specific set of colors.
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

@@ -1,7 +1,7 @@
 # Form / Label
 # Use labels to give a name to a component or a group of components in a form.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

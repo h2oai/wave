@@ -2,7 +2,7 @@
 # Make an area plot showing positive and negative values.
 # ---
 from synth import FakeTimeSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

@@ -1,7 +1,7 @@
 # Form / Frame
 # Use a frame component in a form card to display HTML content inline.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 html = '''
 <!DOCTYPE html>

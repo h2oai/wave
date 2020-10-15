@@ -1,7 +1,7 @@
 # Wizard
 # Create a multi-step wizard using form cards.
 # ---
-from h2o_q import Q, ui, listen, cypress, Cypress
+from h2o_wave import Q, ui, listen, cypress, Cypress
 
 
 async def serve(q: Q):

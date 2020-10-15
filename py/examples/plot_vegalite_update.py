@@ -1,7 +1,7 @@
 # Plot / Vega-lite / Update
 # Periodically update a Vega-lite plot.
 # ---
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 import random
 import time
 

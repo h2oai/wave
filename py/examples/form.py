@@ -2,7 +2,7 @@
 # Use a form to collect data or show textual information.
 # ---
 from synth import FakeCategoricalSeries
-from h2o_q import Q, listen, ui, pack, data
+from h2o_wave import Q, listen, ui, pack, data
 import random
 
 html = '''

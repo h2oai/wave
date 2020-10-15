@@ -7,7 +7,7 @@ from bokeh.plotting import figure
 from bokeh.resources import CDN
 from bokeh.embed import file_html
 
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 n = 500
 x = 2 + 2 * np.random.standard_normal(n)

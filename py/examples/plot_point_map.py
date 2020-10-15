@@ -2,7 +2,7 @@
 # Make a plot to compare quantities across categories. Similar to a heatmap, but using size-encoding instead of color-encoding.
 # ---
 from synth import FakeSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

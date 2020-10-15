@@ -3,7 +3,7 @@
 # ---
 from faker import Faker
 import time
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 from synth import FakePercent, FakeCategoricalSeries
 
 fake = Faker()

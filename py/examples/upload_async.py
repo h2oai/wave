@@ -4,7 +4,7 @@
 
 
 import os
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 def write_csv(filename, rows):
