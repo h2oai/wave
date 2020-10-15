@@ -63,7 +63,7 @@ generate: ## Generate driver bindings
 	cd tools/wavegen && $(MAKE) run
 
 .PHONY: docs
-docs: ## Generate docs
+docs: ## Generate API docs and copy to website
 	cd py && $(MAKE) docs
 
 release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make release)"
@@ -87,10 +87,11 @@ release-os:
 	cp readme-$(OS).txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
-build-docs:
+.PHONY: website
+website: ## Build docs website
 	cd website && npm run build
 
-release-docs:
+publish: ## Deploy built website to hosting dir docs/
 	rm -rf docs && mkdir docs && rsync -a website/build/ docs/
 
 help: ## List all make tasks

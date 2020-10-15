@@ -21,7 +21,7 @@ const features = [
     icon: 'fas fa-stopwatch',
     description: (
       <>
-        Broadcast live information, visualizations and graphics using Q's low-latency realtime server.
+        Broadcast live information, visualizations and graphics using Wave's low-latency realtime server.
       </>
     ),
   },

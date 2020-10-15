@@ -254,7 +254,7 @@ def _is_numpy_obj(x: Any) -> bool:
 
 def _dump(xs: Any):
     if _is_numpy_obj(xs):
-        raise ValueError('NumPy objects are not serializable by Q')
+        raise ValueError('NumPy objects are not serializable by Wave')
 
     if isinstance(xs, (list, tuple)):
         return [_dump(x) for x in xs]

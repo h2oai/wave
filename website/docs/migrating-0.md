@@ -18,7 +18,7 @@ With the previous framework, the only way to execute an app was via the Q server
 
 This also means that you can apply breakpoints and debug or step-through your program in your debugger of choice.
 
-From an information architecture perspective, control has been inverted: instead of your app being an extension to Wave's data/prep/search features, Wave's features are now optional additions to your app, and your app takes center stage. Implementation-wise, instead of your app running in a sidebar inside of Q's UI, your app now occupies the entire UI.
+From an information architecture perspective, control has been inverted: instead of your app being an extension to Wave's data/prep/search features, Wave's features are now optional additions to your app, and your app takes center stage. Implementation-wise, instead of your app running in a sidebar inside of Wave's UI, your app now occupies the entire UI.
 
 ## Breaking changes
 

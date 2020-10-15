@@ -66,11 +66,11 @@ module.exports = {
           items: [
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/h2oq',
+              href: 'https://stackoverflow.com/questions/tagged/h2owave',
             },
             {
               label: 'Discord',
-              href: 'https://discordapp.com/invite/h2oq',
+              href: 'https://discordapp.com/invite/h2owave',
             },
             {
               label: 'Twitter',

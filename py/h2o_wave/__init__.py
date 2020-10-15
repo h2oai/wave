@@ -9,7 +9,7 @@ collaborative, web-based applications. It ships batteries-included with
 a suite of form and data visualization components for rapidly prototyping
 analytical and decision-support applications.
 
-Q's components work in conjunction with the Q relay server that facilitates
+Wave's components work in conjunction with the Q relay server that facilitates
 realtime state synchronization between Python and web browsers.
 
 
