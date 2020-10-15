@@ -19,6 +19,7 @@ describe('Datepicker.tsx', () => {
     render(<XDatePicker model={datepickerProps} />)
     expect(T.qd.args[name]).toBeFalsy()
   })
+
   it('Sets args - init - value specified', () => {
     render(<XDatePicker model={{ ...datepickerProps, value: 'Test' }} />)
     expect(T.qd.args[name]).toBe('Test')
@@ -31,5 +32,16 @@ describe('Datepicker.tsx', () => {
     fireEvent.click(getAllByText('1')[0])
 
     expect(T.qd.args[name]).toBeTruthy()
+  })
+
+  it('Calls sync when trigger specified', () => {
+    const syncMock = jest.fn()
+    const { getAllByRole, getAllByText } = render(<XDatePicker model={{ ...datepickerProps, trigger: true }} />)
+
+    T.qd.sync = syncMock
+    fireEvent.click(getAllByRole('combobox')[0])
+    fireEvent.click(getAllByText('1')[0])
+
+    expect(syncMock).toHaveBeenCalled()
   })
 })
