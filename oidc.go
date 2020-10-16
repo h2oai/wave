@@ -1,4 +1,4 @@
-package qd
+package wave
 
 import (
 	"crypto/rand"
