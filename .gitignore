@@ -18,11 +18,9 @@
 /build
 /data
 /wave
-/teledb
+/surf
 /*.db
 *.log
 *.swp
 node_modules
 
-# IDEs
-.vscode
