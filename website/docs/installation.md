@@ -2,7 +2,7 @@
 title: Installation
 ---
 
-To set up H2O Wave, simply download and extract a release (~8MB). The release ships with a precompiled binary executable, so no explicit installation step is necessary.
+To set up H2O Wave, simply download and extract a release (~10MB). The release ships with a precompiled binary executable, so no explicit installation step is necessary.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ H2O Wave runs on Linux, macOS, and Windows, having Python 3.6.1 or later.
 
 ### Step 1: Download
 
-[Download the H2O Wave SDK](https://github.com/h2oai/wave/releases/latest) for your platform. 
+[Download the H2O Wave SDK](https://github.com/h2oai/wave/releases/latest) for your platform.
 
 ### Step 2: Extract
 
@@ -59,13 +59,13 @@ Start the Wave server.
 ```
 
 ```
-2020/10/15 12:04:40 # 
+2020/10/15 12:04:40 #
 2020/10/15 12:04:40 # ┌───────────────────┐
 2020/10/15 12:04:40 # │   ┬ ┬┌─┐┬  ┬┌─┐   │
 2020/10/15 12:04:40 # │   │││├─┤└┐┌┘├┤    │
 2020/10/15 12:04:40 # │   └┴┘┴ ┴ └┘ └─┘   │
 2020/10/15 12:04:40 # └───────────────────┘
-2020/10/15 12:04:40 # 
+2020/10/15 12:04:40 #
 2020/10/15 12:04:40 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
 ```
 
@@ -79,8 +79,6 @@ Finally, point your web browser to [http://localhost:55555/](http://localhost:55
 
 ![spinner](assets/installation__waiting.png)
 
-Congratulations! Wave is now running, but doesn't have any content yet (hence the spinner). 
+Congratulations! Wave is now running, but doesn't have any content yet (hence the spinner).
 
 In the next few sections, we'll add some content and see what the fuss is all about.
-
-
