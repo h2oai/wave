@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, F, S, qd } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a slider.
@@ -35,6 +36,8 @@ export interface Slider {
   disabled?: B
   /** True if the form should be submitted when the slider value changes. */
   trigger?: B
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -42,21 +45,16 @@ export interface Slider {
 export const
   XSlider = bond(({ model: m }: { model: Slider }) => {
     const
-      min = m.min || 0,
-      max = m.max || 100,
-      step = m.step || 1,
-      value = m.value || 0
-
-    const defaultValue = (value < min) ? min : ((value > max) ? max : value)
+      { min = 0, max = 100, step = 1, value = 0 } = m,
+      defaultValue = (value < min) ? min : ((value > max) ? max : value)
     qd.args[m.name] = defaultValue
     const
       onChange = (v: number) => qd.args[m.name] = v,
-      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => {
-        if (m.trigger) qd.sync()
-      },
+      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => { if (m.trigger) qd.sync() },
       render = () => (
         <Fluent.Slider
           data-test={m.name}
+          styles={{ root: displayMixin(m.visible) as Fluent.IStyle }}
           buttonProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
           min={min}

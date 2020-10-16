@@ -6,7 +6,7 @@ import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards } from './layout'
 import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V } from './qd'
-import { getTheme } from './theme'
+import { getTheme, displayMixin } from './theme'
 
 const
   theme = getTheme(),
@@ -724,6 +724,8 @@ export interface Visualization {
   width?: S;
   /** The height of the visualization. Defaults to 300px. */
   height?: S;
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
 }
 
 export const
@@ -761,12 +763,12 @@ export const
       },
       render = () => {
         const
-          { width, height } = model,
+          { width, height, visible } = model,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
             : { width: width || 'auto', height: height || '300px' }
         return (
-          <div style={style} ref={container} />
+          <div style={{ ...style, ...displayMixin(visible) }} ref={container} />
         )
       }
     return { init, update, render }

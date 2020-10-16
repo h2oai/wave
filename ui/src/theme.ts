@@ -54,7 +54,8 @@ export const
   margin = padding,
   rgba = (r: U, g: U, b: U, a: F) => `rgba(${r},${g},${b},${a.toFixed(1)})`,
   gray = (b: U) => { const h = b.toString(16); return `#${h}${h}${h}` },
-  centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' })
+  centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
+  displayMixin = (visible = true): React.CSSProperties => ({ display: visible ? 'inherit' : 'none' })
 
 const
   black: RGB = { r: 0, g: 0, b: 0 },

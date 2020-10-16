@@ -4,6 +4,7 @@ import { stylesheet } from 'typestyle'
 import { Component } from './form'
 import { B, bond, S, qd, Dict } from './qd'
 import { XToolTip } from './tooltip'
+import { displayMixin } from './theme'
 
 /**
  * Create a button.
@@ -38,6 +39,8 @@ export interface Button {
   disabled?: B
   /** True if the button should be rendered as link text and not a standard button. */
   link?: B
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -50,6 +53,8 @@ export interface Buttons {
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** An identifying name for this component. */
   name?: S
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
 }
 
 
@@ -72,16 +77,16 @@ const
     qd.args[m.name] = false
     const
       onClick = () => {
-        if (m.name[0] === '#') {
+        if (m.name.startsWith('#')) {
           window.location.hash = m.name.substr(1)
           return
         }
-        qd.args[m.name] = m.value !== undefined ? m.value : true
+        qd.args[m.name] = m.value === undefined || m.value
         qd.sync()
       },
       render = () => {
         if (m.link) {
-          return (<Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>)
+          return <Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>
         }
         return m.caption?.length
           ? m.primary
@@ -105,7 +110,7 @@ export const
             </XToolTip>
           ))
         return (
-          <div data-test={m.name} className={css.buttons}>
+          <div data-test={m.name} className={css.buttons} style={displayMixin(m.visible)}>
             <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
           </div>
         )
@@ -113,5 +118,7 @@ export const
     return { render }
   }),
   XStandAloneButton = ({ model: m }: { model: Button }) => (
-    <div className={css.buttons}><XButton key={m.name} model={m}>{m.label}</XButton></div>
+    <div className={css.buttons} style={displayMixin(m.visible)}>
+      <XButton key={m.name} model={m}>{m.label}</XButton>
+    </div>
   )

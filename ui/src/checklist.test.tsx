@@ -18,6 +18,12 @@ describe('Checklist.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display checklist when visible is false', () => {
+    const { queryByTestId } = render(<XChecklist model={{ ...checklistProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets args - single selection', () => {
     const { getByText } = render(<XChecklist model={checklistProps} />)
     fireEvent.click(getByText('Choice1').parentElement!)

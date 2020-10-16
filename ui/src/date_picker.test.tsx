@@ -15,6 +15,12 @@ describe('Datepicker.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display date picker when visible is false', () => {
+    const { queryByTestId } = render(<XDatePicker model={{ ...datepickerProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets args - init - value not specified', () => {
     render(<XDatePicker model={datepickerProps} />)
     expect(T.qd.args[name]).toBeFalsy()

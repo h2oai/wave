@@ -2,6 +2,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { Choice } from './choice_group'
 import { B, bond, S, qd, box } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a dropdown.
@@ -35,6 +36,8 @@ export interface Dropdown {
   disabled?: B
   /** True if the form should be submitted when the dropdown value changes. */
   trigger?: B
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -90,7 +93,7 @@ export const
         onChange()
       },
       render = () =>
-        <div>
+        <div style={displayMixin(m.visible)}>
           <Fluent.Dropdown
             data-test={m.name}
             label={m.label}

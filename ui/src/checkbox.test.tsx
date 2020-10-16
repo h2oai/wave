@@ -19,6 +19,12 @@ describe('Checkbox.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display checkbox when visible is false', () => {
+    const { queryByTestId } = render(<XCheckbox model={{ ...checkboxProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Does not call sync when trigger is off', () => {
     const syncMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={checkboxProps} />)

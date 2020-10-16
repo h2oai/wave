@@ -15,6 +15,12 @@ describe('ColorPicker.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display color picker when visible is false', () => {
+    const { queryByTestId } = render(<XColorPicker model={{ ...colorPickerProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets args - init - value not specified', () => {
     render(<XColorPicker model={colorPickerProps} />)
     expect(T.qd.args[name]).toBeFalsy()

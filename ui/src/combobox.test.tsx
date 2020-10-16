@@ -15,6 +15,12 @@ describe('Combobox.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display combobox when visible is false', () => {
+    const { queryByTestId } = render(<XCombobox model={{ ...comboboxProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets args - init - value not specified', () => {
     render(<XCombobox model={comboboxProps} />)
     expect(T.qd.args[name]).toBeNull()

@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, S } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a label.
@@ -18,24 +19,21 @@ export interface Label {
   required?: B
   /** True if the label should be disabled. */
   disabled?: B
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
   /** An identifying name for this component. */
   name?: S
 }
 
-const
-  defaults: Partial<Label> = {
-    required: false,
-    disabled: false,
-  }
-
 export const
   XLabel = ({ model }: { model: Label }) => {
-    const { name, label, required, disabled } = { ...defaults, ...model }
+    const { label, required = false, disabled = false, visible } = model
     return (
       <Fluent.Label
         data-test={name}
+        style={displayMixin(visible)}
         required={required}
         disabled={disabled}
       >{label}</Fluent.Label>

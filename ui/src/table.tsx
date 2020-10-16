@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, S, qd, box, Dict, U } from './qd'
 import { stylesheet } from 'typestyle'
-import { rem } from './theme'
+import { rem, displayMixin } from './theme'
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 
@@ -79,6 +79,8 @@ export interface Table {
   height?: S
   /** The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`). */
   values?: S[]
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -456,7 +458,7 @@ export const
         </>
       ),
       render = () => (
-        <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
+        <div data-test={m.name} style={{ position: 'relative', height: computeHeight(), ...displayMixin(m.visible) }}>
           <Fluent.Stack horizontal horizontalAlign='space-between' >
             {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
             {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%' } }} />}

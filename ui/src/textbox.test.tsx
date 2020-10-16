@@ -20,6 +20,12 @@ describe('Textbox.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display textbox when visible is false', () => {
+    const { queryByTestId } = render(<XTextbox model={{ ...textboxProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Renders data-test attr - masked', () => {
     const { queryByTestId } = render(<XTextbox model={{ ...textboxProps, mask: 'mask' }} />)
     expect(queryByTestId(name)).toBeInTheDocument()

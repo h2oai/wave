@@ -15,6 +15,12 @@ describe('ChoiceGroup.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display choice group when visible is false', () => {
+    const { queryByTestId } = render(<XChoiceGroup model={{ ...choiceGroupProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets args - single selection', () => {
     const { getByText } = render(<XChoiceGroup model={choiceGroupProps} />)
     fireEvent.click(getByText('Choice1').parentElement!)

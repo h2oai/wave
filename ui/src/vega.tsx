@@ -2,8 +2,8 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards } from './layout'
-import { bond, Card, Rec, S, unpack, xid } from './qd'
-import { getTheme } from './theme'
+import { bond, Card, Rec, S, unpack, xid, B } from './qd'
+import { getTheme, displayMixin } from './theme'
 
 const
   theme = getTheme(),
@@ -32,6 +32,8 @@ export interface VegaVisualization {
   height?: S
   /** An identifying name for this component. */
   name?: S
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
 }
 
 export const
@@ -62,13 +64,11 @@ export const
       },
       render = () => {
         const
-          { name, width, height } = state,
+          { name, width, height, visible } = state,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
             : { width: width || 'auto', height: height || 'auto' }
-        return (
-          <div data-test={name} style={style} ref={ref} />
-        )
+        return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={ref} />
       }
 
     return { init, render }

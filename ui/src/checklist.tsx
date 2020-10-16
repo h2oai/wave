@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { Choice } from './choice_group'
 import { B, bond, box, Box, on, S, qd } from './qd'
-import { margin } from './theme'
+import { margin, displayMixin } from './theme'
 import { stylesheet } from 'typestyle'
 
 /**
@@ -21,6 +21,8 @@ export interface Checklist {
   choices?: Choice[]
   /** True if the form should be submitted when the checklist value changes. */
   trigger?: B
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -87,7 +89,7 @@ export const
             <XChecklistItem name={`checkbox-${i + 1}`} key={i} label={choice.label || choice.name} disabled={!!choice.disabled} selectedB={selectedB} />
           ))
         return (
-          <div data-test={m.name}>
+          <div data-test={m.name} style={displayMixin(m.visible)}>
             <Fluent.Label>{m.label}</Fluent.Label>
             <div className={css.toolbar}>
               <Fluent.Text variant='small'>

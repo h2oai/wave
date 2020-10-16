@@ -18,6 +18,12 @@ describe('Stepper.tsx', () => {
     }
   })
 
+  it('Does not display stepper when visible is false', () => {
+    const { queryByTestId } = render(<XStepper model={{ ...stepperProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Renders step numbers by default', () => {
     const { queryByText } = render(<XStepper model={stepperProps} />)
 

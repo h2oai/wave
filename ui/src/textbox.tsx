@@ -2,6 +2,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, S, qd } from './qd'
 import { debounce } from 'vega'
+import { displayMixin } from './theme'
 
 /**
  * Create a text box.
@@ -41,6 +42,8 @@ export interface Textbox {
   password?: B
   /** True if the form should be submitted when the text value changes. */
   trigger?: B
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -62,6 +65,7 @@ export const
         ? (
           <Fluent.MaskedTextField
             data-test={m.name}
+            style={displayMixin(m.visible)}
             label={m.label}
             defaultValue={m.value}
             mask={m.mask}
@@ -75,6 +79,7 @@ export const
         : (
           <Fluent.TextField
             data-test={m.name}
+            style={displayMixin(m.visible)}
             label={m.label}
             placeholder={m.placeholder}
             iconProps={icon}

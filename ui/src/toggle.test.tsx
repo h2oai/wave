@@ -19,6 +19,12 @@ describe('Toggle.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display toggle when visible is false', () => {
+    const { queryByTestId } = render(<XToggle model={{ ...toggleProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Calls sync when trigger is on', () => {
     const syncMock = jest.fn()
     const { getByTestId } = render(<XToggle model={{ ...toggleProps, trigger: true }} />)

@@ -17,4 +17,10 @@ describe('Separator.tsx', () => {
     const { queryByTestId } = render(<XSeparator model={separatorProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
+
+  it('Does not display separator when visible is false', () => {
+    const { queryByTestId } = render(<XSeparator model={{ ...separatorProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
 })

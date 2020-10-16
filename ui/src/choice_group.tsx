@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, S, qd } from './qd'
+import { displayMixin } from './theme'
 
 /**
  *  Create a choice for a checklist, choice group or dropdown.
@@ -39,6 +40,8 @@ export interface ChoiceGroup {
   required?: B
   /** True if the form should be submitted when the selection changes. */
   trigger?: B
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -55,6 +58,7 @@ export const
       render = () => (
         <Fluent.ChoiceGroup
           data-test={m.name}
+          style={displayMixin(m.visible)}
           label={m.label}
           required={m.required}
           defaultSelectedKey={m.value}

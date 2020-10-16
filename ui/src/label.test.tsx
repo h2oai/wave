@@ -17,4 +17,10 @@ describe('Label.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display label when visible is false', () => {
+    const { queryByTestId } = render(<XLabel model={{ ...labelProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
 })

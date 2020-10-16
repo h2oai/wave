@@ -18,6 +18,12 @@ describe('rangeSlider.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display range slider when visible is false', () => {
+    const { queryByTestId } = render(<XRangeSlider model={{ ...rangeSliderProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets args - init', () => {
     render(<XRangeSlider model={rangeSliderProps} />)
     expect(T.qd.args[name]).toMatchObject([0, 100])

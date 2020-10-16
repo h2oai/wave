@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { F, S } from './qd'
+import { F, S, B } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a progress bar.
@@ -30,23 +31,20 @@ export interface Progress {
   caption?: S
   /** The progress, between 0.0 and 1.0, or -1 (default) if indeterminate. */
   value?: F
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
   /** An identifying name for this component. */
   name?: S
 }
 
-const
-  defaults: Partial<Progress> = {
-    caption: 'Please wait...',
-  }
-
 export const
   XProgress = ({ model }: { model: Progress }) => {
     const
-      { name, label, caption, value } = { ...defaults, ...model }
+      { label, caption = 'Please wait...', value, visible } = model
     return (
-      <div data-test={name}>
+      <div data-test={name} style={displayMixin(visible)}>
         <Fluent.ProgressIndicator
           label={label}
           description={caption}

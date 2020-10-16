@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import { XButtons, Buttons } from './button'
+import { XButtons, Buttons, XStandAloneButton } from './button'
 import * as T from './qd'
 
 const name = 'test-btn'
@@ -27,6 +27,18 @@ describe('Button.tsx', () => {
   it('Renders data-test attr for Button', () => {
     const { queryByTestId } = render(<XButtons model={btnProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
+  it('Does not display buttons when visible set to false', () => {
+    const { queryByTestId } = render(<XButtons model={{ ...btnProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
+  it('Does not display standalone button when visible set to false', () => {
+    const { queryByTestId } = render(<XStandAloneButton model={{ ...btnProps.items[0].button!, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Calls sync() after click', () => {

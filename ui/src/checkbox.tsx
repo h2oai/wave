@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, S, qd } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a checkbox.
@@ -31,6 +32,8 @@ export interface Checkbox {
   disabled?: B
   /** True if the form should be submitted when the checkbox value changes. */
   trigger?: B
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -43,28 +46,17 @@ export const
         qd.args[m.name] = checked === null ? null : !!checked
         if (m.trigger) qd.sync()
       },
-      render = () =>
-        m.indeterminate
-          ? (
-            <Fluent.Checkbox
-              data-test={m.name}
-              inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
-              label={m.label}
-              defaultIndeterminate={true}
-              onChange={onChange}
-              disabled={m.disabled}
-            />
-          )
-          : (
-            <Fluent.Checkbox
-              data-test={m.name}
-              inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
-              label={m.label}
-              defaultChecked={m.value}
-              onChange={onChange}
-              disabled={m.disabled}
-            />
-          )
+      render = () => (
+        <Fluent.Checkbox
+          data-test={m.name}
+          style={displayMixin(m.visible)}
+          inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
+          label={m.label}
+          defaultIndeterminate={m.indeterminate}
+          onChange={onChange}
+          disabled={m.disabled}
+        />
+      )
 
     return { render }
   })

@@ -16,6 +16,12 @@ describe('Tabs.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display tabs when visible is false', () => {
+    const { queryByTestId } = render(<XTabs model={{ ...tabsProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets args and calls sync on click', () => {
     const syncMock = jest.fn()
     T.qd.sync = syncMock

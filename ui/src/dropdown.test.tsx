@@ -24,6 +24,12 @@ describe('Dropdown.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display dropdown when visible is false', () => {
+    const { queryByTestId } = render(<XDropdown model={{ ...defaultProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Calls qd.sync() when trigger is on', () => {
     const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, trigger: true }} />)
     const syncMock = jest.fn()

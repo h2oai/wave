@@ -1,8 +1,8 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { bond, Card, S } from './qd'
-import { getTheme } from './theme'
+import { bond, Card, S, B } from './qd'
+import { getTheme, displayMixin } from './theme'
 
 const
   theme = getTheme(),
@@ -21,6 +21,8 @@ const
 export interface Markup {
   /** The HTML content. */
   content: S
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
 }
 
 /** Render HTML content. */
@@ -32,10 +34,9 @@ interface State {
 }
 
 export const
-  XMarkup = ({ model: { content } }: { model: Markup }) => {
-    const html = { __html: content }
-    return <div dangerouslySetInnerHTML={html} />
-  },
+  XMarkup = ({ model: { content, visible } }: { model: Markup }) => (
+    <div dangerouslySetInnerHTML={{ __html: content }} style={displayMixin(visible)} />
+  ),
   MarkupCard = ({ name, title, content }: { name: S, title: S, content: S }) => (
     <div data-test={name} className={title ? css.titledCard : css.untitledCard}>
       {title && <div className={css.title}>{title}</div>}

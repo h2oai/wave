@@ -1,8 +1,8 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { bond, Card, S, xid } from './qd'
-import { getTheme } from './theme'
+import { bond, Card, S, xid, B } from './qd'
+import { getTheme, displayMixin } from './theme'
 
 const
   theme = getTheme(),
@@ -33,6 +33,8 @@ export interface Frame {
   height?: S
   /** An identifying name for this component. */
   name?: S
+  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  visible?: B
 }
 
 /**
@@ -50,18 +52,16 @@ interface State {
 }
 
 const
-  fixrefs = (s: S): S => {
-    // replace ' src="/' -> ' src="http://foo.bar.baz:8080/'
-    return s.replace(/(\s+src\s*=\s*["'])\//g, `$1${window.location.protocol}//${window.location.host}/`)
-  },
+  // replace ' src="/' -> ' src="http://foo.bar.baz:8080/'
+  fixrefs = (s: S): S => s.replace(/(\s+src\s*=\s*["'])\//g, `$1${window.location.protocol}//${window.location.host}/`),
   inline = (s: S): S => `data:text/html;base64,${btoa(fixrefs(s))}`,
   InlineFrame = ({ path, content }: { path?: S, content?: S }) => (
     <iframe title={xid()} src={path ? path : content ? inline(content) : inline('Nothing to render.')} frameBorder="0" width="100%" height="100%" />
   )
 
 // HACK: Applying width/height styles directly on iframe don't work in Chrome/FF; so wrap in div instead.
-export const XFrame = ({ model: { name, path, content, width, height } }: { model: Frame }) => (
-  <div data-test={name} style={{ width: width || '100%', height: height || 150 }}>
+export const XFrame = ({ model: { name, path, content, width = '100%', height = '150px', visible } }: { model: Frame }) => (
+  <div data-test={name} style={{ width, height, ...displayMixin(visible) }}>
     <InlineFrame path={path} content={content} />
   </div>
 )

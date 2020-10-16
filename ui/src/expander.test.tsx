@@ -15,6 +15,12 @@ describe('Expander.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display expander when visible is false', () => {
+    const { queryByTestId } = render(<XExpander model={{ ...expanderProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets args - init - null', () => {
     render(<XExpander model={expanderProps} />)
     expect(T.qd.args[name]).toBeNull()
