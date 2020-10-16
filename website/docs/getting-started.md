@@ -2,13 +2,13 @@
 title: Introduction
 ---
 
-H2O Wave lets you build and deploy amazing realtime analytics with dramatically less effort.
+H2O Wave lets you build and deploy amazing, realtime analytics with dramatically less effort.
 
 ## What is H2O Wave?
 
-H2O Wave is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python without using HTML, Javascript or CSS.
+H2O Wave is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python without using HTML, Javascript, or CSS.
 
-It excels at capturing data, visualizations, and graphics from multiple sources, and broadcasting them live over the web.
+It excels at capturing data, visualizations, and graphics from multiple sources and broadcasting them live over the web.
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/getting-started__dashboard.mp4').default} type='video/mp4'/></video>
 
@@ -33,9 +33,9 @@ H2O Wave's mental model is simple, but powerful[^1]:
 
 That's it. Your changes are now visible to everyone.
 
-This simplicity makes it fast, fun and easy to rapidly build and deploy interactive applications without having to reason about client/server, HTTP request/response, browser quirks, and front-end development. 
+This simplicity makes it fast, fun, and easy to rapidly build and deploy interactive applications without having to reason about client/server, HTTP request/response, browser quirks, or front-end development. 
 
-The API is concise and elegant, freeing you to create in broad strokes, tackling high level ideas first, and polishing up the details later.
+The API is concise and elegant, freeing you to create in broad strokes, tackling high level ideas first and polishing up the details later.
 
 ## Show me some code!
 
@@ -73,9 +73,9 @@ listen('/counter', serve)
 
 ## What's included?
 
-The SDK ships batteries-included with a wide variety of user interface widgets and charts. You also get to use your favorite Python libraries seamlessly - anything that works in a Jupyter notebook works in H2O Wave - including Altair, Bokeh, H2O, Keras, Matplotlib, Plotly, PyTorch, Seaborn, TensorFlow, Vega-lite, and others. H2O Wave lets you use and broadcast results from all these libraries, in realtime.
+The SDK ships batteries-included with a wide variety of user interface widgets and charts. You also get to use your favorite Python libraries seamlessly - anything that works in a Jupyter notebook works in H2O Wave - including Altair, Bokeh, H2O, Keras, Matplotlib, Plotly, PyTorch, Seaborn, TensorFlow, Vega-lite, and others. H2O Wave lets you use and broadcast results from all of these libraries, in realtime.
 
-H2O Wave is not only a programming toolkit but a programmable content server  as well: it can capture, retain, and relay information efficiently in realtime. The content server (or *Wave Server*) is written in Go, a ~10MB static executable without runtime dependencies[^2]. It currently ships with a Python language driver, but is language-agnostic (an R language driver is under development).
+H2O Wave is not only a programming toolkit but a programmable content server as well: it can capture, retain, and relay information efficiently in realtime. The content server (or *Wave Server*) is written in Go, a ~10MB static executable without runtime dependencies[^2]. It currently ships with a Python language driver, but is language-agnostic (an R language driver is under development).
 
 The Wave Server stores all the content and acts as a hub between your user's web browser and your apps. Therefore, it must be up and running before you launch Wave apps. Typically, you only need one Wave Server to serve several apps.
 
