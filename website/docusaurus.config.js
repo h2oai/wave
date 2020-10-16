@@ -1,12 +1,12 @@
 module.exports = {
   title: 'H2O Wave',
   tagline: 'From the makers of H2O',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://h2oai.github.io/wave/',
   baseUrl: '/wave/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'h2oai', // Usually your GitHub org/user name.
-  projectName: 'q', // Usually your repo name.
+  projectName: 'wave', // Usually your repo name.
   themeConfig: {
     //    prism: {
     //      theme: require('prism-react-renderer/themes/nightOwlLight'),
@@ -66,12 +66,12 @@ module.exports = {
           items: [
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/h2owave',
+              href: 'https://stackoverflow.com/questions/tagged/h2o-wave',
             },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/h2owave',
-            },
+            // {
+            //  label: 'Discord',
+            //  href: 'https://discordapp.com/invite/h2owave',
+            // },
             {
               label: 'Twitter',
               href: 'https://twitter.com/h2oai',
