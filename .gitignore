@@ -17,9 +17,10 @@
 .vscode/settings.json
 /build
 /data
-/qd
-/teledb
+/wave
+/surf
 /*.db
 *.log
 *.swp
 node_modules
+
