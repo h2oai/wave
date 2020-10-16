@@ -8,7 +8,7 @@ Your Wave release download ships with [over 150 examples](examples).
 You can play around with these examples in your browser using `tour.py`, a Python script (itself a Wave app) located in `examples/`:
 
 ```none title="Contents of $HOME/wave"
-q/
+wave/
 ├── docs/           
 ├── examples/       <-- Examples live here.
 |   └── tour.py     <-- The Wave Tour.
