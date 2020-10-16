@@ -54,8 +54,8 @@ def run_app_with_test(
     test_dir: str,
     sleep_time: int,
     browser: Optional[str],
-    qd_path: Optional[str],
-    qd_web_dir: Optional[str],
+    wave_path: Optional[str],
+    wave_web_dir: Optional[str],
     **kwargs
 ):
     def do_run():
@@ -83,8 +83,8 @@ def run_app_with_test(
                     f'--reporter-options "mochaFile=cypress/reports/{app_name}.xml"'
                 )
 
-    if qd_path:
-        cmd = [qd_path, "-web-dir", qd_web_dir] if qd_web_dir else [qd_path]
+    if wave_path:
+        cmd = [wave_path, "-web-dir", wave_web_dir] if wave_web_dir else [wave_path]
         with Process(cmd=cmd, sleep_time=sleep_time):
             do_run()
     else:
@@ -104,7 +104,7 @@ def dir_argument(dir_name: str):
 
 
 def main():
-    parser = ArgumentParser(description="Cypress test runner for Q apps")
+    parser = ArgumentParser(description="Cypress test runner for Wave apps")
     parser.add_argument(
         "-t",
         "--test-dir",
@@ -137,20 +137,20 @@ def main():
     )
 
     parser.add_argument(
-        "-q",
-        "--qd-path",
+        "-w",
+        "--wave-path",
         type=file_argument,
-        help="optionally start QD from the given path",
+        help="optionally start Wave from the given path",
     )
 
     parser.add_argument(
-        "-w",
-        "--qd-web-dir",
+        "-d",
+        "--wave-web-dir",
         type=dir_argument,
-        help='directory to serve QD web assets from (default "./www")',
+        help='directory to serve Wave web assets from (default "./www")',
     )
 
-    parser.add_argument("app_file", help="Q app python file", type=file_argument)
+    parser.add_argument("app_file", help="Wave app python file", type=file_argument)
     args = parser.parse_args()
     logging.basicConfig(
         level=args.log_level.upper(),
