@@ -54,8 +54,8 @@ export interface State {
 }
 
 export const
-  Header = (s: State) => (
-    <header data-test={name} className={css.card}>
+  Header = (s: State & { name: S }) => (
+    <header data-test={s.name} className={css.card}>
       <div className={css.lhs}>
         <FontIcon className={css.icon} style={{ color: theme.color(s.icon_color) }} iconName={s.icon || 'WebComponents'} />
       </div>
@@ -65,8 +65,8 @@ export const
       </div>
     </header>
   ),
-  View = bond(({ state, changed }: Card<State>) => {
-    const render = () => <Header {...state} />
+  View = bond(({ state, changed, name }: Card<State>) => {
+    const render = () => <Header {...{ ...state, name }} />
     return { render, changed }
   })
 

@@ -108,10 +108,10 @@ export interface State {
 }
 
 const
-  SideNavHeader = (s: HeaderState) => {
+  SideNavHeader = (s: HeaderState & { name: S }) => {
     return (
       <div className={css.sideNavHeader}>
-        <Header {...s} />
+        <Header {...{ ...s, name: s.name }} />
       </div>
     )
   }
@@ -132,7 +132,7 @@ export const View = bond((card: Card<State>) => {
     render = () => (
       <>
         <nav className={clas(css.sideNav, isCollapsedB() ? css.collapsed : '')}>
-          {card.state.header && <SideNavHeader {...card.state.header} />}
+          {card.state.header && <SideNavHeader {...{ ...card.state.header, name: card.name }} />}
           <Nav {...card} />
           <Fluent.IconButton
             className={css.desktopCollapseBtn}

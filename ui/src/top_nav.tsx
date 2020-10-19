@@ -88,11 +88,11 @@ export interface State {
   items: Command[]
 }
 
-export const View = bond(({ state, changed }: Card<State>) => {
+export const View = bond(({ state, changed, name }: Card<State>) => {
   const
     render = () => (
       <Fluent.Stack className={css.topNav} horizontal horizontalAlign='space-between' verticalAlign='center'>
-        <Header title={state.header.title} subtitle={state.header.subtitle} icon={state.header.icon} icon_color={state.header.icon_color} />
+        <Header {...{ ...state.header, name }} />
         {
           !!state.items.length && (
             <div className={css.toolbar}>
