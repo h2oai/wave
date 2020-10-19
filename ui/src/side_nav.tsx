@@ -111,7 +111,7 @@ const
   SideNavHeader = (s: HeaderState & { name: S }) => {
     return (
       <div className={css.sideNavHeader}>
-        <Header {...{ ...s, name: s.name }} />
+        <Header {...{ ...s, name: `${s.name}-top-nav-header` }} />
       </div>
     )
   }

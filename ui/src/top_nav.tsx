@@ -92,7 +92,7 @@ export const View = bond(({ state, changed, name }: Card<State>) => {
   const
     render = () => (
       <Fluent.Stack className={css.topNav} horizontal horizontalAlign='space-between' verticalAlign='center'>
-        <Header {...{ ...state.header, name }} />
+        <Header {...{ ...state.header, name: `${name}-top-nav-header` }} />
         {
           !!state.items.length && (
             <div className={css.toolbar}>

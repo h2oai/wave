@@ -8,7 +8,7 @@
 #
 # When no value is specified for box prop, card takes whole row.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 
