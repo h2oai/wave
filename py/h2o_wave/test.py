@@ -49,7 +49,7 @@ class _TestElement:
         return method
 
     def __enter__(self):
-        _write('.within(() => {{')
+        _write('.within(() => {')
         _indent()
         return Cypress()
 
