@@ -8,6 +8,11 @@ const name = 'card'
 describe('CardMenu.tsx', () => {
   beforeAll(() => initializeIcons())
 
+  it('Does not render data-test attr', () => {
+    const { container } = render(<CardMenu commands={[{ name }]} changedB={box(false)} />)
+    expect(container.querySelectorAll('[data-test]')).toHaveLength(0)
+  })
+
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<CardMenu name={name} commands={[{ name }]} changedB={box(false)} />)
     expect(queryByTestId(name)).toBeInTheDocument()

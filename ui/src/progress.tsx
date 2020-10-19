@@ -32,6 +32,8 @@ export interface Progress {
   value?: F
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 const
@@ -42,9 +44,9 @@ const
 export const
   XProgress = ({ model }: { model: Progress }) => {
     const
-      { label, caption, value } = { ...defaults, ...model }
+      { name, label, caption, value } = { ...defaults, ...model }
     return (
-      <div data-test='progress'>
+      <div data-test={name}>
         <Fluent.ProgressIndicator
           label={label}
           description={caption}

@@ -20,6 +20,8 @@ export interface Label {
   disabled?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 const
@@ -30,10 +32,10 @@ const
 
 export const
   XLabel = ({ model }: { model: Label }) => {
-    const { label, required, disabled } = { ...defaults, ...model }
+    const { name, label, required, disabled } = { ...defaults, ...model }
     return (
       <Fluent.Label
-        data-test='label'
+        data-test={name}
         required={required}
         disabled={disabled}
       >{label}</Fluent.Label>

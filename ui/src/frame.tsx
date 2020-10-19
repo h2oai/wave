@@ -31,6 +31,8 @@ export interface Frame {
   width?: S
   /** The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`. */
   height?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /**
@@ -58,8 +60,8 @@ const
   )
 
 // HACK: Applying width/height styles directly on iframe don't work in Chrome/FF; so wrap in div instead.
-export const XFrame = ({ model: { path, content, width, height } }: { model: Frame }) => (
-  <div style={{ width: width || '100%', height: height || 150 }}>
+export const XFrame = ({ model: { name, path, content, width, height } }: { model: Frame }) => (
+  <div data-test={name} style={{ width: width || '100%', height: height || 150 }}>
     <InlineFrame path={path} content={content} />
   </div>
 )

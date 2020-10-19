@@ -5,10 +5,15 @@ import { initializeIcons } from '@fluentui/react'
 
 const
   name = 'message_bar',
-  messagebarProps: MessageBar = { text: name }
+  messagebarProps: MessageBar = { name, text: name }
 
 describe('MessageBar.tsx', () => {
   beforeAll(() => initializeIcons())
+
+  it('Does not render data-test attr', () => {
+    const { container } = render(<XMessageBar model={{}} />)
+    expect(container.querySelectorAll('[data-test]')).toHaveLength(0)
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XMessageBar model={messagebarProps} />)

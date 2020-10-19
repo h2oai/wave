@@ -36,10 +36,12 @@ const
 export interface ProgressTableCellType {
   /** Color of the progress arc. */
   color?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
-  <div className={css.container}>
+  <div data-test={m.name} className={css.container}>
     <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(m.color || 'red')} value={progress} />
     <div className={css.percentContainer}>
       <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>

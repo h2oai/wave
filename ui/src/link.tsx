@@ -22,6 +22,8 @@ export interface Link {
   button?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 export const
@@ -32,8 +34,8 @@ export const
       render = () => {
         // TODO target="_blank"
         return m.button
-          ? <div><Fluent.DefaultButton data-test='link' text={label} disabled={m.disabled} onClick={onClick} /></div>
-          : <div><Fluent.Link data-test='link' href={m.path} download={m.download || undefined} disabled={m.disabled}>{label}</Fluent.Link></div>
+          ? <div><Fluent.DefaultButton data-test={m.name} text={label} disabled={m.disabled} onClick={onClick} /></div>
+          : <div><Fluent.Link data-test={m.name} href={m.path} download={m.download || undefined} disabled={m.disabled}>{label}</Fluent.Link></div>
       }
     return { render }
   })

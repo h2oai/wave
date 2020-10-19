@@ -15,6 +15,8 @@ export interface Text {
   size?: 'xl' | 'l' | 'm' | 's' | 'xs'
   /** Tooltip message. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create extra-large sized text content. */
@@ -25,6 +27,8 @@ export interface TextXl {
   tooltip?: S
   /** Contextual menu commands for this component. */
   commands?: Command[]
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create large sized text content. */
@@ -35,6 +39,8 @@ export interface TextL {
   tooltip?: S
   /** Contextual menu commands for this component. */
   commands?: Command[]
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create medium sized text content. */
@@ -43,6 +49,8 @@ export interface TextM {
   content: S
   /** Tooltip message. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create small sized text content. */
@@ -51,6 +59,8 @@ export interface TextS {
   content: S
   /** Tooltip message. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Create extra-small sized text content. */
@@ -59,6 +69,8 @@ export interface TextXs {
   content: S
   /** Tooltip message. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 const
@@ -104,15 +116,14 @@ const
   toTextVariant = (s: S) => textVariants[s] || 'mediumPlus'
 
 export const
-  XText = ({ content, size, commands }: { content: S, size?: S, commands?: Command[] }) => {
-    const
-      name = 'text' + (size ? `-${size}` : '')
+  XText = ({ content, name, size, commands }: { content: S, name?: S, size?: S, commands?: Command[] }) => {
+    const menuName = name ? `${name}-menu` : name
     return (
       <div className={css.text}>
         <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block>
           <div className={css.markdown}><Markdown source={content} /></div>
         </Fluent.Text>
-        {!!commands?.length && <CardMenu name={name} commands={commands} />}
+        {!!commands?.length && <CardMenu name={menuName} commands={commands} />}
       </div>
     )
   }

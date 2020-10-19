@@ -9,8 +9,10 @@ import { S } from './qd'
 export interface IconTableCellType {
   /** Icon color. */
   color?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 export const XIconTableCellType = ({ model: m, icon }: { model: IconTableCellType, icon: S }) => (
-  <Fluent.Icon iconName={icon} styles={{ root: { fontSize: '1.2rem', color: m.color || 'inherit' } }} />
+  <Fluent.Icon data-test={m.name} iconName={icon} styles={{ root: { fontSize: '1.2rem', color: m.color || 'inherit' } }} />
 )

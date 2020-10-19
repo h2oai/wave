@@ -10,6 +10,8 @@ export interface Template {
   content: S
   /** Data for the Handlebars template */
   data?: Rec
+  /** An identifying name for this component. */
+  name?: S
 }
 
 /** Render dynamic content using a HTML template.*/
@@ -28,7 +30,7 @@ export const
       template = Handlebars.compile(m.content || ''),
       render = () => {
         const data = unpack(m.data)
-        return <XMarkup model={{ content: template(data || {}) }} />
+        return <div data-test={m.name}><XMarkup model={{ content: template(data || {}) }} /></div>
       }
     return { render }
   }),

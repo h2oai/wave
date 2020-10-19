@@ -14,6 +14,8 @@ export interface MessageBar {
   type?: 'info' | 'error' | 'warning' | 'success' | 'danger' | 'blocked'
   /** The text displayed on the message bar. */
   text?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 const
@@ -33,7 +35,7 @@ export const
     m.text?.length
       ? (
         <Fluent.MessageBar
-          data-test='message_bar'
+          data-test={m.name}
           messageBarType={toMessageBarType(m.type as S)} >{m.text}</Fluent.MessageBar>
       )
       : <div />

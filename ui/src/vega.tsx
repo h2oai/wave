@@ -30,6 +30,8 @@ export interface VegaVisualization {
   width?: S
   /** The height of the visualization. Defaults to 300px. */
   height?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 export const
@@ -60,12 +62,12 @@ export const
       },
       render = () => {
         const
-          { width, height } = state,
+          { name, width, height } = state,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
             : { width: width || 'auto', height: height || 'auto' }
         return (
-          <div style={style} ref={ref} />
+          <div data-test={name} style={style} ref={ref} />
         )
       }
 

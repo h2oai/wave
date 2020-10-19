@@ -53,7 +53,7 @@ const
   }
 
 export const
-  CardMenu = bond(({ name, commands, changedB }: { name: S, commands: Command[], changedB?: Box<B> }) => {
+  CardMenu = bond(({ commands, name, changedB }: { commands: Command[], name?: S, changedB?: Box<B> }) => {
     const
       target = React.createRef<HTMLDivElement>(),
       hiddenB = box(true),

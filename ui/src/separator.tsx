@@ -18,11 +18,13 @@ const
 export interface Separator {
   /** The text displayed on the separator. */
   label?: S
+  /** An identifying name for this component. */
+  name?: S
 }
 
 export const
   XSeparator = ({ model: m }: { model: Separator }) => (
-    <div data-test='separator' className={css.separator}>
-      <Fluent.Separator data-test='separator'>{m.label}</Fluent.Separator>
+    <div data-test={m.name} className={css.separator}>
+      <Fluent.Separator>{m.label}</Fluent.Separator>
     </div>
   )
