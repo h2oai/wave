@@ -1,5 +1,6 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { Button, Buttons, XButtons, XStandAloneButton } from './button'
 import { Checkbox, XCheckbox } from './checkbox'
 import { Checklist, XChecklist } from './checklist'
@@ -34,7 +35,6 @@ import { getTheme, margin } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
-import { stylesheet } from 'typestyle'
 
 /** Create a component. */
 export interface Component {
@@ -123,7 +123,7 @@ const
   theme = getTheme(),
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
-    formComponent: {
+    form: {
       $nest: {
         '> *': {
           margin: margin(10, 0)
@@ -136,7 +136,7 @@ const
 export const
   XComponents = ({ items }: { items: Component[] }) => {
     const components = items.map(m => <XComponent key={xid()} model={m} />)
-    return <div className={css.formComponent}>{components}</div>
+    return <>{components}</>
   }
 
 const
@@ -189,7 +189,7 @@ export const
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
-          <div data-test={name}>
+          <div data-test={name} className={css.form}>
             <XComponents items={items} />
           </div>
         )
