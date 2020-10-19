@@ -2,7 +2,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { bond, S, B, U } from './qd'
 import { stylesheet } from 'typestyle'
-import { getTheme, rem } from './theme'
+import { getTheme, rem, mobileBreakpoint } from './theme'
 
 /**
  * Create a step for a stepper.
@@ -32,6 +32,19 @@ export interface Stepper {
 const
   { colors } = getTheme(),
   css = stylesheet({
+    container: {
+      $nest: {
+        ...mobileBreakpoint({
+          justifyContent: 'center',
+          $nest: {
+            // Hide separators on mobile.
+            '>div:nth-child(even)': {
+              display: 'none'
+            }
+          }
+        })
+      }
+    },
     stepNumber: {
       background: colors.text,
       color: colors.card,
@@ -45,7 +58,19 @@ const
       width: 24,
     },
     disabled: {
-      opacity: 0.5
+      opacity: 0.5,
+      $nest: {
+        ...mobileBreakpoint({
+          display: 'none'
+        })
+      }
+    },
+    done: {
+      $nest: {
+        ...mobileBreakpoint({
+          display: 'none'
+        })
+      }
     }
   }),
   iconStyles: Fluent.IIconStyles = { root: { fontSize: 24 } }
@@ -57,21 +82,19 @@ export const
       disabledStyles = (stepIdx: U) => stepIdx > 0 && !steps[stepIdx - 1].done ? css.disabled : '',
       createStep = (step: Step, i: U) => (
         <React.Fragment key={i}>
-          <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='center' grow={1}>
-            <Fluent.Stack
-              className={!step.done ? disabledStyles(i) : ''}
-              horizontalAlign='center'
-              styles={{ root: { paddingRight: 10, paddingLeft: 10 } }}
-            >
-              {
-                step.done
-                  ? <Fluent.Icon styles={iconStyles} iconName='CompletedSolid' />
-                  : step.icon
-                    ? <Fluent.Icon styles={iconStyles} iconName={step.icon} />
-                    : <span className={css.stepNumber}>{i + 1}</span>
-              }
-              <Fluent.Text block nowrap styles={{ root: { padding: 10 } }}>{step.label}</Fluent.Text>
-            </Fluent.Stack>
+          <Fluent.Stack
+            className={step.done ? css.done : disabledStyles(i)}
+            horizontalAlign='center'
+            styles={{ root: { paddingRight: 10, paddingLeft: 10 } }}
+          >
+            {
+              step.done
+                ? <Fluent.Icon styles={iconStyles} iconName='CompletedSolid' />
+                : step.icon
+                  ? <Fluent.Icon styles={iconStyles} iconName={step.icon} />
+                  : <span className={css.stepNumber}>{i + 1}</span>
+            }
+            <Fluent.Text block nowrap styles={{ root: { padding: 10 } }}>{step.label}</Fluent.Text>
           </Fluent.Stack>
           {(steps.length - 1) !== i && <Fluent.Separator styles={{ root: { width: '100%' } }} />}
         </React.Fragment>
@@ -79,6 +102,7 @@ export const
       render = () => (
         <Fluent.Stack
           data-test={m.name}
+          className={css.container}
           horizontal
           horizontalAlign='space-between'
           verticalAlign='center'
