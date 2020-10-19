@@ -1,5 +1,5 @@
 # Form / Date Picker / Trigger
-# Use date picker with trigger flag to sync user input after selection.
+# To handle live changes to a date picker, enable the `trigger` attribute.
 # ---
 from h2o_q import Q, listen, ui
 
