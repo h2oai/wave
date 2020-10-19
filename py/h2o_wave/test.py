@@ -44,13 +44,12 @@ def _js_call(fn, *args, **kwargs):
 class _TestElement:
     def __getattr__(self, fn):
         def method(*args, **kwargs):
-            _write(f'.{_js_call(fn, *args, **kwargs)}')
+            _write(f'.{_js_call(fn.lstrip("_"), *args, **kwargs)}')
             return self
-
         return method
 
     def __enter__(self):
-        _write(f'.within(() => {{')
+        _write('.within(() => {{')
         _indent()
         return Cypress()
 
