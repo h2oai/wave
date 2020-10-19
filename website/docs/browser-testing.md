@@ -42,6 +42,10 @@ def test_wizard(cy):
 
 ```
 
+:::tip
+To escape Cypress function names that overlap with Python's reserved keywords, prefix the name with an underscore `_`. For example, use `cy._as()` instead of `cy.as()`.
+:::
+
 ## Running your test
 
 #### Step 1: Start the Cypress test runner
