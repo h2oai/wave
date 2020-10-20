@@ -11,27 +11,37 @@ Execute `wave -help` to see all available command line options:
 $ ./wave -help
 Usage of ./wave:
   -access-key-id string
-        default access key ID (default "access_key_id")
+    	default access key ID (default "access_key_id")
   -access-key-secret string
-        default access key secret (default "access_key_secret")
+    	default access key secret (default "access_key_secret")
   -compact string
-        compact AOF log
+    	compact AOF log
   -data-dir string
-        directory to store site data (default "./data")
+    	directory to store site data (default "./data")
   -debug
-        enable debug mode (profiling, inspection, etc.)
+    	enable debug mode (profiling, inspection, etc.)
   -init string
-        initialize site content from AOF log
+    	initialize site content from AOF log
   -listen string
-        listen on this address (default ":55555")
+    	listen on this address (default ":55555")
+  -oidc-client-id string
+    	OIDC client ID
+  -oidc-client-secret string
+    	OIDC client secret
+  -oidc-end-session-url string
+    	OIDC end session URL
+  -oidc-provider-url string
+    	OIDC provider URL
+  -oidc-redirect-url string
+    	OIDC redirect URL
   -tls-cert-file string
-        path to certificate file (TLS only)
+    	path to certificate file (TLS only)
   -tls-key-file string
-        path to private key file (TLS only)
+    	path to private key file (TLS only)
   -version
-        print version and exit
+    	print version and exit
   -web-dir string
-        directory to serve web assets from (default "./www")
+    	directory to serve web assets from (default "./www")
 ```
 
 ## Configuring your app

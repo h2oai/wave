@@ -36,11 +36,11 @@ func main() {
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
-	flag.StringVar(&conf.OIDCClientID, "oidc-client-id", "", "OIDC client id")
+	flag.StringVar(&conf.OIDCClientID, "oidc-client-id", "", "OIDC client ID")
 	flag.StringVar(&conf.OIDCClientSecret, "oidc-client-secret", "", "OIDC client secret")
-	flag.StringVar(&conf.OIDCProviderURL, "oidc-provider-url", "", "OIDC provider url")
-	flag.StringVar(&conf.OIDCRedirectURL, "oidc-redirect-url", "", "OIDC redirect url")
-	flag.StringVar(&conf.OIDCEndSessionURL, "oidc-end-session-url", "", "OIDC end session url")
+	flag.StringVar(&conf.OIDCProviderURL, "oidc-provider-url", "", "OIDC provider URL")
+	flag.StringVar(&conf.OIDCRedirectURL, "oidc-redirect-url", "", "OIDC redirect URL")
+	flag.StringVar(&conf.OIDCEndSessionURL, "oidc-end-session-url", "", "OIDC end session URL")
 
 	flag.Parse()
 
