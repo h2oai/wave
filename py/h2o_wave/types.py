@@ -2254,6 +2254,7 @@ class Table:
             downloadable: Optional[bool] = None,
             resettable: Optional[bool] = None,
             height: Optional[str] = None,
+            values: Optional[List[str]] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2272,6 +2273,8 @@ class Table:
         """Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False."""
         self.height = height
         """The height of the table, e.g. '400px', '50%', etc."""
+        self.values = values
+        """The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`)."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2292,6 +2295,7 @@ class Table:
             downloadable=self.downloadable,
             resettable=self.resettable,
             height=self.height,
+            values=self.values,
             tooltip=self.tooltip,
         )
 
@@ -2312,6 +2316,7 @@ class Table:
         __d_downloadable: Any = __d.get('downloadable')
         __d_resettable: Any = __d.get('resettable')
         __d_height: Any = __d.get('height')
+        __d_values: Any = __d.get('values')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
@@ -2321,6 +2326,7 @@ class Table:
         downloadable: Optional[bool] = __d_downloadable
         resettable: Optional[bool] = __d_resettable
         height: Optional[str] = __d_height
+        values: Optional[List[str]] = __d_values
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
@@ -2331,6 +2337,7 @@ class Table:
             downloadable,
             resettable,
             height,
+            values,
             tooltip,
         )
 
