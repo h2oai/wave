@@ -12,6 +12,22 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.8.0
+Oct 20, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.8.0)
+
+- Added
+  - Escape Cypress test functions using leading underscore `_` if they overlap with Python reserved keywords.
+  - Add data-test attribute to all form components for browser testing.
+  - Add `trigger` property to the date picker component.
+  - Allow pre-selecting rows in the table component.
+  - Add `visible` property to all components to show/hide them on demand.
+  - Add support for OpenID Connect (OIDC).
+  - Add documentation on security.
+- Fixed
+  - Default HTML page title set to *Wave*.
+  - Make % heights work properly for frames inside forms.
+
+
 ## v0.7.0
 Oct 15, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.7.0)
 - Added
