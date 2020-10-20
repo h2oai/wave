@@ -85,7 +85,7 @@ describe('Table.tsx', () => {
         rows: [
           { name: 'rowname1', cells: [cell11, 'BoxMultiplySolid'] },
           { name: 'rowname2', cells: [cell21, 'BoxMultiplySolid'] },
-          { name: 'rowname2', cells: [cell31, 'BoxMultiplySolid'] }
+          { name: 'rowname3', cells: [cell31, 'BoxMultiplySolid'] }
         ]
       }
       const { getByTestId } = render(<XTable model={tableProps} />)
@@ -199,7 +199,7 @@ describe('Table.tsx', () => {
         rows: [
           { name: 'rowname1', cells: [cell11, 'BoxMultiplySolid'] },
           { name: 'rowname2', cells: [cell21, 'BoxCheckmarkSolid'] },
-          { name: 'rowname2', cells: [cell31, 'BoxMultiplySolid'] }
+          { name: 'rowname3', cells: [cell31, 'BoxMultiplySolid'] }
         ]
       }
       const { container, getAllByRole } = render(<XTable model={tableProps} />)

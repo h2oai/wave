@@ -2274,7 +2274,7 @@ class Table:
         self.height = height
         """The height of the table, e.g. '400px', '50%', etc."""
         self.values = values
-        """The names of the initially selected rows. Multiple must be set to true in order to make this prop work."""
+        """The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`)."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 

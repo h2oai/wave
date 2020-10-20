@@ -1134,7 +1134,7 @@ def table(
         downloadable: Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
         resettable: Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
         height: The height of the table, e.g. '400px', '50%', etc.
-        values: The names of the initially selected rows. Multiple must be set to true in order to make this prop work.
+        values: The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`).
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Table` instance.
