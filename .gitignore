@@ -15,6 +15,7 @@
 # vendor/
 
 .vscode/settings.json
+.idea
 /build
 /data
 /wave

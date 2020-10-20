@@ -18,6 +18,8 @@ export interface DatePicker {
   value?: S
   /** True if this field is disabled. */
   disabled?: B
+  /** True if the form should be submitted when the datepicker value changes. */
+  trigger?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -43,6 +45,8 @@ export const
     const
       onSelectDate = (d: Date | null | undefined) => {
         qd.args[m.name] = (d === null || d === undefined) ? value : formatDate(d)
+
+        if (m.trigger) qd.sync()
       },
       render = () => (
         <Fluent.DatePicker
