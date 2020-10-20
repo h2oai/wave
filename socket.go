@@ -6,12 +6,14 @@ import (
 
 // SocketServer represents a websocket server.
 type SocketServer struct {
-	broker *Broker
+	broker   *Broker
+	sessions *OIDCSessions
 }
 
-func newSocketServer(broker *Broker) *SocketServer {
+func newSocketServer(broker *Broker, sessions *OIDCSessions) *SocketServer {
 	return &SocketServer{
 		broker,
+		sessions,
 	}
 }
 
@@ -21,13 +23,25 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		echo(Log{"t": "socket_upgrade", "err": err.Error()})
 		return
 	}
-	client := newClient(getRemoteAddr(r), getUsername(r), s.broker, conn)
+	username, subject := getIdentity(r, s.sessions)
+	client := newClient(getRemoteAddr(r), username, subject, s.broker, conn)
 	go client.flush()
 	go client.listen()
 }
 
-func getUsername(r *http.Request) string {
-	return "default-user" // XXX set username
+func getIdentity(r *http.Request, sessions *OIDCSessions) (username, subject string) {
+	username = "default-user"
+	subject = "no-subject"
+	cookie, err := r.Cookie(oidcSessionKey)
+	if err != nil {
+		return
+	}
+	sessionID := cookie.Value
+	session, ok := sessions.get(sessionID)
+	if !ok {
+		return
+	}
+	return session.username, session.subject
 }
 
 func getRemoteAddr(r *http.Request) string {

@@ -29,6 +29,18 @@ MULTICAST = 'multicast'
 BROADCAST = 'broadcast'
 
 
+class Auth:
+    """
+    Represents authentication information for a given query context. Carries valid information only if single sign on is enabled.
+    """
+
+    def __init__(self, username: str, subject: str):
+        self.username = username
+        """The username of the user."""
+        self.subject = subject
+        """A unique identifier for the user."""
+
+
 class Query:
     """
     Represents the query context.
@@ -48,6 +60,7 @@ class Query:
             app_state: Expando,
             user_state: Expando,
             client_state: Expando,
+            auth: Auth,
             args: Expando,
     ):
         self.mode = mode
@@ -68,6 +81,8 @@ class Query:
         """The username of the user who initiated the active request."""
         self.route = route
         """The route served by the server."""
+        self.auth = auth
+        """The username and subject ID of the authenticated user."""
 
     async def sleep(self, delay):
         await asyncio.sleep(delay)
@@ -102,30 +117,33 @@ class _Server:
 _server: Optional[_Server] = None
 
 
-def _parse_request(req: str):
+def _parse_request(req: str) -> Tuple[str, str, str, str]:
     username = ''
+    subject = ''
     client_id = ''
 
     # format:
-    # u:username\nc:client_id\n\nbody
+    # u:username\ns:subject\nc:client_id\n\nbody
 
     head, body = req.split('\n\n', maxsplit=1)
-    for line in req.splitlines():
+    for line in head.splitlines():
         kv = line.split(':', maxsplit=1)
         if len(kv) == 2:
             k, v = kv
             if k == 'u':
                 username = v
+            elif k == 's':
+                subject = v
             elif k == 'c':
                 client_id = v
 
-    return username, client_id, body
+    return username, subject, client_id, body
 
 
 async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
     site = AsyncSite(ws)
     async for req in ws:
-        username, client_id, args = _parse_request(req)
+        username, subject, client_id, args = _parse_request(req)
         logger.debug(f'user: {username}, client: {client_id}')
         logger.debug(args)
         app_state, user_state, client_state = _server.state
@@ -138,6 +156,7 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
             app_state=app_state,
             user_state=_session_for(user_state, username),
             client_state=_session_for(client_state, client_id),
+            auth=Auth(username, subject),
             args=Expando(unmarshal(args)),
         )
         # noinspection PyBroadException,PyPep8
@@ -196,7 +215,7 @@ def listen(route: str, handle: HandleAsync, mode=UNICAST):
     logger.info(f'Hub Address: {_config.hub_address}')
     logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
     logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
-    logger.info(f'Shutdown Timeout{_config.shutdown_timeout}')
+    logger.info(f'Shutdown Timeout [seconds]: {_config.shutdown_timeout}')
 
     el = asyncio.get_event_loop()
     stop_server = el.create_future()

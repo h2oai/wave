@@ -50,14 +50,39 @@ const (
 	contentTypeJSON = "application/json"
 )
 
-func newWebServer(site *Site, broker *Broker, users map[string][]byte, www string) *WebServer {
-	return &WebServer{
-		site,
-		broker,
-		// http.StripPrefix("/fs", http.FileServer(http.Dir(www))),
-		fallback("/", http.FileServer(http.Dir(www))),
-		users,
+func newWebServer(site *Site, broker *Broker, users map[string][]byte, oidcEnabled bool, sessions *OIDCSessions, www string) *WebServer {
+	fs := fallback("/", http.FileServer(http.Dir(www)))
+	if oidcEnabled {
+		fs = checkSession(sessions, fs)
 	}
+	return &WebServer{site, broker, fs, users}
+}
+
+func checkSession(sessions *OIDCSessions, h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if len(path.Ext(r.URL.Path)) > 0 || r.URL.Path == "/_login" {
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		u, _ := url.Parse("/_login")
+		q := u.Query()
+		q.Set("next", r.URL.Path)
+		u.RawQuery = q.Encode()
+
+		cookie, err := r.Cookie(oidcSessionKey)
+		if err != nil {
+			http.Redirect(w, r, u.String(), http.StatusFound)
+			return
+		}
+		sessionID := cookie.Value
+		_, ok := sessions.get(sessionID)
+		if !ok {
+			http.Redirect(w, r, u.String(), http.StatusFound)
+			return
+		}
+		h.ServeHTTP(w, r)
+	})
 }
 
 func fallback(prefix string, h http.Handler) http.Handler {
@@ -106,7 +131,6 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.broker.patch(url, data)
 
 	case http.MethodGet: // reads
-		// TODO auth
 		switch r.Header.Get("Content-Type") {
 		case contentTypeJSON: // data
 			page := s.site.at(url)
@@ -364,16 +388,25 @@ func compactSite(aofPath string) {
 
 // ServerConf represents Server configuration options.
 type ServerConf struct {
-	Listen          string
-	WebDir          string
-	DataDir         string
-	AccessKeyID     string
-	AccessKeySecret string
-	Init            string
-	Compact         string
-	CertFile        string
-	KeyFile         string
-	Debug           bool
+	Listen            string
+	WebDir            string
+	DataDir           string
+	AccessKeyID       string
+	AccessKeySecret   string
+	Init              string
+	Compact           string
+	CertFile          string
+	KeyFile           string
+	Debug             bool
+	OIDCClientID      string
+	OIDCClientSecret  string
+	OIDCProviderURL   string
+	OIDCRedirectURL   string
+	OIDCEndSessionURL string
+}
+
+func (c *ServerConf) oidcEnabled() bool {
+	return c.OIDCClientID != "" && c.OIDCClientSecret != "" && c.OIDCProviderURL != "" && c.OIDCRedirectURL != ""
 }
 
 // Run runs the HTTP server.
@@ -386,6 +419,9 @@ func Run(conf ServerConf) {
 
 	// FIXME RBAC
 	users := map[string][]byte{conf.AccessKeyID: accessKeyHash}
+
+	// FIXME SESSIONS
+	sessions := newOIDCSessions()
 
 	if len(conf.Compact) > 0 {
 		compactSite(conf.Compact)
@@ -404,11 +440,17 @@ func Run(conf ServerConf) {
 		http.Handle("/_d/site", newDebugHandler(broker))
 	}
 
-	http.Handle("/_s", newSocketServer(broker))
+	if conf.oidcEnabled() {
+		http.Handle("/_auth/init", newOIDCInitHandler(sessions, conf.OIDCClientID, conf.OIDCClientSecret, conf.OIDCProviderURL, conf.OIDCRedirectURL))
+		http.Handle("/_auth/callback", newOAuth2Handler(sessions, conf.OIDCClientID, conf.OIDCClientSecret, conf.OIDCProviderURL, conf.OIDCRedirectURL))
+		http.Handle("/_logout", newOIDCLogoutHandler(sessions, conf.OIDCEndSessionURL))
+	}
+
+	http.Handle("/_s", newSocketServer(broker, sessions))
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))   // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir)) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, users, conf.oidcEnabled(), sessions, conf.WebDir))
 
 	for _, line := range strings.Split(logo, "\n") {
 		log.Println("#", line)
