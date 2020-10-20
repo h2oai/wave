@@ -50,15 +50,15 @@ const (
 	contentTypeJSON = "application/json"
 )
 
-func newWebServer(site *Site, broker *Broker, users map[string][]byte, OIDCEnabled bool, sessions OIDCSessions, www string) *WebServer {
+func newWebServer(site *Site, broker *Broker, users map[string][]byte, oidcEnabled bool, sessions *OIDCSessions, www string) *WebServer {
 	fs := fallback("/", http.FileServer(http.Dir(www)))
-	if OIDCEnabled {
+	if oidcEnabled {
 		fs = checkSession(sessions, fs)
 	}
 	return &WebServer{site, broker, fs, users}
 }
 
-func checkSession(sessions OIDCSessions, h http.Handler) http.Handler {
+func checkSession(sessions *OIDCSessions, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if len(path.Ext(r.URL.Path)) > 0 || r.URL.Path == "/_login" {
 			h.ServeHTTP(w, r)
@@ -76,7 +76,7 @@ func checkSession(sessions OIDCSessions, h http.Handler) http.Handler {
 			return
 		}
 		sessionID := cookie.Value
-		_, ok := sessions[sessionID]
+		_, ok := sessions.get(sessionID)
 		if !ok {
 			http.Redirect(w, r, u.String(), http.StatusFound)
 			return
@@ -388,22 +388,25 @@ func compactSite(aofPath string) {
 
 // ServerConf represents Server configuration options.
 type ServerConf struct {
-	Listen          string
-	WebDir          string
-	DataDir         string
-	AccessKeyID     string
-	AccessKeySecret string
-	Init            string
-	Compact         string
-	CertFile        string
-	KeyFile         string
-	Debug           bool
-	OIDCEnabled     bool
-	ClientID        string
-	ClientSecret    string
-	ProviderURL     string
-	RedirectURL     string
-	EndSessionURL   string
+	Listen            string
+	WebDir            string
+	DataDir           string
+	AccessKeyID       string
+	AccessKeySecret   string
+	Init              string
+	Compact           string
+	CertFile          string
+	KeyFile           string
+	Debug             bool
+	OIDCClientID      string
+	OIDCClientSecret  string
+	OIDCProviderURL   string
+	OIDCRedirectURL   string
+	OIDCEndSessionURL string
+}
+
+func (c *ServerConf) oidcEnabled() bool {
+	return c.OIDCClientID != "" && c.OIDCClientSecret != "" && c.OIDCProviderURL != "" && c.OIDCRedirectURL != ""
 }
 
 // Run runs the HTTP server.
@@ -418,7 +421,7 @@ func Run(conf ServerConf) {
 	users := map[string][]byte{conf.AccessKeyID: accessKeyHash}
 
 	// FIXME SESSIONS
-	sessions := OIDCSessions{}
+	sessions := newOIDCSessions()
 
 	if len(conf.Compact) > 0 {
 		compactSite(conf.Compact)
@@ -437,17 +440,17 @@ func Run(conf ServerConf) {
 		http.Handle("/_d/site", newDebugHandler(broker))
 	}
 
-	if conf.OIDCEnabled {
-		http.Handle("/_auth/init", newOIDCInitHandler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
-		http.Handle("/_auth/callback", newOAuth2Handler(sessions, conf.ClientID, conf.ClientSecret, conf.ProviderURL, conf.RedirectURL))
-		http.Handle("/_logout", newOIDCLogoutHandler(sessions, conf.EndSessionURL))
+	if conf.oidcEnabled() {
+		http.Handle("/_auth/init", newOIDCInitHandler(sessions, conf.OIDCClientID, conf.OIDCClientSecret, conf.OIDCProviderURL, conf.OIDCRedirectURL))
+		http.Handle("/_auth/callback", newOAuth2Handler(sessions, conf.OIDCClientID, conf.OIDCClientSecret, conf.OIDCProviderURL, conf.OIDCRedirectURL))
+		http.Handle("/_logout", newOIDCLogoutHandler(sessions, conf.OIDCEndSessionURL))
 	}
 
 	http.Handle("/_s", newSocketServer(broker, sessions))
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))   // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir)) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, conf.OIDCEnabled, sessions, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, users, conf.oidcEnabled(), sessions, conf.WebDir))
 
 	for _, line := range strings.Split(logo, "\n") {
 		log.Println("#", line)

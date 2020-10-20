@@ -746,6 +746,21 @@ class AsyncSite:
 site = Site()
 
 
+class Auth:
+    """
+    Represents a crate which carries valid authentication data if server has OIDC auth enabled. If OIDC auth not enabled
+    the members are set to default values by server.
+
+    Args:
+        username: The preferred username of the user. Defaults to default-user.
+        subject: Locally unique and never reassigned identifier within the Issuer. Defaults to no-subject.
+    """
+
+    def __init__(self, username: str, subject: str):
+        self.username = username
+        self.subject = subject
+
+
 def _kv(key: str, index: str, value: Any):
     return dict(k=key, v=value) if index is None or index == '' else dict(k=key, i=index, v=value)
 

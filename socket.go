@@ -7,10 +7,10 @@ import (
 // SocketServer represents a websocket server.
 type SocketServer struct {
 	broker   *Broker
-	sessions OIDCSessions
+	sessions *OIDCSessions
 }
 
-func newSocketServer(broker *Broker, sessions OIDCSessions) *SocketServer {
+func newSocketServer(broker *Broker, sessions *OIDCSessions) *SocketServer {
 	return &SocketServer{
 		broker,
 		sessions,
@@ -29,7 +29,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	go client.listen()
 }
 
-func getIdentity(r *http.Request, sessions OIDCSessions) (username, subject string) {
+func getIdentity(r *http.Request, sessions *OIDCSessions) (username, subject string) {
 	username = "default-user"
 	subject = "no-subject"
 	cookie, err := r.Cookie(oidcSessionKey)
@@ -37,7 +37,7 @@ func getIdentity(r *http.Request, sessions OIDCSessions) (username, subject stri
 		return
 	}
 	sessionID := cookie.Value
-	session, ok := sessions[sessionID]
+	session, ok := sessions.get(sessionID)
 	if !ok {
 		return
 	}

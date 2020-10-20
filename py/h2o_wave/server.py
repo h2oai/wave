@@ -10,7 +10,7 @@ import requests
 import websockets
 from requests.auth import HTTPBasicAuth
 
-from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite
+from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite, Auth
 from .ui import markdown_card
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class Query:
             app_state: Expando,
             user_state: Expando,
             client_state: Expando,
-            auth: Expando,
+            auth: Auth,
             args: Expando,
     ):
         self.mode = mode
@@ -144,7 +144,7 @@ async def _serve(ws: websockets.WebSocketServerProtocol, path: str):
             app_state=app_state,
             user_state=_session_for(user_state, username),
             client_state=_session_for(client_state, client_id),
-            auth=Expando({'username': username, 'subject': subject}),
+            auth=Auth(username, subject),
             args=Expando(unmarshal(args)),
         )
         # noinspection PyBroadException,PyPep8

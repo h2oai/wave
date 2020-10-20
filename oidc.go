@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 
 	"github.com/coreos/go-oidc"
@@ -14,7 +15,33 @@ import (
 
 const oidcSessionKey = "oidcsession"
 
-type OIDCSessions map[string]OIDCSession
+type OIDCSessions struct {
+	sync.RWMutex
+	sessions map[string]OIDCSession
+}
+
+func newOIDCSessions() *OIDCSessions {
+	return &OIDCSessions{sessions: make(map[string]OIDCSession)}
+}
+
+func (s *OIDCSessions) get(key string) (OIDCSession, bool) {
+	s.RLock()
+	defer s.RUnlock()
+	session, ok := s.sessions[key]
+	return session, ok
+}
+
+func (s *OIDCSessions) set(key string, session OIDCSession) {
+	s.Lock()
+	defer s.Unlock()
+	s.sessions[key] = session
+}
+
+func (s *OIDCSessions) remove(key string) {
+	s.Lock()
+	defer s.Unlock()
+	delete(s.sessions, key)
+}
 
 type OIDCSession struct {
 	state        string
@@ -36,14 +63,14 @@ func generateRandomKey(byteCount int) (string, error) {
 }
 
 type OIDCInitHandler struct {
-	sessions     OIDCSessions
+	sessions     *OIDCSessions
 	clientID     string
 	clientSecret string
 	providerURL  string
 	redirectURL  string
 }
 
-func newOIDCInitHandler(sessions OIDCSessions, clientID, clientSecret, providerURL, redirectURL string) http.Handler {
+func newOIDCInitHandler(sessions *OIDCSessions, clientID, clientSecret, providerURL, redirectURL string) http.Handler {
 	return &OIDCInitHandler{
 		sessions,
 		clientID,
@@ -93,7 +120,7 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Session ID stored in cookie.
 	sessionID := uuid.New().String()
 
-	h.sessions[sessionID] = OIDCSession{state: state, nonce: nonce, successURL: successURL}
+	h.sessions.set(sessionID, OIDCSession{state: state, nonce: nonce, successURL: successURL})
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 	cookie := http.Cookie{Name: oidcSessionKey, Value: sessionID, Path: "/", Expires: expiration}
 	http.SetCookie(w, &cookie)
@@ -101,14 +128,14 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 type OAuth2Handler struct {
-	sessions     OIDCSessions
+	sessions     *OIDCSessions
 	clientID     string
 	clientSecret string
 	providerURL  string
 	redirectURL  string
 }
 
-func newOAuth2Handler(sessions OIDCSessions, clientID, clientSecret, providerURL, redirectURL string) http.Handler {
+func newOAuth2Handler(sessions *OIDCSessions, clientID, clientSecret, providerURL, redirectURL string) http.Handler {
 	return &OAuth2Handler{
 		sessions,
 		clientID,
@@ -128,7 +155,7 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sessionID := cookie.Value
-	session, ok := h.sessions[sessionID]
+	session, ok := h.sessions.get(sessionID)
 	if !ok {
 		echo(Log{"t": "oauth2_session", "error": "not found"})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -215,17 +242,17 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	echo(Log{"t": "login", "subject": session.subject, "username": session.username})
 
-	h.sessions[sessionID] = session
+	h.sessions.set(sessionID, session)
 
 	http.Redirect(w, r, session.successURL, http.StatusFound)
 }
 
 type OIDCLogoutHandler struct {
-	sessions      OIDCSessions
+	sessions      *OIDCSessions
 	endSessionURL string
 }
 
-func newOIDCLogoutHandler(sessions OIDCSessions, endSessionURL string) http.Handler {
+func newOIDCLogoutHandler(sessions *OIDCSessions, endSessionURL string) http.Handler {
 	return &OIDCLogoutHandler{sessions, endSessionURL}
 }
 
@@ -263,13 +290,13 @@ func (h *OIDCLogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, cookie)
 
 	// Clean up session.
-	_, ok := h.sessions[sessionID]
+	_, ok := h.sessions.get(sessionID)
 	if !ok {
 		echo(Log{"t": "logout_session", "error": "not found"})
 		h.logoutRedirect(w, r)
 		return
 	}
-	delete(h.sessions, sessionID)
+	h.sessions.remove(sessionID)
 
 	h.logoutRedirect(w, r)
 }
