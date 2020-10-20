@@ -35,6 +35,7 @@ module.exports = {
       'files',
       'plotting',
       'graphics',
+      'security',
       'logging',
       'development',
       'browser-testing',
