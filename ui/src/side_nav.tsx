@@ -5,7 +5,7 @@ import { cards } from './grid_layout'
 import { Header, State as HeaderState } from "./header"
 import { NavGroup, View as Nav } from "./nav"
 import { bond, box, Card, S } from './qd'
-import { clas, getTheme, mobileBreakpoint, pc, sideNavWidth, collapsedSideNavWidth, topNavHeight } from './theme'
+import { clas, collapsedSideNavWidth, getTheme, mobileBreakpoint, pc, sideNavWidth, topNavHeight } from './theme'
 
 const
   { colors } = getTheme(),
@@ -13,20 +13,55 @@ const
     sideNav: {
       position: 'fixed',
       height: pc(100),
-      zIndex: 1,
+      zIndex: 2,
       background: colors.card,
-      transition: 'transform .5s',
-      width: sideNavWidth,
+      transition: 'width .5s',
+      width: collapsedSideNavWidth,
       $nest: {
-        '> div': {
-          paddingRight: collapsedSideNavWidth
+        '&:hover': {
+          width: sideNavWidth,
+          $nest: {
+            '.is-expanded + ul': {
+              display: 'inherit',
+            },
+            '.ms-Nav-chevronButton': {
+              display: 'inherit',
+            },
+            'div[class*=sideNavHeader]': {
+              transition: 'opacity .5s .5s, height 1s 1s',
+              opacity: 1,
+              height: 'auto'
+            },
+          }
+        },
+        '.is-expanded + ul': {
+          display: 'none'
+        },
+        '.ms-Nav': {
+          overflow: 'hidden'
+        },
+        '.ms-Nav .ms-Icon': {
+          marginLeft: 8
+        },
+        '.ms-Nav-chevronButton': {
+          display: 'none',
+          left: 'initial',
+          right: 10
+        },
+        'div[class*=sideNavHeader]': {
+          opacity: 0,
+          height: 0,
+          overflow: 'hidden',
+          margin: 0
+        },
+        '~ main': {
+          marginLeft: collapsedSideNavWidth
         },
         ...mobileBreakpoint({
           top: topNavHeight,
           $nest: {
             '~ main': {
-              marginLeft: 0,
-              top: topNavHeight
+              top: topNavHeight,
             }
           }
         })
@@ -57,16 +92,6 @@ const
           position: 'fixed',
           top: 25,
           left: 25
-        })
-      }
-    },
-    desktopCollapseBtn: {
-      position: 'absolute',
-      top: '45%',
-      right: 5,
-      $nest: {
-        ...mobileBreakpoint({
-          display: 'none',
         })
       }
     },
@@ -119,26 +144,12 @@ const
 export const View = bond((card: Card<State>) => {
   const
     isCollapsedB = box(window.innerWidth <= 600),
-    toggleCollapse = () => {
-      isCollapsedB(!isCollapsedB())
-      // Trigger resize event in order to inform plots they should resize themselves to fit the new parent container.
-      // The timeout is specified due to animation and has to be synced with it.
-      setTimeout(() => {
-        const event = document.createEvent('HTMLEvents')
-        event.initEvent('resize', true, false)
-        document.dispatchEvent(event)
-      }, 501)
-    },
+    toggleCollapse = () => isCollapsedB(!isCollapsedB()),
     render = () => (
       <>
         <nav className={clas(css.sideNav, isCollapsedB() ? css.collapsed : '')}>
           {card.state.header && <SideNavHeader {...{ ...card.state.header, name: card.name }} />}
           <Nav {...card} />
-          <Fluent.IconButton
-            className={css.desktopCollapseBtn}
-            styles={{ icon: { fontSize: 25, transform: isCollapsedB() ? 'rotate(180deg)' : undefined, transition: 'transform 1s' } }}
-            iconProps={{ iconName: 'SkypeCircleArrow' }}
-            onClick={toggleCollapse} />
         </nav>
         <Fluent.IconButton
           className={css.mobileCollapseBtn}

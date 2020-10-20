@@ -5,7 +5,7 @@ import { FlexLayout } from './flex_layout'
 import { GridLayout } from './grid_layout'
 import { bond, box, Card, connect, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { View as SideNav } from './side_nav'
-import { clas, getTheme, mobileBreakpoint, pc, topNavHeight, sideNavWidth } from './theme'
+import { clas, getTheme, mobileBreakpoint, pc, topNavHeight } from './theme'
 import { State as TopNavState, View as TopNav } from './top_nav'
 
 const
@@ -25,10 +25,6 @@ const
       $nest: {
         ...mobileBreakpoint({ marginBottom: 75 })
       }
-    },
-    appWithSideNav: {
-      marginLeft: sideNavWidth,
-      transition: 'margin-left .5s'
     },
     centerFullHeight: {
       height: pc(100),
@@ -102,15 +98,14 @@ const
         const
           topNav = page.list().find(c => c.state.view === 'top_nav') as Card<any>,
           sideNav = page.list().find(c => c.state.view === 'side_nav') as Card<any>,
-          topNavClass = topNav ? css.appWithTopNav : '',
-          sideNavClass = sideNav ? css.appWithSideNav : ''
+          topNavClass = topNav ? css.appWithTopNav : ''
 
         return (
           <>
             {topNav && <TopNav {...topNav} />}
             {sideNav && <SideNav {...sideNav} />}
             {sideNav && !topNav && <MobileTopSideNav {...{ ...sideNav!.state, items: [] } as TopNavState} />}
-            <main className={clas(css.app, topNavClass, sideNavClass)}>{getLayout(page)}</main>
+            <main className={clas(css.app, topNavClass)}>{getLayout(page)}</main>
           </>
         )
       },

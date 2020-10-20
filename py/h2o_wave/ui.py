@@ -2239,18 +2239,21 @@ def nav_item(
 def nav_group(
         label: str,
         items: List[NavItem],
+        icon: Optional[str] = None,
 ) -> NavGroup:
     """Create a group of navigation items.
 
     Args:
         label: The label to display for this group.
         items: The navigation items contained in this group.
+        icon: The icon to display for this group.
     Returns:
         A `h2o_wave.types.NavGroup` instance.
     """
     return NavGroup(
         label,
         items,
+        icon,
     )
 
 
@@ -2368,7 +2371,7 @@ def side_nav_header(
         icon: The icon type, displayed to the left.
         icon_color: The icon's color.
     Returns:
-        A `h2o_q.types.SideNavHeader` instance.
+        A `h2o_wave.types.SideNavHeader` instance.
     """
     return SideNavHeader(
         title,
@@ -2392,7 +2395,7 @@ def side_nav_card(
         header: Render a branding header as part of the side navigation.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.SideNavCard` instance.
+        A `h2o_wave.types.SideNavCard` instance.
     """
     return SideNavCard(
         box,
@@ -2659,7 +2662,7 @@ def top_nav_header(
         icon: The icon type, displayed to the left.
         icon_color: The icon's color.
     Returns:
-        A `h2o_q.types.TopNavHeader` instance.
+        A `h2o_wave.types.TopNavHeader` instance.
     """
     return TopNavHeader(
         title,
@@ -2683,7 +2686,7 @@ def top_nav_card(
         items: Navigation tabs links to be displayed in top nav.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_q.types.TopNavCard` instance.
+        A `h2o_wave.types.TopNavCard` instance.
     """
     return TopNavCard(
         box,

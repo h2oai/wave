@@ -46,17 +46,17 @@ page['nav'] = ui.top_nav_card(
     ]
 )
 page['side'] = ui.side_nav_card(box='', items=[
-    ui.nav_group('Menu', items=[
+    ui.nav_group('Menu', icon='Home', items=[
           ui.nav_item(name='#menu/spam', label='Spam'),
           ui.nav_item(name='#menu/ham', label='Ham'),
           ui.nav_item(name='#menu/eggs', label='Eggs'),
     ]),
-    ui.nav_group('Help', items=[
+    ui.nav_group('Help', icon='Help', items=[
         ui.nav_item(name='#about', label='About'),
         ui.nav_item(name='#support', label='Support'),
     ])
   ],
-  # header=ui.side_nav_header(title='My app', subtitle='Try it, you will not regret')
+  header=ui.side_nav_header(title='My app', subtitle='Try it, you will not regret')
 )
 
 fake = Faker()

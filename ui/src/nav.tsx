@@ -1,7 +1,7 @@
-import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
+import { INavLink, Nav } from '@fluentui/react'
 import React from 'react'
 import { cards } from './grid_layout'
-import { bond, Card, S, qd } from './qd'
+import { bond, Card, qd, S } from './qd'
 
 /** Create a navigation item. */
 interface NavItem {
@@ -17,6 +17,8 @@ export interface NavGroup {
   label: S
   /** The navigation items contained in this group. */
   items: NavItem[]
+  /** The icon to display for this group. */
+  icon?: S
 }
 
 /** Create a card containing a navigation pane. */
@@ -29,8 +31,11 @@ export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
-        const groups = state.items.map((g): INavLinkGroup => ({
+        const links = state.items.map((g) => ({
           name: g.label,
+          icon: g.icon,
+          url: '',
+          isExpanded: true,
           links: g.items.map(({ name, label }): INavLink => ({
             key: name,
             name: label,
@@ -45,7 +50,7 @@ export const
             }
           }))
         }))
-        return <div data-test={name}><Nav groups={groups} /></div>
+        return <div data-test={name}><Nav groups={[{ links }]} /></div>
       }
     return { render, changed }
   })

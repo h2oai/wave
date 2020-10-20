@@ -286,5 +286,5 @@ export const
     fontFamily: 'Inter',
   },
   topNavHeight = 80,
-  sideNavWidth = 300,
+  sideNavWidth = 250,
   collapsedSideNavWidth = 40

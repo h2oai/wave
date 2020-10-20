@@ -2516,15 +2516,19 @@ ui_nav_item <- function(
 #'
 #' @param label The label to display for this group.
 #' @param items The navigation items contained in this group.
+#' @param icon The icon to display for this group.
 #' @return A NavGroup instance.
 ui_nav_group <- function(
   label,
-  items) {
+  items,
+  icon = NULL) {
   .guard_scalar("label", "character", label)
   .guard_vector("items", "h2oq_NavItem", items)
+  .guard_scalar("icon", "character", icon)
   .o <- list(
     label=label,
-    items=items)
+    items=items,
+    icon=icon)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavGroup"))
   return(.o)
 }

@@ -4843,11 +4843,14 @@ class NavGroup:
             self,
             label: str,
             items: List[NavItem],
+            icon: Optional[str] = None,
     ):
         self.label = label
         """The label to display for this group."""
         self.items = items
         """The navigation items contained in this group."""
+        self.icon = icon
+        """The icon to display for this group."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4858,6 +4861,7 @@ class NavGroup:
         return _dump(
             label=self.label,
             items=[__e.dump() for __e in self.items],
+            icon=self.icon,
         )
 
     @staticmethod
@@ -4869,11 +4873,14 @@ class NavGroup:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('NavGroup.items is required.')
+        __d_icon: Any = __d.get('icon')
         label: str = __d_label
         items: List[NavItem] = [NavItem.load(__e) for __e in __d_items]
+        icon: Optional[str] = __d_icon
         return NavGroup(
             label,
             items,
+            icon,
         )
 
 
