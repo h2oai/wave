@@ -25,10 +25,14 @@ const
         }),
         '~ nav': {
           top: topNavHeight
+        },
+        'header div[class*=subtitle]': {
+          whiteSpace: 'nowrap'
         }
       }
     },
     toolbar: {
+      overflow: 'hidden',
       $nest: {
         ...mobileBreakpoint({
           position: 'fixed',
