@@ -28,10 +28,12 @@ const
               display: 'inherit',
             },
             'div[class*=sideNavHeader]': {
-              transition: 'opacity .5s .5s, height 1s 1s',
               opacity: 1,
-              height: 'auto'
+              height: 'auto',
             },
+            'div[class*=sideNavHeader] div[class*=subtitle]': {
+              whiteSpace: 'inherit',
+            }
           }
         },
         '.is-expanded + ul': {
@@ -49,10 +51,15 @@ const
           right: 10
         },
         'div[class*=sideNavHeader]': {
+          transition: 'opacity .5s .5s',
+          whiteSpace: 'nowrap',
           opacity: 0,
           height: 0,
           overflow: 'hidden',
           margin: 0
+        },
+        'div[class*=sideNavHeader] div[class*=subtitle]': {
+          whiteSpace: 'nowrap',
         },
         '~ main': {
           marginLeft: collapsedSideNavWidth
