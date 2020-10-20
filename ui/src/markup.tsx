@@ -21,7 +21,9 @@ const
 export interface Markup {
   /** The HTML content. */
   content: S
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** An identifying name for this component. */
+  name?: S
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
 }
 
@@ -34,8 +36,8 @@ interface State {
 }
 
 export const
-  XMarkup = ({ model: { content, visible } }: { model: Markup }) => (
-    <div dangerouslySetInnerHTML={{ __html: content }} style={displayMixin(visible)} />
+  XMarkup = ({ model: { content, visible, name } }: { model: Markup }) => (
+    <div data-test={name} dangerouslySetInnerHTML={{ __html: content }} style={displayMixin(visible)} />
   ),
   MarkupCard = ({ name, title, content }: { name: S, title: S, content: S }) => (
     <div data-test={name} className={title ? css.titledCard : css.untitledCard}>

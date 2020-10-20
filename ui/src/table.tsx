@@ -79,7 +79,7 @@ export interface Table {
   height?: S
   /** The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`). */
   values?: S[]
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S

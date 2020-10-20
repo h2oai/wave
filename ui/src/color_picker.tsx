@@ -18,7 +18,7 @@ export interface ColorPicker {
   value?: S
   /** A list of colors (CSS-compatible strings) to limit color choices to. */
   choices?: S[]
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S

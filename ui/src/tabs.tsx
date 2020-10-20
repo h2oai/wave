@@ -25,7 +25,7 @@ export interface Tabs {
   value?: S
   /** The tabs in this tab bar. */
   items?: Tab[]
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
 }
 

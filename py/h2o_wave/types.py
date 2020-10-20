@@ -293,7 +293,7 @@ class Text:
         self.size = size
         """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -349,7 +349,7 @@ class TextXl:
         self.content = content
         """The text content."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -407,7 +407,7 @@ class TextL:
         self.content = content
         """The text content."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -464,7 +464,7 @@ class TextM:
         self.content = content
         """The text content."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -515,7 +515,7 @@ class TextS:
         self.content = content
         """The text content."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -566,7 +566,7 @@ class TextXs:
         self.content = content
         """The text content."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -629,7 +629,7 @@ class Label:
         self.disabled = disabled
         """True if the label should be disabled."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
@@ -691,7 +691,7 @@ class Separator:
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -754,7 +754,7 @@ class Progress:
         self.value = value
         """The progress, between 0.0 and 1.0, or -1 (default) if indeterminate."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
@@ -821,7 +821,7 @@ class MessageBar:
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -909,7 +909,7 @@ class Textbox:
         self.trigger = trigger
         """True if the form should be submitted when the text value changes."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1037,7 +1037,7 @@ class Checkbox:
         self.trigger = trigger
         """True if the form should be submitted when the checkbox value changes."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1120,7 +1120,7 @@ class Toggle:
         self.trigger = trigger
         """True if the form should be submitted when the toggle value changes."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1248,7 +1248,7 @@ class ChoiceGroup:
         self.trigger = trigger
         """True if the form should be submitted when the selection changes."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1326,7 +1326,7 @@ class Checklist:
         self.trigger = trigger
         """True if the form should be submitted when the checklist value changes."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1420,7 +1420,7 @@ class Dropdown:
         self.trigger = trigger
         """True if the form should be submitted when the dropdown value changes."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1524,7 +1524,7 @@ class Combobox:
         self.disabled = disabled
         """True if this field is disabled."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1626,7 +1626,7 @@ class Slider:
         self.trigger = trigger
         """True if the form should be submitted when the slider value changes."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1719,7 +1719,7 @@ class Spinbox:
         self.disabled = disabled
         """True if this field is disabled."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1804,7 +1804,7 @@ class DatePicker:
         self.trigger = trigger
         """True if the form should be submitted when the datepicker value changes."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1880,7 +1880,7 @@ class ColorPicker:
         self.choices = choices
         """A list of colors (CSS-compatible strings) to limit color choices to."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1969,7 +1969,7 @@ class Button:
         self.link = link
         """True if the button should be rendered as link text and not a standard button."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2042,7 +2042,7 @@ class Buttons:
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2107,7 +2107,7 @@ class FileUpload:
         self.height = height
         """The height of the file upload, e.g. '400px', '50%', etc."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2445,7 +2445,7 @@ class Table:
         self.values = values
         """The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`)."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2546,7 +2546,7 @@ class Link:
         self.button = button
         """True if the link should be rendered as a button."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
@@ -2657,7 +2657,7 @@ class Tabs:
         self.items = items
         """The tabs in this tab bar."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2713,7 +2713,7 @@ class Expander:
         self.items = items
         """List of components to be hideable by the expander."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2774,7 +2774,7 @@ class Frame:
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2818,12 +2818,15 @@ class Markup:
     def __init__(
             self,
             content: str,
+            name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         self.content = content
         """The HTML content."""
+        self.name = name
+        """An identifying name for this component."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2831,6 +2834,7 @@ class Markup:
             raise ValueError('Markup.content is required.')
         return _dump(
             content=self.content,
+            name=self.name,
             visible=self.visible,
         )
 
@@ -2840,11 +2844,14 @@ class Markup:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('Markup.content is required.')
+        __d_name: Any = __d.get('name')
         __d_visible: Any = __d.get('visible')
         content: str = __d_content
+        name: Optional[str] = __d_name
         visible: Optional[bool] = __d_visible
         return Markup(
             content,
+            name,
             visible,
         )
 
@@ -2866,7 +2873,7 @@ class Template:
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2929,7 +2936,7 @@ class Picker:
         self.disabled = disabled
         """Controls whether the picker should be disabled or not."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -3025,7 +3032,7 @@ class RangeSlider:
         self.trigger = trigger
         """True if the form should be submitted when the slider value changes."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -3149,7 +3156,7 @@ class Stepper:
         self.items = items
         """The sequence of steps to be displayed."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -3640,6 +3647,7 @@ class Visualization:
             data: PackedRecord,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         self.plot = plot
@@ -3649,9 +3657,11 @@ class Visualization:
         self.width = width
         """The width of the visualization. Defaults to 100%."""
         self.height = height
-        """The height of the visualization. Defaults to 300px."""
+        """The hight of the visualization. Defaults to 300px."""
+        self.name = name
+        """An identifying name for this component."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3664,6 +3674,7 @@ class Visualization:
             data=self.data,
             width=self.width,
             height=self.height,
+            name=self.name,
             visible=self.visible,
         )
 
@@ -3678,17 +3689,20 @@ class Visualization:
             raise ValueError('Visualization.data is required.')
         __d_width: Any = __d.get('width')
         __d_height: Any = __d.get('height')
+        __d_name: Any = __d.get('name')
         __d_visible: Any = __d.get('visible')
         plot: Plot = Plot.load(__d_plot)
         data: PackedRecord = __d_data
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
+        name: Optional[str] = __d_name
         visible: Optional[bool] = __d_visible
         return Visualization(
             plot,
             data,
             width,
             height,
+            name,
             visible,
         )
 
@@ -3716,7 +3730,7 @@ class VegaVisualization:
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
-        """Controls visibility of the component. Persists component state on show/hide. Defaults to true."""
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

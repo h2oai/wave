@@ -19,7 +19,7 @@ export interface Expander {
   expanded?: B
   /** List of components to be hideable by the expander. */
   items?: Component[]
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
 }
 

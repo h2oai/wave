@@ -22,13 +22,18 @@ describe('Plot.tsx', () => {
 
   describe('Form Plot', () => {
     const formPlotProps: Visualization = {
+      name,
       data: [] as any,
       plot: { marks: [] }
     }
 
-    it('Does not display form plot when visible is false', () => {
+    it('Renders data-test attr', () => {
       const { queryByTestId } = render(<XVisualization model={{ ...formPlotProps, visible: false }} />)
       expect(queryByTestId(name)).toBeInTheDocument()
+    })
+
+    it('Does not display form plot when visible is false', () => {
+      const { queryByTestId } = render(<XVisualization model={{ ...formPlotProps, visible: false }} />)
       expect(queryByTestId(name)).not.toBeVisible()
     })
   })

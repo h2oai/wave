@@ -163,7 +163,7 @@ ui_flex_card <- function(
 #' @param content The text content.
 #' @param size The font size of the text content.
 #'   One of 'xl', 'l', 'm', 's', 'xs'.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A Text instance.
@@ -191,7 +191,7 @@ ui_text <- function(
 #' Create extra-large sized text content.
 #'
 #' @param content The text content.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
@@ -220,7 +220,7 @@ ui_text_xl <- function(
 #' Create large sized text content.
 #'
 #' @param content The text content.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
@@ -249,7 +249,7 @@ ui_text_l <- function(
 #' Create medium sized text content.
 #'
 #' @param content The text content.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextM instance.
@@ -274,7 +274,7 @@ ui_text_m <- function(
 #' Create small sized text content.
 #'
 #' @param content The text content.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextS instance.
@@ -299,7 +299,7 @@ ui_text_s <- function(
 #' Create extra-small sized text content.
 #'
 #' @param content The text content.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextXs instance.
@@ -332,7 +332,7 @@ ui_text_xs <- function(
 #' @param label The text displayed on the label.
 #' @param required True if the field is required.
 #' @param disabled True if the label should be disabled.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Label instance.
@@ -366,7 +366,7 @@ ui_label <- function(
 #'
 #' @param label The text displayed on the separator.
 #' @param name An identifying name for this component.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Separator instance.
 ui_separator <- function(
   label = NULL,
@@ -406,7 +406,7 @@ ui_separator <- function(
 #' @param label The text displayed above the bar.
 #' @param caption The text displayed below the bar.
 #' @param value The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Progress instance.
@@ -444,7 +444,7 @@ ui_progress <- function(
 #'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
 #' @param text The text displayed on the message bar.
 #' @param name An identifying name for this component.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A MessageBar instance.
 ui_message_bar <- function(
   type = NULL,
@@ -485,7 +485,7 @@ ui_message_bar <- function(
 #' @param multiline True if the text box should allow multi-line text entry.
 #' @param password True if the text box should hide text content.
 #' @param trigger True if the form should be submitted when the text value changes.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Textbox instance.
 ui_textbox <- function(
@@ -566,7 +566,7 @@ ui_textbox <- function(
 #' @param indeterminate True if the selection is indeterminate (neither selected nor unselected).
 #' @param disabled True if the checkbox is disabled.
 #' @param trigger True if the form should be submitted when the checkbox value changes.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checkbox instance.
 ui_checkbox <- function(
@@ -613,7 +613,7 @@ ui_checkbox <- function(
 #' @param value True if selected, False if unselected.
 #' @param disabled True if the checkbox is disabled.
 #' @param trigger True if the form should be submitted when the toggle value changes.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Toggle instance.
 ui_toggle <- function(
@@ -681,7 +681,7 @@ ui_choice <- function(
 #' @param choices The choices to be presented.
 #' @param required True if this field is required.
 #' @param trigger True if the form should be submitted when the selection changes.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ChoiceGroup instance.
 ui_choice_group <- function(
@@ -723,7 +723,7 @@ ui_choice_group <- function(
 #' @param values The names of the selected choices.
 #' @param choices The choices to be presented.
 #' @param trigger True if the form should be submitted when the checklist value changes.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checklist instance.
 ui_checklist <- function(
@@ -774,7 +774,7 @@ ui_checklist <- function(
 #' @param required True if this is a required field.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the dropdown value changes.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Dropdown instance.
 ui_dropdown <- function(
@@ -835,7 +835,7 @@ ui_dropdown <- function(
 #' @param choices The choices to be presented.
 #' @param error Text to be displayed as an error below the text box.
 #' @param disabled True if this field is disabled.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Combobox instance.
 ui_combobox <- function(
@@ -894,7 +894,7 @@ ui_combobox <- function(
 #' @param value The current value of the slider.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the slider value changes.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Slider instance.
 ui_slider <- function(
@@ -945,7 +945,7 @@ ui_slider <- function(
 #' @param step The difference between two adjacent values of the spinbox.
 #' @param value The current value of the spinbox.
 #' @param disabled True if this field is disabled.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Spinbox instance.
 ui_spinbox <- function(
@@ -991,7 +991,7 @@ ui_spinbox <- function(
 #' @param value The date value in YYYY-MM-DD format.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the datepicker value changes.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A DatePicker instance.
 ui_date_picker <- function(
@@ -1033,7 +1033,7 @@ ui_date_picker <- function(
 #' @param label Text to be displayed alongside the component.
 #' @param value The selected color (CSS-compatible string)
 #' @param choices A list of colors (CSS-compatible strings) to limit color choices to.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ColorPicker instance.
 ui_color_picker <- function(
@@ -1084,7 +1084,7 @@ ui_color_picker <- function(
 #' @param primary True if the button should be rendered as the primary button in the set.
 #' @param disabled True if the button should be disabled.
 #' @param link True if the button should be rendered as link text and not a standard button.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Button instance.
 ui_button <- function(
@@ -1126,7 +1126,7 @@ ui_button <- function(
 #' @param justify Specifies how to lay out buttons horizontally.
 #'   One of 'start', 'end', 'center', 'between', 'around'.
 #' @param name An identifying name for this component.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Buttons instance.
 ui_buttons <- function(
   items,
@@ -1156,7 +1156,7 @@ ui_buttons <- function(
 #' @param max_file_size Maximum allowed size (Mb) per file. Defaults to no limit.
 #' @param max_size Maximum allowed size (Mb) for all files combined. Defaults to no limit.
 #' @param height The height of the file upload, e.g. '400px', '50%', etc.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A FileUpload instance.
 ui_file_upload <- function(
@@ -1332,7 +1332,7 @@ ui_table_row <- function(
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
 #' @param height The height of the table, e.g. '400px', '50%', etc.
 #' @param values The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`).
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
 ui_table <- function(
@@ -1385,7 +1385,7 @@ ui_table <- function(
 #' @param disabled True if the link should be disabled.
 #' @param download True if the link should be used for file download.
 #' @param button True if the link should be rendered as a button.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Link instance.
@@ -1445,7 +1445,7 @@ ui_tab <- function(
 #' @param name An identifying name for this component.
 #' @param value The name of the tab to select.
 #' @param items The tabs in this tab bar.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Tabs instance.
 ui_tabs <- function(
   name,
@@ -1473,7 +1473,7 @@ ui_tabs <- function(
 #' @param label The text displayed on the expander.
 #' @param expanded True if expanded, False if collapsed.
 #' @param items List of components to be hideable by the expander.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Expander instance.
 ui_expander <- function(
   name,
@@ -1503,7 +1503,7 @@ ui_expander <- function(
 #' @param width The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.
 #' @param height The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.
 #' @param name An identifying name for this component.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Frame instance.
 ui_frame <- function(
   path = NULL,
@@ -1532,15 +1532,19 @@ ui_frame <- function(
 #' Render HTML content.
 #'
 #' @param content The HTML content.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param name An identifying name for this component.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Markup instance.
 ui_markup <- function(
   content,
+  name = NULL,
   visible = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("name", "character", name)
   .guard_scalar("visible", "logical", visible)
   .o <- list(markup=list(
     content=content,
+    name=name,
     visible=visible))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
@@ -1551,7 +1555,7 @@ ui_markup <- function(
 #' @param content The Handlebars template. https://handlebarsjs.com/guide/
 #' @param data Data for the Handlebars template
 #' @param name An identifying name for this component.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Template instance.
 ui_template <- function(
   content,
@@ -1581,7 +1585,7 @@ ui_template <- function(
 #' @param values The names of the selected choices.
 #' @param max_choices Maximum number of selectable choices. Defaults to no limit.
 #' @param disabled Controls whether the picker should be disabled or not.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Picker instance.
 ui_picker <- function(
@@ -1629,7 +1633,7 @@ ui_picker <- function(
 #' @param max_value The upper bound of the selected range.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the slider value changes.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A RangeSlider instance.
 ui_range_slider <- function(
@@ -1697,7 +1701,7 @@ ui_step <- function(
 #'
 #' @param name An identifying name for this component.
 #' @param items The sequence of steps to be displayed.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Stepper instance.
 ui_stepper <- function(
@@ -1978,25 +1982,29 @@ ui_plot <- function(
 #' @param plot The plot to be rendered in this visualization.
 #' @param data Data for this visualization.
 #' @param width The width of the visualization. Defaults to 100%.
-#' @param height The height of the visualization. Defaults to 300px.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param height The hight of the visualization. Defaults to 300px.
+#' @param name An identifying name for this component.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Visualization instance.
 ui_visualization <- function(
   plot,
   data,
   width = NULL,
   height = NULL,
+  name = NULL,
   visible = NULL) {
   .guard_scalar("plot", "h2oq_Plot", plot)
   # TODO Validate data: Rec
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
+  .guard_scalar("name", "character", name)
   .guard_scalar("visible", "logical", visible)
   .o <- list(visualization=list(
     plot=plot,
     data=data,
     width=width,
     height=height,
+    name=name,
     visible=visible))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
@@ -2009,7 +2017,7 @@ ui_visualization <- function(
 #' @param width The width of the visualization. Defaults to 100%.
 #' @param height The height of the visualization. Defaults to 300px.
 #' @param name An identifying name for this component.
-#' @param visible Controls visibility of the component. Persists component state on show/hide. Defaults to true.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A VegaVisualization instance.
 ui_vega_visualization <- function(
   specification,

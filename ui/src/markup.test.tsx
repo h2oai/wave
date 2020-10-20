@@ -21,11 +21,20 @@ describe('Markup.tsx', () => {
   })
 
   describe('Form Markup', () => {
-    const formMarkupProps: Markup = { content: '' }
+    const formMarkupProps: Markup = { name, content: '' }
 
     it('Renders data-test attr', () => {
-      const { queryByTestId } = render(<XMarkup model={{ ...formMarkupProps, visible: false }} />)
+      const { queryByTestId } = render(<XMarkup model={formMarkupProps} />)
       expect(queryByTestId(name)).toBeInTheDocument()
+    })
+
+    it('Does not render data-test attr - name not specified', () => {
+      const { queryByTestId } = render(<XMarkup model={{ content: '' }} />)
+      expect(queryByTestId(name)).not.toBeInTheDocument()
+    })
+
+    it('Does not display Markup when visible is false', () => {
+      const { queryByTestId } = render(<XMarkup model={{ ...formMarkupProps, visible: false }} />)
       expect(queryByTestId(name)).not.toBeVisible()
     })
   })

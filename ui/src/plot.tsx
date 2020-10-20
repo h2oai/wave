@@ -717,14 +717,16 @@ const
 /** Create a visualization for display inside a form. */
 export interface Visualization {
   /** The plot to be rendered in this visualization. */
-  plot: Plot;
+  plot: Plot
   /** Data for this visualization. */
-  data: Rec;
+  data: Rec
   /** The width of the visualization. Defaults to 100%. */
-  width?: S;
-  /** The height of the visualization. Defaults to 300px. */
-  height?: S;
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  width?: S
+  /** The hight of the visualization. Defaults to 300px. */
+  height?: S
+  /** An identifying name for this component. */
+  name?: S
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
 }
 
@@ -763,12 +765,12 @@ export const
       },
       render = () => {
         const
-          { width, height, visible } = model,
+          { width, height, visible, name } = model,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
             : { width: width || 'auto', height: height || '300px' }
         return (
-          <div style={{ ...style, ...displayMixin(visible) }} ref={container} />
+          <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={container} />
         )
       }
     return { init, update, render }

@@ -13,7 +13,7 @@ export interface Text {
   content: S
   /** The font size of the text content. */
   size?: 'xl' | 'l' | 'm' | 's' | 'xs'
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
   tooltip?: S
@@ -25,7 +25,7 @@ export interface Text {
 export interface TextXl {
   /** The text content. */
   content: S
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
   tooltip?: S
@@ -39,7 +39,7 @@ export interface TextXl {
 export interface TextL {
   /** The text content. */
   content: S
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
   tooltip?: S
@@ -53,7 +53,7 @@ export interface TextL {
 export interface TextM {
   /** The text content. */
   content: S
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
   tooltip?: S
@@ -65,7 +65,7 @@ export interface TextM {
 export interface TextS {
   /** The text content. */
   content: S
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
   tooltip?: S
@@ -77,7 +77,7 @@ export interface TextS {
 export interface TextXs {
   /** The text content. */
   content: S
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
   tooltip?: S

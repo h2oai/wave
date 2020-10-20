@@ -36,7 +36,7 @@ export interface Dropdown {
   disabled?: B
   /** True if the form should be submitted when the dropdown value changes. */
   trigger?: B
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S

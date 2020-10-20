@@ -19,7 +19,7 @@ export interface Label {
   required?: B
   /** True if the label should be disabled. */
   disabled?: B
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
@@ -29,7 +29,7 @@ export interface Label {
 
 export const
   XLabel = ({ model }: { model: Label }) => {
-    const { label, required = false, disabled = false, visible } = model
+    const { label, required = false, disabled = false, visible, name } = model
     return (
       <Fluent.Label
         data-test={name}

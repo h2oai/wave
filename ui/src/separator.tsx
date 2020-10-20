@@ -21,7 +21,7 @@ export interface Separator {
   label?: S
   /** An identifying name for this component. */
   name?: S
-  /** Controls visibility of the component. Persists component state on show/hide. Defaults to true. */
+  /** True if the component should be visible. Defaults to true. */
   visible?: B
 }
 
