@@ -10,7 +10,7 @@ import requests
 import websockets
 from requests.auth import HTTPBasicAuth
 
-from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite, Auth
+from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite
 from .ui import markdown_card
 
 logger = logging.getLogger(__name__)
@@ -27,6 +27,18 @@ def _session_for(sessions: dict, session_id: str):
 UNICAST = 'unicast'
 MULTICAST = 'multicast'
 BROADCAST = 'broadcast'
+
+
+class Auth:
+    """
+    Represents authentication information for a given query context. Carries valid information only if single sign on is enabled.
+    """
+
+    def __init__(self, username: str, subject: str):
+        self.username = username
+        """The username of the user."""
+        self.subject = subject
+        """A unique identifier for the user."""
 
 
 class Query:
