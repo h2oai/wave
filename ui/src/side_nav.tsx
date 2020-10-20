@@ -6,9 +6,25 @@ import { Header, State as HeaderState } from "./header"
 import { NavGroup, View as Nav } from "./nav"
 import { bond, box, Card, S } from './qd'
 import { clas, collapsedSideNavWidth, getTheme, mobileBreakpoint, pc, sideNavWidth, topNavHeight } from './theme'
+import { NestedCSSSelectors } from 'typestyle/lib/types'
 
 const
   { colors } = getTheme(),
+  expandedStyles: NestedCSSSelectors = {
+    '.is-expanded + ul': {
+      display: 'inherit',
+    },
+    '.ms-Nav-chevronButton': {
+      display: 'inherit',
+    },
+    'div[class*=sideNavHeader]': {
+      opacity: 1,
+      height: 'auto',
+    },
+    'div[class*=sideNavHeader] div[class*=subtitle]': {
+      whiteSpace: 'inherit',
+    }
+  },
   css = stylesheet({
     sideNav: {
       position: 'fixed',
@@ -20,21 +36,7 @@ const
       $nest: {
         '&:hover': {
           width: sideNavWidth,
-          $nest: {
-            '.is-expanded + ul': {
-              display: 'inherit',
-            },
-            '.ms-Nav-chevronButton': {
-              display: 'inherit',
-            },
-            'div[class*=sideNavHeader]': {
-              opacity: 1,
-              height: 'auto',
-            },
-            'div[class*=sideNavHeader] div[class*=subtitle]': {
-              whiteSpace: 'inherit',
-            }
-          }
+          ...expandedStyles
         },
         '.is-expanded + ul': {
           display: 'none'
@@ -66,27 +68,21 @@ const
         },
         ...mobileBreakpoint({
           top: topNavHeight,
+          width: sideNavWidth,
           $nest: {
+            ...expandedStyles,
             '~ main': {
               top: topNavHeight,
+              marginLeft: 0
             }
           }
         })
       }
     },
     collapsed: {
-      transform: `translateX(-${sideNavWidth - collapsedSideNavWidth}px)`,
       $nest: {
-        '~ main': {
-          marginLeft: collapsedSideNavWidth
-        },
         ...mobileBreakpoint({
-          transform: `translateX(-${sideNavWidth}px)`,
-          $nest: {
-            '~ main': {
-              marginLeft: 0
-            }
-          }
+          width: 0,
         })
       }
     },
