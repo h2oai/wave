@@ -3,7 +3,7 @@ import { CardMenu } from './card_menu'
 import { bond, Page, S, C } from './qd'
 import { CardView } from './grid_layout'
 import { stylesheet } from 'typestyle'
-import { getTheme, pc } from './theme'
+import { getTheme, pc, margin } from './theme'
 
 const
   { colors } = getTheme(),
@@ -15,7 +15,8 @@ const
       justifyContent: 'space-evenly',
       backgroundColor: colors.page,
       height: 'min-content',
-      width: pc(100)
+      width: pc(100),
+      margin: margin(gap, 0, 0, gap)
     },
     slot: {
       backgroundColor: colors.card,
@@ -23,7 +24,7 @@ const
       borderRadius: 3,
       boxShadow: `0px 3px 5px ${colors.text0}`,
       overflow: 'auto',
-      margin: gap,
+      margin: margin(0, gap, gap, 0),
       padding: 15
     },
   }),
