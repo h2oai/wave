@@ -8,7 +8,7 @@ def breadcrumb(
         name: str,
         label: str,
 ) -> Breadcrumb:
-    """Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
+    """Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
 
     Args:
         name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
@@ -69,7 +69,7 @@ def breadcrumbs_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        items: A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`
+        items: A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.BreadcrumbsCard` instance.

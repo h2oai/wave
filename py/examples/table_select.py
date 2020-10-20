@@ -2,7 +2,7 @@
 # Use a table as an advanced multi-select. Specify rownames in 'values' for preselection.
 # ---
 from faker import Faker
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 fake = Faker()
 
