@@ -284,6 +284,7 @@ class Text:
             self,
             content: str,
             size: Optional[str] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
@@ -291,6 +292,8 @@ class Text:
         """The text content."""
         self.size = size
         """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -303,6 +306,7 @@ class Text:
         return _dump(
             content=self.content,
             size=self.size,
+            visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -314,15 +318,18 @@ class Text:
         if __d_content is None:
             raise ValueError('Text.content is required.')
         __d_size: Any = __d.get('size')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         __d_name: Any = __d.get('name')
         content: str = __d_content
         size: Optional[str] = __d_size
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return Text(
             content,
             size,
+            visible,
             tooltip,
             name,
         )
@@ -334,12 +341,15 @@ class TextXl:
     def __init__(
             self,
             content: str,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -353,6 +363,7 @@ class TextXl:
             raise ValueError('TextXl.content is required.')
         return _dump(
             content=self.content,
+            visible=self.visible,
             tooltip=self.tooltip,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
             name=self.name,
@@ -364,15 +375,18 @@ class TextXl:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextXl.content is required.')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         __d_commands: Any = __d.get('commands')
         __d_name: Any = __d.get('name')
         content: str = __d_content
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         name: Optional[str] = __d_name
         return TextXl(
             content,
+            visible,
             tooltip,
             commands,
             name,
@@ -385,12 +399,15 @@ class TextL:
     def __init__(
             self,
             content: str,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -404,6 +421,7 @@ class TextL:
             raise ValueError('TextL.content is required.')
         return _dump(
             content=self.content,
+            visible=self.visible,
             tooltip=self.tooltip,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
             name=self.name,
@@ -415,15 +433,18 @@ class TextL:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextL.content is required.')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         __d_commands: Any = __d.get('commands')
         __d_name: Any = __d.get('name')
         content: str = __d_content
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         name: Optional[str] = __d_name
         return TextL(
             content,
+            visible,
             tooltip,
             commands,
             name,
@@ -436,11 +457,14 @@ class TextM:
     def __init__(
             self,
             content: str,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -452,6 +476,7 @@ class TextM:
             raise ValueError('TextM.content is required.')
         return _dump(
             content=self.content,
+            visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -462,13 +487,16 @@ class TextM:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextM.content is required.')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         __d_name: Any = __d.get('name')
         content: str = __d_content
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return TextM(
             content,
+            visible,
             tooltip,
             name,
         )
@@ -480,11 +508,14 @@ class TextS:
     def __init__(
             self,
             content: str,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -496,6 +527,7 @@ class TextS:
             raise ValueError('TextS.content is required.')
         return _dump(
             content=self.content,
+            visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -506,13 +538,16 @@ class TextS:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextS.content is required.')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         __d_name: Any = __d.get('name')
         content: str = __d_content
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return TextS(
             content,
+            visible,
             tooltip,
             name,
         )
@@ -524,11 +559,14 @@ class TextXs:
     def __init__(
             self,
             content: str,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         self.content = content
         """The text content."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -540,6 +578,7 @@ class TextXs:
             raise ValueError('TextXs.content is required.')
         return _dump(
             content=self.content,
+            visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -550,13 +589,16 @@ class TextXs:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('TextXs.content is required.')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         __d_name: Any = __d.get('name')
         content: str = __d_content
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return TextXs(
             content,
+            visible,
             tooltip,
             name,
         )
@@ -576,6 +618,7 @@ class Label:
             label: str,
             required: Optional[bool] = None,
             disabled: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
@@ -585,6 +628,8 @@ class Label:
         """True if the field is required."""
         self.disabled = disabled
         """True if the label should be disabled."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
@@ -598,6 +643,7 @@ class Label:
             label=self.label,
             required=self.required,
             disabled=self.disabled,
+            visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -610,17 +656,20 @@ class Label:
             raise ValueError('Label.label is required.')
         __d_required: Any = __d.get('required')
         __d_disabled: Any = __d.get('disabled')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         __d_name: Any = __d.get('name')
         label: str = __d_label
         required: Optional[bool] = __d_required
         disabled: Optional[bool] = __d_disabled
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return Label(
             label,
             required,
             disabled,
+            visible,
             tooltip,
             name,
         )
@@ -635,17 +684,21 @@ class Separator:
             self,
             label: Optional[str] = None,
             name: Optional[str] = None,
+            visible: Optional[bool] = None,
     ):
         self.label = label
         """The text displayed on the separator."""
         self.name = name
         """An identifying name for this component."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         return _dump(
             label=self.label,
             name=self.name,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -653,11 +706,14 @@ class Separator:
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
         __d_name: Any = __d.get('name')
+        __d_visible: Any = __d.get('visible')
         label: Optional[str] = __d_label
         name: Optional[str] = __d_name
+        visible: Optional[bool] = __d_visible
         return Separator(
             label,
             name,
+            visible,
         )
 
 
@@ -687,6 +743,7 @@ class Progress:
             label: str,
             caption: Optional[str] = None,
             value: Optional[float] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
@@ -696,6 +753,8 @@ class Progress:
         """The text displayed below the bar."""
         self.value = value
         """The progress, between 0.0 and 1.0, or -1 (default) if indeterminate."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
@@ -709,6 +768,7 @@ class Progress:
             label=self.label,
             caption=self.caption,
             value=self.value,
+            visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -721,17 +781,20 @@ class Progress:
             raise ValueError('Progress.label is required.')
         __d_caption: Any = __d.get('caption')
         __d_value: Any = __d.get('value')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         __d_name: Any = __d.get('name')
         label: str = __d_label
         caption: Optional[str] = __d_caption
         value: Optional[float] = __d_value
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return Progress(
             label,
             caption,
             value,
+            visible,
             tooltip,
             name,
         )
@@ -749,6 +812,7 @@ class MessageBar:
             type: Optional[str] = None,
             text: Optional[str] = None,
             name: Optional[str] = None,
+            visible: Optional[bool] = None,
     ):
         self.type = type
         """The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'."""
@@ -756,6 +820,8 @@ class MessageBar:
         """The text displayed on the message bar."""
         self.name = name
         """An identifying name for this component."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -763,6 +829,7 @@ class MessageBar:
             type=self.type,
             text=self.text,
             name=self.name,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -771,13 +838,16 @@ class MessageBar:
         __d_type: Any = __d.get('type')
         __d_text: Any = __d.get('text')
         __d_name: Any = __d.get('name')
+        __d_visible: Any = __d.get('visible')
         type: Optional[str] = __d_type
         text: Optional[str] = __d_text
         name: Optional[str] = __d_name
+        visible: Optional[bool] = __d_visible
         return MessageBar(
             type,
             text,
             name,
+            visible,
         )
 
 
@@ -805,6 +875,7 @@ class Textbox:
             multiline: Optional[bool] = None,
             password: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -837,6 +908,8 @@ class Textbox:
         """True if the text box should hide text content."""
         self.trigger = trigger
         """True if the form should be submitted when the text value changes."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -860,6 +933,7 @@ class Textbox:
             multiline=self.multiline,
             password=self.password,
             trigger=self.trigger,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -883,6 +957,7 @@ class Textbox:
         __d_multiline: Any = __d.get('multiline')
         __d_password: Any = __d.get('password')
         __d_trigger: Any = __d.get('trigger')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -899,6 +974,7 @@ class Textbox:
         multiline: Optional[bool] = __d_multiline
         password: Optional[bool] = __d_password
         trigger: Optional[bool] = __d_trigger
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Textbox(
             name,
@@ -916,6 +992,7 @@ class Textbox:
             multiline,
             password,
             trigger,
+            visible,
             tooltip,
         )
 
@@ -944,6 +1021,7 @@ class Checkbox:
             indeterminate: Optional[bool] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -958,6 +1036,8 @@ class Checkbox:
         """True if the checkbox is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the checkbox value changes."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -972,6 +1052,7 @@ class Checkbox:
             indeterminate=self.indeterminate,
             disabled=self.disabled,
             trigger=self.trigger,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -986,6 +1067,7 @@ class Checkbox:
         __d_indeterminate: Any = __d.get('indeterminate')
         __d_disabled: Any = __d.get('disabled')
         __d_trigger: Any = __d.get('trigger')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -993,6 +1075,7 @@ class Checkbox:
         indeterminate: Optional[bool] = __d_indeterminate
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Checkbox(
             name,
@@ -1001,6 +1084,7 @@ class Checkbox:
             indeterminate,
             disabled,
             trigger,
+            visible,
             tooltip,
         )
 
@@ -1022,6 +1106,7 @@ class Toggle:
             value: Optional[bool] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1034,6 +1119,8 @@ class Toggle:
         """True if the checkbox is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the toggle value changes."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1047,6 +1134,7 @@ class Toggle:
             value=self.value,
             disabled=self.disabled,
             trigger=self.trigger,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1060,12 +1148,14 @@ class Toggle:
         __d_value: Any = __d.get('value')
         __d_disabled: Any = __d.get('disabled')
         __d_trigger: Any = __d.get('trigger')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
         value: Optional[bool] = __d_value
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Toggle(
             name,
@@ -1073,6 +1163,7 @@ class Toggle:
             value,
             disabled,
             trigger,
+            visible,
             tooltip,
         )
 
@@ -1141,6 +1232,7 @@ class ChoiceGroup:
             choices: Optional[List[Choice]] = None,
             required: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1155,6 +1247,8 @@ class ChoiceGroup:
         """True if this field is required."""
         self.trigger = trigger
         """True if the form should be submitted when the selection changes."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1169,6 +1263,7 @@ class ChoiceGroup:
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             required=self.required,
             trigger=self.trigger,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1183,6 +1278,7 @@ class ChoiceGroup:
         __d_choices: Any = __d.get('choices')
         __d_required: Any = __d.get('required')
         __d_trigger: Any = __d.get('trigger')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -1190,6 +1286,7 @@ class ChoiceGroup:
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
         required: Optional[bool] = __d_required
         trigger: Optional[bool] = __d_trigger
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return ChoiceGroup(
             name,
@@ -1198,6 +1295,7 @@ class ChoiceGroup:
             choices,
             required,
             trigger,
+            visible,
             tooltip,
         )
 
@@ -1214,6 +1312,7 @@ class Checklist:
             values: Optional[List[str]] = None,
             choices: Optional[List[Choice]] = None,
             trigger: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1226,6 +1325,8 @@ class Checklist:
         """The choices to be presented."""
         self.trigger = trigger
         """True if the form should be submitted when the checklist value changes."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1239,6 +1340,7 @@ class Checklist:
             values=self.values,
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             trigger=self.trigger,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1252,12 +1354,14 @@ class Checklist:
         __d_values: Any = __d.get('values')
         __d_choices: Any = __d.get('choices')
         __d_trigger: Any = __d.get('trigger')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
         values: Optional[List[str]] = __d_values
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
         trigger: Optional[bool] = __d_trigger
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Checklist(
             name,
@@ -1265,6 +1369,7 @@ class Checklist:
             values,
             choices,
             trigger,
+            visible,
             tooltip,
         )
 
@@ -1293,6 +1398,7 @@ class Dropdown:
             required: Optional[bool] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1313,6 +1419,8 @@ class Dropdown:
         """True if this field is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the dropdown value changes."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1330,6 +1438,7 @@ class Dropdown:
             required=self.required,
             disabled=self.disabled,
             trigger=self.trigger,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1347,6 +1456,7 @@ class Dropdown:
         __d_required: Any = __d.get('required')
         __d_disabled: Any = __d.get('disabled')
         __d_trigger: Any = __d.get('trigger')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -1357,6 +1467,7 @@ class Dropdown:
         required: Optional[bool] = __d_required
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Dropdown(
             name,
@@ -1368,6 +1479,7 @@ class Dropdown:
             required,
             disabled,
             trigger,
+            visible,
             tooltip,
         )
 
@@ -1394,6 +1506,7 @@ class Combobox:
             choices: Optional[List[str]] = None,
             error: Optional[str] = None,
             disabled: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1410,6 +1523,8 @@ class Combobox:
         """Text to be displayed as an error below the text box."""
         self.disabled = disabled
         """True if this field is disabled."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1425,6 +1540,7 @@ class Combobox:
             choices=self.choices,
             error=self.error,
             disabled=self.disabled,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1440,6 +1556,7 @@ class Combobox:
         __d_choices: Any = __d.get('choices')
         __d_error: Any = __d.get('error')
         __d_disabled: Any = __d.get('disabled')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -1448,6 +1565,7 @@ class Combobox:
         choices: Optional[List[str]] = __d_choices
         error: Optional[str] = __d_error
         disabled: Optional[bool] = __d_disabled
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Combobox(
             name,
@@ -1457,6 +1575,7 @@ class Combobox:
             choices,
             error,
             disabled,
+            visible,
             tooltip,
         )
 
@@ -1487,6 +1606,7 @@ class Slider:
             value: Optional[float] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1505,6 +1625,8 @@ class Slider:
         """True if this field is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the slider value changes."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1521,6 +1643,7 @@ class Slider:
             value=self.value,
             disabled=self.disabled,
             trigger=self.trigger,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1537,6 +1660,7 @@ class Slider:
         __d_value: Any = __d.get('value')
         __d_disabled: Any = __d.get('disabled')
         __d_trigger: Any = __d.get('trigger')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -1546,6 +1670,7 @@ class Slider:
         value: Optional[float] = __d_value
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Slider(
             name,
@@ -1556,6 +1681,7 @@ class Slider:
             value,
             disabled,
             trigger,
+            visible,
             tooltip,
         )
 
@@ -1575,6 +1701,7 @@ class Spinbox:
             step: Optional[float] = None,
             value: Optional[float] = None,
             disabled: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1591,6 +1718,8 @@ class Spinbox:
         """The current value of the spinbox."""
         self.disabled = disabled
         """True if this field is disabled."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1606,6 +1735,7 @@ class Spinbox:
             step=self.step,
             value=self.value,
             disabled=self.disabled,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1621,6 +1751,7 @@ class Spinbox:
         __d_step: Any = __d.get('step')
         __d_value: Any = __d.get('value')
         __d_disabled: Any = __d.get('disabled')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -1629,6 +1760,7 @@ class Spinbox:
         step: Optional[float] = __d_step
         value: Optional[float] = __d_value
         disabled: Optional[bool] = __d_disabled
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Spinbox(
             name,
@@ -1638,6 +1770,7 @@ class Spinbox:
             step,
             value,
             disabled,
+            visible,
             tooltip,
         )
 
@@ -1655,6 +1788,7 @@ class DatePicker:
             value: Optional[str] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1669,6 +1803,8 @@ class DatePicker:
         """True if this field is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the datepicker value changes."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1683,6 +1819,7 @@ class DatePicker:
             value=self.value,
             disabled=self.disabled,
             trigger=self.trigger,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1697,6 +1834,7 @@ class DatePicker:
         __d_value: Any = __d.get('value')
         __d_disabled: Any = __d.get('disabled')
         __d_trigger: Any = __d.get('trigger')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -1704,6 +1842,7 @@ class DatePicker:
         value: Optional[str] = __d_value
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return DatePicker(
             name,
@@ -1712,6 +1851,7 @@ class DatePicker:
             value,
             disabled,
             trigger,
+            visible,
             tooltip,
         )
 
@@ -1728,6 +1868,7 @@ class ColorPicker:
             label: Optional[str] = None,
             value: Optional[str] = None,
             choices: Optional[List[str]] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1738,6 +1879,8 @@ class ColorPicker:
         """The selected color (CSS-compatible string)"""
         self.choices = choices
         """A list of colors (CSS-compatible strings) to limit color choices to."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1750,6 +1893,7 @@ class ColorPicker:
             label=self.label,
             value=self.value,
             choices=self.choices,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1762,17 +1906,20 @@ class ColorPicker:
         __d_label: Any = __d.get('label')
         __d_value: Any = __d.get('value')
         __d_choices: Any = __d.get('choices')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
         value: Optional[str] = __d_value
         choices: Optional[List[str]] = __d_choices
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return ColorPicker(
             name,
             label,
             value,
             choices,
+            visible,
             tooltip,
         )
 
@@ -1804,6 +1951,7 @@ class Button:
             primary: Optional[bool] = None,
             disabled: Optional[bool] = None,
             link: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1820,6 +1968,8 @@ class Button:
         """True if the button should be disabled."""
         self.link = link
         """True if the button should be rendered as link text and not a standard button."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1835,6 +1985,7 @@ class Button:
             primary=self.primary,
             disabled=self.disabled,
             link=self.link,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1850,6 +2001,7 @@ class Button:
         __d_primary: Any = __d.get('primary')
         __d_disabled: Any = __d.get('disabled')
         __d_link: Any = __d.get('link')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -1858,6 +2010,7 @@ class Button:
         primary: Optional[bool] = __d_primary
         disabled: Optional[bool] = __d_disabled
         link: Optional[bool] = __d_link
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Button(
             name,
@@ -1867,6 +2020,7 @@ class Button:
             primary,
             disabled,
             link,
+            visible,
             tooltip,
         )
 
@@ -1879,6 +2033,7 @@ class Buttons:
             items: List['Component'],
             justify: Optional[str] = None,
             name: Optional[str] = None,
+            visible: Optional[bool] = None,
     ):
         self.items = items
         """The button in this set."""
@@ -1886,6 +2041,8 @@ class Buttons:
         """Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'."""
         self.name = name
         """An identifying name for this component."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1895,6 +2052,7 @@ class Buttons:
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             name=self.name,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -1905,13 +2063,16 @@ class Buttons:
             raise ValueError('Buttons.items is required.')
         __d_justify: Any = __d.get('justify')
         __d_name: Any = __d.get('name')
+        __d_visible: Any = __d.get('visible')
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         name: Optional[str] = __d_name
+        visible: Optional[bool] = __d_visible
         return Buttons(
             items,
             justify,
             name,
+            visible,
         )
 
 
@@ -1928,6 +2089,7 @@ class FileUpload:
             max_file_size: Optional[float] = None,
             max_size: Optional[float] = None,
             height: Optional[str] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1944,6 +2106,8 @@ class FileUpload:
         """Maximum allowed size (Mb) for all files combined. Defaults to no limit."""
         self.height = height
         """The height of the file upload, e.g. '400px', '50%', etc."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1959,6 +2123,7 @@ class FileUpload:
             max_file_size=self.max_file_size,
             max_size=self.max_size,
             height=self.height,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1974,6 +2139,7 @@ class FileUpload:
         __d_max_file_size: Any = __d.get('max_file_size')
         __d_max_size: Any = __d.get('max_size')
         __d_height: Any = __d.get('height')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -1982,6 +2148,7 @@ class FileUpload:
         max_file_size: Optional[float] = __d_max_file_size
         max_size: Optional[float] = __d_max_size
         height: Optional[str] = __d_height
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return FileUpload(
             name,
@@ -1991,6 +2158,7 @@ class FileUpload:
             max_file_size,
             max_size,
             height,
+            visible,
             tooltip,
         )
 
@@ -2255,6 +2423,7 @@ class Table:
             resettable: Optional[bool] = None,
             height: Optional[str] = None,
             values: Optional[List[str]] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2275,6 +2444,8 @@ class Table:
         """The height of the table, e.g. '400px', '50%', etc."""
         self.values = values
         """The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`)."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2296,6 +2467,7 @@ class Table:
             resettable=self.resettable,
             height=self.height,
             values=self.values,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -2317,6 +2489,7 @@ class Table:
         __d_resettable: Any = __d.get('resettable')
         __d_height: Any = __d.get('height')
         __d_values: Any = __d.get('values')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         columns: List[TableColumn] = [TableColumn.load(__e) for __e in __d_columns]
@@ -2327,6 +2500,7 @@ class Table:
         resettable: Optional[bool] = __d_resettable
         height: Optional[str] = __d_height
         values: Optional[List[str]] = __d_values
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Table(
             name,
@@ -2338,6 +2512,7 @@ class Table:
             resettable,
             height,
             values,
+            visible,
             tooltip,
         )
 
@@ -2356,6 +2531,7 @@ class Link:
             disabled: Optional[bool] = None,
             download: Optional[bool] = None,
             button: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
@@ -2369,6 +2545,8 @@ class Link:
         """True if the link should be used for file download."""
         self.button = button
         """True if the link should be rendered as a button."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
@@ -2382,6 +2560,7 @@ class Link:
             disabled=self.disabled,
             download=self.download,
             button=self.button,
+            visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -2394,6 +2573,7 @@ class Link:
         __d_disabled: Any = __d.get('disabled')
         __d_download: Any = __d.get('download')
         __d_button: Any = __d.get('button')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         __d_name: Any = __d.get('name')
         label: Optional[str] = __d_label
@@ -2401,6 +2581,7 @@ class Link:
         disabled: Optional[bool] = __d_disabled
         download: Optional[bool] = __d_download
         button: Optional[bool] = __d_button
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return Link(
@@ -2409,6 +2590,7 @@ class Link:
             disabled,
             download,
             button,
+            visible,
             tooltip,
             name,
         )
@@ -2466,6 +2648,7 @@ class Tabs:
             name: str,
             value: Optional[str] = None,
             items: Optional[List[Tab]] = None,
+            visible: Optional[bool] = None,
     ):
         self.name = name
         """An identifying name for this component."""
@@ -2473,6 +2656,8 @@ class Tabs:
         """The name of the tab to select."""
         self.items = items
         """The tabs in this tab bar."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2482,6 +2667,7 @@ class Tabs:
             name=self.name,
             value=self.value,
             items=None if self.items is None else [__e.dump() for __e in self.items],
+            visible=self.visible,
         )
 
     @staticmethod
@@ -2492,13 +2678,16 @@ class Tabs:
             raise ValueError('Tabs.name is required.')
         __d_value: Any = __d.get('value')
         __d_items: Any = __d.get('items')
+        __d_visible: Any = __d.get('visible')
         name: str = __d_name
         value: Optional[str] = __d_value
         items: Optional[List[Tab]] = None if __d_items is None else [Tab.load(__e) for __e in __d_items]
+        visible: Optional[bool] = __d_visible
         return Tabs(
             name,
             value,
             items,
+            visible,
         )
 
 
@@ -2513,6 +2702,7 @@ class Expander:
             label: Optional[str] = None,
             expanded: Optional[bool] = None,
             items: Optional[List['Component']] = None,
+            visible: Optional[bool] = None,
     ):
         self.name = name
         """An identifying name for this component."""
@@ -2522,6 +2712,8 @@ class Expander:
         """True if expanded, False if collapsed."""
         self.items = items
         """List of components to be hideable by the expander."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2532,6 +2724,7 @@ class Expander:
             label=self.label,
             expanded=self.expanded,
             items=None if self.items is None else [__e.dump() for __e in self.items],
+            visible=self.visible,
         )
 
     @staticmethod
@@ -2543,15 +2736,18 @@ class Expander:
         __d_label: Any = __d.get('label')
         __d_expanded: Any = __d.get('expanded')
         __d_items: Any = __d.get('items')
+        __d_visible: Any = __d.get('visible')
         name: str = __d_name
         label: Optional[str] = __d_label
         expanded: Optional[bool] = __d_expanded
         items: Optional[List['Component']] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        visible: Optional[bool] = __d_visible
         return Expander(
             name,
             label,
             expanded,
             items,
+            visible,
         )
 
 
@@ -2565,6 +2761,7 @@ class Frame:
             width: Optional[str] = None,
             height: Optional[str] = None,
             name: Optional[str] = None,
+            visible: Optional[bool] = None,
     ):
         self.path = path
         """The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`"""
@@ -2576,6 +2773,8 @@ class Frame:
         """The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`."""
         self.name = name
         """An identifying name for this component."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2585,6 +2784,7 @@ class Frame:
             width=self.width,
             height=self.height,
             name=self.name,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -2595,17 +2795,20 @@ class Frame:
         __d_width: Any = __d.get('width')
         __d_height: Any = __d.get('height')
         __d_name: Any = __d.get('name')
+        __d_visible: Any = __d.get('visible')
         path: Optional[str] = __d_path
         content: Optional[str] = __d_content
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
         name: Optional[str] = __d_name
+        visible: Optional[bool] = __d_visible
         return Frame(
             path,
             content,
             width,
             height,
             name,
+            visible,
         )
 
 
@@ -2615,9 +2818,15 @@ class Markup:
     def __init__(
             self,
             content: str,
+            name: Optional[str] = None,
+            visible: Optional[bool] = None,
     ):
         self.content = content
         """The HTML content."""
+        self.name = name
+        """An identifying name for this component."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2625,6 +2834,8 @@ class Markup:
             raise ValueError('Markup.content is required.')
         return _dump(
             content=self.content,
+            name=self.name,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -2633,20 +2844,27 @@ class Markup:
         __d_content: Any = __d.get('content')
         if __d_content is None:
             raise ValueError('Markup.content is required.')
+        __d_name: Any = __d.get('name')
+        __d_visible: Any = __d.get('visible')
         content: str = __d_content
+        name: Optional[str] = __d_name
+        visible: Optional[bool] = __d_visible
         return Markup(
             content,
+            name,
+            visible,
         )
 
 
 class Template:
-    """Render dynamic content using a HTML template.
+    """Render dynamic content using an HTML template.
     """
     def __init__(
             self,
             content: str,
             data: Optional[PackedRecord] = None,
             name: Optional[str] = None,
+            visible: Optional[bool] = None,
     ):
         self.content = content
         """The Handlebars template. https://handlebarsjs.com/guide/"""
@@ -2654,6 +2872,8 @@ class Template:
         """Data for the Handlebars template"""
         self.name = name
         """An identifying name for this component."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2663,6 +2883,7 @@ class Template:
             content=self.content,
             data=self.data,
             name=self.name,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -2673,13 +2894,16 @@ class Template:
             raise ValueError('Template.content is required.')
         __d_data: Any = __d.get('data')
         __d_name: Any = __d.get('name')
+        __d_visible: Any = __d.get('visible')
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
         name: Optional[str] = __d_name
+        visible: Optional[bool] = __d_visible
         return Template(
             content,
             data,
             name,
+            visible,
         )
 
 
@@ -2696,6 +2920,7 @@ class Picker:
             values: Optional[List[str]] = None,
             max_choices: Optional[int] = None,
             disabled: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2710,6 +2935,8 @@ class Picker:
         """Maximum number of selectable choices. Defaults to no limit."""
         self.disabled = disabled
         """Controls whether the picker should be disabled or not."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2726,6 +2953,7 @@ class Picker:
             values=self.values,
             max_choices=self.max_choices,
             disabled=self.disabled,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -2742,6 +2970,7 @@ class Picker:
         __d_values: Any = __d.get('values')
         __d_max_choices: Any = __d.get('max_choices')
         __d_disabled: Any = __d.get('disabled')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
@@ -2749,6 +2978,7 @@ class Picker:
         values: Optional[List[str]] = __d_values
         max_choices: Optional[int] = __d_max_choices
         disabled: Optional[bool] = __d_disabled
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Picker(
             name,
@@ -2757,6 +2987,7 @@ class Picker:
             values,
             max_choices,
             disabled,
+            visible,
             tooltip,
         )
 
@@ -2779,6 +3010,7 @@ class RangeSlider:
             max_value: Optional[float] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -2799,6 +3031,8 @@ class RangeSlider:
         """True if this field is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the slider value changes."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2816,6 +3050,7 @@ class RangeSlider:
             max_value=self.max_value,
             disabled=self.disabled,
             trigger=self.trigger,
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -2833,6 +3068,7 @@ class RangeSlider:
         __d_max_value: Any = __d.get('max_value')
         __d_disabled: Any = __d.get('disabled')
         __d_trigger: Any = __d.get('trigger')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
@@ -2843,6 +3079,7 @@ class RangeSlider:
         max_value: Optional[float] = __d_max_value
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return RangeSlider(
             name,
@@ -2854,6 +3091,7 @@ class RangeSlider:
             max_value,
             disabled,
             trigger,
+            visible,
             tooltip,
         )
 
@@ -2910,12 +3148,15 @@ class Stepper:
             self,
             name: str,
             items: List[Step],
+            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
         """An identifying name for this component."""
         self.items = items
         """The sequence of steps to be displayed."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2928,6 +3169,7 @@ class Stepper:
         return _dump(
             name=self.name,
             items=[__e.dump() for __e in self.items],
+            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -2940,13 +3182,16 @@ class Stepper:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('Stepper.items is required.')
+        __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         items: List[Step] = [Step.load(__e) for __e in __d_items]
+        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Stepper(
             name,
             items,
+            visible,
             tooltip,
         )
 
@@ -3402,6 +3647,8 @@ class Visualization:
             data: PackedRecord,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            name: Optional[str] = None,
+            visible: Optional[bool] = None,
     ):
         self.plot = plot
         """The plot to be rendered in this visualization."""
@@ -3410,7 +3657,11 @@ class Visualization:
         self.width = width
         """The width of the visualization. Defaults to 100%."""
         self.height = height
-        """The height of the visualization. Defaults to 300px."""
+        """The hight of the visualization. Defaults to 300px."""
+        self.name = name
+        """An identifying name for this component."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3423,6 +3674,8 @@ class Visualization:
             data=self.data,
             width=self.width,
             height=self.height,
+            name=self.name,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -3436,15 +3689,21 @@ class Visualization:
             raise ValueError('Visualization.data is required.')
         __d_width: Any = __d.get('width')
         __d_height: Any = __d.get('height')
+        __d_name: Any = __d.get('name')
+        __d_visible: Any = __d.get('visible')
         plot: Plot = Plot.load(__d_plot)
         data: PackedRecord = __d_data
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
+        name: Optional[str] = __d_name
+        visible: Optional[bool] = __d_visible
         return Visualization(
             plot,
             data,
             width,
             height,
+            name,
+            visible,
         )
 
 
@@ -3458,6 +3717,7 @@ class VegaVisualization:
             width: Optional[str] = None,
             height: Optional[str] = None,
             name: Optional[str] = None,
+            visible: Optional[bool] = None,
     ):
         self.specification = specification
         """The Vega-lite specification."""
@@ -3469,6 +3729,8 @@ class VegaVisualization:
         """The height of the visualization. Defaults to 300px."""
         self.name = name
         """An identifying name for this component."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3480,6 +3742,7 @@ class VegaVisualization:
             width=self.width,
             height=self.height,
             name=self.name,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -3492,17 +3755,20 @@ class VegaVisualization:
         __d_width: Any = __d.get('width')
         __d_height: Any = __d.get('height')
         __d_name: Any = __d.get('name')
+        __d_visible: Any = __d.get('visible')
         specification: str = __d_specification
         data: Optional[PackedRecord] = __d_data
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
         name: Optional[str] = __d_name
+        visible: Optional[bool] = __d_visible
         return VegaVisualization(
             specification,
             data,
             width,
             height,
             name,
+            visible,
         )
 
 
@@ -5608,7 +5874,7 @@ class TallSeriesStatCard:
 
 
 class TemplateCard:
-    """Render dynamic content using a HTML template.
+    """Render dynamic content using an HTML template.
     """
     def __init__(
             self,
@@ -5625,7 +5891,7 @@ class TemplateCard:
         self.content = content
         """The Handlebars template. https://handlebarsjs.com/guide/"""
         self.data = data
-        """Data for the Handlebars template"""
+        """Data for the Handlebars template."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

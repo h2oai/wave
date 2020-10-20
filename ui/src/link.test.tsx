@@ -21,6 +21,12 @@ describe('Link.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display link when visible is false', () => {
+    const { queryByTestId } = render(<XLink model={{ ...linkProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets default label when not specified', () => {
     const { queryByText } = render(<XLink model={linkProps} />)
     expect(queryByText(name)).toBeInTheDocument()

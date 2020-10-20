@@ -4,7 +4,7 @@ import { bond, box, S, qd, B, U, F } from './qd'
 import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import { stylesheet } from 'typestyle'
-import { palette, padding } from './theme'
+import { palette, padding, displayMixin } from './theme'
 
 const
   css = stylesheet({
@@ -88,15 +88,15 @@ export interface RangeSlider {
   disabled?: B
   /** True if the form should be submitted when the slider value changes. */
   trigger?: B
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
 export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
   const
-    min = m.min || 0,
-    max = m.max || 100,
-    step = m.step || 1,
+    { min = 0, max = 100, step = 1 } = m,
     value = {
       min: (m.min_value && m.min_value > min && m.min_value <= max) ? m.min_value : min,
       max: (m.max_value && m.max_value > min && m.max_value <= max) ? m.max_value : max
@@ -112,7 +112,7 @@ export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
       if (m.trigger) qd.sync()
     },
     render = () => (
-      <div data-test={m.name} className={css.wrapper}>
+      <div data-test={m.name} className={css.wrapper} style={displayMixin(m.visible)}>
         {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
         <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
           <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={valueB()} onChange={onChange} />

@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, S, qd } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a toggle.
@@ -23,6 +24,8 @@ export interface Toggle {
   disabled?: B
   /** True if the form should be submitted when the toggle value changes. */
   trigger?: B
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -38,6 +41,7 @@ export const
       render = () => (
         <Fluent.Toggle
           data-test={m.name}
+          style={displayMixin(m.visible)}
           label={m.label}
           defaultChecked={m.value}
           onChange={onChange}

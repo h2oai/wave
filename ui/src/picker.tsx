@@ -2,6 +2,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { bond, S, U, B, qd, box } from './qd'
 import { Choice } from './choice_group'
+import { displayMixin } from './theme'
 
 /**
  * Create a picker.
@@ -10,19 +11,21 @@ import { Choice } from './choice_group'
 */
 export interface Picker {
   /** An identifying name for this component. */
-  name: S;
+  name: S
   /** The choices to be presented. */
-  choices: Choice[];
+  choices: Choice[]
   /** Text to be displayed above the component. */
-  label?: S;
+  label?: S
   /** The names of the selected choices. */
-  values?: S[];
+  values?: S[]
   /** Maximum number of selectable choices. Defaults to no limit. */
-  max_choices?: U;
+  max_choices?: U
   /** Controls whether the picker should be disabled or not. */
-  disabled?: B;
+  disabled?: B
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
-  tooltip?: S;
+  tooltip?: S
 }
 
 const pickerSuggestionsProps: Fluent.IBasePickerSuggestionsProps = {
@@ -50,7 +53,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
     },
     init = () => qd.args[m.name] = m.values || null,
     render = () => (
-      <div>
+      <div style={displayMixin(m.visible)}>
         {m.label && <Fluent.Text>{m.label}</Fluent.Text>}
         <Fluent.TagPicker
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version

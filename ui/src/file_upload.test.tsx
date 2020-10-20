@@ -36,6 +36,12 @@ describe('FileUpload.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display file upload when visible is false', () => {
+    const { queryByTestId } = render(<XFileUpload model={{ ...fileUploadProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Shows dragging screen on dragging', () => {
     const { getByTestId, queryByText } = render(<XFileUpload model={fileUploadProps} />)
     fireEvent.dragEnter(getByTestId(name))

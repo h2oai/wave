@@ -17,6 +17,12 @@ describe('Spinbox.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display spinbox when visible is false', () => {
+    const { queryByTestId } = render(<XSpinbox model={{ ...spinboxProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
   it('Sets args - init', () => {
     render(<XSpinbox model={spinboxProps} />)
     expect(T.qd.args[name]).toBe(0)

@@ -2,9 +2,9 @@ import Handlebars from 'handlebars'
 import React from 'react'
 import { cards, substitute } from './layout'
 import { MarkupCard, XMarkup } from './markup'
-import { bond, Card, Rec, S, unpack } from './qd'
+import { bond, Card, Rec, S, unpack, B } from './qd'
 
-/** Render dynamic content using a HTML template.*/
+/** Render dynamic content using an HTML template.*/
 export interface Template {
   /** The Handlebars template. https://handlebarsjs.com/guide/ */
   content: S
@@ -12,15 +12,17 @@ export interface Template {
   data?: Rec
   /** An identifying name for this component. */
   name?: S
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
 }
 
-/** Render dynamic content using a HTML template.*/
+/** Render dynamic content using an HTML template.*/
 interface State {
   /** The title for this card.*/
   title: S
   /** The Handlebars template. https://handlebarsjs.com/guide/ */
   content: S
-  /** Data for the Handlebars template */
+  /** Data for the Handlebars template. */
   data?: Rec
 }
 
@@ -30,7 +32,7 @@ export const
       template = Handlebars.compile(m.content || ''),
       render = () => {
         const data = unpack(m.data)
-        return <div data-test={m.name}><XMarkup model={{ content: template(data || {}) }} /></div>
+        return <div data-test={m.name}><XMarkup model={{ content: template(data || {}), visible: m.visible }} /></div>
       }
     return { render }
   }),

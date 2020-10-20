@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, S } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a hyperlink.
@@ -20,6 +21,8 @@ export interface Link {
   download?: B
   /** True if the link should be rendered as a button. */
   button?: B
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
   /** An identifying name for this component. */
@@ -30,12 +33,16 @@ export const
   XLink = bond(({ model: m }: { model: Link }) => {
     const
       label = m.label || m.path,
-      onClick = () => { window.open(m.path) },
-      render = () => {
-        // TODO target="_blank"
-        return m.button
-          ? <div><Fluent.DefaultButton data-test={m.name} text={label} disabled={m.disabled} onClick={onClick} /></div>
-          : <div><Fluent.Link data-test={m.name} href={m.path} download={m.download || undefined} disabled={m.disabled}>{label}</Fluent.Link></div>
-      }
+      onClick = () => window.open(m.path),
+      // TODO target="_blank"
+      render = () => (
+        <div style={displayMixin(m.visible)}>
+          {
+            m.button
+              ? <Fluent.DefaultButton data-test={m.name} text={label} disabled={m.disabled} onClick={onClick} />
+              : <Fluent.Link data-test={m.name} href={m.path} download={m.download} disabled={m.disabled}>{label}</Fluent.Link>
+          }
+        </div>
+      )
     return { render }
   })

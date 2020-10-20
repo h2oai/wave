@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { bond, S, qd } from './qd'
+import { bond, S, qd, B } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a color picker.
@@ -17,6 +18,8 @@ export interface ColorPicker {
   value?: S
   /** A list of colors (CSS-compatible strings) to limit color choices to. */
   choices?: S[]
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -29,10 +32,10 @@ export const
     const value = m.value || null
     qd.args[m.name] = value
     const
-      onColorChanged = (_id?: string, color?: string) => qd.args[m.name] = color ? color : value,
-      onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => qd.args[m.name] = color ? color.str : value,
+      onColorChanged = (_id?: string, color?: string) => qd.args[m.name] = color || value,
+      onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => qd.args[m.name] = color?.str || value,
       render = () => (
-        <div data-test={m.name}>
+        <div data-test={m.name} style={displayMixin(m.visible)}>
           <Fluent.Label>{m.label}</Fluent.Label>
           {
             m.choices && m.choices.length

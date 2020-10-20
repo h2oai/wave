@@ -20,4 +20,9 @@ describe('MessageBar.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Does not display message bar when visible is false', () => {
+    const { queryByTestId } = render(<XMessageBar model={{ ...messagebarProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
 })

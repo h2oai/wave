@@ -1,6 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { bond, S, qd } from './qd'
+import { bond, S, qd, B } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a tab.
@@ -24,6 +25,8 @@ export interface Tabs {
   value?: S
   /** The tabs in this tab bar. */
   items?: Tab[]
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
 }
 
 export const
@@ -37,12 +40,8 @@ export const
         }
       },
       render = () => {
-        const
-          selectedKey = (m.value !== undefined && m.value !== null) ? m.value : null,
-          tabs = (m.items || []).map(t => (
-            <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />
-          ))
-        return (<Fluent.Pivot data-test={m.name} selectedKey={selectedKey} onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>)
+        const tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />)
+        return <Fluent.Pivot data-test={m.name} style={displayMixin(m.visible)} selectedKey={m.value ?? null} onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
       }
     return { render }
   })
