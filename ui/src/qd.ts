@@ -759,6 +759,7 @@ export const qd: Qd = {
     return { get, set, del, drop, sync }
   },
   sync: () => {
+    blockRoot()
     const sock = qd.socket
     if (!sock) return
     const args = cloneRec(qd.args)
@@ -784,6 +785,16 @@ type SockHandler = (e: SockEvent) => void
 
 let backoff = 1, currentPage: Page | null = null
 const
+  blockRoot = (block: B = true) => {
+    // eslint-disable-next-line no-console
+    console.log(block ? 'blocking root' : 'unblocking root')
+    const el = document.getElementById('root')
+    if (el) {
+      el.style.pointerEvents = block ? 'none' : 'auto'
+      el.style.userSelect = block ? 'none' : 'auto'
+    }
+  },
+  unblockRoot = () => blockRoot(false),
   toSocketAddress = (path: S): S => {
     const
       l = window.location,
@@ -815,6 +826,7 @@ const
     sock.onmessage = function (e) {
       if (!e.data) return
       if (!e.data.length) return
+      unblockRoot()
       for (const line of e.data.split('\n')) {
         try {
           const msg = JSON.parse(line) as OpsD
@@ -837,6 +849,7 @@ const
       }
     }
     sock.onerror = function (e: Event) {
+      unblockRoot()
       console.error('A websocket error was encountered.', e) // XXX
     }
   }
