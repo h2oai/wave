@@ -29,7 +29,7 @@ dump_object <- function(x) {
 }
 
 
-#' Create a breadcrumb for a `h2o_q.types.BreadcrumbsCard()`.
+#' Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
 #'
 #' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
 #' @param label The label to display.
@@ -90,7 +90,7 @@ ui_command <- function(
 #' or navigation of an experience, above the primary content area.
 #'
 #' @param box A string indicating how to place this component on the page.
-#' @param items A list of `h2o_q.types.Breadcrumb` instances to display. See `h2o_q.ui.breadcrumb()`
+#' @param items A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
 #' @param commands Contextual menu commands for this component.
 #' @return A BreadcrumbsCard instance.
 ui_breadcrumbs_card <- function(
