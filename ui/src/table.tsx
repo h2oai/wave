@@ -183,6 +183,7 @@ export const
         return item
       }),
       isMultiple = m.values?.length || m.multiple,
+      { visible = true } = m,
       filteredItemsB = box(items),
       searchableKeys = m.columns.filter(({ searchable }) => searchable).map(({ name }) => name),
       searchStrB = box(''),
@@ -485,7 +486,7 @@ export const
         </>
       ),
       render = () => (
-        <div data-test={m.name} style={{ position: 'relative', height: computeHeight(), ...displayMixin(m.visible) }}>
+        <div data-test={m.name} style={{ position: 'relative', ...displayMixin(visible), height: visible ? computeHeight() : 0, }}>
           <Fluent.Stack horizontal horizontalAlign='space-between' >
             {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
             {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%' } }} />}

@@ -202,7 +202,7 @@ export enum XComponentAlignment { Top, Left, Right }
 export const
   XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
     const
-      components = items.map(m => <XComponent key={xid()} model={m} />),
+      components = items.map((m, i) => <XComponent key={i} model={m} />),
       className = alignment === XComponentAlignment.Left
         ? clas(css.horizontal, css.horizontalLeft, inset ? css.inset : '')
         : alignment === XComponentAlignment.Right

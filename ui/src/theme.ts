@@ -69,10 +69,7 @@ export const
   rgba = (r: U, g: U, b: U, a: F) => `rgba(${r},${g},${b},${a.toFixed(1)})`,
   gray = (b: U) => { const h = b.toString(16); return `#${h}${h}${h}` },
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
-  displayMixin = (visible = true): React.CSSProperties => {
-    if (visible) return {}
-    return { display: 'none' }
-  }
+  displayMixin = (visible = true): React.CSSProperties => ({ overflow: visible ? 'inherit' : 'hidden', height: visible ? 'inherit' : 0, visibility: visible ? 'visible' : 'hidden' })
 
 const
   black: RGB = { r: 0, g: 0, b: 0 },

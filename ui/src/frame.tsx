@@ -77,7 +77,7 @@ const
 
 // HACK: Applying width/height styles directly on iframe don't work in Chrome/FF; so wrap in div instead.
 export const XFrame = ({ model: { name, path, content, width = '100%', height = '150px', visible } }: { model: Frame }) => (
-  <div data-test={name} style={{ width, height, ...displayMixin(visible) }}>
+  <div data-test={name} style={{ width, ...displayMixin(visible), height: visible ? height : 0 }}>
     <InlineFrame path={path} content={content} />
   </div>
 )
