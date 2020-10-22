@@ -715,6 +715,7 @@ export interface Qd {
   readonly path: S
   readonly args: Rec
   readonly refreshRateB: Box<U>
+  readonly waitingForResponseB: Box<B>
   socket: WebSocket | null
   page(): PageRef
   sync(): void
@@ -735,6 +736,7 @@ export const qd: Qd = {
   path: window.location.pathname,
   args: {},
   refreshRateB: box(-1),
+  waitingForResponseB: box(false),
   socket: null,
   page: (path?: S): PageRef => {
     path = path || qd.path
@@ -759,12 +761,12 @@ export const qd: Qd = {
     return { get, set, del, drop, sync }
   },
   sync: () => {
-    blockRoot()
     const sock = qd.socket
     if (!sock) return
     const args = cloneRec(qd.args)
     clearRec(qd.args)
     sock.send(`@ ${qd.path} ${JSON.stringify(args)}`)
+    qd.waitingForResponseB(true)
   },
 }
 
@@ -785,16 +787,6 @@ type SockHandler = (e: SockEvent) => void
 
 let backoff = 1, currentPage: Page | null = null
 const
-  blockRoot = (block: B = true) => {
-    // eslint-disable-next-line no-console
-    console.log(block ? 'blocking root' : 'unblocking root')
-    const el = document.getElementById('root')
-    if (el) {
-      el.style.pointerEvents = block ? 'none' : 'auto'
-      el.style.userSelect = block ? 'none' : 'auto'
-    }
-  },
-  unblockRoot = () => blockRoot(false),
   toSocketAddress = (path: S): S => {
     const
       l = window.location,
@@ -826,7 +818,7 @@ const
     sock.onmessage = function (e) {
       if (!e.data) return
       if (!e.data.length) return
-      unblockRoot()
+      qd.waitingForResponseB(false)
       for (const line of e.data.split('\n')) {
         try {
           const msg = JSON.parse(line) as OpsD
@@ -849,7 +841,7 @@ const
       }
     }
     sock.onerror = function (e: Event) {
-      unblockRoot()
+      qd.waitingForResponseB(false)
       console.error('A websocket error was encountered.', e) // XXX
     }
   }

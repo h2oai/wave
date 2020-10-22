@@ -1,7 +1,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { GridLayout } from './layout'
-import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, qd } from './qd'
+import { bond, Box, box, connect, Page, S, B, SockEvent, SockEventType, SockMessageType, qd, on, Act } from './qd'
 import { getTheme, pc, clas } from './theme'
 import { Spinner, SpinnerSize } from '@fluentui/react'
 
@@ -24,14 +24,37 @@ const
       alignItems: 'center',
       backgroundColor: theme.colors.page,
       color: theme.colors.text,
-    }
+    },
+    overlay: {
+      position: 'fixed',
+      left: 0, top: 0, right: 0, bottom: 0,
+      opacity: 0.8,
+    },
   })
 
 
 const
+  boolDebounce = (b: Box<B>, cb: Act, delay: number) => {
+    let t = -1
+    on(b, (value) => {
+      if (value) {
+        t = window.setTimeout(() => {
+          t = -1
+          cb()
+        }, delay)
+      } else {
+        if (t != -1) {
+          clearTimeout(t)
+          t = -1
+        }
+      }
+    })
+  },
   App = bond(() => {
     const
       contentB = box<{ page?: Page, error?: S }>({}),
+      blockUIB = qd.waitingForResponseB,
+      showSpinnerB = box(false),
       onSocket = (e: SockEvent) => {
         switch (e.t) {
           case SockEventType.Data:
@@ -54,7 +77,10 @@ const
         window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {
-        const { page, error } = contentB()
+        const
+          { page, error } = contentB(),
+          displayOverlay = blockUIB() ? 'block' : 'none',
+          displaySpinner = showSpinnerB() ? 'flex' : 'none'
         // TODO prettier error section
         if (error) {
           const errorMessage = error === 'not_found'
@@ -67,6 +93,9 @@ const
         return (
           <div className={css.app}>
             <GridLayout key={page.key} page={page} />
+            <div className={css.overlay} style={{ display: displayOverlay }}>
+              <Spinner className={css.centerFullHeight} label='Waiting for server response...' size={SpinnerSize.large} style={{ display: displaySpinner }} />
+            </div>
           </div>
         )
       },
@@ -74,7 +103,13 @@ const
         window.removeEventListener('hashchange', onHashChanged)
       }
 
-    return { init, render, dispose, contentB }
+    boolDebounce(blockUIB, () => showSpinnerB(true), 2000)
+    on(blockUIB, (blocked) => {
+      if (!blocked) {
+        showSpinnerB(false)
+      }
+    })
+    return { init, render, dispose, contentB, blockUIB, showSpinnerB }
   })
 
 export default App
