@@ -37,6 +37,7 @@ Keywords = ["awesome"]
 Module = "app.run"
 VolumeMount = "/data"
 VolumeSize = "1Gi"
+ResourceVolumeSize = "2Gi"
 MemoryLimit = "500Mi"
 MemoryReservation = "400Mi"
 
@@ -47,8 +48,19 @@ SecretKey = "SecretKeyName"
 
 [[Env]]
 Name = "ANOTHER_ENVIRONMENT_VARIABLE_NAME"
-Secret = "SecretName"
-SecretKey = "AnotherSecretKeyName"
+Value = "some value"
+
+[[File]]
+Path = "some/path.file"
+Secret = "FileSecretName"
+SecretKey = "FileSecretKeyName"
+
+[[File]]
+Path = "/another/path.file"
+Value = '''
+some
+string
+'''
 ```
 
 **Required attributes**:
@@ -73,15 +85,32 @@ SecretKey = "AnotherSecretKeyName"
   * `VolumeMount` and `VolumeSize` - request for a volume to persist app instance data across
        restarts, `VolumeMount` has to be an absolute path, `VolumeSize` needs to conform to the
        [k8s resource model](https://github.com/fabric8io/kansible/blob/master/vendor/k8s.io/kubernetes/docs/design/resources.md#resource-quantities).
+  * `ResourceVolumeSize` - request for a volume to persist internal app resources (such as Python venv)
+         across restarts, only recommended for production-quality apps with sizeable resources due
+         to cluster node limits, needs to conform to the
+         [k8s resource model](https://github.com/fabric8io/kansible/blob/master/vendor/k8s.io/kubernetes/docs/design/resources.md#resource-quantities).
   * `MemoryLimit` and `MemoryReservation` - memory requirements for an instance of the app
       (default to service-wide settings managed by Admins); be conservative with these limits;
       `MemoryLimit` is a hard limit on the maximum amount of memory an instance can use before it is OOM-killed;
       `MemoryReservation` is how much memory is required to schedule an instance of the app.
-* `Env` - request for a configuration/secret to be injected into an instance at startup-time as an Env variable;
+* `Env` - request for a literal value/secret to be injected into an instance at startup-time as an Env variable;
   repeated; see [Utilizing Secrets](#utilizing-secrets).
-  * `Name` - name of the Env variable to the injected into the Python process
-  * `Secret` - name of the shared secret to use; each secret can contain multiple key-value pairs
-  * `SecretKey` - name of the key within the secret to use
+  * `Name` - name of the Env variable to the injected into the Python process;
+    names prefixed with `Q8S` are disallowed.
+  * `Secret` - name of the shared secret to use; each secret can contain multiple key-value pairs;
+    cannot be used together with `Value`.
+  * `SecretKey` - name of the key within the secret to use; cannot be used together with `Value`.
+  * `Value` - the literal value of the Env variable; cannot be used together with `Secret`/`SecretKey`.
+* `File` - request for a literal value/secret to be injected into an instance at startup-time as a file;
+  repeated; see [Utilizing Secrets](#utilizing-secrets).
+  * `Path` - path to inject the file to; relative path mean relative to the directory with the app code
+    as determined by the platform; path dir cannot be `/` or `.` (only subdirs are allowed);
+    path dir has to be unique across all other `File` configurations; path dir `/resources` is
+    disallowed.
+  * `Secret` - name of the shared secret to use; each secret can contain multiple key-value pairs;
+    cannot be used together with `Value`.
+  * `SecretKey` - name of the key within the secret to use; cannot be used together with `Value`.
+  * `Value` - the literal value of the file; cannot be used together with `Secret`/`SecretKey`.
 
 ## Runtime Environment
 
@@ -266,13 +295,11 @@ starting new instances of the old version.
 
 ### Utilizing Secrets
 
-Developers can pass secrets registered with the platform to apps, exposed as environment variables,
-using the `[[Env]]` section within the `q-app.toml`.
+Developers can pass secrets registered with the platform to apps, exposed as environment variables
+using the `[[Env]]` section within the `q-app.toml` or as files using the ``[[File]]`` section.
 
 This allows developers to link their apps with external dependencies (e.g., S3, Driverless AI)
 securely, while allowing easy overrides for local development or deployments outside the platform.
-
-Environment variables prefixed with `Q8S` are disallowed.
 
 :::note
 There is currently not a self-service option for developers to add their own secrets,
