@@ -103,7 +103,7 @@ string
   * `Value` - the literal value of the Env variable; cannot be used together with `Secret`/`SecretKey`.
 * `File` - request for a literal value/secret to be injected into an instance at startup-time as a file;
   repeated; see [Utilizing Secrets](#utilizing-secrets).
-  * `Path` - path to inject the file to; relative path mean relative to the directory with the app code
+  * `Path` - path to inject the file to; relative path means relative to the directory with the app code
     as determined by the platform; path dir cannot be `/` or `.` (only subdirs are allowed);
     path dir has to be unique across all other `File` configurations; path dir `/resources` is
     disallowed.
