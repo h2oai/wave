@@ -379,6 +379,10 @@ const
           }
         }
 
+        // Every form component element has to have a unique id to make React list rerendering work correctly.
+        if (type.name === 'Component') {
+          p('id_ = 0')
+        }
         p('')
         p(`class ${type.name}:`)
         p(`    """` + genComments(type.comments, '    '))
@@ -389,6 +393,12 @@ const
           p(`            ${getSigWithDefault(m)},`)
         }
         p(`    ):`)
+        // Every form component element has to have a unique id to make React list rerendering work correctly.
+        if (type.name === 'Component') {
+          p(`        global id_`)
+          p(`        id_ += 1`)
+          p(`        self.id = id_`)
+        }
         for (const m of type.members) {
           p(`        self.${m.name} = ${m.name}`)
           p(`        """${m.comments.join(' ')}"""`)
@@ -407,6 +417,10 @@ const
           }
         }
         p(`        return _dump(`)
+        // Every form component element has to have a unique id to make React list rerendering work correctly.
+        if (type.name === 'Component') {
+          p(`            id=self.id,`)
+        }
         if (type.isRoot) {
           p(`            view='${type.file}',`)
         }

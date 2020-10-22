@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Component, XComponents } from './form'
+import { Component, XComponents, ComponentWithId } from './form'
 import { B, bond, box, S, qd } from './qd'
 import { displayMixin } from './theme'
 
@@ -83,7 +83,9 @@ export const
                 onClick={onClick}
                 styles={{ root: { paddingLeft: 0 }, icon: { marginLeft: 0 } }}>{m.label}</Fluent.ActionButton>
             </Fluent.Separator>
-            <XComponents items={m.items || []} />
+            <div>
+              <XComponents items={m.items as ComponentWithId[] || []} />
+            </div>
           </div>
         )
       }

@@ -34,7 +34,7 @@ import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
-import { B, bond, Card, Packed, S, unpack, xid } from './qd'
+import { B, bond, Card, Packed, S, unpack, U } from './qd'
 import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'
@@ -200,9 +200,9 @@ const
 export enum XComponentAlignment { Top, Left, Right }
 
 export const
-  XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
+  XComponents = ({ items, alignment, inset }: { items: ComponentWithId[], alignment?: XComponentAlignment, inset?: B }) => {
     const
-      components = items.map((m, i) => <XComponent key={i} model={m} />),
+      components = items.map(m => <XComponent key={m.id} model={m} />),
       className = alignment === XComponentAlignment.Left
         ? clas(css.horizontal, css.horizontalLeft, inset ? css.inset : '')
         : alignment === XComponentAlignment.Right
@@ -218,6 +218,7 @@ export const
     />
   )
 
+export type ComponentWithId = Component & { id: U }
 
 const
   XComponent = ({ model: m }: { model: Component }) => {
@@ -268,8 +269,12 @@ export const
       render = () => {
         const
           s = theme.merge(defaults, state),
+<<<<<<< HEAD
           title = s.title,
           items = unpack<Component[]>(s.items) // XXX ugly
+=======
+          items = unpack<ComponentWithId[]>(s.items) // XXX ugly
+>>>>>>> feat: add unique id to each form component to allow react rerender form list properly
 
         return (
           <div data-test={name} className={css.card}>
