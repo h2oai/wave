@@ -4,7 +4,7 @@ slug: /enterprise/basic-concepts
 ---
 
 
-H2O AI Cloud, a.k.a. q8s, recognizes three actors:
+H2O AI Cloud platform recognizes three actors:
 
 * **App Developer**: creates and publishes apps
 * **App User**: browses and runs apps
@@ -57,7 +57,7 @@ Instances can be stateless or stateful (depending on the app configuration)
 and can use external dependencies (e.g., AWS S3, Driverless AI).
 
 Under the hood, each instance consists of several k8s resources, specifically, each instance is running in its
-own k8s `pod`, under its own k8s `service`, accessible via a H2O AI Cloud subdomain (e.g., `https://1234.q8s.h2o.ai`).
+own k8s `pod`, under its own k8s `service`, accessible via a H2O AI Cloud subdomain (e.g., `https://1234.wave.h2o.ai`).
 It can optionally include other resources, such as PVCs, Configmaps, etc.
 
 ## Authorization
@@ -72,6 +72,8 @@ Access to apps is governed by the following rules:
     these are typically created via `q8s-cli bundle import`
 * App owner can manage (view, update, delete) her apps via `q8s-cli app ...` or via the "My Apps" page.
 
+See [Developer Guide](develiper-guide#cli) for details on managing apps.
+
 ### Instance Access Authorization
 
 Access to app instances is governed by the following rules:
@@ -82,6 +84,8 @@ Access to app instances is governed by the following rules:
 * Instance owner can manage (view, update, terminate) her instances via `q8s-cli instance` or via the "My instances" page.
 
 Note that app/instance visibility can be modified by the owner, e.g., using `q8s-cli (app|instance) update <id> -v <visibility>`
- or via the "My Apps"/"My Instances" page.
+or via the "My Apps"/"My Instances" page.
 
 Admin access is exempt from all the authorization rules (i.e., admins have full access to all apps/instances).
+
+See [Developer Guide](develiper-guide#cli) for details on manaigng app instance.

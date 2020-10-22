@@ -6,10 +6,10 @@ slug: /enterprise/developer-guide
 
 ## App Bundle Structure
 
-Each q8s-compatible app has to be bundled as a zip archive (commonly used with suffix `.qz`)
+Each app has to be bundled as a zip archive (commonly used with suffix `.qz`)
 consisting of:
 
-* `wave-app.toml` - to q8s configuration file
+* `q-app.toml` - the platform configuration file
 * `static/` - static asset directory, including the app icon (a png file starting with `icon`)
   and screenshots (files starting with `screenshot`)
 * `requirements.txt` - pip-managed dependencies of the app (can contain references to `.whl` files
@@ -21,12 +21,12 @@ You can quickly create a `.qz` archive by running `q8s-cli bundle` in your app g
 
 ### q-app.toml
 
-Each q8s-compatible app has to contain a `q-app.toml` configuration file in the [TOML](https://toml.io/en/) format,
+Each app archive has to contain a `q-app.toml` configuration file in the [TOML](https://toml.io/en/) format,
 placed in the root of the `.qz` archive, example:
 
 ```toml
 [App]
-Name = "ai.h2o.q.my-app"
+Name = "ai.h2o.wave.my-app"
 Version = "0.0.1"
 Title = "My awesome app"
 Description = "This is my awesome app"
@@ -34,7 +34,7 @@ Category = "Other"
 Keywords = ["awesome"]
 
 [Runtime]
-Module = "q_app.run"
+Module = "app.run"
 VolumeMount = "/data"
 VolumeSize = "1Gi"
 MemoryLimit = "500Mi"
@@ -93,7 +93,7 @@ references to `.whl` files included in the `.qz` using paths relative to the arc
 Developers can further customize the runtime environment by [Utilizing Secrets](#utilizing-secrets).
 
 :::note
-At this moment, q8s does not provide any provisions for developers to customize the OS,
+At this moment, the platform does not provide any provisions for developers to customize the OS,
 native OS dependencies, Qd version, etc.
 
 We are actively working on improving this.
@@ -101,12 +101,12 @@ We are actively working on improving this.
 
 ## CLI
 
-As a developer, you will need the `q8s-cli` binary to interact with the q8s service.
+As a developer, you will need the `q8s-cli` binary to interact with the platform.
 
 ### Configuring the CLI
 
 First you need to configure the CLI by running `q8s-cli config setup` so that it knows how to talk
-to a particular q8s deployment.
+to a particular platform deployment.
 
 Be aware, currently the CLI launches a browser to complete the user authentication, and due to this
 we currently unable to support remote use of the CLI over SSH without provisions for X forwarding.
@@ -137,12 +137,12 @@ URL https://22222222-3333-4444-5555-666666666666.q8s.h2o.ai
 ### Publishing an app for others to see and launch
 
 Just run `q8s-cli bundle import` in your app git repository. This will automatically package your
-current directory into a `.qz` package and import it to q8s.
+current directory into a `.qz` package and import it into the platform.
 
 If you set the visibility to `ALL_USERS` (via the `-v` flag), others will be able use `q8s-cli app run`
 or the UI to launch the app in q8s.
 
-Note: the name-version combination from your `q-app.toml` has to be unique and q8s will reject
+Note: the name-version combination from your `q-app.toml` has to be unique and the platform will reject
 the request if such combination already exists. Therefore, you need to update the version in `q-app.toml`
 before each run.
 
@@ -161,15 +161,15 @@ Icon Location   ai.h2o.q.peak.0.1.2/icon.jpg
 Description     Forecast of COVID-19 spread
 ```
 
-### Running an app under development in q8s
+### Running an app under development
 
 Just run `q8s-cli bundle deploy` in your app git repository. This will automatically package your
-current directory into a `.qz` package, import it to q8s, and run it.
+current directory into a `.qz` package, import it into the platform, and run it.
 
 In the output you will be able to find a URL where you can reach the instance, or visit
 the "My Instances" in the UI.
 
-Note: q8s will auto-generate the version so that you can keep executing this without worrying about
+Note: the CLI will auto-generate the version so that you can keep executing this without worrying about
 version conflicts, just don't forget to clean up old instances/versions.
 
 ```sh
@@ -189,29 +189,29 @@ ID  22222222-3333-4444-5555-666666666666
 URL https://22222222-3333-4444-5555-666666666666.q8s.h2o.ai
 ```
 
-### Getting the logs of a running q8s instance
+### Getting the logs of a running app instance
 
 Just run `q8s-cli instance logs`, use the flag `-f` (`--follow`) to tail the log.
 
 ```sh
 $ q8s-cli instance logs c22222222-3333-4444-5555-666666666666
 ...
-2020/10/15 12:04:40 # 
+2020/10/15 12:04:40 #
 2020/10/15 12:04:40 # ┌───────────────────┐
 2020/10/15 12:04:40 # │   ┬ ┬┌─┐┬  ┬┌─┐   │
 2020/10/15 12:04:40 # │   │││├─┤└┐┌┘├┤    │
 2020/10/15 12:04:40 # │   └┴┘┴ ┴ └┘ └─┘   │
 2020/10/15 12:04:40 # └───────────────────┘
-2020/10/15 12:04:40 # 
+2020/10/15 12:04:40 #
 2020/10/15 12:04:40 # {"address":":55555","t":"listen","webroot":"/wave/www"}
 2020/10/15 12:04:40 # {"host":"ws://127.0.0.1:55556","route":"/","t":"relay"}
 ...
 ```
 
-### Running the app in q8s-like environment locally
+### Running the app in cloud-like environment locally
 
 Just run `q8s-cli exec`. This will bundle the app in a temporary `.qz` and launch it locally
-using our q8s docker image.
+using our platform docker image.
 
 Note that this requires that you have docker installed and that you have access to the docker image.
 
@@ -266,11 +266,11 @@ starting new instances of the old version.
 
 ### Utilizing Secrets
 
-Developers can pass secrets registered with q8s to apps, exposed as environment variables, using
-the `[[Env]]` section within the `q-app.toml`.
+Developers can pass secrets registered with the platform to apps, exposed as environment variables,
+using the `[[Env]]` section within the `q-app.toml`.
 
 This allows developers to link their apps with external dependencies (e.g., S3, Driverless AI)
-securely, while allowing easy overrides for local development.
+securely, while allowing easy overrides for local development or deployments outside the platform.
 
 Environment variables prefixed with `Q8S` are disallowed.
 
@@ -285,8 +285,8 @@ We are actively working on improving this.
 
 ### App Route
 
-While it is not a strict requirement, since each app in q8s is deployed with its own Qd,
-it is advised that apps use `/` as its main route:
+While it is not a strict requirement, since the platform deploys each app with its own Wave server,
+we advise that apps use `/` as their main route:
 
 ```python
 if __name__ == '__main__':
