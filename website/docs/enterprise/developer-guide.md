@@ -6,23 +6,23 @@ slug: /enterprise/developer-guide
 
 ## App Bundle Structure
 
-Each app has to be bundled as a zip archive (commonly used with suffix `.qz`)
+Each app has to be bundled as a zip archive (commonly used with suffix `.wave`)
 consisting of:
 
-* `q-app.toml` - the platform configuration file
+* `app.toml` - the platform configuration file
 * `static/` - static asset directory, including the app icon (a png file starting with `icon`)
   and screenshots (files starting with `screenshot`)
 * `requirements.txt` - pip-managed dependencies of the app (can contain references to `.whl` files
-  included in the `.qz` using paths relative to the archive root)
+  included in the `.wave` using paths relative to the archive root)
 * app source code
 
-You can quickly create a `.qz` archive by running `q8s-cli bundle` in your app git repository
+You can quickly create a `.wave` archive by running `q8s-cli bundle` in your app git repository
 (see the [CLI](#cli) section)
 
-### q-app.toml
+### app.toml
 
-Each app archive has to contain a `q-app.toml` configuration file in the [TOML](https://toml.io/en/) format,
-placed in the root of the `.qz` archive, example:
+Each app archive has to contain a `app.toml` configuration file in the [TOML](https://toml.io/en/) format,
+placed in the root of the `.wave` archive, example:
 
 ```toml
 [App]
@@ -117,7 +117,7 @@ string
 Q8s configures the app instance runtime environment, i.e., OS, OS dependencies, location of the app code/venv, etc.
 
 Developers can specify the pip-managed dependencies of the app via `requirements.txt` (can contain
-references to `.whl` files included in the `.qz` using paths relative to the archive root)
+references to `.whl` files included in the `.wave` using paths relative to the archive root)
 
 Developers can further customize the runtime environment by [Utilizing Secrets](#utilizing-secrets).
 
@@ -166,13 +166,13 @@ URL https://22222222-3333-4444-5555-666666666666.q8s.h2o.ai
 ### Publishing an app for others to see and launch
 
 Just run `q8s-cli bundle import` in your app git repository. This will automatically package your
-current directory into a `.qz` package and import it into the platform.
+current directory into a `.wave` package and import it into the platform.
 
 If you set the visibility to `ALL_USERS` (via the `-v` flag), others will be able use `q8s-cli app run`
 or the UI to launch the app in q8s.
 
-Note: the name-version combination from your `q-app.toml` has to be unique and the platform will reject
-the request if such combination already exists. Therefore, you need to update the version in `q-app.toml`
+Note: the name-version combination from your `app.toml` has to be unique and the platform will reject
+the request if such combination already exists. Therefore, you need to update the version in `app.toml`
 before each run.
 
 ```sh
@@ -185,7 +185,7 @@ Created At      2020-10-13 06:28:03.050226 +0000 UTC
 Updated At      2020-10-13 06:28:03.050226 +0000 UTC
 Owner           user1@h2o.ai
 Visibility      ALL_USERS
-Bundle Location ai.h2o.q.peak.0.1.2.qz
+Bundle Location ai.h2o.q.peak.0.1.2.wave
 Icon Location   ai.h2o.q.peak.0.1.2/icon.jpg
 Description     Forecast of COVID-19 spread
 ```
@@ -193,7 +193,7 @@ Description     Forecast of COVID-19 spread
 ### Running an app under development
 
 Just run `q8s-cli bundle deploy` in your app git repository. This will automatically package your
-current directory into a `.qz` package, import it into the platform, and run it.
+current directory into a `.wave` package, import it into the platform, and run it.
 
 In the output you will be able to find a URL where you can reach the instance, or visit
 the "My Instances" in the UI.
@@ -211,7 +211,7 @@ Created At      2020-10-13 06:28:03.050226 +0000 UTC
 Updated At      2020-10-13 06:28:03.050226 +0000 UTC
 Owner           user1@h2o.ai
 Visibility      PRIVATE
-Bundle Location ai.h2o.q.peak.0.1.2-20201013062803.qz
+Bundle Location ai.h2o.q.peak.0.1.2-20201013062803.wave
 Icon Location   ai.h2o.q.peak.0.1.2-20201013062803/icon.jpg
 Description     Forecast of COVID-19 spread
 ID  22222222-3333-4444-5555-666666666666
@@ -239,7 +239,7 @@ $ q8s-cli instance logs c22222222-3333-4444-5555-666666666666
 
 ### Running the app in cloud-like environment locally
 
-Just run `q8s-cli exec`. This will bundle the app in a temporary `.qz` and launch it locally
+Just run `q8s-cli exec`. This will bundle the app in a temporary `.wave` and launch it locally
 using our platform docker image.
 
 Note that this requires that you have docker installed and that you have access to the docker image.
@@ -248,9 +248,9 @@ Then navigate to `http://localhost:55555/<your main route>`.
 
 ```sh
 $ q8s-cli exec
-{"level":"info","log_level":"debug","url":"file:///qz/q-peak.0.1.2.qz","app_root":"/app","venv_root":"/resources","server_path":"/wave/wave","py_module":"peak","tmp":"/tmp","startup_server":true,"version":"latest-20200929","time":"2020-10-13T06:42:21Z","message":"configuration"}
+{"level":"info","log_level":"debug","url":"file:///wave_bundle/q-peak.0.1.2.wave","app_root":"/app","venv_root":"/resources","server_path":"/wave/wave","py_module":"peak","tmp":"/tmp","startup_server":true,"version":"latest-20200929","time":"2020-10-13T06:42:21Z","message":"configuration"}
 {"level":"info","port":":55555","time":"2020-10-13T06:42:21Z","message":"starting launcher server"}
-{"level":"info","executable":"/wave/wave","time":"2020-10-13T06:42:21Z","message":"q executable found"}
+{"level":"info","executable":"/wave/wave","time":"2020-10-13T06:42:21Z","message":"wave executable found"}
 ...
 ```
 
@@ -296,7 +296,7 @@ starting new instances of the old version.
 ### Utilizing Secrets
 
 Developers can pass secrets registered with the platform to apps, exposed as environment variables
-using the `[[Env]]` section within the `q-app.toml` or as files using the ``[[File]]`` section.
+using the `[[Env]]` section within the `app.toml` or as files using the ``[[File]]`` section.
 
 This allows developers to link their apps with external dependencies (e.g., S3, Driverless AI)
 securely, while allowing easy overrides for local development or deployments outside the platform.
