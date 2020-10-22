@@ -6,7 +6,7 @@
 # For multi word url parts, use "-" (e.g. localhost:3000/demo#my/really-long-word).
 # ---
 
-from h2o_q import Q, listen, ui
+from h2o_wave import Q, listen, ui
 
 
 async def serve(q: Q):

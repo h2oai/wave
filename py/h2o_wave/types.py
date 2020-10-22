@@ -130,20 +130,23 @@ class BreadcrumbsCard:
     They also afford one-click access to higher levels of that hierarchy.
     Breadcrumbs are typically placed, in horizontal form, under the masthead
     or navigation of an experience, above the primary content area.
+
+    If items is an empty array, the automatic mode is activated. This means
+    breadcrumbs will be generated automatically based on current url.
+
+    Multiple routes should be separated by "/". E.g. /main/sub/susub generates Main -> Sub -> Subsub breadcrumb.
+    Multi word route names should be separated by "-". E.g. /long-word/sub-route generates Long Word -> Sub Route.
     """
     def __init__(
             self,
             box: str,
             items: List[Breadcrumb],
-            auto: Optional[bool] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
         """A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`"""
-        self.auto = auto
-        """Turn off automatic breadcrumbs generator based on current URL.`"""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -157,7 +160,6 @@ class BreadcrumbsCard:
             view='breadcrumbs',
             box=self.box,
             items=[__e.dump() for __e in self.items],
-            auto=self.auto,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -170,16 +172,13 @@ class BreadcrumbsCard:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('BreadcrumbsCard.items is required.')
-        __d_auto: Any = __d.get('auto')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
-        auto: Optional[bool] = __d_auto
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return BreadcrumbsCard(
             box,
             items,
-            auto,
             commands,
         )
 

@@ -1,7 +1,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { cards } from './layout'
-import { B, bond, Card, qd, S, box } from './qd'
+import { bond, box, Card, qd, S } from './qd'
 
 /** Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`. */
 interface Breadcrumb {
@@ -18,12 +18,16 @@ interface Breadcrumb {
  * They also afford one-click access to higher levels of that hierarchy.
  * Breadcrumbs are typically placed, in horizontal form, under the masthead
  * or navigation of an experience, above the primary content area.
+ * 
+ * If items is an empty array, the automatic mode is activated. This means
+ * breadcrumbs will be generated automatically based on current url. 
+ *
+ * Multiple routes should be separated by "/". E.g. /main/sub/susub generates Main -> Sub -> Subsub breadcrumb.
+ * Multi word route names should be separated by "-". E.g. /long-word/sub-route generates Long Word -> Sub Route.
  */
 interface State {
   /** A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()` */
   items: Breadcrumb[]
-  /** Turn off automatic breadcrumbs generator based on current URL.` */
-  auto?: B
 }
 
 export const
@@ -42,6 +46,7 @@ export const
         }
       }),
       itemsB = box<Fluent.IBreadcrumbItem[]>([]),
+      autoMode = !state.items.length,
       onHashChanged = () => {
         const items = window.location.hash.substr(1)
           .split('/')
@@ -56,13 +61,13 @@ export const
         itemsB(items)
       },
       init = () => {
-        if (state.auto) {
+        if (autoMode) {
           window.addEventListener('hashchange', onHashChanged)
           onHashChanged()
         } else itemsB(state.items.map(mapToBreadcrumb))
       },
       render = () => <Fluent.Breadcrumb data-test={name} styles={{ itemLink: { textTransform: 'capitalize' } }} items={itemsB()} />,
-      dispose = () => { if (state.auto) window.removeEventListener('hashchange', onHashChanged) }
+      dispose = () => { if (autoMode) window.removeEventListener('hashchange', onHashChanged) }
 
     return { init, render, changed, itemsB, dispose }
   })

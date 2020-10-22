@@ -57,7 +57,6 @@ def command(
 def breadcrumbs_card(
         box: str,
         items: List[Breadcrumb],
-        auto: Optional[bool] = None,
         commands: Optional[List[Command]] = None,
 ) -> BreadcrumbsCard:
     """Create a card containing breadcrumbs.
@@ -68,10 +67,15 @@ def breadcrumbs_card(
     Breadcrumbs are typically placed, in horizontal form, under the masthead
     or navigation of an experience, above the primary content area.
 
+    If items is an empty array, the automatic mode is activated. This means
+    breadcrumbs will be generated automatically based on current url.
+
+    Multiple routes should be separated by "/". E.g. /main/sub/susub generates Main -> Sub -> Subsub breadcrumb.
+    Multi word route names should be separated by "-". E.g. /long-word/sub-route generates Long Word -> Sub Route.
+
     Args:
         box: A string indicating how to place this component on the page.
         items: A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
-        auto: Turn off automatic breadcrumbs generator based on current URL.`
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.BreadcrumbsCard` instance.
@@ -79,7 +83,6 @@ def breadcrumbs_card(
     return BreadcrumbsCard(
         box,
         items,
-        auto,
         commands,
     )
 

@@ -69,7 +69,7 @@ describe('Breadcrumbs.tsx', () => {
   it('Renders correct label for single-word url - Auto mode', () => {
     breadcrumbsProps = {
       ...breadcrumbsProps,
-      state: { items: [{ name, label }], auto: true },
+      state: { items: [] },
     }
     window.location.hash = 'spam/ham/eggs'
     const { queryByText } = render(<View {...breadcrumbsProps} />)
@@ -93,7 +93,7 @@ describe('Breadcrumbs.tsx', () => {
   it('Renders correct label for multi-word url - Auto mode', () => {
     breadcrumbsProps = {
       ...breadcrumbsProps,
-      state: { items: [{ name, label }], auto: true },
+      state: { items: [] },
     }
     window.location.hash = 'spam-ham/ham-ham/eggs-meggs'
     const { queryByText } = render(<View {...breadcrumbsProps} />)
@@ -107,7 +107,7 @@ describe('Breadcrumbs.tsx', () => {
   it('Sets correct url on click - Auto mode', async () => {
     breadcrumbsProps = {
       ...breadcrumbsProps,
-      state: { items: [{ name, label }], auto: true },
+      state: { items: [] },
     }
     window.location.hash = 'spam-ham/ham-ham/eggs-meggs'
     const { getByText, queryByText } = render(<View {...breadcrumbsProps} />)
