@@ -1,7 +1,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { GridLayout } from './layout'
-import { bond, Box, box, connect, Page, S, B, SockEvent, SockEventType, SockMessageType, qd, on, Act } from './qd'
+import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, qd } from './qd'
 import { getTheme, pc, clas } from './theme'
 import { Spinner, SpinnerSize } from '@fluentui/react'
 
@@ -28,33 +28,23 @@ const
     overlay: {
       position: 'fixed',
       left: 0, top: 0, right: 0, bottom: 0,
+      opacity: 0,
+      zIndex: -1,
+      transition: 'opacity 1s',
+      transitionDelay: '2s',
+    },
+    overlayActive: {
       opacity: 0.8,
+      zIndex: 1,
     },
   })
 
 
 const
-  boolDebounce = (b: Box<B>, cb: Act, delay: number) => {
-    let t = -1
-    on(b, (value) => {
-      if (value) {
-        t = window.setTimeout(() => {
-          t = -1
-          cb()
-        }, delay)
-      } else {
-        if (t != -1) {
-          clearTimeout(t)
-          t = -1
-        }
-      }
-    })
-  },
   App = bond(() => {
     const
       contentB = box<{ page?: Page, error?: S }>({}),
       blockUIB = qd.waitingForResponseB,
-      showSpinnerB = box(false),
       onSocket = (e: SockEvent) => {
         switch (e.t) {
           case SockEventType.Data:
@@ -79,8 +69,7 @@ const
       render = () => {
         const
           { page, error } = contentB(),
-          displayOverlay = blockUIB() ? 'block' : 'none',
-          displaySpinner = showSpinnerB() ? 'flex' : 'none'
+          overlayClass = blockUIB() ? clas(css.overlay, css.overlayActive) : css.overlay
         // TODO prettier error section
         if (error) {
           const errorMessage = error === 'not_found'
@@ -93,8 +82,8 @@ const
         return (
           <div className={css.app}>
             <GridLayout key={page.key} page={page} />
-            <div className={css.overlay} style={{ display: displayOverlay }}>
-              <Spinner className={css.centerFullHeight} label='Waiting for server response...' size={SpinnerSize.large} style={{ display: displaySpinner }} />
+            <div className={overlayClass}>
+              <Spinner className={css.centerFullHeight} label='Waiting for server response...' size={SpinnerSize.large} />
             </div>
           </div>
         )
@@ -103,13 +92,7 @@ const
         window.removeEventListener('hashchange', onHashChanged)
       }
 
-    boolDebounce(blockUIB, () => showSpinnerB(true), 2000)
-    on(blockUIB, (blocked) => {
-      if (!blocked) {
-        showSpinnerB(false)
-      }
-    })
-    return { init, render, dispose, contentB, blockUIB, showSpinnerB }
+    return { init, render, dispose, contentB, blockUIB }
   })
 
 export default App
