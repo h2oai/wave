@@ -96,7 +96,7 @@ string
 * `Env` - request for a literal value/secret to be injected into an instance at startup-time as an Env variable;
   repeated; see [Utilizing Secrets](#utilizing-secrets).
   * `Name` - name of the Env variable to the injected into the Python process;
-    names prefixed with `Q8S` are disallowed.
+    names prefixed with `H2O_CLOUD` are disallowed.
   * `Secret` - name of the shared secret to use; each secret can contain multiple key-value pairs;
     cannot be used together with `Value`.
   * `SecretKey` - name of the key within the secret to use; cannot be used together with `Value`.
