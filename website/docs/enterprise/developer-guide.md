@@ -146,9 +146,9 @@ The `h2o app list -a` command will list all apps available for launch.
 
 ```sh
 $ h2o app list -a
-ID                                    TITLE                        OWNER            CREATED UPDATED CATEGORY      VISIBILITY
-abc543210-0000-0000-0000-1234567890ab Peak 0.1.1                   user1@h2o.ai     18d     18d     Healthcare    ALL_USERS
-bcd543210-1111-1111-1111-0123456789ab Tour 0.0.15-20200922162859   user2@h2o.ai     20d     20d     Other         ALL_USERS
+ID                                    TITLE                        OWNER            CREATED CATEGORY      VISIBILITY    TAGS
+abc543210-0000-0000-0000-1234567890ab Peak 0.1.1                   user1@h2o.ai     18d     Healthcare    ALL_USERS     Beta
+bcd543210-1111-1111-1111-0123456789ab Tour 0.0.15-20200922162859   user2@h2o.ai     20d     Other         ALL_USERS
 ...
 ```
 
@@ -185,9 +185,8 @@ Created At      2020-10-13 06:28:03.050226 +0000 UTC
 Updated At      2020-10-13 06:28:03.050226 +0000 UTC
 Owner           user1@h2o.ai
 Visibility      ALL_USERS
-Bundle Location ai.h2o.wave.peak.0.1.2.wave
-Icon Location   ai.h2o.wave.peak.0.1.2/icon.jpg
 Description     Forecast of COVID-19 spread
+Tags
 ```
 
 ### Running an app under development
@@ -211,9 +210,8 @@ Created At      2020-10-13 06:28:03.050226 +0000 UTC
 Updated At      2020-10-13 06:28:03.050226 +0000 UTC
 Owner           user1@h2o.ai
 Visibility      PRIVATE
-Bundle Location ai.h2o.wave.peak.0.1.2-20201013062803.wave
-Icon Location   ai.h2o.wave.peak.0.1.2-20201013062803/icon.jpg
 Description     Forecast of COVID-19 spread
+Tags
 ID  22222222-3333-4444-5555-666666666666
 URL https://22222222-3333-4444-5555-666666666666.wave.h2o.ai
 ```
@@ -266,6 +264,19 @@ The preferred method to de-list previous versions is to modify the visibility se
 
 The `h2o instance update <instanceId> -v <visbility>` command, much like the `app` version,
 can be used to modify an existing running instance's visibility setting.
+
+### Managing App Tags
+
+Tags are means of visually annotating apps in the platform (similar to
+[GitHub issue labels](https://docs.github.com/en/free-pro-team@latest/github/managing-your-work-on-github/about-labels)).
+
+The `h2o tag [assign, get, list, remove, update]` commands let users see and, when authorized,
+manage available app tags.
+App tag configuration includes of name/title, RGB color, description, and ACLs.
+Tags can only be assigned/removed/updated by user having a role (as determined by the auth provider)
+present in the tag's `Admin Roles` list (empty means any user).
+
+Currently, tags can only be created and deleted by platform admins.
 
 ## How-To
 
