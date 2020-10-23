@@ -30,8 +30,7 @@ const
       left: 0, top: 0, right: 0, bottom: 0,
       opacity: 0,
       zIndex: -1,
-      transition: 'opacity 1s',
-      transitionDelay: '2s',
+      transition: 'opacity 1s 2s',
     },
     overlayActive: {
       opacity: 0.8,
@@ -67,9 +66,7 @@ const
         window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {
-        const
-          { page, error } = contentB(),
-          overlayClass = blockUIB() ? clas(css.overlay, css.overlayActive) : css.overlay
+        const { page, error } = contentB()
         // TODO prettier error section
         if (error) {
           const errorMessage = error === 'not_found'
@@ -82,7 +79,7 @@ const
         return (
           <div className={css.app}>
             <GridLayout key={page.key} page={page} />
-            <div className={overlayClass}>
+            <div className={blockUIB() ? clas(css.overlay, css.overlayActive) : css.overlay}>
               <Spinner className={css.centerFullHeight} label='Waiting for server response...' size={SpinnerSize.large} />
             </div>
           </div>
