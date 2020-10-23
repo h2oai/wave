@@ -67,12 +67,12 @@ It can optionally include other resources, such as PVCs, Configmaps, etc.
 Access to apps is governed by the following rules:
 
 * `PRIVATE` apps are only visible to/runnable by the owner;
-    these are typically created via `q8s-cli bundle deploy`
+    these are typically created via `h2o bundle deploy`
 * `ALL_USERS` apps are visible to/runnable by all signed-in users; they are also visible on the "Catalog" page;
-    these are typically created via `q8s-cli bundle import`
-* App owner can manage (view, update, delete) her apps via `q8s-cli app ...` or via the "My Apps" page.
+    these are typically created via `h2o bundle import`
+* App owner can manage (view, update, delete) her apps via `h2o app ...` or via the "My Apps" page.
 
-See [Developer Guide](develiper-guide#cli) for details on managing apps.
+See [Developer Guide](developer-guide#cli) for details on managing apps.
 
 ### Instance Access Authorization
 
@@ -81,11 +81,11 @@ Access to app instances is governed by the following rules:
 * `PRIVATE` instances are only visible to the owner and the owner of the corresponding app (the app owner has only read access)
 * `ALL_USERS` instances are visible to all signed-in users
 * `PUBLIC` instances are visible to anyone on the Internet
-* Instance owner can manage (view, update, terminate) her instances via `q8s-cli instance` or via the "My instances" page.
+* Instance owner can manage (view, update, terminate) her instances via `h2o instance` or via the "My instances" page.
 
-Note that app/instance visibility can be modified by the owner, e.g., using `q8s-cli (app|instance) update <id> -v <visibility>`
+Note that app/instance visibility can be modified by the owner, e.g., using `h2o (app|instance) update <id> -v <visibility>`
 or via the "My Apps"/"My Instances" page.
 
 Admin access is exempt from all the authorization rules (i.e., admins have full access to all apps/instances).
 
-See [Developer Guide](develiper-guide#cli) for details on manaigng app instance.
+See [Developer Guide](developer-guide#cli) for details on manaigng app instance.

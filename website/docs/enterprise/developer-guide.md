@@ -16,7 +16,7 @@ consisting of:
   included in the `.wave` using paths relative to the archive root)
 * app source code
 
-You can quickly create a `.wave` archive by running `q8s-cli bundle` in your app git repository
+You can quickly create a `.wave` archive by running `h2o bundle` in your app git repository
 (see the [CLI](#cli) section)
 
 ### app.toml
@@ -114,7 +114,7 @@ string
 
 ## Runtime Environment
 
-Q8s configures the app instance runtime environment, i.e., OS, OS dependencies, location of the app code/venv, etc.
+The platform configures the app instance runtime environment, i.e., OS, OS dependencies, location of the app code/venv, etc.
 
 Developers can specify the pip-managed dependencies of the app via `requirements.txt` (can contain
 references to `.whl` files included in the `.wave` using paths relative to the archive root)
@@ -130,11 +130,11 @@ We are actively working on improving this.
 
 ## CLI
 
-As a developer, you will need the `q8s-cli` binary to interact with the platform.
+As a developer, you will need the `h2o` binary to interact with the platform.
 
 ### Configuring the CLI
 
-First you need to configure the CLI by running `q8s-cli config setup` so that it knows how to talk
+First you need to configure the CLI by running `h2o config setup` so that it knows how to talk
 to a particular platform deployment.
 
 Be aware, currently the CLI launches a browser to complete the user authentication, and due to this
@@ -142,57 +142,57 @@ we currently unable to support remote use of the CLI over SSH without provisions
 
 ### Listing existing apps
 
-The `q8s-cli app list -a` command will list all apps available for launch.
+The `h2o app list -a` command will list all apps available for launch.
 
 ```sh
-$ q8s-cli app list -a
-ID                                   TITLE                          OWNER            CREATED UPDATED CATEGORY      VISIBILITY
-abc543210-0000-0000-0000-1234567890ab Q Peak 0.1.1                   user1@h2o.ai     18d     18d     Healthcare    ALL_USERS
-bcd543210-1111-1111-1111-0123456789ab Q Tour 0.0.15-20200922162859   user2@h2o.ai     20d     20d     Other         ALL_USERS
+$ h2o app list -a
+ID                                    TITLE                        OWNER            CREATED UPDATED CATEGORY      VISIBILITY
+abc543210-0000-0000-0000-1234567890ab Peak 0.1.1                   user1@h2o.ai     18d     18d     Healthcare    ALL_USERS
+bcd543210-1111-1111-1111-0123456789ab Tour 0.0.15-20200922162859   user2@h2o.ai     20d     20d     Other         ALL_USERS
 ...
 ```
 
 ### Launching existing apps
 
-To launch an app, the `q8s-cli app run <appId>` command can be used to launch a new instance of that app.
+To launch an app, the `h2o app run <appId>` command can be used to launch a new instance of that app.
 The `-v` flag can be used with `app run` to specify app instance visibility settings.
 
 ```sh
-$ q8s-cli app run bcd543210-1111-1111-1111-0123456789ab
+$ h2o app run bcd543210-1111-1111-1111-0123456789ab
 ID  22222222-3333-4444-5555-666666666666
-URL https://22222222-3333-4444-5555-666666666666.q8s.h2o.ai
+URL https://22222222-3333-4444-5555-666666666666.wave.h2o.ai
 ```
 
 ### Publishing an app for others to see and launch
 
-Just run `q8s-cli bundle import` in your app git repository. This will automatically package your
+Just run `h2o bundle import` in your app git repository. This will automatically package your
 current directory into a `.wave` package and import it into the platform.
 
-If you set the visibility to `ALL_USERS` (via the `-v` flag), others will be able use `q8s-cli app run`
-or the UI to launch the app in q8s.
+If you set the visibility to `ALL_USERS` (via the `-v` flag), others will be able use `h2o app run`
+or the UI to launch the app.
 
 Note: the name-version combination from your `app.toml` has to be unique and the platform will reject
 the request if such combination already exists. Therefore, you need to update the version in `app.toml`
 before each run.
 
 ```sh
-$ q8s-cli bundle import -v ALL_USERS
+$ h2o bundle import -v ALL_USERS
 ID              bcd543210-1111-1111-1111-0123456789ab
-Title           Q Peak
+Title           Peak
 Version         0.1.2
 Category        Healthcare
 Created At      2020-10-13 06:28:03.050226 +0000 UTC
 Updated At      2020-10-13 06:28:03.050226 +0000 UTC
 Owner           user1@h2o.ai
 Visibility      ALL_USERS
-Bundle Location ai.h2o.q.peak.0.1.2.wave
-Icon Location   ai.h2o.q.peak.0.1.2/icon.jpg
+Bundle Location ai.h2o.wave.peak.0.1.2.wave
+Icon Location   ai.h2o.wave.peak.0.1.2/icon.jpg
 Description     Forecast of COVID-19 spread
 ```
 
 ### Running an app under development
 
-Just run `q8s-cli bundle deploy` in your app git repository. This will automatically package your
+Just run `h2o bundle deploy` in your app git repository. This will automatically package your
 current directory into a `.wave` package, import it into the platform, and run it.
 
 In the output you will be able to find a URL where you can reach the instance, or visit
@@ -202,28 +202,28 @@ Note: the CLI will auto-generate the version so that you can keep executing this
 version conflicts, just don't forget to clean up old instances/versions.
 
 ```sh
-$ q8s-cli bundle deploy
+$ h2o bundle deploy
 ID              bcd543210-1111-1111-1111-0123456789ab
-Title           Q Peak
+Title           Peak
 Version         0.1.2-20201013062803
 Category        Healthcare
 Created At      2020-10-13 06:28:03.050226 +0000 UTC
 Updated At      2020-10-13 06:28:03.050226 +0000 UTC
 Owner           user1@h2o.ai
 Visibility      PRIVATE
-Bundle Location ai.h2o.q.peak.0.1.2-20201013062803.wave
-Icon Location   ai.h2o.q.peak.0.1.2-20201013062803/icon.jpg
+Bundle Location ai.h2o.wave.peak.0.1.2-20201013062803.wave
+Icon Location   ai.h2o.wave.peak.0.1.2-20201013062803/icon.jpg
 Description     Forecast of COVID-19 spread
 ID  22222222-3333-4444-5555-666666666666
-URL https://22222222-3333-4444-5555-666666666666.q8s.h2o.ai
+URL https://22222222-3333-4444-5555-666666666666.wave.h2o.ai
 ```
 
 ### Getting the logs of a running app instance
 
-Just run `q8s-cli instance logs`, use the flag `-f` (`--follow`) to tail the log.
+Just run `h2o instance logs`, use the flag `-f` (`--follow`) to tail the log.
 
 ```sh
-$ q8s-cli instance logs c22222222-3333-4444-5555-666666666666
+$ h2o instance logs c22222222-3333-4444-5555-666666666666
 ...
 2020/10/15 12:04:40 #
 2020/10/15 12:04:40 # ┌───────────────────┐
@@ -239,7 +239,7 @@ $ q8s-cli instance logs c22222222-3333-4444-5555-666666666666
 
 ### Running the app in cloud-like environment locally
 
-Just run `q8s-cli exec`. This will bundle the app in a temporary `.wave` and launch it locally
+Just run `h2o exec`. This will bundle the app in a temporary `.wave` and launch it locally
 using our platform docker image.
 
 Note that this requires that you have docker installed and that you have access to the docker image.
@@ -247,7 +247,7 @@ Note that this requires that you have docker installed and that you have access 
 Then navigate to `http://localhost:55555/<your main route>`.
 
 ```sh
-$ q8s-cli exec
+$ h2o exec
 {"level":"info","log_level":"debug","url":"file:///wave_bundle/q-peak.0.1.2.wave","app_root":"/app","venv_root":"/resources","server_path":"/wave/wave","py_module":"peak","tmp":"/tmp","startup_server":true,"version":"latest-20200929","time":"2020-10-13T06:42:21Z","message":"configuration"}
 {"level":"info","port":":55555","time":"2020-10-13T06:42:21Z","message":"starting launcher server"}
 {"level":"info","executable":"/wave/wave","time":"2020-10-13T06:42:21Z","message":"wave executable found"}
@@ -256,7 +256,7 @@ $ q8s-cli exec
 
 ### Updating App Visibility
 
-The `q8s-cli app update <appId> -v <visbility>` command can be used to modify an existing app's visibility.
+The `h2o app update <appId> -v <visbility>` command can be used to modify an existing app's visibility.
 
 Authors who publish a new version of an app may want to de-list the old version.  It is not possible
 to remove an app if there are instances running, as the data may still need to be available.
@@ -264,7 +264,7 @@ The preferred method to de-list previous versions is to modify the visibility se
 
 ### Updating Instance Visibility
 
-The `q8s-cli instance update <instanceId> -v <visbility>` command, much like the `app` version,
+The `h2o instance update <instanceId> -v <visbility>` command, much like the `app` version,
 can be used to modify an existing running instance's visibility setting.
 
 ## How-To
