@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import logging
 import os
+from pathlib import Path
 from argparse import ArgumentParser, ArgumentTypeError
 from shutil import rmtree
-from subprocess import PIPE, Popen
+from subprocess import PIPE, Popen, TimeoutExpired
 from tempfile import mkdtemp
 from time import sleep
 from typing import Dict, List, Optional
@@ -12,13 +13,14 @@ from typing import Dict, List, Optional
 class Process:
     def __init__(self, cmd: List[str], env: Dict[str, str] = {}, sleep_time=5):
         self.cmd = cmd
+        self.cmdline = ' '.join([str(c) for c in self.cmd])
         process_env = os.environ.copy()
         process_env.update(env)
         self.env = process_env
         self.sleep_time = sleep_time
 
     def __enter__(self):
-        logging.debug(f"Running command {' '.join(self.cmd)}")
+        logging.debug(f"Running command {self.cmdline}")
         self.process = Popen(
             self.cmd,
             stdout=PIPE,
@@ -32,11 +34,17 @@ class Process:
         return self.process
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        self.process.terminate()
+        try:
+            logging.debug(f"Terminating command {self.cmdline}")
+            self.process.terminate()
+            self.process.wait(timeout=self.sleep_time)
+        except TimeoutExpired:
+            logging.debug(f"Killing process{self.cmdline}")
+            self.process.kill()
 
 
 class TempDir:
-    def __init__(self, parent_dir):
+    def __init__(self, parent_dir: Path):
         self.parent_dir = parent_dir
 
     def __enter__(self):
@@ -50,29 +58,34 @@ class TempDir:
 
 
 def run_app_with_test(
-    app_file: str,
+    app_module: Optional[str],
+    app_script: Optional[str],
     test_dir: str,
-    sleep_time: int,
+    delay: int,
     browser: Optional[str],
-    wave_path: Optional[str],
+    start_wave: Optional[str],
     wave_web_dir: Optional[str],
     **kwargs
 ):
     def do_run():
-        with TempDir(os.path.join(test_dir, "cypress/integration")) as spec_dir:
+        with TempDir(test_dir / "cypress/integration") as spec_dir:
+            if app_script:
+                cmd = ["python", app_script]
+            else:
+                cmd = ["python", "-m", app_module]
             with Process(
-                cmd=["python", app_file],
+                cmd=cmd,
                 env={"CYPRESS_INTEGRATION_TEST_DIR": spec_dir},
-                sleep_time=sleep_time,
+                sleep_time=delay,
             ):
+                app_name = app_module if app_module else app_script.stem
                 specs = [f for f in os.listdir(spec_dir) if f.endswith(".spec.js")]
                 if not specs:
                     logging.warning(
                         f"No cypress specs generated in {spec_dir}, "
-                        f"does {app_file} has any tests defined?"
+                        f"does {app_name} has any tests defined?"
                     )
                     return
-                app_name = os.path.splitext(os.path.basename(app_file))[0]
                 cypress = "./node_modules/cypress/bin/cypress"
                 browser_arg = f"--browser {browser}" if browser else ""
                 logging.info(f"Starting cypress to run spec(s): {specs}")
@@ -83,9 +96,9 @@ def run_app_with_test(
                     f'--reporter-options "mochaFile=cypress/reports/{app_name}.xml"'
                 )
 
-    if wave_path:
-        cmd = [wave_path, "-web-dir", wave_web_dir] if wave_web_dir else [wave_path]
-        with Process(cmd=cmd, sleep_time=sleep_time):
+    if start_wave:
+        cmd = [str(start_wave), "-web-dir", str(wave_web_dir)] if wave_web_dir else [start_wave]
+        with Process(cmd=cmd, sleep_time=delay):
             do_run()
     else:
         do_run()
@@ -103,22 +116,38 @@ def dir_argument(dir_name: str):
     raise ArgumentTypeError(f"directory not found: {dir_name}")
 
 
+def test_path() -> Path: return Path(__file__).parent.resolve()
+
+
+def wave_root() -> Path: return (test_path() / '..').resolve()
+
+
+def default_web_dir() -> Path:
+    root = wave_root()
+    www = root / "www"
+    return www if www.exists() else root / "ui/build"
+
+
+def default_wave_path() -> Path:
+    wave_bin = wave_root() / "wave"
+    return wave_bin if wave_bin.is_file() else None
+
+
 def main():
     parser = ArgumentParser(description="Cypress test runner for Wave apps")
     parser.add_argument(
         "-t",
         "--test-dir",
         help="test directory where cypress is installed",
-        default=".",
-        type=dir_argument,
+        default=test_path(),
+        type=Path,
     )
     parser.add_argument(
-        "-s",
-        "--seconds",
+        "-d",
+        "--delay",
         help="how long should the test wait for app to start",
         type=int,
         default=5,
-        dest="sleep_time"
     )
     parser.add_argument(
         "-l",
@@ -135,22 +164,25 @@ def main():
             "attempt to use the browser at that path."
         ),
     )
-
     parser.add_argument(
         "-w",
-        "--wave-path",
-        type=file_argument,
-        help="optionally start Wave from the given path",
+        "--start-wave",
+        nargs="?",
+        const=default_wave_path(),
+        default=None,
+        metavar="wave_path",
+        help="start Wave before running the tests, optionally from the given path"
     )
-
     parser.add_argument(
-        "-d",
+        "-wd",
         "--wave-web-dir",
-        type=dir_argument,
+        default=default_web_dir(),
         help='directory to serve Wave web assets from (default "./www")',
     )
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-s", "--app-script", type=Path, help="python script with wave app")
+    group.add_argument("-m", "--app-module", help="python module with wave app")
 
-    parser.add_argument("app_file", help="Wave app python file", type=file_argument)
     args = parser.parse_args()
     logging.basicConfig(
         level=args.log_level.upper(),
