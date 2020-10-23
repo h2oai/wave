@@ -7,8 +7,8 @@ from typing import List, Dict, Union, Tuple, Any, Optional
 
 import requests
 import shutil
-import websockets
 from requests.auth import HTTPBasicAuth
+from starlette.websockets import WebSocket
 
 logger = logging.getLogger(__name__)
 
@@ -557,23 +557,7 @@ class AsyncPage(PageBase):
         p = self._diff()
         if p:
             logger.debug(p)
-            await self._ws.send(f'* {self.url} {p}')
-
-    # XXX Broken
-    async def pull(self) -> 'Q':
-        """
-        EXPERIMENTAL. DO NOT USE.
-        """
-        req = await self._ws.recv()
-        return Q(self._ws, req)
-
-    # XXX Broken
-    async def poll(self) -> 'Q':
-        """
-        EXPERIMENTAL. DO NOT USE.
-        """
-        await self.save()
-        return await self.pull()
+            await self._ws.send_text(f'* {self.url} {p}')
 
 
 class _BasicAuthClient:
@@ -685,7 +669,7 @@ class AsyncSite:
     Represents a reference to the remote Q site. Similar to `h2o_wave.core.Site` except that this class exposes ``async`` methods.
     """
 
-    def __init__(self, ws: websockets.WebSocketServerProtocol):
+    def __init__(self, ws: WebSocket):
         self._ws = ws
 
     def __getitem__(self, url) -> AsyncPage:
