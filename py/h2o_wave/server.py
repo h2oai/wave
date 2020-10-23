@@ -100,26 +100,73 @@ HandleAsync = Callable[[Q], Awaitable[Any]]
 WebAppState = Tuple[Expando, Dict[str, Expando], Dict[str, Expando]]
 
 
-class _App:
-    def __init__(self, mode: str, route: str, handle: HandleAsync):
-        self.mode = mode
-        self.route = route
-        self.handle = handle
+class App:
+    def __init__(self, route: str, handle: HandleAsync, mode=UNICAST):
+        self._mode = mode
+        self._route = route
+        self._handle = handle
         # TODO load from remote store if configured
-        self.state: WebAppState = (Expando(), dict(), dict())
-        self.site: Optional[AsyncSite] = None
+        self._state: WebAppState = (Expando(), dict(), dict())
+        self._site: Optional[AsyncSite] = None
 
-    async def process(self, query: str):
+        internal_address = urlparse(_config.internal_address)
+        if internal_address.port == 0:
+            _config.internal_address = f'ws://127.0.0.1:{_get_unused_port()}'
+            _config.external_address = _config.internal_address
+
+        logger.info(f'Server Mode: {mode}')
+        logger.info(f'Server Route: {route}')
+        logger.info(f'External Address: {_config.external_address}')
+        logger.info(f'Hub Address: {_config.hub_address}')
+        logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
+        logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
+        logger.info(f'Shutdown Timeout [seconds]: {_config.shutdown_timeout}')
+
+        self._router = Router(
+            routes=[
+                WebSocketRoute('/', self._receive),
+            ],
+            on_startup=[
+                self._announce,
+            ],
+            on_shutdown=[
+                self._shutdown,
+            ]
+        )
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        await self._router(scope, receive, send)
+
+    def _announce(self):
+        logger.debug(f'Announcing server at {_config.external_address} ...')
+        requests.post(
+            _config.hub_address,
+            data=marshal(dict(mode=self._mode, url=self._route, host=_config.external_address)),
+            headers=_content_type_json,
+            auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
+        )
+        logger.debug('Announcement: success!')
+
+    async def _receive(self, ws: WebSocket):
+        await ws.accept()
+        self._site = AsyncSite(ws)
+        try:
+            while True:
+                await _app._process(await ws.receive_text())
+        except WebSocketDisconnect:
+            await ws.close()
+
+    async def _process(self, query: str):
         username, subject, client_id, args = _parse_query(query)
         logger.debug(f'user: {username}, client: {client_id}')
         logger.debug(args)
-        app_state, user_state, client_state = self.state
+        app_state, user_state, client_state = self._state
         q = Q(
-            site=self.site,
-            mode=self.mode,
+            site=self._site,
+            mode=self._mode,
             username=username,
             client_id=client_id,
-            route=self.route,
+            route=self._route,
             app_state=app_state,
             user_state=_session_for(user_state, username),
             client_state=_session_for(client_state, client_id),
@@ -128,7 +175,7 @@ class _App:
         )
         # noinspection PyBroadException,PyPep8
         try:
-            await self.handle(q)
+            await self._handle(q)
         except:
             logger.exception('Unhandled exception')
             # noinspection PyBroadException,PyPep8
@@ -144,9 +191,9 @@ class _App:
             except:
                 logger.exception('Failed transmitting unhandled exception')
 
-    def stop(self):
+    def _shutdown(self):
         # TODO save to remote store if configured
-        app_state, sessions, clients = self.state
+        app_state, sessions, clients = self._state
         state = (
             expando_to_dict(app_state),
             {k: expando_to_dict(v) for k, v in sessions.items()},
@@ -155,7 +202,7 @@ class _App:
         pickle.dump(state, open('h2o_wave.state', 'wb'))
 
 
-_app: Optional[_App] = None
+_app: Optional[App] = None
 
 
 def _parse_query(query: str) -> Tuple[str, str, str, str]:
@@ -181,29 +228,6 @@ def _parse_query(query: str) -> Tuple[str, str, str, str]:
     return username, subject, client_id, body
 
 
-# XXX move to app
-def _announce_app():
-    logger.debug(f'Announcing server at {_config.external_address} ...')
-    requests.post(
-        _config.hub_address,
-        data=marshal(dict(mode=_app.mode, url=_app.route, host=_config.external_address)),
-        headers=_content_type_json,
-        auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
-    )
-    logger.debug('Announcement: success!')
-
-
-# XXX move to app
-async def _on_websocket(ws: WebSocket):
-    await ws.accept()
-    _app.site = AsyncSite(ws)
-    try:
-        while True:
-            await _app.process(await ws.receive_text())
-    except WebSocketDisconnect:
-        await ws.close()
-
-
 def _get_unused_port() -> int:
     port = 8000
     while True:
@@ -211,44 +235,6 @@ def _get_unused_port() -> int:
             if s.connect_ex(('127.0.0.1', port)):
                 return port
         port += 1
-
-
-# XXX move to app init
-def _router():
-    internal_address = urlparse(_config.internal_address)
-    if internal_address.port == 0:
-        _config.internal_address = f'ws://127.0.0.1:{_get_unused_port()}'
-        _config.external_address = _config.internal_address
-
-    logger.info(f'Server Mode: {_app.mode}')
-    logger.info(f'Server Route: {_app.route}')
-    logger.info(f'External Address: {_config.external_address}')
-    logger.info(f'Hub Address: {_config.hub_address}')
-    logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
-    logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
-    logger.info(f'Shutdown Timeout [seconds]: {_config.shutdown_timeout}')
-
-    return Router(
-        routes=[
-            WebSocketRoute('/', _on_websocket),
-        ],
-        on_startup=[
-            _announce_app,
-        ],
-        on_shutdown=[
-            _app.stop,
-        ]
-    )
-
-
-class App:
-    def __init__(self, route: str, handle: HandleAsync, mode=UNICAST):
-        global _app
-        _app = _App(mode, route, handle)
-        self._route = _router()
-
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        await self._route(scope, receive, send)
 
 
 def listen(route: str, handle: HandleAsync, mode=UNICAST):
@@ -262,9 +248,8 @@ def listen(route: str, handle: HandleAsync, mode=UNICAST):
     """
 
     global _app
-    _app = _App(mode, route, handle)
+    _app = App(route, handle, mode)
 
-    route = _router()
     internal_address = urlparse(_config.internal_address)
     logger.info(f'Listening on host "{internal_address.hostname}", port "{internal_address.port}"...')
-    uvicorn.run(route, host=internal_address.hostname, port=internal_address.port)
+    uvicorn.run(_app, host=internal_address.hostname, port=internal_address.port)
