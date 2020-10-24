@@ -83,9 +83,9 @@ func (c *Client) listen() {
 			if relay := c.broker.at(m.addr); relay != nil { // is service?
 				switch relay.mode {
 				case unicastMode:
-					c.subscribe(c.id) // client-level
+					c.subscribe("/" + c.id) // client-level
 				case multicastMode:
-					c.subscribe(c.username) // user-level
+					c.subscribe("/" + c.username) // user-level
 				case broadcastMode:
 					c.subscribe(m.addr) // system-level
 				}

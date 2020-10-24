@@ -167,7 +167,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 				return
 			}
-			go s.broker.relay(req.Mode, req.URL, req.Host)
+			s.broker.relay(req.Mode, req.URL, req.Host)
 		default:
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		}

@@ -75,11 +75,9 @@ func (b *Broker) relay(mode, route, addr string) {
 	b.relaysMux.Unlock()
 
 	echo(Log{"t": "relay", "route": route, "host": addr})
+}
 
-	if err := s.run(); err != nil { // blocking
-		echo(Log{"t": "relay", "route": route, "host": addr, "error": err.Error()})
-	}
-
+func (b *Broker) unrelay(route string) {
 	b.relaysMux.Lock()
 	delete(b.relays, route)
 	b.relaysMux.Unlock()

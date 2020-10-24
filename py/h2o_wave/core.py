@@ -1,4 +1,5 @@
 import json
+import warnings
 import logging
 import os
 import os.path
@@ -8,7 +9,7 @@ from typing import List, Dict, Union, Tuple, Any, Optional
 import requests
 import shutil
 from requests.auth import HTTPBasicAuth
-from starlette.websockets import WebSocket
+import httpx
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ def _get_env(key: str, value: Any):
     return os.environ.get(f'H2O_WAVE_{key}', value)
 
 
-_default_internal_address = 'ws://127.0.0.1:8000'
+_default_internal_address = 'http://127.0.0.1:8000'
 
 
 class _Config:
@@ -506,7 +507,7 @@ class Page(PageBase):
         """
         DEPRECATED: Use `h2o_wave.core.Page.save` instead.
         """
-        logger.warn('page.sync() is deprecated. Please use page.save() instead.')
+        warnings.warn('page.sync() is deprecated. Please use page.save() instead.', DeprecationWarning)
         self.save()
 
     def save(self):
@@ -531,7 +532,7 @@ class AsyncPage(PageBase):
 
     def __init__(self, site: 'AsyncSite', url: str):
         self.site = site
-        self._ws = site._ws
+        self._http = site._http
         super().__init__(url)
 
     async def load(self) -> dict:
@@ -547,7 +548,7 @@ class AsyncPage(PageBase):
         """
         DEPRECATED: Use `h2o_wave.core.AsyncPage.save` instead.
         """
-        logger.warn('page.push() is deprecated. Please use page.save() instead.')
+        warnings.warn('page.push() is deprecated. Please use page.save() instead.', DeprecationWarning)
         await self.save()
 
     async def save(self):
@@ -557,7 +558,7 @@ class AsyncPage(PageBase):
         p = self._diff()
         if p:
             logger.debug(p)
-            await self._ws.send_text(f'* {self.url} {p}')
+            await self._http.patch(f'{_config.hub_address}{self.url}', content=p)
 
 
 class _BasicAuthClient:
@@ -669,8 +670,8 @@ class AsyncSite:
     Represents a reference to the remote Q site. Similar to `h2o_wave.core.Site` except that this class exposes ``async`` methods.
     """
 
-    def __init__(self, ws: WebSocket):
-        self._ws = ws
+    def __init__(self):
+        self._http = httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret))
 
     def __getitem__(self, url) -> AsyncPage:
         return AsyncPage(self, url)

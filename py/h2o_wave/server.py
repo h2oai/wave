@@ -1,6 +1,7 @@
 import socket
 import asyncio
 import logging
+import warnings
 import pickle
 import traceback
 from typing import Dict, Tuple, Callable, Any, Awaitable, Optional
@@ -10,8 +11,10 @@ import requests
 import uvicorn
 from starlette.types import Scope, Receive, Send
 from starlette.applications import Router
-from starlette.routing import WebSocketRoute
-from starlette.websockets import WebSocket, WebSocketDisconnect
+from starlette.routing import Route
+from starlette.requests import Request
+from starlette.responses import PlainTextResponse
+from starlette.background import BackgroundTask
 from requests.auth import HTTPBasicAuth
 
 from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite
@@ -48,7 +51,7 @@ class Auth:
 class Query:
     """
     Represents the query context.
-    The query context is passed to the `listen()` handler function whenever a query
+    The query context is passed to the `@app` handler function whenever a query
     arrives from the browser (page load, user interaction events, etc.).
     The query context contains useful information about the query, including arguments
     `args` (equivalent to URL query strings) and app-level, user-level and client-level state.
@@ -71,7 +74,7 @@ class Query:
         """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
         self.site = site
         """A reference to the current site."""
-        self.page = site[client_id if mode == UNICAST else username if mode == MULTICAST else route]
+        self.page = site[f'/{client_id}' if mode == UNICAST else f'/{username}' if mode == MULTICAST else route]
         """A reference to the current page."""
         self.app = app_state
         """A `h2o_wave.core.Expando` instance to hold application-specific state."""
@@ -106,7 +109,7 @@ class _App:
         self._handle = handle
         # TODO load from remote store if configured
         self._state: WebAppState = (Expando(), dict(), dict())
-        self._site: Optional[AsyncSite] = None
+        self._site: AsyncSite = AsyncSite()
 
         # internal_address = urlparse(_config.internal_address)
         # if internal_address.port == 0:
@@ -123,7 +126,7 @@ class _App:
 
         self._router = Router(
             routes=[
-                WebSocketRoute('/', self._receive),
+                Route('/', endpoint=self._receive, methods=['POST']),
             ],
             on_startup=[
                 self._announce,
@@ -143,14 +146,9 @@ class _App:
         )
         logger.debug('Announcement: success!')
 
-    async def _receive(self, ws: WebSocket):
-        await ws.accept()
-        self._site = AsyncSite(ws)
-        try:
-            while True:
-                await self._process(await ws.receive_text())
-        except WebSocketDisconnect:
-            await ws.close()
+    async def _receive(self, req: Request):
+        b = await req.body()
+        return PlainTextResponse('', background=BackgroundTask(self._process, b.decode('utf-8')))
 
     async def _process(self, query: str):
         username, subject, client_id, args = _parse_query(query)
@@ -258,6 +256,8 @@ def listen(route: str, handle: HandleAsync, mode=UNICAST):
         handle: The handler function.
         mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
     """
+    warnings.warn("listen() is deprecated. Import main and annotate your serve() function with @app instead.",
+                  DeprecationWarning)
     main = _Main(_App(route, handle, mode))
 
     internal_address = urlparse(_config.internal_address)
