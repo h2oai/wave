@@ -34,7 +34,7 @@ const
       overflow: 'auto',
       $nest: {
         '>*': {
-          borderBottom: '1px solid ' + theme.colors.text1,
+          borderBottom: '1px solid var(--text1)',
           padding: '5px 0',
         },
       },

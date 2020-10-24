@@ -2454,10 +2454,7 @@ def meta_card(
         dialog: Optional[Dialog] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
-    """Represents page-global state.
-
-    This card is invisible.
-    It is used to control attributes of the active page.
+    """No documentation available.
 
     Args:
         box: A string indicating how to place this component on the page.
@@ -2465,7 +2462,7 @@ def meta_card(
         refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
         notification: Display a desktop notification.
         redirect: Redirect the page to a new URL.
-        icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
+        icon: No documentation available.
         layouts: The layouts supported by this page.
         dialog: Display a dialog on the page.
         commands: Contextual menu commands for this component.

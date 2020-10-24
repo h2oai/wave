@@ -17,7 +17,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { cssVar, getTheme } from './theme'
 
 const
   theme = getTheme(),
@@ -51,7 +51,7 @@ const
     },
     aux_value: {
       ...theme.font.s12,
-      color: theme.colors.text7,
+      color: 'var(--text7)',
     },
   })
 
@@ -79,7 +79,7 @@ export const
         <div data-test={name} className={css.card}>
           <Format data={data} format={s.title} className={css.title} />
           <div className={css.body}>
-            <ProgressArc thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <ProgressArc thickness={2} color={cssVar(s.plot_color as any)} value={s.progress} />
             <div className={css.value_overlay}>
               <Format data={data} format={s.value} className={css.value} />
               <Format data={data} format={s.aux_value} className={css.aux_value} />

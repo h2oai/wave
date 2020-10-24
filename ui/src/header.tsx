@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { bond, Box, box, Card, S } from './qd'
-import { clas, getTheme, padding } from './theme'
+import { clas, getTheme, padding, cssVar } from './theme'
 import { NavGroup, XNav } from './nav'
 
 const
@@ -39,7 +39,7 @@ const
     burger: {
       $nest: {
         '&:hover': {
-          color: theme.colors.page, // TODO improve
+          color: cssVar('page'),
           cursor: 'pointer',
         },
       },
@@ -114,7 +114,7 @@ export const
               </div>
             ) : (
               <div className={css.lhs}>
-                <FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: theme.color(icon_color) }} />
+                <FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color as any) }} />
               </div>
             )
 

@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { ProgressArc } from './parts/progress_arc'
 import { F, S } from './qd'
-import { getTheme } from './theme'
+import { getTheme, cssVar } from './theme'
 
 const
   theme = getTheme(),
@@ -51,7 +51,7 @@ export interface ProgressTableCellType {
 
 export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
   <div data-test={m.name} className={css.container}>
-    <ProgressArc thickness={2} color={theme.color(m.color || 'red')} value={progress} />
+    <ProgressArc thickness={2} color={cssVar(m.color as any, 'red')} value={progress} />
     <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={css.percentContainer}>
       <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
     </Fluent.Stack>

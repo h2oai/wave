@@ -39,12 +39,12 @@ const
       ...theme.font.w2,
     },
     aux_value: {
-      color: theme.colors.text6,
       marginLeft: 5,
+      color: 'var(--text6)',
     },
     caption: {
       ...theme.font.s13,
-      color: theme.colors.text5,
+      color: 'var(--text5)',
     }
   })
 

@@ -19,22 +19,21 @@ import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
 import { B, bond, Card, Dict, F, parseI, parseU, qd, Rec, S, unpack, V } from './qd'
-import { getTheme, displayMixin } from './theme'
+import { getTheme, displayMixin, cssVar } from './theme'
 
 const
   theme = getTheme(),
-  hues = theme.colors,
   cat10 = [
-    hues.gray,
-    hues.blue,
-    hues.green,
-    hues.amber,
-    hues.tangerine,
-    hues.purple,
-    hues.cyan,
-    hues.mint,
-    hues.pink,
-    hues.brown,
+    'var(--gray)',
+    'var(--blue)',
+    'var(--green)',
+    'var(--amber)',
+    'var(--tangerine)',
+    'var(--purple)',
+    'var(--cyan)',
+    'var(--mint)',
+    'var(--pink)',
+    'var(--brown)',
   ]
 type AnnotationOption = ArcOption | LineOption | TextOption | RegionOption | DataMarkerOption | DataRegionOption
 
@@ -494,7 +493,7 @@ const
     if (adjust.length) o.adjust = adjust
     if (isS(x_field) && isS(y_field)) o.position = { fields: [x_field, y_field] }
     if (isS(color_field)) {
-      const colors = isS(color_range) ? split(color_range).map(theme.color) : cat10
+      const colors = isS(color_range) ? split(color_range).map(c => cssVar(c as any)) : cat10
       o.color = { fields: [color_field], values: colors }
       if (color_domain && color_domain.length == colors.length) {
         const domain_colors = color_domain.reduce((acc, value, i) => {
@@ -504,7 +503,7 @@ const
         o.color.callback = (x: S) => domain_colors[x]
       }
     } else {
-      o.color = isS(color) ? theme.color(color) : theme.colors.gray
+      o.color = isS(color) ? color : 'var(--gray)'
     }
     if (isS(shape_field)) {
       if (isS(shape_range)) {
@@ -577,9 +576,9 @@ const
   },
   makeShapeStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, stroke_dash?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = theme.color(fill_color)
+    if (isS(fill_color)) s.fill = cssVar(fill_color as any)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = theme.color(stroke_color)
+    if (isS(stroke_color)) s.stroke = cssVar(stroke_color as any)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isS(stroke_dash)) s.lineDash = parseInts(stroke_dash)
@@ -587,9 +586,9 @@ const
   },
   makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S, line_height?: F, align?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = theme.color(fill_color)
+    if (isS(fill_color)) s.fill = cssVar(fill_color as any)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = theme.color(stroke_color)
+    if (isS(stroke_color)) s.stroke = cssVar(stroke_color as any)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isF(font_size)) s.fontSize = font_size

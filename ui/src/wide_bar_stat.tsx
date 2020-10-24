@@ -17,7 +17,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressBar } from './parts/progress_bar'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { getTheme, cssVar } from './theme'
 
 const
   theme = getTheme(),
@@ -47,8 +47,8 @@ const
     },
     aux_value: {
       ...theme.font.s13,
-      color: theme.colors.text7,
       marginLeft: 5,
+      color: cssVar('text7'),
     }
   })
 
@@ -80,7 +80,7 @@ export const
               <Format data={data} format={s.value} className={css.value} />
               <Format data={data} format={s.aux_value} className={css.aux_value} />
             </div>
-            <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <ProgressBar thickness={2} color={cssVar(s.plot_color as any)} value={s.progress} />
           </div>
         </div>
       )

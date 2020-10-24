@@ -17,7 +17,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
 import { B, box, C, Card, Dict, F, parseI, Rec, S, U, unpack, xid } from './qd'
-import { clas, getTheme, margin, palette } from './theme'
+import { clas, cssVar, margin, palette } from './theme'
 
 type Slot = {
   left: U
@@ -143,7 +143,6 @@ export const
   grid = newGrid(134, 76, 12, 10, 15) // approx 1800x930
 
 const
-  theme = getTheme(),
   css = stylesheet({
     grid: {
       position: 'relative',
@@ -154,6 +153,10 @@ const
     slot: {
       boxSizing: 'border-box',
       transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
+      position: 'absolute',
+      backgroundColor: cssVar('card'),
+      borderRadius: 3,
+      boxShadow: '0px 3px 5px var(--text0)',
       overflow: 'auto',
       display: 'flex',
       flexDirection: 'column',
@@ -165,22 +168,22 @@ const
       }
     },
     normal: {
-      backgroundColor: theme.colors.card,
-      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      backgroundColor: cssVar('card'),
+      boxShadow: `0px 3px 5px ${cssVar('text0')}`,
       $nest: {
         '&:hover': {
-          boxShadow: `0px 12px 20px ${theme.colors.text2}`,
+          boxShadow: `0px 12px 20px ${cssVar('text2')}`,
         }
       },
     },
     raised: {
-      color: theme.colors.card,
+      color: cssVar('card'),
       backgroundColor: palette.themePrimary,
-      boxShadow: `0px 3px 7px ${theme.colors.text3}`,
+      boxShadow: `0px 3px 7px ${cssVar('text3')}`,
     },
     flat: {
-      backgroundColor: theme.colors.card,
-      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      backgroundColor: cssVar('card'),
+      boxShadow: `0px 3px 5px ${cssVar('text0')}`,
     },
   }),
   getCardEffectClass = (c: C) => {

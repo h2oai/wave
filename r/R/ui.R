@@ -2828,17 +2828,14 @@ ui_dialog <- function(
   return(.o)
 }
 
-#' Represents page-global state.
-#' 
-#' This card is invisible.
-#' It is used to control attributes of the active page.
+#' No documentation available.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title of the page.
 #' @param refresh Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
 #' @param notification Display a desktop notification.
 #' @param redirect Redirect the page to a new URL.
-#' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
+#' @param icon No documentation available.
 #' @param layouts The layouts supported by this page.
 #' @param dialog Display a dialog on the page.
 #' @param commands Contextual menu commands for this component.

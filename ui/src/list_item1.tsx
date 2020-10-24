@@ -16,7 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
 import { bond, Card, unpack, Rec, S } from './qd'
-import { getTheme } from './theme'
+import { getTheme, cssVar } from './theme'
 
 const
   theme = getTheme(),
@@ -37,14 +37,14 @@ const
     },
     caption: {
       ...theme.font.s13,
-      color: theme.colors.text5,
+      color: cssVar('text5'),
     },
     value: {
       ...theme.font.s12,
     },
     aux_value: {
       ...theme.font.s13,
-      color: theme.colors.text5,
+      color: cssVar('text5'),
     },
   })
 

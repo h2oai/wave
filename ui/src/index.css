@@ -33,3 +33,64 @@ body,
   right: 0;
   bottom: 0;
 }
+
+:root {
+  /* Base colors. */
+  --amber: #FFC107;
+  --azure: #03A9F4;
+  --blue: #2196F3;
+  --brown: #795548;
+  --card: #ffffff;
+  --cyan: #00BCD4;
+  --gray: #9E9E9E;
+  --green: #8BC34A;
+  --indigo: #3F51B5;
+  --lime: #CDDC39;
+  --mint: #4CAF50;
+  --orange: #FF9800;
+  --page: #f5f5f5;
+  --pink: #E91E63;
+  --purple: #9C27B0;
+  --red: #F44336;
+  --tangerine: #FF5722;
+  --teal: #009688;
+  --text: #323130;
+  --violet: #673AB7;
+  --yellow: #FFEB3B;
+
+  /* Text tones. */
+  --text0: rgba(var(--text), 0.05);
+  --text1: rgba(var(--text), 0.1);
+  --text2: rgba(var(--text), 0.2);
+  --text3: rgba(var(--text), 0.3);
+  --text4: rgba(var(--text), 0.4);
+  --text5: rgba(var(--text), 0.5);
+  --text6: rgba(var(--text), 0.6);
+  --text7: rgba(var(--text), 0.7);
+  --text8: rgba(var(--text), 0.8);
+  --text9: rgba(var(--text), 0.9);
+
+  /* Fluent colors. */
+  --themePrimary: #000000;
+  --themeLighterAlt: #898989;
+  --themeLighter: #737373;
+  --themeLight: #595959;
+  --themeTertiary: #373737;
+  --themeSecondary: #2f2f2f;
+  --themeDarkAlt: #252525;
+  --themeDark: #151515;
+  --themeDarker: #0b0b0b;
+  --neutralLighterAlt: #faf9f8;
+  --neutralLighter: #f3f2f1;
+  --neutralLight: #edebe9;
+  --neutralQuaternaryAlt: #e1dfdd;
+  --neutralQuaternary: #d0d0d0;
+  --neutralTertiaryAlt: #c8c6c4;
+  --neutralTertiary: #a19f9d;
+  --neutralSecondary: #605e5c;
+  --neutralPrimaryAlt: #3b3a39;
+  --neutralPrimary: #323130;
+  --neutralDark: #201f1e;
+  --black: #000000;
+  --white: #ffffff;
+}

@@ -15,19 +15,18 @@
 import { Spinner, SpinnerSize } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import Dialog from './dialog'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
-import { clas, getTheme, pc } from './theme'
-import Dialog from './dialog'
+import { clas, cssVar, pc } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     app: {
       position: 'absolute',
       left: 0, top: 0, right: 0, bottom: 0,
-      backgroundColor: theme.colors.page,
-      color: theme.colors.text,
+      backgroundColor: cssVar('page'),
+      color: cssVar('text'),
       display: 'flex',
       justifyContent: 'center',
       overflow: 'auto'
@@ -37,8 +36,8 @@ const
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: theme.colors.page,
-      color: theme.colors.text,
+      backgroundColor: cssVar('page'),
+      color: cssVar('text'),
     },
     freeOverlay: {
       display: 'none',
@@ -49,7 +48,6 @@ const
       display: 'block',
     },
   })
-
 
 const
   BusyOverlay = bond(() => {

@@ -14,8 +14,8 @@
 
 import { NestedCSSProperties } from "typestyle/lib/types"
 import { Dict, I, F, S, U } from "./qd"
+import * as Fluent from "@fluentui/react"
 
-interface RGB { r: U, g: U, b: U }
 interface Palette {
   red: S
   pink: S
@@ -57,6 +57,7 @@ export const
   px = (x: I) => `${x}px`,
   pc = (x: F) => `${x}%`,
   rem = (x: F) => `${x}rem`,
+  cssVar = (x: keyof (Palette & Tones & Fluent.IPalette), fallback = '--gray') => `var(--${x}, ${fallback})`,
   clas = (...names: string[]) => names.join(' '),
   quint = (prop: string) => `${prop} 600ms cubic-bezier(0.23, 1, 0.32, 1)`, // https://easings.net/#easeOutQuint
   border = (thickness: U, color: string) => `${thickness}px solid ${color}`,
@@ -75,67 +76,22 @@ export const
   }
 
 const
-  black: RGB = { r: 0, g: 0, b: 0 },
-  rgb = (hex: S): RGB => {
-    const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-    return x ? { r: parseInt(x[1], 16), g: parseInt(x[2], 16), b: parseInt(x[3], 16) } : black
-  },
-  toPalette = (palette: Palette, a: F): Palette & Tones => {
-    const
-      { r, g, b } = rgb(palette.text),
-      tones: Tones = {
-        text0: rgba(r, g, b, 0.05),
-        text1: rgba(r, g, b, a += 0.1),
-        text2: rgba(r, g, b, a += 0.1),
-        text3: rgba(r, g, b, a += 0.1),
-        text4: rgba(r, g, b, a += 0.1),
-        text5: rgba(r, g, b, a += 0.1),
-        text6: rgba(r, g, b, a += 0.1),
-        text7: rgba(r, g, b, a += 0.1),
-        text8: rgba(r, g, b, a += 0.1),
-        text9: rgba(r, g, b, a += 0.1),
-      }
-    return { ...palette, ...tones }
-  },
-  defaultColors = {
-    red: '#F44336',
-    pink: '#E91E63',
-    purple: '#9C27B0',
-    violet: '#673AB7',
-    indigo: '#3F51B5',
-    blue: '#2196F3',
-    azure: '#03A9F4',
-    cyan: '#00BCD4',
-    teal: '#009688',
-    mint: '#4CAF50',
-    green: '#8BC34A',
-    lime: '#CDDC39',
-    yellow: '#FFEB3B',
-    amber: '#FFC107',
-    orange: '#FF9800',
-    tangerine: '#FF5722',
-    brown: '#795548',
-    gray: '#9E9E9E',
-  },
-  palettes: Dict<Palette & Tones> = {
-    light: toPalette({
-      ...defaultColors,
+  palettes: Dict<{}> = {
+    light: {
       text: '#323130',
       card: '#ffffff',
       page: '#f5f5f5',
-    }, 0.1),
-    dark: toPalette({
-      ...defaultColors,
+    },
+    dark: {
       text: '#ffffff',
       card: '#21252b',
       page: '#282c34',
-    }, 0),
-    neon: toPalette({
-      ...defaultColors,
+    },
+    neon: {
       text: '#ffffff',
       card: '#0d0e0f',
       page: '#1b1d1f',
-    }, 0),
+    },
   },
   // tracking = a + b * Math.exp(c * fontSize)
   // a = -0.0223, b = 0.185, c = -0.1745
@@ -199,9 +155,6 @@ const
     w8: { fontWeight: 800 }, // extrabold
     w9: { fontWeight: 900 }, // black
   }
-// ellipsis: NestedCSSProperties = {
-//   whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden',
-// }
 
 interface ThemeFont {
   s6: NestedCSSProperties
@@ -244,37 +197,31 @@ interface ThemeFont {
 
 export interface Theme {
   font: ThemeFont
-  colors: Palette & Tones
   merge<T>(defs: Partial<T>, state: Partial<T>): T
-  color(color?: S): S
 }
 
 let theme: Theme | null = null
 export const
-  loadTheme = (name: S): Theme => {
-    const colors = palettes[name],
-      color = (s?: S): S => {
-        if (!s) return colors.gray
-        if (s.startsWith('$')) {
-          const c = (colors as any)[s.substr(1)]
-          return c ? c : colors.gray
+  loadTheme = (): Theme => {
+    const merge = <T extends unknown>(defs: Partial<T>, state: Partial<T>): T => {
+      const s = { ...defs, ...state } as any
+      for (const k in s) {
+        if (k.endsWith('_color')) {// XXX obsolete; remove
+          // const v = s[k]
+          // if (typeof v === 'string') s[k] = color(v)
         }
-        return s
-      },
-      merge = <T extends unknown>(defs: Partial<T>, state: Partial<T>): T => {
-        const s = { ...defs, ...state } as any
-        for (const k in s) {
-          if (k.endsWith('_color')) {// XXX obsolete; remove
-            const v = s[k]
-            if (typeof v === 'string') s[k] = color(v)
-          }
-        }
-        return s as T
       }
-    theme = { font, colors, merge, color }
+      return s as T
+    }
+    theme = { font, merge }
     return theme
   },
-  getTheme = (): Theme => theme ? theme : loadTheme('light'),
+  changeTheme = (name: S) => {
+    const palette = palettes[name]
+    // TODO: Resolve the any.
+    Object.keys(palette).forEach(k => document.body.style.setProperty(`--${k}`, (palette as any)[k]))
+  },
+  getTheme = (): Theme => theme || loadTheme(),
   palette = {
     themePrimary: '#000000',
     themeLighterAlt: '#898989',

@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
+    "michelemelluso.code-beautifier",
     "ms-python.python",
     "golang.Go",
     "DavidAnson.vscode-markdownlint"

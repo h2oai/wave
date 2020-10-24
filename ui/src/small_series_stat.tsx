@@ -15,10 +15,10 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
+import { getTheme, cssVar } from './theme'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
 
 const
   theme = getTheme(),
@@ -76,14 +76,14 @@ export const
               data={unpack(s.plot_data)}
               category={s.plot_category}
               value={s.plot_value}
-              color={theme.color(s.plot_color)}
+              color={cssVar(s.plot_color as any)}
               zeroValue={s.plot_zero_value}
             />
           ) : (
             <MicroArea
               data={unpack(s.plot_data)}
               value={s.plot_value}
-              color={theme.color(s.plot_color)}
+              color={cssVar(s.plot_color as any)}
               zeroValue={s.plot_zero_value}
               curve={s.plot_curve || 'linear'}
             />

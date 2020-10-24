@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { B, bond, box, F, Id, qd, S, U, xid } from './qd'
-import { centerMixin, clas, dashed, displayMixin, getTheme, padding } from './theme'
+import { centerMixin, clas, dashed, displayMixin, padding } from './theme'
 
 /**
  * Create a file upload component.
@@ -44,7 +44,6 @@ export interface FileUpload {
 }
 
 const
-  { colors } = getTheme(),
   css = stylesheet({
     uploadInput: {
       opacity: 0
@@ -55,7 +54,7 @@ const
       boxSizing: 'border-box',
     },
     uploadDragging: {
-      border: dashed(2, colors.text),
+      border: dashed(2, 'var(--text)'),
     },
     uploadLabel: {
       ...centerMixin(),
@@ -63,8 +62,8 @@ const
       fontSize: 14,
       fontWeight: 600,
       borderRadius: 2,
-      background: colors.text,
-      color: colors.page,
+      background: 'var(--text)',
+      color: 'var(--page)',
       minWidth: 80,
       $nest: {
         '&:hover': {
