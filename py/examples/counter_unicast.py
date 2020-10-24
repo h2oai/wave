@@ -1,24 +1,21 @@
 # Mode / Unicast
 # Launch the server in unicast mode and use `q.client` to manage client-local state.
 # ---
-from h2o_wave import Q, listen, ui, pack
+from h2o_wave import Q, ui, pack, app, main
 
 
+@app('/demo')
 async def serve(q: Q):
     count = q.client.count or 0
-    if 'increment' in q.args:
-        count += 1
-        q.client.count = count
 
-    items = pack([ui.button(name='increment', label=f'Count={count}')])
+    if not q.client.initialized:
+        q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
+            ui.button(name='increment', label=f'Count={count}')
+        ])
+        q.client.initialized = True
 
-    if count > 0:
-        form = q.page['example']
-        form.items = items
-    else:
-        q.page['example'] = ui.form_card(box='1 1 12 10', items=items)
+    if q.args.increment:
+        q.client.count = count = count + 1
+        q.page['example'].items[0].button.label = f'Count={count}'
 
     await q.page.save()
-
-
-listen('/demo', serve)
