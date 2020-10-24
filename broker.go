@@ -2,6 +2,7 @@ package wave
 
 import (
 	"bytes"
+	"encoding/json"
 	"log"
 	"sort"
 	"sync"
@@ -130,6 +131,13 @@ func (b *Broker) patch(url string, data []byte) {
 	log.Println("*", url, string(data))
 	if err := b.site.patch(url, data); err != nil {
 		echo(Log{"t": "broker_patch", "error": err.Error()})
+	}
+}
+
+// TODO allow only in debug mode?
+func (b *Broker) reset(url string) {
+	if data, err := json.Marshal(OpsD{R: 1}); err == nil {
+		b.publish <- Pub{url, data}
 	}
 }
 

@@ -168,6 +168,8 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			s.broker.relay(req.Mode, req.URL, req.Host)
+			// Force-reload all browsers listening to this app
+			s.broker.reset(req.URL) // TODO allow only in debug mode?
 		default:
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		}

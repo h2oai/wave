@@ -5,6 +5,7 @@ type OpsD struct {
 	P *PageD                 `json:"p,omitempty"` // page
 	C map[string]interface{} `json:"c,omitempty"` // FIXME comment - is this required?
 	D []OpD                  `json:"d,omitempty"` // deltas
+	R int                    `json:"r,omitempty"` // reset
 }
 
 // OpD represents a delta operation (effector)
