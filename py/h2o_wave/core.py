@@ -20,7 +20,7 @@ def _get_env(key: str, value: Any):
     return os.environ.get(f'H2O_WAVE_{key}', value)
 
 
-_default_internal_address = 'ws://127.0.0.1:0'
+_default_internal_address = 'ws://127.0.0.1:8000'
 
 
 class _Config:

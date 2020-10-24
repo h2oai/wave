@@ -1,5 +1,4 @@
 import socket
-import functools
 import asyncio
 import logging
 import pickle
@@ -100,7 +99,7 @@ HandleAsync = Callable[[Q], Awaitable[Any]]
 WebAppState = Tuple[Expando, Dict[str, Expando], Dict[str, Expando]]
 
 
-class App:
+class _App:
     def __init__(self, route: str, handle: HandleAsync, mode=UNICAST):
         self._mode = mode
         self._route = route
@@ -109,10 +108,10 @@ class App:
         self._state: WebAppState = (Expando(), dict(), dict())
         self._site: Optional[AsyncSite] = None
 
-        internal_address = urlparse(_config.internal_address)
-        if internal_address.port == 0:
-            _config.internal_address = f'ws://127.0.0.1:{_get_unused_port()}'
-            _config.external_address = _config.internal_address
+        # internal_address = urlparse(_config.internal_address)
+        # if internal_address.port == 0:
+        #     _config.internal_address = f'ws://127.0.0.1:{_get_unused_port()}'
+        #     _config.external_address = _config.internal_address
 
         logger.info(f'Server Mode: {mode}')
         logger.info(f'Server Route: {route}')
@@ -134,9 +133,6 @@ class App:
             ]
         )
 
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        await self._router(scope, receive, send)
-
     def _announce(self):
         logger.debug(f'Announcing server at {_config.external_address} ...')
         requests.post(
@@ -152,7 +148,7 @@ class App:
         self._site = AsyncSite(ws)
         try:
             while True:
-                await _app._process(await ws.receive_text())
+                await self._process(await ws.receive_text())
         except WebSocketDisconnect:
             await ws.close()
 
@@ -202,9 +198,6 @@ class App:
         pickle.dump(state, open('h2o_wave.state', 'wb'))
 
 
-_app: Optional[App] = None
-
-
 def _parse_query(query: str) -> Tuple[str, str, str, str]:
     username = ''
     subject = ''
@@ -237,6 +230,25 @@ def _get_unused_port() -> int:
         port += 1
 
 
+class _Main:
+    def __init__(self, app: Optional[_App] = None):
+        self._app: Optional[_App] = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        await self._app._router(scope, receive, send)
+
+
+main = _Main()
+
+
+def app(route: str, mode=UNICAST):
+    def wrap(handle: HandleAsync):
+        main._app = _App(route, handle, mode)
+        return handle
+
+    return wrap
+
+
 def listen(route: str, handle: HandleAsync, mode=UNICAST):
     """
     Launch an application server.
@@ -246,10 +258,8 @@ def listen(route: str, handle: HandleAsync, mode=UNICAST):
         handle: The handler function.
         mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
     """
-
-    global _app
-    _app = App(route, handle, mode)
+    main = _Main(_App(route, handle, mode))
 
     internal_address = urlparse(_config.internal_address)
     logger.info(f'Listening on host "{internal_address.hostname}", port "{internal_address.port}"...')
-    uvicorn.run(_app, host=internal_address.hostname, port=internal_address.port)
+    uvicorn.run(main, host=internal_address.hostname, port=internal_address.port)
