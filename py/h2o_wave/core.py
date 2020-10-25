@@ -669,8 +669,8 @@ class AsyncSite:
     Represents a reference to the remote Q site. Similar to `h2o_wave.core.Site` except that this class exposes ``async`` methods.
     """
 
-    def __init__(self):
-        self._http = httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret))
+    def __init__(self, http: httpx.AsyncClient):
+        self._http = http
 
     def __getitem__(self, url) -> AsyncPage:
         return AsyncPage(self, url)

@@ -6,15 +6,14 @@ import traceback
 from typing import Dict, Tuple, Callable, Any, Awaitable, Optional
 from urllib.parse import urlparse
 
-import requests
 import uvicorn
+import httpx
 from starlette.types import Scope, Receive, Send
 from starlette.applications import Router
 from starlette.routing import Route
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 from starlette.background import BackgroundTask
-from requests.auth import HTTPBasicAuth
 
 from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite
 from .ui import markdown_card
@@ -108,7 +107,8 @@ class _App:
         self._handle = handle
         # TODO load from remote store if configured
         self._state: WebAppState = (Expando(), dict(), dict())
-        self._site: AsyncSite = AsyncSite()
+        self._http = httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret))
+        self._site: AsyncSite = AsyncSite(self._http)
 
         logger.info(f'Server Mode: {mode}')
         logger.info(f'Server Route: {route}')
@@ -116,29 +116,27 @@ class _App:
         logger.info(f'Hub Address: {_config.hub_address}')
         logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
         logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
-        logger.info(f'Shutdown Timeout [seconds]: {_config.shutdown_timeout}')
 
         self._router = Router(
             routes=[
                 Route('/', endpoint=self._receive, methods=['POST']),
             ],
             on_startup=[
-                self._announce,
+                self._advertise,
             ],
             on_shutdown=[
                 self._shutdown,
             ]
         )
 
-    def _announce(self):
-        logger.debug(f'Announcing server at {_config.external_address} ...')
-        requests.post(
+    async def _advertise(self):
+        logger.debug(f'Advertising server at {_config.external_address} ...')
+        await self._http.post(
             _config.hub_address,
-            data=marshal(dict(mode=self._mode, url=self._route, host=_config.external_address)),
+            content=marshal(dict(mode=self._mode, url=self._route, host=_config.external_address)),
             headers=_content_type_json,
-            auth=HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
         )
-        logger.debug('Announcement: success!')
+        logger.debug('Advertise: success!')
 
     async def _receive(self, req: Request):
         b = await req.body()

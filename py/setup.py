@@ -30,6 +30,8 @@ setuptools.setup(
     python_requires='>=3.6.1',
     install_requires=[
         'requests',
-        'websockets'
+        'httpx==0.16.1',
+        'starlette==0.13.8',
+        'uvicorn==0.12.2',
     ],
 )
