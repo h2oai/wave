@@ -22,11 +22,11 @@ import (
 )
 
 const logo = `
-┌───────────────────┐
-│   ┬ ┬┌─┐┬  ┬┌─┐   │
-│   │││├─┤└┐┌┘├┤    │
-│   └┴┘┴ ┴ └┘ └─┘   │
-└───────────────────┘
+┌────────────────────────┐
+│  ┌   ┌ ┌──┐ ┌  ┌ ┌──┐  │ H2O Wave
+│  │ ┌─┘ │──│ │  │ └┐    │ v%s b%s
+│  └─┘   ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
+└────────────────────────┘
 `
 
 // Log represents key-value data for a log message.
@@ -390,6 +390,8 @@ func compactSite(aofPath string) {
 
 // ServerConf represents Server configuration options.
 type ServerConf struct {
+	Version           string
+	BuildDate         string
 	Listen            string
 	WebDir            string
 	DataDir           string
@@ -454,7 +456,7 @@ func Run(conf ServerConf) {
 	http.Handle("/_f/", newFileServer(fileDir)) // XXX secure
 	http.Handle("/", newWebServer(site, broker, users, conf.oidcEnabled(), sessions, conf.WebDir))
 
-	for _, line := range strings.Split(logo, "\n") {
+	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)
 	}
 

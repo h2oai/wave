@@ -52,5 +52,8 @@ func main() {
 	conf.WebDir, _ = filepath.Abs(conf.WebDir)
 	conf.DataDir, _ = filepath.Abs(conf.DataDir)
 
+	conf.Version = Version
+	conf.BuildDate = BuildDate
+
 	wave.Run(conf)
 }
