@@ -107,7 +107,10 @@ class _App:
         self._handle = handle
         # TODO load from remote store if configured
         self._state: WebAppState = (Expando(), dict(), dict())
-        self._http = httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret))
+        self._http = httpx.AsyncClient(
+            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
+            verify=False,
+        )
         self._site: AsyncSite = AsyncSite(self._http)
 
         logger.info(f'Server Mode: {mode}')

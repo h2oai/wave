@@ -6,9 +6,6 @@ import os.path
 import sys
 from typing import List, Dict, Union, Tuple, Any, Optional
 
-import requests
-import shutil
-from requests.auth import HTTPBasicAuth
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -34,43 +31,6 @@ class _Config:
 
 
 _config = _Config()
-
-
-def configure(
-        internal_address: Optional[str] = None,
-        external_address: Optional[str] = None,
-        hub_address: Optional[str] = None,
-        hub_access_key_id: Optional[str] = None,
-        hub_access_key_secret: Optional[str] = None,
-):
-    """
-    Configure networking addresses/credentials before use.
-
-    Args:
-        internal_address: The local host:port to listen on.
-        external_address: The remote host:port of this server.
-        hub_address: The host:port of the Q server.
-        hub_access_key_id: The access key ID to use while connecting to the Q server.
-        hub_access_key_secret: The access key secret to use while connecting to the Q server.
-    """
-    if internal_address:
-        _config.internal_address = internal_address
-
-    if external_address:
-        _config.external_address = external_address
-    elif internal_address and (_config.external_address == _default_internal_address):
-        _config.external_address = internal_address
-
-    if hub_address:
-        _config.hub_address = hub_address
-    if hub_access_key_id:
-        _config.hub_access_key_id = hub_access_key_id
-    if hub_access_key_secret:
-        _config.hub_access_key_secret = hub_access_key_secret
-
-    global _client
-    _client = _BasicAuthClient()
-
 
 _key_sep = ' '
 _content_type_json = {'Content-type': 'application/json'}
@@ -560,62 +520,24 @@ class AsyncPage(PageBase):
             await self._http.patch(f'{_config.hub_address}{self.url}', content=p)
 
 
-class _BasicAuthClient:
-    def __init__(self):
-        self._auth = HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
-        self._secure = False
-
-    def patch(self, url: str, data: Any):
-        res = requests.patch(f'{_config.hub_address}{url}', data=data, headers=_content_type_json, auth=self._auth)
-        if res.status_code != 200:
-            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
-
-    def get(self, url: str):
-        res = requests.get(f'{_config.hub_address}{url}', headers=_content_type_json, auth=self._auth)
-        if res.status_code != 200:
-            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
-        return res.json()
-
-    def upload(self, files: List[str]) -> List[str]:
-        # XXX Use aiohttp client for async multipart or streaming upload
-        upload_url = f'{_config.hub_address}/_f'
-        fs = [('files', (os.path.basename(f), open(f, 'rb'))) for f in files]
-        res = requests.post(upload_url, files=fs, auth=self._auth, verify=self._secure)
-        if res.status_code == 200:
-            return json.loads(res.text)['files']
-        raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
-
-    def download(self, url: str, path: str) -> str:
-        path = os.path.abspath(path)
-        # If path is dir, get basename from url
-        filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
-
-        with requests.get(f'{_config.hub_address}{url}', stream=True) as r:
-            with open(filepath, 'wb') as f:
-                shutil.copyfileobj(r.raw, f)
-
-        return filepath
-
-    def unload(self, url: str):
-        res = requests.delete(f'{_config.hub_address}{url}')
-        if res.status_code == 200:
-            return
-        raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
-
-
-_client = _BasicAuthClient()
-
-
 class Site:
     """
     Represents a reference to the remote Q site. A Site instance is used to obtain references to the site's pages.
     """
 
+    def __init__(self):
+        self._http = httpx.Client(
+            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
+            verify=False,
+        )
+
     def __getitem__(self, url) -> Page:
         return Page(self, url)
 
-    def _save(self, url: str, data: str):
-        _client.patch(url, data)
+    def _save(self, url: str, patch: str):
+        res = self._http.patch(f'{_config.hub_address}{url}', content=patch)
+        if res.status_code != 200:
+            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
     def load(self, url) -> dict:
         """
@@ -627,7 +549,10 @@ class Site:
         Returns:
             The serialized page.
         """
-        return _client.get(url)
+        res = self._http.get(f'{_config.hub_address}{url}', headers=_content_type_json)
+        if res.status_code != 200:
+            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
+        return res.json()
 
     def upload(self, files: List[str]) -> List[str]:
         """
@@ -639,7 +564,11 @@ class Site:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        return _client.upload(files)
+        upload_url = f'{_config.hub_address}/_f'
+        res = self._http.post(upload_url, files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        if res.status_code == 200:
+            return json.loads(res.text)['files']
+        raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
 
     def download(self, url: str, path: str) -> str:
         """
@@ -652,7 +581,16 @@ class Site:
         Returns:
             The path to the downloaded file.
         """
-        return _client.download(url, path)
+        path = os.path.abspath(path)
+        # If path is a directory, get basename from url
+        filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
+
+        with open(filepath, 'wb') as f:
+            with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
+                for chunk in r.iter_bytes():
+                    f.write(chunk)
+
+        return filepath
 
     def unload(self, url: str):
         """
@@ -661,7 +599,13 @@ class Site:
         Args:
             url: The URL of the file to delete.
         """
-        _client.unload(url)
+        res = self._http.delete(f'{_config.hub_address}{url}')
+        if res.status_code == 200:
+            return
+        raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
+
+
+site = Site()
 
 
 class AsyncSite:
@@ -698,9 +642,11 @@ class AsyncSite:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        # XXX use non-blocking aiohttp post
-        paths = _client.upload(files)
-        return paths
+        upload_url = f'{_config.hub_address}/_f'
+        res = await self._http.post(upload_url, files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        if res.status_code == 200:
+            return json.loads(res.text)['files']
+        raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
 
     async def download(self, url: str, path: str) -> str:
         """
@@ -712,9 +658,16 @@ class AsyncSite:
         Returns:
             The path to the downloaded file.
         """
-        # XXX use non-blocking aiohttp get
-        path = _client.download(url, path)
-        return path
+        path = os.path.abspath(path)
+        # If path is a directory, get basename from url
+        filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
+
+        with open(filepath, 'wb') as f:
+            async with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
+                async for chunk in r.aiter_bytes():
+                    f.write(chunk)
+
+        return filepath
 
     async def unload(self, url: str):
         """
@@ -723,11 +676,10 @@ class AsyncSite:
         Args:
             url: The URL of the file to delete.
         """
-        # XXX use non-blocking aiohttp get
-        _client.unload(url)
-
-
-site = Site()
+        res = await self._http.delete(f'{_config.hub_address}{url}')
+        if res.status_code == 200:
+            return
+        raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
 
 
 def _kv(key: str, index: str, value: Any):
