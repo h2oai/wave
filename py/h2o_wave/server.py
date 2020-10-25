@@ -1,4 +1,3 @@
-import socket
 import asyncio
 import logging
 import warnings
@@ -111,11 +110,6 @@ class _App:
         self._state: WebAppState = (Expando(), dict(), dict())
         self._site: AsyncSite = AsyncSite()
 
-        # internal_address = urlparse(_config.internal_address)
-        # if internal_address.port == 0:
-        #     _config.internal_address = f'ws://127.0.0.1:{_get_unused_port()}'
-        #     _config.external_address = _config.internal_address
-
         logger.info(f'Server Mode: {mode}')
         logger.info(f'Server Route: {route}')
         logger.info(f'External Address: {_config.external_address}')
@@ -219,15 +213,6 @@ def _parse_query(query: str) -> Tuple[str, str, str, str]:
     return username, subject, client_id, body
 
 
-def _get_unused_port() -> int:
-    port = 8000
-    while True:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            if s.connect_ex(('127.0.0.1', port)):
-                return port
-        port += 1
-
-
 class _Main:
     def __init__(self, app: Optional[_App] = None):
         self._app: Optional[_App] = app
@@ -256,10 +241,9 @@ def listen(route: str, handle: HandleAsync, mode=UNICAST):
         handle: The handler function.
         mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
     """
-    warnings.warn("listen() is deprecated. Import main and annotate your serve() function with @app instead.",
+    warnings.warn("'listen()' is deprecated. Instead, import 'main' and annotate your 'serve()' function with '@app'.",
                   DeprecationWarning)
-    main = _Main(_App(route, handle, mode))
 
     internal_address = urlparse(_config.internal_address)
     logger.info(f'Listening on host "{internal_address.hostname}", port "{internal_address.port}"...')
-    uvicorn.run(main, host=internal_address.hostname, port=internal_address.port)
+    uvicorn.run(_Main(_App(route, handle, mode)), host=internal_address.hostname, port=internal_address.port)
