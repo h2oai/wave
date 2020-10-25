@@ -189,6 +189,7 @@ interface OpsD {
   p?: PageD // init
   d?: OpD[] // deltas
   e?: S // error
+  r?: U // reset
 }
 interface OpD {
   k?: S
@@ -775,11 +776,12 @@ on(qd.refreshRateB, r => {
   if (sock) sock.close()
 })
 
-export enum SockEventType { Message, Data }
-export type SockEvent = SockMessage | SockData
+export enum SockEventType { Message, Data, Reset }
+export type SockEvent = SockMessage | SockData | SockReload
 export interface SockData { t: SockEventType.Data, page: Page }
 export enum SockMessageType { Info, Warn, Err }
 export interface SockMessage { t: SockEventType.Message, type: SockMessageType, message: S }
+export interface SockReload { t: SockEventType.Reset }
 type SockHandler = (e: SockEvent) => void
 
 let backoff = 1, currentPage: Page | null = null
@@ -829,6 +831,8 @@ const
             handle({ t: SockEventType.Data, page: currentPage })
           } else if (msg.e) {
             handle({ t: SockEventType.Message, type: SockMessageType.Err, message: msg.e })
+          } else if (msg.r) {
+            handle({ t: SockEventType.Reset })
           }
         } catch (err) {
           console.error(err)

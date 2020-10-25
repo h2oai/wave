@@ -2,6 +2,7 @@ package wave
 
 import (
 	"bytes"
+	"encoding/json"
 	"log"
 	"sort"
 	"sync"
@@ -75,11 +76,9 @@ func (b *Broker) relay(mode, route, addr string) {
 	b.relaysMux.Unlock()
 
 	echo(Log{"t": "relay", "route": route, "host": addr})
+}
 
-	if err := s.run(); err != nil { // blocking
-		echo(Log{"t": "relay", "route": route, "host": addr, "error": err.Error()})
-	}
-
+func (b *Broker) unrelay(route string) {
 	b.relaysMux.Lock()
 	delete(b.relays, route)
 	b.relaysMux.Unlock()
@@ -132,6 +131,13 @@ func (b *Broker) patch(url string, data []byte) {
 	log.Println("*", url, string(data))
 	if err := b.site.patch(url, data); err != nil {
 		echo(Log{"t": "broker_patch", "error": err.Error()})
+	}
+}
+
+// TODO allow only in debug mode?
+func (b *Broker) reset(url string) {
+	if data, err := json.Marshal(OpsD{R: 1}); err == nil {
+		b.publish <- Pub{url, data}
 	}
 }
 

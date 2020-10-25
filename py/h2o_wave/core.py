@@ -1,4 +1,5 @@
 import json
+import warnings
 import logging
 import os
 import os.path
@@ -7,8 +8,8 @@ from typing import List, Dict, Union, Tuple, Any, Optional
 
 import requests
 import shutil
-import websockets
 from requests.auth import HTTPBasicAuth
+import httpx
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ def _get_env(key: str, value: Any):
     return os.environ.get(f'H2O_WAVE_{key}', value)
 
 
-_default_internal_address = 'ws://127.0.0.1:0'
+_default_internal_address = 'http://127.0.0.1:8000'
 
 
 class _Config:
@@ -30,7 +31,6 @@ class _Config:
         self.hub_address = _get_env('ADDRESS', 'http://127.0.0.1:55555')
         self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
-        self.shutdown_timeout: int = int(_get_env('SHUTDOWN_TIMEOUT', '3'))  # seconds
 
 
 _config = _Config()
@@ -506,7 +506,7 @@ class Page(PageBase):
         """
         DEPRECATED: Use `h2o_wave.core.Page.save` instead.
         """
-        logger.warn('page.sync() is deprecated. Please use page.save() instead.')
+        warnings.warn('page.sync() is deprecated. Please use page.save() instead.', DeprecationWarning)
         self.save()
 
     def save(self):
@@ -531,7 +531,7 @@ class AsyncPage(PageBase):
 
     def __init__(self, site: 'AsyncSite', url: str):
         self.site = site
-        self._ws = site._ws
+        self._http = site._http
         super().__init__(url)
 
     async def load(self) -> dict:
@@ -547,7 +547,7 @@ class AsyncPage(PageBase):
         """
         DEPRECATED: Use `h2o_wave.core.AsyncPage.save` instead.
         """
-        logger.warn('page.push() is deprecated. Please use page.save() instead.')
+        warnings.warn('page.push() is deprecated. Please use page.save() instead.', DeprecationWarning)
         await self.save()
 
     async def save(self):
@@ -557,23 +557,7 @@ class AsyncPage(PageBase):
         p = self._diff()
         if p:
             logger.debug(p)
-            await self._ws.send(f'* {self.url} {p}')
-
-    # XXX Broken
-    async def pull(self) -> 'Q':
-        """
-        EXPERIMENTAL. DO NOT USE.
-        """
-        req = await self._ws.recv()
-        return Q(self._ws, req)
-
-    # XXX Broken
-    async def poll(self) -> 'Q':
-        """
-        EXPERIMENTAL. DO NOT USE.
-        """
-        await self.save()
-        return await self.pull()
+            await self._http.patch(f'{_config.hub_address}{self.url}', content=p)
 
 
 class _BasicAuthClient:
@@ -685,8 +669,8 @@ class AsyncSite:
     Represents a reference to the remote Q site. Similar to `h2o_wave.core.Site` except that this class exposes ``async`` methods.
     """
 
-    def __init__(self, ws: websockets.WebSocketServerProtocol):
-        self._ws = ws
+    def __init__(self):
+        self._http = httpx.AsyncClient(auth=(_config.hub_access_key_id, _config.hub_access_key_secret))
 
     def __getitem__(self, url) -> AsyncPage:
         return AsyncPage(self, url)
