@@ -97,7 +97,7 @@ class Query:
         self.auth = auth
         """The username and subject ID of the authenticated user."""
 
-    async def sleep(self, delay: int, result=None) -> Any:
+    async def sleep(self, delay: float, result=None) -> Any:
         """
         Suspend execution for the specified number of seconds.
         Always use `q.sleep()` instead of `time.sleep()` in Wave apps.
