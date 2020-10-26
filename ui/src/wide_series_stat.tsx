@@ -18,10 +18,9 @@ import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
-import { cssVar, getTheme, pc } from './theme'
+import { cssVar, font, pc } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -36,20 +35,21 @@ const
       paddingLeft: grid.gap,
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
     },
     values: {
       display: 'flex',
       alignItems: 'baseline',
     },
     value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
+      ...font.s24,
+      ...font.w3,
     },
     aux_value: {
-      ...theme.font.s13,
+      flexGrow: 1,
+      ...font.s13,
       color: 'var(--text7)',
       marginLeft: 5,
     }

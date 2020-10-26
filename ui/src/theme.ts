@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { NestedCSSProperties } from "typestyle/lib/types"
-import { Dict, I, F, S, U } from "./qd"
 import * as Fluent from "@fluentui/react"
+import { NestedCSSProperties } from "typestyle/lib/types"
+import { F, I, S, U, qd } from "./qd"
 
 interface Palette {
   red: S
@@ -53,6 +53,8 @@ interface Tones {
   text9: S
 }
 
+type Theme = 'light' | 'dark' | 'neon'
+
 export const
   px = (x: I) => `${x}px`,
   pc = (x: F) => `${x}%`,
@@ -76,7 +78,7 @@ export const
   }
 
 const
-  palettes: Dict<{}> = {
+  palettes: { [K in Theme]: Partial<Palette> } = {
     light: {
       text: '#323130',
       card: '#ffffff',
@@ -92,6 +94,63 @@ const
       card: '#0d0e0f',
       page: '#1b1d1f',
     },
+  },
+  fluentPalettes: { [K in Theme]: Partial<Fluent.IPalette> } = {
+    light: {
+      themePrimary: '#000000',
+      themeLighterAlt: '#898989',
+      themeLighter: '#737373',
+      themeLight: '#595959',
+      themeTertiary: '#373737',
+      themeSecondary: '#2f2f2f',
+      themeDarkAlt: '#252525',
+      themeDark: '#151515',
+      themeDarker: '#0b0b0b',
+      neutralLighterAlt: '#faf9f8',
+      neutralLighter: '#f3f2f1',
+      neutralLight: '#edebe9',
+      neutralQuaternaryAlt: '#e1dfdd',
+      neutralQuaternary: '#d0d0d0',
+      neutralTertiaryAlt: '#c8c6c4',
+      neutralTertiary: '#a19f9d',
+      neutralSecondary: '#605e5c',
+      neutralPrimaryAlt: '#3b3a39',
+      neutralPrimary: '#323130',
+      neutralDark: '#201f1e',
+      black: '#000000',
+      white: '#ffffff',
+    },
+    neon: {
+      themePrimary: '#cddc39',
+      themeLighterAlt: '#080902',
+      themeLighter: '#202309',
+      themeLight: '#3d4211',
+      themeTertiary: '#7a8422',
+      themeSecondary: '#b3c132',
+      themeDarkAlt: '#d0df4a',
+      themeDark: '#d7e464',
+      themeDarker: '#e1eb8a',
+      neutralLighterAlt: '#1a1c1e',
+      neutralLighter: '#191b1d',
+      neutralLight: '#181a1c',
+      neutralQuaternaryAlt: '#17181a',
+      neutralQuaternary: '#161719',
+      neutralTertiaryAlt: '#151618',
+      neutralTertiary: '#c8c8c8',
+      neutralSecondary: '#d0d0d0',
+      neutralPrimaryAlt: '#dadada',
+      neutralPrimary: '#ffffff',
+      neutralDark: '#f4f4f4',
+      black: '#f8f8f8',
+      white: '#1b1d1f',
+    },
+    dark: {
+      // TODO: Generate dark fluent color palette.
+    }
+  },
+  rgb = (hex: S): [U, U, U] => {
+    const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    return x ? [parseInt(x[1], 16), parseInt(x[2], 16), parseInt(x[3], 16)] : [0, 0, 0]
   },
   // tracking = a + b * Math.exp(c * fontSize)
   // a = -0.0223, b = 0.185, c = -0.1745
@@ -125,7 +184,7 @@ const
 fontTrackings.forEach(([size, tracking]) => fontStyles[size] = fontStyleFor(size, tracking))
 
 
-const
+export const
   font: ThemeFont = {
     s6: fontStyles[6],
     s7: fontStyles[7],
@@ -195,57 +254,25 @@ interface ThemeFont {
   w9: NestedCSSProperties
 }
 
-export interface Theme {
-  font: ThemeFont
-  merge<T>(defs: Partial<T>, state: Partial<T>): T
-}
-
-let theme: Theme | null = null
 export const
-  loadTheme = (): Theme => {
-    const merge = <T extends unknown>(defs: Partial<T>, state: Partial<T>): T => {
-      const s = { ...defs, ...state } as any
-      for (const k in s) {
-        if (k.endsWith('_color')) {// XXX obsolete; remove
-          // const v = s[k]
-          // if (typeof v === 'string') s[k] = color(v)
-        }
-      }
-      return s as T
-    }
-    theme = { font, merge }
-    return theme
-  },
-  changeTheme = (name: S) => {
+  changeTheme = (name: Theme) => {
     const palette = palettes[name]
+    const fluentPalette = fluentPalettes[name]
     // TODO: Resolve the any.
     Object.keys(palette).forEach(k => document.body.style.setProperty(`--${k}`, (palette as any)[k]))
-  },
-  getTheme = (): Theme => theme || loadTheme(),
-  palette = {
-    themePrimary: '#000000',
-    themeLighterAlt: '#898989',
-    themeLighter: '#737373',
-    themeLight: '#595959',
-    themeTertiary: '#373737',
-    themeSecondary: '#2f2f2f',
-    themeDarkAlt: '#252525',
-    themeDark: '#151515',
-    themeDarker: '#0b0b0b',
-    neutralLighterAlt: '#faf9f8',
-    neutralLighter: '#f3f2f1',
-    neutralLight: '#edebe9',
-    neutralQuaternaryAlt: '#e1dfdd',
-    neutralQuaternary: '#d0d0d0',
-    neutralTertiaryAlt: '#c8c6c4',
-    neutralTertiary: '#a19f9d',
-    neutralSecondary: '#605e5c',
-    neutralPrimaryAlt: '#3b3a39',
-    neutralPrimary: '#323130',
-    neutralDark: '#201f1e',
-    black: '#000000',
-    white: '#ffffff',
-  },
-  defaultFontStyle = {
-    fontFamily: 'Inter',
+    Object.keys(fluentPalette).forEach(k => document.body.style.setProperty(`--${k}`, (fluentPalette as any)[k]))
+
+    // Update text tones.
+    if (palette.text) {
+      const [r, g, b] = rgb(palette.text)
+      let alpha = 0.05
+      for (let i = 0; i < 10; i++) {
+        document.body.style.setProperty(`--text${i}`, `rgba(${r},${g},${b},${alpha})`)
+        alpha += i === 0 ? 0.05 : 0.1
+      }
+    }
+
+    // Change global Fluent theme.
+    Fluent.loadTheme({ palette: fluentPalettes[name] })
+    qd.theme(name)
   }

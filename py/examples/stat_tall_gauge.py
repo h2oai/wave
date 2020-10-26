@@ -19,7 +19,7 @@ c = page.add('example', ui.tall_gauge_stat_card(
     title=fake.cryptocurrency_name(),
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    plot_color='$red',
+    plot_color='red',
     progress=pc,
     data=dict(foo=val, bar=pc),
 ))

@@ -16,10 +16,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { bond, Card, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { font } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -27,13 +26,13 @@ const
       padding: grid.gap,
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
     },
     value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
+      ...font.s24,
+      ...font.w3,
     }
   })
 

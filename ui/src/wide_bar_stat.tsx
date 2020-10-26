@@ -17,10 +17,9 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressBar } from './parts/progress_bar'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { getTheme, cssVar } from './theme'
+import { font, cssVar } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       padding: grid.gap,
@@ -28,8 +27,8 @@ const
       flexDirection: 'column',
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
     },
     content: {
       flexGrow: 1,
@@ -42,12 +41,12 @@ const
       alignItems: 'baseline',
     },
     value: {
-      ...theme.font.s18,
-      ...theme.font.w3,
+      ...font.s18,
+      ...font.w3,
     },
     aux_value: {
-      ...theme.font.s13,
       marginLeft: 5,
+      ...font.s13,
       color: cssVar('text7'),
     }
   })

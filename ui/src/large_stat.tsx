@@ -16,10 +16,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
 import { bond, Card, Rec, S } from './qd'
-import { getTheme } from './theme'
+import { font } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -31,19 +30,19 @@ const
       alignItems: 'baseline',
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
     },
     value: {
-      ...theme.font.s40,
-      ...theme.font.w2,
+      ...font.s40,
+      ...font.w2,
     },
     aux_value: {
       marginLeft: 5,
       color: 'var(--text6)',
     },
     caption: {
-      ...theme.font.s13,
+      ...font.s13,
       color: 'var(--text5)',
     }
   })

@@ -19,6 +19,7 @@ import Dialog from './dialog'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, cssVar, pc } from './theme'
+import * as Fluent from '@fluentui/react'
 
 const
   css = stylesheet({
@@ -111,18 +112,20 @@ const
         if (!page) return <Spinner className={css.centerFullHeight} size={SpinnerSize.large} label='Loading ...' />
 
         return (
-          <div className={css.app}>
-            <PageLayout key={page.key} page={page} />
-            <BusyOverlay />
-            <Dialog />
-          </div>
+          <Fluent.Fabric applyTheme>
+            <div className={css.app}>
+              <PageLayout key={page.key} page={page} />
+              <BusyOverlay />
+              <Dialog />
+            </div>
+          </Fluent.Fabric>
         )
       },
       dispose = () => {
         window.removeEventListener('hashchange', onHashChanged)
       }
 
-    return { init, render, dispose, contentB }
+    return { init, render, dispose, contentB, theme: qd.theme }
   })
 
 export default App

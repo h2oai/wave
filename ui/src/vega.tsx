@@ -17,10 +17,9 @@ import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
 import { B, bond, Card, Rec, S, unpack, xid, debounce } from './qd'
-import { displayMixin, getTheme } from './theme'
+import { displayMixin, font } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -28,8 +27,8 @@ const
       padding: grid.gap,
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
     },
     body: {
       flexGrow: 1,

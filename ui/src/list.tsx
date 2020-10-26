@@ -16,18 +16,17 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Repeat } from './layout'
 import { bond, Card, Rec, S, Data } from './qd'
-import { getTheme } from './theme'
+import { font } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
     },
     body: {
       flexGrow: 1,

@@ -15,13 +15,12 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { getTheme, cssVar } from './theme'
+import { bond, Card, unpack, F, Rec, S, Data } from './qd'
+import { font, cssVar } from './theme'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
-import { bond, Card, Data, F, Rec, S, unpack } from './qd'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -33,11 +32,11 @@ const
       padding: grid.gap,
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
     },
     value: {
-      ...theme.font.s12,
+      ...font.s12,
     },
   })
 

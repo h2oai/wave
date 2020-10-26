@@ -11,7 +11,7 @@ from h2o_wave import site, ui, data
 
 page = site['/demo']
 
-colors = '$red $pink $blue $azure $cyan $teal $mint $green $lime $yellow $amber $orange $tangerine'.split()
+colors = 'red pink blue azure cyan teal mint green lime yellow amber orange tangerine'.split()
 curves = 'linear smooth step step-after step-before'.split()
 fake = Faker()
 cards = []

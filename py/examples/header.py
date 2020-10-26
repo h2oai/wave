@@ -20,13 +20,13 @@ page['header3'] = ui.header_card(
     title='The Amazing Gonkulator',
     subtitle='And now for something completely different!',
     icon='Cycling',
-    icon_color='$violet',
+    icon_color='violet',
 )
 page['header4'] = ui.header_card(
     box='1 4 3 1',
     title='The Amazing Gonkulator',
     subtitle='And now for something completely different!',
     icon='ExploreData',
-    icon_color='$red',
+    icon_color='red',
 )
 page.save()

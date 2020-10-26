@@ -17,10 +17,9 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { cssVar, getTheme, pc } from './theme'
+import { cssVar, font, pc } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -46,21 +45,21 @@ const
       alignItems: 'center',
     },
     percent: {
-      ...theme.font.s12,
+      ...font.s12,
       opacity: 0.5,
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
       overflow: 'visible'
     },
     value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
+      ...font.s24,
+      ...font.w3,
     },
     aux_value: {
-      ...theme.font.s13,
+      ...font.s13,
       color: 'var(--text7)',
       marginLeft: 5,
     }

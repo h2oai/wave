@@ -16,10 +16,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { bond, Card, S, B } from './qd'
-import { getTheme, displayMixin } from './theme'
+import { font, displayMixin } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -27,8 +26,8 @@ const
       padding: grid.gap,
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
     },
     body: {
       flexGrow: 1,

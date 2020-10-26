@@ -46,7 +46,7 @@ import { Tabs, XTabs } from './tabs'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
-import { clas, getTheme, margin, padding } from './theme'
+import { clas, margin, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
@@ -150,7 +150,6 @@ interface State {
 }
 
 const
-  theme = getTheme(),
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
     card: {
@@ -267,7 +266,7 @@ export const
     const
       render = () => {
         const
-          s = theme.merge(defaults, state),
+          s = { ...defaults, ...state },
           title = s.title,
           items = unpack<Component[]>(s.items) // XXX ugly
 

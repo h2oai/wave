@@ -13,28 +13,29 @@
 // limitations under the License.
 
 import { Chart, registerInteraction } from '@antv/g2'
-import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, ChartCfg, AxisOption } from '@antv/g2/lib/interface'
+import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { B, bond, Card, Dict, F, parseI, parseU, qd, Rec, S, unpack, V } from './qd'
-import { getTheme, displayMixin, cssVar } from './theme'
+import { displayMixin, cssVar, font } from './theme'
+import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V, qd } from './qd'
 
-const
-  theme = getTheme(),
+let
   cat10 = [
-    'var(--gray)',
-    'var(--blue)',
-    'var(--green)',
-    'var(--amber)',
-    'var(--tangerine)',
-    'var(--purple)',
-    'var(--cyan)',
-    'var(--mint)',
-    'var(--pink)',
-    'var(--brown)',
+    'gray',
+    'blue',
+    'green',
+    'amber',
+    'tangerine',
+    'purple',
+    'cyan',
+    'mint',
+    'pink',
+    'brown',
   ]
+
+
 type AnnotationOption = ArcOption | LineOption | TextOption | RegionOption | DataMarkerOption | DataRegionOption
 
 enum SpaceT { CC, DD, TT, CD, DC, TC, CT, TD, DT }
@@ -503,7 +504,7 @@ const
         o.color.callback = (x: S) => domain_colors[x]
       }
     } else {
-      o.color = isS(color) ? color : 'var(--gray)'
+      o.color = isS(color) ? color : getComputedStyle(document.documentElement).getPropertyValue('--gray').trim()
     }
     if (isS(shape_field)) {
       if (isS(shape_range)) {
@@ -727,8 +728,8 @@ const
       padding: grid.gap,
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      ...font.s12,
+      ...font.w6,
     },
     body: {
       flexGrow: 1,
@@ -771,6 +772,8 @@ export const
     const
       container = React.createRef<HTMLDivElement>(),
       init = () => {
+        // Map CSS var colors to their hex values.
+        cat10 = cat10.map(c => getComputedStyle(document.documentElement).getPropertyValue(`--${c}`).trim())
         const el = container.current
         if (!el) return
         // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
