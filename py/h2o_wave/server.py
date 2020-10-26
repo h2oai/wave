@@ -173,11 +173,7 @@ class _App:
         self._handle = handle
         # TODO load from remote store if configured
         self._state: WebAppState = (Expando(), dict(), dict())
-        self._http = httpx.AsyncClient(
-            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
-            verify=False,
-        )
-        self._site: AsyncSite = AsyncSite(self._http)
+        self._site: AsyncSite = AsyncSite()
 
         logger.info(f'Server Mode: {mode}')
         logger.info(f'Server Route: {route}')
@@ -201,11 +197,15 @@ class _App:
 
     async def _advertise(self):
         logger.debug(f'Advertising server at {_config.external_address} ...')
-        await self._http.post(
-            _config.hub_address,
-            content=marshal(dict(mode=self._mode, url=self._route, host=_config.external_address)),
-            headers=_content_type_json,
-        )
+        async with httpx.AsyncClient(
+                auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
+                verify=False,
+        ) as http:
+            await http.post(
+                _config.hub_address,
+                content=marshal(dict(mode=self._mode, url=self._route, host=_config.external_address)),
+                headers=_content_type_json,
+            )
         logger.debug('Advertise: success!')
 
     async def _receive(self, req: Request):

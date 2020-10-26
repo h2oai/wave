@@ -229,7 +229,7 @@ def _dump(xs: Any):
 class Ref:
     """
     Represents a local reference to an element on a `h2o_wave.core.Page`.
-    Any changes made to this local reference are tracked and sent to the remote Q server when the page is saved.
+    Any changes made to this local reference are tracked and sent to the remote Wave server when the page is saved.
     """
 
     def __init__(self, page: 'PageBase', key: str):
@@ -257,7 +257,7 @@ class Ref:
 
 class Data:
     """
-    Represents a data placeholder. A data placeholder is used to allocate memory on the Q server to store data.
+    Represents a data placeholder. A data placeholder is used to allocate memory on the Wave server to store data.
 
     Args:
         fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
@@ -302,7 +302,7 @@ def data(
     """
     Create a `h2o_wave.core.Data` instance for associating data with cards.
 
-    ``data(fields, size)`` creates a placeholder for data and allocates memory on the Q server.
+    ``data(fields, size)`` creates a placeholder for data and allocates memory on the Wave server.
 
     ``data(fields, size, rows)`` creates a placeholder and initializes it with the provided rows.
 
@@ -442,7 +442,7 @@ class PageBase:
 
 class Page(PageBase):
     """
-    Represents a reference to a remote Q page.
+    Represents a reference to a remote Wave page.
 
     Args:
         site: The parent site.
@@ -481,7 +481,7 @@ class Page(PageBase):
 
 class AsyncPage(PageBase):
     """
-    Represents a reference to a remote Q page. Similar to `h2o_wave.core.Page` except that this class exposes ``async`` methods.
+    Represents a reference to a remote Wave page. Similar to `h2o_wave.core.Page` except that this class exposes ``async`` methods.
 
 
     Args:
@@ -491,7 +491,6 @@ class AsyncPage(PageBase):
 
     def __init__(self, site: 'AsyncSite', url: str):
         self.site = site
-        self._http = site._http
         super().__init__(url)
 
     async def load(self) -> dict:
@@ -517,12 +516,12 @@ class AsyncPage(PageBase):
         p = self._diff()
         if p:
             logger.debug(p)
-            await self._http.patch(f'{_config.hub_address}{self.url}', content=p)
+            await self.site._save(self.url, p)
 
 
 class Site:
     """
-    Represents a reference to the remote Q site. A Site instance is used to obtain references to the site's pages.
+    Represents a reference to the remote Wave site. A Site instance is used to obtain references to the site's pages.
     """
 
     def __init__(self):
@@ -610,14 +609,22 @@ site = Site()
 
 class AsyncSite:
     """
-    Represents a reference to the remote Q site. Similar to `h2o_wave.core.Site` except that this class exposes ``async`` methods.
+    Represents a reference to the remote Wave site. Similar to `h2o_wave.core.Site` except that this class exposes ``async`` methods.
     """
 
-    def __init__(self, http: httpx.AsyncClient):
-        self._http = http
+    def __init__(self):
+        self._http = httpx.AsyncClient(
+            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
+            verify=False,
+        )
 
     def __getitem__(self, url) -> AsyncPage:
         return AsyncPage(self, url)
+
+    async def _save(self, url: str, patch: str):
+        res = await self._http.patch(f'{_config.hub_address}{url}', content=patch)
+        if res.status_code != 200:
+            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
     async def load(self, url) -> dict:
         """
@@ -629,8 +636,10 @@ class AsyncSite:
         Returns:
             The serialized page.
         """
-        # XXX implement
-        return {}
+        res = await self._http.get(f'{_config.hub_address}{url}', headers=_content_type_json)
+        if res.status_code != 200:
+            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
+        return res.json()
 
     async def upload(self, files: List[str]) -> List[str]:
         """
