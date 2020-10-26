@@ -1,5 +1,13 @@
 import asyncio
+from concurrent.futures import Executor
+
+try:
+    import contextvars  # Python 3.7+ only.
+except ImportError:
+    contextvars = None
+
 import logging
+import functools
 import warnings
 import pickle
 import traceback
@@ -89,8 +97,66 @@ class Query:
         self.auth = auth
         """The username and subject ID of the authenticated user."""
 
-    async def sleep(self, delay):
-        await asyncio.sleep(delay)
+    async def sleep(self, delay: int, result=None) -> Any:
+        """
+        Suspend execution for the specified number of seconds.
+        Always use `q.sleep()` instead of `time.sleep()` in Wave apps.
+
+        Args:
+            delay: Number of seconds to sleep.
+            result: Result to return after delay, if any.
+
+        Returns:
+            The `result` argument, if any, as is.
+        """
+        return await asyncio.sleep(delay, result)
+
+    async def exec(self, executor: Optional[Executor], func: Callable, *args: Any, **kwargs: Any) -> Any:
+        """
+        Execute a function in the background using the specified executor.
+
+        To execute a function in-process, use `q.run()`.
+
+        Args:
+            executor: The executor to be used. If None, executes the function in-process.
+            func: The function to to be called.
+            args: Arguments to be passed to the function.
+            kwargs: Keywords arguments to be passed to the function.
+        Returns:
+            The result of the function call.
+        """
+        if asyncio.iscoroutinefunction(func):
+            return await func(*args, **kwargs)
+
+        loop = asyncio.get_event_loop()
+
+        if contextvars is not None:  # Python 3.7+ only.
+            return await loop.run_in_executor(
+                executor,
+                contextvars.copy_context().run,
+                functools.partial(func, *args, **kwargs)
+            )
+
+        if kwargs:
+            return await loop.run_in_executor(executor, functools.partial(func, *args, **kwargs))
+
+        return await loop.run_in_executor(executor, func, *args)
+
+    async def run(self, func: Callable, *args: Any, **kwargs: Any) -> Any:
+        """
+        Execute a function in the background, in-process.
+
+        Equivalent to calling `q.exec()` without an executor.
+
+        Args:
+            func: The function to to be called.
+            args: Arguments to be passed to the function.
+            kwargs: Keywords arguments to be passed to the function.
+
+        Returns:
+            The result of the function call.
+        """
+        return await self.exec(None, func, *args, **kwargs)
 
 
 Q = Query
@@ -120,7 +186,8 @@ class _App:
         logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
         logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
 
-        self._router = Router(
+        # ASGI app
+        self.app = Router(
             routes=[
                 Route('/', endpoint=self._receive, methods=['POST']),
             ],
@@ -219,7 +286,7 @@ class _Main:
         self._app: Optional[_App] = app
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        await self._app._router(scope, receive, send)
+        await self._app.app(scope, receive, send)
 
 
 main = _Main()
