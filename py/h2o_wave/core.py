@@ -533,6 +533,10 @@ class Site:
     def __getitem__(self, url) -> Page:
         return Page(self, url)
 
+    def __delitem__(self, key: str):
+        page = self[key]
+        page.drop()
+
     def _save(self, url: str, patch: str):
         res = self._http.patch(f'{_config.hub_address}{url}', content=patch)
         if res.status_code != 200:
@@ -609,7 +613,7 @@ site = Site()
 
 class AsyncSite:
     """
-    Represents a reference to the remote Wave site. Similar to `h2o_wave.core.Site` except that this class exposes ``async`` methods.
+    Represents a reference to the remote Wave site. Similar to `h2o_wave.core.Site` except that this class exposes `async` methods.
     """
 
     def __init__(self):
@@ -620,6 +624,10 @@ class AsyncSite:
 
     def __getitem__(self, url) -> AsyncPage:
         return AsyncPage(self, url)
+
+    def __delitem__(self, key: str):
+        page = self[key]
+        page.drop()
 
     async def _save(self, url: str, patch: str):
         res = await self._http.patch(f'{_config.hub_address}{url}', content=patch)
