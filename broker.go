@@ -80,6 +80,13 @@ func (b *Broker) addApp(mode, route, addr string) {
 	b.reset(route) // TODO allow only in debug mode?
 }
 
+func (b *Broker) getApp(route string) *App {
+	b.appsMux.RLock()
+	defer b.appsMux.RUnlock()
+	app, _ := b.apps[route]
+	return app
+}
+
 func (b *Broker) dropApp(route string) {
 	b.appsMux.Lock()
 	delete(b.apps, route)
@@ -119,13 +126,6 @@ func parseMsg(s []byte) Msg {
 		return Msg{action, string(addr), data}
 	}
 	return invalidMsg
-}
-
-func (b *Broker) getApp(route string) *App {
-	b.appsMux.RLock()
-	defer b.appsMux.RUnlock()
-	app, _ := b.apps[route]
-	return app
 }
 
 // patch broadcasts changes to clients and patches site data.

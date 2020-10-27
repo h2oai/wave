@@ -78,11 +78,11 @@ func (c *Client) listen() {
 				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "service unavailable"})
 				continue
 			}
-			app.sendOrDrop(c.format(m.data))
+			app.forward(c.format(m.data))
 		case watchMsgT:
 			c.subscribe(m.addr) // subscribe even if page is currently NA
 
-			if app := c.broker.getApp(m.addr); app != nil { // is service?
+			if app := c.broker.getApp(m.addr); app != nil { // do we have an app handling this route?
 				switch app.mode {
 				case unicastMode:
 					c.subscribe("/" + c.id) // client-level
@@ -96,7 +96,8 @@ func (c *Client) listen() {
 						boot = j
 					}
 				}
-				app.sendOrDrop(c.format(boot))
+				// echo(Log{"t": "boot", "client": c.addr, "route": m.addr, "addr": app.addr, "location": string(boot)})
+				app.forward(c.format(boot))
 				continue
 			}
 

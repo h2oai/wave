@@ -49,7 +49,7 @@ func newApp(broker *Broker, mode, route, addr string) *App {
 	}
 }
 
-func (app *App) sendOrDrop(data []byte) {
+func (app *App) forward(data []byte) {
 	if !app.send(data) {
 		app.broker.dropApp(app.route)
 	}
