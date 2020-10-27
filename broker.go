@@ -75,6 +75,9 @@ func (b *Broker) addApp(mode, route, addr string) {
 	b.appsMux.Unlock()
 
 	echo(Log{"t": "app_add", "route": route, "host": addr})
+
+	// Force-reload all browsers listening to this app
+	b.reset(route) // TODO allow only in debug mode?
 }
 
 func (b *Broker) dropApp(route string) {
@@ -83,6 +86,9 @@ func (b *Broker) dropApp(route string) {
 	b.appsMux.Unlock()
 
 	echo(Log{"t": "app_drop", "route": route})
+
+	// Force-reload all browsers listening to this app
+	b.reset(route) // TODO allow only in debug mode?
 }
 
 func parseMsgT(s []byte) MsgT {
