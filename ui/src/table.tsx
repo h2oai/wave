@@ -129,8 +129,8 @@ const
         case 'number':
           return sortAsc ? a - b : b - a
         case 'string':
-          a = a.toLowerCase()
-          b = b.toLowerCase()
+          a = Date.parse(a) || a.toLowerCase()
+          b = Date.parse(b) || b.toLowerCase()
           break
       }
     }

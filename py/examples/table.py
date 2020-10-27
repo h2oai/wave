@@ -11,7 +11,7 @@ _id = 0
 
 
 class Issue:
-    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str):
+    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str, created: str):
         global _id
         _id += 1
         self.id = f'I{_id}'
@@ -21,6 +21,7 @@ class Issue:
         self.progress = progress
         self.icon = icon
         self.notifications = notifications
+        self.created = created
 
 
 # Create some issues
@@ -30,7 +31,8 @@ issues = [
         status=('Closed' if i % 2 == 0 else 'Open'),
         progress=random.random(),
         icon=('BoxCheckmarkSolid' if random.random() > 0.5 else 'BoxMultiplySolid'),
-        notifications=('Off' if random.random() > 0.5 else 'On')) for i in range(100)
+        notifications=('Off' if random.random() > 0.5 else 'On'),
+        created=fake.iso8601()) for i in range(100)
 ]
 
 # Create columns for our issue table.
@@ -41,6 +43,7 @@ columns = [
     ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
     ui.table_column(name='views', label='Views', sortable=True),
     ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
+    ui.table_column(name='created', label='Created', sortable=True),
 ]
 
 
@@ -52,8 +55,9 @@ async def serve(q: Q):
             columns=columns,
             rows=[ui.table_row(
                 name=issue.id,
-                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
-                issue in issues],
+                cells=[issue.text, issue.status, issue.notifications, issue.icon,
+                  str(issue.views), issue.progress, issue.created]
+                ) for issue in issues],
             groupable=True,
             downloadable=True,
             resettable=True,

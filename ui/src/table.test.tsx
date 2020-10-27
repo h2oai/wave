@@ -186,16 +186,34 @@ describe('Table.tsx', () => {
     it('Sorts by column - string', () => {
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
-      let gridcell1 = getAllByRole('gridcell')[0]
-      expect(gridcell1.textContent).toBe(cell11)
+      expect(getAllByRole('gridcell')[0].textContent).toBe(cell11)
+      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      expect(getAllByRole('gridcell')[0].textContent).toBe(cell21)
+      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      expect(getAllByRole('gridcell')[0].textContent).toBe(cell31)
+    })
 
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
+    it('Sorts by column - iso date', () => {
+      const date1 = '1971-07-08T23:09:33', date2 = '1976-11-05T19:12:18', date3 = '2001-03-28T03:09:31'
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: 'rowname1', cells: [date3] },
+          { name: 'rowname2', cells: [date2] },
+          { name: 'rowname3', cells: [date1] }
+        ]
+      }
+      const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
-      gridcell1 = getAllByRole('gridcell')[0]
-      expect(gridcell1.textContent).toBe(cell21)
+      expect(getAllByRole('gridcell')[0].textContent).toBe(date3)
+      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      expect(getAllByRole('gridcell')[0].textContent).toBe(date1)
+      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      expect(getAllByRole('gridcell')[0].textContent).toBe(date3)
     })
 
     it('Sorts by column and rerenders icon col', () => {
+      const xIcon = 'BoxMultiplySolid', checkIcon = 'BoxCheckmarkSolid'
       tableProps = {
         ...tableProps,
         columns: [
@@ -203,28 +221,36 @@ describe('Table.tsx', () => {
           { name: 'colname2', label: 'Col2', cell_type: { icon: {} } },
         ],
         rows: [
-          { name: 'rowname1', cells: [cell11, 'BoxMultiplySolid'] },
-          { name: 'rowname2', cells: [cell21, 'BoxCheckmarkSolid'] },
-          { name: 'rowname3', cells: [cell31, 'BoxMultiplySolid'] }
+          { name: 'rowname1', cells: [cell11, xIcon] },
+          { name: 'rowname2', cells: [cell21, checkIcon] },
+          { name: 'rowname3', cells: [cell31, xIcon] }
         ]
       }
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe('BoxMultiplySolid')
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
-      expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe('BoxCheckmarkSolid')
+      expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe(xIcon)
+      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe(checkIcon)
+      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      expect(getAllByRole('gridcell')[1].querySelector('i')?.getAttribute('data-icon-name')).toBe(xIcon)
     })
 
     it('Sorts by column - number', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: 'rowname1', cells: [111 as any] },
+          { name: 'rowname2', cells: [25] },
+          { name: 'rowname3', cells: [9] }
+        ]
+      }
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
-      let gridcell1 = getAllByRole('gridcell')[1]
-      expect(gridcell1.textContent).toBe('2')
-
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
-
-      gridcell1 = getAllByRole('gridcell')[1]
-      expect(gridcell1.textContent).toBe('1')
+      expect(getAllByRole('gridcell')[0].textContent).toBe('111')
+      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('9')
+      fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('111')
     })
   })
 
