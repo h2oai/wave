@@ -22,11 +22,11 @@ import (
 )
 
 const logo = `
-┌────────────────────────┐
-│  ┌   ┌ ┌──┐ ┌  ┌ ┌──┐  │ H2O Wave
-│  │ ┌─┘ │──│ │  │ └┐    │ v%s b%s
-│  └─┘   ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
-└────────────────────────┘
+┌─────────────────────────┐
+│  ┌    ┌ ┌──┐ ┌  ┌ ┌──┐  │ H2O Wave
+│  │ ┌──┘ │──│ │  │ └┐    │ %s %s
+│  └─┘    ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
+└─────────────────────────┘
 `
 
 // Log represents key-value data for a log message.
@@ -155,7 +155,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// TODO auth
 		switch r.Header.Get("Content-Type") {
 		case contentTypeJSON: // data
-			var req RelayRequest
+			var req AppRequest
 			b, err := ioutil.ReadAll(r.Body) // XXX add limit
 			if err != nil {
 				echo(Log{"t": "read post request body", "error": err.Error()})
@@ -167,9 +167,17 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 				return
 			}
-			s.broker.relay(req.Mode, req.URL, req.Host)
-			// Force-reload all browsers listening to this app
-			s.broker.reset(req.URL) // TODO allow only in debug mode?
+			if req.RegisterApp != nil {
+				q := req.RegisterApp
+				s.broker.relay(q.Mode, q.Route, q.Host)
+				// Force-reload all browsers listening to this app
+				s.broker.reset(q.Route) // TODO allow only in debug mode?
+			} else if req.UnregisterApp != nil {
+				q := req.UnregisterApp
+				s.broker.unrelay(q.Route)
+				// Force-reload all browsers listening to this app
+				s.broker.reset(q.Route) // TODO allow only in debug mode?
+			}
 		default:
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		}

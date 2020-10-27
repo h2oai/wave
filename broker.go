@@ -75,13 +75,15 @@ func (b *Broker) relay(mode, route, addr string) {
 	b.relays[route] = s
 	b.relaysMux.Unlock()
 
-	echo(Log{"t": "relay", "route": route, "host": addr})
+	echo(Log{"t": "app_reg", "route": route, "host": addr})
 }
 
 func (b *Broker) unrelay(route string) {
 	b.relaysMux.Lock()
 	delete(b.relays, route)
 	b.relaysMux.Unlock()
+
+	echo(Log{"t": "app_unreg", "route": route})
 }
 
 func parseMsgT(s []byte) MsgT {

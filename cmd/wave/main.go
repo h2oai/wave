@@ -11,10 +11,10 @@ import (
 
 var (
 	// Version is the executable version.
-	Version = "dev"
+	Version = "(version)"
 
 	// BuildDate is the executable build date.
-	BuildDate = "unknown"
+	BuildDate = "(build)"
 )
 
 func main() {

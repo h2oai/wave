@@ -166,12 +166,28 @@ HandleAsync = Callable[[Q], Awaitable[Any]]
 WebAppState = Tuple[Expando, Dict[str, Expando], Dict[str, Expando]]
 
 
+class _Wave:
+    def __init__(self):
+        self._http = httpx.AsyncClient(
+            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
+            verify=False,
+        )
+
+    async def call(self, method: str, **kwargs):
+        return await self._http.post(
+            _config.hub_address,
+            headers=_content_type_json,
+            content=marshal({method: kwargs}),
+        )
+
+
 class _App:
     def __init__(self, route: str, handle: HandleAsync, mode=UNICAST):
         self._mode = mode
         self._route = route
         self._handle = handle
         # TODO load from remote store if configured
+        self._wave: _Wave = _Wave()
         self._state: WebAppState = (Expando(), dict(), dict())
         self._site: AsyncSite = AsyncSite()
 
@@ -188,25 +204,23 @@ class _App:
                 Route('/', endpoint=self._receive, methods=['POST']),
             ],
             on_startup=[
-                self._advertise,
+                self._register,
             ],
             on_shutdown=[
+                self._unregister,
                 self._shutdown,
             ]
         )
 
-    async def _advertise(self):
-        logger.debug(f'Advertising server at {_config.external_address} ...')
-        async with httpx.AsyncClient(
-                auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
-                verify=False,
-        ) as http:
-            await http.post(
-                _config.hub_address,
-                content=marshal(dict(mode=self._mode, url=self._route, host=_config.external_address)),
-                headers=_content_type_json,
-            )
-        logger.debug('Advertise: success!')
+    async def _register(self):
+        logger.debug(f'Registering app at {_config.external_address} ...')
+        await self._wave.call('register_app', mode=self._mode, route=self._route, host=_config.external_address)
+        logger.debug('Register: success!')
+
+    async def _unregister(self):
+        logger.debug(f'Unregistering app...')
+        await self._wave.call('unregister_app', route=self._route)
+        logger.debug('Unregister: success!')
 
     async def _receive(self, req: Request):
         b = await req.body()
