@@ -11,7 +11,7 @@ def blocking_function(secs) -> str:
     return f'Done waiting for {secs} seconds!'
 
 
-@app(route='/')
+@app(route='/demo')
 async def serve(q: Q):
     if q.args.start:
         q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[ui.progress('Running...')])

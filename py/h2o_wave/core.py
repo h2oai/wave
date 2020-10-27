@@ -118,7 +118,7 @@ class Expando:
 
     def __repr__(self): return repr(self.__dict__[DICT])
 
-    def __str__(self): return '\n'.join([f'{k} = {repr(v)}' for k, v in self.__dict__[DICT].items()])
+    def __str__(self): return ', '.join([f'{k}:{repr(v)}' for k, v in self.__dict__[DICT].items()])
 
 
 def expando_to_dict(e: Expando) -> dict:
