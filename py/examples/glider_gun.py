@@ -159,4 +159,3 @@ def make_glider_gun(r, c):
 
 
 render(make_glider_gun(2, 2))
-

@@ -1,7 +1,7 @@
 # Form / Tabs
 # Use tabs within a form to navigate between two or more distinct content categories.
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 tabs = [
     ui.tab(name='email', label='Mail', icon='Mail'),
@@ -10,6 +10,7 @@ tabs = [
 ]
 
 
+@app('/demo')
 async def serve(q: Q):
     if q.args.menu:
         q.page['example'].items = [
@@ -28,6 +29,3 @@ def get_tab_content(category: str):
     # Return a checklist of dummy items.
     items = [f'{category.title()} {i}' for i in range(1, 11)]
     return ui.checklist(name='items', choices=[ui.choice(name=item, label=item) for item in items])
-
-
-listen('/demo', serve)

@@ -28,7 +28,6 @@ class Example:
         self.next_example: Optional[Example] = None
         self.process: Optional[asyncio.subprocess.Process] = None
         self.is_app = source.find('@app(') > 0
-        self.is_listen = source.find('listen(') > 0
 
     async def start(self):
         if self.is_app:
@@ -185,6 +184,7 @@ async def show_example(q: Q, example: Example):
 
 
 @app('/tour')
+@app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
         q.client.initialized = True

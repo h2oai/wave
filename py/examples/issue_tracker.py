@@ -1,7 +1,7 @@
 # Issue Tracker
 # Implement a simple issue tracker using a table to create master-detail views.
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 from faker import Faker
 
 fake = Faker()
@@ -120,6 +120,7 @@ async def reopen_issues(q: Q):
     await show_issues(q)
 
 
+@app('/demo')
 async def serve(q: Q):
     if q.args.edit_multiple:
         await edit_multiple(q)
@@ -135,6 +136,3 @@ async def serve(q: Q):
         await show_issue(q, q.args.issues[0])
     else:
         await show_issues(q)
-
-
-listen('/demo', serve)

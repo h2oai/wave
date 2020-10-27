@@ -4,7 +4,7 @@
 
 
 import os
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 
 def write_csv(filename, rows):
@@ -12,6 +12,7 @@ def write_csv(filename, rows):
         f.write('\n'.join([','.join([str(x) for x in row]) for row in rows]))
 
 
+@app('/demo')
 async def serve(q: Q):
     if q.args.generate_csv:
         # Generate
@@ -35,6 +36,3 @@ async def serve(q: Q):
             ui.button(name='generate_csv', label='Generate', primary=True),
         ])
     await q.page.save()
-
-
-listen('/demo', serve)

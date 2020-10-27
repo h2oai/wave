@@ -5,6 +5,7 @@ from h2o_wave import Q, ui, pack, app, main
 
 
 @app('/demo')
+@app('/demo')
 async def serve(q: Q):
     count = q.client.count or 0
 

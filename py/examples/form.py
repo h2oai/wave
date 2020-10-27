@@ -2,7 +2,7 @@
 # Use a form to collect data or show textual information.
 # ---
 from synth import FakeCategoricalSeries
-from h2o_wave import Q, listen, ui, pack, data
+from h2o_wave import Q, main, app, ui, pack, data
 import random
 
 html = '''
@@ -37,6 +37,7 @@ n = 20
 def rnd(): return random.randint(1, 100)
 
 
+@app('/demo')
 async def serve(q: Q):
     q.page['example'] = ui.form_card(box='1 1 4 10', items=[
         ui.text_xl(content='Extra-large text, for headings.'),
@@ -128,6 +129,3 @@ async def serve(q: Q):
         ui.button(name='show_inputs', label='Submit', primary=True),
     ])
     await q.page.save()
-
-
-listen('/demo', serve)

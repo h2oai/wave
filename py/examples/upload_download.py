@@ -5,8 +5,10 @@
 
 import os
 import os.path
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
+
+@app('/demo')
 async def serve(q: Q):
     links = q.args.user_files
     if links:
@@ -31,6 +33,3 @@ async def serve(q: Q):
             ui.file_upload(name='user_files', label='Upload', multiple=True),
         ])
     await q.page.save()
-
-
-listen('/demo', serve)

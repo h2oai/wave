@@ -1,9 +1,10 @@
 # Form / Toggle
 # Use a toggle to present users with two mutually exclusive options (to turn settings on and off).
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 
+@app('/demo')
 async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
@@ -22,6 +23,3 @@ async def serve(q: Q):
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
-
-
-listen('/demo', serve)

@@ -1,9 +1,10 @@
 # Form / Button
 # Use buttons to enable a user to commit a change or complete steps in a task.
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 
+@app('/demo')
 async def serve(q: Q):
     if 'basic_button' in q.args:
         q.page['example'].items = [
@@ -35,6 +36,3 @@ async def serve(q: Q):
                       primary=True, disabled=True),
         ])
     await q.page.save()
-
-
-listen('/demo', serve)

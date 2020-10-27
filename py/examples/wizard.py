@@ -1,12 +1,13 @@
 # Wizard
 # Create a multi-step wizard using form cards.
 # ---
-from h2o_wave import Q, ui, listen, cypress, Cypress
+from h2o_wave import Q, ui, main, app, cypress, Cypress
 
 
+@app('/demo')
 async def serve(q: Q):
     if (
-        not q.client.initialized
+            not q.client.initialized
     ):  # First visit, create an empty form card for our wizard
         q.page['wizard'] = ui.form_card(box='1 1 2 4', items=[])
         q.client.initialized = True
@@ -59,6 +60,3 @@ def try_walk_through(cy: Cypress):
     cy.locate('text').should(
         'contain.text', 'What a coincidence, Fred! I feel quirky too!'
     )
-
-
-listen('/demo', serve)

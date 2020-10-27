@@ -3,7 +3,7 @@
 # ---
 import random
 from faker import Faker
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 fake = Faker()
 
@@ -44,6 +44,7 @@ columns = [
 ]
 
 
+@app('/demo')
 async def serve(q: Q):
     q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
         ui.table(
@@ -57,6 +58,3 @@ async def serve(q: Q):
         )
     ])
     await q.page.save()
-
-
-listen('/demo', serve)
