@@ -214,7 +214,7 @@ class _App:
 
     async def _register(self):
         logger.debug(f'Registering app at {_config.external_address} ...')
-        await self._wave.call('register_app', mode=self._mode, route=self._route, host=_config.external_address)
+        await self._wave.call('register_app', mode=self._mode, route=self._route, address=_config.external_address)
         logger.debug('Register: success!')
 
     async def _unregister(self):

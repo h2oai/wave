@@ -46,9 +46,21 @@ func (s *WebServer) authenticate(username, password string) bool {
 	return err == nil
 }
 
+func (s *WebServer) guard(w http.ResponseWriter, r *http.Request) bool {
+	username, password, ok := r.BasicAuth()
+	if !ok || !s.authenticate(username, password) {
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return false
+	}
+	return true
+}
+
 func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPatch: // writes
+		if !s.guard(w, r) {
+			return
+		}
 		s.patch(w, r)
 	case http.MethodGet: // reads
 		switch r.Header.Get("Content-Type") {
@@ -58,6 +70,9 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			s.fs.ServeHTTP(w, r)
 		}
 	case http.MethodPost: // all other APIs
+		if !s.guard(w, r) {
+			return
+		}
 		s.post(w, r)
 	// TODO case http.MethodPut: // file uploads
 	default:
@@ -66,12 +81,6 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *WebServer) patch(w http.ResponseWriter, r *http.Request) {
-	username, password, ok := r.BasicAuth()
-	if !ok || !s.authenticate(username, password) {
-		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-		return
-	}
-
 	data, err := ioutil.ReadAll(r.Body) // XXX add limit
 	if err != nil {
 		echo(Log{"t": "read patch request body", "error": err.Error()})
@@ -101,7 +110,6 @@ func (s *WebServer) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
-	// TODO auth
 	switch r.Header.Get("Content-Type") {
 	case contentTypeJSON: // data
 		var req AppRequest
@@ -118,7 +126,7 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 		}
 		if req.RegisterApp != nil {
 			q := req.RegisterApp
-			s.broker.addApp(q.Mode, q.Route, q.Host)
+			s.broker.addApp(q.Mode, q.Route, q.Address)
 		} else if req.UnregisterApp != nil {
 			q := req.UnregisterApp
 			s.broker.dropApp(q.Route)

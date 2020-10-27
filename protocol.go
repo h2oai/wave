@@ -67,9 +67,9 @@ type AppRequest struct {
 
 // RegisterApp represents a request to register an app.
 type RegisterApp struct {
-	Mode  string `json:"mode"`
-	Route string `json:"route"`
-	Host  string `json:"host"`
+	Mode    string `json:"mode"`
+	Route   string `json:"route"`
+	Address string `json:"address"`
 }
 
 // UnregisterApp represents a request to unregister an app.
