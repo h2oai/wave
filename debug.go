@@ -13,8 +13,8 @@ const siteTemplate = `
 		<title>Site Profile</title>
 	</head>
 	<body style="font-family:monospace">
-	  <div><strong>Relays</strong><div>
-		{{range .Relays}}<div><a href="{{ . }}">{{ . }}</a></div>{{else}}<div>No relays.</div>{{end}}
+	  <div><strong>Apps</strong><div>
+		{{range .Apps}}<div><a href="{{ . }}">{{ . }}</a></div>{{else}}<div>No apps.</div>{{end}}
 	  <div><strong>Pages</strong><div>
 		{{range .Pages}}<div><a href="{{ . }}">{{ . }}</a></div>{{else}}<div>No pages.</div>{{end}}
 	</body>
@@ -35,11 +35,11 @@ func newDebugHandler(broker *Broker) *DebugHandler {
 
 func (h *DebugHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := struct {
-		Relays []string
-		Pages  []string
+		Apps  []string
+		Pages []string
 	}{
-		Relays: h.broker.urls(),
-		Pages:  h.broker.site.urls(),
+		Apps:  h.broker.routes(),
+		Pages: h.broker.site.urls(),
 	}
 	h.siteTemplate.Execute(w, data)
 }

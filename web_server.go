@@ -141,12 +141,12 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 			if req.RegisterApp != nil {
 				q := req.RegisterApp
-				s.broker.relay(q.Mode, q.Route, q.Host)
+				s.broker.addApp(q.Mode, q.Route, q.Host)
 				// Force-reload all browsers listening to this app
 				s.broker.reset(q.Route) // TODO allow only in debug mode?
 			} else if req.UnregisterApp != nil {
 				q := req.UnregisterApp
-				s.broker.unrelay(q.Route)
+				s.broker.dropApp(q.Route)
 				// Force-reload all browsers listening to this app
 				s.broker.reset(q.Route) // TODO allow only in debug mode?
 			}

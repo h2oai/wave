@@ -15,7 +15,7 @@ const (
 	badMsgT MsgT = iota
 	noopMsgT
 	patchMsgT
-	relayMsgT
+	queryMsgT
 	watchMsgT
 )
 
@@ -34,13 +34,13 @@ var (
 
 // Pub represents a published message
 type Pub struct {
-	url  string
-	data []byte
+	route string
+	data  []byte
 }
 
 // Sub represents a subscription.
 type Sub struct {
-	url    string
+	route  string
 	client *Client
 }
 
@@ -51,8 +51,8 @@ type Broker struct {
 	publish     chan Pub
 	subscribe   chan Sub
 	unsubscribe chan *Client
-	relays      map[string]*Relay // route => relay
-	relaysMux   sync.RWMutex      // mutex for tracking relays
+	apps        map[string]*App // route => app
+	appsMux     sync.RWMutex    // mutex for tracking apps
 }
 
 func newBroker(site *Site) *Broker {
@@ -62,28 +62,27 @@ func newBroker(site *Site) *Broker {
 		make(chan Pub, 1024),
 		make(chan Sub),
 		make(chan *Client),
-		make(map[string]*Relay),
+		make(map[string]*App),
 		sync.RWMutex{},
 	}
 }
 
-// relay establishes a relay to an upstream service; blocking
-func (b *Broker) relay(mode, route, addr string) {
-	s := newRelay(b, mode, route, addr)
+func (b *Broker) addApp(mode, route, addr string) {
+	s := newApp(b, mode, route, addr)
 
-	b.relaysMux.Lock()
-	b.relays[route] = s
-	b.relaysMux.Unlock()
+	b.appsMux.Lock()
+	b.apps[route] = s
+	b.appsMux.Unlock()
 
-	echo(Log{"t": "app_reg", "route": route, "host": addr})
+	echo(Log{"t": "app_add", "route": route, "host": addr})
 }
 
-func (b *Broker) unrelay(route string) {
-	b.relaysMux.Lock()
-	delete(b.relays, route)
-	b.relaysMux.Unlock()
+func (b *Broker) dropApp(route string) {
+	b.appsMux.Lock()
+	delete(b.apps, route)
+	b.appsMux.Unlock()
 
-	echo(Log{"t": "app_unreg", "route": route})
+	echo(Log{"t": "app_drop", "route": route})
 }
 
 func parseMsgT(s []byte) MsgT {
@@ -92,7 +91,7 @@ func parseMsgT(s []byte) MsgT {
 		case '*':
 			return patchMsgT
 		case '@':
-			return relayMsgT
+			return queryMsgT
 		case '+':
 			return watchMsgT
 		case '#':
@@ -116,30 +115,29 @@ func parseMsg(s []byte) Msg {
 	return invalidMsg
 }
 
-// at looks up a relay for a given route
-func (b *Broker) at(route string) *Relay {
-	b.relaysMux.RLock()
-	defer b.relaysMux.RUnlock()
-	relay, _ := b.relays[route]
-	return relay
+func (b *Broker) getApp(route string) *App {
+	b.appsMux.RLock()
+	defer b.appsMux.RUnlock()
+	app, _ := b.apps[route]
+	return app
 }
 
 // patch broadcasts changes to clients and patches site data.
-func (b *Broker) patch(url string, data []byte) {
-	b.publish <- Pub{url, data}
+func (b *Broker) patch(route string, data []byte) {
+	b.publish <- Pub{route, data}
 	// Write AOF entry with patch marker "*" as-is to log file.
 	// FIXME bufio.Scanner.Scan() is not reliable if line length > 65536 chars,
 	// so reading back in is unreliable.
-	log.Println("*", url, string(data))
-	if err := b.site.patch(url, data); err != nil {
+	log.Println("*", route, string(data))
+	if err := b.site.patch(route, data); err != nil {
 		echo(Log{"t": "broker_patch", "error": err.Error()})
 	}
 }
 
 // TODO allow only in debug mode?
-func (b *Broker) reset(url string) {
+func (b *Broker) reset(route string) {
 	if data, err := json.Marshal(OpsD{R: 1}); err == nil {
-		b.publish <- Pub{url, data}
+		b.publish <- Pub{route, data}
 	}
 }
 
@@ -148,14 +146,14 @@ func (b *Broker) run() {
 	for {
 		select {
 		case sub := <-b.subscribe:
-			b.add(sub.url, sub.client)
+			b.addClient(sub.route, sub.client)
 		case client := <-b.unsubscribe:
-			b.drop(client)
+			b.dropClient(client)
 		case pub := <-b.publish:
-			if clients, ok := b.clients[pub.url]; ok {
+			if clients, ok := b.clients[pub.route]; ok {
 				for client := range clients {
-					if !client.relay(pub.data) {
-						b.drop(client)
+					if !client.send(pub.data) {
+						b.dropClient(client)
 					}
 				}
 			}
@@ -163,57 +161,55 @@ func (b *Broker) run() {
 	}
 }
 
-// add registers a client
-func (b *Broker) add(url string, client *Client) {
-	clients, ok := b.clients[url]
+func (b *Broker) addClient(route string, client *Client) {
+	clients, ok := b.clients[route]
 	if !ok {
 		clients = make(map[*Client]interface{})
-		b.clients[url] = clients
+		b.clients[route] = clients
 	}
 	clients[client] = nil
 
-	echo(Log{"t": "connect", "addr": client.addr, "url": url})
+	echo(Log{"t": "ui_add", "addr": client.addr, "route": route})
 }
 
-// drop unregisters a client
-func (b *Broker) drop(client *Client) {
+func (b *Broker) dropClient(client *Client) {
 	var gc []string
 
-	for _, url := range client.urls {
-		if clients, ok := b.clients[url]; ok {
+	for _, route := range client.routes {
+		if clients, ok := b.clients[route]; ok {
 			delete(clients, client)
 			if len(clients) == 0 {
-				gc = append(gc, url)
+				gc = append(gc, route)
 			}
 		}
 	}
 
 	client.quit()
 
-	for _, url := range gc {
-		delete(b.clients, url)
+	for _, route := range gc {
+		delete(b.clients, route)
 	}
 
 	// FIXME leak: this is not captured in the AOF logging; page will be recreated on hydration
 	b.site.del(client.id) // delete transient page, if any.
 
-	echo(Log{"t": "disconnect", "addr": client.addr})
+	echo(Log{"t": "ui_drop", "addr": client.addr})
 }
 
-// urls returns a sorted slice of urls relayed by this broker.
-func (b *Broker) urls() []string {
-	b.relaysMux.RLock()
-	defer b.relaysMux.RUnlock()
+// routes returns a sorted slice of routes managed by this broker.
+func (b *Broker) routes() []string {
+	b.appsMux.RLock()
+	defer b.appsMux.RUnlock()
 
-	relays := b.relays
+	apps := b.apps
 
-	urls := make([]string, len(relays))
+	routes := make([]string, len(apps))
 	i := 0
-	for url := range relays {
-		urls[i] = url
+	for route := range apps {
+		routes[i] = route
 		i++
 	}
 
-	sort.Strings(urls)
-	return urls
+	sort.Strings(routes)
+	return routes
 }
