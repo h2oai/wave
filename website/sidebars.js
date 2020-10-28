@@ -40,6 +40,7 @@ module.exports = {
       'development',
       'browser-testing',
       'configuration',
+      'deployment',
       'backup',
     ],
     'Enterprise': [
