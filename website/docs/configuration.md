@@ -5,11 +5,11 @@ title: Configuration
 ## Configuring the server
 
 ### Command line options
-Execute `wave -help` to see all available command line options:
+Execute `waved -help` to see all available command line options:
 
 ```
-$ ./wave -help
-Usage of ./wave:
+$ ./waved -help
+Usage of ./waved:
   -access-key-id string
     	default access key ID (default "access_key_id")
   -access-key-secret string

@@ -9,15 +9,14 @@ You can play around with these examples in your browser using `tour.py`, a Pytho
 
 ```none title="Contents of $HOME/wave"
 wave/
-├── docs/           
 ├── examples/       <-- Examples live here.
 |   └── tour.py     <-- The Wave Tour.
 ├── test/           
 ├── www/            
-└── wave              
+└── waved
 ```
 
-To run the tour, as with any Wave app, we need to start both the Wave server (`wave`) and the tour (`tour.py`). Let's go ahead and do that.
+To run the tour, as with any Wave app, we need to start both the Wave server (`waved`) and the tour (`tour.py`). Let's go ahead and do that.
 
 ## Step 1: Start the Wave server
 
@@ -25,7 +24,7 @@ To run the tour, as with any Wave app, we need to start both the Wave server (`w
 
 ## Step 2: Run the tour
 
-To run the tour, create a [virtual environment](https://docs.python.org/3/tutorial/venv.html), install the tour's dependencies, and finally execute `tour.py`.  
+To run the tour, create a [virtual environment](https://docs.python.org/3/tutorial/venv.html), install the tour's dependencies, and execute `tour.py`.
 
 :::important
 Do this from a new terminal window!

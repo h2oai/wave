@@ -75,9 +75,9 @@ listen('/counter', serve)
 
 The SDK ships batteries-included with a wide variety of user interface widgets and charts. You also get to use your favorite Python libraries seamlessly - anything that works in a Jupyter notebook works in H2O Wave - including Altair, Bokeh, H2O, Keras, Matplotlib, Plotly, PyTorch, Seaborn, TensorFlow, Vega-lite, and others. H2O Wave lets you use and broadcast results from all of these libraries, in realtime.
 
-H2O Wave is not only a programming toolkit but a programmable content server as well: it can capture, retain, and relay information efficiently in realtime. The content server (or *Wave Server*) is written in Go, a ~10MB static executable without runtime dependencies[^2]. It currently ships with a Python language driver, but is language-agnostic (an R language driver is under development).
+H2O Wave is not only a programming toolkit but a programmable content server as well: it can capture, retain, and relay information efficiently in realtime. The content server (or *Wave server*) is written in Go, a ~10MB static executable without runtime dependencies[^2]. It currently ships with a Python language driver, but is language-agnostic (an R language driver is under development).
 
-The Wave Server stores all the content and acts as a hub between your user's web browser and your apps. Therefore, it must be up and running before you launch Wave apps. Typically, you only need one Wave Server to serve several apps.
+The Wave server stores all the content and acts as a hub between your user's web browser and your apps. Therefore, it must be up and running before you launch Wave apps. Typically, you only need one Wave server to serve several apps.
 
 ``` 
                                       +---------+

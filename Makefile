@@ -20,7 +20,7 @@ clean: ## Clean
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
 	cd tools/wavegen && $(MAKE) clean
-	rm -f wave
+	rm -f waved
 
 .PHONY: build
 build: build-ui build-server ## Build everything
@@ -38,7 +38,7 @@ test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test
 
 build-server: ## Build server for current OS/Arch
-	go build $(LDFLAGS) -o wave cmd/wave/main.go
+	go build $(LDFLAGS) -o waved cmd/wave/main.go
 
 build-py: ## Build h2o_wave wheel
 	cd py && $(MAKE) release
@@ -82,7 +82,7 @@ release-os:
 	rm -rf test/cypress/screenshots/*.*
 	rm -rf test/cypress/videos/*.*
 	rsync --exclude node_modules -a test build/$(REL)/
-	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/wave$(EXE_EXT) cmd/wave/main.go
+	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/waved$(EXE_EXT) cmd/wave/main.go
 	cp readme.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 

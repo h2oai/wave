@@ -18,7 +18,7 @@
 .idea
 /build
 /data
-/wave
+/waved
 /surf
 /*.db
 *.log

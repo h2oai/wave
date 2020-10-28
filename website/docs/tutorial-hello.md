@@ -10,7 +10,7 @@ In this section, we'll learn how to author our first Wave program from scratch, 
 These tutorials assume that you have some familiarity with the Python programming language. You don't have to be an expert, but it might be harder to learn both Wave and Python at the same time.
 :::
 
-## Step 1: Start the Wave Server
+## Step 1: Start the Wave server
 
 <StartQ/>
 
