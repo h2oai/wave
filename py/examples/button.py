@@ -1,7 +1,7 @@
 # Form / Button
 # Use buttons to enable a user to commit a change or complete steps in a task.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 
 @app('/demo')

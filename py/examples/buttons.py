@@ -1,7 +1,7 @@
 # Form / Buttons
 # Use the `ui.buttons()` function to group related buttons.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 
 @app('/demo')

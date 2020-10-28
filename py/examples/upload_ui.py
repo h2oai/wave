@@ -4,7 +4,7 @@
 
 
 import os
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 import os.path
 
 

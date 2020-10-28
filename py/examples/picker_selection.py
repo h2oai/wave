@@ -1,7 +1,7 @@
 # Form / Picker / Selection
 # Pre-select choices while displaying a picker.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 
 @app('/demo')

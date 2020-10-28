@@ -3,7 +3,7 @@
 # ---
 import random
 from faker import Faker
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 fake = Faker()
 

@@ -2,7 +2,7 @@
 # Display a context menu on a card.
 # ---
 import json
-from h2o_wave import Q, main, app, ui, data
+from h2o_wave import main, app, Q, ui, data
 
 # Vega lite spec for a bar plot, defaults to linear scale.
 spec_linear_scale = json.dumps(dict(

@@ -1,7 +1,7 @@
 # Form / Range Slider
 # Use a range slider to allow users to select a value range (from, to).
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 
 @app('/demo')

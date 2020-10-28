@@ -2,7 +2,7 @@
 # Launch the server in broadcast mode to synchronize browser state across users. Global variables can be used to manage state.
 # Open `/demo` in multiple browsers and watch them synchronize in realtime.
 # ---
-from h2o_wave import Q, main, app, ui, pack
+from h2o_wave import main, app, Q, ui, pack
 
 count = 0
 

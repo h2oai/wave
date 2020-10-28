@@ -1,7 +1,7 @@
 # Toolbar
 # Use toolbars to provide commands that operate on the content of a page.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 
 @app('/demo')

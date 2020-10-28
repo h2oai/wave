@@ -3,7 +3,7 @@
 # ---
 import time
 import random
-from h2o_wave import ui, Q, app, main
+from h2o_wave import main, app, Q, ui
 
 
 def blocking_function(secs) -> str:

@@ -1,7 +1,7 @@
 # Form / Color Picker
 # Use a color picker to allow a user to select a color.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 
 @app('/demo')

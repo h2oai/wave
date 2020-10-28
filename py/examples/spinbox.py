@@ -1,7 +1,7 @@
 # Form / Spinbox
 # Use a spinbox to allow users to incrementally adjust a value in small steps.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 
 @app('/demo')

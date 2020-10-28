@@ -1,7 +1,7 @@
 # Form / Tabs
 # Use tabs within a form to navigate between two or more distinct content categories.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 tabs = [
     ui.tab(name='email', label='Mail', icon='Mail'),

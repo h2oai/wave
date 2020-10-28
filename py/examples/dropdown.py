@@ -1,7 +1,7 @@
 # Form / Dropdown
 # Use dropdowns to allow users to choose between available choices.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 choices = [
     ui.choice('A', 'Option A'),

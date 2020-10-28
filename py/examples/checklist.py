@@ -1,7 +1,7 @@
 # Form / Checklist
 # Use a checklist to group a set of related checkboxes.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 
 @app('/demo')

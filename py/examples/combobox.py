@@ -1,7 +1,7 @@
 # Form / Combobox
 # Use comboboxes to allow users to either choose between available choices or indicate a choice by free-form editing.
 # ---
-from h2o_wave import Q, main, app, ui
+from h2o_wave import main, app, Q, ui
 
 combobox_choices = ['Cyan', 'Magenta', 'Yellow', 'Black']
 

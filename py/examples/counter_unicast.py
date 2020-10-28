@@ -1,10 +1,9 @@
 # Mode / Unicast
 # Launch the server in unicast mode and use `q.client` to manage client-local state.
 # ---
-from h2o_wave import Q, ui, pack, app, main
+from h2o_wave import main, app, Q, ui
 
 
-@app('/demo')
 @app('/demo')
 async def serve(q: Q):
     count = q.client.count or 0
