@@ -24,7 +24,7 @@ To run the tour, as with any Wave app, we need to start both the Wave server (`w
 
 ## Step 2: Run the tour
 
-To run the tour, create a [virtual environment](https://docs.python.org/3/tutorial/venv.html), install the tour's dependencies, and execute `tour.py`.
+First, create a [virtual environment](https://docs.python.org/3/tutorial/venv.html), install the tour's dependencies.
 
 :::important
 Do this from a new terminal window!
@@ -35,7 +35,6 @@ cd $HOME/wave
 python3 -m venv venv
 source venv/bin/activate
 pip install -r examples/requirements.txt
-wave start examples.tour
 ```
 
 On Windows:
@@ -45,10 +44,16 @@ cd $HOME\wave
 python3 -m venv venv
 venv\Scripts\activate.bat
 pip install -r examples\requirements.txt
-wave start examples.tour
+```
+
+Finally, run the tour:
+
+```shell
+wave run --no-reload examples.tour
 ```
 
 ## Step 3: Enjoy the tour
+
 
 Go to [http://localhost:55555/tour](http://localhost:55555/tour) to access the tour. 
 
@@ -65,7 +70,7 @@ To play with the tour's active example in isolation, simply open a new browser t
 In this section, we started the Wave server and then launched `tour.py` to experience the tour. In general, this is how you'd typically launch any app, including your own. There is nothing special about `tour.py`. In fact, to run any example, all you need to do is repeat the steps above in a new terminal window. For example, to run `todo.py`, simply run:
 
 ```shell 
-wave start examples.todo
+wave run examples.todo
 ```
 
 You can now access the example at [http://localhost:55555/demo](http://localhost:55555/demo). Simple!

@@ -20,42 +20,28 @@ def main():
     pass
 
 
-def _run(app: str, reload: bool):
+@main.command()
+@click.argument('app')
+@click.option("--no-reload", is_flag=True, default=False, help="Disable auto-reload.")
+def run(app: str, no_reload: bool):
+    """Run an app.
+
+    \b
+    Run app.py with auto reload:
+    $ wave run app
+
+    \b
+    Run path/to/app.py with auto reload:
+    $ wave run path.to.app
+
+    \b
+    Run path/to/app.py without auto reload:
+    $ wave run --no-reload path.to.app
+    """
+
     port = _scan_free_port()
     addr = f'http://{_localhost}:{port}'
     os.environ['H2O_WAVE_INTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_EXTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_APP_ADDRESS'] = addr
-    uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=reload)
-
-
-@main.command()
-@click.argument('app')
-def run(app: str):
-    """Run an app with live reload (development).
-
-    \b
-    Run main() in app.py:
-    $ wave run app:main
-
-    \b
-    Run main() in path/to/app.py:
-    $ wave run path.to.app:main
-    """
-    _run(app, reload=True)
-
-
-@main.command()
-@click.argument('app')
-def start(app: str):
-    """Run an app.
-
-    \b
-    Run main() in app.py:
-    $ wave start app:main
-
-    \b
-    Run main() in path/to/app.py:
-    $ wave start path.to.app:main
-    """
-    _run(app, reload=False)
+    uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
