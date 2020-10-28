@@ -45,7 +45,7 @@ python3 -m venv venv
 
 ## Debugging Apps
 
-To debug Wave apps, set your IDE or editor's configuration to execute the command `python -m h2o_wave start --no-reload foo` instead of `python foo.py`.
+To debug Wave apps, set your IDE or editor's configuration to execute the command `python -m h2o_wave run --no-reload foo` instead of `python foo.py`.
 
 :::tip
 The command `wave run --no-reload foo` is equivalent to `python -m h2o_wave run --no-reload foo`.
