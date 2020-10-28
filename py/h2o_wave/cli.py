@@ -26,7 +26,7 @@ def _run(app: str, reload: bool):
     os.environ['H2O_WAVE_INTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_EXTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_APP_ADDRESS'] = addr
-    uvicorn.run(app, host=_localhost, port=port, reload=reload)
+    uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=reload)
 
 
 @main.command()

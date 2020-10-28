@@ -36,10 +36,12 @@ We named our `@app` function `serve()`, but you can call it anything you please,
 `serve()` is an `async` function, and must be declared as `async def serve(...)` instead of plain `def serve(...)`.
 :::
 
+To run your app, use `wave run`:
+
 ```shell
 cd $HOME/wave-apps
 source venv/bin/activate
-wave run counter:main
+wave run counter
 ```
 
 The `wave run` command runs your app in *development mode*, and the app is automatically reloaded when edited. The argument `counter:main` indicates that we want to use the `main()` function in `counter.py` to serve the app.

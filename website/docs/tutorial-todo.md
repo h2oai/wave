@@ -199,7 +199,7 @@ At this point, try running your app.
 ```shell 
 cd $HOME/wave-apps
 source venv/bin/activate
-wave run todo:main
+wave run todo
 ```
 
 Point your browser to [http://localhost:55555/todo](http://localhost:55555/todo).

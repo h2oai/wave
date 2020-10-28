@@ -6,10 +6,12 @@ A Wave app is the primary mechanism to publish interactive web content in Wave.
 
 A Wave app can publish content and handle user interactions, unlike a [Wave script](scripts.md), which can publish content but not handle user interactions.
 
+## Structure
+
 Here is the skeleton of a Wave app:
 
-```py 
-from h2o_wave import Q, main, app, ui
+```py title="app.py" 
+from h2o_wave import main, app, Q, ui
 
 @app('/foo')
 async def serve(q: Q):
@@ -19,15 +21,31 @@ async def serve(q: Q):
     # Save the page
     await q.page.save()
 ```
-## Listen and serve
 
-`@app()` has one required argument - the route your app is interested in (in the above case `/foo`).
+An app typically imports four symbols from `h2o_wave`:
 
-`main` is an [ASGI](https://asgi.readthedocs.io/en/latest/)-compatible function, and can be passed to an ASGI server any it starts an event loop listening for user interaction events, and announces itself to the Wave server. The Wave server then starts routing any user actions happening at `/foo` to your app. 
+- `main`: An [ASGI](https://asgi.readthedocs.io/en/latest/)-compatible function. See [Deployment](deployment.md).
+- `app`: A decorator for your query handler (or request handler).
+- `Q`: A class that represents the query sent to your query handler. 
+- `ui`: The module containing the API for drawing UI elements.
 
-The `serve()` function is called every time the user performs some action at the route `/foo` (access the page, reload it, click a button, access a menu, enter text, and so on). 
+`@app()` has one required argument - the route your app is interested in (in this case `/foo`). Whenever a user performs any action at `/foo` - access the page, reload it, click a button, access a menu, enter text, and so on - the query handler `serve()` is called. The details about what action was performed, and who  performed the action, are available in the argument passed to `serve()`, the *query context* `q` (of type [Q](api/server#q)).
 
-The details about what action was performed, and who  performed the action, are available in the argument passed to `serve()`, the *query context* `q` (of type [Q](api/server#q)).
+Wave apps are run using the `wave run` command, which accepts the name of the Python module in which `main` is imported from `h2o_wave`.
+
+If your app is contained in `app.py`, run it like this:
+
+```shell 
+wave run app
+```
+
+If your app is contained in `path/to/app.py`, run it like this:
+
+```shell
+wave run path.to.app
+```
+
+When run, the app starts an event loop listening for user interaction events, and announces itself to the Wave server. The Wave server then starts routing any user actions happening at `/foo` to your app. 
 
 ## Runtime context
 
