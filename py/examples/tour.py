@@ -15,6 +15,9 @@ py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
 example_dir = os.path.dirname(os.path.realpath(__file__))
 
+_app_host = '127.0.0.1'
+_app_port = '55556'
+
 
 class Example:
     def __init__(self, filename: str, title: str, description: str, source: str):
@@ -32,8 +35,8 @@ class Example:
     async def start(self):
         if self.is_app:
             self.process = await asyncio.create_subprocess_exec(
-                sys.executable, '-m', 'uvicorn', '--port', '8002', f'examples.{self.name}:main', env=dict(
-                    H2O_WAVE_EXTERNAL_ADDRESS='http://127.0.0.1:8002'
+                sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main', env=dict(
+                    H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}'
                 ),
             )
         else:

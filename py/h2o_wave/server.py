@@ -193,7 +193,7 @@ class _App:
 
         logger.info(f'Server Mode: {mode}')
         logger.info(f'Server Route: {route}')
-        logger.info(f'External Address: {_config.external_address}')
+        logger.info(f'App Address: {_config.app_address}')
         logger.info(f'Hub Address: {_config.hub_address}')
         logger.debug(f'Hub Access Key ID: {_config.hub_access_key_id}')
         logger.debug(f'Hub Access Key Secret: {_config.hub_access_key_secret}')
@@ -213,8 +213,8 @@ class _App:
         )
 
     async def _register(self):
-        logger.debug(f'Registering app at {_config.external_address} ...')
-        await self._wave.call('register_app', mode=self._mode, route=self._route, address=_config.external_address)
+        logger.debug(f'Registering app at {_config.app_address} ...')
+        await self._wave.call('register_app', mode=self._mode, route=self._route, address=_config.app_address)
         logger.debug('Register: success!')
 
     async def _unregister(self):

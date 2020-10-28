@@ -24,7 +24,7 @@ _default_internal_address = 'http://127.0.0.1:8000'
 class _Config:
     def __init__(self):
         self.internal_address = _get_env('INTERNAL_ADDRESS', _default_internal_address)
-        self.external_address = _get_env('EXTERNAL_ADDRESS', self.internal_address)
+        self.app_address = _get_env('APP_ADDRESS', _get_env('EXTERNAL_ADDRESS', self.internal_address))
         self.hub_address = _get_env('ADDRESS', 'http://127.0.0.1:55555')
         self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
