@@ -33,10 +33,7 @@ export const
   padding = (...t: I[]) => t.map(px).join(' '),
   margin = padding,
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
-  displayMixin = (visible = true): React.CSSProperties => {
-    if (visible) return {}
-    return { display: 'none' }
-  },
+  displayMixin = (visible = true): React.CSSProperties => visible ? {} : { display: 'none' },
   // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
   cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color
 

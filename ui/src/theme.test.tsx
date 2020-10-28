@@ -45,7 +45,7 @@ describe('Theme util functions', () => {
   })
 
   it('returns expected display obj', () => {
-    expect(displayMixin()).toMatchObject({ display: 'block' })
+    expect(displayMixin()).toMatchObject({})
     expect(displayMixin(false)).toMatchObject({ display: 'none' })
   })
 
