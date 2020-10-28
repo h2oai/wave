@@ -31,6 +31,7 @@ module.exports = {
       'state',
       'routing',
       'realtime',
+      'background',
       'expressions',
       'files',
       'plotting',
