@@ -11,7 +11,7 @@ publish: ## Publish package to PyPI
 setup: ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
-	./venv/bin/python -m pip install setuptools wheel twine requests httpx uvicorn starlette pdoc3 pytest flake8
+	./venv/bin/python -m pip install setuptools wheel twine httpx uvicorn starlette pdoc3 pytest flake8
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
 
