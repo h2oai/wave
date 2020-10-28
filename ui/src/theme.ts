@@ -28,16 +28,10 @@ export const
   pc = (x: F) => `${x}%`,
   rem = (x: F) => `${x}rem`,
   clas = (...names: string[]) => names.join(' '),
-  quint = (prop: string) => `${prop} 600ms cubic-bezier(0.23, 1, 0.32, 1)`, // https://easings.net/#easeOutQuint
   border = (thickness: U, color: string) => `${thickness}px solid ${color}`,
-  dotted = (thickness: U, color: string) => `${thickness}px dotted ${color}`,
   dashed = (thickness: U, color: string) => `${thickness}px dashed ${color}`,
-  hairline = border(1, '#ececec'),
   padding = (...t: I[]) => t.map(px).join(' '),
-  paddingRem = (...t: F[]) => t.map(rem).join(' '),
   margin = padding,
-  rgba = (r: U, g: U, b: U, a: F) => `rgba(${r},${g},${b},${a.toFixed(1)})`,
-  gray = (b: U) => { const h = b.toString(16); return `#${h}${h}${h}` },
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
   displayMixin = (visible = true): React.CSSProperties => {
     if (visible) return {}
