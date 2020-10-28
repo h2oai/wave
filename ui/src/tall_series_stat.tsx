@@ -18,7 +18,7 @@ import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
-import { cssVar, font } from './theme'
+import { clas, cssVar } from './theme'
 
 const
   css = stylesheet({
@@ -29,16 +29,7 @@ const
     text: {
       padding: grid.gap,
     },
-    title: {
-      ...font.s12,
-      ...font.w6,
-    },
-    value: {
-      ...font.s24,
-      ...font.w3,
-    },
     aux_value: {
-      ...font.s12,
       color: 'var(--text7)',
     },
   })
@@ -96,9 +87,9 @@ export const
       return (
         <div data-test={name} className={css.card}>
           <div className={css.text}>
-            <Format data={data} format={s.title || 'Untitled'} className={css.title} />
-            <Format data={data} format={s.value} className={css.value} />
-            <Format data={data} format={s.aux_value} className={css.aux_value} />
+            <Format data={data} format={s.title || 'Untitled'} className='s12 w6' />
+            <Format data={data} format={s.value} className='s24 w3' />
+            <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's12')} />
           </div>
           {plot}
         </div>

@@ -16,7 +16,6 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { bond, Card, unpack, Rec, S, qd, U } from './qd'
-import { font } from './theme'
 
 const
   pixelSize = 20,
@@ -29,10 +28,6 @@ const
       display: 'flex',
       flexDirection: 'column',
       padding: grid.gap,
-    },
-    title: {
-      ...font.s12,
-      ...font.w6,
     },
     canvas: {
       display: 'flex', flexWrap: 'wrap',
@@ -106,7 +101,7 @@ export const
           })
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.title}>{s.title}</div>
+            <div className='s12 w6'>{s.title}</div>
             <div className={css.canvas}>{pixels}</div>
             <div className={css.swatches}>
               <div className={css.pixel}>
@@ -123,4 +118,3 @@ export const
   })
 
 cards.register('pixel_art', View)
-

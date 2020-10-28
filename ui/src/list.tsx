@@ -16,17 +16,12 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Repeat } from './layout'
 import { bond, Card, Rec, S, Data } from './qd'
-import { font } from './theme'
 
 const
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
-    },
-    title: {
-      ...font.s12,
-      ...font.w6,
     },
     body: {
       flexGrow: 1,
@@ -61,7 +56,7 @@ export const
       render = () => {
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.title}>{s.title}</div>
+            <div className='s12 w6'>{s.title}</div>
             <div className={css.body}>
               <Repeat view={s.item_view} props={s.item_props} data={s.data} />
             </div>

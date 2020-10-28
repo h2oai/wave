@@ -17,7 +17,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { cssVar, font, pc } from './theme'
+import { cssVar, pc } from './theme'
 
 const
   css = stylesheet({
@@ -45,21 +45,15 @@ const
       alignItems: 'center',
     },
     percent: {
-      ...font.s12,
       opacity: 0.5,
     },
     title: {
-      ...font.s12,
-      ...font.w6,
       overflow: 'visible'
     },
     value: {
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
-      ...font.s24,
-      ...font.w3,
     },
     aux_value: {
-      ...font.s13,
       color: 'var(--text7)',
       marginLeft: 5,
     }
@@ -94,13 +88,13 @@ export const
             </div>
           </div>
           <div className={css.rhs}>
-            <Format data={data} format={s.title} className={css.title} />
+            <Format data={data} format={s.title} className='s12 w6' />
             <div className={css.values}>
-              <Format data={data} format={s.value} className={css.value} />
-              <Format data={data} format={s.aux_value} className={css.aux_value} />
+              <Format data={data} format={s.value} className='s24 w3' />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
             </div>
           </div>
-        </div>
+        </div >
       )
     }
     return { render, changed }

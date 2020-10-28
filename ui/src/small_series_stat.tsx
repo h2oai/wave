@@ -31,13 +31,6 @@ const
       justifyContent: 'space-between',
       padding: grid.gap,
     },
-    title: {
-      ...font.s12,
-      ...font.w6,
-    },
-    value: {
-      ...font.s12,
-    },
   })
 
 /** Create a small stat card displaying a primary value and a series plot. */
@@ -90,8 +83,8 @@ export const
       return (
         <div data-test={name} className={css.card}>
           <div className={css.text}>
-            <Format data={data} format={s.title || 'Untitled'} className={css.title} />
-            <Format data={data} format={s.value} className={css.value} />
+            <Format data={data} format={s.title || 'Untitled'} className='s12 w6' />
+            <Format data={data} format={s.value} className='s12' />
           </div>
           {plot}
         </div>

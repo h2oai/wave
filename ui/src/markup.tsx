@@ -16,7 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { bond, Card, S, B } from './qd'
-import { font, displayMixin } from './theme'
+import { displayMixin } from './theme'
 
 const
   css = stylesheet({
@@ -24,10 +24,6 @@ const
       display: 'flex',
       flexDirection: 'column',
       padding: grid.gap,
-    },
-    title: {
-      ...font.s12,
-      ...font.w6,
     },
     body: {
       flexGrow: 1,
@@ -58,7 +54,7 @@ export const
   ),
   MarkupCard = ({ name, title, content }: { name: S, title: S, content: S }) => (
     <div data-test={name} className={css.card}>
-      {title && <div className={css.title}>{title}</div>}
+      {title && <div className='s12 w6'>{title}</div>}
       <div className={css.body}>
         <XMarkup model={{ content }} />
       </div>

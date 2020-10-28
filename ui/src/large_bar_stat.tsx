@@ -17,7 +17,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressBar } from './parts/progress_bar'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { cssVar, font } from './theme'
+import { clas, cssVar } from './theme'
 
 const
   css = stylesheet({
@@ -27,27 +27,19 @@ const
       justifyContent: 'space-between',
       padding: grid.gap,
     },
-    title: {
-      ...font.s12,
-      ...font.w6,
-    },
     values: {
       display: 'flex',
       justifyContent: 'space-between',
-      ...font.s18,
-      ...font.w3,
     },
     aux_value: {
       color: 'var(--text7)',
     },
     caption: {
-      ...font.s13,
       color: 'var(--text5)',
     },
     captions: {
       display: 'flex',
       justifyContent: 'space-between',
-      ...font.s12,
       color: 'var(--text7)',
     },
   })
@@ -80,15 +72,15 @@ export const
       const data = unpack(s.data)
       return (
         <div data-test={name} className={css.card}>
-          <Format data={data} format={s.title} className={css.title} />
-          <Format data={data} format={s.caption} className={css.caption} />
+          <Format data={data} format={s.title} className='s12 w6' />
+          <Format data={data} format={s.caption} className={clas(css.caption, 's13')} />
           <div>
-            <div className={css.values}>
+            <div className={clas(css.values, 's18 w3')}>
               <div><Format data={data} format={s.value} /></div>
               <Format data={data} format={s.aux_value} className={css.aux_value} />
             </div>
-            <ProgressBar thickness={2} color={cssVar(s.plot_color as any)} value={s.progress} />
-            <div className={css.captions}>
+            <ProgressBar thickness={2} color={cssVar(s.plot_color)} value={s.progress} />
+            <div className={clas(css.captions, 's12')}>
               <div><Format data={data} format={s.value_caption} /></div>
               <div><Format data={data} format={s.aux_value_caption} /></div>
             </div>

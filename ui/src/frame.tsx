@@ -16,7 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { bond, Card, S, xid, B } from './qd'
-import { font, displayMixin } from './theme'
+import { displayMixin } from './theme'
 
 const
   css = stylesheet({
@@ -24,10 +24,6 @@ const
       display: 'flex',
       flexDirection: 'column',
       padding: grid.gap,
-    },
-    title: {
-      ...font.s12,
-      ...font.w6,
     },
     body: {
       flexGrow: 1,
@@ -85,7 +81,7 @@ export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const render = () => (
       <div data-test={name} className={css.card}>
-        <div className={css.title}>{state.title}</div>
+        <div className='s12 w6'>{state.title}</div>
         <div className={css.body}>
           <InlineFrame path={state.path} content={state.content} />
         </div>

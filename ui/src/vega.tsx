@@ -17,7 +17,7 @@ import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
 import { B, bond, Card, Rec, S, unpack, xid, debounce } from './qd'
-import { displayMixin, font } from './theme'
+import { displayMixin } from './theme'
 
 const
   css = stylesheet({
@@ -25,10 +25,6 @@ const
       display: 'flex',
       flexDirection: 'column',
       padding: grid.gap,
-    },
-    title: {
-      ...font.s12,
-      ...font.w6,
     },
     body: {
       flexGrow: 1,
@@ -130,7 +126,7 @@ export const
         const { specification, data } = state
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.title}>{state.title}</div>
+            <div className='s12 w6'>{state.title}</div>
             <div className={css.body}>
               <XVegaVisualization key={xid()} model={{ specification, data }} />
             </div>

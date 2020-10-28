@@ -16,7 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
 import { bond, Card, Rec, S } from './qd'
-import { font } from './theme'
+import { clas } from './theme'
 
 const
   css = stylesheet({
@@ -29,20 +29,11 @@ const
       display: 'flex',
       alignItems: 'baseline',
     },
-    title: {
-      ...font.s12,
-      ...font.w6,
-    },
-    value: {
-      ...font.s40,
-      ...font.w2,
-    },
     aux_value: {
       marginLeft: 5,
       color: 'var(--text6)',
     },
     caption: {
-      ...font.s13,
       color: 'var(--text5)',
     }
   })
@@ -65,12 +56,12 @@ export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
     const render = () => (
       <div data-test={name} className={css.card}>
-        <Format data={s.data} format={s.title} className={css.title} />
+        <Format data={s.data} format={s.title} className='s12 w6' />
         <div className={css.values}>
-          <Format data={s.data} defaultValue={s.value} format={s.value} className={css.value} />
+          <Format data={s.data} defaultValue={s.value} format={s.value} className='s40 w2' />
           <Format data={s.data} format={s.aux_value} className={css.aux_value} />
         </div>
-        <Format data={s.data} format={s.caption} className={css.caption} />
+        <Format data={s.data} format={s.caption} className={clas(css.caption, 's13')} />
       </div>
     )
 

@@ -16,17 +16,12 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { B, Card, unpack, Rec, S, Data, xid, box, bond } from './qd'
 import { cards, CardView, Format } from './layout'
-import { font } from './theme'
 
 const
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
-    },
-    title: {
-      ...font.s12,
-      ...font.w6,
     },
     body: {
       flexGrow: 1,
@@ -82,7 +77,7 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.title}>{s.title || 'Untitled'}</div>
+            <div className='s12 w6'>{s.title || 'Untitled'}</div>
             <div className={css.body}>
               <table className={css.table}>
                 <thead>
@@ -100,4 +95,3 @@ export const
   })
 
 cards.register('grid', View)
-

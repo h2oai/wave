@@ -33,8 +33,6 @@ def next_curve():
 
 def create_dashboard(update_freq=0.0):
     page = site['/demo']
-    page['meta'] = ui.meta_card(box='', theme='neon')
-
     simples = []
     for i in range(1, 7):
         f = FakePercent()
