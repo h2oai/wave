@@ -4998,6 +4998,7 @@ class MetaCard:
             refresh: Optional[int] = None,
             notification: Optional[str] = None,
             redirect: Optional[str] = None,
+            icon: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -5010,6 +5011,8 @@ class MetaCard:
         """Display a desktop notification to the user."""
         self.redirect = redirect
         """Redirect the page to a new URL."""
+        self.icon = icon
+        """Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers)."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -5024,6 +5027,7 @@ class MetaCard:
             refresh=self.refresh,
             notification=self.notification,
             redirect=self.redirect,
+            icon=self.icon,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -5037,12 +5041,14 @@ class MetaCard:
         __d_refresh: Any = __d.get('refresh')
         __d_notification: Any = __d.get('notification')
         __d_redirect: Any = __d.get('redirect')
+        __d_icon: Any = __d.get('icon')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
         refresh: Optional[int] = __d_refresh
         notification: Optional[str] = __d_notification
         redirect: Optional[str] = __d_redirect
+        icon: Optional[str] = __d_icon
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -5050,6 +5056,7 @@ class MetaCard:
             refresh,
             notification,
             redirect,
+            icon,
             commands,
         )
 

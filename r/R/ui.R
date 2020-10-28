@@ -2617,6 +2617,7 @@ ui_markup_card <- function(
 #' @param refresh Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
 #' @param notification Display a desktop notification to the user.
 #' @param redirect Redirect the page to a new URL.
+#' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 ui_meta_card <- function(
@@ -2625,12 +2626,14 @@ ui_meta_card <- function(
   refresh = NULL,
   notification = NULL,
   redirect = NULL,
+  icon = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("refresh", "numeric", refresh)
   .guard_scalar("notification", "character", notification)
   .guard_scalar("redirect", "character", redirect)
+  .guard_scalar("icon", "character", icon)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
@@ -2638,6 +2641,7 @@ ui_meta_card <- function(
     refresh=refresh,
     notification=notification,
     redirect=redirect,
+    icon=icon,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
   return(.o)
