@@ -38,6 +38,7 @@ module.exports = {
       'graphics',
       'security',
       'logging',
+      'cli',
       'development',
       'browser-testing',
       'configuration',
