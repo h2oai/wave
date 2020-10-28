@@ -50,7 +50,7 @@ export interface ProgressTableCellType {
 
 export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
   <div data-test={m.name} className={css.container}>
-    <ProgressArc thickness={2} color={cssVar(m.color as any, 'red')} value={progress} />
+    <ProgressArc thickness={2} color={cssVar(m.color || '$red')} value={progress} />
     <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={css.percentContainer}>
       <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
     </Fluent.Stack>

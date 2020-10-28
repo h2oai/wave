@@ -26,8 +26,8 @@ const
     app: {
       position: 'absolute',
       left: 0, top: 0, right: 0, bottom: 0,
-      backgroundColor: cssVar('page'),
-      color: cssVar('text'),
+      backgroundColor: cssVar('$page'),
+      color: cssVar('$text'),
       display: 'flex',
       justifyContent: 'center',
       overflow: 'auto'
@@ -37,8 +37,8 @@ const
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: cssVar('page'),
-      color: cssVar('text'),
+      backgroundColor: cssVar('$page'),
+      color: cssVar('$text'),
     },
     freeOverlay: {
       display: 'none',

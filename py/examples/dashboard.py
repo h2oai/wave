@@ -8,8 +8,8 @@ from synth import FakePercent, FakeCategoricalSeries
 
 fake = Faker()
 
-light_theme_colors = 'red pink purple violet indigo blue azure cyan teal mint green amber orange tangerine'.split()
-dark_theme_colors = 'red pink blue azure cyan teal mint green lime yellow amber orange tangerine'.split()
+light_theme_colors = '$red $pink $purple $violet $indigo $blue $azure $cyan $teal $mint $green $amber $orange $tangerine'.split()  # noqa: E501
+dark_theme_colors = '$red $pink $blue $azure $cyan $teal $mint $green $lime $yellow $amber $orange $tangerine'.split()
 
 _color_index = -1
 colors = dark_theme_colors

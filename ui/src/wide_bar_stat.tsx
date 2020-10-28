@@ -79,7 +79,7 @@ export const
               <Format data={data} format={s.value} className={css.value} />
               <Format data={data} format={s.aux_value} className={css.aux_value} />
             </div>
-            <ProgressBar thickness={2} color={cssVar(s.plot_color as any)} value={s.progress} />
+            <ProgressBar thickness={2} color={cssVar(s.plot_color)} value={s.progress} />
           </div>
         </div>
       )

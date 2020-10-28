@@ -40,18 +40,18 @@ interface Palette {
   page: S
 }
 
-interface Tones {
-  text0: S
-  text1: S
-  text2: S
-  text3: S
-  text4: S
-  text5: S
-  text6: S
-  text7: S
-  text8: S
-  text9: S
-}
+// interface Tones {
+//   text0: S
+//   text1: S
+//   text2: S
+//   text3: S
+//   text4: S
+//   text5: S
+//   text6: S
+//   text7: S
+//   text8: S
+//   text9: S
+// }
 
 type Theme = 'light' | 'dark' | 'neon'
 
@@ -59,7 +59,6 @@ export const
   px = (x: I) => `${x}px`,
   pc = (x: F) => `${x}%`,
   rem = (x: F) => `${x}rem`,
-  cssVar = (x: keyof (Palette & Tones & Fluent.IPalette), fallback = '--gray') => `var(--${x}, ${fallback})`,
   clas = (...names: string[]) => names.join(' '),
   quint = (prop: string) => `${prop} 600ms cubic-bezier(0.23, 1, 0.32, 1)`, // https://easings.net/#easeOutQuint
   border = (thickness: U, color: string) => `${thickness}px solid ${color}`,
@@ -75,7 +74,9 @@ export const
   displayMixin = (visible = true): React.CSSProperties => {
     if (visible) return {}
     return { display: 'none' }
-  }
+  },
+  // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
+  cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color
 
 const
   palettes: { [K in Theme]: Partial<Palette> } = {

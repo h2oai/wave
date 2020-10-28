@@ -1,11 +1,10 @@
 # Meta / Theme
-# Turn off live updates for static pages to conserve server resources.
+# Change the base color theme of the app.
 # ---
 from h2o_wave import site, ui
 
 page = site['/demo']
 
-# Set refresh rate to zero ("no updates")
 page['meta'] = ui.meta_card(box='', theme='neon')
 
 page['example'] = ui.markdown_card(

@@ -62,7 +62,33 @@ const
                   background: 'var(--neutralSecondary)',
                 },
               }
-            }
+            },
+          }
+        },
+        '&:active .input-range': {
+          $nest: {
+            '&__slider': {
+              borderColor: 'var(--themeDark)',
+            },
+            '&__track': {
+              background: 'var(--themeLighter)',
+            },
+            '&__track--active': {
+              background: 'var(--themeDark)',
+            },
+          }
+        },
+        '&:hover .input-range': {
+          $nest: {
+            '&__slider': {
+              borderColor: 'var(--themePrimary)',
+            },
+            '&__track': {
+              background: 'var(--themeLighter)',
+            },
+            '&__track--active': {
+              background: 'var(--themePrimary)',
+            },
           }
         },
       }

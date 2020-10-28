@@ -88,7 +88,7 @@ export const
       return (
         <div data-test={name} className={css.card}>
           <div className={css.lhs}>
-            <ProgressArc thickness={2} color={cssVar(s.plot_color as any)} value={s.progress} />
+            <ProgressArc thickness={2} color={cssVar(s.plot_color)} value={s.progress} />
             <div className={css.percentContainer}>
               <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
             </div>

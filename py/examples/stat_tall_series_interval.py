@@ -23,7 +23,7 @@ c = page.add('example', ui.tall_series_stat_card(
     plot_category='foo',
     plot_type='interval',
     plot_value='qux',
-    plot_color='red',
+    plot_color='$red',
     plot_data=data('foo qux', -20),
     plot_zero_value=0,
 ))

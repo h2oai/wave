@@ -22,7 +22,7 @@ c = page.add('example', ui.large_bar_stat_card(
     value_caption='This Month',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value_caption='Previous Month',
-    plot_color='red',
+    plot_color='$red',
     progress=pc,
     data=dict(foo=val, bar=pc),
     caption=' '.join(fake.sentences(2)),
