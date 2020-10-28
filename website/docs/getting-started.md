@@ -45,11 +45,12 @@ Here's a bean counter. Clicking the button increments the bean count:
 
 And here's how it's written:
 
-```py {8-9,16}
-from h2o_wave import Q, listen, ui
+```py {9-10,17}
+from h2o_wave import Q, main, app, ui
 
 bean_count = 0
 
+@app('/counter')
 async def serve(q: Q):
     global bean_count
     # Was the 'increment' button clicked?
@@ -67,8 +68,6 @@ async def serve(q: Q):
     
     # Save the page
     await q.page.save()
-
-listen('/counter', serve)
 ```
 
 ## What's included?

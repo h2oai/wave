@@ -20,15 +20,14 @@ The Wave query context `q` (of type [Q](api/server#q)) carries `q.app`, `q.user`
 :::
 
 
-In most non-trivial apps, you'll find yourself frequently copying values from `q.args` into `q.client` (or `q.user`, depending on the problem you're solving). If this gets too repetitive for your taste, use `copy_expando()` to copy everything in `q.args` to `q.client` at the beginning of your `listen()` handler:
+In most non-trivial apps, you'll find yourself frequently copying values from `q.args` into `q.client` (or `q.user`, depending on the problem you're solving). If this gets too repetitive for your taste, use `copy_expando()` to copy everything in `q.args` to `q.client` at the beginning of your `@app()` handler:
 
-```py {4}
-from h2o_wave import Q, listen, copy_expando
+```py {5}
+from h2o_wave import Q, main, app, copy_expando
 
+@app('/foo')
 async def serve(q: Q):
     copy_expando(q.args, q.client)
     # Do something else...
-
-listen('/foo', serve)
 ```
 

@@ -327,6 +327,7 @@ While it is not a strict requirement, since the platform deploys each app with i
 we advise that apps use `/` as their main route:
 
 ```python
-if __name__ == '__main__':
-    listen('/', main_page)
+@app('/')
+async def serve(q: Q):
+    pass
 ```

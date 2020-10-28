@@ -16,33 +16,37 @@ This tutorial assumes your Wave server is up and running, and you have a working
 
 ## Step 1: Start listening
 
-The first step towards listening to events from the UI is to, literally, `listen`.
+The first step towards listening to events from the UI is to define an `@app` function:
 
 ```py title="$HOME/wave-apps/counter.py"
-from h2o_wave import Q, listen
+from h2o_wave import Q, main, app
 
+@app('/counter')
 async def serve(q: Q):
     pass
-
-listen('/counter', serve)
 ```
 
-`listen()` is a function that takes two required arguments:
-1. The route to listen to, in this case `/counter` (which translates to `localhost:55555/counter` or `www.example.com/counter`).
-2. The function to call when a event arrives from the UI, in this case `serve()` (but you can call it anything you please, like `shoe_strings()`).
+`@app` is a decorator that takes one required argument - the route to listen to, in this case `/counter` (which translates to `localhost:55555/counter` or `www.example.com/counter`).
 
-It's important to understand that `serve()` is called on every event from the UI. No matter how many event originate from the UI, they all pass through `serve()`.
+The `@app` function, in this case `serve()`, is called on every event from the UI. No matter how many events originate from the UI, they all pass through `serve()`.
+
+We named our `@app` function `serve()`, but you can call it anything you please, like `shoe_strings()`.
 
 :::caution
 `serve()` is an `async` function, and must be declared as `async def serve(...)` instead of plain `def serve(...)`.
 :::
 
-Next, run your app:
-
 ```shell
 cd $HOME/wave-apps
-./venv/bin/python counter.py
+source venv/bin/activate
+wave run counter:main
 ```
+
+The `wave run` command runs your app in *development mode*, and the app is automatically reloaded when edited. The argument `counter:main` indicates that we want to use the `main()` function in `counter.py` to serve the app.
+
+:::info
+You don't have to do anything with `main` except import it into your `.py` file. `main()` is an [ASGI](https://asgi.readthedocs.io/en/latest/)-compatible function that you can use with any ASGI server like [uvicorn](https://www.uvicorn.org/) or [gunicorn](https://gunicorn.org/). See [Deployment](deployment.md).
+:::
 
 At this point, your app will be up and running, but it doesn't do anything yet. Let's change that in a second.
 
@@ -53,9 +57,9 @@ Let's add a button to our app. Out goal is to increment and display the bean cou
 To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](components.md) (also called *widgets*). In this case our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome. 
 
 ```py {5-18} title="$HOME/wave-apps/counter.py"
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
-
+@app('/counter')
 async def serve(q: Q):
     bean_count = 0
 
@@ -71,9 +75,6 @@ async def serve(q: Q):
         ],
     )
     await q.page.save()
-
-
-listen('/counter', serve)
 ```
 
 Notice how the technique to modify and save pages in a Wave app is different from that of a Wave script.
@@ -84,14 +85,7 @@ Notice how the technique to modify and save pages in a Wave app is different fro
 | Access card named `foo` | `card = page['foo']` | `card = q.page['foo']` |
 | Save page | `page.save()` | `await q.page.save()` |
 
-In a Wave app, we always access the page using the *query context* `q`. The query context carries useful information about the active UI event, including who issued the event, what information was entered, which buttons were clicked, and so on; and `q.page` always refers to the page located at the route you passed to `listen()` (in this case, `/counter`).
-
-Restart your app (`^C` and run it again):
-
-```shell
-cd $HOME/wave-apps
-./venv/bin/python counter.py
-```
+In a Wave app, we always access the page using the *query context* `q`. The query context carries useful information about the active UI event, including who issued the event, what information was entered, which buttons were clicked, and so on; and `q.page` always refers to the page located at the route you passed to `@app()` (in this case).
 
 Point your browser to [http://localhost:55555/counter](http://localhost:55555/counter). You should see a nice big button, waiting to be clicked on:
 
@@ -104,9 +98,9 @@ If you click on the button, you'll notice that it doesn't do anything. This is b
 Add a condition to check if the button is clicked, and if so, increment the bean count.
 
 ```py {5-7} title="$HOME/wave-apps/counter.py"
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
-
+@app('/counter')
 async def serve(q: Q):
     bean_count = q.client.bean_count or 0
     if q.args.increment:
@@ -124,9 +118,6 @@ async def serve(q: Q):
         ],
     )
     await q.page.save()
-
-
-listen('/counter', serve)
 ```
 
 The above edit introduces two important concepts: `q.client` and `q.args`. 
@@ -142,19 +133,10 @@ From now on, any time you see the term 'client', recall that it's a technical te
 Each component in the Wave component library populates `q.args` with its own value. For more information, see [Components](components.md).
 :::
 
-
-
-
-Go ahead and restart your app (`^C` and run it again):
-
-```shell
-cd $HOME/wave-apps
-./venv/bin/python counter.py
-```
-
-Point your browser to [http://localhost:55555/counter](http://localhost:55555/counter). Your button should now count beans when clicked:
+Your button should now count beans when clicked:
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__demo.mp4').default} type='video/mp4'/></video>
+
 
 ## Step 4: Make it more efficient
 
@@ -168,9 +150,9 @@ Let's wrinkle our noses in disgust and fix this gross inefficiency right away to
 
 
 ```py {9-10,22-23} title="$HOME/wave-apps/counter.py"
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
-
+@app('/counter')
 async def serve(q: Q):
     bean_count = q.client.bean_count or 0
     if q.args.increment:
@@ -192,9 +174,6 @@ async def serve(q: Q):
     else:
         q.page['beans'].items[0].button.caption = f'{bean_count} beans'
     await q.page.save()
-
-
-listen('/counter', serve)
 ```
 
 In the above edit, we check for an arbitrary flag in `q.client` called `initialized`. 
@@ -222,15 +201,15 @@ In most apps, you'll end up using a mix of `q.client`, `q.user` and `q.app` to c
 
 In other words, your Wave app is multi-user by default, but how the app manages data at the app-level, at the user-level and at the client-level is up to you.
  
-## Step 6: User-level realtime sync
+## Step 5: User-level realtime sync
 
 To maintain bean counts at the user level, all we have to do store `bean_count` in `q.user` instead of `q.client`.
  
  
 ```py {5,7} title="$HOME/wave-apps/counter.py"
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
-
+@app('/counter')
 async def serve(q: Q):
     bean_count = q.user.bean_count or 0
     if q.args.increment:
@@ -252,12 +231,9 @@ async def serve(q: Q):
     else:
         q.page['beans'].items[0].button.caption = f'{bean_count} beans'
     await q.page.save()
-
-
-listen('/counter', serve)
 ```
  
-If we run this app, we'll see that the counts are being maintained across browser tabs, but the updated counts don't show up immediately across all tabs. Instead, they show up only when you interact with the other tabs, or reload them. 
+Now when you play with your app, you'll see that the counts are being maintained across browser tabs, but the updated counts don't show up immediately across all tabs. Instead, they show up only when you interact with the other tabs, or reload them. 
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__user-nosync.mp4').default} type='video/mp4'/></video>
 
@@ -266,9 +242,9 @@ This would be considered normal behavior for a typical web application, and most
 This is easier done than said - simply change the server mode to `multicast` to enable realtime sync across clients:
 
 ```py {27} title="$HOME/wave-apps/counter.py"
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
-
+@app('/counter')
 async def serve(q: Q):
     bean_count = q.user.bean_count or 0
     if q.args.increment:
@@ -290,30 +266,29 @@ async def serve(q: Q):
     else:
         q.page['beans'].items[0].button.caption = f'{bean_count} beans'
     await q.page.save()
-
-
-listen('/counter', serve, mode='multicast')
 ```
 
 :::info
 The default server mode for apps is `unicast`, which means "don't sync across clients". On the other hand, `multicast` means "sync across clients". There's also a third mode, `broadcast`, which means "sync across users", which we'll see in the next step.
 :::
 
-Re-running our app proves that the user-level bean count indeed syncs across tabs:
-
+If you play with your app now, you'll see that the user-level bean count indeed syncs across tabs:
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__user-sync.mp4').default} type='video/mp4'/></video>
 
+
+
  
-## Step 7: App-level realtime sync
+ 
+## Step 6: App-level realtime sync
  
 Going from user-level bean counting to app-level bean counting is easy: simply store `bean_count` on `q.app` instead of `q.user`, and switch the server mode to `broadcast`:
 
  
 ```py {5,7,27} title="$HOME/wave-apps/counter.py"
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
-
+@app('/counter')
 async def serve(q: Q):
     bean_count = q.app.bean_count or 0
     if q.args.increment:
@@ -335,9 +310,6 @@ async def serve(q: Q):
     else:
         q.page['beans'].items[0].button.caption = f'{bean_count} beans'
     await q.page.save()
-
-
-listen('/counter', serve, mode='broadcast')
 ```
 
 :::tip

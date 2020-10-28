@@ -9,24 +9,21 @@ A Wave app can publish content and handle user interactions, unlike a [Wave scri
 Here is the skeleton of a Wave app:
 
 ```py 
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
+@app('/foo')
 async def serve(q: Q):
     # Modify the page
     q.page['qux'] = ui.some_card()
     
     # Save the page
     await q.page.save()
-
-# Start listening to events
-listen('/foo', serve)
 ```
 ## Listen and serve
-`listen()` has two required arguments:
-- The route your app is interested in (in the above case `/foo`).
-- The handler function to call when an event is received (in the above case, `serve`).
 
-`listen()` is a blocking call: it starts an event loop listening for user interaction events, and announces itself to the Wave server. The Wave server then starts routing any user actions happening at `/foo` to your app. 
+`@app()` has one required argument - the route your app is interested in (in the above case `/foo`).
+
+`main` is an [ASGI](https://asgi.readthedocs.io/en/latest/)-compatible function, and can be passed to an ASGI server any it starts an event loop listening for user interaction events, and announces itself to the Wave server. The Wave server then starts routing any user actions happening at `/foo` to your app. 
 
 The `serve()` function is called every time the user performs some action at the route `/foo` (access the page, reload it, click a button, access a menu, enter text, and so on). 
 
