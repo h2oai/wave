@@ -2335,18 +2335,21 @@ def meta_card(
 def nav_item(
         name: str,
         label: str,
+        icon: Optional[str] = None,
 ) -> NavItem:
     """Create a navigation item.
 
     Args:
         name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
         label: The label to display.
+        icon: The icon to be displayed left of the label. Available values are icon names and image urls.
     Returns:
         A `h2o_wave.types.NavItem` instance.
     """
     return NavItem(
         name,
         label,
+        icon,
     )
 
 

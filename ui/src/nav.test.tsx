@@ -68,4 +68,19 @@ describe('Nav.tsx', () => {
     expect(window.location.hash).toBe(hashName)
   })
 
+  it('Renders image as icon when specified', () => {
+    const props = { ...navProps }
+    props.state.items[0].items[0].icon = 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'
+    const { container } = render(<View {...props} />)
+
+    expect(container.querySelector('.ms-Image')).toBeInTheDocument()
+  })
+  it('Renders icon when specified', () => {
+    const props = { ...navProps }
+    props.state.items[0].items[0].icon = 'Home'
+    const { container } = render(<View {...props} />)
+
+    expect(container.querySelector('.ms-Icon')).toBeInTheDocument()
+  })
+
 })

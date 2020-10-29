@@ -2651,15 +2651,19 @@ ui_meta_card <- function(
 #'
 #' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
 #' @param label The label to display.
+#' @param icon The icon to be displayed left of the label. Available values are icon names and image urls.
 #' @return A NavItem instance.
 ui_nav_item <- function(
   name,
-  label) {
+  label,
+  icon = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
+  .guard_scalar("icon", "character", icon)
   .o <- list(
     name=name,
-    label=label)
+    label=label,
+    icon=icon)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavItem"))
   return(.o)
 }

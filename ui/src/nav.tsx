@@ -1,7 +1,7 @@
-import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { cards } from './layout'
-import { bond, Card, S, qd } from './qd'
+import { bond, Card, qd, S } from './qd'
 
 /** Create a navigation item. */
 interface NavItem {
@@ -9,6 +9,8 @@ interface NavItem {
   name: S
   /** The label to display. */
   label: S
+  /** The icon to be displayed left of the label. Available values are icon names and image urls. */
+  icon?: S
 }
 
 /** Create a group of navigation items. */
@@ -29,23 +31,40 @@ export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
-        const groups = state.items.map((g): INavLinkGroup => ({
-          name: g.label,
-          links: g.items.map(({ name, label }): INavLink => ({
-            key: name,
-            name: label,
-            url: '',
-            onClick: () => {
-              if (name.startsWith('#')) {
-                window.location.hash = name.substr(1)
-                return
+        const
+          onRenderLink = (props?: Fluent.INavLink, defaultRender?: (props?: Fluent.INavLink) => JSX.Element | null) => {
+            if (!defaultRender || !props) return null
+
+            const isFluentIcon = !/.+\..+/.test(props.customIcon)
+            if (!isFluentIcon) delete props.iconProps?.iconName
+
+            return (
+              <Fluent.Stack horizontal verticalAlign='center' horizontalAlign='space-between'>
+                {!isFluentIcon && <Fluent.Image src={props.customIcon} width={24} height={24} styles={{ root: { marginRight: 6 } }} />}
+                {defaultRender(props)}
+              </Fluent.Stack>
+            )
+          },
+          groups = state.items.map((g): Fluent.INavLinkGroup => ({
+            name: g.label,
+            links: g.items.map(({ name, label, icon }): Fluent.INavLink => ({
+              key: name,
+              name: label,
+              url: '',
+              customIcon: icon,
+              iconProps: { iconName: icon },
+              onClick: () => {
+                if (name.startsWith('#')) {
+                  window.location.hash = name.substr(1)
+                  return
+                }
+                qd.args[name] = true
+                qd.sync()
               }
-              qd.args[name] = true
-              qd.sync()
-            }
+            })
+            )
           }))
-        }))
-        return <div data-test={name}><Nav groups={groups} /></div>
+        return <div data-test={name}><Fluent.Nav groups={groups} onRenderLink={onRenderLink} /></div>
       }
     return { render, changed }
   })
