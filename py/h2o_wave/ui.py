@@ -423,6 +423,7 @@ def textbox(
         disabled: Optional[bool] = None,
         readonly: Optional[bool] = None,
         multiline: Optional[bool] = None,
+        multiline_height: Optional[str] = None,
         password: Optional[bool] = None,
         trigger: Optional[bool] = None,
         visible: Optional[bool] = None,
@@ -448,6 +449,7 @@ def textbox(
         disabled: True if the text box is disabled.
         readonly: True if the text box is a read-only field.
         multiline: True if the text box should allow multi-line text entry.
+        multiline_height: The height of the multilne text, e.g. '400px', '50%', etc.
         password: True if the text box should hide text content.
         trigger: True if the form should be submitted when the text value changes.
         visible: True if the component should be visible. Defaults to true.
@@ -469,6 +471,7 @@ def textbox(
         disabled,
         readonly,
         multiline,
+        multiline_height,
         password,
         trigger,
         visible,

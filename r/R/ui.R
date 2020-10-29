@@ -483,6 +483,7 @@ ui_message_bar <- function(
 #' @param disabled True if the text box is disabled.
 #' @param readonly True if the text box is a read-only field.
 #' @param multiline True if the text box should allow multi-line text entry.
+#' @param multiline_height The height of the multilne text, e.g. '400px', '50%', etc.
 #' @param password True if the text box should hide text content.
 #' @param trigger True if the form should be submitted when the text value changes.
 #' @param visible True if the component should be visible. Defaults to true.
@@ -502,6 +503,7 @@ ui_textbox <- function(
   disabled = NULL,
   readonly = NULL,
   multiline = NULL,
+  multiline_height = NULL,
   password = NULL,
   trigger = NULL,
   visible = NULL,
@@ -519,6 +521,7 @@ ui_textbox <- function(
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("readonly", "logical", readonly)
   .guard_scalar("multiline", "logical", multiline)
+  .guard_scalar("multiline_height", "character", multiline_height)
   .guard_scalar("password", "logical", password)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("visible", "logical", visible)
@@ -537,6 +540,7 @@ ui_textbox <- function(
     disabled=disabled,
     readonly=readonly,
     multiline=multiline,
+    multiline_height=multiline_height,
     password=password,
     trigger=trigger,
     visible=visible,

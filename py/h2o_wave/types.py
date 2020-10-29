@@ -873,6 +873,7 @@ class Textbox:
             disabled: Optional[bool] = None,
             readonly: Optional[bool] = None,
             multiline: Optional[bool] = None,
+            multiline_height: Optional[str] = None,
             password: Optional[bool] = None,
             trigger: Optional[bool] = None,
             visible: Optional[bool] = None,
@@ -904,6 +905,8 @@ class Textbox:
         """True if the text box is a read-only field."""
         self.multiline = multiline
         """True if the text box should allow multi-line text entry."""
+        self.multiline_height = multiline_height
+        """The height of the multilne text, e.g. '400px', '50%', etc."""
         self.password = password
         """True if the text box should hide text content."""
         self.trigger = trigger
@@ -931,6 +934,7 @@ class Textbox:
             disabled=self.disabled,
             readonly=self.readonly,
             multiline=self.multiline,
+            multiline_height=self.multiline_height,
             password=self.password,
             trigger=self.trigger,
             visible=self.visible,
@@ -955,6 +959,7 @@ class Textbox:
         __d_disabled: Any = __d.get('disabled')
         __d_readonly: Any = __d.get('readonly')
         __d_multiline: Any = __d.get('multiline')
+        __d_multiline_height: Any = __d.get('multiline_height')
         __d_password: Any = __d.get('password')
         __d_trigger: Any = __d.get('trigger')
         __d_visible: Any = __d.get('visible')
@@ -972,6 +977,7 @@ class Textbox:
         disabled: Optional[bool] = __d_disabled
         readonly: Optional[bool] = __d_readonly
         multiline: Optional[bool] = __d_multiline
+        multiline_height: Optional[str] = __d_multiline_height
         password: Optional[bool] = __d_password
         trigger: Optional[bool] = __d_trigger
         visible: Optional[bool] = __d_visible
@@ -990,6 +996,7 @@ class Textbox:
             disabled,
             readonly,
             multiline,
+            multiline_height,
             password,
             trigger,
             visible,
