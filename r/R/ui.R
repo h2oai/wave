@@ -1031,9 +1031,10 @@ ui_date_picker <- function(
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
-#' @param value The selected color (CSS-compatible string)
+#' @param value The selected color (CSS-compatible string).
 #' @param choices A list of colors (CSS-compatible strings) to limit color choices to.
 #' @param visible True if the component should be visible. Defaults to true.
+#' @param trigger True if the form should be submitted when the color picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ColorPicker instance.
 ui_color_picker <- function(
@@ -1042,12 +1043,14 @@ ui_color_picker <- function(
   value = NULL,
   choices = NULL,
   visible = NULL,
+  trigger = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("value", "character", value)
   .guard_vector("choices", "character", choices)
   .guard_scalar("visible", "logical", visible)
+  .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(color_picker=list(
     name=name,
@@ -1055,6 +1058,7 @@ ui_color_picker <- function(
     value=value,
     choices=choices,
     visible=visible,
+    trigger=trigger,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)

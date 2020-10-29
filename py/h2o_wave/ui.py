@@ -911,6 +911,7 @@ def color_picker(
         value: Optional[str] = None,
         choices: Optional[List[str]] = None,
         visible: Optional[bool] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a color picker.
@@ -921,9 +922,10 @@ def color_picker(
     Args:
         name: An identifying name for this component.
         label: Text to be displayed alongside the component.
-        value: The selected color (CSS-compatible string)
+        value: The selected color (CSS-compatible string).
         choices: A list of colors (CSS-compatible strings) to limit color choices to.
         visible: True if the component should be visible. Defaults to true.
+        trigger: True if the form should be submitted when the color picker value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.ColorPicker` instance.
@@ -934,6 +936,7 @@ def color_picker(
         value,
         choices,
         visible,
+        trigger,
         tooltip,
     ))
 

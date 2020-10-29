@@ -1869,6 +1869,7 @@ class ColorPicker:
             value: Optional[str] = None,
             choices: Optional[List[str]] = None,
             visible: Optional[bool] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -1876,11 +1877,13 @@ class ColorPicker:
         self.label = label
         """Text to be displayed alongside the component."""
         self.value = value
-        """The selected color (CSS-compatible string)"""
+        """The selected color (CSS-compatible string)."""
         self.choices = choices
         """A list of colors (CSS-compatible strings) to limit color choices to."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
+        self.trigger = trigger
+        """True if the form should be submitted when the color picker value changes."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1894,6 +1897,7 @@ class ColorPicker:
             value=self.value,
             choices=self.choices,
             visible=self.visible,
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -1907,12 +1911,14 @@ class ColorPicker:
         __d_value: Any = __d.get('value')
         __d_choices: Any = __d.get('choices')
         __d_visible: Any = __d.get('visible')
+        __d_trigger: Any = __d.get('trigger')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         label: Optional[str] = __d_label
         value: Optional[str] = __d_value
         choices: Optional[List[str]] = __d_choices
         visible: Optional[bool] = __d_visible
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return ColorPicker(
             name,
@@ -1920,6 +1926,7 @@ class ColorPicker:
             value,
             choices,
             visible,
+            trigger,
             tooltip,
         )
 
