@@ -4,6 +4,8 @@ title: Migrating from 0.8
 
 H2O Wave v0.9.0+ introduces significant improvements to application performance and concurrency, and brings us closer to a v1.0 release. v1.0 will include the ability to increase the number of worker processes to scale apps, while preserving the simplicity of the Wave API.
 
+Among other changes, the Wave server executable `wave` is now called `waved` (or `waved.exe`), and the `h2o-wave` Python package ships with a new CLI named `wave`.
+
 ## ASGI Compatibility
 
 Wave apps are now [ASGI](https://asgi.readthedocs.io/en/latest/)-compatible, based on the [high-performance](https://www.techempower.com/benchmarks/#section=data-r17&hw=ph&test=fortune&l=zijzen-1) [Uvicorn](https://www.uvicorn.org) / [Starlette](https://www.starlette.io/) duo.
@@ -20,7 +22,7 @@ from h2o_wave import listen, Q
 async def serve(q: Q):
     pass
 
-listen('/qux', serve)
+listen('/demo', serve)
 ```
 
 The above app could be run like this:
@@ -36,7 +38,7 @@ In versions v0.9.0+, a skeleton app looks like this:
 ```python {1,3} title="foo.py"
 from h2o_wave import main, app, Q
 
-@app('/qux')
+@app('/demo')
 async def serve(q: Q):
     pass
 ```
