@@ -1,3 +1,4 @@
+import sys
 import socket
 from contextlib import closing
 import uvicorn
@@ -44,4 +45,10 @@ def run(app: str, no_reload: bool):
     os.environ['H2O_WAVE_INTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_EXTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_APP_ADDRESS'] = addr
+
+    # Make "python -m h2o_wave run" behave identical to "wave run":
+    # Insert cwd into path, otherwise uvicorn fails to locate the app module.
+    # uvicorn.main() does this before calling uvicorn.run().
+    sys.path.insert(0, '.')
+
     uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
