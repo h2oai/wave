@@ -1121,6 +1121,7 @@ def table_column(
         searchable: Optional[bool] = None,
         filterable: Optional[bool] = None,
         link: Optional[bool] = None,
+        data_type: Optional[str] = None,
         cell_type: Optional[TableCellType] = None,
 ) -> TableColumn:
     """Create a table column.
@@ -1134,6 +1135,7 @@ def table_column(
         searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
         filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
         link: Indicates whether each cell in this column should be displayed as a clickable link.
+        data_type: Defines type of data for this column. Defaults to string. One of 'time', 'number'.
         cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_wave.types.TableColumn` instance.
@@ -1147,6 +1149,7 @@ def table_column(
         searchable,
         filterable,
         link,
+        data_type,
         cell_type,
     )
 

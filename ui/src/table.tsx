@@ -30,6 +30,8 @@ interface TableColumn {
   filterable?: B
   /** Indicates whether each cell in this column should be displayed as a clickable link. */
   link?: B
+  /** Defines type of data for this column. Defaults to string. */
+  data_type?: 'time' | 'number'
   /** Defines how to render each cell in this column. Defaults to plain text. */
   cell_type?: TableCellType
 }
@@ -86,6 +88,7 @@ export interface Table {
 }
 
 type QColumn = Fluent.IColumn & {
+  dataType?: S
   cellType?: TableCellType
   isSortable?: B
 }
@@ -122,18 +125,20 @@ const
   },
   sortingF = (column: QColumn, sortAsc: B) => (rowA: any, rowB: any) => {
     let a = rowA[column.key], b = rowB[column.key]
-    const ta = typeof a, tb = typeof b
 
-    if (ta === tb) {
-      switch (ta) {
-        case 'number':
-          return sortAsc ? a - b : b - a
-        case 'string':
-          a = Date.parse(a) || a.toLowerCase()
-          b = Date.parse(b) || b.toLowerCase()
-          break
-      }
+    switch (column.dataType) {
+      case 'number':
+        return sortAsc ? a - b : b - a
+      case 'time':
+        a = Date.parse(a)
+        b = Date.parse(b)
+        break
+      default:
+        a = a.toLowerCase()
+        b = b.toLowerCase()
+        break
     }
+
     return sortAsc
       ? b > a ? -1 : 1
       : b > a ? 1 : -1
@@ -386,6 +391,7 @@ export const
           onColumnClick,
           columnActionsMode: c.filterable ? Fluent.ColumnActionsMode.hasDropdown : Fluent.ColumnActionsMode.clickable,
           cellType: c.cell_type,
+          dataType: c.data_type,
           isSortable: c.sortable,
           isResizable: true,
         }
@@ -419,7 +425,8 @@ export const
         }
 
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
-        else if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
+        if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
+        if (col.dataType === 'time') return <span>{new Date(v).toLocaleString()}</span>
 
         return <span>{v}</span>
       },

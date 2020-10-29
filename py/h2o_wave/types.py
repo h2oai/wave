@@ -2277,6 +2277,7 @@ class TableColumn:
             searchable: Optional[bool] = None,
             filterable: Optional[bool] = None,
             link: Optional[bool] = None,
+            data_type: Optional[str] = None,
             cell_type: Optional[TableCellType] = None,
     ):
         self.name = name
@@ -2295,6 +2296,8 @@ class TableColumn:
         """Indicates whether the contents of this column are displayed as filters in a dropdown."""
         self.link = link
         """Indicates whether each cell in this column should be displayed as a clickable link."""
+        self.data_type = data_type
+        """Defines type of data for this column. Defaults to string. One of 'time', 'number'."""
         self.cell_type = cell_type
         """Defines how to render each cell in this column. Defaults to plain text."""
 
@@ -2313,6 +2316,7 @@ class TableColumn:
             searchable=self.searchable,
             filterable=self.filterable,
             link=self.link,
+            data_type=self.data_type,
             cell_type=None if self.cell_type is None else self.cell_type.dump(),
         )
 
@@ -2331,6 +2335,7 @@ class TableColumn:
         __d_searchable: Any = __d.get('searchable')
         __d_filterable: Any = __d.get('filterable')
         __d_link: Any = __d.get('link')
+        __d_data_type: Any = __d.get('data_type')
         __d_cell_type: Any = __d.get('cell_type')
         name: str = __d_name
         label: str = __d_label
@@ -2340,6 +2345,7 @@ class TableColumn:
         searchable: Optional[bool] = __d_searchable
         filterable: Optional[bool] = __d_filterable
         link: Optional[bool] = __d_link
+        data_type: Optional[str] = __d_data_type
         cell_type: Optional[TableCellType] = None if __d_cell_type is None else TableCellType.load(__d_cell_type)
         return TableColumn(
             name,
@@ -2350,6 +2356,7 @@ class TableColumn:
             searchable,
             filterable,
             link,
+            data_type,
             cell_type,
         )
 

@@ -1255,6 +1255,8 @@ ui_table_cell_type <- function(
 #' @param searchable Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
 #' @param filterable Indicates whether the contents of this column are displayed as filters in a dropdown.
 #' @param link Indicates whether each cell in this column should be displayed as a clickable link.
+#' @param data_type Defines type of data for this column. Defaults to string.
+#'   One of 'time', 'number'.
 #' @param cell_type Defines how to render each cell in this column. Defaults to plain text.
 #' @return A TableColumn instance.
 ui_table_column <- function(
@@ -1266,6 +1268,7 @@ ui_table_column <- function(
   searchable = NULL,
   filterable = NULL,
   link = NULL,
+  data_type = NULL,
   cell_type = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
@@ -1275,6 +1278,7 @@ ui_table_column <- function(
   .guard_scalar("searchable", "logical", searchable)
   .guard_scalar("filterable", "logical", filterable)
   .guard_scalar("link", "logical", link)
+  # TODO Validate data_type
   .guard_scalar("cell_type", "h2oq_TableCellType", cell_type)
   .o <- list(
     name=name,
@@ -1285,6 +1289,7 @@ ui_table_column <- function(
     searchable=searchable,
     filterable=filterable,
     link=link,
+    data_type=data_type,
     cell_type=cell_type)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableColumn"))
   return(.o)

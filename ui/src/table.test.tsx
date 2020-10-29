@@ -201,7 +201,11 @@ describe('Table.tsx', () => {
           { name: 'rowname1', cells: [date3] },
           { name: 'rowname2', cells: [date2] },
           { name: 'rowname3', cells: [date1] }
-        ]
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true, searchable: true, data_type: 'time' },
+          { name: 'colname2', label: 'Col2', sortable: true, filterable: true, data_type: 'time' },
+        ],
       }
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
@@ -242,7 +246,11 @@ describe('Table.tsx', () => {
           { name: 'rowname1', cells: [111 as any] },
           { name: 'rowname2', cells: [25] },
           { name: 'rowname3', cells: [9] }
-        ]
+        ],
+        columns: [
+          { name: 'colname1', label: 'Col1', sortable: true, searchable: true, data_type: 'number' },
+          { name: 'colname2', label: 'Col2', sortable: true, filterable: true, data_type: 'number' },
+        ],
       }
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
