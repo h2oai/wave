@@ -187,7 +187,6 @@ async def show_example(q: Q, example: Example):
 
 
 @app('/tour')
-@app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
         q.client.initialized = True
