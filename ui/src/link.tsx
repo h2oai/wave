@@ -23,6 +23,8 @@ export interface Link {
   button?: B
   /** True if the component should be visible. Defaults to true. */
   visible?: B
+  /** True if the component should open link in a new browser tab. */
+  new_tab?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
   /** An identifying name for this component. */
@@ -33,14 +35,20 @@ export const
   XLink = bond(({ model: m }: { model: Link }) => {
     const
       label = m.label || m.path,
-      onClick = () => window.open(m.path),
-      // TODO target="_blank"
+      onClick = () => window.open(m.path, m.new_tab ? '_blank' : '_self'),
       render = () => (
         <div style={displayMixin(m.visible)}>
           {
             m.button
               ? <Fluent.DefaultButton data-test={m.name} text={label} disabled={m.disabled} onClick={onClick} />
-              : <Fluent.Link data-test={m.name} href={m.path} download={m.download} disabled={m.disabled}>{label}</Fluent.Link>
+              : <Fluent.Link
+                data-test={m.name}
+                href={m.path}
+                download={m.download}
+                disabled={m.disabled}
+                target={m.new_tab ? '_blank' : undefined}>
+                {label}
+              </Fluent.Link>
           }
         </div>
       )
