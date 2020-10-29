@@ -46,30 +46,16 @@ Usage of ./waved:
 
 ## Configuring your app
 
-Your Wave application has a websocket server under the hood, called an *app server*. When you run your app during development, the app server run at http://127.0.0.1:8000/ (localhost, port 8000), and assumes that your Wave server is running at http://127.0.0.1:55555/ (localhost, port 55555). For production deployments, you'll want to configure which port your app listens to, how it can access the Wave server, and how the Wave server can access your app.
+Your Wave application is an ASGI server. When you run your app during development, the app server runs at http://127.0.0.1:8000/ by default (localhost, port 8000), and assumes that your Wave server is running at http://127.0.0.1:55555/ (localhost, port 55555). The `wave run` command automatically picks another available port if `8000` is not available. 
+
+The Wave server and apps communicate with each other using RPC over persistent HTTP connections.
+
+For production deployments, you'll want to configure which port your app listens to, how it can access the Wave server, and how the Wave server can access your app.
 
 You can use the following environment variables to configure your app's server's behavior:
 
-### [DEPRECATED)] H2O_WAVE_INTERNAL_ADDRESS
-
-:::caution Deprecated
-
-To specify the host/port, use `--host` and/or `--port`:
-
-```
-$ uvicorn --host 127.0.0.1 --port 8000 example:main
-```
-
-:::
-
-The local host/port on which the app server should listen. Defaults to `http://127.0.0.1:8000`. For example, if you want your app to listen on a specific port, execute your app as follows (replace `66666` with a port number of your choice):
-```
-$ H2O_WAVE_INTERNAL_ADDRESS=ws://127.0.0.1:66666 ./venv/bin/python my_app.py
-```
-
-
-### H2O_WAVE_EXTERNAL_ADDRESS
-The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machine or containers.
+### H2O_APP_ADDRESS
+The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.
 
 ### H2O_WAVE_ADDRESS
 The public host/port of the Wave server. Defaults to `http://127.0.0.1:55555`. Set this variable if you are running the Wave server on a remote machine or container.
@@ -79,3 +65,23 @@ The API access key ID to use for communicating with the Wave server.
 
 ### H2O_WAVE_ACCESS_KEY_SECRET
 The API access key secret to use for communicating with the Wave server.
+
+### H2O_WAVE_INTERNAL_ADDRESS
+
+:::caution Deprecated
+This environment variable will be removed in v1.0.
+:::
+
+The local host/port on which the app server should listen. Defaults to `http://127.0.0.1:8000`. For example, if you want your app to listen on a specific port, execute your app as follows (replace `66666` with a port number of your choice):
+```
+$ H2O_WAVE_INTERNAL_ADDRESS=ws://127.0.0.1:66666 ./venv/bin/python my_app.py
+```
+
+
+### H2O_WAVE_EXTERNAL_ADDRESS
+
+:::caution Deprecated
+Specify `H2O_APP_ADDRESS` instead.
+:::
+
+The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.

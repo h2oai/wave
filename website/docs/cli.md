@@ -27,7 +27,7 @@ $ wave <command> --help
 
 ## wave run
 
-Run an app.
+`wave run` runs an app.
 
 Run app.py with auto reload:
 ```shell

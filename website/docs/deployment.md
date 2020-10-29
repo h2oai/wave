@@ -14,4 +14,14 @@ You can run Wave apps behind any ASGI server, like [uvicorn](https://www.uvicorn
 
 To run your app using an ASGI server, append `:main` to the `app` argument. For example, if you were normally executing your app `foo.py` using `wave run foo`, and want to run your app using Uvicorn, use `uvicorn foo:main`.
 
+These commands are equivalent:
+
+```shell
+(venv) $ wave run --no-reload foo
+```
+
+```shell
+(venv) $ uvicorn foo:main
+```
+
 For more information, see [uvicorn.org/deployment](https://www.uvicorn.org/deployment/) and [starlette.io/#performance](https://www.starlette.io/#performance).

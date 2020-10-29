@@ -4,6 +4,7 @@ module.exports = {
   someSidebar: {
     'Prologue': [
       'change-log',
+      'migrating-0-8',
       'migrating-0',
       'contributing',
     ],
