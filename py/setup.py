@@ -5,7 +5,7 @@ with open('README.rst', 'r') as readme:
 
 setuptools.setup(
     name='h2o_wave',
-    version='0.9.0',
+    version='0.9.1',
     author='Prithvi Prabhu',
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Wave Realtime Apps',
