@@ -1,7 +1,7 @@
 import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
 import React from 'react'
 import { cards } from './layout'
-import { bond, Card, S, qd } from './qd'
+import { bond, Card, S, qd, B } from './qd'
 
 /** Create a navigation item. */
 interface NavItem {
@@ -17,6 +17,8 @@ interface NavGroup {
   label: S
   /** The navigation items contained in this group. */
   items: NavItem[]
+  /** Indicates whether nav groups should be rendered as collapsed initially */
+  collapsed?: B
 }
 
 /** Create a card containing a navigation pane. */
@@ -31,6 +33,7 @@ export const
       render = () => {
         const groups = state.items.map((g): INavLinkGroup => ({
           name: g.label,
+          collapseByDefault: g.collapsed,
           links: g.items.map(({ name, label }): INavLink => ({
             key: name,
             name: label,

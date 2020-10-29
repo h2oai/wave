@@ -68,4 +68,16 @@ describe('Nav.tsx', () => {
     expect(window.location.hash).toBe(hashName)
   })
 
+  it('Collapses a group when collapse is specified', () => {
+    const props = {
+      ...navProps,
+      state: {
+        items: [
+          { label: 'group1', items: [{ name, label: 'label1' }], collapsed: true }
+        ]
+      },
+    }
+    const { container } = render(<View {...props} />)
+    expect(container.querySelector('.is-expanded')).not.toBeInTheDocument()
+  })
 })

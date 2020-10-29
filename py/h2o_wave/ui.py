@@ -2353,18 +2353,21 @@ def nav_item(
 def nav_group(
         label: str,
         items: List[NavItem],
+        collapsed: Optional[bool] = None,
 ) -> NavGroup:
     """Create a group of navigation items.
 
     Args:
         label: The label to display for this group.
         items: The navigation items contained in this group.
+        collapsed: Indicates whether nav groups should be rendered as collapsed initially
     Returns:
         A `h2o_wave.types.NavGroup` instance.
     """
     return NavGroup(
         label,
         items,
+        collapsed,
     )
 
 
