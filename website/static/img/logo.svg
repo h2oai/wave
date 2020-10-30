@@ -5,15 +5,15 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   id="svg4813"
+   id="svg5155"
    version="1.1"
-   viewBox="0 0 15.780505 15.780505"
-   height="15.780505mm"
-   width="15.780505mm">
+   viewBox="0 0 28.584448 28.584448"
+   height="28.584448mm"
+   width="28.584448mm">
   <defs
-     id="defs4807" />
+     id="defs5149" />
   <metadata
-     id="metadata4810">
+     id="metadata5152">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -25,28 +25,25 @@
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(239.96763,157.65811)"
+     transform="translate(578.98866,156.50056)"
      id="layer1">
     <g
-       id="text4787"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.78891182px;line-height:1.25;font-family:Fabricate;-inkscape-font-specification:'Fabricate, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       aria-label="w"
-       transform="translate(-245.07031,-196.78385)">
+       transform="translate(-636.96074,-97.069009)"
+       id="g4987">
       <g
-         id="g4815">
+         id="g4885"
+         transform="translate(-51.404763,-92.415179)">
         <rect
-           rx="1.322921"
-           ry="1.322921"
-           y="39.125744"
-           x="5.1026793"
-           height="15.780505"
-           width="15.780505"
-           id="rect4783"
-           style="opacity:1;fill:#f72a30;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="opacity:1;fill:#ffe52b;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect4881"
+           width="28.584448"
+           height="28.584448"
+           x="109.37685"
+           y="32.983631" />
         <path
-           d="m 18.617217,47.013413 q 0,0.47009 -0.335779,0.805868 -0.318989,0.318989 -0.789078,0.318989 H 13.362287 L 9.1818487,51.277797 Q 8.8964372,51.496053 8.560659,51.512842 8.2248807,51.546419 7.9226803,51.361741 7.6708466,51.210641 7.5197464,50.958807 7.3686462,50.706974 7.3686462,50.387984 v -6.749142 q 0,-0.47009 0.3189893,-0.789079 0.3357783,-0.335778 0.8058678,-0.335778 0.4700895,0 0.7890789,0.335778 0.3357782,0.318989 0.3357782,0.789079 v 4.499428 l 2.7030146,-2.031458 q 0.3022,-0.218256 0.671556,-0.218256 h 3.374572 v -2.249714 q 0,-0.47009 0.318989,-0.789079 0.335778,-0.335778 0.805868,-0.335778 0.470089,0 0.789078,0.335778 0.335779,0.318989 0.335779,0.789079 z"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.78891182px;font-family:Fabricate;-inkscape-font-specification:'Fabricate, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke-width:0.26458332"
-           id="path4803" />
+           id="path4883"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.78891182px;line-height:1.25;font-family:Fabricate;-inkscape-font-specification:'Fabricate, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           d="m 129.29336,47.273271 q 0,0.47009 -0.33578,0.805867 -0.31899,0.318989 -0.78908,0.318989 h -4.13007 l -4.18044,3.139528 q -0.28541,0.218256 -0.62119,0.235045 -0.33578,0.03358 -0.63798,-0.151101 -0.25183,-0.1511 -0.40293,-0.402934 -0.1511,-0.251833 -0.1511,-0.570823 V 43.8987 q 0,-0.47009 0.31899,-0.789079 0.33577,-0.335778 0.80586,-0.335778 0.47009,0 0.78908,0.335778 0.33578,0.318989 0.33578,0.789079 v 4.499428 l 2.70301,-2.031458 q 0.3022,-0.218256 0.67156,-0.218256 h 3.37457 V 43.8987 q 0,-0.47009 0.31899,-0.789079 0.33578,-0.335778 0.80587,-0.335778 0.47009,0 0.78908,0.335778 0.33578,0.318989 0.33578,0.789079 z" />
       </g>
     </g>
   </g>
