@@ -128,6 +128,8 @@ const
 
     switch (column.dataType) {
       case 'number':
+        a = +a
+        b = +b
         return sortAsc ? a - b : b - a
       case 'time':
         a = Date.parse(a)

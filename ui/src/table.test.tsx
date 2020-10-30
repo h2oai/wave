@@ -243,9 +243,9 @@ describe('Table.tsx', () => {
       tableProps = {
         ...tableProps,
         rows: [
-          { name: 'rowname1', cells: [111 as any] },
-          { name: 'rowname2', cells: [25] },
-          { name: 'rowname3', cells: [9] }
+          { name: 'rowname1', cells: ['111'] },
+          { name: 'rowname2', cells: ['25'] },
+          { name: 'rowname3', cells: ['9'] }
         ],
         columns: [
           { name: 'colname1', label: 'Col1', sortable: true, searchable: true, data_type: 'number' },
