@@ -1,4 +1,4 @@
-![Wave](wave.png)
+![Wave](assets/brand/wave-type-yellow.png)
 
 **Realtime AI Apps and Dashboards for Python.**
 
