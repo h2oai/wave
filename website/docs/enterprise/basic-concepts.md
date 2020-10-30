@@ -13,7 +13,7 @@ H2O AI Cloud platform recognizes three actors:
 over two resource types:
 
 * **App**: runnable Wave app package
-* **App instance**: running instane of an app
+* **App instance**: running instance of an app
 
 ## App
 
@@ -45,7 +45,7 @@ title, description, owner, instances, etc.
 
 ## App Instance
 
-App instance is a running instance of an app wit the following metadata:
+App instance is a running instance of an app with the following metadata:
 
 * pointer to the corresponding app
 * owner (the person who started it)
@@ -88,4 +88,4 @@ or via the "My Apps"/"My Instances" page.
 
 Admin access is exempt from all the authorization rules (i.e., admins have full access to all apps/instances).
 
-See [Developer Guide](developer-guide#cli) for details on manaigng app instance.
+See [Developer Guide](developer-guide#cli) for details on managing app instance.
