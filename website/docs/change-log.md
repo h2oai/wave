@@ -12,9 +12,13 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.9.1
+Oct 28, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.9.1)
+- Fixed
+    - Make `wave run` behave identical to `python -m h2o_wave run`.
+
 ## v0.9.0
 Oct 28, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.9.0)
-
 - Added
     - ASGI compatibility: Wave apps can now be run using an ASGI server.
     - `@app` decorator to identify primary query handler in an app.
