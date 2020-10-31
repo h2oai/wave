@@ -19,7 +19,7 @@ type WebServer struct {
 }
 
 const (
-	contentTypeJSON = "application/json"
+	contentTypeJSON = "application/json; charset=utf-8"
 )
 
 func newWebServer(
