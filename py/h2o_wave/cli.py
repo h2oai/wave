@@ -52,3 +52,8 @@ def run(app: str, no_reload: bool):
     sys.path.insert(0, '.')
 
     uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
+
+
+@main.command()
+def ide():
+    uvicorn.run(f'h2o_wave.ide:ide', host=_localhost, port=55554)
