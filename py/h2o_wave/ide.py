@@ -48,6 +48,8 @@ class App:
         # TODO starting, stopping state handling
 
     async def start(self):
+        if self.is_running():
+            return
         python = self.dir / 'venv' / 'bin' / 'python'
         port = _scan_free_port()
         logger.info(str(python))
@@ -55,7 +57,7 @@ class App:
             str(python), '-m', 'uvicorn',
             '--port', str(port),
             '--app-dir', str(self.dir),
-            '--reload',
+            # '--reload',
             f'app:main',
             env=dict(H2O_WAVE_APP_ADDRESS=f'http://{_localhost}:{port}')
         )
@@ -63,6 +65,10 @@ class App:
     async def stop(self):
         if self.is_running():
             self.process.terminate()
+
+    async def restart(self):
+        await self.stop()
+        await self.start()
 
     def is_running(self):
         return self.process and self.process.returncode is None
@@ -108,9 +114,6 @@ def _rmdir(p: Path):
     p.rmdir()
 
 
-#
-# Public APIs
-#
 def _guard_app_name(app_name: str):
     if not app_name.isidentifier():
         raise ValueError('app name must be an identifier')
@@ -136,6 +139,9 @@ def _file_path_of(app_name: str, file_name: str) -> Path:
         raise ValueError('file_name does not resolve to app directory')
     return file_path
 
+#
+# Public APIs
+#
 
 @rpc
 async def create_app(app_name: str):
@@ -194,19 +200,25 @@ async def read_file(app_name: str, file_name: str) -> str:
 
 @rpc
 async def write_file(app_name: str, file_name: str, file_content: str):
+    app = _get_app(app_name)
     _write_file(_file_path_of(app_name, file_name), file_content)
+    await app.restart()
 
 
 @rpc
 async def rename_file(app_name: str, file_name: str, new_file_name: str):
+    app = _get_app(app_name)
     old_path = _file_path_of(app_name, file_name)
     new_path = _file_path_of(app_name, new_file_name)
     old_path.rename(new_path)
+    await app.restart()
 
 
 @rpc
 async def delete_file(app_name: str, file_name: str):
+    app = _get_app(app_name)
     _file_path_of(app_name, file_name).unlink()
+    await app.restart()
 
 
 #
