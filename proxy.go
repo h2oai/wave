@@ -16,18 +16,18 @@ type Proxy struct {
 
 // ProxyRequest represents the request to be sent to the upstream server.
 type ProxyRequest struct {
-	Method string              `json:"method"`
-	URL    string              `json:"url"`
-	Header map[string][]string `json:"header"`
-	Body   string              `json:"body"`
+	Method  string              `json:"method"`
+	URL     string              `json:"url"`
+	Headers map[string][]string `json:"headers"`
+	Body    string              `json:"body"`
 }
 
 // ProxyResponse represents the response received from the upstream server.
 type ProxyResponse struct {
-	Status string              `json:"status"`
-	Code   int                 `json:"code"`
-	Header map[string][]string `json:"header"`
-	Body   string              `json:"body"`
+	Status  string              `json:"status"`
+	Code    int                 `json:"code"`
+	Headers map[string][]string `json:"headers"`
+	Body    string              `json:"body"`
 }
 
 // ProxyResult represents the result returned for a proxy request.
@@ -92,7 +92,7 @@ func (p *Proxy) do(pr ProxyRequest) (ProxyResponse, error) {
 	if err != nil {
 		return none, err
 	}
-	for name, values := range pr.Header {
+	for name, values := range pr.Headers {
 		for _, value := range values {
 			req.Header.Add(name, value)
 		}

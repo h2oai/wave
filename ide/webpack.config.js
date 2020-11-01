@@ -15,7 +15,10 @@ module.exports = {
 		'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker'
 	},
 	devServer: {
-		hot: true
+		hot: true,
+		proxy: {
+			'/_p': 'http://localhost:55555'
+		}
 	},
 	resolve: {
 		extensions: ['*', '.js', '.jsx', '.tsx', '.ts']
