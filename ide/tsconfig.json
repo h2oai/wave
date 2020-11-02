@@ -4,13 +4,11 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"strict": true,
-		"target": "ES6",
+		"target": "es6",
 		"outDir": "./dist",
 		"lib": [
 			"dom",
-			"es5",
-			"es2015.collection",
-			"es2015.promise"
+			"es6",
 		],
 		"types": [],
 		"baseUrl": "./node_modules",
