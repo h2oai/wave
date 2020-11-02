@@ -20,3 +20,4 @@ from .server import listen, Q, app, main
 from .db import TeleDBError, TeleDB
 from .types import *
 from .test import cypress, Cypress
+from .platform import build_model, get_model, deploy_model
