@@ -28,6 +28,11 @@ build: build-ui build-server ## Build everything
 build-ui: ## Build UI
 	cd ui && $(MAKE) build
 
+build-ide: ## Build IDE
+	cd ide && npm run build
+	rm -rf ui/build/_ide
+	mv ide/dist ui/build/_ide
+
 run-ui: ## Run UI in development mode (hot reloading)
 	cd ui && $(MAKE) run
 
