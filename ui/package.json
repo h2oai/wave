@@ -37,7 +37,7 @@
     "eslint-plugin-flowtype": "4.6.0",
     "eslint-plugin-import": "2.20.0",
     "eslint-plugin-jsx-a11y": "6.2.3",
-    "eslint-plugin-q": "file:eslint",
+    "eslint-plugin-wave": "file:eslint",
     "eslint-plugin-react": "7.18.0",
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-loader": "4.3.0",

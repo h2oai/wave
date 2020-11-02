@@ -15,27 +15,7 @@ module.exports = {
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 2018,
-    "sourceType": "module",
-    "project": process.env.GIT_HOOK ? "ui/tsconfig.json" : "./tsconfig.json"
-  },
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "wave"
-  ],
   "rules": {
-    "wave/box-variable-suffix": "error",
-    "wave/data-test-on-component": "error",
-    "wave/card-variable-name": "error",
     "react/display-name": "off",
     "no-console": [
       process.env.NODE_ENV === 'production' ? "error" : "warn",

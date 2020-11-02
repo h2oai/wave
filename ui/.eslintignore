@@ -3,9 +3,10 @@ node_modules
 build
 
 # Config files
-config/webpackDevServer.config.js
+config
 jest.config.js
-lint-staged.config.js
+
+# Linter
 eslint/linter.js
 
 # React boilerplate

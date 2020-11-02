@@ -1,16 +1,15 @@
 {
   "*.(ts|tsx)": [
-    "npm run lint-staged:typescript",
     "npm run lint-staged:eslint",
     "npm run lint-staged:tests"
   ],
   "*.go": [
-    "golint -set_exit_status"
+    "npm run lint-staged:golint"
   ],
   "*.md": [
-    "./node_modules/markdownlint-cli/markdownlint.js"
+    "npm run lint-staged:mdlint"
   ],
   "*.py": [
-    "./py/venv/bin/flake8"
+    "npm run lint-staged:pylint"
   ]
 }

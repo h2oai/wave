@@ -17,6 +17,9 @@
     "noUnusedLocals": true,
     "types": [
       "node"
+    ],
+    "exclude": [
+      "node_modules"
     ]
   }
 }

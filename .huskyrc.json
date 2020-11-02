@@ -1,6 +1,6 @@
 {
   "hooks": {
     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS && node githooks/commit-msg.js $HUSKY_GIT_PARAMS",
-    "pre-commit": "lint-staged"
+    "pre-commit": "export GIT_HOOK=true && lint-staged"
   }
 }

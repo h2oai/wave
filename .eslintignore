@@ -1,0 +1,11 @@
+# Generated assets
+node_modules
+ide/node_modules
+tools/wavegen/node_modules
+
+ide/build
+tools/wavegen/build
+
+# Config files
+ide/webpack.config.js
+lint-staged.config.js
