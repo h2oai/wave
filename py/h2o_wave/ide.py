@@ -48,8 +48,6 @@ class App:
         # TODO starting, stopping state handling
 
     async def start(self):
-        if self.is_running():
-            return
         python = self.dir / 'venv' / 'bin' / 'python'
         port = _scan_free_port()
         logger.info(str(python))
@@ -57,18 +55,14 @@ class App:
             str(python), '-m', 'uvicorn',
             '--port', str(port),
             '--app-dir', str(self.dir),
-            # '--reload',
+            '--reload',
             f'app:main',
             env=dict(H2O_WAVE_APP_ADDRESS=f'http://{_localhost}:{port}')
         )
 
     async def stop(self):
         if self.is_running():
-            self.process.terminate()
-
-    async def restart(self):
-        await self.stop()
-        await self.start()
+            self.process.kill()
 
     def is_running(self):
         return self.process and self.process.returncode is None
@@ -139,6 +133,7 @@ def _file_path_of(app_name: str, file_name: str) -> Path:
         raise ValueError('file_name does not resolve to app directory')
     return file_path
 
+
 #
 # Public APIs
 #
@@ -202,7 +197,6 @@ async def read_file(app_name: str, file_name: str) -> str:
 async def write_file(app_name: str, file_name: str, file_content: str):
     app = _get_app(app_name)
     _write_file(_file_path_of(app_name, file_name), file_content)
-    await app.restart()
 
 
 @rpc
