@@ -17,7 +17,7 @@ module.exports = {
 	devServer: {
 		hot: true,
 		proxy: {
-			'/_p': 'http://localhost:55555'
+			'/': 'http://localhost:55555'
 		}
 	},
 	resolve: {
@@ -26,7 +26,8 @@ module.exports = {
 	output: {
 		globalObject: 'self',
 		filename: '[name].bundle.js',
-		path: path.resolve(__dirname, 'dist')
+		path: path.resolve(__dirname, 'dist'),
+		publicPath: '/_ide/'
 	},
 	module: {
 		rules: [
