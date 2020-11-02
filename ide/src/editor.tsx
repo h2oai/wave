@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import * as monaco from 'monaco-editor'
-import { write_file } from './ide'
+import { editor } from './model'
+import { on } from './dataflow'
 
 
 // @ts-ignore
@@ -24,28 +25,35 @@ self.MonacoEnvironment = {
 
 export const Editor: React.FC = () => {
   const divEl = useRef<HTMLDivElement>(null)
-  let editor: monaco.editor.IStandaloneCodeEditor
+  let ed: monaco.editor.IStandaloneCodeEditor
   useEffect(() => {
     if (divEl.current) {
-      editor = monaco.editor.create(divEl.current, {
-        value: "@app('/demo')\nasync def serve(q: Q):\n\tpass",
+      ed = monaco.editor.create(divEl.current, {
+        value: editor.contentB(),
         language: 'python',
         theme: 'vs-dark',
-        minimap: { enabled: false }
       })
+
       // Save on Ctrl+S
-      editor.addAction({
+      let isCapturing = false
+      ed.addAction({
         id: 'save-content',
         label: 'Save',
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
-        run: async (editor) => {
-          const src = editor.getValue()
-          await write_file('sample_app', 'app.py', src)
+        run: (ed) => {
+          isCapturing = true
+          editor.contentB(ed.getValue())
+          isCapturing = false
         }
+      })
+
+      on(editor.contentB, (content) => {
+        if (isCapturing) return
+        ed.setValue(content)
       })
     }
     return () => {
-      editor.dispose()
+      ed.dispose()
     }
   }, [])
   return <div className="Editor" ref={divEl}></div>
