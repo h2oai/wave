@@ -1386,7 +1386,7 @@ ui_table <- function(
 #' @param download True if the link should be used for file download.
 #' @param button True if the link should be rendered as a button.
 #' @param visible True if the component should be visible. Defaults to true.
-#' @param new_tab True if the component should open link in a new browser tab.
+#' @param target Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Link instance.
@@ -1397,7 +1397,7 @@ ui_link <- function(
   download = NULL,
   button = NULL,
   visible = NULL,
-  new_tab = NULL,
+  target = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("label", "character", label)
@@ -1406,7 +1406,7 @@ ui_link <- function(
   .guard_scalar("download", "logical", download)
   .guard_scalar("button", "logical", button)
   .guard_scalar("visible", "logical", visible)
-  .guard_scalar("new_tab", "logical", new_tab)
+  .guard_scalar("target", "character", target)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(link=list(
@@ -1416,7 +1416,7 @@ ui_link <- function(
     download=download,
     button=button,
     visible=visible,
-    new_tab=new_tab,
+    target=target,
     tooltip=tooltip,
     name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))

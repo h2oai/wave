@@ -39,12 +39,12 @@ describe('Link.tsx', () => {
 
     fireEvent.click(getByText(name))
     expect(windowOpenMock).toHaveBeenCalled()
-    expect(windowOpenMock).toHaveBeenCalledWith(name, '_self')
+    expect(windowOpenMock).toHaveBeenCalledWith(name)
   })
   it('Opens button link in same tab', () => {
     const windowOpenMock = jest.fn()
     window.open = windowOpenMock
-    const { getByText } = render(<XLink model={{ ...linkProps, button: true, new_tab: true }} />)
+    const { getByText } = render(<XLink model={{ ...linkProps, button: true, target: '' }} />)
 
     fireEvent.click(getByText(name))
     expect(windowOpenMock).toHaveBeenCalled()
@@ -57,7 +57,7 @@ describe('Link.tsx', () => {
   })
 
   it('Renders link target attribute when new tab specified', () => {
-    const { getByTestId } = render(<XLink model={{ ...linkProps, new_tab: true }} />)
+    const { getByTestId } = render(<XLink model={{ ...linkProps, target: '' }} />)
     expect(getByTestId(name).getAttribute('target')).toEqual('_blank')
   })
 
