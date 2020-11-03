@@ -716,7 +716,7 @@ export interface Qd {
   readonly path: S
   readonly args: Rec
   readonly refreshRateB: Box<U>
-  readonly waitingForResponseB: Box<B>
+  readonly busyB: Box<B>
   socket: WebSocket | null
   page(): PageRef
   sync(): void
@@ -737,7 +737,7 @@ export const qd: Qd = {
   path: window.location.pathname,
   args: {},
   refreshRateB: box(-1),
-  waitingForResponseB: box(false),
+  busyB: box(false),
   socket: null,
   page: (path?: S): PageRef => {
     path = path || qd.path
@@ -767,7 +767,7 @@ export const qd: Qd = {
     const args = cloneRec(qd.args)
     clearRec(qd.args)
     sock.send(`@ ${qd.path} ${JSON.stringify(args)}`)
-    qd.waitingForResponseB(true)
+    qd.busyB(true)
   },
 }
 
@@ -820,7 +820,7 @@ const
     sock.onmessage = function (e) {
       if (!e.data) return
       if (!e.data.length) return
-      qd.waitingForResponseB(false)
+      qd.busyB(false)
       for (const line of e.data.split('\n')) {
         try {
           const msg = JSON.parse(line) as OpsD
@@ -845,7 +845,7 @@ const
       }
     }
     sock.onerror = function (e: Event) {
-      qd.waitingForResponseB(false)
+      qd.busyB(false)
       console.error('A websocket error was encountered.', e) // XXX
     }
   }

@@ -25,25 +25,32 @@ const
       backgroundColor: theme.colors.page,
       color: theme.colors.text,
     },
-    overlay: {
+    freeOverlay: {
+      display: 'none',
       position: 'fixed',
       left: 0, top: 0, right: 0, bottom: 0,
-      opacity: 0,
-      zIndex: -1,
-      transition: 'opacity 1s 2s',
     },
-    overlayActive: {
+    busyOverlay: {
+      display: 'block',
       opacity: 0.8,
-      zIndex: 1,
     },
   })
 
 
 const
+  BusyOverlay = bond(() => {
+    const
+      busyB = qd.busyB,
+      render = () => (
+        <div className={busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
+          <Spinner className={css.centerFullHeight} label='Loading...' size={SpinnerSize.large} />
+        </div>
+      )
+    return { render, busyB }
+  }),
   App = bond(() => {
     const
       contentB = box<{ page?: Page, error?: S }>({}),
-      blockUIB = qd.waitingForResponseB,
       onSocket = (e: SockEvent) => {
         switch (e.t) {
           case SockEventType.Data:
@@ -82,9 +89,7 @@ const
         return (
           <div className={css.app}>
             <GridLayout key={page.key} page={page} />
-            <div className={blockUIB() ? clas(css.overlay, css.overlayActive) : css.overlay}>
-              <Spinner className={css.centerFullHeight} label='Waiting for server response...' size={SpinnerSize.large} />
-            </div>
+            <BusyOverlay />
           </div>
         )
       },
@@ -92,7 +97,7 @@ const
         window.removeEventListener('hashchange', onHashChanged)
       }
 
-    return { init, render, dispose, contentB, blockUIB }
+    return { init, render, dispose, contentB }
   })
 
 export default App
