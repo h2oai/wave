@@ -14,6 +14,7 @@ from .core import _config
 
 
 WaveModelType = Enum('WaveModelType', 'H2O3 DAI')
+WaveModelMetric = Enum('WaveModelMetric', 'AUTO AUC MSE RMSE MAE RMSLE DEVIANCE LOGLOSS AUCPR')
 
 
 class WaveModel:
@@ -26,7 +27,7 @@ class WaveModel:
     def ingest(self, filename: str):
         raise NotImplementedError()
 
-    def build(self, target: str):
+    def build(self, target: str, metric: WaveModelMetric):
         raise NotImplementedError()
 
     def predict(self, filename: str, output_folder: str = '', **kwargs) -> str:
@@ -67,9 +68,9 @@ class H2O3Model(WaveModel):
         else:
             raise ValueError('file not found')
 
-    def build(self, target: str):
+    def build(self, target: str, metric: WaveModelMetric):
         self.id_ = H2O3Model.make_id()
-        self.aml = H2OAutoML(max_runtime_secs=30, project_name=self.id_)
+        self.aml = H2OAutoML(max_runtime_secs=30, project_name=self.id_, stopping_metric=metric.name)
         cols = list(self.frame.columns)
         cols.remove(target)
         self.aml.train(x=cols, y=target, training_frame=self.frame)
@@ -98,7 +99,7 @@ class DAIModel(WaveModel):
     def ingest(self, filename: str):
         ...
 
-    def build(self, target: str):
+    def build(self, target: str, metric: WaveModelMetric):
         ...
 
     def predict(self, filename: str, output_folder: str = '', **kwargs) -> str:
@@ -111,7 +112,7 @@ def _determine_model_instance() -> WaveModel:
     raise RuntimeError('library not found')
 
 
-def build_model(file: str = '', target: str = '', model_type: Optional[WaveModelType] = None) -> WaveModel:
+def build_model(file: str = '', target: str = '', metric: WaveModelMetric = WaveModelMetric.AUTO, model_type: Optional[WaveModelType] = None) -> WaveModel:
     m = None
     if model_type is not None:
         if model_type == WaveModelType.H2O3:
@@ -121,7 +122,7 @@ def build_model(file: str = '', target: str = '', model_type: Optional[WaveModel
     else:
         m = _determine_model_instance()
     m.ingest(file)
-    m.build(target)
+    m.build(target, metric)
     return m
 
 
