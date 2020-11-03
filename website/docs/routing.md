@@ -4,20 +4,19 @@ title: Routing
 
 ## App routing
 
-Your Wave app gets hosted at the route you passed to `listen()`.
+Your Wave app gets hosted at the route you passed to `@app()`.
 
-```py {6}
-from h2o_wave import Q, listen
+```py {3}
+from h2o_wave import Q, main, app
 
+@app('/foo')
 async def serve(q: Q):
     pass
-
-listen('/foo', serve)
 ```
 
-To host your app at `localhost:55555/foo` or `www.example.com/foo`, pass `/foo` to `listen()`.
+To host your app at `localhost:55555/foo` or `www.example.com/foo`, pass `/foo` to `@app()`.
 
-To host your app at `localhost:55555` or `www.example.com`, pass `/` to `listen()`. Do this if you plan to host exactly one app and nothing else.
+To host your app at `localhost:55555` or `www.example.com`, pass `/` to `@app()`. Do this if you plan to host exactly one app and nothing else.
 
 You can host multiple apps behind a single Wave server.
 
@@ -35,9 +34,10 @@ To set the location hash, prefix `#` to the `name` attribute of command-like com
 
 For example, if a button is named `foo` is clicked, `q.args.foo` is set to `True`. Instead, if a button named `#foo` is clicked, the location hash is set to `foo` (`q.args.foo` is not set). 
 
-```py {7-8}
-from h2o_wave import Q, listen, ui
+```py {8-9}
+from h2o_wave import Q, main, app, ui
 
+@app('/toss')
 async def serve(q: Q):
     q.page['sides'] = ui.form_card(
         box='1 1 4 4',
@@ -47,8 +47,6 @@ async def serve(q: Q):
         ],
     )
     q.page.save()
-
-listen('/toss', serve)
 ```
 
 Names don't have to be alphanumeric, so you can use names with nested sub-paths like `#foo/bar`, `#foo/bar/baz`, `#foo/bar/baz/qux` to make route-handling more manageable.
@@ -64,9 +62,10 @@ The components that support setting a location hash are:
 
 To get the location hash, read `q.args['#']` (a string). If the route in the browser's address bar is `/foo/bar#baz/qux`, `q.args['#']` is set to `baz/qux`.
 
-```py {4-8}
-from h2o_wave import Q, listen, ui
+```py {5-9}
+from h2o_wave import Q, main, app, ui
 
+@app('/toss')
 async def serve(q: Q):
     hash = q.args['#']
     if hash == 'heads':
@@ -75,8 +74,6 @@ async def serve(q: Q):
         print('Tails!')
 
     q.page.save()
-
-listen('/toss', serve)
 ```
 
 ### Hash route switching
@@ -84,9 +81,10 @@ listen('/toss', serve)
 Combining the two examples above gives us a basic pattern for handling routes and updating the user interface:
 
 
-```py {6,8,10}
-from h2o_wave import Q, listen, ui
+```py {7,9,11}
+from h2o_wave import Q, main, app, ui
 
+@app('/toss')
 async def serve(q: Q):
     hash = q.args['#']
 
@@ -104,6 +102,4 @@ async def serve(q: Q):
         )
 
     q.page.save()
-
-listen('/toss', serve)
 ```

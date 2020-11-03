@@ -15,6 +15,7 @@ import (
 
 const oidcSessionKey = "oidcsession"
 
+// OIDCSessions represents active OIDC sessions
 type OIDCSessions struct {
 	sync.RWMutex
 	sessions map[string]OIDCSession
@@ -43,6 +44,7 @@ func (s *OIDCSessions) remove(key string) {
 	delete(s.sessions, key)
 }
 
+// OIDCSession represents an OIDC session
 type OIDCSession struct {
 	state        string
 	nonce        string
@@ -62,6 +64,7 @@ func generateRandomKey(byteCount int) (string, error) {
 	return fmt.Sprintf("%x", b), nil
 }
 
+// OIDCInitHandler handles auth requests
 type OIDCInitHandler struct {
 	sessions     *OIDCSessions
 	clientID     string
@@ -127,6 +130,7 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, oAuth2Config.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
 }
 
+// OAuth2Handler handles OAuth2 requests
 type OAuth2Handler struct {
 	sessions     *OIDCSessions
 	clientID     string
@@ -247,6 +251,7 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, session.successURL, http.StatusFound)
 }
 
+// OIDCLogoutHandler handles logout requests
 type OIDCLogoutHandler struct {
 	sessions      *OIDCSessions
 	endSessionURL string

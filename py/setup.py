@@ -5,7 +5,7 @@ with open('README.rst', 'r') as readme:
 
 setuptools.setup(
     name='h2o_wave',
-    version='0.8.0',
+    version='0.9.1',
     author='Prithvi Prabhu',
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Wave Realtime Apps',
@@ -29,7 +29,12 @@ setuptools.setup(
     ],
     python_requires='>=3.6.1',
     install_requires=[
-        'requests',
-        'websockets'
+        'Click',
+        'httpx==0.16.1',
+        'starlette==0.13.8',
+        'uvicorn==0.12.2',
     ],
+    entry_points=dict(
+        console_scripts=["wave = h2o_wave.cli:main"]
+    ),
 )

@@ -2302,6 +2302,7 @@ def meta_card(
         refresh: Optional[int] = None,
         notification: Optional[str] = None,
         redirect: Optional[str] = None,
+        icon: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2315,6 +2316,7 @@ def meta_card(
         refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
         notification: Display a desktop notification to the user.
         redirect: Redirect the page to a new URL.
+        icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2325,6 +2327,7 @@ def meta_card(
         refresh,
         notification,
         redirect,
+        icon,
         commands,
     )
 

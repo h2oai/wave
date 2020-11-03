@@ -3,7 +3,7 @@
 # ---
 import pandas as pd
 from faker import Faker
-from h2o_wave import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 fake = Faker()
 
@@ -31,6 +31,7 @@ def search_df(df: pd.DataFrame, term: str):
     return df[str_cols.apply(lambda column: column.str.contains(term, case=False, na=False)).any(axis=1)]
 
 
+@app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
         q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
@@ -52,6 +53,3 @@ async def serve(q: Q):
         table.rows = df_to_rows(search_df(addresses, term) if len(term) else addresses)
 
     await q.page.save()
-
-
-listen('/demo', serve)

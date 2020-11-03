@@ -4,7 +4,7 @@
 
 
 import os
-from h2o_wave import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 import os.path
 
 
@@ -13,6 +13,7 @@ def make_link_list(links):
     return '\n'.join([f'- [{os.path.basename(link)}]({link})' for link in links])
 
 
+@app('/demo')
 async def serve(q: Q):
     if q.args.user_files:
         q.page['example'].items = [
@@ -26,6 +27,3 @@ async def serve(q: Q):
             ui.file_upload(name='user_files', label='Upload', multiple=True),
         ])
     await q.page.save()
-
-
-listen('/demo', serve)

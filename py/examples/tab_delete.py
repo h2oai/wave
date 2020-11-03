@@ -2,7 +2,7 @@
 # Navigate between two or more tabs.
 # Delete the cards when switching between tabs.
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 TABS = 'abcde'
 
@@ -22,6 +22,7 @@ async def remove_cards(q: Q):
     await q.page.save()
 
 
+@app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
         q.client.tab = 'a'
@@ -37,6 +38,3 @@ async def serve(q: Q):
     await remove_cards(q)
     await display_tab(q)
     await q.page.save()
-
-
-listen('/demo', serve)

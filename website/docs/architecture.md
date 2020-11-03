@@ -88,7 +88,7 @@ The language driver can be used by two kinds of Python programs: *Wave apps* and
 - [Wave apps](apps.md) are interactive programs that can update content and respond to user actions.
 - [Wave scripts](scripts.md) are simpler, non-interactive (batch) programs: they can update content, but not respond to user actions. 
 
-Wave apps sport a websocket server under the hood. When a Wave app is launched, it announces its existence to the Wave server, and the Wave server establishes a *relay* with the Wave app. When a browser tries to connect to an app, the Wave server acts as a hub, relaying information back and forth between the browser and the app. 
+Wave apps are ASGI servers under the hood. When a Wave app is launched, it announces its existence to the Wave server, and the Wave server establishes a *relay* with the Wave app. When a browser tries to connect to an app, the Wave server acts as a hub, relaying information back and forth between the browser and the app. 
 
 ## How is it different?
 

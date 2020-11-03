@@ -26,8 +26,7 @@ module.exports = {
         { to: 'docs/guide', label: 'Guide', position: 'left', },
         { to: 'docs/enterprise', label: 'Enterprise', position: 'left', },
         { to: 'docs/api/index', label: 'API', position: 'left' },
-        // TODO
-        // { to: 'blog', label: 'Blog', position: 'left' },
+        { to: 'blog', label: 'Blog', position: 'left' },
         { to: 'https://github.com/h2oai/wave/releases/latest', label: 'Download', position: 'right', },
         { href: 'https://github.com/h2oai/wave', label: 'GitHub', position: 'right', },
       ],

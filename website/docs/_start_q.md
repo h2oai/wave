@@ -1,19 +1,19 @@
-To start the Wave server, simply open a new terminal window and execute `wave` (or `wave.exe` on Windows).
+To start the Wave server, simply open a new terminal window and execute `waved` (or `waved.exe` on Windows).
 
 ```shell
 cd $HOME/wave
-./wave
+./waved
 ```
 
 ```
-2020/10/15 12:04:40 #
-2020/10/15 12:04:40 # ┌───────────────────┐
-2020/10/15 12:04:40 # │   ┬ ┬┌─┐┬  ┬┌─┐   │
-2020/10/15 12:04:40 # │   │││├─┤└┐┌┘├┤    │
-2020/10/15 12:04:40 # │   └┴┘┴ ┴ └┘ └─┘   │
-2020/10/15 12:04:40 # └───────────────────┘
-2020/10/15 12:04:40 #
-2020/10/15 12:04:40 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
+2020/10/27 16:16:34 # 
+2020/10/27 16:16:34 # ┌─────────────────────────┐
+2020/10/27 16:16:34 # │  ┌    ┌ ┌──┐ ┌  ┌ ┌──┐  │ H2O Wave
+2020/10/27 16:16:34 # │  │ ┌──┘ │──│ │  │ └┐    │ (version) (build)
+2020/10/27 16:16:34 # │  └─┘    ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
+2020/10/27 16:16:34 # └─────────────────────────┘
+2020/10/27 16:16:34 # 
+2020/10/27 16:16:34 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
 ```
 
 The Wave server should now be running at [http://localhost:55555](http://localhost:55555).

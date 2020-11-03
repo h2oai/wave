@@ -6,11 +6,11 @@ The Wave server stores and manages content. Content is stored in a page cache, c
 
 To reference a site from within a Wave script, import `site`.
 
-```py 
+```py
 from h2o_wave import site
 ```
 
-`site` is a dictionary-like object. 
+`site` is a dictionary-like object.
 
 To reference the current site from within a Wave app, use `q.site`.
 
@@ -58,12 +58,12 @@ page['foo'] = ui.form_card(...)
 card = page['foo']
 ```
 
-```py 
+```py
 card = page.add('foo', ui.form_card(...)
 ```
 
 To delete a card named `foo` from a page, use `del page['foo']`:
-```py 
+```py
 del page['foo']
 ```
 
@@ -86,7 +86,7 @@ To save a page from within a Wave script, use `page.save()`.
 page.save()
 ```
 
-To save the active page from within a Wave app, use `q.page.save()`. 
+To save the active page from within a Wave app, use `q.page.save()`.
 
 ```py
 async def serve(q: Q):
@@ -111,7 +111,7 @@ site['/foo'].drop()
 ```
 
 ```py
-del site['/foo'] 
+del site['/foo']
 ```
 
 Deleting a page automatically drops all cards associated with that page. Conversely, to delete all cards from a page, simply delete the page.
@@ -123,3 +123,15 @@ async def serve(q: Q):
     await q.page.drop()
 ```
 
+To update other (non-app) pages from within an app, use `AsyncSite`:
+
+```py
+from h2o_wave import Q, AsyncSite
+
+site = AsyncSite()
+
+async def serve(q: Q):
+    page = site['/foo']
+    page['bar'] = card
+    await page.save()
+```

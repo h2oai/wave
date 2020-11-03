@@ -6,11 +6,12 @@ import numpy as np
 from plotly import graph_objects as go
 from plotly import io as pio
 
-from h2o_wave import ui, listen, Q
+from h2o_wave import ui, main, app, Q
 
 np.random.seed(19680801)
 
 
+@app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:  # First visit
         q.client.initialized = True
@@ -59,6 +60,3 @@ async def serve(q: Q):
 
     # Save page
     await q.page.save()
-
-
-listen('/demo', serve)

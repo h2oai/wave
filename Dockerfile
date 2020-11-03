@@ -17,7 +17,7 @@ ENV PATH="/nodejs/node-v14.4.0-linux-x64/bin:${PATH}"
 RUN echo 'PATH="/nodejs/node-v14.4.0-linux-x64/bin:${PATH}"' >> /etc/profile.d/nodejs.sh
 
 # # Install chromium
-RUN apt-get -y --no-install-recommends install \
+RUN apt-get -y --no-install-recommends --fix-missing install \
     chromium
 
 # Cypress deps
@@ -42,15 +42,17 @@ RUN mkdir /.npm && \
 RUN mkdir /.cache /.config && \
     chown $uid:$gid /.cache /.config
 
-RUN echo ". /qd/py/venv/bin/activate" >> /etc/profile.d/venv.sh
+RUN echo ". /wave/py/venv/bin/activate" >> /etc/profile.d/venv.sh
 
+COPY . /wave
+RUN chown -R ${uid} /wave
 USER ${uid}
-COPY --chown=${uid} . /qd
-WORKDIR /qd/test
-RUN npm i
 
-WORKDIR /qd
+WORKDIR /wave/test
+RUN npm i
+RUN mkdir -p /wave/test/cypress/integration
+
+WORKDIR /wave
 RUN make all
 
-# docker run will have venv from qd build
-ENTRYPOINT [ "/bin/bash" , "-l"]
+WORKDIR /app

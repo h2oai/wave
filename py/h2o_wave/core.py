@@ -1,14 +1,12 @@
 import json
+import warnings
 import logging
 import os
 import os.path
 import sys
 from typing import List, Dict, Union, Tuple, Any, Optional
 
-import requests
-import shutil
-import websockets
-from requests.auth import HTTPBasicAuth
+import httpx
 
 logger = logging.getLogger(__name__)
 
@@ -20,57 +18,19 @@ def _get_env(key: str, value: Any):
     return os.environ.get(f'H2O_WAVE_{key}', value)
 
 
-_default_internal_address = 'ws://127.0.0.1:0'
+_default_internal_address = 'http://127.0.0.1:8000'
 
 
 class _Config:
     def __init__(self):
         self.internal_address = _get_env('INTERNAL_ADDRESS', _default_internal_address)
-        self.external_address = _get_env('EXTERNAL_ADDRESS', self.internal_address)
+        self.app_address = _get_env('APP_ADDRESS', _get_env('EXTERNAL_ADDRESS', self.internal_address))
         self.hub_address = _get_env('ADDRESS', 'http://127.0.0.1:55555')
         self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
-        self.shutdown_timeout: int = int(_get_env('SHUTDOWN_TIMEOUT', '3'))  # seconds
 
 
 _config = _Config()
-
-
-def configure(
-        internal_address: Optional[str] = None,
-        external_address: Optional[str] = None,
-        hub_address: Optional[str] = None,
-        hub_access_key_id: Optional[str] = None,
-        hub_access_key_secret: Optional[str] = None,
-):
-    """
-    Configure networking addresses/credentials before use.
-
-    Args:
-        internal_address: The local host:port to listen on.
-        external_address: The remote host:port of this server.
-        hub_address: The host:port of the Q server.
-        hub_access_key_id: The access key ID to use while connecting to the Q server.
-        hub_access_key_secret: The access key secret to use while connecting to the Q server.
-    """
-    if internal_address:
-        _config.internal_address = internal_address
-
-    if external_address:
-        _config.external_address = external_address
-    elif internal_address and (_config.external_address == _default_internal_address):
-        _config.external_address = internal_address
-
-    if hub_address:
-        _config.hub_address = hub_address
-    if hub_access_key_id:
-        _config.hub_access_key_id = hub_access_key_id
-    if hub_access_key_secret:
-        _config.hub_access_key_secret = hub_access_key_secret
-
-    global _client
-    _client = _BasicAuthClient()
-
 
 _key_sep = ' '
 _content_type_json = {'Content-type': 'application/json'}
@@ -158,7 +118,7 @@ class Expando:
 
     def __repr__(self): return repr(self.__dict__[DICT])
 
-    def __str__(self): return '\n'.join([f'{k} = {repr(v)}' for k, v in self.__dict__[DICT].items()])
+    def __str__(self): return ', '.join([f'{k}:{repr(v)}' for k, v in self.__dict__[DICT].items()])
 
 
 def expando_to_dict(e: Expando) -> dict:
@@ -269,7 +229,7 @@ def _dump(xs: Any):
 class Ref:
     """
     Represents a local reference to an element on a `h2o_wave.core.Page`.
-    Any changes made to this local reference are tracked and sent to the remote Q server when the page is saved.
+    Any changes made to this local reference are tracked and sent to the remote Wave server when the page is saved.
     """
 
     def __init__(self, page: 'PageBase', key: str):
@@ -297,7 +257,7 @@ class Ref:
 
 class Data:
     """
-    Represents a data placeholder. A data placeholder is used to allocate memory on the Q server to store data.
+    Represents a data placeholder. A data placeholder is used to allocate memory on the Wave server to store data.
 
     Args:
         fields: The names of the fields (columns names) in the data, either a list or tuple or string containing space-separated names.
@@ -342,7 +302,7 @@ def data(
     """
     Create a `h2o_wave.core.Data` instance for associating data with cards.
 
-    ``data(fields, size)`` creates a placeholder for data and allocates memory on the Q server.
+    ``data(fields, size)`` creates a placeholder for data and allocates memory on the Wave server.
 
     ``data(fields, size, rows)`` creates a placeholder and initializes it with the provided rows.
 
@@ -482,7 +442,7 @@ class PageBase:
 
 class Page(PageBase):
     """
-    Represents a reference to a remote Q page.
+    Represents a reference to a remote Wave page.
 
     Args:
         site: The parent site.
@@ -506,7 +466,7 @@ class Page(PageBase):
         """
         DEPRECATED: Use `h2o_wave.core.Page.save` instead.
         """
-        logger.warn('page.sync() is deprecated. Please use page.save() instead.')
+        warnings.warn('page.sync() is deprecated. Please use page.save() instead.', DeprecationWarning)
         self.save()
 
     def save(self):
@@ -521,7 +481,7 @@ class Page(PageBase):
 
 class AsyncPage(PageBase):
     """
-    Represents a reference to a remote Q page. Similar to `h2o_wave.core.Page` except that this class exposes ``async`` methods.
+    Represents a reference to a remote Wave page. Similar to `h2o_wave.core.Page` except that this class exposes ``async`` methods.
 
 
     Args:
@@ -531,7 +491,6 @@ class AsyncPage(PageBase):
 
     def __init__(self, site: 'AsyncSite', url: str):
         self.site = site
-        self._ws = site._ws
         super().__init__(url)
 
     async def load(self) -> dict:
@@ -547,7 +506,7 @@ class AsyncPage(PageBase):
         """
         DEPRECATED: Use `h2o_wave.core.AsyncPage.save` instead.
         """
-        logger.warn('page.push() is deprecated. Please use page.save() instead.')
+        warnings.warn('page.push() is deprecated. Please use page.save() instead.', DeprecationWarning)
         await self.save()
 
     async def save(self):
@@ -557,81 +516,31 @@ class AsyncPage(PageBase):
         p = self._diff()
         if p:
             logger.debug(p)
-            await self._ws.send(f'* {self.url} {p}')
-
-    # XXX Broken
-    async def pull(self) -> 'Q':
-        """
-        EXPERIMENTAL. DO NOT USE.
-        """
-        req = await self._ws.recv()
-        return Q(self._ws, req)
-
-    # XXX Broken
-    async def poll(self) -> 'Q':
-        """
-        EXPERIMENTAL. DO NOT USE.
-        """
-        await self.save()
-        return await self.pull()
-
-
-class _BasicAuthClient:
-    def __init__(self):
-        self._auth = HTTPBasicAuth(_config.hub_access_key_id, _config.hub_access_key_secret)
-        self._secure = False
-
-    def patch(self, url: str, data: Any):
-        res = requests.patch(f'{_config.hub_address}{url}', data=data, headers=_content_type_json, auth=self._auth)
-        if res.status_code != 200:
-            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
-
-    def get(self, url: str):
-        res = requests.get(f'{_config.hub_address}{url}', headers=_content_type_json, auth=self._auth)
-        if res.status_code != 200:
-            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
-        return res.json()
-
-    def upload(self, files: List[str]) -> List[str]:
-        # XXX Use aiohttp client for async multipart or streaming upload
-        upload_url = f'{_config.hub_address}/_f'
-        fs = [('files', (os.path.basename(f), open(f, 'rb'))) for f in files]
-        res = requests.post(upload_url, files=fs, auth=self._auth, verify=self._secure)
-        if res.status_code == 200:
-            return json.loads(res.text)['files']
-        raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
-
-    def download(self, url: str, path: str) -> str:
-        path = os.path.abspath(path)
-        # If path is dir, get basename from url
-        filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
-
-        with requests.get(f'{_config.hub_address}{url}', stream=True) as r:
-            with open(filepath, 'wb') as f:
-                shutil.copyfileobj(r.raw, f)
-
-        return filepath
-
-    def unload(self, url: str):
-        res = requests.delete(f'{_config.hub_address}{url}')
-        if res.status_code == 200:
-            return
-        raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
-
-
-_client = _BasicAuthClient()
+            await self.site._save(self.url, p)
 
 
 class Site:
     """
-    Represents a reference to the remote Q site. A Site instance is used to obtain references to the site's pages.
+    Represents a reference to the remote Wave site. A Site instance is used to obtain references to the site's pages.
     """
+
+    def __init__(self):
+        self._http = httpx.Client(
+            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
+            verify=False,
+        )
 
     def __getitem__(self, url) -> Page:
         return Page(self, url)
 
-    def _save(self, url: str, data: str):
-        _client.patch(url, data)
+    def __delitem__(self, key: str):
+        page = self[key]
+        page.drop()
+
+    def _save(self, url: str, patch: str):
+        res = self._http.patch(f'{_config.hub_address}{url}', content=patch)
+        if res.status_code != 200:
+            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
     def load(self, url) -> dict:
         """
@@ -643,7 +552,10 @@ class Site:
         Returns:
             The serialized page.
         """
-        return _client.get(url)
+        res = self._http.get(f'{_config.hub_address}{url}', headers=_content_type_json)
+        if res.status_code != 200:
+            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
+        return res.json()
 
     def upload(self, files: List[str]) -> List[str]:
         """
@@ -655,7 +567,11 @@ class Site:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        return _client.upload(files)
+        upload_url = f'{_config.hub_address}/_f'
+        res = self._http.post(upload_url, files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        if res.status_code == 200:
+            return json.loads(res.text)['files']
+        raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
 
     def download(self, url: str, path: str) -> str:
         """
@@ -668,7 +584,16 @@ class Site:
         Returns:
             The path to the downloaded file.
         """
-        return _client.download(url, path)
+        path = os.path.abspath(path)
+        # If path is a directory, get basename from url
+        filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
+
+        with open(filepath, 'wb') as f:
+            with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
+                for chunk in r.iter_bytes():
+                    f.write(chunk)
+
+        return filepath
 
     def unload(self, url: str):
         """
@@ -677,19 +602,37 @@ class Site:
         Args:
             url: The URL of the file to delete.
         """
-        _client.unload(url)
+        res = self._http.delete(f'{_config.hub_address}{url}')
+        if res.status_code == 200:
+            return
+        raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
+
+
+site = Site()
 
 
 class AsyncSite:
     """
-    Represents a reference to the remote Q site. Similar to `h2o_wave.core.Site` except that this class exposes ``async`` methods.
+    Represents a reference to the remote Wave site. Similar to `h2o_wave.core.Site` except that this class exposes `async` methods.
     """
 
-    def __init__(self, ws: websockets.WebSocketServerProtocol):
-        self._ws = ws
+    def __init__(self):
+        self._http = httpx.AsyncClient(
+            auth=(_config.hub_access_key_id, _config.hub_access_key_secret),
+            verify=False,
+        )
 
     def __getitem__(self, url) -> AsyncPage:
         return AsyncPage(self, url)
+
+    def __delitem__(self, key: str):
+        page = self[key]
+        page.drop()
+
+    async def _save(self, url: str, patch: str):
+        res = await self._http.patch(f'{_config.hub_address}{url}', content=patch)
+        if res.status_code != 200:
+            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
 
     async def load(self, url) -> dict:
         """
@@ -701,8 +644,10 @@ class AsyncSite:
         Returns:
             The serialized page.
         """
-        # XXX implement
-        return {}
+        res = await self._http.get(f'{_config.hub_address}{url}', headers=_content_type_json)
+        if res.status_code != 200:
+            raise ServiceError(f'Request failed (code={res.status_code}): {res.text}')
+        return res.json()
 
     async def upload(self, files: List[str]) -> List[str]:
         """
@@ -714,9 +659,11 @@ class AsyncSite:
         Returns:
             A list of remote URLs for the uploaded files, in order.
         """
-        # XXX use non-blocking aiohttp post
-        paths = _client.upload(files)
-        return paths
+        upload_url = f'{_config.hub_address}/_f'
+        res = await self._http.post(upload_url, files=[('files', (os.path.basename(f), open(f, 'rb'))) for f in files])
+        if res.status_code == 200:
+            return json.loads(res.text)['files']
+        raise ServiceError(f'Upload failed (code={res.status_code}): {res.text}')
 
     async def download(self, url: str, path: str) -> str:
         """
@@ -728,9 +675,16 @@ class AsyncSite:
         Returns:
             The path to the downloaded file.
         """
-        # XXX use non-blocking aiohttp get
-        path = _client.download(url, path)
-        return path
+        path = os.path.abspath(path)
+        # If path is a directory, get basename from url
+        filepath = os.path.join(path, os.path.basename(url)) if os.path.isdir(path) else path
+
+        with open(filepath, 'wb') as f:
+            async with self._http.stream('GET', f'{_config.hub_address}{url}') as r:
+                async for chunk in r.aiter_bytes():
+                    f.write(chunk)
+
+        return filepath
 
     async def unload(self, url: str):
         """
@@ -739,11 +693,10 @@ class AsyncSite:
         Args:
             url: The URL of the file to delete.
         """
-        # XXX use non-blocking aiohttp get
-        _client.unload(url)
-
-
-site = Site()
+        res = await self._http.delete(f'{_config.hub_address}{url}')
+        if res.status_code == 200:
+            return
+        raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
 
 
 def _kv(key: str, index: str, value: Any):

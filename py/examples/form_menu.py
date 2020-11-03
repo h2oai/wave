@@ -2,7 +2,7 @@
 # Display context menus inside forms.
 # ---
 import json
-from h2o_wave import Q, listen, ui, data
+from h2o_wave import main, app, Q, ui, data
 
 # Vega lite spec for a bar plot, defaults to linear scale.
 spec_linear_scale = json.dumps(dict(
@@ -42,6 +42,7 @@ linear_scale_command = ui.command(
 )
 
 
+@app('/demo')
 async def serve(q: Q):
     if q.client.plot_added:  # Have we already added a plot?
         example = q.page['example']
@@ -67,6 +68,3 @@ async def serve(q: Q):
         q.client.plot_added = True
 
     await q.page.save()
-
-
-listen('/demo', serve)

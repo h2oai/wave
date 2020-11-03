@@ -20,7 +20,7 @@ clean: ## Clean
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
 	cd tools/wavegen && $(MAKE) clean
-	rm -f wave
+	rm -f waved
 
 .PHONY: build
 build: build-ui build-server ## Build everything
@@ -28,19 +28,24 @@ build: build-ui build-server ## Build everything
 build-ui: ## Build UI
 	cd ui && $(MAKE) build
 
+build-ide: ## Build IDE
+	cd ide && npm run build
+	rm -rf ui/build/_ide
+	mv ide/dist ui/build/_ide
+
 run-ui: ## Run UI in development mode (hot reloading)
 	cd ui && $(MAKE) run
 
 test-ui-ci: ## Run UI unit tests in CI mode 
 	cd ui && $(MAKE) test-ci
 
-test-ui-watch: ## Run UI unit tests in CI mode 
+test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test
 
 build-server: ## Build server for current OS/Arch
-	go build $(LDFLAGS) -o wave cmd/wave/main.go
+	go build $(LDFLAGS) -o waved cmd/wave/main.go
 
-build-py: ## Build wheel
+build-py: ## Build h2o_wave wheel
 	cd py && $(MAKE) release
 
 build-docker:
@@ -53,9 +58,6 @@ build-docker:
 run: ## Run server
 	go run cmd/wave/main.go -web-dir ./ui/build -debug
 
-run-cypress-bridge: ## Run Cypress proxy
-	go run cmd/wave/main.go -cypress
-
 run-cypress: ## Run Cypress
 	cd test && ./node_modules/.bin/cypress open
 
@@ -66,12 +68,15 @@ generate: ## Generate driver bindings
 docs: ## Generate API docs and copy to website
 	cd py && $(MAKE) docs
 
-release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make release)"
+publish-pypi: ## Publish PyPI package
+	cd py && $(MAKE) publish
+
+release: build-ui build-py ## Prepare release builds (e.g. "VERSION=v1.2.3 make release)"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
-	$(MAKE) website
-	$(MAKE) publish
+	$(MAKE) build-website
+	$(MAKE) publish-website
 
 release-os:
 	rm -rf build/$(REL)
@@ -82,15 +87,14 @@ release-os:
 	rm -rf test/cypress/screenshots/*.*
 	rm -rf test/cypress/videos/*.*
 	rsync --exclude node_modules -a test build/$(REL)/
-	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/wave$(EXE_EXT) cmd/wave/main.go
+	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/waved$(EXE_EXT) cmd/wave/main.go
 	cp readme.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
-.PHONY: website
-website: ## Build docs website
+build-website: ## Build website
 	cd website && npm run build
 
-publish: ## Deploy built website to hosting dir docs/
+publish-website: ## Publish website
 	rm -rf docs && mkdir docs && rsync -a website/build/ docs/
 
 help: ## List all make tasks

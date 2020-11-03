@@ -11,10 +11,10 @@ import (
 
 var (
 	// Version is the executable version.
-	Version = "dev"
+	Version = "(version)"
 
 	// BuildDate is the executable build date.
-	BuildDate = "unknown"
+	BuildDate = "(build)"
 )
 
 func main() {
@@ -51,6 +51,9 @@ func main() {
 
 	conf.WebDir, _ = filepath.Abs(conf.WebDir)
 	conf.DataDir, _ = filepath.Abs(conf.DataDir)
+
+	conf.Version = Version
+	conf.BuildDate = BuildDate
 
 	wave.Run(conf)
 }

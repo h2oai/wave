@@ -4,6 +4,7 @@ module.exports = {
   someSidebar: {
     'Prologue': [
       'change-log',
+      'migrating-0-8',
       'migrating-0',
       'contributing',
     ],
@@ -31,15 +32,18 @@ module.exports = {
       'state',
       'routing',
       'realtime',
+      'background',
       'expressions',
       'files',
       'plotting',
       'graphics',
       'security',
       'logging',
+      'cli',
       'development',
       'browser-testing',
       'configuration',
+      'deployment',
       'backup',
     ],
     'Enterprise': [

@@ -5,6 +5,7 @@ type OpsD struct {
 	P *PageD                 `json:"p,omitempty"` // page
 	C map[string]interface{} `json:"c,omitempty"` // FIXME comment - is this required?
 	D []OpD                  `json:"d,omitempty"` // deltas
+	R int                    `json:"r,omitempty"` // reset
 }
 
 // OpD represents a delta operation (effector)
@@ -58,10 +59,20 @@ type CycBufD struct {
 	I int             `json:"i"` // index
 }
 
-// RelayRequest represents a request from a service for establishing a duplex relay.
-// XXX move to protocol
-type RelayRequest struct {
-	Mode string `json:"mode"`
-	URL  string `json:"url"`
-	Host string `json:"host"`
+// AppRequest represents a request from an app.
+type AppRequest struct {
+	RegisterApp   *RegisterApp   `json:"register_app,omitempty"`
+	UnregisterApp *UnregisterApp `json:"unregister_app,omitempty"`
+}
+
+// RegisterApp represents a request to register an app.
+type RegisterApp struct {
+	Mode    string `json:"mode"`
+	Route   string `json:"route"`
+	Address string `json:"address"`
+}
+
+// UnregisterApp represents a request to unregister an app.
+type UnregisterApp struct {
+	Route string `json:"route"`
 }

@@ -12,12 +12,13 @@ Above all, prefer brevity and clarity. [The best code is no code at all](https:/
 
 We'll start with a basic skeleton, and then work our way up from there. 
 
-The first step is to `listen()`. Also, we want the landing page to show a list of to-dos, so we'll throw in an empty `show_todos()` function for now, and call it from `serve()`.
+The first step is to define an `@app` function. Also, we want the landing page to show a list of to-dos, so we'll throw in an empty `show_todos()` function for now, and call it from `serve()`.
 
-```py title="$HOME/wave-apps/todo.py"
-from h2o_wave import Q, listen, ui
+```py {6,10-11} title="$HOME/wave-apps/todo.py"
+from h2o_wave import Q, main, app, ui
 
 
+@app('/todo')
 async def serve(q: Q):
     show_todos(q)
     await q.page.save()
@@ -25,9 +26,6 @@ async def serve(q: Q):
 
 def show_todos(q: Q):
     pass
-
-
-listen('/todo', serve)
 ```
 
 ## Step 2: What's in a to-do?
@@ -35,7 +33,7 @@ listen('/todo', serve)
 A to-do item has some basic attributes: an ID, some text content, and whether it's completed or not. Let's define a `class` for that, with a global one-up `id`.
 
 ```py {3-13} title="$HOME/wave-apps/todo.py"
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 _id = 0
 
@@ -50,6 +48,7 @@ class TodoItem:
         self.done = False
 
 
+@app('/todo')
 async def serve(q: Q):
     show_todos(q)
     await q.page.save()
@@ -57,10 +56,8 @@ async def serve(q: Q):
 
 def show_todos(q: Q):
     pass
-
-
-listen('/todo', serve)
 ```
+
 ## Step 3: Make a to-do list
 
 Since we want each user to have a separate to-do list, it's appropriate to keep the to-do list in `q.user`.
@@ -70,10 +67,9 @@ Here, we attempt to fetch the list from `q.user`, and create one if it doesn't e
 
 ```py {1,23-28} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 _id = 0
-
 
 # A simple class that represents a to-do item.
 class TodoItem:
@@ -85,6 +81,7 @@ class TodoItem:
         self.done = False
 
 
+@app('/todo')
 async def serve(q: Q):
     show_todos(q)
     await q.page.save()
@@ -97,8 +94,6 @@ def show_todos(q: Q):
     # Create a sample list if we don't have any.
     if todos is None:
         q.user.todos = todos = [TodoItem('Do this'), TodoItem('Do that'), TodoItem('Do something else')]
-
-listen('/todo', serve)
 ```
 
 ## Step 4: Show the to-do list
@@ -112,10 +107,9 @@ Several [components](components.md) have a `trigger` attribute. Normally, an eve
 
 ```py {1,30-37} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 _id = 0
-
 
 # A simple class that represents a to-do item.
 class TodoItem:
@@ -127,6 +121,7 @@ class TodoItem:
         self.done = False
 
 
+@app('/todo')
 async def serve(q: Q):
     show_todos(q)
     await q.page.save()
@@ -148,9 +143,6 @@ def show_todos(q: Q):
         ui.text_l('To Do'),
         *not_done,
     ])
-
-
-listen('/todo', serve)
 ```
 
 
@@ -161,10 +153,9 @@ We also turn each completed to-do item into another list of checkboxes, checked 
 
 ```py {31,38-39} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 _id = 0
-
 
 # A simple class that represents a to-do item.
 class TodoItem:
@@ -172,10 +163,11 @@ class TodoItem:
         global _id
         _id += 1
         self.id = f'todo_{_id}'
-        self.done = False
         self.text = text
+        self.done = False
 
 
+@app('/todo')
 async def serve(q: Q):
     show_todos(q)
     await q.page.save()
@@ -200,16 +192,14 @@ def show_todos(q: Q):
         *([ui.separator('Done')] if len(done) else []),
         *done,
     ])
-
-
-listen('/todo', serve)
 ```
 
 At this point, try running your app.
 
 ```shell 
 cd $HOME/wave-apps
-./venv/bin/python todo.py
+source venv/bin/activate
+wave run todo
 ```
 
 Point your browser to [http://localhost:55555/todo](http://localhost:55555/todo).
@@ -229,10 +219,9 @@ So, we iterate through all the to-do items set their `done` attribute based on t
 
 ```py {30-33} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 _id = 0
-
 
 # A simple class that represents a to-do item.
 class TodoItem:
@@ -240,10 +229,11 @@ class TodoItem:
         global _id
         _id += 1
         self.id = f'todo_{_id}'
-        self.done = False
         self.text = text
+        self.done = False
 
 
+@app('/todo')
 async def serve(q: Q):
     show_todos(q)
     await q.page.save()
@@ -273,12 +263,9 @@ def show_todos(q: Q):
         *([ui.separator('Done')] if len(done) else []),
         *done,
     ])
-
-
-listen('/todo', serve)
 ```
 
-Restart your app and reload your browser. You should now be able to check/uncheck the items in your todo list. 
+You should now be able to check/uncheck the items in your todo list. 
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__2.mp4').default} type='video/mp4'/></video>
 
@@ -293,10 +280,9 @@ In the `new_todo()` function, we display a new form containing a textbox (using 
 
 ```py {18-21,45,52-61} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 _id = 0
-
 
 # A simple class that represents a to-do item.
 class TodoItem:
@@ -304,10 +290,11 @@ class TodoItem:
         global _id
         _id += 1
         self.id = f'todo_{_id}'
-        self.done = False
         self.text = text
+        self.done = False
 
 
+@app('/todo')
 async def serve(q: Q):
     if q.args.new_todo:  # Display an input form.
         new_todo(q)
@@ -353,12 +340,9 @@ def new_todo(q: Q):
             ui.button(name='show_todos', label='Back'),
         ]),
     ])
-
-
-listen('/todo', serve)
 ```
 
-Restart your app and reload your browser. You should now be able to bring up the new to-do form. 
+You should now be able to bring up the new to-do form. 
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__3.mp4').default} type='video/mp4'/></video>
 
@@ -372,10 +356,9 @@ In this example, for clarity, we named the both the buttons and their correspond
 
 ```py {20-21,54-59} title="$HOME/wave-apps/todo.py"
 from typing import List
-from h2o_wave import Q, listen, ui
+from h2o_wave import Q, main, app, ui
 
 _id = 0
-
 
 # A simple class that represents a to-do item.
 class TodoItem:
@@ -383,10 +366,11 @@ class TodoItem:
         global _id
         _id += 1
         self.id = f'todo_{_id}'
-        self.done = False
         self.text = text
+        self.done = False
 
 
+@app('/todo')
 async def serve(q: Q):
     if q.args.new_todo:  # Display an input form.
         new_todo(q)
@@ -442,23 +426,20 @@ def new_todo(q: Q):
             ui.button(name='show_todos', label='Back'),
         ]),
     ])
-
-
-listen('/todo', serve)
 ```
 
-Restart your app and reload your browser. You should now be able to add new to-do items to your list. Congratulations!
+You should now be able to add new to-do items to your list. Congratulations!
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__4.mp4').default} type='video/mp4'/></video>
 
 ## Step 9: Make it realtime
 
-To make your app realtime, simply pass `mode='multicast'` to your `listen()`.
+To make your app realtime, simply pass `mode='multicast'` to `@app()`.
 
 ```py title="$HOME/wave-apps/todo.py"
-listen('/todo', serve, mode='multicast')
+@app('/todo', mode='multicast')
 ```
-Restart your app, and try opening [http://localhost:55555/todo](http://localhost:55555/todo) from multiple browser tabs:
+Now try opening [http://localhost:55555/todo](http://localhost:55555/todo) from multiple browser tabs:
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__5.mp4').default} type='video/mp4'/></video>
 
@@ -468,14 +449,6 @@ Groovy!
 ## Exercise
 
 A little housekeeping goes a long way: add a "Clear" button on the main page to clear all completed to-dos.
-
-> "And this mess is so big<br/>
-> And so deep and so tall,<br/>
-> We cannot pick it up.<br/>
-> There is no way at all!"
-
-― Dr. Seuss, *The Cat in the Hat*
-
 
 ## Next steps
 

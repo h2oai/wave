@@ -52,6 +52,9 @@ const
           case SockEventType.Message:
             if (e.type === SockMessageType.Err) contentB({ error: e.message })
             break
+          case SockEventType.Reset:
+            window.location.reload()
+            break
         }
       },
       onHashChanged = () => {

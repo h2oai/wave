@@ -1,6 +1,6 @@
 from typing import Tuple, List, Optional, Dict
 
-import requests
+import httpx
 
 from .core import marshal, unmarshal
 
@@ -46,10 +46,11 @@ class TeleDB:
             key_secret: access key secret
         """
         self._address = address
-        session = requests.Session()
-        session.headers.update({'Content-type': 'application/json'})
-        session.auth = (key_id, key_secret)
-        self._session = session
+        self._http = httpx.AsyncClient(
+            auth=(key_id, key_secret),
+            headers={'Content-type': 'application/json'},
+            verify=False,
+        )
 
     def __getitem__(self, name: str):
         """
@@ -62,9 +63,8 @@ class TeleDB:
         """
         return _DB(self, name)
 
-    def _call(self, req: dict) -> dict:
-        data = marshal(req)
-        res = self._session.post(self._address, data=data)
+    async def _call(self, req: dict) -> dict:
+        res = await self._http.post(self._address, content=marshal(req))
         if res.status_code != 200:
             raise TeleDBError(f'Request failed (code={res.status_code}): {res.text}')
         return unmarshal(res.text)
@@ -79,7 +79,7 @@ class _DB:
         self._db = db
         self._name = name
 
-    def exec(self, sql: str, *params) -> Tuple[Optional[List[List]], Optional[str]]:
+    async def exec(self, sql: str, *params) -> Tuple[Optional[List[List]], Optional[str]]:
         """
         Execute a single SQL statement. Parameters are optional.
 
@@ -108,12 +108,12 @@ class _DB:
         result, error = db.exec('SELECT name, age FROM student WHERE age > 17')
         result, error = db.exec('SELECT name, age FROM student WHERE age > ?', 17)
         """
-        r, err = self._exec([(sql, *params)])
+        r, err = await self._exec([(sql, *params)])
         if err:
             return None, err
         return r[0], None
 
-    def exec_many(self, *args) -> Tuple[Optional[List[List[List]]], Optional[str]]:
+    async def exec_many(self, *args) -> Tuple[Optional[List[List[List]]], Optional[str]]:
         """
         Execute multiple SQL statements.
 
@@ -142,15 +142,15 @@ class _DB:
         print(results)
 
         """
-        return self._exec(list(args))
+        return await self._exec(list(args))
 
-    def exec_atomic(self, *args) -> Tuple[Optional[List[List[List]]], Optional[str]]:
+    async def exec_atomic(self, *args) -> Tuple[Optional[List[List[List]]], Optional[str]]:
         """
         Same as exec_may(), but use a transaction. Rollback if any statement fails.
         """
-        return self._exec(list(args), atomic=True)
+        return await self._exec(list(args), atomic=True)
 
-    def _exec(self, args: list, atomic=False) -> Tuple[Optional[List[List[List]]], Optional[str]]:
+    async def _exec(self, args: list, atomic=False) -> Tuple[Optional[List[List[List]]], Optional[str]]:
         if len(args) == 0:
             raise ValueError('Want at least one SQL query, got none')
 
@@ -170,7 +170,7 @@ class _DB:
             statements.append(_new_stmt(arg[0], arg[1:]))
 
         req = _new_db_request(exec=_new_exec_request(self._name, statements, atomic))
-        res = self._db._call(req)
+        res = await self._db._call(req)
         result, err = res.get('result'), res.get('error')
         if err:
             return None, err

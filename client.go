@@ -40,8 +40,8 @@ type Client struct {
 	subject  string          // oidc subject identifier
 	broker   *Broker         // broker
 	conn     *websocket.Conn // connection
-	urls     []string        // watched page urls
-	send     chan []byte     // send data
+	routes   []string        // watched routes
+	data     chan []byte     // send data
 }
 
 func newClient(addr, username, subject string, broker *Broker, conn *websocket.Conn) *Client {
@@ -72,22 +72,22 @@ func (c *Client) listen() {
 		switch m.t {
 		case patchMsgT:
 			c.broker.patch(m.addr, m.data)
-		case relayMsgT:
-			relay := c.broker.at(m.addr)
-			if relay == nil {
-				echo(Log{"t": "relay", "client": c.addr, "route": m.addr, "error": "service unavailable"})
+		case queryMsgT:
+			app := c.broker.getApp(m.addr)
+			if app == nil {
+				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "service unavailable"})
 				continue
 			}
-			relay.relay(c.format(m.data))
+			app.forward(c.format(m.data))
 		case watchMsgT:
-			if relay := c.broker.at(m.addr); relay != nil { // is service?
-				switch relay.mode {
+			c.subscribe(m.addr) // subscribe even if page is currently NA
+
+			if app := c.broker.getApp(m.addr); app != nil { // do we have an app handling this route?
+				switch app.mode {
 				case unicastMode:
-					c.subscribe(c.id) // client-level
+					c.subscribe("/" + c.id) // client-level
 				case multicastMode:
-					c.subscribe(c.username) // user-level
-				case broadcastMode:
-					c.subscribe(m.addr) // system-level
+					c.subscribe("/" + c.username) // user-level
 				}
 
 				boot := emptyJSON
@@ -96,32 +96,31 @@ func (c *Client) listen() {
 						boot = j
 					}
 				}
-				relay.relay(c.format(boot))
+				// echo(Log{"t": "boot", "client": c.addr, "route": m.addr, "addr": app.addr, "location": string(boot)})
+				app.forward(c.format(boot))
 				continue
 			}
 
-			c.subscribe(m.addr) // subscribe even if page is currently NA
-
 			if page := c.broker.site.at(m.addr); page != nil { // is page?
 				if data := page.marshal(); data != nil {
-					c.relay(data)
+					c.send(data)
 					continue
 				}
 			}
 
-			c.relay(notFound)
+			c.send(notFound)
 		}
 	}
 }
 
-func (c *Client) subscribe(url string) {
-	c.urls = append(c.urls, url) // TODO review
-	c.broker.subscribe <- Sub{url, c}
+func (c *Client) subscribe(route string) {
+	c.routes = append(c.routes, route) // TODO review
+	c.broker.subscribe <- Sub{route, c}
 }
 
-func (c *Client) relay(data []byte) bool {
+func (c *Client) send(data []byte) bool {
 	select {
-	case c.send <- data:
+	case c.data <- data:
 		return true
 	default:
 		return false
@@ -136,7 +135,7 @@ func (c *Client) flush() {
 	}()
 	for {
 		select {
-		case message, ok := <-c.send:
+		case data, ok := <-c.data:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// broker closed the channel.
@@ -148,13 +147,13 @@ func (c *Client) flush() {
 			if err != nil {
 				return
 			}
-			w.Write(message)
+			w.Write(data)
 
 			// push queued messages, if any
-			n := len(c.send)
+			n := len(c.data)
 			for i := 0; i < n; i++ {
 				w.Write(newline)
-				w.Write(<-c.send)
+				w.Write(<-c.data)
 			}
 
 			if err := w.Close(); err != nil {
@@ -170,14 +169,14 @@ func (c *Client) flush() {
 }
 
 func (c *Client) quit() {
-	close(c.send)
+	close(c.data)
 }
 
 var (
 	usernameHeader = []byte("u:")
 	subjectHeader  = []byte("s:")
 	clientIDHeader = []byte("c:")
-	relayBodySep   = []byte("\n\n")
+	queryBodySep   = []byte("\n\n")
 )
 
 func (c *Client) format(data []byte) []byte {
@@ -193,7 +192,7 @@ func (c *Client) format(data []byte) []byte {
 
 	buf.Write(clientIDHeader)
 	buf.WriteString(c.id)
-	buf.Write(relayBodySep)
+	buf.Write(queryBodySep)
 
 	buf.Write(data)
 

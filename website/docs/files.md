@@ -12,9 +12,10 @@ Wave provides four functions to manage files from your app:
 
 Use a file upload component (`ui.file_upload()`) to accept file uploads from the browser. Files get uploaded from the browser and get stored on the Wave server. Use `q.site.download()` to download files from the Wave server to your app.
 
-```py {8,12}
-from h2o_wave import Q, listen, ui
+```py {9,13}
+from h2o_wave import Q, main, app, ui
 
+@app('/uploads')
 async def serve(q: Q):
     paths = q.args.datasets
     if not paths:
@@ -28,8 +29,6 @@ async def serve(q: Q):
             # Do something with the file located at local_path
             # ...
     await q.page.save()
-
-listen('/uploads', serve)
 ```
 
 :::tip
@@ -40,17 +39,16 @@ After a file is uploaded from the browser, it is stored forever on the Wave serv
 
 Use `q.site.upload()` to upload files from your app to the Wave server. Use the returned paths to display download links in the browser.
 
-```py {4,6}
-from h2o_wave import Q, listen, ui
+```py {5,7}
+from h2o_wave import Q, main, app, ui
 
+@app('/downloads')
 async def serve(q: Q):
     download_path, = await q.site.upload(['results.csv'])
     q.page['download'] = ui.form_card(box='1 1 2 2', items = [
         ui.link(label='Download Results', path=download_path),
     ])
     await q.page.save()
-
-listen('/downloads', serve)
 ```
 
 :::tip

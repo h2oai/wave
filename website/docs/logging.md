@@ -7,15 +7,14 @@ Wave apps are plain Python programs. Use Python's built-in `logging` module to c
 Here's a basic configuration that logs a ISO8601 timestamp, log level, and message:
 
 ```py {3,4}
-from h2o_wave import Q, listen
+from h2o_wave import Q, main, app
 
 import logging
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s')
 
+@app('/demo')
 async def serve(q: Q):
     logging.warning('All your base are belong to us')    
-
-listen('/demo', serve)
 ```
 
 The above snippet makes the app log a warning every time it is accessed. This is what the logged message look like:

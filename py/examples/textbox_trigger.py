@@ -1,7 +1,7 @@
 # Form / Textbox / Trigger
 # To handle live changes to a textbox, enable the `trigger` attribute.
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
 def to_pig_latin(text: str):
@@ -20,6 +20,7 @@ def to_pig_latin(text: str):
     return " ".join(text)
 
 
+@app('/demo')
 async def serve(q: Q):
     q.page['example'] = ui.form_card(box='1 1 4 10', items=[
         ui.textbox(name='text', label='English', value=q.args.text or '', multiline=True, trigger=True),
@@ -27,6 +28,3 @@ async def serve(q: Q):
         ui.text(to_pig_latin(q.args.text) or '*Type in some text above to translate to Pig Latin!*'),
     ])
     await q.page.save()
-
-
-listen('/demo', serve)

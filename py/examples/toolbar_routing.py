@@ -5,9 +5,10 @@
 # The location hash can be accessed using `q.args['#']`.
 #
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
+@app('/demo')
 async def serve(q: Q):
     hash = q.args['#']
     if hash:
@@ -36,6 +37,3 @@ async def serve(q: Q):
             content='Welcome to our store!',
         )
     await q.page.save()
-
-
-listen('/demo', serve)

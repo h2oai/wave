@@ -18,14 +18,23 @@ interface State {
   notification?: S
   /** Redirect the page to a new URL. */
   redirect?: S
+  /** Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). */
+  icon?: S
 }
 
 export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       init = () => {
-        const { title, refresh, notification, redirect } = state
+        const { title, icon, refresh, notification, redirect } = state
         if (title) window.document.title = title
+        if (icon) {
+          const
+            iconLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement,
+            touchIconLink = document.querySelector("link[rel*='apple-touch-icon']") as HTMLLinkElement
+          if (iconLink) iconLink.href = icon
+          if (touchIconLink) touchIconLink.href = icon
+        }
         if (typeof refresh === 'number') qd.refreshRateB(refresh)
         if (notification) showNotification(notification)
         if (redirect) {

@@ -2,7 +2,7 @@
 # Use a table as an advanced multi-select. Specify rownames in 'values' for preselection.
 # ---
 from faker import Faker
-from h2o_wave import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 fake = Faker()
 
@@ -24,7 +24,8 @@ issues = [Issue(text=fake.sentence()) for i in range(10)]
 columns = [ui.table_column(name='text', label='Issue', min_width='300px')]
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'selected={q.args.issues}'),
@@ -41,6 +42,3 @@ async def main(q: Q):
             ui.button(name='show_inputs', label='Submit', primary=True)
         ])
     await q.page.save()
-
-
-listen('/demo', main)

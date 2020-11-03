@@ -12,9 +12,43 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.9.1
+Oct 28, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.9.1)
+- Fixed
+    - Make `wave run` behave identical to `python -m h2o_wave run`.
+
+## v0.9.0
+Oct 28, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.9.0)
+- Added
+    - ASGI compatibility: Wave apps can now be run using an ASGI server.
+    - `@app` decorator to identify primary query handler in an app.
+    - Live-reload for apps.
+    - New `wave` CLI and `wave run` command.
+    - `q.run()` and `q.exec()` APIs for running background tasks.
+    - Display server version/build at startup.
+    - `AsyncSite` for updating other pages from an app without blocking the main thread.
+    - Drop or clear pages from a site using `del site[route]`.
+- Changed
+    - All HTTP calls now use non-blocking asyncio using the `httpx` library.
+    - `listen()` is deprecated.
+    - `H2O_WAVE_INTERNAL_ADDRESS` and `H2O_WAVE_EXTERNAL_ADDRESS` are deprecated.
+    - An app's UI is now cleared when an app crashes or is terminated.
+    - All examples migrated to use `@app` instead of `listen()`.
+    - Server binary renamed to `waved` (as in `wave` daemon).
+    - Apps using `@app` must be run using `wave run`.
+- Fixed
+    - Performance and concurrency improvements across the board.
+    - Stability improvements to the Wave Tour.
+
+## v0.8.1
+Oct 26, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.8.1)
+- Fixed
+  - Enable `visible` properly on `text_*` components.
+  - Fix checkbox value unchecking.
+  - Improve stepper component layout.
+
 ## v0.8.0
 Oct 20, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.8.0)
-
 - Added
   - Escape Cypress test functions using leading underscore `_` if they overlap with Python reserved keywords.
   - Add data-test attribute to all form components for browser testing.

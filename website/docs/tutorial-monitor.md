@@ -122,7 +122,7 @@ Lastly, we measure CPU usage every second and append a new row to the end of car
     cpu_card.plot_data[-1] = [tick, cpu_usage]
 ```
 
-Internally, the card's data buffer might look like in memory while in use:
+Internally, the card's data buffer might look like this in memory while in use:
 
 | # | tick | usage |
 |---|------|-------|

@@ -15,8 +15,8 @@ realtime state synchronization between Python and web browsers.
 
 .. include:: ../docs/index.md
 """
-from .core import Site, site, Page, Ref, data, pack, configure, Expando, expando_to_dict, clone_expando, copy_expando
-from .server import listen, Q
+from .core import Site, AsyncSite, site, Page, Ref, data, pack, Expando, expando_to_dict, clone_expando, copy_expando
+from .server import listen, Q, app, main
 from .db import TeleDBError, TeleDB
 from .types import *
 from .test import cypress, Cypress

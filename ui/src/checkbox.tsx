@@ -53,6 +53,7 @@ export const
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
           defaultIndeterminate={m.indeterminate}
+          defaultChecked={m.value}
           onChange={onChange}
           disabled={m.disabled}
         />

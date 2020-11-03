@@ -1,7 +1,7 @@
 # To-do List App
 # A simple multi-user To-do list application.
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 from typing import List
 
 _id = 0
@@ -17,6 +17,7 @@ class TodoItem:
         self.text = text
 
 
+@app('/demo')
 async def serve(q: Q):
     if q.args.new_todo:  # Display an input form.
         await new_todo(q)
@@ -73,6 +74,3 @@ async def new_todo(q: Q):
         ]),
     ])
     await q.page.save()
-
-
-listen('/demo', serve)

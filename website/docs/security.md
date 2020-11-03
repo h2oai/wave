@@ -39,11 +39,10 @@ Once authenticated, you can access user's authentication and authorization infor
 
 
 ```py
-from h2o_wave import Q, listen
+from h2o_wave import Q, main, app
 
+@app('/example')
 async def serve(q: Q):
     print(q.auth.username)
     print(q.auth.subject)
-
-listen('/example', serve)
 ```

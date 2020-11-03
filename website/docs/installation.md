@@ -37,11 +37,10 @@ Inspect your `$HOME/wave` directory. You should see the following content:
 
 ```
 .
-├── docs/           ... Documentation
 ├── examples/       ... Examples
 ├── test/           ... Browser testing framework
 ├── www/            ... Wave server web root (do not modify!)
-└── wave              ... Wave server executable
+└── waved           ... Wave server executable
 ```
 
 ### Step 4: Run
@@ -55,22 +54,22 @@ cd $HOME/wave
 Start the Wave server.
 
 ```shell
-./wave
+./waved
 ```
 
 ```
-2020/10/15 12:04:40 #
-2020/10/15 12:04:40 # ┌───────────────────┐
-2020/10/15 12:04:40 # │   ┬ ┬┌─┐┬  ┬┌─┐   │
-2020/10/15 12:04:40 # │   │││├─┤└┐┌┘├┤    │
-2020/10/15 12:04:40 # │   └┴┘┴ ┴ └┘ └─┘   │
-2020/10/15 12:04:40 # └───────────────────┘
-2020/10/15 12:04:40 #
-2020/10/15 12:04:40 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
+2020/10/27 16:16:34 # 
+2020/10/27 16:16:34 # ┌─────────────────────────┐
+2020/10/27 16:16:34 # │  ┌    ┌ ┌──┐ ┌  ┌ ┌──┐  │ H2O Wave
+2020/10/27 16:16:34 # │  │ ┌──┘ │──│ │  │ └┐    │ (version) (build)
+2020/10/27 16:16:34 # │  └─┘    ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
+2020/10/27 16:16:34 # └─────────────────────────┘
+2020/10/27 16:16:34 # 
+2020/10/27 16:16:34 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
 ```
 
 :::info
-On Windows, run `wave.exe` to start the server.
+On Windows, run `waved.exe` to start the server.
 :::
 
 ### Step 5: Verify

@@ -1,7 +1,7 @@
+import asyncio
 import collections
 import os
 import os.path
-import subprocess
 import sys
 from typing import List, Optional, Dict
 
@@ -9,11 +9,14 @@ from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 
-from h2o_wave import Q, configure, listen, ui
+from h2o_wave import main, app, Q, ui
 
 py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
 example_dir = os.path.dirname(os.path.realpath(__file__))
+
+_app_host = '127.0.0.1'
+_app_port = '55556'
 
 
 class Example:
@@ -26,13 +29,23 @@ class Example:
         self.code = highlight(source, py_lexer, html_formatter)
         self.previous_example: Optional[Example] = None
         self.next_example: Optional[Example] = None
-        self.process: Optional[subprocess.Popen] = None
+        self.process: Optional[asyncio.subprocess.Process] = None
+        self.is_app = source.find('@app(') > 0
 
-    def start(self):
-        self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)])
+    async def start(self):
+        if self.is_app:
+            self.process = await asyncio.create_subprocess_exec(
+                sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main', env=dict(
+                    H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}'
+                ),
+            )
+        else:
+            self.process = await asyncio.create_subprocess_exec(
+                sys.executable, os.path.join(example_dir, self.filename)
+            )
 
-    def stop(self):
-        if self.process:
+    async def stop(self):
+        if self.process and self.process.returncode is None:
             self.process.terminate()
 
 
@@ -148,11 +161,11 @@ async def show_example(q: Q, example: Example):
     # Stop active example, if any.
     global active_example
     if active_example:
-        active_example.stop()
+        await active_example.stop()
 
     # Start new example
     active_example = example
-    active_example.start()
+    await active_example.start()
 
     # Update example blurb
     q.page['blurb'].items = make_blurb(active_example)
@@ -164,12 +177,6 @@ async def show_example(q: Q, example: Example):
 
     preview_card = q.page['preview']
 
-    # If the example is an app, wait for the app handshake to complete before pointing the iframe to the app.
-    if active_example.source.find('listen(') > 0:
-        preview_card.title = f'Loading, please wait...'
-        await q.page.save()
-        await q.sleep(1.5)
-
     # Update preview title
     preview_card.title = f'Preview of {active_example.filename}'
     # HACK
@@ -179,6 +186,7 @@ async def show_example(q: Q, example: Example):
     await q.page.save()
 
 
+@app('/tour')
 async def serve(q: Q):
     if not q.client.initialized:
         q.client.initialized = True
@@ -191,13 +199,11 @@ async def serve(q: Q):
     await show_example(q, catalog[route])
 
 
-if __name__ == '__main__':
-    example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
-                         not line.strip().startswith('#')]
-    catalog = load_examples(example_filenames)
-    print('----------------------------------------')
-    print(' Welcome to the H2O Wave Interactive Tour!')
-    print('')
-    print(' Go to http://localhost:55555/tour')
-    print('----------------------------------------')
-    listen('/tour', serve)
+example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
+                     not line.strip().startswith('#')]
+catalog = load_examples(example_filenames)
+print('----------------------------------------')
+print(' Welcome to the H2O Wave Interactive Tour!')
+print('')
+print(' Go to http://localhost:55555/tour')
+print('----------------------------------------')
