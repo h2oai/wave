@@ -24,7 +24,18 @@ const
       alignItems: 'center',
       backgroundColor: theme.colors.page,
       color: theme.colors.text,
-    }
+    },
+    overlay: {
+      position: 'fixed',
+      left: 0, top: 0, right: 0, bottom: 0,
+      opacity: 0,
+      zIndex: -1,
+      transition: 'opacity 1s 2s',
+    },
+    overlayActive: {
+      opacity: 0.8,
+      zIndex: 1,
+    },
   })
 
 
@@ -32,6 +43,7 @@ const
   App = bond(() => {
     const
       contentB = box<{ page?: Page, error?: S }>({}),
+      blockUIB = qd.waitingForResponseB,
       onSocket = (e: SockEvent) => {
         switch (e.t) {
           case SockEventType.Data:
@@ -70,6 +82,9 @@ const
         return (
           <div className={css.app}>
             <GridLayout key={page.key} page={page} />
+            <div className={blockUIB() ? clas(css.overlay, css.overlayActive) : css.overlay}>
+              <Spinner className={css.centerFullHeight} label='Waiting for server response...' size={SpinnerSize.large} />
+            </div>
           </div>
         )
       },
@@ -77,7 +92,7 @@ const
         window.removeEventListener('hashchange', onHashChanged)
       }
 
-    return { init, render, dispose, contentB }
+    return { init, render, dispose, contentB, blockUIB }
   })
 
 export default App
