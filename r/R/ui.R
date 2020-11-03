@@ -2672,15 +2672,19 @@ ui_nav_item <- function(
 #'
 #' @param label The label to display for this group.
 #' @param items The navigation items contained in this group.
+#' @param collapsed Indicates whether nav groups should be rendered as collapsed initially
 #' @return A NavGroup instance.
 ui_nav_group <- function(
   label,
-  items) {
+  items,
+  collapsed = NULL) {
   .guard_scalar("label", "character", label)
   .guard_vector("items", "h2oq_NavItem", items)
+  .guard_scalar("collapsed", "logical", collapsed)
   .o <- list(
     label=label,
-    items=items)
+    items=items,
+    collapsed=collapsed)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavGroup"))
   return(.o)
 }

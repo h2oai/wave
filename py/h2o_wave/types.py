@@ -5116,11 +5116,14 @@ class NavGroup:
             self,
             label: str,
             items: List[NavItem],
+            collapsed: Optional[bool] = None,
     ):
         self.label = label
         """The label to display for this group."""
         self.items = items
         """The navigation items contained in this group."""
+        self.collapsed = collapsed
+        """Indicates whether nav groups should be rendered as collapsed initially"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5131,6 +5134,7 @@ class NavGroup:
         return _dump(
             label=self.label,
             items=[__e.dump() for __e in self.items],
+            collapsed=self.collapsed,
         )
 
     @staticmethod
@@ -5142,11 +5146,14 @@ class NavGroup:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('NavGroup.items is required.')
+        __d_collapsed: Any = __d.get('collapsed')
         label: str = __d_label
         items: List[NavItem] = [NavItem.load(__e) for __e in __d_items]
+        collapsed: Optional[bool] = __d_collapsed
         return NavGroup(
             label,
             items,
+            collapsed,
         )
 
 
