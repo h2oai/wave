@@ -1,5 +1,3 @@
-.Editor {
-	width: 800px;
-	height: 600px;
-	border: 1px solid #ccc;
+.main-container {
+  padding: 25px;
 }

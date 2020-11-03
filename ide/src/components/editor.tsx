@@ -32,6 +32,8 @@ export const Editor: React.FC = () => {
         value: editor.contentB(),
         language: 'python',
         theme: 'vs-dark',
+        minimap: { enabled: false },
+        automaticLayout: true
       })
 
       // Save on Ctrl+S
@@ -56,5 +58,5 @@ export const Editor: React.FC = () => {
       ed.dispose()
     }
   }, [])
-  return <div className="Editor" ref={divEl}></div>
+  return <div style={{ width: '100%', height: '100%' }} ref={divEl}></div>
 }

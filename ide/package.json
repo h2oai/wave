@@ -1,10 +1,12 @@
 {
   "name": "monaco-esm-webpack-typescript",
   "scripts": {
-    "start": "./node_modules/.bin/webpack-dev-server",
-    "build": "NODE_ENV='production' ./node_modules/.bin/webpack --progress"
+    "start": "npx webpack-dev-server -d",
+    "build": "NODE_ENV='production' npx webpack --progress"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@fluentui/react": "^7.149.3"
+  },
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/plugin-transform-runtime": "^7.12.1",

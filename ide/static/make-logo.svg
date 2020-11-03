@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg9905"
+   version="1.1"
+   viewBox="0 0 28.58445 28.58445"
+   height="28.58445mm"
+   width="28.58445mm">
+  <defs
+     id="defs9899" />
+  <metadata
+     id="metadata9902">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-768.11849,-230.54706)"
+     id="layer1">
+    <g
+       transform="translate(832.87053,121.89732)"
+       id="g5702">
+      <rect
+         y="108.64974"
+         x="-64.752045"
+         height="28.58445"
+         width="28.58445"
+         id="rect5673-7"
+         style="opacity:1;fill:#ffe52b;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         d="m -44.81902,126.32642 q 0,0.47147 -0.33677,0.79139 -0.31992,0.33677 -0.79139,0.33677 -0.47147,0 -0.80824,-0.33677 -0.31992,-0.31992 -0.31992,-0.79139 v -4.4958 l -2.74463,2.00374 q -0.13471,0.10103 -0.31993,0.16838 -0.16838,0.0674 -0.37044,0.0674 -0.45463,0 -0.79139,-0.31993 -0.31993,-0.33676 -0.31993,-0.79139 v -1.12816 l -2.57625,1.93639 q -0.16838,0.13471 -0.3536,0.2189 -0.18522,0.0842 -0.42095,0.0842 -0.47147,0 -0.80824,-0.31993 -0.31992,-0.33676 -0.31992,-0.79139 v -3.35081 q 0,-0.47147 0.31992,-0.79139 0.33677,-0.33677 0.80824,-0.33677 0.47147,0 0.79139,0.33677 0.33677,0.31992 0.33677,0.79139 v 1.09448 l 2.67727,-2.00374 q 0.30309,-0.2189 0.65669,-0.2189 0.47147,0 0.7914,0.31993 0.33676,0.31992 0.33676,0.79139 v 1.12816 l 2.55941,-1.8522 q 0.20206,-0.13471 0.40412,-0.28625 0.20206,-0.15154 0.47147,-0.15154 0.47147,0 0.79139,0.33676 0.33677,0.31993 0.33677,0.7914 v 6.76896 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.83821106px;line-height:1.25;font-family:Fabricate;-inkscape-font-specification:'Fabricate, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         id="path5284-4" />
+    </g>
+  </g>
+</svg>
