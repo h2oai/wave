@@ -30,8 +30,8 @@ interface TableColumn {
   filterable?: B
   /** Indicates whether each cell in this column should be displayed as a clickable link. */
   link?: B
-  /** Defines type of data for this column. Defaults to string. */
-  data_type?: 'time' | 'number'
+  /** Defines the data type of this column. Defaults to `string`. */
+  data_type?: 'string' | 'number' | 'time'
   /** Defines how to render each cell in this column. Defaults to plain text. */
   cell_type?: TableCellType
 }

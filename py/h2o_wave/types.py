@@ -2297,7 +2297,7 @@ class TableColumn:
         self.link = link
         """Indicates whether each cell in this column should be displayed as a clickable link."""
         self.data_type = data_type
-        """Defines type of data for this column. Defaults to string. One of 'time', 'number'."""
+        """Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'."""
         self.cell_type = cell_type
         """Defines how to render each cell in this column. Defaults to plain text."""
 

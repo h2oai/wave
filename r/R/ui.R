@@ -1255,8 +1255,8 @@ ui_table_cell_type <- function(
 #' @param searchable Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
 #' @param filterable Indicates whether the contents of this column are displayed as filters in a dropdown.
 #' @param link Indicates whether each cell in this column should be displayed as a clickable link.
-#' @param data_type Defines type of data for this column. Defaults to string.
-#'   One of 'time', 'number'.
+#' @param data_type Defines the data type of this column. Defaults to `string`.
+#'   One of 'string', 'number', 'time'.
 #' @param cell_type Defines how to render each cell in this column. Defaults to plain text.
 #' @return A TableColumn instance.
 ui_table_column <- function(
