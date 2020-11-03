@@ -100,7 +100,7 @@ page = site['/hello']
 Similar to how a `site` represents a collection of pages, a `page` represents a collection of *cards*. A card represents a block of content: text, graphics, widgets, or some combination of those.
 
 ```py
-page['hello'] = ui.markdown_card(
+page['quote'] = ui.markdown_card(
     box='1 1 2 2',
     title='Hello World',
     content='"The Internet? Is that thing still around?" - *Homer Simpson*',
