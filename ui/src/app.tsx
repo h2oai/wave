@@ -1,9 +1,9 @@
+import { Spinner, SpinnerSize } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { GridLayout } from './layout'
-import { bond, box, connect, Page, S, SockEvent, SockEventType, SockMessageType, qd } from './qd'
-import { getTheme, pc, clas } from './theme'
-import { Spinner, SpinnerSize } from '@fluentui/react'
+import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
+import { clas, getTheme, pc } from './theme'
 
 const
   theme = getTheme(),
@@ -32,21 +32,32 @@ const
     },
     busyOverlay: {
       display: 'block',
-      opacity: 0.8,
     },
   })
 
 
 const
   BusyOverlay = bond(() => {
+    let
+      spinTimeout = 0
     const
+      spinDelay = 500, // ms
       busyB = qd.busyB,
+      spinB = box(false),
       render = () => (
         <div className={busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
-          <Spinner className={css.centerFullHeight} label='Loading...' size={SpinnerSize.large} />
+          <Spinner className={css.centerFullHeight} style={{ opacity: spinB() ? 0.8 : 0 }} label='Loading...' size={SpinnerSize.large} />
         </div>
       )
-    return { render, busyB }
+    on(busyB, busy => {
+      window.clearTimeout(spinTimeout)
+      if (busy) {
+        spinTimeout = window.setTimeout(() => spinB(true), spinDelay)
+      } else {
+        spinB(false)
+      }
+    })
+    return { render, busyB, spinB }
   }),
   App = bond(() => {
     const
