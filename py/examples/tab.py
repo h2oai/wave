@@ -1,9 +1,10 @@
 # Tab
 # Use tab cards to display tabs on a page.
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
+@app('/demo')
 async def serve(q: Q):
     if '#' in q.args:
         hash_ = q.args['#']
@@ -22,5 +23,3 @@ async def serve(q: Q):
             ],
         )
     await q.page.save()
-
-listen('/demo', serve)

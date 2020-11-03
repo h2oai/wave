@@ -1,9 +1,10 @@
 # Form / File Upload
 # Use a file upload component to allow users to upload files.
 # ---
-from h2o_wave import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
+@app('/demo')
 async def serve(q: Q):
     if 'file_upload' in q.args:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
@@ -19,6 +20,3 @@ async def serve(q: Q):
             ]
         )
     await q.page.save()
-
-
-listen('/demo', serve)
