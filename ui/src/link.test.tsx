@@ -32,7 +32,7 @@ describe('Link.tsx', () => {
     expect(queryByText(name)).toBeInTheDocument()
   })
 
-  it('Calls window open on click', () => {
+  it('Opens button link in same tab', () => {
     const windowOpenMock = jest.fn()
     window.open = windowOpenMock
     const { getByText } = render(<XLink model={{ ...linkProps, button: true }} />)
@@ -41,14 +41,24 @@ describe('Link.tsx', () => {
     expect(windowOpenMock).toHaveBeenCalled()
     expect(windowOpenMock).toHaveBeenCalledWith(name)
   })
+  it('Opens button link in same tab', () => {
+    const windowOpenMock = jest.fn()
+    window.open = windowOpenMock
+    const { getByText } = render(<XLink model={{ ...linkProps, button: true, target: '' }} />)
+
+    fireEvent.click(getByText(name))
+    expect(windowOpenMock).toHaveBeenCalled()
+    expect(windowOpenMock).toHaveBeenCalledWith(name, '_blank')
+  })
 
   it('Renders download attribute', () => {
     const { getByTestId } = render(<XLink model={{ ...linkProps, download: true }} />)
     expect(getByTestId(name).getAttribute('download')).toEqual('')
   })
 
-  it('Does not render download attribute', () => {
-    const { getByTestId } = render(<XLink model={linkProps} />)
-    expect(getByTestId(name).getAttribute('download')).toBeNull()
+  it('Renders link target attribute when new tab specified', () => {
+    const { getByTestId } = render(<XLink model={{ ...linkProps, target: '' }} />)
+    expect(getByTestId(name).getAttribute('target')).toEqual('_blank')
   })
+
 })

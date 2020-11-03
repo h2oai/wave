@@ -2546,6 +2546,7 @@ class Link:
             download: Optional[bool] = None,
             button: Optional[bool] = None,
             visible: Optional[bool] = None,
+            target: Optional[str] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
@@ -2561,6 +2562,8 @@ class Link:
         """True if the link should be rendered as a button."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
+        self.target = target
+        """Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
         self.name = name
@@ -2575,6 +2578,7 @@ class Link:
             download=self.download,
             button=self.button,
             visible=self.visible,
+            target=self.target,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -2588,6 +2592,7 @@ class Link:
         __d_download: Any = __d.get('download')
         __d_button: Any = __d.get('button')
         __d_visible: Any = __d.get('visible')
+        __d_target: Any = __d.get('target')
         __d_tooltip: Any = __d.get('tooltip')
         __d_name: Any = __d.get('name')
         label: Optional[str] = __d_label
@@ -2596,6 +2601,7 @@ class Link:
         download: Optional[bool] = __d_download
         button: Optional[bool] = __d_button
         visible: Optional[bool] = __d_visible
+        target: Optional[str] = __d_target
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return Link(
@@ -2605,6 +2611,7 @@ class Link:
             download,
             button,
             visible,
+            target,
             tooltip,
             name,
         )

@@ -1241,6 +1241,7 @@ def link(
         download: Optional[bool] = None,
         button: Optional[bool] = None,
         visible: Optional[bool] = None,
+        target: Optional[str] = None,
         tooltip: Optional[str] = None,
         name: Optional[str] = None,
 ) -> Component:
@@ -1257,6 +1258,7 @@ def link(
         download: True if the link should be used for file download.
         button: True if the link should be rendered as a button.
         visible: True if the component should be visible. Defaults to true.
+        target: Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
         name: An identifying name for this component.
     Returns:
@@ -1269,6 +1271,7 @@ def link(
         download,
         button,
         visible,
+        target,
         tooltip,
         name,
     ))
