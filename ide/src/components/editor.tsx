@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import * as monaco from 'monaco-editor'
-import { editor } from './model'
-import { on } from './dataflow'
+import { editor } from '../model'
+import { on } from '../dataflow'
 
 
 // @ts-ignore
