@@ -182,7 +182,8 @@ class _Wave:
 
 
 class _App:
-    def __init__(self, route: str, handle: HandleAsync, mode=UNICAST):
+    def __init__(self, route: str, handle: HandleAsync, mode=UNICAST, on_startup: Optional[Callable] = None,
+                 on_shutdown: Optional[Callable] = None):
         self._mode = mode
         self._route = route
         self._handle = handle
@@ -205,10 +206,12 @@ class _App:
             ],
             on_startup=[
                 self._register,
+                on_startup,
             ],
             on_shutdown=[
                 self._unregister,
                 self._shutdown,
+                on_shutdown,
             ]
         )
 
@@ -306,9 +309,22 @@ class _Main:
 main = _Main()
 
 
-def app(route: str, mode=UNICAST):
+def app(route: str, mode=UNICAST, on_startup: Optional[Callable] = None, on_shutdown: Optional[Callable] = None):
+    """
+    Indicate that a function is a query handler.
+
+    The function this decorator is applied to must accept exactly one argument that represents the query context,
+    of type `Q` or `Query`
+
+    Args:
+        route: The route to listen to. e.g. `'/foo'` or `'/foo/bar/baz'`.
+        mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
+        on_startup: A callback to invoke on app startup. Callbacks do not take any arguments, and may be be either standard functions, or async functions.
+        on_shutdown: A callback to invoke on app shutdown. Callbacks do not take any arguments, and may be be either standard functions, or async functions.
+    """
+
     def wrap(handle: HandleAsync):
-        main._app = _App(route, handle, mode)
+        main._app = _App(route, handle, mode, on_startup, on_shutdown)
         return handle
 
     return wrap

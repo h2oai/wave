@@ -59,7 +59,25 @@ The query context `q` carries the following attributes:
 - `username`: The username of the user who performed the action.
 - `mode`: The [app's realtime mode](realtime.md), one of `unicast`, `multicast`, or `broadcast`.
 
+## Lifecycle
 
+To perform actions at application startup and shutdown, pass `on_startup` and `on_shutdown` functions to `@app`, like this:
+
+```py
+from h2o_wave import main, app, Q, ui
+
+def on_startup():
+    print('App started!')
+
+def on_shutdown():
+    print('App stopped!')
+
+@app('/foo', on_startup=on_startup, on_shutdown=on_shutdown)
+async def serve(q: Q):
+    pass
+```
+
+The `on_startup` and `on_shutdown` functions can also be `async`.
 
 
 
