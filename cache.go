@@ -54,6 +54,14 @@ func (c *Cache) set(s, k string, v []byte) {
 	c.Unlock()
 }
 
+func (c *Cache) del(s, k string) {
+	if shard := c.at(s); shard != nil {
+		shard.Lock()
+		delete(shard.items, k)
+		shard.Unlock()
+	}
+}
+
 func (c *Cache) parse(url string) (string, string) {
 	p := strings.SplitN(strings.TrimPrefix(url, c.prefix), "/", 2) // "/_c/foo/bar/baz" -> "foo", "bar/baz"
 	if len(p) == 2 {
@@ -80,6 +88,9 @@ func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		c.set(s, k, v)
+
+	case http.MethodDelete:
+		c.del(s, k)
 
 	default:
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
