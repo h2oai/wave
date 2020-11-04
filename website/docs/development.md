@@ -56,5 +56,5 @@ The command `wave run --no-reload foo` is equivalent to `python -m h2o_wave run 
 - Open the "Run/Debug Configurations" dialog for your script.
 - Under "Configuration", change the "Script path" dropdown to "Module name".
 - Set "Module name" to `h2o_wave`.
-- Set "Parameters" to `start foo` (assuming your app's source code is in `foo.py`)
+- Set "Parameters" to `run foo` (assuming your app's source code is in `foo.py`)
 
