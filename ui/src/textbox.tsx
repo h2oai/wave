@@ -38,7 +38,7 @@ export interface Textbox {
   readonly?: B
   /** True if the text box should allow multi-line text entry. */
   multiline?: B
-  /** The height of the multilne text, e.g. '100px'. */
+  /** The height of the text box, e.g. '100px'. Applicable only if `multiline` is true. */
   multiline_height?: S
   /** True if the text box should hide text content. */
   password?: B

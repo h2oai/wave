@@ -906,7 +906,7 @@ class Textbox:
         self.multiline = multiline
         """True if the text box should allow multi-line text entry."""
         self.multiline_height = multiline_height
-        """The height of the multilne text, e.g. '400px', '50%', etc."""
+        """The height of the text box, e.g. '100px'. Applicable only if `multiline` is true."""
         self.password = password
         """True if the text box should hide text content."""
         self.trigger = trigger

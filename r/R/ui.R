@@ -483,7 +483,7 @@ ui_message_bar <- function(
 #' @param disabled True if the text box is disabled.
 #' @param readonly True if the text box is a read-only field.
 #' @param multiline True if the text box should allow multi-line text entry.
-#' @param multiline_height The height of the multilne text, e.g. '400px', '50%', etc.
+#' @param multiline_height The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
 #' @param password True if the text box should hide text content.
 #' @param trigger True if the form should be submitted when the text value changes.
 #' @param visible True if the component should be visible. Defaults to true.

@@ -449,7 +449,7 @@ def textbox(
         disabled: True if the text box is disabled.
         readonly: True if the text box is a read-only field.
         multiline: True if the text box should allow multi-line text entry.
-        multiline_height: The height of the multilne text, e.g. '400px', '50%', etc.
+        multiline_height: The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
         password: True if the text box should hide text content.
         trigger: True if the form should be submitted when the text value changes.
         visible: True if the component should be visible. Defaults to true.
