@@ -16,11 +16,12 @@ type Shard struct {
 // Cache represents a collection of shards.
 type Cache struct {
 	sync.RWMutex
+	prefix string
 	shards map[string]*Shard
 }
 
-func newCache() *Cache {
-	return &Cache{shards: make(map[string]*Shard)}
+func newCache(prefix string) *Cache {
+	return &Cache{prefix: prefix, shards: make(map[string]*Shard)}
 }
 
 func (c *Cache) at(s string) *Shard {
@@ -53,8 +54,8 @@ func (c *Cache) set(s, k string, v []byte) {
 	c.Unlock()
 }
 
-func parseCacheKeys(url string) (string, string) {
-	p := strings.SplitN(strings.TrimPrefix(url, "/_c/"), "/", 2) // "/_c/foo/bar/baz" -> "foo", "bar/baz"
+func (c *Cache) parse(url string) (string, string) {
+	p := strings.SplitN(strings.TrimPrefix(url, c.prefix), "/", 2) // "/_c/foo/bar/baz" -> "foo", "bar/baz"
 	if len(p) == 2 {
 		return p[0], p[1]
 	}
@@ -62,7 +63,7 @@ func parseCacheKeys(url string) (string, string) {
 }
 
 func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s, k := parseCacheKeys(r.URL.Path)
+	s, k := c.parse(r.URL.Path)
 	switch r.Method {
 	case http.MethodGet:
 		if v, ok := c.get(s, k); ok {

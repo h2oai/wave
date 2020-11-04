@@ -72,7 +72,7 @@ func Run(conf ServerConf) {
 	http.Handle("/_f", newFileStore(fileDir))                                                                  // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir))                                                                // XXX secure
 	http.Handle("/_p", newProxy())                                                                             // XXX secure
-	http.Handle("/_c/", newCache())                                                                            // XXX secure
+	http.Handle("/_c/", newCache("/_c/"))                                                                      // XXX secure
 	http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
 	http.Handle("/", newWebServer(site, broker, users, conf.oidcEnabled(), sessions, conf.WebDir))
 
