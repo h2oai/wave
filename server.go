@@ -66,11 +66,13 @@ func Run(conf ServerConf) {
 		http.Handle("/_logout", newOIDCLogoutHandler(sessions, conf.OIDCEndSessionURL))
 	}
 
+	// XXX wrap special _ routes in a separate handler
 	http.Handle("/_s", newSocketServer(broker, sessions))
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))                                                                  // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir))                                                                // XXX secure
 	http.Handle("/_p", newProxy())                                                                             // XXX secure
+	http.Handle("/_c/", newCache())                                                                            // XXX secure
 	http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
 	http.Handle("/", newWebServer(site, broker, users, conf.oidcEnabled(), sessions, conf.WebDir))
 
