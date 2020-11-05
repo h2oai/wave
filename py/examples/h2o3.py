@@ -5,8 +5,8 @@ import datatable as dt
 page = site['/predictions']
 
 target = 'Fuel_Price'
-train_set = '/Users/geomodular/Datasets/walmart_train.csv'
-test_set = '/Users/geomodular/Datasets/walmart_test.csv'
+train_set = 'walmart_train.csv'
+test_set = 'walmart_test.csv'
 
 df_train = dt.fread(train_set)
 df_test = dt.fread(test_set)
