@@ -3,6 +3,7 @@
 #
 
 from typing import Any, Optional, Union, Dict, List
+from enum import Enum
 from .core import Data
 
 Value = Union[str, float, int]
@@ -184,6 +185,32 @@ class BreadcrumbsCard:
         )
 
 
+class FlexCardDirection(Enum):
+    HORIZONTAL = 'horizontal'
+    VERTICAL = 'vertical'
+
+class FlexCardJustify(Enum):
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+class FlexCardAlign(Enum):
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BASELINE = 'baseline'
+    STRETCH = 'stretch'
+
+class FlexCardWrap(Enum):
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+    STRETCH = 'stretch'
+
 class FlexCard:
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
@@ -283,6 +310,13 @@ class FlexCard:
             commands,
         )
 
+
+class TextSize(Enum):
+    XL = 'xl'
+    L = 'l'
+    M = 'm'
+    S = 's'
+    XS = 'xs'
 
 class Text:
     """Create text content.
@@ -806,6 +840,14 @@ class Progress:
             name,
         )
 
+
+class MessageBarType(Enum):
+    INFO = 'info'
+    ERROR = 'error'
+    WARNING = 'warning'
+    SUCCESS = 'success'
+    DANGER = 'danger'
+    BLOCKED = 'blocked'
 
 class MessageBar:
     """Create a message bar.
@@ -2039,6 +2081,13 @@ class Button:
         )
 
 
+class ButtonsJustify(Enum):
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
 class Buttons:
     """Create a set of buttons to be layed out horizontally.
     """
@@ -2277,6 +2326,11 @@ class TableCellType:
             icon,
         )
 
+
+class TableColumnDataType(Enum):
+    STRING = 'string'
+    NUMBER = 'number'
+    TIME = 'time'
 
 class TableColumn:
     """Create a table column.
@@ -3223,6 +3277,74 @@ class Stepper:
             tooltip,
         )
 
+
+class MarkCoord(Enum):
+    RECT = 'rect'
+    CARTESIAN = 'cartesian'
+    POLAR = 'polar'
+    THETA = 'theta'
+    HELIX = 'helix'
+
+class MarkType(Enum):
+    INTERVAL = 'interval'
+    LINE = 'line'
+    PATH = 'path'
+    POINT = 'point'
+    AREA = 'area'
+    POLYGON = 'polygon'
+    SCHEMA = 'schema'
+    EDGE = 'edge'
+    HEATMAP = 'heatmap'
+
+class MarkXScale(Enum):
+    LINEAR = 'linear'
+    CAT = 'cat'
+    CATEGORY = 'category'
+    IDENTITY = 'identity'
+    LOG = 'log'
+    POW = 'pow'
+    TIME = 'time'
+    TIMECAT = 'timeCat'
+    QUANTIZE = 'quantize'
+    QUANTILE = 'quantile'
+
+class MarkYScale(Enum):
+    LINEAR = 'linear'
+    CAT = 'cat'
+    CATEGORY = 'category'
+    IDENTITY = 'identity'
+    LOG = 'log'
+    POW = 'pow'
+    TIME = 'time'
+    TIMECAT = 'timeCat'
+    QUANTIZE = 'quantize'
+    QUANTILE = 'quantile'
+
+class MarkCurve(Enum):
+    NONE = 'none'
+    SMOOTH = 'smooth'
+    STEP_BEFORE = 'step-before'
+    STEP = 'step'
+    STEP_AFTER = 'step-after'
+
+class MarkLabelPosition(Enum):
+    TOP = 'top'
+    BOTTOM = 'bottom'
+    MIDDLE = 'middle'
+    LEFT = 'left'
+    RIGHT = 'right'
+
+class MarkLabelOverlap(Enum):
+    HIDE = 'hide'
+    OVERLAP = 'overlap'
+    CONSTRAIN = 'constrain'
+
+class MarkLabelAlign(Enum):
+    LEFT = 'left'
+    RIGHT = 'right'
+    CENTER = 'center'
+    START = 'start'
+    END = 'end'
 
 class Mark:
     """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
@@ -5430,6 +5552,17 @@ class RepeatCard:
         )
 
 
+class SmallSeriesStatCardPlotType(Enum):
+    AREA = 'area'
+    INTERVAL = 'interval'
+
+class SmallSeriesStatCardPlotCurve(Enum):
+    LINEAR = 'linear'
+    SMOOTH = 'smooth'
+    STEP = 'step'
+    STEP_AFTER = 'step-after'
+    STEP_BEFORE = 'step-before'
+
 class SmallSeriesStatCard:
     """Create a small stat card displaying a primary value and a series plot.
     """
@@ -5779,6 +5912,17 @@ class TallGaugeStatCard:
             commands,
         )
 
+
+class TallSeriesStatCardPlotType(Enum):
+    AREA = 'area'
+    INTERVAL = 'interval'
+
+class TallSeriesStatCardPlotCurve(Enum):
+    LINEAR = 'linear'
+    SMOOTH = 'smooth'
+    STEP = 'step'
+    STEP_AFTER = 'step-after'
+    STEP_BEFORE = 'step-before'
 
 class TallSeriesStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
@@ -6303,6 +6447,17 @@ class WideGaugeStatCard:
             commands,
         )
 
+
+class WideSeriesStatCardPlotType(Enum):
+    AREA = 'area'
+    INTERVAL = 'interval'
+
+class WideSeriesStatCardPlotCurve(Enum):
+    LINEAR = 'linear'
+    SMOOTH = 'smooth'
+    STEP = 'step'
+    STEP_AFTER = 'step-after'
+    STEP_BEFORE = 'step-before'
 
 class WideSeriesStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a series plot.

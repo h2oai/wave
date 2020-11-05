@@ -336,6 +336,17 @@ const
         }
 
         console.log(`Generating ${type.name}...`)
+
+        for (const m of type.members) {
+          if (m.t == MemberT.Enum) {
+            p('')
+            p(`class ${type.name}${titlecase(m.name)}(Enum):`)
+            for (const v of m.values) {
+              p(`    ${v.toUpperCase().replace(/\-/, '_')} = '${v}'`)
+            }
+          }
+        }
+
         p('')
         p(`class ${type.name}:`)
         p(`    """` + genComments(type.comments, '    '))
@@ -426,6 +437,7 @@ const
         p('#')
         p('')
         p('from typing import Any, Optional, Union, Dict, List')
+        p('from enum import Enum')
         p('from .core import Data')
         p('')
         p('Value = Union[str, float, int]')
