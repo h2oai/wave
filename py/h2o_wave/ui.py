@@ -2,7 +2,9 @@
 # THIS FILE IS GENERATED; DO NOT EDIT
 #
 
+import warnings
 from .types import *
+
 
 def breadcrumb(
         name: str,
@@ -28,6 +30,7 @@ def command(
         caption: Optional[str] = None,
         icon: Optional[str] = None,
         items: Optional[List[Command]] = None,
+        value: Optional[str] = None,
         data: Optional[str] = None,
 ) -> Command:
     """Create a command.
@@ -40,16 +43,20 @@ def command(
         caption: The caption for this command (typically a tooltip).
         icon: The icon to be displayed for this command.
         items: Sub-commands, if any
-        data: Data associated with this command, if any.
+        value: Data associated with this command, if any.
+        data: DEPRECATED. Use `value` instead. Data associated with this command, if any.
     Returns:
         A `h2o_wave.types.Command` instance.
     """
+    if data is not None:
+        warnings.warn('The data argument is deprecated.')
     return Command(
         name,
         label,
         caption,
         icon,
         items,
+        value,
         data,
     )
 

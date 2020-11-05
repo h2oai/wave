@@ -55,7 +55,8 @@ ui_breadcrumb <- function(
 #' @param caption The caption for this command (typically a tooltip).
 #' @param icon The icon to be displayed for this command.
 #' @param items Sub-commands, if any
-#' @param data Data associated with this command, if any.
+#' @param value Data associated with this command, if any.
+#' @param data DEPRECATED. Use `value` instead. Data associated with this command, if any.
 #' @return A Command instance.
 ui_command <- function(
   name,
@@ -63,12 +64,14 @@ ui_command <- function(
   caption = NULL,
   icon = NULL,
   items = NULL,
+  value = NULL,
   data = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("icon", "character", icon)
   .guard_vector("items", "h2oq_Command", items)
+  .guard_scalar("value", "character", value)
   .guard_scalar("data", "character", data)
   .o <- list(
     name=name,
@@ -76,6 +79,7 @@ ui_command <- function(
     caption=caption,
     icon=icon,
     items=items,
+    value=value,
     data=data)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Command"))
   return(.o)

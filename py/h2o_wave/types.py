@@ -67,6 +67,7 @@ class Command:
             caption: Optional[str] = None,
             icon: Optional[str] = None,
             items: Optional[List['Command']] = None,
+            value: Optional[str] = None,
             data: Optional[str] = None,
     ):
         self.name = name
@@ -79,8 +80,10 @@ class Command:
         """The icon to be displayed for this command."""
         self.items = items
         """Sub-commands, if any"""
-        self.data = data
+        self.value = value
         """Data associated with this command, if any."""
+        self.data = data
+        """DEPRECATED. Use `value` instead. Data associated with this command, if any."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -92,6 +95,7 @@ class Command:
             caption=self.caption,
             icon=self.icon,
             items=None if self.items is None else [__e.dump() for __e in self.items],
+            value=self.value,
             data=self.data,
         )
 
@@ -105,12 +109,14 @@ class Command:
         __d_caption: Any = __d.get('caption')
         __d_icon: Any = __d.get('icon')
         __d_items: Any = __d.get('items')
+        __d_value: Any = __d.get('value')
         __d_data: Any = __d.get('data')
         name: str = __d_name
         label: Optional[str] = __d_label
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
         items: Optional[List['Command']] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
+        value: Optional[str] = __d_value
         data: Optional[str] = __d_data
         return Command(
             name,
@@ -118,6 +124,7 @@ class Command:
             caption,
             icon,
             items,
+            value,
             data,
         )
 

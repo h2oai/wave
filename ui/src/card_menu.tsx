@@ -39,7 +39,7 @@ const
           window.location.hash = c.name.substr(1)
           return
         }
-        qd.args[c.name] = c.data === undefined ? true : c.data
+        qd.args[c.name] = c.value ?? c.data ?? true
         qd.sync()
       }
     return {

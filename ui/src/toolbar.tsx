@@ -20,6 +20,8 @@ export interface Command {
   /** Sub-commands, if any */
   items?: Command[]
   /** Data associated with this command, if any. */
+  value?: S
+  /** DEPRECATED. Use `value` instead. Data associated with this command, if any. */
   data?: S
 }
 
