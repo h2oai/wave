@@ -1,6 +1,7 @@
 package wave
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -42,6 +43,25 @@ func (c *Cache) get(s, k string) ([]byte, bool) {
 	return v, ok
 }
 
+func (c *Cache) getAll(s string) ([]byte, bool) {
+	shard := c.at(s)
+	if shard == nil {
+		return nil, false
+	}
+	shard.RLock()
+	defer shard.RUnlock()
+
+	// TODO expensive
+	m := make(map[string]string)
+	for k, v := range shard.items {
+		m[k] = string(v)
+	}
+	if b, err := json.Marshal(m); err == nil {
+		return b, true
+	}
+	return nil, false
+}
+
 func (c *Cache) set(s, k string, v []byte) {
 	if shard := c.at(s); shard != nil {
 		shard.Lock()
@@ -67,19 +87,25 @@ func (c *Cache) parse(url string) (string, string) {
 	if len(p) == 2 {
 		return p[0], p[1]
 	}
-	return "", p[0]
+	return p[0], ""
 }
 
 func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s, k := c.parse(r.URL.Path)
 	switch r.Method {
 	case http.MethodGet:
-		if v, ok := c.get(s, k); ok {
-			w.Write(v)
-			return
+		if len(k) > 0 {
+			if v, ok := c.get(s, k); ok {
+				w.Write(v)
+				return
+			}
+		} else {
+			if v, ok := c.getAll(s); ok {
+				w.Write(v)
+				return
+			}
 		}
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-
 	case http.MethodPut:
 		v, err := ioutil.ReadAll(r.Body) // XXX limit
 		if err != nil {
