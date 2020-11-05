@@ -1,6 +1,8 @@
 import React from 'react';
 import * as Fluent from '@fluentui/react'
 import { useHistory } from 'react-router-dom';
+import makeLogo from '@static/make-logo.svg'
+import { list_apps } from "@/ide";
 
 
 function HomePage() {
@@ -8,6 +10,7 @@ function HomePage() {
     [appName, setAppName] = React.useState(''),
     [appNameErr, setAppNameErr] = React.useState(''),
     [dialogHidden, setDialogHidden] = React.useState(true),
+    [recentApps, setRecentApps] = React.useState<string[]>([]),
     history = useHistory(),
     toggleDialog = () => setDialogHidden(!dialogHidden),
     dialogContentProps: Fluent.IDialogContentProps = {
@@ -18,8 +21,21 @@ function HomePage() {
       setAppNameErr(/^\w+$/.test(val) ? '' : 'An app name can contain only word characters, numbers and underscore ("-")')
       setAppName(val)
     },
-    startApp = () => history.push(`/app/${appName}`)
+    startApp = (appName: string) => () => history.push(`/app/${appName}`)
 
+  React.useEffect(() => {
+    const init = async () => {
+      let apps: string[] = []
+      try {
+        apps = await list_apps()
+      } catch (err) {
+        /* noop */
+      } finally {
+        setRecentApps(apps)
+      }
+    }
+    init()
+  }, [])
 
   return (
     <>
@@ -31,8 +47,10 @@ function HomePage() {
           <Fluent.Link href='https://h2oai.github.io/wave/'>What is Wave?</Fluent.Link>
           <Fluent.Link href='https://h2oai.github.io/wave/docs/getting-started'>Getting started</Fluent.Link>
           <Fluent.Link>Build your first app</Fluent.Link>
+          <Fluent.Text variant='xxLargePlus'>Recent Apps</Fluent.Text>
+          {recentApps.map((app, i) => <Fluent.Link key={i} onClick={startApp(app)}>{app}</Fluent.Link>)}
         </Fluent.Stack>
-        <Fluent.Image src='static/make-logo.svg' />
+        <Fluent.Image src={makeLogo} />
       </Fluent.Stack>
       <Fluent.Dialog hidden={dialogHidden} dialogContentProps={dialogContentProps} minWidth={600} styles={{}}>
         <Fluent.DialogContent styles={{ header: { display: 'none' }, inner: { minHeight: 85 } }}>
@@ -40,7 +58,7 @@ function HomePage() {
         </Fluent.DialogContent>
         <Fluent.DialogFooter>
           <Fluent.DefaultButton onClick={toggleDialog} text="Cancel" />
-          <Fluent.PrimaryButton onClick={startApp} disabled={!!appNameErr} text="Submit" />
+          <Fluent.PrimaryButton onClick={startApp(appName)} disabled={!!appNameErr} text="Submit" />
         </Fluent.DialogFooter>
       </Fluent.Dialog>
     </>

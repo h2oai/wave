@@ -1,11 +1,12 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = {
-  mode: 'development',
+  mode: isDevelopment ? 'development' : 'production',
   entry: {
     app: './src/index.tsx',
     'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
@@ -15,21 +16,30 @@ module.exports = {
     'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker'
   },
   devServer: {
+    port: 3000,
     hot: true,
+    open: true,
     watchContentBase: true,
     historyApiFallback: true,
     proxy: {
       '/': 'http://localhost:55555'
     }
   },
+  optimization: {
+    minimize: true,
+  },
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.tsx', '.ts']
+    extensions: ['*', '.js', '.jsx', '.tsx', '.ts'],
+    alias: {
+      '@static': path.resolve(__dirname, 'static'),
+      '@': path.resolve(__dirname, 'src/'),
+    }
   },
   output: {
     globalObject: 'self',
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/_ide/' //TODO: use just '/' for dev so that devserver will continue to work.
+    publicPath: isDevelopment ? '/' : '/_ide/'
   },
   module: {
     rules: [
@@ -51,15 +61,17 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.ttf$/,
+        test: /\.(png|svg|jpg|gif|ttf)$/,
         use: ['file-loader']
       }
     ]
   },
   plugins: [
-    new HtmlWebPackPlugin({
-      template: 'src/index.html'
+    new HtmlWebPackPlugin({ template: 'src/index.html', minify: 'auto' }),
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+    new webpack.DefinePlugin({
+      BASENAME: isDevelopment ? JSON.stringify('') : JSON.stringify('_ide'),
+      IFRAME_URL: isDevelopment ? JSON.stringify('http://localhost:55555') : JSON.stringify('')
     }),
-    isDevelopment && new ReactRefreshWebpackPlugin()
-  ].filter(Boolean)
+  ].filter(Boolean),
 };

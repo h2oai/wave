@@ -10,16 +10,23 @@
       "dom",
       "es6",
     ],
-    "types": [],
-    "baseUrl": "./node_modules",
+    "types": [
+      "node"
+    ],
+    "baseUrl": ".",
     "jsx": "preserve",
     "esModuleInterop": true,
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
-    "./src/**/*"
+    "./src/**/*",
   ],
   "exclude": [
     "node_modules"
