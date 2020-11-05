@@ -471,6 +471,15 @@ const
         p(`    Returns:`)
         p(`        A \`h2o_wave.types.${type.name}\` instance.`)
         p(`    """`)
+        for (const m of type.members) {
+          for (const comment of m.comments) {
+            if (comment.toLowerCase().indexOf('deprecated') >= 0) {
+              p(`    if ${m.name} is not None:`)
+              p(`        warnings.warn('The ${m.name} argument is deprecated.')`)
+              break
+            }
+          }
+        }
         if (type.oneOf) {
           p(`    return ${type.oneOf.type.name}(${type.oneOf.name}=${type.name}(`)
         } else {
@@ -492,7 +501,9 @@ const
         p('# THIS FILE IS GENERATED; DO NOT EDIT')
         p('#')
         p('')
+        p('import warnings')
         p('from .types import *')
+        p('')
 
         for (const type of protocol.types) {
           if (type.isRoot) {
