@@ -1,5 +1,4 @@
 import os.path
-import sys
 import uuid
 from enum import Enum
 from typing import Optional
@@ -15,11 +14,33 @@ WaveModelMetric = Enum('WaveModelMetric', 'AUTO AUC MSE RMSE MAE RMSLE DEVIANCE 
 
 
 class WaveModel:
+    """Represents a common interface for a model. It references DAI or H2O-3 model in backend."""
+
     def __init__(self, id_: str, type_: WaveModelType):
         self.id = id_
+        """The id of a model that identifies it on a backend service."""
         self.type = type_
+        """A wave model type represented by `h2o_wave.ml.WaveModelType` enum."""
 
     def predict(self, inputs, **kwargs):
+        """Predict values based on inputs.
+
+        Inputs follow the `python_obj` spec here: http://docs.h2o.ai/h2o/latest-stable/h2o-py/docs/frame.html#h2oframe
+        This is a temporary solution. The contract needs to be stabilized.
+
+        Args:
+            inputs: A python obj. [[1, 'a'], [2, 'b'], [3, 'c']]) will create 3 rows and 2 columns.
+
+        Returns:
+            A list of lists representing rows.
+
+        Examples:
+
+            >>> # Two rows and three columns:
+            >>> model.predict([[1, 12.3, 'aa', 32.5], [2, 15.6, 'bb', 89.9]])
+            [[16.6], [17.8]]
+        """
+
         raise NotImplementedError()
 
 
@@ -29,7 +50,7 @@ class _H2O3Model(WaveModel):
 
     def __init__(self, id_: str, aml: H2OAutoML):
         super().__init__(id_, WaveModelType.H2O3)
-        self.aml: H2OAutoML = aml
+        self.aml = aml
 
     @staticmethod
     def _make_id():
@@ -77,17 +98,30 @@ class _H2O3Model(WaveModel):
 
     def predict(self, inputs, **kwargs):
         training_frame_id = self.aml.input_spec['training_frame']
-        training_frame = h2o.H2OFrame.get_frame(training_frame_id, rows=0)
-        iframe = h2o.H2OFrame(python_obj=inputs, header=1, column_names=training_frame.names)
-        oframe = self.aml.predict(iframe)
+        training_frame = h2o.get_frame(training_frame_id, rows=0)
 
-        if 'pandas' in sys.modules:
-            return oframe.as_data_frame(use_pandas=True)
-        return oframe.as_data_frame(use_pandas=False)
+        # The column_names are explicitly required
+        iframe = h2o.H2OFrame(python_obj=inputs, header=-1, column_names=training_frame.names)
+        oframe = self.aml.predict(iframe)
+        return oframe.as_data_frame(use_pandas=False, header=False)
 
 
 def build_model(filename: str, target: str, metric: WaveModelMetric = WaveModelMetric.AUTO,
                 model_type: Optional[WaveModelType] = None) -> WaveModel:
+    """Build a model.
+
+    Id `model_type` not specified the function will determine correct model based on a current environment.
+
+    Args:
+        filename: A path for a dataset to be used as a train set.
+        target: A name of the response column.
+        metric: A metric to be used in building process specified by `h2o_wave.ml.WaveModelMetric`
+        model_type: Optionally a model type specified by `h2o_wave.ml.WaveModelType`.
+
+    Returns:
+        A wave model.
+    """
+
     if model_type is not None:
         if model_type == WaveModelType.H2O3:
             return _H2O3Model.build(filename, target, metric)
@@ -97,6 +131,16 @@ def build_model(filename: str, target: str, metric: WaveModelMetric = WaveModelM
 
 
 def get_model(id_: str, model_type: Optional[WaveModelType] = None) -> WaveModel:
+    """Get a model that is already built on a backend.
+
+    Args:
+        id_: Identification string of a model.
+        model_type: Optionally a model type specified by `h2o_wave.ml_WaveModelType`.
+
+    Returns:
+        A wave model.
+    """
+
     if model_type is not None:
         if model_type == WaveModelType.H2O3:
             return _H2O3Model.get(id_)
@@ -106,6 +150,7 @@ def get_model(id_: str, model_type: Optional[WaveModelType] = None) -> WaveModel
 
 
 def deploy_model(model: WaveModel):
+    """Deploy a model. (To be done)"""
     if isinstance(model, _H2O3Model):
         raise ValueError('H2O-3 models not supported: cannot deploy')
     raise NotImplementedError()
