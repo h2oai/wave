@@ -1637,7 +1637,7 @@ def mark(
         x_min: X axis scale minimum.
         x_max: X axis scale maximum.
         x_nice: Whether to nice X axis scale ticks.
-        x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+        x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'.
         x_title: X axis title.
         y: Y field or value.
         y0: Y base field or value.
@@ -1646,7 +1646,7 @@ def mark(
         y_min: Y axis scale minimum.
         y_max: Y axis scale maximum.
         y_nice: Whether to nice Y axis scale ticks.
-        y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+        y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'.
         y_title: Y axis title.
         color: Mark color field or value.
         color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`

@@ -3303,8 +3303,9 @@ class MarkXScale(Enum):
     IDENTITY = 'identity'
     LOG = 'log'
     POW = 'pow'
+    POWER = 'power'
     TIME = 'time'
-    TIMECAT = 'timeCat'
+    TIME_CATEGORY = 'time-category'
     QUANTIZE = 'quantize'
     QUANTILE = 'quantile'
 
@@ -3315,8 +3316,9 @@ class MarkYScale(Enum):
     IDENTITY = 'identity'
     LOG = 'log'
     POW = 'pow'
+    POWER = 'power'
     TIME = 'time'
-    TIMECAT = 'timeCat'
+    TIME_CATEGORY = 'time-category'
     QUANTIZE = 'quantize'
     QUANTILE = 'quantile'
 
@@ -3428,7 +3430,7 @@ class Mark:
         self.x_nice = x_nice
         """Whether to nice X axis scale ticks."""
         self.x_scale = x_scale
-        """X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'."""
+        """X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'."""
         self.x_title = x_title
         """X axis title."""
         self.y = y
@@ -3446,7 +3448,7 @@ class Mark:
         self.y_nice = y_nice
         """Whether to nice Y axis scale ticks."""
         self.y_scale = y_scale
-        """Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'."""
+        """Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'."""
         self.y_title = y_title
         """Y axis title."""
         self.color = color

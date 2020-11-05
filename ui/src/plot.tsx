@@ -51,7 +51,7 @@ interface Mark {
   /** Whether to nice X axis scale ticks. */
   x_nice?: B;
   /** X axis scale type. */
-  x_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'time' | 'timeCat' | 'quantize' | 'quantile';
+  x_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'power' | 'time' | 'time-category' | 'quantize' | 'quantile';
   /** X axis title. */
   x_title?: S;
   /** Y field or value. */
@@ -69,7 +69,7 @@ interface Mark {
   /** Whether to nice Y axis scale ticks. */
   y_nice?: B;
   /** Y axis scale type. */
-  y_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'time' | 'timeCat' | 'quantize' | 'quantile';
+  y_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'power' | 'time' | 'time-category' | 'quantize' | 'quantile';
   /** Y axis title. */
   y_title?: S;
   /** Mark color field or value. */
@@ -613,11 +613,18 @@ const
 
     return [scales, axes]
   },
+  fixScaleType = (t: S): S => {
+    switch (t) {
+      case 'time-category': return 'timeCat'
+      case 'power': return 'pow'
+    }
+    return t
+  },
   makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): [ScaleOption, AxisOption | null] => {
     const
       scale: ScaleOption = {},
       axis: AxisOption = { label: { autoHide: false } } // Bug in G2? `autoHide` should be set to false by default (it is not).
-    if (isS(typ)) scale.type = typ as any
+    if (isS(typ)) scale.type = fixScaleType(typ) as any
     if (format) scale.formatter = (v: any) => format(undefined, v)
     if (isS(title)) {
       scale.alias = title

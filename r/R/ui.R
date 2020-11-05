@@ -1754,7 +1754,7 @@ ui_stepper <- function(
 #' @param x_max X axis scale maximum.
 #' @param x_nice Whether to nice X axis scale ticks.
 #' @param x_scale X axis scale type.
-#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'.
 #' @param x_title X axis title.
 #' @param y Y field or value.
 #' @param y0 Y base field or value.
@@ -1764,7 +1764,7 @@ ui_stepper <- function(
 #' @param y_max Y axis scale maximum.
 #' @param y_nice Whether to nice Y axis scale ticks.
 #' @param y_scale Y axis scale type.
-#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'time', 'timeCat', 'quantize', 'quantile'.
+#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'.
 #' @param y_title Y axis title.
 #' @param color Mark color field or value.
 #' @param color_range Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
