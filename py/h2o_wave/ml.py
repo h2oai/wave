@@ -10,7 +10,8 @@ from .core import _config
 
 
 WaveModelType = Enum('WaveModelType', 'H2O3 DAI')
-WaveModelMetric = Enum('WaveModelMetric', 'AUTO AUC MSE RMSE MAE RMSLE DEVIANCE LOGLOSS AUCPR')
+WaveModelMetric = Enum('WaveModelMetric', 'AUTO AUC MSE RMSE MAE RMSLE DEVIANCE LOGLOSS AUCPR LIFT_TOP_GROUP'
+                                          'MISCLASSIFICATION MEAN_PER_CLASS_ERROR')
 
 
 class WaveModel:
