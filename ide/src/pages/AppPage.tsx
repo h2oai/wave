@@ -36,13 +36,13 @@ function AppPageHeader({ appName, changeViewStyle }: AppPageHeaderProps) {
   return (
     <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
       <Fluent.Stack horizontal verticalAlign='center'>
-        <Fluent.Image src={makeLogo} />
+        <Fluent.Image src={makeLogo} width={40} />
         <Fluent.Text variant='xxLargePlus' styles={{ root: { padding: 15 } }}>{appName}</Fluent.Text>
       </Fluent.Stack>
       <Fluent.Pivot onLinkClick={onLinkClick} linkSize={Fluent.PivotLinkSize.large}>
-        <Fluent.PivotItem itemKey={ViewType.SPLIT} headerText='Split screen' itemIcon='Split' />
-        <Fluent.PivotItem itemKey={ViewType.CODE} headerText='Code only' itemIcon='CodeEdit' />
-        <Fluent.PivotItem itemKey={ViewType.PREVIEW} headerText='Preview only' itemIcon='TVMonitor' />
+        <Fluent.PivotItem itemKey={ViewType.SPLIT} itemIcon='DoubleColumnEdit' />
+        <Fluent.PivotItem itemKey={ViewType.CODE} itemIcon='Edit' />
+        <Fluent.PivotItem itemKey={ViewType.PREVIEW} itemIcon='TVMonitor' />
       </Fluent.Pivot>
     </Fluent.Stack>
   )
