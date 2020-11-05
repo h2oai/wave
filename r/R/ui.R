@@ -120,13 +120,13 @@ ui_breadcrumbs_card <- function(
 #' @param item_props The child card properties.
 #' @param data Data for this card.
 #' @param direction Layout direction.
-#'   One of 'horizontal', 'vertical'.
+#'   One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection.
 #' @param justify Layout strategy for main axis.
-#'   One of 'start', 'end', 'center', 'between', 'around'.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify.
 #' @param align Layout strategy for cross axis.
-#'   One of 'start', 'end', 'center', 'baseline', 'stretch'.
+#'   One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign.
 #' @param wrap Wrapping strategy.
-#'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
+#'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap.
 #' @param commands Contextual menu commands for this component.
 #' @return A FlexCard instance.
 ui_flex_card <- function(
@@ -166,7 +166,7 @@ ui_flex_card <- function(
 #'
 #' @param content The text content.
 #' @param size The font size of the text content.
-#'   One of 'xl', 'l', 'm', 's', 'xs'.
+#'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
@@ -445,7 +445,7 @@ ui_progress <- function(
 #' therefore does not need to block other activities.
 #'
 #' @param type The icon and color of the message bar.
-#'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
+#'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType.
 #' @param text The text displayed on the message bar.
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to true.
@@ -1132,7 +1132,7 @@ ui_button <- function(
 #'
 #' @param items The button in this set.
 #' @param justify Specifies how to lay out buttons horizontally.
-#'   One of 'start', 'end', 'center', 'between', 'around'.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify.
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A Buttons instance.
@@ -1264,7 +1264,7 @@ ui_table_cell_type <- function(
 #' @param filterable Indicates whether the contents of this column are displayed as filters in a dropdown.
 #' @param link Indicates whether each cell in this column should be displayed as a clickable link.
 #' @param data_type Defines the data type of this column. Defaults to `string`.
-#'   One of 'string', 'number', 'time'.
+#'   One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
 #' @param cell_type Defines how to render each cell in this column. Defaults to plain text.
 #' @return A TableColumn instance.
 ui_table_column <- function(
@@ -1743,9 +1743,9 @@ ui_stepper <- function(
 #' A plot can contain multiple such layers of marks.
 #'
 #' @param coord Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`.
-#'   One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
+#'   One of 'rect', 'cartesian', 'polar', 'theta', 'helix'. See enum h2o_wave.ui.MarkCoord.
 #' @param type Graphical geometry.
-#'   One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
+#'   One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'. See enum h2o_wave.ui.MarkType.
 #' @param x X field or value.
 #' @param x0 X base field or value.
 #' @param x1 X bin lower bound field or value. For histograms.
@@ -1754,7 +1754,7 @@ ui_stepper <- function(
 #' @param x_max X axis scale maximum.
 #' @param x_nice Whether to nice X axis scale ticks.
 #' @param x_scale X axis scale type.
-#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'.
+#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'. See enum h2o_wave.ui.MarkXScale.
 #' @param x_title X axis title.
 #' @param y Y field or value.
 #' @param y0 Y base field or value.
@@ -1764,7 +1764,7 @@ ui_stepper <- function(
 #' @param y_max Y axis scale maximum.
 #' @param y_nice Whether to nice Y axis scale ticks.
 #' @param y_scale Y axis scale type.
-#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'.
+#'   One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'. See enum h2o_wave.ui.MarkYScale.
 #' @param y_title Y axis title.
 #' @param color Mark color field or value.
 #' @param color_range Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
@@ -1776,7 +1776,7 @@ ui_stepper <- function(
 #' @param stack Field to stack marks by, or 'auto' to infer.
 #' @param dodge Field to dodge marks by, or 'auto' to infer.
 #' @param curve Curve type for `line` and `area` mark types.
-#'   One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
+#'   One of 'none', 'smooth', 'step-before', 'step', 'step-after'. See enum h2o_wave.ui.MarkCurve.
 #' @param fill_color Mark fill color.
 #' @param fill_opacity Mark fill opacity.
 #' @param stroke_color Mark stroke color.
@@ -1789,9 +1789,9 @@ ui_stepper <- function(
 #' @param label_offset_y Vertical distance between label and mark.
 #' @param label_rotation Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
 #' @param label_position Label position relative to the mark.
-#'   One of 'top', 'bottom', 'middle', 'left', 'right'.
+#'   One of 'top', 'bottom', 'middle', 'left', 'right'. See enum h2o_wave.ui.MarkLabelPosition.
 #' @param label_overlap Strategy to use if labels overlap.
-#'   One of 'hide', 'overlap', 'constrain'.
+#'   One of 'hide', 'overlap', 'constrain'. See enum h2o_wave.ui.MarkLabelOverlap.
 #' @param label_fill_color Label fill color.
 #' @param label_fill_opacity Label fill opacity.
 #' @param label_stroke_color Label stroke color.
@@ -1801,7 +1801,7 @@ ui_stepper <- function(
 #' @param label_font_weight Label font weight.
 #' @param label_line_height Label line height.
 #' @param label_align Label text alignment.
-#'   One of 'left', 'right', 'center', 'start', 'end'.
+#'   One of 'left', 'right', 'center', 'start', 'end'. See enum h2o_wave.ui.MarkLabelAlign.
 #' @param ref_stroke_color Reference line stroke color.
 #' @param ref_stroke_opacity Reference line stroke opacity.
 #' @param ref_stroke_size Reference line stroke size (line width or pen thickness).
@@ -2817,9 +2817,9 @@ ui_repeat_card <- function(
 #' @param plot_zero_value The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
 #' @param plot_category The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
 #' @param plot_type The type of plot. Defaults to `area`.
-#'   One of 'area', 'interval'.
+#'   One of 'area', 'interval'. See enum h2o_wave.ui.SmallSeriesStatCardPlotType.
 #' @param plot_curve The plot's curve style. Defaults to `linear`.
-#'   One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+#'   One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.SmallSeriesStatCardPlotCurve.
 #' @param plot_color The plot's color.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
@@ -2976,9 +2976,9 @@ ui_tall_gauge_stat_card <- function(
 #' @param plot_zero_value The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
 #' @param plot_category The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
 #' @param plot_type The type of plot. Defaults to `area`.
-#'   One of 'area', 'interval'.
+#'   One of 'area', 'interval'. See enum h2o_wave.ui.TallSeriesStatCardPlotType.
 #' @param plot_curve The plot's curve style. Defaults to `linear`.
-#'   One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+#'   One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.TallSeriesStatCardPlotCurve.
 #' @param plot_color The plot's color.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
@@ -3208,9 +3208,9 @@ ui_wide_gauge_stat_card <- function(
 #' @param plot_zero_value The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
 #' @param plot_category The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
 #' @param plot_type The type of plot. Defaults to `area`.
-#'   One of 'area', 'interval'.
+#'   One of 'area', 'interval'. See enum h2o_wave.ui.WideSeriesStatCardPlotType.
 #' @param plot_curve The plot's curve style. Defaults to `linear`.
-#'   One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
+#'   One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.WideSeriesStatCardPlotCurve.
 #' @param plot_color The plot's color.
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.

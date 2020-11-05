@@ -18,12 +18,12 @@ page['example'] = ui.form_card(
 
         # Using `ui.text()` with a `size` argument produces similar results:
         ui.separator('Separator'),
-        ui.text('Extra large text', size='xl'),
-        ui.text('Large text', size='l'),
+        ui.text('Extra large text', size=ui.TextSize.XL),
+        ui.text('Large text', size=ui.TextSize.L),
         ui.text('Normal text'),
-        ui.text('Medium text', size='m'),
-        ui.text('Small text', size='s'),
-        ui.text('Extra small text', size='xs'),
+        ui.text('Medium text', size=ui.TextSize.M),
+        ui.text('Small text', size=ui.TextSize.S),
+        ui.text('Extra small text', size=ui.TextSize.XS),
     ],
 )
 page.save()

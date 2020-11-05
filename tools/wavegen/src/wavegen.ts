@@ -199,7 +199,7 @@ const
       }
       const values = collectEnumType(memberType)
       if (values) {
-        comments.push(`One of ${values.map(v => `'${v}'`).join(', ')}.`)
+        comments.push(`One of ${values.map(v => `'${v}'`).join(', ')}. See enum h2o_wave.ui.${typename}${titlecase(memberName)}.`)
         return { t: MemberT.Enum, name: memberName, values, isOptional: optional, comments }
       }
     }
@@ -340,10 +340,11 @@ const
         for (const m of type.members) {
           if (m.t == MemberT.Enum) {
             p('')
-            p(`class ${type.name}${titlecase(m.name)}(Enum):`)
+            p(`class ${type.name}${titlecase(m.name)}:`)
             for (const v of m.values) {
               p(`    ${v.toUpperCase().replace(/\-/, '_')} = '${v}'`)
             }
+            p('')
           }
         }
 
@@ -437,7 +438,6 @@ const
         p('#')
         p('')
         p('from typing import Any, Optional, Union, Dict, List')
-        p('from enum import Enum')
         p('from .core import Data')
         p('')
         p('Value = Union[str, float, int]')
