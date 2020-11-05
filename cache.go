@@ -1,7 +1,7 @@
 package wave
 
 import (
-	"encoding/json"
+	"bytes"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -43,7 +43,7 @@ func (c *Cache) get(s, k string) ([]byte, bool) {
 	return v, ok
 }
 
-func (c *Cache) getAll(s string) ([]byte, bool) {
+func (c *Cache) keys(s string) ([]byte, bool) {
 	shard := c.at(s)
 	if shard == nil {
 		return nil, false
@@ -51,15 +51,12 @@ func (c *Cache) getAll(s string) ([]byte, bool) {
 	shard.RLock()
 	defer shard.RUnlock()
 
-	// TODO expensive
-	m := make(map[string]string)
-	for k, v := range shard.items {
-		m[k] = string(v)
+	var b bytes.Buffer
+	for k := range shard.items {
+		b.WriteString(k)
+		b.WriteByte('\n')
 	}
-	if b, err := json.Marshal(m); err == nil {
-		return b, true
-	}
-	return nil, false
+	return b.Bytes(), true
 }
 
 func (c *Cache) set(s, k string, v []byte) {
@@ -100,7 +97,7 @@ func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		} else {
-			if v, ok := c.getAll(s); ok {
+			if v, ok := c.keys(s); ok {
 				w.Write(v)
 				return
 			}
