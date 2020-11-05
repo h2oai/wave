@@ -29,6 +29,9 @@ from .ui import markdown_card
 logger = logging.getLogger(__name__)
 
 
+def _noop(): pass
+
+
 def _session_for(sessions: dict, session_id: str):
     session = sessions.get(session_id, None)
     if session is None:
@@ -206,12 +209,12 @@ class _App:
             ],
             on_startup=[
                 self._register,
-                on_startup,
+                on_startup or _noop,
             ],
             on_shutdown=[
                 self._unregister,
                 self._shutdown,
-                on_shutdown,
+                on_shutdown or _noop,
             ]
         )
 
