@@ -1,5 +1,5 @@
 import React from 'react'
-import { cards } from './layout'
+import { cards, Grid } from './layout'
 import { bond, Card, on, S, U, qd } from './qd'
 import { showNotification } from './notification'
 
@@ -20,6 +20,8 @@ interface State {
   redirect?: S
   /** Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). */
   icon?: S
+  /** The layout grids for the page. */
+  grids?: Grid[]
 }
 
 export const
