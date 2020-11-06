@@ -57,11 +57,14 @@ type Size = [U, U]
 export interface Grid {
   /**
    * The minimum viewport width at which to use this grid.
-   * Typical breakpoints are:
-   * 576 for small devices (landscape phones),
-   * 768 for medium devices (tablets),
-   * 992 for large devices (desktops),
-   * 1200 for extra large devices (large desktops)
+   * A breakpoint value of 0 matches all viewport widths, unless other breakpoints are set.
+   *
+   * Typical slabs are:
+   * 0-576 for extra small devices (portrait phones),
+   * 576-768  for small devices (landscape phones),
+   * 768-992  for medium devices (tablets),
+   * 992-1200 for large devices (desktops),
+   * 1200+ for extra large devices (large desktops).
   */
   breakpoint: U
   /** The specifications for the columns in this grid. Defaults to 12 columns, each set to `1fr` (1 fraction, or 1/12th grid width). */
@@ -70,15 +73,20 @@ export interface Grid {
   rows: S[]
   /** The width of the grid. Defaults to `1773px`. */
   width?: S
-  /** The minimum width of the grid. Defaults to `1773px`. */
+  /**
+   * The minimum width of the grid.
+   * Not specifying a min_width will make the grid width equal to the viewport width
+   * if the grid width exceeds the available viewport width.
+   **/
   min_width?: S
-  /** The height of the grid. Defaults to `895px`. */
+  /** The height of the grid. Defaults to `auto`. */
   height?: S
-  /** The gap between the columns or rows in this grid. Defaults to `15px`. */
-  gap?: S
+  /** The minimum height of the grid. */
+  min_height?: S
 }
 
 const
+  gridGap = 15,
   repeat = <T extends {}>(n: U, x: T): T[] => {
     const xs = new Array<T>(n)
     for (let i = 0; i < n; i++) xs[i] = x
@@ -91,7 +99,6 @@ const
     width: '1773px', // 134*12 + 15*(12-1)
     min_width: '1773px',
     height: '895px', // 76*10 + 15*(10-1)
-    gap: '15px',
   },
   badPlacement: Slot = { x: 0, y: 0, w: 0, h: 0 },
   normalize = (s: S): S[] => {
@@ -155,7 +162,7 @@ const
 
 
 export const // XXX remove
-  grid = newGrid(134, 76, 12, 10, 15) // approx 1800x930
+  grid = newGrid(134, 76, 12, 10, gridGap) // approx 1800x930
 
 type Breakpoint = {
   grid: Grid
@@ -203,6 +210,7 @@ const
     grid: {
       position: 'relative',
       display: 'grid',
+      gap: gridGap,
     },
     slot: {
       position: 'relative',
@@ -214,7 +222,7 @@ const
       $nest: {
         '>*:first-child': {
           position: 'absolute',
-          left: grid.gap, top: grid.gap, right: grid.gap, bottom: grid.gap,
+          left: gridGap, top: gridGap, right: gridGap, bottom: gridGap,
         }
       }
     }
@@ -251,9 +259,9 @@ export const
             gridTemplateColumns: grid.columns.join(' '),
             gridTemplateRows: grid.rows.join(' '),
             width: grid.width ?? defaultGrid.width,
-            minWidth: grid.min_width ?? defaultGrid.min_width,
-            height: grid.height ?? defaultGrid.height,
-            gap: grid.gap ?? defaultGrid.gap,
+            minWidth: grid.min_width ?? undefined,
+            height: grid.height ?? 'auto',
+            minHeight: grid.min_height ?? undefined,
           }
         return (
           <div data-test={page.key} className={css.grid} style={style}>
