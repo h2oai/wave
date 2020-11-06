@@ -16,8 +16,9 @@ module.exports = {
     hot: true,
     watchContentBase: true,
     historyApiFallback: true,
+    stats: 'minimal',
     proxy: {
-      '/': 'http://localhost:55555'
+      '/_p': 'http://localhost:55555'
     }
   },
   optimization: {
