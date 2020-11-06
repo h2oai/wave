@@ -1,5 +1,5 @@
 import React from 'react'
-import { cards, Grid } from './layout'
+import { cards, Grid, gridsB } from './layout'
 import { bond, Card, on, S, U, qd } from './qd'
 import { showNotification } from './notification'
 
@@ -28,18 +28,34 @@ export const
   View = bond(({ state, changed }: Card<State>) => {
     const
       init = () => {
-        const { title, icon, refresh, notification, redirect } = state
-        if (title) window.document.title = title
+        const { title, icon, refresh, notification, redirect, grids } = state
+
+        if (title) {
+          delete state.title
+          window.document.title = title
+        }
+
         if (icon) {
+          delete state.icon
           const
             iconLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement,
             touchIconLink = document.querySelector("link[rel*='apple-touch-icon']") as HTMLLinkElement
           if (iconLink) iconLink.href = icon
           if (touchIconLink) touchIconLink.href = icon
         }
-        if (typeof refresh === 'number') qd.refreshRateB(refresh)
-        if (notification) showNotification(notification)
+
+        if (typeof refresh === 'number') {
+          delete state.refresh
+          qd.refreshRateB(refresh)
+        }
+
+        if (notification) {
+          delete state.notification
+          showNotification(notification)
+        }
+
         if (redirect) {
+          delete state.redirect
           try {
             const url = new URL(redirect)
             if (redirect === url.hash) {
@@ -51,9 +67,17 @@ export const
             console.error(`Could not redirect: ${redirect} is an invalid URL`)
           }
         }
+
+        if (grids) {
+          delete state.grids
+          gridsB(grids)
+        }
+
       },
       render = () => (<></>)
+
     on(changed, init)
+
     return { init, render }
   })
 
