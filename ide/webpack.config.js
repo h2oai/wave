@@ -8,12 +8,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 module.exports = {
   mode: isDevelopment ? 'development' : 'production',
   entry: {
-    app: './src/index.tsx',
-    'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
-    'json.worker': 'monaco-editor/esm/vs/language/json/json.worker',
-    'css.worker': 'monaco-editor/esm/vs/language/css/css.worker',
-    'html.worker': 'monaco-editor/esm/vs/language/html/html.worker',
-    'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker'
+    app: './src/index.tsx'
   },
   devServer: {
     port: 3000,
@@ -62,6 +57,10 @@ module.exports = {
       {
         test: /\.(png|svg|jpg|gif|ttf)$/,
         use: ['file-loader']
+      },
+      {
+        test: /\.worker\.js$/,
+        use: ['worker-loader']
       }
     ]
   },

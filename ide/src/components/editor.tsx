@@ -1,28 +1,13 @@
 import { on } from '@/dataflow'
 import { newEditor } from '@/model'
-import * as monaco from 'monaco-editor'
-import React from 'react'
 import * as Fluent from '@fluentui/react'
+import * as monaco from 'monaco-editor'
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker'
+import React from 'react'
 
 
 // @ts-ignore
-self.MonacoEnvironment = {
-  getWorkerUrl: function (_moduleId: any, label: string) {
-    if (label === 'json') {
-      return './json.worker.bundle.js'
-    }
-    if (label === 'css') {
-      return './css.worker.bundle.js'
-    }
-    if (label === 'html') {
-      return './html.worker.bundle.js'
-    }
-    if (label === 'typescript' || label === 'javascript') {
-      return './ts.worker.bundle.js'
-    }
-    return './editor.worker.bundle.js'
-  }
-}
+self.MonacoEnvironment = { getWorker: () => new EditorWorker() }
 
 type EditorProps = {
   appName: string,
