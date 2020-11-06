@@ -71,7 +71,7 @@ export interface Grid {
   columns: S[]
   /** The specifications for rows in this grid. Defaults to 10 rows, each set to `1fr` (1 fraction, or 1/10th grid height).*/
   rows: S[]
-  /** The width of the grid. Defaults to `1773px`. */
+  /** The width of the grid. Defaults to `100%`. */
   width?: S
   /**
    * The minimum width of the grid.
@@ -258,7 +258,7 @@ export const
           style: React.CSSProperties = {
             gridTemplateColumns: grid.columns.join(' '),
             gridTemplateRows: grid.rows.join(' '),
-            width: grid.width ?? defaultGrid.width,
+            width: grid.width ?? '100%',
             minWidth: grid.min_width ?? undefined,
             height: grid.height ?? 'auto',
             minHeight: grid.min_height ?? undefined,
