@@ -5152,6 +5152,86 @@ class MarkupCard:
         )
 
 
+class Grid:
+    """No documentation available.
+    """
+    def __init__(
+            self,
+            breakpoint: int,
+            columns: List[str],
+            rows: List[str],
+            width: Optional[str] = None,
+            min_width: Optional[str] = None,
+            height: Optional[str] = None,
+            min_height: Optional[str] = None,
+    ):
+        self.breakpoint = breakpoint
+        """The minimum viewport width at which to use this grid. A breakpoint value of 0 matches all viewport widths, unless other breakpoints are set.  Typical slabs are: 0-576 for extra small devices (portrait phones), 576-768  for small devices (landscape phones), 768-992  for medium devices (tablets), 992-1200 for large devices (desktops), 1200+ for extra large devices (large desktops)."""
+        self.columns = columns
+        """The specifications for the columns in this grid. Defaults to 12 columns, each set to `1fr` (1 fraction, or 1/12th grid width)."""
+        self.rows = rows
+        """The specifications for rows in this grid. Defaults to 10 rows, each set to `1fr` (1 fraction, or 1/10th grid height)."""
+        self.width = width
+        """The width of the grid. Defaults to `100%`."""
+        self.min_width = min_width
+        """The minimum width of the grid. Not specifying a min_width will make the grid width equal to the viewport width if the grid width exceeds the available viewport width."""
+        self.height = height
+        """The height of the grid. Defaults to `auto`."""
+        self.min_height = min_height
+        """The minimum height of the grid."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.breakpoint is None:
+            raise ValueError('Grid.breakpoint is required.')
+        if self.columns is None:
+            raise ValueError('Grid.columns is required.')
+        if self.rows is None:
+            raise ValueError('Grid.rows is required.')
+        return _dump(
+            breakpoint=self.breakpoint,
+            columns=self.columns,
+            rows=self.rows,
+            width=self.width,
+            min_width=self.min_width,
+            height=self.height,
+            min_height=self.min_height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Grid':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_breakpoint: Any = __d.get('breakpoint')
+        if __d_breakpoint is None:
+            raise ValueError('Grid.breakpoint is required.')
+        __d_columns: Any = __d.get('columns')
+        if __d_columns is None:
+            raise ValueError('Grid.columns is required.')
+        __d_rows: Any = __d.get('rows')
+        if __d_rows is None:
+            raise ValueError('Grid.rows is required.')
+        __d_width: Any = __d.get('width')
+        __d_min_width: Any = __d.get('min_width')
+        __d_height: Any = __d.get('height')
+        __d_min_height: Any = __d.get('min_height')
+        breakpoint: int = __d_breakpoint
+        columns: List[str] = __d_columns
+        rows: List[str] = __d_rows
+        width: Optional[str] = __d_width
+        min_width: Optional[str] = __d_min_width
+        height: Optional[str] = __d_height
+        min_height: Optional[str] = __d_min_height
+        return Grid(
+            breakpoint,
+            columns,
+            rows,
+            width,
+            min_width,
+            height,
+            min_height,
+        )
+
+
 class MetaCard:
     """Represents page-global state.
 
@@ -5166,6 +5246,7 @@ class MetaCard:
             notification: Optional[str] = None,
             redirect: Optional[str] = None,
             icon: Optional[str] = None,
+            grids: Optional[List[Grid]] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -5180,6 +5261,8 @@ class MetaCard:
         """Redirect the page to a new URL."""
         self.icon = icon
         """Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers)."""
+        self.grids = grids
+        """The layout grids for the page."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -5195,6 +5278,7 @@ class MetaCard:
             notification=self.notification,
             redirect=self.redirect,
             icon=self.icon,
+            grids=None if self.grids is None else [__e.dump() for __e in self.grids],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -5209,6 +5293,7 @@ class MetaCard:
         __d_notification: Any = __d.get('notification')
         __d_redirect: Any = __d.get('redirect')
         __d_icon: Any = __d.get('icon')
+        __d_grids: Any = __d.get('grids')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
@@ -5216,6 +5301,7 @@ class MetaCard:
         notification: Optional[str] = __d_notification
         redirect: Optional[str] = __d_redirect
         icon: Optional[str] = __d_icon
+        grids: Optional[List[Grid]] = None if __d_grids is None else [Grid.load(__e) for __e in __d_grids]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -5224,6 +5310,7 @@ class MetaCard:
             notification,
             redirect,
             icon,
+            grids,
             commands,
         )
 

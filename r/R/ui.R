@@ -2624,6 +2624,53 @@ ui_markup_card <- function(
   return(.o)
 }
 
+#' No documentation available.
+#'
+#' @param breakpoint The minimum viewport width at which to use this grid.
+#'   A breakpoint value of 0 matches all viewport widths, unless other breakpoints are set.
+#'   
+#'   Typical slabs are:
+#'   0-576 for extra small devices (portrait phones),
+#'   576-768  for small devices (landscape phones),
+#'   768-992  for medium devices (tablets),
+#'   992-1200 for large devices (desktops),
+#'   1200+ for extra large devices (large desktops).
+#' @param columns The specifications for the columns in this grid. Defaults to 12 columns, each set to `1fr` (1 fraction, or 1/12th grid width).
+#' @param rows The specifications for rows in this grid. Defaults to 10 rows, each set to `1fr` (1 fraction, or 1/10th grid height).
+#' @param width The width of the grid. Defaults to `100%`.
+#' @param min_width The minimum width of the grid.
+#'   Not specifying a min_width will make the grid width equal to the viewport width
+#'   if the grid width exceeds the available viewport width.
+#' @param height The height of the grid. Defaults to `auto`.
+#' @param min_height The minimum height of the grid.
+#' @return A Grid instance.
+ui_grid <- function(
+  breakpoint,
+  columns,
+  rows,
+  width = NULL,
+  min_width = NULL,
+  height = NULL,
+  min_height = NULL) {
+  .guard_scalar("breakpoint", "numeric", breakpoint)
+  .guard_vector("columns", "character", columns)
+  .guard_vector("rows", "character", rows)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("min_width", "character", min_width)
+  .guard_scalar("height", "character", height)
+  .guard_scalar("min_height", "character", min_height)
+  .o <- list(
+    breakpoint=breakpoint,
+    columns=columns,
+    rows=rows,
+    width=width,
+    min_width=min_width,
+    height=height,
+    min_height=min_height)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Grid"))
+  return(.o)
+}
+
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -2635,6 +2682,7 @@ ui_markup_card <- function(
 #' @param notification Display a desktop notification to the user.
 #' @param redirect Redirect the page to a new URL.
 #' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
+#' @param grids The layout grids for the page.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 ui_meta_card <- function(
@@ -2644,6 +2692,7 @@ ui_meta_card <- function(
   notification = NULL,
   redirect = NULL,
   icon = NULL,
+  grids = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -2651,6 +2700,7 @@ ui_meta_card <- function(
   .guard_scalar("notification", "character", notification)
   .guard_scalar("redirect", "character", redirect)
   .guard_scalar("icon", "character", icon)
+  .guard_vector("grids", "h2oq_Grid", grids)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
@@ -2659,6 +2709,7 @@ ui_meta_card <- function(
     notification=notification,
     redirect=redirect,
     icon=icon,
+    grids=grids,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
   return(.o)

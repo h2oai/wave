@@ -2312,6 +2312,39 @@ def markup_card(
     )
 
 
+def grid(
+        breakpoint: int,
+        columns: List[str],
+        rows: List[str],
+        width: Optional[str] = None,
+        min_width: Optional[str] = None,
+        height: Optional[str] = None,
+        min_height: Optional[str] = None,
+) -> Grid:
+    """No documentation available.
+
+    Args:
+        breakpoint: The minimum viewport width at which to use this grid. A breakpoint value of 0 matches all viewport widths, unless other breakpoints are set.  Typical slabs are: 0-576 for extra small devices (portrait phones), 576-768  for small devices (landscape phones), 768-992  for medium devices (tablets), 992-1200 for large devices (desktops), 1200+ for extra large devices (large desktops).
+        columns: The specifications for the columns in this grid. Defaults to 12 columns, each set to `1fr` (1 fraction, or 1/12th grid width).
+        rows: The specifications for rows in this grid. Defaults to 10 rows, each set to `1fr` (1 fraction, or 1/10th grid height).
+        width: The width of the grid. Defaults to `100%`.
+        min_width: The minimum width of the grid. Not specifying a min_width will make the grid width equal to the viewport width if the grid width exceeds the available viewport width.
+        height: The height of the grid. Defaults to `auto`.
+        min_height: The minimum height of the grid.
+    Returns:
+        A `h2o_wave.types.Grid` instance.
+    """
+    return Grid(
+        breakpoint,
+        columns,
+        rows,
+        width,
+        min_width,
+        height,
+        min_height,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2319,6 +2352,7 @@ def meta_card(
         notification: Optional[str] = None,
         redirect: Optional[str] = None,
         icon: Optional[str] = None,
+        grids: Optional[List[Grid]] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2333,6 +2367,7 @@ def meta_card(
         notification: Display a desktop notification to the user.
         redirect: Redirect the page to a new URL.
         icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
+        grids: The layout grids for the page.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2344,6 +2379,7 @@ def meta_card(
         notification,
         redirect,
         icon,
+        grids,
         commands,
     )
 
