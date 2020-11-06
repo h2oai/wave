@@ -17,7 +17,6 @@ module.exports = {
   },
   devServer: {
     port: 3000,
-    hot: true,
     open: true,
     watchContentBase: true,
     historyApiFallback: true,
@@ -26,7 +25,7 @@ module.exports = {
     }
   },
   optimization: {
-    minimize: true,
+    minimize: !isDevelopment,
   },
   resolve: {
     extensions: ['*', '.js', '.jsx', '.tsx', '.ts'],
