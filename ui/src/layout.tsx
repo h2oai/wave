@@ -69,9 +69,9 @@ export interface Grid {
   /** The specifications for rows in this grid. Defaults to 10 rows, each set to `1fr` (1 fraction, or 1/10th grid height).*/
   rows: S[]
   /** The width of the grid. Defaults to `1773px`. */
-  width: S
+  width?: S
   /** The minimum width of the grid. Defaults to `1773px`. */
-  min_width: S
+  min_width?: S
   /** The height of the grid. Defaults to `895px`. */
   height?: S
   /** The gap between the columns or rows in this grid. Defaults to `15px`. */
@@ -157,35 +157,6 @@ const
 export const // XXX remove
   grid = newGrid(134, 76, 12, 10, 15) // approx 1800x930
 
-const
-  theme = getTheme(),
-  css = stylesheet({
-    grid: {
-      position: 'relative',
-      display: 'grid',
-      width: grid.innerWidth,
-      minWidth: grid.innerWidth,
-      height: grid.innerHeight,
-      gridTemplateColumns: 'repeat(12,1fr)',
-      gridTemplateRows: 'repeat(10,1fr)',
-      gap: grid.gap,
-    },
-    slot: {
-      position: 'relative',
-      backgroundColor: theme.colors.card,
-      boxSizing: 'border-box',
-      borderRadius: 3,
-      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
-      overflow: 'auto',
-      $nest: {
-        '>*:first-child': {
-          position: 'absolute',
-          left: grid.gap, top: grid.gap, right: grid.gap, bottom: grid.gap,
-        }
-      }
-    }
-  })
-
 type Breakpoint = {
   grid: Grid
   min: U
@@ -226,6 +197,30 @@ on(gridsB, grids => {
   breakpointsB(bps)
 })
 
+const
+  theme = getTheme(),
+  css = stylesheet({
+    grid: {
+      position: 'relative',
+      display: 'grid',
+    },
+    slot: {
+      position: 'relative',
+      backgroundColor: theme.colors.card,
+      boxSizing: 'border-box',
+      borderRadius: 3,
+      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      overflow: 'auto',
+      $nest: {
+        '>*:first-child': {
+          position: 'absolute',
+          left: grid.gap, top: grid.gap, right: grid.gap, bottom: grid.gap,
+        }
+      }
+    }
+  })
+
+
 export const
   GridSlot = bond(({ c }: { c: C }) => {
     const
@@ -243,19 +238,28 @@ export const
           </div>
         )
       }
-    return { render }
+    return { render, gridB }
   }),
   GridLayout = bond(({ page }: { page: Page }) => {
     const
       { changed } = page,
       render = () => {
         const
-          children = page.list().map(c => <GridSlot key={c.id} c={c} />)
+          { grid } = gridB(),
+          children = page.list().map(c => <GridSlot key={c.id} c={c} />),
+          style: React.CSSProperties = {
+            gridTemplateColumns: grid.columns.join(' '),
+            gridTemplateRows: grid.rows.join(' '),
+            width: grid.width ?? defaultGrid.width,
+            minWidth: grid.min_width ?? defaultGrid.min_width,
+            height: grid.height ?? defaultGrid.height,
+            gap: grid.gap ?? defaultGrid.gap,
+          }
         return (
-          <div data-test={page.key} className={css.grid}>
+          <div data-test={page.key} className={css.grid} style={style}>
             {children}
           </div>
         )
       }
-    return { render, gridsB, changed }
+    return { render, gridB, changed }
   })
