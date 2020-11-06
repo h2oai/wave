@@ -2,7 +2,7 @@ import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
-import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd'
+import { B, bond, box, C, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd'
 import { getTheme, margin } from './theme'
 
 type Slot = {
@@ -149,26 +149,31 @@ const
   })
 
 export const
+  GridSlot = bond(({ c }: { c: C }) => {
+    const
+      render = () => {
+        const
+          placement = grid.place(c.state.box),
+          { left, top, right, bottom, width, height } = placement,
+          display = placement === badPlacement ? 'none' : 'block',
+          zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
+
+        c.size = { width: width || 0, height: height || 0 } // TODO compute width from grid width; height cannot be relied upon
+        return (
+          <div className={css.slot} style={{ display, left, top, right, bottom, width, height, zIndex }}>
+            <CardView card={c} />
+            {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
+          </div>
+        )
+      }
+    return { render }
+  }),
   GridLayout = bond(({ page }: { page: Page }) => {
     const
       { changed } = page,
       render = () => {
         const
-          children = page.list().map(c => {
-            const
-              placement = grid.place(c.state.box),
-              { left, top, right, bottom, width, height } = placement,
-              display = placement === badPlacement ? 'none' : 'block',
-              zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
-
-            c.size = { width: width || 0, height: height || 0 } // TODO compute width from grid width; height cannot be relied upon
-            return (
-              <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height, zIndex }}>
-                <CardView card={c} />
-                {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
-              </div>
-            )
-          })
+          children = page.list().map(c => <GridSlot key={c.id} c={c} />)
         return (
           <div data-test={page.key} className={css.grid}>
             {children}
