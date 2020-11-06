@@ -67,7 +67,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebPackPlugin({ template: 'src/index.html', minify: 'auto' }),
+    new HtmlWebPackPlugin({ template: 'src/index.html', minify: 'auto', favicon: "./static/favicon.ico" }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new webpack.DefinePlugin({
       BASENAME: isDevelopment ? JSON.stringify('') : JSON.stringify('_ide'),
