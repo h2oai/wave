@@ -255,7 +255,6 @@ export interface Card<T> {
   name: S
   state: T
   changed: Box<B>
-  size?: Size
 }
 export interface C extends Card<Dict<any>> {
   id: S

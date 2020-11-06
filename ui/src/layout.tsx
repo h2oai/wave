@@ -6,12 +6,10 @@ import { B, bond, box, C, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } 
 import { getTheme, margin } from './theme'
 
 type Slot = {
-  left: U
-  top: U
-  width?: U
-  height?: U
-  right?: U
-  bottom?: U
+  x: U
+  y: U
+  w: U
+  h: U
 }
 
 const
@@ -57,7 +55,7 @@ export const
 type Size = [U, U]
 
 const
-  badPlacement: Slot = { left: 0, top: 0, width: 0, height: 0 },
+  badPlacement: Slot = { x: 0, y: 0, w: 0, h: 0 },
   newGrid = (uw: U, uh: U, cols: U, rows: U, gap: U) => {
     let scale = 1
     const
@@ -67,24 +65,6 @@ const
       height = uh * rows + gap * (rows + 1),
       giw = width - 2 * gap,
       gih = height - 2 * gap,
-      placeOnGrid = (x: U, y: U, w: U, h: U): Slot => {
-        const
-          slot: Slot = {
-            left: x * (uw + gap),
-            top: y * (uh + gap),
-          }
-        if (w > 0) {
-          slot.width = w * uw + (w - 1) * gap
-        } else {
-          slot.right = -(w + 1) * (uw + gap)
-        }
-        if (h > 0) {
-          slot.height = h * uh + (h - 1) * gap
-        } else {
-          slot.bottom = -(h + 1) * (uh + gap)
-        }
-        return slot
-      },
       normalize = (s: S): S[] => {
         const x = s.trim().split(/\s+/g)
         switch (x.length) {
@@ -99,7 +79,12 @@ const
         if (!s) return badPlacement
         const [x, y, w, h] = normalize(s).map(parseI)
         if (isNaN(x) || isNaN(y) || isNaN(w) || isNaN(h)) return badPlacement
-        return placeOnGrid(x - 1, y - 1, w, h)
+        return {
+          x,
+          y,
+          w: w > 0 ? w : cols + w, // XXX breaks backward compatibility
+          h: h > 0 ? h : rows + h, // XXX breaks backward compatibility
+        }
       },
       getWindowSize = (): Size => ([
         window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
@@ -111,6 +96,7 @@ const
         return scale
       },
       inset: React.CSSProperties = ({ position: 'absolute', left: gap, top: gap, right: gap, bottom: gap, overflow: 'auto' })
+
     return {
       width, height,
       innerWidth: giw, innerHeight: gih,
@@ -128,12 +114,16 @@ const
   css = stylesheet({
     grid: {
       position: 'relative',
-      boxSizing: 'border-box',
+      display: 'grid',
       width: grid.innerWidth,
+      height: grid.innerHeight,
+      gridTemplateColumns: 'repeat(12,1fr)',
+      gridTemplateRows: 'repeat(10,1fr)',
+      gap: grid.gap,
       margin: margin(grid.gap),
     },
     slot: {
-      position: 'absolute',
+      position: 'relative',
       backgroundColor: theme.colors.card,
       boxSizing: 'border-box',
       borderRadius: 3,
@@ -153,14 +143,13 @@ export const
     const
       render = () => {
         const
-          placement = grid.place(c.state.box),
-          { left, top, right, bottom, width, height } = placement,
-          display = placement === badPlacement ? 'none' : 'block',
+          slot = grid.place(c.state.box),
+          { x, y, w, h } = slot,
+          display = slot === badPlacement ? 'none' : 'block',
           zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
 
-        c.size = { width: width || 0, height: height || 0 } // TODO compute width from grid width; height cannot be relied upon
         return (
-          <div className={css.slot} style={{ display, left, top, right, bottom, width, height, zIndex }}>
+          <div className={css.slot} style={{ display, gridArea: `${y}/${x}/span ${h}/span ${w}`, zIndex }}>
             <CardView card={c} />
             {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
           </div>
