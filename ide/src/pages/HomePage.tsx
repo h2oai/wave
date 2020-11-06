@@ -17,7 +17,7 @@ export default bond(() => {
       onDismiss: toggleDialog
     },
     onAppNameChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, val = '') => {
-      appNameErrB(/^\w+$/.test(val) ? '' : 'An app name can contain only word characters, numbers and underscore ("-")')
+      appNameErrB(/^\w+$/.test(val) ? '' : 'An app name can contain only word characters, numbers and underscore ("_")')
       appNameB(val)
     },
     init = async () => {
@@ -51,7 +51,7 @@ export default bond(() => {
           </Fluent.DialogContent>
           <Fluent.DialogFooter>
             <Fluent.DefaultButton onClick={toggleDialog} text="Cancel" />
-            <Fluent.PrimaryButton disabled={!!appNameErrB()}>
+            <Fluent.PrimaryButton disabled={!!appNameErrB() || !appNameB()}>
               <Link to={`/app/${appNameB()}`}>Submit</Link>
             </Fluent.PrimaryButton>
           </Fluent.DialogFooter>

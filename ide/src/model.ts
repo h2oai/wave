@@ -1,8 +1,15 @@
-import { box, on } from '@/dataflow'
-import { create_app, list_apps, read_file, start_app, stop_app, write_file } from '@/ide'
+import { box, Box } from '@/dataflow'
+import { create_app, list_apps, read_file, start_app, stop_app } from '@/ide'
+
+export type Editor = {
+  contentB: Box<string>
+  loadApp: () => Promise<void>
+  startApp: () => Promise<void>
+  stopApp: () => Promise<void>
+}
 
 export const
-  newEditor = (appName: string) => {
+  newEditor = (appName: string): Editor => {
     const
       contentB = box(''),
       createAppIfNotExists = async () => {
@@ -23,10 +30,6 @@ export const
       stopApp = async () => {
         await stop_app(appName)
       }
-
-    on(contentB, async (content) => {
-      await write_file(appName, 'app.py', content)
-    })
 
     return { contentB, loadApp, startApp, stopApp }
   }

@@ -71,3 +71,7 @@ export async function rename_file(app_name: string, file_name: string, new_file_
 export async function delete_file(app_name: string, file_name: string) {
   return await rpc('delete_file', { app_name, file_name })
 }
+
+export async function list_files(app_name: string) {
+  return await rpc<string[]>('list_files', { app_name })
+}

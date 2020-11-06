@@ -125,6 +125,10 @@ def _list_apps() -> List[str]:
     return [app_dir.name for app_dir in _apps_dir.iterdir() if app_dir.is_dir()]
 
 
+def _list_files(app_name: str) -> List[str]:
+    return [app_file.name for app_file in (_apps_dir / app_name).iterdir() if app_file.is_file()]
+
+
 def _file_path_of(app_name: str, file_name: str) -> Path:
     _guard_app_name(app_name)
     app_dir = _apps_dir / app_name
@@ -186,6 +190,11 @@ async def stop_app(app_name: str):
 @rpc
 async def list_apps() -> List[str]:
     return _list_apps()
+
+
+@rpc
+async def list_files(app_name: str) -> List[str]:
+    return _list_files(app_name)
 
 
 @rpc

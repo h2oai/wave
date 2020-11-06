@@ -1,6 +1,4 @@
-import { on, bond, box } from '@/dataflow'
-import { newEditor } from '@/model'
-import * as Fluent from '@fluentui/react'
+import { bond, Box, on } from '@/dataflow'
 import * as monaco from 'monaco-editor'
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker'
 import React from 'react'
@@ -11,31 +9,20 @@ declare global {
 self.MonacoEnvironment = { getWorker: () => new EditorWorker() }
 
 type EditorProps = {
-  appName: string,
-  setIsDirty: (val: boolean) => void
+  contentB: Box<string>,
+  onDirtyChange: (val: boolean) => void
+  onContentChange: (val: string) => Promise<void>
 }
 
-export default bond(({ appName, setIsDirty }: EditorProps) => {
+export default bond(({ contentB, onDirtyChange, onContentChange }: EditorProps) => {
   let ed: monaco.editor.IStandaloneCodeEditor
 
   const
     divEl = React.createRef<HTMLDivElement>(),
-    editor = newEditor(appName),
-    isLoadingB = box(true),
-    init = async () => {
-      await editor.loadApp()
-      try {
-        await editor.startApp()
-      }
-      catch (error) {
-        /* noop */
-      }
-      finally {
-        isLoadingB(false)
-      }
+    init = () => {
       if (!divEl.current) return
       ed = monaco.editor.create(divEl.current, {
-        value: editor.contentB(),
+        value: contentB(),
         language: 'python',
         theme: 'vs-dark',
         minimap: { enabled: false },
@@ -43,39 +30,20 @@ export default bond(({ appName, setIsDirty }: EditorProps) => {
       })
 
       // Save on Ctrl+S
-      let isCapturing = false
       ed.addAction({
         id: 'save-content',
         label: 'Save',
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
-        run: (ed) => {
-          isCapturing = true
-          editor.contentB(ed.getValue())
-          isCapturing = false
-          setIsDirty(false)
+        run: async (ed) => {
+          await onContentChange(ed.getValue())
+          onDirtyChange(false)
         }
       })
-      ed.onDidChangeModelContent(() => setIsDirty(true))
 
-      on(editor.contentB, (content) => {
-        if (isCapturing) return
-        ed.setValue(content)
-      })
+      ed.onDidChangeModelContent(() => onDirtyChange(true))
+      on(contentB, content => ed.setValue(content))
     },
-    dispose = () => {
-      ed.dispose()
-      editor.stopApp()
-    },
-    render = () => (
-      <>
-        {
-          isLoadingB() &&
-          <Fluent.Stack horizontalAlign='center' verticalAlign='center' styles={{ root: { height: '100%' } }}>
-            <Fluent.Spinner label='Loading editor' size={Fluent.SpinnerSize.large} />
-          </Fluent.Stack>
-        }
-        <div style={{ width: '100%', height: '100%', display: isLoadingB() ? 'none' : 'block', overflow: "hidden" }} ref={divEl}></div>
-      </>
-    )
-  return { init, render, isLoadingB, dispose }
+    dispose = () => ed.dispose(),
+    render = () => <div style={{ width: '100%', height: '100%', overflow: 'hidden' }} ref={divEl}></div>
+  return { init, render, contentB, dispose }
 })
