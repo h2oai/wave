@@ -2052,12 +2052,52 @@ def grid_card(
     )
 
 
+def nav_item(
+        name: str,
+        label: str,
+) -> NavItem:
+    """Create a navigation item.
+
+    Args:
+        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+        label: The label to display.
+    Returns:
+        A `h2o_wave.types.NavItem` instance.
+    """
+    return NavItem(
+        name,
+        label,
+    )
+
+
+def nav_group(
+        label: str,
+        items: List[NavItem],
+        collapsed: Optional[bool] = None,
+) -> NavGroup:
+    """Create a group of navigation items.
+
+    Args:
+        label: The label to display for this group.
+        items: The navigation items contained in this group.
+        collapsed: Indicates whether nav groups should be rendered as collapsed initially
+    Returns:
+        A `h2o_wave.types.NavGroup` instance.
+    """
+    return NavGroup(
+        label,
+        items,
+        collapsed,
+    )
+
+
 def header_card(
         box: str,
         title: str,
         subtitle: str,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
+        nav: Optional[List[NavGroup]] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
     """Render a card containing a HTML page inside an inline frame (iframe).
@@ -2070,6 +2110,7 @@ def header_card(
         subtitle: The subtitle, displayed below the title.
         icon: The icon type, displayed to the left.
         icon_color: The icon's color.
+        nav: The navigation menu to display when the header's icon is clicked.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.HeaderCard` instance.
@@ -2080,6 +2121,7 @@ def header_card(
         subtitle,
         icon,
         icon_color,
+        nav,
         commands,
     )
 
@@ -2381,45 +2423,6 @@ def meta_card(
         icon,
         grids,
         commands,
-    )
-
-
-def nav_item(
-        name: str,
-        label: str,
-) -> NavItem:
-    """Create a navigation item.
-
-    Args:
-        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-        label: The label to display.
-    Returns:
-        A `h2o_wave.types.NavItem` instance.
-    """
-    return NavItem(
-        name,
-        label,
-    )
-
-
-def nav_group(
-        label: str,
-        items: List[NavItem],
-        collapsed: Optional[bool] = None,
-) -> NavGroup:
-    """Create a group of navigation items.
-
-    Args:
-        label: The label to display for this group.
-        items: The navigation items contained in this group.
-        collapsed: Indicates whether nav groups should be rendered as collapsed initially
-    Returns:
-        A `h2o_wave.types.NavGroup` instance.
-    """
-    return NavGroup(
-        label,
-        items,
-        collapsed,
     )
 
 

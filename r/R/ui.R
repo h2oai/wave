@@ -2336,6 +2336,44 @@ ui_grid_card <- function(
   return(.o)
 }
 
+#' Create a navigation item.
+#'
+#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+#' @param label The label to display.
+#' @return A NavItem instance.
+ui_nav_item <- function(
+  name,
+  label) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .o <- list(
+    name=name,
+    label=label)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavItem"))
+  return(.o)
+}
+
+#' Create a group of navigation items.
+#'
+#' @param label The label to display for this group.
+#' @param items The navigation items contained in this group.
+#' @param collapsed Indicates whether nav groups should be rendered as collapsed initially
+#' @return A NavGroup instance.
+ui_nav_group <- function(
+  label,
+  items,
+  collapsed = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_vector("items", "h2oq_NavItem", items)
+  .guard_scalar("collapsed", "logical", collapsed)
+  .o <- list(
+    label=label,
+    items=items,
+    collapsed=collapsed)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavGroup"))
+  return(.o)
+}
+
 #' Render a card containing a HTML page inside an inline frame (iframe).
 #' 
 #' Either a path or content can be provided as arguments.
@@ -2345,6 +2383,7 @@ ui_grid_card <- function(
 #' @param subtitle The subtitle, displayed below the title.
 #' @param icon The icon type, displayed to the left.
 #' @param icon_color The icon's color.
+#' @param nav The navigation menu to display when the header's icon is clicked.
 #' @param commands Contextual menu commands for this component.
 #' @return A HeaderCard instance.
 ui_header_card <- function(
@@ -2353,12 +2392,14 @@ ui_header_card <- function(
   subtitle,
   icon = NULL,
   icon_color = NULL,
+  nav = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
+  .guard_vector("nav", "h2oq_NavGroup", nav)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
@@ -2366,6 +2407,7 @@ ui_header_card <- function(
     subtitle=subtitle,
     icon=icon,
     icon_color=icon_color,
+    nav=nav,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_HeaderCard"))
   return(.o)
@@ -2712,44 +2754,6 @@ ui_meta_card <- function(
     grids=grids,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
-  return(.o)
-}
-
-#' Create a navigation item.
-#'
-#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-#' @param label The label to display.
-#' @return A NavItem instance.
-ui_nav_item <- function(
-  name,
-  label) {
-  .guard_scalar("name", "character", name)
-  .guard_scalar("label", "character", label)
-  .o <- list(
-    name=name,
-    label=label)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavItem"))
-  return(.o)
-}
-
-#' Create a group of navigation items.
-#'
-#' @param label The label to display for this group.
-#' @param items The navigation items contained in this group.
-#' @param collapsed Indicates whether nav groups should be rendered as collapsed initially
-#' @return A NavGroup instance.
-ui_nav_group <- function(
-  label,
-  items,
-  collapsed = NULL) {
-  .guard_scalar("label", "character", label)
-  .guard_vector("items", "h2oq_NavItem", items)
-  .guard_scalar("collapsed", "logical", collapsed)
-  .o <- list(
-    label=label,
-    items=items,
-    collapsed=collapsed)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavGroup"))
   return(.o)
 }
 

@@ -15,37 +15,48 @@ page['meta'] = ui.meta_card(box='', grids=[
         breakpoint=0,
         # Create one column, sized automatically.
         columns=['auto'],
-        # Create 5 rows: 100px for the header, and 4 others for content, sized automatically.
-        rows=['100px'] + ['auto'] * 4,
+        # Create 5 rows: 80px for the header, and 4 others for content, sized automatically.
+        rows=['80px'] + ['auto'] * 4,
     ),
     ui.grid(
         # If the viewport width >= 768:
         breakpoint=768,
         # Create 2 columns: 250px for the sidebar, and another for the content, sized automatically.
         columns=['250px', 'auto'],
-        # Create 4 rows: 100px for the header, and 3 others for content, sized automatically.
-        rows=['100px'] + ['auto'] * 3,
+        # Create 4 rows: 80px for the header, and 3 others for content, sized automatically.
+        rows=['80px'] + ['auto'] * 3,
     ),
     ui.grid(
         # If the viewport width >= 1200:
         breakpoint=1200,
         # Create 3 columns: 300px for the sidebar, and 2 others taking up 1/2 and 1/2 of the remaining width.
         columns=['300px', '1fr', '1fr'],
-        # Create 3 rows: 100px for the header, and 2 others taking up 1/3rd and 2/3rd of the remaining height.
-        rows=['100px', '1fr', '2fr'],
+        # Create 3 rows: 80px for the header, and 2 others taking up 1/3rd and 2/3rd of the remaining height.
+        rows=['80px', '1fr', '2fr'],
         # Fix width to 1200px.
         width='1200px',
     ),
 ])
 
-page['header'] = ui.markdown_card(
+page['header'] = ui.header_card(
     # The box attribute for a card specifies where to place the card for each of our three viewport sizes above.
     # If the viewport width >= 0: use 1 1 1 1.
     # If the viewport width >= 768: use 1 1 2 1.
     # If the viewport width >= 1200: use 1 1 3 1.
     box='1 1 1 1 / 1 1 2 1 / 1 1 3 1',
-    title='Header',
-    content='',
+    title='Lorem Ipsum',
+    subtitle='Excepteur sint occaecat cupidatat',
+    nav=[
+        ui.nav_group('Menu', items=[
+            ui.nav_item(name='#menu/spam', label='Spam'),
+            ui.nav_item(name='#menu/ham', label='Ham'),
+            ui.nav_item(name='#menu/eggs', label='Eggs'),
+        ]),
+        ui.nav_group('Help', items=[
+            ui.nav_item(name='#about', label='About'),
+            ui.nav_item(name='#support', label='Support'),
+        ])
+    ],
 )
 page['controls'] = ui.markdown_card(
     box='1 2 1 1 / 1 2 1 -1 / 1 2 1 -1',

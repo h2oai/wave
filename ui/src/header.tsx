@@ -1,13 +1,14 @@
-import { FontIcon } from '@fluentui/react'
+import { FontIcon, Panel, PanelType } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { bond, Card, S } from './qd'
-import { getTheme } from './theme'
+import { bond, Box, box, Card, S } from './qd'
+import { clas, getTheme } from './theme'
+import { NavGroup, XNav } from './nav'
 
 const
   theme = getTheme(),
-  iconSize = 36,
+  iconSize = 24,
   css = stylesheet({
     card: {
       position: 'absolute', left: 0, top: 0, right: 0, bottom: 0,
@@ -15,8 +16,19 @@ const
       alignItems: 'center',
     },
     lhs: {
-      width: iconSize + 10,
-      height: iconSize,
+      width: iconSize + 15,
+      height: iconSize + 15,
+      display: 'flex',
+      alignItems: 'center',
+      cursor: 'default',
+    },
+    burger: {
+      $nest: {
+        '&:hover': {
+          color: 'red',
+          cursor: 'pointer',
+        },
+      },
     },
     icon: {
       fontSize: iconSize,
@@ -52,21 +64,58 @@ interface State {
   icon?: S
   /** The icon's color. */
   icon_color?: S
+  /** The navigation menu to display when the header's icon is clicked. */
+  nav?: NavGroup[]
 }
+
+const
+  Navigation = bond(({ items, isOpenB }: { items: NavGroup[], isOpenB: Box<boolean> }) => {
+    const
+      hideNav = () => isOpenB(false),
+      render = () => (
+        <Panel
+          isLightDismiss
+          type={PanelType.smallFixedNear}
+          isOpen={isOpenB()}
+          onDismiss={hideNav}
+          hasCloseButton={false}
+        >
+          <XNav items={items} />
+        </Panel>
+      )
+    return { render, isOpenB }
+  })
 
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
-    const render = () => (
-      <div data-test={name} className={css.card}>
-        <div className={css.lhs}>
-          <FontIcon className={css.icon} style={{ color: theme.color(state.icon_color) }} iconName={state.icon || 'WebComponents'} />
-        </div>
-        <div className={css.rhs}>
-          <div className={css.title}>{state.title}</div>
-          <div className={css.subtitle}>{state.subtitle}</div>
-        </div>
-      </div>
-    )
+    const
+      navB = box(false),
+      showNav = () => navB(true),
+      render = () => {
+        const
+          { title, subtitle, icon, icon_color, nav } = state,
+          burger = nav
+            ? (
+              <div className={clas(css.lhs, css.burger)} onClick={showNav}>
+                <FontIcon className={css.icon} iconName='GlobalNavButton' />
+              </div>
+            ) : (
+              <div className={css.lhs}>
+                <FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: theme.color(icon_color) }} />
+              </div>
+            )
+
+        return (
+          <div data-test={name} className={css.card}>
+            {burger}
+            <div className={css.rhs}>
+              <div className={css.title}>{title}</div>
+              <div className={css.subtitle}>{subtitle}</div>
+            </div>
+            {nav && <Navigation items={nav} isOpenB={navB} />}
+          </div>
+        )
+      }
     return { render, changed }
   })
 

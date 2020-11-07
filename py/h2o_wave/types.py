@@ -4472,6 +4472,95 @@ class GridCard:
         )
 
 
+class NavItem:
+    """Create a navigation item.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+    ):
+        self.name = name
+        """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
+        self.label = label
+        """The label to display."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('NavItem.name is required.')
+        if self.label is None:
+            raise ValueError('NavItem.label is required.')
+        return _dump(
+            name=self.name,
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'NavItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('NavItem.name is required.')
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('NavItem.label is required.')
+        name: str = __d_name
+        label: str = __d_label
+        return NavItem(
+            name,
+            label,
+        )
+
+
+class NavGroup:
+    """Create a group of navigation items.
+    """
+    def __init__(
+            self,
+            label: str,
+            items: List[NavItem],
+            collapsed: Optional[bool] = None,
+    ):
+        self.label = label
+        """The label to display for this group."""
+        self.items = items
+        """The navigation items contained in this group."""
+        self.collapsed = collapsed
+        """Indicates whether nav groups should be rendered as collapsed initially"""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('NavGroup.label is required.')
+        if self.items is None:
+            raise ValueError('NavGroup.items is required.')
+        return _dump(
+            label=self.label,
+            items=[__e.dump() for __e in self.items],
+            collapsed=self.collapsed,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'NavGroup':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('NavGroup.label is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('NavGroup.items is required.')
+        __d_collapsed: Any = __d.get('collapsed')
+        label: str = __d_label
+        items: List[NavItem] = [NavItem.load(__e) for __e in __d_items]
+        collapsed: Optional[bool] = __d_collapsed
+        return NavGroup(
+            label,
+            items,
+            collapsed,
+        )
+
+
 class HeaderCard:
     """Render a card containing a HTML page inside an inline frame (iframe).
 
@@ -4484,6 +4573,7 @@ class HeaderCard:
             subtitle: str,
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
+            nav: Optional[List[NavGroup]] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -4496,6 +4586,8 @@ class HeaderCard:
         """The icon type, displayed to the left."""
         self.icon_color = icon_color
         """The icon's color."""
+        self.nav = nav
+        """The navigation menu to display when the header's icon is clicked."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -4514,6 +4606,7 @@ class HeaderCard:
             subtitle=self.subtitle,
             icon=self.icon,
             icon_color=self.icon_color,
+            nav=None if self.nav is None else [__e.dump() for __e in self.nav],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4531,12 +4624,14 @@ class HeaderCard:
             raise ValueError('HeaderCard.subtitle is required.')
         __d_icon: Any = __d.get('icon')
         __d_icon_color: Any = __d.get('icon_color')
+        __d_nav: Any = __d.get('nav')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         subtitle: str = __d_subtitle
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
+        nav: Optional[List[NavGroup]] = None if __d_nav is None else [NavGroup.load(__e) for __e in __d_nav]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return HeaderCard(
             box,
@@ -4544,6 +4639,7 @@ class HeaderCard:
             subtitle,
             icon,
             icon_color,
+            nav,
             commands,
         )
 
@@ -5312,95 +5408,6 @@ class MetaCard:
             icon,
             grids,
             commands,
-        )
-
-
-class NavItem:
-    """Create a navigation item.
-    """
-    def __init__(
-            self,
-            name: str,
-            label: str,
-    ):
-        self.name = name
-        """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
-        self.label = label
-        """The label to display."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('NavItem.name is required.')
-        if self.label is None:
-            raise ValueError('NavItem.label is required.')
-        return _dump(
-            name=self.name,
-            label=self.label,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'NavItem':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('NavItem.name is required.')
-        __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('NavItem.label is required.')
-        name: str = __d_name
-        label: str = __d_label
-        return NavItem(
-            name,
-            label,
-        )
-
-
-class NavGroup:
-    """Create a group of navigation items.
-    """
-    def __init__(
-            self,
-            label: str,
-            items: List[NavItem],
-            collapsed: Optional[bool] = None,
-    ):
-        self.label = label
-        """The label to display for this group."""
-        self.items = items
-        """The navigation items contained in this group."""
-        self.collapsed = collapsed
-        """Indicates whether nav groups should be rendered as collapsed initially"""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('NavGroup.label is required.')
-        if self.items is None:
-            raise ValueError('NavGroup.items is required.')
-        return _dump(
-            label=self.label,
-            items=[__e.dump() for __e in self.items],
-            collapsed=self.collapsed,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'NavGroup':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('NavGroup.label is required.')
-        __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('NavGroup.items is required.')
-        __d_collapsed: Any = __d.get('collapsed')
-        label: str = __d_label
-        items: List[NavItem] = [NavItem.load(__e) for __e in __d_items]
-        collapsed: Optional[bool] = __d_collapsed
-        return NavGroup(
-            label,
-            items,
-            collapsed,
         )
 
 
