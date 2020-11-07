@@ -1,7 +1,7 @@
 import { FontIcon, Panel, PanelType } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards } from './layout'
+import { CardEffect, cards } from './layout'
 import { bond, Box, box, Card, S } from './qd'
 import { clas, getTheme } from './theme'
 import { NavGroup, XNav } from './nav'
@@ -25,7 +25,7 @@ const
     burger: {
       $nest: {
         '&:hover': {
-          color: 'red',
+          color: theme.colors.page, // TODO improve
           cursor: 'pointer',
         },
       },
@@ -40,7 +40,7 @@ const
     },
     title: {
       ...theme.font.s24,
-      ...theme.font.w6,
+      ...theme.font.w3,
     },
     subtitle: {
       position: 'relative',
@@ -119,5 +119,5 @@ export const
     return { render, changed }
   })
 
-cards.register('header', View)
+cards.register('header', View, CardEffect.Inverted)
 

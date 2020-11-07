@@ -12,11 +12,13 @@ type Slot = {
   h: U
 }
 
+export enum CardEffect { None, Normal, Inverted }
+
 const
   newCardRegistry = () => {
     const
-      m: Dict<typeof React.Component> = {},
-      register = (name: S, ctor: typeof React.Component) => m[name] = ctor,
+      m: Dict<{ ctor: typeof React.Component, effect: CardEffect }> = {},
+      register = (name: S, ctor: typeof React.Component, effect: CardEffect = CardEffect.Normal) => m[name] = { ctor, effect },
       lookup = (name: S) => m[name] || m['']
     return { register, lookup }
   }
@@ -37,7 +39,7 @@ export const
     return x === null ? x : <>{x}</>
   },
   CardView = ({ card }: { card: Card<any> }) => {
-    const Tag = cards.lookup(card.state.view)
+    const Tag = cards.lookup(card.state.view).ctor
     return <Tag {...card} />
   },
   Repeat = ({ view, props, data }: { view: S | any, props: any, data: any }) => {
@@ -111,7 +113,7 @@ const
       default: return x.slice(0, 4)
     }
   },
-  place = (ss: S): Slot => {
+  parseBox = (ss: S): Slot => {
     if (!ss) return badPlacement
 
     const
@@ -206,6 +208,7 @@ on(gridsB, grids => {
 
 const
   theme = getTheme(),
+  cardShadow = `0px 3px 5px ${theme.colors.text0}`,
   css = stylesheet({
     grid: {
       position: 'relative',
@@ -214,10 +217,7 @@ const
     },
     slot: {
       position: 'relative',
-      backgroundColor: theme.colors.card,
       boxSizing: 'border-box',
-      borderRadius: 3,
-      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
       overflow: 'auto',
       $nest: {
         '>*:first-child': {
@@ -226,7 +226,16 @@ const
         }
       }
     }
-  })
+  }),
+  normalCardStyle: React.CSSProperties = {
+    backgroundColor: theme.colors.card,
+    borderRadius: 3,
+    boxShadow: cardShadow,
+  },
+  invertedCardStyle: React.CSSProperties = {
+    color: theme.colors.card,
+    backgroundColor: theme.colors.text,
+  }
 
 
 export const
@@ -234,13 +243,19 @@ export const
     const
       render = () => {
         const
-          slot = place(c.state.box),
+          slot = parseBox(c.state.box),
           { x, y, w, h } = slot,
           display = slot === badPlacement ? 'none' : 'block',
-          zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
-
+          zIndex = c.name === '__unhandled_error__' ? 1 : 'initial',
+          effect = cards.lookup(c.state.view).effect,
+          style: React.CSSProperties = effect === CardEffect.Normal ? normalCardStyle : effect === CardEffect.Inverted ? invertedCardStyle : {}
         return (
-          <div className={css.slot} style={{ display, gridArea: `${y}/${x}/span ${h}/span ${w}`, zIndex }}>
+          <div className={css.slot} style={{
+            display,
+            gridArea: `${y}/${x}/span ${h}/span ${w}`,
+            zIndex,
+            ...style,
+          }}>
             <CardView card={c} />
             {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
           </div>
