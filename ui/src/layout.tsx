@@ -2,7 +2,7 @@ import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
-import { B, bond, box, C, Card, Dict, F, on, Page, parseI, Rec, S, U, unpack, xid } from './qd'
+import { B, bond, box, C, Card, Dict, F, on, Page, parseI, parseU, Rec, S, U, unpack, xid } from './qd'
 import { clas, getTheme } from './theme'
 
 type Slot = {
@@ -113,12 +113,16 @@ const
       default: return x.slice(0, 4)
     }
   },
-  parseBox = (ss: S): Slot => {
-    if (!ss) return badPlacement
+  toGridTemplate = (specs: S[]): S => specs.map(s => {
+    const u = parseU(s)
+    return isNaN(u) ? s : `${u}fr`
+  }).join(' '),
+  parseBox = (spec: S): Slot => {
+    if (!spec) return badPlacement
 
     const
       { grid, index } = gridB(),
-      s = ss.split('/').map(s => s.trim())[index]
+      s = spec.split(/\s*\/\s*/)[index]
 
     if (!s) return badPlacement
 
@@ -278,8 +282,8 @@ export const
           { grid } = gridB(),
           children = page.list().map(c => <GridSlot key={c.id} c={c} />),
           style: React.CSSProperties = {
-            gridTemplateColumns: grid.columns.join(' '),
-            gridTemplateRows: grid.rows.join(' '),
+            gridTemplateColumns: toGridTemplate(grid.columns),
+            gridTemplateRows: toGridTemplate(grid.rows),
             width: grid.width ?? '100%',
             minWidth: grid.min_width ?? undefined,
             height: grid.height ?? 'auto',

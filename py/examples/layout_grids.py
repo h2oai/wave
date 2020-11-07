@@ -29,10 +29,10 @@ page['meta'] = ui.meta_card(box='', grids=[
     ui.grid(
         # If the viewport width >= 1200:
         breakpoint=1200,
-        # Create 3 columns: 300px for the sidebar, and 2 others taking up 1/2 and 1/2 of the remaining width.
-        columns=['300px', '1fr', '1fr'],
-        # Create 3 rows: 80px for the header, and 2 others taking up 1/3rd and 2/3rd of the remaining height.
-        rows=['80px', '1fr', '2fr'],
+        # Create 3 columns: 300px for the sidebar, and 2 others taking up 1:1 (1/2 and 1/2) of the remaining width.
+        columns=['300px', '1', '1'],
+        # Create 3 rows: 80px for the header, and 2 others taking up 1:2 (1/3rd and 2/3rd) of the remaining height.
+        rows=['80px', '1', '2'],
         # Fix width to 1200px.
         width='1200px',
     ),
