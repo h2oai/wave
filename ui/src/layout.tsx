@@ -3,7 +3,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
 import { B, bond, box, C, Card, Dict, F, on, Page, parseI, Rec, S, U, unpack, xid } from './qd'
-import { getTheme } from './theme'
+import { clas, getTheme } from './theme'
 
 type Slot = {
   x: U
@@ -12,7 +12,7 @@ type Slot = {
   h: U
 }
 
-export enum CardEffect { None, Normal, Inverted }
+export enum CardEffect { Transparent, Normal, Raised }
 
 const
   newCardRegistry = () => {
@@ -208,7 +208,6 @@ on(gridsB, grids => {
 
 const
   theme = getTheme(),
-  cardShadow = `0px 3px 5px ${theme.colors.text0}`,
   css = stylesheet({
     grid: {
       position: 'relative',
@@ -219,23 +218,32 @@ const
       position: 'relative',
       boxSizing: 'border-box',
       overflow: 'auto',
+      transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
       $nest: {
         '>*:first-child': {
           position: 'absolute',
           left: gridGap, top: gridGap, right: gridGap, bottom: gridGap,
         }
       }
-    }
-  }),
-  normalCardStyle: React.CSSProperties = {
-    backgroundColor: theme.colors.card,
-    borderRadius: 3,
-    boxShadow: cardShadow,
-  },
-  invertedCardStyle: React.CSSProperties = {
-    color: theme.colors.card,
-    backgroundColor: theme.colors.text,
-  }
+    },
+    raised: {
+      color: theme.colors.card,
+      backgroundColor: theme.colors.text,
+      boxShadow: `0px 3px 7px ${theme.colors.text3}`,
+    },
+    normal: {
+      backgroundColor: theme.colors.card,
+      borderRadius: 3,
+      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      $nest: {
+        '&:hover': {
+          boxShadow: `0px 12px 20px ${theme.colors.text2}`,
+        }
+      },
+    },
+    flush: {
+    },
+  })
 
 
 export const
@@ -248,13 +256,12 @@ export const
           display = slot === badPlacement ? 'none' : 'block',
           zIndex = c.name === '__unhandled_error__' ? 1 : 'initial',
           effect = cards.lookup(c.state.view).effect,
-          style: React.CSSProperties = effect === CardEffect.Normal ? normalCardStyle : effect === CardEffect.Inverted ? invertedCardStyle : {}
+          className = clas(css.slot, effect === CardEffect.Normal ? css.normal : effect === CardEffect.Raised ? css.raised : css.flush)
         return (
-          <div className={css.slot} style={{
+          <div className={className} style={{
             display,
             gridArea: `${y}/${x}/span ${h}/span ${w}`,
             zIndex,
-            ...style,
           }}>
             <CardView card={c} />
             {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}

@@ -119,5 +119,5 @@ export const
     return { render, changed }
   })
 
-cards.register('header', View, CardEffect.Inverted)
+cards.register('header', View, CardEffect.Raised)
 
