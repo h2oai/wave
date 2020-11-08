@@ -59,16 +59,17 @@ type Size = [U, U]
 export interface Grid {
   /**
    * The minimum viewport width at which to use this grid.
-   * A breakpoint value of 0 matches all viewport widths, unless other breakpoints are set.
+   * Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset.
+   * The named presets are:
+   * 'xs': '0px' for extra small devices (portrait phones),
+   * 's': '576px' for small devices (landscape phones),
+   * 'm': '768px' for medium devices (tablets),
+   * 'l': '992px' for large devices (desktops),
+   * 'xl': '1200px' for extra large devices (large desktops).
    *
-   * Typical slabs are:
-   * 0-576 for extra small devices (portrait phones),
-   * 576-768  for small devices (landscape phones),
-   * 768-992  for medium devices (tablets),
-   * 992-1200 for large devices (desktops),
-   * 1200+ for extra large devices (large desktops).
+   * A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set.
   */
-  breakpoint: U
+  breakpoint: S
   /** The specifications for the columns in this grid. Defaults to 12 columns, each set to `1fr` (1 fraction, or 1/12th grid width). */
   columns: S[]
   /** The specifications for rows in this grid. Defaults to 10 rows, each set to `1fr` (1 fraction, or 1/10th grid height).*/
@@ -89,13 +90,20 @@ export interface Grid {
 
 const
   gridGap = 15,
+  presetBreakpoints: Dict<S> = {
+    xs: '0px',
+    s: '576px',
+    m: '768px',
+    l: '992px',
+    xl: '1200px',
+  },
   repeat = <T extends {}>(n: U, x: T): T[] => {
     const xs = new Array<T>(n)
     for (let i = 0; i < n; i++) xs[i] = x
     return xs
   },
   defaultGrid: Grid = {
-    breakpoint: 0, // any width
+    breakpoint: 'xs', // any width
     columns: repeat(12, '1fr'),
     rows: repeat(10, '1fr'),
     width: '1773px', // 134*12 + 15*(12-1)
@@ -117,6 +125,7 @@ const
     const u = parseU(s)
     return isNaN(u) ? s : `${u}fr`
   }).join(' '),
+  parseBreakpoint = (spec: S): U => parseInt(presetBreakpoints[spec] ?? spec, 10),
   parseBox = (spec: S): Slot => {
     if (!spec) return badPlacement
 
@@ -190,8 +199,8 @@ on(gridsB, grids => {
     bps = grids.map((grid, index): Breakpoint => {
       const
         g2 = grids[index + 1],
-        min = grid.breakpoint,
-        max = g2 ? g2.breakpoint - 1 : 0, // next breakpoint's min
+        min = parseBreakpoint(grid.breakpoint),
+        max = g2 ? parseBreakpoint(g2.breakpoint) - 1 : 0, // next breakpoint's min
         mq = window.matchMedia(
           max
             ? `(min-width:${min}px) and (max-width:${max}.98px)`

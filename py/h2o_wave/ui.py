@@ -2355,7 +2355,7 @@ def markup_card(
 
 
 def grid(
-        breakpoint: int,
+        breakpoint: str,
         columns: List[str],
         rows: List[str],
         width: Optional[str] = None,
@@ -2366,7 +2366,7 @@ def grid(
     """No documentation available.
 
     Args:
-        breakpoint: The minimum viewport width at which to use this grid. A breakpoint value of 0 matches all viewport widths, unless other breakpoints are set.  Typical slabs are: 0-576 for extra small devices (portrait phones), 576-768  for small devices (landscape phones), 768-992  for medium devices (tablets), 992-1200 for large devices (desktops), 1200+ for extra large devices (large desktops).
+        breakpoint: The minimum viewport width at which to use this grid. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set.
         columns: The specifications for the columns in this grid. Defaults to 12 columns, each set to `1fr` (1 fraction, or 1/12th grid width).
         rows: The specifications for rows in this grid. Defaults to 10 rows, each set to `1fr` (1 fraction, or 1/10th grid height).
         width: The width of the grid. Defaults to `100%`.

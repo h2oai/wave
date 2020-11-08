@@ -5253,7 +5253,7 @@ class Grid:
     """
     def __init__(
             self,
-            breakpoint: int,
+            breakpoint: str,
             columns: List[str],
             rows: List[str],
             width: Optional[str] = None,
@@ -5262,7 +5262,7 @@ class Grid:
             min_height: Optional[str] = None,
     ):
         self.breakpoint = breakpoint
-        """The minimum viewport width at which to use this grid. A breakpoint value of 0 matches all viewport widths, unless other breakpoints are set.  Typical slabs are: 0-576 for extra small devices (portrait phones), 576-768  for small devices (landscape phones), 768-992  for medium devices (tablets), 992-1200 for large devices (desktops), 1200+ for extra large devices (large desktops)."""
+        """The minimum viewport width at which to use this grid. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set."""
         self.columns = columns
         """The specifications for the columns in this grid. Defaults to 12 columns, each set to `1fr` (1 fraction, or 1/12th grid width)."""
         self.rows = rows
@@ -5310,7 +5310,7 @@ class Grid:
         __d_min_width: Any = __d.get('min_width')
         __d_height: Any = __d.get('height')
         __d_min_height: Any = __d.get('min_height')
-        breakpoint: int = __d_breakpoint
+        breakpoint: str = __d_breakpoint
         columns: List[str] = __d_columns
         rows: List[str] = __d_rows
         width: Optional[str] = __d_width

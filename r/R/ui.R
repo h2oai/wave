@@ -2669,14 +2669,15 @@ ui_markup_card <- function(
 #' No documentation available.
 #'
 #' @param breakpoint The minimum viewport width at which to use this grid.
-#'   A breakpoint value of 0 matches all viewport widths, unless other breakpoints are set.
+#'   Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset.
+#'   The named presets are:
+#'   'xs': '0px' for extra small devices (portrait phones),
+#'   's': '576px' for small devices (landscape phones),
+#'   'm': '768px' for medium devices (tablets),
+#'   'l': '992px' for large devices (desktops),
+#'   'xl': '1200px' for extra large devices (large desktops).
 #'   
-#'   Typical slabs are:
-#'   0-576 for extra small devices (portrait phones),
-#'   576-768  for small devices (landscape phones),
-#'   768-992  for medium devices (tablets),
-#'   992-1200 for large devices (desktops),
-#'   1200+ for extra large devices (large desktops).
+#'   A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set.
 #' @param columns The specifications for the columns in this grid. Defaults to 12 columns, each set to `1fr` (1 fraction, or 1/12th grid width).
 #' @param rows The specifications for rows in this grid. Defaults to 10 rows, each set to `1fr` (1 fraction, or 1/10th grid height).
 #' @param width The width of the grid. Defaults to `100%`.
@@ -2694,7 +2695,7 @@ ui_grid <- function(
   min_width = NULL,
   height = NULL,
   min_height = NULL) {
-  .guard_scalar("breakpoint", "numeric", breakpoint)
+  .guard_scalar("breakpoint", "character", breakpoint)
   .guard_vector("columns", "character", columns)
   .guard_vector("rows", "character", rows)
   .guard_scalar("width", "character", width)
