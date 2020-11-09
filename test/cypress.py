@@ -60,6 +60,7 @@ class TempDir:
 def run_app_with_test(
     app_module: Optional[str],
     app_script: Optional[str],
+    wave_module: Optional[str],
     test_dir: str,
     delay: int,
     browser: Optional[str],
@@ -71,6 +72,8 @@ def run_app_with_test(
         with TempDir(test_dir / "cypress/integration") as spec_dir:
             if app_script:
                 cmd = ["python", app_script]
+            elif wave_module:
+                cmd = ["wave", "run", wave_module]
             else:
                 cmd = ["python", "-m", app_module]
             with Process(
@@ -129,7 +132,7 @@ def default_web_dir() -> Path:
 
 
 def default_wave_path() -> Path:
-    wave_bin = wave_root() / "wave"
+    wave_bin = wave_root() / "waved"
     return wave_bin if wave_bin.is_file() else None
 
 
@@ -182,6 +185,7 @@ def main():
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-s", "--app-script", type=Path, help="python script with wave app")
     group.add_argument("-m", "--app-module", help="python module with wave app")
+    group.add_argument("-w", "--wave-module", help="wave module of wave app")
 
     args = parser.parse_args()
     logging.basicConfig(
