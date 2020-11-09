@@ -61,7 +61,7 @@ export async function read_file(app_name: string, file_name: string) {
 }
 
 export async function write_file(app_name: string, file_name: string, file_content: string) {
-  return await rpc('write_file', { app_name, file_name, file_content })
+  return await rpc<void>('write_file', { app_name, file_name, file_content })
 }
 
 export async function rename_file(app_name: string, file_name: string, new_file_name: string) {

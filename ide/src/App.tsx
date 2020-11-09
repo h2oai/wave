@@ -1,8 +1,9 @@
-import AppPage from '@/pages/AppPage';
-import HomePage from '@/pages/HomePage';
-import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { bond } from './dataflow';
+import Dialog from "@/components/dialog"
+import AppPage from '@/pages/AppPage'
+import HomePage from '@/pages/HomePage'
+import React from 'react'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { bond } from './dataflow'
 
 export default bond(() => {
   const
@@ -13,6 +14,7 @@ export default bond(() => {
             <Route path='/' exact={true} component={HomePage} />
             <Route path='/app/:name' exact={false} component={AppPage} />
           </Switch>
+          <Dialog />
         </BrowserRouter>
       </div>
     )

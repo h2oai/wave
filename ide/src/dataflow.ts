@@ -156,3 +156,16 @@ export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) =>
     }
   }
 }
+
+
+type Store = {
+  dialogB: Box<{
+    content: JSX.Element | null
+    footer: JSX.Element | null
+    title: string
+  } | null>
+}
+
+export const store: Store = {
+  dialogB: box(null),
+}

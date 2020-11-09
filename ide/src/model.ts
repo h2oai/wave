@@ -3,9 +3,9 @@ import { create_app, list_apps, read_file, start_app, stop_app } from '@/ide'
 
 export type Editor = {
   contentB: Box<string>
-  loadApp: () => Promise<void>
   startApp: () => Promise<void>
   stopApp: () => Promise<void>
+  createAppIfNotExists: () => Promise<void>
 }
 
 export const
@@ -18,18 +18,12 @@ export const
           await create_app(appName)
         }
       },
-      loadApp = async () => {
-        await createAppIfNotExists() // temporary hack
-        const content = await read_file(appName, 'app.py')
-        contentB(content)
-      },
       startApp = async () => {
-        await createAppIfNotExists() // temporary hack
         await start_app(appName)
       },
       stopApp = async () => {
         await stop_app(appName)
       }
 
-    return { contentB, loadApp, startApp, stopApp }
+    return { contentB, startApp, stopApp, createAppIfNotExists }
   }
