@@ -177,7 +177,7 @@ def main():
     )
     parser.add_argument(
         "-m",
-        "--module",
+        "--app-module",
         help="python module with wave app",
         type=str,
         default="src.app",
