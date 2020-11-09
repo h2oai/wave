@@ -59,7 +59,6 @@ class TempDir:
 
 def run_app_with_test(
     app_module: Optional[str],
-    app_script: Optional[str],
     test_dir: str,
     delay: int,
     browser: Optional[str],
@@ -69,10 +68,7 @@ def run_app_with_test(
 ):
     def do_run():
         with TempDir(test_dir / "cypress/integration") as spec_dir:
-            if app_script:
-                cmd = ["python", app_script]
-            else:
-                cmd = ["wave", "run", app_module]
+            cmd = ["wave", "run", app_module]
             with Process(
                 cmd=cmd,
                 env={"CYPRESS_INTEGRATION_TEST_DIR": spec_dir},
@@ -179,8 +175,11 @@ def main():
         default=default_web_dir(),
         help='directory to serve Wave web assets from (default "./www")',
     )
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("-m", "--app-module", help="python module with wave app")
+    parser.add_argument(
+        "-m",
+        "--module",
+        help="python module with wave app",
+    )
 
     args = parser.parse_args()
     logging.basicConfig(
