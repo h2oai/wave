@@ -3,10 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/h2oai/wave"
+	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
+	"strings"
+)
 
-	"github.com/h2oai/wave"
+const (
+	envVarNamePrefix = "H2O_WAVE"
 )
 
 var (
@@ -25,22 +31,22 @@ func main() {
 		version bool
 	)
 
-	flag.BoolVar(&version, "version", false, "print version and exit")
-	flag.StringVar(&conf.Listen, "listen", ":55555", "listen on this address")
-	flag.StringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from")
-	flag.StringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
-	flag.StringVar(&conf.AccessKeyID, "access-key-id", "access_key_id", "default access key ID")
-	flag.StringVar(&conf.AccessKeySecret, "access-key-secret", "access_key_secret", "default access key secret")
-	flag.StringVar(&conf.Init, "init", "", "initialize site content from AOF log")
-	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
-	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
-	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
-	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
-	flag.StringVar(&conf.OIDCClientID, "oidc-client-id", "", "OIDC client ID")
-	flag.StringVar(&conf.OIDCClientSecret, "oidc-client-secret", "", "OIDC client secret")
-	flag.StringVar(&conf.OIDCProviderURL, "oidc-provider-url", "", "OIDC provider URL")
-	flag.StringVar(&conf.OIDCRedirectURL, "oidc-redirect-url", "", "OIDC redirect URL")
-	flag.StringVar(&conf.OIDCEndSessionURL, "oidc-end-session-url", "", "OIDC end session URL")
+	boolFlagWithDefault(&version, "version", false, "print version and exit")
+	stringFlagWithDefault(&conf.Listen, "listen", ":55555", "listen on this address")
+	stringFlagWithDefault(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from")
+	stringFlagWithDefault(&conf.DataDir, "data-dir", "./data", "directory to store site data")
+	stringFlagWithDefault(&conf.AccessKeyID, "access-key-id", "access_key_id", "default access key ID")
+	stringFlagWithDefault(&conf.AccessKeySecret, "access-key-secret", "access_key_secret", "default access key secret")
+	stringFlagWithDefault(&conf.Init, "init", "", "initialize site content from AOF log")
+	stringFlagWithDefault(&conf.Compact, "compact", "", "compact AOF log")
+	stringFlagWithDefault(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
+	stringFlagWithDefault(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
+	boolFlagWithDefault(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
+	stringFlagWithDefault(&conf.OIDCClientID, "oidc-client-id", "", "OIDC client ID")
+	stringFlagWithDefault(&conf.OIDCClientSecret, "oidc-client-secret", "", "OIDC client secret")
+	stringFlagWithDefault(&conf.OIDCProviderURL, "oidc-provider-url", "", "OIDC provider URL")
+	stringFlagWithDefault(&conf.OIDCRedirectURL, "oidc-redirect-url", "", "OIDC redirect URL")
+	stringFlagWithDefault(&conf.OIDCEndSessionURL, "oidc-end-session-url", "", "OIDC end session URL")
 
 	flag.Parse()
 
@@ -56,4 +62,41 @@ func main() {
 	conf.BuildDate = BuildDate
 
 	wave.Run(conf)
+}
+
+func stringFlagWithDefault(p *string, name string, defaultValue string, usage string) {
+	flag.StringVar(p, name, lookupStringEnv(envVarName(name), defaultValue), usage)
+}
+
+func boolFlagWithDefault(p *bool, name string, defaultValue bool, usage string) {
+	envVal, err := lookupBoolEnv(envVarName(name), defaultValue)
+	if err != nil {
+		panic(err)
+	}
+	flag.BoolVar(p, name, envVal, usage)
+}
+
+func envVarName(n string) string {
+	envVar := strings.ToUpper(strings.ReplaceAll(n, "-", "_"))
+	return fmt.Sprintf("%s_%s", envVarNamePrefix, envVar)
+}
+
+func lookupStringEnv(name string, defaultValue string) string {
+	val, found := os.LookupEnv(name)
+	if !found {
+		return defaultValue
+	}
+	return val
+}
+
+func lookupBoolEnv(name string, defaultValue bool) (bool, error) {
+	rawVal, found := os.LookupEnv(name)
+	if !found {
+		return defaultValue, nil
+	}
+	val, err := strconv.ParseBool(rawVal)
+	if err != nil {
+		return false, fmt.Errorf("failed parsing %s: %v", name, err)
+	}
+	return val, nil
 }
