@@ -52,6 +52,10 @@ Finally, run the tour:
 wave run --no-reload examples.tour
 ```
 
+:::tip
+To run the application without sourcing the environment first, use `./venv/bin/wave run --no-reload examples.tour`
+:::
+
 ## Step 3: Enjoy the tour
 
 
