@@ -9,11 +9,12 @@ slug: /enterprise/developer-guide
 Each app has to be bundled as a zip archive (commonly used with suffix `.wave`)
 consisting of:
 
-* `app.toml` - the platform configuration file
+* `app.toml` - required; the platform configuration file
 * `static/` - static asset directory, including the app icon (a png file starting with `icon`)
   and screenshots (files starting with `screenshot`)
 * `requirements.txt` - pip-managed dependencies of the app (can contain references to `.whl` files
   included in the `.wave` using paths relative to the archive root)
+* `packages.txt` - OS-managed dependencies of the app
 * app source code
 
 You can quickly create a `.wave` archive by running `h2o bundle` in your app git repository
@@ -30,6 +31,7 @@ Name = "ai.h2o.wave.my-app"
 Version = "0.0.1"
 Title = "My awesome app"
 Description = "This is my awesome app"
+LongDescription = "LongDescription.md"
 Category = "Other"
 Keywords = ["awesome"]
 
@@ -76,7 +78,11 @@ string
 
 * `App`
   * `Title` - a human-oriented name of the app for presentation in UI/CLI; string
-  * `Description` - a multiline description of the app for presentation in UI/CLI; string
+  * `Description` - a single-line description of the app for presentation in UI/CLI; string
+  * `LongDescription` - a path to a file, relative to the archive root, containing additional
+        multi-line markdown description of the app; string;
+        although there is no actual restriction of the Markdown format, it is recommended to limit
+        it to bullet-point lists (`*`), H3 headings (`###`), and hyperlinks (`[]()`)
   * `Category` - category for organizing apps into groups, string
       (UI recognizes `All`, `Data Science`, `Financial Services`, `Healthcare`, `Insurance`,
       `Manufacturing`, `Marketing`, `Retail`, `Sales`, `Telecommunications`, and `Other`)
@@ -114,16 +120,21 @@ string
 
 ## Runtime Environment
 
-The platform configures the app instance runtime environment, i.e., OS, OS dependencies, location of the app code/venv, etc.
+The platform sets the app instance runtime environment, i.e., OS, Wave/Python version, location of the app code/venv, etc.
 
-Developers can specify the pip-managed dependencies of the app via `requirements.txt` (can contain
+Developers can specify the pip-managed dependencies of the app via standard `requirements.txt` (can contain
 references to `.whl` files included in the `.wave` using paths relative to the archive root)
+
+Developers can also specify the OS-managed dependencies of the app via `packages.txt` in a format
+similar to `requirements.txt`: one package name per line.
+These will be installed as given using the native package manager of the platform OS
+(e.g., `apt-get install` for Debian).
 
 Developers can further customize the runtime environment by [Utilizing Secrets](#utilizing-secrets).
 
 :::note
 At this moment, the platform does not provide any provisions for developers to customize the OS,
-native OS dependencies, Qd version, etc.
+Python, or Wave versions.
 
 We are actively working on improving this.
 :::
