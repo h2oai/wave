@@ -36,9 +36,13 @@ export default bond(({ contentB, onContentSave, onContentChange }: EditorProps) 
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
         run: ed => onContentSave(ed.getValue())
       })
-
-      // Flush means the content was changed programatically.
-      ed.onDidChangeModelContent(({ isFlush }) => { if (!isFlush) onContentChange(ed.getValue()) })
+      ed.onDidChangeModelContent(({ isFlush }) => {
+        // Flush means the content was changed programatically.
+        if (!isFlush) onContentChange(ed.getValue())
+        // Focus editor when content was set programatically.
+        else ed.focus()
+      })
+      ed.focus()
       on(contentB, content => ed.setValue(content))
     },
     dispose = () => ed.dispose(),
