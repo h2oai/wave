@@ -4,7 +4,7 @@ import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker'
 import React from 'react'
 
 declare global {
-  interface Window { MonacoEnvironment: monaco.Environment | undefined; }
+  interface Window { MonacoEnvironment: monaco.Environment | undefined }
 }
 self.MonacoEnvironment = { getWorker: () => new EditorWorker() }
 

@@ -213,11 +213,11 @@ export default bond(() => {
     editor = newEditor(appName),
     isLoadingB = box(true),
     dirtyFileContentMap = new Map<string, string>(),
-    loadFiles = async () => {
+    loadFiles = async (nextActiveFile?: string) => {
       const files = await list_files(appName)
       filesB(files.map(name => ({ name, isDirty: false })))
       if (files.length) {
-        const activeFile = files[0];
+        const activeFile = nextActiveFile || files[0];
         activeFileB(activeFile)
         await readFile(activeFile)
       }
@@ -226,9 +226,7 @@ export default bond(() => {
       fileName = `${fileName}.py`
       const content = ''
       await write_file(appName, fileName, content)
-      await loadFiles()
-      activeFileB(fileName)
-      editor.contentB(content)
+      await loadFiles(fileName)
       store.dialogB(null)
     },
     readFile = async (fileName: string) => {
@@ -243,8 +241,7 @@ export default bond(() => {
     renameFile = async (newName: string) => {
       newName = `${newName}.py`
       await rename_file(appName, activeFileB(), newName)
-      await loadFiles()
-      activeFileB(newName)
+      await loadFiles(newName)
       store.dialogB(null)
     },
     onContentSave = async (newContent: string) => {
