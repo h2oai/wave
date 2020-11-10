@@ -82,7 +82,7 @@ const FileActions = bond(({ deleteFile, renameFile, activeFileB }: FileActionsPr
 })
 
 type FileToolbarProps = {
-  filesB: Box<string[]>
+  filesB: Box<File[]>
   activeFileB: Box<string>
   addNewFile: (fileName: string) => Promise<void>
   readFile: (fileName: string) => Promise<void>
@@ -123,11 +123,19 @@ const FileToolbar = bond(({ addNewFile, readFile, filesB, activeFileB }: FileToo
       activeFileB(selectedFile)
       readFile(item.props.itemKey || 'app.py')
     },
+    onRenderItemLink = (isDirty: boolean) => (props?: Fluent.IPivotItemProps, defaultRenderer?: (link?: Fluent.IPivotItemProps) => JSX.Element | null) =>
+      !props || !defaultRenderer ? null : (
+        <span style={{ position: 'relative' }}>
+          {defaultRenderer(props)}
+          {isDirty && <span style={{ position: 'absolute', top: -5, right: -10 }}>*</span>}
+        </span>
+      )
+    ,
     render = () => (
       <>
         <Fluent.Stack horizontal verticalAlign='center'>
           <Fluent.Pivot selectedKey={activeFileB()} linkSize={Fluent.PivotLinkSize.large} onLinkClick={onLinkClick}>
-            {filesB().map(f => <Fluent.PivotItem key={f} itemKey={f.replace(/ \*/g, '')} headerText={f} />)}
+            {filesB().map(({ name, isDirty }) => <Fluent.PivotItem key={name} itemKey={name} headerText={name} onRenderItemLink={onRenderItemLink(isDirty)} />)}
           </Fluent.Pivot>
           <Fluent.TooltipHost content="Add another file" id='add-file-tooltip'>
             <Fluent.IconButton data-test='add-file' iconProps={{ iconName: 'Add' }} onClick={onAddFile} />
@@ -191,18 +199,23 @@ const
     },
   }
 
+type File = {
+  name: string,
+  isDirty: boolean
+}
 
 export default bond(() => {
   const
     appName = matchPath<{ name: string }>(window.location.pathname, { path: "/app/:name" })?.params.name || 'Untitled',
     viewStyleB = box<ViewType>(ViewType.SPLIT),
-    filesB = box<string[]>([]),
+    filesB = box<File[]>([]),
     activeFileB = box('app.py'),
     editor = newEditor(appName),
     isLoadingB = box(true),
+    dirtyFileContentMap = new Map<string, string>(),
     loadFiles = async () => {
       const files = await list_files(appName)
-      filesB(files)
+      filesB(files.map(name => ({ name, isDirty: false })))
       if (files.length) {
         const activeFile = files[0];
         activeFileB(activeFile)
@@ -218,9 +231,8 @@ export default bond(() => {
       store.dialogB(null)
     },
     readFile = async (fileName: string) => {
-      const content = await read_file(appName, fileName)
+      const content = dirtyFileContentMap.get(fileName) || await read_file(appName, fileName)
       editor.contentB(content)
-      onDirtyChange(false)
     },
     deleteFile = async () => {
       await delete_file(appName, activeFileB())
@@ -234,15 +246,16 @@ export default bond(() => {
       await loadFiles()
       store.dialogB(null)
     },
-    onContentChange = (newContent: string) => write_file(appName, activeFileB(), newContent),
-    onDirtyChange = (isDirty: boolean) => {
-      filesB(filesB().map(f => {
-        // TODO: refactor using reasonable CSS
-        return isDirty && f.startsWith(activeFileB())
-          ? f.endsWith('*') ? f : `${f} *`
-          : f.replace(/ \*/g, '')
-      }))
+    onContentSave = async (newContent: string) => {
+      await write_file(appName, activeFileB(), newContent)
+      dirtyFileContentMap.delete(activeFileB())
+      onDirtyChange()
     },
+    onContentChange = (newContent: string) => {
+      dirtyFileContentMap.set(activeFileB(), newContent)
+      onDirtyChange()
+    },
+    onDirtyChange = () => filesB(filesB().map(({ name }) => ({ name, isDirty: dirtyFileContentMap.has(name) }))),
     init = async () => {
       await editor.createAppIfNotExists()
       await loadFiles()
@@ -272,7 +285,7 @@ export default bond(() => {
                 <FileToolbar addNewFile={addNewFile} readFile={readFile} filesB={filesB} activeFileB={activeFileB} />
                 <Fluent.Stack horizontal styles={{ root: { marginTop: 5, width: '100%', height: 'calc(100vh - 122px)' } }}>
                   <div data-test='editor-window' style={{ position: 'relative', ...commonStyles, ...viewStyles[viewStyleB()].editor }}>
-                    <Editor contentB={editor.contentB} onContentChange={onContentChange} onDirtyChange={onDirtyChange} />
+                    <Editor contentB={editor.contentB} onContentSave={onContentSave} onContentChange={onContentChange} />
                     <FileActions deleteFile={deleteFile} renameFile={renameFile} activeFileB={activeFileB} />
                   </div>
                   <div data-test='app-window' style={{ ...commonStyles, ...viewStyles[viewStyleB()].app }}>

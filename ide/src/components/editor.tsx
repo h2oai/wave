@@ -10,11 +10,11 @@ self.MonacoEnvironment = { getWorker: () => new EditorWorker() }
 
 type EditorProps = {
   contentB: Box<string>,
-  onDirtyChange: (val: boolean) => void
-  onContentChange: (val: string) => Promise<void>
+  onContentSave: (val: string) => Promise<void>
+  onContentChange: (val: string) => void
 }
 
-export default bond(({ contentB, onDirtyChange, onContentChange }: EditorProps) => {
+export default bond(({ contentB, onContentSave, onContentChange }: EditorProps) => {
   let ed: monaco.editor.IStandaloneCodeEditor
 
   const
@@ -34,13 +34,11 @@ export default bond(({ contentB, onDirtyChange, onContentChange }: EditorProps) 
         id: 'save-content',
         label: 'Save',
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
-        run: async (ed) => {
-          await onContentChange(ed.getValue())
-          onDirtyChange(false)
-        }
+        run: ed => onContentSave(ed.getValue())
       })
 
-      ed.onDidChangeModelContent(() => onDirtyChange(true))
+      // Flush means the content was changed programatically.
+      ed.onDidChangeModelContent(({ isFlush }) => { if (!isFlush) onContentChange(ed.getValue()) })
       on(contentB, content => ed.setValue(content))
     },
     dispose = () => ed.dispose(),
