@@ -206,7 +206,7 @@ type File = {
 
 export default bond(() => {
   const
-    appName = matchPath<{ name: string }>(window.location.pathname, { path: "/app/:name" })?.params.name || 'Untitled',
+    appName = matchPath<{ name: string }>(window.location.pathname, { path: `${BASENAME ? `/${BASENAME}` : ''}/app/:name` })?.params.name || 'Untitled',
     viewStyleB = box<ViewType>(ViewType.SPLIT),
     filesB = box<File[]>([]),
     activeFileB = box('app.py'),
