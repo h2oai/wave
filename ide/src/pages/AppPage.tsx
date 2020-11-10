@@ -227,6 +227,7 @@ export default bond(() => {
       const content = ''
       await write_file(appName, fileName, content)
       await loadFiles()
+      activeFileB(fileName)
       editor.contentB(content)
       store.dialogB(null)
     },
@@ -242,8 +243,8 @@ export default bond(() => {
     renameFile = async (newName: string) => {
       newName = `${newName}.py`
       await rename_file(appName, activeFileB(), newName)
-      activeFileB(newName)
       await loadFiles()
+      activeFileB(newName)
       store.dialogB(null)
     },
     onContentSave = async (newContent: string) => {
