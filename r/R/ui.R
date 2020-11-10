@@ -2686,6 +2686,10 @@ ui_markup_card <- function(
 #'   if the grid width exceeds the available viewport width.
 #' @param height The height of the grid. Defaults to `auto`.
 #' @param min_height The minimum height of the grid.
+#' @param margin_left The left margin.
+#' @param margin_top The top margin.
+#' @param margin_right The right margin.
+#' @param margin_bottom The bottom margin.
 #' @return A Grid instance.
 ui_grid <- function(
   breakpoint,
@@ -2694,7 +2698,11 @@ ui_grid <- function(
   width = NULL,
   min_width = NULL,
   height = NULL,
-  min_height = NULL) {
+  min_height = NULL,
+  margin_left = NULL,
+  margin_top = NULL,
+  margin_right = NULL,
+  margin_bottom = NULL) {
   .guard_scalar("breakpoint", "character", breakpoint)
   .guard_vector("columns", "character", columns)
   .guard_vector("rows", "character", rows)
@@ -2702,6 +2710,10 @@ ui_grid <- function(
   .guard_scalar("min_width", "character", min_width)
   .guard_scalar("height", "character", height)
   .guard_scalar("min_height", "character", min_height)
+  .guard_scalar("margin_left", "character", margin_left)
+  .guard_scalar("margin_top", "character", margin_top)
+  .guard_scalar("margin_right", "character", margin_right)
+  .guard_scalar("margin_bottom", "character", margin_bottom)
   .o <- list(
     breakpoint=breakpoint,
     columns=columns,
@@ -2709,7 +2721,11 @@ ui_grid <- function(
     width=width,
     min_width=min_width,
     height=height,
-    min_height=min_height)
+    min_height=min_height,
+    margin_left=margin_left,
+    margin_top=margin_top,
+    margin_right=margin_right,
+    margin_bottom=margin_bottom)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Grid"))
   return(.o)
 }

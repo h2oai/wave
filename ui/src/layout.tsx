@@ -86,6 +86,14 @@ export interface Grid {
   height?: S
   /** The minimum height of the grid. */
   min_height?: S
+  /** The left margin. */
+  margin_left?: S
+  /** The top margin. */
+  margin_top?: S
+  /** The right margin. */
+  margin_right?: S
+  /** The bottom margin. */
+  margin_bottom?: S
 }
 
 const
@@ -126,12 +134,10 @@ const
     return isNaN(u) ? s : `${u}fr`
   }).join(' '),
   parseBreakpoint = (spec: S): U => parseInt(presetBreakpoints[spec] ?? spec, 10),
-  parseBox = (spec: S): Slot => {
+  parseBox = (grid: Grid, index: U, spec: S): Slot => {
     if (!spec) return badPlacement
 
-    const
-      { grid, index } = gridB(),
-      s = spec.split(/\s*\/\s*/)[index]
+    const s = spec.split(/\s*\/\s*/)[index]
 
     if (!s) return badPlacement
 
@@ -273,7 +279,8 @@ export const
     const
       render = () => {
         const
-          slot = parseBox(c.state.box),
+          { grid, index } = gridB(),
+          slot = parseBox(grid, index, c.state.box),
           { x, y, w, h } = slot,
           display = slot === badPlacement ? 'none' : 'block',
           zIndex = c.name === '__unhandled_error__' ? 1 : 'initial',
@@ -311,6 +318,7 @@ export const
             minWidth: grid.min_width ?? undefined,
             height: grid.height ?? 'auto',
             minHeight: grid.min_height ?? undefined,
+            margin: `${grid.margin_top ?? 0} ${grid.margin_right ?? 0} ${grid.margin_bottom ?? 0} ${grid.margin_left ?? 0}`,
           }
         return (
           <div data-test={page.key} className={css.grid} style={style}>

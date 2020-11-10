@@ -2362,6 +2362,10 @@ def grid(
         min_width: Optional[str] = None,
         height: Optional[str] = None,
         min_height: Optional[str] = None,
+        margin_left: Optional[str] = None,
+        margin_top: Optional[str] = None,
+        margin_right: Optional[str] = None,
+        margin_bottom: Optional[str] = None,
 ) -> Grid:
     """No documentation available.
 
@@ -2373,6 +2377,10 @@ def grid(
         min_width: The minimum width of the grid. Not specifying a min_width will make the grid width equal to the viewport width if the grid width exceeds the available viewport width.
         height: The height of the grid. Defaults to `auto`.
         min_height: The minimum height of the grid.
+        margin_left: The left margin.
+        margin_top: The top margin.
+        margin_right: The right margin.
+        margin_bottom: The bottom margin.
     Returns:
         A `h2o_wave.types.Grid` instance.
     """
@@ -2384,6 +2392,10 @@ def grid(
         min_width,
         height,
         min_height,
+        margin_left,
+        margin_top,
+        margin_right,
+        margin_bottom,
     )
 
 

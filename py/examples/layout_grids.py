@@ -25,6 +25,8 @@ page['meta'] = ui.meta_card(box='', grids=[
         columns=['250px', 'auto'],
         # Create 4 rows: 80px for the header, and 3 others for content, sized automatically.
         rows=['80px'] + ['auto'] * 3,
+        # 15px bottom margin
+        margin_bottom='15px',
     ),
     ui.grid(
         # If the viewport width >= 1200:
@@ -35,17 +37,29 @@ page['meta'] = ui.meta_card(box='', grids=[
         rows=['80px', '1', '2'],
         # Fix width to 1200px.
         width='1200px',
+        # 5px bottom margin
+        margin_bottom='15px',
     ),
 ])
-
-page['header'] = ui.markdown_card(
+page['header'] = ui.header_card(
     # The box attribute for a card specifies where to place the card for each of our three viewport sizes above.
     # If the viewport width >= 0: use 1 1 1 1.
     # If the viewport width >= 768: use 1 1 2 1.
     # If the viewport width >= 1200: use 1 1 3 1.
     box='1 1 1 1 / 1 1 2 1 / 1 1 3 1',
-    title='Header',
-    content='',
+    title='Lorem Ipsum',
+    subtitle='Excepteur sint occaecat cupidatat',
+    nav=[
+        ui.nav_group('Menu', items=[
+            ui.nav_item(name='#menu/spam', label='Spam'),
+            ui.nav_item(name='#menu/ham', label='Ham'),
+            ui.nav_item(name='#menu/eggs', label='Eggs'),
+        ]),
+        ui.nav_group('Help', items=[
+            ui.nav_item(name='#about', label='About'),
+            ui.nav_item(name='#support', label='Support'),
+        ])
+    ],
 )
 page['controls'] = ui.markdown_card(
     box='1 2 1 1 / 1 2 1 -1 / 1 2 1 -1',

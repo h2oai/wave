@@ -5260,6 +5260,10 @@ class Grid:
             min_width: Optional[str] = None,
             height: Optional[str] = None,
             min_height: Optional[str] = None,
+            margin_left: Optional[str] = None,
+            margin_top: Optional[str] = None,
+            margin_right: Optional[str] = None,
+            margin_bottom: Optional[str] = None,
     ):
         self.breakpoint = breakpoint
         """The minimum viewport width at which to use this grid. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set."""
@@ -5275,6 +5279,14 @@ class Grid:
         """The height of the grid. Defaults to `auto`."""
         self.min_height = min_height
         """The minimum height of the grid."""
+        self.margin_left = margin_left
+        """The left margin."""
+        self.margin_top = margin_top
+        """The top margin."""
+        self.margin_right = margin_right
+        """The right margin."""
+        self.margin_bottom = margin_bottom
+        """The bottom margin."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5292,6 +5304,10 @@ class Grid:
             min_width=self.min_width,
             height=self.height,
             min_height=self.min_height,
+            margin_left=self.margin_left,
+            margin_top=self.margin_top,
+            margin_right=self.margin_right,
+            margin_bottom=self.margin_bottom,
         )
 
     @staticmethod
@@ -5310,6 +5326,10 @@ class Grid:
         __d_min_width: Any = __d.get('min_width')
         __d_height: Any = __d.get('height')
         __d_min_height: Any = __d.get('min_height')
+        __d_margin_left: Any = __d.get('margin_left')
+        __d_margin_top: Any = __d.get('margin_top')
+        __d_margin_right: Any = __d.get('margin_right')
+        __d_margin_bottom: Any = __d.get('margin_bottom')
         breakpoint: str = __d_breakpoint
         columns: List[str] = __d_columns
         rows: List[str] = __d_rows
@@ -5317,6 +5337,10 @@ class Grid:
         min_width: Optional[str] = __d_min_width
         height: Optional[str] = __d_height
         min_height: Optional[str] = __d_min_height
+        margin_left: Optional[str] = __d_margin_left
+        margin_top: Optional[str] = __d_margin_top
+        margin_right: Optional[str] = __d_margin_right
+        margin_bottom: Optional[str] = __d_margin_bottom
         return Grid(
             breakpoint,
             columns,
@@ -5325,6 +5349,10 @@ class Grid:
             min_width,
             height,
             min_height,
+            margin_left,
+            margin_top,
+            margin_right,
+            margin_bottom,
         )
 
 
