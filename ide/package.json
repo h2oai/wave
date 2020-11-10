@@ -2,6 +2,8 @@
   "name": "monaco-esm-webpack-typescript",
   "scripts": {
     "start": "npx webpack-dev-server -d",
+    "test": "npx jest --watch",
+    "test:ci": "CI=true npx jest",
     "build": "NODE_ENV='production' npx webpack --progress"
   },
   "dependencies": {
@@ -12,9 +14,12 @@
     "@babel/core": "^7.11.6",
     "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.11.5",
-    "@babel/preset-react": "^7.10.4",
-    "@babel/preset-typescript": "^7.10.4",
+    "@babel/preset-react": "^7.12.5",
+    "@babel/preset-typescript": "^7.12.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.2",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.1",
+    "@types/jest": "^26.0.15",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.6",
@@ -23,6 +28,7 @@
     "file-loader": "^6.1.0",
     "glob": "^7.1.6",
     "html-webpack-plugin": "^4.4.1",
+    "jest": "^26.6.3",
     "monaco-editor": "^0.21.0",
     "monaco-editor-webpack-plugin": "^2.0.0",
     "prettier": "^2.1.2",

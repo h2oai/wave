@@ -18,7 +18,7 @@ const FileActions = bond(({ deleteFile, renameFile, activeFileB }: FileActionsPr
   const
     onDeleteFile = () => {
       store.dialogB({
-        title: 'Delete file',
+        title: 'Delete File',
         content: (
           <Fluent.DialogContent styles={{ header: { display: 'none' } }}>
             <Fluent.Text block>Are you sure you want to proceed?</Fluent.Text>
@@ -38,7 +38,7 @@ const FileActions = bond(({ deleteFile, renameFile, activeFileB }: FileActionsPr
         submit = () => renameFile(newName)
 
       store.dialogB({
-        title: 'Rename file',
+        title: 'Rename File',
         content: (
           <Fluent.DialogContent styles={{ header: { display: 'none' }, inner: { minHeight: 85 } }}>
             <Fluent.TextField
@@ -62,7 +62,7 @@ const FileActions = bond(({ deleteFile, renameFile, activeFileB }: FileActionsPr
         iconProps: { iconName: 'Delete' },
         onClick: onDeleteFile,
         tooltipHostProps: { content: 'Delete File' },
-        buttonStyles: { root: { background: 'transparent' } }
+        buttonStyles: { root: { background: 'transparent' } },
       },
       {
         key: 'rename',
@@ -130,7 +130,7 @@ const FileToolbar = bond(({ addNewFile, readFile, filesB, activeFileB }: FileToo
             {filesB().map(f => <Fluent.PivotItem key={f} itemKey={f.replace(/ \*/g, '')} headerText={f} />)}
           </Fluent.Pivot>
           <Fluent.TooltipHost content="Add another file" id='add-file-tooltip'>
-            <Fluent.IconButton iconProps={{ iconName: 'Add' }} onClick={onAddFile} />
+            <Fluent.IconButton data-test='add-file' iconProps={{ iconName: 'Add' }} onClick={onAddFile} />
           </Fluent.TooltipHost>
         </Fluent.Stack>
       </>
@@ -271,11 +271,11 @@ export default bond(() => {
               <>
                 <FileToolbar addNewFile={addNewFile} readFile={readFile} filesB={filesB} activeFileB={activeFileB} />
                 <Fluent.Stack horizontal styles={{ root: { marginTop: 5, width: '100%', height: 'calc(100vh - 122px)' } }}>
-                  <div style={{ position: 'relative', ...commonStyles, ...viewStyles[viewStyleB()].editor }}>
+                  <div data-test='editor-window' style={{ position: 'relative', ...commonStyles, ...viewStyles[viewStyleB()].editor }}>
                     <Editor contentB={editor.contentB} onContentChange={onContentChange} onDirtyChange={onDirtyChange} />
                     <FileActions deleteFile={deleteFile} renameFile={renameFile} activeFileB={activeFileB} />
                   </div>
-                  <div style={{ ...commonStyles, ...viewStyles[viewStyleB()].app }}>
+                  <div data-test='app-window' style={{ ...commonStyles, ...viewStyles[viewStyleB()].app }}>
                     <iframe src={`${IFRAME_URL}/${appName}`} width='100%' height='100%' frameBorder="0" />
                   </div>
                 </Fluent.Stack>

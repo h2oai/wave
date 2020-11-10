@@ -11,7 +11,8 @@
       "es6",
     ],
     "types": [
-      "node"
+      "node",
+      "jest"
     ],
     "baseUrl": ".",
     "jsx": "preserve",
