@@ -46,13 +46,12 @@ func (s *OIDCSessions) remove(key string) {
 
 // OIDCSession represents an OIDC session
 type OIDCSession struct {
-	state        string
-	nonce        string
-	accessToken  string
-	refreshToken string
-	subject      string
-	username     string
-	successURL   string
+	state      string
+	nonce      string
+	subject    string
+	username   string
+	successURL string
+	token      *oauth2.Token
 }
 
 func generateRandomKey(byteCount int) (string, error) {
@@ -67,38 +66,17 @@ func generateRandomKey(byteCount int) (string, error) {
 // OIDCInitHandler handles auth requests
 type OIDCInitHandler struct {
 	sessions     *OIDCSessions
-	clientID     string
-	clientSecret string
-	providerURL  string
-	redirectURL  string
+	oauth2Config oauth2.Config
 }
 
-func newOIDCInitHandler(sessions *OIDCSessions, clientID, clientSecret, providerURL, redirectURL string) http.Handler {
+func newOIDCInitHandler(sessions *OIDCSessions, oauth2Config oauth2.Config) http.Handler {
 	return &OIDCInitHandler{
-		sessions,
-		clientID,
-		clientSecret,
-		providerURL,
-		redirectURL,
+		sessions:     sessions,
+		oauth2Config: oauth2Config,
 	}
 }
 
 func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	oAuth2Provider, err := oidc.NewProvider(r.Context(), h.providerURL)
-	if err != nil {
-		echo(Log{"t": "oidc_provider", "error": err.Error()})
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-
-	oAuth2Config := oauth2.Config{
-		ClientID:     h.clientID,
-		ClientSecret: h.clientSecret,
-		RedirectURL:  h.redirectURL,
-		Endpoint:     oAuth2Provider.Endpoint(),
-		Scopes:       []string{oidc.ScopeOpenID},
-	}
-
 	// `state` is to protect from CSRF (OAuth2 part).
 	state, err := generateRandomKey(4)
 	if err != nil {
@@ -127,25 +105,21 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 	cookie := http.Cookie{Name: oidcSessionKey, Value: sessionID, Path: "/", Expires: expiration}
 	http.SetCookie(w, &cookie)
-	http.Redirect(w, r, oAuth2Config.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
+	http.Redirect(w, r, h.oauth2Config.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
 }
 
 // OAuth2Handler handles OAuth2 requests
 type OAuth2Handler struct {
 	sessions     *OIDCSessions
-	clientID     string
-	clientSecret string
+	oauth2Config oauth2.Config
 	providerURL  string
-	redirectURL  string
 }
 
-func newOAuth2Handler(sessions *OIDCSessions, clientID, clientSecret, providerURL, redirectURL string) http.Handler {
+func newOAuth2Handler(sessions *OIDCSessions, oauth2Config oauth2.Config, providerURL string) http.Handler {
 	return &OAuth2Handler{
-		sessions,
-		clientID,
-		clientSecret,
-		providerURL,
-		redirectURL,
+		sessions:     sessions,
+		oauth2Config: oauth2Config,
+		providerURL:  providerURL,
 	}
 }
 
@@ -189,15 +163,7 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	oAuth2Config := oauth2.Config{
-		ClientID:     h.clientID,
-		ClientSecret: h.clientSecret,
-		RedirectURL:  h.redirectURL,
-		Endpoint:     oAuth2Provider.Endpoint(),
-		Scopes:       []string{oidc.ScopeOpenID},
-	}
-
-	oauth2Token, err := oAuth2Config.Exchange(r.Context(), r.URL.Query().Get("code"))
+	oauth2Token, err := h.oauth2Config.Exchange(r.Context(), r.URL.Query().Get("code"))
 	if err != nil {
 		echo(Log{"t": "oauth2_exchange", "error": "failed exchanging code with provider"})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -211,7 +177,7 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	oidcVerifier := oAuth2Provider.Verifier(&oidc.Config{ClientID: h.clientID})
+	oidcVerifier := oAuth2Provider.Verifier(&oidc.Config{ClientID: h.oauth2Config.ClientID})
 	idToken, err := oidcVerifier.Verify(r.Context(), rawIDToken)
 	if err != nil {
 		echo(Log{"t": "oauth2_oidc_verifier", "error": "failed verifying id_token"})
@@ -239,8 +205,7 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	session.accessToken = oauth2Token.AccessToken
-	session.refreshToken = oauth2Token.RefreshToken
+	session.token = oauth2Token
 	session.subject = idToken.Subject
 	session.username = claims.PreferredUsername
 
@@ -272,6 +237,7 @@ func (h *OIDCLogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Reques
 		}
 
 		query := redirectURL.Query()
+		// TODO (#291): some providers, for example OKTA, require id_token_hint
 		query.Set("post_logout_redirect_uri", r.Host)
 		redirectURL.RawQuery = query.Encode()
 

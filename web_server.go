@@ -1,7 +1,9 @@
 package wave
 
 import (
+	"context"
 	"encoding/json"
+	"golang.org/x/oauth2"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -28,11 +30,12 @@ func newWebServer(
 	users map[string][]byte,
 	oidcEnabled bool,
 	sessions *OIDCSessions,
+	oauth2Config oauth2.Config,
 	www string,
 ) *WebServer {
 	fs := fallback("/", http.FileServer(http.Dir(www)))
 	if oidcEnabled {
-		fs = checkSession(sessions, fs)
+		fs = checkSession(oauth2Config, sessions, fs)
 	}
 	return &WebServer{site, broker, fs, users}
 }
@@ -136,7 +139,7 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func checkSession(sessions *OIDCSessions, h http.Handler) http.Handler {
+func checkSession(oauth2Config oauth2.Config, sessions *OIDCSessions, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if len(path.Ext(r.URL.Path)) > 0 || r.URL.Path == "/_login" {
 			h.ServeHTTP(w, r)
@@ -154,11 +157,23 @@ func checkSession(sessions *OIDCSessions, h http.Handler) http.Handler {
 			return
 		}
 		sessionID := cookie.Value
-		_, ok := sessions.get(sessionID)
+		session, ok := sessions.get(sessionID)
 		if !ok {
 			http.Redirect(w, r, u.String(), http.StatusFound)
 			return
 		}
+
+		t, err := ensureValidOidcToken(r.Context(), oauth2Config, session.token)
+		if err != nil {
+			echo(Log{"t": "access_token_refresh", "error": err.Error()})
+			http.Redirect(w, r, u.String(), http.StatusFound)
+			return
+		}
+		if session.token != t {
+			session.token = t
+			sessions.set(sessionID, session)
+		}
+
 		h.ServeHTTP(w, r)
 	})
 }
@@ -179,4 +194,8 @@ func fallback(prefix string, h http.Handler) http.Handler {
 		r2.URL.Path = prefix
 		h.ServeHTTP(w, r2)
 	})
+}
+
+func ensureValidOidcToken(c context.Context, cfg oauth2.Config, t *oauth2.Token) (*oauth2.Token, error) {
+	return cfg.TokenSource(c, t).Token()
 }
