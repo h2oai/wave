@@ -1,6 +1,6 @@
 import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react'
 import React from 'react'
-import { cards } from './layout'
+import { CardEffect, cards } from './layout'
 import { Tab } from './tabs'
 import { bond, Card, qd, B, S } from './qd'
 
@@ -39,4 +39,4 @@ export const
     return { render, changed }
   })
 
-cards.register('tab', View)
+cards.register('tab', View, CardEffect.Flat)

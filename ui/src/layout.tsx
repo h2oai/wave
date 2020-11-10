@@ -3,7 +3,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
 import { B, bond, box, C, Card, Dict, F, on, Page, parseI, parseU, Rec, S, U, unpack, xid } from './qd'
-import { clas, getTheme } from './theme'
+import { clas, getTheme, palette } from './theme'
 
 type Slot = {
   x: U
@@ -12,7 +12,7 @@ type Slot = {
   h: U
 }
 
-export enum CardEffect { Transparent, Normal, Raised }
+export enum CardEffect { Transparent, Normal, Raised, Flat }
 
 const
   newCardRegistry = () => {
@@ -241,12 +241,11 @@ const
     },
     raised: {
       color: theme.colors.card,
-      backgroundColor: theme.colors.text,
+      backgroundColor: palette.themePrimary,
       boxShadow: `0px 3px 7px ${theme.colors.text3}`,
     },
     normal: {
       backgroundColor: theme.colors.card,
-      borderRadius: 3,
       boxShadow: `0px 3px 5px ${theme.colors.text0}`,
       $nest: {
         '&:hover': {
@@ -254,7 +253,17 @@ const
         }
       },
     },
+    flat: {
+      backgroundColor: theme.colors.card,
+      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+    },
     flush: {
+      $nest: {
+        '>*:first-child': {
+          position: 'absolute',
+          left: 0, top: 0, right: 0, bottom: 0,
+        }
+      }
     },
   })
 
@@ -269,7 +278,12 @@ export const
           display = slot === badPlacement ? 'none' : 'block',
           zIndex = c.name === '__unhandled_error__' ? 1 : 'initial',
           effect = cards.lookup(c.state.view).effect,
-          className = clas(css.slot, effect === CardEffect.Normal ? css.normal : effect === CardEffect.Raised ? css.raised : css.flush)
+          className = clas(css.slot, effect === CardEffect.Normal
+            ? css.normal
+            : effect === CardEffect.Raised
+              ? css.raised
+              : effect == CardEffect.Flat
+                ? css.flat : css.flush)
         return (
           <div className={className} style={{
             display,
