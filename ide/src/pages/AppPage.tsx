@@ -1,20 +1,21 @@
 import Editor from '@/components/editor';
 import { bond, box, Box, store } from '@/dataflow';
-import { list_files, read_file, write_file, delete_file, rename_file, list_apps } from '@/ide';
+import { delete_file, list_files, read_file, rename_file, write_file } from '@/ide';
 import { newEditor } from '@/model';
+import { validateFileName } from '@/utils/validation';
 import * as Fluent from '@fluentui/react';
 import makeLogo from '@static/make-logo.svg';
 import React from 'react';
 import { matchPath } from 'react-router-dom';
-import { validateFileName } from '@/utils/validation';
 
 type FileActionsProps = {
   deleteFile: () => Promise<void>
   renameFile: (fileName: string) => Promise<void>
+  fileNameValidation: (val: string) => string
   activeFileB: Box<string>
 }
 
-const FileActions = bond(({ deleteFile, renameFile, activeFileB }: FileActionsProps) => {
+const FileActions = bond(({ deleteFile, renameFile, activeFileB, fileNameValidation }: FileActionsProps) => {
   const
     onDeleteFile = () => {
       store.dialogB({
@@ -28,14 +29,16 @@ const FileActions = bond(({ deleteFile, renameFile, activeFileB }: FileActionsPr
       })
     },
     onRenameFile = () => {
-      let newName = ''
       const
-        onRenameChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
-          newName = newVal
+        onRenameChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newName = '') => {
           const dialog = store.dialogB()
-          if (dialog) store.dialogB({ ...dialog, footer: <Fluent.PrimaryButton text='Submit' onClick={submit} disabled={!!validateFileName(newName)} /> })
-        },
-        submit = () => renameFile(newName)
+          if (dialog) {
+            const
+              isDisabled = !!fileNameValidation(newName),
+              submit = () => renameFile(newName)
+            store.dialogB({ ...dialog, footer: <Fluent.PrimaryButton text='Submit' onClick={submit} disabled={isDisabled} /> })
+          }
+        }
 
       store.dialogB({
         title: 'Rename File',
@@ -46,13 +49,13 @@ const FileActions = bond(({ deleteFile, renameFile, activeFileB }: FileActionsPr
               suffix='.py'
               defaultValue={activeFileB().substring(0, activeFileB().length - 3)}
               required
-              onGetErrorMessage={validateFileName}
+              onGetErrorMessage={fileNameValidation}
               validateOnLoad={false}
               onChange={onRenameChange}
             />
           </Fluent.DialogContent>
         ),
-        footer: <Fluent.PrimaryButton text='Submit' onClick={submit} disabled={!!activeFileB()} />
+        footer: <Fluent.PrimaryButton text='Submit' disabled />
       })
     },
     commands: Fluent.ICommandBarItemProps[] = [
@@ -84,21 +87,24 @@ const FileActions = bond(({ deleteFile, renameFile, activeFileB }: FileActionsPr
 type FileToolbarProps = {
   filesB: Box<File[]>
   activeFileB: Box<string>
+  fileNameValidation: (val: string) => string
   addNewFile: (fileName: string) => Promise<void>
   readFile: (fileName: string) => Promise<void>
 }
 
-const FileToolbar = bond(({ addNewFile, readFile, filesB, activeFileB }: FileToolbarProps) => {
+const FileToolbar = bond(({ addNewFile, readFile, filesB, activeFileB, fileNameValidation }: FileToolbarProps) => {
   const
     onAddFile = () => {
-      let fileName = ''
       const
-        onNameChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
-          fileName = newVal
+        onNameChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, fileName = '') => {
           const dialog = store.dialogB()
-          if (dialog) store.dialogB({ ...dialog, footer: <Fluent.PrimaryButton text='Submit' onClick={submit} disabled={!!validateFileName(fileName)} /> })
-        },
-        submit = () => addNewFile(fileName)
+          if (dialog) {
+            const
+              isDisabled = !!fileNameValidation(fileName),
+              submit = () => addNewFile(fileName)
+            store.dialogB({ ...dialog, footer: <Fluent.PrimaryButton text='Submit' onClick={submit} disabled={isDisabled} /> })
+          }
+        }
 
       store.dialogB({
         title: 'Add new file',
@@ -108,13 +114,13 @@ const FileToolbar = bond(({ addNewFile, readFile, filesB, activeFileB }: FileToo
               label='File name'
               suffix='.py'
               required
-              onGetErrorMessage={validateFileName}
+              onGetErrorMessage={fileNameValidation}
               validateOnLoad={false}
               onChange={onNameChange}
             />
           </Fluent.DialogContent>
         ),
-        footer: <Fluent.PrimaryButton text='Submit' onClick={submit} disabled />
+        footer: <Fluent.PrimaryButton text='Submit' disabled />
       })
     },
     onLinkClick = (item?: Fluent.PivotItem) => {
@@ -229,6 +235,7 @@ export default bond(() => {
       await loadFiles(fileName)
       store.dialogB(null)
     },
+    fileNameValidation = (val: string) => validateFileName(val, filesB().map(f => f.name)),
     readFile = async (fileName: string) => {
       const content = dirtyFileContentMap.get(fileName) || await read_file(appName, fileName)
       editor.contentB(content)
@@ -280,11 +287,11 @@ export default bond(() => {
             )
             : (
               <>
-                <FileToolbar addNewFile={addNewFile} readFile={readFile} filesB={filesB} activeFileB={activeFileB} />
+                <FileToolbar addNewFile={addNewFile} readFile={readFile} filesB={filesB} activeFileB={activeFileB} fileNameValidation={fileNameValidation} />
                 <Fluent.Stack horizontal styles={{ root: { marginTop: 5, width: '100%', height: 'calc(100vh - 122px)' } }}>
                   <div data-test='editor-window' style={{ position: 'relative', ...commonStyles, ...viewStyles[viewStyleB()].editor }}>
                     <Editor contentB={editor.contentB} onContentSave={onContentSave} onContentChange={onContentChange} />
-                    <FileActions deleteFile={deleteFile} renameFile={renameFile} activeFileB={activeFileB} />
+                    <FileActions deleteFile={deleteFile} renameFile={renameFile} activeFileB={activeFileB} fileNameValidation={fileNameValidation} />
                   </div>
                   <div data-test='app-window' style={{ ...commonStyles, ...viewStyles[viewStyleB()].app }}>
                     <iframe src={`${IFRAME_URL}/${appName}`} width='100%' height='100%' frameBorder="0" />

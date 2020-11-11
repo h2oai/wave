@@ -4,6 +4,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import * as IDE from "@/ide";
+import { sleep } from '@/setupTests'
 
 
 let homepage: JSX.Element
@@ -28,22 +29,28 @@ describe('Homepage.tsx', () => {
     expect(getByText('Submit').parentElement?.parentElement).toBeDisabled()
   })
 
-  it('should show err message for invalid input', async () => {
+  it('should show err for invalid input', async () => {
     const { getByText } = render(homepage)
     fireEvent.click(getByText('Make a new app...'))
     // Cannot target input element normally for some reason.
     fireEvent.change(getByText('App name').nextElementSibling?.firstChild!, { target: { value: 'my_app**' } })
     // Fluent input uses 200ms debounce for validation by default.
-    await waitFor(() => expect(getByText('File name can contain only word characters, numbers and underscore ("_")')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('App name can contain only word characters, numbers and underscore ("_").')).toBeInTheDocument())
     expect(getByText('Submit').parentElement?.parentElement).toBeDisabled()
   })
 
-  it('should not show err message for valid input', async () => {
+  it('should show err for invalid input - already existing app', async () => {
+    // @ts-ignore
+    IDE.list_apps = jest.fn().mockImplementation(() => ['app1', 'app2', 'app3'])
     const { getByText } = render(homepage)
+    // Wait till the mocked async data get loaded properly.
+    await sleep(1)
     fireEvent.click(getByText('Make a new app...'))
     // Cannot target input element normally for some reason.
-    fireEvent.change(getByText('App name').nextElementSibling?.firstChild!, { target: { value: 'my_app' } })
-    expect(getByText('Submit').parentElement?.parentElement).toBeEnabled()
+    fireEvent.change(getByText('App name').nextElementSibling?.firstChild!, { target: { value: 'app1' } })
+    // Fluent input uses 200ms debounce for validation by default.
+    await waitFor(() => expect(getByText('App with such name already exists.')).toBeInTheDocument())
+    expect(getByText('Submit').parentElement?.parentElement).toBeDisabled()
   })
 
   it('should redirect to an app after clicking recent', async () => {

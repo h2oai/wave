@@ -1,7 +1,8 @@
 module.exports = {
   roots: ["<rootDir>/src"],
   globals: {
-    "IFRAME_URL": "http://localhost:3000"
+    "IFRAME_URL": "http://localhost:3000",
+    "BASENAME": ""
   },
   transform: {
     "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",

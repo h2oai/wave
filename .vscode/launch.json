@@ -12,7 +12,7 @@
       "webRoot": "${workspaceFolder}/ui"
     },
     {
-      "name": "Debug Tests",
+      "name": "Debug UI Tests",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "node",
@@ -26,6 +26,20 @@
       "protocol": "inspector",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "Debug IDE Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/ide/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceRoot}/ide",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229
     }
   ]
 }

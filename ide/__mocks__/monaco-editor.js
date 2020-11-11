@@ -4,7 +4,8 @@ export const editor = {
   create: jest.fn().mockImplementation(() => ({
     addAction: jest.fn(),
     dispose: jest.fn(),
-    onDidChangeModelContent: jest.fn()
+    onDidChangeModelContent: jest.fn(),
+    focus: jest.fn()
   }))
 }
 export const KeyMod = {}

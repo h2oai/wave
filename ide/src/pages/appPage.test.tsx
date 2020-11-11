@@ -3,6 +3,7 @@ import * as IDE from "@/ide";
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import AppPage from './AppPage';
+import { sleep } from '@/setupTests';
 
 let appPage: JSX.Element
 describe('Apppage.tsx', () => {
@@ -54,38 +55,55 @@ describe('Apppage.tsx', () => {
     expect(getByText('Rename File')).toBeInTheDocument()
   })
 
-  it('should show err message for invalid input - new file', async () => {
+  it('should show err for invalid input - new file', async () => {
     const { getByText, getByTestId } = render(appPage)
     const addFileIcon = await waitFor(() => getByTestId('add-file'))
     fireEvent.click(addFileIcon)
     // Cannot target input element normally for some reason.
     fireEvent.change(getByText('File name').nextElementSibling?.firstChild!, { target: { value: 'my_app**' } })
     // Fluent input uses 200ms debounce for validation by default.
-    await waitFor(() => expect(getByText('File name can contain only word characters, numbers and underscore ("_")')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('File name can contain only word characters, numbers and underscore ("_").')).toBeInTheDocument())
     expect(getByText('Submit').parentElement?.parentElement?.parentElement).toBeDisabled()
   })
 
-  it('should not show err message for valid input - new file', async () => {
+  it('should show err for invalid input - new - already existing file', async () => {
     const { getByText, getByTestId } = render(appPage)
     const addFileIcon = await waitFor(() => getByTestId('add-file'))
     fireEvent.click(addFileIcon)
     // Cannot target input element normally for some reason.
-    fireEvent.change(getByText('File name').nextElementSibling?.firstChild!, { target: { value: 'my_app' } })
-    expect(getByText('Submit').parentElement?.parentElement?.parentElement).toBeEnabled()
+    fireEvent.change(getByText('File name').nextElementSibling?.firstChild!, { target: { value: 'app' } })
+    // Fluent input uses 200ms debounce for validation by default.
+    await waitFor(() => expect(getByText('File with such name already exists.')).toBeInTheDocument())
+    expect(getByText('Submit').parentElement?.parentElement?.parentElement).toBeDisabled()
   })
 
-  it('should show err message for invalid input - rename file', async () => {
+  it('should show err for invalid input - rename', async () => {
     const { getByText, getAllByRole } = render(appPage)
     const renameFileIcon = await waitFor(() => getAllByRole('menuitem')[1])
     fireEvent.click(renameFileIcon)
     // Cannot target input element normally for some reason.
     fireEvent.change(getByText('File name').nextElementSibling?.firstChild!, { target: { value: 'my_app**' } })
     // Fluent input uses 200ms debounce for validation by default.
-    await waitFor(() => expect(getByText('File name can contain only word characters, numbers and underscore ("_")')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('File name can contain only word characters, numbers and underscore ("_").')).toBeInTheDocument())
     expect(getByText('Submit').parentElement?.parentElement?.parentElement).toBeDisabled()
   })
 
-  it('should not show err message for valid input - rename file', async () => {
+  it('should show err for invalid input - rename - already existing file', async () => {
+    // @ts-ignore
+    IDE.list_files = jest.fn().mockImplementation(() => ['file1.py', 'file2.py', 'file3.py'])
+    const { getByText, getAllByRole } = render(appPage)
+    // Wait till the mocked async data get loaded properly.
+    await sleep(1)
+    const renameFileIcon = await waitFor(() => getAllByRole('menuitem')[1])
+    fireEvent.click(renameFileIcon)
+    // Cannot target input element normally for some reason.
+    fireEvent.change(getByText('File name').nextElementSibling?.firstChild!, { target: { value: 'file1' } })
+    // Fluent input uses 200ms debounce for validation by default.
+    await waitFor(() => expect(getByText('File with such name already exists.')).toBeInTheDocument())
+    expect(getByText('Submit').parentElement?.parentElement?.parentElement).toBeDisabled()
+  })
+
+  it('should not show err for valid input - rename', async () => {
     const { getByText, getAllByRole } = render(appPage)
     const renameFileIcon = await waitFor(() => getAllByRole('menuitem')[1])
     fireEvent.click(renameFileIcon)

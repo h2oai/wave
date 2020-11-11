@@ -4,25 +4,27 @@ import * as Fluent from '@fluentui/react';
 import makeLogo from '@static/make-logo.svg';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { validateFileName } from '@/utils/validation';
+import { validateAppName } from '@/utils/validation';
 
 export default bond(() => {
   const
     appNameB = box(''),
     recentAppsB = box<string[]>([]),
     hideDialog = () => store.dialogB(null),
+    validate = (val: string) => validateAppName(val, recentAppsB()),
     makeNewApp = () => {
-      let appName = ''
-      const onAppNameChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newVal = '') => {
-        appName = newVal
+      const onAppNameChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, appName = '') => {
         const dialog = store.dialogB()
-        if (dialog) store.dialogB({
-          ...dialog, footer: (
-            <Fluent.PrimaryButton disabled={!!validateFileName(appName)} onClick={hideDialog}>
-              <Link to={`/app/${appName}`}>Submit</Link>
-            </Fluent.PrimaryButton>
-          )
-        })
+        if (dialog) {
+          const isDisabled = !!validate(appName)
+          store.dialogB({
+            ...dialog, footer: (
+              <Fluent.PrimaryButton disabled={isDisabled} onClick={hideDialog}>
+                <Link to={`/app/${appName}`}>Submit</Link>
+              </Fluent.PrimaryButton>
+            )
+          })
+        }
       }
 
       store.dialogB({
@@ -33,7 +35,7 @@ export default bond(() => {
               label='App name'
               onChange={onAppNameChange}
               required
-              onGetErrorMessage={validateFileName}
+              onGetErrorMessage={validate}
               validateOnLoad={false} />
           </Fluent.DialogContent>
         ),
