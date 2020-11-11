@@ -4472,6 +4472,95 @@ class GridCard:
         )
 
 
+class NavItem:
+    """Create a navigation item.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+    ):
+        self.name = name
+        """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
+        self.label = label
+        """The label to display."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('NavItem.name is required.')
+        if self.label is None:
+            raise ValueError('NavItem.label is required.')
+        return _dump(
+            name=self.name,
+            label=self.label,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'NavItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('NavItem.name is required.')
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('NavItem.label is required.')
+        name: str = __d_name
+        label: str = __d_label
+        return NavItem(
+            name,
+            label,
+        )
+
+
+class NavGroup:
+    """Create a group of navigation items.
+    """
+    def __init__(
+            self,
+            label: str,
+            items: List[NavItem],
+            collapsed: Optional[bool] = None,
+    ):
+        self.label = label
+        """The label to display for this group."""
+        self.items = items
+        """The navigation items contained in this group."""
+        self.collapsed = collapsed
+        """Indicates whether nav groups should be rendered as collapsed initially"""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('NavGroup.label is required.')
+        if self.items is None:
+            raise ValueError('NavGroup.items is required.')
+        return _dump(
+            label=self.label,
+            items=[__e.dump() for __e in self.items],
+            collapsed=self.collapsed,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'NavGroup':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('NavGroup.label is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('NavGroup.items is required.')
+        __d_collapsed: Any = __d.get('collapsed')
+        label: str = __d_label
+        items: List[NavItem] = [NavItem.load(__e) for __e in __d_items]
+        collapsed: Optional[bool] = __d_collapsed
+        return NavGroup(
+            label,
+            items,
+            collapsed,
+        )
+
+
 class HeaderCard:
     """Render a card containing a HTML page inside an inline frame (iframe).
 
@@ -4484,6 +4573,7 @@ class HeaderCard:
             subtitle: str,
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
+            nav: Optional[List[NavGroup]] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -4496,6 +4586,8 @@ class HeaderCard:
         """The icon type, displayed to the left."""
         self.icon_color = icon_color
         """The icon's color."""
+        self.nav = nav
+        """The navigation menu to display when the header's icon is clicked."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -4514,6 +4606,7 @@ class HeaderCard:
             subtitle=self.subtitle,
             icon=self.icon,
             icon_color=self.icon_color,
+            nav=None if self.nav is None else [__e.dump() for __e in self.nav],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4531,12 +4624,14 @@ class HeaderCard:
             raise ValueError('HeaderCard.subtitle is required.')
         __d_icon: Any = __d.get('icon')
         __d_icon_color: Any = __d.get('icon_color')
+        __d_nav: Any = __d.get('nav')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         subtitle: str = __d_subtitle
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
+        nav: Optional[List[NavGroup]] = None if __d_nav is None else [NavGroup.load(__e) for __e in __d_nav]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return HeaderCard(
             box,
@@ -4544,6 +4639,7 @@ class HeaderCard:
             subtitle,
             icon,
             icon_color,
+            nav,
             commands,
         )
 
@@ -5152,6 +5248,190 @@ class MarkupCard:
         )
 
 
+class AreaDirection:
+    ROW = 'row'
+    COLUMN = 'column'
+
+
+class AreaJustify:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+
+class AreaAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    STRETCH = 'stretch'
+
+
+class AreaWrap:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+    STRETCH = 'stretch'
+
+
+class Area:
+    """Represents an area within a page layout.
+    """
+    def __init__(
+            self,
+            name: str,
+            size: Optional[str] = None,
+            direction: Optional[str] = None,
+            justify: Optional[str] = None,
+            align: Optional[str] = None,
+            wrap: Optional[str] = None,
+            areas: Optional[List['Area']] = None,
+    ):
+        self.name = name
+        """An identifying name for this area."""
+        self.size = size
+        """The size of this area."""
+        self.direction = direction
+        """Layout direction. One of 'row', 'column'. See enum h2o_wave.ui.AreaDirection."""
+        self.justify = justify
+        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.AreaJustify."""
+        self.align = align
+        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.AreaAlign."""
+        self.wrap = wrap
+        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.AreaWrap."""
+        self.areas = areas
+        """The areas contained inside this area."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('Area.name is required.')
+        return _dump(
+            name=self.name,
+            size=self.size,
+            direction=self.direction,
+            justify=self.justify,
+            align=self.align,
+            wrap=self.wrap,
+            areas=None if self.areas is None else [__e.dump() for __e in self.areas],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Area':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('Area.name is required.')
+        __d_size: Any = __d.get('size')
+        __d_direction: Any = __d.get('direction')
+        __d_justify: Any = __d.get('justify')
+        __d_align: Any = __d.get('align')
+        __d_wrap: Any = __d.get('wrap')
+        __d_areas: Any = __d.get('areas')
+        name: str = __d_name
+        size: Optional[str] = __d_size
+        direction: Optional[str] = __d_direction
+        justify: Optional[str] = __d_justify
+        align: Optional[str] = __d_align
+        wrap: Optional[str] = __d_wrap
+        areas: Optional[List['Area']] = None if __d_areas is None else [Area.load(__e) for __e in __d_areas]
+        return Area(
+            name,
+            size,
+            direction,
+            justify,
+            align,
+            wrap,
+            areas,
+        )
+
+
+class Layout:
+    """Represents the layout structure for a page.
+    """
+    def __init__(
+            self,
+            breakpoint: str,
+            area: Area,
+            width: Optional[str] = None,
+            min_width: Optional[str] = None,
+            max_width: Optional[str] = None,
+            height: Optional[str] = None,
+            min_height: Optional[str] = None,
+            max_height: Optional[str] = None,
+    ):
+        self.breakpoint = breakpoint
+        """The minimum viewport width at which to use this grid. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set."""
+        self.area = area
+        """The area contained within this layout."""
+        self.width = width
+        """The width of the grid. Defaults to `100%`."""
+        self.min_width = min_width
+        """The minimum width of the grid."""
+        self.max_width = max_width
+        """The maximum width of the grid."""
+        self.height = height
+        """The height of the grid. Defaults to `auto`."""
+        self.min_height = min_height
+        """The minimum height of the grid."""
+        self.max_height = max_height
+        """The maximum height of the grid."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.breakpoint is None:
+            raise ValueError('Layout.breakpoint is required.')
+        if self.area is None:
+            raise ValueError('Layout.area is required.')
+        return _dump(
+            breakpoint=self.breakpoint,
+            area=self.area.dump(),
+            width=self.width,
+            min_width=self.min_width,
+            max_width=self.max_width,
+            height=self.height,
+            min_height=self.min_height,
+            max_height=self.max_height,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Layout':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_breakpoint: Any = __d.get('breakpoint')
+        if __d_breakpoint is None:
+            raise ValueError('Layout.breakpoint is required.')
+        __d_area: Any = __d.get('area')
+        if __d_area is None:
+            raise ValueError('Layout.area is required.')
+        __d_width: Any = __d.get('width')
+        __d_min_width: Any = __d.get('min_width')
+        __d_max_width: Any = __d.get('max_width')
+        __d_height: Any = __d.get('height')
+        __d_min_height: Any = __d.get('min_height')
+        __d_max_height: Any = __d.get('max_height')
+        breakpoint: str = __d_breakpoint
+        area: Area = Area.load(__d_area)
+        width: Optional[str] = __d_width
+        min_width: Optional[str] = __d_min_width
+        max_width: Optional[str] = __d_max_width
+        height: Optional[str] = __d_height
+        min_height: Optional[str] = __d_min_height
+        max_height: Optional[str] = __d_max_height
+        return Layout(
+            breakpoint,
+            area,
+            width,
+            min_width,
+            max_width,
+            height,
+            min_height,
+            max_height,
+        )
+
+
 class MetaCard:
     """Represents page-global state.
 
@@ -5166,6 +5446,7 @@ class MetaCard:
             notification: Optional[str] = None,
             redirect: Optional[str] = None,
             icon: Optional[str] = None,
+            layouts: Optional[List[Layout]] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -5180,6 +5461,8 @@ class MetaCard:
         """Redirect the page to a new URL."""
         self.icon = icon
         """Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers)."""
+        self.layouts = layouts
+        """The layouts supported by this page."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -5195,6 +5478,7 @@ class MetaCard:
             notification=self.notification,
             redirect=self.redirect,
             icon=self.icon,
+            layouts=None if self.layouts is None else [__e.dump() for __e in self.layouts],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -5209,6 +5493,7 @@ class MetaCard:
         __d_notification: Any = __d.get('notification')
         __d_redirect: Any = __d.get('redirect')
         __d_icon: Any = __d.get('icon')
+        __d_layouts: Any = __d.get('layouts')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
@@ -5216,6 +5501,7 @@ class MetaCard:
         notification: Optional[str] = __d_notification
         redirect: Optional[str] = __d_redirect
         icon: Optional[str] = __d_icon
+        layouts: Optional[List[Layout]] = None if __d_layouts is None else [Layout.load(__e) for __e in __d_layouts]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -5224,96 +5510,8 @@ class MetaCard:
             notification,
             redirect,
             icon,
+            layouts,
             commands,
-        )
-
-
-class NavItem:
-    """Create a navigation item.
-    """
-    def __init__(
-            self,
-            name: str,
-            label: str,
-    ):
-        self.name = name
-        """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
-        self.label = label
-        """The label to display."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('NavItem.name is required.')
-        if self.label is None:
-            raise ValueError('NavItem.label is required.')
-        return _dump(
-            name=self.name,
-            label=self.label,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'NavItem':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('NavItem.name is required.')
-        __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('NavItem.label is required.')
-        name: str = __d_name
-        label: str = __d_label
-        return NavItem(
-            name,
-            label,
-        )
-
-
-class NavGroup:
-    """Create a group of navigation items.
-    """
-    def __init__(
-            self,
-            label: str,
-            items: List[NavItem],
-            collapsed: Optional[bool] = None,
-    ):
-        self.label = label
-        """The label to display for this group."""
-        self.items = items
-        """The navigation items contained in this group."""
-        self.collapsed = collapsed
-        """Indicates whether nav groups should be rendered as collapsed initially"""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('NavGroup.label is required.')
-        if self.items is None:
-            raise ValueError('NavGroup.items is required.')
-        return _dump(
-            label=self.label,
-            items=[__e.dump() for __e in self.items],
-            collapsed=self.collapsed,
-        )
-
-    @staticmethod
-    def load(__d: Dict) -> 'NavGroup':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('NavGroup.label is required.')
-        __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('NavGroup.items is required.')
-        __d_collapsed: Any = __d.get('collapsed')
-        label: str = __d_label
-        items: List[NavItem] = [NavItem.load(__e) for __e in __d_items]
-        collapsed: Optional[bool] = __d_collapsed
-        return NavGroup(
-            label,
-            items,
-            collapsed,
         )
 
 

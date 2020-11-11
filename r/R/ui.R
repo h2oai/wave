@@ -2336,6 +2336,44 @@ ui_grid_card <- function(
   return(.o)
 }
 
+#' Create a navigation item.
+#'
+#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+#' @param label The label to display.
+#' @return A NavItem instance.
+ui_nav_item <- function(
+  name,
+  label) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .o <- list(
+    name=name,
+    label=label)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavItem"))
+  return(.o)
+}
+
+#' Create a group of navigation items.
+#'
+#' @param label The label to display for this group.
+#' @param items The navigation items contained in this group.
+#' @param collapsed Indicates whether nav groups should be rendered as collapsed initially
+#' @return A NavGroup instance.
+ui_nav_group <- function(
+  label,
+  items,
+  collapsed = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_vector("items", "h2oq_NavItem", items)
+  .guard_scalar("collapsed", "logical", collapsed)
+  .o <- list(
+    label=label,
+    items=items,
+    collapsed=collapsed)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavGroup"))
+  return(.o)
+}
+
 #' Render a card containing a HTML page inside an inline frame (iframe).
 #' 
 #' Either a path or content can be provided as arguments.
@@ -2345,6 +2383,7 @@ ui_grid_card <- function(
 #' @param subtitle The subtitle, displayed below the title.
 #' @param icon The icon type, displayed to the left.
 #' @param icon_color The icon's color.
+#' @param nav The navigation menu to display when the header's icon is clicked.
 #' @param commands Contextual menu commands for this component.
 #' @return A HeaderCard instance.
 ui_header_card <- function(
@@ -2353,12 +2392,14 @@ ui_header_card <- function(
   subtitle,
   icon = NULL,
   icon_color = NULL,
+  nav = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
+  .guard_vector("nav", "h2oq_NavGroup", nav)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
@@ -2366,6 +2407,7 @@ ui_header_card <- function(
     subtitle=subtitle,
     icon=icon,
     icon_color=icon_color,
+    nav=nav,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_HeaderCard"))
   return(.o)
@@ -2624,6 +2666,97 @@ ui_markup_card <- function(
   return(.o)
 }
 
+#' Represents an area within a page layout.
+#'
+#' @param name An identifying name for this area.
+#' @param size The size of this area.
+#' @param direction Layout direction.
+#'   One of 'row', 'column'. See enum h2o_wave.ui.AreaDirection.
+#' @param justify Layout strategy for main axis.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.AreaJustify.
+#' @param align Layout strategy for cross axis.
+#'   One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.AreaAlign.
+#' @param wrap Wrapping strategy.
+#'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.AreaWrap.
+#' @param areas The areas contained inside this area.
+#' @return A Area instance.
+ui_area <- function(
+  name,
+  size = NULL,
+  direction = NULL,
+  justify = NULL,
+  align = NULL,
+  wrap = NULL,
+  areas = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("size", "character", size)
+  # TODO Validate direction
+  # TODO Validate justify
+  # TODO Validate align
+  # TODO Validate wrap
+  .guard_vector("areas", "h2oq_Area", areas)
+  .o <- list(
+    name=name,
+    size=size,
+    direction=direction,
+    justify=justify,
+    align=align,
+    wrap=wrap,
+    areas=areas)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Area"))
+  return(.o)
+}
+
+#' Represents the layout structure for a page.
+#'
+#' @param breakpoint The minimum viewport width at which to use this grid.
+#'   Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset.
+#'   The named presets are:
+#'   'xs': '0px' for extra small devices (portrait phones),
+#'   's': '576px' for small devices (landscape phones),
+#'   'm': '768px' for medium devices (tablets),
+#'   'l': '992px' for large devices (desktops),
+#'   'xl': '1200px' for extra large devices (large desktops).
+#'   
+#'   A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set.
+#' @param area The area contained within this layout.
+#' @param width The width of the grid. Defaults to `100%`.
+#' @param min_width The minimum width of the grid.
+#' @param max_width The maximum width of the grid.
+#' @param height The height of the grid. Defaults to `auto`.
+#' @param min_height The minimum height of the grid.
+#' @param max_height The maximum height of the grid.
+#' @return A Layout instance.
+ui_layout <- function(
+  breakpoint,
+  area,
+  width = NULL,
+  min_width = NULL,
+  max_width = NULL,
+  height = NULL,
+  min_height = NULL,
+  max_height = NULL) {
+  .guard_scalar("breakpoint", "character", breakpoint)
+  .guard_scalar("area", "h2oq_Area", area)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("min_width", "character", min_width)
+  .guard_scalar("max_width", "character", max_width)
+  .guard_scalar("height", "character", height)
+  .guard_scalar("min_height", "character", min_height)
+  .guard_scalar("max_height", "character", max_height)
+  .o <- list(
+    breakpoint=breakpoint,
+    area=area,
+    width=width,
+    min_width=min_width,
+    max_width=max_width,
+    height=height,
+    min_height=min_height,
+    max_height=max_height)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Layout"))
+  return(.o)
+}
+
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -2635,6 +2768,7 @@ ui_markup_card <- function(
 #' @param notification Display a desktop notification to the user.
 #' @param redirect Redirect the page to a new URL.
 #' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
+#' @param layouts The layouts supported by this page.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 ui_meta_card <- function(
@@ -2644,6 +2778,7 @@ ui_meta_card <- function(
   notification = NULL,
   redirect = NULL,
   icon = NULL,
+  layouts = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -2651,6 +2786,7 @@ ui_meta_card <- function(
   .guard_scalar("notification", "character", notification)
   .guard_scalar("redirect", "character", redirect)
   .guard_scalar("icon", "character", icon)
+  .guard_vector("layouts", "h2oq_Layout", layouts)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
@@ -2659,46 +2795,9 @@ ui_meta_card <- function(
     notification=notification,
     redirect=redirect,
     icon=icon,
+    layouts=layouts,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
-  return(.o)
-}
-
-#' Create a navigation item.
-#'
-#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-#' @param label The label to display.
-#' @return A NavItem instance.
-ui_nav_item <- function(
-  name,
-  label) {
-  .guard_scalar("name", "character", name)
-  .guard_scalar("label", "character", label)
-  .o <- list(
-    name=name,
-    label=label)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavItem"))
-  return(.o)
-}
-
-#' Create a group of navigation items.
-#'
-#' @param label The label to display for this group.
-#' @param items The navigation items contained in this group.
-#' @param collapsed Indicates whether nav groups should be rendered as collapsed initially
-#' @return A NavGroup instance.
-ui_nav_group <- function(
-  label,
-  items,
-  collapsed = NULL) {
-  .guard_scalar("label", "character", label)
-  .guard_vector("items", "h2oq_NavItem", items)
-  .guard_scalar("collapsed", "logical", collapsed)
-  .o <- list(
-    label=label,
-    items=items,
-    collapsed=collapsed)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavGroup"))
   return(.o)
 }
 

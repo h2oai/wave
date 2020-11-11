@@ -4,7 +4,7 @@ import { cards } from './layout'
 import { bond, Card, S, qd, B } from './qd'
 
 /** Create a navigation item. */
-interface NavItem {
+export interface NavItem {
   /** The name of this item. Prefix the name with a '#' to trigger hash-change navigation. */
   name: S
   /** The label to display. */
@@ -12,7 +12,7 @@ interface NavItem {
 }
 
 /** Create a group of navigation items. */
-interface NavGroup {
+export interface NavGroup {
   /** The label to display for this group. */
   label: S
   /** The navigation items contained in this group. */
@@ -28,27 +28,30 @@ interface State {
 }
 
 export const
+  XNav = ({ items }: { items: NavGroup[] }) => {
+    const groups = items.map((g): INavLinkGroup => ({
+      name: g.label,
+      collapseByDefault: g.collapsed,
+      links: g.items.map(({ name, label }): INavLink => ({
+        key: name,
+        name: label,
+        url: '',
+        onClick: () => {
+          if (name.startsWith('#')) {
+            window.location.hash = name.substr(1)
+            return
+          }
+          qd.args[name] = true
+          qd.sync()
+        }
+      }))
+    }))
+    return <Nav groups={groups} />
+  },
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
-        const groups = state.items.map((g): INavLinkGroup => ({
-          name: g.label,
-          collapseByDefault: g.collapsed,
-          links: g.items.map(({ name, label }): INavLink => ({
-            key: name,
-            name: label,
-            url: '',
-            onClick: () => {
-              if (name.startsWith('#')) {
-                window.location.hash = name.substr(1)
-                return
-              }
-              qd.args[name] = true
-              qd.sync()
-            }
-          }))
-        }))
-        return <div data-test={name}><Nav groups={groups} /></div>
+        return <div data-test={name}><XNav items={state.items} /></div>
       }
     return { render, changed }
   })

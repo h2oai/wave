@@ -1,7 +1,7 @@
 import { Spinner, SpinnerSize } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { GridLayout } from './layout'
+import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, getTheme, pc } from './theme'
 
@@ -99,7 +99,7 @@ const
 
         return (
           <div className={css.app}>
-            <GridLayout key={page.key} page={page} />
+            <PageLayout key={page.key} page={page} />
             <BusyOverlay />
           </div>
         )
