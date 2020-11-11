@@ -180,7 +180,6 @@ def main():
         "--app-module",
         help="python module with wave app",
         type=str,
-        default="src.app",
     )
 
     args = parser.parse_args()
