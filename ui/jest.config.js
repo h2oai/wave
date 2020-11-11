@@ -1,37 +1,39 @@
 module.exports = {
-  "roots": [
+  roots: [
     "<rootDir>/src"
   ],
-  "collectCoverageFrom": [
+  collectCoverageFrom: [
     "src/**/*.{js,jsx,ts,tsx}",
     "!src/**/*.d.ts"
   ],
-  "setupFiles": [
+  setupFiles: [
     "react-app-polyfill/jsdom"
   ],
-  "setupFilesAfterEnv": [
+  setupFilesAfterEnv: [
     "<rootDir>/src/setupTests.ts"
   ],
-  "testMatch": [
+  testMatch: [
     "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
     "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
   ],
-  "testEnvironment": "jest-environment-jsdom-fourteen",
-  "transform": {
-    "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+  testEnvironment: "jest-environment-jsdom-fourteen",
+  transform: {
+    "^.+\\.(js|jsx|ts|tsx)$": [
+      '<rootDir>/node_modules/babel-jest', { configFile: process.env.GIT_HOOK ? './ui/.babelrc.json' : undefined }
+    ],
     "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
     "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
   },
-  "transformIgnorePatterns": [
+  transformIgnorePatterns: [
     "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
     "^.+\\.module\\.(css|sass|scss)$"
   ],
-  "modulePaths": [],
-  "moduleNameMapper": {
+  modulePaths: [],
+  moduleNameMapper: {
     "^react-native$": "react-native-web",
     "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
   },
-  "moduleFileExtensions": [
+  moduleFileExtensions: [
     "web.js",
     "js",
     "web.ts",
@@ -43,7 +45,7 @@ module.exports = {
     "jsx",
     "node"
   ],
-  "watchPlugins": [
+  watchPlugins: [
     "jest-watch-typeahead/filename",
     "jest-watch-typeahead/testname"
   ]

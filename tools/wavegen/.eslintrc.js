@@ -1,32 +1,15 @@
 module.exports = {
   "parser": "@typescript-eslint/parser",
-  "settings": {
-    "react": {
-      "version": "latest"
-    }
-  },
   "env": {
-    "browser": true,
+    "node": true,
     "es6": true
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
-    "react/display-name": "off",
-    "no-console": [
-      process.env.NODE_ENV === 'production' ? "error" : "warn",
-      {
-        "allow": [
-          "warn",
-          "error"
-        ]
-      }
-    ],
-    "no-debugger": process.env.NODE_ENV === 'production' ? "error" : "warn",
     "semi": [
       "error",
       "never",

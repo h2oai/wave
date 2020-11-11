@@ -2,34 +2,14 @@
   "name": "wave",
   "version": "1.0.0",
   "dependencies": {},
-  "@comment devDependencies": [
-    "@testing-library/jest-dom - needs to be in the root in order to be properly checked",
-    "with Typescript in precommit hook"
-  ],
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
     "@commitlint/config-conventional": "^9.1.2",
-    "@testing-library/jest-dom": "^5.11.4",
     "husky": "^4.3.0",
-    "jest": "24.9.0",
-    "babel-preset-react-app": "^9.1.1",
     "lint-staged": "^10.3.0",
-    "eslint": "^6.6.0",
-    "eslint-plugin-react": "7.18.0",
-    "typescript": "^3.7.5",
-    "@typescript-eslint/eslint-plugin": "^2.10.0",
-    "@typescript-eslint/parser": "^2.10.0",
-    "eslint-plugin-wave": "file:ui/eslint",
     "markdownlint-cli": "^0.23.2"
   },
-  "scripts": {
-    "lint-staged:tests": "npx jest --config ui/jest.config.js --findRelatedTests --bail",
-    "lint-staged:eslint": "npx eslint",
-    "lint-staged:pylint": "./py/venv/bin/flake8",
-    "lint-staged:golint": "golint -set_exit_status",
-    "lint-staged:mdlint": "./node_modules/markdownlint-cli/markdownlint.js"
-  },
-  "author": "",
+  "author": "Prithvi Prabhu <prithvi@h2o.ai>",
   "bugs": {
     "url": "https://github.com/h2oai/qd/issues"
   },

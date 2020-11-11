@@ -1,15 +1,18 @@
 {
-  "*.(ts|tsx)": [
-    "npm run lint-staged:eslint",
-    "npm run lint-staged:tests"
+  "tools/wavegen/**/*.(ts|tsx)": [
+    "tools/wavegen/node_modules/eslint/bin/eslint.js"
+  ],
+  "ui/**/*.(ts|tsx)": [
+    "ui/node_modules/eslint/bin/eslint.js",
+    "ui/node_modules/jest/bin/jest.js --config ui/jest.config.js --findRelatedTests --bail"
   ],
   "*.go": [
-    "npm run lint-staged:golint"
+    "golint -set_exit_status"
   ],
   "*.md": [
-    "npm run lint-staged:mdlint"
+    "./node_modules/markdownlint-cli/markdownlint.js"
   ],
   "*.py": [
-    "npm run lint-staged:pylint"
+    "./py/venv/bin/flake8"
   ]
 }
