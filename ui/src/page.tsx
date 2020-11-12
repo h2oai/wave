@@ -194,13 +194,11 @@ const
     return style
 
   },
-  toSection = (area: Area): Section => {
-    return {
-      area,
-      sections: area.areas?.map(toSection),
-      cardslots: []
-    }
-  },
+  toSection = (area: Area): Section => ({
+    area,
+    sections: area.areas?.map(toSection),
+    cardslots: []
+  }),
   findSection = (section: Section, name: S): Section | null => {
     const { area, sections } = section
     if (area.name === name) return section
