@@ -248,7 +248,7 @@ const
           const
             slot = parseBox(index, card.state.box),
             target = findSection(section, slot.area ?? '')
-          if (target) target.cardslots.push({ card, slot })
+         target?.cardslots.push({ card, slot })
         }
         const style: React.CSSProperties = {
           width: width ?? '100%',
