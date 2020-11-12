@@ -48,8 +48,7 @@ const
   parseBreakpoint = (spec: S): U => parseInt(presetBreakpoints[spec] ?? spec, 10),
   badSlot: Slot = {},
   parseBox = (index: U, spec: S): Slot => {
-    if (!spec) return badSlot
-    if (!spec.length) return badSlot
+    if (!spec?.length) return badSlot
     const specs = spec.split(/\s*\/\s*/)
     let s = specs[index]
     if (!s) s = s[0] // shorthand: assume same area for every layout
