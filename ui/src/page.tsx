@@ -280,7 +280,7 @@ export const
           [metas, cards] = segregate(all, c => c.state.view === 'meta')
 
         if (metas.length) {
-          if (onMetaCardChanged) onMetaCardChanged.dispose()
+          onMetaCardChanged?.dispose()
           metaCard = metas[0]
           preload(metaCard as any)
           onMetaCardChanged = on(metaCard.changed, () => preload(metaCard as any))
