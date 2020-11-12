@@ -126,6 +126,6 @@ export const
     }
   }
 
-export const View = bond((_state: Card<State>) => ({ render: () => (<></>) }))
+export const View = bond(() => ({ render: () => <></> }))
 
 cards.register('meta', View)
