@@ -2455,7 +2455,7 @@ def meta_card(
         notification: Display a desktop notification to the user.
         redirect: Redirect the page to a new URL.
         icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
-        layouts: The layouts supported by this page.
+        layouts: No documentation available.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.

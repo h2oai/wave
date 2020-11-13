@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Dialog } from './meta'
 
 //
 // Dataflow
@@ -718,6 +719,7 @@ export interface Qd {
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
   socket: WebSocket | null
+  dialogB: Box<Dialog | null>
   page(): PageRef
   sync(): void
 }
@@ -735,6 +737,7 @@ export const qd: Qd = {
   refreshRateB: box(-1),
   busyB: box(false),
   socket: null,
+  dialogB: box(null),
   page: (path?: S): PageRef => {
     path = path || qd.path
     const

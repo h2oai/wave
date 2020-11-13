@@ -5483,7 +5483,7 @@ class MetaCard:
         self.icon = icon
         """Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers)."""
         self.layouts = layouts
-        """The layouts supported by this page."""
+        """No documentation available."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

@@ -23,9 +23,10 @@ describe('Meta.tsx', () => {
   })
 
   it('Sets refreshRate - init', () => {
+    const refresh = 1
     expect(T.qd.refreshRateB()).toBe(-1)
-    render(<View {...{ ...metaProps, state: { refresh: 1 } }} />)
-    expect(T.qd.refreshRateB()).toBe(1)
+    render(<View {...{ ...metaProps, state: { refresh } }} />)
+    expect(T.qd.refreshRateB()).toBe(refresh)
   })
 
   it('Shows notification - init', () => {
@@ -36,6 +37,17 @@ describe('Meta.tsx', () => {
     render(<View {...{ ...metaProps, state: { notification: name } }} />)
     expect(showNotificationMock).toHaveBeenCalled()
     expect(showNotificationMock).toHaveBeenCalledWith(name)
+  })
+
+  it('Sets dialog - init', () => {
+    const dialog = {
+      name: 'dialog',
+      title: 'Dialog Title',
+      items: [],
+    }
+    expect(T.qd.dialogB()).toBe(null)
+    render(<View {...{ ...metaProps, state: { dialog } }} />)
+    expect(T.qd.dialogB()).toMatchObject(dialog)
   })
 
 })

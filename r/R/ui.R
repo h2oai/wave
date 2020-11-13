@@ -2780,7 +2780,7 @@ ui_layout <- function(
 #' @param notification Display a desktop notification to the user.
 #' @param redirect Redirect the page to a new URL.
 #' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
-#' @param layouts The layouts supported by this page.
+#' @param layouts No documentation available.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 ui_meta_card <- function(

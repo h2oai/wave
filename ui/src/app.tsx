@@ -4,6 +4,7 @@ import { stylesheet } from 'typestyle'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, getTheme, pc } from './theme'
+import Dialog from './parts/dialog'
 
 const
   theme = getTheme(),
@@ -77,7 +78,7 @@ const
       },
       onHashChanged = () => {
         const h = window.location.hash
-        if (h && h.length > 1) {
+        if (h?.length > 1) {
           qd.args['#'] = h.substr(1)
         }
         qd.sync()
@@ -91,7 +92,7 @@ const
         // TODO prettier error section
         if (error) {
           const errorMessage = error === 'not_found'
-            ? (<Spinner label='Waiting for content...' size={SpinnerSize.large} />)
+            ? <Spinner label='Waiting for content...' size={SpinnerSize.large} />
             : error
           return <div className={clas(css.centerFullHeight, css.app)}>{errorMessage}</div>
         }
@@ -101,6 +102,7 @@ const
           <div className={css.app}>
             <PageLayout key={page.key} page={page} />
             <BusyOverlay />
+            <Dialog />
           </div>
         )
       },
