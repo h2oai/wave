@@ -12,7 +12,7 @@ df_train = dt.fread(train_set)
 df_test = dt.fread(test_set)
 
 model = build_model(train_set, target=target)
-prediction = model.predict(df_test.to_tuples())
+prediction = model.predict(test_set)
 
 n_train = 50
 n_test = df_test.nrows
