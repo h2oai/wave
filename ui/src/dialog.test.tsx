@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import * as T from '../qd'
+import * as T from './qd'
 import Dialog from './dialog'
 
 

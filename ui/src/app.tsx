@@ -4,7 +4,7 @@ import { stylesheet } from 'typestyle'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, getTheme, pc } from './theme'
-import Dialog from './parts/dialog'
+import Dialog from './dialog'
 
 const
   theme = getTheme(),

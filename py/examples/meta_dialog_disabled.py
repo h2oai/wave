@@ -1,7 +1,7 @@
 # Meta / Dialog / Disabled
 # Control disabled state within displayed dialog.
 # ---
-from h2o_wave import app, Q, ui
+from h2o_wave import main, app, Q, ui
 
 
 @app('/demo')

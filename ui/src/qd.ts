@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dialog } from './meta'
+import { Dialog } from './dialog'
 
 //
 // Dataflow

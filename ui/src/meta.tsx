@@ -1,8 +1,8 @@
 import React from 'react'
-import { Component } from './form'
 import { cards } from './layout'
 import { showNotification } from './notification'
 import { bond, box, Card, qd, S, U, B } from './qd'
+import { Component } from './form'
 
 /**
  * Represents the layout structure for a page.

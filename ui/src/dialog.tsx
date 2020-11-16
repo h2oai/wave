@@ -1,7 +1,31 @@
 import React from 'react'
-import { bond, qd } from '../qd'
+import { bond, qd, S, B } from './qd'
 import * as Fluent from '@fluentui/react'
-import { XComponents } from '../form'
+import { XComponents, Component } from './form'
+
+/**
+ * A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
+ * and requires people to interact with it. It’s primarily used for confirming actions,
+ * such as deleting a file, or asking people to make a choice.
+ */
+export interface Dialog {
+  /** An identifying name for this component. */
+  name: S
+  /** The title of the dialog. */
+  title: S
+  /** The form components in the dialog. */
+  items: Component[]
+  /** True if the dialog submit button should be disabled. */
+  disabled?: B
+  /** Width of the dialog. E.g. '400px', defaults to '600px'. */
+  width?: S
+  /** True if the dialog should have closing 'X' button in top right corner. */
+  has_x?: B
+  /** Text displayed on submit button. Defaults to 'Submit'. */
+  submitText?: S
+  /** Text displayed on cancel button. Defaults to 'Cancel'. */
+  cancelText?: S
+}
 
 export default bond(() => {
   const
