@@ -235,12 +235,12 @@ Now when you play with your app, you'll see that the counts are being maintained
 
 This would be considered normal behavior for a typical web application, and most users familiar with the interwebs are also familiar with the reload button, but we can do better, because having to hit the reload button to get updates is about as exciting as waiting for paint to dry.
 
-This is easier done than said - simply change the server mode to `multicast` to enable realtime sync across clients:
+This is easier done than said - simply change the app mode to `multicast` to enable realtime sync across clients:
 
 ```py {27} title="$HOME/wave-apps/counter.py"
 from h2o_wave import Q, main, app, ui
 
-@app('/counter')
+@app('/counter', mode='multicast')
 async def serve(q: Q):
     bean_count = q.user.bean_count or 0
     if q.args.increment:
@@ -265,7 +265,7 @@ async def serve(q: Q):
 ```
 
 :::info
-The default server mode for apps is `unicast`, which means "don't sync across clients". On the other hand, `multicast` means "sync across clients". There's also a third mode, `broadcast`, which means "sync across users", which we'll see in the next step.
+The default app mode is `unicast`, which means "don't sync across clients". On the other hand, `multicast` means "sync across clients". There's also a third mode, `broadcast`, which means "sync across users", which we'll see in the next step.
 :::
 
 If you play with your app now, you'll see that the user-level bean count indeed syncs across tabs:
@@ -278,13 +278,13 @@ If you play with your app now, you'll see that the user-level bean count indeed 
 
 ## Step 6: App-level realtime sync
 
-Going from user-level bean counting to app-level bean counting is easy: simply store `bean_count` on `q.app` instead of `q.user`, and switch the server mode to `broadcast`:
+Going from user-level bean counting to app-level bean counting is easy: simply store `bean_count` on `q.app` instead of `q.user`, and switch the app mode to `broadcast`:
 
 
 ```py {5,7,27} title="$HOME/wave-apps/counter.py"
 from h2o_wave import Q, main, app, ui
 
-@app('/counter')
+@app('/counter', mode='broadcast')
 async def serve(q: Q):
     bean_count = q.app.bean_count or 0
     if q.args.increment:
