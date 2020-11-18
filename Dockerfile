@@ -42,15 +42,18 @@ RUN mkdir /.npm && \
 RUN mkdir /.cache /.config && \
     chown $uid:$gid /.cache /.config
 
-RUN echo ". /qd/py/venv/bin/activate" >> /etc/profile.d/venv.sh
+RUN echo ". /wave/py/venv/bin/activate" >> /etc/profile.d/venv.sh
 
+COPY . /wave
+RUN chown -R ${uid} /wave
 USER ${uid}
-COPY --chown=${uid} . /qd
-WORKDIR /qd/test
+
+# install cypress
+WORKDIR /wave/test
 RUN npm i
 
-WORKDIR /qd
+# build wave
+WORKDIR /wave
 RUN make all
 
-# docker run will have venv from qd build
-ENTRYPOINT [ "/bin/bash" , "-l"]
+ENTRYPOINT []
