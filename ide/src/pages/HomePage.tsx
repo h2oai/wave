@@ -19,9 +19,9 @@ export default bond(() => {
           const isDisabled = !!validate(appName)
           store.dialogB({
             ...dialog, footer: (
-              <Fluent.PrimaryButton disabled={isDisabled} onClick={hideDialog}>
-                <Link to={`/app/${appName}`}>Submit</Link>
-              </Fluent.PrimaryButton>
+              <Link to={`/app/${appName}`} onClick={hideDialog}>
+                <Fluent.PrimaryButton disabled={isDisabled} text='Submit' />
+              </Link>
             )
           })
         }
