@@ -39,11 +39,7 @@ export default bond(() => {
               validateOnLoad={false} />
           </Fluent.DialogContent>
         ),
-        footer: (
-          <Fluent.PrimaryButton disabled>
-            <Link to={`/app/${appNameB()}`}>Submit</Link>
-          </Fluent.PrimaryButton>
-        )
+        footer: <Fluent.PrimaryButton disabled text='Submit' />
       })
     },
     init = async () => {
