@@ -1,5 +1,12 @@
-.Editor {
-	width: 800px;
-	height: 600px;
-	border: 1px solid #ccc;
+body {
+  margin: 0px;
+}
+
+.main-container {
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }

@@ -128,4 +128,4 @@ dmypy.json
 # Custom
 *.state
 *.gz
-
+.apps

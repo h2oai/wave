@@ -1,34 +1,32 @@
-import { box, on } from './dataflow'
-import { create_app, list_apps, read_file, start_app, stop_app, write_file } from './ide'
+import { box, Box } from '@/dataflow'
+import { create_app, list_apps, start_app, stop_app } from '@/ide'
+import { Position } from 'monaco-editor'
 
-const
-  newEditor = (appName: string) => {
+export type Editor = {
+  contentB: Box<string>
+  cursorPositionB: Box<Position | null>
+  startApp: () => Promise<void>
+  stopApp: () => Promise<void>
+  createAppIfNotExists: () => Promise<void>
+}
+
+export const
+  newEditor = (appName: string): Editor => {
     const
       contentB = box(''),
+      cursorPositionB = box<Position | null>(null),
       createAppIfNotExists = async () => {
         const apps = await list_apps()
-        if (apps.indexOf('sample_app') < 0) {
-          await create_app('sample_app')
+        if (apps.indexOf(appName) < 0) {
+          await create_app(appName)
         }
       },
-      loadApp = async () => {
-        await createAppIfNotExists() // temporary hack
-        const content = await read_file('sample_app', 'app.py')
-        editor.contentB(content)
-      },
       startApp = async () => {
-        await createAppIfNotExists() // temporary hack
-        await start_app('sample_app')
+        await start_app(appName)
       },
       stopApp = async () => {
-        await stop_app('sample_app')
+        await stop_app(appName)
       }
 
-    on(contentB, async (content) => {
-      await write_file(appName, 'app.py', content)
-    })
-
-    return { contentB, loadApp, startApp, stopApp }
+    return { contentB, cursorPositionB, startApp, stopApp, createAppIfNotExists }
   }
-
-export const editor = newEditor('sample_app')

@@ -10,6 +10,7 @@ setup: ## Set up development dependencies
 	$(MAKE) setup-lint
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
+	cd ide && $(MAKE) setup
 	cd tools/wavegen && $(MAKE) setup build
 
 setup-lint: ## Setup linters

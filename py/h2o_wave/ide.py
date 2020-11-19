@@ -1,4 +1,3 @@
-import re
 import sys
 from pathlib import Path
 import traceback
@@ -10,7 +9,6 @@ from starlette.applications import Starlette
 from starlette.routing import Route
 from starlette.requests import Request
 from starlette.responses import JSONResponse
-from starlette.background import BackgroundTask
 import logging
 
 logger = logging.getLogger()
@@ -56,7 +54,7 @@ class App:
             '--port', str(port),
             '--app-dir', str(self.dir),
             '--reload',
-            f'app:main',
+            'app:main',
             env=dict(H2O_WAVE_APP_ADDRESS=f'http://{_localhost}:{port}')
         )
 
@@ -125,6 +123,10 @@ def _list_apps() -> List[str]:
     return [app_dir.name for app_dir in _apps_dir.iterdir() if app_dir.is_dir()]
 
 
+def _list_files(app_name: str) -> List[str]:
+    return [app_file.name for app_file in (_apps_dir / app_name).iterdir() if app_file.is_file()]
+
+
 def _file_path_of(app_name: str, file_name: str) -> Path:
     _guard_app_name(app_name)
     app_dir = _apps_dir / app_name
@@ -189,30 +191,34 @@ async def list_apps() -> List[str]:
 
 
 @rpc
+async def list_files(app_name: str) -> List[str]:
+    return _list_files(app_name)
+
+
+@rpc
 async def read_file(app_name: str, file_name: str) -> str:
     return _read_file(_file_path_of(app_name, file_name))
 
 
 @rpc
 async def write_file(app_name: str, file_name: str, file_content: str):
-    app = _get_app(app_name)
     _write_file(_file_path_of(app_name, file_name), file_content)
 
 
 @rpc
 async def rename_file(app_name: str, file_name: str, new_file_name: str):
-    app = _get_app(app_name)
     old_path = _file_path_of(app_name, file_name)
     new_path = _file_path_of(app_name, new_file_name)
     old_path.rename(new_path)
-    await app.restart()
+    # TODO: Not implemented
+    # await app.restart()
 
 
 @rpc
 async def delete_file(app_name: str, file_name: str):
-    app = _get_app(app_name)
     _file_path_of(app_name, file_name).unlink()
-    await app.restart()
+    # TODO: Not implemented
+    # await app.restart()
 
 
 #
