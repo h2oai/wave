@@ -5,6 +5,7 @@ export const editor = {
     addAction: jest.fn(),
     dispose: jest.fn(),
     onDidChangeModelContent: jest.fn(),
+    onDidChangeCursorPosition: jest.fn(),
     focus: jest.fn()
   }))
 }

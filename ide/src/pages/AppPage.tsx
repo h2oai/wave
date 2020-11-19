@@ -5,6 +5,7 @@ import { newEditor } from '@/model';
 import { validateFileName } from '@/utils/validation';
 import * as Fluent from '@fluentui/react';
 import makeLogo from '@static/make-logo.svg';
+import { Position } from "monaco-editor";
 import React from 'react';
 import { matchPath } from 'react-router-dom';
 
@@ -219,6 +220,7 @@ export default bond(() => {
     editor = newEditor(appName),
     isLoadingB = box(true),
     dirtyFileContentMap = new Map<string, string>(),
+    fileCursorPositionMap = new Map<string, Position | null>(),
     loadFiles = async (nextActiveFile?: string) => {
       const files = await list_files(appName)
       filesB(files.map(name => ({ name, isDirty: false })))
@@ -239,17 +241,25 @@ export default bond(() => {
     readFile = async (fileName: string) => {
       const content = dirtyFileContentMap.get(fileName) || await read_file(appName, fileName)
       editor.contentB(content)
+      editor.cursorPositionB(fileCursorPositionMap.get(fileName) || null)
     },
     deleteFile = async () => {
+      fileCursorPositionMap.delete(activeFileB())
       await delete_file(appName, activeFileB())
       await loadFiles()
       store.dialogB(null)
     },
     renameFile = async (newName: string) => {
       newName = `${newName}.py`
+
+      fileCursorPositionMap.set(newName, fileCursorPositionMap.get(activeFileB()) || null)
+      fileCursorPositionMap.delete(activeFileB())
+
       await rename_file(appName, activeFileB(), newName)
       await loadFiles(newName)
+
       store.dialogB(null)
+      editor.cursorPositionB(fileCursorPositionMap.get(newName) || null)
     },
     onContentSave = async (newContent: string) => {
       await write_file(appName, activeFileB(), newContent)
@@ -260,6 +270,7 @@ export default bond(() => {
       dirtyFileContentMap.set(activeFileB(), newContent)
       onDirtyChange()
     },
+    onCursorChange = (position: Position | null) => fileCursorPositionMap.set(activeFileB(), position),
     onDirtyChange = () => filesB(filesB().map(({ name }) => ({ name, isDirty: dirtyFileContentMap.has(name) }))),
     init = async () => {
       await editor.createAppIfNotExists()
@@ -290,8 +301,19 @@ export default bond(() => {
                 <FileToolbar addNewFile={addNewFile} readFile={readFile} filesB={filesB} activeFileB={activeFileB} fileNameValidation={fileNameValidation} />
                 <Fluent.Stack horizontal styles={{ root: { marginTop: 5, width: '100%', height: 'calc(100vh - 122px)' } }}>
                   <div data-test='editor-window' style={{ position: 'relative', ...commonStyles, ...viewStyles[viewStyleB()].editor }}>
-                    <Editor contentB={editor.contentB} onContentSave={onContentSave} onContentChange={onContentChange} />
-                    <FileActions deleteFile={deleteFile} renameFile={renameFile} activeFileB={activeFileB} fileNameValidation={fileNameValidation} />
+                    <Editor
+                      contentB={editor.contentB}
+                      cursorPositionB={editor.cursorPositionB}
+                      onContentSave={onContentSave}
+                      onContentChange={onContentChange}
+                      onCursorChange={onCursorChange}
+                    />
+                    <FileActions
+                      activeFileB={activeFileB}
+                      deleteFile={deleteFile}
+                      fileNameValidation={fileNameValidation}
+                      renameFile={renameFile}
+                    />
                   </div>
                   <div data-test='app-window' style={{ ...commonStyles, ...viewStyles[viewStyleB()].app }}>
                     <iframe src={`${IFRAME_URL}/${appName}`} width='100%' height='100%' frameBorder="0" />

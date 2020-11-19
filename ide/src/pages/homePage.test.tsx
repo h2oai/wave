@@ -26,7 +26,7 @@ describe('Homepage.tsx', () => {
   it('should show dialog button initially disabled', () => {
     const { getByText } = render(homepage)
     fireEvent.click(getByText('Make a new app...'))
-    expect(getByText('Submit').parentElement?.parentElement).toBeDisabled()
+    expect(getByText('Submit').parentElement?.parentElement?.parentElement).toBeDisabled()
   })
 
   it('should show err for invalid input', async () => {
@@ -36,7 +36,7 @@ describe('Homepage.tsx', () => {
     fireEvent.change(getByText('App name').nextElementSibling?.firstChild!, { target: { value: 'my_app**' } })
     // Fluent input uses 200ms debounce for validation by default.
     await waitFor(() => expect(getByText('App name can contain only word characters, numbers and underscore ("_").')).toBeInTheDocument())
-    expect(getByText('Submit').parentElement?.parentElement).toBeDisabled()
+    expect(getByText('Submit').parentElement?.parentElement?.parentElement).toBeDisabled()
   })
 
   it('should show err for invalid input - already existing app', async () => {
@@ -50,7 +50,7 @@ describe('Homepage.tsx', () => {
     fireEvent.change(getByText('App name').nextElementSibling?.firstChild!, { target: { value: 'app1' } })
     // Fluent input uses 200ms debounce for validation by default.
     await waitFor(() => expect(getByText('App with such name already exists.')).toBeInTheDocument())
-    expect(getByText('Submit').parentElement?.parentElement).toBeDisabled()
+    expect(getByText('Submit').parentElement?.parentElement?.parentElement).toBeDisabled()
   })
 
   it('should redirect to an app after clicking recent', async () => {

@@ -10,11 +10,13 @@ self.MonacoEnvironment = { getWorker: () => new EditorWorker() }
 
 type EditorProps = {
   contentB: Box<string>,
+  cursorPositionB: Box<monaco.Position | null>,
   onContentSave: (val: string) => Promise<void>
   onContentChange: (val: string) => void
+  onCursorChange: (position: monaco.Position | null) => void
 }
 
-export default bond(({ contentB, onContentSave, onContentChange }: EditorProps) => {
+export default bond(({ contentB, cursorPositionB, onContentSave, onContentChange, onCursorChange }: EditorProps) => {
   let ed: monaco.editor.IStandaloneCodeEditor
 
   const
@@ -36,16 +38,18 @@ export default bond(({ contentB, onContentSave, onContentChange }: EditorProps) 
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
         run: ed => onContentSave(ed.getValue())
       })
-      ed.onDidChangeModelContent(({ isFlush }) => {
-        // Flush means the content was changed programatically.
-        if (!isFlush) onContentChange(ed.getValue())
-        // Focus editor when content was set programatically.
-        else ed.focus()
-      })
-      ed.focus()
+      // Flush means the content was changed programatically.
+      ed.onDidChangeModelContent(({ isFlush }) => { if (!isFlush) onContentChange(ed.getValue()) })
+      // Save cursor only on user action, not content flush.
+      ed.onDidChangeCursorPosition(({ position, reason }) => { if (reason === monaco.editor.CursorChangeReason.Explicit) onCursorChange(position) })
+
       on(contentB, content => ed.setValue(content))
+      on(cursorPositionB, position => {
+        ed.focus()
+        ed.setPosition(position || new monaco.Position(1, 1))
+      })
     },
     dispose = () => ed.dispose(),
     render = () => <div style={{ width: '100%', height: '100%', overflow: 'hidden' }} ref={divEl}></div>
-  return { init, render, contentB, dispose }
+  return { init, render, contentB, cursorPositionB, dispose }
 })
