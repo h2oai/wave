@@ -22,10 +22,12 @@ class _DataSource:
     TODO: Handle Numpy, Pandas and Datatable.
     """
 
-    def __init__(self, data: DataSourceObj, column_names: Optional[List[str]] = None):
+    def __init__(self, data: DataSourceObj, column_names: Optional[List[str]] = None,
+                 column_types: Optional[List[str]] = None):
         self._data = data
         self._h2o3_frame: Optional[h2o.H2OFrame] = None
         self._column_names: Optional[List[str]] = column_names
+        self._column_types: Optional[List[str]] = column_types
 
     def _to_h2o3_frame(self) -> h2o.H2OFrame:
         if isinstance(self._data, str):
@@ -36,7 +38,8 @@ class _DataSource:
                 raise ValueError('file not found')
         elif isinstance(self._data, List):
             if self._column_names is not None:
-                return h2o.H2OFrame(python_obj=self._data, header=-1, column_names=self._column_names)
+                return h2o.H2OFrame(python_obj=self._data, header=-1, column_names=self._column_names,
+                                    column_types=self._column_types)
             return h2o.H2OFrame(python_obj=self._data)
         raise ValueError('unknown data type')
 
@@ -58,7 +61,7 @@ class WaveModel:
 
     @property
     def estimator(self) -> str:
-        """The type of a estimator for a particular model."""
+        """The type of an estimator used for a particular model."""
         raise NotImplementedError()
 
     def predict(self, inputs: DataSourceObj, **kwargs):
@@ -70,13 +73,14 @@ class WaveModel:
         Args:
             inputs: A python obj or filename. [[1, 'a'], [2, 'b'], [3, 'c']] will create 3 rows and 2 columns.
 
-
         Returns:
             A list of lists representing rows.
 
         Examples:
 
             >>> # Two rows and three columns:
+            >>> from h2o_wave.ml import build_model
+            >>> model = build_model()
             >>> model.predict([[1, 12.3, 'aa', 32.5], [2, 15.6, 'bb', 89.9]])
             [[16.6], [17.8]]
         """
@@ -117,7 +121,12 @@ class _H2O3Model(WaveModel):
         aml = H2OAutoML(max_runtime_secs=30, project_name=id_, stopping_metric=metric.name)
         frame = data.h2o3_frame
         cols = list(frame.columns)
-        cols.remove(target)
+
+        try:
+            cols.remove(target)
+        except ValueError:
+            raise ValueError('no target column')
+
         aml.train(x=cols, y=target, training_frame=frame)
         return _H2O3Model(id_, aml)
 
@@ -139,7 +148,7 @@ class _H2O3Model(WaveModel):
         training_frame_id = self.aml.input_spec['training_frame']
         training_frame = h2o.get_frame(training_frame_id, rows=0)
 
-        ds = _DataSource(data, column_names=training_frame.names)
+        ds = _DataSource(data, column_names=training_frame.names, column_types=training_frame.types)
         iframe = ds.h2o3_frame
 
         oframe = self.aml.predict(iframe)
