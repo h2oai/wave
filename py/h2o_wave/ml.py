@@ -10,7 +10,7 @@ from h2o.automl import H2OAutoML
 from .core import _config
 
 
-WaveModelType = Enum('WaveModelType', 'H2O3 DAI')
+WaveModelBackendType = Enum('WaveModelBackendType', 'H2O3 DAI')
 WaveModelMetric = Enum('WaveModelMetric', 'AUTO AUC MSE RMSE MAE RMSLE DEVIANCE LOGLOSS AUCPR LIFT_TOP_GROUP'
                                           'MISCLASSIFICATION MEAN_PER_CLASS_ERROR')
 DataSourceObj = Union[str, List[List]]
@@ -19,7 +19,7 @@ DataSourceObj = Union[str, List[List]]
 class _DataSource:
     """Represents a various data sources that can be lazily transformed into another data type.
 
-    TODO: Handle Numpy, Pandas and Datatable.
+    TODO: Handle Numpy, Pandas and Datatable?
     """
 
     def __init__(self, data: DataSourceObj, column_names: Optional[List[str]] = None,
@@ -50,28 +50,21 @@ class _DataSource:
         return self._h2o3_frame
 
 
-class WaveModel:
+class WaveModelBackend:
     """Represents a common interface for a model. It references DAI or H2O-3 model in backend."""
 
-    def __init__(self, id_: str, type_: WaveModelType):
+    def __init__(self, id_: str, type_: WaveModelBackendType):
         self.id = id_
         """The id of a model that identifies it on a backend service."""
         self.type = type_
-        """A wave model type represented by `h2o_wave.ml.WaveModelType` enum. It's either DAI or H2O3."""
-
-    @property
-    def estimator(self) -> str:
-        """The type of an estimator used for a particular model."""
-        raise NotImplementedError()
+        """A wave model backend type represented by `h2o_wave.ml.WaveModelBackendType` enum. It's either DAI or H2O3."""
 
     def predict(self, inputs: DataSourceObj, **kwargs):
         """Predict values based on inputs.
 
-        Inputs follow the `python_obj` spec here: http://docs.h2o.ai/h2o/latest-stable/h2o-py/docs/frame.html#h2oframe
-        This is a temporary solution. The contract needs to be stabilized.
-
         Args:
             inputs: A python obj or filename. [[1, 'a'], [2, 'b'], [3, 'c']] will create 3 rows and 2 columns.
+                    The values for a target column need to be specified as well (can be `None`).
 
         Returns:
             A list of lists representing rows.
@@ -87,12 +80,12 @@ class WaveModel:
         raise NotImplementedError()
 
 
-class _H2O3Model(WaveModel):
+class _H2O3ModelBackend(WaveModelBackend):
 
     INIT = False
 
     def __init__(self, id_: str, aml: H2OAutoML):
-        super().__init__(id_, WaveModelType.H2O3)
+        super().__init__(id_, WaveModelBackendType.H2O3)
         self.aml = aml
 
     @staticmethod
@@ -113,11 +106,11 @@ class _H2O3Model(WaveModel):
             cls.INIT = True
 
     @staticmethod
-    def build(data: _DataSource, target: str, metric: WaveModelMetric) -> WaveModel:
+    def build(data: _DataSource, target: str, metric: WaveModelMetric) -> WaveModelBackend:
 
-        _H2O3Model._init()
+        _H2O3ModelBackend._init()
 
-        id_ = _H2O3Model._make_id()
+        id_ = _H2O3ModelBackend._make_id()
         aml = H2OAutoML(max_runtime_secs=30, project_name=id_, stopping_metric=metric.name)
         frame = data.h2o3_frame
         cols = list(frame.columns)
@@ -128,20 +121,16 @@ class _H2O3Model(WaveModel):
             raise ValueError('no target column')
 
         aml.train(x=cols, y=target, training_frame=frame)
-        return _H2O3Model(id_, aml)
+        return _H2O3ModelBackend(id_, aml)
 
     @staticmethod
     def get(id_: str):
         # H2O-3 needs to be running standalone for this to work.
 
-        _H2O3Model._init()
+        _H2O3ModelBackend._init()
 
         aml = h2o.automl.get_automl(id_)
-        return _H2O3Model(id_, aml)
-
-    @property
-    def estimator(self) -> str:
-        return self.aml.leader.algo
+        return _H2O3ModelBackend(id_, aml)
 
     def predict(self, data: DataSourceObj, **kwargs):
 
@@ -155,12 +144,12 @@ class _H2O3Model(WaveModel):
         return oframe.as_data_frame(use_pandas=False, header=False)
 
 
-# class _DAIModel(WaveModel):
+# class _DAIBackendModel(WaveModelBackend):
 #
 #     _INSTANCE = None
 #
 #     def __init__(self, id_: str, experiment):
-#         super().__init__(id_, WaveModelType.DAI)
+#         super().__init__(id_, WaveModelBackendType.DAI)
 #         self.experiment = experiment
 #
 #     @staticmethod
@@ -184,7 +173,7 @@ class _H2O3Model(WaveModel):
 #         return 'classification'
 #
 #     @staticmethod
-#     def build(filename: str, target: str, metric: WaveModelMetric) -> WaveModel:
+#     def build(filename: str, target: str, metric: WaveModelMetric) -> WaveModelBackend:
 #
 #         dai = _DAIModel._instance()
 #
@@ -216,17 +205,18 @@ class _H2O3Model(WaveModel):
 
 
 def build_model(data_obj: DataSourceObj, target: str, metric: WaveModelMetric = WaveModelMetric.AUTO,
-                model_type: Optional[WaveModelType] = None) -> WaveModel:
+                model_backend_type: Optional[WaveModelBackendType] = None) -> WaveModelBackend:
     """Build a model.
 
-    If `model_type` not specified the function will determine correct model based on a current environment.
+    If `model_backend_type` not specified the function will determine correct backend model based on a current
+    environment.
 
     Args:
         data_obj: A string containing a filename to dataset or python obj.
                   [[1, 'a'], [2, 'b'], [3, 'c']] will create 3 rows and 2 columns.
         target: A name of the response column.
         metric: A metric to be used in building process specified by `h2o_wave.ml.WaveModelMetric`
-        model_type: Optionally a model type specified by `h2o_wave.ml.WaveModelType`.
+        model_backend_type: Optionally a backend model type specified by `h2o_wave.ml.WaveModelBackendType`.
 
     Returns:
         A wave model.
@@ -234,16 +224,16 @@ def build_model(data_obj: DataSourceObj, target: str, metric: WaveModelMetric = 
 
     ds = _DataSource(data_obj)
 
-    if model_type is not None:
-        if model_type == WaveModelType.H2O3:
-            return _H2O3Model.build(ds, target, metric)
-        elif model_type == WaveModelType.DAI:
+    if model_backend_type is not None:
+        if model_backend_type == WaveModelBackendType.H2O3:
+            return _H2O3ModelBackend.build(ds, target, metric)
+        elif model_backend_type == WaveModelBackendType.DAI:
             # return _DAIModel.build(filename, target, metric)
             raise NotImplementedError()
-    return _H2O3Model.build(ds, target, metric)
+    return _H2O3ModelBackend.build(ds, target, metric)
 
 
-def get_model(id_: str, model_type: Optional[WaveModelType] = None) -> WaveModel:
+def get_model(id_: str, model_type: Optional[WaveModelBackendType] = None) -> WaveModelBackend:
     """Get a model that is already built on a backend.
 
     Args:
@@ -255,15 +245,15 @@ def get_model(id_: str, model_type: Optional[WaveModelType] = None) -> WaveModel
     """
 
     if model_type is not None:
-        if model_type == WaveModelType.H2O3:
-            return _H2O3Model.get(id_)
-        elif model_type == WaveModelType.DAI:
+        if model_type == WaveModelBackendType.H2O3:
+            return _H2O3ModelBackend.get(id_)
+        elif model_type == WaveModelBackendType.DAI:
             raise NotImplementedError()
-    return _H2O3Model.get(id_)
+    return _H2O3ModelBackend.get(id_)
 
 
-def deploy_model(model: WaveModel):
+def deploy_model(model: WaveModelBackend):
     """Deploy a model. (To be done)"""
-    if isinstance(model, _H2O3Model):
+    if isinstance(model, _H2O3ModelBackend):
         raise ValueError('H2O-3 models not supported: cannot deploy')
     raise NotImplementedError()
