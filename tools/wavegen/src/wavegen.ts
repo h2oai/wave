@@ -515,6 +515,7 @@ const
         p('')
         p('import warnings')
         p('from .types import *')
+        p('from .ui_ext import *')
         p('')
 
         for (const type of protocol.types) {
