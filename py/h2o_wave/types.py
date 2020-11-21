@@ -5248,12 +5248,12 @@ class MarkupCard:
         )
 
 
-class AreaDirection:
+class ZoneDirection:
     ROW = 'row'
     COLUMN = 'column'
 
 
-class AreaJustify:
+class ZoneJustify:
     START = 'start'
     END = 'end'
     CENTER = 'center'
@@ -5261,14 +5261,14 @@ class AreaJustify:
     AROUND = 'around'
 
 
-class AreaAlign:
+class ZoneAlign:
     START = 'start'
     END = 'end'
     CENTER = 'center'
     STRETCH = 'stretch'
 
 
-class AreaWrap:
+class ZoneWrap:
     START = 'start'
     END = 'end'
     CENTER = 'center'
@@ -5277,8 +5277,8 @@ class AreaWrap:
     STRETCH = 'stretch'
 
 
-class Area:
-    """Represents an area within a page layout.
+class Zone:
+    """Represents an zone within a page layout.
     """
     def __init__(
             self,
@@ -5288,27 +5288,27 @@ class Area:
             justify: Optional[str] = None,
             align: Optional[str] = None,
             wrap: Optional[str] = None,
-            areas: Optional[List['Area']] = None,
+            zones: Optional[List['Zone']] = None,
     ):
         self.name = name
-        """An identifying name for this area."""
+        """An identifying name for this zone."""
         self.size = size
-        """The size of this area."""
+        """The size of this zone."""
         self.direction = direction
-        """Layout direction. One of 'row', 'column'. See enum h2o_wave.ui.AreaDirection."""
+        """Layout direction. One of 'row', 'column'. See enum h2o_wave.ui.ZoneDirection."""
         self.justify = justify
-        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.AreaJustify."""
+        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ZoneJustify."""
         self.align = align
-        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.AreaAlign."""
+        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.ZoneAlign."""
         self.wrap = wrap
-        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.AreaWrap."""
-        self.areas = areas
-        """The areas contained inside this area."""
+        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.ZoneWrap."""
+        self.zones = zones
+        """The sub-zones contained inside this zone."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.name is None:
-            raise ValueError('Area.name is required.')
+            raise ValueError('Zone.name is required.')
         return _dump(
             name=self.name,
             size=self.size,
@@ -5316,36 +5316,36 @@ class Area:
             justify=self.justify,
             align=self.align,
             wrap=self.wrap,
-            areas=None if self.areas is None else [__e.dump() for __e in self.areas],
+            zones=None if self.zones is None else [__e.dump() for __e in self.zones],
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Area':
+    def load(__d: Dict) -> 'Zone':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         if __d_name is None:
-            raise ValueError('Area.name is required.')
+            raise ValueError('Zone.name is required.')
         __d_size: Any = __d.get('size')
         __d_direction: Any = __d.get('direction')
         __d_justify: Any = __d.get('justify')
         __d_align: Any = __d.get('align')
         __d_wrap: Any = __d.get('wrap')
-        __d_areas: Any = __d.get('areas')
+        __d_zones: Any = __d.get('zones')
         name: str = __d_name
         size: Optional[str] = __d_size
         direction: Optional[str] = __d_direction
         justify: Optional[str] = __d_justify
         align: Optional[str] = __d_align
         wrap: Optional[str] = __d_wrap
-        areas: Optional[List['Area']] = None if __d_areas is None else [Area.load(__e) for __e in __d_areas]
-        return Area(
+        zones: Optional[List['Zone']] = None if __d_zones is None else [Zone.load(__e) for __e in __d_zones]
+        return Zone(
             name,
             size,
             direction,
             justify,
             align,
             wrap,
-            areas,
+            zones,
         )
 
 
@@ -5355,7 +5355,7 @@ class Layout:
     def __init__(
             self,
             breakpoint: str,
-            area: Area,
+            zones: List[Zone],
             width: Optional[str] = None,
             min_width: Optional[str] = None,
             max_width: Optional[str] = None,
@@ -5364,31 +5364,31 @@ class Layout:
             max_height: Optional[str] = None,
     ):
         self.breakpoint = breakpoint
-        """The minimum viewport width at which to use this grid. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set."""
-        self.area = area
-        """The area contained within this layout."""
+        """The minimum viewport width at which to use this layout. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set."""
+        self.zones = zones
+        """The zones in this layout. Each zones can in turn contain sub-zones."""
         self.width = width
-        """The width of the grid. Defaults to `100%`."""
+        """The width of the layout. Defaults to `100%`."""
         self.min_width = min_width
-        """The minimum width of the grid."""
+        """The minimum width of the layout."""
         self.max_width = max_width
-        """The maximum width of the grid."""
+        """The maximum width of the layout."""
         self.height = height
-        """The height of the grid. Defaults to `auto`."""
+        """The height of the layout. Defaults to `auto`."""
         self.min_height = min_height
-        """The minimum height of the grid."""
+        """The minimum height of the layout."""
         self.max_height = max_height
-        """The maximum height of the grid."""
+        """The maximum height of the layout."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         if self.breakpoint is None:
             raise ValueError('Layout.breakpoint is required.')
-        if self.area is None:
-            raise ValueError('Layout.area is required.')
+        if self.zones is None:
+            raise ValueError('Layout.zones is required.')
         return _dump(
             breakpoint=self.breakpoint,
-            area=self.area.dump(),
+            zones=[__e.dump() for __e in self.zones],
             width=self.width,
             min_width=self.min_width,
             max_width=self.max_width,
@@ -5403,9 +5403,9 @@ class Layout:
         __d_breakpoint: Any = __d.get('breakpoint')
         if __d_breakpoint is None:
             raise ValueError('Layout.breakpoint is required.')
-        __d_area: Any = __d.get('area')
-        if __d_area is None:
-            raise ValueError('Layout.area is required.')
+        __d_zones: Any = __d.get('zones')
+        if __d_zones is None:
+            raise ValueError('Layout.zones is required.')
         __d_width: Any = __d.get('width')
         __d_min_width: Any = __d.get('min_width')
         __d_max_width: Any = __d.get('max_width')
@@ -5413,7 +5413,7 @@ class Layout:
         __d_min_height: Any = __d.get('min_height')
         __d_max_height: Any = __d.get('max_height')
         breakpoint: str = __d_breakpoint
-        area: Area = Area.load(__d_area)
+        zones: List[Zone] = [Zone.load(__e) for __e in __d_zones]
         width: Optional[str] = __d_width
         min_width: Optional[str] = __d_min_width
         max_width: Optional[str] = __d_max_width
@@ -5422,7 +5422,7 @@ class Layout:
         max_height: Optional[str] = __d_max_height
         return Layout(
             breakpoint,
-            area,
+            zones,
             width,
             min_width,
             max_width,

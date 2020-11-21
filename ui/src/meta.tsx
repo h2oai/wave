@@ -8,7 +8,7 @@ import { bond, box, Card, qd, S, U } from './qd'
  */
 export interface Layout {
   /**
-   * The minimum viewport width at which to use this grid.
+   * The minimum viewport width at which to use this layout.
    * Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset.
    * The named presets are:
    * 'xs': '0px' for extra small devices (portrait phones),
@@ -20,29 +20,29 @@ export interface Layout {
    * A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set.
   */
   breakpoint: S
-  /** The area contained within this layout. */
-  area: Area
-  /** The width of the grid. Defaults to `100%`. */
+  /** The zones in this layout. Each zones can in turn contain sub-zones. */
+  zones: Zone[]
+  /** The width of the layout. Defaults to `100%`. */
   width?: S
-  /** The minimum width of the grid. */
+  /** The minimum width of the layout. */
   min_width?: S
-  /** The maximum width of the grid. */
+  /** The maximum width of the layout. */
   max_width?: S
-  /** The height of the grid. Defaults to `auto`. */
+  /** The height of the layout. Defaults to `auto`. */
   height?: S
-  /** The minimum height of the grid. */
+  /** The minimum height of the layout. */
   min_height?: S
-  /** The maximum height of the grid. */
+  /** The maximum height of the layout. */
   max_height?: S
 }
 
 /**
- * Represents an area within a page layout.
+ * Represents an zone within a page layout.
  */
-export interface Area {
-  /** An identifying name for this area. */
+export interface Zone {
+  /** An identifying name for this zone. */
   name: S,
-  /** The size of this area. */
+  /** The size of this zone. */
   size?: S,
   /** Layout direction. */
   direction?: 'row' | 'column'
@@ -52,8 +52,8 @@ export interface Area {
   align?: 'start' | 'end' | 'center' | 'stretch'
   /** Wrapping strategy. */
   wrap?: 'start' | 'end' | 'center' | 'between' | 'around' | 'stretch'
-  /** The areas contained inside this area. */
-  areas?: Area[]
+  /** The sub-zones contained inside this zone. */
+  zones?: Zone[]
 }
 
 /**

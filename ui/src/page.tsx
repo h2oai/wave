@@ -2,7 +2,7 @@ import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { GridLayout, CardView } from './layout'
-import { Area, Layout, layoutsB, preload } from './meta'
+import { Zone, Layout, layoutsB, preload } from './meta'
 import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
 import { getTheme } from './theme'
 
@@ -16,7 +16,7 @@ type Breakpoint = {
 }
 
 type Slot = {
-  area?: S
+  zone?: S
   order?: U
   grow?: U
   size1?: S
@@ -29,7 +29,7 @@ type CardSlot = {
 }
 
 type Section = {
-  area: Area
+  zone: Zone
   sections?: Section[]
   cardslots: CardSlot[]
 }
@@ -47,23 +47,20 @@ const
   layoutB = box<{ layout: Layout, index: U } | null>(null),
   parseBreakpoint = (spec: S): U => parseInt(presetBreakpoints[spec] ?? spec, 10),
   badSlot: Slot = {},
-  parseBox = (index: U, spec: S): Slot => {
-    if (!spec?.length) return badSlot
-    const specs = spec.split(/\s*\/\s*/)
-    let s = specs[index]
-    if (!s) s = s[0] // shorthand: assume same area for every layout
-    if (!s) return badSlot
-    const
-      [areaOrder, size1, size2] = s.split(/\s+/),
-      [area, orderS] = areaOrder.split('#'),
-      order = parseU(orderS),
-      grow = parseU(size1)
-    return {
-      area,
-      order: isNaN(order) ? undefined : order,
-      grow: isNaN(grow) ? undefined : grow,
-      size1,
-      size2,
+  parseBox = ({ zone, order, size, width, height }: any): Slot => {
+    return { zone, order, grow: parseU(size), size1: width, size2: height }
+  },
+  parseBoxes = (index: U, spec: S): Slot => {
+    try {
+      if (spec[0] === '[') {
+        const specs: any[] = JSON.parse(spec)
+        spec = specs[index]
+        if (!spec) spec = specs[0]
+        if (!spec) return badSlot
+      }
+      return spec[0] === '{' ? parseBox(JSON.parse(spec)) : { zone: spec }
+    } catch {
+      return badSlot
     }
   },
   segregate = <T extends {}>(xs: T[], f: (x: T) => B): [T[], T[]] => {
@@ -144,21 +141,21 @@ const
     around: 'space-around',
     stretch: 'stretch',
   },
-  toSectionStyle = (area: Area, direction?: S): React.CSSProperties => {
+  toSectionStyle = (zone: Zone, direction?: S): React.CSSProperties => {
     const
       css: React.CSSProperties = {
-        flexDirection: area.direction === 'row' ? 'row' : 'column',
-        justifyContent: justifications[area.justify ?? ''],
-        alignItems: alignments[area.align ?? ''],
-        alignContent: wrappings[area.wrap ?? ''],
-        flexWrap: area.wrap ? 'wrap' : undefined,
+        flexDirection: zone.direction === 'row' ? 'row' : 'column',
+        justifyContent: justifications[zone.justify ?? ''],
+        alignItems: alignments[zone.align ?? ''],
+        alignContent: wrappings[zone.wrap ?? ''],
+        flexWrap: zone.wrap ? 'wrap' : undefined,
       }
 
-    if (area.size) {
+    if (zone.size) {
       if (direction === 'row') {
-        css.width = area.size
+        css.width = zone.size
       } else {
-        css.height = area.size
+        css.height = zone.size
       }
     } else {
       css.flexGrow = 1
@@ -193,14 +190,14 @@ const
     return style
 
   },
-  toSection = (area: Area): Section => ({
-    area,
-    sections: area.areas?.map(toSection),
+  toSection = (zone: Zone): Section => ({
+    zone,
+    sections: zone.zones?.map(toSection),
     cardslots: []
   }),
   findSection = (section: Section, name: S): Section | null => {
-    const { area, sections } = section
-    if (area.name === name) return section
+    const { zone, sections } = section
+    if (zone.name === name) return section
     if (sections) {
       for (const s of sections) {
         const c = findSection(s, name)
@@ -211,14 +208,14 @@ const
   },
   FlexSection = ({ section, direction }: { section: Section, direction?: S }) => {
     const
-      { area, cardslots, sections } = section,
+      { zone, cardslots, sections } = section,
       children = sections
-        ? sections.map(section => <FlexSection key={section.area.name} direction={area.direction} section={section} />)
+        ? sections.map(section => <FlexSection key={section.zone.name} direction={zone.direction} section={section} />)
         : cardslots.length ?
           cardslots.map(cardslot => {
             const { card: c } = cardslot
             return (
-              <div key={c.id} className={css.slot} style={toSlotStyle(cardslot, area.direction)}>
+              <div key={c.id} className={css.slot} style={toSlotStyle(cardslot, zone.direction)}>
                 <CardView card={c} />
                 {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
               </div>
@@ -227,7 +224,7 @@ const
           : null
 
     return (
-      <div data-test={area.name} className={css.flex} style={toSectionStyle(area, direction)}>
+      <div data-test={zone.name} className={css.flex} style={toSectionStyle(zone, direction)}>
         {children}
       </div>
     )
@@ -239,13 +236,13 @@ const
         if (!layoutIndex) return <></>
         const
           { layout, index } = layoutIndex,
-          section = toSection(layout.area),
+          section = toSection({ name: 'main', zones: layout.zones }),
           { width, min_width, max_width, height, min_height, max_height } = layout
         for (const card of cards) {
           const
-            slot = parseBox(index, card.state.box),
-            target = findSection(section, slot.area ?? '')
-         target?.cardslots.push({ card, slot })
+            slot = parseBoxes(index, card.state.box),
+            target = findSection(section, slot.zone ?? '')
+          target?.cardslots.push({ card, slot })
         }
         const style: React.CSSProperties = {
           width: width ?? '100%',

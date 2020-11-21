@@ -2354,42 +2354,42 @@ def markup_card(
     )
 
 
-def area(
+def zone(
         name: str,
         size: Optional[str] = None,
         direction: Optional[str] = None,
         justify: Optional[str] = None,
         align: Optional[str] = None,
         wrap: Optional[str] = None,
-        areas: Optional[List[Area]] = None,
-) -> Area:
-    """Represents an area within a page layout.
+        zones: Optional[List[Zone]] = None,
+) -> Zone:
+    """Represents an zone within a page layout.
 
     Args:
-        name: An identifying name for this area.
-        size: The size of this area.
-        direction: Layout direction. One of 'row', 'column'. See enum h2o_wave.ui.AreaDirection.
-        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.AreaJustify.
-        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.AreaAlign.
-        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.AreaWrap.
-        areas: The areas contained inside this area.
+        name: An identifying name for this zone.
+        size: The size of this zone.
+        direction: Layout direction. One of 'row', 'column'. See enum h2o_wave.ui.ZoneDirection.
+        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ZoneJustify.
+        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.ZoneAlign.
+        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.ZoneWrap.
+        zones: The sub-zones contained inside this zone.
     Returns:
-        A `h2o_wave.types.Area` instance.
+        A `h2o_wave.types.Zone` instance.
     """
-    return Area(
+    return Zone(
         name,
         size,
         direction,
         justify,
         align,
         wrap,
-        areas,
+        zones,
     )
 
 
 def layout(
         breakpoint: str,
-        area: Area,
+        zones: List[Zone],
         width: Optional[str] = None,
         min_width: Optional[str] = None,
         max_width: Optional[str] = None,
@@ -2400,20 +2400,20 @@ def layout(
     """Represents the layout structure for a page.
 
     Args:
-        breakpoint: The minimum viewport width at which to use this grid. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set.
-        area: The area contained within this layout.
-        width: The width of the grid. Defaults to `100%`.
-        min_width: The minimum width of the grid.
-        max_width: The maximum width of the grid.
-        height: The height of the grid. Defaults to `auto`.
-        min_height: The minimum height of the grid.
-        max_height: The maximum height of the grid.
+        breakpoint: The minimum viewport width at which to use this layout. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set.
+        zones: The zones in this layout. Each zones can in turn contain sub-zones.
+        width: The width of the layout. Defaults to `100%`.
+        min_width: The minimum width of the layout.
+        max_width: The maximum width of the layout.
+        height: The height of the layout. Defaults to `auto`.
+        min_height: The minimum height of the layout.
+        max_height: The maximum height of the layout.
     Returns:
         A `h2o_wave.types.Layout` instance.
     """
     return Layout(
         breakpoint,
-        area,
+        zones,
         width,
         min_width,
         max_width,

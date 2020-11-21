@@ -2666,35 +2666,35 @@ ui_markup_card <- function(
   return(.o)
 }
 
-#' Represents an area within a page layout.
+#' Represents an zone within a page layout.
 #'
-#' @param name An identifying name for this area.
-#' @param size The size of this area.
+#' @param name An identifying name for this zone.
+#' @param size The size of this zone.
 #' @param direction Layout direction.
-#'   One of 'row', 'column'. See enum h2o_wave.ui.AreaDirection.
+#'   One of 'row', 'column'. See enum h2o_wave.ui.ZoneDirection.
 #' @param justify Layout strategy for main axis.
-#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.AreaJustify.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ZoneJustify.
 #' @param align Layout strategy for cross axis.
-#'   One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.AreaAlign.
+#'   One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.ZoneAlign.
 #' @param wrap Wrapping strategy.
-#'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.AreaWrap.
-#' @param areas The areas contained inside this area.
-#' @return A Area instance.
-ui_area <- function(
+#'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.ZoneWrap.
+#' @param zones The sub-zones contained inside this zone.
+#' @return A Zone instance.
+ui_zone <- function(
   name,
   size = NULL,
   direction = NULL,
   justify = NULL,
   align = NULL,
   wrap = NULL,
-  areas = NULL) {
+  zones = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("size", "character", size)
   # TODO Validate direction
   # TODO Validate justify
   # TODO Validate align
   # TODO Validate wrap
-  .guard_vector("areas", "h2oq_Area", areas)
+  .guard_vector("zones", "h2oq_Zone", zones)
   .o <- list(
     name=name,
     size=size,
@@ -2702,14 +2702,14 @@ ui_area <- function(
     justify=justify,
     align=align,
     wrap=wrap,
-    areas=areas)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Area"))
+    zones=zones)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Zone"))
   return(.o)
 }
 
 #' Represents the layout structure for a page.
 #'
-#' @param breakpoint The minimum viewport width at which to use this grid.
+#' @param breakpoint The minimum viewport width at which to use this layout.
 #'   Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset.
 #'   The named presets are:
 #'   'xs': '0px' for extra small devices (portrait phones),
@@ -2719,17 +2719,17 @@ ui_area <- function(
 #'   'xl': '1200px' for extra large devices (large desktops).
 #'   
 #'   A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set.
-#' @param area The area contained within this layout.
-#' @param width The width of the grid. Defaults to `100%`.
-#' @param min_width The minimum width of the grid.
-#' @param max_width The maximum width of the grid.
-#' @param height The height of the grid. Defaults to `auto`.
-#' @param min_height The minimum height of the grid.
-#' @param max_height The maximum height of the grid.
+#' @param zones The zones in this layout. Each zones can in turn contain sub-zones.
+#' @param width The width of the layout. Defaults to `100%`.
+#' @param min_width The minimum width of the layout.
+#' @param max_width The maximum width of the layout.
+#' @param height The height of the layout. Defaults to `auto`.
+#' @param min_height The minimum height of the layout.
+#' @param max_height The maximum height of the layout.
 #' @return A Layout instance.
 ui_layout <- function(
   breakpoint,
-  area,
+  zones,
   width = NULL,
   min_width = NULL,
   max_width = NULL,
@@ -2737,7 +2737,7 @@ ui_layout <- function(
   min_height = NULL,
   max_height = NULL) {
   .guard_scalar("breakpoint", "character", breakpoint)
-  .guard_scalar("area", "h2oq_Area", area)
+  .guard_vector("zones", "h2oq_Zone", zones)
   .guard_scalar("width", "character", width)
   .guard_scalar("min_width", "character", min_width)
   .guard_scalar("max_width", "character", max_width)
@@ -2746,7 +2746,7 @@ ui_layout <- function(
   .guard_scalar("max_height", "character", max_height)
   .o <- list(
     breakpoint=breakpoint,
-    area=area,
+    zones=zones,
     width=width,
     min_width=min_width,
     max_width=max_width,
