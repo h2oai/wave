@@ -4,7 +4,7 @@ import { CardMenu } from './card_menu'
 import { GridLayout, CardView } from './layout'
 import { Zone, Layout, layoutsB, preload } from './meta'
 import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
-import { getTheme } from './theme'
+import { clas, getTheme } from './theme'
 
 
 type Breakpoint = {
@@ -16,8 +16,8 @@ type Breakpoint = {
 }
 
 type Slot = {
+  order: U
   zone?: S
-  order?: U
   grow?: U
   size1?: S
   size2?: S
@@ -34,7 +34,6 @@ type Section = {
   cardslots: CardSlot[]
 }
 
-
 const
   presetBreakpoints: Dict<S> = {
     xs: '0px',
@@ -46,9 +45,9 @@ const
   breakpointsB = box<Breakpoint[]>([]),
   layoutB = box<{ layout: Layout, index: U } | null>(null),
   parseBreakpoint = (spec: S): U => parseInt(presetBreakpoints[spec] ?? spec, 10),
-  badSlot: Slot = {},
+  badSlot: Slot = { order: 0 },
   parseBox = ({ zone, order, size, width, height }: any): Slot => {
-    return { zone, order, grow: parseU(size), size1: width, size2: height }
+    return { zone, order: order ? order : 0, grow: parseU(size), size1: width, size2: height }
   },
   parseBoxes = (index: U, spec: S): Slot => {
     try {
@@ -58,7 +57,7 @@ const
         if (!spec) spec = specs[0]
         if (!spec) return badSlot
       }
-      return spec[0] === '{' ? parseBox(JSON.parse(spec)) : { zone: spec }
+      return spec[0] === '{' ? parseBox(JSON.parse(spec)) : { zone: spec, order: 0 }
     } catch {
       return badSlot
     }
@@ -104,6 +103,18 @@ const
     flex: {
       position: 'relative',
       display: 'flex',
+    },
+    column: {
+      $nest: {
+        '>*': { marginBottom: 15 },
+        '>*:last-child': { marginBottom: 0 }
+      }
+    },
+    row: {
+      $nest: {
+        '>*': { marginRight: 15 },
+        '>*:last-child': { marginRight: 0 }
+      }
     },
     slot: {
       position: 'relative',
@@ -165,12 +176,9 @@ const
   },
   toSlotStyle = ({ card: c, slot }: CardSlot, direction?: S): React.CSSProperties => {
     const
-      { size1, size2, grow, order } = slot,
+      { size1, size2, grow } = slot,
       zIndex = c.name === '__unhandled_error__' ? 1 : undefined,
-      style: React.CSSProperties = {
-        zIndex,
-        order,
-      }
+      style: React.CSSProperties = { zIndex }
     if (grow) {
       style.flexGrow = grow
     } else {
@@ -206,6 +214,15 @@ const
     }
     return null
   },
+  sortCardsInSection = (section: Section) => {
+    const { sections } = section
+    if (sections) {
+      for (const s of sections) {
+        sortCardsInSection(s)
+      }
+    }
+    section.cardslots.sort((a, b) => a.slot.order - b.slot.order)
+  },
   FlexSection = ({ section, direction }: { section: Section, direction?: S }) => {
     const
       { zone, cardslots, sections } = section,
@@ -224,7 +241,7 @@ const
           : null
 
     return (
-      <div data-test={zone.name} className={css.flex} style={toSectionStyle(zone, direction)}>
+      <div data-test={zone.name} className={clas(css.flex, zone.direction === 'row' ? css.row : css.column)} style={toSectionStyle(zone, direction)}>
         {children}
       </div>
     )
@@ -244,6 +261,9 @@ const
             target = findSection(section, slot.zone ?? '')
           target?.cardslots.push({ card, slot })
         }
+
+        sortCardsInSection(section)
+
         const style: React.CSSProperties = {
           width: width ?? '100%',
           minWidth: min_width,
