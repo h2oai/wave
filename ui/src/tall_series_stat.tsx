@@ -61,11 +61,11 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed, size }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Card<State>) => {
     const
       render = () => {
         const
-          plotWidth = size ? size.width : grid.unitWidth,
+          plotWidth = grid.unitWidth,
           data = unpack(s.data),
           plot = s.plot_type === 'interval'
             ? (
