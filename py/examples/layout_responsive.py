@@ -13,7 +13,9 @@ page['meta'] = ui.meta_card(box='', layouts=[
         # If the viewport width >= 0:
         breakpoint='xs',
         zones=[
+            # 80px high header
             ui.zone('header', size='80px'),
+            # Use remaining space for content
             ui.zone('content')
         ]
     ),
@@ -21,9 +23,13 @@ page['meta'] = ui.meta_card(box='', layouts=[
         # If the viewport width >= 768:
         breakpoint='m',
         zones=[
+            # 80px high header
             ui.zone('header', size='80px'),
-            ui.zone('body', direction='row', zones=[
+            # Use remaining space for body
+            ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
+                # 250px wide sidebar
                 ui.zone('sidebar', size='250px'),
+                # Use remaining space for content
                 ui.zone('content'),
             ]),
         ]
@@ -33,11 +39,17 @@ page['meta'] = ui.meta_card(box='', layouts=[
         breakpoint='xl',
         width='1200px',
         zones=[
+            # 80px high header
             ui.zone('header', size='80px'),
-            ui.zone('body', direction='row', zones=[
+            # Use remaining space for body
+            ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
+                # 300px wide sidebar
                 ui.zone('sidebar', size='300px'),
+                # Use remaining space for other widgets
                 ui.zone('other', zones=[
-                    ui.zone('charts', direction='row'),
+                    # Use one half for charts
+                    ui.zone('charts', direction=ui.ZoneDirection.ROW),
+                    # Use other half for content
                     ui.zone('content'),
                 ]),
             ])
@@ -46,6 +58,7 @@ page['meta'] = ui.meta_card(box='', layouts=[
 ])
 
 page['header'] = ui.header_card(
+    # Place card in the header zone, regardless of viewport size.
     box='header',
     title='Lorem Ipsum',
     subtitle='Excepteur sint occaecat cupidatat',
@@ -62,22 +75,46 @@ page['header'] = ui.header_card(
     ],
 )
 page['controls'] = ui.markdown_card(
+    # If the viewport width >= 0, place in content zone.
+    # If the viewport width >= 768, place in sidebar zone.
+    # If the viewport width >= 1200, place in sidebar zone.
     box=ui.boxes('content', 'sidebar', 'sidebar'),
     title='Controls',
     content='',
 )
 page['chart1'] = ui.markdown_card(
-    box=ui.boxes(ui.box('content', 2), ui.box('content'), ui.box('charts', 1, '2')),
+    box=ui.boxes(
+        # If the viewport width >= 0, place as second item in content zone.
+        ui.box(zone='content', order=2),
+        # If the viewport width >= 768, place in content zone.
+        'content',
+        # If the viewport width >= 1200, place as first item in charts zone, use 2 parts of available space.
+        ui.box(zone='charts', order=1, size=2),
+    ),
     title='Chart 1',
     content='',
 )
 page['chart2'] = ui.markdown_card(
-    box=ui.boxes(ui.box('content', 3), ui.box('content', 2), ui.box('charts', 2, '1')),
+    box=ui.boxes(
+        # If the viewport width >= 0, place as third item in content zone.
+        ui.box(zone='content', order=3),
+        # If the viewport width >= 768, place as second item in content zone.
+        ui.box(zone='content', order=2),
+        # If the viewport width >= 1200, place as second item in charts zone, use 1 part of available space.
+        ui.box(zone='charts', order=2, size=1),
+    ),
     title='Chart 2',
     content='',
 )
 page['content'] = ui.markdown_card(
-    box=ui.boxes(ui.box('content', 4), ui.box('content', 3), 'content'),
+    box=ui.boxes(
+        # If the viewport width >= 0, place as fourth item in content zone.
+        ui.box(zone='content', order=4),
+        # If the viewport width >= 768, place as third item in content zone.
+        ui.box(zone='content', order=3),
+        # If the viewport width >= 1200, place in content zone.
+        'content',
+    ),
     title='Content',
     content='',
 )
