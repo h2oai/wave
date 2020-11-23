@@ -12,24 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { render } from '@testing-library/react'
-import * as T from 'h2o-wave'
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { View } from './markdown'
-
-const
-  name = 'markdown',
-  markdown_props: T.Model<any> = {
-    name,
-    state: { content: '' },
-    changed: T.box(false)
-  }
+import { Markdown } from './markdown'
 
 describe('Markdown.tsx', () => {
 
-  it('Renders data-test attr', () => {
-    const { queryByTestId } = render(<View {...markdown_props} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-  })
+  // Jest JSDOM does not support event system, so we can only check if the event was dispatched.
+  it('Dispatches a custom event when link prefixed with "?"', () => {
+    const dispatchEventMock = jest.fn()
+    window.dispatchEvent = dispatchEventMock
+    const { getByText } = render(<Markdown source='The quick brown [fox](?fox) jumps over the lazy [dog](dog).' />)
 
+    fireEvent.click(getByText('fox'))
+    expect(dispatchEventMock).toHaveBeenCalled()
+
+    dispatchEventMock.mockClear()
+    fireEvent.click(getByText('dog'))
+    expect(dispatchEventMock).not.toHaveBeenCalled()
+  })
 })
