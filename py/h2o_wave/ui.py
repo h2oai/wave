@@ -4,6 +4,7 @@
 
 import warnings
 from .types import *
+from .ui_ext import *
 
 
 def breadcrumb(
@@ -2052,12 +2053,52 @@ def grid_card(
     )
 
 
+def nav_item(
+        name: str,
+        label: str,
+) -> NavItem:
+    """Create a navigation item.
+
+    Args:
+        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+        label: The label to display.
+    Returns:
+        A `h2o_wave.types.NavItem` instance.
+    """
+    return NavItem(
+        name,
+        label,
+    )
+
+
+def nav_group(
+        label: str,
+        items: List[NavItem],
+        collapsed: Optional[bool] = None,
+) -> NavGroup:
+    """Create a group of navigation items.
+
+    Args:
+        label: The label to display for this group.
+        items: The navigation items contained in this group.
+        collapsed: Indicates whether nav groups should be rendered as collapsed initially
+    Returns:
+        A `h2o_wave.types.NavGroup` instance.
+    """
+    return NavGroup(
+        label,
+        items,
+        collapsed,
+    )
+
+
 def header_card(
         box: str,
         title: str,
         subtitle: str,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
+        nav: Optional[List[NavGroup]] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
     """Render a card containing a HTML page inside an inline frame (iframe).
@@ -2070,6 +2111,7 @@ def header_card(
         subtitle: The subtitle, displayed below the title.
         icon: The icon type, displayed to the left.
         icon_color: The icon's color.
+        nav: The navigation menu to display when the header's icon is clicked.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.HeaderCard` instance.
@@ -2080,6 +2122,7 @@ def header_card(
         subtitle,
         icon,
         icon_color,
+        nav,
         commands,
     )
 
@@ -2312,6 +2355,75 @@ def markup_card(
     )
 
 
+def zone(
+        name: str,
+        size: Optional[str] = None,
+        direction: Optional[str] = None,
+        justify: Optional[str] = None,
+        align: Optional[str] = None,
+        wrap: Optional[str] = None,
+        zones: Optional[List[Zone]] = None,
+) -> Zone:
+    """Represents an zone within a page layout.
+
+    Args:
+        name: An identifying name for this zone.
+        size: The size of this zone.
+        direction: Layout direction. One of 'row', 'column'. See enum h2o_wave.ui.ZoneDirection.
+        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ZoneJustify.
+        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.ZoneAlign.
+        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.ZoneWrap.
+        zones: The sub-zones contained inside this zone.
+    Returns:
+        A `h2o_wave.types.Zone` instance.
+    """
+    return Zone(
+        name,
+        size,
+        direction,
+        justify,
+        align,
+        wrap,
+        zones,
+    )
+
+
+def layout(
+        breakpoint: str,
+        zones: List[Zone],
+        width: Optional[str] = None,
+        min_width: Optional[str] = None,
+        max_width: Optional[str] = None,
+        height: Optional[str] = None,
+        min_height: Optional[str] = None,
+        max_height: Optional[str] = None,
+) -> Layout:
+    """Represents the layout structure for a page.
+
+    Args:
+        breakpoint: The minimum viewport width at which to use this layout. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set.
+        zones: The zones in this layout. Each zones can in turn contain sub-zones.
+        width: The width of the layout. Defaults to `100%`.
+        min_width: The minimum width of the layout.
+        max_width: The maximum width of the layout.
+        height: The height of the layout. Defaults to `auto`.
+        min_height: The minimum height of the layout.
+        max_height: The maximum height of the layout.
+    Returns:
+        A `h2o_wave.types.Layout` instance.
+    """
+    return Layout(
+        breakpoint,
+        zones,
+        width,
+        min_width,
+        max_width,
+        height,
+        min_height,
+        max_height,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2319,6 +2431,7 @@ def meta_card(
         notification: Optional[str] = None,
         redirect: Optional[str] = None,
         icon: Optional[str] = None,
+        layouts: Optional[List[Layout]] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2333,6 +2446,7 @@ def meta_card(
         notification: Display a desktop notification to the user.
         redirect: Redirect the page to a new URL.
         icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
+        layouts: The layouts supported by this page.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2344,46 +2458,8 @@ def meta_card(
         notification,
         redirect,
         icon,
+        layouts,
         commands,
-    )
-
-
-def nav_item(
-        name: str,
-        label: str,
-) -> NavItem:
-    """Create a navigation item.
-
-    Args:
-        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-        label: The label to display.
-    Returns:
-        A `h2o_wave.types.NavItem` instance.
-    """
-    return NavItem(
-        name,
-        label,
-    )
-
-
-def nav_group(
-        label: str,
-        items: List[NavItem],
-        collapsed: Optional[bool] = None,
-) -> NavGroup:
-    """Create a group of navigation items.
-
-    Args:
-        label: The label to display for this group.
-        items: The navigation items contained in this group.
-        collapsed: Indicates whether nav groups should be rendered as collapsed initially
-    Returns:
-        A `h2o_wave.types.NavGroup` instance.
-    """
-    return NavGroup(
-        label,
-        items,
-        collapsed,
     )
 
 

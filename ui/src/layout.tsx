@@ -2,7 +2,7 @@ import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
-import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd'
+import { B, bond, box, C, Card, Dict, F, parseI, Rec, S, U, unpack, xid } from './qd'
 import { getTheme, margin } from './theme'
 
 type Slot = {
@@ -149,12 +149,11 @@ const
   })
 
 export const
-  GridLayout = bond(({ page }: { page: Page }) => {
+  GridLayout = bond(({ name, cards }: { name: S, cards: C[] }) => {
     const
-      { changed } = page,
       render = () => {
         const
-          children = page.list().map(c => {
+          children = cards.map(c => {
             const
               placement = grid.place(c.state.box),
               { left, top, right, bottom, width, height } = placement,
@@ -170,10 +169,11 @@ export const
             )
           })
         return (
-          <div data-test={page.key} className={css.grid}>
+          <div data-test={name} className={css.grid}>
             {children}
           </div>
         )
       }
-    return { render, changed }
+    return { render }
   })
+
