@@ -6,6 +6,7 @@ import * as T from './qd'
 const name = 'frame'
 
 describe('Frame.tsx', () => {
+  beforeAll(() => window.URL.createObjectURL = jest.fn(() => ''))
   describe('Frame card', () => {
     const cardFrameProps: T.Card<any> = {
       name,

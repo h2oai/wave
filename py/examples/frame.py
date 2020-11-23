@@ -1,7 +1,7 @@
 # Frame
 # Use a frame card to display HTML content.
 # ---
-from h2o_wave import site, ui
+from h2o_wave import site, ui, main
 
 html = '''
 <!DOCTYPE html>

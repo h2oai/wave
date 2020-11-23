@@ -1,4 +1,6 @@
 [flake8]
+# Ignore unused imports because wave apps need "main" imported eventhough it is not used (ASGI works that way).
+ignore = F401
 max-line-length = 120
 exclude =
   py/h2o_wave/ui.py
