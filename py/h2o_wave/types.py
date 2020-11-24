@@ -4479,11 +4479,14 @@ class NavItem:
             self,
             name: str,
             label: str,
+            icon: Optional[str] = None,
     ):
         self.name = name
         """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
         self.label = label
         """The label to display."""
+        self.icon = icon
+        """An optional icon to display next to the label."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4494,6 +4497,7 @@ class NavItem:
         return _dump(
             name=self.name,
             label=self.label,
+            icon=self.icon,
         )
 
     @staticmethod
@@ -4505,11 +4509,14 @@ class NavItem:
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('NavItem.label is required.')
+        __d_icon: Any = __d.get('icon')
         name: str = __d_name
         label: str = __d_label
+        icon: Optional[str] = __d_icon
         return NavItem(
             name,
             label,
+            icon,
         )
 
 

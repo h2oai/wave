@@ -9,6 +9,8 @@ export interface NavItem {
   name: S
   /** The label to display. */
   label: S
+  /** An optional icon to display next to the label. */
+  icon?: S
 }
 
 /** Create a group of navigation items. */
@@ -32,9 +34,10 @@ export const
     const groups = items.map((g): INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
-      links: g.items.map(({ name, label }): INavLink => ({
+      links: g.items.map(({ name, label, icon }): INavLink => ({
         key: name,
         name: label,
+        icon,
         url: '',
         onClick: () => {
           if (name.startsWith('#')) {
