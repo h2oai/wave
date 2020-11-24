@@ -2452,9 +2452,13 @@ def meta_card(
         icon: Optional[str] = None,
         layouts: Optional[List[Layout]] = None,
         dialog: Optional[Dialog] = None,
+        theme: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
-    """No documentation available.
+    """Represents page-global state.
+
+    This card is invisible.
+    It is used to control attributes of the active page.
 
     Args:
         box: A string indicating how to place this component on the page.
@@ -2462,9 +2466,10 @@ def meta_card(
         refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
         notification: Display a desktop notification.
         redirect: Redirect the page to a new URL.
-        icon: No documentation available.
+        icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
         layouts: The layouts supported by this page.
         dialog: Display a dialog on the page.
+        theme: Specify a color theme for the app. Available values are 'light' | 'dark' | 'neon'. One of 'light', 'dark', 'neon'. See enum h2o_wave.ui.MetaCardTheme.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2478,6 +2483,7 @@ def meta_card(
         icon,
         layouts,
         dialog,
+        theme,
         commands,
     )
 

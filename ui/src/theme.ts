@@ -35,26 +35,7 @@ export const
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
   displayMixin = (visible = true): React.CSSProperties => visible ? {} : { display: 'none' },
   // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
-  cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color
-
-const
-  palettes: { [K in Theme]: Palette } = {
-    light: {
-      text: '#323130',
-      card: '#ffffff',
-      page: '#f5f5f5',
-    },
-    dark: {
-      text: '#ffffff',
-      card: '#21252b',
-      page: '#282c34',
-    },
-    neon: {
-      text: '#ffffff',
-      card: '#0d0e0f',
-      page: '#1b1d1f',
-    },
-  },
+  cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color,
   fluentPalettes: { [K in Theme]: Partial<Fluent.IPalette> } = {
     light: {
       themePrimary: '#000000',
@@ -107,6 +88,25 @@ const
     dark: {
       // TODO: Generate dark fluent color palette.
     }
+  }
+
+const
+  palettes: { [K in Theme]: Palette } = {
+    light: {
+      text: '#323130',
+      card: '#ffffff',
+      page: '#f5f5f5',
+    },
+    dark: {
+      text: '#ffffff',
+      card: '#21252b',
+      page: '#282c34',
+    },
+    neon: {
+      text: '#ffffff',
+      card: '#0d0e0f',
+      page: '#1b1d1f',
+    },
   },
   rgb = (hex: S): [U, U, U] => {
     const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
