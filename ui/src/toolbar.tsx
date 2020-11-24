@@ -1,6 +1,6 @@
 import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
-import { cards } from './layout'
+import { CardEffect, cards } from './layout'
 import { bond, Card, qd, S } from './qd'
 
 /**
@@ -86,6 +86,6 @@ export const
     return { render, changed }
   })
 
-cards.register('toolbar', View)
+cards.register('toolbar', View, CardEffect.Flat)
 
 
