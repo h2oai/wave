@@ -14,7 +14,7 @@ fake = Faker()
 f = FakePercent()
 val, _ = f.next()
 c = page.add('example', ui.small_stat_card(
-    box=f'1 1 1 1',
+    box='1 1 1 1',
     title=fake.cryptocurrency_name(),
     value=f'${val:.2f}',
 ))

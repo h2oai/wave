@@ -10,7 +10,7 @@ spec = altair.Chart(data.cars()).mark_circle(size=60).encode(
     y='Miles_per_Gallon',
     color='Origin',
     tooltip=['Name', 'Origin', 'Horsepower', 'Miles_per_Gallon']
-).interactive().to_json()
+).properties(width='container', height='container').interactive().to_json()
 
 page = site['/demo']
 

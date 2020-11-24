@@ -2,10 +2,7 @@
 # THIS FILE IS GENERATED; DO NOT EDIT
 #
 
-import warnings
 from .types import *
-from .ui_ext import *
-
 
 def breadcrumb(
         name: str,
@@ -49,8 +46,6 @@ def command(
     Returns:
         A `h2o_wave.types.Command` instance.
     """
-    if data is not None:
-        warnings.warn('The data argument is deprecated.')
     return Command(
         name,
         label,
@@ -108,10 +103,10 @@ def flex_card(
         item_view: The child card type.
         item_props: The child card properties.
         data: Data for this card.
-        direction: Layout direction. One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection.
-        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify.
-        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign.
-        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap.
+        direction: Layout direction. One of 'horizontal', 'vertical'.
+        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'.
+        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'.
+        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FlexCard` instance.
@@ -140,7 +135,7 @@ def text(
 
     Args:
         content: The text content.
-        size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
+        size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'.
         visible: True if the component should be visible. Defaults to true.
         tooltip: Tooltip message.
         name: An identifying name for this component.
@@ -402,7 +397,7 @@ def message_bar(
     therefore does not need to block other activities.
 
     Args:
-        type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType.
+        type: The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'.
         text: The text displayed on the message bar.
         name: An identifying name for this component.
         visible: True if the component should be visible. Defaults to true.
@@ -1013,7 +1008,7 @@ def buttons(
 
     Args:
         items: The button in this set.
-        justify: Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify.
+        justify: Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'.
         name: An identifying name for this component.
         visible: True if the component should be visible. Defaults to true.
     Returns:
@@ -1146,7 +1141,7 @@ def table_column(
         searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
         filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
         link: Indicates whether each cell in this column should be displayed as a clickable link.
-        data_type: Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
+        data_type: Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'.
         cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
         A `h2o_wave.types.TableColumn` instance.
@@ -1629,8 +1624,8 @@ def mark(
     A plot can contain multiple such layers of marks.
 
     Args:
-        coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'. See enum h2o_wave.ui.MarkCoord.
-        type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'. See enum h2o_wave.ui.MarkType.
+        coord: Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'.
+        type: Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'.
         x: X field or value.
         x0: X base field or value.
         x1: X bin lower bound field or value. For histograms.
@@ -1638,7 +1633,7 @@ def mark(
         x_min: X axis scale minimum.
         x_max: X axis scale maximum.
         x_nice: Whether to nice X axis scale ticks.
-        x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'. See enum h2o_wave.ui.MarkXScale.
+        x_scale: X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'.
         x_title: X axis title.
         y: Y field or value.
         y0: Y base field or value.
@@ -1647,7 +1642,7 @@ def mark(
         y_min: Y axis scale minimum.
         y_max: Y axis scale maximum.
         y_nice: Whether to nice Y axis scale ticks.
-        y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'. See enum h2o_wave.ui.MarkYScale.
+        y_scale: Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'.
         y_title: Y axis title.
         color: Mark color field or value.
         color_range: Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'`
@@ -1658,7 +1653,7 @@ def mark(
         size_range: Mark size range. A string containing space-separated integers, e.g. `'4 30'`
         stack: Field to stack marks by, or 'auto' to infer.
         dodge: Field to dodge marks by, or 'auto' to infer.
-        curve: Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'. See enum h2o_wave.ui.MarkCurve.
+        curve: Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'.
         fill_color: Mark fill color.
         fill_opacity: Mark fill opacity.
         stroke_color: Mark stroke color.
@@ -1670,8 +1665,8 @@ def mark(
         label_offset_x: Horizontal distance between label and mark.
         label_offset_y: Vertical distance between label and mark.
         label_rotation: Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation.
-        label_position: Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'. See enum h2o_wave.ui.MarkLabelPosition.
-        label_overlap: Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'. See enum h2o_wave.ui.MarkLabelOverlap.
+        label_position: Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'.
+        label_overlap: Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'.
         label_fill_color: Label fill color.
         label_fill_opacity: Label fill opacity.
         label_stroke_color: Label stroke color.
@@ -1680,7 +1675,7 @@ def mark(
         label_font_size: Label font size.
         label_font_weight: Label font weight.
         label_line_height: Label line height.
-        label_align: Label text alignment. One of 'left', 'right', 'center', 'start', 'end'. See enum h2o_wave.ui.MarkLabelAlign.
+        label_align: Label text alignment. One of 'left', 'right', 'center', 'start', 'end'.
         ref_stroke_color: Reference line stroke color.
         ref_stroke_opacity: Reference line stroke opacity.
         ref_stroke_size: Reference line stroke size (line width or pen thickness).
@@ -2375,10 +2370,10 @@ def zone(
     Args:
         name: An identifying name for this zone.
         size: The size of this zone.
-        direction: Layout direction. One of 'row', 'column'. See enum h2o_wave.ui.ZoneDirection.
-        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ZoneJustify.
-        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.ZoneAlign.
-        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.ZoneWrap.
+        direction: Layout direction. One of 'row', 'column'.
+        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'.
+        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'.
+        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'.
         zones: The sub-zones contained inside this zone.
     Returns:
         A `h2o_wave.types.Zone` instance.
@@ -2596,8 +2591,8 @@ def small_series_stat_card(
         plot_value: The data field to use for y-axis values.
         plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
         plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
-        plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'. See enum h2o_wave.ui.SmallSeriesStatCardPlotType.
-        plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.SmallSeriesStatCardPlotCurve.
+        plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+        plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
         plot_color: The plot's color.
         data: Data for this card.
         commands: Contextual menu commands for this component.
@@ -2736,8 +2731,8 @@ def tall_series_stat_card(
         plot_value: The data field to use for y-axis values.
         plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
         plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
-        plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'. See enum h2o_wave.ui.TallSeriesStatCardPlotType.
-        plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.TallSeriesStatCardPlotCurve.
+        plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+        plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
         plot_color: The plot's color.
         data: Data for this card.
         commands: Contextual menu commands for this component.
@@ -2940,8 +2935,8 @@ def wide_series_stat_card(
         plot_value: The data field to use for y-axis values.
         plot_zero_value: The base value to use for each y-axis mark. Set this to `0` if you want to pin the x-axis at `y=0`. If not provided, the minimum value from the data is used.
         plot_category: The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'.
-        plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'. See enum h2o_wave.ui.WideSeriesStatCardPlotType.
-        plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.WideSeriesStatCardPlotCurve.
+        plot_type: The type of plot. Defaults to `area`. One of 'area', 'interval'.
+        plot_curve: The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'.
         plot_color: The plot's color.
         data: Data for this card.
         commands: Contextual menu commands for this component.
