@@ -349,6 +349,12 @@ def data(
     if rows:
         if not isinstance(rows, (list, dict)):
             raise ValueError('rows must be list or dict')
+    elif columns:  # transpose to rows
+        # TODO issue warning: better for caller to use pack=True
+        n = len(columns[0])
+        rows = []
+        for i in range(n):
+            rows.append([c[i] for c in columns])
 
     if not _is_int(size):
         raise ValueError('size must be int')
