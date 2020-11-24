@@ -3,10 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/h2oai/wave"
+)
+
+const (
+	envVarNamePrefix = "H2O_WAVE"
 )
 
 var (
@@ -18,7 +24,7 @@ var (
 )
 
 func main() {
-	// TODO https://github.com/urfave/cli/blob/master/docs/v2/manual.md
+	// TODO Use github.com/gosidekick/goconfig instead.
 
 	var (
 		conf    wave.ServerConf
@@ -36,11 +42,29 @@ func main() {
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
-	flag.StringVar(&conf.OIDCClientID, "oidc-client-id", "", "OIDC client ID")
-	flag.StringVar(&conf.OIDCClientSecret, "oidc-client-secret", "", "OIDC client secret")
-	flag.StringVar(&conf.OIDCProviderURL, "oidc-provider-url", "", "OIDC provider URL")
-	flag.StringVar(&conf.OIDCRedirectURL, "oidc-redirect-url", "", "OIDC redirect URL")
-	flag.StringVar(&conf.OIDCEndSessionURL, "oidc-end-session-url", "", "OIDC end session URL")
+
+	const (
+		oidcClientID      = "oidc-client-id"
+		oidcClientSecret  = "oidc-client-secret"
+		oidcProviderURL   = "oidc-provider-url"
+		oidcRedirectURL   = "oidc-redirect-url"
+		oidcEndSessionURL = "oidc-end-session-url"
+	)
+
+	conf.OIDCClientID = os.Getenv(envVarName(oidcClientID))
+	flag.StringVar(&conf.OIDCClientID, oidcClientID, conf.OIDCClientID, "OIDC client ID")
+
+	conf.OIDCClientSecret = os.Getenv(envVarName(oidcClientSecret))
+	flag.StringVar(&conf.OIDCClientSecret, oidcClientSecret, conf.OIDCClientSecret, "OIDC client secret")
+
+	conf.OIDCProviderURL = os.Getenv(envVarName(oidcProviderURL))
+	flag.StringVar(&conf.OIDCProviderURL, oidcProviderURL, conf.OIDCProviderURL, "OIDC provider URL")
+
+	conf.OIDCRedirectURL = os.Getenv(envVarName(oidcRedirectURL))
+	flag.StringVar(&conf.OIDCRedirectURL, oidcRedirectURL, conf.OIDCRedirectURL, "OIDC redirect URL")
+
+	conf.OIDCEndSessionURL = os.Getenv(envVarName(oidcEndSessionURL))
+	flag.StringVar(&conf.OIDCEndSessionURL, oidcEndSessionURL, conf.OIDCEndSessionURL, "OIDC end session URL")
 
 	flag.Parse()
 
@@ -56,4 +80,9 @@ func main() {
 	conf.BuildDate = BuildDate
 
 	wave.Run(conf)
+}
+
+func envVarName(n string) string {
+	envVar := strings.ToUpper(strings.ReplaceAll(n, "-", "_"))
+	return fmt.Sprintf("%s_%s", envVarNamePrefix, envVar)
 }
