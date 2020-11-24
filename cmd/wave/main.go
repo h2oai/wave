@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/h2oai/wave"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/h2oai/wave"
 )
 
 const (
@@ -23,7 +24,7 @@ var (
 )
 
 func main() {
-	// TODO https://github.com/urfave/cli/blob/master/docs/v2/manual.md
+	// TODO Use github.com/gosidekick/goconfig instead.
 
 	var (
 		conf    wave.ServerConf
