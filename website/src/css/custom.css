@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css");
 
 :root {
   --h2o-accent-color: #f72a30;
 
-  --ifm-color-primary: #000000;
+  --ifm-color-primary: #f72a30;
   --ifm-color-primary-dark: #000000;
   --ifm-color-primary-darker: #000000;
   --ifm-color-primary-darkest: #000000;
@@ -13,7 +13,7 @@
   --ifm-color-primary-lightest: #000000;
 
   --ifm-code-font-size: 95%;
-  --ifm-font-family-base: 'Inter';
+  --ifm-font-family-base: "Inter";
   --ifm-button-background-color: var(--h2o-accent-color);
   --ifm-button-border-radius: 50px;
   --ifm-heading-font-weight: 800;
@@ -44,10 +44,12 @@
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
 }
-.markdown h1, h1 {
+.markdown h1,
+h1 {
   letter-spacing: -0.05em;
 }
-h2 a { /* Blog post title */
+h2 a {
+  /* Blog post title */
   letter-spacing: -0.05em;
 }
 .markdown h2 {
@@ -65,7 +67,6 @@ h2 a { /* Blog post title */
 .markdown a:hover {
   border-bottom: none;
 }
-
 
 /* Custom */
 
@@ -94,7 +95,7 @@ a.thumbnail:link {
   font-size: 0.75rem;
   border: none;
 }
-a.thumbnail>div {
+a.thumbnail > div {
   width: 160px;
   height: 120px;
   background-size: cover;
@@ -104,7 +105,7 @@ a.thumbnail>div {
   border: 1px solid #ccc;
   margin: 0rem 0 0.3rem 0;
 }
-a.thumbnail>div:hover {
+a.thumbnail > div:hover {
   background-position: right bottom;
   border: 1px solid #999;
 }
