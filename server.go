@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/coreos/go-oidc"
-	"golang.org/x/oauth2"
 	"log"
 	"net/http"
 	"path"
@@ -13,7 +11,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/coreos/go-oidc"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/oauth2"
 )
 
 const logo = `
@@ -66,7 +66,7 @@ func Run(conf ServerConf) {
 
 	var oauth2Config oauth2.Config
 	if conf.oidcEnabled() {
-		ctx, cancel := context.WithTimeout(context.Background(), 10 * time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		provider, err := oidc.NewProvider(ctx, conf.OIDCProviderURL)
 		if err != nil {
