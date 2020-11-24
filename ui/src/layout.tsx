@@ -2,7 +2,7 @@ import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
-import { B, bond, box, C, Card, Dict, F, parseI, Rec, S, U, unpack, xid } from './qd'
+import { B, box, C, Card, Dict, F, parseI, Rec, S, U, unpack, xid } from './qd'
 import { clas, getTheme, margin, palette } from './theme'
 
 type Slot = {
@@ -186,29 +186,24 @@ export const
         : effect == CardEffect.Flat
           ? css.flat : css.flush)
   },
-  GridLayout = bond(({ name, cards: cs }: { name: S, cards: C[] }) => {
+  GridLayout = ({ name, cards: cs }: { name: S, cards: C[] }) => {
     const
-      render = () => {
+      children = cs.map(c => {
         const
-          children = cs.map(c => {
-            const
-              placement = grid.place(c.state.box),
-              { left, top, right, bottom, width, height } = placement,
-              display = placement === badPlacement ? 'none' : 'block',
-              zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
-            return (
-              <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex }}>
-                <CardView card={c} />
-                {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
-              </div>
-            )
-          })
+          placement = grid.place(c.state.box),
+          { left, top, right, bottom, width, height } = placement,
+          display = placement === badPlacement ? 'none' : 'block',
+          zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
         return (
-          <div data-test={name} className={css.grid}>
-            {children}
+          <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex }}>
+            <CardView card={c} />
+            {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
           </div>
         )
-      }
-    return { render }
-  })
-
+      })
+    return (
+      <div data-test={name} className={css.grid}>
+        {children}
+      </div>
+    )
+  }
