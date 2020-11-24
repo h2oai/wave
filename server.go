@@ -1,6 +1,7 @@
 package wave
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -8,8 +9,11 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"time"
 
+	"github.com/coreos/go-oidc"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/oauth2"
 )
 
 const logo = `
@@ -60,9 +64,26 @@ func Run(conf ServerConf) {
 		http.Handle("/_d/site", newDebugHandler(broker))
 	}
 
+	var oauth2Config oauth2.Config
 	if conf.oidcEnabled() {
-		http.Handle("/_auth/init", newOIDCInitHandler(sessions, conf.OIDCClientID, conf.OIDCClientSecret, conf.OIDCProviderURL, conf.OIDCRedirectURL))
-		http.Handle("/_auth/callback", newOAuth2Handler(sessions, conf.OIDCClientID, conf.OIDCClientSecret, conf.OIDCProviderURL, conf.OIDCRedirectURL))
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		provider, err := oidc.NewProvider(ctx, conf.OIDCProviderURL)
+		if err != nil {
+			panic(err)
+		}
+
+		oauth2Config = oauth2.Config{
+			ClientID:     conf.OIDCClientID,
+			ClientSecret: conf.OIDCClientSecret,
+			Endpoint:     provider.Endpoint(),
+			RedirectURL:  conf.OIDCRedirectURL,
+			//TODO: make configurable
+			Scopes: []string{oidc.ScopeOpenID},
+		}
+
+		http.Handle("/_auth/init", newOIDCInitHandler(sessions, oauth2Config))
+		http.Handle("/_auth/callback", newOAuth2Handler(sessions, oauth2Config, conf.OIDCProviderURL))
 		http.Handle("/_logout", newOIDCLogoutHandler(sessions, conf.OIDCEndSessionURL))
 	}
 
@@ -74,7 +95,7 @@ func Run(conf ServerConf) {
 	http.Handle("/_p", newProxy())                                                                             // XXX secure
 	http.Handle("/_c/", newCache("/_c/"))                                                                      // XXX secure
 	http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, conf.oidcEnabled(), sessions, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, users, conf.oidcEnabled(), sessions, oauth2Config, conf.WebDir))
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)
