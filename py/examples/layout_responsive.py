@@ -1,7 +1,7 @@
 # Layout / Responsive
 # How to create a responsive layout.
 # ---
-from h2o_wave import site, ui
+from h2o_wave import site, ui, main
 
 page = site['/demo']
 page.drop()

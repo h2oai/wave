@@ -10,7 +10,6 @@ const
   css = stylesheet({
     card: {
       height: `calc(100% - ${px(2 * grid.gap)} )`,
-      minHeight: 300
     },
     title: {
       ...theme.font.s12,

@@ -184,6 +184,36 @@ class BreadcrumbsCard:
         )
 
 
+class FlexCardDirection:
+    HORIZONTAL = 'horizontal'
+    VERTICAL = 'vertical'
+
+
+class FlexCardJustify:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+
+class FlexCardAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BASELINE = 'baseline'
+    STRETCH = 'stretch'
+
+
+class FlexCardWrap:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+    STRETCH = 'stretch'
+
+
 class FlexCard:
     """EXPERIMENTAL. DO NOT USE.
     Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
@@ -209,13 +239,13 @@ class FlexCard:
         self.data = data
         """Data for this card."""
         self.direction = direction
-        """Layout direction. One of 'horizontal', 'vertical'."""
+        """Layout direction. One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection."""
         self.justify = justify
-        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'."""
+        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify."""
         self.align = align
-        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'."""
+        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign."""
         self.wrap = wrap
-        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'."""
+        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -284,6 +314,14 @@ class FlexCard:
         )
 
 
+class TextSize:
+    XL = 'xl'
+    L = 'l'
+    M = 'm'
+    S = 's'
+    XS = 'xs'
+
+
 class Text:
     """Create text content.
     """
@@ -298,7 +336,7 @@ class Text:
         self.content = content
         """The text content."""
         self.size = size
-        """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'."""
+        """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -807,6 +845,15 @@ class Progress:
         )
 
 
+class MessageBarType:
+    INFO = 'info'
+    ERROR = 'error'
+    WARNING = 'warning'
+    SUCCESS = 'success'
+    DANGER = 'danger'
+    BLOCKED = 'blocked'
+
+
 class MessageBar:
     """Create a message bar.
 
@@ -822,7 +869,7 @@ class MessageBar:
             visible: Optional[bool] = None,
     ):
         self.type = type
-        """The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'."""
+        """The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType."""
         self.text = text
         """The text displayed on the message bar."""
         self.name = name
@@ -2039,6 +2086,14 @@ class Button:
         )
 
 
+class ButtonsJustify:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+
 class Buttons:
     """Create a set of buttons to be layed out horizontally.
     """
@@ -2052,7 +2107,7 @@ class Buttons:
         self.items = items
         """The button in this set."""
         self.justify = justify
-        """Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'."""
+        """Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify."""
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
@@ -2278,6 +2333,12 @@ class TableCellType:
         )
 
 
+class TableColumnDataType:
+    STRING = 'string'
+    NUMBER = 'number'
+    TIME = 'time'
+
+
 class TableColumn:
     """Create a table column.
     """
@@ -2311,7 +2372,7 @@ class TableColumn:
         self.link = link
         """Indicates whether each cell in this column should be displayed as a clickable link."""
         self.data_type = data_type
-        """Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'."""
+        """Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType."""
         self.cell_type = cell_type
         """Defines how to render each cell in this column. Defaults to plain text."""
 
@@ -3224,6 +3285,84 @@ class Stepper:
         )
 
 
+class MarkCoord:
+    RECT = 'rect'
+    CARTESIAN = 'cartesian'
+    POLAR = 'polar'
+    THETA = 'theta'
+    HELIX = 'helix'
+
+
+class MarkType:
+    INTERVAL = 'interval'
+    LINE = 'line'
+    PATH = 'path'
+    POINT = 'point'
+    AREA = 'area'
+    POLYGON = 'polygon'
+    SCHEMA = 'schema'
+    EDGE = 'edge'
+    HEATMAP = 'heatmap'
+
+
+class MarkXScale:
+    LINEAR = 'linear'
+    CAT = 'cat'
+    CATEGORY = 'category'
+    IDENTITY = 'identity'
+    LOG = 'log'
+    POW = 'pow'
+    POWER = 'power'
+    TIME = 'time'
+    TIME_CATEGORY = 'time-category'
+    QUANTIZE = 'quantize'
+    QUANTILE = 'quantile'
+
+
+class MarkYScale:
+    LINEAR = 'linear'
+    CAT = 'cat'
+    CATEGORY = 'category'
+    IDENTITY = 'identity'
+    LOG = 'log'
+    POW = 'pow'
+    POWER = 'power'
+    TIME = 'time'
+    TIME_CATEGORY = 'time-category'
+    QUANTIZE = 'quantize'
+    QUANTILE = 'quantile'
+
+
+class MarkCurve:
+    NONE = 'none'
+    SMOOTH = 'smooth'
+    STEP_BEFORE = 'step-before'
+    STEP = 'step'
+    STEP_AFTER = 'step-after'
+
+
+class MarkLabelPosition:
+    TOP = 'top'
+    BOTTOM = 'bottom'
+    MIDDLE = 'middle'
+    LEFT = 'left'
+    RIGHT = 'right'
+
+
+class MarkLabelOverlap:
+    HIDE = 'hide'
+    OVERLAP = 'overlap'
+    CONSTRAIN = 'constrain'
+
+
+class MarkLabelAlign:
+    LEFT = 'left'
+    RIGHT = 'right'
+    CENTER = 'center'
+    START = 'start'
+    END = 'end'
+
+
 class Mark:
     """Create a specification for a layer of graphical marks such as bars, lines, points for a plot.
     A plot can contain multiple such layers of marks.
@@ -3288,9 +3427,9 @@ class Mark:
             ref_stroke_dash: Optional[str] = None,
     ):
         self.coord = coord
-        """Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'."""
+        """Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. One of 'rect', 'cartesian', 'polar', 'theta', 'helix'. See enum h2o_wave.ui.MarkCoord."""
         self.type = type
-        """Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'."""
+        """Graphical geometry. One of 'interval', 'line', 'path', 'point', 'area', 'polygon', 'schema', 'edge', 'heatmap'. See enum h2o_wave.ui.MarkType."""
         self.x = x
         """X field or value."""
         self.x0 = x0
@@ -3306,7 +3445,7 @@ class Mark:
         self.x_nice = x_nice
         """Whether to nice X axis scale ticks."""
         self.x_scale = x_scale
-        """X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'."""
+        """X axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'. See enum h2o_wave.ui.MarkXScale."""
         self.x_title = x_title
         """X axis title."""
         self.y = y
@@ -3324,7 +3463,7 @@ class Mark:
         self.y_nice = y_nice
         """Whether to nice Y axis scale ticks."""
         self.y_scale = y_scale
-        """Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'."""
+        """Y axis scale type. One of 'linear', 'cat', 'category', 'identity', 'log', 'pow', 'power', 'time', 'time-category', 'quantize', 'quantile'. See enum h2o_wave.ui.MarkYScale."""
         self.y_title = y_title
         """Y axis title."""
         self.color = color
@@ -3346,7 +3485,7 @@ class Mark:
         self.dodge = dodge
         """Field to dodge marks by, or 'auto' to infer."""
         self.curve = curve
-        """Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'."""
+        """Curve type for `line` and `area` mark types. One of 'none', 'smooth', 'step-before', 'step', 'step-after'. See enum h2o_wave.ui.MarkCurve."""
         self.fill_color = fill_color
         """Mark fill color."""
         self.fill_opacity = fill_opacity
@@ -3370,9 +3509,9 @@ class Mark:
         self.label_rotation = label_rotation
         """Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation."""
         self.label_position = label_position
-        """Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'."""
+        """Label position relative to the mark. One of 'top', 'bottom', 'middle', 'left', 'right'. See enum h2o_wave.ui.MarkLabelPosition."""
         self.label_overlap = label_overlap
-        """Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'."""
+        """Strategy to use if labels overlap. One of 'hide', 'overlap', 'constrain'. See enum h2o_wave.ui.MarkLabelOverlap."""
         self.label_fill_color = label_fill_color
         """Label fill color."""
         self.label_fill_opacity = label_fill_opacity
@@ -3390,7 +3529,7 @@ class Mark:
         self.label_line_height = label_line_height
         """Label line height."""
         self.label_align = label_align
-        """Label text alignment. One of 'left', 'right', 'center', 'start', 'end'."""
+        """Label text alignment. One of 'left', 'right', 'center', 'start', 'end'. See enum h2o_wave.ui.MarkLabelAlign."""
         self.ref_stroke_color = ref_stroke_color
         """Reference line stroke color."""
         self.ref_stroke_opacity = ref_stroke_opacity
@@ -5123,6 +5262,35 @@ class MarkupCard:
         )
 
 
+class ZoneDirection:
+    ROW = 'row'
+    COLUMN = 'column'
+
+
+class ZoneJustify:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+
+class ZoneAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    STRETCH = 'stretch'
+
+
+class ZoneWrap:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+    STRETCH = 'stretch'
+
+
 class Zone:
     """Represents an zone within a page layout.
     """
@@ -5141,13 +5309,13 @@ class Zone:
         self.size = size
         """The size of this zone."""
         self.direction = direction
-        """Layout direction. One of 'row', 'column'."""
+        """Layout direction. One of 'row', 'column'. See enum h2o_wave.ui.ZoneDirection."""
         self.justify = justify
-        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'."""
+        """Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ZoneJustify."""
         self.align = align
-        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'."""
+        """Layout strategy for cross axis. One of 'start', 'end', 'center', 'stretch'. See enum h2o_wave.ui.ZoneAlign."""
         self.wrap = wrap
-        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'."""
+        """Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.ZoneWrap."""
         self.zones = zones
         """The sub-zones contained inside this zone."""
 
@@ -5620,6 +5788,19 @@ class RepeatCard:
         )
 
 
+class SmallSeriesStatCardPlotType:
+    AREA = 'area'
+    INTERVAL = 'interval'
+
+
+class SmallSeriesStatCardPlotCurve:
+    LINEAR = 'linear'
+    SMOOTH = 'smooth'
+    STEP = 'step'
+    STEP_AFTER = 'step-after'
+    STEP_BEFORE = 'step-before'
+
+
 class SmallSeriesStatCard:
     """Create a small stat card displaying a primary value and a series plot.
     """
@@ -5653,9 +5834,9 @@ class SmallSeriesStatCard:
         self.plot_category = plot_category
         """The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'."""
         self.plot_type = plot_type
-        """The type of plot. Defaults to `area`. One of 'area', 'interval'."""
+        """The type of plot. Defaults to `area`. One of 'area', 'interval'. See enum h2o_wave.ui.SmallSeriesStatCardPlotType."""
         self.plot_curve = plot_curve
-        """The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'."""
+        """The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.SmallSeriesStatCardPlotCurve."""
         self.plot_color = plot_color
         """The plot's color."""
         self.data = data
@@ -5970,6 +6151,19 @@ class TallGaugeStatCard:
         )
 
 
+class TallSeriesStatCardPlotType:
+    AREA = 'area'
+    INTERVAL = 'interval'
+
+
+class TallSeriesStatCardPlotCurve:
+    LINEAR = 'linear'
+    SMOOTH = 'smooth'
+    STEP = 'step'
+    STEP_AFTER = 'step-after'
+    STEP_BEFORE = 'step-before'
+
+
 class TallSeriesStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
     """
@@ -6006,9 +6200,9 @@ class TallSeriesStatCard:
         self.plot_category = plot_category
         """The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'."""
         self.plot_type = plot_type
-        """The type of plot. Defaults to `area`. One of 'area', 'interval'."""
+        """The type of plot. Defaults to `area`. One of 'area', 'interval'. See enum h2o_wave.ui.TallSeriesStatCardPlotType."""
         self.plot_curve = plot_curve
-        """The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'."""
+        """The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.TallSeriesStatCardPlotCurve."""
         self.plot_color = plot_color
         """The plot's color."""
         self.data = data
@@ -6494,6 +6688,19 @@ class WideGaugeStatCard:
         )
 
 
+class WideSeriesStatCardPlotType:
+    AREA = 'area'
+    INTERVAL = 'interval'
+
+
+class WideSeriesStatCardPlotCurve:
+    LINEAR = 'linear'
+    SMOOTH = 'smooth'
+    STEP = 'step'
+    STEP_AFTER = 'step-after'
+    STEP_BEFORE = 'step-before'
+
+
 class WideSeriesStatCard:
     """Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
     """
@@ -6530,9 +6737,9 @@ class WideSeriesStatCard:
         self.plot_category = plot_category
         """The data field to use for x-axis values (ignored if `plot_type` is `area`; must be provided if `plot_type` is `interval`). Defaults to 'x'."""
         self.plot_type = plot_type
-        """The type of plot. Defaults to `area`. One of 'area', 'interval'."""
+        """The type of plot. Defaults to `area`. One of 'area', 'interval'. See enum h2o_wave.ui.WideSeriesStatCardPlotType."""
         self.plot_curve = plot_curve
-        """The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'."""
+        """The plot's curve style. Defaults to `linear`. One of 'linear', 'smooth', 'step', 'step-after', 'step-before'. See enum h2o_wave.ui.WideSeriesStatCardPlotCurve."""
         self.plot_color = plot_color
         """The plot's color."""
         self.data = data
