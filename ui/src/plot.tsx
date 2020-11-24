@@ -5,7 +5,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards } from './layout'
-import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V } from './qd'
+import { B, bond, Card, Dict, F, parseI, parseU, qd, Rec, S, unpack, V } from './qd'
 import { getTheme, displayMixin } from './theme'
 
 const
@@ -735,6 +735,8 @@ export interface Visualization {
   name?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
+  /** The events to capture on this visualization. */
+  events?: S[]
 }
 
 export const
@@ -759,6 +761,24 @@ export const
         if (chart) {
           currentChart = chart
           chart.data(data)
+          if (model.events) {
+            for (const event of model.events) {
+              switch (event) {
+                case 'select_marks': {
+                  chart.interaction('element-single-selected')
+                  chart.on('element:statechange', (ev: any) => {
+                    const e = ev.gEvent.originalEvent
+                    if (e.stateStatus) {
+                      if (model.name) {
+                        qd.events[model.name] = { select_marks: [e.element?.data] }
+                        qd.sync()
+                      }
+                    }
+                  })
+                }
+              }
+            }
+          }
           chart.render()
         }
       },
@@ -786,23 +806,25 @@ export const
 /** Create a card displaying a plot. */
 interface State {
   /** The title for this card. */
-  title: S;
+  title: S
   /** Data for this card. */
-  data: Rec;
+  data: Rec
   /** The plot to be displayed in this card. */
-  plot: Plot;
+  plot: Plot
+  /** The events to capture on this card. */
+  events?: S[]
 }
 
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
-        const { title, plot, data } = state
+        const { title, plot, data, events } = state
         return (
           <div data-test={name} className={css.card}>
             <div className={css.title}>{title || 'Untitled'}</div>
             <div className={css.plot}>
-              <XVisualization model={{ plot, data, width: 'auto', height: 'auto' }} />
+              <XVisualization model={{ name, plot, data, width: 'auto', height: 'auto', events }} />
             </div>
           </div>
         )

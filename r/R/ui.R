@@ -2002,6 +2002,7 @@ ui_plot <- function(
 #' @param height The hight of the visualization. Defaults to 300px.
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to true.
+#' @param events The events to capture on this visualization.
 #' @return A Visualization instance.
 ui_visualization <- function(
   plot,
@@ -2009,20 +2010,23 @@ ui_visualization <- function(
   width = NULL,
   height = NULL,
   name = NULL,
-  visible = NULL) {
+  visible = NULL,
+  events = NULL) {
   .guard_scalar("plot", "h2oq_Plot", plot)
   # TODO Validate data: Rec
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
   .guard_scalar("name", "character", name)
   .guard_scalar("visible", "logical", visible)
+  .guard_vector("events", "character", events)
   .o <- list(visualization=list(
     plot=plot,
     data=data,
     width=width,
     height=height,
     name=name,
-    visible=visible))
+    visible=visible,
+    events=events))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -2857,6 +2861,7 @@ ui_pixel_art_card <- function(
 #' @param title The title for this card.
 #' @param data Data for this card.
 #' @param plot The plot to be displayed in this card.
+#' @param events The events to capture on this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A PlotCard instance.
 ui_plot_card <- function(
@@ -2864,17 +2869,20 @@ ui_plot_card <- function(
   title,
   data,
   plot,
+  events = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
   .guard_scalar("plot", "h2oq_Plot", plot)
+  .guard_vector("events", "character", events)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
     data=data,
     plot=plot,
+    events=events,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_PlotCard"))
   return(.o)

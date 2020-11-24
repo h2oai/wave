@@ -3816,6 +3816,7 @@ class Visualization:
             height: Optional[str] = None,
             name: Optional[str] = None,
             visible: Optional[bool] = None,
+            events: Optional[List[str]] = None,
     ):
         self.plot = plot
         """The plot to be rendered in this visualization."""
@@ -3829,6 +3830,8 @@ class Visualization:
         """An identifying name for this component."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
+        self.events = events
+        """The events to capture on this visualization."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -3843,6 +3846,7 @@ class Visualization:
             height=self.height,
             name=self.name,
             visible=self.visible,
+            events=self.events,
         )
 
     @staticmethod
@@ -3858,12 +3862,14 @@ class Visualization:
         __d_height: Any = __d.get('height')
         __d_name: Any = __d.get('name')
         __d_visible: Any = __d.get('visible')
+        __d_events: Any = __d.get('events')
         plot: Plot = Plot.load(__d_plot)
         data: PackedRecord = __d_data
         width: Optional[str] = __d_width
         height: Optional[str] = __d_height
         name: Optional[str] = __d_name
         visible: Optional[bool] = __d_visible
+        events: Optional[List[str]] = __d_events
         return Visualization(
             plot,
             data,
@@ -3871,6 +3877,7 @@ class Visualization:
             height,
             name,
             visible,
+            events,
         )
 
 
@@ -5640,6 +5647,7 @@ class PlotCard:
             title: str,
             data: PackedRecord,
             plot: Plot,
+            events: Optional[List[str]] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -5650,6 +5658,8 @@ class PlotCard:
         """Data for this card."""
         self.plot = plot
         """The plot to be displayed in this card."""
+        self.events = events
+        """The events to capture on this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -5669,6 +5679,7 @@ class PlotCard:
             title=self.title,
             data=self.data,
             plot=self.plot.dump(),
+            events=self.events,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -5687,17 +5698,20 @@ class PlotCard:
         __d_plot: Any = __d.get('plot')
         if __d_plot is None:
             raise ValueError('PlotCard.plot is required.')
+        __d_events: Any = __d.get('events')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
         plot: Plot = Plot.load(__d_plot)
+        events: Optional[List[str]] = __d_events
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return PlotCard(
             box,
             title,
             data,
             plot,
+            events,
             commands,
         )
 
