@@ -1,10 +1,10 @@
 import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
-import { GridLayout, CardView } from './layout'
-import { Zone, Layout, layoutsB, preload } from './meta'
+import { CardView, GridLayout, getCardEffectClass } from './layout'
+import { Layout, layoutsB, preload, Zone } from './meta'
 import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
-import { clas, getTheme } from './theme'
+import { clas } from './theme'
 
 
 type Breakpoint = {
@@ -94,8 +94,6 @@ on(layoutsB, layouts => {
 })
 
 const
-  theme = getTheme(),
-  gap = 15,
   css = stylesheet({
     layout: {
       display: 'flex',
@@ -116,19 +114,6 @@ const
         '>*:last-child': { marginRight: 0 }
       }
     },
-    slot: {
-      position: 'relative',
-      backgroundColor: theme.colors.card,
-      boxSizing: 'border-box',
-      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
-      overflow: 'auto',
-      $nest: {
-        '>*:first-child': {
-          position: 'absolute',
-          left: gap, top: gap, right: gap, bottom: gap,
-        }
-      }
-    }
   }),
   justifications: Dict<S> = {
     start: 'flex-start',
@@ -178,7 +163,7 @@ const
     const
       { size1, size2, grow } = slot,
       zIndex = c.name === '__unhandled_error__' ? 1 : undefined,
-      style: React.CSSProperties = { zIndex }
+      style: React.CSSProperties = { position: 'relative', zIndex }
     if (grow) {
       style.flexGrow = grow
     } else {
@@ -232,7 +217,7 @@ const
           cardslots.map(cardslot => {
             const { card: c } = cardslot
             return (
-              <div key={c.id} className={css.slot} style={toSlotStyle(cardslot, zone.direction)}>
+              <div key={c.id} className={getCardEffectClass(c)} style={toSlotStyle(cardslot, zone.direction)}>
                 <CardView card={c} />
                 {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
               </div>

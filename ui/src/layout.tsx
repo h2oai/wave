@@ -3,7 +3,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
 import { B, bond, box, C, Card, Dict, F, parseI, Rec, S, U, unpack, xid } from './qd'
-import { getTheme, margin } from './theme'
+import { clas, getTheme, margin, palette } from './theme'
 
 type Slot = {
   left: U
@@ -14,11 +14,14 @@ type Slot = {
   bottom?: U
 }
 
+
+export enum CardEffect { Transparent, Normal, Raised, Flat }
+
 const
   newCardRegistry = () => {
     const
-      m: Dict<typeof React.Component> = {},
-      register = (name: S, ctor: typeof React.Component) => m[name] = ctor,
+      m: Dict<{ ctor: typeof React.Component, effect: CardEffect }> = {},
+      register = (name: S, ctor: typeof React.Component, effect: CardEffect = CardEffect.Normal) => m[name] = { ctor, effect },
       lookup = (name: S) => m[name] || m['']
     return { register, lookup }
   }
@@ -39,7 +42,7 @@ export const
     return x === null ? x : <>{x}</>
   },
   CardView = ({ card }: { card: Card<any> }) => {
-    const Tag = cards.lookup(card.state.view)
+    const Tag = cards.lookup(card.state.view).ctor
     return <Tag {...card} />
   },
   Repeat = ({ view, props, data }: { view: S | any, props: any, data: any }) => {
@@ -133,34 +136,68 @@ const
       margin: margin(grid.gap),
     },
     slot: {
-      position: 'absolute',
       backgroundColor: theme.colors.card,
       boxSizing: 'border-box',
-      borderRadius: 3,
-      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
       overflow: 'auto',
       $nest: {
         '>*:first-child': {
           position: 'absolute',
-          left: grid.gap, top: grid.gap, right: grid.gap, bottom: grid.gap,
+          left: 15, top: 15, right: 15, bottom: 15,
         }
       }
-    }
+    },
+    normal: {
+      backgroundColor: theme.colors.card,
+      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      $nest: {
+        '&:hover': {
+          boxShadow: `0px 12px 20px ${theme.colors.text2}`,
+        }
+      },
+    },
+    raised: {
+      color: theme.colors.card,
+      backgroundColor: palette.themePrimary,
+      boxShadow: `0px 3px 7px ${theme.colors.text3}`,
+    },
+    flat: {
+      backgroundColor: theme.colors.card,
+      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+    },
+    flush: {
+      $nest: {
+        '>*:first-child': {
+          position: 'absolute',
+          left: 0, top: 0, right: 0, bottom: 0,
+        }
+      }
+    },
   })
 
+
 export const
-  GridLayout = bond(({ name, cards }: { name: S, cards: C[] }) => {
+  getCardEffectClass = (c: C) => {
+    const effect = cards.lookup(c.state.view).effect
+    return clas(css.slot, effect === CardEffect.Normal
+      ? css.normal
+      : effect === CardEffect.Raised
+        ? css.raised
+        : effect == CardEffect.Flat
+          ? css.flat : css.flush)
+  },
+  GridLayout = bond(({ name, cards: cs }: { name: S, cards: C[] }) => {
     const
       render = () => {
         const
-          children = cards.map(c => {
+          children = cs.map(c => {
             const
               placement = grid.place(c.state.box),
               { left, top, right, bottom, width, height } = placement,
               display = placement === badPlacement ? 'none' : 'block',
               zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
             return (
-              <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height, zIndex }}>
+              <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex }}>
                 <CardView card={c} />
                 {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
               </div>
