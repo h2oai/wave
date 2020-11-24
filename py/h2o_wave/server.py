@@ -50,11 +50,13 @@ class Auth:
     Represents authentication information for a given query context. Carries valid information only if single sign on is enabled.
     """
 
-    def __init__(self, username: str, subject: str):
+    def __init__(self, username: str, subject: str, access_token: str):
         self.username = username
         """The username of the user."""
         self.subject = subject
         """A unique identifier for the user."""
+        self.access_token = access_token
+        """The access token of the user."""
 
 
 class Query:
@@ -236,7 +238,7 @@ class _App:
         return PlainTextResponse('', background=BackgroundTask(self._process, b.decode('utf-8')))
 
     async def _process(self, query: str):
-        username, subject, client_id, args = _parse_query(query)
+        username, subject, client_id, access_token, args = _parse_query(query)
         logger.debug(f'user: {username}, client: {client_id}')
         logger.debug(args)
         app_state, user_state, client_state = self._state
@@ -254,7 +256,7 @@ class _App:
             app_state=app_state,
             user_state=_session_for(user_state, username),
             client_state=_session_for(client_state, client_id),
-            auth=Auth(username, subject),
+            auth=Auth(username, subject, access_token),
             args=Expando(args_state),
             events=Expando(events_state),
         )
@@ -287,13 +289,14 @@ class _App:
         pickle.dump(state, open('h2o_wave.state', 'wb'))
 
 
-def _parse_query(query: str) -> Tuple[str, str, str, str]:
+def _parse_query(query: str) -> Tuple[str, str, str, str, str]:
     username = ''
     subject = ''
     client_id = ''
+    access_token = ''
 
     # format:
-    # u:username\ns:subject\nc:client_id\n\nbody
+    # u:username\ns:subject\nc:client_id\na:access_token\n\nbody
 
     head, body = query.split('\n\n', maxsplit=1)
     for line in head.splitlines():
@@ -306,8 +309,10 @@ def _parse_query(query: str) -> Tuple[str, str, str, str]:
                 subject = v
             elif k == 'c':
                 client_id = v
+            elif k == 'a':
+                access_token = v
 
-    return username, subject, client_id, body
+    return username, subject, client_id, access_token, body
 
 
 class _Main:

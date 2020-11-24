@@ -34,18 +34,19 @@ var (
 
 // Client represent a websocket (UI) client.
 type Client struct {
-	id       string          // unique id
-	addr     string          // remote address
-	username string          // username, or "default-user"
-	subject  string          // oidc subject identifier
-	broker   *Broker         // broker
-	conn     *websocket.Conn // connection
-	routes   []string        // watched routes
-	data     chan []byte     // send data
+	id          string          // unique id
+	addr        string          // remote address
+	username    string          // username, or "default-user"
+	subject     string          // oidc subject identifier
+	accessToken string          // oidc access token
+	broker      *Broker         // broker
+	conn        *websocket.Conn // connection
+	routes      []string        // watched routes
+	data        chan []byte     // send data
 }
 
-func newClient(addr, username, subject string, broker *Broker, conn *websocket.Conn) *Client {
-	return &Client{uuid.New().String(), addr, username, subject, broker, conn, nil, make(chan []byte, 256)}
+func newClient(addr, username, subject, accessToken string, broker *Broker, conn *websocket.Conn) *Client {
+	return &Client{uuid.New().String(), addr, username, subject, accessToken, broker, conn, nil, make(chan []byte, 256)}
 }
 
 func (c *Client) listen() {
@@ -173,10 +174,11 @@ func (c *Client) quit() {
 }
 
 var (
-	usernameHeader = []byte("u:")
-	subjectHeader  = []byte("s:")
-	clientIDHeader = []byte("c:")
-	queryBodySep   = []byte("\n\n")
+	usernameHeader    = []byte("u:")
+	subjectHeader     = []byte("s:")
+	clientIDHeader    = []byte("c:")
+	accessTokenHeader = []byte("a:")
+	queryBodySep      = []byte("\n\n")
 )
 
 func (c *Client) format(data []byte) []byte {
@@ -192,6 +194,10 @@ func (c *Client) format(data []byte) []byte {
 
 	buf.Write(clientIDHeader)
 	buf.WriteString(c.id)
+	buf.WriteByte('\n')
+
+	buf.Write(accessTokenHeader)
+	buf.WriteString(c.accessToken)
 	buf.Write(queryBodySep)
 
 	buf.Write(data)
