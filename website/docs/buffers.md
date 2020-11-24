@@ -2,9 +2,9 @@
 title: Data Buffers
 ---
 
-*Data buffers* are in-memory data structures designed to hold a card's tabular data. 
+*Data buffers* are in-memory data structures designed to hold a card's tabular data.
 
-Data buffers make it convenient to separate data (what is displayed) from presentation (how it is displayed). You can declare a card once, and update its underlying data buffer multiple times. A card can hold zero or more data buffers. 
+Data buffers make it convenient to separate data (what is displayed) from presentation (how it is displayed). You can declare a card once, and update its underlying data buffer multiple times. A card can hold zero or more data buffers.
 
 ## Cards and buffers
 
@@ -12,7 +12,7 @@ Data buffers are tabular data structures containing columns and rows. Different 
 
 ![CPU Usage](assets/buffers__series-card.png)
 
-```py {5-7} 
+```py {5-7}
 card = ui.small_series_stat_card(
     box=f'1 1 1 1',
     title='CPU',
@@ -27,7 +27,7 @@ In the above snippet, `data('time usage', -15)` defines a placeholder for a tabl
 
 Appending *rows* (*tuples* or *records*) to the data buffer make the card plot those rows.
 
-```py {2} 
+```py {2}
 while True:
     card.plot_data[-1] = [get_time(), get_usage()]
     time.sleep(1)
@@ -65,15 +65,17 @@ Use the `data()` function to declare a data buffer. The Wave server uses this de
     - A positive row count creates an array buffer.
     - A negative row count creates a cyclic buffer.
     - A zero row count (or `None`) creates a map buffer.
-- `rows`: A `dict` or `list` of rows to initialize the data buffer with. Each row can be a list or tuple. 
+- `rows`: A `dict` or `list` of rows to initialize the data buffer with. Each row can be a list or tuple.
     - For array or cyclic buffers, pass a list of rows.
     - For map buffers, pass a dict with strings as keys and rows as values.
+- `columns`: A `list` of columns to initialize the data buffer with. All columns must be of the same length. The columns are automatically transposed to `rows`.
+- `pack`: `True` to pack (compress) the provided rows or columns, use less memory on the server-side, and improve performance. Set `pack=True` if you intend to never make any changes to the data buffer once created. Defaults to `False`.
 
 ## Buffers in practice
 
 Declare a 5-row buffer with columns `donut` and `price`.
 
-```py 
+```py
 # Array buffer
 b = data(fields='donut price', size=5)
 
@@ -85,7 +87,7 @@ b = data(fields='donut price')
 ```
 
 Declare and initialize a 5-row buffer with columns `donut` and `price`.
-```py 
+```py
 # Array buffer
 b = data(fields='donut price', size=5, rows=[
     ['cream', 3.99],
@@ -116,7 +118,7 @@ b = data(fields='donut price', rows=dict(
 
 Modify a buffer row:
 
-```py 
+```py
 # Array buffer
 b[2] = ['cinnamon', 2.99]
 
@@ -130,7 +132,7 @@ b.cin = ['cinnamon', 2.99]
 
 Modify a buffer value:
 
-```py 
+```py
 # Array buffer (the following two forms are equivalent)
 b[2]['price'] = 2.99
 b[2].price = 2.99
@@ -145,10 +147,23 @@ b['cin'].price = 2.99
 b.cin.price = 2.99
 ```
 
+## Packed buffers
 
+If you intend to create tabular data once and never change individual rows or values, it is better to avoid allocating memory on the server by using a *packed buffer*. Packed buffers use less memory on the server and improve performance. To create a packed buffer, use `data(..., pack=True)`. Note that `size` is not required, and is ignored if provided.
 
+```py
+b = data(fields='donut price', rows=[
+    ['cream', 3.99],
+    ['custard', 2.99],
+    ['cinnamon', 2.49],
+    ['sprinkles', 2.49],
+    ['sugar', 1.99],
+], pack=True)
+```
 
-
-
-
-
+```py
+b = data(fields='donut price', columns=[
+    ['cream', 'custard', 'cinnamon', 'sprinkles', 'sugar'],
+    [3.99 , 2.99, 2.49, 2.49, 1.99],
+], pack=True)
+```
