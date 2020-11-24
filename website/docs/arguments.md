@@ -32,7 +32,7 @@ The table below summarizes how to interpret inputs from various components.
 | `ui.choice_group()` | The name of the selected choice (a string). |
 | `ui.color_picker()` | The selected color (a string). |
 | `ui.combobox()` | Either the name of the selected choice or the value typed in (a string). |
-| `ui.command()` | `data` if provided, else `True`. |
+| `ui.command()` | `value` if provided, else `True`. |
 | `ui.date_picker()` | The selected date in `YYYY-MM-DD` format (a string). |
 | `ui.dropdown()` | If multi-valued, a list of names of all the selected choices (a list of strings), otherwise the name of the selected choice (a string).  |
 | `ui.expander()` | `True` if expanded, else `False`. |
