@@ -78,6 +78,7 @@ class Query:
             client_state: Expando,
             auth: Auth,
             args: Expando,
+            events: Expando,
     ):
         self.mode = mode
         """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
@@ -92,7 +93,9 @@ class Query:
         self.client = client_state
         """An `h2o_wave.core.Expando` instance to hold client-specific state."""
         self.args = args
-        """A `h2o_wave.core.Expando` instance containing the active request."""
+        """A `h2o_wave.core.Expando` instance containing arguments from the active request."""
+        self.events = events
+        """A `h2o_wave.core.Expando` instance containing events from the active request."""
         self.username = username
         """The username of the user who initiated the active request."""
         self.route = route
@@ -237,6 +240,11 @@ class _App:
         logger.debug(f'user: {username}, client: {client_id}')
         logger.debug(args)
         app_state, user_state, client_state = self._state
+        args_state: dict = unmarshal(args)
+        events_state: Optional[dict] = args_state.get('', None)
+        if events_state:
+            events_state = {k: Expando(v) for k, v in events_state.items()}
+            del args_state['']
         q = Q(
             site=self._site,
             mode=self._mode,
@@ -247,7 +255,8 @@ class _App:
             user_state=_session_for(user_state, username),
             client_state=_session_for(client_state, client_id),
             auth=Auth(username, subject),
-            args=Expando(unmarshal(args)),
+            args=Expando(args_state),
+            events=Expando(events_state),
         )
         # noinspection PyBroadException,PyPep8
         try:

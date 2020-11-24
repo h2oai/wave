@@ -714,6 +714,7 @@ export interface Ref {
 export interface Qd {
   readonly path: S
   readonly args: Rec
+  readonly events: Dict<any>
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
   socket: WebSocket | null
@@ -723,11 +724,6 @@ export interface Qd {
 
 const
   keyseq = (...keys: S[]): S => keys.join(' '),
-  cloneRec = (a: Rec) => {
-    const b: Rec = {}
-    for (const k in a) b[k] = a[k]
-    return b
-  },
   clearRec = (a: Rec) => {
     for (const k in a) delete a[k]
   }
@@ -735,6 +731,7 @@ const
 export const qd: Qd = {
   path: window.location.pathname,
   args: {},
+  events: {},
   refreshRateB: box(-1),
   busyB: box(false),
   socket: null,
@@ -763,8 +760,12 @@ export const qd: Qd = {
   sync: () => {
     const sock = qd.socket
     if (!sock) return
-    const args = cloneRec(qd.args)
+    const args: Dict<any> = { ...qd.args }
     clearRec(qd.args)
+    if (Object.keys(qd.events).length) {
+      args[''] = { ...qd.events }
+      clearRec(qd.events)
+    }
     sock.send(`@ ${qd.path} ${JSON.stringify(args)}`)
     qd.busyB(true)
   },

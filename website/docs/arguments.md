@@ -1,10 +1,10 @@
 ---
-title: Event Arguments
+title: Query Arguments
 ---
 
-When a user interacts with [components](components.md) on a page - like typing in text, making choices, clicking buttons, and so on - that information is available to your app in the form of *event arguments*.
+When a user interacts with [components](components.md) on a page - like typing in text, making choices, clicking buttons, and so on - that information is available to your app in the form of *query arguments*.
 
-The event arguments can be read from `q.args`, a read-only dictionary-like object passed to your `@app()` handler:
+The query arguments can be read from `q.args`, a read-only dictionary-like object passed to your `@app()` handler:
 
 ```py {5-7}
 from h2o_wave import Q, main, app
