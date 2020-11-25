@@ -146,7 +146,7 @@ const
       : b > a ? 1 : -1
   },
   formatNum = (num: U) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  toCSV = (data: any[][]): S => data.map(row => {
+  toCSV = (data: unknown[][]): S => data.map(row => {
     const line = JSON.stringify(row)
     return line.substr(1, line.length - 2)
   }).join('\n')
@@ -247,7 +247,7 @@ export const
       download = () => {
         // TODO: Prompt a dialog for name, encoding, etc.
         const
-          data = toCSV(items.map(i => Object.values(i))),
+          data = toCSV([m.columns.map(({ label, name }) => label || name), ...m.rows.map(({ cells }) => cells)]),
           a = document.createElement('a'),
           blob = new Blob([data], { type: "octet/stream" }),
           url = window.URL.createObjectURL(blob)
