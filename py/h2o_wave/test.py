@@ -98,5 +98,5 @@ def _translate_test(description: str, f):
     test_name = f.__name__
     test_filename = f'{f.__module__}.{test_name}.spec.js'
     test_body = f'describe({_js(description)}, () => {{\nit({_js(test_name)}, () => {{\n{code}\n  }})\n}})'
-    with open(os.path.join(_cypress_dir, test_filename), 'w') as js_file:
+    with open(os.path.join(_cypress_dir, test_filename), 'w', encoding='utf-8') as js_file:
         js_file.write(test_body)

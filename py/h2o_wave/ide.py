@@ -82,12 +82,12 @@ async def serve(q: Q):
 
 
 def _write_file(p: Path, content: str):
-    with open(str(p), 'w') as f:
+    with open(str(p), 'w', encoding='utf-8') as f:
         f.write(content)
 
 
 def _read_file(p: Path) -> str:
-    with open(str(p), 'r') as f:
+    with open(str(p), 'r', encoding='utf-8') as f:
         return f.read()
 
 

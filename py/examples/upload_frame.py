@@ -23,7 +23,7 @@ html_content = '''
 html_filename = f'{str(uuid.uuid4())}.html'
 
 # Save HTML content to file
-with open(html_filename, 'w') as f:
+with open(html_filename, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
 # Upload HTML file

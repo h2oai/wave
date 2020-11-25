@@ -53,19 +53,13 @@ active_example: Optional[Example] = None
 
 
 def read_lines(p: str) -> List[str]:
-    with open(p) as f:
+    with open(p, encoding='utf-8') as f:
         return f.readlines()
 
 
 def read_file(p: str) -> str:
-    with open(p) as f:
+    with open(p, encoding='utf-8') as f:
         return f.read()
-
-
-def write_file(p: str, txt: str) -> str:
-    with open(p, 'w') as f:
-        f.write(txt)
-    return txt
 
 
 def strip_comment(line: str) -> str:
