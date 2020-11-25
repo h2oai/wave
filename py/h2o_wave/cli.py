@@ -30,14 +30,17 @@ def run(app: str, no_reload: bool):
     \b
     Run app.py with auto reload:
     $ wave run app
+    $ wave run app.py
 
     \b
     Run path/to/app.py with auto reload:
     $ wave run path.to.app
+    $ wave run path/to/app.py
 
     \b
     Run path/to/app.py without auto reload:
     $ wave run --no-reload path.to.app
+    $ wave run --no-reload path/to/app.py
     """
 
     port = _scan_free_port()
@@ -50,6 +53,11 @@ def run(app: str, no_reload: bool):
     # Insert cwd into path, otherwise uvicorn fails to locate the app module.
     # uvicorn.main() does this before calling uvicorn.run().
     sys.path.insert(0, '.')
+
+    # DevX: treat foo/bar/baz.py as foo.bar.baz
+    app_path, ext = os.path.splitext(app)
+    if ext.lower() == '.py':
+        app = app_path.replace(os.path.sep, '.')
 
     uvicorn.run(f'{app}:main', host=_localhost, port=port, reload=not no_reload)
 

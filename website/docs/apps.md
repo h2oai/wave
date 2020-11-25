@@ -10,14 +10,14 @@ A Wave app can publish content and handle user interactions, unlike a [Wave scri
 
 Here is the skeleton of a Wave app:
 
-```py title="app.py" 
+```py title="app.py"
 from h2o_wave import main, app, Q, ui
 
 @app('/foo')
 async def serve(q: Q):
     # Modify the page
     q.page['qux'] = ui.some_card()
-    
+
     # Save the page
     await q.page.save()
 ```
@@ -26,7 +26,7 @@ An app typically imports four symbols from `h2o_wave`:
 
 - `main`: An [ASGI](https://asgi.readthedocs.io/en/latest/)-compatible function. See [Deployment](deployment.md).
 - `app`: A decorator for your query handler (or request handler).
-- `Q`: A class that represents the query sent to your query handler. 
+- `Q`: A class that represents the query sent to your query handler.
 - `ui`: The module containing the API for drawing UI elements.
 
 `@app()` has one required argument - the route your app is interested in (in this case `/foo`). Whenever a user performs any action at `/foo` - access the page, reload it, click a button, access a menu, enter text, and so on - the query handler `serve()` is called. The details about what action was performed, and who  performed the action, are available in the argument passed to `serve()`, the *query context* `q` (of type [Q](api/server#q)).
@@ -35,8 +35,14 @@ Wave apps are run using the `wave run` command, which accepts the name of the Py
 
 If your app is contained in `app.py`, run it like this:
 
-```shell 
+```shell
 wave run app
+```
+
+Or,
+
+```shell
+wave run app.py
 ```
 
 If your app is contained in `path/to/app.py`, run it like this:
@@ -45,7 +51,13 @@ If your app is contained in `path/to/app.py`, run it like this:
 wave run path.to.app
 ```
 
-When run, the app starts an event loop listening for user interaction events, and announces itself to the Wave server. The Wave server then starts routing any user actions happening at `/foo` to your app. 
+Or,
+
+```shell
+wave run path/to/app.py
+```
+
+When run, the app starts an event loop listening for user interaction events, and announces itself to the Wave server. The Wave server then starts routing any user actions happening at `/foo` to your app.
 
 ## Runtime context
 
