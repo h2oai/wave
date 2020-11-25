@@ -1,22 +1,24 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
-import { cards } from './layout'
+import { cards, grid } from './layout'
 import { bond, Card, Rec, S, unpack, xid, B } from './qd'
-import { getTheme, displayMixin } from './theme'
+import { getTheme, displayMixin, px } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
     card: {
+      height: `calc(100% - ${px(2 * grid.gap)} )`,
     },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
     plot: {
-      position: 'absolute',
-      left: 0, top: 30, right: 0, bottom: 0,
+      position: 'relative',
+      height: 'calc(100% - 20px)',
+      width: 'calc(100% - 10px)'
     },
   })
 
@@ -57,6 +59,18 @@ export const
             defaultStyle: false,
             renderer: 'canvas',
             actions: false,
+            config: {
+              autosize: {
+                type: 'fit',
+                resize: true
+              },
+              view: {
+                discreteWidth: ref.current.clientWidth || undefined,
+                discreteHeight: ref.current.clientHeight || undefined,
+                continuousWidth: ref.current.clientWidth || 200,
+                continuousHeight: ref.current.clientHeight || 200,
+              }
+            }
           })
         } catch (e) {
           console.error(e)

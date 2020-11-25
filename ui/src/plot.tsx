@@ -709,8 +709,6 @@ const
 
 const
   css = stylesheet({
-    card: {
-    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
@@ -821,7 +819,7 @@ export const
       render = () => {
         const { title, plot, data, events } = state
         return (
-          <div data-test={name} className={css.card}>
+          <div data-test={name}>
             <div className={css.title}>{title || 'Untitled'}</div>
             <div className={css.plot}>
               <XVisualization model={{ name, plot, data, width: 'auto', height: 'auto', events }} />
