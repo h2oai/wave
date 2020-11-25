@@ -873,9 +873,9 @@ class Textbox:
             disabled: Optional[bool] = None,
             readonly: Optional[bool] = None,
             multiline: Optional[bool] = None,
-            multiline_height: Optional[str] = None,
             password: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            height: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -905,12 +905,12 @@ class Textbox:
         """True if the text box is a read-only field."""
         self.multiline = multiline
         """True if the text box should allow multi-line text entry."""
-        self.multiline_height = multiline_height
-        """The height of the text box, e.g. '100px'. Applicable only if `multiline` is true."""
         self.password = password
         """True if the text box should hide text content."""
         self.trigger = trigger
         """True if the form should be submitted when the text value changes."""
+        self.height = height
+        """The height of the text box, e.g. '100px'. Applicable only if `multiline` is true."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -934,9 +934,9 @@ class Textbox:
             disabled=self.disabled,
             readonly=self.readonly,
             multiline=self.multiline,
-            multiline_height=self.multiline_height,
             password=self.password,
             trigger=self.trigger,
+            height=self.height,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -959,9 +959,9 @@ class Textbox:
         __d_disabled: Any = __d.get('disabled')
         __d_readonly: Any = __d.get('readonly')
         __d_multiline: Any = __d.get('multiline')
-        __d_multiline_height: Any = __d.get('multiline_height')
         __d_password: Any = __d.get('password')
         __d_trigger: Any = __d.get('trigger')
+        __d_height: Any = __d.get('height')
         __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
@@ -977,9 +977,9 @@ class Textbox:
         disabled: Optional[bool] = __d_disabled
         readonly: Optional[bool] = __d_readonly
         multiline: Optional[bool] = __d_multiline
-        multiline_height: Optional[str] = __d_multiline_height
         password: Optional[bool] = __d_password
         trigger: Optional[bool] = __d_trigger
+        height: Optional[str] = __d_height
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Textbox(
@@ -996,9 +996,9 @@ class Textbox:
             disabled,
             readonly,
             multiline,
-            multiline_height,
             password,
             trigger,
+            height,
             visible,
             tooltip,
         )

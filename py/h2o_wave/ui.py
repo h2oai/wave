@@ -423,9 +423,9 @@ def textbox(
         disabled: Optional[bool] = None,
         readonly: Optional[bool] = None,
         multiline: Optional[bool] = None,
-        multiline_height: Optional[str] = None,
         password: Optional[bool] = None,
         trigger: Optional[bool] = None,
+        height: Optional[str] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
@@ -449,9 +449,9 @@ def textbox(
         disabled: True if the text box is disabled.
         readonly: True if the text box is a read-only field.
         multiline: True if the text box should allow multi-line text entry.
-        multiline_height: The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
         password: True if the text box should hide text content.
         trigger: True if the form should be submitted when the text value changes.
+        height: The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
         visible: True if the component should be visible. Defaults to true.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
@@ -471,9 +471,9 @@ def textbox(
         disabled,
         readonly,
         multiline,
-        multiline_height,
         password,
         trigger,
+        height,
         visible,
         tooltip,
     ))
