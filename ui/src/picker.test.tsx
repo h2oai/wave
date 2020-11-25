@@ -2,7 +2,6 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XPicker, Picker } from './picker'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'picker'
 let pickerProps: Picker
@@ -14,7 +13,6 @@ const typeToInput = (input: HTMLInputElement, value: string) => {
 }
 
 describe('Picker.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     pickerProps = {
       name,
