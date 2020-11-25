@@ -8,6 +8,12 @@ Components are blocks of interactive content (inputs, commands, notifications, g
 Several of the components below allow users to input information or interact with them in some way. To know what the user did, see [event arguments](arguments.md).
 :::
 
+In places where a component accepts an `icon` argument, you can specify any of the [Office UI Fabric Icons](https://uifabricicons.azurewebsites.net/). For example,
+
+```py {2}
+ui.command(name="close", label='Close', icon='ChromeClose')])
+```
+
 ## Content
 
 ### Text
@@ -183,4 +189,3 @@ See [ui.expander()](api/ui.md#expander)
 Use a separator to visually separate components in to groups.
 
 See [ui.separator()](api/ui.md#separator)
-
