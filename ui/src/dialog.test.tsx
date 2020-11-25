@@ -37,7 +37,7 @@ describe('Dialog.tsx', () => {
   })
 
   it('should render X closing button when specified', () => {
-    T.qd.dialogB({ ...dialogProps, closeable: true })
+    T.qd.dialogB({ ...dialogProps, closable: true })
     const { queryByTitle } = render(<Dialog />)
     expect(queryByTitle('Close')).toBeInTheDocument()
   })

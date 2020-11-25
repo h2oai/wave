@@ -19,8 +19,9 @@ export interface Dialog {
   /** True if the dialog should have closing 'X' button in top right corner. */
   closeable?: B
   /** A blocking Dialog disables all other actions and commands on the page behind it. Defaults to false. */
+  closable?: B
   blocking?: B
-  /** Dialog with large header banner, mutually exclusive with "closeable" prop. Defaults to false. */
+  /** Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false. */
   primary?: B
 }
 
@@ -29,10 +30,10 @@ export default bond(() => {
     { dialogB } = qd,
     render = () => {
       const
-        { title, width = '600px', items = [], closeable, primary, blocking } = dialogB() || {},
+        { title, width = '600px', items = [], closable, primary, blocking } = dialogB() || {},
         dialogContentProps: Fluent.IDialogContentProps = {
           title,
-          type: closeable
+          type: closable
             ? Fluent.DialogType.close
             : primary
               ? Fluent.DialogType.largeHeader

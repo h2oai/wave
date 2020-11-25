@@ -5463,22 +5463,22 @@ class Dialog:
             title: str,
             items: List[Component],
             width: Optional[str] = None,
-            closeable: Optional[bool] = None,
+            closable: Optional[bool] = None,
             blocking: Optional[bool] = None,
             primary: Optional[bool] = None,
     ):
         self.title = title
-        """The title of the dialog."""
+        """The dialog's title."""
         self.items = items
-        """The form components in the dialog."""
+        """The components displayed in this dialog."""
         self.width = width
-        """Width of the dialog. E.g. '400px', defaults to '600px'."""
-        self.closeable = closeable
-        """True if the dialog should have closing 'X' button in top right corner."""
+        """The width of the dialog, e.g. '400px', defaults to '600px'."""
+        self.closable = closable
+        """True if the dialog should have a closing 'X' button at the top right corner."""
         self.blocking = blocking
-        """A blocking Dialog disables all other actions and commands on the page behind it. Defaults to false."""
+        """True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false."""
         self.primary = primary
-        """Dialog with large header banner, mutually exclusive with "closeable" prop. Defaults to false."""
+        """Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5490,7 +5490,7 @@ class Dialog:
             title=self.title,
             items=[__e.dump() for __e in self.items],
             width=self.width,
-            closeable=self.closeable,
+            closable=self.closable,
             blocking=self.blocking,
             primary=self.primary,
         )
@@ -5505,20 +5505,20 @@ class Dialog:
         if __d_items is None:
             raise ValueError('Dialog.items is required.')
         __d_width: Any = __d.get('width')
-        __d_closeable: Any = __d.get('closeable')
+        __d_closable: Any = __d.get('closable')
         __d_blocking: Any = __d.get('blocking')
         __d_primary: Any = __d.get('primary')
         title: str = __d_title
         items: List[Component] = [Component.load(__e) for __e in __d_items]
         width: Optional[str] = __d_width
-        closeable: Optional[bool] = __d_closeable
+        closable: Optional[bool] = __d_closable
         blocking: Optional[bool] = __d_blocking
         primary: Optional[bool] = __d_primary
         return Dialog(
             title,
             items,
             width,
-            closeable,
+            closable,
             blocking,
             primary,
         )
@@ -5549,7 +5549,7 @@ class MetaCard:
         self.refresh = refresh
         """Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use)."""
         self.notification = notification
-        """Display a desktop notification to the user."""
+        """Display a desktop notification."""
         self.redirect = redirect
         """Redirect the page to a new URL."""
         self.icon = icon
@@ -5557,7 +5557,7 @@ class MetaCard:
         self.layouts = layouts
         """The layouts supported by this page."""
         self.dialog = dialog
-        """Display a dialog to the user."""
+        """Display a dialog on the page."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
