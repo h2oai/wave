@@ -68,7 +68,7 @@ interface State {
   title?: S
   /** Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use). */
   refresh?: U
-  /** Display a desktop notification to the user. */
+  /** Display a desktop notification. */
   notification?: S
   /** Redirect the page to a new URL. */
   redirect?: S
@@ -76,7 +76,7 @@ interface State {
   icon?: S
   /** The layouts supported by this page. */
   layouts?: Layout[]
-  /** Display a dialog to the user. */
+  /** Display a dialog on the page. */
   dialog?: Dialog
 }
 
@@ -104,7 +104,9 @@ export const
       qd.refreshRateB(refresh)
     }
 
-    qd.dialogB(dialog ? { ...dialog } : null) // Force new obj reference to rerender Dialog component with most recent changes.
+    // Force new obj reference to rerender Dialog component with most recent changes.
+    qd.dialogB(dialog ? { ...dialog } : null)
+
     if (notification) {
       delete state.notification
       showNotification(notification)

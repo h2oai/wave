@@ -10,16 +10,15 @@ import { B, bond, qd, S } from './qd'
  * such as deleting a file, or asking people to make a choice.
  */
 export interface Dialog {
-  /** The title of the dialog. */
+  /** The dialog's title. */
   title: S
-  /** The form components in the dialog. */
+  /** The components displayed in this dialog. */
   items: Component[]
-  /** Width of the dialog. E.g. '400px', defaults to '600px'. */
+  /** The width of the dialog, e.g. '400px', defaults to '600px'. */
   width?: S
-  /** True if the dialog should have closing 'X' button in top right corner. */
-  closeable?: B
-  /** A blocking Dialog disables all other actions and commands on the page behind it. Defaults to false. */
+  /** True if the dialog should have a closing 'X' button at the top right corner. */
   closable?: B
+  /** True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false. */
   blocking?: B
   /** Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false. */
   primary?: B
