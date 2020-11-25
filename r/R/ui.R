@@ -92,6 +92,12 @@ ui_command <- function(
 #' They also afford one-click access to higher levels of that hierarchy.
 #' Breadcrumbs are typically placed, in horizontal form, under the masthead
 #' or navigation of an experience, above the primary content area.
+#' 
+#' If items is an empty array, the automatic mode is activated. This means
+#' breadcrumbs will be generated automatically based on current url.
+#' 
+#' Multiple routes should be separated by "/". E.g. /main/sub/susub generates Main -> Sub -> Subsub breadcrumb.
+#' Multi word route names should be separated by "-". E.g. /long-word/sub-route generates Long Word -> Sub Route.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
