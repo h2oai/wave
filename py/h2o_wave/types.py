@@ -3017,6 +3017,7 @@ class Picker:
             max_choices: Optional[int] = None,
             disabled: Optional[bool] = None,
             visible: Optional[bool] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         self.name = name
@@ -3033,6 +3034,8 @@ class Picker:
         """Controls whether the picker should be disabled or not."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
+        self.trigger = trigger
+        """True if the form should be submitted when the picker value changes."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -3050,6 +3053,7 @@ class Picker:
             max_choices=self.max_choices,
             disabled=self.disabled,
             visible=self.visible,
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -3067,6 +3071,7 @@ class Picker:
         __d_max_choices: Any = __d.get('max_choices')
         __d_disabled: Any = __d.get('disabled')
         __d_visible: Any = __d.get('visible')
+        __d_trigger: Any = __d.get('trigger')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
         choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
@@ -3075,6 +3080,7 @@ class Picker:
         max_choices: Optional[int] = __d_max_choices
         disabled: Optional[bool] = __d_disabled
         visible: Optional[bool] = __d_visible
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return Picker(
             name,
@@ -3084,6 +3090,7 @@ class Picker:
             max_choices,
             disabled,
             visible,
+            trigger,
             tooltip,
         )
 
