@@ -13,10 +13,10 @@ cd $HOME/wave
 2020/10/27 16:16:34 # │  └─┘    ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
 2020/10/27 16:16:34 # └─────────────────────────┘
 2020/10/27 16:16:34 # 
-2020/10/27 16:16:34 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
+2020/10/27 16:16:34 # {"address":":10101","t":"listen","webroot":"/home/elp/wave/www"}
 ```
 
-The Wave server should now be running at [http://localhost:55555](http://localhost:55555).
+The Wave server should now be running at [http://localhost:10101](http://localhost:10101).
 
 :::caution Don't close this terminal window!
 To run any Wave app, you need the Wave server up and running at all times. Your web browser communicates with the Wave server, and the Wave server in turn communicates with the Wave app.

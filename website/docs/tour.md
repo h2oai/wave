@@ -55,14 +55,14 @@ wave run --no-reload examples.tour
 ## Step 3: Enjoy the tour
 
 
-Go to [http://localhost:55555/tour](http://localhost:55555/tour) to access the tour. 
+Go to [http://localhost:10101/tour](http://localhost:10101/tour) to access the tour. 
 
 ![tour](assets/tour__tour.png)
 
 `tour.py` is an ordinary Wave app that runs other apps. The tour itself runs at the route `/tour`, and each of the examples runs at `/demo`. 
 
 :::tip
-To play with the tour's active example in isolation, simply open a new browser tab and head to [http://localhost:55555/demo](http://localhost:55555/demo).
+To play with the tour's active example in isolation, simply open a new browser tab and head to [http://localhost:10101/demo](http://localhost:10101/demo).
 :::
 
 ## Wrapping up
@@ -73,5 +73,5 @@ In this section, we started the Wave server and then launched `tour.py` to exper
 wave run examples.todo
 ```
 
-You can now access the example at [http://localhost:55555/demo](http://localhost:55555/demo). Simple!
+You can now access the example at [http://localhost:10101/demo](http://localhost:10101/demo). Simple!
 

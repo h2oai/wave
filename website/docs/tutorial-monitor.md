@@ -66,7 +66,7 @@ cd $HOME/wave-apps
 ./venv/bin/python system_stats.py
 ```
 
-Point your browser to [http://localhost:55555/monitor](http://localhost:55555/monitor).
+Point your browser to [http://localhost:10101/monitor](http://localhost:10101/monitor).
 
 ![CPU](assets/tutorial-monitor__cpu.png)
 
@@ -189,7 +189,7 @@ Terminate your program (`^C`) and restart it:
 cd $HOME/wave-apps
 ./venv/bin/python system_stats.py
 ```
-Point your browser to [http://localhost:55555/monitor](http://localhost:55555/monitor). You should now see both CPU and memory stats live:
+Point your browser to [http://localhost:10101/monitor](http://localhost:10101/monitor). You should now see both CPU and memory stats live:
 
 ![CPU](assets/tutorial-monitor__cpu_mem.png)
 

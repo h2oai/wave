@@ -108,5 +108,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:55555"
+  "proxy": "http://localhost:10101"
 }

@@ -16,7 +16,7 @@ html_formatter = HtmlFormatter(full=True, style='xcode')
 example_dir = os.path.dirname(os.path.realpath(__file__))
 
 _app_host = '127.0.0.1'
-_app_port = '55556'
+_app_port = '10102'
 
 
 class Example:
@@ -205,5 +205,5 @@ catalog = load_examples(example_filenames)
 print('----------------------------------------')
 print(' Welcome to the H2O Wave Interactive Tour!')
 print('')
-print(' Go to http://localhost:55555/tour')
+print(' Go to http://localhost:10101/tour')
 print('----------------------------------------')

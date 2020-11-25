@@ -6,7 +6,7 @@ from h2o_wave import site, ui
 
 # Get the web page at route '/demo'.
 # If you're running this example on your local machine,
-# this page will refer to http://localhost:55555/demo.
+# this page will refer to http://localhost:10101/demo.
 page = site['/demo']
 
 # Add a Markdown card named `hello` to the page.

@@ -74,7 +74,7 @@ cd py && ./venv/bin/python examples/wizard.py
 make run-ui
 ```
 
-After that you can go to `http://localhost:55555/tour` (`http://localhost:3000/tour` if you enabled hot reload server).
+After that you can go to `http://localhost:10101/tour` (`http://localhost:3000/tour` if you enabled hot reload server).
 
 ### Committing Changes
 

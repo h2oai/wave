@@ -14,9 +14,9 @@ async def serve(q: Q):
     pass
 ```
 
-To host your app at `localhost:55555/foo` or `www.example.com/foo`, pass `/foo` to `@app()`.
+To host your app at `localhost:10101/foo` or `www.example.com/foo`, pass `/foo` to `@app()`.
 
-To host your app at `localhost:55555` or `www.example.com`, pass `/` to `@app()`. Do this if you plan to host exactly one app and nothing else.
+To host your app at `localhost:10101` or `www.example.com`, pass `/` to `@app()`. Do this if you plan to host exactly one app and nothing else.
 
 You can host multiple apps behind a single Wave server.
 

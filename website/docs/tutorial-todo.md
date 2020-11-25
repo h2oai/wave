@@ -202,7 +202,7 @@ source venv/bin/activate
 wave run todo
 ```
 
-Point your browser to [http://localhost:55555/todo](http://localhost:55555/todo).
+Point your browser to [http://localhost:10101/todo](http://localhost:10101/todo).
 
 ![todo](assets/tutorial-todo__1.png)
 
@@ -439,7 +439,7 @@ To make your app realtime, simply pass `mode='multicast'` to `@app()`.
 ```py title="$HOME/wave-apps/todo.py"
 @app('/todo', mode='multicast')
 ```
-Now try opening [http://localhost:55555/todo](http://localhost:55555/todo) from multiple browser tabs:
+Now try opening [http://localhost:10101/todo](http://localhost:10101/todo) from multiple browser tabs:
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-todo__5.mp4').default} type='video/mp4'/></video>
 

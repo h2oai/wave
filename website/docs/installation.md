@@ -65,7 +65,7 @@ Start the Wave server.
 2020/10/27 16:16:34 # │  └─┘    ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
 2020/10/27 16:16:34 # └─────────────────────────┘
 2020/10/27 16:16:34 # 
-2020/10/27 16:16:34 # {"address":":55555","t":"listen","webroot":"/home/elp/wave/www"}
+2020/10/27 16:16:34 # {"address":":10101","t":"listen","webroot":"/home/elp/wave/www"}
 ```
 
 :::info
@@ -74,7 +74,7 @@ On Windows, run `waved.exe` to start the server.
 
 ### Step 5: Verify
 
-Finally, point your web browser to [http://localhost:55555/](http://localhost:55555/). You should see an empty page with a spinner that looks like this:
+Finally, point your web browser to [http://localhost:10101/](http://localhost:10101/). You should see an empty page with a spinner that looks like this:
 
 ![spinner](assets/installation__waiting.png)
 

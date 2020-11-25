@@ -59,7 +59,7 @@ cd $HOME/wave-apps
 
 ## Step 3: Watch updates live
 
-Point your browser to [http://localhost:55555/beer](http://localhost:55555/beer), and watch the verses fly by.
+Point your browser to [http://localhost:10101/beer](http://localhost:10101/beer), and watch the verses fly by.
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-beer__demo.mp4').default} type='video/mp4'/></video>
 

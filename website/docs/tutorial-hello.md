@@ -70,7 +70,7 @@ cd $HOME/wave-apps
 
 ## Step 5: Admire your creation
 
-Point your browser to [http://localhost:55555/hello](http://localhost:55555/hello), and pause to reflect on a particularly pithy quote from the venerable Homer Simpson. 
+Point your browser to [http://localhost:10101/hello](http://localhost:10101/hello), and pause to reflect on a particularly pithy quote from the venerable Homer Simpson. 
 
 ![Hello World 1](assets/tutorial-hello__1.png)
 
@@ -89,7 +89,7 @@ Let's understand this principle in practice using the little program we just cre
 
 ### Grab a reference to a page
 
-A `site` represents a dictionary of all the pages on the Wave server. To get a reference to a page hosted at the route `/hello` (which translates to `http://localhost:55555/hello`), simply grab the value at key `/hello`. 
+A `site` represents a dictionary of all the pages on the Wave server. To get a reference to a page hosted at the route `/hello` (which translates to `http://localhost:10101/hello`), simply grab the value at key `/hello`. 
 
 ```py
 page = site['/hello']

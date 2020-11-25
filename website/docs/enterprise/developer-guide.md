@@ -241,8 +241,8 @@ $ h2o instance logs c22222222-3333-4444-5555-666666666666
 2020/10/27 16:16:34 # │  └─┘    ┘  ┘ └──┘  └─┘  │ © 2020 H2O.ai, Inc.
 2020/10/27 16:16:34 # └─────────────────────────┘
 2020/10/27 16:16:34 #
-2020/10/27 16:16:34 # {"address":":55555","t":"listen","webroot":"/wave/www"}
-2020/10/27 16:16:34 # {"host":"ws://127.0.0.1:55556","route":"/","t":"relay"}
+2020/10/27 16:16:34 # {"address":":10101","t":"listen","webroot":"/wave/www"}
+2020/10/27 16:16:34 # {"host":"ws://127.0.0.1:10102","route":"/","t":"relay"}
 ...
 ```
 
@@ -253,12 +253,12 @@ using our platform docker image.
 
 Note that this requires that you have docker installed and that you have access to the docker image.
 
-Then navigate to `http://localhost:55555/<your main route>`.
+Then navigate to `http://localhost:10101/<your main route>`.
 
 ```sh
 $ h2o exec
 {"level":"info","log_level":"debug","url":"file:///wave_bundle/q-peak.0.1.2.wave","app_root":"/app","venv_root":"/resources","server_path":"/wave/wave","py_module":"peak","tmp":"/tmp","startup_server":true,"version":"latest-20200929","time":"2020-10-13T06:42:21Z","message":"configuration"}
-{"level":"info","port":":55555","time":"2020-10-13T06:42:21Z","message":"starting launcher server"}
+{"level":"info","port":":10101","time":"2020-10-13T06:42:21Z","message":"starting launcher server"}
 {"level":"info","executable":"/wave/wave","time":"2020-10-13T06:42:21Z","message":"wave executable found"}
 ...
 ```

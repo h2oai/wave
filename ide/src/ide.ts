@@ -25,7 +25,7 @@ async function proxy(req: ProxyRequest): Promise<ProxyResult> {
 }
 
 async function rpc<T>(method: string, args: any): Promise<T> {
-  const { error, result } = await proxy({ method: 'POST', url: 'http://localhost:55554', body: JSON.stringify([method, args]) })
+  const { error, result } = await proxy({ method: 'POST', url: 'http://localhost:10100', body: JSON.stringify([method, args]) })
   if (error) throw error // proxying error
   if (!result) throw 'empty result' // shouldn't happen
   const { code, status, body } = result

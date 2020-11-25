@@ -26,7 +26,7 @@ async def serve(q: Q):
     pass
 ```
 
-`@app` is a decorator that takes one required argument - the route to listen to, in this case `/counter` (which translates to `localhost:55555/counter` or `www.example.com/counter`).
+`@app` is a decorator that takes one required argument - the route to listen to, in this case `/counter` (which translates to `localhost:10101/counter` or `www.example.com/counter`).
 
 The `@app` decorator is applied to a function called `serve()`, which is called every single time the user interacts with the UI (access the page, reload it, click a button, access a menu, enter text, and so on).
 
@@ -83,7 +83,7 @@ Notice how the technique to modify and save pages in a Wave app is different fro
 
 In a Wave app, we always access the page using the *query context* `q`. The query context carries useful information about the active UI event, including who issued the event, what information was entered, which buttons were clicked, and so on; and `q.page` always refers to the page located at the route you passed to `@app()` (in this case).
 
-Point your browser to [http://localhost:55555/counter](http://localhost:55555/counter). You should see a nice big button, waiting to be clicked on:
+Point your browser to [http://localhost:10101/counter](http://localhost:10101/counter). You should see a nice big button, waiting to be clicked on:
 
 ![Button](assets/tutorial-counter__1.png)
 
@@ -180,7 +180,7 @@ In the above edit, we check for an arbitrary flag in `q.client` called `initiali
 
 In the above steps, we learned about `q.args` (request arguments submitted from the browser) and `q.client` (arbitrary information associated with the client). Let's expand on these and introduce two new concepts: `q.user` and `q.app`.
 
-Before we do that, try accessing [http://localhost:55555/counter](http://localhost:55555/counter) from two different browser tabs and playing with them. You'll notice that each browser tab (or, each client) maintains separate bean counts.
+Before we do that, try accessing [http://localhost:10101/counter](http://localhost:10101/counter) from two different browser tabs and playing with them. You'll notice that each browser tab (or, each client) maintains separate bean counts.
 
 <video autoplay='autoplay' loop='loop' muted='muted'><source src={require('./assets/tutorial-counter__client.mp4').default} type='video/mp4'/></video>
 

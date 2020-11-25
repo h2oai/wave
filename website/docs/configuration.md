@@ -23,7 +23,7 @@ Usage of ./waved:
   -init string
     	initialize site content from AOF log
   -listen string
-    	listen on this address (default ":55555")
+    	listen on this address (default ":10101")
   -oidc-client-id string
     	OIDC client ID
   -oidc-client-secret string
@@ -46,7 +46,7 @@ Usage of ./waved:
 
 ## Configuring your app
 
-Your Wave application is an ASGI server. When you run your app during development, the app server runs at http://127.0.0.1:8000/ by default (localhost, port 8000), and assumes that your Wave server is running at http://127.0.0.1:55555/ (localhost, port 55555). The `wave run` command automatically picks another available port if `8000` is not available. 
+Your Wave application is an ASGI server. When you run your app during development, the app server runs at http://127.0.0.1:8000/ by default (localhost, port 8000), and assumes that your Wave server is running at http://127.0.0.1:10101/ (localhost, port 10101). The `wave run` command automatically picks another available port if `8000` is not available. 
 
 The Wave server and apps communicate with each other using RPC over persistent HTTP connections.
 
@@ -58,7 +58,7 @@ You can use the following environment variables to configure your app's server's
 The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.
 
 ### H2O_WAVE_ADDRESS
-The public host/port of the Wave server. Defaults to `http://127.0.0.1:55555`. Set this variable if you are running the Wave server on a remote machine or container.
+The public host/port of the Wave server. Defaults to `http://127.0.0.1:10101`. Set this variable if you are running the Wave server on a remote machine or container.
 
 ### H2O_WAVE_ACCESS_KEY_ID
 The API access key ID to use for communicating with the Wave server.

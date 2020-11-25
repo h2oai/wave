@@ -10,7 +10,7 @@ func main() {
 
 	var conf surf.DSConf
 
-	flag.StringVar(&conf.Listen, "listen", ":55554", "listen on this address")
+	flag.StringVar(&conf.Listen, "listen", ":10100", "listen on this address")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 

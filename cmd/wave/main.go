@@ -32,7 +32,7 @@ func main() {
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
-	flag.StringVar(&conf.Listen, "listen", ":55555", "listen on this address")
+	flag.StringVar(&conf.Listen, "listen", ":10101", "listen on this address")
 	flag.StringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from")
 	flag.StringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
 	flag.StringVar(&conf.AccessKeyID, "access-key-id", "access_key_id", "default access key ID")

@@ -32,7 +32,7 @@ Hello world
 
     from h2o_wave import site, ui
 
-    # Access the web page at http://localhost:55555/demo
+    # Access the web page at http://localhost:10101/demo
     page = site['/demo']
 
     # Add some content.
