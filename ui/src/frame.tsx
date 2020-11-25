@@ -54,7 +54,7 @@ interface State {
 const
   // replace ' src="/' -> ' src="http://foo.bar.baz:8080/'
   fixrefs = (s: S): S => s.replace(/(\s+src\s*=\s*["'])\//g, `$1${window.location.protocol}//${window.location.host}/`),
-  inline = (s: S): S => `data:text/html;base64,${btoa(fixrefs(s))}`,
+  inline = (s: S): S => URL.createObjectURL(new Blob([fixrefs(s)], { type: 'text/html' })),
   InlineFrame = ({ path, content }: { path?: S, content?: S }) => (
     <iframe title={xid()} src={path ? path : content ? inline(content) : inline('Nothing to render.')} frameBorder="0" width="100%" height="100%" />
   )
