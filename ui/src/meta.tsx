@@ -1,8 +1,8 @@
 import React from 'react'
 import { cards } from './layout'
 import { showNotification } from './notification'
-import { bond, box, Card, qd, S, U, B } from './qd'
-import { Component } from './form'
+import { bond, box, Card, qd, S, U } from './qd'
+import { Dialog } from './dialog'
 
 /**
  * Represents the layout structure for a page.
@@ -56,29 +56,6 @@ export interface Zone {
   /** The sub-zones contained inside this zone. */
   zones?: Zone[]
 }
-/**
- * A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
- * and requires people to interact with it. It’s primarily used for confirming actions,
- * such as deleting a file, or asking people to make a choice.
- */
-export interface Dialog {
-  /** An identifying name for this component. */
-  name: S
-  /** The title of the dialog. */
-  title: S
-  /** The form components in the dialog. */
-  items: Component[]
-  /** True if the dialog submit button should be disabled. */
-  disabled?: B
-  /** Width of the dialog. E.g. '400px', defaults to '600px'. */
-  width?: S
-  /** True if the dialog should have closing 'X' button in top right corner. */
-  has_x?: B
-  /** Text displayed on submit button. Defaults to 'Submit'. */
-  submitText?: S
-  /** Text displayed on cancel button. Defaults to 'Cancel'. */
-  cancelText?: S
-}
 
 /**
  * Represents page-global state.
@@ -127,7 +104,7 @@ export const
       qd.refreshRateB(refresh)
     }
 
-    if (dialog) qd.dialogB({ ...dialog }) // Force new obj reference to rerender Dialog component with most recent changes.
+    qd.dialogB(dialog ? { ...dialog } : null) // Force new obj reference to rerender Dialog component with most recent changes.
     if (notification) {
       delete state.notification
       showNotification(notification)

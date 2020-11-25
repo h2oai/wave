@@ -2433,6 +2433,38 @@ def layout(
     )
 
 
+def dialog(
+        title: str,
+        items: List[Component],
+        width: Optional[str] = None,
+        closeable: Optional[bool] = None,
+        blocking: Optional[bool] = None,
+        primary: Optional[bool] = None,
+) -> Dialog:
+    """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
+    and requires people to interact with it. It’s primarily used for confirming actions,
+    such as deleting a file, or asking people to make a choice.
+
+    Args:
+        title: The title of the dialog.
+        items: The form components in the dialog.
+        width: Width of the dialog. E.g. '400px', defaults to '600px'.
+        closeable: True if the dialog should have closing 'X' button in top right corner.
+        blocking: A blocking Dialog disables all other actions and commands on the page behind it. Defaults to false.
+        primary: Dialog with large header banner, mutually exclusive with "closeable" prop. Defaults to false.
+    Returns:
+        A `h2o_wave.types.Dialog` instance.
+    """
+    return Dialog(
+        title,
+        items,
+        width,
+        closeable,
+        blocking,
+        primary,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2441,6 +2473,7 @@ def meta_card(
         redirect: Optional[str] = None,
         icon: Optional[str] = None,
         layouts: Optional[List[Layout]] = None,
+        dialog: Optional[Dialog] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2455,7 +2488,8 @@ def meta_card(
         notification: Display a desktop notification to the user.
         redirect: Redirect the page to a new URL.
         icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
-        layouts: No documentation available.
+        layouts: The layouts supported by this page.
+        dialog: Display a dialog to the user.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2468,6 +2502,7 @@ def meta_card(
         redirect,
         icon,
         layouts,
+        dialog,
         commands,
     )
 

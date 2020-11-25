@@ -99,24 +99,19 @@ const
     return { render }
   })
 export const
-  XButtons = bond(({ model: m }: { model: Buttons }) => {
+  XButtons = ({ model: m }: { model: Buttons }) => {
     const
-      render = () => {
-        const
-          buttons = m.items.map(c => c.button).filter(b => !!b) as Button[],
-          children = buttons.map(b => (
-            <XToolTip key={b.name} content={b.tooltip} showIcon={false} expand={false}>
-              <XButton model={b}>{b.label}</XButton>
-            </XToolTip>
-          ))
-        return (
-          <div data-test={m.name} className={css.buttons} style={displayMixin(m.visible)}>
-            <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
-          </div>
-        )
-      }
-    return { render }
-  }),
+      children = (m.items.map(c => c.button).filter(Boolean) as Button[]).map(b => (
+        <XToolTip key={b.name} content={b.tooltip} showIcon={false} expand={false}>
+          <XButton model={b}>{b.label}</XButton>
+        </XToolTip>
+      ))
+    return (
+      <div data-test={m.name} className={css.buttons} style={displayMixin(m.visible)}>
+        <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
+      </div>
+    )
+  },
   XStandAloneButton = ({ model: m }: { model: Button }) => (
     <div className={css.buttons} style={displayMixin(m.visible)}>
       <XButton key={m.name} model={m}>{m.label}</XButton>
