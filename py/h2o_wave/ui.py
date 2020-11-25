@@ -2436,6 +2436,38 @@ def layout(
     )
 
 
+def dialog(
+        title: str,
+        items: List[Component],
+        width: Optional[str] = None,
+        closable: Optional[bool] = None,
+        blocking: Optional[bool] = None,
+        primary: Optional[bool] = None,
+) -> Dialog:
+    """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
+    and requires people to interact with it. It’s primarily used for confirming actions,
+    such as deleting a file, or asking people to make a choice.
+
+    Args:
+        title: The dialog's title.
+        items: The components displayed in this dialog.
+        width: The width of the dialog, e.g. '400px', defaults to '600px'.
+        closable: True if the dialog should have a closing 'X' button at the top right corner.
+        blocking: True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false.
+        primary: Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false.
+    Returns:
+        A `h2o_wave.types.Dialog` instance.
+    """
+    return Dialog(
+        title,
+        items,
+        width,
+        closable,
+        blocking,
+        primary,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2444,6 +2476,7 @@ def meta_card(
         redirect: Optional[str] = None,
         icon: Optional[str] = None,
         layouts: Optional[List[Layout]] = None,
+        dialog: Optional[Dialog] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2455,10 +2488,11 @@ def meta_card(
         box: A string indicating how to place this component on the page.
         title: The title of the page.
         refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
-        notification: Display a desktop notification to the user.
+        notification: Display a desktop notification.
         redirect: Redirect the page to a new URL.
         icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
         layouts: The layouts supported by this page.
+        dialog: Display a dialog on the page.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2471,6 +2505,7 @@ def meta_card(
         redirect,
         icon,
         layouts,
+        dialog,
         commands,
     )
 

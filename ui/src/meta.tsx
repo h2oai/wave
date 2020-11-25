@@ -2,6 +2,7 @@ import React from 'react'
 import { cards } from './layout'
 import { showNotification } from './notification'
 import { bond, box, Card, qd, S, U } from './qd'
+import { Dialog } from './dialog'
 
 /**
  * Represents the layout structure for a page.
@@ -67,7 +68,7 @@ interface State {
   title?: S
   /** Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use). */
   refresh?: U
-  /** Display a desktop notification to the user. */
+  /** Display a desktop notification. */
   notification?: S
   /** Redirect the page to a new URL. */
   redirect?: S
@@ -75,12 +76,14 @@ interface State {
   icon?: S
   /** The layouts supported by this page. */
   layouts?: Layout[]
+  /** Display a dialog on the page. */
+  dialog?: Dialog
 }
 
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Card<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts } = state
+    const { title, icon, refresh, notification, redirect, layouts, dialog } = state
 
     if (title) {
       delete state.title
@@ -100,6 +103,9 @@ export const
       delete state.refresh
       qd.refreshRateB(refresh)
     }
+
+    // Force new obj reference to rerender Dialog component with most recent changes.
+    qd.dialogB(dialog ? { ...dialog } : null)
 
     if (notification) {
       delete state.notification

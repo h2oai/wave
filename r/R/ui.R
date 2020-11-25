@@ -2773,6 +2773,41 @@ ui_layout <- function(
   return(.o)
 }
 
+#' A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
+#' and requires people to interact with it. It’s primarily used for confirming actions,
+#' such as deleting a file, or asking people to make a choice.
+#'
+#' @param title The dialog's title.
+#' @param items The components displayed in this dialog.
+#' @param width The width of the dialog, e.g. '400px', defaults to '600px'.
+#' @param closable True if the dialog should have a closing 'X' button at the top right corner.
+#' @param blocking True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false.
+#' @param primary Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false.
+#' @return A Dialog instance.
+ui_dialog <- function(
+  title,
+  items,
+  width = NULL,
+  closable = NULL,
+  blocking = NULL,
+  primary = NULL) {
+  .guard_scalar("title", "character", title)
+  .guard_vector("items", "h2oq_Component", items)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("closable", "logical", closable)
+  .guard_scalar("blocking", "logical", blocking)
+  .guard_scalar("primary", "logical", primary)
+  .o <- list(
+    title=title,
+    items=items,
+    width=width,
+    closable=closable,
+    blocking=blocking,
+    primary=primary)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Dialog"))
+  return(.o)
+}
+
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -2781,10 +2816,11 @@ ui_layout <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title of the page.
 #' @param refresh Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
-#' @param notification Display a desktop notification to the user.
+#' @param notification Display a desktop notification.
 #' @param redirect Redirect the page to a new URL.
 #' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
 #' @param layouts The layouts supported by this page.
+#' @param dialog Display a dialog on the page.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 ui_meta_card <- function(
@@ -2795,6 +2831,7 @@ ui_meta_card <- function(
   redirect = NULL,
   icon = NULL,
   layouts = NULL,
+  dialog = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -2803,6 +2840,7 @@ ui_meta_card <- function(
   .guard_scalar("redirect", "character", redirect)
   .guard_scalar("icon", "character", icon)
   .guard_vector("layouts", "h2oq_Layout", layouts)
+  .guard_scalar("dialog", "h2oq_Dialog", dialog)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
@@ -2812,6 +2850,7 @@ ui_meta_card <- function(
     redirect=redirect,
     icon=icon,
     layouts=layouts,
+    dialog=dialog,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
   return(.o)

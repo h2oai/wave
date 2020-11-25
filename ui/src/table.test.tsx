@@ -2,7 +2,6 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XTable, Table } from './table'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const
   name = 'table',
@@ -13,7 +12,6 @@ const
 let tableProps: Table
 
 describe('Table.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     tableProps = {
       name,

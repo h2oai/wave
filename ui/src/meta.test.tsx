@@ -1,9 +1,6 @@
-import React from 'react'
-import { render } from '@testing-library/react'
-import { View } from './meta'
-import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
+import { preload } from "./meta"
 import * as N from './notification'
+import * as T from './qd'
 
 const
   name = 'meta',
@@ -14,18 +11,18 @@ const
   }
 
 describe('Meta.tsx', () => {
-  beforeAll(() => initializeIcons())
-  beforeEach(() => { jest.clearAllMocks() })
+  beforeEach(() => jest.clearAllMocks())
 
   it('Sets title - init', () => {
-    render(<View {...{ ...metaProps, state: { title: name } }} />)
+    preload({ ...metaProps, state: { title: name } })
     expect(window.document.title).toBe(name)
   })
 
   it('Sets refreshRate - init', () => {
+    const refresh = 1
     expect(T.qd.refreshRateB()).toBe(-1)
-    render(<View {...{ ...metaProps, state: { refresh: 1 } }} />)
-    expect(T.qd.refreshRateB()).toBe(1)
+    preload({ ...metaProps, state: { refresh } })
+    expect(T.qd.refreshRateB()).toBe(refresh)
   })
 
   it('Shows notification - init', () => {
@@ -33,9 +30,20 @@ describe('Meta.tsx', () => {
     // @ts-ignore
     N.showNotification = showNotificationMock
 
-    render(<View {...{ ...metaProps, state: { notification: name } }} />)
+    preload({ ...metaProps, state: { notification: name } })
     expect(showNotificationMock).toHaveBeenCalled()
     expect(showNotificationMock).toHaveBeenCalledWith(name)
+  })
+
+  it('Sets dialog - init', () => {
+    const dialog = {
+      name: 'dialog',
+      title: 'Dialog Title',
+      items: [],
+    }
+    expect(T.qd.dialogB()).toBe(null)
+    preload({ ...metaProps, state: { dialog } })
+    expect(T.qd.dialogB()).toMatchObject(dialog)
   })
 
 })

@@ -5460,6 +5460,77 @@ class Layout:
         )
 
 
+class Dialog:
+    """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
+    and requires people to interact with it. It’s primarily used for confirming actions,
+    such as deleting a file, or asking people to make a choice.
+    """
+    def __init__(
+            self,
+            title: str,
+            items: List[Component],
+            width: Optional[str] = None,
+            closable: Optional[bool] = None,
+            blocking: Optional[bool] = None,
+            primary: Optional[bool] = None,
+    ):
+        self.title = title
+        """The dialog's title."""
+        self.items = items
+        """The components displayed in this dialog."""
+        self.width = width
+        """The width of the dialog, e.g. '400px', defaults to '600px'."""
+        self.closable = closable
+        """True if the dialog should have a closing 'X' button at the top right corner."""
+        self.blocking = blocking
+        """True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false."""
+        self.primary = primary
+        """Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.title is None:
+            raise ValueError('Dialog.title is required.')
+        if self.items is None:
+            raise ValueError('Dialog.items is required.')
+        return _dump(
+            title=self.title,
+            items=[__e.dump() for __e in self.items],
+            width=self.width,
+            closable=self.closable,
+            blocking=self.blocking,
+            primary=self.primary,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Dialog':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('Dialog.title is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('Dialog.items is required.')
+        __d_width: Any = __d.get('width')
+        __d_closable: Any = __d.get('closable')
+        __d_blocking: Any = __d.get('blocking')
+        __d_primary: Any = __d.get('primary')
+        title: str = __d_title
+        items: List[Component] = [Component.load(__e) for __e in __d_items]
+        width: Optional[str] = __d_width
+        closable: Optional[bool] = __d_closable
+        blocking: Optional[bool] = __d_blocking
+        primary: Optional[bool] = __d_primary
+        return Dialog(
+            title,
+            items,
+            width,
+            closable,
+            blocking,
+            primary,
+        )
+
+
 class MetaCard:
     """Represents page-global state.
 
@@ -5475,6 +5546,7 @@ class MetaCard:
             redirect: Optional[str] = None,
             icon: Optional[str] = None,
             layouts: Optional[List[Layout]] = None,
+            dialog: Optional[Dialog] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -5484,13 +5556,15 @@ class MetaCard:
         self.refresh = refresh
         """Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use)."""
         self.notification = notification
-        """Display a desktop notification to the user."""
+        """Display a desktop notification."""
         self.redirect = redirect
         """Redirect the page to a new URL."""
         self.icon = icon
         """Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers)."""
         self.layouts = layouts
         """The layouts supported by this page."""
+        self.dialog = dialog
+        """Display a dialog on the page."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -5507,6 +5581,7 @@ class MetaCard:
             redirect=self.redirect,
             icon=self.icon,
             layouts=None if self.layouts is None else [__e.dump() for __e in self.layouts],
+            dialog=None if self.dialog is None else self.dialog.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -5522,6 +5597,7 @@ class MetaCard:
         __d_redirect: Any = __d.get('redirect')
         __d_icon: Any = __d.get('icon')
         __d_layouts: Any = __d.get('layouts')
+        __d_dialog: Any = __d.get('dialog')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: Optional[str] = __d_title
@@ -5530,6 +5606,7 @@ class MetaCard:
         redirect: Optional[str] = __d_redirect
         icon: Optional[str] = __d_icon
         layouts: Optional[List[Layout]] = None if __d_layouts is None else [Layout.load(__e) for __e in __d_layouts]
+        dialog: Optional[Dialog] = None if __d_dialog is None else Dialog.load(__d_dialog)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -5539,6 +5616,7 @@ class MetaCard:
             redirect,
             icon,
             layouts,
+            dialog,
             commands,
         )
 
