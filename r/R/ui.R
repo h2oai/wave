@@ -1607,6 +1607,7 @@ ui_template <- function(
 #' @param max_choices Maximum number of selectable choices. Defaults to no limit.
 #' @param disabled Controls whether the picker should be disabled or not.
 #' @param visible True if the component should be visible. Defaults to true.
+#' @param trigger True if the form should be submitted when the picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Picker instance.
 ui_picker <- function(
@@ -1617,6 +1618,7 @@ ui_picker <- function(
   max_choices = NULL,
   disabled = NULL,
   visible = NULL,
+  trigger = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("choices", "h2oq_Choice", choices)
@@ -1625,6 +1627,7 @@ ui_picker <- function(
   .guard_scalar("max_choices", "numeric", max_choices)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("visible", "logical", visible)
+  .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(picker=list(
     name=name,
@@ -1634,6 +1637,7 @@ ui_picker <- function(
     max_choices=max_choices,
     disabled=disabled,
     visible=visible,
+    trigger=trigger,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)

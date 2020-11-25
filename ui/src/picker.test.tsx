@@ -132,6 +132,18 @@ describe('Picker.tsx', () => {
     expect(T.qd.args[name]).toMatchObject([name])
   })
 
+
+  it('Calls sync when trigger specified', () => {
+    const synckMock = jest.fn()
+    T.qd.sync = synckMock
+    const { getByRole } = render(<XPicker model={{ ...pickerProps, trigger: true }} />)
+
+    typeToInput(getByRole('textbox') as HTMLInputElement, name)
+    fireEvent.click(getByRole('option').querySelector('button')!)
+
+    expect(synckMock).toHaveBeenCalled()
+  })
+
   it('Sets args - multiple selection', () => {
     const { getByRole } = render(<XPicker model={pickerProps} />)
     const input = getByRole('textbox') as HTMLInputElement

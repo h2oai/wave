@@ -1445,6 +1445,7 @@ def picker(
         max_choices: Optional[int] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a picker.
@@ -1459,6 +1460,7 @@ def picker(
         max_choices: Maximum number of selectable choices. Defaults to no limit.
         disabled: Controls whether the picker should be disabled or not.
         visible: True if the component should be visible. Defaults to true.
+        trigger: True if the form should be submitted when the picker value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Picker` instance.
@@ -1471,6 +1473,7 @@ def picker(
         max_choices,
         disabled,
         visible,
+        trigger,
         tooltip,
     ))
 

@@ -24,6 +24,8 @@ export interface Picker {
   disabled?: B
   /** True if the component should be visible. Defaults to true. */
   visible?: B
+  /** True if the form should be submitted when the picker value changes. */
+  trigger?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -50,6 +52,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
     onChange = (items?: Fluent.ITag[]) => {
       selectedTagsB(items || [])
       qd.args[m.name] = items ? items.map(({ key }) => key) : null
+      if (m.trigger) qd.sync()
     },
     init = () => qd.args[m.name] = m.values || null,
     render = () => (
