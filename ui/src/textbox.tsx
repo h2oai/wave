@@ -42,6 +42,8 @@ export interface Textbox {
   password?: B
   /** True if the form should be submitted when the text value changes. */
   trigger?: B
+  /** The height of the text box, e.g. '100px'. Applicable only if `multiline` is true. */
+  height?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
@@ -53,14 +55,12 @@ export const
   XTextbox = bond(({ model: m }: { model: Textbox }) => {
     qd.args[m.name] = m.value || ''
     const
-      icon: Fluent.IIconProps | undefined = m.icon && m.icon.length ? { iconName: m.icon } : undefined,
-      onChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
-        v = v || (e.target as HTMLInputElement).value
+      onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
+        v = v || (target as HTMLInputElement).value
 
-        qd.args[m.name] = (v !== undefined && v !== null) ? v : (m.value || '')
+        qd.args[m.name] = v ?? (m.value || '')
         if (m.trigger) qd.sync()
       },
-      password = m.password ? 'password' : undefined,
       render = () => m.mask
         ? (
           <Fluent.MaskedTextField
@@ -80,9 +80,10 @@ export const
           <Fluent.TextField
             data-test={m.name}
             style={displayMixin(m.visible)}
+            styles={m.multiline && m.height ? { fieldGroup: { height: m.height } } : undefined}
             label={m.label}
             placeholder={m.placeholder}
-            iconProps={icon}
+            iconProps={{ iconName: m.icon }}
             prefix={m.prefix}
             suffix={m.suffix}
             defaultValue={m.value}
@@ -91,7 +92,7 @@ export const
             disabled={m.disabled}
             readOnly={m.readonly}
             multiline={m.multiline}
-            type={password}
+            type={m.password ? 'password' : undefined}
             onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
           />
         )

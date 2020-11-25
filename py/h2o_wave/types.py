@@ -929,6 +929,7 @@ class Textbox:
             multiline: Optional[bool] = None,
             password: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            height: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -962,6 +963,8 @@ class Textbox:
         """True if the text box should hide text content."""
         self.trigger = trigger
         """True if the form should be submitted when the text value changes."""
+        self.height = height
+        """The height of the text box, e.g. '100px'. Applicable only if `multiline` is true."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -987,6 +990,7 @@ class Textbox:
             multiline=self.multiline,
             password=self.password,
             trigger=self.trigger,
+            height=self.height,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -1011,6 +1015,7 @@ class Textbox:
         __d_multiline: Any = __d.get('multiline')
         __d_password: Any = __d.get('password')
         __d_trigger: Any = __d.get('trigger')
+        __d_height: Any = __d.get('height')
         __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
         name: str = __d_name
@@ -1028,6 +1033,7 @@ class Textbox:
         multiline: Optional[bool] = __d_multiline
         password: Optional[bool] = __d_password
         trigger: Optional[bool] = __d_trigger
+        height: Optional[str] = __d_height
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Textbox(
@@ -1046,6 +1052,7 @@ class Textbox:
             multiline,
             password,
             trigger,
+            height,
             visible,
             tooltip,
         )

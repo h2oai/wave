@@ -489,6 +489,7 @@ ui_message_bar <- function(
 #' @param multiline True if the text box should allow multi-line text entry.
 #' @param password True if the text box should hide text content.
 #' @param trigger True if the form should be submitted when the text value changes.
+#' @param height The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Textbox instance.
@@ -508,6 +509,7 @@ ui_textbox <- function(
   multiline = NULL,
   password = NULL,
   trigger = NULL,
+  height = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -525,6 +527,7 @@ ui_textbox <- function(
   .guard_scalar("multiline", "logical", multiline)
   .guard_scalar("password", "logical", password)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("height", "character", height)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(textbox=list(
@@ -543,6 +546,7 @@ ui_textbox <- function(
     multiline=multiline,
     password=password,
     trigger=trigger,
+    height=height,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
