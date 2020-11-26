@@ -64,7 +64,8 @@ interface Type {
   readonly comments: S[]
   readonly members: Member[]
   readonly isRoot: B
-  readonly isUnion: B
+  readonly areAllMembersOptional: B
+  isUnion: B
   oneOf?: OneOf
 }
 interface Protocol {
@@ -228,8 +229,8 @@ const
           // All cards can optionally have a contextual menu.
           if (isRoot) members.push({ t: MemberT.Repeated, name: 'commands', typeName: 'Command', isOptional: true, comments: [commandsComment], isPacked: false })
 
-          const isUnion = !members.filter(m => !m.isOptional).length // all members are optional?
-          file.types.push({ name: typeName, file: file.name, comments, members, isRoot, isUnion })
+          const areAllMembersOptional = !members.filter(m => !m.isOptional).length // all members are optional?
+          file.types.push({ name: typeName, file: file.name, comments, members, isRoot, areAllMembersOptional, isUnion: false })
       }
     })
   },
@@ -464,6 +465,9 @@ const
           if (memberType) genAPI(memberType)
         }
 
+        // Don't generate API function for discriminated unions
+        if (type.isUnion) return
+
         p('')
         p(`def ${snakeCase(type.name)}(`)
         for (const m of type.members) {
@@ -681,6 +685,9 @@ const
           if (memberType) genFunc(memberType)
         }
 
+        // Don't generate API function for discriminated unions
+        if (type.isUnion) return
+
         p(``)
         p(genComments(type.comments))
         p(`#'`)
@@ -808,7 +815,8 @@ const
     // Mark union members
     for (const typeName in lookup) {
       const type = lookup[typeName]
-      if (type.isUnion) {
+      if (type.areAllMembersOptional) {
+        let oneOfCount = 0
         for (const m of type.members) {
           if (m.t == MemberT.Singular || m.t === MemberT.Repeated) {
             const mt = lookup[m.typeName]
@@ -817,9 +825,11 @@ const
                 throw new CodeGenError(`Union type member ${type.name}.${mt.name} is already used in ${mt.oneOf.type.name}.${mt.oneOf.name}`)
               }
               mt.oneOf = { name: m.name, type }
+              oneOfCount++
             }
           }
         }
+        type.isUnion = oneOfCount === type.members.length
       }
     }
 
