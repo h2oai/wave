@@ -95,17 +95,21 @@ type QColumn = Fluent.IColumn & {
 
 const
   css = stylesheet({
+    // HACK: Put sorting icon on right (same as filter).
     sortableHeader: {
       $nest: {
         '.ms-DetailsHeader-cellName': {
-          display: 'flex',
-          flexDirection: 'row-reverse',
+          position: 'relative',
+          paddingRight: 15
         }
       }
     },
     sortingIcon: {
       marginLeft: 10,
-      fontSize: rem(1.1)
+      fontSize: rem(1.1),
+      position: 'absolute',
+      top: -2,
+      right: -5
     },
     // HACK: incorrect width recalculated after changing to "group by mode" - collapse icon in header
     // causes horizontal overflow for whole table.
