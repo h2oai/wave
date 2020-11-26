@@ -5628,12 +5628,15 @@ class NavCard:
             self,
             box: str,
             items: List[NavGroup],
+            value: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
         """The navigation groups contained in this pane."""
+        self.value = value
+        """The name of the active (highlighted) navigation item."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -5647,6 +5650,7 @@ class NavCard:
             view='nav',
             box=self.box,
             items=[__e.dump() for __e in self.items],
+            value=self.value,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -5659,13 +5663,16 @@ class NavCard:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('NavCard.items is required.')
+        __d_value: Any = __d.get('value')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
+        value: Optional[str] = __d_value
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return NavCard(
             box,
             items,
+            value,
             commands,
         )
 

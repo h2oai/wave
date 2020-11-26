@@ -1,32 +1,31 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import { View } from './nav'
+import { View, State } from './nav'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const
   name = 'nav',
   hashName = `#${name}`,
-  navProps: T.Card<any> = {
+  label = 'label',
+  navProps: T.Card<State> = {
     name,
     state: {
       items: [
-        { label: 'group1', items: [{ name, label: 'label1' }] }
+        { label: 'group1', items: [{ name, label }] }
       ]
     },
     changed: T.box(false)
   },
-  navPropsHash: T.Card<any> = {
+  navPropsHash: T.Card<State> = {
     name,
     state: {
       items: [
-        { label: 'group1', items: [{ name: hashName, label: 'label1' }] }
+        { label: 'group1', items: [{ name: hashName, label }] }
       ]
     },
     changed: T.box(false)
   }
 describe('Nav.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
   it('Renders data-test attr', () => {
@@ -39,12 +38,18 @@ describe('Nav.tsx', () => {
     expect(T.qd.args[name]).toBeNull()
   })
 
+  it('Makes link active when value specified', () => {
+    const props: T.Card<State> = { ...navProps, state: { ...navProps.state, value: name } }
+    const { getByTitle } = render(<View {...props} />)
+    expect(getByTitle(label).parentElement).toHaveClass('is-selected')
+  })
+
   it('Sets args and calls sync on click', () => {
     const syncMock = jest.fn()
     T.qd.sync = syncMock
 
     const { getByTitle } = render(<View {...navProps} />)
-    fireEvent.click(getByTitle('label1'))
+    fireEvent.click(getByTitle(label))
 
     expect(T.qd.args[name]).toBe(true)
     expect(syncMock).toHaveBeenCalled()
@@ -55,7 +60,7 @@ describe('Nav.tsx', () => {
     T.qd.sync = syncMock
 
     const { getByTitle } = render(<View {...navPropsHash} />)
-    fireEvent.click(getByTitle('label1'))
+    fireEvent.click(getByTitle(label))
 
     expect(T.qd.args[name]).toBeNull()
     expect(syncMock).toHaveBeenCalledTimes(0)
@@ -63,7 +68,7 @@ describe('Nav.tsx', () => {
 
   it('Does set window window location hash when name starts with hash', () => {
     const { getByTitle } = render(<View {...navPropsHash} />)
-    fireEvent.click(getByTitle('label1'))
+    fireEvent.click(getByTitle(label))
 
     expect(window.location.hash).toBe(hashName)
   })
@@ -73,7 +78,7 @@ describe('Nav.tsx', () => {
       ...navProps,
       state: {
         items: [
-          { label: 'group1', items: [{ name, label: 'label1' }], collapsed: true }
+          { label: 'group1', items: [{ name, label }], collapsed: true }
         ]
       },
     }

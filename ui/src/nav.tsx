@@ -24,13 +24,15 @@ export interface NavGroup {
 }
 
 /** Create a card containing a navigation pane. */
-interface State {
+export interface State {
   /** The navigation groups contained in this pane. */
   items: NavGroup[]
+  /** The name of the active (highlighted) navigation item. */
+  value?: S
 }
 
 export const
-  XNav = ({ items }: { items: NavGroup[] }) => {
+  XNav = ({ items, value }: State) => {
     const groups = items.map((g): INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
@@ -49,13 +51,10 @@ export const
         }
       }))
     }))
-    return <Nav groups={groups} />
+    return <Nav groups={groups} selectedKey={value} />
   },
   View = bond(({ name, state, changed }: Card<State>) => {
-    const
-      render = () => {
-        return <div data-test={name}><XNav items={state.items} /></div>
-      }
+    const render = () => <div data-test={name}><XNav {...state} /></div>
     return { render, changed }
   })
 
