@@ -15,6 +15,11 @@ const
       ...theme.font.s12,
       ...theme.font.w6,
     },
+    img: {
+      flexGrow: 1,
+      objectFit: 'contain',
+      maxHeight: 'calc(100% - 20px)'
+    }
   })
 
 /** Create a card that displays a base64-encoded image. */
@@ -31,20 +36,15 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const src = `data:image/${s.type};base64,${s.image}`
-        return (
-          <div data-test={name} className={css.card}>
-            <div className={css.title}>
-              <Format data={s.data} format={s.title} />
-            </div>
-            <div>
-              <img alt='generated' src={src} />
-            </div>
-          </div>
-        )
-      }
+    const render = () => (
+      <div data-test={name} className={css.card}>
+        <div className={css.title}>
+          <Format data={s.data} format={s.title} />
+        </div>
+        <img className={css.img} alt={s.title} src={`data:image/${s.type};base64,${s.image}`} />
+      </div>
+    )
+
     return { render, changed }
   })
 
