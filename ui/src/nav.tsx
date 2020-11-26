@@ -27,7 +27,7 @@ export interface NavGroup {
 export interface State {
   /** The navigation groups contained in this pane. */
   items: NavGroup[]
-  /** Initially selected nav item's name. */
+  /** The name of the active (highlighted) navigation item. */
   value?: S
 }
 

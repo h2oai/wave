@@ -2860,7 +2860,7 @@ ui_meta_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The navigation groups contained in this pane.
-#' @param value Initially selected nav item's name.
+#' @param value The name of the active (highlighted) navigation item.
 #' @param commands Contextual menu commands for this component.
 #' @return A NavCard instance.
 ui_nav_card <- function(

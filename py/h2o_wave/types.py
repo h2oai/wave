@@ -5636,7 +5636,7 @@ class NavCard:
         self.items = items
         """The navigation groups contained in this pane."""
         self.value = value
-        """Initially selected nav item's name."""
+        """The name of the active (highlighted) navigation item."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

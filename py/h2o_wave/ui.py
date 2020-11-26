@@ -2521,7 +2521,7 @@ def nav_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: The navigation groups contained in this pane.
-        value: Initially selected nav item's name.
+        value: The name of the active (highlighted) navigation item.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.NavCard` instance.
