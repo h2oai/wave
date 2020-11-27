@@ -148,8 +148,11 @@ func checkSession(conf ServerConf, oauth2Config oauth2.Config, sessions *OIDCSes
 		}
 		if r.URL.Path == "/_login" {
 			if conf.OIDCSkipLoginPage {
-				q := map[string]string{"next": r.URL.Query().Get("next")}
-				u, _ := urlWithQuery("/_auth/init", q)
+				u, _ := url.Parse("/_auth/init")
+				if r.URL.Query().Get("next") != "" {
+					q := map[string]string{"next": r.URL.Query().Get("next")}
+					u, _ = urlWithQuery("/_auth/init", q)
+				}
 				http.Redirect(w, r, u.String(), http.StatusFound)
 				return
 			}
