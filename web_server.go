@@ -148,11 +148,8 @@ func checkSession(conf ServerConf, oauth2Config oauth2.Config, sessions *OIDCSes
 		}
 		if r.URL.Path == "/_login" {
 			if conf.OIDCSkipLoginPage {
-				u, _ := url.Parse("/_auth/init")
-				if r.URL.Query().Get("next") != "" {
-					q := map[string]string{"next": r.URL.Query().Get("next")}
-					u, _ = urlWithQuery("/_auth/init", q)
-				}
+				q := map[string]string{"next": r.URL.Query().Get("next")}
+				u, _ := urlWithQuery("/_auth/init", q)
 				http.Redirect(w, r, u.String(), http.StatusFound)
 				return
 			}
@@ -215,7 +212,7 @@ func ensureValidOidcToken(c context.Context, cfg oauth2.Config, t *oauth2.Token)
 func urlWithQuery(b string, p map[string]string) (*url.URL, error) {
 	u, err := url.Parse(b)
 	if err != nil {
-		return nil, fmt.Errorf("cannot parse base url: %s", err)
+		return nil, fmt.Errorf("failed parsing base url: %v", err)
 	}
 	q := u.Query()
 	for k, v := range p {
