@@ -3,6 +3,7 @@ package wave
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -28,14 +29,14 @@ func newWebServer(
 	site *Site,
 	broker *Broker,
 	users map[string][]byte,
-	oidcEnabled bool,
+	conf ServerConf,
 	sessions *OIDCSessions,
 	oauth2Config oauth2.Config,
 	www string,
 ) *WebServer {
 	fs := fallback("/", http.FileServer(http.Dir(www)))
-	if oidcEnabled {
-		fs = checkSession(oauth2Config, sessions, fs)
+	if conf.oidcEnabled() {
+		fs = checkSession(conf, oauth2Config, sessions, fs)
 	}
 	return &WebServer{site, broker, fs, users}
 }
@@ -139,17 +140,28 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func checkSession(oauth2Config oauth2.Config, sessions *OIDCSessions, h http.Handler) http.Handler {
+func checkSession(conf ServerConf, oauth2Config oauth2.Config, sessions *OIDCSessions, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if len(path.Ext(r.URL.Path)) > 0 || r.URL.Path == "/_login" {
+		if len(path.Ext(r.URL.Path)) > 0 {
+			h.ServeHTTP(w, r)
+			return
+		}
+		if r.URL.Path == "/_login" {
+			if conf.OIDCSkipLoginPage {
+				u, _ := url.Parse("/_auth/init")
+				if r.URL.Query().Get("next") != "" {
+					q := map[string]string{"next": r.URL.Query().Get("next")}
+					u, _ = urlWithQuery("/_auth/init", q)
+				}
+				http.Redirect(w, r, u.String(), http.StatusFound)
+				return
+			}
 			h.ServeHTTP(w, r)
 			return
 		}
 
-		u, _ := url.Parse("/_login")
-		q := u.Query()
-		q.Set("next", r.URL.Path)
-		u.RawQuery = q.Encode()
+		q := map[string]string{"next": r.URL.Path}
+		u, _ := urlWithQuery("/_login", q)
 
 		cookie, err := r.Cookie(oidcSessionKey)
 		if err != nil {
@@ -198,4 +210,17 @@ func fallback(prefix string, h http.Handler) http.Handler {
 
 func ensureValidOidcToken(c context.Context, cfg oauth2.Config, t *oauth2.Token) (*oauth2.Token, error) {
 	return cfg.TokenSource(c, t).Token()
+}
+
+func urlWithQuery(b string, p map[string]string) (*url.URL, error) {
+	u, err := url.Parse(b)
+	if err != nil {
+		return nil, fmt.Errorf("cannot parse base url: %s", err)
+	}
+	q := u.Query()
+	for k, v := range p {
+		q.Set(k, v)
+	}
+	u.RawQuery = q.Encode()
+	return u, nil
 }

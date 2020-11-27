@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 
 	"github.com/h2oai/wave"
@@ -49,6 +50,7 @@ func main() {
 		oidcProviderURL   = "oidc-provider-url"
 		oidcRedirectURL   = "oidc-redirect-url"
 		oidcEndSessionURL = "oidc-end-session-url"
+		oidcSkipLoginPage = "oidc-skip-login-page"
 	)
 
 	conf.OIDCClientID = os.Getenv(envVarName(oidcClientID))
@@ -65,6 +67,9 @@ func main() {
 
 	conf.OIDCEndSessionURL = os.Getenv(envVarName(oidcEndSessionURL))
 	flag.StringVar(&conf.OIDCEndSessionURL, oidcEndSessionURL, conf.OIDCEndSessionURL, "OIDC end session URL")
+
+	conf.OIDCSkipLoginPage = getEnvBool(envVarName(oidcSkipLoginPage))
+	flag.BoolVar(&conf.OIDCSkipLoginPage, oidcSkipLoginPage, conf.OIDCSkipLoginPage, "Whether to skip the OpenID login page in UI")
 
 	flag.Parse()
 
@@ -85,4 +90,16 @@ func main() {
 func envVarName(n string) string {
 	envVar := strings.ToUpper(strings.ReplaceAll(n, "-", "_"))
 	return fmt.Sprintf("%s_%s", envVarNamePrefix, envVar)
+}
+
+func getEnvBool(k string) bool {
+	raw, found := os.LookupEnv(k)
+	if !found {
+		return false
+	}
+	v, err := strconv.ParseBool(strings.ToLower(raw))
+	if err != nil {
+		panic(err)
+	}
+	return v
 }

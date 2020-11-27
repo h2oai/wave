@@ -19,6 +19,7 @@ type ServerConf struct {
 	OIDCProviderURL   string
 	OIDCRedirectURL   string
 	OIDCEndSessionURL string
+	OIDCSkipLoginPage bool
 }
 
 func (c *ServerConf) oidcEnabled() bool {
