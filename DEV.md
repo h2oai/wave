@@ -29,7 +29,7 @@ For example `./venv/bin/pip install -e path/to/git/qd/py/`.
 Update `website/docs/change-log.md`, then:
 
 ```
-VERSION=v1.2.3 make release
+VERSION=1.2.3 make release
 git add .
 git commit -m "Release v1.2.3"
 git tag v1.2.3
