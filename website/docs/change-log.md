@@ -12,6 +12,44 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.10.0
+
+Nov 29, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.10.0)
+- Added
+  - Add support for responsive layouts.
+  - Add support for modal dialogs.
+  - Add ability to handle events from UI (`q.events`).
+  - Allow handling mark selection events on plots.
+  - Allow apps to handle server startup/shutdown events via `on_startup` and `on_shutdown` hooks.
+  - Allow color picker to submit values immediately when changed (`trigger` attribute).
+  - Allow collapsing nav items during initialization.
+  - Handle display and sorting of numeric and time valued columns in `ui.table()`.
+  - Allow links/link-buttons to open links in new windows/tabs.
+  - API now ships with enums for functions expecting predefined constants as parameters.
+  - Read OIDC flags from env vars when available.
+  - Automatically refresh OAuth2 access token in the background if expired.
+  - Allow accessing OIDC access tokens in Python client.
+  - Allow icons on navigation items.
+  - Automatically transpose columns to rows in `data()` if not packed.
+  - Allow adjust multiline textbox height.
+  - Allow picker to submit values immediately when changed (`trigger` attribute).
+  - Treat `wave run foo/bar/baz.py` as `wave run foo.bar.baz`.
+  - Allow selecting nav links during initialization.
+
+- Changed
+  - Cards display a "raised" effect on mouse over; Header, tab, toolbar and navbar have alternate styles.
+  - Display loading spinner automatically when a request is in flight.
+  - Mark `ui.command(data=...)` as deprecated (use `ui.command(value=...)` instead, similar to `ui.button(...)`.)
+  - Remove redundant `ui.*` API for discriminated unions (`ui.component()`, etc.),
+  - Add column headers to CSVs downloaded from `ui.table()`; remove row names.
+  - Change default Wave server port from 55555 to 10101 (55555 is special on OSX Big Sur).
+  - Center image in image card and preserve aspect ratio.
+
+- Fixed
+  - Improve ability of `ui.frame()` and `ui.frame_card()` to handle large HTML content.
+  - Fix tour on Windows.
+  - Use ellipsis on long column labels in `ui.table()`.
+
 ## v0.9.1
 Oct 28, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.9.1)
 - Fixed
@@ -20,25 +58,25 @@ Oct 28, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.9.1)
 ## v0.9.0
 Oct 28, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.9.0)
 - Added
-    - ASGI compatibility: Wave apps can now be run using an ASGI server.
-    - `@app` decorator to identify primary query handler in an app.
-    - Live-reload for apps.
-    - New `wave` CLI and `wave run` command.
-    - `q.run()` and `q.exec()` APIs for running background tasks.
-    - Display server version/build at startup.
-    - `AsyncSite` for updating other pages from an app without blocking the main thread.
-    - Drop or clear pages from a site using `del site[route]`.
+  - ASGI compatibility: Wave apps can now be run using an ASGI server.
+  - `@app` decorator to identify primary query handler in an app.
+  - Live-reload for apps.
+  - New `wave` CLI and `wave run` command.
+  - `q.run()` and `q.exec()` APIs for running background tasks.
+  - Display server version/build at startup.
+  - `AsyncSite` for updating other pages from an app without blocking the main thread.
+  - Drop or clear pages from a site using `del site[route]`.
 - Changed
-    - All HTTP calls now use non-blocking asyncio using the `httpx` library.
-    - `listen()` is deprecated.
-    - `H2O_WAVE_INTERNAL_ADDRESS` and `H2O_WAVE_EXTERNAL_ADDRESS` are deprecated.
-    - An app's UI is now cleared when an app crashes or is terminated.
-    - All examples migrated to use `@app` instead of `listen()`.
-    - Server binary renamed to `waved` (as in `wave` daemon).
-    - Apps using `@app` must be run using `wave run`.
+  - All HTTP calls now use non-blocking asyncio using the `httpx` library.
+  - `listen()` is deprecated.
+  - `H2O_WAVE_INTERNAL_ADDRESS` and `H2O_WAVE_EXTERNAL_ADDRESS` are deprecated.
+  - An app's UI is now cleared when an app crashes or is terminated.
+  - All examples migrated to use `@app` instead of `listen()`.
+  - Server binary renamed to `waved` (as in `wave` daemon).
+  - Apps using `@app` must be run using `wave run`.
 - Fixed
-    - Performance and concurrency improvements across the board.
-    - Stability improvements to the Wave Tour.
+  - Performance and concurrency improvements across the board.
+  - Stability improvements to the Wave Tour.
 
 ## v0.8.1
 Oct 26, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.8.1)
