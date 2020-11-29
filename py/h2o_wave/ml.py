@@ -1,11 +1,14 @@
 import os.path
 import uuid
 from enum import Enum
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Tuple
 
-# import driverlessai
+import datatable as dt
+import driverlessai
 import h2o
 from h2o.automl import H2OAutoML
+import h2osteam
+from h2osteam.clients import MultinodeClient
 
 from .core import _config
 
@@ -17,10 +20,7 @@ DataSourceObj = Union[str, List[List]]
 
 
 class _DataSource:
-    """Represents a various data sources that can be lazily transformed into another data type.
-
-    TODO: Handle Numpy, Pandas and Datatable?
-    """
+    """Represents a various data sources that can be lazily transformed into another data type."""
 
     def __init__(self, data: DataSourceObj, column_names: Optional[List[str]] = None,
                  column_types: Optional[List[str]] = None):
@@ -49,9 +49,18 @@ class _DataSource:
             self._h2o3_frame = self._to_h2o3_frame()
         return self._h2o3_frame
 
+    @property
+    def filename(self) -> str:
+        if isinstance(self._data, str):
+            return self._data
+        elif isinstance(self._data, List):
+            # TODO: Convert data to csv file using datatable.
+            raise NotImplementedError()
+        raise ValueError('unknown data type')
+
 
 class WaveModelBackend:
-    """Represents a common interface for a model. It references DAI or H2O-3 model in backend."""
+    """Represents a common interface for a model backend. It references DAI or H2O-3 model in backend."""
 
     def __init__(self, id_: str, type_: WaveModelBackendType):
         self.id = id_
@@ -59,12 +68,12 @@ class WaveModelBackend:
         self.type = type_
         """A wave model backend type represented by `h2o_wave.ml.WaveModelBackendType` enum. It's either DAI or H2O3."""
 
-    def predict(self, inputs: DataSourceObj, **kwargs):
+    def predict(self, inputs: DataSourceObj, **kwargs) -> List[Tuple]:
         """Predict values based on inputs.
 
         Args:
             inputs: A python obj or filename. [[1, 'a'], [2, 'b'], [3, 'c']] will create 3 rows and 2 columns.
-                    The values for a target column need to be specified as well (can be `None`).
+                    The values for a target column need to be specified as well (and can be `None`).
 
         Returns:
             A list of lists representing rows.
@@ -106,13 +115,18 @@ class _H2O3ModelBackend(WaveModelBackend):
             cls.INIT = True
 
     @staticmethod
-    def build(data: _DataSource, target: str, metric: WaveModelMetric) -> WaveModelBackend:
+    def build(filename: str, target: str, metric: WaveModelMetric, **train_settings) -> WaveModelBackend:
 
         _H2O3ModelBackend._init()
 
         id_ = _H2O3ModelBackend._make_id()
         aml = H2OAutoML(max_runtime_secs=30, project_name=id_, stopping_metric=metric.name)
-        frame = data.h2o3_frame
+
+        if os.path.exists(filename):
+            frame = h2o.import_file(filename)
+        else:
+            raise ValueError('file not found')
+
         cols = list(frame.columns)
 
         try:
@@ -120,7 +134,12 @@ class _H2O3ModelBackend(WaveModelBackend):
         except ValueError:
             raise ValueError('no target column')
 
-        aml.train(x=cols, y=target, training_frame=frame)
+        ts = train_settings  # A shortcut.
+        ts['x'] = cols
+        ts['y'] = target
+        ts['training_frame'] = frame
+
+        aml.train(**ts)
         return _H2O3ModelBackend(id_, aml)
 
     @staticmethod
@@ -132,7 +151,7 @@ class _H2O3ModelBackend(WaveModelBackend):
         aml = h2o.automl.get_automl(id_)
         return _H2O3ModelBackend(id_, aml)
 
-    def predict(self, data: DataSourceObj, **kwargs):
+    def predict(self, data: DataSourceObj, **kwargs) -> List[Tuple]:
 
         training_frame_id = self.aml.input_spec['training_frame']
         training_frame = h2o.get_frame(training_frame_id, rows=0)
@@ -141,96 +160,136 @@ class _H2O3ModelBackend(WaveModelBackend):
         iframe = ds.h2o3_frame
 
         oframe = self.aml.predict(iframe)
-        return oframe.as_data_frame(use_pandas=False, header=False)
+        filename = f'./{self._make_id()}.csv'
+        h2o.download_csv(oframe, filename)
+
+        prediction = dt.fread(filename)
+        return prediction.to_tuples()
 
 
-# class _DAIBackendModel(WaveModelBackend):
-#
-#     _INSTANCE = None
-#
-#     def __init__(self, id_: str, experiment):
-#         super().__init__(id_, WaveModelBackendType.DAI)
-#         self.experiment = experiment
-#
-#     @staticmethod
-#     def _make_id() -> str:
-#         """Generate random id."""
-#         return str(uuid.uuid4())
-#
-#     @classmethod
-#     def _instance(cls):
-#         if cls._INSTANCE is None:
-#             # Set up credentials
-#             cls._INSTANCE = driverlessai.Client(address='', username='', password='')
-#         return cls._INSTANCE
-#
-#     @staticmethod
-#     def _determine_task_type(summary) -> str:
-#         """Guess if a task type for a DAI is of `regression` or `classification`."""
-#         if summary.data_type in ('int', 'real'):
-#             if summary.unique > 50:
-#                 return 'regression'
-#         return 'classification'
-#
-#     @staticmethod
-#     def build(filename: str, target: str, metric: WaveModelMetric) -> WaveModelBackend:
-#
-#         dai = _DAIModel._instance()
-#
-#         dataset_id = _DAIModel._make_id()
-#         dataset = dai.datasets.create(filename, name=dataset_id)
-#
-#         try:
-#             summary = dataset.column_summaries(columns=[target])[0]
-#         except KeyError:
-#             raise ValueError('no target column')
-#
-#         settings = {
-#             'accuracy': 1,
-#             'time': 1,
-#             'interpretability': 10,
-#             'task': _DAIModel._determine_task_type(summary),
-#         }
-#
-#         ex = dai.experiments.create(train_dataset=dataset, target_column=target, **settings)
-#         return _DAIModel(ex.key, ex)
-#
-#     @staticmethod
-#     def get(id_: str):
-#         dai = _DAIModel._instance()
-#         return _DAIModel(id_, dai.experiments.get(id_))
-#
-#     def predict(self, inputs, **kwargs):
-#         ...
+class _DAIModelBackend(WaveModelBackend):
+
+    _INSTANCE = None
+    _CLUSTER_NAME = 'wave-dai-multinode-1'
+
+    def __init__(self, id_: str, experiment):
+        super().__init__(id_, WaveModelBackendType.DAI)
+        self.experiment = experiment
+
+    @staticmethod
+    def _make_id() -> str:
+        """Generate random id."""
+        return str(uuid.uuid4())
+
+    @classmethod
+    def _instance(cls):
+        if cls._INSTANCE is None:
+            if _config.steam_address:
+                h2osteam.login(url=_config.steam_address,
+                               username=_config.steam_username,
+                               password=_config.steam_password,
+                               verify_ssl=True)
+                cluster = MultinodeClient.get_cluster(cls._CLUSTER_NAME)
+                cls._INSTANCE = cluster.connect()
+
+            elif _config.dai_address:
+                cls._INSTANCE = driverlessai.Client(address=_config.dai_address,
+                                                    username=_config.dai_username,
+                                                    password=_config.dai_password)
+            else:
+                raise RuntimeError('no backend service available')
+        return cls._INSTANCE
+
+    @staticmethod
+    def _determine_task_type(summary) -> str:
+        """Guess if a task type for a DAI is of `regression` or `classification`."""
+        if summary.data_type in ('int', 'real'):
+            if summary.unique > 50:
+                return 'regression'
+        return 'classification'
+
+    @staticmethod
+    def build(filename: str, target: str, metric: WaveModelMetric, **experiment_settings) -> WaveModelBackend:
+
+        dai = _DAIModelBackend._instance()
+
+        dataset_id = _DAIModelBackend._make_id()
+        dataset = dai.datasets.create(filename, name=dataset_id)
+
+        try:
+            summary = dataset.column_summaries(columns=[target])[0]
+        except KeyError:
+            raise ValueError('no target column')
+
+        task_type = experiment_settings.get('task', _DAIModelBackend._determine_task_type(summary))
+
+        # ATTENTION: Not portable solution (use preview or search_expert_settings).
+        is_classification = True if task_type == 'classification' else False
+        params = dai._backend.get_experiment_tuning_suggestion(dataset_key=dataset.key, target_col=target,
+                                                               is_classification=is_classification,
+                                                               is_time_series=False, is_image=False,
+                                                               config_overrides=None, cols_to_drop=[])
+
+        es = experiment_settings  # A shortcut.
+        es['accuracy'] = es.get('accuracy', params.accuracy)
+        es['time'] = es.get('time', params.time)
+        es['interpretability'] = es.get('interpretability', params.interpretability)
+        es['task'] = task_type
+        es['scorer'] = params.score_f_name if metric == WaveModelMetric.AUTO else metric.name
+        es['train_dataset'] = dataset
+        es['target_column'] = target
+
+        ex = dai.experiments.create(**es)
+        return _DAIModelBackend(ex.key, ex)
+
+    @staticmethod
+    def get(id_: str):
+        dai = _DAIModelBackend._instance()
+        return _DAIModelBackend(id_, dai.experiments.get(id_))
+
+    def predict(self, data: DataSourceObj, **kwargs) -> List[Tuple]:
+
+        dai = _DAIModelBackend._instance()
+        ds = _DataSource(data)
+
+        dataset_id = _DAIModelBackend._make_id()
+        dataset = dai.datasets.create(ds.filename, name=dataset_id)
+
+        prediction_obj = self.experiment.predict(dataset=dataset)
+        prediction_filename = prediction_obj.download(overwrite=True)
+
+        prediction = dt.fread(prediction_filename)
+        return prediction.to_tuples()
 
 
-def build_model(data_obj: DataSourceObj, target: str, metric: WaveModelMetric = WaveModelMetric.AUTO,
-                model_backend_type: Optional[WaveModelBackendType] = None) -> WaveModelBackend:
+def build_model(filename: str, target: str, metric: WaveModelMetric = WaveModelMetric.AUTO,
+                model_backend_type: Optional[WaveModelBackendType] = None, **kwargs) -> WaveModelBackend:
     """Build a model.
 
     If `model_backend_type` not specified the function will determine correct backend model based on a current
     environment.
 
     Args:
-        data_obj: A string containing a filename to dataset or python obj.
-                  [[1, 'a'], [2, 'b'], [3, 'c']] will create 3 rows and 2 columns.
-        target: A name of the response column.
+        filename: A string containing a filename to dataset.
+        target: A name of the target column.
         metric: A metric to be used in building process specified by `h2o_wave.ml.WaveModelMetric`
         model_backend_type: Optionally a backend model type specified by `h2o_wave.ml.WaveModelBackendType`.
+        kwargs: Optional parameters passed to a backend model.
 
     Returns:
         A wave model.
     """
 
-    ds = _DataSource(data_obj)
-
     if model_backend_type is not None:
         if model_backend_type == WaveModelBackendType.H2O3:
-            return _H2O3ModelBackend.build(ds, target, metric)
+            return _H2O3ModelBackend.build(filename, target, metric, **kwargs)
         elif model_backend_type == WaveModelBackendType.DAI:
-            # return _DAIModel.build(filename, target, metric)
-            raise NotImplementedError()
-    return _H2O3ModelBackend.build(ds, target, metric)
+            return _DAIModelBackend.build(filename, target, metric, **kwargs)
+
+    if _config.steam_address or _config.dai_address:
+        return _DAIModelBackend.build(filename, target, metric, **kwargs)
+
+    return _H2O3ModelBackend.build(filename, target, metric, **kwargs)
 
 
 def get_model(id_: str, model_type: Optional[WaveModelBackendType] = None) -> WaveModelBackend:
@@ -248,7 +307,11 @@ def get_model(id_: str, model_type: Optional[WaveModelBackendType] = None) -> Wa
         if model_type == WaveModelBackendType.H2O3:
             return _H2O3ModelBackend.get(id_)
         elif model_type == WaveModelBackendType.DAI:
-            raise NotImplementedError()
+            return _DAIModelBackend.get(id_)
+
+    if _config.steam_address or _config.dai_address:
+        return _DAIModelBackend.get(id_)
+
     return _H2O3ModelBackend.get(id_)
 
 

@@ -29,6 +29,12 @@ class _Config:
         self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
         self.h2o3_url = _get_env('H2O3_URL', '')
+        self.dai_address = _get_env('DAI_ADDRESS', '')
+        self.dai_username = _get_env('DAI_USERNAME', '')
+        self.dai_password = _get_env('DAI_PASSWORD', '')
+        self.steam_address = _get_env('STEAM_ADDRESS', '')
+        self.steam_username = _get_env('STEAM_USERNAME', '')
+        self.steam_password = _get_env('STEAM_PASSWORD', '')
 
 
 _config = _Config()
