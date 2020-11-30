@@ -1,8 +1,7 @@
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XPicker, Picker } from './picker'
+import { Picker, XPicker } from './picker'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'picker'
 let pickerProps: Picker
@@ -14,7 +13,6 @@ const typeToInput = (input: HTMLInputElement, value: string) => {
 }
 
 describe('Picker.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     pickerProps = {
       name,
@@ -157,4 +155,10 @@ describe('Picker.tsx', () => {
     expect(T.qd.args[name]).toMatchObject([name, 'something else'])
   })
 
+  it('should open suggestion list on click', () => {
+    const { getByTestId, queryByText } = render(<XPicker model={pickerProps} />)
+    expect(queryByText('Suggestions')).not.toBeInTheDocument()
+    fireEvent.click(getByTestId(name))
+    expect(queryByText('Suggestions')).toBeInTheDocument()
+  })
 })

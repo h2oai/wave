@@ -20,7 +20,7 @@ async def serve(q: Q):
                 ui.choice(name='cheese', label='Cheese'),
                 ui.choice(name='beans', label='Beans'),
                 ui.choice(name='toast', label='Toast'),
-            ]),
+            ], values='eggs'),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
