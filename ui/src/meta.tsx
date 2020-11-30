@@ -124,7 +124,7 @@ export const
     // Force new obj reference to rerender Dialog component with most recent changes.
     qd.dialogB(dialog ? { ...dialog } : null)
 
-    changeTheme(theme || 'light')
+    if (theme) changeTheme(theme)
     if (notification) {
       delete state.notification
       showNotification(notification)
