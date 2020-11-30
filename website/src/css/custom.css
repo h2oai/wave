@@ -22,7 +22,7 @@ html[data-theme="dark"] {
 }
 .hero--primary {
   --ifm-hero-background-color: #fff;
-  --ifm-hero-text-color: var(--ifm-color-primary-dark);
+  --ifm-hero-text-color: #000;
 }
 .hero .button--outline {
   --ifm-button-background-color: var(--h2o-accent-color);
