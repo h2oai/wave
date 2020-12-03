@@ -11,16 +11,18 @@
   --ifm-color-primary-light: #000000;
   --ifm-color-primary-lighter: #000000;
   --ifm-color-primary-lightest: #000000;
-
   --ifm-code-font-size: 95%;
   --ifm-font-family-base: "Inter";
   --ifm-button-background-color: var(--h2o-accent-color);
   --ifm-button-border-radius: 50px;
   --ifm-heading-font-weight: 800;
 }
+html[data-theme="dark"] {
+  --ifm-color-primary: #ffe52b;
+}
 .hero--primary {
   --ifm-hero-background-color: #fff;
-  --ifm-hero-text-color: var(--ifm-color-primary);
+  --ifm-hero-text-color: #000;
 }
 .hero .button--outline {
   --ifm-button-background-color: var(--h2o-accent-color);
