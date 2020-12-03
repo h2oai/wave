@@ -38,15 +38,11 @@ const pickerSuggestionsProps: Fluent.IBasePickerSuggestionsProps = {
 export const XPicker = bond(({ model: m }: { model: Picker }) => {
   const
     tags: Fluent.ITag[] = m.choices.map(({ name, label }) => ({ key: name, name: label || name })),
-    selectedTagsB = box<Fluent.ITag[]>(
-      m.choices
-        .filter(({ name }) => m.values?.includes(name))
-        .map(({ name, label }) => ({ key: name, name: label || name }))
-    ),
-    filterSuggestedTags = (filterText: string, selectedTags?: Fluent.ITag[]) => {
+    selectedTagsB = box<Fluent.ITag[]>(tags.filter(({ key }) => m.values?.includes(key as S))),
+    filterSuggestedTags = (filterText: S, selectedTags?: Fluent.ITag[]) => {
       if (!filterText) return []
       const isAlreadySelected = (t: Fluent.ITag) => selectedTags && selectedTags.includes(t)
-      const isStringMatch = (name: string) => name.toLowerCase().includes(filterText.toLowerCase())
+      const isStringMatch = (name: S) => name.toLowerCase().includes(filterText.toLowerCase())
       return tags.filter(t => isStringMatch(t.name) && !isAlreadySelected(t))
     },
     onChange = (items?: Fluent.ITag[]) => {
@@ -54,6 +50,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
       qd.args[m.name] = items ? items.map(({ key }) => key) : null
       if (m.trigger) qd.sync()
     },
+    onEmptyResolveSuggestions = () => tags,
     init = () => qd.args[m.name] = m.values || null,
     render = () => (
       <div style={displayMixin(m.visible)}>
@@ -67,6 +64,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
           itemLimit={m.max_choices}
           selectedItems={selectedTagsB()}
           disabled={m.disabled}
+          onEmptyResolveSuggestions={onEmptyResolveSuggestions}
         />
       </div>
     )
