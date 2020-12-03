@@ -63,20 +63,12 @@ export const
         return (
           <div data-test={name} className={css.item}>
             <div className={css.left}>
-              <div className={css.title}>
-                <Format data={data} format={s.title} />
-              </div>
-              <div className={css.caption}>
-                <Format data={data} format={s.caption} />
-              </div>
+              <Format data={data} format={s.title} className={css.title} />
+              <Format data={data} format={s.caption} className={css.caption} />
             </div>
             <div className={css.right}>
-              <div className={css.value}>
-                <Format data={data} format={s.value} />
-              </div>
-              <div className={css.aux_value}>
-                <Format data={data} format={s.aux_value} />
-              </div>
+              <Format data={data} format={s.value} className={css.value} />
+              <Format data={data} format={s.aux_value} className={css.aux_value} />
             </div>
           </div>
         )
@@ -85,5 +77,3 @@ export const
   })
 
 cards.register('list_item1', View)
-
-

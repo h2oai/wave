@@ -1,7 +1,7 @@
 
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { F, S } from './qd'
 import { getTheme } from './theme'
@@ -10,18 +10,13 @@ const
   theme = getTheme(),
   css = stylesheet({
     container: {
-      display: 'flex'
+      position: 'relative',
+      width: 50,
+      height: 50
     },
     percentContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'column',
       position: 'absolute',
-      left: 12,
-      top: 10,
-      width: grid.unitInnerHeight,
-      height: grid.unitInnerHeight,
+      top: 0, left: 0, bottom: 0, right: 0
     },
     percent: {
       ...theme.font.s12,
@@ -42,9 +37,9 @@ export interface ProgressTableCellType {
 
 export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
   <div data-test={m.name} className={css.container}>
-    <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(m.color || 'red')} value={progress} />
-    <div className={css.percentContainer}>
+    <ProgressArc thickness={2} color={theme.color(m.color || 'red')} value={progress} />
+    <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={css.percentContainer}>
       <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
-    </div>
+    </Fluent.Stack>
   </div>
 )

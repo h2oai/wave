@@ -1,3 +1,4 @@
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
@@ -7,10 +8,6 @@ import { getTheme } from './theme'
 const
   theme = getTheme(),
   css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
@@ -33,22 +30,16 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const
-          data = unpack(s.data)
-        return (
-          <div data-test={name} className={css.card}>
-            <div className={css.title}>
-              <Format data={data} format={s.title} />
-            </div>
-            <div className={css.value}>
-              <Format data={data} format={s.value} />
-            </div>
-          </div>)
-      }
+    const render = () => {
+      const data = unpack(s.data)
+      return (
+        <Fluent.Stack data-test={name}>
+          <Format data={data} format={s.title} className={css.title} />
+          <Format data={data} format={s.value} className={css.value} />
+        </Fluent.Stack>
+      )
+    }
     return { render, changed }
   })
-
 
 cards.register('small_stat', View)

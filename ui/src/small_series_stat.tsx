@@ -1,23 +1,15 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format, grid } from './layout'
+import { cards, Format } from './layout'
 import { bond, Card, unpack, F, Rec, S, Data } from './qd'
 import { getTheme } from './theme'
 import { MicroBars } from './parts/microbars'
-import { MicroArea } from './parts/microline'
+import { MicroArea } from './parts/microarea'
+import * as Fluent from '@fluentui/react'
 
 const
   theme = getTheme(),
-  plotHeight = grid.unitInnerHeight - 10,
   css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    titleBar: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
@@ -26,10 +18,9 @@ const
       ...theme.font.s12,
     },
     plot: {
-      position: 'absolute',
-      left: -grid.gap,
-      bottom: -grid.gap,
-      height: plotHeight,
+      // 30px top/bottom padding + 17px line height of the title.
+      height: 'calc(100% - 47px)',
+      width: '100%'
     },
   })
 
@@ -59,46 +50,37 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const
-          plotWidth = grid.unitWidth,
-          data = unpack(s.data),
-          plot = s.plot_type === 'interval'
-            ? (
-              <MicroBars
-                width={plotWidth}
-                height={plotHeight}
-                data={unpack(s.plot_data)}
-                category={s.plot_category}
-                value={s.plot_value}
-                color={theme.color(s.plot_color)}
-                zeroValue={s.plot_zero_value}
-              />
-            ) : (
-              <MicroArea
-                width={plotWidth}
-                height={plotHeight}
-                data={unpack(s.plot_data)}
-                value={s.plot_value}
-                color={theme.color(s.plot_color)}
-                zeroValue={s.plot_zero_value}
-                curve={s.plot_curve || 'linear'}
-              />
-            )
-        return (
-          <div data-test={name} className={css.card}>
-            <div className={css.titleBar}>
-              <div className={css.title || 'Untitled'}>
-                <Format data={data} format={s.title} />
-              </div>
-              <div className={css.value}>
-                <Format data={data} format={s.value} />
-              </div>
-            </div>
-            <div className={css.plot}>{plot}</div>
-          </div>)
-      }
+    const render = () => {
+      const
+        data = unpack(s.data),
+        plot = s.plot_type === 'interval'
+          ? (
+            <MicroBars
+              data={unpack(s.plot_data)}
+              category={s.plot_category}
+              value={s.plot_value}
+              color={theme.color(s.plot_color)}
+              zeroValue={s.plot_zero_value}
+            />
+          ) : (
+            <MicroArea
+              data={unpack(s.plot_data)}
+              value={s.plot_value}
+              color={theme.color(s.plot_color)}
+              zeroValue={s.plot_zero_value}
+              curve={s.plot_curve || 'linear'}
+            />
+          )
+      return (
+        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%' }}>
+          <Fluent.Stack horizontal horizontalAlign='space-between' padding={15}>
+            <Format data={data} format={s.title || 'Untitled'} className={css.title} />
+            <Format data={data} format={s.value} className={css.value} />
+          </Fluent.Stack>
+          <div className={css.plot}>{plot}</div>
+        </Fluent.Stack>
+      )
+    }
     return { render, changed }
   })
 

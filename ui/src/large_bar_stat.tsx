@@ -1,30 +1,21 @@
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
-import { bond, Card, unpack, F, Rec, S } from './qd'
-import { getTheme } from './theme'
 import { ProgressBar } from './parts/progress_bar'
+import { bond, Card, F, Rec, S, unpack } from './qd'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
     values: {
-      display: 'flex',
-      alignItems: 'baseline',
-      justifyContent: 'space-between',
       ...theme.font.s18,
       ...theme.font.w3,
-    },
-    value: {
     },
     aux_value: {
       color: theme.colors.text7,
@@ -34,15 +25,8 @@ const
       color: theme.colors.text5,
     },
     captions: {
-      display: 'flex',
-      alignItems: 'baseline',
-      justifyContent: 'space-between',
       ...theme.font.s12,
       color: theme.colors.text7,
-    },
-    value_caption: {
-    },
-    aux_value_caption: {
     },
   })
 
@@ -70,43 +54,27 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const
-          data = unpack(s.data)
-
-        return (
-          <div data-test={name} className={css.card}>
-            <div className={css.title}>
-              <Format data={data} format={s.title} />
-            </div>
-            <div className={css.caption}>
-              <Format data={data} format={s.caption} />
-            </div>
-            <div>
-              <div className={css.values}>
-                <div className={css.value}>
-                  <Format data={data} format={s.value} />
-                </div>
-                <div className={css.aux_value}>
-                  <Format data={data} format={s.aux_value} />
-                </div>
-              </div>
-              <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-              <div className={css.captions}>
-                <div className={css.value_caption}>
-                  <Format data={data} format={s.value_caption} />
-                </div>
-                <div className={css.aux_value_caption}>
-                  <Format data={data} format={s.aux_value_caption} />
-                </div>
-              </div>
-            </div>
+    const render = () => {
+      const data = unpack(s.data)
+      return (
+        <Fluent.Stack data-test={name} verticalAlign='space-between'>
+          <Format data={data} format={s.title} className={css.title} />
+          <Format data={data} format={s.caption} className={css.caption} />
+          <div>
+            <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='baseline' className={css.values}>
+              <div><Format data={data} format={s.value} /></div>
+              <Format data={data} format={s.aux_value} className={css.aux_value} />
+            </Fluent.Stack>
+            <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='baseline' className={css.captions}>
+              <div><Format data={data} format={s.value_caption} /></div>
+              <div><Format data={data} format={s.aux_value_caption} /></div>
+            </Fluent.Stack>
           </div>
-        )
-      }
+        </Fluent.Stack >
+      )
+    }
     return { render, changed }
   })
 
 cards.register('large_bar_stat', View)
-

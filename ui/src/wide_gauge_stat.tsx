@@ -1,50 +1,26 @@
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format, grid } from './layout'
-import { bond, Card, unpack, F, Rec, S } from './qd'
-import { getTheme } from './theme'
+import { cards, Format } from './layout'
 import { ProgressArc } from './parts/progress_arc'
+import { bond, Card, F, Rec, S, unpack } from './qd'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
-    card: {
-      display: 'flex',
-    },
-    left: {
-      width: grid.unitInnerHeight,
-      height: grid.unitInnerHeight,
-      marginRight: grid.gap,
-    },
     percentContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'column',
       position: 'absolute',
-      left: 0,
-      top: 0,
-      width: grid.unitInnerHeight,
-      height: grid.unitInnerHeight,
+      top: 0, right: 0, bottom: 0, left: 0,
     },
     percent: {
       ...theme.font.s12,
       opacity: 0.5,
     },
-    right: {
-      flexGrow: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      // justifyContent: 'space-between',
-    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
       overflow: 'visible'
-    },
-    values: {
-      display: 'flex',
-      alignItems: 'baseline',
     },
     value: {
       ...theme.font.s24,
@@ -53,8 +29,6 @@ const
     aux_value: {
       ...theme.font.s13,
       color: theme.colors.text7,
-      flexGrow: 1,
-      marginLeft: 5,
     }
   })
 
@@ -76,33 +50,26 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const data = unpack(s.data)
-
-        return (
-          <div data-test={name} className={css.card}>
-            <div className={css.left}>
-              <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-              <div className={css.percentContainer}>
-                <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
-              </div>
-            </div>
-            <div className={css.right}>
-              <div className={css.title}>
-                <Format data={data} format={s.title} />
-              </div>
-              <div className={css.values}>
-                <div className={css.value}>
-                  <Format data={data} format={s.value} />
-                </div>
-                <div className={css.aux_value}>
-                  <Format data={data} format={s.aux_value} />
-                </div>
-              </div>
-            </div>
-          </div>)
-      }
+    const render = () => {
+      const data = unpack(s.data)
+      return (
+        <Fluent.Stack horizontal data-test={name} style={{ position: 'static', padding: 15, height: '100%' }}>
+          <Fluent.StackItem grow={1} styles={{ root: { position: 'relative' } }}>
+            <ProgressArc thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={css.percentContainer}>
+              <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
+            </Fluent.Stack>
+          </Fluent.StackItem>
+          <Fluent.Stack styles={{ root: { minWidth: 150 } }}>
+            <Format data={data} format={s.title} className={css.title} />
+            <Fluent.Stack verticalAlign='baseline' horizontal tokens={{ childrenGap: 5 }}>
+              <Format data={data} format={s.value} className={css.value} />
+              <Format data={data} format={s.aux_value} className={css.aux_value} />
+            </Fluent.Stack>
+          </Fluent.Stack>
+        </Fluent.Stack>
+      )
+    }
     return { render, changed }
   })
 

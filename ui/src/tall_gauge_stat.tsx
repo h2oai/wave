@@ -1,34 +1,21 @@
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format, grid } from './layout'
-import { bond, Card, unpack, F, Rec, S } from './qd'
-import { getTheme } from './theme'
+import { cards, Format } from './layout'
 import { ProgressArc } from './parts/progress_arc'
+import { bond, Card, F, Rec, S, unpack } from './qd'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
-    body: {
-      position: 'relative',
-      width: grid.unitInnerWidth, height: grid.unitInnerWidth,
-    },
     value_overlay: {
       position: 'absolute',
-      left: 0, top: 0,
-      width: grid.unitInnerWidth, height: grid.unitInnerWidth,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
+      top: 0, right: 0, bottom: 0, left: 0,
     },
     value: {
       ...theme.font.s24,
@@ -58,30 +45,22 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const data = unpack(s.data)
-
-        return (
-          <div data-test={name} className={css.card}>
-            <div className={css.title}>
-              <Format data={data} format={s.title} />
-            </div>
-            <div className={css.body}>
-              <ProgressArc size={grid.unitInnerWidth} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-              <div className={css.value_overlay}>
-                <div className={css.value}>
-                  <Format data={data} format={s.value} />
-                </div>
-                <div className={css.aux_value}>
-                  <Format data={data} format={s.aux_value} />
-                </div>
-              </div>
-            </div>
-          </div>)
-      }
+    const render = () => {
+      const data = unpack(s.data)
+      return (
+        <Fluent.Stack data-test={name} style={{ position: 'static', padding: 15, height: '100%' }}>
+          <Format data={data} format={s.title} className={css.title} />
+          <Fluent.StackItem grow={1} styles={{ root: { position: 'relative', height: 'calc(100% - 17px)' } }}>
+            <ProgressArc thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <Fluent.Stack className={css.value_overlay} horizontalAlign='center' verticalAlign='center'>
+              <Format data={data} format={s.value} className={css.value} />
+              <Format data={data} format={s.aux_value} className={css.aux_value} />
+            </Fluent.Stack>
+          </Fluent.StackItem>
+        </Fluent.Stack>
+      )
+    }
     return { render, changed }
   })
 
 cards.register('tall_gauge_stat', View)
-

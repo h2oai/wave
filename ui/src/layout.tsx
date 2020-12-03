@@ -37,9 +37,11 @@ export const
         ? defaultValue
         : null
   },
-  Format = ({ data, defaultValue: v, format: f }: { data?: Rec, defaultValue?: any, format?: S }) => {
+  Format = ({ data, defaultValue: v, format: f, className }: { data?: Rec, defaultValue?: any, format?: S, className?: S }) => {
     const x = substitute(f, data, v)
-    return x === null ? x : <>{x}</>
+    if (x == null) return null
+    if (className) return <div className={className}>{x}</div>
+    return <>{x}</>
   },
   CardView = ({ card }: { card: Card<any> }) => {
     const Tag = cards.lookup(card.state.view).ctor
