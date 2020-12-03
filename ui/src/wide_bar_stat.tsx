@@ -1,3 +1,4 @@
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
@@ -8,18 +9,9 @@ import { getTheme } from './theme'
 const
   theme = getTheme(),
   css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
-    },
-    values: {
-      display: 'flex',
-      alignItems: 'baseline',
     },
     value: {
       ...theme.font.s18,
@@ -28,8 +20,6 @@ const
     aux_value: {
       ...theme.font.s13,
       color: theme.colors.text7,
-      flexGrow: 1,
-      marginLeft: 5,
     }
   })
 
@@ -51,27 +41,21 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const data = unpack(s.data)
-
-        return (
-          <div data-test={name} className={css.card}>
-            <div className={css.title}>
-              <Format data={data} format={s.title} />
-            </div>
-            <div className={css.values}>
-              <div className={css.value}>
-                <Format data={data} format={s.value} />
-              </div>
-              <div className={css.aux_value}>
-                <Format data={data} format={s.aux_value} />
-              </div>
-            </div>
+    const render = () => {
+      const data = unpack(s.data)
+      return (
+        <Fluent.Stack data-test={name} style={{ position: 'static', padding: 15, height: '100%' }}>
+          <Format data={data} format={s.title} className={css.title} />
+          <Fluent.StackItem grow={1}>
+            <Fluent.Stack horizontal verticalAlign='baseline' tokens={{ childrenGap: 5 }}>
+              <Format data={data} format={s.value} className={css.value} />
+              <Format data={data} format={s.aux_value} className={css.aux_value} />
+            </Fluent.Stack>
             <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-          </div>
-        )
-      }
+          </Fluent.StackItem>
+        </Fluent.Stack>
+      )
+    }
     return { render, changed }
   })
 

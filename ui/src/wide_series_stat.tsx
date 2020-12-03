@@ -1,48 +1,26 @@
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { bond, Card, unpack, F, Rec, S, Data } from './qd'
-import { getTheme } from './theme'
 import { MicroBars } from './parts/microbars'
-import { MicroArea } from './parts/microline'
+import { MicroArea } from './parts/microarea'
+import { bond, Card, Data, F, Rec, S, unpack } from './qd'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),
-  plotWidth = grid.unitWidth - grid.gap,
-  plotHeight = grid.unitInnerHeight,
   css = stylesheet({
-    card: {
-      display: 'flex',
-    },
-    left: {
-      width: plotWidth,
-      height: grid.unitInnerHeight,
-      marginRight: grid.gap,
-    },
-    right: {
-      flexGrow: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      // justifyContent: 'space-between',
-    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
-    },
-    values: {
-      display: 'flex',
-      alignItems: 'baseline',
     },
     value: {
       ...theme.font.s24,
       ...theme.font.w3,
     },
     aux_value: {
-      flexGrow: 1,
       ...theme.font.s13,
       color: theme.colors.text7,
-      marginLeft: 5,
-      marginBottom: 3,
     }
   })
 
@@ -74,51 +52,41 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const
-          data = unpack(s.data),
-          plot = s.plot_type === 'interval'
-            ? (
-              <MicroBars
-                width={plotWidth}
-                height={plotHeight}
-                data={unpack(s.plot_data)}
-                category={s.plot_category}
-                value={s.plot_value}
-                color={theme.color(s.plot_color)}
-                zeroValue={s.plot_zero_value}
-              />
-            ) : (
-              <MicroArea
-                width={plotWidth}
-                height={plotHeight}
-                data={unpack(s.plot_data)}
-                value={s.plot_value}
-                color={theme.color(s.plot_color)}
-                zeroValue={s.plot_zero_value}
-                curve={s.plot_curve || 'linear'}
-              />
-            )
+    const render = () => {
+      const
+        data = unpack(s.data),
+        plot = s.plot_type === 'interval'
+          ? (
+            <MicroBars
+              data={unpack(s.plot_data)}
+              category={s.plot_category}
+              value={s.plot_value}
+              color={theme.color(s.plot_color)}
+              zeroValue={s.plot_zero_value}
+            />
+          ) : (
+            <MicroArea
+              data={unpack(s.plot_data)}
+              value={s.plot_value}
+              color={theme.color(s.plot_color)}
+              zeroValue={s.plot_zero_value}
+              curve={s.plot_curve || 'linear'}
+            />
+          )
 
-        return (
-          <div data-test={name} className={css.card}>
-            <div className={css.left}>{plot}</div>
-            <div className={css.right}>
-              <div className={css.title}>
-                <Format data={data} format={s.title} />
-              </div>
-              <div className={css.values}>
-                <div className={css.value}>
-                  <Format data={data} format={s.value} />
-                </div>
-                <div className={css.aux_value}>
-                  <Format data={data} format={s.aux_value} />
-                </div>
-              </div>
-            </div>
-          </div>)
-      }
+      return (
+        <Fluent.Stack data-test={name} horizontal styles={{ root: { height: '100%' } }} style={{ position: 'static' }} >
+          <Fluent.StackItem grow={1}>{plot}</Fluent.StackItem>
+          <Fluent.StackItem styles={{ root: { padding: grid.gap, minWidth: 120 } }}>
+            <Format data={data} format={s.title} className={css.title} />
+            <Fluent.Stack horizontal verticalAlign='baseline' tokens={{ childrenGap: 5 }}>
+              <Format data={data} format={s.value} className={css.value} />
+              <Format data={data} format={s.aux_value} className={css.aux_value} />
+            </Fluent.Stack>
+          </Fluent.StackItem>
+        </Fluent.Stack>
+      )
+    }
     return { render, changed }
   })
 

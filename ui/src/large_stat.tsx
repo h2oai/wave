@@ -3,28 +3,20 @@ import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
 import { bond, Card, Rec, S } from './qd'
 import { getTheme } from './theme'
+import * as Fluent from '@fluentui/react'
 
 const
   theme = getTheme(),
   css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
-    },
-    values: {
-      display: 'flex',
-      alignItems: 'baseline',
     },
     value: {
       ...theme.font.s40,
       ...theme.font.w2,
     },
     aux_value: {
-      marginLeft: 5,
       color: theme.colors.text6,
     },
     caption: {
@@ -49,27 +41,17 @@ interface State {
 
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        return (
-          <div data-test={name} className={css.card}>
-            <div className={css.title}>
-              <Format data={s.data} format={s.title} />
-            </div>
-            <div className={css.values}>
-              <div className={css.value}>
-                <Format data={s.data} defaultValue={s.value} format={s.value} />
-              </div>
-              <div className={css.aux_value}>
-                <Format data={s.data} format={s.aux_value} />
-              </div>
-            </div>
-            <div className={css.caption}>
-              <Format data={s.data} format={s.caption} />
-            </div>
-          </div>
-        )
-      }
+    const render = () => (
+      <Fluent.Stack data-test={name}>
+        <Format data={s.data} format={s.title} className={css.title} />
+        <Fluent.Stack horizontal verticalAlign='baseline' tokens={{ childrenGap: 5 }}>
+          <Format data={s.data} defaultValue={s.value} format={s.value} className={css.value} />
+          <Format data={s.data} format={s.aux_value} className={css.aux_value} />
+        </Fluent.Stack>
+        <Format data={s.data} format={s.caption} className={css.caption} />
+      </Fluent.Stack>
+    )
+
     return { render, changed }
   })
 
