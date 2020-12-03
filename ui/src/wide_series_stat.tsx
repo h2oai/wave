@@ -76,7 +76,7 @@ export const
 
       return (
         <Fluent.Stack data-test={name} horizontal styles={{ root: { height: '100%' } }} style={{ position: 'static' }} >
-          <Fluent.StackItem grow={1}>{plot}</Fluent.StackItem>
+          <Fluent.StackItem grow={1} tokens={{ padding: 15 }}>{plot}</Fluent.StackItem>
           <Fluent.StackItem styles={{ root: { padding: grid.gap, minWidth: 120 } }}>
             <Format data={data} format={s.title} className={css.title} />
             <Fluent.Stack horizontal verticalAlign='baseline' tokens={{ childrenGap: 5 }}>
