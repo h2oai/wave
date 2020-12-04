@@ -17,7 +17,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { cssVar, pc } from './theme'
+import { cssVar, pc, clas } from './theme'
 
 const
   css = stylesheet({

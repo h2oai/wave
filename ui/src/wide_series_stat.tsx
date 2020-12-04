@@ -18,7 +18,7 @@ import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
-import { cssVar, pc } from './theme'
+import { cssVar, pc, clas } from './theme'
 
 const
   css = stylesheet({
@@ -42,7 +42,6 @@ const
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
     },
     aux_value: {
-      flexGrow: 1,
       color: 'var(--text7)',
       marginLeft: 5,
     }
