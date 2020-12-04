@@ -93,7 +93,7 @@ interface State {
   layouts?: Layout[]
   /** Display a dialog on the page. */
   dialog?: Dialog
-  /** Specify a color theme for the app. Available values are 'light' | 'dark' | 'neon'. */
+  /** Specify the name of the theme (color scheme) to use on this page. One of 'light', 'dark' or 'neon'. */
   theme?: S
 }
 

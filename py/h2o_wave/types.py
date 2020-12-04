@@ -6919,7 +6919,7 @@ class MetaCard:
         self.dialog = dialog
         """Display a dialog on the page."""
         self.theme = theme
-        """Specify a color theme for the app. Available values are 'light' | 'dark' | 'neon'."""
+        """Specify the name of the theme (color scheme) to use on this page. One of 'light', 'dark' or 'neon'."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

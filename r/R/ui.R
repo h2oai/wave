@@ -2841,7 +2841,7 @@ ui_dialog <- function(
 #' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
 #' @param layouts The layouts supported by this page.
 #' @param dialog Display a dialog on the page.
-#' @param theme Specify a color theme for the app. Available values are 'light' | 'dark' | 'neon'.
+#' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light', 'dark' or 'neon'.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export

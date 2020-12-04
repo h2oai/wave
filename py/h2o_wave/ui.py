@@ -2469,7 +2469,7 @@ def meta_card(
         icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
         layouts: The layouts supported by this page.
         dialog: Display a dialog on the page.
-        theme: Specify a color theme for the app. Available values are 'light' | 'dark' | 'neon'.
+        theme: Specify the name of the theme (color scheme) to use on this page. One of 'light', 'dark' or 'neon'.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
