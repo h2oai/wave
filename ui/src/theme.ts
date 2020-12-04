@@ -21,22 +21,20 @@ interface Palette {
   page: S
 }
 
-type Theme = 'light' | 'dark' | 'neon'
-
 export const
   px = (x: I) => `${x}px`,
   pc = (x: F) => `${x}%`,
   rem = (x: F) => `${x}rem`,
-  clas = (...names: string[]) => names.join(' '),
-  border = (thickness: U, color: string) => `${thickness}px solid ${color}`,
-  dashed = (thickness: U, color: string) => `${thickness}px dashed ${color}`,
+  clas = (...names: S[]) => names.join(' '),
+  border = (thickness: U, color: S) => `${thickness}px solid ${color}`,
+  dashed = (thickness: U, color: S) => `${thickness}px dashed ${color}`,
   padding = (...t: I[]) => t.map(px).join(' '),
   margin = padding,
   centerMixin = () => ({ display: 'flex', alignItems: 'center', justifyContent: 'center' }),
   displayMixin = (visible = true): React.CSSProperties => visible ? {} : { display: 'none' },
   // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
   cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color,
-  fluentPalettes: { [K in Theme]: Partial<Fluent.IPalette> } = {
+  fluentPalettes: { [id: string]: Partial<Fluent.IPalette> } = {
     light: {
       themePrimary: '#000000',
       themeLighterAlt: '#898989',
@@ -91,7 +89,7 @@ export const
   }
 
 const
-  palettes: { [K in Theme]: Palette } = {
+  palettes: { [id: string]: Palette } = {
     light: {
       text: '#323130',
       card: '#ffffff',
@@ -114,7 +112,7 @@ const
   }
 
 export const
-  changeTheme = (name: Theme) => {
+  changeTheme = (name: S) => {
     const palette = palettes[name]
     const fluentPalette = fluentPalettes[name]
     // TODO: Resolve the any.

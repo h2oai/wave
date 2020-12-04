@@ -6873,15 +6873,6 @@ class Dialog:
         )
 
 
-_MetaCardTheme = ['light', 'dark', 'neon']
-
-
-class MetaCardTheme:
-    LIGHT = 'light'
-    DARK = 'dark'
-    NEON = 'neon'
-
-
 class MetaCard:
     """Represents page-global state.
 
@@ -6909,7 +6900,7 @@ class MetaCard:
         _guard_scalar('MetaCard.icon', icon, (str,), False, True, False)
         _guard_vector('MetaCard.layouts', layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', dialog, (Dialog,), False, True, False)
-        _guard_enum('MetaCard.theme', theme, _MetaCardTheme, True)
+        _guard_scalar('MetaCard.theme', theme, (str,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6928,7 +6919,7 @@ class MetaCard:
         self.dialog = dialog
         """Display a dialog on the page."""
         self.theme = theme
-        """Specify a color theme for the app. Available values are 'light' | 'dark' | 'neon'. One of 'light', 'dark', 'neon'. See enum h2o_wave.ui.MetaCardTheme."""
+        """Specify a color theme for the app. Available values are 'light' | 'dark' | 'neon'."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6942,7 +6933,7 @@ class MetaCard:
         _guard_scalar('MetaCard.icon', self.icon, (str,), False, True, False)
         _guard_vector('MetaCard.layouts', self.layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', self.dialog, (Dialog,), False, True, False)
-        _guard_enum('MetaCard.theme', self.theme, _MetaCardTheme, True)
+        _guard_scalar('MetaCard.theme', self.theme, (str,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='meta',
@@ -6978,7 +6969,7 @@ class MetaCard:
         __d_dialog: Any = __d.get('dialog')
         _guard_scalar('MetaCard.dialog', __d_dialog, (Dialog,), False, True, False)
         __d_theme: Any = __d.get('theme')
-        _guard_enum('MetaCard.theme', __d_theme, _MetaCardTheme, True)
+        _guard_scalar('MetaCard.theme', __d_theme, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MetaCard.commands', __d_commands, (Command,), False, True, False)
         box: str = __d_box
