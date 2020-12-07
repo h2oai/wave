@@ -278,16 +278,11 @@ can be used to modify an existing running instance's visibility setting.
 
 ### Managing App Tags
 
-Tags are means of visually annotating apps in the platform (similar to
-[GitHub issue labels](https://docs.github.com/en/free-pro-team@latest/github/managing-your-work-on-github/about-labels)).
-
 The `h2o tag [assign, get, list, remove, update]` commands let users see and, when authorized,
 manage available app tags.
-App tag configuration includes of name/title, RGB color, description, and ACLs.
-Tags can only be assigned/removed/updated by user having a role (as determined by the auth provider)
-present in the tag's `Admin Roles` list (empty means any user).
-
-Currently, tags can only be created and deleted by platform admins.
+App tag configuration includes of name/title, RGB color, description, and ACLs
+(see [Authorization](basic-concepts#authorization) for details on ACLs and semantics of the related
+tag attributes).
 
 ## How-To
 
