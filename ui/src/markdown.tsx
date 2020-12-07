@@ -17,7 +17,7 @@ import markdownit from 'markdown-it'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid, substitute } from './layout'
-import { border, cssVar, padding, pc } from './theme'
+import { border, clas, cssVar, padding, pc } from './theme'
 import { bond } from './ui'
 
 const
@@ -65,8 +65,8 @@ const
 export const
   markdown = markdownit({ html: true, linkify: true, typographer: true, }),
   markdownSafe = markdownit({ typographer: true, linkify: true }),
-  Markdown = ({ source }: { source: S }) => (<div className={css.markdown} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />),
-  MarkdownSafe = ({ source }: { source: S }) => (<div className={css.markdown} dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />)
+  Markdown = ({ source }: { source: S }) => <div className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />,
+  MarkdownSafe = ({ source }: { source: S }) => <div className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />
 
 
 /**
