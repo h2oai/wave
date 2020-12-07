@@ -301,14 +301,29 @@ export const
       },
       makeGroups = () => {
         let prevSum = 0
-        const groupedBy = groupByF(filteredItemsB(), groupByKeyB())
-        const groupedByKeys = Object.keys(groupedBy)
-        const groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => {
-          if (i !== 0) {
-            const prevKey = groupedByKeys[i - 1]
-            prevSum += groupedBy[prevKey].length
-          }
-          return { key, name: key, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: true }
+        const
+          groupedBy = groupByF(filteredItemsB(), groupByKeyB()),
+          groupedByKeys = Object.keys(groupedBy),
+          groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => {
+            if (i !== 0) {
+              const prevKey = groupedByKeys[i - 1]
+              prevSum += groupedBy[prevKey].length
+            }
+
+            let name = key
+            if (isNaN(Number(key)) && !isNaN(Date.parse(key))) name = new Date(key).toLocaleString()
+
+            return { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: true }
+          })
+
+        groups.sort(({ name: name1 }, { name: name2 }) => {
+          const numName1 = Number(name1), numName2 = Number(name2)
+          if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
+
+          const dateName1 = Date.parse(name1), dateName2 = Date.parse(name2)
+          if (!isNaN(dateName1) && !isNaN(dateName2)) return dateName1 - dateName2
+
+          return name2 < name1 ? 1 : -1
         })
 
         return { groupedBy, groups }

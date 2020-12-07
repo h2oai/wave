@@ -1,11 +1,11 @@
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
-import { bond, Card, unpack, F, Rec, S, Data } from './qd'
-import { getTheme } from './theme'
-import { MicroBars } from './parts/microbars'
 import { MicroArea } from './parts/microarea'
-import * as Fluent from '@fluentui/react'
+import { MicroBars } from './parts/microbars'
+import { bond, Card, Data, F, Rec, S, unpack } from './qd'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),
@@ -73,7 +73,7 @@ export const
           )
       return (
         <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%' }}>
-          <Fluent.Stack horizontal horizontalAlign='space-between' padding={15}>
+          <Fluent.Stack horizontal horizontalAlign='space-between' tokens={{ padding: 15 }}>
             <Format data={data} format={s.title || 'Untitled'} className={css.title} />
             <Format data={data} format={s.value} className={css.value} />
           </Fluent.Stack>
