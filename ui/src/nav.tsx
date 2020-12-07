@@ -49,7 +49,7 @@ export interface State {
 }
 
 export const
-  XNav = ({ items, value }: State) => {
+  XNav = ({ items, value, hideNav }: State & { hideNav?: () => void }) => {
     const groups = items.map((g): INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
@@ -60,6 +60,7 @@ export const
         disabled,
         url: '',
         onClick: () => {
+          if (hideNav) hideNav()
           if (name.startsWith('#')) {
             window.location.hash = name.substr(1)
             return

@@ -18,8 +18,8 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { NavGroup, XNav } from './nav'
-import { clas, cssVar, padding } from './theme'
 import { bond } from './ui'
+import { clas, cssVar, padding } from './theme'
 
 const
   iconSize = 24,
@@ -107,7 +107,7 @@ const
           onDismiss={hideNav}
           hasCloseButton={false}
         >
-          <XNav items={items} />
+          <XNav items={items} hideNav={hideNav} />
         </Panel>
       )
     return { render, isOpenB }
