@@ -1,5 +1,5 @@
 # Hello World!
-# A simple example to get you started with Q.
+# A simple script to get you started with non-interactive Wave scripts.
 # ---
 # Import `Site` and the `ui` module from the `h2o_wave` package
 from h2o_wave import site, ui
@@ -13,7 +13,7 @@ page = site['/demo']
 page['hello'] = ui.markdown_card(
     box='1 1 2 2',
     title='Hello World!',
-    content='And now for something completely different!',
+    content='Hello John! Welcome to Wave!',
 )
 
 # Finally, sync the page to send our changes to the server.

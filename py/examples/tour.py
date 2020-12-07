@@ -188,7 +188,7 @@ async def serve(q: Q):
 
     route = q.args['#']
     if not route:
-        route = 'hello_world'
+        route = 'hello_world_script'
 
     await show_example(q, catalog[route])
 
