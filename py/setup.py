@@ -34,9 +34,9 @@ setuptools.setup(
         'starlette==0.13.8',
         'uvicorn==0.12.2',
     ],
-    extras_require={'ml': [
-        'h2o',
-    ]},
+    extras_require={
+        'ml': ['h2o==3.32.0.1', 'datatable=0.11.0']
+    },
     entry_points=dict(
         console_scripts=["wave = h2o_wave.cli:main"]
     ),
