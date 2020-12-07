@@ -1993,6 +1993,7 @@ ui_plot <- function(
 #' @param height The hight of the visualization. Defaults to 300px.
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to true.
+#' @param legend False to hide the plot legend. Defaults to True.
 #' @param events The events to capture on this visualization.
 #' @return A Visualization instance.
 ui_visualization <- function(
@@ -2002,6 +2003,7 @@ ui_visualization <- function(
   height = NULL,
   name = NULL,
   visible = NULL,
+  legend = NULL,
   events = NULL) {
   .guard_scalar("plot", "h2oq_Plot", plot)
   # TODO Validate data: Rec
@@ -2009,6 +2011,7 @@ ui_visualization <- function(
   .guard_scalar("height", "character", height)
   .guard_scalar("name", "character", name)
   .guard_scalar("visible", "logical", visible)
+  .guard_scalar("legend", "logical", legend)
   .guard_vector("events", "character", events)
   .o <- list(visualization=list(
     plot=plot,
@@ -2017,6 +2020,7 @@ ui_visualization <- function(
     height=height,
     name=name,
     visible=visible,
+    legend=legend,
     events=events))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
@@ -2742,6 +2746,7 @@ ui_pixel_art_card <- function(
 #' @param title The title for this card.
 #' @param data Data for this card.
 #' @param plot The plot to be displayed in this card.
+#' @param legend False to hide the plot legend. Defaults to True.
 #' @param events The events to capture on this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A PlotCard instance.
@@ -2750,12 +2755,14 @@ ui_plot_card <- function(
   title,
   data,
   plot,
+  legend = NULL,
   events = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
   .guard_scalar("plot", "h2oq_Plot", plot)
+  .guard_scalar("legend", "logical", legend)
   .guard_vector("events", "character", events)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
@@ -2763,6 +2770,7 @@ ui_plot_card <- function(
     title=title,
     data=data,
     plot=plot,
+    legend=legend,
     events=events,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_PlotCard"))

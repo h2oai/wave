@@ -1758,6 +1758,7 @@ def visualization(
         height: Optional[str] = None,
         name: Optional[str] = None,
         visible: Optional[bool] = None,
+        legend: Optional[bool] = None,
         events: Optional[List[str]] = None,
 ) -> Component:
     """Create a visualization for display inside a form.
@@ -1769,6 +1770,7 @@ def visualization(
         height: The hight of the visualization. Defaults to 300px.
         name: An identifying name for this component.
         visible: True if the component should be visible. Defaults to true.
+        legend: False to hide the plot legend. Defaults to True.
         events: The events to capture on this visualization.
     Returns:
         A `h2o_wave.types.Visualization` instance.
@@ -1780,6 +1782,7 @@ def visualization(
         height,
         name,
         visible,
+        legend,
         events,
     ))
 
@@ -2425,6 +2428,7 @@ def plot_card(
         title: str,
         data: PackedRecord,
         plot: Plot,
+        legend: Optional[bool] = None,
         events: Optional[List[str]] = None,
         commands: Optional[List[Command]] = None,
 ) -> PlotCard:
@@ -2435,6 +2439,7 @@ def plot_card(
         title: The title for this card.
         data: Data for this card.
         plot: The plot to be displayed in this card.
+        legend: False to hide the plot legend. Defaults to True.
         events: The events to capture on this card.
         commands: Contextual menu commands for this component.
     Returns:
@@ -2445,6 +2450,7 @@ def plot_card(
         title,
         data,
         plot,
+        legend,
         events,
         commands,
     )

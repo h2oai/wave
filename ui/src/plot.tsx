@@ -733,6 +733,8 @@ export interface Visualization {
   name?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
+  /** False to hide the plot legend. Defaults to True. */
+  legend?: B
   /** The events to capture on this visualization. */
   events?: S[]
 }
@@ -751,10 +753,11 @@ export const
           raw_data = unpack<any[]>(model.data),
           raw_plot = unpack<Plot>(model.plot),
           marks = raw_plot.marks.map(refactorMark),
-          plot: Plot = { marks: marks },
+          plot: Plot = { marks },
           space = spaceTypeOf(raw_data, marks),
           data = refactorData(raw_data, plot.marks),
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks)) : null
+        chart?.legend(model.legend === undefined || model.legend)
         currentPlot = plot
         if (chart) {
           currentChart = chart
@@ -809,6 +812,8 @@ interface State {
   data: Rec
   /** The plot to be displayed in this card. */
   plot: Plot
+  /** False to hide the plot legend. Defaults to True. */
+  legend?: B
   /** The events to capture on this card. */
   events?: S[]
 }
@@ -817,12 +822,12 @@ export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
-        const { title, plot, data, events } = state
+        const { title, plot, data, events, legend } = state
         return (
           <div>
             <div className={css.title}>{title || 'Untitled'}</div>
             <div className={css.plot}>
-              <XVisualization model={{ name, plot, data, width: 'auto', height: 'auto', events }} />
+              <XVisualization model={{ name, plot, data, width: 'auto', height: 'auto', events, legend }} />
             </div>
           </div>
         )
