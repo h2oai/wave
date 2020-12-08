@@ -104,7 +104,7 @@ class _H2O3ModelBackend(WaveModelBackend):
 
     @classmethod
     def _ensure(cls):
-        """Initializes h2o-3 if not before."""
+        """Initializes h2o-3."""
 
         if not cls.INIT:
             if _config.h2o3_url != '':
@@ -144,6 +144,11 @@ class _H2O3ModelBackend(WaveModelBackend):
     def get(id_: str) -> WaveModelBackend:
         """Get a model identified by an AutoML project id.
         H2O-3 needs to be running standalone for this to work.
+
+        Args:
+            id_: Identification of the aml project on a running h2o-3 instance.
+        Returns:
+            A wave model.
         """
 
         _H2O3ModelBackend._ensure()
@@ -189,11 +194,11 @@ def build_model(filename: str, target: str, metric: WaveModelMetric = WaveModelM
 
 
 def get_model(id_: str, model_type: Optional[WaveModelBackendType] = None) -> WaveModelBackend:
-    """Get a model that is already built on a backend.
+    """Get a model that can be addressed on a backend.
 
     Args:
         id_: Identification of a model.
-        model_type: Optionally a model type specified by `h2o_wave.ml_WaveModelType`.
+        model_type: Optionally a model backend type specified by `h2o_wave.ml_WaveModelType`.
     Returns:
         A wave model.
     """
@@ -206,17 +211,29 @@ def get_model(id_: str, model_type: Optional[WaveModelBackendType] = None) -> Wa
     return _H2O3ModelBackend.get(id_)
 
 
-def save_model(backend: WaveModelBackend, folder: str):
-    """Save a model to disk."""
+def save_model(backend: WaveModelBackend, folder: str) -> str:
+    """Save a model to disk.
+
+    Args:
+       backend: A model backend produced by build_model.
+       folder: A directory where the saved model will be put to.
+    Returns:
+        Path to a saved model.
+    """
 
     if isinstance(backend, _H2O3ModelBackend):
-        h2o.download_model(backend.model, path=folder)
-    else:
-        raise NotImplementedError()
+        return h2o.download_model(backend.model, path=folder)
+    raise NotImplementedError()
 
 
 def load_model(filename: str) -> WaveModelBackend:
-    """Load a model from a disk into the instance."""
+    """Load a model from disk into the instance.
+
+    Args:
+        filename: Path to saved model.
+    Returns:
+        A wave model.
+    """
 
     _H2O3ModelBackend._ensure()
 
