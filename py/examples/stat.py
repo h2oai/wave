@@ -16,14 +16,8 @@ fakeSeries = FakeCategoricalSeries()
 val, pc = fakePercent.next()
 cat_s, val_s, pc_s = fakeSeries.next()
 
-page.add('small_stat_card', ui.small_stat_card(
-    box='1 1 1 1',
-    title='Small Stat Card',
-    value=f'${val:.2f}',
-))
-
 page.add('large_stat_card', ui.large_stat_card(
-    box='2 1 2 2',
+    box='1 1 2 2',
     title="Large Stat Card",
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
@@ -31,18 +25,14 @@ page.add('large_stat_card', ui.large_stat_card(
     caption=' '.join(faker.sentences()),
 ))
 
-page.add('wide_gauge_stat_card', ui.wide_gauge_stat_card(
-    box='1 3 2 1',
-    title='Wide Gauge',
-    value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    plot_color='$red',
-    progress=pc,
-    data=dict(foo=val, bar=pc),
+page.add('small_stat_card', ui.small_stat_card(
+    box='3 1 1 1',
+    title='Small Stat Card',
+    value=f'${val:.2f}',
 ))
 
 page.add('tall_gauge_stat_card', ui.tall_gauge_stat_card(
-    box='3 3 1 2',
+    box='1 3 1 2',
     title='Tall Gauge',
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
@@ -51,9 +41,9 @@ page.add('tall_gauge_stat_card', ui.tall_gauge_stat_card(
     data=dict(foo=val, bar=pc),
 ))
 
-page.add('wide_bar_stat_card', ui.wide_bar_stat_card(
-    box='1 5 2 1',
-    title='Wide Bar',
+page.add('wide_gauge_stat_card', ui.wide_gauge_stat_card(
+    box='2 3 2 1',
+    title='Wide Gauge',
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     plot_color='$red',
@@ -62,7 +52,7 @@ page.add('wide_bar_stat_card', ui.wide_bar_stat_card(
 ))
 
 page.add('large_bar_stat_card', ui.large_bar_stat_card(
-    box='3 5 2 2',
+    box='1 5 2 2',
     title='Large Bar',
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     value_caption='This Month',
@@ -72,6 +62,16 @@ page.add('large_bar_stat_card', ui.large_bar_stat_card(
     progress=pc,
     data=dict(foo=val, bar=pc),
     caption=' '.join(faker.sentences(2)),
+))
+
+page.add('wide_bar_stat_card', ui.wide_bar_stat_card(
+    box='3 5 2 1',
+    title='Wide Bar',
+    value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+    aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
+    plot_color='$red',
+    progress=pc,
+    data=dict(foo=val, bar=pc),
 ))
 
 colors = '$red $pink $blue $azure $cyan $teal $mint $green $lime $yellow $amber $orange $tangerine'.split()
