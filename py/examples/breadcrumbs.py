@@ -13,7 +13,7 @@ from h2o_wave import main, app, Q, ui
 async def serve(q: Q):
     if '#' in q.args:
         hash_ = q.args['#']
-        q.page['breadcrumbs'] = ui.form_card(box='1 1 2 5', items=[
+        q.page['breadcrumbs'] = ui.form_card(box='1 1 2 2', items=[
             ui.text(f'#={hash_}'),
             ui.button(name='show_breadcrumbs', label='Back', primary=True),
         ])

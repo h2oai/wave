@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Breadcrumb } from '@fluentui/react'
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
@@ -66,7 +66,7 @@ export const
       )),
       render = () => (
         <div data-test={name} className={css.card}>
-          <Breadcrumb items={items} />
+          <Fluent.Breadcrumb items={items} />
         </div>
       )
 
