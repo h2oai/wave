@@ -63,21 +63,19 @@ class WaveModelBackend:
 
     def __init__(self, type_: WaveModelBackendType):
         self.type = type_
-        """A wave model backend type represented by `h2o_wave.ml.WaveModelBackendType` enum. It's either DAI or H2O3."""
+        """A wave model backend type represented by `h2o_wave.ml.WaveModelBackendType` enum."""
 
     def predict(self, inputs: DataSourceObj, **kwargs) -> List[Tuple]:
         """Predicts values based on inputs.
         Args:
-            inputs: A python obj or filename. e.g. [['ID', 'Letter'], [1, 'a'], [2, 'b'], [3, 'c']] will create 3 rows
-                    and 2 columns.
-                    A header needs to be specified for the python obj.
+            inputs: A python obj or filename. A header needs to be specified for the python obj.
         Returns:
             A list of tuples representing predicted values.
         Examples:
-            >>> # Two rows and three columns:
             >>> from h2o_wave.ml import build_model
             >>> model = build_model(...)
-            >>> model.predict([[1, 12.3, 'aa', 32.5], [2, 15.6, 'bb', 89.9]])
+            >>> # Three rows and two columns:
+            >>> model.predict([['ID', 'Letter'], [1, 'a'], [2, 'b'], [3, 'c']])
             [(16.6,), (17.8,)]
         """
 
@@ -105,7 +103,7 @@ class _H2O3ModelBackend(WaveModelBackend):
 
     @classmethod
     def _ensure(cls):
-        """Initializes h2o-3."""
+        """Initializes H2O-3."""
 
         if not cls.INIT:
             if _config.h2o3_url != '':
@@ -127,6 +125,7 @@ class _H2O3ModelBackend(WaveModelBackend):
 
     @classmethod
     def build(cls, filename: str, target: str, metric: WaveModelMetric, **aml_settings) -> WaveModelBackend:
+        """Builds an H2O-3 based model and returns it in a backend wrapper."""
 
         cls._ensure()
 
@@ -157,7 +156,7 @@ class _H2O3ModelBackend(WaveModelBackend):
 
     @classmethod
     def get(cls, id_: str) -> WaveModelBackend:
-        """Get a model identified by an AutoML project id.
+        """Gets a model identified by an AutoML project id.
         H2O-3 needs to be running standalone for this to work.
 
         Args:
@@ -172,6 +171,7 @@ class _H2O3ModelBackend(WaveModelBackend):
         return _H2O3ModelBackend(aml.leader)
 
     def predict(self, data: DataSourceObj, **kwargs) -> List[Tuple]:
+        """Predicts on a model."""
 
         ds = _DataSource(data)
         input_frame = ds.h2o3_frame
@@ -186,16 +186,17 @@ class _H2O3ModelBackend(WaveModelBackend):
 
 def build_model(filename: str, target: str, metric: WaveModelMetric = WaveModelMetric.AUTO,
                 model_backend_type: Optional[WaveModelBackendType] = None, **kwargs) -> WaveModelBackend:
-    """Build a model.
+    """Builds a model.
     If `model_backend_type` not specified the function will determine correct backend model based on a current
     environment.
 
     Args:
         filename: A string containing the filename to a dataset.
         target: A name of the target column.
-        metric: A metric to be used in building process specified by `h2o_wave.ml.WaveModelMetric`. Defaults to AUTO.
+        metric: A metric to be used during the building process specified by `h2o_wave.ml.WaveModelMetric`.
+                It Defaults to AUTO.
         model_backend_type: Optionally a backend model type specified by `h2o_wave.ml.WaveModelBackendType`.
-        kwargs: Optional parameters passed to a backend model.
+        kwargs: Optional parameters passed to the backend.
     Returns:
         A wave model.
     """
@@ -209,7 +210,7 @@ def build_model(filename: str, target: str, metric: WaveModelMetric = WaveModelM
 
 
 def get_model(id_: str, model_type: Optional[WaveModelBackendType] = None) -> WaveModelBackend:
-    """Get a model that can be addressed on a backend.
+    """Get a model that can be accessed on a backend.
 
     Args:
         id_: Identification of a model.
