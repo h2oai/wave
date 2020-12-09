@@ -89,6 +89,7 @@ class _H2O3ModelBackend(WaveModelBackend):
     INIT = False
     MAX_RUNTIME_SECS = 60 * 60
     MAX_MODELS = 20
+    INT_TO_CAT_THRESHOLD = 50
 
     def __init__(self, model: H2OEstimator):
         super().__init__(WaveModelBackendType.H2O3)
@@ -113,14 +114,25 @@ class _H2O3ModelBackend(WaveModelBackend):
                 h2o.init()
             cls.INIT = True
 
-    @staticmethod
-    def build(filename: str, target: str, metric: WaveModelMetric, **aml_settings) -> WaveModelBackend:
+    @classmethod
+    def _is_classification_task(cls, frame: h2o.H2OFrame, target: str) -> bool:
+        target_type = frame.type(target)
+        if target_type == 'str':
+            return True
+        if target_type == 'int':
+            uniques = frame[target].unique()
+            if len(uniques) < cls.INT_TO_CAT_THRESHOLD:
+                return True
+        return False
 
-        _H2O3ModelBackend._ensure()
+    @classmethod
+    def build(cls, filename: str, target: str, metric: WaveModelMetric, **aml_settings) -> WaveModelBackend:
 
-        id_ = _H2O3ModelBackend._make_project_id()
-        aml = H2OAutoML(max_runtime_secs=aml_settings.get('max_runtime_secs', _H2O3ModelBackend.MAX_RUNTIME_SECS),
-                        max_models=aml_settings.get('max_models', _H2O3ModelBackend.MAX_MODELS),
+        cls._ensure()
+
+        id_ = cls._make_project_id()
+        aml = H2OAutoML(max_runtime_secs=aml_settings.get('max_runtime_secs', cls.MAX_RUNTIME_SECS),
+                        max_models=aml_settings.get('max_models', cls.MAX_MODELS),
                         project_name=id_,
                         stopping_metric=metric.name,
                         sort_metric=metric.name)
@@ -137,11 +149,14 @@ class _H2O3ModelBackend(WaveModelBackend):
         except ValueError:
             raise ValueError('no target column')
 
+        if cls._is_classification_task(frame, target):
+            frame[target] = frame[target].asfactor()
+
         aml.train(x=cols, y=target, training_frame=frame)
         return _H2O3ModelBackend(aml.leader)
 
-    @staticmethod
-    def get(id_: str) -> WaveModelBackend:
+    @classmethod
+    def get(cls, id_: str) -> WaveModelBackend:
         """Get a model identified by an AutoML project id.
         H2O-3 needs to be running standalone for this to work.
 
@@ -151,7 +166,7 @@ class _H2O3ModelBackend(WaveModelBackend):
             A wave model.
         """
 
-        _H2O3ModelBackend._ensure()
+        cls._ensure()
 
         aml = h2o.automl.get_automl(id_)
         return _H2O3ModelBackend(aml.leader)
