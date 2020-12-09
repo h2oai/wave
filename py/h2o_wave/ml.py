@@ -76,7 +76,7 @@ class WaveModelBackend:
             >>> model = build_model(...)
             >>> # Three rows and two columns:
             >>> model.predict([['ID', 'Letter'], [1, 'a'], [2, 'b'], [3, 'c']])
-            [(16.6,), (17.8,)]
+            [(16.6,), (17.8,), (18.9,)]
         """
 
         raise NotImplementedError()
