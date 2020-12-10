@@ -7368,6 +7368,7 @@ class HeaderCard:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
             nav: Optional[List[NavGroup]] = None,
+            items: Optional[List[Command]] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('HeaderCard.box', box, (str,), False, False, False)
@@ -7376,6 +7377,7 @@ class HeaderCard:
         _guard_scalar('HeaderCard.icon', icon, (str,), False, True, False)
         _guard_scalar('HeaderCard.icon_color', icon_color, (str,), False, True, False)
         _guard_vector('HeaderCard.nav', nav, (NavGroup,), False, True, False)
+        _guard_vector('HeaderCard.items', items, (Command,), False, True, False)
         _guard_vector('HeaderCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7389,6 +7391,8 @@ class HeaderCard:
         """The icon's color."""
         self.nav = nav
         """The navigation menu to display when the header's icon is clicked."""
+        self.items = items
+        """Items that should be displayed on the right side of the header."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -7400,6 +7404,7 @@ class HeaderCard:
         _guard_scalar('HeaderCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('HeaderCard.icon_color', self.icon_color, (str,), False, True, False)
         _guard_vector('HeaderCard.nav', self.nav, (NavGroup,), False, True, False)
+        _guard_vector('HeaderCard.items', self.items, (Command,), False, True, False)
         _guard_vector('HeaderCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='header',
@@ -7409,6 +7414,7 @@ class HeaderCard:
             icon=self.icon,
             icon_color=self.icon_color,
             nav=None if self.nav is None else [__e.dump() for __e in self.nav],
+            items=None if self.items is None else [__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -7427,6 +7433,8 @@ class HeaderCard:
         _guard_scalar('HeaderCard.icon_color', __d_icon_color, (str,), False, True, False)
         __d_nav: Any = __d.get('nav')
         _guard_vector('HeaderCard.nav', __d_nav, (dict,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('HeaderCard.items', __d_items, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('HeaderCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -7435,6 +7443,7 @@ class HeaderCard:
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
         nav: Optional[List[NavGroup]] = None if __d_nav is None else [NavGroup.load(__e) for __e in __d_nav]
+        items: Optional[List[Command]] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return HeaderCard(
             box,
@@ -7443,6 +7452,7 @@ class HeaderCard:
             icon,
             icon_color,
             nav,
+            items,
             commands,
         )
 

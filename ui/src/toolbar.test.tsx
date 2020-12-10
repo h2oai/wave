@@ -13,25 +13,28 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './toolbar'
+import { box, Model } from 'h2o-wave'
 import { wave } from './ui'
+
 
 const
   name = 'toolbar',
+  hashName = `#${name}`,
+  label = 'toolbar',
   commandName = 'toolbar_command',
   commandNameWithHash = '#toolbar_command',
   commandValue = 'toolbar_command_value',
-  toolbarProps: T.Model<any> = {
+  toolbarProps: Model<any> = {
     name,
     state: { items: [{ name: commandName, label: commandName }] },
-    changed: T.box(true)
+    changed: box(true)
   },
-  toolbarPropsWithHash: T.Model<any> = {
+  toolbarPropsWithHash: Model<any> = {
     name,
     state: { items: [{ name: commandNameWithHash, label: commandNameWithHash }] },
-    changed: T.box(true)
+    changed: box(true),
   }
 
 describe('Toolbar.tsx', () => {
@@ -94,4 +97,33 @@ describe('Toolbar.tsx', () => {
     expect(window.location.hash).toBe(commandNameWithHash)
   })
 
+  it('Sets args - init', () => {
+    render(<View {...toolbarProps} />)
+    expect(wave.args[name]).toBe(false)
+  })
+
+  it('Sets args and calls sync on click', () => {
+    const syncMock = jest.fn()
+    wave.push = syncMock
+
+    const { getByText } = render(<View {...toolbarProps} />)
+    fireEvent.click(getByText(label))
+
+    expect(wave.args[name]).toBe(true)
+    expect(syncMock).toHaveBeenCalled()
+    expect(window.location.hash).toBe('')
+  })
+
+  it('Does not set args, calls sync on click, updates browser hash when name starts with hash', () => {
+    const syncMock = jest.fn()
+    wave.push = syncMock
+    toolbarProps.state.items[0].name = hashName
+
+    const { getByText } = render(<View {...toolbarProps} />)
+    fireEvent.click(getByText(label))
+
+    expect(wave.args[hashName]).toBe(false)
+    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(window.location.hash).toBe(hashName)
+  })
 })

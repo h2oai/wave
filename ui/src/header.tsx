@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { FontIcon, Panel, PanelType } from '@fluentui/react'
+import * as Fluent from '@fluentui/react'
 import { B, Box, box, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { NavGroup, XNav } from './nav'
-import { bond } from './ui'
 import { clas, cssVar, padding } from './theme'
+import { Command, View as Toolbar } from './toolbar'
+import { bond } from './ui'
 
 const
   iconSize = 24,
@@ -32,8 +33,6 @@ const
     lhs: {
       width: iconSize + 15,
       height: iconSize + 15,
-      display: 'flex',
-      alignItems: 'center',
       cursor: 'default',
     },
     burger: {
@@ -48,13 +47,6 @@ const
       fontSize: iconSize,
       height: iconSize,
       width: iconSize,
-    },
-    rhs: {
-      flexGrow: 1
-    },
-    subtitle: {
-      position: 'relative',
-      top: -5, // nudge up slightly to account for padding
     },
   })
 
@@ -93,6 +85,8 @@ interface State {
    * The navigation menu to display when the header's icon is clicked.
    **/
   nav?: NavGroup[]
+  /** Items that should be displayed on the right side of the header. */
+  items?: Command[]
 }
 
 const
@@ -100,15 +94,15 @@ const
     const
       hideNav = () => isOpenB(false),
       render = () => (
-        <Panel
+        <Fluent.Panel
           isLightDismiss
-          type={PanelType.smallFixedNear}
+          type={Fluent.PanelType.smallFixedNear}
           isOpen={isOpenB()}
           onDismiss={hideNav}
           hasCloseButton={false}
         >
           <XNav items={items} hideNav={hideNav} />
-        </Panel>
+        </Fluent.Panel>
       )
     return { render, isOpenB }
   })
@@ -120,32 +114,31 @@ export const
       showNav = () => navB(true),
       render = () => {
         const
-          { title, subtitle, icon, icon_color, nav } = state,
+          { title, subtitle, icon, icon_color, nav, items } = state,
           burger = nav
             ? (
-              <div className={clas(css.lhs, css.burger)} onClick={showNav}>
-                <FontIcon className={css.icon} iconName='GlobalNavButton' />
-              </div>
+              <Fluent.Stack horizontal verticalAlign='center' className={clas(css.burger, css.lhs)} onClick={showNav}>
+                <Fluent.FontIcon className={css.icon} iconName='GlobalNavButton' />
+              </Fluent.Stack>
             ) : (
-              <div className={css.lhs}>
-                <FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />
-              </div>
+              <Fluent.Stack horizontal verticalAlign='center' className={css.lhs}>
+                <Fluent.FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />
+              </Fluent.Stack>
             )
 
         return (
-          <div data-test={name} className={css.card}>
+          <Fluent.Stack data-test={name} horizontal verticalAlign='center'>
             {burger}
-            <div className={css.rhs}>
+            <Fluent.StackItem grow={1}>
               <div className='wave-s24 wave-w3'>{title}</div>
               <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>
-            </div>
-            {nav && <Navigation items={nav} isOpenB={navB} />}
-          </div>
+            </Fluent.StackItem>
+            { nav && <Navigation items={nav} isOpenB={navB} />}
+            { items && <Toolbar name={`${name}-toolbar`} changed={changed} state={{ items }} />}
+          </Fluent.Stack >
         )
       }
     return { render, changed }
   })
 
 cards.register('header', View, { effect: CardEffect.Raised })
-
-

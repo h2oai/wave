@@ -3020,6 +3020,7 @@ ui_nav_group <- function(
 #' @param icon The icon, displayed to the left.
 #' @param icon_color The icon's color.
 #' @param nav The navigation menu to display when the header's icon is clicked.
+#' @param items Items that should be displayed on the right side of the header.
 #' @param commands Contextual menu commands for this component.
 #' @return A HeaderCard instance.
 #' @export
@@ -3030,6 +3031,7 @@ ui_header_card <- function(
   icon = NULL,
   icon_color = NULL,
   nav = NULL,
+  items = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3037,6 +3039,7 @@ ui_header_card <- function(
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
   .guard_vector("nav", "WaveNavGroup", nav)
+  .guard_vector("items", "WaveCommand", items)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3045,6 +3048,7 @@ ui_header_card <- function(
     icon=icon,
     icon_color=icon_color,
     nav=nav,
+    items=items,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveHeaderCard"))
   return(.o)

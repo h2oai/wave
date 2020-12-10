@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
+import * as Fluent from '@fluentui/react'
+import { ICommandBarItemProps } from '@fluentui/react'
 import { Id, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
@@ -53,12 +54,26 @@ interface State {
 
 
 const
-  overflowProps: IButtonProps = { ariaLabel: 'More' },
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    commandBar: {
+      $nest: {
+        '.ms-Button--commandBar, .ms-Button-icon, .ms-Button-menuIcon, .ms-CommandBar, &:hover': {
+          background: 'inherit',
+          color: 'inherit'
+        }
+      }
+    }
+  }),
   toCommands = (commands: Command[]) => commands.map(toCommand),
   toCommand = ({ name, label, caption, icon, items, value }: Command): ICommandBarItemProps => {
     wave.args[name] = false
     const onClick = () => {
-      if (name[0] === '#') {
+      if (name.startsWith('#')) {
         window.location.hash = name.substr(1)
         return
       }
@@ -76,14 +91,6 @@ const
       onClick,
     }
   }
-const
-  css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-    }
-  })
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
@@ -96,13 +103,14 @@ export const
           farCommands = secondary_items ? toCommands(secondary_items) : undefined
         return (
           <div className={css.card}>
-            <CommandBar
+            <Fluent.CommandBar
               data-test={name}
               items={commands}
               overflowItems={overflowCommands}
-              overflowButtonProps={overflowProps}
+              overflowButtonProps={{ ariaLabel: 'More' }}
               farItems={farCommands}
               ariaLabel='Use left and right arrow keys to navigate between commands.'
+              className={css.commandBar}
             />
           </div>
         )
@@ -111,5 +119,3 @@ export const
   })
 
 cards.register('toolbar', View, { effect: CardEffect.Transparent })
-
-

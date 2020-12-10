@@ -13,17 +13,19 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
+import { box, Model } from 'h2o-wave'
 import React from 'react'
 import { View } from './header'
+import { wave } from './ui'
 
 const
   name = 'header',
+  hashName = `#${name}`,
   label = 'label',
-  headerProps: T.Model<any> = {
+  headerProps: Model<any> = {
     name,
     state: { nav: [{ label: 'group1', items: [{ name, label }] }] },
-    changed: T.box(false)
+    changed: box(false)
   }
 
 describe('Header.tsx', () => {
@@ -41,5 +43,35 @@ describe('Header.tsx', () => {
 
     fireEvent.click(menuItem!)
     expect(menuItem).not.toBeVisible()
+  })
+
+  it('Sets args - init', () => {
+    render(<View {...headerProps} />)
+    expect(wave.args[name]).toBe(false)
+  })
+
+  it('Sets args and calls sync on click', () => {
+    const syncMock = jest.fn()
+    wave.push = syncMock
+
+    const { getByText } = render(<View {...headerProps} />)
+    fireEvent.click(getByText(label))
+
+    expect(wave.args[name]).toBe(true)
+    expect(syncMock).toHaveBeenCalled()
+    expect(window.location.hash).toBe('')
+  })
+
+  it('Does not set args, calls sync on click, updates browser hash when name starts with hash', () => {
+    const syncMock = jest.fn()
+    wave.push = syncMock
+    headerProps.state.items[0].name = hashName
+
+    const { getByText } = render(<View {...headerProps} />)
+    fireEvent.click(getByText(label))
+
+    expect(wave.args[hashName]).toBe(false)
+    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(window.location.hash).toBe(hashName)
   })
 })
