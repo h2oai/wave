@@ -2,24 +2,24 @@
 # Filter table using Python
 # ---
 import pandas as pd
-from faker import Faker
 from h2o_wave import main, app, Q, ui
 
-fake = Faker()
 
-N = 50  # number of rows
-
-# Make a synthetic data frame
-addresses = pd.DataFrame(dict(
-    ID=[i + 1 for i in range(N)],
-    Name=[fake.name() for _ in range(N)],
-    Language=[fake.language_name() for _ in range(N)],
-    Job=[fake.job() for _ in range(N)],
-    Address=[fake.address() for _ in range(N)],
-    City=[fake.city() for _ in range(N)],
-))
-
-column_names = ['ID', 'Name', 'Language', 'Job', 'Address', 'City']
+column_names = ['ID', 'Name', 'Language', 'Job', 'Address']
+addresses = pd.DataFrame(
+    [
+        [1, 'Rick Fleming', 'German', 'Engineer, electronics', '4432 Alan Ridges Yangton, CA 33492'],
+        [2, 'Rhonda Anderson', 'Cornish', 'Lexicographer', '55417 Mills Isle South Franklinville, ND 98866'],
+        [3, 'Jared Lee', 'Swati', 'Printmaker', 'Unit 5860 Box 4474 DPO AA 66244'],
+        [4, 'Matthew Jimenez', 'North Ndebele', 'Training and development officer', '636 East Brian, AL 81942'],
+        [5, 'Mitchell Schmidt', 'Marshallese', 'Building services engineer', '366 Hernandez Port Davidshire, NY 86317'],
+        [6, 'Katie Perez', 'Russian', 'Civil engineer, consulting', '3605 Brenda Cape Mosleyport, MA 76379'],
+        [7, 'Jason Anderson', 'Sinhala', 'Veterinary surgeon', '24841 Jessica Meadows Suite 294 Ericabury, SC 38082'],
+        [8, 'Susan Rogers', 'Amharic', 'Podiatrist', '43725 Luna Center Suite 540 Gambleville, NH 91245'],
+        [9, 'Mary Molina', 'Japanese', 'Travel agency manager', '2515 Natalie Springs Apt. 666 Brownmouth, SC 22702'],
+        [10, 'Phillip Collins', 'Chechen', 'Water engineer', '8426 Christian Port Apt. 910 South Jamesport, ME 37737']
+    ],
+    columns=column_names)
 
 
 def df_to_rows(df: pd.DataFrame):

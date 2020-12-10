@@ -1,19 +1,20 @@
-# Table
-# Use a table to display tabular data.
-# On a table level, you can add a download button with downloadable=True, a reset button with resettable=True and a group-by option with groupable=True.
-# Those parameters are available in the ui.table element.
+# Table / Column Settings
+# Add filter, sort and search options to your Table per column.
+# On a column level, you can add sort with sortable=True, filter with filterable=True and search with searchable true.
+# Note that those parameters are added per column in the column definition.
 # ---
 
 from h2o_wave import main, app, Q, ui
 
 
 # Create columns for our issue table.
+# For each column you can specify whether it is searchbale, filterable and/or sortable
 columns = [
-    ui.table_column(name='text', label='Issue'),
-    ui.table_column(name='status', label='Status'),
+    ui.table_column(name='text', label='Issue', searchable=True),
+    ui.table_column(name='status', label='Status', filterable=True, sortable=True),
     ui.table_column(name='notifications', label='Notifications'),
     ui.table_column(name='done', label='Done', cell_type=ui.icon_table_cell_type()),
-    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
+    ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type(), sortable=True),
 ]
 
 
@@ -32,7 +33,7 @@ issues = [
     ['Money many toward son project person.', 'Open', 'On', 'BoxMultiplySolid', 0.5049239782344025],
 ]
 
-# Add the groupable, downloadable and resettable parameters to add the functionality to the table.
+
 @app('/demo')
 async def serve(q: Q):
     q.page['form'] = ui.form_card(box='1 1 -1 11', items=[

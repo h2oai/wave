@@ -1,13 +1,8 @@
 # Grid
 # Use a grid card to lay out multiple child cards in table form.
 # ---
-import random
-
-from faker import Faker
 
 from h2o_wave import site, ui, pack, data
-
-fake = Faker()
 
 page = site['/demo']
 
@@ -20,10 +15,23 @@ c = page.add('example', ui.grid_card(
              view='list_item1',
              props=dict(title='=code', caption='1 hour ago', value='=trades', aux_value='=returns')),
     ]),
-    data=data('currency code trades returns', -15),
+    data=data(fields=['currency', 'code', 'trades', 'returns'], size=-15),
 ))
 c.data = [
-    [fake.cryptocurrency_name(), fake.cryptocurrency_code(), random.randint(100, 1000), random.randint(10, 100)] for
-    _ in range(15)]
+    ['Bitcoin', 'ETC', 146, 17],
+    ['Namecoin', 'STC', 858, 70],
+    ['Sirin Labs', 'AUR', 149, 79],
+    ['AMP', 'EMC', 632, 43],
+    ['BlackCoin', 'NEM', 799, 31],
+    ['Primecoin', 'STC', 944, 91],
+    ['AMP', 'BURST', 127, 39],
+    ['XEM', 'STC', 832, 11],
+    ['Burstcoin', 'ETC', 177, 81],
+    ['Decred', 'DRC', 944, 43],
+    ['Feathercoin', 'DOGE', 800, 89],
+    ['Bitcoin', 'IOTA', 172, 39],
+    ['Burstcoin', 'LTC', 480, 25],
+    ['Bytecoin', 'MZC', 698, 92],
+    ['Auroracoin', 'FTH', 882, 73]]
 
 page.save()

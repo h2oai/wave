@@ -1,13 +1,8 @@
 # Flex
 # Use a flex card to tile multiple child cards along one dimension, with optional wrapping.
 # ---
-import random
-
-from faker import Faker
 
 from h2o_wave import site, ui, pack, data
-
-fake = Faker()
 
 page = site['/demo']
 
@@ -20,8 +15,18 @@ c = page.add('example', ui.flex_card(
     item_props=pack(dict(
         content='<div style="width:15px; height:15px; border-radius: 50%; background-color:{{#if loss}}red{{else}}green{{/if}}" title="{{code}}"/>'
     )),
-    data=data('code loss', -10),
+    data=data(fields=['code', 'loss'], size=-10),
 ))
-c.data = [[fake.cryptocurrency_code(), random.randint(0, 1)] for _ in range(10)]
+c.data = [
+    ['AMP', 1],
+    ['WAVES', 0],
+    ['STC', 1],
+    ['ETC', 1],
+    ['SRN', 1],
+    ['WAVES', 0],
+    ['EMC', 1],
+    ['GRC', 1],
+    ['XDN', 0],
+    ['NEM', 1]]
 
 page.save()
