@@ -10,19 +10,21 @@ from synth import FakePercent
 
 page = site['/demo']
 
-faker = Faker()
+mock_description = 'Your description goes here'
+
 fakePercent = FakePercent()
 fakeSeries = FakeCategoricalSeries()
 val, pc = fakePercent.next()
 cat_s, val_s, pc_s = fakeSeries.next()
 
+# Stat cards
 page.add('large_stat_card', ui.large_stat_card(
     box='1 1 2 2',
     title="Large Stat Card",
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
     data=dict(qux=val, quux=pc),
-    caption=' '.join(faker.sentences()),
+    caption=mock_description,
 ))
 
 page.add('small_stat_card', ui.small_stat_card(
@@ -31,6 +33,7 @@ page.add('small_stat_card', ui.small_stat_card(
     value=f'${val:.2f}',
 ))
 
+# Gauges
 page.add('tall_gauge_stat_card', ui.tall_gauge_stat_card(
     box='1 3 1 2',
     title='Tall Gauge',
@@ -51,6 +54,7 @@ page.add('wide_gauge_stat_card', ui.wide_gauge_stat_card(
     data=dict(foo=val, bar=pc),
 ))
 
+# Bar cards
 page.add('large_bar_stat_card', ui.large_bar_stat_card(
     box='1 5 2 2',
     title='Large Bar',
@@ -61,7 +65,7 @@ page.add('large_bar_stat_card', ui.large_bar_stat_card(
     plot_color='$red',
     progress=pc,
     data=dict(foo=val, bar=pc),
-    caption=' '.join(faker.sentences(2)),
+    caption=mock_description,
 ))
 
 page.add('wide_bar_stat_card', ui.wide_bar_stat_card(
@@ -74,6 +78,7 @@ page.add('wide_bar_stat_card', ui.wide_bar_stat_card(
     data=dict(foo=val, bar=pc),
 ))
 
+# Time series data cards
 colors = '$red $pink $blue $azure $cyan $teal $mint $green $lime $yellow $amber $orange $tangerine'.split()
 curves = 'linear smooth step step-after step-before'.split()
 for i in range(len(curves)):
@@ -173,11 +178,6 @@ while True:
     val, _ = fakePercent.next()
     c = page['small_stat_card']
     c.value = f'${val:.2f}'
-
-    val, pc = fakePercent.next()
-    c = page['large_stat_card']
-    c.data.qux = val
-    c.data.quux = pc
 
     val, pc = fakePercent.next()
     c = page['wide_gauge_stat_card']
