@@ -173,6 +173,7 @@ page.add('tall_series_stat_card', ui.tall_series_stat_card(
 
 page.save()
 
+# This infinite loop is only for updating values of cards each second for visualization purposes.
 while True:
     time.sleep(1)
 
