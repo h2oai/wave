@@ -11,7 +11,7 @@ async def serve(q: Q):
         q.page['pricing'] = ui.plot_card(
             box='1 1 4 5',
             title='Interval',
-            data=data(fields='product price', rows=[
+            data=data(fields=['product', 'price'], rows=[
                 ['spam', 1.49],
                 ['eggs', 2.49],
                 ['ham', 1.99],
