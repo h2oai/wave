@@ -14,8 +14,9 @@ mock_description = 'Your description goes here'
 
 fakePercent = FakePercent()
 fakeSeries = FakeCategoricalSeries()
+
 val, percentage = fakePercent.next()
-cat_s, val_s, pc_s = fakeSeries.next()
+category_series, val_series, percentage_series = fakeSeries.next()
 
 # Stat cards
 page.add('large_stat_card', ui.large_stat_card(
@@ -86,7 +87,7 @@ for i in range(len(curves)):
         box=f'{i + 1} 7 1 1',
         title="Series",
         value='=${{intl value minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-        data=dict(value=val_s, aux_value=pc_s),
+        data=dict(value=val_series, aux_value=percentage_series),
         plot_category='category',
         plot_type='area',
         plot_value='value',
@@ -100,7 +101,7 @@ page.add('small_series_stat_card_interval', ui.small_series_stat_card(
     box='1 8 1 1',
     title='Series',
     value='=${{intl value minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-    data=dict(value=val_s, aux_value=pc_s),
+    data=dict(value=val_series, aux_value=percentage_series),
     plot_category='category',
     plot_type='interval',
     plot_value='value',
@@ -115,7 +116,7 @@ for i in range(len(curves)):
         title='Wide Series Area',
         value='=${{intl value minimum_fraction_digits=2 maximum_fraction_digits=2}}',
         aux_value='={{intl aux_value style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-        data=dict(value=val_s, aux_value=pc_s / 100),
+        data=dict(value=val_series, aux_value=percentage_series / 100),
         plot_category='category',
         plot_type='area',
         plot_value='value',
@@ -146,7 +147,7 @@ for i in range(len(curves)):
         title='Tall Series',
         value='=${{intl value minimum_fraction_digits=2 maximum_fraction_digits=2}}',
         aux_value='={{intl aux_value style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-        data=dict(value=val_s, aux_value=pc_s / 100),
+        data=dict(value=val_series, aux_value=percentage_series / 100),
         plot_type='area',
         plot_category='category',
         plot_value='value',
@@ -161,7 +162,7 @@ page.add('tall_series_stat_card', ui.tall_series_stat_card(
     title='Tall Series',
     value='=${{intl value minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     aux_value='={{intl aux_value style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
-    data=dict(value=val_s, aux_value=pc_s / 100),
+    data=dict(value=val_series, aux_value=percentage_series / 100),
     plot_category='category',
     plot_type='interval',
     plot_value='value',
@@ -174,6 +175,11 @@ page.save()
 
 while True:
     time.sleep(1)
+
+    val, percentage = fakePercent.next()
+    c = page['large_stat_card']
+    c.data.value = val
+    c.data.aux_value = percentage
 
     val, _ = fakePercent.next()
     c = page['small_stat_card']
@@ -204,42 +210,42 @@ while True:
     c.progress = percentage
 
     for i in range(len(curves)):
-        cat_s, val_s, pc_s = fakeSeries.next()
+        category_series, val_series, percentage_series = fakeSeries.next()
         c = page[f'small_series_stat_card_area_{i}']
-        c.data.value = val_s
-        c.data.aux_value = pc_s
-        c.plot_data[-1] = [cat_s, val_s]
+        c.data.value = val_series
+        c.data.aux_value = percentage_series
+        c.plot_data[-1] = [category_series, val_series]
 
-    cat_s, val_s, pc_s = fakeSeries.next()
+    category_series, val_series, percentage_series = fakeSeries.next()
     c = page['small_series_stat_card_interval']
-    c.data.value = val_s
-    c.data.aux_value = pc_s
-    c.plot_data[-1] = [cat_s, val_s]
+    c.data.value = val_series
+    c.data.aux_value = percentage_series
+    c.plot_data[-1] = [category_series, val_series]
 
     for i in range(len(curves)):
-        cat_s, val_s, pc_s = fakeSeries.next()
+        category_series, val_series, percentage_series = fakeSeries.next()
         c = page[f'wide_series_stat_card_area_{i}']
-        c.data.value = val_s
-        c.data.aux_value = pc_s / 100
-        c.plot_data[-1] = [cat_s, val_s]
+        c.data.value = val_series
+        c.data.aux_value = percentage_series / 100
+        c.plot_data[-1] = [category_series, val_series]
 
-    cat_s, val_s, pc_s = fakeSeries.next()
+    category_series, val_series, percentage_series = fakeSeries.next()
     c = page['wide_series_stat_card_interval']
-    c.data.value = val_s
-    c.data.aux_value = pc_s / 100
-    c.plot_data[-1] = [cat_s, val_s]
+    c.data.value = val_series
+    c.data.aux_value = percentage_series / 100
+    c.plot_data[-1] = [category_series, val_series]
 
     for i in range(len(curves)):
-        cat_s, val_s, pc_s = fakeSeries.next()
+        category_series, val_series, percentage_series = fakeSeries.next()
         c = page[f'tall_series_stat_card_area_{i}']
-        c.data.value = val_s
-        c.data.aux_value = pc_s / 100
-        c.plot_data[-1] = [cat_s, val_s]
+        c.data.value = val_series
+        c.data.aux_value = percentage_series / 100
+        c.plot_data[-1] = [category_series, val_series]
 
-    cat_s, val_s, pc_s = fakeSeries.next()
+    category_series, val_series, percentage_series = fakeSeries.next()
     c = page['tall_series_stat_card']
-    c.data.value = val_s
-    c.data.aux_value = pc_s / 100
-    c.plot_data[-1] = [cat_s, val_s]
+    c.data.value = val_series
+    c.data.aux_value = percentage_series / 100
+    c.plot_data[-1] = [category_series, val_series]
 
     page.save()
