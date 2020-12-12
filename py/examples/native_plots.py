@@ -1,9 +1,8 @@
 # Native Plots
 # Make plots with native Wave.
-# In this example there we show a selection of available plots.
-# Try adding / changing the following parameters ti ui.mark for additional plot options:
-# curve=smooth; coord='helix'; coord='theta'; color='#333333'; type=path;
+# In this example, we show a selective of native plots.
 # ---
+
 import pandas as pd
 from h2o_wave import main, app, data, Q, ui
 
@@ -36,17 +35,19 @@ values = pd.DataFrame([
 # Add labels to bars with label parameters
 grouped_bar = ui.plot_card(
     box='1 1 3 4',
-    title='Grouped Bar Plot',
+    title='Product Price by Country',
     data=data(fields=['country', 'product', 'price'], rows=list(zip(values['country'], values['product'], values['price']))),
-    plot=ui.plot([ui.mark(type='interval', x='=price', y='=product', color='=country', dodge='auto', y_min=0,
-                          label='=price', label_offset=0, label_position='middle', label_rotation='0', label_fill_color='#333333',
-                          label_font_weight='bold', label_stroke_color='#fff', label_stroke_size=2)]))
+    plot=ui.plot([ui.mark(type='interval', x='=price', y='=product', color='=country', dodge='auto', y_min=0, x_title='Price',
+                          y_title='Product', label='=price', label_offset=0, label_position='middle', label_rotation='0',
+                          label_fill_color='#333333', label_font_weight='bold', label_stroke_color='#fff', label_stroke_size=2)]))
 
 
 # Area plot with a line
+# Select a color by adding it to ui.mark color='#333333'
+# Try curve='smooth' for a smooth line over the area, or a smooth area
 area_plot = ui.plot_card(
     box='4 1 4 4',
-    title='Area Plot with a Line',
+    title='Price over Time',
     data=data(fields=['date', 'price'], rows=list(zip(values['date'], values['price']))),
     plot=ui.plot([ui.mark(type='area', x_scale='time', x='=date', y='=price', y_min=0, x_title='Date', y_title='Price'),
                   ui.mark(type='line', x='=date', y='=price')])
@@ -56,37 +57,41 @@ area_plot = ui.plot_card(
 # Add stack='auto' for a stacked area plot
 grouped_area = ui.plot_card(
     box='8 1 4 4',
-    title='Grouped Area Plot',
+    title='Price over Time by Country',
     data=data(fields=['country', 'date', 'price'], rows=list(zip(values['country'],values['date'], values['price']))),
-    plot=ui.plot([ui.mark(type='area', x_scale='time', x='=date', y='=price', color='=country', y_min=0)])
+    plot=ui.plot([ui.mark(type='area', x_scale='time', x='=date', y='=price', color='=country', y_min=0, x_title='Date', y_title='Price')])
 )
 
 
 # Histogram
 histogram = ui.plot_card(
     box='1 5 4 4',
-    title='Histogram',
+    title='Price per Number of Products',
     data=data(fields=['price', 'min_amount', 'max_amount'], rows=list(zip(values['price'],values['min_amount'], values['max_amount']))),
-    plot=ui.plot([ui.mark(type='interval', y='=price', x1='=min_amount', x2='=max_amount', y_min=0)]))
+    plot=ui.plot([ui.mark(type='interval', y='=price', x1='=min_amount', x2='=max_amount', y_min=0, x_title='Amount', y_title='Price')]))
 
 
 # Stacked bar plot
 # Add annotations by passing additional u.mark elements.
 stacked_bar = ui.plot_card(
     box='5 5 4 4',
-    title='Stacked Bar Plot',
+    title='Product Price by Country',
     data=data(fields=['country', 'product', 'price'], rows=list(zip(values['country'], values['product'], values['price']))),
-    plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', color='=country', stack='auto'),
-                  ui.mark(x='C10', y=18, label='point'),
-                  ui.mark(x='C7', label='vertical line'),
-                  ui.mark(y=20, label='horizontal line'),
-                  ui.mark(x='C6', x0='C3', label='vertical region'),
-                  ui.mark(y=10, y0=20, label='horizontal region')]))
+    plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', color='=country', stack='auto', x_title='Product', y_title='Price'),
+                  ui.mark(x='C4', y=26.5, label='Product Average Price', label_fill_color='#333333',
+                          label_font_weight='bold', label_stroke_color='#fff', label_stroke_size=2),
+                  ui.mark(x='C7', label='Best Seller', label_fill_color='#333333',
+                          label_font_weight='bold', label_stroke_color='#fff', label_stroke_size=2),
+                  ui.mark(y=20, label='Average Price', label_fill_color='#333333',
+                          label_font_weight='bold', label_stroke_color='#fff', label_stroke_size=2),
+                  ui.mark(x='C8', x0='C6', label='vertical region'),
+                  ui.mark(y=15, y0=20, label='horizontal region')]))
 
 # Polar bar plot
+# Over available coordinates: coord='helix'; coord='theta'
 polar_plot = ui.plot_card(
     box='9 5 3 4',
-    title='Polar Stacked Bar Plot',
+    title='Product Price by Country',
     data=data(fields=['country', 'product', 'price'], rows=list(zip(values['country'], values['product'], values['price']))),
     plot=ui.plot([ui.mark(coord='polar', type='interval',x='=product', y='=price', color='=country', stack='auto', y_min=0)]))
 
@@ -94,19 +99,20 @@ polar_plot = ui.plot_card(
 # Custom Point Plot
 # In point plots you can change the shape of the points per group with shape_range='circle square'
 point_plot = ui.plot_card(
-    box='1 9 4 4',
-    title='Custom Point Plot',
+    box='1 9 5 4',
+    title='Performance by Price and Discount',
     data=data(fields=['price', 'performance', 'discount'], rows=list(zip(values['price'], values['performance'], values['discount']))),
     plot=ui.plot([ui.mark(type='point', x='=price', y='=performance', size='=discount', size_range='4 30',
                           fill_color='#eb4559', stroke_color='#eb4559', stroke_size=1, fill_opacity=0.3,
-                          stroke_opacity=1)]))
+                          stroke_opacity=1, x_title='Price', y_title='Performance')]))
 
 # Heatmap
 heatmap = ui.plot_card(
-    box='5 9 -1 4',
-    title='Heatmap',
+    box='6 9 -1 4',
+    title='Product Price by Country',
     data=data(fields=['country', 'product', 'price'], rows=list(zip(values['country'], values['product'], values['price']))),
-    plot=ui.plot([ui.mark(type='polygon', x='=country', y='=product', color='=price', color_range='#fee8c8 #fdbb84 #e34a33')]))
+    plot=ui.plot([ui.mark(type='polygon', x='=country', y='=product', color='=price',
+                          color_range='#fee8c8 #fdbb84 #e34a33', x_title='Country', y_title='Product')]))
 
 
 @app('/demo')
@@ -120,6 +126,3 @@ async def serve(q: Q):
     q.page.add('point', point_plot)
     q.page.add('heatmap', heatmap)
     await q.page.save()
-
-
-
