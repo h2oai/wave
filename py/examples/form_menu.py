@@ -58,7 +58,7 @@ async def serve(q: Q):
             example.items[1].vega_visualization.specification = spec_linear_scale
     else:  # Add a new plot
         q.page['example'] = ui.form_card(
-            box='1 1 2 8',
+            box='1 1 5 5',
             items=[
                 ui.text_l(content='Plot (Linear Scale)', commands=[log_scale_command]),
                 ui.vega_visualization(specification=spec_linear_scale, data=plot_data, height='300px'),
