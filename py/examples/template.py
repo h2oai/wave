@@ -1,7 +1,11 @@
 # Template
-# Use a template card to render dynamic content using a HTML template.
+# Use a template card to render dynamic content using an HTML template.
+# Update a template card's data periodically.
 # ---
-from h2o_wave import site, pack, ui
+
+import time
+import random
+from h2o_wave import site, ui
 
 page = site['/demo']
 page.drop()
@@ -14,14 +18,26 @@ menu = '''
 </ol
 '''
 
-c = page.add('template_example', ui.template_card(
+menu_card = page.add('template_example', ui.template_card(
     box=f'1 1 2 2',
-    title='Menu',
+    title='Surge-priced Menu',
     content=menu,
-    data=pack(dict(dishes=[
+    data=dict(dishes=[
         dict(name='Spam', price='$2.00'),
         dict(name='Ham', price='$3.45'),
         dict(name='Eggs', price='$1.75'),
-    ])),
+    ]),
 ))
 page.save()
+
+
+def rand_price(): return f'${random.randrange(0, 4)}.{random.randrange(10, 99)}'
+
+
+dishes = menu_card.data.dishes
+for i in range(98, 2, -1):
+    time.sleep(1)
+    dishes[0].price = rand_price()
+    dishes[1].price = rand_price()
+    dishes[2].price = rand_price()
+    page.save()
