@@ -14,8 +14,8 @@ from h2o_wave import main, app, Q, ui
 
 @app('/demo')
 async def serve(q: Q):
-    q.page.add('static_form', ui.form_card(
-        box='1 1 6 -1',
+    q.page.add('form', ui.form_card(
+        box='1 1 -1 -1',
         items=[
             ui.text_xl(content='Form Card Example'),
             ui.text_l(content='Static Elements'),
@@ -37,13 +37,6 @@ async def serve(q: Q):
                     <li>Eggs</li>
                 </ol>
                 '''),
-            ui.frame(path='https://example.com')
-        ],
-    ))
-    q.page.add('interactive_form', ui.form_card(
-        box='7 1 -1 -1',
-        items=[
-            ui.text_xl(content='Form Card Example'),
             ui.text_l(content='Interactive Elements'),
             ui.separator(label='A separator'),
             ui.textbox(name='textbox', label='Request text input from the user'),
@@ -62,6 +55,6 @@ async def serve(q: Q):
                 ui.button(name='standard_button', label='Standard'),
                 ui.button(name='standard_disabled_button', label='Standard', disabled=True),
             ]),
-        ]
+        ],
     ))
     await q.page.save()
