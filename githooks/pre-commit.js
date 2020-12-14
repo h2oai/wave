@@ -13,7 +13,7 @@ function runLinter(linterName, command, stagedFiles) {
     console.log('\x1b[36m', 'If you want to skip linting (not recommended) you can commit with --no-verify option.')
     process.exit(1)
   }
-  console.log('\x1b[32m', `Linting finished with no linting errors.`, '\x1b[0m');
+  console.log('\x1b[32m', `Linting finished with no linting errors.`, '\x1b[0m')
 }
 
 function runRelatedTests(command, stagedFiles) {
@@ -46,4 +46,4 @@ if (files.py.length) runLinter('flake8', './py/venv/bin/flake8', files.py)
 if (files.go.length) runLinter('golint', 'golint -set_exit_status', files.go)
 if (files.md.length) runLinter('markdownlint', 'ui/node_modules/markdownlint-cli/markdownlint.js', files.md)
 
-console.log('\x1b[32m', 'No errors found. Good job!', '\x1b[0m');
+console.log('\x1b[32m', 'No errors found. Good job!', '\x1b[0m')
