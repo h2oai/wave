@@ -25,7 +25,8 @@ module.exports = {
     },
     "ecmaVersion": 2018,
     "sourceType": "module",
-    "project": process.env.GIT_HOOK ? "ui/tsconfig.json" : "./tsconfig.json"
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": __dirname,
   },
   "plugins": [
     "react",
