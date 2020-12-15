@@ -1,6 +1,6 @@
 module.exports = {
   title: 'H2O Wave',
-  tagline: 'From the makers of H2O',
+  tagline: 'Realtime Web Apps and Dashboards for Python',
   url: 'https://h2oai.github.io/wave/',
   baseUrl: '/wave/',
   onBrokenLinks: 'throw',
