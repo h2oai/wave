@@ -1835,6 +1835,39 @@ def form_card(
     )
 
 
+def searchbar_card(
+        box: str,
+        items: Union[List[Component], str],
+        direction: Optional[str] = None,
+        justify: Optional[str] = None,
+        align: Optional[str] = None,
+        wrap: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> SearchBarCard:
+    """Create a searchbar.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: The components in this searchbar.
+        direction: SearchBar direction. One of 'horizontal', 'vertical'. See enum h2o_wave.ui.SearchBarDirection.
+        justify: SearchBar strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.SearchBarJustify.
+        align: SearchBar strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.SearchBarAlign.
+        wrap: SearchBar Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.SearchBarWrap.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.SearchBarCard` instance.
+    """
+    return SearchBarCard(
+        box,
+        items,
+        direction,
+        justify,
+        align,
+        wrap,
+        commands,
+    )
+
+
 def frame_card(
         box: str,
         title: str,

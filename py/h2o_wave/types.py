@@ -5460,6 +5460,112 @@ class Layout:
         )
 
 
+class SearchBarDirection:
+    ROW = 'row'
+    COLUMN = 'column'
+
+
+class SearchBarJustify:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+
+class SearchBarAlign:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    STRETCH = 'stretch'
+
+
+class SearchBarWrap:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+    STRETCH = 'stretch'
+
+
+class SearchBarCard:
+    """Create a searchbar.
+    """
+    def __init__(
+            self,
+            box: str,
+            items: Union[List[Component], str],
+            direction: Optional[str] = None,
+            justify: Optional[str] = None,
+            align: Optional[str] = None,
+            wrap: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.items = items
+        """The components in this searchbar."""
+        self.direction = direction
+        """SearchBar direction. One of 'horizontal', 'vertical'. See enum h2o_wave.ui.SearchBarDirection."""
+        self.justify = justify
+        """SearchBar strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.SearchBarJustify."""
+        self.align = align
+        """SearchBar strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.SearchBarAlign."""
+        self.wrap = wrap
+        """SearchBar strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.SearchBarWrap."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('SearchBarCard.box is required.')
+        if self.items is None:
+            raise ValueError('SearchBarCard.items is required.')
+        return _dump(
+            view='searchbar',
+            box=self.box,
+            items=self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
+            direction=self.direction,
+            justify=self.justify,
+            align=self.align,
+            wrap=self.wrap,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'SearchBarCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('SearchBarCard.box is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('SearchBarCard.items is required.')
+        __d_direction: Any = __d.get('direction')
+        __d_justify: Any = __d.get('justify')
+        __d_align: Any = __d.get('align')
+        __d_wrap: Any = __d.get('wrap')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
+        direction: Optional[str] = __d_direction
+        justify: Optional[str] = __d_justify
+        align: Optional[str] = __d_align
+        wrap: Optional[str] = __d_wrap
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return SearchBarCard(
+            box,
+            items,
+            direction,
+            justify,
+            align,
+            wrap,
+            commands,
+        )
+
+
 class Dialog:
     """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
     and requires people to interact with it. It’s primarily used for confirming actions,
