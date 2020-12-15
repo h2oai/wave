@@ -1,3 +1,17 @@
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import Handlebars from 'handlebars'
 import { createIntl, createIntlCache } from 'react-intl'
 import { B, S } from './qd'
@@ -9,7 +23,7 @@ export const intl = createIntl({
   // Since we generate format messages on the fly, ignore all errors.
   // The intl lib requires messages to be initialized in advance,
   // Otherwise, it throws console.errors for each missing id, each time format() is called.
-  // As of this implementation, there's no formal way to disable that behavior.  
+  // As of this implementation, there's no formal way to disable that behavior.
   onError: () => { /* noop */ },
 }, intlCache)
 

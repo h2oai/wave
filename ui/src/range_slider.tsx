@@ -1,3 +1,17 @@
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import React from 'react'
 import * as Fluent from '@fluentui/react'
 import { bond, box, S, qd, B, U, F } from './qd'
@@ -67,7 +81,7 @@ const
  * A range slider is an element used to select a value range. It provides a visual indication of adjustable content, as well as the
  * current setting in the total range of content. It is displayed as a horizontal track with options on either side.
  * Knobs or levers are dragged to one end or the other to make the choice, indicating the current max and min value.
- * 
+ *
 */
 export interface RangeSlider {
   /** An identifying name for this component. */
