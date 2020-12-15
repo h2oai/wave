@@ -1,3 +1,7 @@
+:warning: **Wave is pre-alpha.** The software is not yet stable enough for production use and has known security issues.
+
+---
+
 ![Wave](assets/brand/wave-type-yellow.png)
 
 **Realtime AI Apps and Dashboards for Python.**
