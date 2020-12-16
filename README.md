@@ -29,13 +29,13 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 
 (Coming soon!)
 
-![Themes](assets/visuals/theme-light.png)
-![Themes](assets/visuals/theme-dark.png)
-![Themes](assets/visuals/theme-neon.png)
+![Light Theme](assets/visuals/theme-light.png)
+![Dark Theme](assets/visuals/theme-dark.png)
+![Neon Theme](assets/visuals/theme-neon.png)
 
 ## 80+ components, 175+ examples
 
 More at https://h2oai.github.io/wave/docs/examples
 
-![Components](assets/visuals/visual2.png)
-![Components](assets/visuals/visual3.png)
+![Components](assets/visuals/components-1.png)
+![Visualizations](assets/visuals/components-2.png)

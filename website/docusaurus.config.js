@@ -64,26 +64,26 @@ module.exports = {
           title: 'Community',
           items: [
             {
+              label: 'Discuss',
+              href: 'https://h2owave.h2o.ai/',
+            },
+            {
               label: 'Stack Overflow',
               href: 'https://stackoverflow.com/questions/tagged/h2o-wave',
             },
-            // {
-            //  label: 'Discord',
-            //  href: 'https://discordapp.com/invite/h2owave',
-            // },
             {
               label: 'Twitter',
-              href: 'https://twitter.com/h2oai',
+              href: 'https://twitter.com/h2o_wave',
             },
           ],
         },
         {
           title: 'More',
           items: [
-            // {
-            //   label: 'Blog',
-            //   to: 'blog',
-            // },
+            {
+              label: 'Blog',
+              to: 'blog',
+            },
             {
               label: 'Download',
               href: 'https://github.com/h2oai/wave/releases/latest',
