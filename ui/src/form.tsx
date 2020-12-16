@@ -49,6 +49,7 @@ import { getTheme, margin } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
+import { OrderedSelect, XOrderedSelect } from './ordered_select'
 
 /** Create a component. */
 export interface Component {
@@ -84,6 +85,8 @@ export interface Component {
   checklist?: Checklist;
   /** Dropdown. */
   dropdown?: Dropdown;
+  /** Ordered select. */
+  ordered_select?: OrderedSelect;
   /** Combobox. */
   combobox?: Combobox;
   /** Slider. */
@@ -171,6 +174,7 @@ const
     if (m.toggle) return <XToolTip content={m.toggle.tooltip} expand={false}><XToggle model={m.toggle} /></XToolTip>
     if (m.choice_group) return <XToolTip content={m.choice_group.tooltip}><XChoiceGroup model={m.choice_group} /></XToolTip>
     if (m.dropdown) return <XToolTip content={m.dropdown.tooltip}><XDropdown model={m.dropdown} /></XToolTip>
+    if (m.ordered_select) return <XOrderedSelect model={m.ordered_select} />
     if (m.checklist) return <XToolTip content={m.checklist.tooltip}><XChecklist model={m.checklist} /></XToolTip>
     if (m.combobox) return <XToolTip content={m.combobox.tooltip}><XCombobox model={m.combobox} /></XToolTip>
     if (m.slider) return <XToolTip content={m.slider.tooltip}><XSlider model={m.slider} /></XToolTip>
@@ -212,4 +216,3 @@ export const
   })
 
 cards.register('form', View)
-

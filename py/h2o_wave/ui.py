@@ -2,20 +2,6 @@
 # THIS FILE IS GENERATED; DO NOT EDIT
 #
 
-# Copyright 2020 H2O.ai, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import warnings
 from .types import *
 from .ui_ext import *
@@ -743,6 +729,46 @@ def dropdown(
         trigger,
         visible,
         tooltip,
+    ))
+
+
+def ordered_select(
+        name: str,
+        choices: List[Choice],
+        label: Optional[str] = None,
+        values: Optional[List[str]] = None,
+        max_choices: Optional[int] = None,
+        multiple: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        trigger: Optional[bool] = None,
+) -> Component:
+    """Create an ordered select.
+    Ordered select is used for cases when you need to make a selection that depends on order as opposed to a regular select.
+
+    Args:
+        name: An identifying name for this component.
+        choices: The choices to be presented.
+        label: Text to be displayed above the component.
+        values: The names of the selected choices.
+        max_choices: Maximum number of selectable choices. Defaults to no limit.
+        multiple: True to allow multiple rows to be selected.
+        disabled: Controls whether the picker should be disabled or not.
+        visible: True if the component should be visible. Defaults to true.
+        trigger: True if the form should be submitted when the picker value changes.
+    Returns:
+        A `h2o_wave.types.OrderedSelect` instance.
+    """
+    return Component(ordered_select=OrderedSelect(
+        name,
+        choices,
+        label,
+        values,
+        max_choices,
+        multiple,
+        disabled,
+        visible,
+        trigger,
     ))
 
 

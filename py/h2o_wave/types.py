@@ -2,20 +2,6 @@
 # THIS FILE IS GENERATED; DO NOT EDIT
 #
 
-# Copyright 2020 H2O.ai, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 from typing import Any, Optional, Union, Dict, List
 from .core import Data
 
@@ -1556,6 +1542,97 @@ class Dropdown:
             trigger,
             visible,
             tooltip,
+        )
+
+
+class OrderedSelect:
+    """Create an ordered select.
+    Ordered select is used for cases when you need to make a selection that depends on order as opposed to a regular select.
+    """
+    def __init__(
+            self,
+            name: str,
+            choices: List[Choice],
+            label: Optional[str] = None,
+            values: Optional[List[str]] = None,
+            max_choices: Optional[int] = None,
+            multiple: Optional[bool] = None,
+            disabled: Optional[bool] = None,
+            visible: Optional[bool] = None,
+            trigger: Optional[bool] = None,
+    ):
+        self.name = name
+        """An identifying name for this component."""
+        self.choices = choices
+        """The choices to be presented."""
+        self.label = label
+        """Text to be displayed above the component."""
+        self.values = values
+        """The names of the selected choices."""
+        self.max_choices = max_choices
+        """Maximum number of selectable choices. Defaults to no limit."""
+        self.multiple = multiple
+        """True to allow multiple rows to be selected."""
+        self.disabled = disabled
+        """Controls whether the picker should be disabled or not."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
+        self.trigger = trigger
+        """True if the form should be submitted when the picker value changes."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.name is None:
+            raise ValueError('OrderedSelect.name is required.')
+        if self.choices is None:
+            raise ValueError('OrderedSelect.choices is required.')
+        return _dump(
+            name=self.name,
+            choices=[__e.dump() for __e in self.choices],
+            label=self.label,
+            values=self.values,
+            max_choices=self.max_choices,
+            multiple=self.multiple,
+            disabled=self.disabled,
+            visible=self.visible,
+            trigger=self.trigger,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'OrderedSelect':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        if __d_name is None:
+            raise ValueError('OrderedSelect.name is required.')
+        __d_choices: Any = __d.get('choices')
+        if __d_choices is None:
+            raise ValueError('OrderedSelect.choices is required.')
+        __d_label: Any = __d.get('label')
+        __d_values: Any = __d.get('values')
+        __d_max_choices: Any = __d.get('max_choices')
+        __d_multiple: Any = __d.get('multiple')
+        __d_disabled: Any = __d.get('disabled')
+        __d_visible: Any = __d.get('visible')
+        __d_trigger: Any = __d.get('trigger')
+        name: str = __d_name
+        choices: List[Choice] = [Choice.load(__e) for __e in __d_choices]
+        label: Optional[str] = __d_label
+        values: Optional[List[str]] = __d_values
+        max_choices: Optional[int] = __d_max_choices
+        multiple: Optional[bool] = __d_multiple
+        disabled: Optional[bool] = __d_disabled
+        visible: Optional[bool] = __d_visible
+        trigger: Optional[bool] = __d_trigger
+        return OrderedSelect(
+            name,
+            choices,
+            label,
+            values,
+            max_choices,
+            multiple,
+            disabled,
+            visible,
+            trigger,
         )
 
 
@@ -3995,6 +4072,7 @@ class Component:
             choice_group: Optional[ChoiceGroup] = None,
             checklist: Optional[Checklist] = None,
             dropdown: Optional[Dropdown] = None,
+            ordered_select: Optional[OrderedSelect] = None,
             combobox: Optional[Combobox] = None,
             slider: Optional[Slider] = None,
             spinbox: Optional[Spinbox] = None,
@@ -4048,6 +4126,8 @@ class Component:
         """Checklist."""
         self.dropdown = dropdown
         """Dropdown."""
+        self.ordered_select = ordered_select
+        """Ordered select."""
         self.combobox = combobox
         """Combobox."""
         self.slider = slider
@@ -4108,6 +4188,7 @@ class Component:
             choice_group=None if self.choice_group is None else self.choice_group.dump(),
             checklist=None if self.checklist is None else self.checklist.dump(),
             dropdown=None if self.dropdown is None else self.dropdown.dump(),
+            ordered_select=None if self.ordered_select is None else self.ordered_select.dump(),
             combobox=None if self.combobox is None else self.combobox.dump(),
             slider=None if self.slider is None else self.slider.dump(),
             spinbox=None if self.spinbox is None else self.spinbox.dump(),
@@ -4149,6 +4230,7 @@ class Component:
         __d_choice_group: Any = __d.get('choice_group')
         __d_checklist: Any = __d.get('checklist')
         __d_dropdown: Any = __d.get('dropdown')
+        __d_ordered_select: Any = __d.get('ordered_select')
         __d_combobox: Any = __d.get('combobox')
         __d_slider: Any = __d.get('slider')
         __d_spinbox: Any = __d.get('spinbox')
@@ -4185,6 +4267,7 @@ class Component:
         choice_group: Optional[ChoiceGroup] = None if __d_choice_group is None else ChoiceGroup.load(__d_choice_group)
         checklist: Optional[Checklist] = None if __d_checklist is None else Checklist.load(__d_checklist)
         dropdown: Optional[Dropdown] = None if __d_dropdown is None else Dropdown.load(__d_dropdown)
+        ordered_select: Optional[OrderedSelect] = None if __d_ordered_select is None else OrderedSelect.load(__d_ordered_select)
         combobox: Optional[Combobox] = None if __d_combobox is None else Combobox.load(__d_combobox)
         slider: Optional[Slider] = None if __d_slider is None else Slider.load(__d_slider)
         spinbox: Optional[Spinbox] = None if __d_spinbox is None else Spinbox.load(__d_spinbox)
@@ -4222,6 +4305,7 @@ class Component:
             choice_group,
             checklist,
             dropdown,
+            ordered_select,
             combobox,
             slider,
             spinbox,

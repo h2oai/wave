@@ -2,20 +2,6 @@
 # THIS FILE IS GENERATED; DO NOT EDIT
 #
 
-# Copyright 2020 H2O.ai, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 .to_json <- function(x) {
   # TODO: Eliminate NULL-valued entries from x first.
   jsonlite::toJSON(x, auto_unbox = TRUE)
@@ -834,6 +820,52 @@ ui_dropdown <- function(
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
+#' Create an ordered select.
+#' Ordered select is used for cases when you need to make a selection that depends on order as opposed to a regular select.
+#'
+#' @param name An identifying name for this component.
+#' @param choices The choices to be presented.
+#' @param label Text to be displayed above the component.
+#' @param values The names of the selected choices.
+#' @param max_choices Maximum number of selectable choices. Defaults to no limit.
+#' @param multiple True to allow multiple rows to be selected.
+#' @param disabled Controls whether the picker should be disabled or not.
+#' @param visible True if the component should be visible. Defaults to true.
+#' @param trigger True if the form should be submitted when the picker value changes.
+#' @return A OrderedSelect instance.
+ui_ordered_select <- function(
+  name,
+  choices,
+  label = NULL,
+  values = NULL,
+  max_choices = NULL,
+  multiple = NULL,
+  disabled = NULL,
+  visible = NULL,
+  trigger = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_scalar("label", "character", label)
+  .guard_vector("values", "character", values)
+  .guard_scalar("max_choices", "numeric", max_choices)
+  .guard_scalar("multiple", "logical", multiple)
+  .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("visible", "logical", visible)
+  .guard_scalar("trigger", "logical", trigger)
+  .o <- list(ordered_select=list(
+    name=name,
+    choices=choices,
+    label=label,
+    values=values,
+    max_choices=max_choices,
+    multiple=multiple,
+    disabled=disabled,
+    visible=visible,
+    trigger=trigger))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
