@@ -2,7 +2,7 @@ H2O Wave
 ========
 
 H2O Wave is a lightweight software stack for programming interactive web applications
-entirely in Python (no HTML/Javascript/CSS) required.
+entirely in Python (no HTML/Javascript/CSS required).
 
 It is designed to make it fast, fun and easy to build low-latency, realtime,
 collaborative, web-based applications. It ships batteries-included with
