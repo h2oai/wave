@@ -1,0 +1,12 @@
+name: Release Wave
+
+on: workflow_dispatch
+
+jobs:
+  ci-test:
+    name: CI Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run UI Unit Tests
+        run:
+          make test-ui-ci
