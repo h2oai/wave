@@ -26,7 +26,7 @@ If you’ve identified an issue, first search through the list of existing issue
 
 If you want to fix a specific issue, it’s best to comment on the individual issue with your intent. However, we do not lock or assign issues except in cases where we have worked with the developer before. It’s best to strike up a conversation on the issue and discuss your proposed solution. The H2O Wave team can provide guidance that saves you time.
 
-Issues that are labeled **good first issue**, **low** or **medium** priority are great places to start.
+Issues that are labeled **good first issue**, **low** or **medium** priority are great places to start. Only issues that have assigned a milestone or are tagged with **help needed** / **good first issue** will be merged.
 
 ## Improving documentation and tutorials
 
