@@ -7,10 +7,15 @@ module.exports = {
   favicon: 'img/favicon.ico',
   organizationName: 'h2oai', // Usually your GitHub org/user name.
   projectName: 'wave', // Usually your repo name.
+  plugins: [
+    [
+      require.resolve('docusaurus-gtm-plugin'),
+      {
+        id: 'GTM-TTFP7BH', // GTM Container ID
+      }
+    ]
+  ],
   themeConfig: {
-    //    prism: {
-    //      theme: require('prism-react-renderer/themes/nightOwlLight'),
-    //    },
     prism: {
       additionalLanguages: ['toml'],
     },
