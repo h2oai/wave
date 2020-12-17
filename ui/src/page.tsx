@@ -97,13 +97,13 @@ on(layoutsB, layouts => {
         listener = (mq: MediaQueryListEvent) => { if (mq.matches) layoutB({ layout, index }) },
         bp: Breakpoint = { layout, min, max, mq, listener }
 
-      mq.addEventListener('change', listener)
+      mq.addListener(listener)
       if (mq.matches) layoutB({ layout, index })
 
       return bp
     })
 
-  for (const { mq, listener } of breakpointsB()) mq.removeEventListener('change', listener)
+  for (const { mq, listener } of breakpointsB()) mq.removeListener(listener)
   breakpointsB(bps)
 })
 
@@ -166,6 +166,7 @@ const
         css.width = zone.size
       } else {
         css.height = zone.size
+        css.minHeight = zone.size // Needed for Safari.
       }
     } else {
       css.flexGrow = 1
