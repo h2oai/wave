@@ -75,6 +75,13 @@ export const
         qd.args[m.name] = v ?? (m.value || '')
         if (m.trigger) qd.sync()
       },
+      onKeyUp = ( event: React.KeyboardEvent<HTMLInputElement>, v?: string) => {
+        if ((event).key == "Enter" && event.target instanceof HTMLInputElement) {
+          v = v || (event.target as HTMLInputElement).value
+          qd.args[m.name] = v ?? (m.value || '')
+          qd.sync()
+        }
+      },
       render = () => m.mask
         ? (
           <Fluent.MaskedTextField
@@ -88,6 +95,7 @@ export const
             disabled={m.disabled}
             readOnly={m.readonly}
             onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
+            onKeyUp={onKeyUp}
           />
         )
         : (
@@ -108,6 +116,7 @@ export const
             multiline={m.multiline}
             type={m.password ? 'password' : undefined}
             onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
+            onKeyUp={onKeyUp}
           />
         )
 

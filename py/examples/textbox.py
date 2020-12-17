@@ -22,6 +22,11 @@ async def serve(q: Q):
             ui.text(f'textbox_multiline={q.args.textbox_multiline}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
+    elif q.args.enter_key_handler:
+        q.page['example'].items = [
+            ui.text(f'textbox_enter_key_handler={q.args.enter_key_handler}'),
+            ui.button(name='show_form', label='Back', primary=True),
+        ]
     else:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
             ui.textbox(name='textbox', label='Standard'),
@@ -36,6 +41,7 @@ async def serve(q: Q):
             ui.textbox(name='textbox_placeholder', label='With placeholder', placeholder='I need some input'),
             ui.textbox(name='textbox_disabled_placeholder', label='Disabled with placeholder', disabled=True,
                        placeholder='I am disabled'),
+            ui.textbox(name='enter_key_handler', label='Submits the textbox value on Enter key', icon='Search'),
             ui.textbox(name='textbox_multiline', label='Multiline textarea', multiline=True),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])

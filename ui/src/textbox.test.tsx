@@ -101,4 +101,35 @@ describe('Textbox.tsx', () => {
 
     expect(syncMock).not.toBeCalled()
   })
+
+  it('Calls sync on key up  - When the key is Enter key', () => {
+    const { getByTestId } = render(<XTextbox model={textboxProps} />)
+    const syncMock = jest.fn()
+
+    T.qd.sync = syncMock
+    fireEvent.keyUp(getByTestId(name), { key: 'Enter', target: { value: 'text' } })
+
+    expect(syncMock).toBeCalled()
+  })
+
+  it('Does not call sync on key up  - When the key is not Enter key', () => {
+    const { getByTestId } = render(<XTextbox model={textboxProps} />)
+    const syncMock = jest.fn()
+
+    T.qd.sync = syncMock
+    fireEvent.keyUp(getByTestId(name), { key: 'A', target: { value: 'text' } })
+
+    expect(syncMock).not.toBeCalled()
+  })
+
+  it('Does not call sync on key up  - When multiline is true', () => {
+    const { getByTestId } = render(<XTextbox model={{ ...textboxProps, multiline: true}} />)
+    const syncMock = jest.fn()
+
+    T.qd.sync = syncMock
+    fireEvent.keyUp(getByTestId(name), { key: 'Enter', target: { value: 'text' } })
+
+    expect(syncMock).not.toBeCalled()
+  })
+
 })
