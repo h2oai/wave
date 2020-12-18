@@ -3,8 +3,11 @@ node_modules
 build
 
 # Config files
-config
+config/
+scripts/
 jest.config.js
+.eslintrc.js
+src/setupProxy.js
 
 # Linter
 eslint/linter.js
