@@ -32,7 +32,7 @@ module.exports = {
         { to: 'docs/enterprise', label: 'Enterprise', position: 'left', },
         { to: 'docs/api/index', label: 'API', position: 'left' },
         { to: 'blog', label: 'Blog', position: 'left' },
-        { to: 'https://github.com/h2oai/wave/releases/latest', label: 'Download', position: 'right', },
+        { to: 'https://github.com/h2oai/wave/releases', label: 'Download', position: 'right', },
         { href: 'https://github.com/h2oai/wave', label: 'GitHub', position: 'right', },
       ],
     },
@@ -91,7 +91,7 @@ module.exports = {
             },
             {
               label: 'Download',
-              href: 'https://github.com/h2oai/wave/releases/latest',
+              href: 'https://github.com/h2oai/wave/releases',
             },
             {
               label: 'GitHub',
