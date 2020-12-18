@@ -102,7 +102,7 @@ describe('Textbox.tsx', () => {
     expect(syncMock).not.toBeCalled()
   })
 
-  it('Calls sync on key up  - When the key is Enter key', () => {
+  it('Calls sync on enter pressed', () => {
     const { getByTestId } = render(<XTextbox model={textboxProps} />)
     const syncMock = jest.fn()
 
