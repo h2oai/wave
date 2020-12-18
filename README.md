@@ -1,8 +1,8 @@
 <p align="center"><a href="https://vuejs.org" target="_blank" rel="noopener noreferrer"><img width='50%' src="assets/brand/wave-type-yellow.png" alt="Wave logo"></a></p>
 
 <p align='center'>
-  <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/h2o-wave?color=FBE52B">
-  <img alt="PyPI - License" src="https://img.shields.io/pypi/l/h2o-wave?color=yellow">
+  <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/h2o-wave?color=FBE52B">  
+  <img alt="License" src="https://img.shields.io/github/license/h2oai/wave?color=yellow">
   <img alt="Discourse topics" src="https://img.shields.io/discourse/topics?server=https%3A%2F%2Fh2owave.h2o.ai%2F">
   <img alt="PyPI" src="https://img.shields.io/pypi/v/h2o-wave?label=current-version">
   <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/h2o_wave">
