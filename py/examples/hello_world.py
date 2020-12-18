@@ -1,5 +1,5 @@
 # Hello World!
-# A simple example to get you started with Q.
+# A simple example to get you started with Wave.
 # ---
 # Import `Site` and the `ui` module from the `h2o_wave` package
 from h2o_wave import site, ui

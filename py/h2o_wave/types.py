@@ -2624,7 +2624,7 @@ class Link:
     """Create a hyperlink.
 
     Hyperlinks can be internal or external.
-    Internal hyperlinks have paths that begin with a `/` and point to URLs within the Q UI.
+    Internal hyperlinks have paths that begin with a `/` and point to URLs within the Wave UI.
     All other kinds of paths are treated as external hyperlinks.
     """
     def __init__(
