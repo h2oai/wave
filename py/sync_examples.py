@@ -74,7 +74,7 @@ def load_example(filename: str) -> Example:
 
 
 def make_toc(examples: List[Example]):
-    return f'''---
+    return '''---
 title: Contents
 slug: /examples
 ---
@@ -83,14 +83,16 @@ slug: /examples
 
 
 def make_gallery_thumbnail(e: Example):
-    return f"<a class='thumbnail' href='{e.slug}'><div style={{{{backgroundImage:'url(' + require('./assets/{e.slug}.png').default + ')'}}}}></div>{e.title}</a>"
+    return f"<a class='thumbnail' href={{useBaseUrl('docs/examples/{e.slug}')}}><div style={{{{backgroundImage:'url(' + require('./assets/{e.slug}.png').default + ')'}}}}></div>{e.title}</a>"  # noqa: E501
 
 
 def make_gallery(examples: List[Example]):
-    return f'''---
+    return '''---
 title: Gallery
 slug: /examples
 ---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
 ''' + '\n' + '\n\n'.join([make_gallery_thumbnail(e) for e in examples])
 
 
