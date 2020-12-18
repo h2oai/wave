@@ -75,9 +75,9 @@ export const
         qd.args[m.name] = v ?? (m.value || '')
         if (m.trigger) qd.sync()
       },
-      onKeyUp = ( event: React.KeyboardEvent<HTMLInputElement>, v?: string) => {
-        if ((event).key == "Enter" && event.target instanceof HTMLInputElement) {
-          v = v || (event.target as HTMLInputElement).value
+      onKeyUp = ( {key, target}: React.KeyboardEvent<HTMLInputElement>, v?: S) => {
+        if (key == 'Enter' && target instanceof HTMLInputElement) {
+          v = v || target.value
           qd.args[m.name] = v ?? (m.value || '')
           qd.sync()
         }
