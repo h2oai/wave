@@ -74,6 +74,8 @@ After cloning the repo, run:
 make all
 ```
 
+:warning: This project is best suited for Linux-based machines at the moment. If you develop on Windows machine, we suggest using [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).
+
 After successful setup, you need to run:
 
 - Wave server (Go server) with command
