@@ -450,6 +450,7 @@ def textbox(
         height: Optional[str] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        submit: Optional[bool] = None,
 ) -> Component:
     """Create a text box.
 
@@ -476,6 +477,7 @@ def textbox(
         height: The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
         visible: True if the component should be visible. Defaults to true.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        submit: True if the form should be submitted when enter key pressed.
     Returns:
         A `h2o_wave.types.Textbox` instance.
     """
@@ -498,6 +500,7 @@ def textbox(
         height,
         visible,
         tooltip,
+        submit,
     ))
 
 

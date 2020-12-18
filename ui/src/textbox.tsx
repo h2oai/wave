@@ -62,6 +62,8 @@ export interface Textbox {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** True if the form should be submitted when enter key is pressed. */
+  submit?: B
 }
 
 const DEBOUNCE_TIMEOUT = 500
@@ -95,7 +97,7 @@ export const
             disabled={m.disabled}
             readOnly={m.readonly}
             onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
-            onKeyUp={onKeyUp}
+            onKeyUp={m.submit ? onKeyUp : undefined}
           />
         )
         : (
@@ -116,7 +118,7 @@ export const
             multiline={m.multiline}
             type={m.password ? 'password' : undefined}
             onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
-            onKeyUp={onKeyUp}
+            onKeyUp={m.submit ? onKeyUp : undefined}
           />
         )
 

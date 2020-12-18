@@ -946,6 +946,7 @@ class Textbox:
             height: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            submit: Optional[bool] = None,
     ):
         self.name = name
         """An identifying name for this component."""
@@ -983,6 +984,8 @@ class Textbox:
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.submit = submit
+        """True if the form should be submitted when enter key pressed."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -1007,6 +1010,7 @@ class Textbox:
             height=self.height,
             visible=self.visible,
             tooltip=self.tooltip,
+            submit=self.submit,
         )
 
     @staticmethod
@@ -1032,6 +1036,7 @@ class Textbox:
         __d_height: Any = __d.get('height')
         __d_visible: Any = __d.get('visible')
         __d_tooltip: Any = __d.get('tooltip')
+        __d_submit: Any = __d.get('submit')
         name: str = __d_name
         label: Optional[str] = __d_label
         placeholder: Optional[str] = __d_placeholder
@@ -1050,6 +1055,7 @@ class Textbox:
         height: Optional[str] = __d_height
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
+        submit: Optional[bool] = __d_submit
         return Textbox(
             name,
             label,
@@ -1069,6 +1075,7 @@ class Textbox:
             height,
             visible,
             tooltip,
+            submit,
         )
 
 
