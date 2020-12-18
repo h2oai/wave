@@ -1,19 +1,21 @@
-<p align="center"><a href="https://vuejs.org" target="_blank" rel="noopener noreferrer"><img width='50%' src="assets/brand/wave-type-yellow.png" alt="Wave logo"></a></p>
+## H2O Wave
 
-<p align='center'>
-  <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/h2o-wave?color=FBE52B">  
+<img width='50%' src="assets/brand/wave-type-yellow.png" alt="Wave logo">
+
+<p>
+  <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/h2o-wave?color=FBE52B">
   <img alt="License" src="https://img.shields.io/github/license/h2oai/wave?color=yellow">
   <img alt="Discourse topics" src="https://img.shields.io/discourse/topics?server=https%3A%2F%2Fh2owave.h2o.ai%2F">
   <img alt="PyPI" src="https://img.shields.io/pypi/v/h2o-wave?label=current-version">
   <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/h2o_wave">
 </p>
-<p align='center'>
+<p>
   <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/h2o-wave?color=3677AF">
   <img alt="Go version" src="https://img.shields.io/static/v1?label=golang&message=1.13.10&color=70C8D6">
   <img alt="Node version" src="https://img.shields.io/static/v1?label=nodejs&message=14.4.0&color=73AB63">
 </p>
-<h1 align='center'>H2O Wave</h1>
-<h2 align='center'>Realtime Web Apps and Dashboards for Python</h2>
+
+### Realtime Web Apps and Dashboards for Python
 
 H2O Wave is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python without using HTML, Javascript, or CSS.
 
@@ -36,7 +38,7 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 
 ---
 
-## Themes
+### Themes
 
 (Coming soon!)
 
@@ -44,7 +46,7 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 ![Dark Theme](assets/visuals/theme-dark.png)
 ![Neon Theme](assets/visuals/theme-neon.png)
 
-## 80+ components, 175+ examples
+### 80+ components, 175+ examples
 
 More at https://h2oai.github.io/wave/docs/examples
 

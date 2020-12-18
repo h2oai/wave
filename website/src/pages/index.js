@@ -79,10 +79,22 @@ function Home() {
   return (
     <Layout
       title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      description="Realtime Web Apps and Dashboards for Python">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <h1 className="hero__title">Make AI Apps</h1>
+          <div style={{ margin: '1em 0' }}>
+            <Link to={useBaseUrl('docs/getting-started')}>
+              <img
+                src='img/hero.png'
+                alt='Screenshot'
+                style={{
+                  width: '100%',
+                  maxWidth: 800,
+                  boxShadow: '0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22)',
+                }} />
+            </Link>
+          </div>
           <p className="hero__subtitle">{siteConfig.tagline}</p>
           <div className={styles.buttons}>
             <Link
