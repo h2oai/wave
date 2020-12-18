@@ -80,7 +80,7 @@ After successful setup, you need to run:
 make run
 ```
 
-:warning: This project is best suited for Linux-based machines at the moment. If you develop on Windows machine, we suggest using [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).
+:warning: This project is best developed on OSX or Linux at the moment. If you develop on Windows, we suggest using [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).
 
 - Wave app (this will run `tour.py`, but can be any app)
 
