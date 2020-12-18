@@ -72,6 +72,7 @@ def load_example(filename: str) -> Example:
     title, description = strip_comment(header[0]), [strip_comment(x) for x in header[1:]]
     return Example(filename, title, '\n'.join(description), code)
 
+
 def make_toc(examples: List[Example]):
     return f'''---
 title: Contents
@@ -80,8 +81,10 @@ slug: /examples
 
 ''' + '\n'.join([f'- [{e.title}](examples/{e.slug}): {e.subtitle}' for e in examples])
 
+
 def make_gallery_thumbnail(e: Example):
-    return f"<a class='thumbnail' href='examples/{e.slug}'><div style={{{{backgroundImage:'url(' + require('./assets/{e.slug}.png').default + ')'}}}}></div>{e.title}</a>"
+    return f"<a class='thumbnail' href='{e.slug}'><div style={{{{backgroundImage:'url(' + require('./assets/{e.slug}.png').default + ')'}}}}></div>{e.title}</a>"
+
 
 def make_gallery(examples: List[Example]):
     return f'''---
@@ -89,6 +92,7 @@ title: Gallery
 slug: /examples
 ---
 ''' + '\n' + '\n\n'.join([make_gallery_thumbnail(e) for e in examples])
+
 
 def main():
     filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
