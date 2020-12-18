@@ -93,7 +93,7 @@ interface State {
   layouts?: Layout[]
   /** Display a dialog on the page. */
   dialog?: Dialog
-  /** Specify the name of the theme (color scheme) to use on this page. One of 'light', 'dark' or 'neon'. */
+  /** Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'. */
   theme?: S
 }
 
