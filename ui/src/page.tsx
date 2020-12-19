@@ -76,6 +76,7 @@ const
       return badSlot
     }
   },
+  // eslint-disable-next-line @typescript-eslint/ban-types
   segregate = <T extends {}>(xs: T[], f: (x: T) => B): [T[], T[]] => {
     const a: T[] = [], b: T[] = []
     for (const x of xs) (f(x) ? a : b).push(x)

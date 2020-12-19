@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/* eslint-disable @typescript-eslint/ban-types */
 import * as React from 'react'
 import { Dialog } from './dialog'
 
@@ -91,7 +92,7 @@ export function to<A, B, C>(a: Box<A>, b: Box<B>, c: Box<C>, f: Eff3<A, B, C>): 
 export function to<A, B, C, D>(a: Box<A>, b: Box<B>, c: Box<C>, d: Box<D>, f: Eff4<A, B, C, D>): Disposable;
 export function to(...args: any[]): Disposable { return react(true, args.slice(0, args.length - 1), args[args.length - 1]) }
 
-// tslint:disable-next-line:ban-types
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function react(immediate: boolean, boxen: Box<any>[], f: Function): Disposable {
   const
     xs = boxen as Boxed<any>[],
@@ -111,6 +112,7 @@ export function by(...args: any[]): any {
   const
     m = args.length - 1,
     xs = args.slice(0, m) as Boxed<any>[],
+    // eslint-disable-next-line @typescript-eslint/ban-types
     f = args[m] as Function,
     yB = box(f(...xs.map(x => x())))
 

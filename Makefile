@@ -6,14 +6,16 @@ LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
 
 all: clean setup build ## Setup and build everything
 
-setup: ## Set up development dependencies
-	$(MAKE) setup-lint
+setup: setup-git-hooks ## Set up development dependencies
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
 	cd tools/wavegen && $(MAKE) setup build
 
-setup-lint: ## Setup linters
-	npm ci
+setup-git-hooks: ## Setup GIT hooks
+	cp githooks/pre-commit.js .git/hooks/pre-commit
+	cp githooks/commit-msg.js .git/hooks/commit-msg
+	chmod +x .git/hooks/pre-commit
+	chmod +x .git/hooks/commit-msg
 
 clean: ## Clean
 	rm -rf build

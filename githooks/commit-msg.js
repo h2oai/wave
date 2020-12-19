@@ -1,39 +1,19 @@
 #!/usr/bin/env node
 
-// Hook for appending github issue number to commit.
-const fs = require('fs');
-const childProcessExec = require('child_process').exec;
-const util = require('util');
-const TIMEOUT_THRESHOLD = 3000;
-const exec = util.promisify(childProcessExec);
+// Hook for appending github issue number to commit and linting the commit msg via commitlint.
+const
+  fs = require('fs'),
+  { execSync } = require('child_process'),
+  message = fs.readFileSync(process.argv[2], 'utf8').trim(),
+  splitBranchName = execSync('git branch').toString().split('\n').find(b => b.trim().charAt(0) === '*').trim().substring(2).split('-'),
+  lastIndex = splitBranchName.length - 1
 
-checkCommitMessage();
-hookCleanup();
+// Append issue number if branch name ends with -#ISSUE_NUMBER.
+if (!isNaN(+splitBranchName[lastIndex])) fs.writeFileSync(process.argv[2], `${message} #${splitBranchName[lastIndex]}`)
 
-async function checkCommitMessage() {
-  const message = fs.readFileSync(process.argv[2], 'utf8').trim();
-  try {
-    branchName = await getCurrentBranch();
-    const splitBranchName = branchName.split('-')
-    if (splitBranchName.length === 2 && !isNaN(+splitBranchName[1])) {
-      fs.writeFileSync(process.argv[2], `${message} #${splitBranchName[1]}`)
-    }
-  }
-  catch (e) {
-    console.error(e)
-    process.exit(1);
-  }
-  process.exit(0);
-}
-
-async function getCurrentBranch() {
-  const branchesOutput = await exec('git branch');
-  if (branchesOutput.stderr) throw new Error(stderr);
-  return branchesOutput.stdout.split('\n').find(b => b.trim().charAt(0) === '*').trim().substring(2);
-}
-
-function hookCleanup() {
-  setTimeout(() => {
-    process.exit(1);
-  }, TIMEOUT_THRESHOLD);
+// Lint commit msg.
+try {
+  execSync(`node ui/node_modules/@commitlint/cli/cli.js --config ui/.commitlintrc.js -e`, { stdio: 'inherit' })
+} catch (error) {
+  process.exit(1)
 }

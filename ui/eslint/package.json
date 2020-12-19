@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-q",
+  "name": "eslint-plugin-wave",
   "version": "1.0.0",
   "main": "linter.js"
 }
