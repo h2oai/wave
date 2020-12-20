@@ -7,8 +7,8 @@ jobs:
     name: CI Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Build
       - uses: actions/checkout@v2
+      - name: Build
       - run: make
       - name: Unit Test
       - run: make test-ui-ci
