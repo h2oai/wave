@@ -8,6 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build
-        run: make
-      - name: Unit Test
-        run: make test-ui-ci
+        run: echo Test
