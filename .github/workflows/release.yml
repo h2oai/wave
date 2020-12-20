@@ -9,8 +9,6 @@ jobs:
     steps:
       - name: Build
       - uses: actions/checkout@v2
-      - run:
-          make
+      - run: make
       - name: Unit Test
-      - run:
-        make test-ui-ci
+      - run: make test-ui-ci
