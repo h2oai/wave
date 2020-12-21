@@ -57,7 +57,7 @@ const features = [
     icon: 'fas fa-terminal',
     description: (
       <>
-        ~10MB static executables for Linux, Windows, OSX, BSD, Solaris on AMD64, 386, ARM, PPC. Run it on a RPi Zero for great good!
+        ~10MB static executables for Linux, Windows, OSX, BSD, Solaris on AMD64, 386, ARM, PPC. Run it on a Raspberry Pi (RPi) Zero for greater good!
       </>
     ),
   }
