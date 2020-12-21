@@ -16,10 +16,10 @@ These tutorials assume that you have some familiarity with the Python programmin
 
 ## Step 2: Set up a working directory
 
-Next, let's set up a working directory to author our program. 
+Next, let's set up a working directory to author our program.
 
 ### Create a directory
-```shell 
+```shell
 mkdir $HOME/wave-apps
 cd $HOME/wave-apps
 ```
@@ -27,19 +27,19 @@ cd $HOME/wave-apps
 ### Set up a virtual environment
 A [virtual environment](https://docs.python.org/3/tutorial/venv.html) helps us manage our program's dependencies without interfering with system-wide packages.
 
-```shell 
+```shell
 python3 -m venv venv
 ```
 
 ### Install the Wave Python driver
 
-```shell 
+```shell
 ./venv/bin/pip install h2o-wave
 ```
 
 ## Step 3: Write your program
 
-Next, open your preferred text editor, create a Python script called `hello_world.py` in the `$HOME/wave-apps` directory, and copy-paste the following. 
+Next, open your preferred text editor, create a Python script called `hello_world.py` in the `$HOME/wave-apps` directory, and copy-paste the following.
 
 For now, don't worry too much about what this program is doing. We'll get to that shortly.
 
@@ -63,14 +63,14 @@ page.save()
 
 ## Step 4: Run your program
 
-```shell 
+```shell
 cd $HOME/wave-apps
 ./venv/bin/python hello_world.py
 ```
 
 ## Step 5: Admire your creation
 
-Point your browser to [http://localhost:10101/hello](http://localhost:10101/hello), and pause to reflect on a particularly pithy quote from the venerable Homer Simpson. 
+Point your browser to [http://localhost:10101/hello](http://localhost:10101/hello), and pause to reflect on a particularly pithy quote from the venerable Homer Simpson.
 
 ![Hello World 1](assets/tutorial-hello__1.png)
 
@@ -79,9 +79,9 @@ Point your browser to [http://localhost:10101/hello](http://localhost:10101/hell
 Let's walk through this program step by step.
 
 This program (technically a [script](scripts.md)), illustrates the core of Wave's programming model, or, "How to think in Wave."
- 
+
 1. Your Wave server instance holds a collection of pages.
-2. To change a page, simply grab a reference to a page, change it, and save it. 
+2. To change a page, simply grab a reference to a page, change it, and save it.
 
 That's it. Your changes are now visible to everyone.
 
@@ -89,7 +89,7 @@ Let's understand this principle in practice using the little program we just cre
 
 ### Grab a reference to a page
 
-A `site` represents a dictionary of all the pages on the Wave server. To get a reference to a page hosted at the route `/hello` (which translates to `http://localhost:10101/hello`), simply grab the value at key `/hello`. 
+A `site` represents a dictionary of all the pages on the Wave server. To get a reference to a page hosted at the route `/hello` (which translates to `http://localhost:10101/hello`), simply grab the value at key `/hello`.
 
 ```py
 page = site['/hello']
@@ -107,7 +107,7 @@ page['quote'] = ui.markdown_card(
 )
 ```
 
-Pages support different kinds of cards. In this case, we add a card named `hello` that displays markdown content (`markdown_card()`). The position and size of the card on the page is specified by the `box` attribute. In this case, the card is placed at column `1`, row `1`, sized `2 x 2` units. The `content` attribute supports [Github Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Pages support different kinds of cards. In this case, we add a card named `quote` that displays markdown content (`markdown_card()`). The position and size of the card on the page is specified by the `box` attribute. In this case, the card is placed at column `1`, row `1`, sized `2 x 2` units. The `content` attribute supports [Github Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
 ### Save the page
 
@@ -120,13 +120,13 @@ page.save()
 
 So far, so good.
 
-## Step 7: Edit your page from a REPL 
+## Step 7: Edit your page from a REPL
 
 Finally, just for kicks, let's make some changes to our hello world page using a Python REPL and watch our page reflect those changes in realtime.
 
 ### Start a Python REPL
 
-```shell 
+```shell
 cd $HOME/wave-apps
 ./venv/bin/python
 ```
@@ -169,6 +169,6 @@ quit()
 
 ## Summary
 
-What we just did - add content from one program and make edits to it from another - illustrates another important aspect of Wave's programming model: *The Wave server retains content*. Your `hello_world.py` program did its thing and exited. So did your REPL. But your content was retained for the viewing pleasure of future visitors to `/hello`.  
+What we just did - add content from one program and make edits to it from another - illustrates another important aspect of Wave's programming model: *The Wave server retains content*. Your `hello_world.py` program did its thing and exited. So did your REPL. But your content was retained for the viewing pleasure of future visitors to `/hello`.
 
 Next, we'll take the principles we learned from this tutorial and apply it towards a supposedly spirited folk song involving arithmetic progressions.
