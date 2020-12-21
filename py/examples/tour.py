@@ -1,7 +1,7 @@
-import asyncio
 import collections
 import os
 import os.path
+import subprocess
 import sys
 from typing import List, Optional, Dict
 
@@ -29,24 +29,45 @@ class Example:
         self.code = highlight(source, py_lexer, html_formatter)
         self.previous_example: Optional[Example] = None
         self.next_example: Optional[Example] = None
-        self.process: Optional[asyncio.subprocess.Process] = None
+        self.process: Optional[subprocess.Popen] = None
         self.is_app = source.find('@app(') > 0
 
     async def start(self):
         if self.is_app:
-            self.process = await asyncio.create_subprocess_exec(
-                sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main', env=dict(
-                    H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}'
-                ),
-            )
+            self.process = subprocess.Popen(
+                [sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main'],
+                env=self.adjust_env_for_platform(dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}')))
         else:
-            self.process = await asyncio.create_subprocess_exec(
-                sys.executable, os.path.join(example_dir, self.filename)
-            )
+            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)])
 
     async def stop(self):
         if self.process and self.process.returncode is None:
             self.process.terminate()
+            self.process.wait()
+
+    def adjust_env_for_platform(self, env):
+        """ Add required platform-specific adjustments to env.
+        """
+        if sys.platform.startswith('win'):
+            self._add_systemroot_to_env_win32(env)
+
+    def _add_systemroot_to_env_win32(self, env):
+        """ Sets ``%SYSTEMROOT%`` environment variable, if not present in :py:attr:`target_environ` .
+
+        Args:
+            env (dict): desired environment variables
+        """
+        # 'SYSTEMROOT' unnecessary unless 'PATH' is set.
+        if env is None:
+            return
+        # leave SYSTEMROOT alone if set by user
+        if 'SYSTEMROOT' in env:
+            return
+        # not enough info to set SYSTEMROOT
+        if 'SYSTEMROOT' not in os.environ:
+            return
+
+        env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
 
 
 active_example: Optional[Example] = None
