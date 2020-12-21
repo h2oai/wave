@@ -118,6 +118,7 @@ export const
             multiSelect={isMultivalued || undefined}
             defaultSelectedKey={!isMultivalued ? m.value : undefined}
             selectedKeys={isMultivalued ? selectedOptionsB() : undefined}
+            calloutProps={{ directionalHint: Fluent.DirectionalHint.bottomLeftEdge, directionalHintFixed: true }}
             onChange={onChange}
           />
           {
