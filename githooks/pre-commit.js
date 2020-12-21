@@ -37,7 +37,7 @@ const
 
 if (files.uiTs.length) {
   runLinter('eslint', 'ui/node_modules/eslint/bin/eslint.js --resolve-plugins-relative-to ui -c ui/.eslintrc.js', files.uiTs)
-  runRelatedTests('ui/node_modules/jest/bin/jest.js --config ui/jest.config.js --bail --findRelatedTests', files.uiTs)
+  runRelatedTests('ui/node_modules/jest/bin/jest.js --config ui/jest.config.js --findRelatedTests --bail', files.uiTs)
 }
 if (files.wavegenTs.length) {
   runLinter('eslint', 'tools/wavegen/node_modules/eslint/bin/eslint.js --resolve-plugins-relative-to tools/wavegen -c tools/wavegen/.eslintrc.js', files.wavegenTs)
