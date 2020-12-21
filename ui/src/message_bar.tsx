@@ -40,6 +40,7 @@ const
   css = stylesheet({
     messageBar: {
       $nest: {
+        // Adjust spacing to align with Fluent Messagebar icon.
         '.wave-markdown > *:first-child': { marginTop: 0 },
         '.wave-markdown > *:only-child': { marginBottom: 0 },
       }
