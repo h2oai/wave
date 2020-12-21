@@ -16,7 +16,6 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XDropdown, Dropdown } from './dropdown'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'dropdown-test'
 const defaultProps: Dropdown = {
@@ -30,8 +29,6 @@ const defaultProps: Dropdown = {
   ]
 }
 describe('Dropdown.tsx', () => {
-
-  beforeAll(() => initializeIcons())
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XDropdown model={defaultProps} />)
