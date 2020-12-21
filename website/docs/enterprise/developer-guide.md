@@ -100,7 +100,7 @@ string
       (default to service-wide settings managed by Admins); be conservative with these limits;
       `MemoryLimit` is a hard limit on the maximum amount of memory an instance can use before it is OOM-killed;
       `MemoryReservation` is how much memory is required to schedule an instance of the app.
-  * `EnableOIDC` - Enable wave to be setup with OIDC authorization giving access to the user's authentication and authorization information from your app
+  * `EnableOIDC` - Enable wave to be setup with OIDC authorization giving access to the user's authentication and authorization information from your app (see [Security](security.md/#single-sign-on) for details).
 * `Env` - request for a literal value/secret to be injected into an instance at startup-time as an Env variable;
   repeated; see [Utilizing Secrets](#utilizing-secrets).
   * `Name` - name of the Env variable to the injected into the Python process;
