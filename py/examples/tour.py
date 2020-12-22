@@ -35,7 +35,7 @@ class Example:
     async def start(self):
         # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
         # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
-        env = dict({'SYSTEMROOT': os.environ['SYSTEMROOT']}) if sys.platform.lower().startswith('win') else {}
+        env = {'SYSTEMROOT': os.environ['SYSTEMROOT']} if sys.platform.lower().startswith('win') else {}
         if self.is_app:
             self.process = subprocess.Popen(
                 [sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main'],
