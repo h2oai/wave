@@ -46,7 +46,7 @@ async def serve(q: Q):
             ui.button(name='#tails', label='Tails'),
         ],
     )
-    q.page.save()
+    await q.page.save()
 ```
 
 Names don't have to be alphanumeric, so you can use names with nested sub-paths like `#foo/bar`, `#foo/bar/baz`, `#foo/bar/baz/qux` to make route-handling more manageable.
