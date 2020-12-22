@@ -37,14 +37,13 @@ from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 from starlette.background import BackgroundTask
 
-from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite
+from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite, _get_env
 from .ui import markdown_card
 
 logger = logging.getLogger(__name__)
 
 
 def _noop(): pass
-
 
 def _session_for(sessions: dict, session_id: str):
     session = sessions.get(session_id, None)
@@ -240,8 +239,9 @@ class _App:
         )
 
     async def _register(self):
-        logger.debug(f'Registering app at {_config.app_address} ...')
-        await self._wave.call('register_app', mode=self._mode, route=self._route, address=_config.app_address)
+        app_address = _get_env('APP_ADDRESS', _config.app_address)
+        logger.debug(f'Registering app at {app_address} ...')
+        await self._wave.call('register_app', mode=self._mode, route=self._route, address=app_address)
         logger.debug('Register: success!')
 
     async def _unregister(self):
