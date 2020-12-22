@@ -1,7 +1,7 @@
-import asyncio
 import collections
 import os
 import os.path
+import subprocess
 import sys
 from typing import List, Optional, Dict
 
@@ -29,24 +29,24 @@ class Example:
         self.code = highlight(source, py_lexer, html_formatter)
         self.previous_example: Optional[Example] = None
         self.next_example: Optional[Example] = None
-        self.process: Optional[asyncio.subprocess.Process] = None
+        self.process: Optional[subprocess.Popen] = None
         self.is_app = source.find('@app(') > 0
 
     async def start(self):
+        # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
+        # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
+        env = {'SYSTEMROOT': os.environ['SYSTEMROOT']} if sys.platform.lower().startswith('win') else {}
         if self.is_app:
-            self.process = await asyncio.create_subprocess_exec(
-                sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main', env=dict(
-                    H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}'
-                ),
-            )
+            self.process = subprocess.Popen(
+                [sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main'],
+                env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
         else:
-            self.process = await asyncio.create_subprocess_exec(
-                sys.executable, os.path.join(example_dir, self.filename)
-            )
+            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
 
     async def stop(self):
         if self.process and self.process.returncode is None:
             self.process.terminate()
+            self.process.wait()
 
 
 active_example: Optional[Example] = None
