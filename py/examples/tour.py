@@ -33,16 +33,15 @@ class Example:
         self.is_app = source.find('@app(') > 0
 
     async def start(self):
+        # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
+        # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
+        env = dict({'SYSTEMROOT': os.environ['SYSTEMROOT']}) if sys.platform.lower().startswith('win') else {}
         if self.is_app:
-            # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
-            # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
             self.process = subprocess.Popen(
                 [sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main'],
-                **dict(env={'H2O_WAVE_EXTERNAL_ADDRESS': f'http://{_app_host}:{_app_port}', **(
-                    {'SYSTEMROOT': os.environ['SYSTEMROOT']} if sys.platform.lower().startswith('win') else {})}))
+                env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
         else:
-            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], **dict(
-                env={'SYSTEMROOT': os.environ['SYSTEMROOT']}) if sys.platform.lower().startswith('win') else {})
+            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
 
     async def stop(self):
         if self.process and self.process.returncode is None:
