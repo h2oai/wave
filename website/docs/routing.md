@@ -101,5 +101,5 @@ async def serve(q: Q):
             ],
         )
 
-    q.page.save()
+    await q.page.save()
 ```
