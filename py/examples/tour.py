@@ -34,40 +34,20 @@ class Example:
 
     async def start(self):
         if self.is_app:
+            # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
+            # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
             self.process = subprocess.Popen(
                 [sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main'],
-                env=self.adjust_env_for_platform(dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}')))
+                **dict(env={'H2O_WAVE_EXTERNAL_ADDRESS': f'http://{_app_host}:{_app_port}', **(
+                    {'SYSTEMROOT': os.environ['SYSTEMROOT']} if sys.platform.lower().startswith('win') else {})}))
         else:
-            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)])
+            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], **dict(
+                env={'SYSTEMROOT': os.environ['SYSTEMROOT']}) if sys.platform.lower().startswith('win') else {})
 
     async def stop(self):
         if self.process and self.process.returncode is None:
             self.process.terminate()
             self.process.wait()
-
-    def adjust_env_for_platform(self, env):
-        """ Add required platform-specific adjustments to env.
-        """
-        if sys.platform.startswith('win'):
-            self._add_systemroot_to_env_win32(env)
-
-    def _add_systemroot_to_env_win32(self, env):
-        """ Sets ``%SYSTEMROOT%`` environment variable, if not present in :py:attr:`target_environ` .
-
-        Args:
-            env (dict): desired environment variables
-        """
-        # 'SYSTEMROOT' unnecessary unless 'PATH' is set.
-        if env is None:
-            return
-        # leave SYSTEMROOT alone if set by user
-        if 'SYSTEMROOT' in env:
-            return
-        # not enough info to set SYSTEMROOT
-        if 'SYSTEMROOT' not in os.environ:
-            return
-
-        env['SYSTEMROOT'] = os.environ['SYSTEMROOT']
 
 
 active_example: Optional[Example] = None
