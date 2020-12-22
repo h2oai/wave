@@ -25,6 +25,8 @@ export interface NavItem {
   label: S
   /** An optional icon to display next to the label. */
   icon?: S
+  /** True if the nav_item should be disabled. */
+  disabled?: B
 }
 
 /** Create a group of navigation items. */
@@ -50,10 +52,11 @@ export const
     const groups = items.map((g): INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
-      links: g.items.map(({ name, label, icon }): INavLink => ({
+      links: g.items.map(({ name, label, icon, disabled }): INavLink => ({
         key: name,
         name: label,
         icon,
+        disabled,
         url: '',
         onClick: () => {
           if (name.startsWith('#')) {

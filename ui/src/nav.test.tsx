@@ -58,6 +58,19 @@ describe('Nav.tsx', () => {
     expect(getByTitle(label).parentElement).toHaveClass('is-selected')
   })
 
+  it('Makes link inactive when disabled is true', () => {
+    const props: T.Card<State> = {
+      ...navProps,
+      state: {
+        items: [
+          { label: 'group1', items: [{ name, label, disabled: true }] }
+        ]
+      },
+    }
+    const { getByTitle } = render(<View {...props} />)
+    expect(getByTitle(label).parentElement).toHaveClass('is-disabled')
+  })
+
   it('Sets args and calls sync on click', () => {
     const syncMock = jest.fn()
     T.qd.sync = syncMock
