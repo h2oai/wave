@@ -25,7 +25,7 @@ export interface NavItem {
   label: S
   /** An optional icon to display next to the label. */
   icon?: S
-  /** True if the nav_item should be disabled. */
+  /** True if this item should be disabled. */
   disabled?: B
 }
 
