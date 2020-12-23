@@ -18,18 +18,18 @@ class Issue:
 
 # Create some issues
 issues = [
-    Issue('Allow clickable links in table rows', status='Open'),
-    Issue('Document Expected OIDC URLs', status='Open'),
-    Issue('Examples dashboard doesnt work', status='Open'),
-    Issue('Provide a way to refresh OIDC tokens', status='Open'),
-    Issue('Add application showcase inside docs', status='Open'),
-    Issue('Get Wave Library through Conda', status='Open'),
-    Issue('Set up CI using Github actions', status='Open'),
-    Issue('Tour not working on Windows 10', status='Open'),
-    Issue('Change default wave server port', status='Open'),
-    Issue('Python SDK Lifecycle hooks', status='Open'),
-    Issue('Manage OIDC tokens', status='Open'),
-    Issue('Advanced table data download', status='Open'),
+    Issue('Update release notes', status='Open'),
+    Issue('Generate software license', status='Open'),
+    Issue('Update product documentation', status='Open'),
+    Issue('Introduce new tutorials', status='Open'),
+    Issue('Rewrite the error handling guide', status='Open'),
+    Issue('Navigation links are not working', status='Open'),
+    Issue('Set up CICD pipeline', status='Open'),
+    Issue('Improve unit tests coverage', status='Open'),
+    Issue('Update dependencies', status='Open'),
+    Issue('Run the automated test suite', status='Open'),
+    Issue('Monitor server utilization', status='Open'),
+    Issue('Run deployment on a staging server', status='Open'),
 ]
 
 # Build a lookup of issues for convenience
