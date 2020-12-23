@@ -75,7 +75,7 @@ def load_example(filename: str) -> Example:
 
 def make_toc(examples: List[Example]):
     return '''---
-title: Contents
+title: Table of Content
 slug: /examples
 ---
 
@@ -89,7 +89,7 @@ def make_gallery_thumbnail(e: Example):
 def make_gallery(examples: List[Example]):
     return '''---
 title: Gallery
-slug: /examples
+slug: /examples/gallery
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -112,9 +112,10 @@ def main():
 
     example_items = [dict(slug=e.slug) for e in examples]
     example_items.insert(0, dict(slug='index'))
+    example_items.insert(1, dict(slug='gallery'))
     write_file(os.path.join(website_dir, 'examples.js'), f'module.exports={json.dumps(example_items)}')
-    # write_file(os.path.join(example_md_dir, 'index.md'), make_toc(examples))
-    write_file(os.path.join(example_md_dir, 'index.md'), make_gallery(examples))
+    write_file(os.path.join(example_md_dir, 'index.md'), make_toc(examples))
+    write_file(os.path.join(example_md_dir, 'gallery.md'), make_gallery(examples))
 
 
 if __name__ == '__main__':
