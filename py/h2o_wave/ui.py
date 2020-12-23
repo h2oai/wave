@@ -1942,6 +1942,7 @@ def nav_item(
         name: str,
         label: str,
         icon: Optional[str] = None,
+        disabled: Optional[bool] = None,
 ) -> NavItem:
     """Create a navigation item.
 
@@ -1949,6 +1950,7 @@ def nav_item(
         name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
         label: The label to display.
         icon: An optional icon to display next to the label.
+        disabled: True if the nav_item should be disabled.
     Returns:
         A `h2o_wave.types.NavItem` instance.
     """
@@ -1956,6 +1958,7 @@ def nav_item(
         name,
         label,
         icon,
+        disabled,
     )
 
 
