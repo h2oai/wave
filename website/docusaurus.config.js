@@ -26,7 +26,7 @@ module.exports = {
         src: 'img/logo.svg',
       },
       items: [
-        { to: 'docs/examples', label: 'Examples', position: 'left' },
+        { to: 'docs/examples', label: 'Gallery', position: 'left' },
         { to: 'docs/getting-started', label: 'Get Started', position: 'left', },
         { to: 'docs/guide', label: 'Guide', position: 'left', },
         { to: 'docs/enterprise', label: 'Enterprise', position: 'left', },
