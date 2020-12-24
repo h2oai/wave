@@ -79,7 +79,9 @@ title: All Examples
 slug: /examples/all
 ---
 
-''' + '\n'.join([f'- [{e.title}]({e.slug}): {e.subtitle}' for e in examples])
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+''' + '\n\n'.join([f"- <a href={{useBaseUrl('docs/examples/{e.slug}')}}>{e.title}</a>: {e.subtitle}" for e in examples])
 
 
 def make_gallery_thumbnail(e: Example):
