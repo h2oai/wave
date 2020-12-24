@@ -75,7 +75,7 @@ def load_example(filename: str) -> Example:
 
 def make_toc(examples: List[Example]):
     return '''---
-title: Table of Content
+title: All Examples
 slug: /examples
 ---
 
