@@ -3,7 +3,7 @@
 # [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash)
 #
 # The location hash can be accessed using `q.args['#']`.
-#
+# routing, toolbar
 # ---
 from h2o_wave import main, app, Q, ui
 
