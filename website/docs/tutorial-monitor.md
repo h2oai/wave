@@ -2,6 +2,8 @@
 title: "Tutorial: System Monitor"
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 In this tutorial, we'll put our learnings from the [first](tutorial-hello.md) and [second](tutorial-beer.md) tutorials to some real-world use: a simple system monitoring tool that displays CPU, memory and network stats on a web page. 
 
 ![CPU](assets/tutorial-monitor__cpu_mem.png)
@@ -82,7 +84,7 @@ Let's explore these topics one by one.
 
 ### Using a stats card
 
-The Wave SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see [Gallery](examples) for more). 
+The Wave SDK ships with a variety of *stats cards*, which are cards that display values or graphics, or a combination of both (see <a href={useBaseUrl('docs/examples')}>Gallery</a> for more). 
 
 In this case, we use `small_series_stats_card()`, which displays a value and a time series visualization.
 
@@ -195,7 +197,7 @@ Point your browser to [http://localhost:10101/monitor](http://localhost:10101/mo
 
 ## Exercise
 
-Explore other kinds of cards in the [Gallery](examples) and display additional stats gleaned from `psutil` (network, disk, processes, etc.).
+Explore other kinds of cards in the <a href={useBaseUrl('docs/examples')}>Gallery</a> and display additional stats gleaned from `psutil` (network, disk, processes, etc.).
 
 ## Summary
 
