@@ -2,16 +2,14 @@
 # Enable filtering values for specific columns.
 # ---
 import random
-from faker import Faker
-from h2o_wave import main, app, Q, ui
-
-fake = Faker()
+from datetime import datetime, timedelta
+from h2o_wave import  main, app, Q, ui
 
 _id = 0
 
 
 class Issue:
-    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str):
+    def __init__(self, text: str, status: str, progress: float, icon: str, notifications: str, created: str):
         global _id
         _id += 1
         self.id = f'I{_id}'
@@ -21,16 +19,54 @@ class Issue:
         self.progress = progress
         self.icon = icon
         self.notifications = notifications
+        self.created = created
+
+
+issue_descriptions = [
+    'Update release notes',
+    'Generate software license',
+    'Update product documentation',
+    'Introduce new tutorials',
+    'Rewrite the error handling guide',
+    'Navigation links are not working',
+    'Set up CICD pipeline',
+    'Improve unit tests coverage',
+    'Update dependencies',
+    'Run the automated test suite',
+    'Monitor server utilization',
+    'Run deployment on a staging server',
+]
+
+
+def gen_datetime(min_year=1990, max_year=datetime.now().year):
+    # generate a datetime in iso format
+    start = datetime(min_year, 1, 1, 00, 00, 00)
+    years = max_year - min_year + 1
+    end = start + timedelta(days=365 * years)
+    return (start + (end - start) * random.random()).isoformat()
+
+
+def notification_status():
+    return 'Off' if random.random() > 0.5 else 'On'
+
+
+def get_icon():
+    return 'BoxCheckmarkSolid' if random.random() > 0.5 else 'BoxMultiplySolid'
+
+
+def issue_status():
+    return 'Closed' if random.random() % 2 == 0 else 'Open'
 
 
 # Create some issues
 issues = [
     Issue(
-        text=fake.sentence(),
-        status=('Closed' if i % 2 == 0 else 'Open'),
+        text=issue,
+        status=issue_status(),
         progress=random.random(),
-        icon=('BoxCheckmarkSolid' if random.random() > 0.5 else 'BoxMultiplySolid'),
-        notifications=('Off' if random.random() > 0.5 else 'On')) for i in range(100)
+        icon=get_icon(),
+        notifications=notification_status(),
+        created=gen_datetime()) for issue in issue_descriptions
 ]
 
 # Create columns for our issue table.

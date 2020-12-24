@@ -1,7 +1,6 @@
 # Form
 # Use a form to collect data or show textual information.
 # ---
-from synth import FakeCategoricalSeries
 from h2o_wave import main, app, Q, ui, pack, data
 import random
 
@@ -29,9 +28,6 @@ spec = '''
   }
 }
 '''
-f = FakeCategoricalSeries()
-n = 20
-
 
 # Generate random datum between 1 and 100
 def rnd(): return random.randint(1, 100)
@@ -116,7 +112,8 @@ async def serve(q: Q):
         ]),
         ui.visualization(
             plot=ui.plot([ui.mark(type='interval', x='=product', y='=price', y_min=0)]),
-            data=data(fields='product price', rows=[(c, x) for c, x, _ in [f.next() for _ in range(n)]], pack=True),
+            data=data(fields='product price', rows=[(c, x) for c, x in [(f'C{i}', rnd()) for i in range(20)]],
+                      pack=True),
         ),
         ui.vega_visualization(
             specification=spec,

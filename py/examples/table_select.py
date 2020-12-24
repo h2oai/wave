@@ -1,10 +1,8 @@
 # Table / Preselection
 # Use a table as an advanced multi-select. Specify rownames in 'values' for preselection.
 # ---
-from faker import Faker
-from h2o_wave import main, app, Q, ui
+from h2o_wave import  main, app, Q, ui
 
-fake = Faker()
 
 _id = 0
 
@@ -17,8 +15,23 @@ class Issue:
         self.text = text
 
 
+issue_descriptions = [
+    'Update release notes',
+    'Generate software license',
+    'Update product documentation',
+    'Introduce new tutorials',
+    'Rewrite the error handling guide',
+    'Navigation links are not working',
+    'Set up CICD pipeline',
+    'Improve unit tests coverage',
+    'Update dependencies',
+    'Run the automated test suite',
+    'Monitor server utilization',
+    'Run deployment on a staging server',
+]
+
 # Create some issues
-issues = [Issue(text=fake.sentence()) for i in range(10)]
+issues = [Issue(text=issue) for issue in issue_descriptions]
 
 # Create columns for our issue table.
 columns = [ui.table_column(name='text', label='Issue', min_width='300px')]
