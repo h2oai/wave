@@ -41,7 +41,7 @@ build-wavegen: ## Build wavegen
 run-ui: ## Run UI in development mode (hot reloading)
 	cd ui && $(MAKE) run
 
-test-ui-ci: ## Run UI unit tests in CI mode 
+test-ui-ci: ## Run UI unit tests in CI mode
 	cd ui && $(MAKE) test-ci
 
 test-ui-watch: ## Run UI unit tests
@@ -97,7 +97,7 @@ release-os:
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
 build-website: ## Build website
-	cd website && npm run build
+	cd website && npm install && npm run build
 
 publish-website: ## Publish website
 	rm -rf docs && mkdir docs && rsync -a website/build/ docs/
