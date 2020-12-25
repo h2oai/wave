@@ -113,11 +113,13 @@ def load_example(filename: str) -> Example:
 
 def make_toc(examples: List[Example]):
     return '''---
-title: Contents
-slug: /examples
+title: All Examples
+slug: /examples/all
 ---
 
-''' + '\n'.join([f'- [{e.title}](examples/{e.slug}): {e.subtitle}' for e in examples])
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+''' + '\n\n'.join([f"- <a href={{useBaseUrl('docs/examples/{e.slug}')}}>{e.title}</a>: {e.subtitle}" for e in examples])
 
 
 def make_gallery_thumbnail(e: Example):
@@ -175,11 +177,12 @@ def main():
             print(f'*** ALERT: no thumbnail found for example "{e.slug}"')
 
     example_items = [dict(slug=e.slug) for e in examples]
-    example_items.insert(0, dict(slug='examples-tags'))
     example_items.insert(0, dict(slug='index'))
+    example_items.insert(1, dict(slug='all'))
+    example_items.insert(2, dict(slug='examples-tags'))
     write_file(os.path.join(website_dir, 'examples.js'), f'module.exports={json.dumps(example_items)}')
-    # write_file(os.path.join(example_md_dir, 'index.md'), make_toc(examples))
     write_file(os.path.join(example_md_dir, 'index.md'), make_gallery(examples))
+    write_file(os.path.join(example_md_dir, 'all.md'), make_toc(examples))
     write_file(os.path.join(example_md_dir, 'examples-tags.md'), make_examples_by_keyword(examples))
 
 
