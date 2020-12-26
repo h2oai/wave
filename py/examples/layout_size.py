@@ -1,5 +1,5 @@
 # Layout / Size
-# How to adjust the size of cards on a page.
+# How to adjust the #size of cards on a page. #layout
 # ---
 
 from h2o_wave import site, ui

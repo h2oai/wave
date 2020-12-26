@@ -1,5 +1,6 @@
 # Table / Filter
 # Enable filtering values for specific columns.
+# #table #filter
 # ---
 import random
 from faker import Faker

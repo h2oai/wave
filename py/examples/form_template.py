@@ -1,5 +1,6 @@
 # Form / Template
-# Use a template component to render dynamic content using a HTML template.
+# Use a template component to render #dynamic content using a #HTML #template.
+# #form
 # ---
 from h2o_wave import site, pack, ui
 
@@ -15,7 +16,7 @@ menu = '''
 '''
 
 c = page.add('template_example', ui.form_card(
-    box=f'1 1 2 2',
+    box='1 1 2 2',
     items=[
         ui.template(
             content=menu,

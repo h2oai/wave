@@ -1,5 +1,5 @@
 # Plot / Vega-lite
-# Make a plot using Vega-lite.
+# Make a #plot using Vega-lite. #vega_lite
 # ---
 from h2o_wave import site, data, ui
 

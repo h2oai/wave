@@ -1,5 +1,6 @@
 # Frame / Path
-# Use a frame card to display external web pages.
+# Use a #frame card to display external web pages.
+# #path
 # ---
 from h2o_wave import site, ui
 

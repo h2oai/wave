@@ -1,5 +1,5 @@
 # Uploads / Frame
-# To display content > 2MB in frame cards, first upload the content and then use it in a frame card.
+# To display content > 2MB in #frame cards, first #upload the content and then use it in a frame card.
 # ---
 import os
 import uuid

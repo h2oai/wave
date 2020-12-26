@@ -1,5 +1,6 @@
 # Issue Tracker
-# Implement a simple issue tracker using a table to create master-detail views.
+# Implement a simple issue tracker using a #table to create master-detail views.
+# #issue_tracker
 # ---
 from h2o_wave import main, app, Q, ui
 from faker import Faker

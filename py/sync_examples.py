@@ -131,13 +131,13 @@ def parse_tags(description: str) -> Tuple[str, List[str]]:
     """
     hashtag_regex_pattern = r"(\s+)#(\w*[a-zA-Z]+\w*)\b"
     pattern = re.compile(hashtag_regex_pattern)
-    matches = pattern.findall(description)
+    matches = pattern.findall(' ' + description)
 
     # Retrieve tags from the matches
     tags = sorted(list(set([x[-1].lower() for x in matches])))
 
     # Remove the '#' before the tags in description
-    new_d = pattern.sub(r'\1\2', description)
+    new_d = pattern.sub(r'\1\2', ' ' + description)
 
     # Remove the last line in description if it has only tags
     *lines, last_line = new_d.strip().splitlines()

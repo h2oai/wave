@@ -1,5 +1,6 @@
 # Graphics / Path
-# Use the graphics API to draw a red square.
+# Use the #graphics API to draw a red square.
+# #path
 # ---
 from h2o_wave import site, ui, graphics as g
 

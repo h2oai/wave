@@ -1,5 +1,6 @@
 # Stat / Series / Wide / Area
-# Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
+# Create a #wide stat card displaying a primary value, an auxiliary value and a #series plot.
+# #stat_card #area
 # ---
 import time
 

@@ -1,5 +1,6 @@
 # Meta / Refresh
-# Turn off live updates for static pages to conserve server resources.
+# Turn off #live updates for static pages to conserve server resources.
+# #meta #refresh
 # ---
 from h2o_wave import site, ui
 

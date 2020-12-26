@@ -1,5 +1,6 @@
 # Form / File Upload
-# Use a file upload component to allow users to upload files.
+# Use a file #upload component to allow users to upload files.
+# #form #file_upload
 # ---
 from h2o_wave import main, app, Q, ui
 

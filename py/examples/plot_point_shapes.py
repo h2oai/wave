@@ -1,5 +1,6 @@
 # Plot / Point / Shapes
-# Make a scatterplot with categories encoded as mark shapes.
+# Make a #scatterplot with categories encoded as mark shapes.
+# #shape #plot #multiple_categories
 # ---
 from synth import FakeScatter
 from h2o_wave import site, data, ui

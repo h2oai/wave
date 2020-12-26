@@ -1,5 +1,6 @@
 # Form / Toggle
-# Use a toggle to present users with two mutually exclusive options (to turn settings on and off).
+# Use a #toggle to present users with two mutually exclusive options (to turn settings on and off).
+# #form
 # ---
 from h2o_wave import main, app, Q, ui
 

@@ -1,5 +1,5 @@
 # Plot / Interval / Annotation
-# Add annotations to a column plot.
+# Add annotations to a #column #plot. #annotation #interval
 # ---
 from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui

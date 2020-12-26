@@ -1,5 +1,6 @@
 # Form / Choice Group
-# Use choice groups to let users select one option from two or more choices.
+# Use #choice groups to let users select one option from two or more choices.
+# #form #choice_group
 # ---
 from h2o_wave import main, app, Q, ui
 

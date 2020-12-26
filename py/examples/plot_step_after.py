@@ -1,5 +1,5 @@
 # Plot / Line / Step / After
-# Make a line plot with a step-after curve.
+# Make a #line #plot with a step-after #curve. #step_after
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui

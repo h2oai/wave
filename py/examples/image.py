@@ -1,5 +1,5 @@
 # Image
-# Use an image card to display a base64-encoded image.
+# Use an image card to display a base64-encoded #image.
 # ---
 from h2o_wave import site, ui
 import io

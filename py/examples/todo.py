@@ -1,5 +1,6 @@
 # To-do List App
-# A simple multi-user To-do list application.
+# A #simple multi-user To-do list #application.
+# #multi_user
 # ---
 from h2o_wave import main, app, Q, ui
 from typing import List

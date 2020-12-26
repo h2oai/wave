@@ -1,5 +1,5 @@
 # Plot / Interval / Transpose
-# Make a bar plot.
+# Make a #bar #plot. #interval #transpose
 # ---
 from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui

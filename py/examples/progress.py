@@ -1,5 +1,6 @@
 # Form / Progress
-# Use a progress bar to indicate completion status of an operation.
+# Use a #progress bar to indicate completion #status of an operation.
+# #form
 # ---
 from h2o_wave import site, ui
 

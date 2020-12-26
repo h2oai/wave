@@ -1,5 +1,5 @@
 # Plot / Area / Range
-# Make an area plot representing a range (band) of values.
+# Make an #area #plot representing a range (band) of values.
 # ---
 import random
 

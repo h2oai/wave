@@ -1,5 +1,6 @@
 # Table / Group by
 # Allow grouping a table by column values.
+# #table #group_by
 # ---
 import random
 from faker import Faker

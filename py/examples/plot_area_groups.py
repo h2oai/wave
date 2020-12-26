@@ -1,5 +1,6 @@
 # Plot / Area / Groups
-# Make an area plot showing multiple categories.
+# Make an #area #plot showing multiple categories.
+# multiple_categories
 # ---
 from synth import FakeMultiTimeSeries
 from h2o_wave import site, data, ui

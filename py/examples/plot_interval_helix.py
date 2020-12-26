@@ -1,5 +1,5 @@
 # Plot / Interval / Helix
-# Make a bar plot in helical coordinates.
+# Make a #bar #plot in helical coordinates. #interval #helix
 # ---
 from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui

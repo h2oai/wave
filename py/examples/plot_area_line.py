@@ -1,5 +1,5 @@
 # Plot / Area + Line
-# Make an area plot with an additional line layer on top.
+# Make an #area #plot with an additional #line #layer on top.
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui

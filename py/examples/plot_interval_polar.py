@@ -1,5 +1,5 @@
 # Plot / Interval / Polar
-# Make a rose plot (a bar plot in polar coordinates).
+# Make a #rose #plot (a #bar plot in #polar coordinates). #interval
 # ---
 from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui

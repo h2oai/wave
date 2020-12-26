@@ -1,5 +1,5 @@
 # Plot / Area
-# Make an area plot.
+# Make an #area #plot.
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui

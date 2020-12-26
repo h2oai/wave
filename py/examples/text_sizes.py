@@ -1,5 +1,6 @@
 # Form / Text / Sizes
-# Use text size variants to display formatted text using predefined font sizes.
+# Use #text #size variants to display formatted text using predefined font sizes.
+# #form #font_size
 # ---
 from h2o_wave import site, ui
 

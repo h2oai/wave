@@ -1,5 +1,6 @@
 # Plot / Plotly
-# Use plotly to create plots. Also demonstrates how to provide live control over plots.
+# Use #plotly to create plots. Also demonstrates how to provide #live control over plots.
+# #plot
 # ---
 
 import numpy as np

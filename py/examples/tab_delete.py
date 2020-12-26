@@ -1,6 +1,7 @@
 # Tabs / Navigation
 # Navigate between two or more tabs.
 # Delete the cards when switching between tabs.
+# #tabs #navigation
 # ---
 from h2o_wave import main, app, Q, ui
 

@@ -1,6 +1,6 @@
 # Form / Button
-# Use buttons to enable a user to commit a change or complete steps in a task.
-# form, buttons
+# Use #buttons to enable a user to commit a change or complete steps in a task.
+# #form
 # ---
 from h2o_wave import main, app, Q, ui
 
