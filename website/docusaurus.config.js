@@ -19,6 +19,11 @@ module.exports = {
     prism: {
       additionalLanguages: ['toml'],
     },
+    algolia: {
+      apiKey: '1ff399df2912b1f87d8b235fa995fce6',
+      indexName: 'wave',
+      contextualSearch: true,
+    },
     navbar: {
       title: 'H2O Wave',
       logo: {
