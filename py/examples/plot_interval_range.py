@@ -1,5 +1,6 @@
 # Plot / Interval / Range
-# Make a column plot with each bar representing high/low (or start/end) values. Transposing this produces a gantt plot.
+# Make a column #plot with each bar representing high/low (or start/end) values.
+# Transposing this produces a gantt plot. #interval #range
 # ---
 import random
 

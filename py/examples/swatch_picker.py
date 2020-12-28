@@ -1,5 +1,6 @@
 # Form / Swatch Picker
 # Use a swatch picker to allow users to choose a from a specific set of colors.
+# #swatch_picker #form
 # ---
 from h2o_wave import main, app, Q, ui
 

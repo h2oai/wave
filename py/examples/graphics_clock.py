@@ -1,5 +1,5 @@
 # Graphics / Clock
-# Use the graphics API to make a clock.
+# Use the #graphics API to make a clock.
 # Source: https://codepen.io/dudleystorey/pen/HLBki
 # ---
 import time
@@ -22,7 +22,8 @@ page['example'] = ui.graphics_card(
 page.save()
 
 
-def rotate(deg): return f'rotate({deg} 50 50)'
+def rotate(deg):
+    return f'rotate({deg} 50 50)'
 
 
 scene = page['example'].scene

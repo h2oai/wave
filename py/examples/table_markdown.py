@@ -1,5 +1,5 @@
 # Table / Markdown
-# Display a table using markdown.
+# Display a #table using #markdown.
 # ---
 from h2o_wave import site, ui
 

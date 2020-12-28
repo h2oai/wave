@@ -1,5 +1,6 @@
 # Background Tasks / Progress
-# Execute background functions while incrementing a progress bar
+# Execute background functions while incrementing a #progress bar.
+# #background_tasks
 # ---
 import time
 import asyncio
@@ -10,7 +11,7 @@ from h2o_wave import main, app, Q, ui
 # A long-running that performs a blocking operation, in this case time.sleep()
 def blocking_function(secs) -> str:
     time.sleep(secs)  # Blocks!
-    return f'Download completed!'
+    return 'Download completed!'
 
 
 # An async function that displays a progress bar

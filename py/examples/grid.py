@@ -1,5 +1,5 @@
 # Grid
-# Use a grid card to lay out multiple child cards in table form.
+# Use a #grid card to lay out multiple child cards in table form.
 # ---
 import random
 

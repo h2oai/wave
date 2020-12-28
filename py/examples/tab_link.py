@@ -1,6 +1,7 @@
 # Tab / Links
-# Use tab cards to display tabs on a page.
+# Use tab cards to display #tabs on a page.
 # This examples render tabs styled as links.
+# #link
 # ---
 from h2o_wave import main, app, Q, ui
 

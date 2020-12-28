@@ -1,5 +1,5 @@
 # Meta / Redirect
-# Redirect the page to a new URL or hash.
+# #Redirect the page to a new URL or hash. #meta
 # ---
 import time
 

@@ -1,5 +1,6 @@
 # Plot / Point / Groups
 # Make a scatterplot with categories encoded as colors.
+# #plot
 # ---
 from synth import FakeScatter
 from h2o_wave import site, data, ui

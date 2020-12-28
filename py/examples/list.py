@@ -1,5 +1,5 @@
 # Lists
-# Use list cards to lay out multiple child cards in the form of a list.
+# Use list cards to lay out multiple child cards in the form of a #list.
 # ---
 import random
 

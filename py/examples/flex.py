@@ -1,5 +1,6 @@
 # Flex
 # Use a flex card to tile multiple child cards along one dimension, with optional wrapping.
+# #flex
 # ---
 import random
 
@@ -18,7 +19,7 @@ c = page.add('example', ui.flex_card(
     wrap='between',
     item_view='template',
     item_props=pack(dict(
-        content='<div style="width:15px; height:15px; border-radius: 50%; background-color:{{#if loss}}red{{else}}green{{/if}}" title="{{code}}"/>'
+        content='<div style="width:15px; height:15px; border-radius: 50%; background-color:{{#if loss}}red{{else}}green{{/if}}" title="{{code}}"/>'  # noqa: E501
     )),
     data=data('code loss', -10),
 ))

@@ -1,5 +1,6 @@
 # Stat / Series / Small / Interval
 # Create a small stat card displaying a primary value and a series plot.
+# #stat_card #interval #series
 # ---
 import time
 
@@ -13,7 +14,7 @@ page = site['/demo']
 fake = Faker()
 f = FakeCategoricalSeries()
 cat, val, pc = f.next()
-c = page.add(f'example', ui.small_series_stat_card(
+c = page.add('example', ui.small_series_stat_card(
     box='1 1 1 1',
     title=fake.cryptocurrency_name(),
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',

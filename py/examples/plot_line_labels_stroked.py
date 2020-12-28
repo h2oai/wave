@@ -1,5 +1,6 @@
 # Plot / Line / Labels/ Stroked
 # Customize label rendering: add a subtle outline to labels to improve readability.
+# #plot
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui

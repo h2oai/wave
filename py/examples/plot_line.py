@@ -1,5 +1,5 @@
 # Plot / Line
-# Make a line plot.
+# Make a line #plot.
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui

@@ -1,5 +1,5 @@
 # Form
-# Use a form to collect data or show textual information.
+# Use a #form to collect data or show textual information.
 # ---
 from synth import FakeCategoricalSeries
 from h2o_wave import main, app, Q, ui, pack, data
@@ -34,7 +34,8 @@ n = 20
 
 
 # Generate random datum between 1 and 100
-def rnd(): return random.randint(1, 100)
+def rnd():
+    return random.randint(1, 100)
 
 
 @app('/demo')

@@ -1,5 +1,5 @@
 # Markdown / Data
-# Display dynamic formatted content using markdown.
+# Display dynamic formatted content using #markdown.
 # ---
 import time
 from h2o_wave import site, ui

@@ -1,5 +1,6 @@
 # Form / Markup
-# Use a markup component to display formatted content using HTML.
+# Use a #markup component to display formatted content using #HTML.
+# #form
 # ---
 from h2o_wave import site, ui
 

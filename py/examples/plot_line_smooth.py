@@ -1,5 +1,5 @@
 # Plot / Line / Smooth
-# Make a line plot using a smooth curve.
+# Make a line #plot using a smooth curve.
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui

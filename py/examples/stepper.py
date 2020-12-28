@@ -1,5 +1,6 @@
 # Form / Stepper
-# Use Stepper to show progress through numbered steps.
+# Use #Stepper to show #progress through numbered steps.
+# #form
 # ---
 from h2o_wave import main, app, Q, ui
 

@@ -1,5 +1,5 @@
 # Template
-# Use a template card to render dynamic content using a HTML template.
+# Use a #template card to render dynamic content using a #HTML template.
 # ---
 from h2o_wave import site, pack, ui
 
@@ -15,7 +15,7 @@ menu = '''
 '''
 
 c = page.add('template_example', ui.template_card(
-    box=f'1 1 2 2',
+    box='1 1 2 2',
     title='Menu',
     content=menu,
     data=pack(dict(dishes=[

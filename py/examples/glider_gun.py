@@ -1,5 +1,5 @@
 # Graphics / Glider Gun
-# Use the graphics API to play Conway's Game of Life - Gosper's Glider Gun
+# Use the #graphics API to play Conway's Game of Life - Gosper's Glider Gun
 # https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 # ---
 import time

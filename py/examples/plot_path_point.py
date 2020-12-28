@@ -1,5 +1,5 @@
 # Plot / Path / Point
-# Make a path plot with an additional layer of points.
+# Make a path #plot with an additional layer of points.
 # ---
 from synth import FakeScatter
 from h2o_wave import site, data, ui

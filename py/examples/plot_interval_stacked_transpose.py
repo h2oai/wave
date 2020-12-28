@@ -1,5 +1,5 @@
 # Plot / Interval / Stacked / Transpose
-# Make a stacked bar plot.
+# Make a #stacked bar #plot. #interval
 # ---
 from synth import FakeMultiCategoricalSeries
 from h2o_wave import site, data, ui

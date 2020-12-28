@@ -1,5 +1,5 @@
 # Plot / D3.js
-# Create custom plots using D3.js.
+# Create custom plots using D3.js. #plot
 # ---
 import json
 import os.path

@@ -1,5 +1,6 @@
 # Form / Label
-# Use labels to give a name to a component or a group of components in a form.
+# Use labels to give a name to a component or a group of components in a #form.
+# #label
 # ---
 from h2o_wave import site, ui
 

@@ -1,8 +1,10 @@
 # Table
-# Use a table to display tabular data.
+# Use a #table to display tabular data.
 # ---
 import random
+
 from faker import Faker
+
 from h2o_wave import main, app, Q, ui
 
 fake = Faker()
@@ -56,8 +58,8 @@ async def serve(q: Q):
             rows=[ui.table_row(
                 name=issue.id,
                 cells=[issue.text, issue.status, issue.notifications, issue.icon,
-                  str(issue.views), issue.progress, issue.created]
-                ) for issue in issues],
+                       str(issue.views), issue.progress, issue.created]
+            ) for issue in issues],
             groupable=True,
             downloadable=True,
             resettable=True,
