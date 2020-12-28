@@ -3,7 +3,7 @@ package:
   version: "{{ VERSION }}"
 
 about:
-  home: https://h2o.ai/h2o-wave
+  home: https://h2o.ai/products/h2o-wave
   license: Apache-2.0 License
   license_family: APACHE
   summary: Python driver for H2O Wave Realtime Apps
