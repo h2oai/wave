@@ -86,7 +86,14 @@ jobs:
           asset_name: "wave-${{ env.VERSION }}-windows-amd64.tar.gz"
           asset_content_type: application/gzip
 
-      - name: Publish distribution 📦 to PyPI
+      - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Publish to Conda
+        uses: fcakyon/conda-publish-action@v1.3
+        with:
+          subdir: 'conda'
+          anacondatoken: ${{ secrets.ANACONDA_TOKEN }}
+          platforms: 'win osx linux'
