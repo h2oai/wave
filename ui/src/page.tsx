@@ -58,6 +58,7 @@ const
   },
   breakpointsB = box<Breakpoint[]>([]),
   layoutB = box<{ layout: Layout, index: U } | null>(null),
+  resizedB = box(), // breakpoint changed?
   parseBreakpoint = (spec: S): U => parseInt(presetBreakpoints[spec] ?? spec, 10),
   badSlot: Slot = { order: 0 },
   parseBox = ({ zone, order, size, width, height }: any): Slot => {
@@ -95,7 +96,12 @@ on(layoutsB, layouts => {
             ? `(min-width:${min}px) and (max-width:${max}.98px)`
             : `(min-width:${min}px)`
         ),
-        listener = (mq: MediaQueryListEvent) => { if (mq.matches) layoutB({ layout, index }) },
+        listener = (mq: MediaQueryListEvent) => {
+          if (mq.matches) {
+            layoutB({ layout, index })
+            resizedB({})
+          }
+        },
         bp: Breakpoint = { layout, min, max, mq, listener }
 
       mq.addListener(listener)
@@ -247,40 +253,36 @@ const
       </div>
     )
   },
-  FlexLayout = bond(({ name, cards }: { name: S, cards: C[] }) => {
+  FlexLayout = ({ name, cards }: { name: S, cards: C[] }) => {
+    const layoutIndex = layoutB()
+    if (!layoutIndex) return <></>
     const
-      render = () => {
-        const layoutIndex = layoutB()
-        if (!layoutIndex) return <></>
-        const
-          { layout, index } = layoutIndex,
-          section = toSection({ name: 'main', zones: layout.zones }),
-          { width, min_width, max_width, height, min_height, max_height } = layout
-        for (const card of cards) {
-          const
-            slot = parseBoxes(index, card.state.box),
-            target = findSection(section, slot.zone ?? '')
-          target?.cardslots.push({ card, slot })
-        }
+      { layout, index } = layoutIndex,
+      section = toSection({ name: 'main', zones: layout.zones }),
+      { width, min_width, max_width, height, min_height, max_height } = layout
+    for (const card of cards) {
+      const
+        slot = parseBoxes(index, card.state.box),
+        target = findSection(section, slot.zone ?? '')
+      target?.cardslots.push({ card, slot })
+    }
 
-        sortCardsInSection(section)
+    sortCardsInSection(section)
 
-        const style: React.CSSProperties = {
-          width: width ?? '100%',
-          minWidth: min_width,
-          maxWidth: max_width,
-          height,
-          minHeight: min_height,
-          maxHeight: max_height,
-        }
-        return (
-          <div data-test={name} className={css.layout} style={style}>
-            <FlexSection section={section} />
-          </div>
-        )
-      }
-    return { render, layoutB }
-  })
+    const style: React.CSSProperties = {
+      width: width ?? '100%',
+      minWidth: min_width,
+      maxWidth: max_width,
+      height,
+      minHeight: min_height,
+      maxHeight: max_height,
+    }
+    return (
+      <div data-test={name} className={css.layout} style={style}>
+        <FlexSection section={section} />
+      </div>
+    )
+  }
 export const
   PageLayout = bond(({ page }: { page: Page }) => {
     let
@@ -297,7 +299,7 @@ export const
         if (metas.length) {
           onMetaCardChanged?.dispose()
           metaCard = metas[0]
-          preload(metaCard as any)
+          preload(metaCard as any) // causes layoutB to be set, if available.
           onMetaCardChanged = on(metaCard.changed, () => preload(metaCard as any))
         }
         return layoutsB().length
@@ -305,5 +307,5 @@ export const
           : <GridLayout name={page.key} cards={cards} />
       }
 
-    return { render, changed }
+    return { render, changed, resizedB }
   })
