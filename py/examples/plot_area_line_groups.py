@@ -1,6 +1,5 @@
 # Plot / Area + Line / Groups
-# Make an #combined #area + #line #plot showing multiple categories.
-# multiple_categories
+# Make an combined area + line #plot showing multiple categories.
 # ---
 from synth import FakeMultiTimeSeries
 from h2o_wave import site, data, ui

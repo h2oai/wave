@@ -1,5 +1,5 @@
 # Stat / Series / Small / Interval
-# Create a #small stat card displaying a primary value and a series plot.
+# Create a small stat card displaying a primary value and a series plot.
 # #stat_card #interval #series
 # ---
 import time

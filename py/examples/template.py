@@ -1,5 +1,5 @@
 # Template
-# Use a #template card to render #dynamic content using a #HTML template.
+# Use a #template card to render dynamic content using a #HTML template.
 # ---
 from h2o_wave import site, pack, ui
 

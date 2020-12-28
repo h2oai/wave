@@ -1,6 +1,6 @@
 # Stat / Series / Small / Area
-# Create a #small stat card displaying a primary value and a series plot.
-# #stat_card #area #series
+# Create a small stat card displaying a primary value and a series plot.
+# #stat_card #series
 # ---
 import time
 

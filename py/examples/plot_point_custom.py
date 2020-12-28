@@ -1,6 +1,6 @@
 # Plot / Point / Custom
-# Customize a plot's fill/stroke #color, #size and #opacity.
-# #custom #plot #fill #stroke #point
+# Customize a plot's fill/stroke color, size and opacity.
+# #plot
 # ---
 import random
 

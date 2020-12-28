@@ -1,5 +1,5 @@
 # Plot / Line / Groups
-# Make a multi-series #line #plot. #multi_series
+# Make a multi-series line #plot. #multi_series
 # ---
 from synth import FakeMultiTimeSeries
 from h2o_wave import site, data, ui

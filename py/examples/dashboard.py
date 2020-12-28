@@ -1,5 +1,5 @@
 # Dashboard
-# Make a #dashboard using a multitude of cards and update them #live.
+# Make a #dashboard using a multitude of cards and update them live.
 # ---
 from faker import Faker
 import time

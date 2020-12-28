@@ -1,5 +1,5 @@
 # Graphics / Hilbert
-# Use #turtle #graphics recursively to draw #Hilbert curves.
+# Use turtle #graphics recursively to draw Hilbert curves.
 # ---
 from h2o_wave import ui, main, app, Q, graphics as g
 

@@ -1,6 +1,6 @@
 # Plot / Point / Sizes
-# Make a #scatterplot with mark sizes mapped to a continuous variable (a "bubble plot").
-# #bubble_plot #plot #size
+# Make a scatterplot with mark sizes mapped to a continuous variable (a "bubble plot").
+# #plot
 # ---
 import random
 

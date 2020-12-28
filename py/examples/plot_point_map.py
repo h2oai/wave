@@ -1,7 +1,7 @@
 # Plot / Point / Map
 # Make a #plot to compare quantities across categories. Similar to a heatmap,
 # but using size-encoding instead of color-encoding.
-# #point #map #size #multiple_categories
+# #map
 # ---
 from synth import FakeSeries
 from h2o_wave import site, data, ui

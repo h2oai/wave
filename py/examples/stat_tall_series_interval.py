@@ -1,5 +1,5 @@
 # Stat / Series / Tall / Interval
-# Create a #tall stat card displaying a primary value, an auxiliary value and a #series plot.
+# Create a tall stat card displaying a primary value, an auxiliary value and a #series plot.
 # #stat_card #interval
 # ---
 import time

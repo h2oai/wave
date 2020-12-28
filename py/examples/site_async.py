@@ -1,6 +1,6 @@
 # Site / Async
-# #Update any page on a site from within an app using an `AsyncSite` instance.
-# #site #async
+# Update any page on a site from within an app using an `AsyncSite` instance.
+# #site
 # ---
 from .synth import FakePercent
 from h2o_wave import Q, app, main, ui, AsyncSite

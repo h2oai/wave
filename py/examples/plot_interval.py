@@ -1,5 +1,5 @@
 # Plot / Interval
-# Make a #column #plot. #interval
+# Make a column #plot. #interval
 # ---
 from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui

@@ -1,5 +1,5 @@
 # Stat / Bar / Wide
-# Create a #wide stat card displaying a primary value, an auxiliary value and a #progress bar.
+# Create a wide stat card displaying a primary value, an auxiliary value and a #progress bar.
 # #stat_card
 # ---
 import time

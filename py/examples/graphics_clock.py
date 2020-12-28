@@ -1,5 +1,5 @@
 # Graphics / Clock
-# Use the #graphics API to make a #clock.
+# Use the #graphics API to make a clock.
 # Source: https://codepen.io/dudleystorey/pen/HLBki
 # ---
 import time

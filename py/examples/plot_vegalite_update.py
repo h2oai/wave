@@ -1,5 +1,5 @@
 # Plot / Vega-lite / Update
-# Periodically #update a Vega-lite #plot. #vega_lite #live
+# Periodically update a Vega-lite #plot. #vega
 # ---
 from h2o_wave import site, data, ui
 import random

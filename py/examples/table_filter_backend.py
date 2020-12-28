@@ -1,6 +1,6 @@
 # Table / Filter / Backend
-# Filter table using Python
-# #table #filter #backend
+# Filter table using Python.
+# #table
 # ---
 import pandas as pd
 from faker import Faker

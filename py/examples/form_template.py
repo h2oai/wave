@@ -1,5 +1,5 @@
 # Form / Template
-# Use a template component to render #dynamic content using a #HTML #template.
+# Use a template component to render dynamic content using a #HTML #template.
 # #form
 # ---
 from h2o_wave import site, pack, ui

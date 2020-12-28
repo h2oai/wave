@@ -207,7 +207,8 @@ def index_examples(examples: List[Example]):
     for e in examples:
         for t in e.tags:
             tags_dict[t].append(e)
-    return sorted(tags_dict.items())
+    # Sort all tags and examples under each tag alphabetically
+    return sorted([(t, sorted(e, key=lambda x: x.title)) for t, e in tags_dict.items()])
 
 
 def make_examples_by_tag(examples: List[Example]):

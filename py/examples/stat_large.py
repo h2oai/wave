@@ -1,6 +1,6 @@
 # Stat / Large
 # Create a stat card displaying a primary value, an auxiliary value and a caption.
-# #stat_card #large
+# #stat_card
 # ---
 import time
 

@@ -1,5 +1,5 @@
 # Background Tasks / Progress
-# Execute background functions while incrementing a #progress bar
+# Execute background functions while incrementing a #progress bar.
 # #background_tasks
 # ---
 import time

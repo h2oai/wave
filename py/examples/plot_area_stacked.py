@@ -1,5 +1,5 @@
 # Plot / Area / Stacked
-# Make a #stacked #area #plot.
+# Make a #stacked area #plot.
 # ---
 from synth import FakeMultiTimeSeries
 from h2o_wave import site, data, ui

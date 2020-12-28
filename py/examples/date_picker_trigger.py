@@ -1,5 +1,5 @@
 # Form / Date Picker / Trigger
-# To handle #live changes to a date picker, enable the `trigger` attribute.
+# To handle live changes to a date picker, enable the `trigger` attribute.
 # #form #date_picker #trigger
 # ---
 from h2o_wave import main, app, Q, ui

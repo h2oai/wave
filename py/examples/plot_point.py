@@ -1,5 +1,5 @@
 # Plot / Point
-# Make a #scatterplot. #plot #point
+# Make a scatterplot. #plot
 # ---
 from synth import FakeScatter
 from h2o_wave import site, data, ui

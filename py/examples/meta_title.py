@@ -1,5 +1,5 @@
 # Meta / Title
-# Set the browser window #title for a page. #meta
+# Set the browser window title for a page. #meta
 # ---
 from h2o_wave import site, ui
 

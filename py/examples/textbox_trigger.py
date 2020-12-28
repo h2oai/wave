@@ -1,5 +1,5 @@
 # Form / Textbox / Trigger
-# To handle #live changes to a #textbox, enable the `trigger` attribute.
+# To handle live changes to a #textbox, enable the `trigger` attribute.
 # #form #trigger
 # ---
 from h2o_wave import main, app, Q, ui

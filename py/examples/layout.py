@@ -1,5 +1,5 @@
 # Layout / Position
-# How to adjust the #position of cards on a page.
+# How to adjust the position of cards on a page.
 # #layout
 # ---
 

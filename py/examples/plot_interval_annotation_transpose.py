@@ -1,5 +1,5 @@
 # Plot / Interval / Annotation / Transpose
-# Add annotations to a #bar #plot. #annotation #interval #transpose
+# Add annotations to a bar #plot. #annotation #interval
 # ---
 from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui

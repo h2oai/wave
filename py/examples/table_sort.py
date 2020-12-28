@@ -1,6 +1,5 @@
 # Table / Sort
 # Allow sorting a #table by specific columns.
-# #sort
 # ---
 import random
 from faker import Faker

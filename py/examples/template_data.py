@@ -1,6 +1,5 @@
 # Template / Data
-# #Update a #template card's #data periodically.
-# #live
+# Update a #template card's data periodically.
 # ---
 import time
 import random

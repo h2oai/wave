@@ -1,6 +1,6 @@
 # Stat / Small
 # Create a stat card displaying a single value.
-# #stat_card #small
+# #stat_card
 # ---
 import time
 

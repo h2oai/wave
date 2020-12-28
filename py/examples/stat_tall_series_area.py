@@ -1,6 +1,6 @@
 # Stat / Series / Tall / Area
-# Create a #tall stat card displaying a primary value, an auxiliary value and a #series plot.
-# #stat_card #area
+# Create a tall stat card displaying a primary value, an auxiliary value and a #series plot.
+# #stat_card
 # ---
 import time
 

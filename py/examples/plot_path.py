@@ -1,5 +1,5 @@
 # Plot / Path
-# Make a #path #plot.
+# Make a path #plot.
 # ---
 from synth import FakeScatter
 from h2o_wave import site, data, ui

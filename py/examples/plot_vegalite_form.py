@@ -1,5 +1,5 @@
 # Plot / Vega-lite / Form
-# Display a Vega-lite #plot inside a #form card. #vega_lite
+# Display a Vega-lite #plot inside a #form card. #vega
 # ---
 from h2o_wave import site, data, ui
 import random

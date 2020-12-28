@@ -1,5 +1,5 @@
 # Plot / Interval / Groups
-# Make a #grouped #column #plot. #interval
+# Make a grouped column #plot. #interval
 # ---
 from synth import FakeMultiCategoricalSeries
 from h2o_wave import site, data, ui

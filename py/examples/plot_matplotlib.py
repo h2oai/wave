@@ -1,6 +1,6 @@
 # Plot / Matplotlib
 # Use #matplotlib to create plots. Also demonstrates how to provide live control over plots.
-# #plot #live
+# #plot
 # ---
 import uuid
 import os
