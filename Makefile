@@ -97,7 +97,7 @@ release-os:
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
 build-website: ## Build website
-	cd website && npm install && npm run build
+	cd website && npm ci && npm run build
 
 publish-website: ## Publish website
 	rm -rf docs && mkdir docs && rsync -a website/build/ docs/
