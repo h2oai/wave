@@ -88,11 +88,13 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@master
+        working-directory: py
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Publish to Conda
         uses: fcakyon/conda-publish-action@v1.3
+        working-directory: py
         with:
           subdir: 'conda'
           anacondatoken: ${{ secrets.ANACONDA_TOKEN }}
