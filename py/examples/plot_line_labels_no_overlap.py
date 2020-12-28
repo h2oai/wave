@@ -1,5 +1,5 @@
 # Plot / Line / Labels / Occlusion
-# Make a line #plot with non-overlapping #label.
+# Make a line #plot with non-overlapping labels.
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui
