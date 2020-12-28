@@ -86,6 +86,7 @@ jobs:
           asset_name: "wave-${{ env.VERSION }}-windows-amd64.tar.gz"
           asset_content_type: application/gzip
 
-# TODO: Enable this before merge
-#      - name: Publish to PyPI
-#        run: make publish-pypi
+      - name: Publish distribution 📦 to PyPI
+          uses: pypa/gh-action-pypi-publish@master
+          with:
+            password: ${{ secrets.PYPI_API_TOKEN }}

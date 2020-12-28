@@ -73,9 +73,6 @@ generate: ## Generate driver bindings
 docs: ## Generate API docs and copy to website
 	cd py && $(MAKE) docs
 
-publish-pypi: ## Publish PyPI package
-	cd py && $(MAKE) publish
-
 release: build-ui build-py ## Prepare release builds (e.g. "VERSION=v1.2.3 make release)"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
