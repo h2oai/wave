@@ -176,6 +176,28 @@ ui_flex_card <- function(
   return(.o)
 }
 
+#' Render a page footer displaying a caption.
+#' Footer cards are typically displayed at the bottom of a page.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param caption The caption.
+#' @param commands Contextual menu commands for this component.
+#' @return A FooterCard instance.
+ui_footer_card <- function(
+  box,
+  caption,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("caption", "character", caption)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    caption=caption,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FooterCard"))
+  return(.o)
+}
+
 #' Create text content.
 #'
 #' @param content The text content.

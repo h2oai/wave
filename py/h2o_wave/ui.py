@@ -143,6 +143,28 @@ def flex_card(
     )
 
 
+def footer_card(
+        box: str,
+        caption: str,
+        commands: Optional[List[Command]] = None,
+) -> FooterCard:
+    """Render a page footer displaying a caption.
+    Footer cards are typically displayed at the bottom of a page.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        caption: The caption.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.FooterCard` instance.
+    """
+    return FooterCard(
+        box,
+        caption,
+        commands,
+    )
+
+
 def text(
         content: str,
         size: Optional[str] = None,

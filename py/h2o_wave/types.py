@@ -328,6 +328,56 @@ class FlexCard:
         )
 
 
+class FooterCard:
+    """Render a page footer displaying a caption.
+    Footer cards are typically displayed at the bottom of a page.
+    """
+    def __init__(
+            self,
+            box: str,
+            caption: str,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.caption = caption
+        """The caption."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('FooterCard.box is required.')
+        if self.caption is None:
+            raise ValueError('FooterCard.caption is required.')
+        return _dump(
+            view='footer',
+            box=self.box,
+            caption=self.caption,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'FooterCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('FooterCard.box is required.')
+        __d_caption: Any = __d.get('caption')
+        if __d_caption is None:
+            raise ValueError('FooterCard.caption is required.')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        caption: str = __d_caption
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return FooterCard(
+            box,
+            caption,
+            commands,
+        )
+
+
 class TextSize:
     XL = 'xl'
     L = 'l'
