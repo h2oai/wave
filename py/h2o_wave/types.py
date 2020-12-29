@@ -4524,7 +4524,7 @@ class NavItem:
         self.icon = icon
         """An optional icon to display next to the label."""
         self.disabled = disabled
-        """True if the nav_item should be disabled."""
+        """True if this item should be disabled."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4611,9 +4611,8 @@ class NavGroup:
 
 
 class HeaderCard:
-    """Render a card containing a HTML page inside an inline frame (iframe).
-
-    Either a path or content can be provided as arguments.
+    """Render a page header displaying a title, subtitle and an optional navigation menu.
+    Header cards are typically used for top-level navigation.
     """
     def __init__(
             self,

@@ -65,9 +65,8 @@ const
 
 
 /**
- * Render a card containing a HTML page inside an inline frame (iframe).
- *
- * Either a path or content can be provided as arguments.
+ * Render a page header displaying a title, subtitle and an optional navigation menu.
+ * Header cards are typically used for top-level navigation.
  */
 interface State {
   /** The title. */

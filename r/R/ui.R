@@ -2197,18 +2197,22 @@ ui_grid_card <- function(
 #' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
 #' @param label The label to display.
 #' @param icon An optional icon to display next to the label.
+#' @param disabled True if this item should be disabled.
 #' @return A NavItem instance.
 ui_nav_item <- function(
   name,
   label,
-  icon = NULL) {
+  icon = NULL,
+  disabled = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("icon", "character", icon)
+  .guard_scalar("disabled", "logical", disabled)
   .o <- list(
     name=name,
     label=label,
-    icon=icon)
+    icon=icon,
+    disabled=disabled)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavItem"))
   return(.o)
 }
@@ -2234,9 +2238,8 @@ ui_nav_group <- function(
   return(.o)
 }
 
-#' Render a card containing a HTML page inside an inline frame (iframe).
-#' 
-#' Either a path or content can be provided as arguments.
+#' Render a page header displaying a title, subtitle and an optional navigation menu.
+#' Header cards are typically used for top-level navigation.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title.

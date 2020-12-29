@@ -1950,7 +1950,7 @@ def nav_item(
         name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
         label: The label to display.
         icon: An optional icon to display next to the label.
-        disabled: True if the nav_item should be disabled.
+        disabled: True if this item should be disabled.
     Returns:
         A `h2o_wave.types.NavItem` instance.
     """
@@ -1992,9 +1992,8 @@ def header_card(
         nav: Optional[List[NavGroup]] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
-    """Render a card containing a HTML page inside an inline frame (iframe).
-
-    Either a path or content can be provided as arguments.
+    """Render a page header displaying a title, subtitle and an optional navigation menu.
+    Header cards are typically used for top-level navigation.
 
     Args:
         box: A string indicating how to place this component on the page.
