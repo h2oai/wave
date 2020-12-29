@@ -55,11 +55,12 @@ module.exports = {
     'API': [
       'api/index',
       'api/core',
-      'api/graphics',
-      'api/server',
-      'api/test',
-      'api/types',
       'api/ui',
+      'api/ui_ext',
+      'api/server',
+      'api/graphics',
+      'api/types',
+      'api/test',
     ],
   },
 };

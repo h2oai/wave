@@ -40,5 +40,4 @@ __pdoc__ = {
     'cli': False,
     'db': False,
     'ide': False,
-    'ui_ext': False,
 }
