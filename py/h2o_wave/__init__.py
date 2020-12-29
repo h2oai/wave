@@ -34,3 +34,11 @@ from .server import listen, Q, app, main
 from .db import TeleDBError, TeleDB
 from .types import *
 from .test import cypress, Cypress
+
+
+__pdoc__ = {
+    'cli': False,
+    'db': False,
+    'ide': False,
+    'ui_ext': False,
+}
