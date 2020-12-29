@@ -152,7 +152,6 @@ const
       margin: margin(grid.gap),
     },
     slot: {
-      backgroundColor: theme.colors.card,
       boxSizing: 'border-box',
       transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
       overflow: 'auto',
