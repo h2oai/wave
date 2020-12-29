@@ -2095,18 +2095,22 @@ ui_vega_visualization <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The components in this form.
+#' @param title The title for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A FormCard instance.
 ui_form_card <- function(
   box,
   items,
+  title = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_Component", items)
+  .guard_scalar("title", "character", title)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
+    title=title,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FormCard"))
   return(.o)

@@ -34,7 +34,7 @@ import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
-import { bond, Card, Packed, unpack, xid } from './qd'
+import { bond, Card, Packed, S, unpack, xid } from './qd'
 import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'
@@ -129,7 +129,9 @@ export interface Component {
 /** Create a form. */
 interface State {
   /** The components in this form. */
-  items: Packed<Component[]>;
+  items: Packed<Component[]>
+  /** The title for this card. */
+  title?: S
 }
 
 
@@ -137,20 +139,24 @@ const
   theme = getTheme(),
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
-    form: {
+    components: {
       $nest: {
         '> *': {
           margin: margin(10, 0)
         }
       }
-    }
+    },
+    title: {
+      ...theme.font.s12,
+      ...theme.font.w6,
+    },
   })
 
 
 export const
   XComponents = ({ items }: { items: Component[] }) => {
     const components = items.map(m => <XComponent key={xid()} model={m} />)
-    return <>{components}</>
+    return <div className={css.components}>{components}</div>
   }
 
 const
@@ -200,10 +206,12 @@ export const
       render = () => {
         const
           s = theme.merge(defaults, state),
+          title = s.title,
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
-          <div data-test={name} className={css.form}>
+          <div data-test={name} >
+            {title && <div className={css.title}>{title}</div>}
             <XComponents items={items} />
           </div>
         )

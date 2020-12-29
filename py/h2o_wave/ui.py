@@ -1853,6 +1853,7 @@ def vega_visualization(
 def form_card(
         box: str,
         items: Union[List[Component], str],
+        title: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> FormCard:
     """Create a form.
@@ -1860,6 +1861,7 @@ def form_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: The components in this form.
+        title: The title for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FormCard` instance.
@@ -1867,6 +1869,7 @@ def form_card(
     return FormCard(
         box,
         items,
+        title,
         commands,
     )
 
