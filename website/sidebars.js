@@ -56,6 +56,7 @@ module.exports = {
       'api/index',
       'api/core',
       'api/ui',
+      'api/ui_ext',
       'api/server',
       'api/graphics',
       'api/types',
