@@ -39,7 +39,10 @@ class Example:
         if self.is_app:
             self.process = subprocess.Popen(
                 [sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main'],
-                env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
+                env=os.environ.update(
+                    dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env)
+                )
+            )
         else:
             self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
 
