@@ -1,5 +1,6 @@
 # Plot / Point / Shapes
 # Make a scatterplot with categories encoded as mark shapes.
+# #plot
 # ---
 from h2o_wave import site, data, ui
 

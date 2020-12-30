@@ -1,5 +1,5 @@
 # Plot / Histogram
-# Make a histogram.
+# Make a #histogram. #plot
 # ---
 from h2o_wave import site, data, ui
 

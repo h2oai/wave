@@ -1,5 +1,6 @@
 # Plot / Point / Sizes
 # Make a scatterplot with mark sizes mapped to a continuous variable (a "bubble plot").
+# #plot
 # ---
 
 from h2o_wave import site, data, ui

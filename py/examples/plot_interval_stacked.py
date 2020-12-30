@@ -1,5 +1,5 @@
 # Plot / Interval / Stacked
-# Make a stacked column plot.
+# Make a #stacked column #plot. #interval
 # ---
 from h2o_wave import site, data, ui
 

@@ -1,5 +1,6 @@
 # Stat / Series / Tall / Area
-# Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
+# Create a tall stat card displaying a primary value, an auxiliary value and a #series plot.
+# #stat_card
 # ---
 import time
 from h2o_wave import site, ui, data

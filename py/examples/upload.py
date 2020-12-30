@@ -1,5 +1,5 @@
 # Uploads
-# Upload files to the Wave server.
+# #Upload files to the Wave server.
 # ---
 import os
 from h2o_wave import site, ui

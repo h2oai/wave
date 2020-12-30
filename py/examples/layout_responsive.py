@@ -1,5 +1,5 @@
 # Layout / Responsive
-# How to create a responsive layout.
+# How to create a #responsive #layout.
 # ---
 from h2o_wave import site, ui
 

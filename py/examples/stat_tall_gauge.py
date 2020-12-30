@@ -1,5 +1,6 @@
 # Stat / Gauge / Tall
-# Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
+# Create a tall stat card displaying a primary value, an auxiliary value and a #progress gauge.
+# #stat_card
 # ---
 import time
 from h2o_wave import site, ui

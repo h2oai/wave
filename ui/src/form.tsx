@@ -34,11 +34,12 @@ import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
-import { bond, Card, Packed, unpack, xid } from './qd'
+import { bond, Card, Packed, S, unpack, xid } from './qd'
 import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'
 import { Spinbox, XSpinbox } from './spinbox'
+import { Stats, XStats } from './stats'
 import { Stepper, XStepper } from './stepper'
 import { Table, XTable } from './table'
 import { Tabs, XTabs } from './tabs'
@@ -53,104 +54,111 @@ import { VegaVisualization, XVegaVisualization } from './vega'
 /** Create a component. */
 export interface Component {
   /** Text block. */
-  text?: Text;
+  text?: Text
   /** Extra-large sized text block. */
-  text_xl?: TextXl;
+  text_xl?: TextXl
   /** Large sized text block. */
-  text_l?: TextL;
+  text_l?: TextL
   /** Medium sized text block. */
-  text_m?: TextM;
+  text_m?: TextM
   /** Small sized text block. */
-  text_s?: TextS;
+  text_s?: TextS
   /** Extra-small sized text block. */
-  text_xs?: TextXs;
+  text_xs?: TextXs
   /** Label. */
-  label?: Label;
+  label?: Label
   /** Separator. */
-  separator?: Separator;
+  separator?: Separator
   /** Progress bar. */
-  progress?: Progress;
+  progress?: Progress
   /** Message bar. */
-  message_bar?: MessageBar;
+  message_bar?: MessageBar
   /** Textbox. */
-  textbox?: Textbox;
+  textbox?: Textbox
   /** Checkbox. */
-  checkbox?: Checkbox;
+  checkbox?: Checkbox
   /** Toggle. */
-  toggle?: Toggle;
+  toggle?: Toggle
   /** Choice group. */
-  choice_group?: ChoiceGroup;
+  choice_group?: ChoiceGroup
   /** Checklist. */
-  checklist?: Checklist;
+  checklist?: Checklist
   /** Dropdown. */
-  dropdown?: Dropdown;
+  dropdown?: Dropdown
   /** Combobox. */
-  combobox?: Combobox;
+  combobox?: Combobox
   /** Slider. */
-  slider?: Slider;
+  slider?: Slider
   /** Spinbox. */
-  spinbox?: Spinbox;
+  spinbox?: Spinbox
   /** Date picker. */
-  date_picker?: DatePicker;
+  date_picker?: DatePicker
   /** Color picker. */
-  color_picker?: ColorPicker;
+  color_picker?: ColorPicker
   /** Button. */
-  button?: Button;
+  button?: Button
   /** Button set. */
-  buttons?: Buttons;
+  buttons?: Buttons
   /** File upload. */
-  file_upload?: FileUpload;
+  file_upload?: FileUpload
   /** Table. */
   table?: Table;
   /** Link. */
-  link?: Link;
+  link?: Link
   /** Tabs. */
   tabs?: Tabs;
   /** Expander. */
-  expander?: Expander;
+  expander?: Expander
   /** Frame. */
-  frame?: Frame;
+  frame?: Frame
   /** Markup */
   markup?: Markup
   /** Template */
   template?: Template
   /** Picker.*/
-  picker?: Picker;
+  picker?: Picker
   /** Range Slider. */
-  range_slider?: RangeSlider;
+  range_slider?: RangeSlider
   /** Stepper. */
-  stepper?: Stepper;
+  stepper?: Stepper
   /** Visualization. */
-  visualization?: Visualization;
+  visualization?: Visualization
   /** Vega-lite Visualization. */
-  vega_visualization?: VegaVisualization;
+  vega_visualization?: VegaVisualization
+  /** Stats */
+  stats?: Stats
 }
 
 /** Create a form. */
 interface State {
   /** The components in this form. */
-  items: Packed<Component[]>;
+  items: Packed<Component[]>
+  /** The title for this card. */
+  title?: S
 }
-
 
 const
   theme = getTheme(),
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
-    form: {
+    components: {
       $nest: {
         '> *': {
           margin: margin(10, 0)
         }
       }
-    }
+    },
+    title: {
+      ...theme.font.s12,
+      ...theme.font.w6,
+    },
   })
 
 
 export const
   XComponents = ({ items }: { items: Component[] }) => {
     const components = items.map(m => <XComponent key={xid()} model={m} />)
-    return <>{components}</>
+    return <div className={css.components}>{components}</div>
   }
 
 const
@@ -191,6 +199,7 @@ const
     if (m.stepper) return <XToolTip content={m.stepper.tooltip}><XStepper model={m.stepper} /></XToolTip>
     if (m.visualization) return <XVisualization model={m.visualization} />
     if (m.vega_visualization) return <XVegaVisualization model={m.vega_visualization} />
+    if (m.stats) return <XStats model={m.stats} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
@@ -200,10 +209,12 @@ export const
       render = () => {
         const
           s = theme.merge(defaults, state),
+          title = s.title,
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
-          <div data-test={name} className={css.form}>
+          <div data-test={name} >
+            {title && <div className={css.title}>{title}</div>}
             <XComponents items={items} />
           </div>
         )

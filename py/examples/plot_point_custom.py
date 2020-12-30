@@ -1,5 +1,6 @@
 # Plot / Point / Custom
 # Customize a plot's fill/stroke color, size and opacity.
+# #plot
 # ---
 from h2o_wave import site, data, ui
 

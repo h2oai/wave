@@ -1,5 +1,5 @@
 # Plot / Path / Smooth
-# Make a path plot with a smooth curve.
+# Make a path #plot with a smooth curve.
 # ---
 from h2o_wave import site, data, ui
 

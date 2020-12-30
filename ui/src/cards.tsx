@@ -15,6 +15,7 @@
 import './breadcrumbs'
 import './flex'
 import './form'
+import './footer'
 import './frame'
 import './graphics'
 import './grid'

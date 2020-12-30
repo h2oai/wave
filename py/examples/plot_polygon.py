@@ -1,5 +1,5 @@
-# Plot / Point / Map
-# Make a plot to compare quantities across categories. Similar to a heatmap, but using size-encoding instead of color-encoding.
+# Plot / Polygon
+# Make a heatmap. #plot
 # ---
 from h2o_wave import site, data, ui
 

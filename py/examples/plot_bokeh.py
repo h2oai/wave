@@ -1,5 +1,5 @@
 # Plot / Bokeh
-# Use Bokeh to create plots.
+# Use #Bokeh to create plots. #plot
 # ---
 import numpy as np
 from bokeh.models import HoverTool

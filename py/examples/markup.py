@@ -1,5 +1,5 @@
 # Markup
-# Use a markup card to display formatted content using HTML.
+# Use a #markup card to display formatted content using #HTML.
 # ---
 from h2o_wave import site, ui
 

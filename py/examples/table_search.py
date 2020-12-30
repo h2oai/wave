@@ -1,5 +1,5 @@
 # Table / Search
-# Enable searching a table across specific columns.
+# Enable searching a #table across specific columns. #search
 # ---
 import random
 from datetime import datetime, timedelta

@@ -1,5 +1,6 @@
 # Stat / Series / Wide / Interval
-# Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
+# Create a wide stat card displaying a primary value, an auxiliary value and a #series plot.
+# #stat_card #interval
 # ---
 import time
 from h2o_wave import site, ui, data

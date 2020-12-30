@@ -1,5 +1,5 @@
 # Graphics / Spline
-# Use the graphics module to render splines.
+# Use the #graphics module to render splines.
 # ---
 
 import random

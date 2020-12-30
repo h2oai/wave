@@ -1,5 +1,6 @@
 # Form / Picker / Selection
-# Pre-select choices while displaying a picker.
+# Pre-select choices while displaying a #picker.
+# #form #selection #choice
 # ---
 from h2o_wave import main, app, Q, ui
 

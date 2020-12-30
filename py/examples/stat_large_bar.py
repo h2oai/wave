@@ -1,5 +1,7 @@
 # Stat / Bar / Large
-# Create a large captioned card displaying a primary value, an auxiliary value and a progress bar, with captions for each value.
+# Create a large captioned card displaying a primary value, an auxiliary value and a progress bar,
+# with captions for each value.
+# #stat_card #progress
 # ---
 import time
 from h2o_wave import site, ui

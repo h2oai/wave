@@ -1,5 +1,6 @@
 # Form / Message Bar
 # Use message bars to indicate relevant status information.
+# #form #message_bar
 # ---
 from h2o_wave import site, ui
 

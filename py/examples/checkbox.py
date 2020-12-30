@@ -1,5 +1,6 @@
 # Form / Checkbox
 # Use checkboxes to switch between two mutually exclusive options.
+# #form #checkbox
 # ---
 from h2o_wave import main, app, Q, ui
 

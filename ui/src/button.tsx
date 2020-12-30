@@ -59,7 +59,7 @@ export interface Button {
   tooltip?: S
 }
 
-/** Create a set of buttons to be layed out horizontally. */
+/** Create a set of buttons laid out horizontally. */
 export interface Buttons {
   /** The button in this set. */
   items: Component[]

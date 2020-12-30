@@ -1,5 +1,5 @@
 # Plot / Interval / Theta
-# Make a "racetrack" plot (a bar plot in polar coordinates, transposed).
+# Make a "racetrack" #plot (a bar plot in polar coordinates, transposed). #interval
 # ---
 from h2o_wave import site, data, ui
 

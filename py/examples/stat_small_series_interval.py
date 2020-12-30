@@ -1,5 +1,6 @@
 # Stat / Series / Small / Interval
 # Create a small stat card displaying a primary value and a series plot.
+# #stat_card #interval #series
 # ---
 import time
 from h2o_wave import site, ui, data

@@ -1,5 +1,6 @@
 # Table / Download
 # Allow downloading a table's data as CSV file.
+# #table #download
 # ---
 import random
 from datetime import datetime, timedelta

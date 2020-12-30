@@ -1,5 +1,5 @@
 # Plot / Form
-# Display a plot inside a form.
+# Display a #plot inside a #form.
 # ---
 from h2o_wave import site, data, ui
 

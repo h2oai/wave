@@ -176,6 +176,28 @@ ui_flex_card <- function(
   return(.o)
 }
 
+#' Render a page footer displaying a caption.
+#' Footer cards are typically displayed at the bottom of a page.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param caption The caption.
+#' @param commands Contextual menu commands for this component.
+#' @return A FooterCard instance.
+ui_footer_card <- function(
+  box,
+  caption,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("caption", "character", caption)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    caption=caption,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FooterCard"))
+  return(.o)
+}
+
 #' Create text content.
 #'
 #' @param content The text content.
@@ -1146,7 +1168,7 @@ ui_button <- function(
   return(.o)
 }
 
-#' Create a set of buttons to be layed out horizontally.
+#' Create a set of buttons laid out horizontally.
 #'
 #' @param items The button in this set.
 #' @param justify Specifies how to lay out buttons horizontally.
@@ -2069,22 +2091,61 @@ ui_vega_visualization <- function(
   return(.o)
 }
 
+#' Create a stat (a label-value pair) for displaying a metric.
+#'
+#' @param label The label for the metric.
+#' @param value The value of the metric.
+#' @return A Stat instance.
+ui_stat <- function(
+  label,
+  value) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("value", "character", value)
+  .o <- list(
+    label=label,
+    value=value)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Stat"))
+  return(.o)
+}
+
+#' Create a set of stats laid out horizontally.
+#'
+#' @param items The individual stats to be displayed.
+#' @param justify Specifies how to lay out the individual stats. Defaults to 'start'.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
+#' @return A Stats instance.
+ui_stats <- function(
+  items,
+  justify = NULL) {
+  .guard_vector("items", "h2oq_Stat", items)
+  # TODO Validate justify
+  .o <- list(stats=list(
+    items=items,
+    justify=justify))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
 #' Create a form.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param items The components in this form.
+#' @param title The title for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A FormCard instance.
 ui_form_card <- function(
   box,
   items,
+  title = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_Component", items)
+  .guard_scalar("title", "character", title)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
+    title=title,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FormCard"))
   return(.o)
@@ -2197,18 +2258,22 @@ ui_grid_card <- function(
 #' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
 #' @param label The label to display.
 #' @param icon An optional icon to display next to the label.
+#' @param disabled True if this item should be disabled.
 #' @return A NavItem instance.
 ui_nav_item <- function(
   name,
   label,
-  icon = NULL) {
+  icon = NULL,
+  disabled = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("icon", "character", icon)
+  .guard_scalar("disabled", "logical", disabled)
   .o <- list(
     name=name,
     label=label,
-    icon=icon)
+    icon=icon,
+    disabled=disabled)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavItem"))
   return(.o)
 }
@@ -2234,9 +2299,8 @@ ui_nav_group <- function(
   return(.o)
 }
 
-#' Render a card containing a HTML page inside an inline frame (iframe).
-#' 
-#' Either a path or content can be provided as arguments.
+#' Render a page header displaying a title, subtitle and an optional navigation menu.
+#' Header cards are typically used for top-level navigation.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title.

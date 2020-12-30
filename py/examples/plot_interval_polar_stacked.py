@@ -1,5 +1,5 @@
 # Plot / Interval / Polar / Stacked
-# Make a stacked rose plot (a stacked bar plot in polar coordinates).
+# Make a #stacked rose #plot (a stacked bar plot in polar coordinates). #interval
 # ---
 from h2o_wave import site, data, ui
 

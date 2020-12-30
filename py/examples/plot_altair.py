@@ -1,5 +1,5 @@
 # Plot / Altair
-# Use Altair to create plot specifications for the Vega card.
+# Use #Altair to create #plot specifications for the #Vega card.
 # ---
 import altair
 from vega_datasets import data

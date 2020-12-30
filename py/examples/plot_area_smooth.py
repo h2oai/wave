@@ -1,5 +1,5 @@
 # Plot / Area / Smooth
-# Make an area plot with a smooth curve.
+# Make an area #plot with a smooth curve.
 # ---
 from h2o_wave import site, data, ui
 

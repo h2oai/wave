@@ -1,5 +1,5 @@
 # Plot / Interval / Stacked / Grouped
-# Make a column plot with both stacked and grouped bars.
+# Make a column #plot with both #stacked and grouped bars. #interval
 # ---
 from h2o_wave import site, data, ui
 

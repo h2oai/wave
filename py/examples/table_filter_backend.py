@@ -1,5 +1,6 @@
 # Table / Filter / Backend
-# Filter table using Python
+# Filter table using Python.
+# #table
 # ---
 import pandas as pd
 from h2o_wave import main, app, Q, ui

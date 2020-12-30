@@ -1,5 +1,5 @@
 # Form / Frame
-# Use a frame component in a form card to display HTML content inline.
+# Use a #frame component in a #form card to display #HTML content inline.
 # ---
 from h2o_wave import site, ui
 

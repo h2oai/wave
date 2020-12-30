@@ -1,5 +1,5 @@
 # Plot / Axis Titles
-# Display custom axis titles on a plot.
+# Display custom axis titles on a #plot.
 # ---
 from h2o_wave import site, data, ui
 

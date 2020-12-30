@@ -1,5 +1,6 @@
 # Form / Progress / Updating
-# Update a progress bar's completion status periodically.
+# Update a #progress bar's completion status periodically.
+# #form
 # ---
 import time
 

@@ -1,5 +1,6 @@
 # Form / Spinbox
-# Use a spinbox to allow users to incrementally adjust a value in small steps.
+# Use a #spinbox to allow users to incrementally adjust a value in small steps.
+# #form
 # ---
 from h2o_wave import main, app, Q, ui
 

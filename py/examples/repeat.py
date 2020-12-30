@@ -1,5 +1,5 @@
 # Repeat
-# Use a repeat card to render a card repeatedly.
+# Use a #repeat card to render a card repeatedly.
 # ---
 import random
 

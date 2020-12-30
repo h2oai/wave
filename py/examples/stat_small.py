@@ -1,5 +1,6 @@
 # Stat / Small
 # Create a stat card displaying a single value.
+# #stat_card
 # ---
 import time
 from h2o_wave import site, ui

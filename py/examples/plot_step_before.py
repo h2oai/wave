@@ -1,5 +1,5 @@
 # Plot / Line / Step / Before
-# Make a line plot with a step-before curve.
+# Make a line #plot with a step-before curve.
 # ---
 from h2o_wave import site, data, ui
 

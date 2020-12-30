@@ -143,6 +143,28 @@ def flex_card(
     )
 
 
+def footer_card(
+        box: str,
+        caption: str,
+        commands: Optional[List[Command]] = None,
+) -> FooterCard:
+    """Render a page footer displaying a caption.
+    Footer cards are typically displayed at the bottom of a page.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        caption: The caption.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.FooterCard` instance.
+    """
+    return FooterCard(
+        box,
+        caption,
+        commands,
+    )
+
+
 def text(
         content: str,
         size: Optional[str] = None,
@@ -1026,7 +1048,7 @@ def buttons(
         name: Optional[str] = None,
         visible: Optional[bool] = None,
 ) -> Component:
-    """Create a set of buttons to be layed out horizontally.
+    """Create a set of buttons laid out horizontally.
 
     Args:
         items: The button in this set.
@@ -1828,9 +1850,46 @@ def vega_visualization(
     ))
 
 
+def stat(
+        label: str,
+        value: str,
+) -> Stat:
+    """Create a stat (a label-value pair) for displaying a metric.
+
+    Args:
+        label: The label for the metric.
+        value: The value of the metric.
+    Returns:
+        A `h2o_wave.types.Stat` instance.
+    """
+    return Stat(
+        label,
+        value,
+    )
+
+
+def stats(
+        items: List[Stat],
+        justify: Optional[str] = None,
+) -> Component:
+    """Create a set of stats laid out horizontally.
+
+    Args:
+        items: The individual stats to be displayed.
+        justify: Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
+    Returns:
+        A `h2o_wave.types.Stats` instance.
+    """
+    return Component(stats=Stats(
+        items,
+        justify,
+    ))
+
+
 def form_card(
         box: str,
         items: Union[List[Component], str],
+        title: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> FormCard:
     """Create a form.
@@ -1838,6 +1897,7 @@ def form_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: The components in this form.
+        title: The title for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FormCard` instance.
@@ -1845,6 +1905,7 @@ def form_card(
     return FormCard(
         box,
         items,
+        title,
         commands,
     )
 
@@ -1950,7 +2011,7 @@ def nav_item(
         name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
         label: The label to display.
         icon: An optional icon to display next to the label.
-        disabled: True if the nav_item should be disabled.
+        disabled: True if this item should be disabled.
     Returns:
         A `h2o_wave.types.NavItem` instance.
     """
@@ -1992,9 +2053,8 @@ def header_card(
         nav: Optional[List[NavGroup]] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
-    """Render a card containing a HTML page inside an inline frame (iframe).
-
-    Either a path or content can be provided as arguments.
+    """Render a page header displaying a title, subtitle and an optional navigation menu.
+    Header cards are typically used for top-level navigation.
 
     Args:
         box: A string indicating how to place this component on the page.

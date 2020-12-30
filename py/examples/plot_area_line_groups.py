@@ -1,5 +1,5 @@
 # Plot / Area + Line / Groups
-# Make an combined area + line plot showing multiple categories.
+# Make an combined area + line #plot showing multiple categories.
 # ---
 from h2o_wave import site, data, ui
 

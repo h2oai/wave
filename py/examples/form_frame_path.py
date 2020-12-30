@@ -1,5 +1,5 @@
 # Form / Frame / Path
-# Use a frame component in a form card to display external web pages.
+# Use a #frame component in a #form card to display external web pages.
 # ---
 from h2o_wave import site, ui
 

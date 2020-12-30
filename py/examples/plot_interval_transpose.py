@@ -1,5 +1,5 @@
 # Plot / Interval / Transpose
-# Make a bar plot.
+# Make a bar #plot. #interval
 # ---
 from h2o_wave import site, data, ui
 

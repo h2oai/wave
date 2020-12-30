@@ -1,5 +1,6 @@
 # Plot / Point / Annotation
-# Add annotations (points, lines and regions) to a plot.
+# Add annotations (points, lines and regions) to a #plot.
+# #annotation
 # ---
 from h2o_wave import site, data, ui
 

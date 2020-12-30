@@ -1,5 +1,5 @@
 # Plot / Point
-# Make a scatterplot.
+# Make a scatterplot. #plot
 # ---
 from h2o_wave import site, data, ui
 

@@ -1,5 +1,6 @@
 # Form / Picker
 # Use pickers to allow users to select one or more choices, such as tags or files, from a list.
+# #form #picker #choice
 # ---
 from h2o_wave import main, app, Q, ui
 

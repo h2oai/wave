@@ -1,5 +1,5 @@
 # Meta / Notification
-# Display a desktop notification.
+# Display a desktop #notification. #meta
 # ---
 import time
 

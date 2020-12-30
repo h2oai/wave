@@ -1,7 +1,9 @@
 # Routing
-# Use the browser's [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash) for routing using URLs.
+# Use the browser's [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash)
+# for #routing using URLs.
 #
 # The location hash can be accessed using `q.args['#']`.
+# #location_hash
 # ---
 from h2o_wave import main, app, Q, ui
 

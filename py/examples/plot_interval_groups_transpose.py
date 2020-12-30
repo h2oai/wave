@@ -1,5 +1,5 @@
 # Plot / Interval / Groups / Transpose
-# Make a grouped bar plot.
+# Make a grouped bar #plot. #interval
 # ---
 from h2o_wave import site, data, ui
 

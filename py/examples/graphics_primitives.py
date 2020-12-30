@@ -1,5 +1,5 @@
 # Graphics / Primitives
-# Use the graphics module to render and update shapes.
+# Use the #graphics module to render and update shapes.
 # ---
 
 from h2o_wave import site, ui, graphics as g

@@ -1,5 +1,5 @@
 # Header
-# Use a header card to display a page header.
+# Use a header card to display a page #header.
 # ---
 from h2o_wave import site, ui
 

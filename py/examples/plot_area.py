@@ -1,5 +1,5 @@
 # Plot / Area
-# Make an area plot.
+# Make an area #plot.
 # ---
 from h2o_wave import site, data, ui
 

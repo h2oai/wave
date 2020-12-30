@@ -1,5 +1,5 @@
 # Plot / Interval / Labels
-# Make a column plot with labels on each bar.
+# Make a column #plot with labels on each bar. #interval
 # ---
 from h2o_wave import site, data, ui
 

@@ -1,5 +1,5 @@
 # Table / Preselection
-# Use a table as an advanced multi-select. Specify rownames in 'values' for preselection.
+# Use a #table as an advanced multi-select. Specify row names in 'values' for #selection.
 # ---
 from h2o_wave import  main, app, Q, ui
 
