@@ -53,77 +53,77 @@ import { VegaVisualization, XVegaVisualization } from './vega'
 /** Create a component. */
 export interface Component {
   /** Text block. */
-  text?: Text;
+  text?: Text
   /** Extra-large sized text block. */
-  text_xl?: TextXl;
+  text_xl?: TextXl
   /** Large sized text block. */
-  text_l?: TextL;
+  text_l?: TextL
   /** Medium sized text block. */
-  text_m?: TextM;
+  text_m?: TextM
   /** Small sized text block. */
-  text_s?: TextS;
+  text_s?: TextS
   /** Extra-small sized text block. */
-  text_xs?: TextXs;
+  text_xs?: TextXs
   /** Label. */
-  label?: Label;
+  label?: Label
   /** Separator. */
-  separator?: Separator;
+  separator?: Separator
   /** Progress bar. */
-  progress?: Progress;
+  progress?: Progress
   /** Message bar. */
-  message_bar?: MessageBar;
+  message_bar?: MessageBar
   /** Textbox. */
-  textbox?: Textbox;
+  textbox?: Textbox
   /** Checkbox. */
-  checkbox?: Checkbox;
+  checkbox?: Checkbox
   /** Toggle. */
-  toggle?: Toggle;
+  toggle?: Toggle
   /** Choice group. */
-  choice_group?: ChoiceGroup;
+  choice_group?: ChoiceGroup
   /** Checklist. */
-  checklist?: Checklist;
+  checklist?: Checklist
   /** Dropdown. */
-  dropdown?: Dropdown;
+  dropdown?: Dropdown
   /** Combobox. */
-  combobox?: Combobox;
+  combobox?: Combobox
   /** Slider. */
-  slider?: Slider;
+  slider?: Slider
   /** Spinbox. */
-  spinbox?: Spinbox;
+  spinbox?: Spinbox
   /** Date picker. */
-  date_picker?: DatePicker;
+  date_picker?: DatePicker
   /** Color picker. */
-  color_picker?: ColorPicker;
+  color_picker?: ColorPicker
   /** Button. */
-  button?: Button;
+  button?: Button
   /** Button set. */
-  buttons?: Buttons;
+  buttons?: Buttons
   /** File upload. */
-  file_upload?: FileUpload;
+  file_upload?: FileUpload
   /** Table. */
   table?: Table;
   /** Link. */
-  link?: Link;
+  link?: Link
   /** Tabs. */
   tabs?: Tabs;
   /** Expander. */
-  expander?: Expander;
+  expander?: Expander
   /** Frame. */
-  frame?: Frame;
+  frame?: Frame
   /** Markup */
   markup?: Markup
   /** Template */
   template?: Template
   /** Picker.*/
-  picker?: Picker;
+  picker?: Picker
   /** Range Slider. */
-  range_slider?: RangeSlider;
+  range_slider?: RangeSlider
   /** Stepper. */
-  stepper?: Stepper;
+  stepper?: Stepper
   /** Visualization. */
-  visualization?: Visualization;
+  visualization?: Visualization
   /** Vega-lite Visualization. */
-  vega_visualization?: VegaVisualization;
+  vega_visualization?: VegaVisualization
 }
 
 /** Create a form. */
