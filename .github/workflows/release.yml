@@ -9,7 +9,8 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  VERSION: "v${{ github.event.inputs.version }}"
+  VERSION: "${{ github.event.inputs.version }}"
+  TAG: "v${{ github.event.inputs.version }}"
 
 defaults:
   run:
@@ -20,10 +21,7 @@ defaults:
 jobs:
   ci-test:
     name: CI Test
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ macos-10.15, ubuntu-18.04 ]
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
 
@@ -50,15 +48,15 @@ jobs:
         uses: EndBug/add-and-commit@v5
         with:
           add: '.'
-          message: "Release ${{ env.VERSION }}"
-          tag: ${{ env.VERSION }}
+          message: "Release ${{ env.TAG }}"
+          tag: ${{ env.TAG }}
 
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: ${{ env.VERSION }}
+          tag_name: ${{ env.TAG }}
+          release_name: ${{ env.TAG }}
           draft: false
           prerelease: true
 
@@ -88,14 +86,6 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@master
-        working-directory: py
         with:
+          packages_dir: py/dist
           password: ${{ secrets.PYPI_API_TOKEN }}
-
-      - name: Publish to Conda
-        uses: fcakyon/conda-publish-action@v1.3
-        working-directory: py
-        with:
-          subdir: 'conda'
-          anacondatoken: ${{ secrets.ANACONDA_TOKEN }}
-          platforms: 'win osx linux'
