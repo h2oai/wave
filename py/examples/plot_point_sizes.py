@@ -1,21 +1,22 @@
 # Plot / Point / Sizes
 # Make a scatterplot with mark sizes mapped to a continuous variable (a "bubble plot").
 # ---
-import random
 
-from synth import FakeScatter
 from h2o_wave import site, data, ui
 
 page = site['/demo']
 
-n = 40
-f = FakeScatter()
+ice_cream_sales = [(3, 14, 225), (5, 16.2, 335), (6, 11.6, 205), (10, 15, 362), (5, 18.3, 426),
+                   (3, 21.9, 540), (3, 19.2, 425), (5, 24.9, 644), (4, 23.2, 564), (10, 17.9, 452),
+                   (5, 22.4, 465), (7, 17, 430), (5, 14.3, 285), (10, 18.2, 442), (3, 12, 218),
+                   (5, 23.4, 492), (7, 18, 457), (5, 15.3, 315), (5, 19.2, 472), (5, 13, 238)]
+
 v = page.add('example', ui.plot_card(
     box='1 1 4 5',
-    title='Point, sized',
-    data=data('price performance discount', n),
-    plot=ui.plot([ui.mark(type='point', x='=price', y='=performance', size='=discount')])
+    title='Point, shapes - Temperature vs Ice Cream Sales for various discounts',
+    data=data('discount temperature sales', len(ice_cream_sales)),
+    plot=ui.plot([ui.mark(type='point', x='=temperature', y='=sales', size='=discount')])
 ))
-v.data = [(x, y, random.randint(1, 10)) for x, y in [f.next() for _ in range(n)]]
+v.data = ice_cream_sales
 
 page.save()

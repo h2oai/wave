@@ -1,25 +1,23 @@
 # Plot / Interval / Labels
 # Make a column plot with labels on each bar.
 # ---
-from synth import FakeCategoricalSeries
 from h2o_wave import site, data, ui
 
 page = site['/demo']
 
-n = 20
-f = FakeCategoricalSeries()
+fruit_popularity = [('Apple', 55), ('Orange', 80), ('Banana', 45), ('Kiwifruit', 40),
+                    ('Blueberry', 85), ('Grapes', 60), ('Pears', 65), ('Watermelon', 35), ]
+
 v = page.add('example', ui.plot_card(
     box='1 1 4 5',
-    title='Label Customization',
-    data=data('product price', n),
-    plot=ui.plot([
-        ui.mark(type='interval', x='=product',
-                y='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}', y_min=0,
-                color='#333333',
-                label='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}',
-                label_offset=0, label_position='middle', label_rotation='-90', label_fill_color='#fff',
-                label_font_weight='bold')])
+    title='Label Customization - Fruit popularity',
+    data=data('fruit popularity', len(fruit_popularity)),
+    plot=ui.plot([ui.mark(type='interval', x='=fruit', y='=popularity', color='#333333',
+                          label='={{intl popularity}}',
+                          label_offset=0, label_position='middle', label_rotation='-90', label_fill_color='#fff',
+                          label_font_weight='bold'
+                          )])
 ))
-v.data = [(c, x) for c, x, dx in [f.next() for _ in range(n)]]
+v.data = fruit_popularity
 
 page.save()

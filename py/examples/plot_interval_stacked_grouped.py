@@ -1,25 +1,25 @@
 # Plot / Interval / Stacked / Grouped
 # Make a column plot with both stacked and grouped bars.
 # ---
-from synth import FakeMultiCategoricalSeries
 from h2o_wave import site, data, ui
 
 page = site['/demo']
 
-n = 5
-k = 5
-f1 = FakeMultiCategoricalSeries(groups=k)
-f2 = FakeMultiCategoricalSeries(groups=k)
+fruit_popularity = [('January', 'AZ', 'Apple', 55), ('January', 'AZ', 'Orange', 80), ('January', 'AZ', 'Banana', 45),
+                    ('February', 'AZ', 'Apple', 60), ('February', 'AZ', 'Orange', 85), ('February', 'AZ', 'Banana', 50),
+                    ('January', 'CA', 'Apple', 65), ('January', 'CA', 'Orange', 95), ('January', 'CA', 'Banana', 55),
+                    ('February', 'CA', 'Apple', 75), ('February', 'CA', 'Orange', 110), ('February', 'CA', 'Banana', 70),
+                    ('January', 'FL', 'Apple', 45), ('January', 'FL', 'Orange', 50), ('January', 'FL', 'Banana', 55),
+                    ('February', 'FL', 'Apple', 40), ('February', 'FL', 'Orange', 65), ('February', 'FL', 'Banana', 70), ]
+
 v = page.add('example', ui.plot_card(
     box='1 1 4 5',
-    title='Intervals, stacked and dodged',
-    data=data('category country product price', n * k * 2),
-    plot=ui.plot([
-        ui.mark(type='interval', x='=product', y='=price', color='=country', stack='auto', dodge='=category', y_min=0)])
+    title='Intervals, stacked and dodged - Fruit popularity in different states',
+    data=data('month state fruit popularity', len(fruit_popularity)),
+    plot=ui.plot(
+        [ui.mark(type='interval', x='=state', y='=popularity', color='=fruit', dodge='=month', stack='auto', y_min=0)])
 ))
 
-data1 = [('A', g, t, x) for x in [f1.next() for _ in range(n)] for g, t, x, _ in x]
-data2 = [('B', g, t, x) for x in [f2.next() for _ in range(n)] for g, t, x, _ in x]
-v.data = data1 + data2
+v.data = fruit_popularity
 
 page.save()
