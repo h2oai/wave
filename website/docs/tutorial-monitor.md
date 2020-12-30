@@ -187,7 +187,7 @@ Terminate your program (`^C`) and restart it:
 
 ```shell
 cd $HOME/wave-apps
-./venv/bin/python system_stats.py
+./venv/bin/python system_monitor.py
 ```
 Point your browser to [http://localhost:10101/monitor](http://localhost:10101/monitor). You should now see both CPU and memory stats live:
 
