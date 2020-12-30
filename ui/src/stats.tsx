@@ -14,13 +14,15 @@
 
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { S } from './qd'
+import { Dict, S } from './qd'
 import { getTheme } from './theme'
 
 /** Create a set of stats laid out horizontally. */
 export interface Stats {
   /** The individual stats to be displayed. */
   items: Stat[]
+  /** Specifies how to lay out the individual stats. Defaults to 'start'. */
+  justify?: 'start' | 'end' | 'center' | 'between' | 'around'
 }
 
 /** Create a stat (a label-value pair) for displaying a metric. */
@@ -37,9 +39,6 @@ const
     stats: {
       display: 'flex'
     },
-    stat: {
-      marginRight: '2em'
-    },
     statLabel: {
       ...theme.font.s12,
       ...theme.font.w5,
@@ -48,17 +47,36 @@ const
       ...theme.font.s24,
       ...theme.font.w3,
     },
-  })
+  }),
+  justifications: Dict<S> = {
+    start: 'flex-start',
+    end: 'flex-end',
+    center: 'center',
+    between: 'space-between',
+    around: 'space-around',
+  },
+  statMargin = '2em'
+
 
 export const
   XStats = ({ model: m }: { model: Stats }) => {
-    const stats = m.items.map(({ label, value }, i) => (
-      <div key={`${i}:${label}`} className={css.stat}>
-        <div className={css.statLabel}>{label}</div>
-        <div className={css.statValue}>{value}</div>
-      </div>
-    ))
+    const
+      statStyle: React.CSSProperties = m.justify
+        ? m.justify === 'start'
+          ? { marginRight: statMargin }
+          : m.justify === 'end'
+            ? { marginLeft: statMargin }
+            : {}
+        : { marginRight: statMargin },
+      justification = justifications[m.justify ?? ''],
+      stats = m.items.map(({ label, value }, i) => (
+        <div key={`${i}:${label}`} style={statStyle}>
+          <div className={css.statLabel}>{label}</div>
+          <div className={css.statValue}>{value}</div>
+        </div>
+      ))
+
     return (
-      <div className={css.stats}>{stats}</div>
+      <div className={css.stats} style={{ justifyContent: justification }}>{stats}</div>
     )
   }

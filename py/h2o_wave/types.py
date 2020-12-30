@@ -4065,15 +4065,26 @@ class Stat:
         )
 
 
+class StatsJustify:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+
 class Stats:
     """Create a set of stats laid out horizontally.
     """
     def __init__(
             self,
             items: List[Stat],
+            justify: Optional[str] = None,
     ):
         self.items = items
         """The individual stats to be displayed."""
+        self.justify = justify
+        """Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4081,6 +4092,7 @@ class Stats:
             raise ValueError('Stats.items is required.')
         return _dump(
             items=[__e.dump() for __e in self.items],
+            justify=self.justify,
         )
 
     @staticmethod
@@ -4089,9 +4101,12 @@ class Stats:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('Stats.items is required.')
+        __d_justify: Any = __d.get('justify')
         items: List[Stat] = [Stat.load(__e) for __e in __d_items]
+        justify: Optional[str] = __d_justify
         return Stats(
             items,
+            justify,
         )
 
 

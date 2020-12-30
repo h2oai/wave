@@ -2111,12 +2111,17 @@ ui_stat <- function(
 #' Create a set of stats laid out horizontally.
 #'
 #' @param items The individual stats to be displayed.
+#' @param justify Specifies how to lay out the individual stats. Defaults to 'start'.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
 #' @return A Stats instance.
 ui_stats <- function(
-  items) {
+  items,
+  justify = NULL) {
   .guard_vector("items", "h2oq_Stat", items)
+  # TODO Validate justify
   .o <- list(stats=list(
-    items=items))
+    items=items,
+    justify=justify))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
