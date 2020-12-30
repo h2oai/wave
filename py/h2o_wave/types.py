@@ -2166,7 +2166,7 @@ class ButtonsJustify:
 
 
 class Buttons:
-    """Create a set of buttons to be layed out horizontally.
+    """Create a set of buttons laid out horizontally.
     """
     def __init__(
             self,
@@ -4024,6 +4024,77 @@ class VegaVisualization:
         )
 
 
+class Stat:
+    """Create a stat (a label-value pair) for displaying a metric.
+    """
+    def __init__(
+            self,
+            label: str,
+            value: str,
+    ):
+        self.label = label
+        """The label for the metric."""
+        self.value = value
+        """The value of the metric."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('Stat.label is required.')
+        if self.value is None:
+            raise ValueError('Stat.value is required.')
+        return _dump(
+            label=self.label,
+            value=self.value,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Stat':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('Stat.label is required.')
+        __d_value: Any = __d.get('value')
+        if __d_value is None:
+            raise ValueError('Stat.value is required.')
+        label: str = __d_label
+        value: str = __d_value
+        return Stat(
+            label,
+            value,
+        )
+
+
+class Stats:
+    """Create a set of stats laid out horizontally.
+    """
+    def __init__(
+            self,
+            items: List[Stat],
+    ):
+        self.items = items
+        """The individual stats to be displayed."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.items is None:
+            raise ValueError('Stats.items is required.')
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Stats':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('Stats.items is required.')
+        items: List[Stat] = [Stat.load(__e) for __e in __d_items]
+        return Stats(
+            items,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -4065,6 +4136,7 @@ class Component:
             stepper: Optional[Stepper] = None,
             visualization: Optional[Visualization] = None,
             vega_visualization: Optional[VegaVisualization] = None,
+            stats: Optional[Stats] = None,
     ):
         self.text = text
         """Text block."""
@@ -4138,6 +4210,8 @@ class Component:
         """Visualization."""
         self.vega_visualization = vega_visualization
         """Vega-lite Visualization."""
+        self.stats = stats
+        """Stats"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4178,6 +4252,7 @@ class Component:
             stepper=None if self.stepper is None else self.stepper.dump(),
             visualization=None if self.visualization is None else self.visualization.dump(),
             vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
+            stats=None if self.stats is None else self.stats.dump(),
         )
 
     @staticmethod
@@ -4219,6 +4294,7 @@ class Component:
         __d_stepper: Any = __d.get('stepper')
         __d_visualization: Any = __d.get('visualization')
         __d_vega_visualization: Any = __d.get('vega_visualization')
+        __d_stats: Any = __d.get('stats')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -4255,6 +4331,7 @@ class Component:
         stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
         visualization: Optional[Visualization] = None if __d_visualization is None else Visualization.load(__d_visualization)
         vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
+        stats: Optional[Stats] = None if __d_stats is None else Stats.load(__d_stats)
         return Component(
             text,
             text_xl,
@@ -4292,6 +4369,7 @@ class Component:
             stepper,
             visualization,
             vega_visualization,
+            stats,
         )
 
 

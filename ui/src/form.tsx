@@ -39,6 +39,7 @@ import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'
 import { Spinbox, XSpinbox } from './spinbox'
+import { Stats, XStats } from './stats'
 import { Stepper, XStepper } from './stepper'
 import { Table, XTable } from './table'
 import { Tabs, XTabs } from './tabs'
@@ -124,6 +125,8 @@ export interface Component {
   visualization?: Visualization
   /** Vega-lite Visualization. */
   vega_visualization?: VegaVisualization
+  /** Stats */
+  stats?: Stats
 }
 
 /** Create a form. */
@@ -133,7 +136,6 @@ interface State {
   /** The title for this card. */
   title?: S
 }
-
 
 const
   theme = getTheme(),
@@ -197,6 +199,7 @@ const
     if (m.stepper) return <XToolTip content={m.stepper.tooltip}><XStepper model={m.stepper} /></XToolTip>
     if (m.visualization) return <XVisualization model={m.visualization} />
     if (m.vega_visualization) return <XVegaVisualization model={m.vega_visualization} />
+    if (m.stats) return <XStats model={m.stats} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

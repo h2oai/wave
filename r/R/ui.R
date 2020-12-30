@@ -1168,7 +1168,7 @@ ui_button <- function(
   return(.o)
 }
 
-#' Create a set of buttons to be layed out horizontally.
+#' Create a set of buttons laid out horizontally.
 #'
 #' @param items The button in this set.
 #' @param justify Specifies how to lay out buttons horizontally.
@@ -2087,6 +2087,36 @@ ui_vega_visualization <- function(
     height=height,
     name=name,
     visible=visible))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
+#' Create a stat (a label-value pair) for displaying a metric.
+#'
+#' @param label The label for the metric.
+#' @param value The value of the metric.
+#' @return A Stat instance.
+ui_stat <- function(
+  label,
+  value) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("value", "character", value)
+  .o <- list(
+    label=label,
+    value=value)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Stat"))
+  return(.o)
+}
+
+#' Create a set of stats laid out horizontally.
+#'
+#' @param items The individual stats to be displayed.
+#' @return A Stats instance.
+ui_stats <- function(
+  items) {
+  .guard_vector("items", "h2oq_Stat", items)
+  .o <- list(stats=list(
+    items=items))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }

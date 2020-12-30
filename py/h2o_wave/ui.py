@@ -1048,7 +1048,7 @@ def buttons(
         name: Optional[str] = None,
         visible: Optional[bool] = None,
 ) -> Component:
-    """Create a set of buttons to be layed out horizontally.
+    """Create a set of buttons laid out horizontally.
 
     Args:
         items: The button in this set.
@@ -1847,6 +1847,39 @@ def vega_visualization(
         height,
         name,
         visible,
+    ))
+
+
+def stat(
+        label: str,
+        value: str,
+) -> Stat:
+    """Create a stat (a label-value pair) for displaying a metric.
+
+    Args:
+        label: The label for the metric.
+        value: The value of the metric.
+    Returns:
+        A `h2o_wave.types.Stat` instance.
+    """
+    return Stat(
+        label,
+        value,
+    )
+
+
+def stats(
+        items: List[Stat],
+) -> Component:
+    """Create a set of stats laid out horizontally.
+
+    Args:
+        items: The individual stats to be displayed.
+    Returns:
+        A `h2o_wave.types.Stats` instance.
+    """
+    return Component(stats=Stats(
+        items,
     ))
 
 
