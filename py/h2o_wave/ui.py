@@ -2555,6 +2555,31 @@ def repeat_card(
     )
 
 
+def section_card(
+        box: str,
+        title: str,
+        subtitle: str,
+        commands: Optional[List[Command]] = None,
+) -> SectionCard:
+    """Render a card displaying a title and a subtitle.
+    Section cards are typically used to demarcate different sections on a page.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title.
+        subtitle: The subtitle, displayed below the title.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.SectionCard` instance.
+    """
+    return SectionCard(
+        box,
+        title,
+        subtitle,
+        commands,
+    )
+
+
 def small_series_stat_card(
         box: str,
         title: str,

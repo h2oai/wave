@@ -2877,6 +2877,32 @@ ui_repeat_card <- function(
   return(.o)
 }
 
+#' Render a card displaying a title and a subtitle.
+#' Section cards are typically used to demarcate different sections on a page.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title.
+#' @param subtitle The subtitle, displayed below the title.
+#' @param commands Contextual menu commands for this component.
+#' @return A SectionCard instance.
+ui_section_card <- function(
+  box,
+  title,
+  subtitle,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    subtitle=subtitle,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SectionCard"))
+  return(.o)
+}
+
 #' Create a small stat card displaying a primary value and a series plot.
 #'
 #' @param box A string indicating how to place this component on the page.

@@ -6057,6 +6057,67 @@ class RepeatCard:
         )
 
 
+class SectionCard:
+    """Render a card displaying a title and a subtitle.
+    Section cards are typically used to demarcate different sections on a page.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            subtitle: str,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('SectionCard.box is required.')
+        if self.title is None:
+            raise ValueError('SectionCard.title is required.')
+        if self.subtitle is None:
+            raise ValueError('SectionCard.subtitle is required.')
+        return _dump(
+            view='section',
+            box=self.box,
+            title=self.title,
+            subtitle=self.subtitle,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'SectionCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('SectionCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('SectionCard.title is required.')
+        __d_subtitle: Any = __d.get('subtitle')
+        if __d_subtitle is None:
+            raise ValueError('SectionCard.subtitle is required.')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        subtitle: str = __d_subtitle
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return SectionCard(
+            box,
+            title,
+            subtitle,
+            commands,
+        )
+
+
 class SmallSeriesStatCardPlotType:
     AREA = 'area'
     INTERVAL = 'interval'
