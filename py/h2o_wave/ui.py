@@ -2655,6 +2655,64 @@ def small_stat_card(
     )
 
 
+def stat_list_item(
+        label: str,
+        caption: Optional[str] = None,
+        value: Optional[str] = None,
+        aux_value: Optional[str] = None,
+        icon: Optional[str] = None,
+        value_color: Optional[str] = None,
+) -> StatListItem:
+    """Create a stat (a label-value pair) for displaying a metric.
+
+    Args:
+        label: The label for the metric.
+        caption: The caption for the metric, displayed below the label.
+        value: The primary value of the metric.
+        aux_value: The auxiliary value, displayed below the primary value.
+        icon: An optional icon, displayed next to the label.
+        value_color: The font color of the primary value.
+    Returns:
+        A `h2o_wave.types.StatListItem` instance.
+    """
+    return StatListItem(
+        label,
+        caption,
+        value,
+        aux_value,
+        icon,
+        value_color,
+    )
+
+
+def stat_list_card(
+        box: str,
+        title: str,
+        items: List[StatListItem],
+        subtitle: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> StatListCard:
+    """Render a card displaying a title and a subtitle.
+    Section cards are typically used to demarcate different sections on a page.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title.
+        items: The individual stats to be displayed.
+        subtitle: The subtitle, displayed below the title.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.StatListCard` instance.
+    """
+    return StatListCard(
+        box,
+        title,
+        items,
+        subtitle,
+        commands,
+    )
+
+
 def tab_card(
         box: str,
         items: List[Tab],

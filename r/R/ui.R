@@ -2991,6 +2991,69 @@ ui_small_stat_card <- function(
   return(.o)
 }
 
+#' Create a stat (a label-value pair) for displaying a metric.
+#'
+#' @param label The label for the metric.
+#' @param caption The caption for the metric, displayed below the label.
+#' @param value The primary value of the metric.
+#' @param aux_value The auxiliary value, displayed below the primary value.
+#' @param icon An optional icon, displayed next to the label.
+#' @param value_color The font color of the primary value.
+#' @return A StatListItem instance.
+ui_stat_list_item <- function(
+  label,
+  caption = NULL,
+  value = NULL,
+  aux_value = NULL,
+  icon = NULL,
+  value_color = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("aux_value", "character", aux_value)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("value_color", "character", value_color)
+  .o <- list(
+    label=label,
+    caption=caption,
+    value=value,
+    aux_value=aux_value,
+    icon=icon,
+    value_color=value_color)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_StatListItem"))
+  return(.o)
+}
+
+#' Render a card displaying a title and a subtitle.
+#' Section cards are typically used to demarcate different sections on a page.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title.
+#' @param items The individual stats to be displayed.
+#' @param subtitle The subtitle, displayed below the title.
+#' @param commands Contextual menu commands for this component.
+#' @return A StatListCard instance.
+ui_stat_list_card <- function(
+  box,
+  title,
+  items,
+  subtitle = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_vector("items", "h2oq_StatListItem", items)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    items=items,
+    subtitle=subtitle,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_StatListCard"))
+  return(.o)
+}
+
 #' Create a card containing tabs for navigation.
 #'
 #' @param box A string indicating how to place this component on the page.

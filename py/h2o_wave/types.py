@@ -6322,6 +6322,139 @@ class SmallStatCard:
         )
 
 
+class StatListItem:
+    """Create a stat (a label-value pair) for displaying a metric.
+    """
+    def __init__(
+            self,
+            label: str,
+            caption: Optional[str] = None,
+            value: Optional[str] = None,
+            aux_value: Optional[str] = None,
+            icon: Optional[str] = None,
+            value_color: Optional[str] = None,
+    ):
+        self.label = label
+        """The label for the metric."""
+        self.caption = caption
+        """The caption for the metric, displayed below the label."""
+        self.value = value
+        """The primary value of the metric."""
+        self.aux_value = aux_value
+        """The auxiliary value, displayed below the primary value."""
+        self.icon = icon
+        """An optional icon, displayed next to the label."""
+        self.value_color = value_color
+        """The font color of the primary value."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('StatListItem.label is required.')
+        return _dump(
+            label=self.label,
+            caption=self.caption,
+            value=self.value,
+            aux_value=self.aux_value,
+            icon=self.icon,
+            value_color=self.value_color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'StatListItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('StatListItem.label is required.')
+        __d_caption: Any = __d.get('caption')
+        __d_value: Any = __d.get('value')
+        __d_aux_value: Any = __d.get('aux_value')
+        __d_icon: Any = __d.get('icon')
+        __d_value_color: Any = __d.get('value_color')
+        label: str = __d_label
+        caption: Optional[str] = __d_caption
+        value: Optional[str] = __d_value
+        aux_value: Optional[str] = __d_aux_value
+        icon: Optional[str] = __d_icon
+        value_color: Optional[str] = __d_value_color
+        return StatListItem(
+            label,
+            caption,
+            value,
+            aux_value,
+            icon,
+            value_color,
+        )
+
+
+class StatListCard:
+    """Render a card displaying a title and a subtitle.
+    Section cards are typically used to demarcate different sections on a page.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            items: List[StatListItem],
+            subtitle: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title."""
+        self.items = items
+        """The individual stats to be displayed."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('StatListCard.box is required.')
+        if self.title is None:
+            raise ValueError('StatListCard.title is required.')
+        if self.items is None:
+            raise ValueError('StatListCard.items is required.')
+        return _dump(
+            view='stat_list',
+            box=self.box,
+            title=self.title,
+            items=[__e.dump() for __e in self.items],
+            subtitle=self.subtitle,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'StatListCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('StatListCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('StatListCard.title is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('StatListCard.items is required.')
+        __d_subtitle: Any = __d.get('subtitle')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        items: List[StatListItem] = [StatListItem.load(__e) for __e in __d_items]
+        subtitle: Optional[str] = __d_subtitle
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return StatListCard(
+            box,
+            title,
+            items,
+            subtitle,
+            commands,
+        )
+
+
 class TabCard:
     """Create a card containing tabs for navigation.
     """
