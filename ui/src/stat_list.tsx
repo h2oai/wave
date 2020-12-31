@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { FontIcon } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
@@ -41,12 +42,14 @@ export interface StatListItem {
   caption?: S
   /** The primary value of the metric. */
   value?: S
+  /** The font color of the primary value. */
+  value_color?: S
   /** The auxiliary value, displayed below the primary value. */
   aux_value?: S
   /** An optional icon, displayed next to the label. */
   icon?: S
-  /** The font color of the primary value. */
-  value_color?: S
+  /** The color of the icon. */
+  icon_color?: S
 }
 
 const
@@ -79,6 +82,12 @@ const
         }
       }
     },
+    icon: {
+      padding: '0.2em 0.5em 0em 0.1em',
+    },
+    lhs: {
+      flexGrow: 1,
+    },
     rhs: {
       textAlign: 'right'
     },
@@ -88,6 +97,7 @@ const
     },
     caption: {
       ...theme.font.s12,
+      opacity: 0.7,
     },
     value: {
       ...theme.font.s13,
@@ -95,6 +105,7 @@ const
     },
     auxValue: {
       ...theme.font.s12,
+      opacity: 0.7,
     },
   })
 
@@ -104,16 +115,18 @@ export const
       render = () => {
         const
           { title, subtitle, items } = state,
-          list = items.map(({ label, caption, value, aux_value, icon, value_color }, i) => {
+          list = items.map(({ label, caption, value, value_color, aux_value, icon, icon_color }, i) => {
             return (
               <div key={`${i}:${label}`} className={css.item}>
-                { icon && <div >icon</div>}
-                <div>
+                { icon && <div className={css.icon} style={icon_color ? { color: theme.color(icon_color) } : undefined}><FontIcon iconName={icon} /></div>}
+                <div className={css.lhs}>
                   <div className={css.label}>{label}</div>
                   {caption && <div className={css.caption}>{caption}</div>}
                 </div>
                 <div className={css.rhs}>
-                  {value && <div className={css.value} style={value_color ? { color: theme.color(value_color) } : {}}>{value}</div>}
+                  {value && (
+                    <div className={css.value} style={value_color ? { color: theme.color(value_color) } : undefined}>{value}</div>
+                  )}
                   {aux_value && <div className={css.auxValue}>{aux_value}</div>}
                 </div>
               </div>

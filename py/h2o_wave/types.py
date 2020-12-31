@@ -6344,9 +6344,10 @@ class StatListItem:
             label: str,
             caption: Optional[str] = None,
             value: Optional[str] = None,
+            value_color: Optional[str] = None,
             aux_value: Optional[str] = None,
             icon: Optional[str] = None,
-            value_color: Optional[str] = None,
+            icon_color: Optional[str] = None,
     ):
         self.label = label
         """The label for the metric."""
@@ -6354,12 +6355,14 @@ class StatListItem:
         """The caption for the metric, displayed below the label."""
         self.value = value
         """The primary value of the metric."""
+        self.value_color = value_color
+        """The font color of the primary value."""
         self.aux_value = aux_value
         """The auxiliary value, displayed below the primary value."""
         self.icon = icon
         """An optional icon, displayed next to the label."""
-        self.value_color = value_color
-        """The font color of the primary value."""
+        self.icon_color = icon_color
+        """The color of the icon."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6369,9 +6372,10 @@ class StatListItem:
             label=self.label,
             caption=self.caption,
             value=self.value,
+            value_color=self.value_color,
             aux_value=self.aux_value,
             icon=self.icon,
-            value_color=self.value_color,
+            icon_color=self.icon_color,
         )
 
     @staticmethod
@@ -6382,22 +6386,25 @@ class StatListItem:
             raise ValueError('StatListItem.label is required.')
         __d_caption: Any = __d.get('caption')
         __d_value: Any = __d.get('value')
+        __d_value_color: Any = __d.get('value_color')
         __d_aux_value: Any = __d.get('aux_value')
         __d_icon: Any = __d.get('icon')
-        __d_value_color: Any = __d.get('value_color')
+        __d_icon_color: Any = __d.get('icon_color')
         label: str = __d_label
         caption: Optional[str] = __d_caption
         value: Optional[str] = __d_value
+        value_color: Optional[str] = __d_value_color
         aux_value: Optional[str] = __d_aux_value
         icon: Optional[str] = __d_icon
-        value_color: Optional[str] = __d_value_color
+        icon_color: Optional[str] = __d_icon_color
         return StatListItem(
             label,
             caption,
             value,
+            value_color,
             aux_value,
             icon,
-            value_color,
+            icon_color,
         )
 
 

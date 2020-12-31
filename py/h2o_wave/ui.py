@@ -2665,9 +2665,10 @@ def stat_list_item(
         label: str,
         caption: Optional[str] = None,
         value: Optional[str] = None,
+        value_color: Optional[str] = None,
         aux_value: Optional[str] = None,
         icon: Optional[str] = None,
-        value_color: Optional[str] = None,
+        icon_color: Optional[str] = None,
 ) -> StatListItem:
     """Create a stat (a label-value pair) for displaying a metric.
 
@@ -2675,9 +2676,10 @@ def stat_list_item(
         label: The label for the metric.
         caption: The caption for the metric, displayed below the label.
         value: The primary value of the metric.
+        value_color: The font color of the primary value.
         aux_value: The auxiliary value, displayed below the primary value.
         icon: An optional icon, displayed next to the label.
-        value_color: The font color of the primary value.
+        icon_color: The color of the icon.
     Returns:
         A `h2o_wave.types.StatListItem` instance.
     """
@@ -2685,9 +2687,10 @@ def stat_list_item(
         label,
         caption,
         value,
+        value_color,
         aux_value,
         icon,
-        value_color,
+        icon_color,
     )
 
 
