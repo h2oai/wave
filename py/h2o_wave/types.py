@@ -6337,7 +6337,7 @@ class SmallStatCard:
 
 
 class StatListItem:
-    """Create a stat (a label-value pair) for displaying a metric.
+    """Create a stat item (a label-value pair) for stat_list_card.
     """
     def __init__(
             self,
@@ -6409,8 +6409,7 @@ class StatListItem:
 
 
 class StatListCard:
-    """Render a card displaying a title and a subtitle.
-    Section cards are typically used to demarcate different sections on a page.
+    """Render a card displaying a list of stats.
     """
     def __init__(
             self,
@@ -6470,6 +6469,146 @@ class StatListCard:
         return StatListCard(
             box,
             title,
+            items,
+            subtitle,
+            commands,
+        )
+
+
+class StatTableItem:
+    """Create a stat item (a label and a set of values) for stat_table_card.
+    """
+    def __init__(
+            self,
+            label: str,
+            values: List[str],
+            caption: Optional[str] = None,
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+    ):
+        self.label = label
+        """The label for the row."""
+        self.values = values
+        """The values displayed in the row."""
+        self.caption = caption
+        """The caption for the metric, displayed below the label."""
+        self.icon = icon
+        """An optional icon, displayed next to the label."""
+        self.icon_color = icon_color
+        """The color of the icon."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('StatTableItem.label is required.')
+        if self.values is None:
+            raise ValueError('StatTableItem.values is required.')
+        return _dump(
+            label=self.label,
+            values=self.values,
+            caption=self.caption,
+            icon=self.icon,
+            icon_color=self.icon_color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'StatTableItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('StatTableItem.label is required.')
+        __d_values: Any = __d.get('values')
+        if __d_values is None:
+            raise ValueError('StatTableItem.values is required.')
+        __d_caption: Any = __d.get('caption')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
+        label: str = __d_label
+        values: List[str] = __d_values
+        caption: Optional[str] = __d_caption
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
+        return StatTableItem(
+            label,
+            values,
+            caption,
+            icon,
+            icon_color,
+        )
+
+
+class StatTableCard:
+    """Render a card displaying a table of stats.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            columns: List[str],
+            items: List[StatTableItem],
+            subtitle: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title."""
+        self.columns = columns
+        """The names of this table's columns."""
+        self.items = items
+        """The rows displayed in this table."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('StatTableCard.box is required.')
+        if self.title is None:
+            raise ValueError('StatTableCard.title is required.')
+        if self.columns is None:
+            raise ValueError('StatTableCard.columns is required.')
+        if self.items is None:
+            raise ValueError('StatTableCard.items is required.')
+        return _dump(
+            view='stat_table',
+            box=self.box,
+            title=self.title,
+            columns=self.columns,
+            items=[__e.dump() for __e in self.items],
+            subtitle=self.subtitle,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'StatTableCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('StatTableCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('StatTableCard.title is required.')
+        __d_columns: Any = __d.get('columns')
+        if __d_columns is None:
+            raise ValueError('StatTableCard.columns is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('StatTableCard.items is required.')
+        __d_subtitle: Any = __d.get('subtitle')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        columns: List[str] = __d_columns
+        items: List[StatTableItem] = [StatTableItem.load(__e) for __e in __d_items]
+        subtitle: Optional[str] = __d_subtitle
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return StatTableCard(
+            box,
+            title,
+            columns,
             items,
             subtitle,
             commands,

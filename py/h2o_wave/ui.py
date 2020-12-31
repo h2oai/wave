@@ -2670,7 +2670,7 @@ def stat_list_item(
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
 ) -> StatListItem:
-    """Create a stat (a label-value pair) for displaying a metric.
+    """Create a stat item (a label-value pair) for stat_list_card.
 
     Args:
         label: The label for the metric.
@@ -2701,8 +2701,7 @@ def stat_list_card(
         subtitle: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> StatListCard:
-    """Render a card displaying a title and a subtitle.
-    Section cards are typically used to demarcate different sections on a page.
+    """Render a card displaying a list of stats.
 
     Args:
         box: A string indicating how to place this component on the page.
@@ -2716,6 +2715,63 @@ def stat_list_card(
     return StatListCard(
         box,
         title,
+        items,
+        subtitle,
+        commands,
+    )
+
+
+def stat_table_item(
+        label: str,
+        values: List[str],
+        caption: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+) -> StatTableItem:
+    """Create a stat item (a label and a set of values) for stat_table_card.
+
+    Args:
+        label: The label for the row.
+        values: The values displayed in the row.
+        caption: The caption for the metric, displayed below the label.
+        icon: An optional icon, displayed next to the label.
+        icon_color: The color of the icon.
+    Returns:
+        A `h2o_wave.types.StatTableItem` instance.
+    """
+    return StatTableItem(
+        label,
+        values,
+        caption,
+        icon,
+        icon_color,
+    )
+
+
+def stat_table_card(
+        box: str,
+        title: str,
+        columns: List[str],
+        items: List[StatTableItem],
+        subtitle: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> StatTableCard:
+    """Render a card displaying a table of stats.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title.
+        columns: The names of this table's columns.
+        items: The rows displayed in this table.
+        subtitle: The subtitle, displayed below the title.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.StatTableCard` instance.
+    """
+    return StatTableCard(
+        box,
+        title,
+        columns,
         items,
         subtitle,
         commands,

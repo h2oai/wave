@@ -2999,7 +2999,7 @@ ui_small_stat_card <- function(
   return(.o)
 }
 
-#' Create a stat (a label-value pair) for displaying a metric.
+#' Create a stat item (a label-value pair) for stat_list_card.
 #'
 #' @param label The label for the metric.
 #' @param caption The caption for the metric, displayed below the label.
@@ -3036,8 +3036,7 @@ ui_stat_list_item <- function(
   return(.o)
 }
 
-#' Render a card displaying a title and a subtitle.
-#' Section cards are typically used to demarcate different sections on a page.
+#' Render a card displaying a list of stats.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title.
@@ -3063,6 +3062,68 @@ ui_stat_list_card <- function(
     subtitle=subtitle,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_StatListCard"))
+  return(.o)
+}
+
+#' Create a stat item (a label and a set of values) for stat_table_card.
+#'
+#' @param label The label for the row.
+#' @param values The values displayed in the row.
+#' @param caption The caption for the metric, displayed below the label.
+#' @param icon An optional icon, displayed next to the label.
+#' @param icon_color The color of the icon.
+#' @return A StatTableItem instance.
+ui_stat_table_item <- function(
+  label,
+  values,
+  caption = NULL,
+  icon = NULL,
+  icon_color = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_vector("values", "character", values)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("icon_color", "character", icon_color)
+  .o <- list(
+    label=label,
+    values=values,
+    caption=caption,
+    icon=icon,
+    icon_color=icon_color)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_StatTableItem"))
+  return(.o)
+}
+
+#' Render a card displaying a table of stats.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title.
+#' @param columns The names of this table's columns.
+#' @param items The rows displayed in this table.
+#' @param subtitle The subtitle, displayed below the title.
+#' @param commands Contextual menu commands for this component.
+#' @return A StatTableCard instance.
+ui_stat_table_card <- function(
+  box,
+  title,
+  columns,
+  items,
+  subtitle = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_vector("columns", "character", columns)
+  .guard_vector("items", "h2oq_StatTableItem", items)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    columns=columns,
+    items=items,
+    subtitle=subtitle,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_StatTableCard"))
   return(.o)
 }
 
