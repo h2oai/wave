@@ -21,8 +21,7 @@ import { getTheme } from './theme'
 
 
 /**
- * Render a card displaying a title and a subtitle.
- * Section cards are typically used to demarcate different sections on a page. 
+ * Render a card displaying a list of stats.
  */
 interface State {
   /** The title. */
@@ -34,7 +33,7 @@ interface State {
   subtitle?: S
 }
 
-/** Create a stat (a label-value pair) for displaying a metric. */
+/** Create a stat item (a label-value pair) for stat_list_card. */
 export interface StatListItem {
   /** The label for the metric. */
   label: S
