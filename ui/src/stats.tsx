@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { FontIcon } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Dict, S } from './qd'
@@ -31,6 +32,10 @@ export interface Stat {
   label: S
   /** The value of the metric. */
   value: S
+  /** An optional icon, displayed next to the label. */
+  icon?: S
+  /** The color of the icon. */
+  icon_color?: S
 }
 
 const
@@ -38,6 +43,17 @@ const
   css = stylesheet({
     stats: {
       display: 'flex'
+    },
+    stat: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    lhs: {
+      width: '45px',
+      marginRight: '0.5em',
+    },
+    icon: {
+      fontSize: '45px',
     },
     statLabel: {
       ...theme.font.s12,
@@ -69,10 +85,17 @@ export const
             : {}
         : { marginRight: statMargin },
       justification = justifications[m.justify ?? ''],
-      stats = m.items.map(({ label, value }, i) => (
-        <div key={`${i}:${label}`} style={statStyle}>
-          <div className={css.statLabel}>{label}</div>
-          <div className={css.statValue}>{value}</div>
+      stats = m.items.map(({ label, value, icon, icon_color }, i) => (
+        <div key={`${i}:${label}`} className={css.stat} style={statStyle}>
+          { icon && (
+            <div className={css.lhs} style={icon_color ? { color: theme.color(icon_color) } : undefined}>
+              <FontIcon className={css.icon} iconName={icon} />
+            </div>
+          )}
+          <div>
+            <div className={css.statLabel}>{label}</div>
+            <div className={css.statValue}>{value}</div>
+          </div>
         </div>
       ))
 

@@ -1853,18 +1853,24 @@ def vega_visualization(
 def stat(
         label: str,
         value: str,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
 ) -> Stat:
     """Create a stat (a label-value pair) for displaying a metric.
 
     Args:
         label: The label for the metric.
         value: The value of the metric.
+        icon: An optional icon, displayed next to the label.
+        icon_color: The color of the icon.
     Returns:
         A `h2o_wave.types.Stat` instance.
     """
     return Stat(
         label,
         value,
+        icon,
+        icon_color,
     )
 
 

@@ -4031,11 +4031,17 @@ class Stat:
             self,
             label: str,
             value: str,
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
     ):
         self.label = label
         """The label for the metric."""
         self.value = value
         """The value of the metric."""
+        self.icon = icon
+        """An optional icon, displayed next to the label."""
+        self.icon_color = icon_color
+        """The color of the icon."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4046,6 +4052,8 @@ class Stat:
         return _dump(
             label=self.label,
             value=self.value,
+            icon=self.icon,
+            icon_color=self.icon_color,
         )
 
     @staticmethod
@@ -4057,11 +4065,17 @@ class Stat:
         __d_value: Any = __d.get('value')
         if __d_value is None:
             raise ValueError('Stat.value is required.')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
         label: str = __d_label
         value: str = __d_value
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
         return Stat(
             label,
             value,
+            icon,
+            icon_color,
         )
 
 
