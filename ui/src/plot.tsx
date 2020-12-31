@@ -504,7 +504,7 @@ const
         o.color.callback = (x: S) => domain_colors[x]
       }
     } else {
-      o.color = isS(color) ? color : theme.colors.gray
+      o.color = isS(color) ? theme.color(color) : theme.colors.gray
     }
     if (isS(shape_field)) {
       if (isS(shape_range)) {
@@ -577,9 +577,9 @@ const
   },
   makeShapeStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, stroke_dash?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = fill_color
+    if (isS(fill_color)) s.fill = theme.color(fill_color)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = stroke_color
+    if (isS(stroke_color)) s.stroke = theme.color(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isS(stroke_dash)) s.lineDash = parseInts(stroke_dash)
@@ -587,9 +587,9 @@ const
   },
   makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S, line_height?: F, align?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = fill_color
+    if (isS(fill_color)) s.fill = theme.color(fill_color)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = stroke_color
+    if (isS(stroke_color)) s.stroke = theme.color(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isF(font_size)) s.fontSize = font_size
