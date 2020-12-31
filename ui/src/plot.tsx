@@ -494,7 +494,7 @@ const
     if (adjust.length) o.adjust = adjust
     if (isS(x_field) && isS(y_field)) o.position = { fields: [x_field, y_field] }
     if (isS(color_field)) {
-      const colors = isS(color_range) ? split(color_range) : cat10
+      const colors = isS(color_range) ? split(color_range).map(theme.color) : cat10
       o.color = { fields: [color_field], values: colors }
       if (color_domain && color_domain.length == colors.length) {
         const domain_colors = color_domain.reduce((acc, value, i) => {
