@@ -63,10 +63,14 @@ const
     subtitle: {
       ...theme.font.s12,
     },
+    items: {
+      flexGrow: 1,
+      overflow: 'auto',
+      marginTop: '1em',
+    },
     table: {
       ...theme.font.s13,
       width: '100%',
-      marginTop: '1em',
       $nest: {
         thead: {
           ...theme.font.w6,
@@ -155,16 +159,18 @@ export const
           <div data-test={name} className={css.card}>
             <div className={css.title}>{title}</div>
             { subtitle && <div className={css.subtitle}>{subtitle}</div>}
-            <table className={css.table}>
-              <thead>
-                <tr>
-                  {header}
-                </tr>
-              </thead>
-              <tbody>
-                {rows}
-              </tbody>
-            </table>
+            <div className={css.items}>
+              <table className={css.table}>
+                <thead>
+                  <tr>
+                    {header}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows}
+                </tbody>
+              </table>
+            </div>
           </div>
         )
       }
