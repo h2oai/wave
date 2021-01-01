@@ -16,7 +16,7 @@ import { FontIcon } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { bond, Card, S } from './qd'
+import { bond, Card, qd, S } from './qd'
 import { getTheme } from './theme'
 
 
@@ -31,6 +31,8 @@ interface State {
   /** The rows displayed in this table. */
   items: StatTableItem[]
   // TODO optional data for buffer-based rendering.
+  /** An optional name for this item. */
+  name?: S
   /** The subtitle, displayed below the title. */
   subtitle?: S
 }
@@ -41,6 +43,8 @@ export interface StatTableItem {
   label: S
   /** The values displayed in the row. */
   values: S[]
+  /** An optional name for this row (required only if this row is clickable). */
+  name?: S
   /** The caption for the metric, displayed below the label. */
   caption?: S
   /** An optional icon, displayed next to the label. */
@@ -70,6 +74,7 @@ const
     },
     table: {
       ...theme.font.s13,
+      borderSpacing: 0,
       width: '100%',
       $nest: {
         thead: {
@@ -122,6 +127,14 @@ const
     icon: {
       padding: '0.2em 0.5em 0em 0.1em',
     },
+    clickable: {
+      cursor: 'pointer',
+      $nest: {
+        '&:hover': {
+          backgroundColor: '#fafafa',
+        }
+      },
+    },
   })
 
 export const
@@ -129,16 +142,17 @@ export const
     const
       render = () => {
         const
-          { title, columns, subtitle, items } = state,
+          { name: tableName, title, columns, subtitle, items } = state,
           header = columns.map((label, i) => (
             <th key={`${i}:${label}`}>{label}</th>
           )),
-          rows = items.map(({ label, values, caption, icon, icon_color }, i) => {
-            const cells = values.map((value, j) => {
-              return (<td key={`${j}:${value}`}>{value}</td>)
-            })
+          rows = items.map(({ name: rowName, label, values, caption, icon, icon_color }, i) => {
+            const
+              onClick = rowName ? () => qd.jump(tableName, rowName) : undefined,
+              cells = values.map((value, j) => (<td key={`${j}:${value}`}>{value}</td>))
+
             return (
-              <tr key={`${i}:${label}`}>
+              <tr key={rowName ?? `${i}:${label}`} className={onClick ? css.clickable : undefined} onClick={onClick}>
                 <th key='label'>
                   <div className={css.header}>
                     {icon && <div className={css.icon} style={icon_color ? { color: theme.color(icon_color) } : undefined}>

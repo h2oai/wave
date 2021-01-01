@@ -738,6 +738,7 @@ export interface Qd {
   dialogB: Box<Dialog | null>
   page(): PageRef
   sync(): void
+  jump(key: any, value: any): void
 }
 
 const
@@ -787,6 +788,18 @@ export const qd: Qd = {
     }
     sock.send(`@ ${qd.path} ${JSON.stringify(args)}`)
     qd.busyB(true)
+  },
+  jump: (key: any, value: any) => {
+    if (value.startsWith('#')) {
+      window.location.hash = value.substr(1)
+      return
+    }
+    if (key) {
+      qd.args[key] = value
+    } else {
+      qd.args[value] = true
+    }
+    qd.sync()
   },
 }
 

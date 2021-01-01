@@ -16,8 +16,8 @@ import { FontIcon } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { bond, Card, S } from './qd'
-import { getTheme } from './theme'
+import { bond, Card, qd, S } from './qd'
+import { clas, getTheme } from './theme'
 
 
 /**
@@ -29,6 +29,8 @@ interface State {
   /** The individual stats to be displayed. */
   items: StatListItem[]
   // TODO optional data for buffer-based rendering.
+  /** An optional name for this item. */
+  name?: S
   /** The subtitle, displayed below the title. */
   subtitle?: S
 }
@@ -37,6 +39,8 @@ interface State {
 export interface StatListItem {
   /** The label for the metric. */
   label: S
+  /** An optional name for this item (required only if this item is clickable). */
+  name?: S
   /** The caption for the metric, displayed below the label. */
   caption?: S
   /** The primary value of the metric. */
@@ -106,6 +110,14 @@ const
       ...theme.font.s12,
       opacity: 0.7,
     },
+    clickable: {
+      cursor: 'pointer',
+      $nest: {
+        '&:hover': {
+          backgroundColor: '#fafafa',
+        }
+      },
+    },
   })
 
 export const
@@ -113,10 +125,12 @@ export const
     const
       render = () => {
         const
-          { title, subtitle, items } = state,
-          list = items.map(({ label, caption, value, value_color, aux_value, icon, icon_color }, i) => {
+          { name: listName, title, subtitle, items } = state,
+          list = items.map(({ name: itemName, label, caption, value, value_color, aux_value, icon, icon_color }, i) => {
+            const
+              onClick = itemName ? () => qd.jump(listName, itemName) : undefined
             return (
-              <div key={`${i}:${label}`} className={css.item}>
+              <div key={itemName ?? `${i}:${label}`} className={onClick ? clas(css.item, css.clickable) : css.item} onClick={onClick}>
                 { icon && <div className={css.icon} style={icon_color ? { color: theme.color(icon_color) } : undefined}><FontIcon iconName={icon} /></div>}
                 <div className={css.lhs}>
                   <div className={css.label}>{label}</div>
