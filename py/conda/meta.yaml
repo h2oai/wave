@@ -4,6 +4,25 @@ package:
 
 about:
   home: https://h2o.ai/products/h2o-wave
-  license: Apache-2.0 License
-  license_family: APACHE
+  license: Apache License Version 2.0
+  license_family: Apache
   summary: Python driver for H2O Wave Realtime Apps
+
+requirements:
+  build:
+    - python {{ python }}
+    - pip
+    - wheel
+    - Click
+    - httpx==0.16.1
+    - uvicorn==0.12.2
+    - starlette==0.13.8
+
+  run:
+    - Click
+    - httpx==0.16.1
+    - uvicorn==0.12.2
+    - starlette==0.13.8
+
+source:
+  path: ..
