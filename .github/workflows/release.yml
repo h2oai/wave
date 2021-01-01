@@ -12,12 +12,6 @@ env:
   VERSION: "${{ github.event.inputs.version }}"
   TAG: "v${{ github.event.inputs.version }}"
 
-defaults:
-  run:
-    shell: bash
-
-#TODO: Generate change log
-
 jobs:
   ci-test:
     name: CI Test
