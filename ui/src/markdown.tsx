@@ -12,17 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import markdownit from 'markdown-it'
+import MarkdownIt from 'markdown-it'
+import Renderer from 'markdown-it/lib/renderer'
+import Token from 'markdown-it/lib/token'
 import React from 'react'
 import { cards, substitute } from './layout'
-import { bond, Card, Rec, S, unpack } from './qd'
 import { MarkupCard } from './markup'
+import { bond, Card, Rec, S, U, unpack } from './qd'
 
-export const
-  markdown = markdownit({ html: true, linkify: true, typographer: true, }),
-  markdownSafe = markdownit({ typographer: true, linkify: true }),
-  Markdown = ({ source }: { source: S }) => (<div dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />),
-  MarkdownSafe = ({ source }: { source: S }) => (<div dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />)
+const
+  markdown = MarkdownIt({ html: true, linkify: true, typographer: true }),
+  defaultRenderer = markdown.renderer.rules.text
+markdown.renderer.rules.text = (tokens: Token[], idx: U, options: MarkdownIt.Options, env: any, self: Renderer) => {
+  const
+    linkOpenToken = tokens[idx + 1],
+    hrefAttr = linkOpenToken?.attrGet('href')
+
+  // Had to inline the onclick otherwise I would need a global function. Custom event is handled at App.tsx. Return false prevents navigation behavior.
+  if (hrefAttr?.startsWith('?')) linkOpenToken.attrPush(['onclick', `window.dispatchEvent(new CustomEvent("md-link-click", {detail:"${hrefAttr.substring(1)}" }));return false`])
+  return defaultRenderer!(tokens, idx, options, env, self)
+}
+
+export const Markdown = ({ source }: { source: S }) => <div dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />
 
 /**
  * Create a card that renders Markdown content.

@@ -97,9 +97,11 @@ const
         }
         qd.sync()
       },
+      onMdLinkClick = ({ detail }: any) => qd.args[detail] = true,
       init = () => {
         connect('/_s', onSocket)
         window.addEventListener('hashchange', onHashChanged)
+        window.addEventListener('md-link-click', onMdLinkClick)
       },
       render = () => {
         const { page, error } = contentB()
@@ -122,6 +124,7 @@ const
       },
       dispose = () => {
         window.removeEventListener('hashchange', onHashChanged)
+        window.removeEventListener('md-link-click', onMdLinkClick)
       }
 
     return { init, render, dispose, contentB }

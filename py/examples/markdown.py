@@ -1,7 +1,7 @@
 # Markdown
 # Use a markdown card to display formatted content using #markdown.
 # ---
-from h2o_wave import site, ui
+from h2o_wave import site, ui, main
 
 page = site['/demo']
 

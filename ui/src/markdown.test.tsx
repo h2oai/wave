@@ -13,23 +13,22 @@
 // limitations under the License.
 
 import React from 'react'
-import { render } from '@testing-library/react'
-import { View } from './markdown'
-import * as T from './qd'
-
-const
-  name = 'markdown',
-  markdown_props: T.Card<any> = {
-    name,
-    state: { content: '' },
-    changed: T.box(false)
-  }
+import { render, fireEvent } from '@testing-library/react'
+import { Markdown } from './markdown'
 
 describe('Markdown.tsx', () => {
 
-  it('Renders data-test attr', () => {
-    const { queryByTestId } = render(<View {...markdown_props} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-  })
+  // Jest JSDOM does not support event system, so we can only check if the event was dispatched.
+  it('Dispatches a custom event when link prefixed with "?"', () => {
+    const dispatchEventMock = jest.fn()
+    window.dispatchEvent = dispatchEventMock
+    const { getByText } = render(<Markdown source='The quick brown [fox](?fox) jumps over the lazy [dog](dog).' />)
 
+    fireEvent.click(getByText('fox'))
+    expect(dispatchEventMock).toHaveBeenCalled()
+
+    dispatchEventMock.mockClear()
+    fireEvent.click(getByText('dog'))
+    expect(dispatchEventMock).not.toHaveBeenCalled()
+  })
 })
