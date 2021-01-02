@@ -66,8 +66,13 @@ export const
           window.location.hash = name.substr(1)
           return
         }
-        if (name !== qd.args[m.name]) {
-          qd.args[m.name] = name
+        if (m.name) {
+          if (name !== qd.args[m.name]) {
+            qd.args[m.name] = name
+            qd.sync()
+          }
+        } else {
+          qd.args[name] = true
           qd.sync()
         }
       },
