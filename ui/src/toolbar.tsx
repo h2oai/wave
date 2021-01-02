@@ -100,6 +100,6 @@ export const
     return { render, changed }
   })
 
-cards.register('toolbar', View, CardEffect.Flat)
+cards.register('toolbar', View, CardEffect.Transparent)
 
 
