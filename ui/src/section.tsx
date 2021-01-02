@@ -14,14 +14,23 @@
 
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { Component, XComponentAlignment, XComponents } from './form'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
-import { bond, Card, S } from './qd'
+import { bond, Card, Packed, S, unpack } from './qd'
 import { getTheme } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+    },
+    lhs: {
+      flexGrow: 1,
+    },
+    rhs: {
+    },
     title: {
       ...theme.font.s14,
       ...theme.font.w6,
@@ -44,6 +53,8 @@ interface State {
   title: S
   /** The subtitle, displayed below the title. Supports Markdown. */
   subtitle: S
+  /** The components to display in this card */
+  items?: Packed<Component[]>
 }
 
 export const
@@ -51,12 +62,21 @@ export const
     const
       render = () => {
         const
-          { title, subtitle } = state
+          { title, subtitle, items } = state,
+          components = unpack<Component[]>(items), // XXX ugly
+          form = items && (
+            <div className={css.rhs}>
+              <XComponents items={components} alignment={XComponentAlignment.Right} />
+            </div>
+          )
 
         return (
-          <div data-test={name}>
-            <div className={css.title}>{title}</div>
-            <div className={css.subtitle}><Markdown source={subtitle} /></div>
+          <div data-test={name} className={css.card}>
+            <div className={css.lhs}>
+              <div className={css.title}>{title}</div>
+              <div className={css.subtitle}><Markdown source={subtitle} /></div>
+            </div>
+            {form}
           </div>
         )
       }

@@ -2568,6 +2568,7 @@ def section_card(
         box: str,
         title: str,
         subtitle: str,
+        items: Optional[Union[List[Component], str]] = None,
         commands: Optional[List[Command]] = None,
 ) -> SectionCard:
     """Render a card displaying a title and a subtitle.
@@ -2577,6 +2578,7 @@ def section_card(
         box: A string indicating how to place this component on the page.
         title: The title.
         subtitle: The subtitle, displayed below the title. Supports Markdown.
+        items: The components to display in this card
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.SectionCard` instance.
@@ -2585,6 +2587,7 @@ def section_card(
         box,
         title,
         subtitle,
+        items,
         commands,
     )
 
@@ -2805,7 +2808,7 @@ def tab_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        items: Items to render.
+        items: The tabs to display in this card
         value: The name of the tab to select.
         link: True if tabs should be rendered as links instead of buttons.
         name: An optional name for the card. If provided, the selected tab can be accessed using the name of the card.

@@ -2895,21 +2895,25 @@ ui_repeat_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title.
 #' @param subtitle The subtitle, displayed below the title. Supports Markdown.
+#' @param items The components to display in this card
 #' @param commands Contextual menu commands for this component.
 #' @return A SectionCard instance.
 ui_section_card <- function(
   box,
   title,
   subtitle,
+  items = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
+  .guard_vector("items", "h2oq_Component", items)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     title=title,
     subtitle=subtitle,
+    items=items,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SectionCard"))
   return(.o)
@@ -3150,7 +3154,7 @@ ui_stat_table_card <- function(
 #' Create a card containing tabs for navigation.
 #'
 #' @param box A string indicating how to place this component on the page.
-#' @param items Items to render.
+#' @param items The tabs to display in this card
 #' @param value The name of the tab to select.
 #' @param link True if tabs should be rendered as links instead of buttons.
 #' @param name An optional name for the card. If provided, the selected tab can be accessed using the name of the card.

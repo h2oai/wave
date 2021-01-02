@@ -6087,6 +6087,7 @@ class SectionCard:
             box: str,
             title: str,
             subtitle: str,
+            items: Optional[Union[List[Component], str]] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -6095,6 +6096,8 @@ class SectionCard:
         """The title."""
         self.subtitle = subtitle
         """The subtitle, displayed below the title. Supports Markdown."""
+        self.items = items
+        """The components to display in this card"""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6111,6 +6114,7 @@ class SectionCard:
             box=self.box,
             title=self.title,
             subtitle=self.subtitle,
+            items=None if self.items is None else self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -6126,15 +6130,18 @@ class SectionCard:
         __d_subtitle: Any = __d.get('subtitle')
         if __d_subtitle is None:
             raise ValueError('SectionCard.subtitle is required.')
+        __d_items: Any = __d.get('items')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         subtitle: str = __d_subtitle
+        items: Optional[Union[List[Component], str]] = __d_items if isinstance(__d_items, str) else None if __d_items is None else [Component.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return SectionCard(
             box,
             title,
             subtitle,
+            items,
             commands,
         )
 
@@ -6665,7 +6672,7 @@ class TabCard:
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
-        """Items to render."""
+        """The tabs to display in this card"""
         self.value = value
         """The name of the tab to select."""
         self.link = link
