@@ -15,10 +15,10 @@
 import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
-import { CardView, GridLayout, getCardEffectClass } from './layout'
+import { CardEffect, CardView, getCardEffect, GridLayout } from './layout'
 import { Layout, layoutsB, preload, Zone } from './meta'
 import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
-import { clas } from './theme'
+import { clas, getTheme, palette } from './theme'
 
 
 type Breakpoint = {
@@ -115,6 +115,7 @@ on(layoutsB, layouts => {
 })
 
 const
+  theme = getTheme(),
   css = stylesheet({
     layout: {
       display: 'flex',
@@ -135,7 +136,52 @@ const
         '>*:last-child': { marginRight: 0 }
       }
     },
+    slot: {
+      boxSizing: 'border-box',
+      transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
+      overflow: 'auto',
+      $nest: {
+        '>*:first-child': {
+          boxSizing: 'border-box',
+          margin: 15,
+        }
+      }
+    },
+    normal: {
+      backgroundColor: theme.colors.card,
+      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      $nest: {
+        '&:hover': {
+          boxShadow: `0px 12px 20px ${theme.colors.text2}`,
+        }
+      },
+    },
+    raised: {
+      color: theme.colors.card,
+      backgroundColor: palette.themePrimary,
+      boxShadow: `0px 3px 7px ${theme.colors.text3}`,
+    },
+    flat: {
+      backgroundColor: theme.colors.card,
+      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+    },
+    transparent: {
+      $nest: {
+        '>*:first-child': {
+          margin: '0 15px'
+        }
+      }
+    },
   }),
+  getCardEffectClass = (c: C) => {
+    const effect = getCardEffect(c)
+    return clas(css.slot, effect === CardEffect.Normal
+      ? css.normal
+      : effect === CardEffect.Raised
+        ? css.raised
+        : effect == CardEffect.Flat
+          ? css.flat : css.transparent)
+  },
   justifications: Dict<S> = {
     start: 'flex-start',
     end: 'flex-end',

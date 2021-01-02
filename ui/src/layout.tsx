@@ -180,7 +180,7 @@ const
       backgroundColor: theme.colors.card,
       boxShadow: `0px 3px 5px ${theme.colors.text0}`,
     },
-    flush: {
+    transparent: {
       $nest: {
         '>*:first-child': {
           position: 'absolute',
@@ -188,19 +188,19 @@ const
         }
       }
     },
-  })
-
-
-export const
+  }),
   getCardEffectClass = (c: C) => {
-    const effect = cards.lookup(c.state.view).effect
+    const effect = getCardEffect(c)
     return clas(css.slot, effect === CardEffect.Normal
       ? css.normal
       : effect === CardEffect.Raised
         ? css.raised
         : effect == CardEffect.Flat
-          ? css.flat : css.flush)
-  },
+          ? css.flat : css.transparent)
+  }
+
+export const
+  getCardEffect = (c: C): CardEffect => cards.lookup(c.state.view).effect,
   GridLayout = ({ name, cards: cs }: { name: S, cards: C[] }) => {
     const
       children = cs.map(c => {
