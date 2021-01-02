@@ -15,6 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
+import { Markdown } from './markdown'
 import { bond, Card, S } from './qd'
 import { getTheme } from './theme'
 
@@ -27,6 +28,9 @@ const
     },
     subtitle: {
       ...theme.font.s12,
+      $nest: {
+        '>div>p': { margin: 0 },
+      },
     },
   })
 
@@ -38,7 +42,7 @@ const
 interface State {
   /** The title. */
   title: S
-  /** The subtitle, displayed below the title. */
+  /** The subtitle, displayed below the title. Supports Markdown. */
   subtitle: S
 }
 
@@ -52,7 +56,7 @@ export const
         return (
           <div data-test={name}>
             <div className={css.title}>{title}</div>
-            <div className={css.subtitle}>{subtitle}</div>
+            <div className={css.subtitle}><Markdown source={subtitle} /></div>
           </div>
         )
       }
