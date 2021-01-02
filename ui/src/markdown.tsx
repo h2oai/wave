@@ -21,8 +21,8 @@ import { MarkupCard } from './markup'
 export const
   markdown = markdownit({ html: true, linkify: true, typographer: true, }),
   markdownSafe = markdownit({ typographer: true, linkify: true }),
-  Markdown = ({ source }: { source: S }) => (<div dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />),
-  MarkdownSafe = ({ source }: { source: S }) => (<div dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />)
+  Markdown = ({ source }: { source: S }) => <div className='wave-markdown' dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />,
+  MarkdownSafe = ({ source }: { source: S }) => <div dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />
 
 /**
  * Create a card that renders Markdown content.
