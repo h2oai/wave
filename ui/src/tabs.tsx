@@ -41,6 +41,8 @@ export interface Tabs {
   items?: Tab[]
   /** True if the component should be visible. Defaults to true. */
   visible?: B
+  /** True if tabs should be rendered as links instead of buttons. */
+  link?: B
 }
 
 export const
@@ -59,8 +61,21 @@ export const
         }
       },
       render = () => {
-        const tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />)
-        return <Fluent.Pivot data-test={m.name} style={displayMixin(m.visible)} selectedKey={m.value ?? null} onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
+        const tabs = m.items?.map(t => (
+          <Fluent.PivotItem
+            key={t.name}
+            itemIcon={t.icon}
+            itemKey={t.name}
+            headerText={t.label} />
+        ))
+        return (
+          <Fluent.Pivot
+            data-test={m.name}
+            style={displayMixin(m.visible)}
+            selectedKey={m.value ?? null}
+            linkFormat={m.link ? Fluent.PivotLinkFormat.links : Fluent.PivotLinkFormat.tabs}
+            onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
+        )
       }
     return { render }
   })

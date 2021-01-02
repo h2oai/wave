@@ -24,7 +24,7 @@ interface State {
   items: Tab[]
   /** The name of the tab to select. */
   value?: S
-  /** True if tabs should be rendered as links and not a standard tab. */
+  /** True if tabs should be rendered as links instead of buttons. */
   link?: B
 }
 
