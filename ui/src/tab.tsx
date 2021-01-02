@@ -40,7 +40,11 @@ export const
           window.location.hash = name.substr(1)
           return
         }
-        qd.args[name] = state.name ?? true
+        if (state.name) {
+          qd.args[state.name] = name
+        } else {
+          qd.args[name] = true
+        }
         qd.sync()
       },
       render = () => {
