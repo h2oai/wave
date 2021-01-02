@@ -153,7 +153,7 @@ def footer_card(
 
     Args:
         box: A string indicating how to place this component on the page.
-        caption: The caption.
+        caption: The caption. Supports markdown.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FooterCard` instance.
@@ -1332,6 +1332,7 @@ def tabs(
         value: Optional[str] = None,
         items: Optional[List[Tab]] = None,
         visible: Optional[bool] = None,
+        link: Optional[bool] = None,
 ) -> Component:
     """Create a tab bar.
 
@@ -1340,6 +1341,7 @@ def tabs(
         value: The name of the tab to select.
         items: The tabs in this tab bar.
         visible: True if the component should be visible. Defaults to true.
+        link: True if tabs should be rendered as links instead of buttons.
     Returns:
         A `h2o_wave.types.Tabs` instance.
     """
@@ -1348,6 +1350,7 @@ def tabs(
         value,
         items,
         visible,
+        link,
     ))
 
 
@@ -2573,7 +2576,7 @@ def section_card(
     Args:
         box: A string indicating how to place this component on the page.
         title: The title.
-        subtitle: The subtitle, displayed below the title.
+        subtitle: The subtitle, displayed below the title. Supports Markdown.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.SectionCard` instance.
@@ -2663,6 +2666,7 @@ def small_stat_card(
 
 def stat_list_item(
         label: str,
+        name: Optional[str] = None,
         caption: Optional[str] = None,
         value: Optional[str] = None,
         value_color: Optional[str] = None,
@@ -2674,6 +2678,7 @@ def stat_list_item(
 
     Args:
         label: The label for the metric.
+        name: An optional name for this item (required only if this item is clickable).
         caption: The caption for the metric, displayed below the label.
         value: The primary value of the metric.
         value_color: The font color of the primary value.
@@ -2685,6 +2690,7 @@ def stat_list_item(
     """
     return StatListItem(
         label,
+        name,
         caption,
         value,
         value_color,
@@ -2698,6 +2704,7 @@ def stat_list_card(
         box: str,
         title: str,
         items: List[StatListItem],
+        name: Optional[str] = None,
         subtitle: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> StatListCard:
@@ -2707,6 +2714,7 @@ def stat_list_card(
         box: A string indicating how to place this component on the page.
         title: The title.
         items: The individual stats to be displayed.
+        name: An optional name for this item.
         subtitle: The subtitle, displayed below the title.
         commands: Contextual menu commands for this component.
     Returns:
@@ -2716,6 +2724,7 @@ def stat_list_card(
         box,
         title,
         items,
+        name,
         subtitle,
         commands,
     )
@@ -2724,6 +2733,7 @@ def stat_list_card(
 def stat_table_item(
         label: str,
         values: List[str],
+        name: Optional[str] = None,
         caption: Optional[str] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
@@ -2733,6 +2743,7 @@ def stat_table_item(
     Args:
         label: The label for the row.
         values: The values displayed in the row.
+        name: An optional name for this row (required only if this row is clickable).
         caption: The caption for the metric, displayed below the label.
         icon: An optional icon, displayed next to the label.
         icon_color: The color of the icon.
@@ -2742,6 +2753,7 @@ def stat_table_item(
     return StatTableItem(
         label,
         values,
+        name,
         caption,
         icon,
         icon_color,
@@ -2753,6 +2765,7 @@ def stat_table_card(
         title: str,
         columns: List[str],
         items: List[StatTableItem],
+        name: Optional[str] = None,
         subtitle: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> StatTableCard:
@@ -2763,6 +2776,7 @@ def stat_table_card(
         title: The title.
         columns: The names of this table's columns.
         items: The rows displayed in this table.
+        name: An optional name for this item.
         subtitle: The subtitle, displayed below the title.
         commands: Contextual menu commands for this component.
     Returns:
@@ -2773,6 +2787,7 @@ def stat_table_card(
         title,
         columns,
         items,
+        name,
         subtitle,
         commands,
     )
@@ -2783,6 +2798,7 @@ def tab_card(
         items: List[Tab],
         value: Optional[str] = None,
         link: Optional[bool] = None,
+        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> TabCard:
     """Create a card containing tabs for navigation.
@@ -2791,7 +2807,8 @@ def tab_card(
         box: A string indicating how to place this component on the page.
         items: Items to render.
         value: The name of the tab to select.
-        link: True if tabs should be rendered as links and not a standard tab.
+        link: True if tabs should be rendered as links instead of buttons.
+        name: An optional name for the card. If provided, the selected tab can be accessed using the name of the card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.TabCard` instance.
@@ -2801,6 +2818,7 @@ def tab_card(
         items,
         value,
         link,
+        name,
         commands,
     )
 

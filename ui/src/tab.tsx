@@ -26,6 +26,8 @@ interface State {
   value?: S
   /** True if tabs should be rendered as links instead of buttons. */
   link?: B
+  /** An optional name for the card. If provided, the selected tab can be accessed using the name of the card. */
+  name?: S
 }
 
 export const
@@ -38,7 +40,7 @@ export const
           window.location.hash = name.substr(1)
           return
         }
-        qd.args[name] = true
+        qd.args[name] = state.name ?? true
         qd.sync()
       },
       render = () => {

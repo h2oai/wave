@@ -341,7 +341,7 @@ class FooterCard:
         self.box = box
         """A string indicating how to place this component on the page."""
         self.caption = caption
-        """The caption."""
+        """The caption. Supports markdown."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -2809,6 +2809,7 @@ class Tabs:
             value: Optional[str] = None,
             items: Optional[List[Tab]] = None,
             visible: Optional[bool] = None,
+            link: Optional[bool] = None,
     ):
         self.name = name
         """An identifying name for this component."""
@@ -2818,6 +2819,8 @@ class Tabs:
         """The tabs in this tab bar."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
+        self.link = link
+        """True if tabs should be rendered as links instead of buttons."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2828,6 +2831,7 @@ class Tabs:
             value=self.value,
             items=None if self.items is None else [__e.dump() for __e in self.items],
             visible=self.visible,
+            link=self.link,
         )
 
     @staticmethod
@@ -2839,15 +2843,18 @@ class Tabs:
         __d_value: Any = __d.get('value')
         __d_items: Any = __d.get('items')
         __d_visible: Any = __d.get('visible')
+        __d_link: Any = __d.get('link')
         name: str = __d_name
         value: Optional[str] = __d_value
         items: Optional[List[Tab]] = None if __d_items is None else [Tab.load(__e) for __e in __d_items]
         visible: Optional[bool] = __d_visible
+        link: Optional[bool] = __d_link
         return Tabs(
             name,
             value,
             items,
             visible,
+            link,
         )
 
 
@@ -6087,7 +6094,7 @@ class SectionCard:
         self.title = title
         """The title."""
         self.subtitle = subtitle
-        """The subtitle, displayed below the title."""
+        """The subtitle, displayed below the title. Supports Markdown."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6342,6 +6349,7 @@ class StatListItem:
     def __init__(
             self,
             label: str,
+            name: Optional[str] = None,
             caption: Optional[str] = None,
             value: Optional[str] = None,
             value_color: Optional[str] = None,
@@ -6351,6 +6359,8 @@ class StatListItem:
     ):
         self.label = label
         """The label for the metric."""
+        self.name = name
+        """An optional name for this item (required only if this item is clickable)."""
         self.caption = caption
         """The caption for the metric, displayed below the label."""
         self.value = value
@@ -6370,6 +6380,7 @@ class StatListItem:
             raise ValueError('StatListItem.label is required.')
         return _dump(
             label=self.label,
+            name=self.name,
             caption=self.caption,
             value=self.value,
             value_color=self.value_color,
@@ -6384,6 +6395,7 @@ class StatListItem:
         __d_label: Any = __d.get('label')
         if __d_label is None:
             raise ValueError('StatListItem.label is required.')
+        __d_name: Any = __d.get('name')
         __d_caption: Any = __d.get('caption')
         __d_value: Any = __d.get('value')
         __d_value_color: Any = __d.get('value_color')
@@ -6391,6 +6403,7 @@ class StatListItem:
         __d_icon: Any = __d.get('icon')
         __d_icon_color: Any = __d.get('icon_color')
         label: str = __d_label
+        name: Optional[str] = __d_name
         caption: Optional[str] = __d_caption
         value: Optional[str] = __d_value
         value_color: Optional[str] = __d_value_color
@@ -6399,6 +6412,7 @@ class StatListItem:
         icon_color: Optional[str] = __d_icon_color
         return StatListItem(
             label,
+            name,
             caption,
             value,
             value_color,
@@ -6416,6 +6430,7 @@ class StatListCard:
             box: str,
             title: str,
             items: List[StatListItem],
+            name: Optional[str] = None,
             subtitle: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
@@ -6425,6 +6440,8 @@ class StatListCard:
         """The title."""
         self.items = items
         """The individual stats to be displayed."""
+        self.name = name
+        """An optional name for this item."""
         self.subtitle = subtitle
         """The subtitle, displayed below the title."""
         self.commands = commands
@@ -6443,6 +6460,7 @@ class StatListCard:
             box=self.box,
             title=self.title,
             items=[__e.dump() for __e in self.items],
+            name=self.name,
             subtitle=self.subtitle,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
@@ -6459,17 +6477,20 @@ class StatListCard:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('StatListCard.items is required.')
+        __d_name: Any = __d.get('name')
         __d_subtitle: Any = __d.get('subtitle')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         items: List[StatListItem] = [StatListItem.load(__e) for __e in __d_items]
+        name: Optional[str] = __d_name
         subtitle: Optional[str] = __d_subtitle
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return StatListCard(
             box,
             title,
             items,
+            name,
             subtitle,
             commands,
         )
@@ -6482,6 +6503,7 @@ class StatTableItem:
             self,
             label: str,
             values: List[str],
+            name: Optional[str] = None,
             caption: Optional[str] = None,
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
@@ -6490,6 +6512,8 @@ class StatTableItem:
         """The label for the row."""
         self.values = values
         """The values displayed in the row."""
+        self.name = name
+        """An optional name for this row (required only if this row is clickable)."""
         self.caption = caption
         """The caption for the metric, displayed below the label."""
         self.icon = icon
@@ -6506,6 +6530,7 @@ class StatTableItem:
         return _dump(
             label=self.label,
             values=self.values,
+            name=self.name,
             caption=self.caption,
             icon=self.icon,
             icon_color=self.icon_color,
@@ -6520,17 +6545,20 @@ class StatTableItem:
         __d_values: Any = __d.get('values')
         if __d_values is None:
             raise ValueError('StatTableItem.values is required.')
+        __d_name: Any = __d.get('name')
         __d_caption: Any = __d.get('caption')
         __d_icon: Any = __d.get('icon')
         __d_icon_color: Any = __d.get('icon_color')
         label: str = __d_label
         values: List[str] = __d_values
+        name: Optional[str] = __d_name
         caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
         return StatTableItem(
             label,
             values,
+            name,
             caption,
             icon,
             icon_color,
@@ -6546,6 +6574,7 @@ class StatTableCard:
             title: str,
             columns: List[str],
             items: List[StatTableItem],
+            name: Optional[str] = None,
             subtitle: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
@@ -6557,6 +6586,8 @@ class StatTableCard:
         """The names of this table's columns."""
         self.items = items
         """The rows displayed in this table."""
+        self.name = name
+        """An optional name for this item."""
         self.subtitle = subtitle
         """The subtitle, displayed below the title."""
         self.commands = commands
@@ -6578,6 +6609,7 @@ class StatTableCard:
             title=self.title,
             columns=self.columns,
             items=[__e.dump() for __e in self.items],
+            name=self.name,
             subtitle=self.subtitle,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
@@ -6597,12 +6629,14 @@ class StatTableCard:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('StatTableCard.items is required.')
+        __d_name: Any = __d.get('name')
         __d_subtitle: Any = __d.get('subtitle')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         title: str = __d_title
         columns: List[str] = __d_columns
         items: List[StatTableItem] = [StatTableItem.load(__e) for __e in __d_items]
+        name: Optional[str] = __d_name
         subtitle: Optional[str] = __d_subtitle
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return StatTableCard(
@@ -6610,6 +6644,7 @@ class StatTableCard:
             title,
             columns,
             items,
+            name,
             subtitle,
             commands,
         )
@@ -6624,6 +6659,7 @@ class TabCard:
             items: List[Tab],
             value: Optional[str] = None,
             link: Optional[bool] = None,
+            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
@@ -6633,7 +6669,9 @@ class TabCard:
         self.value = value
         """The name of the tab to select."""
         self.link = link
-        """True if tabs should be rendered as links and not a standard tab."""
+        """True if tabs should be rendered as links instead of buttons."""
+        self.name = name
+        """An optional name for the card. If provided, the selected tab can be accessed using the name of the card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6649,6 +6687,7 @@ class TabCard:
             items=[__e.dump() for __e in self.items],
             value=self.value,
             link=self.link,
+            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -6663,17 +6702,20 @@ class TabCard:
             raise ValueError('TabCard.items is required.')
         __d_value: Any = __d.get('value')
         __d_link: Any = __d.get('link')
+        __d_name: Any = __d.get('name')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: List[Tab] = [Tab.load(__e) for __e in __d_items]
         value: Optional[str] = __d_value
         link: Optional[bool] = __d_link
+        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TabCard(
             box,
             items,
             value,
             link,
+            name,
             commands,
         )
 
