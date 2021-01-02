@@ -160,7 +160,7 @@ const
   },
   toSectionStyle = (zone: Zone, direction?: S): React.CSSProperties => {
     const
-      css: React.CSSProperties = {
+      style: React.CSSProperties = {
         flexDirection: zone.direction === 'row' ? 'row' : 'column',
         justifyContent: justifications[zone.justify ?? ''],
         alignItems: alignments[zone.align ?? ''],
@@ -169,17 +169,22 @@ const
       }
 
     if (zone.size) {
-      if (direction === 'row') {
-        css.width = zone.size
-      } else {
-        css.height = zone.size
-        css.minHeight = zone.size // Needed for Safari.
+      const grow = parseU(zone.size) // attempt strict-parse to uint
+      if (!isNaN(grow)) {// no units; treat as ratio
+        style.flexGrow = grow
+      } else { // has units; treat as size
+        if (direction === 'row') {
+          style.width = zone.size
+        } else {
+          style.height = zone.size
+          style.minHeight = zone.size // Needed for Safari.
+        }
       }
-    } else {
-      css.flexGrow = 1
+    } else { // so size; occupy 1 part
+      style.flexGrow = 1
     }
 
-    return css
+    return style
   },
   toSlotStyle = ({ card: c, slot }: CardSlot): React.CSSProperties => {
     const
