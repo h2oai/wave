@@ -33,8 +33,8 @@ type Slot = {
   order: U
   zone?: S
   grow?: U
-  size1?: S
-  size2?: S
+  width?: S
+  height?: S
 }
 
 type CardSlot = {
@@ -62,7 +62,7 @@ const
   parseBreakpoint = (spec: S): U => parseInt(presetBreakpoints[spec] ?? spec, 10),
   badSlot: Slot = { order: 0 },
   parseBox = ({ zone, order, size, width, height }: any): Slot => {
-    return { zone, order: order ? order : 0, grow: parseU(size), size1: width, size2: height }
+    return { zone, order: order ? order : 0, grow: parseU(size), width, height }
   },
   parseBoxes = (index: U, spec: S): Slot => {
     try {
@@ -181,29 +181,20 @@ const
 
     return css
   },
-  toSlotStyle = ({ card: c, slot }: CardSlot, direction?: S): React.CSSProperties => {
+  toSlotStyle = ({ card: c, slot }: CardSlot): React.CSSProperties => {
     const
-      { size1, size2, grow } = slot,
+      { width, height, grow } = slot,
       zIndex = c.name === '__unhandled_error__' ? 1 : undefined,
       style: React.CSSProperties = { position: 'relative', zIndex }
     if (grow) {
       style.flexGrow = grow
+    } else if (width || height) {
+      if (width) style.width = width
+      if (height) style.height = height
     } else {
-      if (size1 && size2) {
-        style.width = size1
-        style.height = size2
-      } else if (size1) {
-        if (direction === 'row') {
-          style.width = size1
-        } else {
-          style.height = size1
-        }
-      } else {
-        style.flexGrow = 1
-      }
+      style.flexGrow = 1
     }
     return style
-
   },
   toSection = (zone: Zone): Section => ({
     zone,
@@ -239,7 +230,7 @@ const
           cardslots.map(cardslot => {
             const { card: c } = cardslot
             return (
-              <div key={c.id} className={getCardEffectClass(c)} style={toSlotStyle(cardslot, zone.direction)}>
+              <div key={c.id} className={getCardEffectClass(c)} style={toSlotStyle(cardslot)}>
                 <CardView card={c} />
                 {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
               </div>
