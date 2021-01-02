@@ -171,7 +171,7 @@ const
     if (zone.size) {
       const grow = parseU(zone.size) // attempt strict-parse to uint
       if (!isNaN(grow)) {// no units; treat as ratio
-        style.flexGrow = grow
+        if (grow > 0) style.flexGrow = grow
       } else { // has units; treat as size
         if (direction === 'row') {
           style.width = zone.size
