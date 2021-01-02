@@ -55,4 +55,4 @@ export const
     return { render, changed }
   })
 
-cards.register('tab', View, CardEffect.Flat)
+cards.register('tab', View, CardEffect.Transparent)
