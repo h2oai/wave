@@ -47,9 +47,14 @@ export const
   XTabs = bond(({ model: m }: { model: Tabs }) => {
     const
       onLinkClick = (item?: Fluent.PivotItem) => {
-        if (!item) return
-        if (item.props.itemKey !== qd.args[m.name]) {
-          qd.args[m.name] = item.props.itemKey || null
+        const name = item?.props.itemKey
+        if (!name) return
+        if (name.startsWith('#')) {
+          window.location.hash = name.substr(1)
+          return
+        }
+        if (name !== qd.args[m.name]) {
+          qd.args[m.name] = name
           qd.sync()
         }
       },
