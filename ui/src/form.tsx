@@ -141,10 +141,27 @@ const
   theme = getTheme(),
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
-    components: {
+    vertical: {
       $nest: {
         '> *': {
           margin: margin(10, 0)
+        }
+      }
+    },
+    horizontalLeft: {
+      display: 'flex',
+      $nest: {
+        '> *': {
+          margin: margin(0, 15, 0, 0),
+        }
+      }
+    },
+    horizontalRight: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      $nest: {
+        '> *': {
+          margin: margin(0, 0, 0, 15),
         }
       }
     },
@@ -154,11 +171,18 @@ const
     },
   })
 
+export enum XComponentAlignment { Top, Left, Right }
 
 export const
-  XComponents = ({ items }: { items: Component[] }) => {
-    const components = items.map(m => <XComponent key={xid()} model={m} />)
-    return <div className={css.components}>{components}</div>
+  XComponents = ({ items, alignment }: { items: Component[], alignment?: XComponentAlignment }) => {
+    const
+      components = items.map(m => <XComponent key={xid()} model={m} />),
+      className = alignment === XComponentAlignment.Left
+        ? css.horizontalLeft
+        : alignment === XComponentAlignment.Right
+          ? css.horizontalRight
+          : css.vertical
+    return <div className={className}>{components}</div>
   }
 
 const
