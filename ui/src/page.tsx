@@ -191,11 +191,12 @@ const
       { width, height, grow } = slot,
       zIndex = c.name === '__unhandled_error__' ? 1 : undefined,
       style: React.CSSProperties = { position: 'relative', zIndex }
-    if (grow || width || height) {
-      if (grow) style.flexGrow = grow // user-specified ratio
+
+    if (grow || grow === 0 || width || height) {
+      if (grow) style.flexGrow = grow // grow only if non-zero (else default to shrink)
       if (width) style.width = width
       if (height) style.height = height
-    } else { // so size specified; occupy 1 part
+    } else { // no size specified; occupy 1 part
       style.flexGrow = 1
     }
     return style
