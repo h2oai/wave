@@ -20,7 +20,7 @@ import { bond, Card, qd, B, S } from './qd'
 
 /** Create a card containing tabs for navigation. */
 interface State {
-  /** Items to render. */
+  /** The tabs to display in this card */
   items: Tab[]
   /** The name of the tab to select. */
   value?: S

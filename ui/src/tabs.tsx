@@ -14,6 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { bond, S, qd, B } from './qd'
 import { displayMixin } from './theme'
 
@@ -45,6 +46,16 @@ export interface Tabs {
   link?: B
 }
 
+const
+  css = stylesheet({
+    pivot: {
+      // Actual height of the Fluent pivot is 44.
+      // When used standalone in a flex layout, scrollbars show up when attempting to fit to content height.
+      // So explicitly set a height to work around this issue.
+      minHeight: 46,
+    }
+  })
+
 export const
   XTabs = bond(({ model: m }: { model: Tabs }) => {
     const
@@ -69,12 +80,14 @@ export const
             headerText={t.label} />
         ))
         return (
-          <Fluent.Pivot
-            data-test={m.name}
-            style={displayMixin(m.visible)}
-            selectedKey={m.value ?? null}
-            linkFormat={m.link ? Fluent.PivotLinkFormat.links : Fluent.PivotLinkFormat.tabs}
-            onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
+          <div className={css.pivot}>
+            <Fluent.Pivot
+              data-test={m.name}
+              style={displayMixin(m.visible)}
+              selectedKey={m.value ?? null}
+              linkFormat={m.link ? Fluent.PivotLinkFormat.links : Fluent.PivotLinkFormat.tabs}
+              onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
+          </div>
         )
       }
     return { render }
