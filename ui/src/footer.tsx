@@ -15,6 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
+import { Markdown } from './markdown'
 import { bond, Card, S } from './qd'
 import { getTheme } from './theme'
 
@@ -22,7 +23,6 @@ const
   theme = getTheme(),
   css = stylesheet({
     card: {
-      position: 'absolute', left: 0, top: 0, right: 0, bottom: 0,
       display: 'flex',
       alignItems: 'center',
     },
@@ -37,7 +37,7 @@ const
  * Footer cards are typically displayed at the bottom of a page.
  */
 interface State {
-  /** The caption. */
+  /** The caption. Supports markdown. */
   caption: S
 }
 
@@ -50,7 +50,7 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.caption}>{caption}</div>
+            <div className={css.caption}><Markdown source={caption} /></div>
           </div>
         )
       }
