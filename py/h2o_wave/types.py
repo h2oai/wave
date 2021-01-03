@@ -4143,11 +4143,14 @@ class Inline:
             self,
             items: List['Component'],
             justify: Optional[str] = None,
+            inset: Optional[bool] = None,
     ):
         self.items = items
         """The components laid out inline."""
         self.justify = justify
         """Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify."""
+        self.inset = inset
+        """Whether to display the components inset from the parent form, with a contrasting background."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4156,6 +4159,7 @@ class Inline:
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
+            inset=self.inset,
         )
 
     @staticmethod
@@ -4165,11 +4169,14 @@ class Inline:
         if __d_items is None:
             raise ValueError('Inline.items is required.')
         __d_justify: Any = __d.get('justify')
+        __d_inset: Any = __d.get('inset')
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
+        inset: Optional[bool] = __d_inset
         return Inline(
             items,
             justify,
+            inset,
         )
 
 

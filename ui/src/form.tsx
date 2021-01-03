@@ -34,7 +34,7 @@ import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
-import { bond, Card, Packed, S, unpack, xid } from './qd'
+import { B, bond, Card, Packed, S, unpack, xid } from './qd'
 import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'
@@ -46,7 +46,7 @@ import { Tabs, XTabs } from './tabs'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
-import { getTheme, margin } from './theme'
+import { clas, getTheme, margin, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
@@ -137,6 +137,8 @@ interface Inline {
   items: Component[]
   /** Specifies how to lay out the individual components. Defaults to 'start'. */
   justify?: 'start' | 'end'
+  /** Whether to display the components inset from the parent form, with a contrasting background. */
+  inset?: B
 }
 
 /** Create a form. */
@@ -158,9 +160,15 @@ const
         }
       }
     },
-    horizontalLeft: {
+    horizontal: {
       display: 'flex',
       alignItems: 'center',
+    },
+    inset: {
+      background: theme.colors.page,
+      padding: padding(10, 15)
+    },
+    horizontalLeft: {
       $nest: {
         '> *': {
           margin: margin(0, 25, 0, 0),
@@ -168,8 +176,6 @@ const
       }
     },
     horizontalRight: {
-      display: 'flex',
-      alignItems: 'center',
       justifyContent: 'flex-end',
       $nest: {
         '> *': {
@@ -186,13 +192,13 @@ const
 export enum XComponentAlignment { Top, Left, Right }
 
 export const
-  XComponents = ({ items, alignment }: { items: Component[], alignment?: XComponentAlignment }) => {
+  XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
     const
       components = items.map(m => <XComponent key={xid()} model={m} />),
       className = alignment === XComponentAlignment.Left
-        ? css.horizontalLeft
+        ? clas(css.horizontal, css.horizontalLeft, inset ? css.inset : '')
         : alignment === XComponentAlignment.Right
-          ? css.horizontalRight
+          ? clas(css.horizontal, css.horizontalRight, inset ? css.inset : '')
           : css.vertical
     return <div className={className}>{components}</div>
   },
@@ -200,6 +206,7 @@ export const
     <XComponents
       items={m.items}
       alignment={m.justify === 'end' ? XComponentAlignment.Right : XComponentAlignment.Left}
+      inset={m.inset}
     />
   )
 

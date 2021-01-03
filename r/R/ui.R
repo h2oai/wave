@@ -2143,15 +2143,19 @@ ui_stats <- function(
 #' @param items The components laid out inline.
 #' @param justify Specifies how to lay out the individual components. Defaults to 'start'.
 #'   One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify.
+#' @param inset Whether to display the components inset from the parent form, with a contrasting background.
 #' @return A Inline instance.
 ui_inline <- function(
   items,
-  justify = NULL) {
+  justify = NULL,
+  inset = NULL) {
   .guard_vector("items", "h2oq_Component", items)
   # TODO Validate justify
+  .guard_scalar("inset", "logical", inset)
   .o <- list(inline=list(
     items=items,
-    justify=justify))
+    justify=justify,
+    inset=inset))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }

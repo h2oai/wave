@@ -1898,18 +1898,21 @@ def stats(
 def inline(
         items: List[Component],
         justify: Optional[str] = None,
+        inset: Optional[bool] = None,
 ) -> Component:
     """Create an inline (horizontal) list of components.
 
     Args:
         items: The components laid out inline.
         justify: Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify.
+        inset: Whether to display the components inset from the parent form, with a contrasting background.
     Returns:
         A `h2o_wave.types.Inline` instance.
     """
     return Component(inline=Inline(
         items,
         justify,
+        inset,
     ))
 
 
