@@ -1880,18 +1880,21 @@ def stat(
 def stats(
         items: List[Stat],
         justify: Optional[str] = None,
+        inset: Optional[bool] = None,
 ) -> Component:
     """Create a set of stats laid out horizontally.
 
     Args:
         items: The individual stats to be displayed.
         justify: Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
+        inset: Whether to display the stats with a contrasting background.
     Returns:
         A `h2o_wave.types.Stats` instance.
     """
     return Component(stats=Stats(
         items,
         justify,
+        inset,
     ))
 
 

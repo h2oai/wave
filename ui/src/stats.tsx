@@ -15,8 +15,8 @@
 import { FontIcon } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Dict, S } from './qd'
-import { getTheme } from './theme'
+import { B, Dict, S } from './qd'
+import { clas, getTheme, padding } from './theme'
 
 /** Create a set of stats laid out horizontally. */
 export interface Stats {
@@ -24,6 +24,8 @@ export interface Stats {
   items: Stat[]
   /** Specifies how to lay out the individual stats. Defaults to 'start'. */
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
+  /** Whether to display the stats with a contrasting background. */
+  inset?: B
 }
 
 /** Create a stat (a label-value pair) for displaying a metric. */
@@ -42,7 +44,11 @@ const
   theme = getTheme(),
   css = stylesheet({
     stats: {
-      display: 'flex'
+      display: 'flex',
+    },
+    inset: {
+      background: theme.colors.page,
+      padding: padding(10, 15),
     },
     stat: {
       display: 'flex',
@@ -100,6 +106,6 @@ export const
       ))
 
     return (
-      <div className={css.stats} style={{ justifyContent: justification }}>{stats}</div>
+      <div className={clas(css.stats, m.inset ? css.inset : '')} style={{ justifyContent: justification }}>{stats}</div>
     )
   }

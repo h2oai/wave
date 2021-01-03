@@ -4101,11 +4101,14 @@ class Stats:
             self,
             items: List[Stat],
             justify: Optional[str] = None,
+            inset: Optional[bool] = None,
     ):
         self.items = items
         """The individual stats to be displayed."""
         self.justify = justify
         """Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify."""
+        self.inset = inset
+        """Whether to display the stats with a contrasting background."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4114,6 +4117,7 @@ class Stats:
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
+            inset=self.inset,
         )
 
     @staticmethod
@@ -4123,11 +4127,14 @@ class Stats:
         if __d_items is None:
             raise ValueError('Stats.items is required.')
         __d_justify: Any = __d.get('justify')
+        __d_inset: Any = __d.get('inset')
         items: List[Stat] = [Stat.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
+        inset: Optional[bool] = __d_inset
         return Stats(
             items,
             justify,
+            inset,
         )
 
 
