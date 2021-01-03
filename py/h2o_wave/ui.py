@@ -1895,6 +1895,24 @@ def stats(
     ))
 
 
+def inline(
+        items: List[Component],
+        justify: Optional[str] = None,
+) -> Component:
+    """Create an inline (horizontal) list of components.
+
+    Args:
+        items: The components laid out inline.
+        justify: Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify.
+    Returns:
+        A `h2o_wave.types.Inline` instance.
+    """
+    return Component(inline=Inline(
+        items,
+        justify,
+    ))
+
+
 def form_card(
         box: str,
         items: Union[List[Component], str],
@@ -2571,7 +2589,7 @@ def section_card(
         items: Optional[Union[List[Component], str]] = None,
         commands: Optional[List[Command]] = None,
 ) -> SectionCard:
-    """Render a card displaying a title and a subtitle.
+    """Render a card displaying a title, a subtitle, and optional components.
     Section cards are typically used to demarcate different sections on a page.
 
     Args:

@@ -4131,6 +4131,48 @@ class Stats:
         )
 
 
+class InlineJustify:
+    START = 'start'
+    END = 'end'
+
+
+class Inline:
+    """Create an inline (horizontal) list of components.
+    """
+    def __init__(
+            self,
+            items: List['Component'],
+            justify: Optional[str] = None,
+    ):
+        self.items = items
+        """The components laid out inline."""
+        self.justify = justify
+        """Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.items is None:
+            raise ValueError('Inline.items is required.')
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+            justify=self.justify,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Inline':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('Inline.items is required.')
+        __d_justify: Any = __d.get('justify')
+        items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        justify: Optional[str] = __d_justify
+        return Inline(
+            items,
+            justify,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -4173,6 +4215,7 @@ class Component:
             visualization: Optional[Visualization] = None,
             vega_visualization: Optional[VegaVisualization] = None,
             stats: Optional[Stats] = None,
+            inline: Optional[Inline] = None,
     ):
         self.text = text
         """Text block."""
@@ -4248,6 +4291,8 @@ class Component:
         """Vega-lite Visualization."""
         self.stats = stats
         """Stats"""
+        self.inline = inline
+        """Inline components"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4289,6 +4334,7 @@ class Component:
             visualization=None if self.visualization is None else self.visualization.dump(),
             vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
             stats=None if self.stats is None else self.stats.dump(),
+            inline=None if self.inline is None else self.inline.dump(),
         )
 
     @staticmethod
@@ -4331,6 +4377,7 @@ class Component:
         __d_visualization: Any = __d.get('visualization')
         __d_vega_visualization: Any = __d.get('vega_visualization')
         __d_stats: Any = __d.get('stats')
+        __d_inline: Any = __d.get('inline')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -4368,6 +4415,7 @@ class Component:
         visualization: Optional[Visualization] = None if __d_visualization is None else Visualization.load(__d_visualization)
         vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
         stats: Optional[Stats] = None if __d_stats is None else Stats.load(__d_stats)
+        inline: Optional[Inline] = None if __d_inline is None else Inline.load(__d_inline)
         return Component(
             text,
             text_xl,
@@ -4406,6 +4454,7 @@ class Component:
             visualization,
             vega_visualization,
             stats,
+            inline,
         )
 
 
@@ -6079,7 +6128,7 @@ class RepeatCard:
 
 
 class SectionCard:
-    """Render a card displaying a title and a subtitle.
+    """Render a card displaying a title, a subtitle, and optional components.
     Section cards are typically used to demarcate different sections on a page.
     """
     def __init__(

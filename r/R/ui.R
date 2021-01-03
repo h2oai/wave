@@ -2138,6 +2138,24 @@ ui_stats <- function(
   return(.o)
 }
 
+#' Create an inline (horizontal) list of components.
+#'
+#' @param items The components laid out inline.
+#' @param justify Specifies how to lay out the individual components. Defaults to 'start'.
+#'   One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify.
+#' @return A Inline instance.
+ui_inline <- function(
+  items,
+  justify = NULL) {
+  .guard_vector("items", "h2oq_Component", items)
+  # TODO Validate justify
+  .o <- list(inline=list(
+    items=items,
+    justify=justify))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  return(.o)
+}
+
 #' Create a form.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -2889,7 +2907,7 @@ ui_repeat_card <- function(
   return(.o)
 }
 
-#' Render a card displaying a title and a subtitle.
+#' Render a card displaying a title, a subtitle, and optional components.
 #' Section cards are typically used to demarcate different sections on a page.
 #'
 #' @param box A string indicating how to place this component on the page.

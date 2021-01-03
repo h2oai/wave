@@ -45,7 +45,7 @@ const
 
 
 /**
- * Render a card displaying a title and a subtitle.
+ * Render a card displaying a title, a subtitle, and optional components.
  * Section cards are typically used to demarcate different sections on a page. 
  */
 interface State {

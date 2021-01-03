@@ -127,6 +127,16 @@ export interface Component {
   vega_visualization?: VegaVisualization
   /** Stats */
   stats?: Stats
+  /** Inline components */
+  inline?: Inline
+}
+
+/** Create an inline (horizontal) list of components. */
+interface Inline {
+  /** The components laid out inline. */
+  items: Component[]
+  /** Specifies how to lay out the individual components. Defaults to 'start'. */
+  justify?: 'start' | 'end'
 }
 
 /** Create a form. */
@@ -150,18 +160,20 @@ const
     },
     horizontalLeft: {
       display: 'flex',
+      alignItems: 'center',
       $nest: {
         '> *': {
-          margin: margin(0, 15, 0, 0),
+          margin: margin(0, 25, 0, 0),
         }
       }
     },
     horizontalRight: {
       display: 'flex',
+      alignItems: 'center',
       justifyContent: 'flex-end',
       $nest: {
         '> *': {
-          margin: margin(0, 0, 0, 15),
+          margin: margin(0, 0, 0, 25),
         }
       }
     },
@@ -183,7 +195,14 @@ export const
           ? css.horizontalRight
           : css.vertical
     return <div className={className}>{components}</div>
-  }
+  },
+  XInline = ({ model: m }: { model: Inline }) => (
+    <XComponents
+      items={m.items}
+      alignment={m.justify === 'end' ? XComponentAlignment.Right : XComponentAlignment.Left}
+    />
+  )
+
 
 const
   XComponent = ({ model: m }: { model: Component }) => {
@@ -224,6 +243,7 @@ const
     if (m.visualization) return <XVisualization model={m.visualization} />
     if (m.vega_visualization) return <XVegaVisualization model={m.vega_visualization} />
     if (m.stats) return <XStats model={m.stats} />
+    if (m.inline) return <XInline model={m.inline} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
