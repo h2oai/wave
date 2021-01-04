@@ -15,7 +15,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
-import { F, S, U } from '../qd'
+import { debounce, F, S, U } from '../qd'
 
 interface Props {
   thickness: U
@@ -52,11 +52,12 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
           <path d={bar as S} fill={color} transform={`translate(${outerRadius},${outerRadius})`} />
         </g>
       ))
-    }
+    },
+    onResize = debounce(1000, renderViz)
 
   React.useEffect(() => {
-    window.addEventListener('resize', renderViz)
-    return () => window.removeEventListener('resize', renderViz)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [])
   React.useLayoutEffect(renderViz, [thickness, color, value])
 

@@ -15,7 +15,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
-import { F, S } from '../qd'
+import { debounce, F, S } from '../qd'
 
 interface Props {
   data: any[]
@@ -70,11 +70,12 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
           <path d={ln(data) as S} fill='none' stroke={color} strokeWidth='1.5' strokeLinejoin='round' strokeLinecap='round'></path>
         </>
       )
-    }
+    },
+    onResize = debounce(1000, renderViz)
 
   React.useEffect(() => {
-    window.addEventListener('resize', renderViz)
-    return () => window.removeEventListener('resize', renderViz)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [])
   React.useLayoutEffect(renderViz, [value, color, data, zeroValue, curve])
 
