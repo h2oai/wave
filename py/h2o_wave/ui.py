@@ -1855,7 +1855,8 @@ def vega_visualization(
 
 def stat(
         label: str,
-        value: str,
+        value: Optional[str] = None,
+        caption: Optional[str] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
 ) -> Stat:
@@ -1864,6 +1865,7 @@ def stat(
     Args:
         label: The label for the metric.
         value: The value of the metric.
+        caption: The caption displayed below the primary value.
         icon: An optional icon, displayed next to the label.
         icon_color: The color of the icon.
     Returns:
@@ -1872,6 +1874,7 @@ def stat(
     return Stat(
         label,
         value,
+        caption,
         icon,
         icon_color,
     )

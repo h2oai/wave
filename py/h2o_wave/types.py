@@ -4037,7 +4037,8 @@ class Stat:
     def __init__(
             self,
             label: str,
-            value: str,
+            value: Optional[str] = None,
+            caption: Optional[str] = None,
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
     ):
@@ -4045,6 +4046,8 @@ class Stat:
         """The label for the metric."""
         self.value = value
         """The value of the metric."""
+        self.caption = caption
+        """The caption displayed below the primary value."""
         self.icon = icon
         """An optional icon, displayed next to the label."""
         self.icon_color = icon_color
@@ -4054,11 +4057,10 @@ class Stat:
         """Returns the contents of this object as a dict."""
         if self.label is None:
             raise ValueError('Stat.label is required.')
-        if self.value is None:
-            raise ValueError('Stat.value is required.')
         return _dump(
             label=self.label,
             value=self.value,
+            caption=self.caption,
             icon=self.icon,
             icon_color=self.icon_color,
         )
@@ -4070,17 +4072,18 @@ class Stat:
         if __d_label is None:
             raise ValueError('Stat.label is required.')
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('Stat.value is required.')
+        __d_caption: Any = __d.get('caption')
         __d_icon: Any = __d.get('icon')
         __d_icon_color: Any = __d.get('icon_color')
         label: str = __d_label
-        value: str = __d_value
+        value: Optional[str] = __d_value
+        caption: Optional[str] = __d_caption
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
         return Stat(
             label,
             value,
+            caption,
             icon,
             icon_color,
         )

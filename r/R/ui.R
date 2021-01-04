@@ -2099,21 +2099,25 @@ ui_vega_visualization <- function(
 #'
 #' @param label The label for the metric.
 #' @param value The value of the metric.
+#' @param caption The caption displayed below the primary value.
 #' @param icon An optional icon, displayed next to the label.
 #' @param icon_color The color of the icon.
 #' @return A Stat instance.
 ui_stat <- function(
   label,
-  value,
+  value = NULL,
+  caption = NULL,
   icon = NULL,
   icon_color = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("value", "character", value)
+  .guard_scalar("caption", "character", caption)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
   .o <- list(
     label=label,
     value=value,
+    caption=caption,
     icon=icon,
     icon_color=icon_color)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Stat"))

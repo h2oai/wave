@@ -33,7 +33,9 @@ export interface Stat {
   /** The label for the metric. */
   label: S
   /** The value of the metric. */
-  value: S
+  value?: S
+  /** The caption displayed below the primary value. */
+  caption?: S
   /** An optional icon, displayed next to the label. */
   icon?: S
   /** The color of the icon. */
@@ -45,6 +47,7 @@ const
   css = stylesheet({
     stats: {
       display: 'flex',
+      alignItems: 'flex-start'
     },
     inset: {
       background: theme.colors.page,
@@ -69,6 +72,10 @@ const
       ...theme.font.s24,
       ...theme.font.w3,
     },
+    statCaption: {
+      ...theme.font.s13,
+      color: theme.colors.text5,
+    }
   }),
   justifications: Dict<S> = {
     start: 'flex-start',
@@ -91,7 +98,7 @@ export const
             : {}
         : { marginRight: statMargin },
       justification = justifications[m.justify ?? ''],
-      stats = m.items.map(({ label, value, icon, icon_color }, i) => (
+      stats = m.items.map(({ label, value, caption, icon, icon_color }, i) => (
         <div key={`${i}:${label}`} className={css.stat} style={statStyle}>
           { icon && (
             <div className={css.lhs} style={icon_color ? { color: theme.color(icon_color) } : undefined}>
@@ -100,7 +107,8 @@ export const
           )}
           <div>
             <div className={css.statLabel}>{label}</div>
-            <div className={css.statValue}>{value}</div>
+            {value && <div className={css.statValue}>{value}</div>}
+            {caption && <div className={css.statCaption}>{caption}</div>}
           </div>
         </div>
       ))
