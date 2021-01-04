@@ -117,9 +117,6 @@ on(layoutsB, layouts => {
 const
   theme = getTheme(),
   css = stylesheet({
-    layout: {
-      display: 'flex',
-    },
     flex: {
       position: 'relative',
       display: 'flex',
@@ -139,7 +136,6 @@ const
     slot: {
       boxSizing: 'border-box',
       transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
-      overflow: 'auto',
       $nest: {
         '>*:first-child': {
           boxSizing: 'border-box',
@@ -319,8 +315,12 @@ const
       minHeight: min_height,
       maxHeight: max_height,
     }
+    if (height === '100%') {
+      style.display = 'flex'
+      style.flexDirection = 'column'
+    }
     return (
-      <div data-test={name} className={css.layout} style={style}>
+      <div data-test={name} style={style}>
         <FlexSection section={section} />
       </div>
     )
