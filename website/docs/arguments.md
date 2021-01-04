@@ -16,7 +16,7 @@ async def serve(q: Q):
     print(q.args.qux)
 ```
 
-:::tip api/core#Expando
+:::tip
 `q.args` is an [Expando](api/core/#Expando) instance, which means it behaves both like a dictionary and an object: `q.args['foo']` is the same as `q.args.foo`. `q.args.foo` is easier to read.
 :::
 
