@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format } from './layout'
+import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
@@ -37,8 +37,8 @@ const
       color: theme.colors.text7,
     },
     plot: {
-      // 98px is the height of titlebar
-      height: 'calc(100% - 98px)',
+      // 83px is the height of titlebar.
+      height: 'calc(100% - 83px)',
       width: '100%'
     }
   })
@@ -94,8 +94,8 @@ export const
           )
 
       return (
-        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%' }}>
-          <Fluent.StackItem tokens={{ padding: 15 }}>
+        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%', padding: grid.gap }}>
+          <Fluent.StackItem styles={{ root: { paddingBottom: grid.gap } }}>
             <Format data={data} format={s.title || 'Untitled'} className={css.title} />
             <Format data={data} format={s.value} className={css.value} />
             <Format data={data} format={s.aux_value} className={css.aux_value} />

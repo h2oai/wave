@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format } from './layout'
+import { cards, Format, grid } from './layout'
 import { ProgressBar } from './parts/progress_bar'
 import { bond, Card, F, Rec, S, unpack } from './qd'
 import { getTheme } from './theme'
@@ -58,7 +58,7 @@ export const
     const render = () => {
       const data = unpack(s.data)
       return (
-        <Fluent.Stack data-test={name} style={{ position: 'static', padding: 15, height: '100%' }}>
+        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%', padding: grid.gap }}>
           <Format data={data} format={s.title} className={css.title} />
           <Fluent.StackItem grow={1}>
             <Fluent.Stack horizontal verticalAlign='baseline' tokens={{ childrenGap: 5 }}>

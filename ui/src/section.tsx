@@ -29,8 +29,6 @@ const
     lhs: {
       flexGrow: 1,
     },
-    rhs: {
-    },
     title: {
       ...theme.font.s14,
       ...theme.font.w6,
@@ -65,7 +63,7 @@ export const
           { title, subtitle, items } = state,
           components = unpack<Component[]>(items), // XXX ugly
           form = items && (
-            <div className={css.rhs}>
+            <div>
               <XComponents items={components} alignment={XComponentAlignment.Right} />
             </div>
           )
