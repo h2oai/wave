@@ -178,7 +178,7 @@ const
     }
     return null
   },
-  flatten = <T extends {}>(xss: T[][]): T[] => {
+  flatten = <T>(xss: T[][]): T[] => {
     const ys: T[] = []
     for (const xs of xss) ys.push(...xs)
     return ys
@@ -237,7 +237,7 @@ const
   collectTypes = (component: S, file: File, sourceFile: ts.SourceFile) => {
     ts.forEachChild(sourceFile, (node) => {
       switch (node.kind) {
-        case ts.SyntaxKind.InterfaceDeclaration:
+        case ts.SyntaxKind.InterfaceDeclaration: {
           const
             n = node as ts.InterfaceDeclaration,
             nodeName = n.name.getText(),
@@ -259,6 +259,7 @@ const
 
           const areAllMembersOptional = !members.filter(m => !m.isOptional).length // all members are optional?
           file.types.push({ name: typeName, file: file.name, comments, members, isRoot, areAllMembersOptional, isUnion: false })
+        }
       }
     })
   },
@@ -372,7 +373,7 @@ const
             p('')
             p(`class ${type.name}${titlecase(m.name)}:`)
             for (const v of m.values) {
-              p(`    ${v.toUpperCase().replace(/\-/, '_')} = '${v}'`)
+              p(`    ${v.toUpperCase().replace(/-/, '_')} = '${v}'`)
             }
             p('')
           }
