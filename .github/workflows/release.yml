@@ -20,7 +20,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build
-        run: make all
+        run: |
+          cd ui
+          make setup
 
       - name: Unit Test
         run: make test-ui-ci
