@@ -6,6 +6,8 @@ from h2o_wave import site, ui
 page = site['/demo']
 page.drop()
 
+content = '![Fill Murray](https://www.fillmurray.com/640/360)'
+
 # The meta card's 'zones' attribute defines placeholder zones to lay out cards for different viewport sizes.
 # We define three layout schemes here.
 page['meta'] = ui.meta_card(box='', layouts=[
@@ -32,6 +34,7 @@ page['meta'] = ui.meta_card(box='', layouts=[
                 # Use remaining space for content
                 ui.zone('content'),
             ]),
+            ui.zone('footer', size='0'),
         ]
     ),
     ui.layout(
@@ -52,7 +55,8 @@ page['meta'] = ui.meta_card(box='', layouts=[
                     # Use other half for content
                     ui.zone('content'),
                 ]),
-            ])
+            ]),
+            ui.zone('footer', size='0'),
         ]
     )
 ])
@@ -80,7 +84,7 @@ page['controls'] = ui.markdown_card(
     # If the viewport width >= 1200, place in sidebar zone.
     box=ui.boxes('content', 'sidebar', 'sidebar'),
     title='Controls',
-    content='',
+    content=content,
 )
 page['chart1'] = ui.markdown_card(
     box=ui.boxes(
@@ -92,7 +96,7 @@ page['chart1'] = ui.markdown_card(
         ui.box(zone='charts', order=1, size=2),
     ),
     title='Chart 1',
-    content='',
+    content=content,
 )
 page['chart2'] = ui.markdown_card(
     box=ui.boxes(
@@ -104,7 +108,7 @@ page['chart2'] = ui.markdown_card(
         ui.box(zone='charts', order=2, size=1),
     ),
     title='Chart 2',
-    content='',
+    content=content,
 )
 page['content'] = ui.markdown_card(
     box=ui.boxes(
@@ -116,7 +120,8 @@ page['content'] = ui.markdown_card(
         'content',
     ),
     title='Content',
-    content='',
+    content=content,
 )
+page['footer'] = ui.footer_card(box='footer', caption='(c) 2020 Lowest Common Denominator, Inc. ')
 
 page.save()
