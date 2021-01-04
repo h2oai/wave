@@ -11,7 +11,7 @@ async def show_red_dashboard(q: Q):
             zones=[
                 ui.zone('header', size='80px'),
                 ui.zone('title', size='0'),
-                ui.zone('top', direction=ui.ZoneDirection.ROW, size='385px', zones=[
+                ui.zone('top', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('top_left', size='66%'),
                     ui.zone('top_right', zones=[
                         ui.zone('top_right_top', direction=ui.ZoneDirection.ROW),
@@ -71,7 +71,7 @@ async def show_red_dashboard(q: Q):
                         ('B', next(audience_days2), next(audience_hits2)) for i in range(60)],
                     pack=True
                 ),
-                height='210px',
+                height='390px',
             )
         ],
     )

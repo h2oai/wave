@@ -14,7 +14,7 @@
 
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format } from './layout'
+import { cards, Format, grid } from './layout'
 import { bond, Card, unpack, F, Rec, S, Data } from './qd'
 import { getTheme } from './theme'
 import { MicroBars } from './parts/microbars'
@@ -32,8 +32,8 @@ const
       ...theme.font.s12,
     },
     plot: {
-      // 30px top/bottom padding + 17px line height of the title.
-      height: 'calc(100% - 47px)',
+      // 32px is title height.
+      height: `calc(100% - 32px)`,
       width: '100%'
     },
   })
@@ -86,8 +86,8 @@ export const
             />
           )
       return (
-        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%' }}>
-          <Fluent.Stack horizontal horizontalAlign='space-between' padding={15}>
+        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%', padding: grid.gap }}>
+          <Fluent.Stack horizontal horizontalAlign='space-between' styles={{ root: { paddingBottom: grid.gap } }}>
             <Format data={data} format={s.title || 'Untitled'} className={css.title} />
             <Format data={data} format={s.value} className={css.value} />
           </Fluent.Stack>

@@ -16,8 +16,8 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { MicroBars } from './parts/microbars'
 import { MicroArea } from './parts/microarea'
+import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
 import { getTheme } from './theme'
 
@@ -89,9 +89,9 @@ export const
           )
 
       return (
-        <Fluent.Stack data-test={name} horizontal styles={{ root: { height: '100%' } }} style={{ position: 'static' }} >
-          <Fluent.StackItem grow={1} tokens={{ padding: 15 }}>{plot}</Fluent.StackItem>
-          <Fluent.StackItem styles={{ root: { padding: grid.gap, minWidth: 120 } }}>
+        <Fluent.Stack data-test={name} horizontal styles={{ root: { height: '100%', padding: grid.gap } }} style={{ position: 'static' }} >
+          <Fluent.StackItem grow={1} styles={{ root: { height: '100%' } }}>{plot}</Fluent.StackItem>
+          <Fluent.StackItem styles={{ root: { minWidth: 120, paddingLeft: grid.gap } }}>
             <Format data={data} format={s.title} className={css.title} />
             <Fluent.Stack horizontal verticalAlign='baseline' tokens={{ childrenGap: 5 }}>
               <Format data={data} format={s.value} className={css.value} />

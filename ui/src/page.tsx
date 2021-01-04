@@ -139,7 +139,7 @@ const
       $nest: {
         '>*:first-child': {
           boxSizing: 'border-box',
-          margin: 15,
+          padding: 15,
         }
       }
     },
@@ -164,7 +164,7 @@ const
     transparent: {
       $nest: {
         '>*:first-child': {
-          margin: '0 15px'
+          padding: '0 15px'
         }
       }
     },
