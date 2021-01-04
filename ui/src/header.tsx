@@ -25,7 +25,6 @@ const
   iconSize = 24,
   css = stylesheet({
     card: {
-      position: 'absolute', left: 0, top: 0, right: 0, bottom: 0,
       display: 'flex',
       alignItems: 'center',
     },
