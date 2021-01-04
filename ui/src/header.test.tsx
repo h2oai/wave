@@ -13,25 +13,33 @@
 // limitations under the License.
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { View } from './header'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const
   name = 'header',
+  label = 'label',
   headerProps: T.Card<any> = {
     name,
-    state: {},
+    state: { nav: [{ label: 'group1', items: [{ name, label }] }] },
     changed: T.box(false)
   }
 
 describe('Header.tsx', () => {
-  beforeAll(() => initializeIcons())
-
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...headerProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Closes nav on click', () => {
+    const { container, queryByText } = render(<View {...headerProps} />)
+    fireEvent.click(container.querySelector('.ms-Icon')!)
+
+    const menuItem = queryByText(label)
+    expect(menuItem).toBeInTheDocument()
+
+    fireEvent.click(menuItem!)
+    expect(menuItem).not.toBeVisible()
+  })
 })

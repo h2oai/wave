@@ -16,7 +16,7 @@ import { FontIcon, Panel, PanelType } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { bond, Box, box, Card, S } from './qd'
+import { bond, Box, box, Card, S, B } from './qd'
 import { clas, getTheme } from './theme'
 import { NavGroup, XNav } from './nav'
 
@@ -81,7 +81,7 @@ interface State {
 }
 
 const
-  Navigation = bond(({ items, isOpenB }: { items: NavGroup[], isOpenB: Box<boolean> }) => {
+  Navigation = bond(({ items, isOpenB }: { items: NavGroup[], isOpenB: Box<B> }) => {
     const
       hideNav = () => isOpenB(false),
       render = () => (
@@ -92,7 +92,7 @@ const
           onDismiss={hideNav}
           hasCloseButton={false}
         >
-          <XNav items={items} />
+          <XNav items={items} hideNav={hideNav} />
         </Panel>
       )
     return { render, isOpenB }
@@ -132,5 +132,3 @@ export const
   })
 
 cards.register('header', View, CardEffect.Raised)
-
-
