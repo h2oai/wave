@@ -317,7 +317,14 @@ export const
       : (isData(data))
         ? data.list()
         : data,
-  iff = (x: S) => x && x.length ? x : undefined
+  iff = (x: S) => x && x.length ? x : undefined,
+  debounce = (timeout: U, f: (e: any) => void) => {
+    let t: number | null = null
+    return (e: any) => {
+      if (t) window.clearTimeout(t)
+      t = window.setTimeout(() => (f(e), t = null), timeout)
+    }
+  }
 
 const
   decodeType = (d: S): [S, S] => {
@@ -847,7 +854,7 @@ const
       backoff *= 2
       if (backoff > 16) backoff = 16
       handle({ t: SockEventType.Message, type: SockMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })
-      setTimeout(retry, backoff * 1000)
+      window.setTimeout(retry, backoff * 1000)
     }
     sock.onmessage = function (e) {
       if (!e.data) return
