@@ -18,7 +18,7 @@ import { CardMenu } from './card_menu'
 import { CardEffect, CardView, getCardEffect, GridLayout } from './layout'
 import { Layout, layoutsB, preload, Zone } from './meta'
 import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
-import { clas, getTheme, palette } from './theme'
+import { clas, getTheme, margin, palette } from './theme'
 
 
 type Breakpoint = {
@@ -121,23 +121,12 @@ const
       position: 'relative',
       display: 'flex',
     },
-    column: {
-      $nest: {
-        '>*': { marginBottom: 15 },
-        '>*:last-child': { marginBottom: 0 }
-      }
-    },
-    row: {
-      $nest: {
-        '>*': { marginRight: 15 },
-        '>*:last-child': { marginRight: 0 }
-      }
-    },
     slot: {
       boxSizing: 'border-box',
       transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
       display: 'flex',
       flexDirection: 'column',
+      margin: margin(7), // Approx 15px gutter between cards.
       $nest: {
         '>*': {
           boxSizing: 'border-box',
@@ -158,17 +147,11 @@ const
       color: theme.colors.card,
       backgroundColor: palette.themePrimary,
       boxShadow: `0px 3px 7px ${theme.colors.text3}`,
+      margin: 0,
     },
     flat: {
       backgroundColor: theme.colors.card,
       boxShadow: `0px 3px 5px ${theme.colors.text0}`,
-    },
-    transparent: {
-      $nest: {
-        '>*:first-child': {
-          margin: '0 15px', // TODO let children control this?
-        }
-      }
     },
   }),
   getCardEffectClass = (c: C) => {
@@ -178,7 +161,7 @@ const
       : effect === CardEffect.Raised
         ? css.raised
         : effect == CardEffect.Flat
-          ? css.flat : css.transparent)
+          ? css.flat : '')
   },
   justifications: Dict<S> = {
     start: 'flex-start',
@@ -288,7 +271,7 @@ const
           : null
 
     return (
-      <div data-test={zone.name} className={clas(css.flex, zone.direction === 'row' ? css.row : css.column)} style={toSectionStyle(zone, direction)}>
+      <div data-test={zone.name} className={css.flex} style={toSectionStyle(zone, direction)}>
         {children}
       </div>
     )
