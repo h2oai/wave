@@ -9,7 +9,7 @@ async def show_orange_dashboard(q: Q):
             breakpoint='xl',
             width='1200px',
             zones=[
-                ui.zone('header', size='80px'),
+                ui.zone('header', size='0'),
                 ui.zone('control', size='0'),
                 ui.zone('top', direction=ui.ZoneDirection.ROW, size='385px', zones=[
                     ui.zone('top_left', direction=ui.ZoneDirection.ROW, size='66%'),
@@ -17,7 +17,7 @@ async def show_orange_dashboard(q: Q):
                 ]),
                 ui.zone('middle', direction=ui.ZoneDirection.ROW, size='400px'),
                 ui.zone('bottom', direction=ui.ZoneDirection.ROW, size='200px'),
-                ui.zone('footer', size='50px'),
+                ui.zone('footer', size='0'),
             ]
         )
     ])

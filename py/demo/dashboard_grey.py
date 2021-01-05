@@ -10,15 +10,15 @@ async def show_grey_dashboard(q: Q):
             min_width='800px',
             height='100%',
             zones=[
-                ui.zone('header', size='80px'),
+                ui.zone('header', size='0'),
                 ui.zone('body', zones=[
                     ui.zone('title', size='40px'),
-                    ui.zone('top', direction=ui.ZoneDirection.ROW, size='1'),
-                    ui.zone('middle', direction=ui.ZoneDirection.ROW, size='1'),
-                    ui.zone('middle2', direction=ui.ZoneDirection.ROW, size='2'),
-                    ui.zone('bottom', direction=ui.ZoneDirection.ROW, size='2'),
+                    ui.zone('top', direction=ui.ZoneDirection.ROW, size='25%'),
+                    ui.zone('middle', direction=ui.ZoneDirection.ROW, size='25%'),
+                    ui.zone('middle2', direction=ui.ZoneDirection.ROW, size='25%'),
+                    ui.zone('bottom', direction=ui.ZoneDirection.ROW, size='25%'),
                 ]),
-                ui.zone('footer', size='50px'),
+                ui.zone('footer', size='0'),
             ]
         )
     ])
