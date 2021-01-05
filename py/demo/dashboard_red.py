@@ -9,7 +9,7 @@ async def show_red_dashboard(q: Q):
             breakpoint='xl',
             width='1200px',
             zones=[
-                ui.zone('header', size='80px'),
+                ui.zone('header', size='0'),
                 ui.zone('title', size='0'),
                 ui.zone('top', direction=ui.ZoneDirection.ROW, size='385px', zones=[
                     ui.zone('top_left'),
@@ -23,7 +23,7 @@ async def show_red_dashboard(q: Q):
                     ui.zone('bottom_left'),
                     ui.zone('bottom_right', size='66%'),
                 ]),
-                ui.zone('footer', size='50px'),
+                ui.zone('footer', size='0'),
             ]
         )
     ])

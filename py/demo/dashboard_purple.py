@@ -8,16 +8,16 @@ async def show_purple_dashboard(q: Q):
         ui.layout(
             breakpoint='xs',
             zones=[
-                ui.zone('header', size='80px'),
+                ui.zone('header', size='0'),
                 ui.zone('title', size='0'),
                 ui.zone('body'),
-                ui.zone('footer', size='50px'),
+                ui.zone('footer', size='0'),
             ],
         ),
         ui.layout(
             breakpoint='m',
             zones=[
-                ui.zone('header', size='80px'),
+                ui.zone('header', size='0'),
                 ui.zone('title', size='0'),
                 ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('main', zones=[
@@ -28,14 +28,14 @@ async def show_purple_dashboard(q: Q):
                     ]),
                     ui.zone('sidebar', size='30%'),
                 ]),
-                ui.zone('footer', size='50px'),
+                ui.zone('footer', size='0'),
             ],
         ),
         ui.layout(
             breakpoint='xl',
             width='1200px',
             zones=[
-                ui.zone('header', size='80px'),
+                ui.zone('header', size='0'),
                 ui.zone('title', size='0'),
                 ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('main', size='3', zones=[
@@ -46,7 +46,7 @@ async def show_purple_dashboard(q: Q):
                     ]),
                     ui.zone('sidebar', size='30%'),
                 ]),
-                ui.zone('footer', size='50px'),
+                ui.zone('footer', size='0'),
             ]
         )
     ])
