@@ -136,10 +136,12 @@ const
     slot: {
       boxSizing: 'border-box',
       transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
+      display: 'flex',
+      flexDirection: 'column',
       $nest: {
-        '>*:first-child': {
+        '>*': {
           boxSizing: 'border-box',
-          padding: 15,
+          flexGrow: 1, // Expand vertically
         }
       }
     },
@@ -164,7 +166,7 @@ const
     transparent: {
       $nest: {
         '>*:first-child': {
-          padding: '0 15px'
+          margin: '0 15px', // TODO let children control this?
         }
       }
     },

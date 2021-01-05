@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
@@ -24,6 +23,13 @@ import { getTheme } from './theme'
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    text: {
+      padding: grid.gap,
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
@@ -37,9 +43,7 @@ const
       color: theme.colors.text7,
     },
     plot: {
-      // 83px is the height of titlebar.
-      height: 'calc(100% - 83px)',
-      width: '100%'
+      flexGrow: 1,
     }
   })
 
@@ -94,14 +98,14 @@ export const
           )
 
       return (
-        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%', padding: grid.gap }}>
-          <Fluent.StackItem styles={{ root: { paddingBottom: grid.gap } }}>
+        <div data-test={name} className={css.card}>
+          <div className={css.text}>
             <Format data={data} format={s.title || 'Untitled'} className={css.title} />
             <Format data={data} format={s.value} className={css.value} />
             <Format data={data} format={s.aux_value} className={css.aux_value} />
-          </Fluent.StackItem>
-          <div className={css.plot}>{plot}</div>
-        </Fluent.Stack>
+          </div>
+          {plot}
+        </div>
       )
     }
     return { render, changed }

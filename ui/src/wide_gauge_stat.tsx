@@ -12,20 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { getTheme, pc } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      padding: grid.gap,
+    },
+    lhs: {
+      display: 'flex',
+      position: 'relative',
+      width: pc(50)
+    },
+    rhs: {
+      width: pc(50),
+      marginLeft: grid.gap,
+    },
+    values: {
+      display: 'flex',
+      alignItems: 'baseline',
+    },
     percentContainer: {
       position: 'absolute',
       top: 0, right: 0, bottom: 0, left: 0,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     percent: {
       ...theme.font.s12,
@@ -43,6 +62,7 @@ const
     aux_value: {
       ...theme.font.s13,
       color: theme.colors.text7,
+      marginLeft: 5,
     }
   })
 
@@ -67,21 +87,21 @@ export const
     const render = () => {
       const data = unpack(s.data)
       return (
-        <Fluent.Stack horizontal data-test={name} style={{ position: 'static', padding: grid.gap, height: '100%' }}>
-          <Fluent.StackItem grow={1} styles={{ root: { position: 'relative' } }}>
+        <div data-test={name} className={css.card}>
+          <div className={css.lhs}>
             <ProgressArc thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-            <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={css.percentContainer}>
+            <div className={css.percentContainer}>
               <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
-            </Fluent.Stack>
-          </Fluent.StackItem>
-          <Fluent.Stack styles={{ root: { minWidth: 150 } }}>
+            </div>
+          </div>
+          <div className={css.rhs}>
             <Format data={data} format={s.title} className={css.title} />
-            <Fluent.Stack verticalAlign='baseline' horizontal tokens={{ childrenGap: 5 }}>
+            <div className={css.values}>
               <Format data={data} format={s.value} className={css.value} />
               <Format data={data} format={s.aux_value} className={css.aux_value} />
-            </Fluent.Stack>
-          </Fluent.Stack>
-        </Fluent.Stack>
+            </div>
+          </div>
+        </div>
       )
     }
     return { render, changed }

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
@@ -23,9 +22,24 @@ import { getTheme } from './theme'
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      padding: grid.gap,
+      display: 'flex',
+      flexDirection: 'column',
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
+    },
+    content: {
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+    },
+    values: {
+      display: 'flex',
+      alignItems: 'baseline',
     },
     value: {
       ...theme.font.s18,
@@ -34,6 +48,7 @@ const
     aux_value: {
       ...theme.font.s13,
       color: theme.colors.text7,
+      marginLeft: 5,
     }
   })
 
@@ -58,16 +73,16 @@ export const
     const render = () => {
       const data = unpack(s.data)
       return (
-        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%', padding: grid.gap }}>
+        <div data-test={name} className={css.card}>
           <Format data={data} format={s.title} className={css.title} />
-          <Fluent.StackItem grow={1}>
-            <Fluent.Stack horizontal verticalAlign='baseline' tokens={{ childrenGap: 5 }}>
+          <div className={css.content}>
+            <div className={css.values}>
               <Format data={data} format={s.value} className={css.value} />
               <Format data={data} format={s.aux_value} className={css.aux_value} />
-            </Fluent.Stack>
+            </div>
             <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-          </Fluent.StackItem>
-        </Fluent.Stack>
+          </div>
+        </div>
       )
     }
     return { render, changed }

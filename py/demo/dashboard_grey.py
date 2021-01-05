@@ -8,6 +8,7 @@ async def show_grey_dashboard(q: Q):
         ui.layout(
             breakpoint='xl',
             min_width='800px',
+            height='100%',
             zones=[
                 ui.zone('header', size='80px'),
                 ui.zone('body', zones=[

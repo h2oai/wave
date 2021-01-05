@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format } from './layout'
+import { cards, Format, grid } from './layout'
 import { ProgressBar } from './parts/progress_bar'
 import { bond, Card, F, Rec, S, unpack } from './qd'
 import { getTheme } from './theme'
@@ -23,11 +22,19 @@ import { getTheme } from './theme'
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      padding: grid.gap,
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
     values: {
+      display: 'flex',
+      justifyContent: 'space-between',
       ...theme.font.s18,
       ...theme.font.w3,
     },
@@ -39,6 +46,8 @@ const
       color: theme.colors.text5,
     },
     captions: {
+      display: 'flex',
+      justifyContent: 'space-between',
       ...theme.font.s12,
       color: theme.colors.text7,
     },
@@ -71,21 +80,21 @@ export const
     const render = () => {
       const data = unpack(s.data)
       return (
-        <Fluent.Stack data-test={name} verticalAlign='space-between'>
+        <div data-test={name} className={css.card}>
           <Format data={data} format={s.title} className={css.title} />
           <Format data={data} format={s.caption} className={css.caption} />
           <div>
-            <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='baseline' className={css.values}>
+            <div className={css.values}>
               <div><Format data={data} format={s.value} /></div>
               <Format data={data} format={s.aux_value} className={css.aux_value} />
-            </Fluent.Stack>
+            </div>
             <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-            <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='baseline' className={css.captions}>
+            <div className={css.captions}>
               <div><Format data={data} format={s.value_caption} /></div>
               <div><Format data={data} format={s.aux_value_caption} /></div>
-            </Fluent.Stack>
+            </div>
           </div>
-        </Fluent.Stack >
+        </div>
       )
     }
     return { render, changed }

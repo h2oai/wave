@@ -17,11 +17,19 @@ import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
 import { bond, Card, Rec, S } from './qd'
 import { getTheme } from './theme'
-import * as Fluent from '@fluentui/react'
 
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: 15,
+    },
+    values: {
+      display: 'flex',
+      alignItems: 'baseline',
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
@@ -32,6 +40,7 @@ const
     },
     aux_value: {
       color: theme.colors.text6,
+      marginLeft: 5,
     },
     caption: {
       ...theme.font.s13,
@@ -56,14 +65,14 @@ interface State {
 export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
     const render = () => (
-      <Fluent.Stack data-test={name}>
+      <div data-test={name} className={css.card}>
         <Format data={s.data} format={s.title} className={css.title} />
-        <Fluent.Stack horizontal verticalAlign='baseline' tokens={{ childrenGap: 5 }}>
+        <div className={css.values}>
           <Format data={s.data} defaultValue={s.value} format={s.value} className={css.value} />
           <Format data={s.data} format={s.aux_value} className={css.aux_value} />
-        </Fluent.Stack>
+        </div>
         <Format data={s.data} format={s.caption} className={css.caption} />
-      </Fluent.Stack>
+      </div>
     )
 
     return { render, changed }

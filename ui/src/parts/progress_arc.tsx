@@ -25,8 +25,8 @@ interface Props {
 
 export const ProgressArc = ({ thickness, color, value }: Props) => {
   const
-    ref = React.useRef<SVGSVGElement>(null),
-    [SVGContent, setSVGContent] = React.useState<JSX.Element | null>(null),
+    ref = React.useRef<HTMLDivElement>(null),
+    [content, setContent] = React.useState<JSX.Element | null>(null),
     renderViz = () => {
       const
         width = ref.current?.clientWidth!,
@@ -46,12 +46,14 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
           startAngle: 0,
           endAngle: 2 * Math.PI * value,
         })
-      setSVGContent((
-        <g transform={size === height ? `translate(${(width - (2 * outerRadius)) / 2}, 0)` : `translate(0, ${(height - (2 * outerRadius)) / 2})`}>
-          <path d={slot as S} fill={color} fillOpacity={0.15} transform={`translate(${outerRadius},${outerRadius})`} />
-          <path d={bar as S} fill={color} transform={`translate(${outerRadius},${outerRadius})`} />
-        </g>
-      ))
+      setContent(
+        <svg width={width} height={height}>
+          <g transform={size === height ? `translate(${(width - (2 * outerRadius)) / 2}, 0)` : `translate(0, ${(height - (2 * outerRadius)) / 2})`}>
+            <path d={slot as S} fill={color} fillOpacity={0.15} transform={`translate(${outerRadius},${outerRadius})`} />
+            <path d={bar as S} fill={color} transform={`translate(${outerRadius},${outerRadius})`} />
+          </g>
+        </svg>
+      )
     },
     onResize = debounce(1000, renderViz)
 
@@ -61,5 +63,5 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
   }, [])
   React.useLayoutEffect(renderViz, [thickness, color, value])
 
-  return <svg ref={ref} width='100%' height='100%'>{SVGContent}</svg>
+  return <div ref={ref} style={{ flexGrow: 1 }}>{content}</div>
 }
