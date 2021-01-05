@@ -25,6 +25,7 @@ const
   css = stylesheet({
     card: {
       display: 'flex',
+      paddingTop: 5,
     },
     lhs: {
       flexGrow: 1,
