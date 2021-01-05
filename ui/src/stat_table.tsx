@@ -59,6 +59,7 @@ const
     card: {
       display: 'flex',
       flexDirection: 'column',
+      padding: 15,
     },
     title: {
       ...theme.font.s12,

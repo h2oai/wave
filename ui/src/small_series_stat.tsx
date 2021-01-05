@@ -15,15 +15,23 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { bond, Card, unpack, F, Rec, S, Data } from './qd'
-import { getTheme } from './theme'
-import { MicroBars } from './parts/microbars'
 import { MicroArea } from './parts/microarea'
-import * as Fluent from '@fluentui/react'
+import { MicroBars } from './parts/microbars'
+import { bond, Card, Data, F, Rec, S, unpack } from './qd'
+import { getTheme } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    text: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: grid.gap,
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
@@ -32,9 +40,8 @@ const
       ...theme.font.s12,
     },
     plot: {
-      // 32px is title height.
-      height: `calc(100% - 32px)`,
-      width: '100%'
+      display: 'flex',
+      flexGrow: 1,
     },
   })
 
@@ -86,13 +93,13 @@ export const
             />
           )
       return (
-        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%', padding: grid.gap }}>
-          <Fluent.Stack horizontal horizontalAlign='space-between' styles={{ root: { paddingBottom: grid.gap } }}>
+        <div data-test={name} className={css.card}>
+          <div className={css.text}>
             <Format data={data} format={s.title || 'Untitled'} className={css.title} />
             <Format data={data} format={s.value} className={css.value} />
-          </Fluent.Stack>
+          </div>
           <div className={css.plot}>{plot}</div>
-        </Fluent.Stack>
+        </div>
       )
     }
     return { render, changed }

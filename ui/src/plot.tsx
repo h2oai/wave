@@ -722,13 +722,18 @@ const
 
 const
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: 15,
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
     plot: {
-      position: 'absolute',
-      left: 0, top: 30, right: 0, bottom: 0,
+      flexGrow: 1,
+      display: 'flex',
     },
   })
 
@@ -805,7 +810,7 @@ export const
         const
           { width, height, visible, name } = model,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
-            ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
+            ? { flexGrow: 1 }
             : { width: width || 'auto', height: height || '300px' }
         return (
           <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={container} />
@@ -832,7 +837,7 @@ export const
       render = () => {
         const { title, plot, data, events } = state
         return (
-          <div>
+          <div className={css.card}>
             <div className={css.title}>{title || 'Untitled'}</div>
             <div className={css.plot}>
               <XVisualization model={{ name, plot, data, width: 'auto', height: 'auto', events }} />

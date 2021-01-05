@@ -153,6 +153,9 @@ const
   theme = getTheme(),
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
+    card: {
+      padding: 15,
+    },
     vertical: {
       $nest: {
         '> *': {
@@ -264,7 +267,7 @@ export const
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
-          <div data-test={name} >
+          <div data-test={name} className={css.card}>
             {title && <div className={css.title}>{title}</div>}
             <XComponents items={items} />
           </div>

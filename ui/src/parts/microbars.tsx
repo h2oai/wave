@@ -27,8 +27,8 @@ interface Props {
 
 export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Props) => {
   const
-    ref = React.useRef<SVGSVGElement | null>(null),
-    [rects, setRects] = React.useState<JSX.Element[] | null>(null),
+    ref = React.useRef<HTMLDivElement | null>(null),
+    [content, setContent] = React.useState<JSX.Element | null>(null),
     [minY, maxY] = React.useMemo(() => {
       let [minY, maxY] = d3.extent<any, any>(data, d => d[value])
 
@@ -40,18 +40,17 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
     }, [data, zeroValue]),
     renderViz = () => {
       const
+        width = ref.current?.clientWidth!,
         height = ref.current?.clientHeight!,
-        scaleX = d3.scaleBand().domain(data.map(d => d[category])).range([0, ref.current?.clientWidth!]).paddingInner(0.1),
+        scaleX = d3.scaleBand().domain(data.map(d => d[category])).range([0, width]).paddingInner(0.1),
         scaleY = d3.scaleLinear().domain([minY, maxY]).range([height, 0]),
         rects = data.map((d, i) => {
           const x = scaleX(d[category]), y = scaleY(d[value])
           return <rect key={i} fill={color} x={x} y={y} width={2} height={height - y} />
         })
-      setRects(rects)
+      setContent(<svg width={width} height={height}>{rects}</svg>)
     },
     onResize = debounce(1000, renderViz)
-
-
 
   React.useEffect(() => {
     window.addEventListener('resize', onResize)
@@ -59,5 +58,5 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
   }, [])
   React.useLayoutEffect(renderViz, [value, category, color, data, zeroValue])
 
-  return <svg ref={ref} width='100%' height='100%'>{rects}</svg>
+  return <div ref={ref} style={{ flexGrow: 1 }}>{content}</div>
 }

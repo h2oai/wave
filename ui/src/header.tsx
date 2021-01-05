@@ -27,6 +27,7 @@ const
     card: {
       display: 'flex',
       alignItems: 'center',
+      padding: 15,
     },
     lhs: {
       width: iconSize + 15,
