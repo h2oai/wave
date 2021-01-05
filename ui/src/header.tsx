@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { bond, Box, box, Card, S } from './qd'
-import { clas, getTheme } from './theme'
+import { clas, getTheme, padding } from './theme'
 import { NavGroup, XNav } from './nav'
 
 const
@@ -27,7 +27,7 @@ const
     card: {
       display: 'flex',
       alignItems: 'center',
-      padding: 15,
+      padding: padding(8, 15),
     },
     lhs: {
       width: iconSize + 15,
