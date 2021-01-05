@@ -60,6 +60,8 @@ const
       display: 'flex',
       flexDirection: 'column',
       padding: 15,
+      // HACK: for some reason, the overflow on 'items' does not take effect without this line.
+      overflow: 'auto',
     },
     title: {
       ...theme.font.s12,
