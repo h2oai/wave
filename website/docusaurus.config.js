@@ -34,7 +34,7 @@ module.exports = {
         { to: 'docs/examples', label: 'Gallery', position: 'left' },
         { to: 'docs/getting-started', label: 'Get Started', position: 'left', },
         { to: 'docs/guide', label: 'Guide', position: 'left', },
-        { to: 'docs/enterprise', label: 'Enterprise', position: 'left', },
+        { to: 'https://h2oai.github.io/h2o-ai-cloud/', label: 'Enterprise', position: 'left', },
         { to: 'docs/api/index', label: 'API', position: 'left' },
         { to: 'blog', label: 'Blog', position: 'left' },
         { to: 'https://github.com/h2oai/wave/releases', label: 'Download', position: 'right', },
@@ -62,7 +62,7 @@ module.exports = {
             },
             {
               label: 'Enterprise',
-              to: 'docs/enterprise',
+              to: 'https://h2oai.github.io/h2o-ai-cloud/',
             },
             {
               label: 'API',

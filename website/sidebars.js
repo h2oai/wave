@@ -46,11 +46,6 @@ module.exports = {
       'deployment',
       'backup',
     ],
-    'Enterprise': [
-      'enterprise/index',
-      'enterprise/basic-concepts',
-      'enterprise/developer-guide',
-    ],
     'Examples': examples.map(e => `examples/${e.slug}`),
     'API': [
       'api/index',
