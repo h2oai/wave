@@ -27,7 +27,6 @@ const
       padding: grid.gap,
     },
     lhs: {
-      display: 'flex',
       position: 'relative',
       width: pc(50)
     },
