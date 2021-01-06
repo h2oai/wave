@@ -40,7 +40,6 @@ const
       ...theme.font.s12,
     },
     plot: {
-      display: 'flex',
       flexGrow: 1,
     },
   })

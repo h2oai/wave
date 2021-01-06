@@ -82,5 +82,5 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
   }, [])
   React.useLayoutEffect(renderViz, [value, color, data, zeroValue, curve])
 
-  return <div ref={ref} style={{ flexGrow: 1 }}>{content}</div>
+  return <div ref={ref} style={{ width: '100%', height: '100%' }}>{content}</div>
 }

@@ -58,5 +58,5 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
   }, [])
   React.useLayoutEffect(renderViz, [value, category, color, data, zeroValue])
 
-  return <div ref={ref} style={{ flexGrow: 1 }}>{content}</div>
+  return <div ref={ref} style={{ width: '100%', height: '100%' }}>{content}</div>
 }
