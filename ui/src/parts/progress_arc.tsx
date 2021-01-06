@@ -15,13 +15,23 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { debounce, F, S, U } from '../qd'
+
 
 interface Props {
   thickness: U
   color: S
   value: F
 }
+
+const css = stylesheet({
+  container: {
+    width: '100%',
+    height: '100%',
+    textAlign: 'center',
+  }
+})
 
 export const ProgressArc = ({ thickness, color, value }: Props) => {
   const
@@ -31,9 +41,9 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
       const
         width = ref.current?.clientWidth!,
         height = ref.current?.clientHeight!,
-        size = Math.min(width, height),
-        outerRadius = size / 2,
-        innerRadius = size / 2 - thickness,
+        diameter = Math.min(width, height),
+        outerRadius = diameter / 2,
+        innerRadius = diameter / 2 - thickness,
         slot = d3.arc()({
           outerRadius,
           innerRadius,
@@ -48,7 +58,7 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
         })
       setContent(
         <svg width={width} height={height}>
-          <g transform={size === height ? `translate(${(width - (2 * outerRadius)) / 2}, 0)` : `translate(0, ${(height - (2 * outerRadius)) / 2})`}>
+          <g transform={diameter === height ? `translate(${(width - (2 * outerRadius)) / 2}, 0)` : `translate(0, ${(height - (2 * outerRadius)) / 2})`}>
             <path d={slot as S} fill={color} fillOpacity={0.15} transform={`translate(${outerRadius},${outerRadius})`} />
             <path d={bar as S} fill={color} transform={`translate(${outerRadius},${outerRadius})`} />
           </g>
@@ -63,5 +73,5 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
   }, [])
   React.useLayoutEffect(renderViz, [thickness, color, value])
 
-  return <div ref={ref} style={{ flexGrow: 1 }}>{content}</div>
+  return <div ref={ref} className={css.container}>{content}</div>
 }
