@@ -40,9 +40,10 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
       return [minY, maxY]
     }, [data, zeroValue]),
     renderViz = () => {
+      if (!ref.current) return
+
       const
-        width = ref.current?.clientWidth!,
-        height = ref.current?.clientHeight!,
+        { width, height } = ref.current.getBoundingClientRect(),
         scaleX = d3.scaleBand().domain(data.map(d => d[category])).range([0, width]).paddingInner(0.1),
         scaleY = d3.scaleLinear().domain([minY, maxY]).range([height, 0]),
         rects = data.map((d, i) => {
@@ -50,7 +51,7 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
           return <rect key={i} fill={color} x={x} y={y} width={2} height={height - y} />
         })
 
-      if (ref.current) ref.current.style.maxHeight = px(height)
+      ref.current.style.maxHeight = px(height)
       setContent(<svg viewBox={`0 0 ${width} ${height}`}>{rects}</svg>)
     },
     onResize = debounce(1000, renderViz)

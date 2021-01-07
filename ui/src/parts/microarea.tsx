@@ -48,9 +48,10 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
     }, [data, zeroValue]),
     [content, setContent] = React.useState<JSX.Element | null>(null),
     renderViz = () => {
+      if (!ref.current) return
+
       const
-        width = ref.current?.clientWidth!,
-        height = ref.current?.clientHeight!,
+        { width, height } = ref.current.getBoundingClientRect(),
         scaleX = d3.scaleLinear().domain([0, data.length - 1]).range([0, width]),
         scaleY = d3.scaleLinear().domain([minY, maxY]).range([height, 2]),
         fcurve = curves[curve] || d3.curveLinear,
@@ -68,7 +69,7 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
           .y1(d => scaleY(d[value]))
           .curve(fcurve)
 
-      if (ref.current) ref.current.style.maxHeight = px(height)
+      ref.current.style.maxHeight = px(height)
       setContent(
         <svg viewBox={`0 0 ${width} ${height}`}>
           <path d={ar(data) as S} fill={color} fillOpacity='0.1' strokeLinejoin='round' strokeLinecap='round'></path>
