@@ -17,6 +17,7 @@ import * as d3 from 'd3'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { debounce, F, S, U } from '../qd'
+import { px } from '../theme'
 
 
 interface Props {
@@ -56,8 +57,11 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
           startAngle: 0,
           endAngle: 2 * Math.PI * value,
         })
+
+      if (ref.current) ref.current.style.maxHeight = px(height)
+
       setContent(
-        <svg width={width} height={height}>
+        <svg viewBox={`0 0 ${width} ${height}`}>
           <g transform={diameter === height ? `translate(${(width - (2 * outerRadius)) / 2}, 0)` : `translate(0, ${(height - (2 * outerRadius)) / 2})`}>
             <path d={slot as S} fill={color} fillOpacity={0.15} transform={`translate(${outerRadius},${outerRadius})`} />
             <path d={bar as S} fill={color} transform={`translate(${outerRadius},${outerRadius})`} />

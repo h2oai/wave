@@ -15,7 +15,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
-import { debounce, F, S } from '../qd'
+import { F, S, debounce } from '../qd'
+import { px } from '../theme'
 
 interface Props {
   data: any[]
@@ -67,8 +68,9 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
           .y1(d => scaleY(d[value]))
           .curve(fcurve)
 
+      if (ref.current) ref.current.style.maxHeight = px(height)
       setContent(
-        <svg width={width} height={height}>
+        <svg viewBox={`0 0 ${width} ${height}`}>
           <path d={ar(data) as S} fill={color} fillOpacity='0.1' strokeLinejoin='round' strokeLinecap='round'></path>
           <path d={ln(data) as S} fill='none' stroke={color} strokeWidth='1.5' strokeLinejoin='round' strokeLinecap='round'></path>
         </svg>
