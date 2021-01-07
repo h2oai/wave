@@ -1,3 +1,4 @@
+#install.packages(c("jsonlite","httr","stringr","future"),repo = "https://lib.ugent.be/CRAN/")
 library(jsonlite)
 library(httr)
 library(stringr) 
@@ -23,7 +24,7 @@ plan(list(multisession,multisession))
         ifelse(var != "", return(var), return(object[2]))
 }
 
-.default_internal_address = 'ws://localhost:55555'
+.default_internal_address = 'ws://localhost:10101'
 
 #' Configure the environmental variables
 #' This is a (hidden) internal function
@@ -44,13 +45,16 @@ plan(list(multisession,multisession))
         .config <<- list()
         .config$internal_address <<- .get.env.var(c("INTERNAL_ADDRESS",.default_internal_address))
         .config$external_address <<- .get.env.var(c("EXTERNAL_ADDRESS",.config$internal_address))
-        .config$hub_address <<- .get.env.var(c("ADDRESS",'http://localhost:55555'))
+        .config$hub_address <<- .get.env.var(c("ADDRESS",'http://localhost:10101'))
         .config$hub_access_key_id <<- .get.env.var(c('ACCESS_KEY_ID', 'access_key_id'))
         .config$hub_access_key_secret <<- .get.env.var(c('ACCESS_KEY_SECRET','access_key_secret'))
         .config$shutdown_timeout <<- as.integer(.get.env.var(c('SHUTDOWN_TIMEOUT','3')))
 }
 
 .Config()
+#.onLoad <- function(){
+#   .Config()
+#}
         
 
 #' Function to check if the object is a primitive.
@@ -86,6 +90,17 @@ plan(list(multisession,multisession))
 }
 }
 
+#' Data Dump
+#' A function to check the kind of data that needs to be packed and sent. 
+#' Different configurations of the data will be enclosed with different named lists. 
+#' @param fields 
+#' @param size 
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 data.dump <- function(fields,size,data=NULL){
         f = fields
         n = size
@@ -128,7 +143,7 @@ page <- function(page_name,fun_flag=FALSE,...){
         if(nchar(page_name) == 0){
              stop(sprintf("page name must not be empty.\n example_page <- page(\"/page_name\")"))
         }
-        if(is.na(str_match(page_name,"^/"))){
+        if(is.na(stringr::str_match(page_name,"^/"))){
              stop(sprintf("page name must be prefixed with \"/\".\n example_page <- page(\"/page_name\")"))
         }
         current_page <<- page_name
@@ -210,6 +225,14 @@ page.load <- function(page_name,...){
 }
 
 
+#' Make a required name change if needed
+#'
+#' @param x 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 .delta_name_change <- function(x){
         return(gsub("\\."," ",gsub("\\.value\\."," ",x)))
 }
@@ -238,17 +261,45 @@ page.load <- function(page_name,...){
         return(.page_changes)
 }
 
+#' Glist - Creating a guarded list. 
+#' This list will be guarded and wont be changed. 
+#'
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 glist <- function(...){
         o <- list(...)
         class(o) <- append(class(o),c("h2o_q_guarded_list"))
         return(o)
 }
 
+#' CHecking for glist
+#'
+#' @param lname 
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 is.glist <- function(lname,...){
         if("h2o_q_guarded_list" %in% class(lname)) return(TRUE)
         else return(FALSE)
 }
 
+#' Page Frame
+#' Add additional attributes if the page is having a delta frame.
+#'
+#' @param page 
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 page_frame <- function(page,...){
         o <- lapply(page,
                     function(x){
@@ -259,6 +310,14 @@ page_frame <- function(page,...){
         return(o)
 }
 
+#' Function to check if the list is empty
+#'
+#' @param x 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 is.list.empty <- function(x){
         o <- unique(unlist(lapply(x,function(x){if(is.list(x)) return(is.list.empty(x)) else return(is.null(x))})))
         if(length(o) > 1) return(FALSE)

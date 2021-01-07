@@ -1,12 +1,14 @@
-source("../core.R") 
-source("../ui.R")
-
+#source("../core.R") 
+#source("../ui.R")
+library("h2owave")
+.Config()
 rm(test_page)
 test_page <- page("/page_demo")
 
 #box template column number (left to right), row number (top to bottom),the number of columns the cell occupies , the number of rows the cell occupies.
 
-dark_theme_colors = c('$red', '$pink', '$blue', '$azure', '$cyan', '$teal', '$mint', '$green', '$lime', '$yellow', '$amber', '$orange' ,'$tangerine')
+#dark_theme_colors = c('$red', '$pink', '$blue', '$azure', '$cyan', '$teal', '$mint', '$green', '$lime', '$yellow', '$amber', '$orange' ,'$tangerine')
+dark_theme_colors = c('$red')
 curves = c('linear','smooth','step','stepAfter','stepBefore')
 
 simples <- list()
