@@ -29,7 +29,8 @@ const css = stylesheet({
   container: {
     width: '100%',
     height: '100%',
-    textAlign: 'center',
+    position: 'relative',
+    flexGrow: 1
   }
 })
 
@@ -38,9 +39,10 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
     ref = React.useRef<HTMLDivElement>(null),
     [content, setContent] = React.useState<JSX.Element | null>(null),
     renderViz = () => {
+      if (!ref.current) return
+
       const
-        width = ref.current?.clientWidth!,
-        height = ref.current?.clientHeight!,
+        { width, height } = ref.current.getBoundingClientRect(),
         diameter = Math.min(width, height),
         outerRadius = diameter / 2,
         innerRadius = diameter / 2 - thickness,
@@ -56,8 +58,9 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
           startAngle: 0,
           endAngle: 2 * Math.PI * value,
         })
+
       setContent(
-        <svg width={width} height={height}>
+        <svg viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           <g transform={diameter === height ? `translate(${(width - (2 * outerRadius)) / 2}, 0)` : `translate(0, ${(height - (2 * outerRadius)) / 2})`}>
             <path d={slot as S} fill={color} fillOpacity={0.15} transform={`translate(${outerRadius},${outerRadius})`} />
             <path d={bar as S} fill={color} transform={`translate(${outerRadius},${outerRadius})`} />

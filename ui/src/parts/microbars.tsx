@@ -15,6 +15,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { debounce, F, S } from '../qd'
 
 interface Props {
@@ -24,6 +25,15 @@ interface Props {
   value: S
   color: S
 }
+
+const css = stylesheet({
+  container: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    flexGrow: 1,
+  }
+})
 
 export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Props) => {
   const
@@ -39,16 +49,17 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
       return [minY, maxY]
     }, [data, zeroValue]),
     renderViz = () => {
+      if (!ref.current) return
+
       const
-        width = ref.current?.clientWidth!,
-        height = ref.current?.clientHeight!,
+        { width, height } = ref.current.getBoundingClientRect(),
         scaleX = d3.scaleBand().domain(data.map(d => d[category])).range([0, width]).paddingInner(0.1),
         scaleY = d3.scaleLinear().domain([minY, maxY]).range([height, 0]),
         rects = data.map((d, i) => {
           const x = scaleX(d[category]), y = scaleY(d[value])
           return <rect key={i} fill={color} x={x} y={y} width={2} height={height - y} />
         })
-      setContent(<svg width={width} height={height}>{rects}</svg>)
+      setContent(<svg viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>{rects}</svg>)
     },
     onResize = debounce(1000, renderViz)
 
@@ -58,5 +69,5 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
   }, [])
   React.useLayoutEffect(renderViz, [value, category, color, data, zeroValue])
 
-  return <div ref={ref} style={{ width: '100%', height: '100%' }}>{content}</div>
+  return <div ref={ref} className={css.container}>{content}</div>
 }

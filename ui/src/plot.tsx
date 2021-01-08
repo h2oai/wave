@@ -809,6 +809,8 @@ export const
       render = () => {
         const
           { width, height, visible, name } = model,
+          // BUG: inside a flex layout, the plot does not use all available width.
+          // Maybe the width here needs to be set explicitly using getBoundingClientRect()?
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { flexGrow: 1 }
             : { width: width || 'auto', height: height || '300px' }

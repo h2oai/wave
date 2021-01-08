@@ -15,6 +15,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { debounce, F, S } from '../qd'
 
 interface Props {
@@ -33,6 +34,15 @@ const curves: Record<S, d3.CurveFactory> = {
   'step-before': d3.curveStepBefore,
 }
 
+const css = stylesheet({
+  container: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    flexGrow: 1,
+  }
+})
+
 export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
   const
     ref = React.useRef<HTMLDivElement>(null),
@@ -47,9 +57,10 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
     }, [data, zeroValue]),
     [content, setContent] = React.useState<JSX.Element | null>(null),
     renderViz = () => {
+      if (!ref.current) return
+
       const
-        width = ref.current?.clientWidth!,
-        height = ref.current?.clientHeight!,
+        { width, height } = ref.current.getBoundingClientRect(),
         scaleX = d3.scaleLinear().domain([0, data.length - 1]).range([0, width]),
         scaleY = d3.scaleLinear().domain([minY, maxY]).range([height, 2]),
         fcurve = curves[curve] || d3.curveLinear,
@@ -68,7 +79,7 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
           .curve(fcurve)
 
       setContent(
-        <svg width={width} height={height}>
+        <svg viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           <path d={ar(data) as S} fill={color} fillOpacity='0.1' strokeLinejoin='round' strokeLinecap='round'></path>
           <path d={ln(data) as S} fill='none' stroke={color} strokeWidth='1.5' strokeLinejoin='round' strokeLinecap='round'></path>
         </svg>
@@ -82,5 +93,5 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
   }, [])
   React.useLayoutEffect(renderViz, [value, color, data, zeroValue, curve])
 
-  return <div ref={ref} style={{ width: '100%', height: '100%' }}>{content}</div>
+  return <div ref={ref} className={css.container}>{content}</div>
 }

@@ -42,9 +42,6 @@ const
       ...theme.font.s12,
       color: theme.colors.text7,
     },
-    plot: {
-      flexGrow: 1,
-    }
   })
 
 /** Create a tall stat card displaying a primary value, an auxiliary value and a series plot. */
