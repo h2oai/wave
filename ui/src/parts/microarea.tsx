@@ -15,6 +15,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { debounce, F, S } from '../qd'
 
 interface Props {
@@ -32,6 +33,15 @@ const curves: Record<S, d3.CurveFactory> = {
   'step-after': d3.curveStepAfter,
   'step-before': d3.curveStepBefore,
 }
+
+const css = stylesheet({
+  container: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    flexGrow: 1,
+  }
+})
 
 export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
   const
@@ -83,5 +93,5 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
   }, [])
   React.useLayoutEffect(renderViz, [value, color, data, zeroValue, curve])
 
-  return <div ref={ref} style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', flexGrow: 1 }}>{content}</div>
+  return <div ref={ref} className={css.container}>{content}</div>
 }

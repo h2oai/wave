@@ -15,6 +15,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { debounce, F, S } from '../qd'
 
 interface Props {
@@ -24,6 +25,15 @@ interface Props {
   value: S
   color: S
 }
+
+const css = stylesheet({
+  container: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    flexGrow: 1,
+  }
+})
 
 export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Props) => {
   const
@@ -59,5 +69,5 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
   }, [])
   React.useLayoutEffect(renderViz, [value, category, color, data, zeroValue])
 
-  return <div ref={ref} style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', flexGrow: 1 }}>{content}</div>
+  return <div ref={ref} className={css.container}>{content}</div>
 }
