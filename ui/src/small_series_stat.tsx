@@ -39,9 +39,6 @@ const
     value: {
       ...theme.font.s12,
     },
-    plot: {
-      flexGrow: 1,
-    },
   })
 
 /** Create a small stat card displaying a primary value and a series plot. */
@@ -97,7 +94,7 @@ export const
             <Format data={data} format={s.title || 'Untitled'} className={css.title} />
             <Format data={data} format={s.value} className={css.value} />
           </div>
-          <div className={css.plot}>{plot}</div>
+          {plot}
         </div>
       )
     }

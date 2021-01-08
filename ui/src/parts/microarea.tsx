@@ -15,8 +15,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
-import { F, S, debounce } from '../qd'
-import { px } from '../theme'
+import { debounce, F, S } from '../qd'
 
 interface Props {
   data: any[]
@@ -69,9 +68,8 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
           .y1(d => scaleY(d[value]))
           .curve(fcurve)
 
-      ref.current.style.maxHeight = px(height)
       setContent(
-        <svg viewBox={`0 0 ${width} ${height}`}>
+        <svg viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           <path d={ar(data) as S} fill={color} fillOpacity='0.1' strokeLinejoin='round' strokeLinecap='round'></path>
           <path d={ln(data) as S} fill='none' stroke={color} strokeWidth='1.5' strokeLinejoin='round' strokeLinecap='round'></path>
         </svg>
@@ -85,5 +83,5 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
   }, [])
   React.useLayoutEffect(renderViz, [value, color, data, zeroValue, curve])
 
-  return <div ref={ref} style={{ width: '100%', height: '100%' }}>{content}</div>
+  return <div ref={ref} style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', flexGrow: 1 }}>{content}</div>
 }

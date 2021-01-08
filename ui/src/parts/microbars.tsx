@@ -15,8 +15,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
-import { F, S, debounce } from '../qd'
-import { px } from '../theme'
+import { debounce, F, S } from '../qd'
 
 interface Props {
   data: any[]
@@ -50,9 +49,7 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
           const x = scaleX(d[category]), y = scaleY(d[value])
           return <rect key={i} fill={color} x={x} y={y} width={2} height={height - y} />
         })
-
-      ref.current.style.maxHeight = px(height)
-      setContent(<svg viewBox={`0 0 ${width} ${height}`}>{rects}</svg>)
+      setContent(<svg viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>{rects}</svg>)
     },
     onResize = debounce(1000, renderViz)
 
@@ -62,5 +59,5 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
   }, [])
   React.useLayoutEffect(renderViz, [value, category, color, data, zeroValue])
 
-  return <div ref={ref} style={{ width: '100%', height: '100%' }}>{content}</div>
+  return <div ref={ref} style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', flexGrow: 1 }}>{content}</div>
 }
