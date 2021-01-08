@@ -735,11 +735,6 @@ const
       flexGrow: 1,
       display: 'flex',
     },
-    plotContainer: {
-      $nest: {
-        '>div': { textAlign: 'center' }
-      }
-    }
   })
 
 /** Create a visualization for display inside a form. */
@@ -814,11 +809,13 @@ export const
       render = () => {
         const
           { width, height, visible, name } = model,
+          // BUG: inside a flex layout, the plot does not use all available width.
+          // Maybe the width here needs to be set explicitly using getBoundingClientRect()?
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { flexGrow: 1 }
             : { width: width || 'auto', height: height || '300px' }
         return (
-          <div data-test={name} style={{ ...style, ...displayMixin(visible) }} className={css.plotContainer} ref={container} />
+          <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={container} />
         )
       }
     return { init, update, render }
