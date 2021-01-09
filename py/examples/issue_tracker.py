@@ -2,9 +2,6 @@
 # Implement a simple issue tracker using a #table to create master-detail views.
 # ---
 from h2o_wave import main, app, Q, ui
-from faker import Faker
-
-fake = Faker()
 
 _id = 0
 
@@ -20,7 +17,20 @@ class Issue:
 
 
 # Create some issues
-issues = [Issue(text=fake.sentence(), status='Open') for i in range(12)]
+issues = [
+    Issue('Update release notes', status='Open'),
+    Issue('Generate software license', status='Open'),
+    Issue('Update product documentation', status='Open'),
+    Issue('Introduce new tutorials', status='Open'),
+    Issue('Rewrite the error handling guide', status='Open'),
+    Issue('Navigation links are not working', status='Open'),
+    Issue('Set up CICD pipeline', status='Open'),
+    Issue('Improve unit tests coverage', status='Open'),
+    Issue('Update dependencies', status='Open'),
+    Issue('Run the automated test suite', status='Open'),
+    Issue('Monitor server utilization', status='Open'),
+    Issue('Run deployment on a staging server', status='Open'),
+]
 
 # Build a lookup of issues for convenience
 issue_lookup = {issue.id: issue for issue in issues}

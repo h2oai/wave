@@ -3,26 +3,29 @@
 # #stat_card
 # ---
 import time
-
-from faker import Faker
-
-from synth import FakePercent
 from h2o_wave import site, ui
 
-page = site['/demo']
+prices = [62.54, 9.42, 26.73, 31.44, 52.90, 8.25, 17.12, 20.35, 48.76, 30.14]
 
-fake = Faker()
-f = FakePercent()
-val, _ = f.next()
-c = page.add('example', ui.small_stat_card(
+
+def next_price():
+    i = 0
+    while True:
+        yield prices[i % len(prices)]
+        i += 1
+
+
+page = site['/demo']
+price = next_price()
+
+stat_card = page.add('example', ui.small_stat_card(
     box='1 1 1 1',
-    title=fake.cryptocurrency_name(),
-    value=f'${val:.2f}',
+    title='Donut Price',
+    value=f'${next(price):.2f}',
 ))
 page.save()
 
 while True:
     time.sleep(1)
-    val, _ = f.next()
-    c.value = f'${val:.2f}'
+    stat_card.value = f'${next(price):.2f}'
     page.save()

@@ -2,7 +2,6 @@
 # Update any page on a site from within an app using an `AsyncSite` instance.
 # #site
 # ---
-from .synth import FakePercent
 from h2o_wave import Q, app, main, ui, AsyncSite
 
 site = AsyncSite()
@@ -13,13 +12,25 @@ stats_page = site['/stats']
 # A flag to indicate whether to pause or resume updating the page at '/stats'
 update_stats = False
 
+price_changes = [(62.54, 0.2345), (9.42, 0.4033), (26.73, 0.3065), (31.44, 0.10000), (52.90, 0.482),
+                 (8.25, 0.2650), (17.12, 0.0328), (20.35, 0.4638), (48.76, 0.3756), (30.14, 0.1500), ]
+
+
+def next_price_fluctuation():
+    i = 0
+    while True:
+        yield price_changes[i % len(price_changes)]
+        i += 1
+
+
+price_change = next_price_fluctuation()
+
 
 async def update_stats_page(q, page):
-    f = FakePercent()
     card = page['example']
     while update_stats:
         await q.sleep(1)
-        price, percent = f.next()
+        price, percent = next(price_change)
         card.data.price = price
         card.data.percent = percent
         card.progress = percent
