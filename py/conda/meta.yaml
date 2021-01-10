@@ -10,7 +10,7 @@ about:
 
 requirements:
   build:
-    - python {{ python }}
+    - python={{ python_version }}
     - pip
     - wheel
     - Click
@@ -19,6 +19,7 @@ requirements:
     - starlette==0.13.8
 
   run:
+    - python={{ python_version }}
     - Click
     - httpx==0.16.1
     - uvicorn==0.12.2
@@ -26,3 +27,7 @@ requirements:
 
 source:
   path: ..
+
+build:
+  script: python setup.py install
+  string: py{{ python_version | replace(".", "") }}
