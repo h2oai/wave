@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { render } from '@testing-library/react'
+import { render, fireEvent, wait } from '@testing-library/react'
 import React from 'react'
 import Dialog from './dialog'
 import * as T from './qd'
@@ -38,9 +38,7 @@ describe('Dialog.tsx', () => {
     const { queryByRole } = render(<Dialog />)
     expect(queryByRole('dialog')).toBeInTheDocument()
     T.qd.dialogB(null)
-    // Fluent dialog implementation has a closing timeout specified.
-    await new Promise((res) => setTimeout(() => res('Resolved'), 300))
-    expect(queryByRole('dialog')).not.toBeInTheDocument()
+    await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('should render correct title when specified', () => {
@@ -56,4 +54,10 @@ describe('Dialog.tsx', () => {
     expect(queryByTitle('Close')).toBeInTheDocument()
   })
 
+  it('should close dialog when clicking on X', async () => {
+    T.qd.dialogB({ ...dialogProps, closable: true })
+    const { getByTitle, queryByRole } = render(<Dialog />)
+    fireEvent.click(getByTitle('Close'))
+    await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
+  })
 })
