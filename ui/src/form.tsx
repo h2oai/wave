@@ -158,9 +158,15 @@ const
     },
     vertical: {
       $nest: {
-        '> *': {
+        '>*': {
           margin: margin(10, 0)
-        }
+        },
+        '>*:first-child': {
+          marginTop: 0,
+        },
+        '>*:last-child': {
+          marginBottom: 0,
+        },
       }
     },
     horizontal: {
