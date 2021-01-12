@@ -17,7 +17,7 @@ check: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 		R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 install: $(PKG_NAME)_$(PKG_VERSION).tar.gz
-#		Rscript R/requirements.R 
+		Rscript R/requirements.R 
 		R CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 clean:
