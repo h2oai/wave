@@ -15,7 +15,7 @@ async def show_grey_dashboard(q: Q):
                     ui.zone('top', direction=ui.ZoneDirection.ROW, size='25%'),
                     ui.zone('middle', direction=ui.ZoneDirection.ROW, size='25%'),
                     ui.zone('middle2', direction=ui.ZoneDirection.ROW, size='25%'),
-                    ui.zone('bottom', direction=ui.ZoneDirection.ROW, size='25%'),
+                    ui.zone('bottom', direction=ui.ZoneDirection.ROW, size='20%'),
                 ]),
                 ui.zone('footer', size='0'),
             ]
