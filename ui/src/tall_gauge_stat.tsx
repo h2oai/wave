@@ -32,6 +32,11 @@ const
       ...theme.font.s12,
       ...theme.font.w6,
     },
+    body: {
+      position: 'relative',
+      display: 'flex',
+      flexGrow: 1,
+    },
     value_overlay: {
       position: 'absolute',
       top: 0, right: 0, bottom: 0, left: 0,
@@ -73,10 +78,12 @@ export const
       return (
         <div data-test={name} className={css.card}>
           <Format data={data} format={s.title} className={css.title} />
-          <ProgressArc thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-          <div className={css.value_overlay}>
-            <Format data={data} format={s.value} className={css.value} />
-            <Format data={data} format={s.aux_value} className={css.aux_value} />
+          <div className={css.body}>
+            <ProgressArc thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <div className={css.value_overlay}>
+              <Format data={data} format={s.value} className={css.value} />
+              <Format data={data} format={s.aux_value} className={css.aux_value} />
+            </div>
           </div>
         </div>
       )
