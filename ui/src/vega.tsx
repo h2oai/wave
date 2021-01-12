@@ -16,7 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
-import { B, bond, Card, Rec, S, unpack, xid } from './qd'
+import { B, bond, Card, Rec, S, unpack, xid, debounce } from './qd'
 import { displayMixin, getTheme } from './theme'
 
 const
@@ -33,8 +33,19 @@ const
     },
     body: {
       flexGrow: 1,
-      position: 'relative',
+      display: 'flex',
     },
+    plot: {
+      $nest: {
+        'canvas': {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        }
+      }
+    }
   })
 
 /** Create a Vega-lite plot for display inside a form. */
@@ -57,50 +68,50 @@ export const
   XVegaVisualization = bond(({ model: state }: { model: VegaVisualization }) => {
     const
       ref = React.createRef<HTMLDivElement>(),
-      init = async () => {
-        if (!ref.current) {
-          window.setTimeout(init, 500)
-          return
-        }
-
+      init = () => {
+        const el = ref.current
+        if (!el) return
+        // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
+        if (el.clientHeight < 30) el.style.height = '300px'
         const
           spec = JSON.parse(state.specification),
-          data = unpack<any[]>(state.data)
+          data = unpack<any[]>(state.data),
+          width = el.clientWidth - 10, // HACK: Vega calculates dimensions with extra 10px for some reason.
+          height = el.clientHeight - 10 // HACK: Vega calculates dimensions with extra 10px for some reason.
 
         if (data) spec.data = { values: data }
-        try {
-          await vegaEmbed(ref.current, spec, {
-            mode: 'vega-lite',
-            defaultStyle: false,
-            renderer: 'canvas',
-            actions: false,
-            config: {
-              autosize: {
-                type: 'fit',
-                resize: true
-              },
-              view: {
-                discreteWidth: ref.current.clientWidth || undefined,
-                discreteHeight: ref.current.clientHeight || undefined,
-                continuousWidth: ref.current.clientWidth || 200,
-                continuousHeight: ref.current.clientHeight || 200,
-              }
+        vegaEmbed(el, spec, {
+          mode: 'vega-lite',
+          defaultStyle: false,
+          renderer: 'canvas',
+          actions: false,
+          config: {
+            autosize: {
+              type: 'fit',
+              resize: true
+            },
+            view: {
+              discreteWidth: width,
+              discreteHeight: height,
+              continuousWidth: width,
+              continuousHeight: height,
             }
-          })
-        } catch (e) {
-          console.error(e)
-        }
+          }
+        }).catch(console.error)
       },
+      onResize = debounce(1000, init),
+      dispose = () => window.removeEventListener('resize', onResize),
       render = () => {
         const
-          { name, width, height, visible } = state,
+          { name, width = 'auto', height = 'auto', visible } = state,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
-            ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
-            : { width: width || 'auto', height: height || 'auto' }
-        return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={ref} />
+            ? { flexGrow: 1 }
+            : { width, height }
+        return <div data-test={name} className={css.plot} style={{ ...style, position: 'relative', ...displayMixin(visible) }} ref={ref} />
       }
+    window.addEventListener('resize', onResize)
 
-    return { init, render }
+    return { init, render, dispose }
   })
 
 /** Create a card containing a Vega-lite plot. */
@@ -117,11 +128,12 @@ export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
+        const { specification, data } = state
         return (
           <div data-test={name} className={css.card}>
             <div className={css.title}>{state.title}</div>
             <div className={css.body}>
-              <XVegaVisualization key={xid()} model={{ specification: state.specification, data: state.data, width: 'auto', height: 'auto' }} />
+              <XVegaVisualization key={xid()} model={{ specification, data }} />
             </div>
           </div>
         )
@@ -130,4 +142,3 @@ export const
   })
 
 cards.register('vega', View)
-
