@@ -19,7 +19,7 @@ async def serve(q: Q):
         ])
     else:
         q.page['breadcrumbs'] = ui.breadcrumbs_card(
-            box='1 1 4 -1',
+            box='1 1 4 1',
             items=[
                 ui.breadcrumb(name='#menu1', label='Menu 1'),
                 ui.breadcrumb(name='#menu2', label='Menu 2'),

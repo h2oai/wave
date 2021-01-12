@@ -23,12 +23,12 @@ async def serve(q: Q):
             blurb.content = 'Everything here is gluten-free!'
     else:
         q.page['nav'] = ui.markdown_card(
-            box='1 1 4 1',
+            box='1 1 4 2',
             title='Links!',
-            content='[Spam](#menu/spam) | [Ham](#menu/ham) | [Eggs](#menu/eggs) | [About](#about)',
+            content='[Spam](#menu/spam) / [Ham](#menu/ham) / [Eggs](#menu/eggs) / [About](#about)',
         )
         q.page['blurb'] = ui.markdown_card(
-            box='1 2 4 2',
+            box='1 3 4 2',
             title='Store',
             content='Welcome to our store!',
         )
