@@ -155,17 +155,16 @@ const
   css = stylesheet({
     card: {
       padding: 15,
+      display: 'flex',
+      flexDirection: 'column'
     },
     vertical: {
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
       $nest: {
-        '>*': {
-          margin: margin(10, 0)
-        },
-        '>*:first-child': {
-          marginTop: 0,
-        },
-        '>*:last-child': {
-          marginBottom: 0,
+        '>*:not(:first-child)': {
+          marginTop: 10
         },
       }
     },

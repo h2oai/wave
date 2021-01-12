@@ -272,7 +272,6 @@ async def show_purple_dashboard(q: Q):
                         ('In-store', next(sales_days_2), next(sales_amounts_2)) for i in range(15)],
                     pack=True
                 ),
-                height='210px',
             )
         ],
     )
@@ -309,7 +308,6 @@ async def show_purple_dashboard(q: Q):
                         ('In-store', next(audience_days2), next(audience_hits2)) for i in range(60)],
                     pack=True
                 ),
-                height='210px',
             )
         ],
     )
