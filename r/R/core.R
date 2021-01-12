@@ -1,4 +1,4 @@
-install.packages(c("jsonlite","httr","stringr","future"),repo = "https://lib.ugent.be/CRAN/")
+#install.packages(c("jsonlite","httr","stringr","future"),repo = "https://lib.ugent.be/CRAN/")
 library(jsonlite)
 library(httr)
 library(stringr) 
@@ -17,8 +17,6 @@ plan(list(multisession,multisession))
 #' @export
 #'
 #' @examples
-#' test_variable <- 'INTERNAL_ADDRESS'
-#' .get_env_var(test_variable)
 .get.env.var <- function(object){
        var <- Sys.getenv(paste0("H2O_Q_",object[1]))
         ifelse(var != "", return(var), return(object[2]))
@@ -105,7 +103,6 @@ data.dump <- function(fields,size,data=NULL){
 #' @export
 #'
 #' @examples 
-#' test_page <- page("/example)
 page <- function(page_name,fun_flag=FALSE,...){
 
         if(fun_flag == TRUE && current_page != page_name){
@@ -141,8 +138,6 @@ page <- function(page_name,fun_flag=FALSE,...){
 #' @export
 #'
 #' @examples
-#' test_page <- page.add(test_page,"/example","test_card"
-#' ,FUN=ui_small_stat_card(box="1 1 1 1",title="test",value="$55.05"))
 page.add <- function(page_instance,page_name,card_name,FUN,...){
         page(page_name,fun_flag=TRUE)
         o <- FUN
@@ -190,7 +185,6 @@ page.add <- function(page_instance,page_name,card_name,FUN,...){
 #' @export
 #'
 #' @examples
-#' page.load("/example")
 page.load <- function(page_name,...){
         return(site.load(page_name,...))
 }
@@ -307,7 +301,6 @@ is.list.empty <- function(x){
 #' @export
 #'
 #' @examples
-#' page.save(test_page,"/example")
 page.save <- function(page_instance,page_name,...){
         page(page_name,fun_flag=TRUE)
         if("h2o_q_delta_data" %in% class(page_instance)) {
@@ -337,7 +330,6 @@ page.save <- function(page_instance,page_name,...){
 #' @export
 #'
 #' @examples
-#' .site.save("/example",json_data)
 .site.save <- function(page_name,data,...){
         return(.BAclient.patch(page_name,data,...))
 }
@@ -355,7 +347,6 @@ page.save <- function(page_instance,page_name,...){
 #' @export
 #'
 #' @examples
-#' site.load("/example")
 site.load <- function(page_name,...){
         return(.BAclient.get(page_name,...))
 }
@@ -372,8 +363,6 @@ site.load <- function(page_name,...){
 #' @export
 #'
 #' @examples
-#' file_list <- list("aml.jpg","dai.jpg")
-#' site.upload(file_list)
 site.upload <- function(files_list,...){
         return(.BAclient.upload(file_list,...))
 }
@@ -389,7 +378,6 @@ site.upload <- function(files_list,...){
 #' @export
 #'
 #' @examples
-#' site.download("aml.jpg","/tmp")
 site.download <- function(files_name,path,...){
         return(.BAclient.download(file_name,path,...))
 }
@@ -406,7 +394,6 @@ site.download <- function(files_name,path,...){
 #' @export
 #'
 #' @examples
-#' site.unload("/example")
 site.unload <- function(page_name,...){
         return(.BAclient.unload(page_name,...))
 }
@@ -424,7 +411,6 @@ site.unload <- function(page_name,...){
 #' @export
 #'
 #' @examples
-#' .BAclient.path("/example",json_data)
 .BAclient.patch <- function(page_name,data,...){
         resp <- httr::PATCH(paste0(.config$hub_address,page_name)
         ,httr::content_type_json()
@@ -447,7 +433,6 @@ site.unload <- function(page_name,...){
 #' @export
 #'
 #' @examples
-#' .BAclient.get("/example")
 .BAclient.get <- function(page_name,...){
         resp <- httr::GET(paste0(.config$hub_address,page_name)
         ,httr::content_type_json()
@@ -468,8 +453,6 @@ site.unload <- function(page_name,...){
 #' @export
 #'
 #' @examples
-#' file_list <- list("aml.jpg","dai.jpg")
-#' .BAclient.upload(file_list)
 .BAclient.upload <- function(files_list,...){
         fs <- lapply(files_list,function(x){upload_file(x)})
         names(fs) <- rep("files",length(fs))
@@ -496,7 +479,6 @@ site.unload <- function(page_name,...){
 #' @export
 #'
 #' @examples
-#' .BAclient.download("aml.jpb","tmp")
 .BAclient.download <- function(file_name,path,...){
         resp <- httr::GET(paste0(.config$hub_address,page_name),write_disk(path))
         if(resp$status_code != 200){
@@ -518,7 +500,6 @@ site.unload <- function(page_name,...){
 #' @export
 #'
 #' @examples
-#' .BAclient.unload("/example")
 .BAclient.unload <- function(page_name,...){
         resp <- httr::DELETE(paste0(.config$hub_address,page_name))
         if(resp$status_code != 200){
