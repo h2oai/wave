@@ -180,14 +180,6 @@ const
       backgroundColor: theme.colors.card,
       boxShadow: `0px 3px 5px ${theme.colors.text0}`,
     },
-    transparent: {
-      $nest: {
-        '>*:first-child': {
-          position: 'absolute',
-          left: 15, top: 0, right: 15, bottom: 0,
-        }
-      }
-    },
   }),
   getCardEffectClass = (c: C) => {
     const effect = getCardEffect(c)
@@ -196,7 +188,7 @@ const
       : effect === CardEffect.Raised
         ? css.raised
         : effect == CardEffect.Flat
-          ? css.flat : css.transparent)
+          ? css.flat : '')
   }
 
 export const
