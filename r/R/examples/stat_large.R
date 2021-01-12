@@ -1,6 +1,6 @@
-source("../core.R")
-source("../ui.R")
-
+#source("../core.R")
+#source("../ui.R")
+library(h2owave)
 library(tokenizers)
 base_url <- "https://programminghistorian.org/assets/basic-text-processing-in-r"
 url <- sprintf("%s/sotu_text/236.txt", base_url)

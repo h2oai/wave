@@ -1,5 +1,6 @@
-source("../core.R")
-source("../ui.R")
+#source("../core.R")
+#source("../ui.R")
+library(h2owave)
 
 card_title <- sample(row.names(mtcars),1)
 card_value <- as.character(sample(mtcars[['mpg']],1))

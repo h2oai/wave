@@ -1,6 +1,6 @@
-source("../core.R") 
-source("../ui.R")
-
+#source("../core.R") 
+#source("../ui.R")
+library(h2owave)
 
 test_page <- page("/page_demo")
 
