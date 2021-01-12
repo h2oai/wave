@@ -17,7 +17,7 @@ import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, Coordin
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
-import { cards } from './layout'
+import { cards, grid } from './layout'
 import { B, bond, Card, Dict, F, parseI, parseU, qd, Rec, S, unpack, V } from './qd'
 import { getTheme, displayMixin } from './theme'
 
@@ -725,13 +725,13 @@ const
     card: {
       display: 'flex',
       flexDirection: 'column',
-      padding: 15,
+      padding: grid.gap,
     },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
-    plot: {
+    body: {
       flexGrow: 1,
       display: 'flex',
     },
@@ -841,7 +841,7 @@ export const
         return (
           <div className={css.card}>
             <div className={css.title}>{title || 'Untitled'}</div>
-            <div className={css.plot}>
+            <div className={css.body}>
               <XVisualization model={{ name, plot, data, width: 'auto', height: 'auto', events }} />
             </div>
           </div>
