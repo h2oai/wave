@@ -62,6 +62,9 @@ const
           maxWidth: '100%',
           maxHeight: '100%',
         },
+        p: {
+          margin: 0
+        },
       },
     },
   })
