@@ -14,7 +14,8 @@
 
 import * as d3 from 'd3'
 import React from 'react'
-import { cards } from './layout'
+import { stylesheet } from 'typestyle'
+import { cards, grid } from './layout'
 import { bond, Card, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd'
 
 
@@ -98,6 +99,13 @@ const
   get1 = (d: any) => d[1],
   get2 = (d: any) => d[2]
 
+const
+  css = stylesheet({
+    card: {
+      position: 'absolute',
+      left: grid.gap, top: grid.gap, right: grid.gap, bottom: grid.gap,
+    },
+  })
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
     type El = { d: S, o: S }
@@ -167,7 +175,7 @@ export const
             ...(o ? JSON.parse(o) : {}),
           }, i)) : []
         return (
-          <div data-test={name}>
+          <div data-test={name} className={css.card}>
             <svg viewBox={view_box} width={width} height={height}>
               <g>{stageEls}</g>
               <g>{sceneEls}</g>
