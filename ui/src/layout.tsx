@@ -155,10 +155,12 @@ const
       boxSizing: 'border-box',
       transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
       overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
       $nest: {
         '>*:first-child': {
-          position: 'absolute',
-          left: 15, top: 15, right: 15, bottom: 15,
+          boxSizing: 'border-box',
+          flexGrow: 1, // Expand vertically
         }
       }
     },
