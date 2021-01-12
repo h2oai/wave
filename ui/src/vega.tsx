@@ -16,23 +16,24 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
-import { bond, Card, Rec, S, unpack, xid, B } from './qd'
-import { getTheme, displayMixin, px } from './theme'
+import { B, bond, Card, Rec, S, unpack, xid } from './qd'
+import { displayMixin, getTheme } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
     card: {
-      height: `calc(100% - ${px(2 * grid.gap)} )`,
+      display: 'flex',
+      flexDirection: 'column',
+      padding: grid.gap,
     },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
-    plot: {
+    body: {
+      flexGrow: 1,
       position: 'relative',
-      height: 'calc(100% - 20px)',
-      width: 'calc(100% - 10px)'
     },
   })
 
@@ -119,7 +120,7 @@ export const
         return (
           <div data-test={name} className={css.card}>
             <div className={css.title}>{state.title}</div>
-            <div className={css.plot}>
+            <div className={css.body}>
               <XVegaVisualization key={xid()} model={{ specification: state.specification, data: state.data, width: 'auto', height: 'auto' }} />
             </div>
           </div>
