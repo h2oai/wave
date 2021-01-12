@@ -15,16 +15,24 @@
 import markdownit from 'markdown-it'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, substitute } from './layout'
+import { cards, grid, substitute } from './layout'
 import { bond, Card, Rec, S, unpack } from './qd'
 import { border, getTheme, padding, palette, pc } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: grid.gap,
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
+    },
+    body: {
+      flexGrow: 1,
     },
     markdown: {
       $nest: {
@@ -90,9 +98,11 @@ export const
           data = unpack(state.data),
           title = substitute(state.title, data)
         return (
-          <div data-test={name}>
+          <div data-test={name} className={css.card}>
             {title && <div className={css.title}>{title}</div>}
-            <Markdown source={substitute(state.content, data)} />
+            <div className={css.body}>
+              <Markdown source={substitute(state.content, data)} />
+            </div>
           </div>
         )
       }
