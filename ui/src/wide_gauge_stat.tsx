@@ -57,6 +57,7 @@ const
     value: {
       ...theme.font.s24,
       ...theme.font.w3,
+      lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
     },
     aux_value: {
       ...theme.font.s13,
