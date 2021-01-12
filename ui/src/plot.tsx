@@ -734,6 +734,15 @@ const
     body: {
       flexGrow: 1,
       display: 'flex',
+      $nest: {
+        'canvas': {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        }
+      }
     },
   })
 
@@ -765,6 +774,8 @@ export const
       init = () => {
         const el = container.current
         if (!el) return
+        // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
+        if (el.clientHeight < 30) el.style.height = '300px'
         const
           raw_data = unpack<any[]>(model.data),
           raw_plot = unpack<Plot>(model.plot),
@@ -808,15 +819,11 @@ export const
       },
       render = () => {
         const
-          { width, height, visible, name } = model,
-          // BUG: inside a flex layout, the plot does not use all available width.
-          // Maybe the width here needs to be set explicitly using getBoundingClientRect()?
+          { width = 'auto', height = 'auto', visible, name } = model,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { flexGrow: 1 }
-            : { width: width || 'auto', height: height || '300px' }
-        return (
-          <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={container} />
-        )
+            : { width, height }
+        return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={container} />
       }
     return { init, update, render }
   })
@@ -837,12 +844,12 @@ export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
-        const { title, plot, data, events } = state
+        const { title = 'Untitled', plot, data, events } = state
         return (
           <div className={css.card}>
-            <div className={css.title}>{title || 'Untitled'}</div>
+            <div className={css.title}>{title}</div>
             <div className={css.body}>
-              <XVisualization model={{ name, plot, data, width: 'auto', height: 'auto', events }} />
+              <XVisualization model={{ name, plot, data, events }} />
             </div>
           </div>
         )
@@ -851,4 +858,3 @@ export const
   })
 
 cards.register('plot', View)
-
