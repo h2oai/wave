@@ -51,7 +51,7 @@ const
       a: any = {}
     delete d['_t']
 
-    for (const k in d) a[k.replace(/_/g, '-')] = d[k] // xml_attr to xml-attr
+    for (const k in d) a[k.replace(/_./g, x => x.substr(1).toUpperCase())] = d[k] // xml_attr to xmlAttr
     return [t, a]
   },
   extract = (d: any, extra: S[]): any[] => {
