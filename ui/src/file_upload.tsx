@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { B, bond, box, S, qd, U, xid, F } from './qd'
-import { getTheme, centerMixin, dashed, clas, displayMixin } from './theme'
+import { getTheme, centerMixin, dashed, clas, displayMixin, padding } from './theme'
 
 /**
  * Create a file upload component.
@@ -59,7 +59,10 @@ const
     },
     uploadLabel: {
       ...centerMixin(),
-      padding: 15,
+      padding: padding(7, 10),
+      fontSize: 14,
+      fontWeight: 600,
+      borderRadius: 2,
       background: colors.text,
       color: colors.page,
       minWidth: 80,
@@ -271,9 +274,7 @@ export const
               type='file'
               accept={fileExtensions?.join(',') || undefined}
               multiple={model.multiple} />
-            <label htmlFor="file" className={css.uploadLabel}>
-              <Fluent.Text variant={'large'}>Browse...</Fluent.Text>
-            </label>
+            <label htmlFor="file" className={css.uploadLabel}>Browse...</label>
             <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or drag and drop {model.multiple ? 'files' : 'a file'} here.</Fluent.Text>
           </>
         )
