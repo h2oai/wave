@@ -1,0 +1,3 @@
+httr
+stringr
+jsonlite
