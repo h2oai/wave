@@ -18,7 +18,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { Markdown } from './markdown'
 import { B, Dict, S } from './qd'
-import { displayMixin } from './theme'
+import { displayMixin, margin } from './theme'
 import { Command } from './toolbar'
 
 /** Create text content. */
@@ -103,6 +103,12 @@ const
   css = stylesheet({
     text: {
       position: 'relative',
+      $nest: {
+        p: {
+          // Override default 1em margin inside markdown paragraphs.
+          margin: margin(0, 0, 10, 0),
+        }
+      },
     },
   }),
   textVariants: Dict<keyof Fluent.IFontStyles> = {
