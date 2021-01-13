@@ -33,3 +33,32 @@ body,
   right: 0;
   bottom: 0;
 }
+
+@media print {
+
+  #root * {
+    overflow: visible;
+  }
+
+  pre {
+    white-space: pre-wrap !important;
+  }
+
+  img, th, tr {
+    page-break-inside: avoid;
+  }
+
+  blockquote, pre {
+    border: 1px solid #adb5bd;
+    page-break-inside: avoid;
+  }
+
+  div[class^="ms-ScrollablePane"], div[class*=" root-"] {
+    overflow: hidden !important;
+  }
+
+  @page {
+    orphans: 4;
+    widows: 2;
+  }
+}
