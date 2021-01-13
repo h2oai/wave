@@ -14,7 +14,7 @@
 
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Component, XComponentAlignment, XComponents } from './form'
+import { Component, XComponentAlignment, XComponents, ComponentWithId } from './form'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
 import { bond, Card, Packed, S, unpack } from './qd'
@@ -65,7 +65,7 @@ export const
           components = unpack<Component[]>(items), // XXX ugly
           form = items && (
             <div>
-              <XComponents items={components} alignment={XComponentAlignment.Right} />
+              <XComponents items={components as ComponentWithId[]} alignment={XComponentAlignment.Right} />
             </div>
           )
 

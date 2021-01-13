@@ -379,10 +379,6 @@ const
           }
         }
 
-        // Every form component element has to have a unique id to make React list rerendering work correctly.
-        if (type.name === 'Component') {
-          p('id_ = 0')
-        }
         p('')
         p(`class ${type.name}:`)
         p(`    """` + genComments(type.comments, '    '))
@@ -395,9 +391,7 @@ const
         p(`    ):`)
         // Every form component element has to have a unique id to make React list rerendering work correctly.
         if (type.name === 'Component') {
-          p(`        global id_`)
-          p(`        id_ += 1`)
-          p(`        self.id = id_`)
+          p(`        self.id = str(uuid.uuid4())`)
         }
         for (const m of type.members) {
           p(`        self.${m.name} = ${m.name}`)
@@ -486,6 +480,7 @@ const
         p('')
         p('from typing import Any, Optional, Union, Dict, List')
         p('from .core import Data')
+        p('import uuid')
         p('')
         p('Value = Union[str, float, int]')
         p('PackedRecord = Union[dict, str]')

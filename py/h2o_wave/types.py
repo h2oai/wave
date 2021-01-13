@@ -18,6 +18,7 @@
 
 from typing import Any, Optional, Union, Dict, List
 from .core import Data
+import uuid
 
 Value = Union[str, float, int]
 PackedRecord = Union[dict, str]
@@ -4030,7 +4031,6 @@ class VegaVisualization:
             visible,
         )
 
-id_ = 0
 
 class Stat:
     """Create a stat (a label-value pair) for displaying a metric.
@@ -4235,9 +4235,7 @@ class Component:
             stats: Optional[Stats] = None,
             inline: Optional[Inline] = None,
     ):
-        global id_
-        id_ += 1
-        self.id = id_
+        self.id = str(uuid.uuid4())
         self.text = text
         """Text block."""
         self.text_xl = text_xl

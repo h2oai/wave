@@ -34,7 +34,7 @@ import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
-import { B, bond, Card, Packed, S, unpack, U } from './qd'
+import { B, bond, Card, Packed, S, U, unpack } from './qd'
 import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'
@@ -212,7 +212,7 @@ export const
   },
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
-      items={m.items}
+      items={m.items as ComponentWithId[]}
       alignment={m.justify === 'end' ? XComponentAlignment.Right : XComponentAlignment.Left}
       inset={m.inset}
     />
@@ -269,12 +269,8 @@ export const
       render = () => {
         const
           s = theme.merge(defaults, state),
-<<<<<<< HEAD
           title = s.title,
-          items = unpack<Component[]>(s.items) // XXX ugly
-=======
           items = unpack<ComponentWithId[]>(s.items) // XXX ugly
->>>>>>> feat: add unique id to each form component to allow react rerender form list properly
 
         return (
           <div data-test={name} className={css.card}>

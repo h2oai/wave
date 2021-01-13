@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { XButtons } from './button'
-import { Component, XComponents } from './form'
+import { Component, XComponents, ComponentWithId } from './form'
 import { B, bond, qd, S } from './qd'
 
 /**
@@ -58,7 +58,7 @@ export default bond(() => {
 
       return (
         <Fluent.Dialog hidden={!dialogB()} dialogContentProps={dialogContentProps} modalProps={{ isBlocking: blocking }} minWidth={width} maxWidth={width}>
-          <XComponents items={items} />
+          <XComponents items={items as ComponentWithId[]} />
           {lastComponent?.buttons && <Fluent.DialogFooter><XButtons model={lastComponent.buttons} /></Fluent.DialogFooter>}
         </Fluent.Dialog>
       )
