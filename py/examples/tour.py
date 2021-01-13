@@ -1,9 +1,10 @@
 import collections
 import os
 import os.path
+import re
 import subprocess
 import sys
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Tuple
 
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
@@ -63,7 +64,73 @@ def read_file(p: str) -> str:
 
 
 def strip_comment(line: str) -> str:
-    return line.strip(" #")
+    """Returns the content of a line without '#' and ' ' characters
+
+    remove leading '#', but preserve '#' that is part of a tag
+    example:
+    >>> '# #hello '.strip('#').strip()
+    '#hello'
+    """
+    return line.strip('#').strip()
+
+
+def parse_tags(description: str) -> Tuple[str, List[str]]:
+    """Creates tags from description.
+
+    Accepts a description containing tags and returns a (new_description, tags) tuple.
+
+    The convention for tags:
+    1. Any valid twitter hashtag
+
+    For example, accept a description in any of the following forms
+
+    1. Use a checklist to group a set of related checkboxes. #form #checkbox #checklist
+
+    2. Use a checklist to group a set of related checkboxes.
+       #form #checkbox #checklist
+
+    3. Use a #checklist to group a set of related checkboxes.
+       #form #checkbox
+
+    and return
+    ('Use a checklist to group a set of related checkboxes.', ['checkbox', 'checklist', 'form']). The list of tags will
+    be sorted and all tags will be converted to lowercase.
+
+    Args:
+        description: Complete description of an example.
+    Returns:
+        A tuple of new_description and a sorted list of tags. new_description is created by removing the '#' characters
+        from the description.
+    """
+    hashtag_regex_pattern = r"(\s+)#(\w*[a-zA-Z]+\w*)\b"
+    pattern = re.compile(hashtag_regex_pattern)
+    matches = pattern.findall(' ' + description)
+
+    # Retrieve tags from the matches
+    tags = sorted(list(set([x[-1].lower() for x in matches])))
+
+    # Remove the '#' before the tags in description
+    new_d = pattern.sub(r'\1\2', ' ' + description)
+
+    # Remove the last line in description if it has only tags
+    *lines, last_line = new_d.strip().splitlines()
+    last_line_has_tags_only = len(last_line.strip()) > 1 and all([x.strip().lower() in tags for x in last_line.split()])
+    if last_line_has_tags_only:
+        # Return all lines except the last line
+        return '\n'.join(lines), tags
+
+    # Remove the last sentence if it has only tags
+    *sentences, last_sentence = last_line.split('. ')
+    last_sentence_has_tags_only = len(last_sentence.strip()) > 1 and all(
+        [x.strip().lower() in tags for x in last_sentence.split()])
+    if last_sentence_has_tags_only:
+        # Return all lines and all sentences in the last line except the last sentence
+        lines.extend(sentences)
+        return '\n'.join(lines) + '.', tags
+
+    # Return the complete description
+    lines.append(last_line)
+    return '\n'.join(lines), tags
 
 
 def load_example(filename: str) -> Example:
@@ -71,7 +138,8 @@ def load_example(filename: str) -> Example:
     parts = contents.split('---', maxsplit=1)
     header, source = parts[0].strip().splitlines(), parts[1].strip()
     title, description = strip_comment(header[0]), [strip_comment(x) for x in header[1:]]
-    return Example(filename, title, '\n'.join(description), source)
+    new_description, _ = parse_tags('\n'.join(description))
+    return Example(filename, title, new_description, source)
 
 
 def load_examples(filenames: List[str]) -> Dict[str, Example]:
