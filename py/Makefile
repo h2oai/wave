@@ -5,13 +5,10 @@ build: purge
 	sed -i -r -e "s/version.+/version='$(VERSION)',/" setup.py
 	./venv/bin/python3 setup.py bdist_wheel
 
-publish: ## Publish package to PyPI
-	./venv/bin/python -m twine upload dist/*
-
 setup: ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
-	./venv/bin/python -m pip install setuptools wheel twine httpx uvicorn starlette pdoc3 pytest flake8
+	./venv/bin/python -m pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
 

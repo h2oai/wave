@@ -24,7 +24,7 @@ setuptools.setup(
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Wave Realtime Apps',
     long_description=long_description,
-    url='https://h2o.ai/h2o-wave/',
+    url='https://h2o.ai/products/h2o-wave',
     packages=setuptools.find_packages(),
     classifiers=[
         'Programming Language :: Python :: 3',
