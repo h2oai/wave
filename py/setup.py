@@ -27,6 +27,7 @@ setuptools.setup(
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Wave Realtime Apps',
     long_description=long_description,
+    # conda_description is a hack to read Anaconda description from a file. Not needed for Pypi.
     conda_description=conda_description,
     url='https://h2o.ai/products/h2o-wave',
     packages=setuptools.find_packages(),
