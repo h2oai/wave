@@ -5,7 +5,7 @@ R_FILES := $(wildcard R/*.R)
 SRC_FILES := $(wildcard R/*.R)
 PKG_FILES := DESCRIPTION NAMESPACE $(R_FILES) $(SRC_FILES)
 
-.PHONY: tarball install check clean 
+.PHONY: preinstall tarball install check clean 
 
 tarball: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
@@ -16,9 +16,14 @@ all: clean tarball check install
 check: $(PKG_NAME)_$(PKG_VERSION).tar.gz 
 		R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
-install: $(PKG_NAME)_$(PKG_VERSION).tar.gz
-		Rscript R/requirements.R 
+preinstall:
+		Rscript R/requirements.R
+
+install: preinstall $(PKG_NAME)_$(PKG_VERSION).tar.gz
 		R CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
+
+uninstall: $(PKG_NAME)_$(PKG_VERSION).tar.gz
+		R CMD REMOVE $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 clean:
 		-rm -f $(PKG_NAME)_*.tar.gz

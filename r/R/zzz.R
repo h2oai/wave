@@ -24,7 +24,3 @@
         .config$shutdown_timeout <<- as.integer(.get.env.var(c('SHUTDOWN_TIMEOUT','3')))
 }
 
-#.onLoad <- function(){
-#  .Config()
-#}
-
