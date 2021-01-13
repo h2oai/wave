@@ -17,7 +17,7 @@ import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, Coordin
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
-import { cards } from './layout'
+import { cards, grid } from './layout'
 import { B, bond, Card, Dict, F, parseI, parseU, qd, Rec, S, unpack, V } from './qd'
 import { getTheme, displayMixin } from './theme'
 
@@ -494,7 +494,7 @@ const
     if (adjust.length) o.adjust = adjust
     if (isS(x_field) && isS(y_field)) o.position = { fields: [x_field, y_field] }
     if (isS(color_field)) {
-      const colors = isS(color_range) ? split(color_range) : cat10
+      const colors = isS(color_range) ? split(color_range).map(theme.color) : cat10
       o.color = { fields: [color_field], values: colors }
       if (color_domain && color_domain.length == colors.length) {
         const domain_colors = color_domain.reduce((acc, value, i) => {
@@ -504,7 +504,7 @@ const
         o.color.callback = (x: S) => domain_colors[x]
       }
     } else {
-      o.color = isS(color) ? color : theme.colors.gray
+      o.color = isS(color) ? theme.color(color) : theme.colors.gray
     }
     if (isS(shape_field)) {
       if (isS(shape_range)) {
@@ -577,9 +577,9 @@ const
   },
   makeShapeStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, stroke_dash?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = fill_color
+    if (isS(fill_color)) s.fill = theme.color(fill_color)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = stroke_color
+    if (isS(stroke_color)) s.stroke = theme.color(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isS(stroke_dash)) s.lineDash = parseInts(stroke_dash)
@@ -587,9 +587,9 @@ const
   },
   makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S, line_height?: F, align?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = fill_color
+    if (isS(fill_color)) s.fill = theme.color(fill_color)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = stroke_color
+    if (isS(stroke_color)) s.stroke = theme.color(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isF(font_size)) s.fontSize = font_size
@@ -722,13 +722,27 @@ const
 
 const
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: grid.gap,
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
-    plot: {
-      position: 'absolute',
-      left: 0, top: 30, right: 0, bottom: 0,
+    body: {
+      flexGrow: 1,
+      display: 'flex',
+      $nest: {
+        'canvas': {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        }
+      }
     },
   })
 
@@ -760,6 +774,8 @@ export const
       init = () => {
         const el = container.current
         if (!el) return
+        // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
+        if (el.clientHeight < 30) el.style.height = '300px'
         const
           raw_data = unpack<any[]>(model.data),
           raw_plot = unpack<Plot>(model.plot),
@@ -803,13 +819,11 @@ export const
       },
       render = () => {
         const
-          { width, height, visible, name } = model,
+          { width = 'auto', height = 'auto', visible, name } = model,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
-            ? { position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }
-            : { width: width || 'auto', height: height || '300px' }
-        return (
-          <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={container} />
-        )
+            ? { flexGrow: 1 }
+            : { width, height }
+        return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={container} />
       }
     return { init, update, render }
   })
@@ -830,12 +844,12 @@ export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
-        const { title, plot, data, events } = state
+        const { title = 'Untitled', plot, data, events } = state
         return (
-          <div>
-            <div className={css.title}>{title || 'Untitled'}</div>
-            <div className={css.plot}>
-              <XVisualization model={{ name, plot, data, width: 'auto', height: 'auto', events }} />
+          <div className={css.card}>
+            <div className={css.title}>{title}</div>
+            <div className={css.body}>
+              <XVisualization model={{ name, plot, data, events }} />
             </div>
           </div>
         )
@@ -844,4 +858,3 @@ export const
   })
 
 cards.register('plot', View)
-

@@ -1,5 +1,5 @@
 # Tab
-# Use tab cards to display tabs on a page.
+# Use tab cards to display #tabs on a page.
 # ---
 from h2o_wave import main, app, Q, ui
 

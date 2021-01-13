@@ -83,9 +83,7 @@ export const
                 onClick={onClick}
                 styles={{ root: { paddingLeft: 0 }, icon: { marginLeft: 0 } }}>{m.label}</Fluent.ActionButton>
             </Fluent.Separator>
-            <div>
-              <XComponents items={m.items || []} />
-            </div>
+            <XComponents items={m.items || []} />
           </div>
         )
       }

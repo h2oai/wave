@@ -1,5 +1,5 @@
 # Plot / Line / Annotation
-# Add annotations to a line plot.
+# Add annotations to a line #plot. #annotation
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui

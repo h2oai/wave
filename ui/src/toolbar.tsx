@@ -14,6 +14,7 @@
 
 import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { bond, Card, qd, S } from './qd'
 
@@ -74,6 +75,14 @@ const
       onClick,
     }
   }
+const
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    }
+  })
 
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
@@ -85,7 +94,7 @@ export const
           overflowCommands = overflow_items ? toCommands(overflow_items) : undefined,
           farCommands = secondary_items ? toCommands(secondary_items) : undefined
         return (
-          <div>
+          <div className={css.card}>
             <CommandBar
               data-test={name}
               items={commands}
@@ -100,6 +109,6 @@ export const
     return { render, changed }
   })
 
-cards.register('toolbar', View, CardEffect.Flat)
+cards.register('toolbar', View, CardEffect.Transparent)
 
 

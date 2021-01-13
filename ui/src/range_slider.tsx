@@ -22,9 +22,6 @@ import { palette, padding, displayMixin } from './theme'
 
 const
   css = stylesheet({
-    wrapper: {
-      marginTop: '-10px !important'
-    },
     container: {
       padding: padding(0, 8),
       $nest: {
@@ -126,7 +123,7 @@ export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
       if (m.trigger) qd.sync()
     },
     render = () => (
-      <div data-test={m.name} className={css.wrapper} style={displayMixin(m.visible)}>
+      <div data-test={m.name} style={displayMixin(m.visible)}>
         {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
         <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
           <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={valueB()} onChange={onChange} />

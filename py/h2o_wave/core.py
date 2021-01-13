@@ -89,10 +89,16 @@ def _guard_primitive_dict_values(d: Dict[str, Any]):
             _guard_primitive(x)
 
 
+def _guard_str_key(key: str):
+    if not _is_str(key):
+        raise KeyError('key must be str')
+    if ' ' in key:
+        raise KeyError('keys cannot contain spaces')
+
+
 def _guard_key(key: str):
     if _is_str(key):
-        if ' ' in key:
-            raise KeyError('keys cannot contain spaces')
+        _guard_str_key(key)
     else:
         if not _is_int(key):
             raise KeyError('invalid key type: want str or int')
@@ -455,11 +461,7 @@ class PageBase:
         Returns:
             A reference to the added card.
         """
-        if key is None:
-            raise ValueError('card must have a key')
-
-        if not _is_str(key):
-            raise ValueError('key must be str')
+        _guard_str_key(key)
 
         props: Optional[dict] = None
 
@@ -508,11 +510,11 @@ class PageBase:
         self.add(key, card)
 
     def __getitem__(self, key: str) -> Ref:
-        if not _is_str(key):
-            raise ValueError('key must be str')
+        _guard_str_key(key)
         return Ref(self, key)
 
     def __delitem__(self, key: str):
+        _guard_str_key(key)
         self._track(dict(k=key))
 
 

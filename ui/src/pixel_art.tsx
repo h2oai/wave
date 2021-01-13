@@ -14,7 +14,7 @@
 
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards } from './layout'
+import { cards, grid } from './layout'
 import { bond, Card, unpack, Rec, S, qd, U } from './qd'
 import { getTheme } from './theme'
 
@@ -29,6 +29,7 @@ const
     card: {
       display: 'flex',
       flexDirection: 'column',
+      padding: grid.gap,
     },
     title: {
       ...theme.font.s12,

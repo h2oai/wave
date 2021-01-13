@@ -1,5 +1,5 @@
 # Wizard
-# Create a multi-step wizard using form cards.
+# Create a multi-step #wizard using #form cards.
 # ---
 from h2o_wave import Q, ui, main, app, cypress, Cypress
 

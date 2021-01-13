@@ -41,11 +41,13 @@ export interface Dialog {
 export default bond(() => {
   const
     { dialogB } = qd,
+    onDismiss = () => qd.dialogB(null),
     render = () => {
       const
         { title, width = '600px', items = [], closable, primary, blocking } = dialogB() || {},
         dialogContentProps: Fluent.IDialogContentProps = {
           title,
+          onDismiss,
           type: closable
             ? Fluent.DialogType.close
             : primary

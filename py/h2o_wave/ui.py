@@ -143,6 +143,28 @@ def flex_card(
     )
 
 
+def footer_card(
+        box: str,
+        caption: str,
+        commands: Optional[List[Command]] = None,
+) -> FooterCard:
+    """Render a page footer displaying a caption.
+    Footer cards are typically displayed at the bottom of a page.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        caption: The caption. Supports markdown.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.FooterCard` instance.
+    """
+    return FooterCard(
+        box,
+        caption,
+        commands,
+    )
+
+
 def text(
         content: str,
         size: Optional[str] = None,
@@ -1026,7 +1048,7 @@ def buttons(
         name: Optional[str] = None,
         visible: Optional[bool] = None,
 ) -> Component:
-    """Create a set of buttons to be layed out horizontally.
+    """Create a set of buttons laid out horizontally.
 
     Args:
         items: The button in this set.
@@ -1310,6 +1332,7 @@ def tabs(
         value: Optional[str] = None,
         items: Optional[List[Tab]] = None,
         visible: Optional[bool] = None,
+        link: Optional[bool] = None,
 ) -> Component:
     """Create a tab bar.
 
@@ -1318,6 +1341,7 @@ def tabs(
         value: The name of the tab to select.
         items: The tabs in this tab bar.
         visible: True if the component should be visible. Defaults to true.
+        link: True if tabs should be rendered as links instead of buttons.
     Returns:
         A `h2o_wave.types.Tabs` instance.
     """
@@ -1326,6 +1350,7 @@ def tabs(
         value,
         items,
         visible,
+        link,
     ))
 
 
@@ -1828,9 +1853,79 @@ def vega_visualization(
     ))
 
 
+def stat(
+        label: str,
+        value: Optional[str] = None,
+        caption: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+) -> Stat:
+    """Create a stat (a label-value pair) for displaying a metric.
+
+    Args:
+        label: The label for the metric.
+        value: The value of the metric.
+        caption: The caption displayed below the primary value.
+        icon: An optional icon, displayed next to the label.
+        icon_color: The color of the icon.
+    Returns:
+        A `h2o_wave.types.Stat` instance.
+    """
+    return Stat(
+        label,
+        value,
+        caption,
+        icon,
+        icon_color,
+    )
+
+
+def stats(
+        items: List[Stat],
+        justify: Optional[str] = None,
+        inset: Optional[bool] = None,
+) -> Component:
+    """Create a set of stats laid out horizontally.
+
+    Args:
+        items: The individual stats to be displayed.
+        justify: Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
+        inset: Whether to display the stats with a contrasting background.
+    Returns:
+        A `h2o_wave.types.Stats` instance.
+    """
+    return Component(stats=Stats(
+        items,
+        justify,
+        inset,
+    ))
+
+
+def inline(
+        items: List[Component],
+        justify: Optional[str] = None,
+        inset: Optional[bool] = None,
+) -> Component:
+    """Create an inline (horizontal) list of components.
+
+    Args:
+        items: The components laid out inline.
+        justify: Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify.
+        inset: Whether to display the components inset from the parent form, with a contrasting background.
+    Returns:
+        A `h2o_wave.types.Inline` instance.
+    """
+    return Component(inline=Inline(
+        items,
+        justify,
+        inset,
+    ))
+
+
 def form_card(
         box: str,
         items: Union[List[Component], str],
+        title: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> FormCard:
     """Create a form.
@@ -1838,6 +1933,7 @@ def form_card(
     Args:
         box: A string indicating how to place this component on the page.
         items: The components in this form.
+        title: The title for this card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FormCard` instance.
@@ -1845,6 +1941,7 @@ def form_card(
     return FormCard(
         box,
         items,
+        title,
         commands,
     )
 
@@ -1950,7 +2047,7 @@ def nav_item(
         name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
         label: The label to display.
         icon: An optional icon to display next to the label.
-        disabled: True if the nav_item should be disabled.
+        disabled: True if this item should be disabled.
     Returns:
         A `h2o_wave.types.NavItem` instance.
     """
@@ -1992,9 +2089,8 @@ def header_card(
         nav: Optional[List[NavGroup]] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
-    """Render a card containing a HTML page inside an inline frame (iframe).
-
-    Either a path or content can be provided as arguments.
+    """Render a page header displaying a title, subtitle and an optional navigation menu.
+    Header cards are typically used for top-level navigation.
 
     Args:
         box: A string indicating how to place this component on the page.
@@ -2495,6 +2591,34 @@ def repeat_card(
     )
 
 
+def section_card(
+        box: str,
+        title: str,
+        subtitle: str,
+        items: Optional[Union[List[Component], str]] = None,
+        commands: Optional[List[Command]] = None,
+) -> SectionCard:
+    """Render a card displaying a title, a subtitle, and optional components.
+    Section cards are typically used to demarcate different sections on a page.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title.
+        subtitle: The subtitle, displayed below the title. Supports Markdown.
+        items: The components to display in this card
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.SectionCard` instance.
+    """
+    return SectionCard(
+        box,
+        title,
+        subtitle,
+        items,
+        commands,
+    )
+
+
 def small_series_stat_card(
         box: str,
         title: str,
@@ -2570,20 +2694,151 @@ def small_stat_card(
     )
 
 
+def stat_list_item(
+        label: str,
+        name: Optional[str] = None,
+        caption: Optional[str] = None,
+        value: Optional[str] = None,
+        value_color: Optional[str] = None,
+        aux_value: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+) -> StatListItem:
+    """Create a stat item (a label-value pair) for stat_list_card.
+
+    Args:
+        label: The label for the metric.
+        name: An optional name for this item (required only if this item is clickable).
+        caption: The caption for the metric, displayed below the label.
+        value: The primary value of the metric.
+        value_color: The font color of the primary value.
+        aux_value: The auxiliary value, displayed below the primary value.
+        icon: An optional icon, displayed next to the label.
+        icon_color: The color of the icon.
+    Returns:
+        A `h2o_wave.types.StatListItem` instance.
+    """
+    return StatListItem(
+        label,
+        name,
+        caption,
+        value,
+        value_color,
+        aux_value,
+        icon,
+        icon_color,
+    )
+
+
+def stat_list_card(
+        box: str,
+        title: str,
+        items: List[StatListItem],
+        name: Optional[str] = None,
+        subtitle: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> StatListCard:
+    """Render a card displaying a list of stats.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title.
+        items: The individual stats to be displayed.
+        name: An optional name for this item.
+        subtitle: The subtitle, displayed below the title.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.StatListCard` instance.
+    """
+    return StatListCard(
+        box,
+        title,
+        items,
+        name,
+        subtitle,
+        commands,
+    )
+
+
+def stat_table_item(
+        label: str,
+        values: List[str],
+        name: Optional[str] = None,
+        caption: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+) -> StatTableItem:
+    """Create a stat item (a label and a set of values) for stat_table_card.
+
+    Args:
+        label: The label for the row.
+        values: The values displayed in the row.
+        name: An optional name for this row (required only if this row is clickable).
+        caption: The caption for the metric, displayed below the label.
+        icon: An optional icon, displayed next to the label.
+        icon_color: The color of the icon.
+    Returns:
+        A `h2o_wave.types.StatTableItem` instance.
+    """
+    return StatTableItem(
+        label,
+        values,
+        name,
+        caption,
+        icon,
+        icon_color,
+    )
+
+
+def stat_table_card(
+        box: str,
+        title: str,
+        columns: List[str],
+        items: List[StatTableItem],
+        name: Optional[str] = None,
+        subtitle: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> StatTableCard:
+    """Render a card displaying a table of stats.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title.
+        columns: The names of this table's columns.
+        items: The rows displayed in this table.
+        name: An optional name for this item.
+        subtitle: The subtitle, displayed below the title.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.StatTableCard` instance.
+    """
+    return StatTableCard(
+        box,
+        title,
+        columns,
+        items,
+        name,
+        subtitle,
+        commands,
+    )
+
+
 def tab_card(
         box: str,
         items: List[Tab],
         value: Optional[str] = None,
         link: Optional[bool] = None,
+        name: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> TabCard:
     """Create a card containing tabs for navigation.
 
     Args:
         box: A string indicating how to place this component on the page.
-        items: Items to render.
+        items: The tabs to display in this card
         value: The name of the tab to select.
-        link: True if tabs should be rendered as links and not a standard tab.
+        link: True if tabs should be rendered as links instead of buttons.
+        name: An optional name for the card. If provided, the selected tab can be accessed using the name of the card.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.TabCard` instance.
@@ -2593,6 +2848,7 @@ def tab_card(
         items,
         value,
         link,
+        name,
         commands,
     )
 

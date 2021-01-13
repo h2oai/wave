@@ -1,5 +1,5 @@
 # Meta / Icon
-# Set the browser window icon for a page
+# Set the browser window #icon for a page. #meta
 # ---
 from h2o_wave import site, ui
 

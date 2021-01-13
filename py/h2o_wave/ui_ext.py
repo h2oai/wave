@@ -38,7 +38,7 @@ def box(zone: str, order: Optional[int] = None, size: Optional[Union[str, int]] 
     Args:
         zone: The name of the zone to place the card in.
         order: An number that determines the position of this card relative to other cards in the same zone. Cards in the same zone are sorted in ascending `order` and then placed left to right (or top to bottom).
-        size: A number that indicates the ratio of available width or height occupied by this card.
+        size: A number that indicates the ratio of available width or height occupied by this card. Defaults to 1 if size, width and height are not provided.
         width: The width of this card, e.g. `200px`, `50%`, etc.
         height: The height of this card, e.g. `200px`, `50%`, etc.
     Returns:

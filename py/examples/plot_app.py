@@ -1,5 +1,5 @@
 # Plot / App
-# Make a plot from an app.
+# Make a #plot from an app.
 # ---
 from .synth import FakeMultiCategoricalSeries as F
 from h2o_wave import main, app, data, Q, ui

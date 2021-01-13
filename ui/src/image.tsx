@@ -14,7 +14,7 @@
 
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format } from './layout'
+import { cards, Format, grid } from './layout'
 import { bond, Card, Rec, S } from './qd'
 import { getTheme } from './theme'
 
@@ -24,6 +24,7 @@ const
     card: {
       display: 'flex',
       flexDirection: 'column',
+      padding: grid.gap,
     },
     title: {
       ...theme.font.s12,
@@ -56,7 +57,6 @@ export const
         <img className={css.img} alt={s.title} src={`data:image/${s.type};base64,${s.image}`} />
       </div>
     )
-
     return { render, changed }
   })
 

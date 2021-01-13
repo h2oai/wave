@@ -54,7 +54,7 @@ For production deployments, you'll want to configure which port your app listens
 
 You can use the following environment variables to configure your app's server's behavior:
 
-### H2O_APP_ADDRESS
+### H2O_WAVE_APP_ADDRESS
 The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.
 
 ### H2O_WAVE_ADDRESS
@@ -81,7 +81,7 @@ $ H2O_WAVE_INTERNAL_ADDRESS=ws://127.0.0.1:66666 ./venv/bin/python my_app.py
 ### H2O_WAVE_EXTERNAL_ADDRESS
 
 :::caution Deprecated
-Specify `H2O_APP_ADDRESS` instead.
+Specify `H2O_WAVE_APP_ADDRESS` instead.
 :::
 
 The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.

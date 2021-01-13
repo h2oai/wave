@@ -15,10 +15,10 @@
 import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
-import { CardView, GridLayout, getCardEffectClass } from './layout'
+import { CardEffect, CardView, getCardEffect, GridLayout } from './layout'
 import { Layout, layoutsB, preload, Zone } from './meta'
 import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
-import { clas } from './theme'
+import { clas, getTheme, margin, palette } from './theme'
 
 
 type Breakpoint = {
@@ -33,8 +33,8 @@ type Slot = {
   order: U
   zone?: S
   grow?: U
-  size1?: S
-  size2?: S
+  width?: S
+  height?: S
 }
 
 type CardSlot = {
@@ -58,10 +58,11 @@ const
   },
   breakpointsB = box<Breakpoint[]>([]),
   layoutB = box<{ layout: Layout, index: U } | null>(null),
+  resizedB = box(), // breakpoint changed?
   parseBreakpoint = (spec: S): U => parseInt(presetBreakpoints[spec] ?? spec, 10),
   badSlot: Slot = { order: 0 },
   parseBox = ({ zone, order, size, width, height }: any): Slot => {
-    return { zone, order: order ? order : 0, grow: parseU(size), size1: width, size2: height }
+    return { zone, order: order ? order : 0, grow: parseU(size), width, height }
   },
   parseBoxes = (index: U, spec: S): Slot => {
     try {
@@ -95,7 +96,12 @@ on(layoutsB, layouts => {
             ? `(min-width:${min}px) and (max-width:${max}.98px)`
             : `(min-width:${min}px)`
         ),
-        listener = (mq: MediaQueryListEvent) => { if (mq.matches) layoutB({ layout, index }) },
+        listener = (mq: MediaQueryListEvent) => {
+          if (mq.matches) {
+            layoutB({ layout, index })
+            resizedB({})
+          }
+        },
         bp: Breakpoint = { layout, min, max, mq, listener }
 
       mq.addListener(listener)
@@ -109,27 +115,54 @@ on(layoutsB, layouts => {
 })
 
 const
+  theme = getTheme(),
   css = stylesheet({
-    layout: {
-      display: 'flex',
-    },
     flex: {
       position: 'relative',
       display: 'flex',
     },
-    column: {
+    slot: {
+      boxSizing: 'border-box',
+      transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
+      display: 'flex',
+      flexDirection: 'column',
+      margin: margin(7), // Approx 15px gutter between cards.
       $nest: {
-        '>*': { marginBottom: 15 },
-        '>*:last-child': { marginBottom: 0 }
+        '>*': {
+          boxSizing: 'border-box',
+          flexGrow: 1, // Expand vertically
+        }
       }
     },
-    row: {
+    normal: {
+      backgroundColor: theme.colors.card,
+      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
       $nest: {
-        '>*': { marginRight: 15 },
-        '>*:last-child': { marginRight: 0 }
-      }
+        '&:hover': {
+          boxShadow: `0px 12px 20px ${theme.colors.text2}`,
+        }
+      },
+    },
+    raised: {
+      color: theme.colors.card,
+      backgroundColor: palette.themePrimary,
+      boxShadow: `0px 3px 7px ${theme.colors.text3}`,
+      margin: 0,
+    },
+    flat: {
+      backgroundColor: theme.colors.card,
+      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
     },
   }),
+  getCardEffectClass = (c: C) => {
+    const effect = getCardEffect(c)
+    return clas(css.slot, effect === CardEffect.Normal
+      ? css.normal
+      : effect === CardEffect.Raised
+        ? css.raised
+        : effect == CardEffect.Flat
+          ? css.flat : '')
+  },
   justifications: Dict<S> = {
     start: 'flex-start',
     end: 'flex-end',
@@ -154,7 +187,7 @@ const
   },
   toSectionStyle = (zone: Zone, direction?: S): React.CSSProperties => {
     const
-      css: React.CSSProperties = {
+      style: React.CSSProperties = {
         flexDirection: zone.direction === 'row' ? 'row' : 'column',
         justifyContent: justifications[zone.justify ?? ''],
         alignItems: alignments[zone.align ?? ''],
@@ -163,41 +196,37 @@ const
       }
 
     if (zone.size) {
-      if (direction === 'row') {
-        css.width = zone.size
-      } else {
-        css.height = zone.size
-        css.minHeight = zone.size // Needed for Safari.
+      const grow = parseU(zone.size) // attempt strict-parse to uint
+      if (!isNaN(grow)) {// no units; treat as ratio
+        if (grow > 0) style.flexGrow = grow
+      } else { // has units; treat as size
+        if (direction === 'row') {
+          style.width = zone.size
+        } else {
+          style.height = zone.size
+          style.minHeight = zone.size // Needed for Safari.
+        }
       }
-    } else {
-      css.flexGrow = 1
+    } else { // so size; occupy 1 part
+      style.flexGrow = 1
     }
 
-    return css
+    return style
   },
-  toSlotStyle = ({ card: c, slot }: CardSlot, direction?: S): React.CSSProperties => {
+  toSlotStyle = ({ card: c, slot }: CardSlot): React.CSSProperties => {
     const
-      { size1, size2, grow } = slot,
+      { width, height, grow } = slot,
       zIndex = c.name === '__unhandled_error__' ? 1 : undefined,
       style: React.CSSProperties = { position: 'relative', zIndex }
-    if (grow) {
-      style.flexGrow = grow
-    } else {
-      if (size1 && size2) {
-        style.width = size1
-        style.height = size2
-      } else if (size1) {
-        if (direction === 'row') {
-          style.width = size1
-        } else {
-          style.height = size1
-        }
-      } else {
-        style.flexGrow = 1
-      }
+
+    if (grow || grow === 0 || width || height) {
+      if (grow) style.flexGrow = grow // grow only if non-zero (else default to shrink)
+      if (width) style.width = width
+      if (height) style.height = height
+    } else { // no size specified; occupy 1 part
+      style.flexGrow = 1
     }
     return style
-
   },
   toSection = (zone: Zone): Section => ({
     zone,
@@ -233,7 +262,7 @@ const
           cardslots.map(cardslot => {
             const { card: c } = cardslot
             return (
-              <div key={c.id} className={getCardEffectClass(c)} style={toSlotStyle(cardslot, zone.direction)}>
+              <div key={c.id} className={getCardEffectClass(c)} style={toSlotStyle(cardslot)}>
                 <CardView card={c} />
                 {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
               </div>
@@ -242,45 +271,45 @@ const
           : null
 
     return (
-      <div data-test={zone.name} className={clas(css.flex, zone.direction === 'row' ? css.row : css.column)} style={toSectionStyle(zone, direction)}>
+      <div data-test={zone.name} className={css.flex} style={toSectionStyle(zone, direction)}>
         {children}
       </div>
     )
   },
-  FlexLayout = bond(({ name, cards }: { name: S, cards: C[] }) => {
+  FlexLayout = ({ name, cards }: { name: S, cards: C[] }) => {
+    const layoutIndex = layoutB()
+    if (!layoutIndex) return <></>
     const
-      render = () => {
-        const layoutIndex = layoutB()
-        if (!layoutIndex) return <></>
-        const
-          { layout, index } = layoutIndex,
-          section = toSection({ name: 'main', zones: layout.zones }),
-          { width, min_width, max_width, height, min_height, max_height } = layout
-        for (const card of cards) {
-          const
-            slot = parseBoxes(index, card.state.box),
-            target = findSection(section, slot.zone ?? '')
-          target?.cardslots.push({ card, slot })
-        }
+      { layout, index } = layoutIndex,
+      section = toSection({ name: 'main', zones: layout.zones }),
+      { width, min_width, max_width, height, min_height, max_height } = layout
+    for (const card of cards) {
+      const
+        slot = parseBoxes(index, card.state.box),
+        target = findSection(section, slot.zone ?? '')
+      target?.cardslots.push({ card, slot })
+    }
 
-        sortCardsInSection(section)
+    sortCardsInSection(section)
 
-        const style: React.CSSProperties = {
-          width: width ?? '100%',
-          minWidth: min_width,
-          maxWidth: max_width,
-          height,
-          minHeight: min_height,
-          maxHeight: max_height,
-        }
-        return (
-          <div data-test={name} className={css.layout} style={style}>
-            <FlexSection section={section} />
-          </div>
-        )
-      }
-    return { render, layoutB }
-  })
+    const style: React.CSSProperties = {
+      width: width ?? '100%',
+      minWidth: min_width,
+      maxWidth: max_width,
+      height,
+      minHeight: min_height,
+      maxHeight: max_height,
+    }
+    if (height === '100%') {
+      style.display = 'flex'
+      style.flexDirection = 'column'
+    }
+    return (
+      <div data-test={name} style={style}>
+        <FlexSection section={section} />
+      </div>
+    )
+  }
 export const
   PageLayout = bond(({ page }: { page: Page }) => {
     let
@@ -297,7 +326,7 @@ export const
         if (metas.length) {
           onMetaCardChanged?.dispose()
           metaCard = metas[0]
-          preload(metaCard as any)
+          preload(metaCard as any) // causes layoutB to be set, if available.
           onMetaCardChanged = on(metaCard.changed, () => preload(metaCard as any))
         }
         return layoutsB().length
@@ -305,5 +334,5 @@ export const
           : <GridLayout name={page.key} cards={cards} />
       }
 
-    return { render, changed }
+    return { render, changed, resizedB }
   })

@@ -30,8 +30,8 @@ Wave has built-in support for [OpenID Connect](https://openid.net/connect/).
 To enable OpenID Connect, pass the following flags when starting the Wave server:
 
 - `-oidc-provider-url`: URL for authentication (the identity provider's URL).
-- `-oidc-redirect-url`: URL to redirect to after authentication.
-- `-oidc-end-session-url`: URL to log out (or sign out).
+- `-oidc-redirect-url`: URL to redirect to after authentication. It's the address of the current instance of the Wave server + `/_auth/callback` e.g.: `http://localhost:10101/_auth/callback`.
+- `-oidc-end-session-url`: URL to log out (refer to your identity provider's documentation). This flag is optional and might not be supported by your identity provider.
 - `-oidc-client-id`: Client ID (refer to your identity provider's documentation).
 - `-oidc-client-secret`:  Client secret (refer to your identity provider's documentation).
 

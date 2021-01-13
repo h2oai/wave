@@ -1,5 +1,5 @@
 # Plot / Line / Labels
-# Add labels to a line plot.
+# Add labels to a line #plot.
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui

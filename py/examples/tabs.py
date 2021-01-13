@@ -1,5 +1,6 @@
 # Form / Tabs
-# Use tabs within a form to navigate between two or more distinct content categories.
+# Use #tabs within a #form to navigate between two or more distinct content categories.
+# #navigation
 # ---
 from h2o_wave import main, app, Q, ui
 

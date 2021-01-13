@@ -1,5 +1,5 @@
 # Meta / Dialog
-# Display a dialog.
+# Display a #dialog. #meta
 # ---
 from h2o_wave import main, app, Q, ui
 

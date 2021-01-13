@@ -14,6 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { bond, S, qd, B } from './qd'
 import { displayMixin } from './theme'
 
@@ -41,21 +42,58 @@ export interface Tabs {
   items?: Tab[]
   /** True if the component should be visible. Defaults to true. */
   visible?: B
+  /** True if tabs should be rendered as links instead of buttons. */
+  link?: B
 }
+
+const
+  css = stylesheet({
+    pivot: {
+      // Actual height of the Fluent pivot is 44.
+      // When used standalone in a flex layout, scrollbars show up when attempting to fit to content height.
+      // So explicitly set a height to work around this issue.
+      minHeight: 46,
+    }
+  })
 
 export const
   XTabs = bond(({ model: m }: { model: Tabs }) => {
     const
       onLinkClick = (item?: Fluent.PivotItem) => {
-        if (!item) return
-        if (item.props.itemKey !== qd.args[m.name]) {
-          qd.args[m.name] = item.props.itemKey || null
+        const name = item?.props.itemKey
+        if (!name) return
+        if (name.startsWith('#')) {
+          window.location.hash = name.substr(1)
+          return
+        }
+        if (m.name) {
+          if (name !== qd.args[m.name]) {
+            qd.args[m.name] = name
+            qd.sync()
+          }
+        } else {
+          qd.args[name] = true
           qd.sync()
         }
       },
       render = () => {
-        const tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />)
-        return <Fluent.Pivot data-test={m.name} style={displayMixin(m.visible)} selectedKey={m.value ?? null} onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
+        const tabs = m.items?.map(t => (
+          <Fluent.PivotItem
+            key={t.name}
+            itemIcon={t.icon}
+            itemKey={t.name}
+            headerText={t.label} />
+        ))
+        return (
+          <div className={css.pivot}>
+            <Fluent.Pivot
+              data-test={m.name}
+              style={displayMixin(m.visible)}
+              selectedKey={m.value ?? null}
+              linkFormat={m.link ? Fluent.PivotLinkFormat.links : Fluent.PivotLinkFormat.tabs}
+              onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
+          </div>
+        )
       }
     return { render }
   })

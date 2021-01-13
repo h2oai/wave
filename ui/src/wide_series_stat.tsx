@@ -12,29 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { MicroBars } from './parts/microbars'
 import { MicroArea } from './parts/microarea'
+import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { getTheme, pc } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      padding: grid.gap,
+    },
+    plot: {
+      display: 'flex',
+      width: pc(50),
+    },
+    text: {
+      width: pc(50),
+      paddingLeft: grid.gap,
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
+    values: {
+      display: 'flex',
+      alignItems: 'baseline',
+    },
     value: {
       ...theme.font.s24,
       ...theme.font.w3,
+      lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
     },
     aux_value: {
       ...theme.font.s13,
       color: theme.colors.text7,
+      marginLeft: 5,
     }
   })
 
@@ -89,16 +106,16 @@ export const
           )
 
       return (
-        <Fluent.Stack data-test={name} horizontal styles={{ root: { height: '100%' } }} style={{ position: 'static' }} >
-          <Fluent.StackItem grow={1} tokens={{ padding: 15 }}>{plot}</Fluent.StackItem>
-          <Fluent.StackItem styles={{ root: { padding: grid.gap, minWidth: 120 } }}>
+        <div data-test={name} className={css.card}>
+          <div className={css.plot}>{plot}</div>
+          <div className={css.text}>
             <Format data={data} format={s.title} className={css.title} />
-            <Fluent.Stack horizontal verticalAlign='baseline' tokens={{ childrenGap: 5 }}>
+            <div className={css.values}>
               <Format data={data} format={s.value} className={css.value} />
               <Format data={data} format={s.aux_value} className={css.aux_value} />
-            </Fluent.Stack>
-          </Fluent.StackItem>
-        </Fluent.Stack>
+            </div>
+          </div>
+        </div>
       )
     }
     return { render, changed }

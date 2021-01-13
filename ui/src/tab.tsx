@@ -14,19 +14,31 @@
 
 import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react'
 import React from 'react'
+import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
+import { B, bond, Card, qd, S } from './qd'
 import { Tab } from './tabs'
-import { bond, Card, qd, B, S } from './qd'
 
 /** Create a card containing tabs for navigation. */
 interface State {
-  /** Items to render. */
+  /** The tabs to display in this card */
   items: Tab[]
   /** The name of the tab to select. */
   value?: S
-  /** True if tabs should be rendered as links and not a standard tab. */
+  /** True if tabs should be rendered as links instead of buttons. */
   link?: B
+  /** An optional name for the card. If provided, the selected tab can be accessed using the name of the card. */
+  name?: S
 }
+
+const
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+  })
 
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
@@ -38,7 +50,11 @@ export const
           window.location.hash = name.substr(1)
           return
         }
-        qd.args[name] = true
+        if (state.name) {
+          qd.args[state.name] = name
+        } else {
+          qd.args[name] = true
+        }
         qd.sync()
       },
       render = () => {
@@ -47,10 +63,13 @@ export const
           items = state.items.map(({ name, label, icon }) => (
             <PivotItem key={name} itemKey={name} headerText={label} itemIcon={icon} />
           ))
-        return <Pivot data-test={name} linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
-
+        return (
+          <div data-test={name} className={css.card}>
+            <Pivot linkFormat={linkFormat} onLinkClick={onLinkClick} defaultSelectedKey={state.value}>{items}</Pivot>
+          </div>
+        )
       }
     return { render, changed }
   })
 
-cards.register('tab', View, CardEffect.Flat)
+cards.register('tab', View, CardEffect.Transparent)

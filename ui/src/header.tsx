@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { bond, Box, box, Card, S } from './qd'
-import { clas, getTheme } from './theme'
+import { clas, getTheme, padding } from './theme'
 import { NavGroup, XNav } from './nav'
 
 const
@@ -25,9 +25,9 @@ const
   iconSize = 24,
   css = stylesheet({
     card: {
-      position: 'absolute', left: 0, top: 0, right: 0, bottom: 0,
       display: 'flex',
       alignItems: 'center',
+      padding: padding(8, 15),
     },
     lhs: {
       width: iconSize + 15,
@@ -65,9 +65,8 @@ const
 
 
 /**
- * Render a card containing a HTML page inside an inline frame (iframe).
- *
- * Either a path or content can be provided as arguments.
+ * Render a page header displaying a title, subtitle and an optional navigation menu.
+ * Header cards are typically used for top-level navigation.
  */
 interface State {
   /** The title. */

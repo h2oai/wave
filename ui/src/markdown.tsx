@@ -14,15 +14,64 @@
 
 import markdownit from 'markdown-it'
 import React from 'react'
-import { cards, substitute } from './layout'
+import { stylesheet } from 'typestyle'
+import { cards, grid, substitute } from './layout'
 import { bond, Card, Rec, S, unpack } from './qd'
-import { MarkupCard } from './markup'
+import { border, getTheme, padding, palette, pc } from './theme'
+
+const
+  theme = getTheme(),
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: grid.gap,
+    },
+    title: {
+      ...theme.font.s12,
+      ...theme.font.w6,
+    },
+    body: {
+      flexGrow: 1,
+    },
+    markdown: {
+      $nest: {
+        a: {
+          color: palette.themePrimary,
+          $nest: {
+            '&:hover': {
+              textDecoration: 'none',
+            },
+          },
+        },
+        table: {
+          width: pc(100),
+          borderCollapse: 'collapse',
+        },
+        tr: {
+          borderBottom: border(1, theme.colors.text5),
+        },
+        th: {
+          padding: padding(11, 6),
+          textAlign: 'left',
+        },
+        td: {
+          padding: padding(11, 6),
+        },
+        img: {
+          maxWidth: '100%',
+          maxHeight: '100%',
+        },
+      },
+    },
+  })
 
 export const
   markdown = markdownit({ html: true, linkify: true, typographer: true, }),
   markdownSafe = markdownit({ typographer: true, linkify: true }),
-  Markdown = ({ source }: { source: S }) => (<div dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />),
-  MarkdownSafe = ({ source }: { source: S }) => (<div dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />)
+  Markdown = ({ source }: { source: S }) => (<div className={css.markdown} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />),
+  MarkdownSafe = ({ source }: { source: S }) => (<div className={css.markdown} dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />)
+
 
 /**
  * Create a card that renders Markdown content.
@@ -45,13 +94,16 @@ export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
-        const data = unpack(state.data)
+        const
+          data = unpack(state.data),
+          title = substitute(state.title, data)
         return (
-          <MarkupCard
-            name={name}
-            title={substitute(state.title, data)}
-            content={markdown.render(substitute(state.content, data))}
-          />
+          <div data-test={name} className={css.card}>
+            {title && <div className={css.title}>{title}</div>}
+            <div className={css.body}>
+              <Markdown source={substitute(state.content, data)} />
+            </div>
+          </div>
         )
       }
     return { render, changed }

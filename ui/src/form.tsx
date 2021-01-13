@@ -34,18 +34,19 @@ import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
-import { bond, Card, Packed, unpack, xid } from './qd'
+import { B, bond, Card, Packed, S, unpack, xid } from './qd'
 import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'
 import { Spinbox, XSpinbox } from './spinbox'
+import { Stats, XStats } from './stats'
 import { Stepper, XStepper } from './stepper'
 import { Table, XTable } from './table'
 import { Tabs, XTabs } from './tabs'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
-import { getTheme, margin } from './theme'
+import { clas, getTheme, margin, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
@@ -53,105 +54,170 @@ import { VegaVisualization, XVegaVisualization } from './vega'
 /** Create a component. */
 export interface Component {
   /** Text block. */
-  text?: Text;
+  text?: Text
   /** Extra-large sized text block. */
-  text_xl?: TextXl;
+  text_xl?: TextXl
   /** Large sized text block. */
-  text_l?: TextL;
+  text_l?: TextL
   /** Medium sized text block. */
-  text_m?: TextM;
+  text_m?: TextM
   /** Small sized text block. */
-  text_s?: TextS;
+  text_s?: TextS
   /** Extra-small sized text block. */
-  text_xs?: TextXs;
+  text_xs?: TextXs
   /** Label. */
-  label?: Label;
+  label?: Label
   /** Separator. */
-  separator?: Separator;
+  separator?: Separator
   /** Progress bar. */
-  progress?: Progress;
+  progress?: Progress
   /** Message bar. */
-  message_bar?: MessageBar;
+  message_bar?: MessageBar
   /** Textbox. */
-  textbox?: Textbox;
+  textbox?: Textbox
   /** Checkbox. */
-  checkbox?: Checkbox;
+  checkbox?: Checkbox
   /** Toggle. */
-  toggle?: Toggle;
+  toggle?: Toggle
   /** Choice group. */
-  choice_group?: ChoiceGroup;
+  choice_group?: ChoiceGroup
   /** Checklist. */
-  checklist?: Checklist;
+  checklist?: Checklist
   /** Dropdown. */
-  dropdown?: Dropdown;
+  dropdown?: Dropdown
   /** Combobox. */
-  combobox?: Combobox;
+  combobox?: Combobox
   /** Slider. */
-  slider?: Slider;
+  slider?: Slider
   /** Spinbox. */
-  spinbox?: Spinbox;
+  spinbox?: Spinbox
   /** Date picker. */
-  date_picker?: DatePicker;
+  date_picker?: DatePicker
   /** Color picker. */
-  color_picker?: ColorPicker;
+  color_picker?: ColorPicker
   /** Button. */
-  button?: Button;
+  button?: Button
   /** Button set. */
-  buttons?: Buttons;
+  buttons?: Buttons
   /** File upload. */
-  file_upload?: FileUpload;
+  file_upload?: FileUpload
   /** Table. */
   table?: Table;
   /** Link. */
-  link?: Link;
+  link?: Link
   /** Tabs. */
   tabs?: Tabs;
   /** Expander. */
-  expander?: Expander;
+  expander?: Expander
   /** Frame. */
-  frame?: Frame;
+  frame?: Frame
   /** Markup */
   markup?: Markup
   /** Template */
   template?: Template
   /** Picker.*/
-  picker?: Picker;
+  picker?: Picker
   /** Range Slider. */
-  range_slider?: RangeSlider;
+  range_slider?: RangeSlider
   /** Stepper. */
-  stepper?: Stepper;
+  stepper?: Stepper
   /** Visualization. */
-  visualization?: Visualization;
+  visualization?: Visualization
   /** Vega-lite Visualization. */
-  vega_visualization?: VegaVisualization;
+  vega_visualization?: VegaVisualization
+  /** Stats */
+  stats?: Stats
+  /** Inline components */
+  inline?: Inline
+}
+
+/** Create an inline (horizontal) list of components. */
+interface Inline {
+  /** The components laid out inline. */
+  items: Component[]
+  /** Specifies how to lay out the individual components. Defaults to 'start'. */
+  justify?: 'start' | 'end'
+  /** Whether to display the components inset from the parent form, with a contrasting background. */
+  inset?: B
 }
 
 /** Create a form. */
 interface State {
   /** The components in this form. */
-  items: Packed<Component[]>;
+  items: Packed<Component[]>
+  /** The title for this card. */
+  title?: S
 }
-
 
 const
   theme = getTheme(),
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
-    form: {
+    card: {
+      padding: 15,
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    vertical: {
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
+      $nest: {
+        '>*:not(:first-child)': {
+          marginTop: 10
+        },
+      }
+    },
+    horizontal: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    inset: {
+      background: theme.colors.page,
+      padding: padding(10, 15)
+    },
+    horizontalLeft: {
       $nest: {
         '> *': {
-          margin: margin(10, 0)
+          margin: margin(0, 25, 0, 0),
         }
       }
-    }
+    },
+    horizontalRight: {
+      justifyContent: 'flex-end',
+      $nest: {
+        '> *': {
+          margin: margin(0, 0, 0, 25),
+        }
+      }
+    },
+    title: {
+      ...theme.font.s12,
+      ...theme.font.w6,
+    },
   })
 
+export enum XComponentAlignment { Top, Left, Right }
 
 export const
-  XComponents = ({ items }: { items: Component[] }) => {
-    const components = items.map(m => <XComponent key={xid()} model={m} />)
-    return <>{components}</>
-  }
+  XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
+    const
+      components = items.map(m => <XComponent key={xid()} model={m} />),
+      className = alignment === XComponentAlignment.Left
+        ? clas(css.horizontal, css.horizontalLeft, inset ? css.inset : '')
+        : alignment === XComponentAlignment.Right
+          ? clas(css.horizontal, css.horizontalRight, inset ? css.inset : '')
+          : css.vertical
+    return <div className={className}>{components}</div>
+  },
+  XInline = ({ model: m }: { model: Inline }) => (
+    <XComponents
+      items={m.items}
+      alignment={m.justify === 'end' ? XComponentAlignment.Right : XComponentAlignment.Left}
+      inset={m.inset}
+    />
+  )
+
 
 const
   XComponent = ({ model: m }: { model: Component }) => {
@@ -191,6 +257,8 @@ const
     if (m.stepper) return <XToolTip content={m.stepper.tooltip}><XStepper model={m.stepper} /></XToolTip>
     if (m.visualization) return <XVisualization model={m.visualization} />
     if (m.vega_visualization) return <XVegaVisualization model={m.vega_visualization} />
+    if (m.stats) return <XStats model={m.stats} />
+    if (m.inline) return <XInline model={m.inline} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
@@ -200,10 +268,12 @@ export const
       render = () => {
         const
           s = theme.merge(defaults, state),
+          title = s.title,
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
-          <div data-test={name} className={css.form}>
+          <div data-test={name} className={css.card}>
+            {title && <div className={css.title}>{title}</div>}
             <XComponents items={items} />
           </div>
         )

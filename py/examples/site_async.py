@@ -1,5 +1,6 @@
 # Site / Async
 # Update any page on a site from within an app using an `AsyncSite` instance.
+# #site
 # ---
 from .synth import FakePercent
 from h2o_wave import Q, app, main, ui, AsyncSite
@@ -44,7 +45,7 @@ async def serve(q: Q):
         # Set up this app's UI
         q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[
             ui.frame(path='/stats', height='110px'),
-            ui.button(name='toggle', label='Toggle Updates', primary=True),
+            ui.button(name='toggle', label='Start updates', primary=True),
         ])
         await q.page.save()
 
@@ -53,4 +54,6 @@ async def serve(q: Q):
     if q.args.toggle:
         global update_stats
         update_stats = not update_stats
+        q.page['form'].items[1].button.label = 'Stop updates' if update_stats else 'Start updates'
+        await q.page.save()
         await update_stats_page(q, stats_page)

@@ -14,7 +14,8 @@
 
 import { Breadcrumb } from '@fluentui/react'
 import React from 'react'
-import { cards } from './layout'
+import { stylesheet } from 'typestyle'
+import { CardEffect, cards } from './layout'
 import { bond, Card, S, qd } from './qd'
 
 /** Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`. */
@@ -38,6 +39,15 @@ interface State {
   items: Breadcrumb[]
 }
 
+const
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+  })
+
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
@@ -54,9 +64,13 @@ export const
         }
       }
       )),
-      render = () => <Breadcrumb data-test={name} items={items} />
+      render = () => (
+        <div data-test={name} className={css.card}>
+          <Breadcrumb items={items} />
+        </div>
+      )
 
     return { render, changed }
   })
 
-cards.register('breadcrumbs', View)
+cards.register('breadcrumbs', View, CardEffect.Transparent)

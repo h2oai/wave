@@ -1,5 +1,5 @@
 # Plot / Area + Line / Smooth
-# Make a combined area + line plot using a smooth curve.
+# Make a combined area + line #plot using a smooth curve.
 # ---
 from synth import FakeTimeSeries
 from h2o_wave import site, data, ui

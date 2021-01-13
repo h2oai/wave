@@ -328,6 +328,56 @@ class FlexCard:
         )
 
 
+class FooterCard:
+    """Render a page footer displaying a caption.
+    Footer cards are typically displayed at the bottom of a page.
+    """
+    def __init__(
+            self,
+            box: str,
+            caption: str,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.caption = caption
+        """The caption. Supports markdown."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('FooterCard.box is required.')
+        if self.caption is None:
+            raise ValueError('FooterCard.caption is required.')
+        return _dump(
+            view='footer',
+            box=self.box,
+            caption=self.caption,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'FooterCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('FooterCard.box is required.')
+        __d_caption: Any = __d.get('caption')
+        if __d_caption is None:
+            raise ValueError('FooterCard.caption is required.')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        caption: str = __d_caption
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return FooterCard(
+            box,
+            caption,
+            commands,
+        )
+
+
 class TextSize:
     XL = 'xl'
     L = 'l'
@@ -2116,7 +2166,7 @@ class ButtonsJustify:
 
 
 class Buttons:
-    """Create a set of buttons to be layed out horizontally.
+    """Create a set of buttons laid out horizontally.
     """
     def __init__(
             self,
@@ -2759,6 +2809,7 @@ class Tabs:
             value: Optional[str] = None,
             items: Optional[List[Tab]] = None,
             visible: Optional[bool] = None,
+            link: Optional[bool] = None,
     ):
         self.name = name
         """An identifying name for this component."""
@@ -2768,6 +2819,8 @@ class Tabs:
         """The tabs in this tab bar."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
+        self.link = link
+        """True if tabs should be rendered as links instead of buttons."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2778,6 +2831,7 @@ class Tabs:
             value=self.value,
             items=None if self.items is None else [__e.dump() for __e in self.items],
             visible=self.visible,
+            link=self.link,
         )
 
     @staticmethod
@@ -2789,15 +2843,18 @@ class Tabs:
         __d_value: Any = __d.get('value')
         __d_items: Any = __d.get('items')
         __d_visible: Any = __d.get('visible')
+        __d_link: Any = __d.get('link')
         name: str = __d_name
         value: Optional[str] = __d_value
         items: Optional[List[Tab]] = None if __d_items is None else [Tab.load(__e) for __e in __d_items]
         visible: Optional[bool] = __d_visible
+        link: Optional[bool] = __d_link
         return Tabs(
             name,
             value,
             items,
             visible,
+            link,
         )
 
 
@@ -3974,6 +4031,165 @@ class VegaVisualization:
         )
 
 
+class Stat:
+    """Create a stat (a label-value pair) for displaying a metric.
+    """
+    def __init__(
+            self,
+            label: str,
+            value: Optional[str] = None,
+            caption: Optional[str] = None,
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+    ):
+        self.label = label
+        """The label for the metric."""
+        self.value = value
+        """The value of the metric."""
+        self.caption = caption
+        """The caption displayed below the primary value."""
+        self.icon = icon
+        """An optional icon, displayed next to the label."""
+        self.icon_color = icon_color
+        """The color of the icon."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('Stat.label is required.')
+        return _dump(
+            label=self.label,
+            value=self.value,
+            caption=self.caption,
+            icon=self.icon,
+            icon_color=self.icon_color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Stat':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('Stat.label is required.')
+        __d_value: Any = __d.get('value')
+        __d_caption: Any = __d.get('caption')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
+        label: str = __d_label
+        value: Optional[str] = __d_value
+        caption: Optional[str] = __d_caption
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
+        return Stat(
+            label,
+            value,
+            caption,
+            icon,
+            icon_color,
+        )
+
+
+class StatsJustify:
+    START = 'start'
+    END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
+
+
+class Stats:
+    """Create a set of stats laid out horizontally.
+    """
+    def __init__(
+            self,
+            items: List[Stat],
+            justify: Optional[str] = None,
+            inset: Optional[bool] = None,
+    ):
+        self.items = items
+        """The individual stats to be displayed."""
+        self.justify = justify
+        """Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify."""
+        self.inset = inset
+        """Whether to display the stats with a contrasting background."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.items is None:
+            raise ValueError('Stats.items is required.')
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+            justify=self.justify,
+            inset=self.inset,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Stats':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('Stats.items is required.')
+        __d_justify: Any = __d.get('justify')
+        __d_inset: Any = __d.get('inset')
+        items: List[Stat] = [Stat.load(__e) for __e in __d_items]
+        justify: Optional[str] = __d_justify
+        inset: Optional[bool] = __d_inset
+        return Stats(
+            items,
+            justify,
+            inset,
+        )
+
+
+class InlineJustify:
+    START = 'start'
+    END = 'end'
+
+
+class Inline:
+    """Create an inline (horizontal) list of components.
+    """
+    def __init__(
+            self,
+            items: List['Component'],
+            justify: Optional[str] = None,
+            inset: Optional[bool] = None,
+    ):
+        self.items = items
+        """The components laid out inline."""
+        self.justify = justify
+        """Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify."""
+        self.inset = inset
+        """Whether to display the components inset from the parent form, with a contrasting background."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.items is None:
+            raise ValueError('Inline.items is required.')
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+            justify=self.justify,
+            inset=self.inset,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Inline':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('Inline.items is required.')
+        __d_justify: Any = __d.get('justify')
+        __d_inset: Any = __d.get('inset')
+        items: List['Component'] = [Component.load(__e) for __e in __d_items]
+        justify: Optional[str] = __d_justify
+        inset: Optional[bool] = __d_inset
+        return Inline(
+            items,
+            justify,
+            inset,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -4015,6 +4231,8 @@ class Component:
             stepper: Optional[Stepper] = None,
             visualization: Optional[Visualization] = None,
             vega_visualization: Optional[VegaVisualization] = None,
+            stats: Optional[Stats] = None,
+            inline: Optional[Inline] = None,
     ):
         self.text = text
         """Text block."""
@@ -4088,6 +4306,10 @@ class Component:
         """Visualization."""
         self.vega_visualization = vega_visualization
         """Vega-lite Visualization."""
+        self.stats = stats
+        """Stats"""
+        self.inline = inline
+        """Inline components"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4128,6 +4350,8 @@ class Component:
             stepper=None if self.stepper is None else self.stepper.dump(),
             visualization=None if self.visualization is None else self.visualization.dump(),
             vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
+            stats=None if self.stats is None else self.stats.dump(),
+            inline=None if self.inline is None else self.inline.dump(),
         )
 
     @staticmethod
@@ -4169,6 +4393,8 @@ class Component:
         __d_stepper: Any = __d.get('stepper')
         __d_visualization: Any = __d.get('visualization')
         __d_vega_visualization: Any = __d.get('vega_visualization')
+        __d_stats: Any = __d.get('stats')
+        __d_inline: Any = __d.get('inline')
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -4205,6 +4431,8 @@ class Component:
         stepper: Optional[Stepper] = None if __d_stepper is None else Stepper.load(__d_stepper)
         visualization: Optional[Visualization] = None if __d_visualization is None else Visualization.load(__d_visualization)
         vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
+        stats: Optional[Stats] = None if __d_stats is None else Stats.load(__d_stats)
+        inline: Optional[Inline] = None if __d_inline is None else Inline.load(__d_inline)
         return Component(
             text,
             text_xl,
@@ -4242,6 +4470,8 @@ class Component:
             stepper,
             visualization,
             vega_visualization,
+            stats,
+            inline,
         )
 
 
@@ -4252,12 +4482,15 @@ class FormCard:
             self,
             box: str,
             items: Union[List[Component], str],
+            title: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
         """The components in this form."""
+        self.title = title
+        """The title for this card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -4271,6 +4504,7 @@ class FormCard:
             view='form',
             box=self.box,
             items=self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
+            title=self.title,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -4283,13 +4517,16 @@ class FormCard:
         __d_items: Any = __d.get('items')
         if __d_items is None:
             raise ValueError('FormCard.items is required.')
+        __d_title: Any = __d.get('title')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
+        title: Optional[str] = __d_title
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return FormCard(
             box,
             items,
+            title,
             commands,
         )
 
@@ -4524,7 +4761,7 @@ class NavItem:
         self.icon = icon
         """An optional icon to display next to the label."""
         self.disabled = disabled
-        """True if the nav_item should be disabled."""
+        """True if this item should be disabled."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -4611,9 +4848,8 @@ class NavGroup:
 
 
 class HeaderCard:
-    """Render a card containing a HTML page inside an inline frame (iframe).
-
-    Either a path or content can be provided as arguments.
+    """Render a page header displaying a title, subtitle and an optional navigation menu.
+    Header cards are typically used for top-level navigation.
     """
     def __init__(
             self,
@@ -5908,6 +6144,74 @@ class RepeatCard:
         )
 
 
+class SectionCard:
+    """Render a card displaying a title, a subtitle, and optional components.
+    Section cards are typically used to demarcate different sections on a page.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            subtitle: str,
+            items: Optional[Union[List[Component], str]] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title. Supports Markdown."""
+        self.items = items
+        """The components to display in this card"""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('SectionCard.box is required.')
+        if self.title is None:
+            raise ValueError('SectionCard.title is required.')
+        if self.subtitle is None:
+            raise ValueError('SectionCard.subtitle is required.')
+        return _dump(
+            view='section',
+            box=self.box,
+            title=self.title,
+            subtitle=self.subtitle,
+            items=None if self.items is None else self.items if isinstance(self.items, str) else [__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'SectionCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('SectionCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('SectionCard.title is required.')
+        __d_subtitle: Any = __d.get('subtitle')
+        if __d_subtitle is None:
+            raise ValueError('SectionCard.subtitle is required.')
+        __d_items: Any = __d.get('items')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        subtitle: str = __d_subtitle
+        items: Optional[Union[List[Component], str]] = __d_items if isinstance(__d_items, str) else None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return SectionCard(
+            box,
+            title,
+            subtitle,
+            items,
+            commands,
+        )
+
+
 class SmallSeriesStatCardPlotType:
     AREA = 'area'
     INTERVAL = 'interval'
@@ -6112,6 +6416,313 @@ class SmallStatCard:
         )
 
 
+class StatListItem:
+    """Create a stat item (a label-value pair) for stat_list_card.
+    """
+    def __init__(
+            self,
+            label: str,
+            name: Optional[str] = None,
+            caption: Optional[str] = None,
+            value: Optional[str] = None,
+            value_color: Optional[str] = None,
+            aux_value: Optional[str] = None,
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+    ):
+        self.label = label
+        """The label for the metric."""
+        self.name = name
+        """An optional name for this item (required only if this item is clickable)."""
+        self.caption = caption
+        """The caption for the metric, displayed below the label."""
+        self.value = value
+        """The primary value of the metric."""
+        self.value_color = value_color
+        """The font color of the primary value."""
+        self.aux_value = aux_value
+        """The auxiliary value, displayed below the primary value."""
+        self.icon = icon
+        """An optional icon, displayed next to the label."""
+        self.icon_color = icon_color
+        """The color of the icon."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('StatListItem.label is required.')
+        return _dump(
+            label=self.label,
+            name=self.name,
+            caption=self.caption,
+            value=self.value,
+            value_color=self.value_color,
+            aux_value=self.aux_value,
+            icon=self.icon,
+            icon_color=self.icon_color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'StatListItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('StatListItem.label is required.')
+        __d_name: Any = __d.get('name')
+        __d_caption: Any = __d.get('caption')
+        __d_value: Any = __d.get('value')
+        __d_value_color: Any = __d.get('value_color')
+        __d_aux_value: Any = __d.get('aux_value')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
+        label: str = __d_label
+        name: Optional[str] = __d_name
+        caption: Optional[str] = __d_caption
+        value: Optional[str] = __d_value
+        value_color: Optional[str] = __d_value_color
+        aux_value: Optional[str] = __d_aux_value
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
+        return StatListItem(
+            label,
+            name,
+            caption,
+            value,
+            value_color,
+            aux_value,
+            icon,
+            icon_color,
+        )
+
+
+class StatListCard:
+    """Render a card displaying a list of stats.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            items: List[StatListItem],
+            name: Optional[str] = None,
+            subtitle: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title."""
+        self.items = items
+        """The individual stats to be displayed."""
+        self.name = name
+        """An optional name for this item."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('StatListCard.box is required.')
+        if self.title is None:
+            raise ValueError('StatListCard.title is required.')
+        if self.items is None:
+            raise ValueError('StatListCard.items is required.')
+        return _dump(
+            view='stat_list',
+            box=self.box,
+            title=self.title,
+            items=[__e.dump() for __e in self.items],
+            name=self.name,
+            subtitle=self.subtitle,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'StatListCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('StatListCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('StatListCard.title is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('StatListCard.items is required.')
+        __d_name: Any = __d.get('name')
+        __d_subtitle: Any = __d.get('subtitle')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        items: List[StatListItem] = [StatListItem.load(__e) for __e in __d_items]
+        name: Optional[str] = __d_name
+        subtitle: Optional[str] = __d_subtitle
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return StatListCard(
+            box,
+            title,
+            items,
+            name,
+            subtitle,
+            commands,
+        )
+
+
+class StatTableItem:
+    """Create a stat item (a label and a set of values) for stat_table_card.
+    """
+    def __init__(
+            self,
+            label: str,
+            values: List[str],
+            name: Optional[str] = None,
+            caption: Optional[str] = None,
+            icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+    ):
+        self.label = label
+        """The label for the row."""
+        self.values = values
+        """The values displayed in the row."""
+        self.name = name
+        """An optional name for this row (required only if this row is clickable)."""
+        self.caption = caption
+        """The caption for the metric, displayed below the label."""
+        self.icon = icon
+        """An optional icon, displayed next to the label."""
+        self.icon_color = icon_color
+        """The color of the icon."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.label is None:
+            raise ValueError('StatTableItem.label is required.')
+        if self.values is None:
+            raise ValueError('StatTableItem.values is required.')
+        return _dump(
+            label=self.label,
+            values=self.values,
+            name=self.name,
+            caption=self.caption,
+            icon=self.icon,
+            icon_color=self.icon_color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'StatTableItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        if __d_label is None:
+            raise ValueError('StatTableItem.label is required.')
+        __d_values: Any = __d.get('values')
+        if __d_values is None:
+            raise ValueError('StatTableItem.values is required.')
+        __d_name: Any = __d.get('name')
+        __d_caption: Any = __d.get('caption')
+        __d_icon: Any = __d.get('icon')
+        __d_icon_color: Any = __d.get('icon_color')
+        label: str = __d_label
+        values: List[str] = __d_values
+        name: Optional[str] = __d_name
+        caption: Optional[str] = __d_caption
+        icon: Optional[str] = __d_icon
+        icon_color: Optional[str] = __d_icon_color
+        return StatTableItem(
+            label,
+            values,
+            name,
+            caption,
+            icon,
+            icon_color,
+        )
+
+
+class StatTableCard:
+    """Render a card displaying a table of stats.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            columns: List[str],
+            items: List[StatTableItem],
+            name: Optional[str] = None,
+            subtitle: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title."""
+        self.columns = columns
+        """The names of this table's columns."""
+        self.items = items
+        """The rows displayed in this table."""
+        self.name = name
+        """An optional name for this item."""
+        self.subtitle = subtitle
+        """The subtitle, displayed below the title."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        if self.box is None:
+            raise ValueError('StatTableCard.box is required.')
+        if self.title is None:
+            raise ValueError('StatTableCard.title is required.')
+        if self.columns is None:
+            raise ValueError('StatTableCard.columns is required.')
+        if self.items is None:
+            raise ValueError('StatTableCard.items is required.')
+        return _dump(
+            view='stat_table',
+            box=self.box,
+            title=self.title,
+            columns=self.columns,
+            items=[__e.dump() for __e in self.items],
+            name=self.name,
+            subtitle=self.subtitle,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'StatTableCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        if __d_box is None:
+            raise ValueError('StatTableCard.box is required.')
+        __d_title: Any = __d.get('title')
+        if __d_title is None:
+            raise ValueError('StatTableCard.title is required.')
+        __d_columns: Any = __d.get('columns')
+        if __d_columns is None:
+            raise ValueError('StatTableCard.columns is required.')
+        __d_items: Any = __d.get('items')
+        if __d_items is None:
+            raise ValueError('StatTableCard.items is required.')
+        __d_name: Any = __d.get('name')
+        __d_subtitle: Any = __d.get('subtitle')
+        __d_commands: Any = __d.get('commands')
+        box: str = __d_box
+        title: str = __d_title
+        columns: List[str] = __d_columns
+        items: List[StatTableItem] = [StatTableItem.load(__e) for __e in __d_items]
+        name: Optional[str] = __d_name
+        subtitle: Optional[str] = __d_subtitle
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return StatTableCard(
+            box,
+            title,
+            columns,
+            items,
+            name,
+            subtitle,
+            commands,
+        )
+
+
 class TabCard:
     """Create a card containing tabs for navigation.
     """
@@ -6121,16 +6732,19 @@ class TabCard:
             items: List[Tab],
             value: Optional[str] = None,
             link: Optional[bool] = None,
+            name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
-        """Items to render."""
+        """The tabs to display in this card"""
         self.value = value
         """The name of the tab to select."""
         self.link = link
-        """True if tabs should be rendered as links and not a standard tab."""
+        """True if tabs should be rendered as links instead of buttons."""
+        self.name = name
+        """An optional name for the card. If provided, the selected tab can be accessed using the name of the card."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6146,6 +6760,7 @@ class TabCard:
             items=[__e.dump() for __e in self.items],
             value=self.value,
             link=self.link,
+            name=self.name,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -6160,17 +6775,20 @@ class TabCard:
             raise ValueError('TabCard.items is required.')
         __d_value: Any = __d.get('value')
         __d_link: Any = __d.get('link')
+        __d_name: Any = __d.get('name')
         __d_commands: Any = __d.get('commands')
         box: str = __d_box
         items: List[Tab] = [Tab.load(__e) for __e in __d_items]
         value: Optional[str] = __d_value
         link: Optional[bool] = __d_link
+        name: Optional[str] = __d_name
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TabCard(
             box,
             items,
             value,
             link,
+            name,
             commands,
         )
 

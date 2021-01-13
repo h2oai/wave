@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format } from './layout'
+import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { bond, Card, F, Rec, S, unpack } from './qd'
 import { getTheme } from './theme'
@@ -23,13 +22,28 @@ import { getTheme } from './theme'
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: grid.gap,
+      position: 'relative',
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
     },
+    body: {
+      position: 'relative',
+      display: 'flex',
+      flexGrow: 1,
+    },
     value_overlay: {
       position: 'absolute',
       top: 0, right: 0, bottom: 0, left: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     value: {
       ...theme.font.s24,
@@ -62,16 +76,16 @@ export const
     const render = () => {
       const data = unpack(s.data)
       return (
-        <Fluent.Stack data-test={name} style={{ position: 'static', padding: 15, height: '100%' }}>
+        <div data-test={name} className={css.card}>
           <Format data={data} format={s.title} className={css.title} />
-          <Fluent.StackItem grow={1} styles={{ root: { position: 'relative', height: 'calc(100% - 17px)' } }}>
+          <div className={css.body}>
             <ProgressArc thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-            <Fluent.Stack className={css.value_overlay} horizontalAlign='center' verticalAlign='center'>
+            <div className={css.value_overlay}>
               <Format data={data} format={s.value} className={css.value} />
               <Format data={data} format={s.aux_value} className={css.aux_value} />
-            </Fluent.Stack>
-          </Fluent.StackItem>
-        </Fluent.Stack>
+            </div>
+          </div>
+        </div>
       )
     }
     return { render, changed }

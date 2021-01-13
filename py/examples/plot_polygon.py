@@ -1,5 +1,5 @@
 # Plot / Polygon
-# Make a heatmap.
+# Make a heatmap. #plot
 # ---
 from synth import FakeSeries
 from h2o_wave import site, data, ui

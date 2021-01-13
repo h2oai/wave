@@ -1,5 +1,6 @@
 # Form / Combobox
 # Use comboboxes to allow users to either choose between available choices or indicate a choice by free-form editing.
+# #form #combobox
 # ---
 from h2o_wave import main, app, Q, ui
 

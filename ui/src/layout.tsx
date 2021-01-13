@@ -152,14 +152,15 @@ const
       margin: margin(grid.gap),
     },
     slot: {
-      backgroundColor: theme.colors.card,
       boxSizing: 'border-box',
       transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
       overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
       $nest: {
         '>*:first-child': {
-          position: 'absolute',
-          left: 15, top: 15, right: 15, bottom: 15,
+          boxSizing: 'border-box',
+          flexGrow: 1, // Expand vertically
         }
       }
     },
@@ -181,34 +182,26 @@ const
       backgroundColor: theme.colors.card,
       boxShadow: `0px 3px 5px ${theme.colors.text0}`,
     },
-    flush: {
-      $nest: {
-        '>*:first-child': {
-          position: 'absolute',
-          left: 0, top: 0, right: 0, bottom: 0,
-        }
-      }
-    },
-  })
-
-
-export const
+  }),
   getCardEffectClass = (c: C) => {
-    const effect = cards.lookup(c.state.view).effect
+    const effect = getCardEffect(c)
     return clas(css.slot, effect === CardEffect.Normal
       ? css.normal
       : effect === CardEffect.Raised
         ? css.raised
         : effect == CardEffect.Flat
-          ? css.flat : css.flush)
-  },
+          ? css.flat : '')
+  }
+
+export const
+  getCardEffect = (c: C): CardEffect => cards.lookup(c.state.view).effect,
   GridLayout = ({ name, cards: cs }: { name: S, cards: C[] }) => {
     const
       children = cs.map(c => {
         const
           placement = grid.place(c.state.box),
           { left, top, right, bottom, width, height } = placement,
-          display = placement === badPlacement ? 'none' : 'block',
+          display = placement === badPlacement ? 'none' : undefined,
           zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
         return (
           <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex }}>

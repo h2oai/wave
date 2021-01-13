@@ -15,7 +15,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
-import { F, S } from '../qd'
+import { stylesheet } from 'typestyle'
+import { debounce, F, S } from '../qd'
 
 interface Props {
   data: any[]
@@ -33,43 +34,64 @@ const curves: Record<S, d3.CurveFactory> = {
   'step-before': d3.curveStepBefore,
 }
 
+const css = stylesheet({
+  container: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    flexGrow: 1,
+  }
+})
+
 export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
   const
-    ref = React.useRef<SVGSVGElement>(null),
-    [SVGContent, setSVGContent] = React.useState<JSX.Element | null>(null)
+    ref = React.useRef<HTMLDivElement>(null),
+    [minY, maxY] = React.useMemo(() => {
+      let [minY, maxY] = d3.extent<any, any>(data, d => d[value])
 
-  React.useLayoutEffect(() => {
-    let [minY, maxY] = d3.extent<any, any>(data, d => d[value])
+      if (zeroValue != null) {
+        minY = Math.min(zeroValue, minY)
+        maxY = Math.max(zeroValue, maxY)
+      }
+      return [minY, maxY]
+    }, [data, zeroValue]),
+    [content, setContent] = React.useState<JSX.Element | null>(null),
+    renderViz = () => {
+      if (!ref.current) return
 
-    if (zeroValue != null) {
-      minY = Math.min(zeroValue, minY)
-      maxY = Math.max(zeroValue, maxY)
-    }
+      const
+        { width, height } = ref.current.getBoundingClientRect(),
+        scaleX = d3.scaleLinear().domain([0, data.length - 1]).range([0, width]),
+        scaleY = d3.scaleLinear().domain([minY, maxY]).range([height, 2]),
+        fcurve = curves[curve] || d3.curveLinear,
+        ln = d3.line<any>()
+          // .curve(d3.curveBasis) // XXX add support for this
+          .defined(d => d && d[value] != null)
+          .x((_, i) => scaleX(i))
+          .y(d => scaleY(d[value]))
+          .curve(fcurve),
+        ar = d3.area<any>()
+          // .curve(d3.curveBasis) // XXX add support for this
+          .defined(d => d && d[value] != null)
+          .x((_, i) => scaleX(i))
+          .y0(_ => scaleY(zeroValue == null ? minY : zeroValue))
+          .y1(d => scaleY(d[value]))
+          .curve(fcurve)
 
-    const
-      scaleX = d3.scaleLinear().domain([0, data.length - 1]).range([0, ref.current?.clientWidth!]),
-      scaleY = d3.scaleLinear().domain([minY, maxY]).range([ref.current?.clientHeight!, 2]), // 2px less so that stroke doesn't clip at edges
-      fcurve = curves[curve] || d3.curveLinear,
-      ln = d3.line<any>()
-        // .curve(d3.curveBasis) // XXX add support for this
-        .defined(d => d && d[value] != null)
-        .x((_, i) => scaleX(i))
-        .y(d => scaleY(d[value]))
-        .curve(fcurve),
-      ar = d3.area<any>()
-        // .curve(d3.curveBasis) // XXX add support for this
-        .defined(d => d && d[value] != null)
-        .x((_, i) => scaleX(i))
-        .y0(_ => scaleY(zeroValue == null ? minY : zeroValue))
-        .y1(d => scaleY(d[value]))
-        .curve(fcurve)
-    setSVGContent(
-      <>
-        <path d={ar(data) as S} fill={color} fillOpacity='0.1' strokeLinejoin='round' strokeLinecap='round' ></path>
-        <path d={ln(data) as S} fill='none' stroke={color} strokeWidth='1.5' strokeLinejoin='round' strokeLinecap='round'></path>
-      </>
-    )
-  }, [value, color, data, zeroValue, curve])
+      setContent(
+        <svg viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+          <path d={ar(data) as S} fill={color} fillOpacity='0.1' strokeLinejoin='round' strokeLinecap='round'></path>
+          <path d={ln(data) as S} fill='none' stroke={color} strokeWidth='1.5' strokeLinejoin='round' strokeLinecap='round'></path>
+        </svg>
+      )
+    },
+    onResize = debounce(1000, renderViz)
 
-  return <svg ref={ref} width='100%' height='100%'>{SVGContent}</svg>
+  React.useEffect(() => {
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+  React.useLayoutEffect(renderViz, [value, color, data, zeroValue, curve])
+
+  return <div ref={ref} className={css.container}>{content}</div>
 }

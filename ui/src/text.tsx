@@ -17,8 +17,8 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { Markdown } from './markdown'
-import { Dict, S, B } from './qd'
-import { border, getTheme, padding, palette, pc, displayMixin } from './theme'
+import { B, Dict, S } from './qd'
+import { displayMixin, margin } from './theme'
 import { Command } from './toolbar'
 
 /** Create text content. */
@@ -100,36 +100,15 @@ export interface TextXs {
 }
 
 const
-  theme = getTheme(),
   css = stylesheet({
     text: {
       position: 'relative',
-    },
-    markdown: {
       $nest: {
-        a: {
-          color: palette.themePrimary,
-          $nest: {
-            '&:hover': {
-              textDecoration: 'none',
-            },
-          },
-        },
-        table: {
-          width: pc(100),
-          borderCollapse: 'collapse',
-        },
-        tr: {
-          borderBottom: border(1, theme.colors.text5),
-        },
-        th: {
-          padding: padding(11, 6),
-          textAlign: 'left',
-        },
-        td: {
-          padding: padding(11, 6),
+        p: {
+          // Override default 1em margin inside markdown paragraphs.
+          margin: margin(0, 0, 10, 0),
         }
-      }
+      },
     },
   }),
   textVariants: Dict<keyof Fluent.IFontStyles> = {
@@ -147,7 +126,7 @@ export const
     return (
       <div className={css.text} style={displayMixin(visibility)}>
         <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block>
-          <div className={css.markdown}><Markdown source={content} /></div>
+          <Markdown source={content} />
         </Fluent.Text>
         {!!commands?.length && <CardMenu name={menuName} commands={commands} />}
       </div>

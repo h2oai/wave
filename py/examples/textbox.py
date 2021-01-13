@@ -1,5 +1,6 @@
 # Form / Textbox
-# Use a textbox to allow users to provide text inputs.
+# Use a #textbox to allow users to provide text inputs.
+# #form
 # ---
 from h2o_wave import main, app, Q, ui
 

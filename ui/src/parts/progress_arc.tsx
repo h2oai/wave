@@ -15,7 +15,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import * as d3 from 'd3'
 import React from 'react'
-import { F, S, U } from '../qd'
+import { stylesheet } from 'typestyle'
+import { debounce, F, S, U } from '../qd'
+
 
 interface Props {
   thickness: U
@@ -23,37 +25,55 @@ interface Props {
   value: F
 }
 
+const css = stylesheet({
+  container: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  }
+})
+
 export const ProgressArc = ({ thickness, color, value }: Props) => {
   const
-    ref = React.useRef<SVGSVGElement>(null),
-    [SVGContent, setSVGContent] = React.useState<JSX.Element | null>(null)
+    ref = React.useRef<HTMLDivElement>(null),
+    [content, setContent] = React.useState<JSX.Element | null>(null),
+    renderViz = () => {
+      if (!ref.current) return
 
-  React.useLayoutEffect(() => {
-    const
-      width = ref.current?.clientWidth!,
-      height = ref.current?.clientHeight!,
-      size = Math.min(width, height),
-      outerRadius = size / 2,
-      innerRadius = size / 2 - thickness,
-      slot = d3.arc()({
-        outerRadius,
-        innerRadius,
-        startAngle: 0,
-        endAngle: 2 * Math.PI,
-      }),
-      bar = d3.arc()({
-        outerRadius,
-        innerRadius,
-        startAngle: 0,
-        endAngle: 2 * Math.PI * value,
-      })
-    setSVGContent((
-      <g transform={size === height ? `translate(${(width - (2 * outerRadius)) / 2}, 0)` : `translate(0, ${(height - (2 * outerRadius)) / 2})`}>
-        <path d={slot as S} fill={color} fillOpacity={0.15} transform={`translate(${outerRadius},${outerRadius})`} />
-        <path d={bar as S} fill={color} transform={`translate(${outerRadius},${outerRadius})`} />
-      </g>
-    ))
-  }, [thickness, color, value])
+      const
+        { width, height } = ref.current.getBoundingClientRect(),
+        diameter = Math.min(width, height),
+        outerRadius = diameter / 2,
+        innerRadius = diameter / 2 - thickness,
+        slot = d3.arc()({
+          outerRadius,
+          innerRadius,
+          startAngle: 0,
+          endAngle: 2 * Math.PI,
+        }),
+        bar = d3.arc()({
+          outerRadius,
+          innerRadius,
+          startAngle: 0,
+          endAngle: 2 * Math.PI * value,
+        })
 
-  return <svg ref={ref} width='100%' height='100%'>{SVGContent}</svg>
+      setContent(
+        <svg viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+          <g transform={diameter === height ? `translate(${(width - (2 * outerRadius)) / 2}, 0)` : `translate(0, ${(height - (2 * outerRadius)) / 2})`}>
+            <path d={slot as S} fill={color} fillOpacity={0.15} transform={`translate(${outerRadius},${outerRadius})`} />
+            <path d={bar as S} fill={color} transform={`translate(${outerRadius},${outerRadius})`} />
+          </g>
+        </svg>
+      )
+    },
+    onResize = debounce(1000, renderViz)
+
+  React.useEffect(() => {
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+  React.useLayoutEffect(renderViz, [thickness, color, value])
+
+  return <div ref={ref} className={css.container}>{content}</div>
 }

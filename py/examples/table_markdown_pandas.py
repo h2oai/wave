@@ -1,5 +1,5 @@
 # Table / Markdown / Pandas
-# Display a pandas dataframe as a markdown table.
+# Display a #pandas #dataframe as a #markdown #table.
 # ---
 from h2o_wave import site, ui
 import pandas as pd

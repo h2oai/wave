@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format } from './layout'
+import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
@@ -24,6 +23,13 @@ import { getTheme } from './theme'
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    text: {
+      padding: grid.gap,
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
@@ -36,11 +42,6 @@ const
       ...theme.font.s12,
       color: theme.colors.text7,
     },
-    plot: {
-      // 98px is the height of titlebar
-      height: 'calc(100% - 98px)',
-      width: '100%'
-    }
   })
 
 /** Create a tall stat card displaying a primary value, an auxiliary value and a series plot. */
@@ -94,14 +95,14 @@ export const
           )
 
       return (
-        <Fluent.Stack data-test={name} style={{ position: 'static', height: '100%' }}>
-          <Fluent.StackItem tokens={{ padding: 15 }}>
+        <div data-test={name} className={css.card}>
+          <div className={css.text}>
             <Format data={data} format={s.title || 'Untitled'} className={css.title} />
             <Format data={data} format={s.value} className={css.value} />
             <Format data={data} format={s.aux_value} className={css.aux_value} />
-          </Fluent.StackItem>
-          <div className={css.plot}>{plot}</div>
-        </Fluent.Stack>
+          </div>
+          {plot}
+        </div>
       )
     }
     return { render, changed }

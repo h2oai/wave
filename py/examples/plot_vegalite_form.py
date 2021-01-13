@@ -1,5 +1,5 @@
 # Plot / Vega-lite / Form
-# Display a Vega-lite plot inside a form card
+# Display a Vega-lite #plot inside a #form card. #vega
 # ---
 from h2o_wave import site, data, ui
 import random
@@ -30,7 +30,8 @@ def poll():
 
 
 # Generate random datum between 1 and 100
-def rnd(): return random.randint(1, 100)
+def rnd():
+    return random.randint(1, 100)
 
 
 page['example'] = ui.form_card(

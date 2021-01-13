@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, Format } from './layout'
+import { cards, Format, grid } from './layout'
 import { bond, Card, Rec, S, unpack } from './qd'
 import { getTheme } from './theme'
 
 const
   theme = getTheme(),
   css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: grid.gap,
+    },
     title: {
       ...theme.font.s12,
       ...theme.font.w6,
@@ -29,6 +33,7 @@ const
     value: {
       ...theme.font.s24,
       ...theme.font.w3,
+      lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
     }
   })
 
@@ -47,10 +52,10 @@ export const
     const render = () => {
       const data = unpack(s.data)
       return (
-        <Fluent.Stack data-test={name}>
+        <div data-test={name} className={css.card}>
           <Format data={data} format={s.title} className={css.title} />
           <Format data={data} format={s.value} className={css.value} />
-        </Fluent.Stack>
+        </div>
       )
     }
     return { render, changed }

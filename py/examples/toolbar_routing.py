@@ -1,9 +1,9 @@
 # Routing / Toolbar
 # This example demonstrates how you can observe and handle changes to the browser's
-# [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash)
+# [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash).
 #
 # The location hash can be accessed using `q.args['#']`.
-#
+# #routing #toolbar
 # ---
 from h2o_wave import main, app, Q, ui
 

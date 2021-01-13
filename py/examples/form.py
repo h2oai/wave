@@ -1,7 +1,7 @@
 # Form
-# Use a form to collect data or show textual information.
+# Use a #form to collect data or show textual information.
 # ---
-from synth import FakeCategoricalSeries
+from .synth import FakeCategoricalSeries
 from h2o_wave import main, app, Q, ui, pack, data
 import random
 
@@ -34,7 +34,8 @@ n = 20
 
 
 # Generate random datum between 1 and 100
-def rnd(): return random.randint(1, 100)
+def rnd():
+    return random.randint(1, 100)
 
 
 @app('/demo')
@@ -93,7 +94,12 @@ async def serve(q: Q):
             ui.tab(name='events', label='Events', icon='Calendar'),
             ui.tab(name='spam', label='Spam'),
         ]),
-        ui.expander(name='expander', label='Expander'),
+        ui.expander(name='expander', label='Expander', items=[
+            ui.combobox(name='combobox', label='Combobox', choices=['Choice 1', 'Choice 2', 'Choice 3']),
+            ui.slider(name='slider', label='Slider'),
+            ui.range_slider(name='range_slider', label='Range slider', max=99),
+            ui.spinbox(name='spinbox', label='Spinbox'),
+        ]),
         ui.frame(path='https://example.com'),
         ui.markup(content=html),
         ui.template(
