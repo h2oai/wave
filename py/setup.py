@@ -17,6 +17,9 @@ import setuptools
 with open('README.rst', 'r') as readme:
     long_description = readme.read()
 
+with open('README.md', 'r') as readme_markdown:
+    conda_description = readme_markdown.read()
+
 setuptools.setup(
     name='h2o_wave',
     version='0.10.0',
@@ -24,6 +27,8 @@ setuptools.setup(
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Wave Realtime Apps',
     long_description=long_description,
+    # conda_description is a hack to read Anaconda description from a file. Not needed for Pypi.
+    conda_description=conda_description,
     url='https://h2o.ai/products/h2o-wave',
     packages=setuptools.find_packages(),
     classifiers=[

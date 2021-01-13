@@ -29,12 +29,26 @@ A [virtual environment](https://docs.python.org/3/tutorial/venv.html) helps us m
 
 ```shell
 python3 -m venv venv
+source venv/bin/activate
+```
+
+If you are using Conda as your package manager,
+
+```shell
+conda create -n venv
+conda activate venv
 ```
 
 ### Install the Wave Python driver
 
 ```shell
-./venv/bin/pip install h2o-wave
+pip install h2o-wave
+```
+
+If you are using Conda as your package manager,
+
+```shell
+conda install -c h2oai h2o_wave
 ```
 
 ## Step 3: Write your program
