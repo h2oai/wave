@@ -34,7 +34,7 @@ page['meta'] = ui.meta_card(box='', layouts=[
                 # Use remaining space for content
                 ui.zone('content'),
             ]),
-            ui.zone('footer', size='0'),
+            ui.zone('footer'),
         ]
     ),
     ui.layout(
@@ -56,7 +56,7 @@ page['meta'] = ui.meta_card(box='', layouts=[
                     ui.zone('content'),
                 ]),
             ]),
-            ui.zone('footer', size='0'),
+            ui.zone('footer'),
         ]
     )
 ])

@@ -8,35 +8,35 @@ async def show_purple_dashboard(q: Q):
         ui.layout(
             breakpoint='xs',
             zones=[
-                ui.zone('header', size='0'),
-                ui.zone('title', size='0'),
+                ui.zone('header'),
+                ui.zone('title'),
                 ui.zone('body'),
-                ui.zone('footer', size='0'),
+                ui.zone('footer'),
             ],
         ),
         ui.layout(
             breakpoint='m',
             zones=[
-                ui.zone('header', size='0'),
-                ui.zone('title', size='0'),
+                ui.zone('header'),
+                ui.zone('title'),
                 ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('main', zones=[
-                        ui.zone('overview', size='0'),
+                        ui.zone('overview'),
                         ui.zone('stats1', direction=ui.ZoneDirection.ROW, size='150px'),
                         ui.zone('stats2', direction=ui.ZoneDirection.ROW, size='150px'),
                         ui.zone('others'),
                     ]),
                     ui.zone('sidebar', size='30%'),
                 ]),
-                ui.zone('footer', size='0'),
+                ui.zone('footer'),
             ],
         ),
         ui.layout(
             breakpoint='xl',
             width='1200px',
             zones=[
-                ui.zone('header', size='0'),
-                ui.zone('title', size='0'),
+                ui.zone('header'),
+                ui.zone('title'),
                 ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('main', size='3', zones=[
                         ui.zone('overview', direction=ui.ZoneDirection.ROW, size='200px'),
@@ -46,7 +46,7 @@ async def show_purple_dashboard(q: Q):
                     ]),
                     ui.zone('sidebar', size='30%'),
                 ]),
-                ui.zone('footer', size='0'),
+                ui.zone('footer'),
             ]
         )
     ])

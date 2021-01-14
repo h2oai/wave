@@ -207,8 +207,11 @@ const
           style.minHeight = zone.size // Needed for Safari.
         }
       }
-    } else { // so size; occupy 1 part
-      style.flexGrow = 1
+    } else { // no size
+      // expand to fit if horizontal
+      if (direction === 'row') {
+        style.flexGrow = 1
+      }
     }
 
     return style

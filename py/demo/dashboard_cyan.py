@@ -9,7 +9,7 @@ async def show_cyan_dashboard(q: Q):
             breakpoint='xl',
             width='1200px',
             zones=[
-                ui.zone('header', size='0'),
+                ui.zone('header'),
                 ui.zone('body', direction=ui.ZoneDirection.ROW, zones=[
                     ui.zone('content', size='75%', zones=[
                         ui.zone('top', size='600px'),
@@ -21,7 +21,7 @@ async def show_cyan_dashboard(q: Q):
                     ]),
                     ui.zone('sidebar', size='25%'),
                 ]),
-                ui.zone('footer', size='0'),
+                ui.zone('footer'),
             ]
         )
     ])
