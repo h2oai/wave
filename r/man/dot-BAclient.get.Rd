@@ -25,6 +25,3 @@ The get function will get the requested page in JSON format from the
 Qd server
 This is a (hidden) internal function
 }
-\examples{
-.BAclient.get("/example")
-}

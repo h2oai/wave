@@ -25,6 +25,3 @@ Function to send a page on a site to the Qd server
 The function requires the name of the page and the data to be sent
 This is a (hidden) internal function
 }
-\examples{
-.site.save("/example",json_data)
-}

@@ -25,6 +25,3 @@ return code from sending the page to the server
 Function to save the page, push the page to the Qd server
 The function requires the page instance created, and the name of the page.
 }
-\examples{
-page.save(test_page,"/example")
-}

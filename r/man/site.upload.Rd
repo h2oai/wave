@@ -21,7 +21,3 @@ Function to upload files to the Qd server
 This function will return the relative file path on the Qd server.
 You can use this relative path for the purposes of your site/page/card
 }
-\examples{
-file_list <- list("aml.jpg","dai.jpg")
-site.upload(file_list)
-}

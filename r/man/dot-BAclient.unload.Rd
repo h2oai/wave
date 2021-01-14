@@ -21,6 +21,3 @@ Basic Authentication HTTP delete function
 This function will delete the page on the Qd server. It requires the page name
 This is a (hidden) internal function
 }
-\examples{
-.BAclient.unload("/example")
-}

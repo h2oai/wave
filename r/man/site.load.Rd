@@ -25,6 +25,3 @@ Function to load/get a page on a site from the Qd server
 The function requires the name of the page
 The data is sent back in JSON.
 }
-\examples{
-site.load("/example")
-}
