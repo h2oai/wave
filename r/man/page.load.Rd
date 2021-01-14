@@ -23,6 +23,3 @@ Function to load/get the data on a page in JSON format
 A page name needs to be passed to the function to get back the
 data on a the page in JSON page.
 }
-\examples{
-page.load("/example")
-}

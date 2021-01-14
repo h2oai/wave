@@ -23,6 +23,3 @@ Basic Authentication HTTP download with get function
 This function will download files from the Qd server and store it in the path provided
 This is a (hidden) internal function
 }
-\examples{
-.BAclient.download("aml.jpb","tmp")
-}

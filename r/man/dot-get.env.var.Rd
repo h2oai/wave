@@ -17,7 +17,3 @@ The found or default environmental variable \code{object}
 Search and return an existing, or default environmental variable
 This is a (hidden) internal function
 }
-\examples{
-test_variable <- 'INTERNAL_ADDRESS'
-.get_env_var(test_variable)
-}

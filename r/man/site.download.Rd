@@ -21,6 +21,3 @@ file is written to disk and http code
 This function will download file(s) from that Qd server to local disk.
 The file will be written to the location defined in the path variable
 }
-\examples{
-site.download("aml.jpg","/tmp")
-}

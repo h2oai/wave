@@ -37,7 +37,3 @@ Each card requires a unique name. If a card with a name similar to an existing c
 is added then the existing card will be over written.
 The card name cannot be empty.
 }
-\examples{
-test_page <- page.add(test_page,"/example","test_card"
-,FUN=ui_small_stat_card(box="1 1 1 1",title="test",value="$55.05"))
-}

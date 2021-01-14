@@ -1,12 +1,9 @@
-#install.packages(c("jsonlite","httr","stringr","future"),repo = "https://lib.ugent.be/CRAN/")
 library(jsonlite)
 library(httr)
 library(stringr) 
-library(future)
 
 `%notin%` <- Negate(`%in%`)
 
-plan(list(multisession,multisession))
 
 #' Search and return an existing, or default environmental variable
 #' This is a (hidden) internal function

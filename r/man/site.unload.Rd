@@ -25,6 +25,3 @@ The function requires the name of a page. This page will
 then be removed from the server
 Currently, Qd, server does not allow removing files - BROKEN
 }
-\examples{
-site.unload("/example")
-}

@@ -29,6 +29,3 @@ The patch function will take the page name and the data that needs to be patched
 In return you will get http code
 This is a (hidden) internal function
 }
-\examples{
-.BAclient.path("/example",json_data)
-}

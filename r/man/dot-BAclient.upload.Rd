@@ -21,7 +21,3 @@ Basic Authentication HTTP upload with post function
 This function will upload the files provided in the fle list to the Qd server
 This is a (hidden) internal function
 }
-\examples{
-file_list <- list("aml.jpg","dai.jpg")
-.BAclient.upload(file_list)
-}
