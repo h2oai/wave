@@ -1,6 +1,6 @@
 Package: h2owave
 Title: R driver for H2O Wave Realtime Apps
-Version: 0.0.0.10
+Version: 0.0.10
 Authors@R: 
     person(given = "Ashrith",
            family = "Barthur",
