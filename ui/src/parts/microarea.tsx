@@ -40,6 +40,7 @@ const css = stylesheet({
     height: '100%',
     position: 'relative',
     flexGrow: 1,
+    minHeight: 32,
   }
 })
 
