@@ -5,7 +5,7 @@ on:
     inputs:
       commit:
         description: 'Commit Message'
-        default: 'docs: Publish docs'
+        default: 'docs: publish docs'
         required: false
 
 env:
