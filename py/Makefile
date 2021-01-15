@@ -27,7 +27,7 @@ examples:
 	sed -i -r -e "s/h2o_wave.+/h2o_wave==$(VERSION)/" examples/requirements.txt
 
 .PHONY: release
-release: build docs examples ## Prepare release artifacts
+release: build examples ## Prepare release artifacts
 
 clean: purge ## Clean
 	rm -rf docs/build venv
