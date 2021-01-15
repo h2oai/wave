@@ -6,7 +6,7 @@ on:
       commit:
         description: 'Commit Message'
         default: 'docs: publish docs'
-        required: false
+        required: true
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
