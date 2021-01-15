@@ -5,8 +5,7 @@ Authors@R:
     person(given = "Ashrith",
            family = "Barthur",
            role = c("aut", "cre"),
-           email = "ashrith.barthur@h2o.ai",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           email = "ashrith.barthur@h2o.ai"
 Description: H2O Wave is a lightweight software stack for programming interactive web applications entirely in R (no HTML/Javascript/CSS) required. It is designed to make it fast, fun and easy to build low-latency, realtime, collaborative, web-based applications. It ships batteries-included with a suite of form and data visualization components for rapidly prototyping analytical and decision-support applications. Wave’s components work in conjunction with the Wave relay server that facilitates realtime state synchronization between R and web browsers.
 License: H2O.AI
 Encoding: UTF-8
