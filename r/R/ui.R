@@ -105,7 +105,6 @@ ui_text <- function(
 #' @param value Data associated with this command, if any.
 #' @param data DEPRECATED. Use `value` instead. Data associated with this command, if any.
 #' @return A Command instance.
-#' @export
 ui_command <- function(
   name,
   label = NULL,
@@ -142,7 +141,6 @@ ui_command <- function(
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
 #' @return A TextXl instance.
-#' @export
 ui_text_xl <- function(
   content,
   width = NULL,
@@ -176,7 +174,6 @@ ui_text_xl <- function(
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
 #' @return A TextL instance.
-#' @export
 ui_text_l <- function(
   content,
   width = NULL,
@@ -209,7 +206,6 @@ ui_text_l <- function(
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextM instance.
-#' @export
 ui_text_m <- function(
   content,
   width = NULL,
@@ -239,7 +235,6 @@ ui_text_m <- function(
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextS instance.
-#' @export
 ui_text_s <- function(
   content,
   width = NULL,
@@ -269,7 +264,6 @@ ui_text_s <- function(
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextXs instance.
-#' @export
 ui_text_xs <- function(
   content,
   width = NULL,
@@ -307,7 +301,6 @@ ui_text_xs <- function(
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Label instance.
-#' @export
 ui_label <- function(
   label,
   required = NULL,
@@ -344,7 +337,6 @@ ui_label <- function(
 #' @param width The width of the separator , e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @return A Separator instance.
-#' @export
 ui_separator <- function(
   label = NULL,
   name = NULL,
@@ -391,7 +383,6 @@ ui_separator <- function(
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Progress instance.
-#' @export
 ui_progress <- function(
   label,
   caption = NULL,
@@ -433,7 +424,6 @@ ui_progress <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param buttons Specify one or more action buttons.
 #' @return A MessageBar instance.
-#' @export
 ui_message_bar <- function(
   type = NULL,
   text = NULL,
@@ -485,7 +475,6 @@ ui_message_bar <- function(
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param spellcheck True if the text may be checked for spelling errors. Defaults to True.
 #' @return A Textbox instance.
-#' @export
 ui_textbox <- function(
   name,
   label = NULL,
@@ -577,7 +566,6 @@ ui_textbox <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checkbox instance.
-#' @export
 ui_checkbox <- function(
   name,
   label = NULL,
@@ -629,7 +617,6 @@ ui_checkbox <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Toggle instance.
-#' @export
 ui_toggle <- function(
   name,
   label = NULL,
@@ -666,7 +653,6 @@ ui_toggle <- function(
 #' @param label Text to be displayed alongside the component.
 #' @param disabled True if the checkbox is disabled.
 #' @return A Choice instance.
-#' @export
 ui_choice <- function(
   name,
   label = NULL,
@@ -704,7 +690,6 @@ ui_choice <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ChoiceGroup instance.
-#' @export
 ui_choice_group <- function(
   name,
   label = NULL,
@@ -755,7 +740,6 @@ ui_choice_group <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checklist instance.
-#' @export
 ui_checklist <- function(
   name,
   label = NULL,
@@ -816,7 +800,6 @@ ui_checklist <- function(
 #' @param popup Whether to present the choices using a pop-up dialog. Defaults to `auto`, which pops up a dialog only when there are more than 100 choices.
 #'   One of 'auto', 'always', 'never'. See enum h2o_wave.ui.DropdownPopup.
 #' @return A Dropdown instance.
-#' @export
 ui_dropdown <- function(
   name,
   label = NULL,
@@ -888,7 +871,6 @@ ui_dropdown <- function(
 #' @param trigger True if the choice should be submitted when an item from the dropdown is selected or the textbox value changes.
 #' @param required True if this is a required field. Defaults to False.
 #' @return A Combobox instance.
-#' @export
 ui_combobox <- function(
   name,
   label = NULL,
@@ -961,7 +943,6 @@ ui_combobox <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Slider instance.
-#' @export
 ui_slider <- function(
   name,
   label = NULL,
@@ -1017,7 +998,6 @@ ui_slider <- function(
 #' @param trigger True if the form should be submitted when the spinbox value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Spinbox instance.
-#' @export
 ui_spinbox <- function(
   name,
   label = NULL,
@@ -1073,7 +1053,6 @@ ui_spinbox <- function(
 #' @param min The minimum allowed date value in YYYY-MM-DD format.
 #' @param max The maximum allowed date value in YYYY-MM-DD format.
 #' @return A DatePicker instance.
-#' @export
 ui_date_picker <- function(
   name,
   label = NULL,
@@ -1129,7 +1108,6 @@ ui_date_picker <- function(
 #' @param trigger True if the form should be submitted when the color picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ColorPicker instance.
-#' @export
 ui_color_picker <- function(
   name,
   label = NULL,
@@ -1196,7 +1174,6 @@ ui_color_picker <- function(
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param path The path or URL to link to. If specified, the `name` is ignored. The URL is opened in a new browser window or tab.
 #' @return A Button instance.
-#' @export
 ui_button <- function(
   name,
   label = NULL,
@@ -1248,7 +1225,6 @@ ui_button <- function(
 #' @param width The width of the buttons, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @return A Buttons instance.
-#' @export
 ui_buttons <- function(
   items,
   justify = NULL,
@@ -1325,7 +1301,6 @@ ui_mini_buttons <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A FileUpload instance.
-#' @export
 ui_file_upload <- function(
   name,
   label = NULL,
@@ -1507,7 +1482,6 @@ ui_markdown_table_cell_type <- function(
 #'   One of 'tooltip', 'wrap'. See enum h2o_wave.ui.TableColumnCellOverflow.
 #' @param filters List of values to allow filtering by, needed when pagination is set. Only applicable to filterable columns.
 #' @return A TableColumn instance.
-#' @export
 ui_table_column <- function(
   name,
   label,
@@ -1555,7 +1529,6 @@ ui_table_column <- function(
 #' @param name An identifying name for this row.
 #' @param cells The cells in this row (displayed left to right).
 #' @return A TableRow instance.
-#' @export
 ui_table_row <- function(
   name,
   cells) {
@@ -1647,7 +1620,6 @@ ui_table_pagination <- function(
 #' @param pagination Display a pagination control at the bottom of the table. Set this value using `ui.table_pagination()`.
 #' @param events The events to capture on this table. One of 'search' | 'sort' | 'filter' | 'download' | 'page_change' | 'reset'.
 #' @return A Table instance.
-#' @export
 ui_table <- function(
   name,
   columns,
@@ -1719,7 +1691,6 @@ ui_table <- function(
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
 #' @return A Link instance.
-#' @export
 ui_link <- function(
   label = NULL,
   path = NULL,
@@ -1788,7 +1759,6 @@ ui_links <- function(
 #' @param label The text displayed on the tab.
 #' @param icon The icon displayed on the tab.
 #' @return A Tab instance.
-#' @export
 ui_tab <- function(
   name,
   label = NULL,
@@ -1813,7 +1783,6 @@ ui_tab <- function(
 #' @param visible True if the component should be visible. Defaults to True.
 #' @param link True if tabs should be rendered as links instead of buttons.
 #' @return A Tabs instance.
-#' @export
 ui_tabs <- function(
   name,
   value = NULL,
@@ -1849,7 +1818,6 @@ ui_tabs <- function(
 #' @param width The width of the expander, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @return A Expander instance.
-#' @export
 ui_expander <- function(
   name,
   label = NULL,
@@ -1883,7 +1851,6 @@ ui_expander <- function(
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to True.
 #' @return A Frame instance.
-#' @export
 ui_frame <- function(
   path = NULL,
   content = NULL,
@@ -1980,7 +1947,6 @@ ui_template <- function(
 #' @param trigger True if the form should be submitted when the picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Picker instance.
-#' @export
 ui_picker <- function(
   name,
   choices,
@@ -3111,7 +3077,6 @@ ui_form_card <- function(
 #' @param content The HTML content of the page. A string containing `<html>...</html>`.
 #' @param commands Contextual menu commands for this component.
 #' @return A FrameCard instance.
-#' @export
 ui_frame_card <- function(
   box,
   title,
@@ -3148,7 +3113,6 @@ ui_frame_card <- function(
 #'   (Not the height of its coordinate system.)
 #' @param commands Contextual menu commands for this component.
 #' @return A GraphicsCard instance.
-#' @export
 ui_graphics_card <- function(
   box,
   view_box,
@@ -3184,7 +3148,6 @@ ui_graphics_card <- function(
 #' @param data EXPERIMENTAL. DO NOT USE.
 #' @param commands Contextual menu commands for this component.
 #' @return A GridCard instance.
-#' @export
 ui_grid_card <- function(
   box,
   title,
@@ -3274,7 +3237,6 @@ ui_nav_group <- function(
 #'   One of 'card', 'transparent', 'primary'. See enum h2o_wave.ui.HeaderCardColor.
 #' @param commands Contextual menu commands for this component.
 #' @return A HeaderCard instance.
-#' @export
 ui_header_card <- function(
   box,
   title,
@@ -3324,7 +3286,6 @@ ui_header_card <- function(
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param commands Contextual menu commands for this component.
 #' @return A ImageCard instance.
-#' @export
 ui_image_card <- function(
   box,
   title,
@@ -3366,7 +3327,6 @@ ui_image_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A LargeBarStatCard instance.
-#' @export
 ui_large_bar_stat_card <- function(
   box,
   title,
@@ -3416,7 +3376,6 @@ ui_large_bar_stat_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A LargeStatCard instance.
-#' @export
 ui_large_stat_card <- function(
   box,
   title,
@@ -3454,7 +3413,6 @@ ui_large_stat_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A ListCard instance.
-#' @export
 ui_list_card <- function(
   box,
   title,
@@ -3489,7 +3447,6 @@ ui_list_card <- function(
 #' @param data EXPERIMENTAL. DO NOT USE.
 #' @param commands Contextual menu commands for this component.
 #' @return A ListItem1Card instance.
-#' @export
 ui_list_item1_card <- function(
   box,
   title,
@@ -3530,7 +3487,6 @@ ui_list_item1_card <- function(
 #' @param data Additional data for the card.
 #' @param commands Contextual menu commands for this component.
 #' @return A MarkdownCard instance.
-#' @export
 ui_markdown_card <- function(
   box,
   title,
@@ -3559,7 +3515,6 @@ ui_markdown_card <- function(
 #' @param content The HTML content.
 #' @param commands Contextual menu commands for this component.
 #' @return A MarkupCard instance.
-#' @export
 ui_markup_card <- function(
   box,
   title,
@@ -4123,7 +4078,6 @@ ui_pixel_art_card <- function(
 #' @param interactions The interactions to be allowed for this card. One of 'drag_move' | 'scale_zoom' | 'brush'. Note: `brush` does not raise `select_marks` event.
 #' @param commands Contextual menu commands for this component.
 #' @return A PlotCard instance.
-#' @export
 ui_plot_card <- function(
   box,
   title,
@@ -4276,7 +4230,6 @@ ui_profile_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A RepeatCard instance.
-#' @export
 ui_repeat_card <- function(
   box,
   item_view,
@@ -4346,7 +4299,6 @@ ui_section_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A SmallSeriesStatCard instance.
-#' @export
 ui_small_series_stat_card <- function(
   box,
   title,
@@ -4580,7 +4532,6 @@ ui_stat_table_card <- function(
 #' @param name An optional name for the card. If provided, the selected tab can be accessed using the name of the card.
 #' @param commands Contextual menu commands for this component.
 #' @return A TabCard instance.
-#' @export
 ui_tab_card <- function(
   box,
   items,
@@ -4664,7 +4615,6 @@ ui_tall_article_preview_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A TallGaugeStatCard instance.
-#' @export
 ui_tall_gauge_stat_card <- function(
   box,
   title,
@@ -4763,7 +4713,6 @@ ui_tall_info_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A TallSeriesStatCard instance.
-#' @export
 ui_tall_series_stat_card <- function(
   box,
   title,
@@ -4839,7 +4788,6 @@ ui_tall_stats_card <- function(
 #' @param data Data for the Handlebars template.
 #' @param commands Contextual menu commands for this component.
 #' @return A TemplateCard instance.
-#' @export
 ui_template_card <- function(
   box,
   title,
@@ -4869,7 +4817,6 @@ ui_template_card <- function(
 #' @param overflow_items Items to render in an overflow menu.
 #' @param commands Contextual menu commands for this component.
 #' @return A ToolbarCard instance.
-#' @export
 ui_toolbar_card <- function(
   box,
   items,
@@ -4899,7 +4846,6 @@ ui_toolbar_card <- function(
 #' @param data Data for the plot, if any.
 #' @param commands Contextual menu commands for this component.
 #' @return A VegaCard instance.
-#' @export
 ui_vega_card <- function(
   box,
   title,
@@ -4982,7 +4928,6 @@ ui_wide_article_preview_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideBarStatCard instance.
-#' @export
 ui_wide_bar_stat_card <- function(
   box,
   title,
@@ -5024,7 +4969,6 @@ ui_wide_bar_stat_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideGaugeStatCard instance.
-#' @export
 ui_wide_gauge_stat_card <- function(
   box,
   title,
@@ -5218,7 +5162,6 @@ ui_wide_plot_card <- function(
 #' @param data Data for this card.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideSeriesStatCard instance.
-#' @export
 ui_wide_series_stat_card <- function(
   box,
   title,
