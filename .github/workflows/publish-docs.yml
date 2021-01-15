@@ -6,23 +6,25 @@ on:
       commit:
         description: 'Commit Message'
         default: 'docs: publish docs'
-        required: true
+        required: false
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   publish:
-    name: Release Wave
+    name: Publish Docs
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build Docs
-        run: make build-website
+      - name: Setup
+        run: make setup
 
       - name: Publish Docs
-        run: make publish-website
+        run: |
+          make build-website
+          make publish-website
 
       - name: Commit & Tag
         uses: EndBug/add-and-commit@v5
