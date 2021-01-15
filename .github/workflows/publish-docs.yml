@@ -1,0 +1,32 @@
+name: Publish Docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit Message'
+        default: 'docs: Publish docs'
+        required: false
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  publish:
+    name: Release Wave
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Docs
+        run: make build-website
+
+      - name: Publish Docs
+        run: make publish-website
+
+      - name: Commit & Tag
+        uses: EndBug/add-and-commit@v5
+        with:
+          add: '.'
+          message: "${{ github.event.inputs.commit }}"
+
