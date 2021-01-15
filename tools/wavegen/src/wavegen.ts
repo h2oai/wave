@@ -633,6 +633,7 @@ const
           p(`#' @param ${m.name} ` + m.comments.join("\n#'   "))
         }
         p(`#' @return A ${type.name} instance.`)
+        p(`#' @export`)
         const
           params = type.members.map(getSigWithDefault),
           assigns = type.members.map(m => `${m.name}=${m.name}`)
