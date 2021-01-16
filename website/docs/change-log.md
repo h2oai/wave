@@ -12,8 +12,50 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
-## v0.10.0
+## v0.11.0
+Jan 15, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.11.0)
+- Added
+  - Make all cards render responsively in both grid and flex layouts.
+  - Add demo application that showcases various dashboards using flexible/responsive layouts.
+  - Add `ui.stats()` and `ui.stat()` for displaying metrics inline in forms.
+  - Add `ui.section_card()` to demarcate sections on a page, with optional nested components.
+  - Add `ui.stat_list_card()` to display lists of metrics, with optional icons and links.
+  - Add `ui.stat_table_card()` to display tables of metrics, with optional icons and links.
+  - Add `ui.inline()` to nest and display components horizontally inside a form.
+  - Add `ui.footer_card()` to display footers at the bottom of pages.
+  - Allow form cards to have titles.
+  - Allow disabling nav items.
+  - Add support for color variable in plot color ranges.
+  - Add support for color variable in plot shape/text fills and strokes.
+  - Allow tabs inside forms to trigger hash change navigation.
+  - Allow a tab card's selected tab to be accessed using the card's name.
+  - Publish `h2o-wave` package to Conda.
+  - Example for displaying background task completion using a progress bar.
+  - Example for displaying Pandas frames as markdown tables.
+  - Example for plotting Pandas frames.
+  - OIDC refresh token is now accessible in the Python client.
+  - Make documentation searchable.
+  - Add table of contents for all Wave examples.
+  - Add tags to all examples; show tag on an index page.
+- Changed
+  - Stats cards now dynamically resize to fit card size.
+  - Picker now displays suggestion list in advance.
+  - Center breadcrumbs vertically in flex layouts.
+  - Plot cards now dynamically resize to fit.
+  - Improve markdown rendering consistency across components.
+  - Center tabs vertically when used in flex layouts.
+  - Display tab cards without a background/padding.
+  - Display toolbar cards without a background/padding.
+  - Vega cards now dynamically resize to fit.
+  - Improve spacing between components contained in an expander.
+- Fixed
+  - Fix Wave tour on Windows.
+  - Fix responsive layout in Safari.
+  - Fix bug where `--no-reload` of apps was using incorrect port.
+  - Fix client-side warnings when using components nested recursively.
+  - Close dialogs properly when the top X button is clicked.
 
+## v0.10.0
 Nov 29, 2020 - [Download](https://github.com/h2oai/wave/releases/tag/v0.10.0)
 - Added
   - Add support for responsive layouts.
