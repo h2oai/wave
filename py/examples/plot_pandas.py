@@ -1,5 +1,5 @@
-# Plot / Dataframe
-# Examples of how to format pandas data when plotting
+# Plot / Pandas
+# Plot Pandas dataframes.
 # ---
 from h2o_wave import site, data, ui
 import pandas as pd
