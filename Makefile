@@ -53,9 +53,6 @@ build-server: ## Build server for current OS/Arch
 build-py: ## Build h2o_wave wheel
 	cd py && $(MAKE) release
 
-build-docs:
-	cd py && $(MAKE) docs
-
 build-docker:
 	docker build \
 		--build-arg uid=$(shell id -u) \
@@ -96,7 +93,7 @@ release-os:
 	cp readme.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
-build-website: build-docs ## Build website
+build-website: docs ## Build website
 	cd website && npm ci && npm run build
 
 publish-website: ## Publish website
