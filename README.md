@@ -38,12 +38,32 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 
 ---
 
+### Responsive Layouts
+
+![Dashboard](website/blog/assets/2021-01-17/dashboards.png)
+
+![Dashboard](website/blog/assets/2021-01-17/dashboard_red.png)
+
+![Dashboard](website/blog/assets/2021-01-17/dashboard_blue.png)
+
+![Dashboard](website/blog/assets/2021-01-17/dashboard_orange.png)
+
+![Dashboard](website/blog/assets/2021-01-17/dashboard_cyan.png)
+
+![Dashboard](website/blog/assets/2021-01-17/dashboard_mint.png)
+
+![Dashboard](website/blog/assets/2021-01-17/dashboard_purple.png)
+
+Code: https://github.com/h2oai/wave/tree/master/py/demo
+
 ### Themes
 
 (Coming soon!)
 
 ![Light Theme](assets/visuals/theme-light.png)
+
 ![Dark Theme](assets/visuals/theme-dark.png)
+
 ![Neon Theme](assets/visuals/theme-neon.png)
 
 ### 80+ components, 175+ examples
@@ -51,4 +71,5 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 More at https://h2oai.github.io/wave/docs/examples
 
 ![Components](assets/visuals/components-1.png)
+
 ![Visualizations](assets/visuals/components-2.png)
