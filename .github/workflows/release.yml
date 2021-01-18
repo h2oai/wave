@@ -8,31 +8,32 @@ on:
         required: true
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   VERSION: "${{ github.event.inputs.version }}"
   TAG: "v${{ github.event.inputs.version }}"
 
 jobs:
-  ci-test:
-    name: CI Test
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Build
-        run: |
-          cd ui
-          make setup
-
-      - name: Unit Test
-        run: make test-ui-ci
+#  ci-test:
+#    name: CI Test
+#    runs-on: ubuntu-18.04
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - name: Build
+#        run: |
+#          cd ui
+#          make setup
+#
+#      - name: Unit Test
+#        run: make test-ui-ci
 
   release:
     name: Release Wave
     runs-on: ubuntu-18.04
-    needs: ci-test
+#    needs: ci-test
     steps:
       - uses: actions/checkout@v2
+        with:
+          - token: ${{ secrets.GIT_TOKEN }}
 
       - name: Setup
         run: make setup
@@ -45,50 +46,58 @@ jobs:
         with:
           add: '.'
           message: "chore: Release ${{ env.TAG }}"
-          tag: ${{ env.TAG }}
+#          tag: ${{ env.TAG }}
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ env.TAG }}
-          release_name: ${{ env.TAG }}
-          draft: false
-          prerelease: true
-
-      - name: Upload MacOS Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "./build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz"
-          asset_name: "wave-${{ env.VERSION }}-darwin-amd64.tar.gz"
-          asset_content_type: application/gzip
-
-      - name: Upload Linux Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "./build/wave-${{ env.VERSION }}-linux-amd64.tar.gz"
-          asset_name: "wave-${{ env.VERSION }}-linux-amd64.tar.gz"
-          asset_content_type: application/gzip
-
-      - name: Upload Windows Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "./build/wave-${{ env.VERSION }}-windows-amd64.tar.gz"
-          asset_name: "wave-${{ env.VERSION }}-windows-amd64.tar.gz"
-          asset_content_type: application/gzip
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          packages_dir: py/dist
-          password: ${{ secrets.PYPI_API_TOKEN }}
-
-      - name: Publish to Conda
-        uses: amauryval/publish_conda_package_action@1.1.0
-        with:
-          CondaDir: 'py/conda'
-          CondaUsername: ${{ secrets.CONDA_USERNAME }}
-          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
+#      - name: Create GitHub Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: ${{ env.TAG }}
+#          release_name: ${{ env.TAG }}
+#          draft: false
+#          prerelease: true
+#
+#      - name: Upload MacOS Release Asset
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: "./build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz"
+#          asset_name: "wave-${{ env.VERSION }}-darwin-amd64.tar.gz"
+#          asset_content_type: application/gzip
+#
+#      - name: Upload Linux Release Asset
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: "./build/wave-${{ env.VERSION }}-linux-amd64.tar.gz"
+#          asset_name: "wave-${{ env.VERSION }}-linux-amd64.tar.gz"
+#          asset_content_type: application/gzip
+#
+#      - name: Upload Windows Release Asset
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: "./build/wave-${{ env.VERSION }}-windows-amd64.tar.gz"
+#          asset_name: "wave-${{ env.VERSION }}-windows-amd64.tar.gz"
+#          asset_content_type: application/gzip
+#
+#      - name: Publish to PyPI
+#        uses: pypa/gh-action-pypi-publish@master
+#        with:
+#          packages_dir: py/dist
+#          password: ${{ secrets.PYPI_API_TOKEN }}
+#
+#      - name: Publish to Conda
+#        uses: amauryval/publish_conda_package_action@1.1.0
+#        with:
+#          CondaDir: 'py/conda'
+#          CondaUsername: ${{ secrets.CONDA_USERNAME }}
+#          CondaPassword: ${{ secrets.CONDA_PASSWORD }}
