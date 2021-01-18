@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          - token: ${{ secrets.GIT_TOKEN }}
+          token: ${{ secrets.GIT_TOKEN }}
 
       - name: Setup
         run: make setup
