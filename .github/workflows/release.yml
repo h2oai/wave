@@ -8,7 +8,6 @@ on:
         required: true
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   VERSION: "${{ github.event.inputs.version }}"
   TAG: "v${{ github.event.inputs.version }}"
 
@@ -33,6 +32,8 @@ jobs:
     needs: ci-test
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
 
       - name: Setup
         run: make setup
@@ -50,6 +51,8 @@ jobs:
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.TAG }}
           release_name: ${{ env.TAG }}
@@ -58,6 +61,8 @@ jobs:
 
       - name: Upload MacOS Release Asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: "./build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz"
@@ -66,6 +71,8 @@ jobs:
 
       - name: Upload Linux Release Asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: "./build/wave-${{ env.VERSION }}-linux-amd64.tar.gz"
@@ -74,6 +81,8 @@ jobs:
 
       - name: Upload Windows Release Asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: "./build/wave-${{ env.VERSION }}-windows-amd64.tar.gz"
