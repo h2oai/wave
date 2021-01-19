@@ -853,22 +853,19 @@ const
       qd.socket = null
       backoff *= 2
       if (backoff > 16) backoff = 16
-      handle({ t: SockEventType.Message, type: SockMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })
+      handle({ t: SockEventType.Message, type: SockMessageType.Warn, message: `Disconnected. Reconnecting in ${backoff} seconds...` })
       window.setTimeout(retry, backoff * 1000)
     }
     sock.onmessage = function (e) {
-      if (!e.data) return
-      if (!e.data.length) return
+      if (!e.data?.length) return
       qd.busyB(false)
       for (const line of e.data.split('\n')) {
         try {
           const msg = JSON.parse(line) as OpsD
           if (msg.d) {
             const page = exec(currentPage || newPage(), msg.d)
-            if (currentPage !== page) {
-              currentPage = page
-              if (page) handle({ t: SockEventType.Data, page: page })
-            }
+            currentPage = page
+            if (page) handle({ t: SockEventType.Data, page })
           } else if (msg.p) {
             currentPage = load(msg.p)
             handle({ t: SockEventType.Data, page: currentPage })
@@ -890,4 +887,3 @@ const
   }
 
 export const connect = (path: S, handle: SockHandler) => reconnect(toSocketAddress(path), handle)
-
