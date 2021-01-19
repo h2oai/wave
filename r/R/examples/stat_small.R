@@ -1,5 +1,3 @@
-#source("../core.R") 
-#source("../ui.R")
 library(h2owave)
 
 card_title <- sample(row.names(mtcars),1)

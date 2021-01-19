@@ -1,5 +1,3 @@
-#source("../core.R") 
-#source("../ui.R")
 library(h2owave)
 
 rm(test_page)
