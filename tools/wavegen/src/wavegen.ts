@@ -390,6 +390,12 @@ const
         }
         p(`    ):`)
         for (const m of type.members) {
+          if (!m.isOptional) {
+            p(`        if ${m.name} is None:`)
+            p(`            raise ValueError('${m.name} is required.')`)
+          }
+        }
+        for (const m of type.members) {
           p(`        self.${m.name} = ${m.name}`)
           p(`        """${m.comments.join(' ')}"""`)
         }

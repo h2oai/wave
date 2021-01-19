@@ -36,6 +36,10 @@ class Breadcrumb:
             name: str,
             label: str,
     ):
+        if name is None:
+            raise ValueError('name is required.')
+        if label is None:
+            raise ValueError('label is required.')
         self.name = name
         """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
         self.label = label
@@ -84,6 +88,8 @@ class Command:
             value: Optional[str] = None,
             data: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed."""
         self.label = label
@@ -158,6 +164,10 @@ class BreadcrumbsCard:
             items: List[Breadcrumb],
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
@@ -244,6 +254,14 @@ class FlexCard:
             wrap: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if item_view is None:
+            raise ValueError('item_view is required.')
+        if item_props is None:
+            raise ValueError('item_props is required.')
+        if data is None:
+            raise ValueError('data is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.item_view = item_view
@@ -338,6 +356,10 @@ class FooterCard:
             caption: str,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if caption is None:
+            raise ValueError('caption is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.caption = caption
@@ -397,6 +419,8 @@ class Text:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
+        if content is None:
+            raise ValueError('content is required.')
         self.content = content
         """The text content."""
         self.size = size
@@ -455,6 +479,8 @@ class TextXl:
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
     ):
+        if content is None:
+            raise ValueError('content is required.')
         self.content = content
         """The text content."""
         self.visible = visible
@@ -513,6 +539,8 @@ class TextL:
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
     ):
+        if content is None:
+            raise ValueError('content is required.')
         self.content = content
         """The text content."""
         self.visible = visible
@@ -570,6 +598,8 @@ class TextM:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
+        if content is None:
+            raise ValueError('content is required.')
         self.content = content
         """The text content."""
         self.visible = visible
@@ -621,6 +651,8 @@ class TextS:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
+        if content is None:
+            raise ValueError('content is required.')
         self.content = content
         """The text content."""
         self.visible = visible
@@ -672,6 +704,8 @@ class TextXs:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
+        if content is None:
+            raise ValueError('content is required.')
         self.content = content
         """The text content."""
         self.visible = visible
@@ -731,6 +765,8 @@ class Label:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
+        if label is None:
+            raise ValueError('label is required.')
         self.label = label
         """The text displayed on the label."""
         self.required = required
@@ -856,6 +892,8 @@ class Progress:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
+        if label is None:
+            raise ValueError('label is required.')
         self.label = label
         """The text displayed above the bar."""
         self.caption = caption
@@ -997,6 +1035,8 @@ class Textbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1149,6 +1189,8 @@ class Checkbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1234,6 +1276,8 @@ class Toggle:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1302,6 +1346,8 @@ class Choice:
             label: Optional[str] = None,
             disabled: Optional[bool] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1360,6 +1406,8 @@ class ChoiceGroup:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1440,6 +1488,8 @@ class Checklist:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1526,6 +1576,8 @@ class Dropdown:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1634,6 +1686,8 @@ class Combobox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1734,6 +1788,8 @@ class Slider:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1829,6 +1885,8 @@ class Spinbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1916,6 +1974,8 @@ class DatePicker:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -1997,6 +2057,8 @@ class ColorPicker:
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -2086,6 +2148,8 @@ class Button:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked."""
         self.label = label
@@ -2175,6 +2239,8 @@ class Buttons:
             name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
+        if items is None:
+            raise ValueError('items is required.')
         self.items = items
         """The button in this set."""
         self.justify = justify
@@ -2232,6 +2298,8 @@ class FileUpload:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -2426,6 +2494,10 @@ class TableColumn:
             data_type: Optional[str] = None,
             cell_type: Optional[TableCellType] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
+        if label is None:
+            raise ValueError('label is required.')
         self.name = name
         """An identifying name for this column."""
         self.label = label
@@ -2515,6 +2587,10 @@ class TableRow:
             name: str,
             cells: List[str],
     ):
+        if name is None:
+            raise ValueError('name is required.')
+        if cells is None:
+            raise ValueError('cells is required.')
         self.name = name
         """An identifying name for this row."""
         self.cells = cells
@@ -2579,6 +2655,12 @@ class Table:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
+        if columns is None:
+            raise ValueError('columns is required.')
+        if rows is None:
+            raise ValueError('rows is required.')
         self.name = name
         """An identifying name for this component."""
         self.columns = columns
@@ -2765,6 +2847,8 @@ class Tab:
             label: Optional[str] = None,
             icon: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -2811,6 +2895,8 @@ class Tabs:
             visible: Optional[bool] = None,
             link: Optional[bool] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.value = value
@@ -2871,6 +2957,8 @@ class Expander:
             items: Optional[List['Component']] = None,
             visible: Optional[bool] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -2988,6 +3076,8 @@ class Markup:
             name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
+        if content is None:
+            raise ValueError('content is required.')
         self.content = content
         """The HTML content."""
         self.name = name
@@ -3033,6 +3123,8 @@ class Template:
             name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
+        if content is None:
+            raise ValueError('content is required.')
         self.content = content
         """The Handlebars template. https://handlebarsjs.com/guide/"""
         self.data = data
@@ -3091,6 +3183,10 @@ class Picker:
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
+        if choices is None:
+            raise ValueError('choices is required.')
         self.name = name
         """An identifying name for this component."""
         self.choices = choices
@@ -3187,6 +3283,8 @@ class RangeSlider:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -3279,6 +3377,8 @@ class Step:
             icon: Optional[str] = None,
             done: Optional[bool] = None,
     ):
+        if label is None:
+            raise ValueError('label is required.')
         self.label = label
         """Text displayed below icon."""
         self.icon = icon
@@ -3325,6 +3425,10 @@ class Stepper:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.name = name
         """An identifying name for this component."""
         self.items = items
@@ -3867,6 +3971,8 @@ class Plot:
             self,
             marks: List[Mark],
     ):
+        if marks is None:
+            raise ValueError('marks is required.')
         self.marks = marks
         """The graphical mark layers contained in this plot."""
 
@@ -3903,6 +4009,10 @@ class Visualization:
             visible: Optional[bool] = None,
             events: Optional[List[str]] = None,
     ):
+        if plot is None:
+            raise ValueError('plot is required.')
+        if data is None:
+            raise ValueError('data is required.')
         self.plot = plot
         """The plot to be rendered in this visualization."""
         self.data = data
@@ -3978,6 +4088,8 @@ class VegaVisualization:
             name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
+        if specification is None:
+            raise ValueError('specification is required.')
         self.specification = specification
         """The Vega-lite specification."""
         self.data = data
@@ -4042,6 +4154,8 @@ class Stat:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
     ):
+        if label is None:
+            raise ValueError('label is required.')
         self.label = label
         """The label for the metric."""
         self.value = value
@@ -4106,6 +4220,8 @@ class Stats:
             justify: Optional[str] = None,
             inset: Optional[bool] = None,
     ):
+        if items is None:
+            raise ValueError('items is required.')
         self.items = items
         """The individual stats to be displayed."""
         self.justify = justify
@@ -4155,6 +4271,8 @@ class Inline:
             justify: Optional[str] = None,
             inset: Optional[bool] = None,
     ):
+        if items is None:
+            raise ValueError('items is required.')
         self.items = items
         """The components laid out inline."""
         self.justify = justify
@@ -4485,6 +4603,10 @@ class FormCard:
             title: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
@@ -4544,6 +4666,10 @@ class FrameCard:
             content: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -4609,6 +4735,10 @@ class GraphicsCard:
             height: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if view_box is None:
+            raise ValueError('view_box is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.view_box = view_box
@@ -4684,6 +4814,14 @@ class GridCard:
             data: PackedData,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if cells is None:
+            raise ValueError('cells is required.')
+        if data is None:
+            raise ValueError('data is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -4754,6 +4892,10 @@ class NavItem:
             icon: Optional[str] = None,
             disabled: Optional[bool] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
+        if label is None:
+            raise ValueError('label is required.')
         self.name = name
         """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
         self.label = label
@@ -4808,6 +4950,10 @@ class NavGroup:
             items: List[NavItem],
             collapsed: Optional[bool] = None,
     ):
+        if label is None:
+            raise ValueError('label is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.label = label
         """The label to display for this group."""
         self.items = items
@@ -4861,6 +5007,12 @@ class HeaderCard:
             nav: Optional[List[NavGroup]] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if subtitle is None:
+            raise ValueError('subtitle is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -4941,6 +5093,14 @@ class ImageCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if type is None:
+            raise ValueError('type is required.')
+        if image is None:
+            raise ValueError('image is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -5024,6 +5184,22 @@ class LargeBarStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if caption is None:
+            raise ValueError('caption is required.')
+        if value is None:
+            raise ValueError('value is required.')
+        if aux_value is None:
+            raise ValueError('aux_value is required.')
+        if value_caption is None:
+            raise ValueError('value_caption is required.')
+        if aux_value_caption is None:
+            raise ValueError('aux_value_caption is required.')
+        if progress is None:
+            raise ValueError('progress is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -5149,6 +5325,16 @@ class LargeStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if value is None:
+            raise ValueError('value is required.')
+        if aux_value is None:
+            raise ValueError('aux_value is required.')
+        if caption is None:
+            raise ValueError('caption is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -5238,6 +5424,16 @@ class ListCard:
             data: PackedData,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if item_view is None:
+            raise ValueError('item_view is required.')
+        if item_props is None:
+            raise ValueError('item_props is required.')
+        if data is None:
+            raise ValueError('data is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -5321,6 +5517,18 @@ class ListItem1Card:
             data: PackedRecord,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if caption is None:
+            raise ValueError('caption is required.')
+        if value is None:
+            raise ValueError('value is required.')
+        if aux_value is None:
+            raise ValueError('aux_value is required.')
+        if data is None:
+            raise ValueError('data is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -5417,6 +5625,12 @@ class MarkdownCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if content is None:
+            raise ValueError('content is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -5483,6 +5697,12 @@ class MarkupCard:
             content: str,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if content is None:
+            raise ValueError('content is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -5575,6 +5795,8 @@ class Zone:
             wrap: Optional[str] = None,
             zones: Optional[List['Zone']] = None,
     ):
+        if name is None:
+            raise ValueError('name is required.')
         self.name = name
         """An identifying name for this zone."""
         self.size = size
@@ -5648,6 +5870,10 @@ class Layout:
             min_height: Optional[str] = None,
             max_height: Optional[str] = None,
     ):
+        if breakpoint is None:
+            raise ValueError('breakpoint is required.')
+        if zones is None:
+            raise ValueError('zones is required.')
         self.breakpoint = breakpoint
         """The minimum viewport width at which to use this layout. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set."""
         self.zones = zones
@@ -5731,6 +5957,10 @@ class Dialog:
             blocking: Optional[bool] = None,
             primary: Optional[bool] = None,
     ):
+        if title is None:
+            raise ValueError('title is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.title = title
         """The dialog's title."""
         self.items = items
@@ -5806,6 +6036,8 @@ class MetaCard:
             dialog: Optional[Dialog] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -5888,6 +6120,10 @@ class NavCard:
             value: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
@@ -5944,6 +6180,12 @@ class PixelArtCard:
             data: PackedRecord,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if data is None:
+            raise ValueError('data is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -6006,6 +6248,14 @@ class PlotCard:
             events: Optional[List[str]] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if data is None:
+            raise ValueError('data is required.')
+        if plot is None:
+            raise ValueError('plot is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -6084,6 +6334,14 @@ class RepeatCard:
             data: PackedData,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if item_view is None:
+            raise ValueError('item_view is required.')
+        if item_props is None:
+            raise ValueError('item_props is required.')
+        if data is None:
+            raise ValueError('data is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.item_view = item_view
@@ -6156,6 +6414,12 @@ class SectionCard:
             items: Optional[Union[List[Component], str]] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if subtitle is None:
+            raise ValueError('subtitle is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -6243,6 +6507,16 @@ class SmallSeriesStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if value is None:
+            raise ValueError('value is required.')
+        if plot_data is None:
+            raise ValueError('plot_data is required.')
+        if plot_value is None:
+            raise ValueError('plot_value is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -6360,6 +6634,12 @@ class SmallStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if value is None:
+            raise ValueError('value is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -6430,6 +6710,8 @@ class StatListItem:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
     ):
+        if label is None:
+            raise ValueError('label is required.')
         self.label = label
         """The label for the metric."""
         self.name = name
@@ -6507,6 +6789,12 @@ class StatListCard:
             subtitle: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -6581,6 +6869,10 @@ class StatTableItem:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
     ):
+        if label is None:
+            raise ValueError('label is required.')
+        if values is None:
+            raise ValueError('values is required.')
         self.label = label
         """The label for the row."""
         self.values = values
@@ -6651,6 +6943,14 @@ class StatTableCard:
             subtitle: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if columns is None:
+            raise ValueError('columns is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -6735,6 +7035,10 @@ class TabCard:
             name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
@@ -6807,6 +7111,16 @@ class TallGaugeStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if value is None:
+            raise ValueError('value is required.')
+        if aux_value is None:
+            raise ValueError('aux_value is required.')
+        if progress is None:
+            raise ValueError('progress is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -6921,6 +7235,18 @@ class TallSeriesStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if value is None:
+            raise ValueError('value is required.')
+        if aux_value is None:
+            raise ValueError('aux_value is required.')
+        if plot_data is None:
+            raise ValueError('plot_data is required.')
+        if plot_value is None:
+            raise ValueError('plot_value is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -7048,6 +7374,12 @@ class TemplateCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if content is None:
+            raise ValueError('content is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -7115,6 +7447,10 @@ class ToolbarCard:
             overflow_items: Optional[List[Command]] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if items is None:
+            raise ValueError('items is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.items = items
@@ -7178,6 +7514,12 @@ class VegaCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if specification is None:
+            raise ValueError('specification is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -7248,6 +7590,16 @@ class WideBarStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if value is None:
+            raise ValueError('value is required.')
+        if aux_value is None:
+            raise ValueError('aux_value is required.')
+        if progress is None:
+            raise ValueError('progress is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -7344,6 +7696,16 @@ class WideGaugeStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if value is None:
+            raise ValueError('value is required.')
+        if aux_value is None:
+            raise ValueError('aux_value is required.')
+        if progress is None:
+            raise ValueError('progress is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -7458,6 +7820,18 @@ class WideSeriesStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
+        if box is None:
+            raise ValueError('box is required.')
+        if title is None:
+            raise ValueError('title is required.')
+        if value is None:
+            raise ValueError('value is required.')
+        if aux_value is None:
+            raise ValueError('aux_value is required.')
+        if plot_data is None:
+            raise ValueError('plot_data is required.')
+        if plot_value is None:
+            raise ValueError('plot_value is required.')
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
