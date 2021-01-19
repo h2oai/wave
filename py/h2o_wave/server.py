@@ -260,7 +260,7 @@ class _App:
         app_state, user_state, client_state = self._state
         args_state: dict = unmarshal(args)
         events_state: Optional[dict] = args_state.get('', None)
-        if events_state:
+        if isinstance(events_state, dict):
             events_state = {k: Expando(v) for k, v in events_state.items()}
             del args_state['']
         q = Q(
