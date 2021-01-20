@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, CardEffect } from './layout'
+import { CardEffect, cards } from './layout'
 import { bond, Card, qd, S } from './qd'
 
 /** Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`. */
@@ -66,7 +66,7 @@ export const
       )),
       render = () => (
         <div data-test={name} className={css.card}>
-          <Fluent.Breadcrumb items={items} styles={{ root: { margin: '15px 0' } }} />
+          <Fluent.Breadcrumb items={items} styles={{ root: { margin: 0 } }} />
         </div>
       )
 
