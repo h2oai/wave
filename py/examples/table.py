@@ -58,7 +58,7 @@ async def serve(q: Q):
             rows=[ui.table_row(
                 name=issue.id,
                 cells=[issue.text, issue.status, issue.notifications, issue.icon,
-                       str(issue.views), issue.progress, issue.created]
+                       str(issue.views), str(issue.progress), issue.created]
             ) for issue in issues],
             groupable=True,
             downloadable=True,

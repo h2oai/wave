@@ -53,8 +53,8 @@ async def serve(q: Q):
             columns=columns,
             rows=[ui.table_row(
                 name=issue.id,
-                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views), issue.progress]) for
-                issue in issues],
+                cells=[issue.text, issue.status, issue.notifications, issue.icon, str(issue.views),
+                       str(issue.progress)]) for issue in issues],
             groupable=True,
         )])
     await q.page.save()

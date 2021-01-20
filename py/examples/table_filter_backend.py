@@ -24,7 +24,7 @@ column_names = ['ID', 'Name', 'Language', 'Job', 'Address', 'City']
 
 
 def df_to_rows(df: pd.DataFrame):
-    return [ui.table_row(row['ID'], [row[name] for name in column_names]) for i, row in df.iterrows()]
+    return [ui.table_row(str(row['ID']), [str(row[name]) for name in column_names]) for i, row in df.iterrows()]
 
 
 def search_df(df: pd.DataFrame, term: str):
