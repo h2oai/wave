@@ -61,6 +61,8 @@ export interface Textbox {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** True if the form should be submitted when enter key is pressed. */
+  submit?: B
 }
 
 const DEBOUNCE_TIMEOUT = 500
@@ -73,6 +75,13 @@ export const
 
         qd.args[m.name] = v ?? (m.value || '')
         if (m.trigger) qd.sync()
+      },
+      onKeyUp = ( {key, target}: React.KeyboardEvent<HTMLInputElement>, v?: S) => {
+        if (key == 'Enter' && target instanceof HTMLInputElement) {
+          v = v || target.value
+          qd.args[m.name] = v ?? (m.value || '')
+          qd.sync()
+        }
       },
       render = () => m.mask
         ? (
@@ -87,6 +96,7 @@ export const
             disabled={m.disabled}
             readOnly={m.readonly}
             onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
+            onKeyUp={m.submit ? onKeyUp : undefined}
           />
         )
         : (
@@ -107,6 +117,7 @@ export const
             multiline={m.multiline}
             type={m.password ? 'password' : undefined}
             onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
+            onKeyUp={m.submit ? onKeyUp : undefined}
           />
         )
 
