@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { bond, S, qd, B } from './qd'
+import { B, bond, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -25,7 +25,7 @@ import { displayMixin } from './theme'
  */
 export interface ColorPicker {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** The selected color (CSS-compatible string). */

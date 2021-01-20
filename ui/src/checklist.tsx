@@ -14,10 +14,10 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { Choice } from './choice_group'
-import { B, bond, box, Box, on, S, qd } from './qd'
-import { margin, displayMixin } from './theme'
 import { stylesheet } from 'typestyle'
+import { Choice } from './choice_group'
+import { B, bond, box, Box, Id, on, qd, S } from './qd'
+import { displayMixin, margin } from './theme'
 
 /**
  * Create a set of checkboxes.
@@ -26,7 +26,7 @@ import { stylesheet } from 'typestyle'
  */
 export interface Checklist {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed above the component. */
   label?: S
   /** The names of the selected choices. */

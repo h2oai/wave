@@ -16,7 +16,7 @@ import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { bond, Card, qd, S } from './qd'
+import { bond, Card, Id, qd, S } from './qd'
 
 /**
  * Create a command.
@@ -25,7 +25,7 @@ import { bond, Card, qd, S } from './qd'
  */
 export interface Command {
   /** An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed. */
-  name: S
+  name: Id
   /** The text displayed for this command. */
   label?: S
   /** The caption for this command (typically a tooltip). */

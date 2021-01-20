@@ -63,7 +63,7 @@ class Breadcrumb:
             name: str,
             label: str,
     ):
-        _guard_scalar('Breadcrumb.name', name, (str,), False, False, False)
+        _guard_scalar('Breadcrumb.name', name, (str,), True, False, False)
         _guard_scalar('Breadcrumb.label', label, (str,), False, False, False)
         self.name = name
         """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
@@ -72,7 +72,7 @@ class Breadcrumb:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Breadcrumb.name', self.name, (str,), False, False, False)
+        _guard_scalar('Breadcrumb.name', self.name, (str,), True, False, False)
         _guard_scalar('Breadcrumb.label', self.label, (str,), False, False, False)
         return _dump(
             name=self.name,
@@ -83,7 +83,7 @@ class Breadcrumb:
     def load(__d: Dict) -> 'Breadcrumb':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Breadcrumb.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Breadcrumb.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Breadcrumb.label', __d_label, (str,), False, False, False)
         name: str = __d_name
@@ -109,7 +109,7 @@ class Command:
             value: Optional[str] = None,
             data: Optional[str] = None,
     ):
-        _guard_scalar('Command.name', name, (str,), False, False, False)
+        _guard_scalar('Command.name', name, (str,), True, False, False)
         _guard_scalar('Command.label', label, (str,), False, True, False)
         _guard_scalar('Command.caption', caption, (str,), False, True, False)
         _guard_scalar('Command.icon', icon, (str,), False, True, False)
@@ -133,7 +133,7 @@ class Command:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Command.name', self.name, (str,), False, False, False)
+        _guard_scalar('Command.name', self.name, (str,), True, False, False)
         _guard_scalar('Command.label', self.label, (str,), False, True, False)
         _guard_scalar('Command.caption', self.caption, (str,), False, True, False)
         _guard_scalar('Command.icon', self.icon, (str,), False, True, False)
@@ -154,7 +154,7 @@ class Command:
     def load(__d: Dict) -> 'Command':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Command.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Command.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Command.label', __d_label, (str,), False, True, False)
         __d_caption: Any = __d.get('caption')
@@ -1170,7 +1170,7 @@ class Textbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Textbox.name', name, (str,), False, False, False)
+        _guard_scalar('Textbox.name', name, (str,), True, False, False)
         _guard_scalar('Textbox.label', label, (str,), False, True, False)
         _guard_scalar('Textbox.placeholder', placeholder, (str,), False, True, False)
         _guard_scalar('Textbox.value', value, (str,), False, True, False)
@@ -1227,7 +1227,7 @@ class Textbox:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Textbox.name', self.name, (str,), False, False, False)
+        _guard_scalar('Textbox.name', self.name, (str,), True, False, False)
         _guard_scalar('Textbox.label', self.label, (str,), False, True, False)
         _guard_scalar('Textbox.placeholder', self.placeholder, (str,), False, True, False)
         _guard_scalar('Textbox.value', self.value, (str,), False, True, False)
@@ -1270,7 +1270,7 @@ class Textbox:
     def load(__d: Dict) -> 'Textbox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Textbox.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Textbox.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Textbox.label', __d_label, (str,), False, True, False)
         __d_placeholder: Any = __d.get('placeholder')
@@ -1372,7 +1372,7 @@ class Checkbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Checkbox.name', name, (str,), False, False, False)
+        _guard_scalar('Checkbox.name', name, (str,), True, False, False)
         _guard_scalar('Checkbox.label', label, (str,), False, True, False)
         _guard_scalar('Checkbox.value', value, (bool,), False, True, False)
         _guard_scalar('Checkbox.indeterminate', indeterminate, (bool,), False, True, False)
@@ -1399,7 +1399,7 @@ class Checkbox:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Checkbox.name', self.name, (str,), False, False, False)
+        _guard_scalar('Checkbox.name', self.name, (str,), True, False, False)
         _guard_scalar('Checkbox.label', self.label, (str,), False, True, False)
         _guard_scalar('Checkbox.value', self.value, (bool,), False, True, False)
         _guard_scalar('Checkbox.indeterminate', self.indeterminate, (bool,), False, True, False)
@@ -1422,7 +1422,7 @@ class Checkbox:
     def load(__d: Dict) -> 'Checkbox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Checkbox.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Checkbox.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Checkbox.label', __d_label, (str,), False, True, False)
         __d_value: Any = __d.get('value')
@@ -1477,7 +1477,7 @@ class Toggle:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Toggle.name', name, (str,), False, False, False)
+        _guard_scalar('Toggle.name', name, (str,), True, False, False)
         _guard_scalar('Toggle.label', label, (str,), False, True, False)
         _guard_scalar('Toggle.value', value, (bool,), False, True, False)
         _guard_scalar('Toggle.disabled', disabled, (bool,), False, True, False)
@@ -1501,7 +1501,7 @@ class Toggle:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Toggle.name', self.name, (str,), False, False, False)
+        _guard_scalar('Toggle.name', self.name, (str,), True, False, False)
         _guard_scalar('Toggle.label', self.label, (str,), False, True, False)
         _guard_scalar('Toggle.value', self.value, (bool,), False, True, False)
         _guard_scalar('Toggle.disabled', self.disabled, (bool,), False, True, False)
@@ -1522,7 +1522,7 @@ class Toggle:
     def load(__d: Dict) -> 'Toggle':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Toggle.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Toggle.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Toggle.label', __d_label, (str,), False, True, False)
         __d_value: Any = __d.get('value')
@@ -1562,7 +1562,7 @@ class Choice:
             label: Optional[str] = None,
             disabled: Optional[bool] = None,
     ):
-        _guard_scalar('Choice.name', name, (str,), False, False, False)
+        _guard_scalar('Choice.name', name, (str,), True, False, False)
         _guard_scalar('Choice.label', label, (str,), False, True, False)
         _guard_scalar('Choice.disabled', disabled, (bool,), False, True, False)
         self.name = name
@@ -1574,7 +1574,7 @@ class Choice:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Choice.name', self.name, (str,), False, False, False)
+        _guard_scalar('Choice.name', self.name, (str,), True, False, False)
         _guard_scalar('Choice.label', self.label, (str,), False, True, False)
         _guard_scalar('Choice.disabled', self.disabled, (bool,), False, True, False)
         return _dump(
@@ -1587,7 +1587,7 @@ class Choice:
     def load(__d: Dict) -> 'Choice':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Choice.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Choice.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Choice.label', __d_label, (str,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
@@ -1625,7 +1625,7 @@ class ChoiceGroup:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('ChoiceGroup.name', name, (str,), False, False, False)
+        _guard_scalar('ChoiceGroup.name', name, (str,), True, False, False)
         _guard_scalar('ChoiceGroup.label', label, (str,), False, True, False)
         _guard_scalar('ChoiceGroup.value', value, (str,), False, True, False)
         _guard_vector('ChoiceGroup.choices', choices, (Choice,), False, True, False)
@@ -1652,7 +1652,7 @@ class ChoiceGroup:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('ChoiceGroup.name', self.name, (str,), False, False, False)
+        _guard_scalar('ChoiceGroup.name', self.name, (str,), True, False, False)
         _guard_scalar('ChoiceGroup.label', self.label, (str,), False, True, False)
         _guard_scalar('ChoiceGroup.value', self.value, (str,), False, True, False)
         _guard_vector('ChoiceGroup.choices', self.choices, (Choice,), False, True, False)
@@ -1675,7 +1675,7 @@ class ChoiceGroup:
     def load(__d: Dict) -> 'ChoiceGroup':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('ChoiceGroup.name', __d_name, (str,), False, False, False)
+        _guard_scalar('ChoiceGroup.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('ChoiceGroup.label', __d_label, (str,), False, True, False)
         __d_value: Any = __d.get('value')
@@ -1725,7 +1725,7 @@ class Checklist:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Checklist.name', name, (str,), False, False, False)
+        _guard_scalar('Checklist.name', name, (str,), True, False, False)
         _guard_scalar('Checklist.label', label, (str,), False, True, False)
         _guard_vector('Checklist.values', values, (str,), False, True, False)
         _guard_vector('Checklist.choices', choices, (Choice,), False, True, False)
@@ -1749,7 +1749,7 @@ class Checklist:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Checklist.name', self.name, (str,), False, False, False)
+        _guard_scalar('Checklist.name', self.name, (str,), True, False, False)
         _guard_scalar('Checklist.label', self.label, (str,), False, True, False)
         _guard_vector('Checklist.values', self.values, (str,), False, True, False)
         _guard_vector('Checklist.choices', self.choices, (Choice,), False, True, False)
@@ -1770,7 +1770,7 @@ class Checklist:
     def load(__d: Dict) -> 'Checklist':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Checklist.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Checklist.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Checklist.label', __d_label, (str,), False, True, False)
         __d_values: Any = __d.get('values')
@@ -1828,7 +1828,7 @@ class Dropdown:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Dropdown.name', name, (str,), False, False, False)
+        _guard_scalar('Dropdown.name', name, (str,), True, False, False)
         _guard_scalar('Dropdown.label', label, (str,), False, True, False)
         _guard_scalar('Dropdown.placeholder', placeholder, (str,), False, True, False)
         _guard_scalar('Dropdown.value', value, (str,), False, True, False)
@@ -1864,7 +1864,7 @@ class Dropdown:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Dropdown.name', self.name, (str,), False, False, False)
+        _guard_scalar('Dropdown.name', self.name, (str,), True, False, False)
         _guard_scalar('Dropdown.label', self.label, (str,), False, True, False)
         _guard_scalar('Dropdown.placeholder', self.placeholder, (str,), False, True, False)
         _guard_scalar('Dropdown.value', self.value, (str,), False, True, False)
@@ -1893,7 +1893,7 @@ class Dropdown:
     def load(__d: Dict) -> 'Dropdown':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Dropdown.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Dropdown.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Dropdown.label', __d_label, (str,), False, True, False)
         __d_placeholder: Any = __d.get('placeholder')
@@ -1965,7 +1965,7 @@ class Combobox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Combobox.name', name, (str,), False, False, False)
+        _guard_scalar('Combobox.name', name, (str,), True, False, False)
         _guard_scalar('Combobox.label', label, (str,), False, True, False)
         _guard_scalar('Combobox.placeholder', placeholder, (str,), False, True, False)
         _guard_scalar('Combobox.value', value, (str,), False, True, False)
@@ -1995,7 +1995,7 @@ class Combobox:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Combobox.name', self.name, (str,), False, False, False)
+        _guard_scalar('Combobox.name', self.name, (str,), True, False, False)
         _guard_scalar('Combobox.label', self.label, (str,), False, True, False)
         _guard_scalar('Combobox.placeholder', self.placeholder, (str,), False, True, False)
         _guard_scalar('Combobox.value', self.value, (str,), False, True, False)
@@ -2020,7 +2020,7 @@ class Combobox:
     def load(__d: Dict) -> 'Combobox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Combobox.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Combobox.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Combobox.label', __d_label, (str,), False, True, False)
         __d_placeholder: Any = __d.get('placeholder')
@@ -2088,7 +2088,7 @@ class Slider:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Slider.name', name, (str,), False, False, False)
+        _guard_scalar('Slider.name', name, (str,), True, False, False)
         _guard_scalar('Slider.label', label, (str,), False, True, False)
         _guard_scalar('Slider.min', min, (float, int,), False, True, False)
         _guard_scalar('Slider.max', max, (float, int,), False, True, False)
@@ -2121,7 +2121,7 @@ class Slider:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Slider.name', self.name, (str,), False, False, False)
+        _guard_scalar('Slider.name', self.name, (str,), True, False, False)
         _guard_scalar('Slider.label', self.label, (str,), False, True, False)
         _guard_scalar('Slider.min', self.min, (float, int,), False, True, False)
         _guard_scalar('Slider.max', self.max, (float, int,), False, True, False)
@@ -2148,7 +2148,7 @@ class Slider:
     def load(__d: Dict) -> 'Slider':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Slider.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Slider.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Slider.label', __d_label, (str,), False, True, False)
         __d_min: Any = __d.get('min')
@@ -2209,7 +2209,7 @@ class Spinbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Spinbox.name', name, (str,), False, False, False)
+        _guard_scalar('Spinbox.name', name, (str,), True, False, False)
         _guard_scalar('Spinbox.label', label, (str,), False, True, False)
         _guard_scalar('Spinbox.min', min, (float, int,), False, True, False)
         _guard_scalar('Spinbox.max', max, (float, int,), False, True, False)
@@ -2239,7 +2239,7 @@ class Spinbox:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Spinbox.name', self.name, (str,), False, False, False)
+        _guard_scalar('Spinbox.name', self.name, (str,), True, False, False)
         _guard_scalar('Spinbox.label', self.label, (str,), False, True, False)
         _guard_scalar('Spinbox.min', self.min, (float, int,), False, True, False)
         _guard_scalar('Spinbox.max', self.max, (float, int,), False, True, False)
@@ -2264,7 +2264,7 @@ class Spinbox:
     def load(__d: Dict) -> 'Spinbox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Spinbox.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Spinbox.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Spinbox.label', __d_label, (str,), False, True, False)
         __d_min: Any = __d.get('min')
@@ -2319,7 +2319,7 @@ class DatePicker:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('DatePicker.name', name, (str,), False, False, False)
+        _guard_scalar('DatePicker.name', name, (str,), True, False, False)
         _guard_scalar('DatePicker.label', label, (str,), False, True, False)
         _guard_scalar('DatePicker.placeholder', placeholder, (str,), False, True, False)
         _guard_scalar('DatePicker.value', value, (str,), False, True, False)
@@ -2346,7 +2346,7 @@ class DatePicker:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('DatePicker.name', self.name, (str,), False, False, False)
+        _guard_scalar('DatePicker.name', self.name, (str,), True, False, False)
         _guard_scalar('DatePicker.label', self.label, (str,), False, True, False)
         _guard_scalar('DatePicker.placeholder', self.placeholder, (str,), False, True, False)
         _guard_scalar('DatePicker.value', self.value, (str,), False, True, False)
@@ -2369,7 +2369,7 @@ class DatePicker:
     def load(__d: Dict) -> 'DatePicker':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('DatePicker.name', __d_name, (str,), False, False, False)
+        _guard_scalar('DatePicker.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('DatePicker.label', __d_label, (str,), False, True, False)
         __d_placeholder: Any = __d.get('placeholder')
@@ -2420,7 +2420,7 @@ class ColorPicker:
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('ColorPicker.name', name, (str,), False, False, False)
+        _guard_scalar('ColorPicker.name', name, (str,), True, False, False)
         _guard_scalar('ColorPicker.label', label, (str,), False, True, False)
         _guard_scalar('ColorPicker.value', value, (str,), False, True, False)
         _guard_vector('ColorPicker.choices', choices, (str,), False, True, False)
@@ -2444,7 +2444,7 @@ class ColorPicker:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('ColorPicker.name', self.name, (str,), False, False, False)
+        _guard_scalar('ColorPicker.name', self.name, (str,), True, False, False)
         _guard_scalar('ColorPicker.label', self.label, (str,), False, True, False)
         _guard_scalar('ColorPicker.value', self.value, (str,), False, True, False)
         _guard_vector('ColorPicker.choices', self.choices, (str,), False, True, False)
@@ -2465,7 +2465,7 @@ class ColorPicker:
     def load(__d: Dict) -> 'ColorPicker':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('ColorPicker.name', __d_name, (str,), False, False, False)
+        _guard_scalar('ColorPicker.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('ColorPicker.label', __d_label, (str,), False, True, False)
         __d_value: Any = __d.get('value')
@@ -2526,7 +2526,7 @@ class Button:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Button.name', name, (str,), False, False, False)
+        _guard_scalar('Button.name', name, (str,), True, False, False)
         _guard_scalar('Button.label', label, (str,), False, True, False)
         _guard_scalar('Button.caption', caption, (str,), False, True, False)
         _guard_scalar('Button.value', value, (str,), False, True, False)
@@ -2556,7 +2556,7 @@ class Button:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Button.name', self.name, (str,), False, False, False)
+        _guard_scalar('Button.name', self.name, (str,), True, False, False)
         _guard_scalar('Button.label', self.label, (str,), False, True, False)
         _guard_scalar('Button.caption', self.caption, (str,), False, True, False)
         _guard_scalar('Button.value', self.value, (str,), False, True, False)
@@ -2581,7 +2581,7 @@ class Button:
     def load(__d: Dict) -> 'Button':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Button.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Button.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Button.label', __d_label, (str,), False, True, False)
         __d_caption: Any = __d.get('caption')
@@ -2706,7 +2706,7 @@ class FileUpload:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('FileUpload.name', name, (str,), False, False, False)
+        _guard_scalar('FileUpload.name', name, (str,), True, False, False)
         _guard_scalar('FileUpload.label', label, (str,), False, True, False)
         _guard_scalar('FileUpload.multiple', multiple, (bool,), False, True, False)
         _guard_vector('FileUpload.file_extensions', file_extensions, (str,), False, True, False)
@@ -2736,7 +2736,7 @@ class FileUpload:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('FileUpload.name', self.name, (str,), False, False, False)
+        _guard_scalar('FileUpload.name', self.name, (str,), True, False, False)
         _guard_scalar('FileUpload.label', self.label, (str,), False, True, False)
         _guard_scalar('FileUpload.multiple', self.multiple, (bool,), False, True, False)
         _guard_vector('FileUpload.file_extensions', self.file_extensions, (str,), False, True, False)
@@ -2761,7 +2761,7 @@ class FileUpload:
     def load(__d: Dict) -> 'FileUpload':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('FileUpload.name', __d_name, (str,), False, False, False)
+        _guard_scalar('FileUpload.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('FileUpload.label', __d_label, (str,), False, True, False)
         __d_multiple: Any = __d.get('multiple')
@@ -2944,7 +2944,7 @@ class TableColumn:
             data_type: Optional[str] = None,
             cell_type: Optional[TableCellType] = None,
     ):
-        _guard_scalar('TableColumn.name', name, (str,), False, False, False)
+        _guard_scalar('TableColumn.name', name, (str,), True, False, False)
         _guard_scalar('TableColumn.label', label, (str,), False, False, False)
         _guard_scalar('TableColumn.min_width', min_width, (str,), False, True, False)
         _guard_scalar('TableColumn.max_width', max_width, (str,), False, True, False)
@@ -2977,7 +2977,7 @@ class TableColumn:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('TableColumn.name', self.name, (str,), False, False, False)
+        _guard_scalar('TableColumn.name', self.name, (str,), True, False, False)
         _guard_scalar('TableColumn.label', self.label, (str,), False, False, False)
         _guard_scalar('TableColumn.min_width', self.min_width, (str,), False, True, False)
         _guard_scalar('TableColumn.max_width', self.max_width, (str,), False, True, False)
@@ -3004,7 +3004,7 @@ class TableColumn:
     def load(__d: Dict) -> 'TableColumn':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('TableColumn.name', __d_name, (str,), False, False, False)
+        _guard_scalar('TableColumn.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('TableColumn.label', __d_label, (str,), False, False, False)
         __d_min_width: Any = __d.get('min_width')
@@ -3055,7 +3055,7 @@ class TableRow:
             name: str,
             cells: List[str],
     ):
-        _guard_scalar('TableRow.name', name, (str,), False, False, False)
+        _guard_scalar('TableRow.name', name, (str,), True, False, False)
         _guard_vector('TableRow.cells', cells, (str,), False, False, False)
         self.name = name
         """An identifying name for this row."""
@@ -3064,7 +3064,7 @@ class TableRow:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('TableRow.name', self.name, (str,), False, False, False)
+        _guard_scalar('TableRow.name', self.name, (str,), True, False, False)
         _guard_vector('TableRow.cells', self.cells, (str,), False, False, False)
         return _dump(
             name=self.name,
@@ -3075,7 +3075,7 @@ class TableRow:
     def load(__d: Dict) -> 'TableRow':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('TableRow.name', __d_name, (str,), False, False, False)
+        _guard_scalar('TableRow.name', __d_name, (str,), True, False, False)
         __d_cells: Any = __d.get('cells')
         _guard_vector('TableRow.cells', __d_cells, (str,), False, False, False)
         name: str = __d_name
@@ -3117,7 +3117,7 @@ class Table:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Table.name', name, (str,), False, False, False)
+        _guard_scalar('Table.name', name, (str,), True, False, False)
         _guard_vector('Table.columns', columns, (TableColumn,), False, False, False)
         _guard_vector('Table.rows', rows, (TableRow,), False, False, False)
         _guard_scalar('Table.multiple', multiple, (bool,), False, True, False)
@@ -3153,7 +3153,7 @@ class Table:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Table.name', self.name, (str,), False, False, False)
+        _guard_scalar('Table.name', self.name, (str,), True, False, False)
         _guard_vector('Table.columns', self.columns, (TableColumn,), False, False, False)
         _guard_vector('Table.rows', self.rows, (TableRow,), False, False, False)
         _guard_scalar('Table.multiple', self.multiple, (bool,), False, True, False)
@@ -3182,7 +3182,7 @@ class Table:
     def load(__d: Dict) -> 'Table':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Table.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Table.name', __d_name, (str,), True, False, False)
         __d_columns: Any = __d.get('columns')
         _guard_vector('Table.columns', __d_columns, (TableColumn,), False, False, False)
         __d_rows: Any = __d.get('rows')
@@ -3351,7 +3351,7 @@ class Tab:
             label: Optional[str] = None,
             icon: Optional[str] = None,
     ):
-        _guard_scalar('Tab.name', name, (str,), False, False, False)
+        _guard_scalar('Tab.name', name, (str,), True, False, False)
         _guard_scalar('Tab.label', label, (str,), False, True, False)
         _guard_scalar('Tab.icon', icon, (str,), False, True, False)
         self.name = name
@@ -3363,7 +3363,7 @@ class Tab:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Tab.name', self.name, (str,), False, False, False)
+        _guard_scalar('Tab.name', self.name, (str,), True, False, False)
         _guard_scalar('Tab.label', self.label, (str,), False, True, False)
         _guard_scalar('Tab.icon', self.icon, (str,), False, True, False)
         return _dump(
@@ -3376,7 +3376,7 @@ class Tab:
     def load(__d: Dict) -> 'Tab':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Tab.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Tab.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Tab.label', __d_label, (str,), False, True, False)
         __d_icon: Any = __d.get('icon')
@@ -3402,7 +3402,7 @@ class Tabs:
             visible: Optional[bool] = None,
             link: Optional[bool] = None,
     ):
-        _guard_scalar('Tabs.name', name, (str,), False, False, False)
+        _guard_scalar('Tabs.name', name, (str,), True, False, False)
         _guard_scalar('Tabs.value', value, (str,), False, True, False)
         _guard_vector('Tabs.items', items, (Tab,), False, True, False)
         _guard_scalar('Tabs.visible', visible, (bool,), False, True, False)
@@ -3420,7 +3420,7 @@ class Tabs:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Tabs.name', self.name, (str,), False, False, False)
+        _guard_scalar('Tabs.name', self.name, (str,), True, False, False)
         _guard_scalar('Tabs.value', self.value, (str,), False, True, False)
         _guard_vector('Tabs.items', self.items, (Tab,), False, True, False)
         _guard_scalar('Tabs.visible', self.visible, (bool,), False, True, False)
@@ -3437,7 +3437,7 @@ class Tabs:
     def load(__d: Dict) -> 'Tabs':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Tabs.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Tabs.name', __d_name, (str,), True, False, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('Tabs.value', __d_value, (str,), False, True, False)
         __d_items: Any = __d.get('items')
@@ -3732,7 +3732,7 @@ class Picker:
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Picker.name', name, (str,), False, False, False)
+        _guard_scalar('Picker.name', name, (str,), True, False, False)
         _guard_vector('Picker.choices', choices, (Choice,), False, False, False)
         _guard_scalar('Picker.label', label, (str,), False, True, False)
         _guard_vector('Picker.values', values, (str,), False, True, False)
@@ -3762,7 +3762,7 @@ class Picker:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Picker.name', self.name, (str,), False, False, False)
+        _guard_scalar('Picker.name', self.name, (str,), True, False, False)
         _guard_vector('Picker.choices', self.choices, (Choice,), False, False, False)
         _guard_scalar('Picker.label', self.label, (str,), False, True, False)
         _guard_vector('Picker.values', self.values, (str,), False, True, False)
@@ -3787,7 +3787,7 @@ class Picker:
     def load(__d: Dict) -> 'Picker':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Picker.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Picker.name', __d_name, (str,), True, False, False)
         __d_choices: Any = __d.get('choices')
         _guard_vector('Picker.choices', __d_choices, (Choice,), False, False, False)
         __d_label: Any = __d.get('label')
@@ -3847,7 +3847,7 @@ class RangeSlider:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('RangeSlider.name', name, (str,), False, False, False)
+        _guard_scalar('RangeSlider.name', name, (str,), True, False, False)
         _guard_scalar('RangeSlider.label', label, (str,), False, True, False)
         _guard_scalar('RangeSlider.min', min, (float, int,), False, True, False)
         _guard_scalar('RangeSlider.max', max, (float, int,), False, True, False)
@@ -3883,7 +3883,7 @@ class RangeSlider:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('RangeSlider.name', self.name, (str,), False, False, False)
+        _guard_scalar('RangeSlider.name', self.name, (str,), True, False, False)
         _guard_scalar('RangeSlider.label', self.label, (str,), False, True, False)
         _guard_scalar('RangeSlider.min', self.min, (float, int,), False, True, False)
         _guard_scalar('RangeSlider.max', self.max, (float, int,), False, True, False)
@@ -3912,7 +3912,7 @@ class RangeSlider:
     def load(__d: Dict) -> 'RangeSlider':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('RangeSlider.name', __d_name, (str,), False, False, False)
+        _guard_scalar('RangeSlider.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('RangeSlider.label', __d_label, (str,), False, True, False)
         __d_min: Any = __d.get('min')
@@ -4019,7 +4019,7 @@ class Stepper:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        _guard_scalar('Stepper.name', name, (str,), False, False, False)
+        _guard_scalar('Stepper.name', name, (str,), True, False, False)
         _guard_vector('Stepper.items', items, (Step,), False, False, False)
         _guard_scalar('Stepper.visible', visible, (bool,), False, True, False)
         _guard_scalar('Stepper.tooltip', tooltip, (str,), False, True, False)
@@ -4034,7 +4034,7 @@ class Stepper:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Stepper.name', self.name, (str,), False, False, False)
+        _guard_scalar('Stepper.name', self.name, (str,), True, False, False)
         _guard_vector('Stepper.items', self.items, (Step,), False, False, False)
         _guard_scalar('Stepper.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Stepper.tooltip', self.tooltip, (str,), False, True, False)
@@ -4049,7 +4049,7 @@ class Stepper:
     def load(__d: Dict) -> 'Stepper':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Stepper.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Stepper.name', __d_name, (str,), True, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('Stepper.items', __d_items, (Step,), False, False, False)
         __d_visible: Any = __d.get('visible')
@@ -5789,7 +5789,7 @@ class NavItem:
             icon: Optional[str] = None,
             disabled: Optional[bool] = None,
     ):
-        _guard_scalar('NavItem.name', name, (str,), False, False, False)
+        _guard_scalar('NavItem.name', name, (str,), True, False, False)
         _guard_scalar('NavItem.label', label, (str,), False, False, False)
         _guard_scalar('NavItem.icon', icon, (str,), False, True, False)
         _guard_scalar('NavItem.disabled', disabled, (bool,), False, True, False)
@@ -5804,7 +5804,7 @@ class NavItem:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('NavItem.name', self.name, (str,), False, False, False)
+        _guard_scalar('NavItem.name', self.name, (str,), True, False, False)
         _guard_scalar('NavItem.label', self.label, (str,), False, False, False)
         _guard_scalar('NavItem.icon', self.icon, (str,), False, True, False)
         _guard_scalar('NavItem.disabled', self.disabled, (bool,), False, True, False)
@@ -5819,7 +5819,7 @@ class NavItem:
     def load(__d: Dict) -> 'NavItem':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('NavItem.name', __d_name, (str,), False, False, False)
+        _guard_scalar('NavItem.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('NavItem.label', __d_label, (str,), False, False, False)
         __d_icon: Any = __d.get('icon')
@@ -6617,7 +6617,7 @@ class Zone:
             wrap: Optional[str] = None,
             zones: Optional[List['Zone']] = None,
     ):
-        _guard_scalar('Zone.name', name, (str,), False, False, False)
+        _guard_scalar('Zone.name', name, (str,), True, False, False)
         _guard_scalar('Zone.size', size, (str,), False, True, False)
         _guard_enum('Zone.direction', direction, _ZoneDirection, True)
         _guard_enum('Zone.justify', justify, _ZoneJustify, True)
@@ -6641,7 +6641,7 @@ class Zone:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Zone.name', self.name, (str,), False, False, False)
+        _guard_scalar('Zone.name', self.name, (str,), True, False, False)
         _guard_scalar('Zone.size', self.size, (str,), False, True, False)
         _guard_enum('Zone.direction', self.direction, _ZoneDirection, True)
         _guard_enum('Zone.justify', self.justify, _ZoneJustify, True)
@@ -6662,7 +6662,7 @@ class Zone:
     def load(__d: Dict) -> 'Zone':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Zone.name', __d_name, (str,), False, False, False)
+        _guard_scalar('Zone.name', __d_name, (str,), True, False, False)
         __d_size: Any = __d.get('size')
         _guard_scalar('Zone.size', __d_size, (str,), False, True, False)
         __d_direction: Any = __d.get('direction')

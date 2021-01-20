@@ -14,9 +14,9 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { bond, S, B, U } from './qd'
 import { stylesheet } from 'typestyle'
-import { getTheme, rem, displayMixin } from './theme'
+import { B, bond, Id, S, U } from './qd'
+import { displayMixin, getTheme, rem } from './theme'
 
 /**
  * Create a step for a stepper.
@@ -36,7 +36,7 @@ interface Step {
 */
 export interface Stepper {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** The sequence of steps to be displayed. */
   items: Step[]
   /** True if the component should be visible. Defaults to true. */

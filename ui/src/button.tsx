@@ -16,9 +16,9 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { B, bond, S, qd, Dict } from './qd'
-import { XToolTip } from './tooltip'
+import { B, bond, Dict, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
+import { XToolTip } from './tooltip'
 
 /**
  * Create a button.
@@ -40,7 +40,7 @@ import { displayMixin } from './theme'
  */
 export interface Button {
   /** An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked. */
-  name: S
+  name: Id
   /** The text displayed on the button. */
   label?: S
   /** The caption displayed below the label. Setting a caption renders a compound button. */

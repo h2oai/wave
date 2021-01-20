@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import * as Fluent from '@fluentui/react'
-import { bond, box, S, qd, B, U, F } from './qd'
+import React from 'react'
 import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import { stylesheet } from 'typestyle'
-import { palette, padding, displayMixin } from './theme'
+import { B, bond, box, F, Id, qd, S, U } from './qd'
+import { displayMixin, padding, palette } from './theme'
 
 const
   css = stylesheet({
@@ -82,7 +82,7 @@ const
 */
 export interface RangeSlider {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** The minimum value of the slider. Defaults to 0. */

@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, F, S, qd } from './qd'
+import { B, bond, F, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -25,7 +25,7 @@ import { displayMixin } from './theme'
  */
 export interface Spinbox {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** The minimum value of the spinbox. */

@@ -14,11 +14,11 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, S, qd, box, Dict, U } from './qd'
 import { stylesheet } from 'typestyle'
-import { rem, displayMixin } from './theme'
-import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
+import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
+import { B, bond, box, Dict, Id, qd, S, U } from './qd'
+import { displayMixin, rem } from './theme'
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {
@@ -29,7 +29,7 @@ interface TableCellType {
 /** Create a table column. */
 interface TableColumn {
   /** An identifying name for this column. */
-  name: S
+  name: Id
   /** The text displayed on the column header. */
   label: S
   /** The minimum width of this column, e.g. '50px'. Only `px` units are supported at this time. */
@@ -53,7 +53,7 @@ interface TableColumn {
 /** Create a table row. */
 interface TableRow {
   /** An identifying name for this row. */
-  name: S
+  name: Id
   /** The cells in this row (displayed left to right). */
   cells: S[]
 }
@@ -78,7 +78,7 @@ interface TableRow {
  */
 export interface Table {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** The columns in this table. */
   columns: TableColumn[]
   /** The rows in this table. */

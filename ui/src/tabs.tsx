@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { bond, S, qd, B } from './qd'
+import { B, bond, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -23,7 +23,7 @@ import { displayMixin } from './theme'
  */
 export interface Tab {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** The text displayed on the tab. */
   label?: S
   /** The icon displayed on the tab. */
@@ -35,7 +35,7 @@ export interface Tab {
  */
 export interface Tabs {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** The name of the tab to select. */
   value?: S
   /** The tabs in this tab bar. */

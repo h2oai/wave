@@ -15,8 +15,8 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { B, bond, box, S, qd, U, xid, F } from './qd'
-import { getTheme, centerMixin, dashed, clas, displayMixin, padding } from './theme'
+import { B, bond, box, F, Id, qd, S, U, xid } from './qd'
+import { centerMixin, clas, dashed, displayMixin, getTheme, padding } from './theme'
 
 /**
  * Create a file upload component.
@@ -24,7 +24,7 @@ import { getTheme, centerMixin, dashed, clas, displayMixin, padding } from './th
  */
 export interface FileUpload {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** True if the component should allow multiple files to be uploaded. */

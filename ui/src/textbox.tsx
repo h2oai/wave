@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, debounce, qd, S } from './qd'
+import { B, bond, debounce, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -26,7 +26,7 @@ import { displayMixin } from './theme'
 */
 export interface Textbox {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** The text displayed above the field. */
   label?: S
   /** A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message. */

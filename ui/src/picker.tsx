@@ -14,8 +14,8 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { bond, S, U, B, qd, box } from './qd'
 import { Choice } from './choice_group'
+import { B, bond, box, Id, qd, S, U } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -25,7 +25,7 @@ import { displayMixin } from './theme'
 */
 export interface Picker {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** The choices to be presented. */
   choices: Choice[]
   /** Text to be displayed above the component. */

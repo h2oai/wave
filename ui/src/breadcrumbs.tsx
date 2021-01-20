@@ -16,12 +16,12 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { bond, Card, qd, S } from './qd'
+import { bond, Card, Id, qd, S } from './qd'
 
 /** Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`. */
 interface Breadcrumb {
   /** The name of this item. Prefix the name with a '#' to trigger hash-change navigation. */
-  name: S
+  name: Id
   /** The label to display. */
   label: S
 }

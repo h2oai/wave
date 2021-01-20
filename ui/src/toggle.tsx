@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, S, qd } from './qd'
+import { B, bond, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -29,7 +29,7 @@ import { displayMixin } from './theme'
  */
 export interface Toggle {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** True if selected, False if unselected. */

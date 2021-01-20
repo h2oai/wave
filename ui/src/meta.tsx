@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import React from 'react'
+import { Dialog } from './dialog'
 import { cards } from './layout'
 import { showNotification } from './notification'
-import { bond, box, Card, qd, S, U } from './qd'
-import { Dialog } from './dialog'
+import { bond, box, Card, Id, qd, S, U } from './qd'
 
 /**
  * Represents the layout structure for a page.
@@ -56,9 +56,9 @@ export interface Layout {
  */
 export interface Zone {
   /** An identifying name for this zone. */
-  name: S,
+  name: Id
   /** The size of this zone. */
-  size?: S,
+  size?: S
   /** Layout direction. */
   direction?: 'row' | 'column'
   /** Layout strategy for main axis. */

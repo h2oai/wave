@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
-import { B, bond, box, S, qd } from './qd'
+import { B, bond, box, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -26,7 +26,7 @@ import { displayMixin } from './theme'
  */
 export interface Expander {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** The text displayed on the expander. */
   label?: S
   /** True if expanded, False if collapsed. */

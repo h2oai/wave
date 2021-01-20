@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, S, qd, U } from './qd'
+import { B, bond, Id, qd, S, U } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -24,7 +24,7 @@ import { displayMixin } from './theme'
  */
 export interface DatePicker {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** A string that provides a brief hint to the user as to what kind of information is expected in the field. */

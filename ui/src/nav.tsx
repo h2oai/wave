@@ -15,12 +15,12 @@
 import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
 import React from 'react'
 import { CardEffect, cards } from './layout'
-import { bond, Card, S, qd, B } from './qd'
+import { B, bond, Card, Id, qd, S } from './qd'
 
 /** Create a navigation item. */
 export interface NavItem {
   /** The name of this item. Prefix the name with a '#' to trigger hash-change navigation. */
-  name: S
+  name: Id
   /** The label to display. */
   label: S
   /** An optional icon to display next to the label. */

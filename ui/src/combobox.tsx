@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, box, S, qd } from './qd'
+import { B, bond, box, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -32,7 +32,7 @@ import { displayMixin } from './theme'
  */
 export interface Combobox {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** A string that provides a brief hint to the user as to what kind of information is expected in the field. */
