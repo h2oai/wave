@@ -288,6 +288,7 @@ const
     }
   },
   pyTypeMappings: Dict<S> = {
+    Id: 'str',
     S: 'str',
     F: 'float',
     I: 'int',
@@ -355,7 +356,8 @@ const
       genComments = (comments: S[], padding: S): S => comments.map(c => (padding + c).trimRight()).join('\n').trim(),
       mapValidationType = (t: S): S[] | null => {
         switch (t) {
-          case 'S': // TODO non-empty string type
+          case 'Id':
+          case 'S':
             return ['str']
           case 'F':
             return ['float', 'int'] // allow ints, since JS doesn't care.
@@ -372,6 +374,7 @@ const
         }
         return [knownTypes[t].name]
       },
+      toPyBool = (b: B) => b ? 'True' : 'False',
       guardValue = (t: Type, m: Member, variable: S) => {
         switch (m.t) {
           case MemberT.Singular:
@@ -380,7 +383,7 @@ const
               const vts = mapValidationType(m.typeName)
               if (vts) {
                 const vt = vts.map(t => `${t}`).join(', ')
-                p(`        _guard_${m.t === MemberT.Singular ? 'scalar' : 'vector'}('${t.name}.${m.name}', ${variable}, (${vt},), ${m.isOptional ? 'True' : 'False'}, ${m.isPacked ? 'True' : 'False'})`)
+                p(`        _guard_${m.t === MemberT.Singular ? 'scalar' : 'vector'}('${t.name}.${m.name}', ${variable}, (${vt},), ${toPyBool(m.typeName === 'Id')}, ${toPyBool(m.isOptional)}, ${toPyBool(m.isPacked)})`)
               }
             }
             break
@@ -512,24 +515,24 @@ const
         p('def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}')
         p('')
         p('')
-        p('def _guard_scalar(name: str, value, types, optional: bool, packed: bool):')
+        p('def _guard_scalar(name: str, value: Any, types, non_empty: bool, optional: bool, packed: bool):')
         p('    if optional and (value is None):')
         p('        return')
         p('    if packed and isinstance(value, str):')
         p('        return')
-        p('    if isinstance(value, types):')
-        p('        return')
-        p("    raise ValueError(f'{name}: want one of {types}, got {type(value)}')")
+        p('    if not isinstance(value, types):')
+        p("        raise ValueError(f'{name}: want one of {types}, got {type(value)}')")
+        p('    if non_empty and len(value) == 0:')
+        p("        raise ValueError(f'{name}: must be non-empty')")
         p('')
         p('')
-        p('def _guard_vector(name: str, values, types, optional: bool, packed: bool):')
+        p('def _guard_vector(name: str, values: Any, types, non_empty: bool, optional: bool, packed: bool):')
         p('    if optional and (values is None):')
         p('        return')
         p('    if packed and isinstance(values, str):')
         p('        return')
         p('    for value in values:')
-        p('        if not isinstance(value, types):')
-        p("            raise ValueError(f'{name}: want one of {types}, got {type(value)}')")
+        p("        _guard_scalar(f'{name} element', value, types, False, non_empty, False)")
         p('')
         p('')
         p('def _guard_enum(name: str, value: str, values: List[str], optional: bool):')
@@ -623,6 +626,7 @@ const
     return [genClasses(), genAPIs()]
   },
   rTypeMappings: Dict<S> = {
+    Id: 'character',
     S: 'character',
     F: 'numeric',
     I: 'numeric',
@@ -700,6 +704,7 @@ const
           switch (m.t) {
             case MemberT.Singular:
               switch (m.typeName) {
+                case 'Id':
                 case 'S':
                 case 'F':
                 case 'I':
@@ -719,6 +724,7 @@ const
               break
             case MemberT.Repeated:
               switch (m.typeName) {
+                case 'Id':
                 case 'S':
                 case 'F':
                 case 'I':

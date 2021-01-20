@@ -194,6 +194,7 @@ export interface Rect extends Size { left: U, top: U }
 
 export interface Dict<T> { [key: string]: T } // generic object
 
+export type Id = S // Identifier or non-empty string (marker type)
 export type Rec = Dict<Prim | Prim[]> // Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type.
 export type Recs = Rec[]
 export type Packed<T> = T | S
