@@ -63,11 +63,7 @@ class Breadcrumb:
             name: str,
             label: str,
     ):
-        if name is None:
-            raise ValueError('Breadcrumb.name is required.')
         _guard_scalar('Breadcrumb.name', name, (str,), False, False)
-        if label is None:
-            raise ValueError('Breadcrumb.label is required.')
         _guard_scalar('Breadcrumb.label', label, (str,), False, False)
         self.name = name
         """The name of this item. Prefix the name with a '#' to trigger hash-change navigation."""
@@ -76,11 +72,7 @@ class Breadcrumb:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Breadcrumb.name is required.')
         _guard_scalar('Breadcrumb.name', self.name, (str,), False, False)
-        if self.label is None:
-            raise ValueError('Breadcrumb.label is required.')
         _guard_scalar('Breadcrumb.label', self.label, (str,), False, False)
         return _dump(
             name=self.name,
@@ -91,12 +83,8 @@ class Breadcrumb:
     def load(__d: Dict) -> 'Breadcrumb':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Breadcrumb.name is required.')
         _guard_scalar('Breadcrumb.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Breadcrumb.label is required.')
         _guard_scalar('Breadcrumb.label', __d_label, (str,), False, False)
         name: str = __d_name
         label: str = __d_label
@@ -121,8 +109,6 @@ class Command:
             value: Optional[str] = None,
             data: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Command.name is required.')
         _guard_scalar('Command.name', name, (str,), False, False)
         _guard_scalar('Command.label', label, (str,), True, False)
         _guard_scalar('Command.caption', caption, (str,), True, False)
@@ -147,8 +133,6 @@ class Command:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Command.name is required.')
         _guard_scalar('Command.name', self.name, (str,), False, False)
         _guard_scalar('Command.label', self.label, (str,), True, False)
         _guard_scalar('Command.caption', self.caption, (str,), True, False)
@@ -170,8 +154,6 @@ class Command:
     def load(__d: Dict) -> 'Command':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Command.name is required.')
         _guard_scalar('Command.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Command.label', __d_label, (str,), True, False)
@@ -218,11 +200,7 @@ class BreadcrumbsCard:
             items: List[Breadcrumb],
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('BreadcrumbsCard.box is required.')
         _guard_scalar('BreadcrumbsCard.box', box, (str,), False, False)
-        if items is None:
-            raise ValueError('BreadcrumbsCard.items is required.')
         _guard_vector('BreadcrumbsCard.items', items, (Breadcrumb,), False, False)
         _guard_vector('BreadcrumbsCard.commands', commands, (Command,), True, False)
         self.box = box
@@ -234,11 +212,7 @@ class BreadcrumbsCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('BreadcrumbsCard.box is required.')
         _guard_scalar('BreadcrumbsCard.box', self.box, (str,), False, False)
-        if self.items is None:
-            raise ValueError('BreadcrumbsCard.items is required.')
         _guard_vector('BreadcrumbsCard.items', self.items, (Breadcrumb,), False, False)
         _guard_vector('BreadcrumbsCard.commands', self.commands, (Command,), True, False)
         return _dump(
@@ -252,12 +226,8 @@ class BreadcrumbsCard:
     def load(__d: Dict) -> 'BreadcrumbsCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('BreadcrumbsCard.box is required.')
         _guard_scalar('BreadcrumbsCard.box', __d_box, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('BreadcrumbsCard.items is required.')
         _guard_vector('BreadcrumbsCard.items', __d_items, (Breadcrumb,), False, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('BreadcrumbsCard.commands', __d_commands, (Command,), True, False)
@@ -329,16 +299,8 @@ class FlexCard:
             wrap: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('FlexCard.box is required.')
         _guard_scalar('FlexCard.box', box, (str,), False, False)
-        if item_view is None:
-            raise ValueError('FlexCard.item_view is required.')
         _guard_scalar('FlexCard.item_view', item_view, (str,), False, False)
-        if item_props is None:
-            raise ValueError('FlexCard.item_props is required.')
-        if data is None:
-            raise ValueError('FlexCard.data is required.')
         _guard_enum('FlexCard.direction', direction, _FlexCardDirection, True)
         _guard_enum('FlexCard.justify', justify, _FlexCardJustify, True)
         _guard_enum('FlexCard.align', align, _FlexCardAlign, True)
@@ -365,16 +327,8 @@ class FlexCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('FlexCard.box is required.')
         _guard_scalar('FlexCard.box', self.box, (str,), False, False)
-        if self.item_view is None:
-            raise ValueError('FlexCard.item_view is required.')
         _guard_scalar('FlexCard.item_view', self.item_view, (str,), False, False)
-        if self.item_props is None:
-            raise ValueError('FlexCard.item_props is required.')
-        if self.data is None:
-            raise ValueError('FlexCard.data is required.')
         _guard_enum('FlexCard.direction', self.direction, _FlexCardDirection, True)
         _guard_enum('FlexCard.justify', self.justify, _FlexCardJustify, True)
         _guard_enum('FlexCard.align', self.align, _FlexCardAlign, True)
@@ -397,19 +351,11 @@ class FlexCard:
     def load(__d: Dict) -> 'FlexCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('FlexCard.box is required.')
         _guard_scalar('FlexCard.box', __d_box, (str,), False, False)
         __d_item_view: Any = __d.get('item_view')
-        if __d_item_view is None:
-            raise ValueError('FlexCard.item_view is required.')
         _guard_scalar('FlexCard.item_view', __d_item_view, (str,), False, False)
         __d_item_props: Any = __d.get('item_props')
-        if __d_item_props is None:
-            raise ValueError('FlexCard.item_props is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('FlexCard.data is required.')
         __d_direction: Any = __d.get('direction')
         _guard_enum('FlexCard.direction', __d_direction, _FlexCardDirection, True)
         __d_justify: Any = __d.get('justify')
@@ -452,11 +398,7 @@ class FooterCard:
             caption: str,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('FooterCard.box is required.')
         _guard_scalar('FooterCard.box', box, (str,), False, False)
-        if caption is None:
-            raise ValueError('FooterCard.caption is required.')
         _guard_scalar('FooterCard.caption', caption, (str,), False, False)
         _guard_vector('FooterCard.commands', commands, (Command,), True, False)
         self.box = box
@@ -468,11 +410,7 @@ class FooterCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('FooterCard.box is required.')
         _guard_scalar('FooterCard.box', self.box, (str,), False, False)
-        if self.caption is None:
-            raise ValueError('FooterCard.caption is required.')
         _guard_scalar('FooterCard.caption', self.caption, (str,), False, False)
         _guard_vector('FooterCard.commands', self.commands, (Command,), True, False)
         return _dump(
@@ -486,12 +424,8 @@ class FooterCard:
     def load(__d: Dict) -> 'FooterCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('FooterCard.box is required.')
         _guard_scalar('FooterCard.box', __d_box, (str,), False, False)
         __d_caption: Any = __d.get('caption')
-        if __d_caption is None:
-            raise ValueError('FooterCard.caption is required.')
         _guard_scalar('FooterCard.caption', __d_caption, (str,), False, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('FooterCard.commands', __d_commands, (Command,), True, False)
@@ -527,8 +461,6 @@ class Text:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
-        if content is None:
-            raise ValueError('Text.content is required.')
         _guard_scalar('Text.content', content, (str,), False, False)
         _guard_enum('Text.size', size, _TextSize, True)
         _guard_scalar('Text.visible', visible, (bool,), True, False)
@@ -547,8 +479,6 @@ class Text:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.content is None:
-            raise ValueError('Text.content is required.')
         _guard_scalar('Text.content', self.content, (str,), False, False)
         _guard_enum('Text.size', self.size, _TextSize, True)
         _guard_scalar('Text.visible', self.visible, (bool,), True, False)
@@ -566,8 +496,6 @@ class Text:
     def load(__d: Dict) -> 'Text':
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('Text.content is required.')
         _guard_scalar('Text.content', __d_content, (str,), False, False)
         __d_size: Any = __d.get('size')
         _guard_enum('Text.size', __d_size, _TextSize, True)
@@ -602,8 +530,6 @@ class TextXl:
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
     ):
-        if content is None:
-            raise ValueError('TextXl.content is required.')
         _guard_scalar('TextXl.content', content, (str,), False, False)
         _guard_scalar('TextXl.visible', visible, (bool,), True, False)
         _guard_scalar('TextXl.tooltip', tooltip, (str,), True, False)
@@ -622,8 +548,6 @@ class TextXl:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.content is None:
-            raise ValueError('TextXl.content is required.')
         _guard_scalar('TextXl.content', self.content, (str,), False, False)
         _guard_scalar('TextXl.visible', self.visible, (bool,), True, False)
         _guard_scalar('TextXl.tooltip', self.tooltip, (str,), True, False)
@@ -641,8 +565,6 @@ class TextXl:
     def load(__d: Dict) -> 'TextXl':
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('TextXl.content is required.')
         _guard_scalar('TextXl.content', __d_content, (str,), False, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextXl.visible', __d_visible, (bool,), True, False)
@@ -677,8 +599,6 @@ class TextL:
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
     ):
-        if content is None:
-            raise ValueError('TextL.content is required.')
         _guard_scalar('TextL.content', content, (str,), False, False)
         _guard_scalar('TextL.visible', visible, (bool,), True, False)
         _guard_scalar('TextL.tooltip', tooltip, (str,), True, False)
@@ -697,8 +617,6 @@ class TextL:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.content is None:
-            raise ValueError('TextL.content is required.')
         _guard_scalar('TextL.content', self.content, (str,), False, False)
         _guard_scalar('TextL.visible', self.visible, (bool,), True, False)
         _guard_scalar('TextL.tooltip', self.tooltip, (str,), True, False)
@@ -716,8 +634,6 @@ class TextL:
     def load(__d: Dict) -> 'TextL':
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('TextL.content is required.')
         _guard_scalar('TextL.content', __d_content, (str,), False, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextL.visible', __d_visible, (bool,), True, False)
@@ -751,8 +667,6 @@ class TextM:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
-        if content is None:
-            raise ValueError('TextM.content is required.')
         _guard_scalar('TextM.content', content, (str,), False, False)
         _guard_scalar('TextM.visible', visible, (bool,), True, False)
         _guard_scalar('TextM.tooltip', tooltip, (str,), True, False)
@@ -768,8 +682,6 @@ class TextM:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.content is None:
-            raise ValueError('TextM.content is required.')
         _guard_scalar('TextM.content', self.content, (str,), False, False)
         _guard_scalar('TextM.visible', self.visible, (bool,), True, False)
         _guard_scalar('TextM.tooltip', self.tooltip, (str,), True, False)
@@ -785,8 +697,6 @@ class TextM:
     def load(__d: Dict) -> 'TextM':
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('TextM.content is required.')
         _guard_scalar('TextM.content', __d_content, (str,), False, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextM.visible', __d_visible, (bool,), True, False)
@@ -816,8 +726,6 @@ class TextS:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
-        if content is None:
-            raise ValueError('TextS.content is required.')
         _guard_scalar('TextS.content', content, (str,), False, False)
         _guard_scalar('TextS.visible', visible, (bool,), True, False)
         _guard_scalar('TextS.tooltip', tooltip, (str,), True, False)
@@ -833,8 +741,6 @@ class TextS:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.content is None:
-            raise ValueError('TextS.content is required.')
         _guard_scalar('TextS.content', self.content, (str,), False, False)
         _guard_scalar('TextS.visible', self.visible, (bool,), True, False)
         _guard_scalar('TextS.tooltip', self.tooltip, (str,), True, False)
@@ -850,8 +756,6 @@ class TextS:
     def load(__d: Dict) -> 'TextS':
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('TextS.content is required.')
         _guard_scalar('TextS.content', __d_content, (str,), False, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextS.visible', __d_visible, (bool,), True, False)
@@ -881,8 +785,6 @@ class TextXs:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
-        if content is None:
-            raise ValueError('TextXs.content is required.')
         _guard_scalar('TextXs.content', content, (str,), False, False)
         _guard_scalar('TextXs.visible', visible, (bool,), True, False)
         _guard_scalar('TextXs.tooltip', tooltip, (str,), True, False)
@@ -898,8 +800,6 @@ class TextXs:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.content is None:
-            raise ValueError('TextXs.content is required.')
         _guard_scalar('TextXs.content', self.content, (str,), False, False)
         _guard_scalar('TextXs.visible', self.visible, (bool,), True, False)
         _guard_scalar('TextXs.tooltip', self.tooltip, (str,), True, False)
@@ -915,8 +815,6 @@ class TextXs:
     def load(__d: Dict) -> 'TextXs':
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('TextXs.content is required.')
         _guard_scalar('TextXs.content', __d_content, (str,), False, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextXs.visible', __d_visible, (bool,), True, False)
@@ -954,8 +852,6 @@ class Label:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
-        if label is None:
-            raise ValueError('Label.label is required.')
         _guard_scalar('Label.label', label, (str,), False, False)
         _guard_scalar('Label.required', required, (bool,), True, False)
         _guard_scalar('Label.disabled', disabled, (bool,), True, False)
@@ -977,8 +873,6 @@ class Label:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('Label.label is required.')
         _guard_scalar('Label.label', self.label, (str,), False, False)
         _guard_scalar('Label.required', self.required, (bool,), True, False)
         _guard_scalar('Label.disabled', self.disabled, (bool,), True, False)
@@ -998,8 +892,6 @@ class Label:
     def load(__d: Dict) -> 'Label':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Label.label is required.')
         _guard_scalar('Label.label', __d_label, (str,), False, False)
         __d_required: Any = __d.get('required')
         _guard_scalar('Label.required', __d_required, (bool,), True, False)
@@ -1108,8 +1000,6 @@ class Progress:
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
-        if label is None:
-            raise ValueError('Progress.label is required.')
         _guard_scalar('Progress.label', label, (str,), False, False)
         _guard_scalar('Progress.caption', caption, (str,), True, False)
         _guard_scalar('Progress.value', value, (float, int,), True, False)
@@ -1131,8 +1021,6 @@ class Progress:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('Progress.label is required.')
         _guard_scalar('Progress.label', self.label, (str,), False, False)
         _guard_scalar('Progress.caption', self.caption, (str,), True, False)
         _guard_scalar('Progress.value', self.value, (float, int,), True, False)
@@ -1152,8 +1040,6 @@ class Progress:
     def load(__d: Dict) -> 'Progress':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Progress.label is required.')
         _guard_scalar('Progress.label', __d_label, (str,), False, False)
         __d_caption: Any = __d.get('caption')
         _guard_scalar('Progress.caption', __d_caption, (str,), True, False)
@@ -1284,8 +1170,6 @@ class Textbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Textbox.name is required.')
         _guard_scalar('Textbox.name', name, (str,), False, False)
         _guard_scalar('Textbox.label', label, (str,), True, False)
         _guard_scalar('Textbox.placeholder', placeholder, (str,), True, False)
@@ -1343,8 +1227,6 @@ class Textbox:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Textbox.name is required.')
         _guard_scalar('Textbox.name', self.name, (str,), False, False)
         _guard_scalar('Textbox.label', self.label, (str,), True, False)
         _guard_scalar('Textbox.placeholder', self.placeholder, (str,), True, False)
@@ -1388,8 +1270,6 @@ class Textbox:
     def load(__d: Dict) -> 'Textbox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Textbox.name is required.')
         _guard_scalar('Textbox.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Textbox.label', __d_label, (str,), True, False)
@@ -1492,8 +1372,6 @@ class Checkbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Checkbox.name is required.')
         _guard_scalar('Checkbox.name', name, (str,), False, False)
         _guard_scalar('Checkbox.label', label, (str,), True, False)
         _guard_scalar('Checkbox.value', value, (bool,), True, False)
@@ -1521,8 +1399,6 @@ class Checkbox:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Checkbox.name is required.')
         _guard_scalar('Checkbox.name', self.name, (str,), False, False)
         _guard_scalar('Checkbox.label', self.label, (str,), True, False)
         _guard_scalar('Checkbox.value', self.value, (bool,), True, False)
@@ -1546,8 +1422,6 @@ class Checkbox:
     def load(__d: Dict) -> 'Checkbox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Checkbox.name is required.')
         _guard_scalar('Checkbox.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Checkbox.label', __d_label, (str,), True, False)
@@ -1603,8 +1477,6 @@ class Toggle:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Toggle.name is required.')
         _guard_scalar('Toggle.name', name, (str,), False, False)
         _guard_scalar('Toggle.label', label, (str,), True, False)
         _guard_scalar('Toggle.value', value, (bool,), True, False)
@@ -1629,8 +1501,6 @@ class Toggle:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Toggle.name is required.')
         _guard_scalar('Toggle.name', self.name, (str,), False, False)
         _guard_scalar('Toggle.label', self.label, (str,), True, False)
         _guard_scalar('Toggle.value', self.value, (bool,), True, False)
@@ -1652,8 +1522,6 @@ class Toggle:
     def load(__d: Dict) -> 'Toggle':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Toggle.name is required.')
         _guard_scalar('Toggle.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Toggle.label', __d_label, (str,), True, False)
@@ -1694,8 +1562,6 @@ class Choice:
             label: Optional[str] = None,
             disabled: Optional[bool] = None,
     ):
-        if name is None:
-            raise ValueError('Choice.name is required.')
         _guard_scalar('Choice.name', name, (str,), False, False)
         _guard_scalar('Choice.label', label, (str,), True, False)
         _guard_scalar('Choice.disabled', disabled, (bool,), True, False)
@@ -1708,8 +1574,6 @@ class Choice:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Choice.name is required.')
         _guard_scalar('Choice.name', self.name, (str,), False, False)
         _guard_scalar('Choice.label', self.label, (str,), True, False)
         _guard_scalar('Choice.disabled', self.disabled, (bool,), True, False)
@@ -1723,8 +1587,6 @@ class Choice:
     def load(__d: Dict) -> 'Choice':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Choice.name is required.')
         _guard_scalar('Choice.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Choice.label', __d_label, (str,), True, False)
@@ -1763,8 +1625,6 @@ class ChoiceGroup:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('ChoiceGroup.name is required.')
         _guard_scalar('ChoiceGroup.name', name, (str,), False, False)
         _guard_scalar('ChoiceGroup.label', label, (str,), True, False)
         _guard_scalar('ChoiceGroup.value', value, (str,), True, False)
@@ -1792,8 +1652,6 @@ class ChoiceGroup:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('ChoiceGroup.name is required.')
         _guard_scalar('ChoiceGroup.name', self.name, (str,), False, False)
         _guard_scalar('ChoiceGroup.label', self.label, (str,), True, False)
         _guard_scalar('ChoiceGroup.value', self.value, (str,), True, False)
@@ -1817,8 +1675,6 @@ class ChoiceGroup:
     def load(__d: Dict) -> 'ChoiceGroup':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('ChoiceGroup.name is required.')
         _guard_scalar('ChoiceGroup.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('ChoiceGroup.label', __d_label, (str,), True, False)
@@ -1869,8 +1725,6 @@ class Checklist:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Checklist.name is required.')
         _guard_scalar('Checklist.name', name, (str,), False, False)
         _guard_scalar('Checklist.label', label, (str,), True, False)
         _guard_vector('Checklist.values', values, (str,), True, False)
@@ -1895,8 +1749,6 @@ class Checklist:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Checklist.name is required.')
         _guard_scalar('Checklist.name', self.name, (str,), False, False)
         _guard_scalar('Checklist.label', self.label, (str,), True, False)
         _guard_vector('Checklist.values', self.values, (str,), True, False)
@@ -1918,8 +1770,6 @@ class Checklist:
     def load(__d: Dict) -> 'Checklist':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Checklist.name is required.')
         _guard_scalar('Checklist.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Checklist.label', __d_label, (str,), True, False)
@@ -1978,8 +1828,6 @@ class Dropdown:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Dropdown.name is required.')
         _guard_scalar('Dropdown.name', name, (str,), False, False)
         _guard_scalar('Dropdown.label', label, (str,), True, False)
         _guard_scalar('Dropdown.placeholder', placeholder, (str,), True, False)
@@ -2016,8 +1864,6 @@ class Dropdown:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Dropdown.name is required.')
         _guard_scalar('Dropdown.name', self.name, (str,), False, False)
         _guard_scalar('Dropdown.label', self.label, (str,), True, False)
         _guard_scalar('Dropdown.placeholder', self.placeholder, (str,), True, False)
@@ -2047,8 +1893,6 @@ class Dropdown:
     def load(__d: Dict) -> 'Dropdown':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Dropdown.name is required.')
         _guard_scalar('Dropdown.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Dropdown.label', __d_label, (str,), True, False)
@@ -2121,8 +1965,6 @@ class Combobox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Combobox.name is required.')
         _guard_scalar('Combobox.name', name, (str,), False, False)
         _guard_scalar('Combobox.label', label, (str,), True, False)
         _guard_scalar('Combobox.placeholder', placeholder, (str,), True, False)
@@ -2153,8 +1995,6 @@ class Combobox:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Combobox.name is required.')
         _guard_scalar('Combobox.name', self.name, (str,), False, False)
         _guard_scalar('Combobox.label', self.label, (str,), True, False)
         _guard_scalar('Combobox.placeholder', self.placeholder, (str,), True, False)
@@ -2180,8 +2020,6 @@ class Combobox:
     def load(__d: Dict) -> 'Combobox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Combobox.name is required.')
         _guard_scalar('Combobox.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Combobox.label', __d_label, (str,), True, False)
@@ -2250,8 +2088,6 @@ class Slider:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Slider.name is required.')
         _guard_scalar('Slider.name', name, (str,), False, False)
         _guard_scalar('Slider.label', label, (str,), True, False)
         _guard_scalar('Slider.min', min, (float, int,), True, False)
@@ -2285,8 +2121,6 @@ class Slider:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Slider.name is required.')
         _guard_scalar('Slider.name', self.name, (str,), False, False)
         _guard_scalar('Slider.label', self.label, (str,), True, False)
         _guard_scalar('Slider.min', self.min, (float, int,), True, False)
@@ -2314,8 +2148,6 @@ class Slider:
     def load(__d: Dict) -> 'Slider':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Slider.name is required.')
         _guard_scalar('Slider.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Slider.label', __d_label, (str,), True, False)
@@ -2377,8 +2209,6 @@ class Spinbox:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Spinbox.name is required.')
         _guard_scalar('Spinbox.name', name, (str,), False, False)
         _guard_scalar('Spinbox.label', label, (str,), True, False)
         _guard_scalar('Spinbox.min', min, (float, int,), True, False)
@@ -2409,8 +2239,6 @@ class Spinbox:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Spinbox.name is required.')
         _guard_scalar('Spinbox.name', self.name, (str,), False, False)
         _guard_scalar('Spinbox.label', self.label, (str,), True, False)
         _guard_scalar('Spinbox.min', self.min, (float, int,), True, False)
@@ -2436,8 +2264,6 @@ class Spinbox:
     def load(__d: Dict) -> 'Spinbox':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Spinbox.name is required.')
         _guard_scalar('Spinbox.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Spinbox.label', __d_label, (str,), True, False)
@@ -2493,8 +2319,6 @@ class DatePicker:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('DatePicker.name is required.')
         _guard_scalar('DatePicker.name', name, (str,), False, False)
         _guard_scalar('DatePicker.label', label, (str,), True, False)
         _guard_scalar('DatePicker.placeholder', placeholder, (str,), True, False)
@@ -2522,8 +2346,6 @@ class DatePicker:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('DatePicker.name is required.')
         _guard_scalar('DatePicker.name', self.name, (str,), False, False)
         _guard_scalar('DatePicker.label', self.label, (str,), True, False)
         _guard_scalar('DatePicker.placeholder', self.placeholder, (str,), True, False)
@@ -2547,8 +2369,6 @@ class DatePicker:
     def load(__d: Dict) -> 'DatePicker':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('DatePicker.name is required.')
         _guard_scalar('DatePicker.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('DatePicker.label', __d_label, (str,), True, False)
@@ -2600,8 +2420,6 @@ class ColorPicker:
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('ColorPicker.name is required.')
         _guard_scalar('ColorPicker.name', name, (str,), False, False)
         _guard_scalar('ColorPicker.label', label, (str,), True, False)
         _guard_scalar('ColorPicker.value', value, (str,), True, False)
@@ -2626,8 +2444,6 @@ class ColorPicker:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('ColorPicker.name is required.')
         _guard_scalar('ColorPicker.name', self.name, (str,), False, False)
         _guard_scalar('ColorPicker.label', self.label, (str,), True, False)
         _guard_scalar('ColorPicker.value', self.value, (str,), True, False)
@@ -2649,8 +2465,6 @@ class ColorPicker:
     def load(__d: Dict) -> 'ColorPicker':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('ColorPicker.name is required.')
         _guard_scalar('ColorPicker.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('ColorPicker.label', __d_label, (str,), True, False)
@@ -2712,8 +2526,6 @@ class Button:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Button.name is required.')
         _guard_scalar('Button.name', name, (str,), False, False)
         _guard_scalar('Button.label', label, (str,), True, False)
         _guard_scalar('Button.caption', caption, (str,), True, False)
@@ -2744,8 +2556,6 @@ class Button:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Button.name is required.')
         _guard_scalar('Button.name', self.name, (str,), False, False)
         _guard_scalar('Button.label', self.label, (str,), True, False)
         _guard_scalar('Button.caption', self.caption, (str,), True, False)
@@ -2771,8 +2581,6 @@ class Button:
     def load(__d: Dict) -> 'Button':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Button.name is required.')
         _guard_scalar('Button.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Button.label', __d_label, (str,), True, False)
@@ -2833,8 +2641,6 @@ class Buttons:
             name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
-        if items is None:
-            raise ValueError('Buttons.items is required.')
         _guard_vector('Buttons.items', items, (Component,), False, False)
         _guard_enum('Buttons.justify', justify, _ButtonsJustify, True)
         _guard_scalar('Buttons.name', name, (str,), True, False)
@@ -2850,8 +2656,6 @@ class Buttons:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.items is None:
-            raise ValueError('Buttons.items is required.')
         _guard_vector('Buttons.items', self.items, (Component,), False, False)
         _guard_enum('Buttons.justify', self.justify, _ButtonsJustify, True)
         _guard_scalar('Buttons.name', self.name, (str,), True, False)
@@ -2867,8 +2671,6 @@ class Buttons:
     def load(__d: Dict) -> 'Buttons':
         """Creates an instance of this class using the contents of a dict."""
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('Buttons.items is required.')
         _guard_vector('Buttons.items', __d_items, (Component,), False, False)
         __d_justify: Any = __d.get('justify')
         _guard_enum('Buttons.justify', __d_justify, _ButtonsJustify, True)
@@ -2904,8 +2706,6 @@ class FileUpload:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('FileUpload.name is required.')
         _guard_scalar('FileUpload.name', name, (str,), False, False)
         _guard_scalar('FileUpload.label', label, (str,), True, False)
         _guard_scalar('FileUpload.multiple', multiple, (bool,), True, False)
@@ -2936,8 +2736,6 @@ class FileUpload:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('FileUpload.name is required.')
         _guard_scalar('FileUpload.name', self.name, (str,), False, False)
         _guard_scalar('FileUpload.label', self.label, (str,), True, False)
         _guard_scalar('FileUpload.multiple', self.multiple, (bool,), True, False)
@@ -2963,8 +2761,6 @@ class FileUpload:
     def load(__d: Dict) -> 'FileUpload':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('FileUpload.name is required.')
         _guard_scalar('FileUpload.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('FileUpload.label', __d_label, (str,), True, False)
@@ -3148,11 +2944,7 @@ class TableColumn:
             data_type: Optional[str] = None,
             cell_type: Optional[TableCellType] = None,
     ):
-        if name is None:
-            raise ValueError('TableColumn.name is required.')
         _guard_scalar('TableColumn.name', name, (str,), False, False)
-        if label is None:
-            raise ValueError('TableColumn.label is required.')
         _guard_scalar('TableColumn.label', label, (str,), False, False)
         _guard_scalar('TableColumn.min_width', min_width, (str,), True, False)
         _guard_scalar('TableColumn.max_width', max_width, (str,), True, False)
@@ -3185,11 +2977,7 @@ class TableColumn:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('TableColumn.name is required.')
         _guard_scalar('TableColumn.name', self.name, (str,), False, False)
-        if self.label is None:
-            raise ValueError('TableColumn.label is required.')
         _guard_scalar('TableColumn.label', self.label, (str,), False, False)
         _guard_scalar('TableColumn.min_width', self.min_width, (str,), True, False)
         _guard_scalar('TableColumn.max_width', self.max_width, (str,), True, False)
@@ -3216,12 +3004,8 @@ class TableColumn:
     def load(__d: Dict) -> 'TableColumn':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('TableColumn.name is required.')
         _guard_scalar('TableColumn.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('TableColumn.label is required.')
         _guard_scalar('TableColumn.label', __d_label, (str,), False, False)
         __d_min_width: Any = __d.get('min_width')
         _guard_scalar('TableColumn.min_width', __d_min_width, (str,), True, False)
@@ -3271,11 +3055,7 @@ class TableRow:
             name: str,
             cells: List[str],
     ):
-        if name is None:
-            raise ValueError('TableRow.name is required.')
         _guard_scalar('TableRow.name', name, (str,), False, False)
-        if cells is None:
-            raise ValueError('TableRow.cells is required.')
         _guard_vector('TableRow.cells', cells, (str,), False, False)
         self.name = name
         """An identifying name for this row."""
@@ -3284,11 +3064,7 @@ class TableRow:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('TableRow.name is required.')
         _guard_scalar('TableRow.name', self.name, (str,), False, False)
-        if self.cells is None:
-            raise ValueError('TableRow.cells is required.')
         _guard_vector('TableRow.cells', self.cells, (str,), False, False)
         return _dump(
             name=self.name,
@@ -3299,12 +3075,8 @@ class TableRow:
     def load(__d: Dict) -> 'TableRow':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('TableRow.name is required.')
         _guard_scalar('TableRow.name', __d_name, (str,), False, False)
         __d_cells: Any = __d.get('cells')
-        if __d_cells is None:
-            raise ValueError('TableRow.cells is required.')
         _guard_vector('TableRow.cells', __d_cells, (str,), False, False)
         name: str = __d_name
         cells: List[str] = __d_cells
@@ -3345,14 +3117,8 @@ class Table:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Table.name is required.')
         _guard_scalar('Table.name', name, (str,), False, False)
-        if columns is None:
-            raise ValueError('Table.columns is required.')
         _guard_vector('Table.columns', columns, (TableColumn,), False, False)
-        if rows is None:
-            raise ValueError('Table.rows is required.')
         _guard_vector('Table.rows', rows, (TableRow,), False, False)
         _guard_scalar('Table.multiple', multiple, (bool,), True, False)
         _guard_scalar('Table.groupable', groupable, (bool,), True, False)
@@ -3387,14 +3153,8 @@ class Table:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Table.name is required.')
         _guard_scalar('Table.name', self.name, (str,), False, False)
-        if self.columns is None:
-            raise ValueError('Table.columns is required.')
         _guard_vector('Table.columns', self.columns, (TableColumn,), False, False)
-        if self.rows is None:
-            raise ValueError('Table.rows is required.')
         _guard_vector('Table.rows', self.rows, (TableRow,), False, False)
         _guard_scalar('Table.multiple', self.multiple, (bool,), True, False)
         _guard_scalar('Table.groupable', self.groupable, (bool,), True, False)
@@ -3422,16 +3182,10 @@ class Table:
     def load(__d: Dict) -> 'Table':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Table.name is required.')
         _guard_scalar('Table.name', __d_name, (str,), False, False)
         __d_columns: Any = __d.get('columns')
-        if __d_columns is None:
-            raise ValueError('Table.columns is required.')
         _guard_vector('Table.columns', __d_columns, (TableColumn,), False, False)
         __d_rows: Any = __d.get('rows')
-        if __d_rows is None:
-            raise ValueError('Table.rows is required.')
         _guard_vector('Table.rows', __d_rows, (TableRow,), False, False)
         __d_multiple: Any = __d.get('multiple')
         _guard_scalar('Table.multiple', __d_multiple, (bool,), True, False)
@@ -3597,8 +3351,6 @@ class Tab:
             label: Optional[str] = None,
             icon: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Tab.name is required.')
         _guard_scalar('Tab.name', name, (str,), False, False)
         _guard_scalar('Tab.label', label, (str,), True, False)
         _guard_scalar('Tab.icon', icon, (str,), True, False)
@@ -3611,8 +3363,6 @@ class Tab:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Tab.name is required.')
         _guard_scalar('Tab.name', self.name, (str,), False, False)
         _guard_scalar('Tab.label', self.label, (str,), True, False)
         _guard_scalar('Tab.icon', self.icon, (str,), True, False)
@@ -3626,8 +3376,6 @@ class Tab:
     def load(__d: Dict) -> 'Tab':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Tab.name is required.')
         _guard_scalar('Tab.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Tab.label', __d_label, (str,), True, False)
@@ -3654,8 +3402,6 @@ class Tabs:
             visible: Optional[bool] = None,
             link: Optional[bool] = None,
     ):
-        if name is None:
-            raise ValueError('Tabs.name is required.')
         _guard_scalar('Tabs.name', name, (str,), False, False)
         _guard_scalar('Tabs.value', value, (str,), True, False)
         _guard_vector('Tabs.items', items, (Tab,), True, False)
@@ -3674,8 +3420,6 @@ class Tabs:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Tabs.name is required.')
         _guard_scalar('Tabs.name', self.name, (str,), False, False)
         _guard_scalar('Tabs.value', self.value, (str,), True, False)
         _guard_vector('Tabs.items', self.items, (Tab,), True, False)
@@ -3693,8 +3437,6 @@ class Tabs:
     def load(__d: Dict) -> 'Tabs':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Tabs.name is required.')
         _guard_scalar('Tabs.name', __d_name, (str,), False, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('Tabs.value', __d_value, (str,), True, False)
@@ -3731,8 +3473,6 @@ class Expander:
             items: Optional[List['Component']] = None,
             visible: Optional[bool] = None,
     ):
-        if name is None:
-            raise ValueError('Expander.name is required.')
         _guard_scalar('Expander.name', name, (str,), False, False)
         _guard_scalar('Expander.label', label, (str,), True, False)
         _guard_scalar('Expander.expanded', expanded, (bool,), True, False)
@@ -3751,8 +3491,6 @@ class Expander:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Expander.name is required.')
         _guard_scalar('Expander.name', self.name, (str,), False, False)
         _guard_scalar('Expander.label', self.label, (str,), True, False)
         _guard_scalar('Expander.expanded', self.expanded, (bool,), True, False)
@@ -3770,8 +3508,6 @@ class Expander:
     def load(__d: Dict) -> 'Expander':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Expander.name is required.')
         _guard_scalar('Expander.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Expander.label', __d_label, (str,), True, False)
@@ -3883,8 +3619,6 @@ class Markup:
             name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
-        if content is None:
-            raise ValueError('Markup.content is required.')
         _guard_scalar('Markup.content', content, (str,), False, False)
         _guard_scalar('Markup.name', name, (str,), True, False)
         _guard_scalar('Markup.visible', visible, (bool,), True, False)
@@ -3897,8 +3631,6 @@ class Markup:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.content is None:
-            raise ValueError('Markup.content is required.')
         _guard_scalar('Markup.content', self.content, (str,), False, False)
         _guard_scalar('Markup.name', self.name, (str,), True, False)
         _guard_scalar('Markup.visible', self.visible, (bool,), True, False)
@@ -3912,8 +3644,6 @@ class Markup:
     def load(__d: Dict) -> 'Markup':
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('Markup.content is required.')
         _guard_scalar('Markup.content', __d_content, (str,), False, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('Markup.name', __d_name, (str,), True, False)
@@ -3939,8 +3669,6 @@ class Template:
             name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
-        if content is None:
-            raise ValueError('Template.content is required.')
         _guard_scalar('Template.content', content, (str,), False, False)
         _guard_scalar('Template.name', name, (str,), True, False)
         _guard_scalar('Template.visible', visible, (bool,), True, False)
@@ -3955,8 +3683,6 @@ class Template:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.content is None:
-            raise ValueError('Template.content is required.')
         _guard_scalar('Template.content', self.content, (str,), False, False)
         _guard_scalar('Template.name', self.name, (str,), True, False)
         _guard_scalar('Template.visible', self.visible, (bool,), True, False)
@@ -3971,8 +3697,6 @@ class Template:
     def load(__d: Dict) -> 'Template':
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('Template.content is required.')
         _guard_scalar('Template.content', __d_content, (str,), False, False)
         __d_data: Any = __d.get('data')
         __d_name: Any = __d.get('name')
@@ -4008,11 +3732,7 @@ class Picker:
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Picker.name is required.')
         _guard_scalar('Picker.name', name, (str,), False, False)
-        if choices is None:
-            raise ValueError('Picker.choices is required.')
         _guard_vector('Picker.choices', choices, (Choice,), False, False)
         _guard_scalar('Picker.label', label, (str,), True, False)
         _guard_vector('Picker.values', values, (str,), True, False)
@@ -4042,11 +3762,7 @@ class Picker:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Picker.name is required.')
         _guard_scalar('Picker.name', self.name, (str,), False, False)
-        if self.choices is None:
-            raise ValueError('Picker.choices is required.')
         _guard_vector('Picker.choices', self.choices, (Choice,), False, False)
         _guard_scalar('Picker.label', self.label, (str,), True, False)
         _guard_vector('Picker.values', self.values, (str,), True, False)
@@ -4071,12 +3787,8 @@ class Picker:
     def load(__d: Dict) -> 'Picker':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Picker.name is required.')
         _guard_scalar('Picker.name', __d_name, (str,), False, False)
         __d_choices: Any = __d.get('choices')
-        if __d_choices is None:
-            raise ValueError('Picker.choices is required.')
         _guard_vector('Picker.choices', __d_choices, (Choice,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Picker.label', __d_label, (str,), True, False)
@@ -4135,8 +3847,6 @@ class RangeSlider:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('RangeSlider.name is required.')
         _guard_scalar('RangeSlider.name', name, (str,), False, False)
         _guard_scalar('RangeSlider.label', label, (str,), True, False)
         _guard_scalar('RangeSlider.min', min, (float, int,), True, False)
@@ -4173,8 +3883,6 @@ class RangeSlider:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('RangeSlider.name is required.')
         _guard_scalar('RangeSlider.name', self.name, (str,), False, False)
         _guard_scalar('RangeSlider.label', self.label, (str,), True, False)
         _guard_scalar('RangeSlider.min', self.min, (float, int,), True, False)
@@ -4204,8 +3912,6 @@ class RangeSlider:
     def load(__d: Dict) -> 'RangeSlider':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('RangeSlider.name is required.')
         _guard_scalar('RangeSlider.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('RangeSlider.label', __d_label, (str,), True, False)
@@ -4262,8 +3968,6 @@ class Step:
             icon: Optional[str] = None,
             done: Optional[bool] = None,
     ):
-        if label is None:
-            raise ValueError('Step.label is required.')
         _guard_scalar('Step.label', label, (str,), False, False)
         _guard_scalar('Step.icon', icon, (str,), True, False)
         _guard_scalar('Step.done', done, (bool,), True, False)
@@ -4276,8 +3980,6 @@ class Step:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('Step.label is required.')
         _guard_scalar('Step.label', self.label, (str,), False, False)
         _guard_scalar('Step.icon', self.icon, (str,), True, False)
         _guard_scalar('Step.done', self.done, (bool,), True, False)
@@ -4291,8 +3993,6 @@ class Step:
     def load(__d: Dict) -> 'Step':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Step.label is required.')
         _guard_scalar('Step.label', __d_label, (str,), False, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('Step.icon', __d_icon, (str,), True, False)
@@ -4319,11 +4019,7 @@ class Stepper:
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
-        if name is None:
-            raise ValueError('Stepper.name is required.')
         _guard_scalar('Stepper.name', name, (str,), False, False)
-        if items is None:
-            raise ValueError('Stepper.items is required.')
         _guard_vector('Stepper.items', items, (Step,), False, False)
         _guard_scalar('Stepper.visible', visible, (bool,), True, False)
         _guard_scalar('Stepper.tooltip', tooltip, (str,), True, False)
@@ -4338,11 +4034,7 @@ class Stepper:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Stepper.name is required.')
         _guard_scalar('Stepper.name', self.name, (str,), False, False)
-        if self.items is None:
-            raise ValueError('Stepper.items is required.')
         _guard_vector('Stepper.items', self.items, (Step,), False, False)
         _guard_scalar('Stepper.visible', self.visible, (bool,), True, False)
         _guard_scalar('Stepper.tooltip', self.tooltip, (str,), True, False)
@@ -4357,12 +4049,8 @@ class Stepper:
     def load(__d: Dict) -> 'Stepper':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Stepper.name is required.')
         _guard_scalar('Stepper.name', __d_name, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('Stepper.items is required.')
         _guard_vector('Stepper.items', __d_items, (Step,), False, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Stepper.visible', __d_visible, (bool,), True, False)
@@ -5042,16 +4730,12 @@ class Plot:
             self,
             marks: List[Mark],
     ):
-        if marks is None:
-            raise ValueError('Plot.marks is required.')
         _guard_vector('Plot.marks', marks, (Mark,), False, False)
         self.marks = marks
         """The graphical mark layers contained in this plot."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.marks is None:
-            raise ValueError('Plot.marks is required.')
         _guard_vector('Plot.marks', self.marks, (Mark,), False, False)
         return _dump(
             marks=[__e.dump() for __e in self.marks],
@@ -5061,8 +4745,6 @@ class Plot:
     def load(__d: Dict) -> 'Plot':
         """Creates an instance of this class using the contents of a dict."""
         __d_marks: Any = __d.get('marks')
-        if __d_marks is None:
-            raise ValueError('Plot.marks is required.')
         _guard_vector('Plot.marks', __d_marks, (Mark,), False, False)
         marks: List[Mark] = [Mark.load(__e) for __e in __d_marks]
         return Plot(
@@ -5083,11 +4765,7 @@ class Visualization:
             visible: Optional[bool] = None,
             events: Optional[List[str]] = None,
     ):
-        if plot is None:
-            raise ValueError('Visualization.plot is required.')
         _guard_scalar('Visualization.plot', plot, (Plot,), False, False)
-        if data is None:
-            raise ValueError('Visualization.data is required.')
         _guard_scalar('Visualization.width', width, (str,), True, False)
         _guard_scalar('Visualization.height', height, (str,), True, False)
         _guard_scalar('Visualization.name', name, (str,), True, False)
@@ -5110,11 +4788,7 @@ class Visualization:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.plot is None:
-            raise ValueError('Visualization.plot is required.')
         _guard_scalar('Visualization.plot', self.plot, (Plot,), False, False)
-        if self.data is None:
-            raise ValueError('Visualization.data is required.')
         _guard_scalar('Visualization.width', self.width, (str,), True, False)
         _guard_scalar('Visualization.height', self.height, (str,), True, False)
         _guard_scalar('Visualization.name', self.name, (str,), True, False)
@@ -5134,12 +4808,8 @@ class Visualization:
     def load(__d: Dict) -> 'Visualization':
         """Creates an instance of this class using the contents of a dict."""
         __d_plot: Any = __d.get('plot')
-        if __d_plot is None:
-            raise ValueError('Visualization.plot is required.')
         _guard_scalar('Visualization.plot', __d_plot, (Plot,), False, False)
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('Visualization.data is required.')
         __d_width: Any = __d.get('width')
         _guard_scalar('Visualization.width', __d_width, (str,), True, False)
         __d_height: Any = __d.get('height')
@@ -5180,8 +4850,6 @@ class VegaVisualization:
             name: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
-        if specification is None:
-            raise ValueError('VegaVisualization.specification is required.')
         _guard_scalar('VegaVisualization.specification', specification, (str,), False, False)
         _guard_scalar('VegaVisualization.width', width, (str,), True, False)
         _guard_scalar('VegaVisualization.height', height, (str,), True, False)
@@ -5202,8 +4870,6 @@ class VegaVisualization:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.specification is None:
-            raise ValueError('VegaVisualization.specification is required.')
         _guard_scalar('VegaVisualization.specification', self.specification, (str,), False, False)
         _guard_scalar('VegaVisualization.width', self.width, (str,), True, False)
         _guard_scalar('VegaVisualization.height', self.height, (str,), True, False)
@@ -5222,8 +4888,6 @@ class VegaVisualization:
     def load(__d: Dict) -> 'VegaVisualization':
         """Creates an instance of this class using the contents of a dict."""
         __d_specification: Any = __d.get('specification')
-        if __d_specification is None:
-            raise ValueError('VegaVisualization.specification is required.')
         _guard_scalar('VegaVisualization.specification', __d_specification, (str,), False, False)
         __d_data: Any = __d.get('data')
         __d_width: Any = __d.get('width')
@@ -5261,8 +4925,6 @@ class Stat:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
     ):
-        if label is None:
-            raise ValueError('Stat.label is required.')
         _guard_scalar('Stat.label', label, (str,), False, False)
         _guard_scalar('Stat.value', value, (str,), True, False)
         _guard_scalar('Stat.caption', caption, (str,), True, False)
@@ -5281,8 +4943,6 @@ class Stat:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('Stat.label is required.')
         _guard_scalar('Stat.label', self.label, (str,), False, False)
         _guard_scalar('Stat.value', self.value, (str,), True, False)
         _guard_scalar('Stat.caption', self.caption, (str,), True, False)
@@ -5300,8 +4960,6 @@ class Stat:
     def load(__d: Dict) -> 'Stat':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('Stat.label is required.')
         _guard_scalar('Stat.label', __d_label, (str,), False, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('Stat.value', __d_value, (str,), True, False)
@@ -5345,8 +5003,6 @@ class Stats:
             justify: Optional[str] = None,
             inset: Optional[bool] = None,
     ):
-        if items is None:
-            raise ValueError('Stats.items is required.')
         _guard_vector('Stats.items', items, (Stat,), False, False)
         _guard_enum('Stats.justify', justify, _StatsJustify, True)
         _guard_scalar('Stats.inset', inset, (bool,), True, False)
@@ -5359,8 +5015,6 @@ class Stats:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.items is None:
-            raise ValueError('Stats.items is required.')
         _guard_vector('Stats.items', self.items, (Stat,), False, False)
         _guard_enum('Stats.justify', self.justify, _StatsJustify, True)
         _guard_scalar('Stats.inset', self.inset, (bool,), True, False)
@@ -5374,8 +5028,6 @@ class Stats:
     def load(__d: Dict) -> 'Stats':
         """Creates an instance of this class using the contents of a dict."""
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('Stats.items is required.')
         _guard_vector('Stats.items', __d_items, (Stat,), False, False)
         __d_justify: Any = __d.get('justify')
         _guard_enum('Stats.justify', __d_justify, _StatsJustify, True)
@@ -5408,8 +5060,6 @@ class Inline:
             justify: Optional[str] = None,
             inset: Optional[bool] = None,
     ):
-        if items is None:
-            raise ValueError('Inline.items is required.')
         _guard_vector('Inline.items', items, (Component,), False, False)
         _guard_enum('Inline.justify', justify, _InlineJustify, True)
         _guard_scalar('Inline.inset', inset, (bool,), True, False)
@@ -5422,8 +5072,6 @@ class Inline:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.items is None:
-            raise ValueError('Inline.items is required.')
         _guard_vector('Inline.items', self.items, (Component,), False, False)
         _guard_enum('Inline.justify', self.justify, _InlineJustify, True)
         _guard_scalar('Inline.inset', self.inset, (bool,), True, False)
@@ -5437,8 +5085,6 @@ class Inline:
     def load(__d: Dict) -> 'Inline':
         """Creates an instance of this class using the contents of a dict."""
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('Inline.items is required.')
         _guard_vector('Inline.items', __d_items, (Component,), False, False)
         __d_justify: Any = __d.get('justify')
         _guard_enum('Inline.justify', __d_justify, _InlineJustify, True)
@@ -5863,11 +5509,7 @@ class FormCard:
             title: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('FormCard.box is required.')
         _guard_scalar('FormCard.box', box, (str,), False, False)
-        if items is None:
-            raise ValueError('FormCard.items is required.')
         _guard_vector('FormCard.items', items, (Component,), False, True)
         _guard_scalar('FormCard.title', title, (str,), True, False)
         _guard_vector('FormCard.commands', commands, (Command,), True, False)
@@ -5882,11 +5524,7 @@ class FormCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('FormCard.box is required.')
         _guard_scalar('FormCard.box', self.box, (str,), False, False)
-        if self.items is None:
-            raise ValueError('FormCard.items is required.')
         _guard_vector('FormCard.items', self.items, (Component,), False, True)
         _guard_scalar('FormCard.title', self.title, (str,), True, False)
         _guard_vector('FormCard.commands', self.commands, (Command,), True, False)
@@ -5902,12 +5540,8 @@ class FormCard:
     def load(__d: Dict) -> 'FormCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('FormCard.box is required.')
         _guard_scalar('FormCard.box', __d_box, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('FormCard.items is required.')
         _guard_vector('FormCard.items', __d_items, (Component,), False, True)
         __d_title: Any = __d.get('title')
         _guard_scalar('FormCard.title', __d_title, (str,), True, False)
@@ -5938,11 +5572,7 @@ class FrameCard:
             content: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('FrameCard.box is required.')
         _guard_scalar('FrameCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('FrameCard.title is required.')
         _guard_scalar('FrameCard.title', title, (str,), False, False)
         _guard_scalar('FrameCard.path', path, (str,), True, False)
         _guard_scalar('FrameCard.content', content, (str,), True, False)
@@ -5960,11 +5590,7 @@ class FrameCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('FrameCard.box is required.')
         _guard_scalar('FrameCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('FrameCard.title is required.')
         _guard_scalar('FrameCard.title', self.title, (str,), False, False)
         _guard_scalar('FrameCard.path', self.path, (str,), True, False)
         _guard_scalar('FrameCard.content', self.content, (str,), True, False)
@@ -5982,12 +5608,8 @@ class FrameCard:
     def load(__d: Dict) -> 'FrameCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('FrameCard.box is required.')
         _guard_scalar('FrameCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('FrameCard.title is required.')
         _guard_scalar('FrameCard.title', __d_title, (str,), False, False)
         __d_path: Any = __d.get('path')
         _guard_scalar('FrameCard.path', __d_path, (str,), True, False)
@@ -6022,11 +5644,7 @@ class GraphicsCard:
             height: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('GraphicsCard.box is required.')
         _guard_scalar('GraphicsCard.box', box, (str,), False, False)
-        if view_box is None:
-            raise ValueError('GraphicsCard.view_box is required.')
         _guard_scalar('GraphicsCard.view_box', view_box, (str,), False, False)
         _guard_scalar('GraphicsCard.width', width, (str,), True, False)
         _guard_scalar('GraphicsCard.height', height, (str,), True, False)
@@ -6048,11 +5666,7 @@ class GraphicsCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('GraphicsCard.box is required.')
         _guard_scalar('GraphicsCard.box', self.box, (str,), False, False)
-        if self.view_box is None:
-            raise ValueError('GraphicsCard.view_box is required.')
         _guard_scalar('GraphicsCard.view_box', self.view_box, (str,), False, False)
         _guard_scalar('GraphicsCard.width', self.width, (str,), True, False)
         _guard_scalar('GraphicsCard.height', self.height, (str,), True, False)
@@ -6072,12 +5686,8 @@ class GraphicsCard:
     def load(__d: Dict) -> 'GraphicsCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('GraphicsCard.box is required.')
         _guard_scalar('GraphicsCard.box', __d_box, (str,), False, False)
         __d_view_box: Any = __d.get('view_box')
-        if __d_view_box is None:
-            raise ValueError('GraphicsCard.view_box is required.')
         _guard_scalar('GraphicsCard.view_box', __d_view_box, (str,), False, False)
         __d_stage: Any = __d.get('stage')
         __d_scene: Any = __d.get('scene')
@@ -6116,16 +5726,8 @@ class GridCard:
             data: PackedData,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('GridCard.box is required.')
         _guard_scalar('GridCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('GridCard.title is required.')
         _guard_scalar('GridCard.title', title, (str,), False, False)
-        if cells is None:
-            raise ValueError('GridCard.cells is required.')
-        if data is None:
-            raise ValueError('GridCard.data is required.')
         _guard_vector('GridCard.commands', commands, (Command,), True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6140,16 +5742,8 @@ class GridCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('GridCard.box is required.')
         _guard_scalar('GridCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('GridCard.title is required.')
         _guard_scalar('GridCard.title', self.title, (str,), False, False)
-        if self.cells is None:
-            raise ValueError('GridCard.cells is required.')
-        if self.data is None:
-            raise ValueError('GridCard.data is required.')
         _guard_vector('GridCard.commands', self.commands, (Command,), True, False)
         return _dump(
             view='grid',
@@ -6164,19 +5758,11 @@ class GridCard:
     def load(__d: Dict) -> 'GridCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('GridCard.box is required.')
         _guard_scalar('GridCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('GridCard.title is required.')
         _guard_scalar('GridCard.title', __d_title, (str,), False, False)
         __d_cells: Any = __d.get('cells')
-        if __d_cells is None:
-            raise ValueError('GridCard.cells is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('GridCard.data is required.')
         __d_commands: Any = __d.get('commands')
         _guard_vector('GridCard.commands', __d_commands, (Command,), True, False)
         box: str = __d_box
@@ -6203,11 +5789,7 @@ class NavItem:
             icon: Optional[str] = None,
             disabled: Optional[bool] = None,
     ):
-        if name is None:
-            raise ValueError('NavItem.name is required.')
         _guard_scalar('NavItem.name', name, (str,), False, False)
-        if label is None:
-            raise ValueError('NavItem.label is required.')
         _guard_scalar('NavItem.label', label, (str,), False, False)
         _guard_scalar('NavItem.icon', icon, (str,), True, False)
         _guard_scalar('NavItem.disabled', disabled, (bool,), True, False)
@@ -6222,11 +5804,7 @@ class NavItem:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('NavItem.name is required.')
         _guard_scalar('NavItem.name', self.name, (str,), False, False)
-        if self.label is None:
-            raise ValueError('NavItem.label is required.')
         _guard_scalar('NavItem.label', self.label, (str,), False, False)
         _guard_scalar('NavItem.icon', self.icon, (str,), True, False)
         _guard_scalar('NavItem.disabled', self.disabled, (bool,), True, False)
@@ -6241,12 +5819,8 @@ class NavItem:
     def load(__d: Dict) -> 'NavItem':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('NavItem.name is required.')
         _guard_scalar('NavItem.name', __d_name, (str,), False, False)
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('NavItem.label is required.')
         _guard_scalar('NavItem.label', __d_label, (str,), False, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('NavItem.icon', __d_icon, (str,), True, False)
@@ -6273,11 +5847,7 @@ class NavGroup:
             items: List[NavItem],
             collapsed: Optional[bool] = None,
     ):
-        if label is None:
-            raise ValueError('NavGroup.label is required.')
         _guard_scalar('NavGroup.label', label, (str,), False, False)
-        if items is None:
-            raise ValueError('NavGroup.items is required.')
         _guard_vector('NavGroup.items', items, (NavItem,), False, False)
         _guard_scalar('NavGroup.collapsed', collapsed, (bool,), True, False)
         self.label = label
@@ -6289,11 +5859,7 @@ class NavGroup:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('NavGroup.label is required.')
         _guard_scalar('NavGroup.label', self.label, (str,), False, False)
-        if self.items is None:
-            raise ValueError('NavGroup.items is required.')
         _guard_vector('NavGroup.items', self.items, (NavItem,), False, False)
         _guard_scalar('NavGroup.collapsed', self.collapsed, (bool,), True, False)
         return _dump(
@@ -6306,12 +5872,8 @@ class NavGroup:
     def load(__d: Dict) -> 'NavGroup':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('NavGroup.label is required.')
         _guard_scalar('NavGroup.label', __d_label, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('NavGroup.items is required.')
         _guard_vector('NavGroup.items', __d_items, (NavItem,), False, False)
         __d_collapsed: Any = __d.get('collapsed')
         _guard_scalar('NavGroup.collapsed', __d_collapsed, (bool,), True, False)
@@ -6339,14 +5901,8 @@ class HeaderCard:
             nav: Optional[List[NavGroup]] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('HeaderCard.box is required.')
         _guard_scalar('HeaderCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('HeaderCard.title is required.')
         _guard_scalar('HeaderCard.title', title, (str,), False, False)
-        if subtitle is None:
-            raise ValueError('HeaderCard.subtitle is required.')
         _guard_scalar('HeaderCard.subtitle', subtitle, (str,), False, False)
         _guard_scalar('HeaderCard.icon', icon, (str,), True, False)
         _guard_scalar('HeaderCard.icon_color', icon_color, (str,), True, False)
@@ -6369,14 +5925,8 @@ class HeaderCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('HeaderCard.box is required.')
         _guard_scalar('HeaderCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('HeaderCard.title is required.')
         _guard_scalar('HeaderCard.title', self.title, (str,), False, False)
-        if self.subtitle is None:
-            raise ValueError('HeaderCard.subtitle is required.')
         _guard_scalar('HeaderCard.subtitle', self.subtitle, (str,), False, False)
         _guard_scalar('HeaderCard.icon', self.icon, (str,), True, False)
         _guard_scalar('HeaderCard.icon_color', self.icon_color, (str,), True, False)
@@ -6397,16 +5947,10 @@ class HeaderCard:
     def load(__d: Dict) -> 'HeaderCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('HeaderCard.box is required.')
         _guard_scalar('HeaderCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('HeaderCard.title is required.')
         _guard_scalar('HeaderCard.title', __d_title, (str,), False, False)
         __d_subtitle: Any = __d.get('subtitle')
-        if __d_subtitle is None:
-            raise ValueError('HeaderCard.subtitle is required.')
         _guard_scalar('HeaderCard.subtitle', __d_subtitle, (str,), False, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('HeaderCard.icon', __d_icon, (str,), True, False)
@@ -6446,17 +5990,9 @@ class ImageCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('ImageCard.box is required.')
         _guard_scalar('ImageCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('ImageCard.title is required.')
         _guard_scalar('ImageCard.title', title, (str,), False, False)
-        if type is None:
-            raise ValueError('ImageCard.type is required.')
         _guard_scalar('ImageCard.type', type, (str,), False, False)
-        if image is None:
-            raise ValueError('ImageCard.image is required.')
         _guard_scalar('ImageCard.image', image, (str,), False, False)
         _guard_vector('ImageCard.commands', commands, (Command,), True, False)
         self.box = box
@@ -6474,17 +6010,9 @@ class ImageCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('ImageCard.box is required.')
         _guard_scalar('ImageCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('ImageCard.title is required.')
         _guard_scalar('ImageCard.title', self.title, (str,), False, False)
-        if self.type is None:
-            raise ValueError('ImageCard.type is required.')
         _guard_scalar('ImageCard.type', self.type, (str,), False, False)
-        if self.image is None:
-            raise ValueError('ImageCard.image is required.')
         _guard_scalar('ImageCard.image', self.image, (str,), False, False)
         _guard_vector('ImageCard.commands', self.commands, (Command,), True, False)
         return _dump(
@@ -6501,20 +6029,12 @@ class ImageCard:
     def load(__d: Dict) -> 'ImageCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('ImageCard.box is required.')
         _guard_scalar('ImageCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('ImageCard.title is required.')
         _guard_scalar('ImageCard.title', __d_title, (str,), False, False)
         __d_type: Any = __d.get('type')
-        if __d_type is None:
-            raise ValueError('ImageCard.type is required.')
         _guard_scalar('ImageCard.type', __d_type, (str,), False, False)
         __d_image: Any = __d.get('image')
-        if __d_image is None:
-            raise ValueError('ImageCard.image is required.')
         _guard_scalar('ImageCard.image', __d_image, (str,), False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
@@ -6552,29 +6072,13 @@ class LargeBarStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('LargeBarStatCard.box is required.')
         _guard_scalar('LargeBarStatCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('LargeBarStatCard.title is required.')
         _guard_scalar('LargeBarStatCard.title', title, (str,), False, False)
-        if caption is None:
-            raise ValueError('LargeBarStatCard.caption is required.')
         _guard_scalar('LargeBarStatCard.caption', caption, (str,), False, False)
-        if value is None:
-            raise ValueError('LargeBarStatCard.value is required.')
         _guard_scalar('LargeBarStatCard.value', value, (str,), False, False)
-        if aux_value is None:
-            raise ValueError('LargeBarStatCard.aux_value is required.')
         _guard_scalar('LargeBarStatCard.aux_value', aux_value, (str,), False, False)
-        if value_caption is None:
-            raise ValueError('LargeBarStatCard.value_caption is required.')
         _guard_scalar('LargeBarStatCard.value_caption', value_caption, (str,), False, False)
-        if aux_value_caption is None:
-            raise ValueError('LargeBarStatCard.aux_value_caption is required.')
         _guard_scalar('LargeBarStatCard.aux_value_caption', aux_value_caption, (str,), False, False)
-        if progress is None:
-            raise ValueError('LargeBarStatCard.progress is required.')
         _guard_scalar('LargeBarStatCard.progress', progress, (float, int,), False, False)
         _guard_scalar('LargeBarStatCard.plot_color', plot_color, (str,), True, False)
         _guard_vector('LargeBarStatCard.commands', commands, (Command,), True, False)
@@ -6603,29 +6107,13 @@ class LargeBarStatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('LargeBarStatCard.box is required.')
         _guard_scalar('LargeBarStatCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('LargeBarStatCard.title is required.')
         _guard_scalar('LargeBarStatCard.title', self.title, (str,), False, False)
-        if self.caption is None:
-            raise ValueError('LargeBarStatCard.caption is required.')
         _guard_scalar('LargeBarStatCard.caption', self.caption, (str,), False, False)
-        if self.value is None:
-            raise ValueError('LargeBarStatCard.value is required.')
         _guard_scalar('LargeBarStatCard.value', self.value, (str,), False, False)
-        if self.aux_value is None:
-            raise ValueError('LargeBarStatCard.aux_value is required.')
         _guard_scalar('LargeBarStatCard.aux_value', self.aux_value, (str,), False, False)
-        if self.value_caption is None:
-            raise ValueError('LargeBarStatCard.value_caption is required.')
         _guard_scalar('LargeBarStatCard.value_caption', self.value_caption, (str,), False, False)
-        if self.aux_value_caption is None:
-            raise ValueError('LargeBarStatCard.aux_value_caption is required.')
         _guard_scalar('LargeBarStatCard.aux_value_caption', self.aux_value_caption, (str,), False, False)
-        if self.progress is None:
-            raise ValueError('LargeBarStatCard.progress is required.')
         _guard_scalar('LargeBarStatCard.progress', self.progress, (float, int,), False, False)
         _guard_scalar('LargeBarStatCard.plot_color', self.plot_color, (str,), True, False)
         _guard_vector('LargeBarStatCard.commands', self.commands, (Command,), True, False)
@@ -6648,36 +6136,20 @@ class LargeBarStatCard:
     def load(__d: Dict) -> 'LargeBarStatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('LargeBarStatCard.box is required.')
         _guard_scalar('LargeBarStatCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('LargeBarStatCard.title is required.')
         _guard_scalar('LargeBarStatCard.title', __d_title, (str,), False, False)
         __d_caption: Any = __d.get('caption')
-        if __d_caption is None:
-            raise ValueError('LargeBarStatCard.caption is required.')
         _guard_scalar('LargeBarStatCard.caption', __d_caption, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('LargeBarStatCard.value is required.')
         _guard_scalar('LargeBarStatCard.value', __d_value, (str,), False, False)
         __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('LargeBarStatCard.aux_value is required.')
         _guard_scalar('LargeBarStatCard.aux_value', __d_aux_value, (str,), False, False)
         __d_value_caption: Any = __d.get('value_caption')
-        if __d_value_caption is None:
-            raise ValueError('LargeBarStatCard.value_caption is required.')
         _guard_scalar('LargeBarStatCard.value_caption', __d_value_caption, (str,), False, False)
         __d_aux_value_caption: Any = __d.get('aux_value_caption')
-        if __d_aux_value_caption is None:
-            raise ValueError('LargeBarStatCard.aux_value_caption is required.')
         _guard_scalar('LargeBarStatCard.aux_value_caption', __d_aux_value_caption, (str,), False, False)
         __d_progress: Any = __d.get('progress')
-        if __d_progress is None:
-            raise ValueError('LargeBarStatCard.progress is required.')
         _guard_scalar('LargeBarStatCard.progress', __d_progress, (float, int,), False, False)
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('LargeBarStatCard.plot_color', __d_plot_color, (str,), True, False)
@@ -6723,20 +6195,10 @@ class LargeStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('LargeStatCard.box is required.')
         _guard_scalar('LargeStatCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('LargeStatCard.title is required.')
         _guard_scalar('LargeStatCard.title', title, (str,), False, False)
-        if value is None:
-            raise ValueError('LargeStatCard.value is required.')
         _guard_scalar('LargeStatCard.value', value, (str,), False, False)
-        if aux_value is None:
-            raise ValueError('LargeStatCard.aux_value is required.')
         _guard_scalar('LargeStatCard.aux_value', aux_value, (str,), False, False)
-        if caption is None:
-            raise ValueError('LargeStatCard.caption is required.')
         _guard_scalar('LargeStatCard.caption', caption, (str,), False, False)
         _guard_vector('LargeStatCard.commands', commands, (Command,), True, False)
         self.box = box
@@ -6756,20 +6218,10 @@ class LargeStatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('LargeStatCard.box is required.')
         _guard_scalar('LargeStatCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('LargeStatCard.title is required.')
         _guard_scalar('LargeStatCard.title', self.title, (str,), False, False)
-        if self.value is None:
-            raise ValueError('LargeStatCard.value is required.')
         _guard_scalar('LargeStatCard.value', self.value, (str,), False, False)
-        if self.aux_value is None:
-            raise ValueError('LargeStatCard.aux_value is required.')
         _guard_scalar('LargeStatCard.aux_value', self.aux_value, (str,), False, False)
-        if self.caption is None:
-            raise ValueError('LargeStatCard.caption is required.')
         _guard_scalar('LargeStatCard.caption', self.caption, (str,), False, False)
         _guard_vector('LargeStatCard.commands', self.commands, (Command,), True, False)
         return _dump(
@@ -6787,24 +6239,14 @@ class LargeStatCard:
     def load(__d: Dict) -> 'LargeStatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('LargeStatCard.box is required.')
         _guard_scalar('LargeStatCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('LargeStatCard.title is required.')
         _guard_scalar('LargeStatCard.title', __d_title, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('LargeStatCard.value is required.')
         _guard_scalar('LargeStatCard.value', __d_value, (str,), False, False)
         __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('LargeStatCard.aux_value is required.')
         _guard_scalar('LargeStatCard.aux_value', __d_aux_value, (str,), False, False)
         __d_caption: Any = __d.get('caption')
-        if __d_caption is None:
-            raise ValueError('LargeStatCard.caption is required.')
         _guard_scalar('LargeStatCard.caption', __d_caption, (str,), False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
@@ -6840,19 +6282,9 @@ class ListCard:
             data: PackedData,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('ListCard.box is required.')
         _guard_scalar('ListCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('ListCard.title is required.')
         _guard_scalar('ListCard.title', title, (str,), False, False)
-        if item_view is None:
-            raise ValueError('ListCard.item_view is required.')
         _guard_scalar('ListCard.item_view', item_view, (str,), False, False)
-        if item_props is None:
-            raise ValueError('ListCard.item_props is required.')
-        if data is None:
-            raise ValueError('ListCard.data is required.')
         _guard_vector('ListCard.commands', commands, (Command,), True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6869,19 +6301,9 @@ class ListCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('ListCard.box is required.')
         _guard_scalar('ListCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('ListCard.title is required.')
         _guard_scalar('ListCard.title', self.title, (str,), False, False)
-        if self.item_view is None:
-            raise ValueError('ListCard.item_view is required.')
         _guard_scalar('ListCard.item_view', self.item_view, (str,), False, False)
-        if self.item_props is None:
-            raise ValueError('ListCard.item_props is required.')
-        if self.data is None:
-            raise ValueError('ListCard.data is required.')
         _guard_vector('ListCard.commands', self.commands, (Command,), True, False)
         return _dump(
             view='list',
@@ -6897,23 +6319,13 @@ class ListCard:
     def load(__d: Dict) -> 'ListCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('ListCard.box is required.')
         _guard_scalar('ListCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('ListCard.title is required.')
         _guard_scalar('ListCard.title', __d_title, (str,), False, False)
         __d_item_view: Any = __d.get('item_view')
-        if __d_item_view is None:
-            raise ValueError('ListCard.item_view is required.')
         _guard_scalar('ListCard.item_view', __d_item_view, (str,), False, False)
         __d_item_props: Any = __d.get('item_props')
-        if __d_item_props is None:
-            raise ValueError('ListCard.item_props is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('ListCard.data is required.')
         __d_commands: Any = __d.get('commands')
         _guard_vector('ListCard.commands', __d_commands, (Command,), True, False)
         box: str = __d_box
@@ -6945,23 +6357,11 @@ class ListItem1Card:
             data: PackedRecord,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('ListItem1Card.box is required.')
         _guard_scalar('ListItem1Card.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('ListItem1Card.title is required.')
         _guard_scalar('ListItem1Card.title', title, (str,), False, False)
-        if caption is None:
-            raise ValueError('ListItem1Card.caption is required.')
         _guard_scalar('ListItem1Card.caption', caption, (str,), False, False)
-        if value is None:
-            raise ValueError('ListItem1Card.value is required.')
         _guard_scalar('ListItem1Card.value', value, (str,), False, False)
-        if aux_value is None:
-            raise ValueError('ListItem1Card.aux_value is required.')
         _guard_scalar('ListItem1Card.aux_value', aux_value, (str,), False, False)
-        if data is None:
-            raise ValueError('ListItem1Card.data is required.')
         _guard_vector('ListItem1Card.commands', commands, (Command,), True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6980,23 +6380,11 @@ class ListItem1Card:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('ListItem1Card.box is required.')
         _guard_scalar('ListItem1Card.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('ListItem1Card.title is required.')
         _guard_scalar('ListItem1Card.title', self.title, (str,), False, False)
-        if self.caption is None:
-            raise ValueError('ListItem1Card.caption is required.')
         _guard_scalar('ListItem1Card.caption', self.caption, (str,), False, False)
-        if self.value is None:
-            raise ValueError('ListItem1Card.value is required.')
         _guard_scalar('ListItem1Card.value', self.value, (str,), False, False)
-        if self.aux_value is None:
-            raise ValueError('ListItem1Card.aux_value is required.')
         _guard_scalar('ListItem1Card.aux_value', self.aux_value, (str,), False, False)
-        if self.data is None:
-            raise ValueError('ListItem1Card.data is required.')
         _guard_vector('ListItem1Card.commands', self.commands, (Command,), True, False)
         return _dump(
             view='list_item1',
@@ -7013,28 +6401,16 @@ class ListItem1Card:
     def load(__d: Dict) -> 'ListItem1Card':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('ListItem1Card.box is required.')
         _guard_scalar('ListItem1Card.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('ListItem1Card.title is required.')
         _guard_scalar('ListItem1Card.title', __d_title, (str,), False, False)
         __d_caption: Any = __d.get('caption')
-        if __d_caption is None:
-            raise ValueError('ListItem1Card.caption is required.')
         _guard_scalar('ListItem1Card.caption', __d_caption, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('ListItem1Card.value is required.')
         _guard_scalar('ListItem1Card.value', __d_value, (str,), False, False)
         __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('ListItem1Card.aux_value is required.')
         _guard_scalar('ListItem1Card.aux_value', __d_aux_value, (str,), False, False)
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('ListItem1Card.data is required.')
         __d_commands: Any = __d.get('commands')
         _guard_vector('ListItem1Card.commands', __d_commands, (Command,), True, False)
         box: str = __d_box
@@ -7071,14 +6447,8 @@ class MarkdownCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('MarkdownCard.box is required.')
         _guard_scalar('MarkdownCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('MarkdownCard.title is required.')
         _guard_scalar('MarkdownCard.title', title, (str,), False, False)
-        if content is None:
-            raise ValueError('MarkdownCard.content is required.')
         _guard_scalar('MarkdownCard.content', content, (str,), False, False)
         _guard_vector('MarkdownCard.commands', commands, (Command,), True, False)
         self.box = box
@@ -7094,14 +6464,8 @@ class MarkdownCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('MarkdownCard.box is required.')
         _guard_scalar('MarkdownCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('MarkdownCard.title is required.')
         _guard_scalar('MarkdownCard.title', self.title, (str,), False, False)
-        if self.content is None:
-            raise ValueError('MarkdownCard.content is required.')
         _guard_scalar('MarkdownCard.content', self.content, (str,), False, False)
         _guard_vector('MarkdownCard.commands', self.commands, (Command,), True, False)
         return _dump(
@@ -7117,16 +6481,10 @@ class MarkdownCard:
     def load(__d: Dict) -> 'MarkdownCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('MarkdownCard.box is required.')
         _guard_scalar('MarkdownCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('MarkdownCard.title is required.')
         _guard_scalar('MarkdownCard.title', __d_title, (str,), False, False)
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('MarkdownCard.content is required.')
         _guard_scalar('MarkdownCard.content', __d_content, (str,), False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
@@ -7155,14 +6513,8 @@ class MarkupCard:
             content: str,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('MarkupCard.box is required.')
         _guard_scalar('MarkupCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('MarkupCard.title is required.')
         _guard_scalar('MarkupCard.title', title, (str,), False, False)
-        if content is None:
-            raise ValueError('MarkupCard.content is required.')
         _guard_scalar('MarkupCard.content', content, (str,), False, False)
         _guard_vector('MarkupCard.commands', commands, (Command,), True, False)
         self.box = box
@@ -7176,14 +6528,8 @@ class MarkupCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('MarkupCard.box is required.')
         _guard_scalar('MarkupCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('MarkupCard.title is required.')
         _guard_scalar('MarkupCard.title', self.title, (str,), False, False)
-        if self.content is None:
-            raise ValueError('MarkupCard.content is required.')
         _guard_scalar('MarkupCard.content', self.content, (str,), False, False)
         _guard_vector('MarkupCard.commands', self.commands, (Command,), True, False)
         return _dump(
@@ -7198,16 +6544,10 @@ class MarkupCard:
     def load(__d: Dict) -> 'MarkupCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('MarkupCard.box is required.')
         _guard_scalar('MarkupCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('MarkupCard.title is required.')
         _guard_scalar('MarkupCard.title', __d_title, (str,), False, False)
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('MarkupCard.content is required.')
         _guard_scalar('MarkupCard.content', __d_content, (str,), False, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MarkupCard.commands', __d_commands, (Command,), True, False)
@@ -7277,8 +6617,6 @@ class Zone:
             wrap: Optional[str] = None,
             zones: Optional[List['Zone']] = None,
     ):
-        if name is None:
-            raise ValueError('Zone.name is required.')
         _guard_scalar('Zone.name', name, (str,), False, False)
         _guard_scalar('Zone.size', size, (str,), True, False)
         _guard_enum('Zone.direction', direction, _ZoneDirection, True)
@@ -7303,8 +6641,6 @@ class Zone:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.name is None:
-            raise ValueError('Zone.name is required.')
         _guard_scalar('Zone.name', self.name, (str,), False, False)
         _guard_scalar('Zone.size', self.size, (str,), True, False)
         _guard_enum('Zone.direction', self.direction, _ZoneDirection, True)
@@ -7326,8 +6662,6 @@ class Zone:
     def load(__d: Dict) -> 'Zone':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        if __d_name is None:
-            raise ValueError('Zone.name is required.')
         _guard_scalar('Zone.name', __d_name, (str,), False, False)
         __d_size: Any = __d.get('size')
         _guard_scalar('Zone.size', __d_size, (str,), True, False)
@@ -7373,11 +6707,7 @@ class Layout:
             min_height: Optional[str] = None,
             max_height: Optional[str] = None,
     ):
-        if breakpoint is None:
-            raise ValueError('Layout.breakpoint is required.')
         _guard_scalar('Layout.breakpoint', breakpoint, (str,), False, False)
-        if zones is None:
-            raise ValueError('Layout.zones is required.')
         _guard_vector('Layout.zones', zones, (Zone,), False, False)
         _guard_scalar('Layout.width', width, (str,), True, False)
         _guard_scalar('Layout.min_width', min_width, (str,), True, False)
@@ -7404,11 +6734,7 @@ class Layout:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.breakpoint is None:
-            raise ValueError('Layout.breakpoint is required.')
         _guard_scalar('Layout.breakpoint', self.breakpoint, (str,), False, False)
-        if self.zones is None:
-            raise ValueError('Layout.zones is required.')
         _guard_vector('Layout.zones', self.zones, (Zone,), False, False)
         _guard_scalar('Layout.width', self.width, (str,), True, False)
         _guard_scalar('Layout.min_width', self.min_width, (str,), True, False)
@@ -7431,12 +6757,8 @@ class Layout:
     def load(__d: Dict) -> 'Layout':
         """Creates an instance of this class using the contents of a dict."""
         __d_breakpoint: Any = __d.get('breakpoint')
-        if __d_breakpoint is None:
-            raise ValueError('Layout.breakpoint is required.')
         _guard_scalar('Layout.breakpoint', __d_breakpoint, (str,), False, False)
         __d_zones: Any = __d.get('zones')
-        if __d_zones is None:
-            raise ValueError('Layout.zones is required.')
         _guard_vector('Layout.zones', __d_zones, (Zone,), False, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('Layout.width', __d_width, (str,), True, False)
@@ -7484,11 +6806,7 @@ class Dialog:
             blocking: Optional[bool] = None,
             primary: Optional[bool] = None,
     ):
-        if title is None:
-            raise ValueError('Dialog.title is required.')
         _guard_scalar('Dialog.title', title, (str,), False, False)
-        if items is None:
-            raise ValueError('Dialog.items is required.')
         _guard_vector('Dialog.items', items, (Component,), False, False)
         _guard_scalar('Dialog.width', width, (str,), True, False)
         _guard_scalar('Dialog.closable', closable, (bool,), True, False)
@@ -7509,11 +6827,7 @@ class Dialog:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.title is None:
-            raise ValueError('Dialog.title is required.')
         _guard_scalar('Dialog.title', self.title, (str,), False, False)
-        if self.items is None:
-            raise ValueError('Dialog.items is required.')
         _guard_vector('Dialog.items', self.items, (Component,), False, False)
         _guard_scalar('Dialog.width', self.width, (str,), True, False)
         _guard_scalar('Dialog.closable', self.closable, (bool,), True, False)
@@ -7532,12 +6846,8 @@ class Dialog:
     def load(__d: Dict) -> 'Dialog':
         """Creates an instance of this class using the contents of a dict."""
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('Dialog.title is required.')
         _guard_scalar('Dialog.title', __d_title, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('Dialog.items is required.')
         _guard_vector('Dialog.items', __d_items, (Component,), False, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('Dialog.width', __d_width, (str,), True, False)
@@ -7581,8 +6891,6 @@ class MetaCard:
             dialog: Optional[Dialog] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('MetaCard.box is required.')
         _guard_scalar('MetaCard.box', box, (str,), False, False)
         _guard_scalar('MetaCard.title', title, (str,), True, False)
         _guard_scalar('MetaCard.refresh', refresh, (int,), True, False)
@@ -7613,8 +6921,6 @@ class MetaCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('MetaCard.box is required.')
         _guard_scalar('MetaCard.box', self.box, (str,), False, False)
         _guard_scalar('MetaCard.title', self.title, (str,), True, False)
         _guard_scalar('MetaCard.refresh', self.refresh, (int,), True, False)
@@ -7641,8 +6947,6 @@ class MetaCard:
     def load(__d: Dict) -> 'MetaCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('MetaCard.box is required.')
         _guard_scalar('MetaCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
         _guard_scalar('MetaCard.title', __d_title, (str,), True, False)
@@ -7692,11 +6996,7 @@ class NavCard:
             value: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('NavCard.box is required.')
         _guard_scalar('NavCard.box', box, (str,), False, False)
-        if items is None:
-            raise ValueError('NavCard.items is required.')
         _guard_vector('NavCard.items', items, (NavGroup,), False, False)
         _guard_scalar('NavCard.value', value, (str,), True, False)
         _guard_vector('NavCard.commands', commands, (Command,), True, False)
@@ -7711,11 +7011,7 @@ class NavCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('NavCard.box is required.')
         _guard_scalar('NavCard.box', self.box, (str,), False, False)
-        if self.items is None:
-            raise ValueError('NavCard.items is required.')
         _guard_vector('NavCard.items', self.items, (NavGroup,), False, False)
         _guard_scalar('NavCard.value', self.value, (str,), True, False)
         _guard_vector('NavCard.commands', self.commands, (Command,), True, False)
@@ -7731,12 +7027,8 @@ class NavCard:
     def load(__d: Dict) -> 'NavCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('NavCard.box is required.')
         _guard_scalar('NavCard.box', __d_box, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('NavCard.items is required.')
         _guard_vector('NavCard.items', __d_items, (NavGroup,), False, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('NavCard.value', __d_value, (str,), True, False)
@@ -7764,14 +7056,8 @@ class PixelArtCard:
             data: PackedRecord,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('PixelArtCard.box is required.')
         _guard_scalar('PixelArtCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('PixelArtCard.title is required.')
         _guard_scalar('PixelArtCard.title', title, (str,), False, False)
-        if data is None:
-            raise ValueError('PixelArtCard.data is required.')
         _guard_vector('PixelArtCard.commands', commands, (Command,), True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7784,14 +7070,8 @@ class PixelArtCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('PixelArtCard.box is required.')
         _guard_scalar('PixelArtCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('PixelArtCard.title is required.')
         _guard_scalar('PixelArtCard.title', self.title, (str,), False, False)
-        if self.data is None:
-            raise ValueError('PixelArtCard.data is required.')
         _guard_vector('PixelArtCard.commands', self.commands, (Command,), True, False)
         return _dump(
             view='pixel_art',
@@ -7805,16 +7085,10 @@ class PixelArtCard:
     def load(__d: Dict) -> 'PixelArtCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('PixelArtCard.box is required.')
         _guard_scalar('PixelArtCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('PixelArtCard.title is required.')
         _guard_scalar('PixelArtCard.title', __d_title, (str,), False, False)
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('PixelArtCard.data is required.')
         __d_commands: Any = __d.get('commands')
         _guard_vector('PixelArtCard.commands', __d_commands, (Command,), True, False)
         box: str = __d_box
@@ -7841,16 +7115,8 @@ class PlotCard:
             events: Optional[List[str]] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('PlotCard.box is required.')
         _guard_scalar('PlotCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('PlotCard.title is required.')
         _guard_scalar('PlotCard.title', title, (str,), False, False)
-        if data is None:
-            raise ValueError('PlotCard.data is required.')
-        if plot is None:
-            raise ValueError('PlotCard.plot is required.')
         _guard_scalar('PlotCard.plot', plot, (Plot,), False, False)
         _guard_vector('PlotCard.events', events, (str,), True, False)
         _guard_vector('PlotCard.commands', commands, (Command,), True, False)
@@ -7869,16 +7135,8 @@ class PlotCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('PlotCard.box is required.')
         _guard_scalar('PlotCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('PlotCard.title is required.')
         _guard_scalar('PlotCard.title', self.title, (str,), False, False)
-        if self.data is None:
-            raise ValueError('PlotCard.data is required.')
-        if self.plot is None:
-            raise ValueError('PlotCard.plot is required.')
         _guard_scalar('PlotCard.plot', self.plot, (Plot,), False, False)
         _guard_vector('PlotCard.events', self.events, (str,), True, False)
         _guard_vector('PlotCard.commands', self.commands, (Command,), True, False)
@@ -7896,19 +7154,11 @@ class PlotCard:
     def load(__d: Dict) -> 'PlotCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('PlotCard.box is required.')
         _guard_scalar('PlotCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('PlotCard.title is required.')
         _guard_scalar('PlotCard.title', __d_title, (str,), False, False)
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('PlotCard.data is required.')
         __d_plot: Any = __d.get('plot')
-        if __d_plot is None:
-            raise ValueError('PlotCard.plot is required.')
         _guard_scalar('PlotCard.plot', __d_plot, (Plot,), False, False)
         __d_events: Any = __d.get('events')
         _guard_vector('PlotCard.events', __d_events, (str,), True, False)
@@ -7942,16 +7192,8 @@ class RepeatCard:
             data: PackedData,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('RepeatCard.box is required.')
         _guard_scalar('RepeatCard.box', box, (str,), False, False)
-        if item_view is None:
-            raise ValueError('RepeatCard.item_view is required.')
         _guard_scalar('RepeatCard.item_view', item_view, (str,), False, False)
-        if item_props is None:
-            raise ValueError('RepeatCard.item_props is required.')
-        if data is None:
-            raise ValueError('RepeatCard.data is required.')
         _guard_vector('RepeatCard.commands', commands, (Command,), True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7966,16 +7208,8 @@ class RepeatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('RepeatCard.box is required.')
         _guard_scalar('RepeatCard.box', self.box, (str,), False, False)
-        if self.item_view is None:
-            raise ValueError('RepeatCard.item_view is required.')
         _guard_scalar('RepeatCard.item_view', self.item_view, (str,), False, False)
-        if self.item_props is None:
-            raise ValueError('RepeatCard.item_props is required.')
-        if self.data is None:
-            raise ValueError('RepeatCard.data is required.')
         _guard_vector('RepeatCard.commands', self.commands, (Command,), True, False)
         return _dump(
             view='repeat',
@@ -7990,19 +7224,11 @@ class RepeatCard:
     def load(__d: Dict) -> 'RepeatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('RepeatCard.box is required.')
         _guard_scalar('RepeatCard.box', __d_box, (str,), False, False)
         __d_item_view: Any = __d.get('item_view')
-        if __d_item_view is None:
-            raise ValueError('RepeatCard.item_view is required.')
         _guard_scalar('RepeatCard.item_view', __d_item_view, (str,), False, False)
         __d_item_props: Any = __d.get('item_props')
-        if __d_item_props is None:
-            raise ValueError('RepeatCard.item_props is required.')
         __d_data: Any = __d.get('data')
-        if __d_data is None:
-            raise ValueError('RepeatCard.data is required.')
         __d_commands: Any = __d.get('commands')
         _guard_vector('RepeatCard.commands', __d_commands, (Command,), True, False)
         box: str = __d_box
@@ -8031,14 +7257,8 @@ class SectionCard:
             items: Optional[Union[List[Component], str]] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('SectionCard.box is required.')
         _guard_scalar('SectionCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('SectionCard.title is required.')
         _guard_scalar('SectionCard.title', title, (str,), False, False)
-        if subtitle is None:
-            raise ValueError('SectionCard.subtitle is required.')
         _guard_scalar('SectionCard.subtitle', subtitle, (str,), False, False)
         _guard_vector('SectionCard.items', items, (Component,), True, True)
         _guard_vector('SectionCard.commands', commands, (Command,), True, False)
@@ -8055,14 +7275,8 @@ class SectionCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('SectionCard.box is required.')
         _guard_scalar('SectionCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('SectionCard.title is required.')
         _guard_scalar('SectionCard.title', self.title, (str,), False, False)
-        if self.subtitle is None:
-            raise ValueError('SectionCard.subtitle is required.')
         _guard_scalar('SectionCard.subtitle', self.subtitle, (str,), False, False)
         _guard_vector('SectionCard.items', self.items, (Component,), True, True)
         _guard_vector('SectionCard.commands', self.commands, (Command,), True, False)
@@ -8079,16 +7293,10 @@ class SectionCard:
     def load(__d: Dict) -> 'SectionCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('SectionCard.box is required.')
         _guard_scalar('SectionCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('SectionCard.title is required.')
         _guard_scalar('SectionCard.title', __d_title, (str,), False, False)
         __d_subtitle: Any = __d.get('subtitle')
-        if __d_subtitle is None:
-            raise ValueError('SectionCard.subtitle is required.')
         _guard_scalar('SectionCard.subtitle', __d_subtitle, (str,), False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('SectionCard.items', __d_items, (Component,), True, True)
@@ -8145,19 +7353,9 @@ class SmallSeriesStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('SmallSeriesStatCard.box is required.')
         _guard_scalar('SmallSeriesStatCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('SmallSeriesStatCard.title is required.')
         _guard_scalar('SmallSeriesStatCard.title', title, (str,), False, False)
-        if value is None:
-            raise ValueError('SmallSeriesStatCard.value is required.')
         _guard_scalar('SmallSeriesStatCard.value', value, (str,), False, False)
-        if plot_data is None:
-            raise ValueError('SmallSeriesStatCard.plot_data is required.')
-        if plot_value is None:
-            raise ValueError('SmallSeriesStatCard.plot_value is required.')
         _guard_scalar('SmallSeriesStatCard.plot_value', plot_value, (str,), False, False)
         _guard_scalar('SmallSeriesStatCard.plot_zero_value', plot_zero_value, (float, int,), True, False)
         _guard_scalar('SmallSeriesStatCard.plot_category', plot_category, (str,), True, False)
@@ -8192,19 +7390,9 @@ class SmallSeriesStatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('SmallSeriesStatCard.box is required.')
         _guard_scalar('SmallSeriesStatCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('SmallSeriesStatCard.title is required.')
         _guard_scalar('SmallSeriesStatCard.title', self.title, (str,), False, False)
-        if self.value is None:
-            raise ValueError('SmallSeriesStatCard.value is required.')
         _guard_scalar('SmallSeriesStatCard.value', self.value, (str,), False, False)
-        if self.plot_data is None:
-            raise ValueError('SmallSeriesStatCard.plot_data is required.')
-        if self.plot_value is None:
-            raise ValueError('SmallSeriesStatCard.plot_value is required.')
         _guard_scalar('SmallSeriesStatCard.plot_value', self.plot_value, (str,), False, False)
         _guard_scalar('SmallSeriesStatCard.plot_zero_value', self.plot_zero_value, (float, int,), True, False)
         _guard_scalar('SmallSeriesStatCard.plot_category', self.plot_category, (str,), True, False)
@@ -8232,23 +7420,13 @@ class SmallSeriesStatCard:
     def load(__d: Dict) -> 'SmallSeriesStatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('SmallSeriesStatCard.box is required.')
         _guard_scalar('SmallSeriesStatCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('SmallSeriesStatCard.title is required.')
         _guard_scalar('SmallSeriesStatCard.title', __d_title, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('SmallSeriesStatCard.value is required.')
         _guard_scalar('SmallSeriesStatCard.value', __d_value, (str,), False, False)
         __d_plot_data: Any = __d.get('plot_data')
-        if __d_plot_data is None:
-            raise ValueError('SmallSeriesStatCard.plot_data is required.')
         __d_plot_value: Any = __d.get('plot_value')
-        if __d_plot_value is None:
-            raise ValueError('SmallSeriesStatCard.plot_value is required.')
         _guard_scalar('SmallSeriesStatCard.plot_value', __d_plot_value, (str,), False, False)
         __d_plot_zero_value: Any = __d.get('plot_zero_value')
         _guard_scalar('SmallSeriesStatCard.plot_zero_value', __d_plot_zero_value, (float, int,), True, False)
@@ -8302,14 +7480,8 @@ class SmallStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('SmallStatCard.box is required.')
         _guard_scalar('SmallStatCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('SmallStatCard.title is required.')
         _guard_scalar('SmallStatCard.title', title, (str,), False, False)
-        if value is None:
-            raise ValueError('SmallStatCard.value is required.')
         _guard_scalar('SmallStatCard.value', value, (str,), False, False)
         _guard_vector('SmallStatCard.commands', commands, (Command,), True, False)
         self.box = box
@@ -8325,14 +7497,8 @@ class SmallStatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('SmallStatCard.box is required.')
         _guard_scalar('SmallStatCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('SmallStatCard.title is required.')
         _guard_scalar('SmallStatCard.title', self.title, (str,), False, False)
-        if self.value is None:
-            raise ValueError('SmallStatCard.value is required.')
         _guard_scalar('SmallStatCard.value', self.value, (str,), False, False)
         _guard_vector('SmallStatCard.commands', self.commands, (Command,), True, False)
         return _dump(
@@ -8348,16 +7514,10 @@ class SmallStatCard:
     def load(__d: Dict) -> 'SmallStatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('SmallStatCard.box is required.')
         _guard_scalar('SmallStatCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('SmallStatCard.title is required.')
         _guard_scalar('SmallStatCard.title', __d_title, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('SmallStatCard.value is required.')
         _guard_scalar('SmallStatCard.value', __d_value, (str,), False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
@@ -8390,8 +7550,6 @@ class StatListItem:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
     ):
-        if label is None:
-            raise ValueError('StatListItem.label is required.')
         _guard_scalar('StatListItem.label', label, (str,), False, False)
         _guard_scalar('StatListItem.name', name, (str,), True, False)
         _guard_scalar('StatListItem.caption', caption, (str,), True, False)
@@ -8419,8 +7577,6 @@ class StatListItem:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('StatListItem.label is required.')
         _guard_scalar('StatListItem.label', self.label, (str,), False, False)
         _guard_scalar('StatListItem.name', self.name, (str,), True, False)
         _guard_scalar('StatListItem.caption', self.caption, (str,), True, False)
@@ -8444,8 +7600,6 @@ class StatListItem:
     def load(__d: Dict) -> 'StatListItem':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('StatListItem.label is required.')
         _guard_scalar('StatListItem.label', __d_label, (str,), False, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('StatListItem.name', __d_name, (str,), True, False)
@@ -8493,14 +7647,8 @@ class StatListCard:
             subtitle: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('StatListCard.box is required.')
         _guard_scalar('StatListCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('StatListCard.title is required.')
         _guard_scalar('StatListCard.title', title, (str,), False, False)
-        if items is None:
-            raise ValueError('StatListCard.items is required.')
         _guard_vector('StatListCard.items', items, (StatListItem,), False, False)
         _guard_scalar('StatListCard.name', name, (str,), True, False)
         _guard_scalar('StatListCard.subtitle', subtitle, (str,), True, False)
@@ -8520,14 +7668,8 @@ class StatListCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('StatListCard.box is required.')
         _guard_scalar('StatListCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('StatListCard.title is required.')
         _guard_scalar('StatListCard.title', self.title, (str,), False, False)
-        if self.items is None:
-            raise ValueError('StatListCard.items is required.')
         _guard_vector('StatListCard.items', self.items, (StatListItem,), False, False)
         _guard_scalar('StatListCard.name', self.name, (str,), True, False)
         _guard_scalar('StatListCard.subtitle', self.subtitle, (str,), True, False)
@@ -8546,16 +7688,10 @@ class StatListCard:
     def load(__d: Dict) -> 'StatListCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('StatListCard.box is required.')
         _guard_scalar('StatListCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('StatListCard.title is required.')
         _guard_scalar('StatListCard.title', __d_title, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('StatListCard.items is required.')
         _guard_vector('StatListCard.items', __d_items, (StatListItem,), False, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('StatListCard.name', __d_name, (str,), True, False)
@@ -8591,11 +7727,7 @@ class StatTableItem:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
     ):
-        if label is None:
-            raise ValueError('StatTableItem.label is required.')
         _guard_scalar('StatTableItem.label', label, (str,), False, False)
-        if values is None:
-            raise ValueError('StatTableItem.values is required.')
         _guard_vector('StatTableItem.values', values, (str,), False, False)
         _guard_scalar('StatTableItem.name', name, (str,), True, False)
         _guard_scalar('StatTableItem.caption', caption, (str,), True, False)
@@ -8616,11 +7748,7 @@ class StatTableItem:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.label is None:
-            raise ValueError('StatTableItem.label is required.')
         _guard_scalar('StatTableItem.label', self.label, (str,), False, False)
-        if self.values is None:
-            raise ValueError('StatTableItem.values is required.')
         _guard_vector('StatTableItem.values', self.values, (str,), False, False)
         _guard_scalar('StatTableItem.name', self.name, (str,), True, False)
         _guard_scalar('StatTableItem.caption', self.caption, (str,), True, False)
@@ -8639,12 +7767,8 @@ class StatTableItem:
     def load(__d: Dict) -> 'StatTableItem':
         """Creates an instance of this class using the contents of a dict."""
         __d_label: Any = __d.get('label')
-        if __d_label is None:
-            raise ValueError('StatTableItem.label is required.')
         _guard_scalar('StatTableItem.label', __d_label, (str,), False, False)
         __d_values: Any = __d.get('values')
-        if __d_values is None:
-            raise ValueError('StatTableItem.values is required.')
         _guard_vector('StatTableItem.values', __d_values, (str,), False, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('StatTableItem.name', __d_name, (str,), True, False)
@@ -8683,17 +7807,9 @@ class StatTableCard:
             subtitle: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('StatTableCard.box is required.')
         _guard_scalar('StatTableCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('StatTableCard.title is required.')
         _guard_scalar('StatTableCard.title', title, (str,), False, False)
-        if columns is None:
-            raise ValueError('StatTableCard.columns is required.')
         _guard_vector('StatTableCard.columns', columns, (str,), False, False)
-        if items is None:
-            raise ValueError('StatTableCard.items is required.')
         _guard_vector('StatTableCard.items', items, (StatTableItem,), False, False)
         _guard_scalar('StatTableCard.name', name, (str,), True, False)
         _guard_scalar('StatTableCard.subtitle', subtitle, (str,), True, False)
@@ -8715,17 +7831,9 @@ class StatTableCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('StatTableCard.box is required.')
         _guard_scalar('StatTableCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('StatTableCard.title is required.')
         _guard_scalar('StatTableCard.title', self.title, (str,), False, False)
-        if self.columns is None:
-            raise ValueError('StatTableCard.columns is required.')
         _guard_vector('StatTableCard.columns', self.columns, (str,), False, False)
-        if self.items is None:
-            raise ValueError('StatTableCard.items is required.')
         _guard_vector('StatTableCard.items', self.items, (StatTableItem,), False, False)
         _guard_scalar('StatTableCard.name', self.name, (str,), True, False)
         _guard_scalar('StatTableCard.subtitle', self.subtitle, (str,), True, False)
@@ -8745,20 +7853,12 @@ class StatTableCard:
     def load(__d: Dict) -> 'StatTableCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('StatTableCard.box is required.')
         _guard_scalar('StatTableCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('StatTableCard.title is required.')
         _guard_scalar('StatTableCard.title', __d_title, (str,), False, False)
         __d_columns: Any = __d.get('columns')
-        if __d_columns is None:
-            raise ValueError('StatTableCard.columns is required.')
         _guard_vector('StatTableCard.columns', __d_columns, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('StatTableCard.items is required.')
         _guard_vector('StatTableCard.items', __d_items, (StatTableItem,), False, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('StatTableCard.name', __d_name, (str,), True, False)
@@ -8796,11 +7896,7 @@ class TabCard:
             name: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('TabCard.box is required.')
         _guard_scalar('TabCard.box', box, (str,), False, False)
-        if items is None:
-            raise ValueError('TabCard.items is required.')
         _guard_vector('TabCard.items', items, (Tab,), False, False)
         _guard_scalar('TabCard.value', value, (str,), True, False)
         _guard_scalar('TabCard.link', link, (bool,), True, False)
@@ -8821,11 +7917,7 @@ class TabCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('TabCard.box is required.')
         _guard_scalar('TabCard.box', self.box, (str,), False, False)
-        if self.items is None:
-            raise ValueError('TabCard.items is required.')
         _guard_vector('TabCard.items', self.items, (Tab,), False, False)
         _guard_scalar('TabCard.value', self.value, (str,), True, False)
         _guard_scalar('TabCard.link', self.link, (bool,), True, False)
@@ -8845,12 +7937,8 @@ class TabCard:
     def load(__d: Dict) -> 'TabCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('TabCard.box is required.')
         _guard_scalar('TabCard.box', __d_box, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('TabCard.items is required.')
         _guard_vector('TabCard.items', __d_items, (Tab,), False, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('TabCard.value', __d_value, (str,), True, False)
@@ -8890,20 +7978,10 @@ class TallGaugeStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('TallGaugeStatCard.box is required.')
         _guard_scalar('TallGaugeStatCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('TallGaugeStatCard.title is required.')
         _guard_scalar('TallGaugeStatCard.title', title, (str,), False, False)
-        if value is None:
-            raise ValueError('TallGaugeStatCard.value is required.')
         _guard_scalar('TallGaugeStatCard.value', value, (str,), False, False)
-        if aux_value is None:
-            raise ValueError('TallGaugeStatCard.aux_value is required.')
         _guard_scalar('TallGaugeStatCard.aux_value', aux_value, (str,), False, False)
-        if progress is None:
-            raise ValueError('TallGaugeStatCard.progress is required.')
         _guard_scalar('TallGaugeStatCard.progress', progress, (float, int,), False, False)
         _guard_scalar('TallGaugeStatCard.plot_color', plot_color, (str,), True, False)
         _guard_vector('TallGaugeStatCard.commands', commands, (Command,), True, False)
@@ -8926,20 +8004,10 @@ class TallGaugeStatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('TallGaugeStatCard.box is required.')
         _guard_scalar('TallGaugeStatCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('TallGaugeStatCard.title is required.')
         _guard_scalar('TallGaugeStatCard.title', self.title, (str,), False, False)
-        if self.value is None:
-            raise ValueError('TallGaugeStatCard.value is required.')
         _guard_scalar('TallGaugeStatCard.value', self.value, (str,), False, False)
-        if self.aux_value is None:
-            raise ValueError('TallGaugeStatCard.aux_value is required.')
         _guard_scalar('TallGaugeStatCard.aux_value', self.aux_value, (str,), False, False)
-        if self.progress is None:
-            raise ValueError('TallGaugeStatCard.progress is required.')
         _guard_scalar('TallGaugeStatCard.progress', self.progress, (float, int,), False, False)
         _guard_scalar('TallGaugeStatCard.plot_color', self.plot_color, (str,), True, False)
         _guard_vector('TallGaugeStatCard.commands', self.commands, (Command,), True, False)
@@ -8959,24 +8027,14 @@ class TallGaugeStatCard:
     def load(__d: Dict) -> 'TallGaugeStatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('TallGaugeStatCard.box is required.')
         _guard_scalar('TallGaugeStatCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('TallGaugeStatCard.title is required.')
         _guard_scalar('TallGaugeStatCard.title', __d_title, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('TallGaugeStatCard.value is required.')
         _guard_scalar('TallGaugeStatCard.value', __d_value, (str,), False, False)
         __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('TallGaugeStatCard.aux_value is required.')
         _guard_scalar('TallGaugeStatCard.aux_value', __d_aux_value, (str,), False, False)
         __d_progress: Any = __d.get('progress')
-        if __d_progress is None:
-            raise ValueError('TallGaugeStatCard.progress is required.')
         _guard_scalar('TallGaugeStatCard.progress', __d_progress, (float, int,), False, False)
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('TallGaugeStatCard.plot_color', __d_plot_color, (str,), True, False)
@@ -9041,22 +8099,10 @@ class TallSeriesStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('TallSeriesStatCard.box is required.')
         _guard_scalar('TallSeriesStatCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('TallSeriesStatCard.title is required.')
         _guard_scalar('TallSeriesStatCard.title', title, (str,), False, False)
-        if value is None:
-            raise ValueError('TallSeriesStatCard.value is required.')
         _guard_scalar('TallSeriesStatCard.value', value, (str,), False, False)
-        if aux_value is None:
-            raise ValueError('TallSeriesStatCard.aux_value is required.')
         _guard_scalar('TallSeriesStatCard.aux_value', aux_value, (str,), False, False)
-        if plot_data is None:
-            raise ValueError('TallSeriesStatCard.plot_data is required.')
-        if plot_value is None:
-            raise ValueError('TallSeriesStatCard.plot_value is required.')
         _guard_scalar('TallSeriesStatCard.plot_value', plot_value, (str,), False, False)
         _guard_scalar('TallSeriesStatCard.plot_zero_value', plot_zero_value, (float, int,), True, False)
         _guard_scalar('TallSeriesStatCard.plot_category', plot_category, (str,), True, False)
@@ -9093,22 +8139,10 @@ class TallSeriesStatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('TallSeriesStatCard.box is required.')
         _guard_scalar('TallSeriesStatCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('TallSeriesStatCard.title is required.')
         _guard_scalar('TallSeriesStatCard.title', self.title, (str,), False, False)
-        if self.value is None:
-            raise ValueError('TallSeriesStatCard.value is required.')
         _guard_scalar('TallSeriesStatCard.value', self.value, (str,), False, False)
-        if self.aux_value is None:
-            raise ValueError('TallSeriesStatCard.aux_value is required.')
         _guard_scalar('TallSeriesStatCard.aux_value', self.aux_value, (str,), False, False)
-        if self.plot_data is None:
-            raise ValueError('TallSeriesStatCard.plot_data is required.')
-        if self.plot_value is None:
-            raise ValueError('TallSeriesStatCard.plot_value is required.')
         _guard_scalar('TallSeriesStatCard.plot_value', self.plot_value, (str,), False, False)
         _guard_scalar('TallSeriesStatCard.plot_zero_value', self.plot_zero_value, (float, int,), True, False)
         _guard_scalar('TallSeriesStatCard.plot_category', self.plot_category, (str,), True, False)
@@ -9137,27 +8171,15 @@ class TallSeriesStatCard:
     def load(__d: Dict) -> 'TallSeriesStatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('TallSeriesStatCard.box is required.')
         _guard_scalar('TallSeriesStatCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('TallSeriesStatCard.title is required.')
         _guard_scalar('TallSeriesStatCard.title', __d_title, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('TallSeriesStatCard.value is required.')
         _guard_scalar('TallSeriesStatCard.value', __d_value, (str,), False, False)
         __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('TallSeriesStatCard.aux_value is required.')
         _guard_scalar('TallSeriesStatCard.aux_value', __d_aux_value, (str,), False, False)
         __d_plot_data: Any = __d.get('plot_data')
-        if __d_plot_data is None:
-            raise ValueError('TallSeriesStatCard.plot_data is required.')
         __d_plot_value: Any = __d.get('plot_value')
-        if __d_plot_value is None:
-            raise ValueError('TallSeriesStatCard.plot_value is required.')
         _guard_scalar('TallSeriesStatCard.plot_value', __d_plot_value, (str,), False, False)
         __d_plot_zero_value: Any = __d.get('plot_zero_value')
         _guard_scalar('TallSeriesStatCard.plot_zero_value', __d_plot_zero_value, (float, int,), True, False)
@@ -9213,14 +8235,8 @@ class TemplateCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('TemplateCard.box is required.')
         _guard_scalar('TemplateCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('TemplateCard.title is required.')
         _guard_scalar('TemplateCard.title', title, (str,), False, False)
-        if content is None:
-            raise ValueError('TemplateCard.content is required.')
         _guard_scalar('TemplateCard.content', content, (str,), False, False)
         _guard_vector('TemplateCard.commands', commands, (Command,), True, False)
         self.box = box
@@ -9236,14 +8252,8 @@ class TemplateCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('TemplateCard.box is required.')
         _guard_scalar('TemplateCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('TemplateCard.title is required.')
         _guard_scalar('TemplateCard.title', self.title, (str,), False, False)
-        if self.content is None:
-            raise ValueError('TemplateCard.content is required.')
         _guard_scalar('TemplateCard.content', self.content, (str,), False, False)
         _guard_vector('TemplateCard.commands', self.commands, (Command,), True, False)
         return _dump(
@@ -9259,16 +8269,10 @@ class TemplateCard:
     def load(__d: Dict) -> 'TemplateCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('TemplateCard.box is required.')
         _guard_scalar('TemplateCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('TemplateCard.title is required.')
         _guard_scalar('TemplateCard.title', __d_title, (str,), False, False)
         __d_content: Any = __d.get('content')
-        if __d_content is None:
-            raise ValueError('TemplateCard.content is required.')
         _guard_scalar('TemplateCard.content', __d_content, (str,), False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
@@ -9298,11 +8302,7 @@ class ToolbarCard:
             overflow_items: Optional[List[Command]] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('ToolbarCard.box is required.')
         _guard_scalar('ToolbarCard.box', box, (str,), False, False)
-        if items is None:
-            raise ValueError('ToolbarCard.items is required.')
         _guard_vector('ToolbarCard.items', items, (Command,), False, False)
         _guard_vector('ToolbarCard.secondary_items', secondary_items, (Command,), True, False)
         _guard_vector('ToolbarCard.overflow_items', overflow_items, (Command,), True, False)
@@ -9320,11 +8320,7 @@ class ToolbarCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('ToolbarCard.box is required.')
         _guard_scalar('ToolbarCard.box', self.box, (str,), False, False)
-        if self.items is None:
-            raise ValueError('ToolbarCard.items is required.')
         _guard_vector('ToolbarCard.items', self.items, (Command,), False, False)
         _guard_vector('ToolbarCard.secondary_items', self.secondary_items, (Command,), True, False)
         _guard_vector('ToolbarCard.overflow_items', self.overflow_items, (Command,), True, False)
@@ -9342,12 +8338,8 @@ class ToolbarCard:
     def load(__d: Dict) -> 'ToolbarCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('ToolbarCard.box is required.')
         _guard_scalar('ToolbarCard.box', __d_box, (str,), False, False)
         __d_items: Any = __d.get('items')
-        if __d_items is None:
-            raise ValueError('ToolbarCard.items is required.')
         _guard_vector('ToolbarCard.items', __d_items, (Command,), False, False)
         __d_secondary_items: Any = __d.get('secondary_items')
         _guard_vector('ToolbarCard.secondary_items', __d_secondary_items, (Command,), True, False)
@@ -9380,14 +8372,8 @@ class VegaCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('VegaCard.box is required.')
         _guard_scalar('VegaCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('VegaCard.title is required.')
         _guard_scalar('VegaCard.title', title, (str,), False, False)
-        if specification is None:
-            raise ValueError('VegaCard.specification is required.')
         _guard_scalar('VegaCard.specification', specification, (str,), False, False)
         _guard_vector('VegaCard.commands', commands, (Command,), True, False)
         self.box = box
@@ -9403,14 +8389,8 @@ class VegaCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('VegaCard.box is required.')
         _guard_scalar('VegaCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('VegaCard.title is required.')
         _guard_scalar('VegaCard.title', self.title, (str,), False, False)
-        if self.specification is None:
-            raise ValueError('VegaCard.specification is required.')
         _guard_scalar('VegaCard.specification', self.specification, (str,), False, False)
         _guard_vector('VegaCard.commands', self.commands, (Command,), True, False)
         return _dump(
@@ -9426,16 +8406,10 @@ class VegaCard:
     def load(__d: Dict) -> 'VegaCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('VegaCard.box is required.')
         _guard_scalar('VegaCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('VegaCard.title is required.')
         _guard_scalar('VegaCard.title', __d_title, (str,), False, False)
         __d_specification: Any = __d.get('specification')
-        if __d_specification is None:
-            raise ValueError('VegaCard.specification is required.')
         _guard_scalar('VegaCard.specification', __d_specification, (str,), False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
@@ -9468,20 +8442,10 @@ class WideBarStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('WideBarStatCard.box is required.')
         _guard_scalar('WideBarStatCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('WideBarStatCard.title is required.')
         _guard_scalar('WideBarStatCard.title', title, (str,), False, False)
-        if value is None:
-            raise ValueError('WideBarStatCard.value is required.')
         _guard_scalar('WideBarStatCard.value', value, (str,), False, False)
-        if aux_value is None:
-            raise ValueError('WideBarStatCard.aux_value is required.')
         _guard_scalar('WideBarStatCard.aux_value', aux_value, (str,), False, False)
-        if progress is None:
-            raise ValueError('WideBarStatCard.progress is required.')
         _guard_scalar('WideBarStatCard.progress', progress, (float, int,), False, False)
         _guard_scalar('WideBarStatCard.plot_color', plot_color, (str,), True, False)
         _guard_vector('WideBarStatCard.commands', commands, (Command,), True, False)
@@ -9504,20 +8468,10 @@ class WideBarStatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('WideBarStatCard.box is required.')
         _guard_scalar('WideBarStatCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('WideBarStatCard.title is required.')
         _guard_scalar('WideBarStatCard.title', self.title, (str,), False, False)
-        if self.value is None:
-            raise ValueError('WideBarStatCard.value is required.')
         _guard_scalar('WideBarStatCard.value', self.value, (str,), False, False)
-        if self.aux_value is None:
-            raise ValueError('WideBarStatCard.aux_value is required.')
         _guard_scalar('WideBarStatCard.aux_value', self.aux_value, (str,), False, False)
-        if self.progress is None:
-            raise ValueError('WideBarStatCard.progress is required.')
         _guard_scalar('WideBarStatCard.progress', self.progress, (float, int,), False, False)
         _guard_scalar('WideBarStatCard.plot_color', self.plot_color, (str,), True, False)
         _guard_vector('WideBarStatCard.commands', self.commands, (Command,), True, False)
@@ -9537,24 +8491,14 @@ class WideBarStatCard:
     def load(__d: Dict) -> 'WideBarStatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('WideBarStatCard.box is required.')
         _guard_scalar('WideBarStatCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('WideBarStatCard.title is required.')
         _guard_scalar('WideBarStatCard.title', __d_title, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('WideBarStatCard.value is required.')
         _guard_scalar('WideBarStatCard.value', __d_value, (str,), False, False)
         __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('WideBarStatCard.aux_value is required.')
         _guard_scalar('WideBarStatCard.aux_value', __d_aux_value, (str,), False, False)
         __d_progress: Any = __d.get('progress')
-        if __d_progress is None:
-            raise ValueError('WideBarStatCard.progress is required.')
         _guard_scalar('WideBarStatCard.progress', __d_progress, (float, int,), False, False)
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('WideBarStatCard.plot_color', __d_plot_color, (str,), True, False)
@@ -9595,20 +8539,10 @@ class WideGaugeStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('WideGaugeStatCard.box is required.')
         _guard_scalar('WideGaugeStatCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('WideGaugeStatCard.title is required.')
         _guard_scalar('WideGaugeStatCard.title', title, (str,), False, False)
-        if value is None:
-            raise ValueError('WideGaugeStatCard.value is required.')
         _guard_scalar('WideGaugeStatCard.value', value, (str,), False, False)
-        if aux_value is None:
-            raise ValueError('WideGaugeStatCard.aux_value is required.')
         _guard_scalar('WideGaugeStatCard.aux_value', aux_value, (str,), False, False)
-        if progress is None:
-            raise ValueError('WideGaugeStatCard.progress is required.')
         _guard_scalar('WideGaugeStatCard.progress', progress, (float, int,), False, False)
         _guard_scalar('WideGaugeStatCard.plot_color', plot_color, (str,), True, False)
         _guard_vector('WideGaugeStatCard.commands', commands, (Command,), True, False)
@@ -9631,20 +8565,10 @@ class WideGaugeStatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('WideGaugeStatCard.box is required.')
         _guard_scalar('WideGaugeStatCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('WideGaugeStatCard.title is required.')
         _guard_scalar('WideGaugeStatCard.title', self.title, (str,), False, False)
-        if self.value is None:
-            raise ValueError('WideGaugeStatCard.value is required.')
         _guard_scalar('WideGaugeStatCard.value', self.value, (str,), False, False)
-        if self.aux_value is None:
-            raise ValueError('WideGaugeStatCard.aux_value is required.')
         _guard_scalar('WideGaugeStatCard.aux_value', self.aux_value, (str,), False, False)
-        if self.progress is None:
-            raise ValueError('WideGaugeStatCard.progress is required.')
         _guard_scalar('WideGaugeStatCard.progress', self.progress, (float, int,), False, False)
         _guard_scalar('WideGaugeStatCard.plot_color', self.plot_color, (str,), True, False)
         _guard_vector('WideGaugeStatCard.commands', self.commands, (Command,), True, False)
@@ -9664,24 +8588,14 @@ class WideGaugeStatCard:
     def load(__d: Dict) -> 'WideGaugeStatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('WideGaugeStatCard.box is required.')
         _guard_scalar('WideGaugeStatCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('WideGaugeStatCard.title is required.')
         _guard_scalar('WideGaugeStatCard.title', __d_title, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('WideGaugeStatCard.value is required.')
         _guard_scalar('WideGaugeStatCard.value', __d_value, (str,), False, False)
         __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('WideGaugeStatCard.aux_value is required.')
         _guard_scalar('WideGaugeStatCard.aux_value', __d_aux_value, (str,), False, False)
         __d_progress: Any = __d.get('progress')
-        if __d_progress is None:
-            raise ValueError('WideGaugeStatCard.progress is required.')
         _guard_scalar('WideGaugeStatCard.progress', __d_progress, (float, int,), False, False)
         __d_plot_color: Any = __d.get('plot_color')
         _guard_scalar('WideGaugeStatCard.plot_color', __d_plot_color, (str,), True, False)
@@ -9746,22 +8660,10 @@ class WideSeriesStatCard:
             data: Optional[PackedRecord] = None,
             commands: Optional[List[Command]] = None,
     ):
-        if box is None:
-            raise ValueError('WideSeriesStatCard.box is required.')
         _guard_scalar('WideSeriesStatCard.box', box, (str,), False, False)
-        if title is None:
-            raise ValueError('WideSeriesStatCard.title is required.')
         _guard_scalar('WideSeriesStatCard.title', title, (str,), False, False)
-        if value is None:
-            raise ValueError('WideSeriesStatCard.value is required.')
         _guard_scalar('WideSeriesStatCard.value', value, (str,), False, False)
-        if aux_value is None:
-            raise ValueError('WideSeriesStatCard.aux_value is required.')
         _guard_scalar('WideSeriesStatCard.aux_value', aux_value, (str,), False, False)
-        if plot_data is None:
-            raise ValueError('WideSeriesStatCard.plot_data is required.')
-        if plot_value is None:
-            raise ValueError('WideSeriesStatCard.plot_value is required.')
         _guard_scalar('WideSeriesStatCard.plot_value', plot_value, (str,), False, False)
         _guard_scalar('WideSeriesStatCard.plot_zero_value', plot_zero_value, (float, int,), True, False)
         _guard_scalar('WideSeriesStatCard.plot_category', plot_category, (str,), True, False)
@@ -9798,22 +8700,10 @@ class WideSeriesStatCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        if self.box is None:
-            raise ValueError('WideSeriesStatCard.box is required.')
         _guard_scalar('WideSeriesStatCard.box', self.box, (str,), False, False)
-        if self.title is None:
-            raise ValueError('WideSeriesStatCard.title is required.')
         _guard_scalar('WideSeriesStatCard.title', self.title, (str,), False, False)
-        if self.value is None:
-            raise ValueError('WideSeriesStatCard.value is required.')
         _guard_scalar('WideSeriesStatCard.value', self.value, (str,), False, False)
-        if self.aux_value is None:
-            raise ValueError('WideSeriesStatCard.aux_value is required.')
         _guard_scalar('WideSeriesStatCard.aux_value', self.aux_value, (str,), False, False)
-        if self.plot_data is None:
-            raise ValueError('WideSeriesStatCard.plot_data is required.')
-        if self.plot_value is None:
-            raise ValueError('WideSeriesStatCard.plot_value is required.')
         _guard_scalar('WideSeriesStatCard.plot_value', self.plot_value, (str,), False, False)
         _guard_scalar('WideSeriesStatCard.plot_zero_value', self.plot_zero_value, (float, int,), True, False)
         _guard_scalar('WideSeriesStatCard.plot_category', self.plot_category, (str,), True, False)
@@ -9842,27 +8732,15 @@ class WideSeriesStatCard:
     def load(__d: Dict) -> 'WideSeriesStatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        if __d_box is None:
-            raise ValueError('WideSeriesStatCard.box is required.')
         _guard_scalar('WideSeriesStatCard.box', __d_box, (str,), False, False)
         __d_title: Any = __d.get('title')
-        if __d_title is None:
-            raise ValueError('WideSeriesStatCard.title is required.')
         _guard_scalar('WideSeriesStatCard.title', __d_title, (str,), False, False)
         __d_value: Any = __d.get('value')
-        if __d_value is None:
-            raise ValueError('WideSeriesStatCard.value is required.')
         _guard_scalar('WideSeriesStatCard.value', __d_value, (str,), False, False)
         __d_aux_value: Any = __d.get('aux_value')
-        if __d_aux_value is None:
-            raise ValueError('WideSeriesStatCard.aux_value is required.')
         _guard_scalar('WideSeriesStatCard.aux_value', __d_aux_value, (str,), False, False)
         __d_plot_data: Any = __d.get('plot_data')
-        if __d_plot_data is None:
-            raise ValueError('WideSeriesStatCard.plot_data is required.')
         __d_plot_value: Any = __d.get('plot_value')
-        if __d_plot_value is None:
-            raise ValueError('WideSeriesStatCard.plot_value is required.')
         _guard_scalar('WideSeriesStatCard.plot_value', __d_plot_value, (str,), False, False)
         __d_plot_zero_value: Any = __d.get('plot_zero_value')
         _guard_scalar('WideSeriesStatCard.plot_zero_value', __d_plot_zero_value, (float, int,), True, False)

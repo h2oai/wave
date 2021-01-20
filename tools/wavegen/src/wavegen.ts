@@ -373,14 +373,6 @@ const
         return [knownTypes[t].name]
       },
       guardValue = (t: Type, m: Member, variable: S) => {
-        if (!m.isOptional) {
-          p(`        if ${variable} is None:`)
-          p(`            raise ValueError('${t.name}.${m.name} is required.')`)
-          if (m.t === MemberT.Enum) {
-            p(`        if ${variable} not in (${m.values.map(v => `'${v}'`).join(', ')}):`)
-            p(`            raise ValueError(f'Invalid value "{self.${m.name}}" for ${t.name}.${m.name}.')`)
-          }
-        }
         switch (m.t) {
           case MemberT.Singular:
           case MemberT.Repeated:
