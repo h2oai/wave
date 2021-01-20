@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Breadcrumb } from '@fluentui/react'
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { bond, Card, S, qd } from './qd'
+import { bond, Card, qd, S } from './qd'
 
 /** Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`. */
 interface Breadcrumb {
@@ -66,7 +66,7 @@ export const
       )),
       render = () => (
         <div data-test={name} className={css.card}>
-          <Breadcrumb items={items} />
+          <Fluent.Breadcrumb items={items} styles={{ root: { margin: 0 } }} />
         </div>
       )
 
