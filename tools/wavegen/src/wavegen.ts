@@ -352,8 +352,50 @@ const
         }
         return null
       },
-      genComments = (comments: S[], padding: S): S => {
-        return comments.map(c => (padding + c).trimRight()).join('\n').trim()
+      genComments = (comments: S[], padding: S): S => comments.map(c => (padding + c).trimRight()).join('\n').trim(),
+      mapValidationType = (t: S): S[] | null => {
+        switch (t) {
+          case 'S': // TODO non-empty string type
+            return ['str']
+          case 'F':
+            return ['float', 'int'] // allow ints, since JS doesn't care.
+          case 'I':
+          case 'U':
+            return ['int']
+          case 'B':
+            return ['bool']
+          case 'V':
+          case 'Rec':
+          case 'Recs':
+          case 'Data':
+            return null // TODO handle properly
+        }
+        return [knownTypes[t].name]
+      },
+      guardValue = (t: Type, m: Member, variable: S) => {
+        if (!m.isOptional) {
+          p(`        if ${variable} is None:`)
+          p(`            raise ValueError('${t.name}.${m.name} is required.')`)
+          if (m.t === MemberT.Enum) {
+            p(`        if ${variable} not in (${m.values.map(v => `'${v}'`).join(', ')}):`)
+            p(`            raise ValueError(f'Invalid value "{self.${m.name}}" for ${t.name}.${m.name}.')`)
+          }
+        }
+        switch (m.t) {
+          case MemberT.Singular:
+          case MemberT.Repeated:
+            {
+              const vts = mapValidationType(m.typeName)
+              if (vts) {
+                const vt = vts.map(t => `${t}`).join(', ')
+                p(`        _guard_${m.t === MemberT.Singular ? 'scalar' : 'vector'}('${t.name}.${m.name}', ${variable}, (${vt},), ${m.isOptional ? 'True' : 'False'}, ${m.isPacked ? 'True' : 'False'})`)
+              }
+            }
+            break
+          case MemberT.Enum:
+            p(`        _guard_enum('${t.name}.${m.name}', ${variable}, _${t.name}${titlecase(m.name)}, ${m.isOptional ? 'True' : 'False'})`)
+            break
+        }
       },
       genClass = (type: Type) => {
         if (classes[type.name] === Declaration.Declared || classes[type.name] === Declaration.Forward) return
@@ -370,8 +412,12 @@ const
 
         for (const m of type.members) {
           if (m.t == MemberT.Enum) {
+            const enumName = `${type.name}${titlecase(m.name)}`
             p('')
-            p(`class ${type.name}${titlecase(m.name)}:`)
+            p(`_${enumName} = [${m.values.map(v => `'${v}'`).join(', ')}]`)
+            p('')
+            p('')
+            p(`class ${enumName}:`)
             for (const v of m.values) {
               p(`    ${v.toUpperCase().replace(/-/, '_')} = '${v}'`)
             }
@@ -389,12 +435,8 @@ const
           p(`            ${getSigWithDefault(m)},`)
         }
         p(`    ):`)
-        for (const m of type.members) {
-          if (!m.isOptional) {
-            p(`        if ${m.name} is None:`)
-            p(`            raise ValueError('${m.name} is required.')`)
-          }
-        }
+        for (const m of type.members) guardValue(type, m, m.name)
+
         for (const m of type.members) {
           p(`        self.${m.name} = ${m.name}`)
           p(`        """${m.comments.join(' ')}"""`)
@@ -402,16 +444,9 @@ const
         p('')
         p(`    def dump(self) -> Dict:`)
         p(`        """Returns the contents of this object as a dict."""`)
-        for (const m of type.members) { // guard
-          if (!m.isOptional) {
-            p(`        if self.${m.name} is None:`)
-            p(`            raise ValueError('${type.name}.${m.name} is required.')`)
-            if (m.t === MemberT.Enum) {
-              p(`        if self.${m.name} not in (${m.values.map(v => `'${v}'`).join(', ')}):`)
-              p(`            raise ValueError(f'Invalid value "{self.${m.name}}" for ${type.name}.${m.name}.')`)
-            }
-          }
-        }
+
+        for (const m of type.members) guardValue(type, m, `self.${m.name}`)
+
         p(`        return _dump(`)
         if (type.isRoot) {
           p(`            view='${type.file}',`)
@@ -438,10 +473,7 @@ const
         for (const m of type.members) {
           const rval = `__d_${m.name}`
           p(`        ${rval}: Any = __d.get('${m.name}')`)
-          if (!m.isOptional) {
-            p(`        if ${rval} is None:`)
-            p(`            raise ValueError('${type.name}.${m.name} is required.')`)
-          }
+          guardValue(type, m, rval)
         }
         for (const m of type.members) {
           const rval = `__d_${m.name}`
@@ -486,6 +518,33 @@ const
         p('')
         p('')
         p('def _dump(**kwargs): return {k: v for k, v in kwargs.items() if v is not None}')
+        p('')
+        p('')
+        p('def _guard_scalar(name: str, value, types, optional: bool, packed: bool):')
+        p('    if optional and (value is None):')
+        p('        return')
+        p('    if packed and isinstance(value, str):')
+        p('        return')
+        p('    if isinstance(value, types):')
+        p('        return')
+        p("    raise ValueError(f'{name}: want one of {types}, got {type(value)}')")
+        p('')
+        p('')
+        p('def _guard_vector(name: str, values, types, optional: bool, packed: bool):')
+        p('    if optional and (values is None):')
+        p('        return')
+        p('    if packed and isinstance(values, str):')
+        p('        return')
+        p('    for value in values:')
+        p('        if not isinstance(value, types):')
+        p("            raise ValueError(f'{name}: want one of {types}, got {type(value)}')")
+        p('')
+        p('')
+        p('def _guard_enum(name: str, value: str, values: List[str], optional: bool):')
+        p('    if optional and (value is None):')
+        p('        return')
+        p('    if value not in values:')
+        p("        raise ValueError(f'{name}: want one of {values}, got {value}')")
         p('')
         for (const type of protocol.types) {
           if (type.isRoot) { // Only export root types (State interface) and their dependencies.
