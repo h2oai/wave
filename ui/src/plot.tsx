@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { displayMixin, cssVar, font } from './theme'
+import { displayMixin, cssVarValue, } from './theme'
 import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V, qd } from './qd'
 
 let
@@ -494,7 +494,7 @@ const
     if (adjust.length) o.adjust = adjust
     if (isS(x_field) && isS(y_field)) o.position = { fields: [x_field, y_field] }
     if (isS(color_field)) {
-      const colors = isS(color_range) ? split(color_range).map(c => cssVar(c as any)) : cat10
+      const colors = isS(color_range) ? split(color_range).map(cssVarValue) : cat10
       o.color = { fields: [color_field], values: colors }
       if (color_domain && color_domain.length == colors.length) {
         const domain_colors = color_domain.reduce((acc, value, i) => {
@@ -504,7 +504,7 @@ const
         o.color.callback = (x: S) => domain_colors[x]
       }
     } else {
-      o.color = isS(color) ? color : getComputedStyle(document.documentElement).getPropertyValue('--gray').trim()
+      o.color = isS(color) ? cssVarValue(color) : getComputedStyle(document.documentElement).getPropertyValue('--gray').trim()
     }
     if (isS(shape_field)) {
       if (isS(shape_range)) {
@@ -577,9 +577,9 @@ const
   },
   makeShapeStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, stroke_dash?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = cssVar(fill_color as any)
+    if (isS(fill_color)) s.fill = cssVarValue(fill_color)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = cssVar(stroke_color as any)
+    if (isS(stroke_color)) s.stroke = cssVarValue(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isS(stroke_dash)) s.lineDash = parseInts(stroke_dash)
@@ -587,9 +587,9 @@ const
   },
   makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S, line_height?: F, align?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = cssVar(fill_color as any)
+    if (isS(fill_color)) s.fill = cssVarValue(fill_color)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = cssVar(stroke_color as any)
+    if (isS(stroke_color)) s.stroke = cssVarValue(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isF(font_size)) s.fontSize = font_size
@@ -727,10 +727,6 @@ const
       flexDirection: 'column',
       padding: grid.gap,
     },
-    title: {
-      ...font.s12,
-      ...font.w6,
-    },
     body: {
       flexGrow: 1,
       display: 'flex',
@@ -773,7 +769,7 @@ export const
       container = React.createRef<HTMLDivElement>(),
       init = () => {
         // Map CSS var colors to their hex values.
-        cat10 = cat10.map(c => getComputedStyle(document.documentElement).getPropertyValue(`--${c}`).trim())
+        cat10 = cat10.map(cssVarValue)
         const el = container.current
         if (!el) return
         // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
@@ -849,7 +845,7 @@ export const
         const { title = 'Untitled', plot, data, events } = state
         return (
           <div className={css.card}>
-            <div className={css.title}>{title}</div>
+            <div className='s12 w6'>{title}</div>
             <div className={css.body}>
               <XVisualization model={{ name, plot, data, events }} />
             </div>

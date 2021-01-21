@@ -16,7 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { bond, Card, unpack, F, Rec, S, Data } from './qd'
-import { font, cssVar } from './theme'
+import { cssVar } from './theme'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 

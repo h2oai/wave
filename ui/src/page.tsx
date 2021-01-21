@@ -18,7 +18,7 @@ import { CardMenu } from './card_menu'
 import { CardEffect, CardView, getCardEffect, GridLayout } from './layout'
 import { Layout, layoutsB, preload, Zone } from './meta'
 import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
-import { clas, getTheme, margin, palette } from './theme'
+import { clas, margin, cssVar } from './theme'
 
 
 type Breakpoint = {
@@ -115,7 +115,6 @@ on(layoutsB, layouts => {
 })
 
 const
-  theme = getTheme(),
   css = stylesheet({
     flex: {
       position: 'relative',
@@ -135,23 +134,23 @@ const
       }
     },
     normal: {
-      backgroundColor: theme.colors.card,
-      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      backgroundColor: cssVar('$card'),
+      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
       $nest: {
         '&:hover': {
-          boxShadow: `0px 12px 20px ${theme.colors.text2}`,
+          boxShadow: `0px 12px 20px ${cssVar('$text2')}`,
         }
       },
     },
     raised: {
-      color: theme.colors.card,
-      backgroundColor: palette.themePrimary,
-      boxShadow: `0px 3px 7px ${theme.colors.text3}`,
+      color: cssVar('$card'),
+      backgroundColor: cssVar('$themePrimary'),
+      boxShadow: `0px 3px 7px ${cssVar('$text3')}`,
       margin: 0,
     },
     flat: {
-      backgroundColor: theme.colors.card,
-      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      backgroundColor: cssVar('$card'),
+      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
     },
   }),
   getCardEffectClass = (c: C) => {

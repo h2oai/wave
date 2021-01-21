@@ -34,6 +34,11 @@ export const
   displayMixin = (visible = true): React.CSSProperties => visible ? {} : { display: 'none' },
   // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
   cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color,
+  cssVarValue = (prop: S) => {
+    if (!prop.startsWith('$')) return prop
+    prop = prop.substring(1)
+    return getComputedStyle(document.documentElement).getPropertyValue(`--${prop}`).trim()
+  },
   fluentPalettes: { [id: string]: Partial<Fluent.IPalette> } = {
     light: {
       themePrimary: '#000000',

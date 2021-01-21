@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { bond, Card, qd, S } from './qd'
-import { clas, getTheme } from './theme'
+import { clas, cssVar } from './theme'
 
 
 /**
@@ -56,19 +56,11 @@ export interface StatListItem {
 }
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
       padding: 15,
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
-    },
-    subtitle: {
-      ...theme.font.s12,
     },
     items: {
       overflow: 'auto',
@@ -95,20 +87,10 @@ const
     rhs: {
       textAlign: 'right'
     },
-    label: {
-      ...theme.font.s13,
-      ...theme.font.w6,
-    },
     caption: {
-      ...theme.font.s12,
       opacity: 0.7,
     },
-    value: {
-      ...theme.font.s13,
-      ...theme.font.w6,
-    },
     auxValue: {
-      ...theme.font.s12,
       opacity: 0.7,
     },
     clickable: {
@@ -132,16 +114,16 @@ export const
               onClick = itemName ? () => qd.jump(listName, itemName) : undefined
             return (
               <div key={itemName ?? `${i}:${label}`} className={onClick ? clas(css.item, css.clickable) : css.item} onClick={onClick}>
-                { icon && <div className={css.icon} style={icon_color ? { color: theme.color(icon_color) } : undefined}><FontIcon iconName={icon} /></div>}
+                {icon && <div className={css.icon} style={icon_color ? { color: cssVar(icon_color) } : undefined}><FontIcon iconName={icon} /></div>}
                 <div className={css.lhs}>
-                  <div className={css.label}>{label}</div>
-                  {caption && <div className={css.caption}>{caption}</div>}
+                  <div className='s12 w6'>{label}</div>
+                  {caption && <div className={clas(css.caption, 's12')}>{caption}</div>}
                 </div>
                 <div className={css.rhs}>
                   {value && (
-                    <div className={css.value} style={value_color ? { color: theme.color(value_color) } : undefined}>{value}</div>
+                    <div className='s13 w6' style={value_color ? { color: cssVar(value_color) } : undefined}>{value}</div>
                   )}
-                  {aux_value && <div className={css.auxValue}>{aux_value}</div>}
+                  {aux_value && <div className={clas(css.auxValue, 's12')}>{aux_value}</div>}
                 </div>
               </div>
             )
@@ -149,8 +131,8 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.title}>{title}</div>
-            { subtitle && <div className={css.subtitle}>{subtitle}</div>}
+            <div className='s12 w6'>{title}</div>
+            {subtitle && <div className='s12'>{subtitle}</div>}
             <div className={css.items}>
               {list}
             </div>

@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { NavGroup, XNav } from './nav'
-import { bond, Box, box, Card, S } from './qd'
+import { bond, Box, box, Card, S, B } from './qd'
 import { clas, cssVar, padding } from './theme'
 
 const
@@ -76,7 +76,7 @@ interface State {
 }
 
 const
-  Navigation = bond(({ items, isOpenB }: { items: NavGroup[], isOpenB: Box<boolean> }) => {
+  Navigation = bond(({ items, isOpenB }: { items: NavGroup[], isOpenB: Box<B> }) => {
     const
       hideNav = () => isOpenB(false),
       render = () => (
@@ -108,7 +108,7 @@ export const
               </div>
             ) : (
               <div className={css.lhs}>
-                <FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color as any) }} />
+                <FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />
               </div>
             )
 
@@ -116,7 +116,7 @@ export const
           <div data-test={name} className={css.card}>
             {burger}
             <div className={css.rhs}>
-              <div className='s24 w6'>{title}</div>
+              <div className='s24 w3'>{title}</div>
               <div className={clas(css.subtitle, 's12')}>{subtitle}</div>
             </div>
             {nav && <Navigation items={nav} isOpenB={navB} />}

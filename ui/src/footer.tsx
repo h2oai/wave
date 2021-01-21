@@ -17,17 +17,12 @@ import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
 import { bond, Card, S } from './qd'
-import { getTheme } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       alignItems: 'center',
-    },
-    caption: {
-      ...theme.font.s13,
     },
   })
 
@@ -50,7 +45,7 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.caption}><Markdown source={caption} /></div>
+            <div className='s13'><Markdown source={caption} /></div>
           </div>
         )
       }

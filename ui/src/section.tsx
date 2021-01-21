@@ -18,10 +18,9 @@ import { Component, XComponentAlignment, XComponents } from './form'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
 import { bond, Card, Packed, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { clas } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -30,12 +29,7 @@ const
     lhs: {
       flexGrow: 1,
     },
-    title: {
-      ...theme.font.s14,
-      ...theme.font.w6,
-    },
     subtitle: {
-      ...theme.font.s12,
       $nest: {
         '>div>p': { margin: 0 },
       },
@@ -72,8 +66,8 @@ export const
         return (
           <div data-test={name} className={css.card}>
             <div className={css.lhs}>
-              <div className={css.title}>{title}</div>
-              <div className={css.subtitle}><Markdown source={subtitle} /></div>
+              <div className='s14 w6'>{title}</div>
+              <div className={clas(css.subtitle, 's12')}><Markdown source={subtitle} /></div>
             </div>
             {form}
           </div>
