@@ -38,7 +38,7 @@ const
     },
     aux_value: {
       marginLeft: 5,
-      color: cssVar('text7'),
+      color: cssVar('$text7'),
     }
   })
 

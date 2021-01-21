@@ -42,7 +42,7 @@ const
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
     },
     aux_value: {
-      color: 'var(--text7)',
+      color: cssVar('$text7'),
       marginLeft: 5,
     }
   })
@@ -103,7 +103,7 @@ export const
           <div className={css.text}>
             <Format data={data} format={s.title} className='s12 w6' />
             <div className={css.values}>
-              <Format data={data} format={s.value} className={clas(css.value, 's12 w3')} />
+              <Format data={data} format={s.value} className={clas(css.value, 's24 w3')} />
               <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
             </div>
           </div>
