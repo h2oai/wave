@@ -23,16 +23,16 @@ import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V, qd } from '.
 
 let
   cat10 = [
-    'gray',
-    'blue',
-    'green',
-    'amber',
-    'tangerine',
-    'purple',
-    'cyan',
-    'mint',
-    'pink',
-    'brown',
+    '$gray',
+    '$blue',
+    '$green',
+    '$amber',
+    '$tangerine',
+    '$purple',
+    '$cyan',
+    '$mint',
+    '$pink',
+    '$brown',
   ]
 
 
