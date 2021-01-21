@@ -22,7 +22,7 @@ def next_color():
 
 
 _curve_index = -1
-curves = 'linear smooth step stepAfter stepBefore'.split()
+curves = 'linear smooth step step-after step-before'.split()
 
 
 def next_curve():
