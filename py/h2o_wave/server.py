@@ -37,7 +37,8 @@ from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 from starlette.background import BackgroundTask
 
-from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite, _get_env
+from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite, _get_env, \
+    UNICAST, MULTICAST
 from .ui import markdown_card
 
 logger = logging.getLogger(__name__)
@@ -45,17 +46,13 @@ logger = logging.getLogger(__name__)
 
 def _noop(): pass
 
+
 def _session_for(sessions: dict, session_id: str):
     session = sessions.get(session_id, None)
     if session is None:
         session = Expando()
         sessions[session_id] = session
     return session
-
-
-UNICAST = 'unicast'
-MULTICAST = 'multicast'
-BROADCAST = 'broadcast'
 
 
 class Auth:
@@ -205,9 +202,9 @@ class _Wave:
 
 
 class _App:
-    def __init__(self, route: str, handle: HandleAsync, mode=UNICAST, on_startup: Optional[Callable] = None,
+    def __init__(self, route: str, handle: HandleAsync, mode=None, on_startup: Optional[Callable] = None,
                  on_shutdown: Optional[Callable] = None):
-        self._mode = mode
+        self._mode = mode or _config.app_mode
         self._route = route
         self._handle = handle
         # TODO load from remote store if configured
@@ -345,7 +342,7 @@ class _Main:
 main = _Main()
 
 
-def app(route: str, mode=UNICAST, on_startup: Optional[Callable] = None, on_shutdown: Optional[Callable] = None):
+def app(route: str, mode=None, on_startup: Optional[Callable] = None, on_shutdown: Optional[Callable] = None):
     """
     Indicate that a function is a query handler.
 
@@ -366,7 +363,7 @@ def app(route: str, mode=UNICAST, on_startup: Optional[Callable] = None, on_shut
     return wrap
 
 
-def listen(route: str, handle: HandleAsync, mode=UNICAST):
+def listen(route: str, handle: HandleAsync, mode=None):
     """
     Launch an application server.
 

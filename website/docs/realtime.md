@@ -21,6 +21,10 @@ async def serve(q: Q):
     pass
 ```
 
+:::tip
+You can also set the mode using the `H2O_WAVE_APP_MODE` environment variable.
+:::
+
 If you change the mode, make sure you store run-time state appropriate to the mode. Generally:
 
 | `mode` | Store state in |

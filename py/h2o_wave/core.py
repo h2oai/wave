@@ -27,6 +27,10 @@ logger = logging.getLogger(__name__)
 Primitive = Union[bool, str, int, float, None]
 PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
 
+UNICAST = 'unicast'
+MULTICAST = 'multicast'
+BROADCAST = 'broadcast'
+
 
 def _get_env(key: str, value: Any):
     return os.environ.get(f'H2O_WAVE_{key}', value)
@@ -39,6 +43,7 @@ class _Config:
     def __init__(self):
         self.internal_address = _get_env('INTERNAL_ADDRESS', _default_internal_address)
         self.app_address = _get_env('APP_ADDRESS', _get_env('EXTERNAL_ADDRESS', self.internal_address))
+        self.app_mode = _get_env('APP_MODE', UNICAST)
         self.hub_address = _get_env('ADDRESS', 'http://127.0.0.1:10101')
         self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')

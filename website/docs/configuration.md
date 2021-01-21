@@ -57,6 +57,9 @@ You can use the following environment variables to configure your app's server's
 ### H2O_WAVE_APP_ADDRESS
 The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.
 
+### H2O_WAVE_APP_MODE
+The [realtime sync mode](realtime.md) of the app server. One of `unicast` (default), `multicast`, or `broadcast`.
+
 ### H2O_WAVE_ADDRESS
 The public host/port of the Wave server. Defaults to `http://127.0.0.1:10101`. Set this variable if you are running the Wave server on a remote machine or container.
 
