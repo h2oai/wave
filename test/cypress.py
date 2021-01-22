@@ -3,6 +3,7 @@ import logging
 import os
 from pathlib import Path
 from argparse import ArgumentParser, ArgumentTypeError
+import re
 from shutil import rmtree
 from subprocess import PIPE, Popen, TimeoutExpired
 from tempfile import mkdtemp
@@ -74,12 +75,11 @@ def run_app_with_test(
                 env={"CYPRESS_INTEGRATION_TEST_DIR": spec_dir},
                 sleep_time=delay,
             ):
-                app_name = app_module if app_module else app_script.stem
                 specs = [f for f in os.listdir(spec_dir) if f.endswith(".spec.js")]
                 if not specs:
                     logging.warning(
                         f"No cypress specs generated in {spec_dir}, "
-                        f"does {app_name} has any tests defined?"
+                        f"does {app_module} has any tests defined?"
                     )
                     return
                 cypress = "./node_modules/cypress/bin/cypress"
@@ -89,7 +89,7 @@ def run_app_with_test(
                 os.system(
                     f"{cypress} run --spec {spec_dir}/*.spec.js "
                     f"--reporter junit {browser_arg} "
-                    f'--reporter-options "mochaFile=cypress/reports/{app_name}.xml"'
+                    f'--reporter-options "mochaFile=cypress/reports/{app_module}.xml"'
                 )
 
     if start_wave:
@@ -178,6 +178,7 @@ def main():
     parser.add_argument(
         "-m",
         "--app-module",
+        required=True,
         help="python module with wave app",
         type=str,
     )
