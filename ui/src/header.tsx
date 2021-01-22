@@ -30,6 +30,9 @@ const
       alignItems: 'center',
       padding: padding(8, 15),
     },
+    rhs: {
+      flexGrow: 1
+    },
     lhs: {
       width: iconSize + 15,
       height: iconSize + 15,
@@ -170,9 +173,9 @@ export const
           { title, subtitle, icon, icon_color, nav, items } = state,
           burger = nav
             ? (
-              <Fluent.Stack horizontal verticalAlign='center' className={clas(css.burger, css.lhs)} onClick={showNav}>
+              <div className={clas(css.burger, css.lhs)} onClick={showNav}>
                 <Fluent.FontIcon className={css.icon} iconName='GlobalNavButton' />
-              </Fluent.Stack>
+              </div>
             ) : (
               <Fluent.Stack horizontal verticalAlign='center' className={css.lhs}>
                 <Fluent.FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />
@@ -180,7 +183,7 @@ export const
             )
 
         return (
-          <Fluent.Stack data-test={name} horizontal verticalAlign='center'>
+          <Fluent.Stack data-test={name} className={css.card} >
             {burger}
             <Fluent.StackItem grow={1}>
               <div className='wave-s24 wave-w3'>{title}</div>
