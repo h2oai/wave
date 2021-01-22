@@ -70,25 +70,22 @@ const
       backgroundColor: cssVar('$themePriary'),
       $nest: {
         '.ms-ContextualMenu-item:hover': {
-          color: cssVar('$text'),
+          color: cssVar('$themePrimary'),
           background: cssVar('$card')
         },
         '.ms-ContextualMenu-itemText': {
           color: cssVar('$card'),
           $nest: {
             '&:hover': {
-              color: cssVar('$text')
+              color: cssVar('$tehmePrimary')
             }
           }
         },
         '.ms-ContextualMenu-link:hover,.ms-ContextualMenu-link.is-expanded': {
           backgroundColor: cssVar('$card'),
           $nest: {
-            '.ms-ContextualMenu-itemText': {
-              color: cssVar('$text')
-            },
-            '.ms-ContextualMenu-submenuIcon': {
-              color: cssVar('$text')
+            '.ms-ContextualMenu-itemText,.ms-ContextualMenu-submenuIcon': {
+              color: `${cssVar('$text')} !important`
             }
           }
         },
