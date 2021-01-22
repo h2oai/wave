@@ -21,14 +21,19 @@ import { wave } from './ui'
 const
   name = 'header',
   hashName = `#${name}`,
-  label = 'label',
-  headerProps: Model<any> = {
-    name,
-    state: { nav: [{ label: 'group1', items: [{ name, label }] }] },
-    changed: box(false)
-  }
+  label = 'label'
+
+let headerProps: Model<any>
 
 describe('Header.tsx', () => {
+  beforeEach(() => {
+    headerProps = {
+      name,
+      state: { nav: [{ label: 'group1', items: [{ name, label }] }] },
+      changed: box(false)
+    }
+  })
+
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...headerProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
@@ -73,5 +78,17 @@ describe('Header.tsx', () => {
     expect(wave.args[hashName]).toBe(false)
     expect(syncMock).toHaveBeenCalledTimes(0)
     expect(window.location.hash).toBe(hashName)
+  })
+
+  it('should show nested submenus', () => {
+    const subText = 'SubItem'
+    headerProps.state.items[0].items = [{ name: subText, label: subText, items: [{ name: '' }] }]
+
+    const { getByText, getAllByRole } = render(<View {...headerProps} />)
+
+    fireEvent.click(getByText(label))
+    fireEvent.click(getByText(subText))
+
+    expect(getAllByRole('menu')).toHaveLength(2)
   })
 })
