@@ -86,9 +86,15 @@ const
           $nest: {
             '.ms-ContextualMenu-itemText': {
               color: cssVar('$text')
+            },
+            '.ms-ContextualMenu-submenuIcon': {
+              color: cssVar('$text')
             }
           }
         },
+        '.ms-ContextualMenu-submenuIcon': {
+          color: cssVar('$card'),
+        }
       }
     },
     calloutContainer: {
