@@ -32,7 +32,12 @@ const
     },
     body: {
       flexGrow: 1,
+      position: 'relative',
     },
+    frame: {
+      position: 'absolute',
+      top: 10, left: 0, right: 0, bottom: 0
+    }
   })
 
 /**
@@ -72,7 +77,7 @@ const
   fixrefs = (s: S): S => s.replace(/(\s+src\s*=\s*["'])\//g, `$1${window.location.protocol}//${window.location.host}/`),
   inline = (s: S): S => URL.createObjectURL(new Blob([fixrefs(s)], { type: 'text/html' })),
   InlineFrame = ({ path, content }: { path?: S, content?: S }) => (
-    <iframe title={xid()} src={path ? path : content ? inline(content) : inline('Nothing to render.')} frameBorder="0" width="100%" height="100%" />
+    <iframe title={xid()} src={path ? path : content ? inline(content) : inline('Nothing to render.')} className={css.frame} frameBorder="0" width="100%" height="100%" />
   )
 
 // HACK: Applying width/height styles directly on iframe don't work in Chrome/FF; so wrap in div instead.
