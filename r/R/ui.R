@@ -3011,6 +3011,36 @@ ui_nav_group <- function(
   return(.o)
 }
 
+#' No documentation available.
+#'
+#' @param name An identifying name for this component.
+#' @param label The text to be displayed. If blank, the `path` is used as the label.
+#' @param path The path or URL to link to.
+#' @param target Where to display the link. Setting this to `'_blank'` opens the link in a new tab or window.
+#' @param items Nested header items for sub menus.
+#' @return A HeaderItem instance.
+#' @export
+ui_header_item <- function(
+  name,
+  label,
+  path = NULL,
+  target = NULL,
+  items = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("path", "character", path)
+  .guard_scalar("target", "character", target)
+  .guard_vector("items", "WaveHeaderItem", items)
+  .o <- list(
+    name=name,
+    label=label,
+    path=path,
+    target=target,
+    items=items)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveHeaderItem"))
+  return(.o)
+}
+
 #' Render a page header displaying a title, subtitle and an optional navigation menu.
 #' Header cards are typically used for top-level navigation.
 #'
@@ -3039,7 +3069,7 @@ ui_header_card <- function(
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
   .guard_vector("nav", "WaveNavGroup", nav)
-  .guard_vector("items", "WaveCommand", items)
+  .guard_vector("items", "WaveHeaderItem", items)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,

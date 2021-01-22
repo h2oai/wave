@@ -7356,6 +7356,75 @@ class NavGroup:
         )
 
 
+class HeaderItem:
+    """No documentation available.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+            path: Optional[str] = None,
+            target: Optional[str] = None,
+            items: Optional[List['HeaderItem']] = None,
+    ):
+        _guard_scalar('HeaderItem.name', name, (str,), False, False, False)
+        _guard_scalar('HeaderItem.label', label, (str,), False, False, False)
+        _guard_scalar('HeaderItem.path', path, (str,), False, True, False)
+        _guard_scalar('HeaderItem.target', target, (str,), False, True, False)
+        _guard_vector('HeaderItem.items', items, (HeaderItem,), False, True, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.label = label
+        """The text to be displayed. If blank, the `path` is used as the label."""
+        self.path = path
+        """The path or URL to link to."""
+        self.target = target
+        """Where to display the link. Setting this to `'_blank'` opens the link in a new tab or window."""
+        self.items = items
+        """Nested header items for sub menus."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('HeaderItem.name', self.name, (str,), False, False, False)
+        _guard_scalar('HeaderItem.label', self.label, (str,), False, False, False)
+        _guard_scalar('HeaderItem.path', self.path, (str,), False, True, False)
+        _guard_scalar('HeaderItem.target', self.target, (str,), False, True, False)
+        _guard_vector('HeaderItem.items', self.items, (HeaderItem,), False, True, False)
+        return _dump(
+            name=self.name,
+            label=self.label,
+            path=self.path,
+            target=self.target,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'HeaderItem':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('HeaderItem.name', __d_name, (str,), False, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('HeaderItem.label', __d_label, (str,), False, False, False)
+        __d_path: Any = __d.get('path')
+        _guard_scalar('HeaderItem.path', __d_path, (str,), False, True, False)
+        __d_target: Any = __d.get('target')
+        _guard_scalar('HeaderItem.target', __d_target, (str,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('HeaderItem.items', __d_items, (dict,), False, True, False)
+        name: str = __d_name
+        label: str = __d_label
+        path: Optional[str] = __d_path
+        target: Optional[str] = __d_target
+        items: Optional[List['HeaderItem']] = None if __d_items is None else [HeaderItem.load(__e) for __e in __d_items]
+        return HeaderItem(
+            name,
+            label,
+            path,
+            target,
+            items,
+        )
+
+
 class HeaderCard:
     """Render a page header displaying a title, subtitle and an optional navigation menu.
     Header cards are typically used for top-level navigation.
@@ -7368,7 +7437,7 @@ class HeaderCard:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
             nav: Optional[List[NavGroup]] = None,
-            items: Optional[List[Command]] = None,
+            items: Optional[List[HeaderItem]] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('HeaderCard.box', box, (str,), False, False, False)
@@ -7377,7 +7446,7 @@ class HeaderCard:
         _guard_scalar('HeaderCard.icon', icon, (str,), False, True, False)
         _guard_scalar('HeaderCard.icon_color', icon_color, (str,), False, True, False)
         _guard_vector('HeaderCard.nav', nav, (NavGroup,), False, True, False)
-        _guard_vector('HeaderCard.items', items, (Command,), False, True, False)
+        _guard_vector('HeaderCard.items', items, (HeaderItem,), False, True, False)
         _guard_vector('HeaderCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7404,7 +7473,7 @@ class HeaderCard:
         _guard_scalar('HeaderCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('HeaderCard.icon_color', self.icon_color, (str,), False, True, False)
         _guard_vector('HeaderCard.nav', self.nav, (NavGroup,), False, True, False)
-        _guard_vector('HeaderCard.items', self.items, (Command,), False, True, False)
+        _guard_vector('HeaderCard.items', self.items, (HeaderItem,), False, True, False)
         _guard_vector('HeaderCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='header',
@@ -7443,7 +7512,7 @@ class HeaderCard:
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
         nav: Optional[List[NavGroup]] = None if __d_nav is None else [NavGroup.load(__e) for __e in __d_nav]
-        items: Optional[List[Command]] = None if __d_items is None else [Command.load(__e) for __e in __d_items]
+        items: Optional[List[HeaderItem]] = None if __d_items is None else [HeaderItem.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return HeaderCard(
             box,

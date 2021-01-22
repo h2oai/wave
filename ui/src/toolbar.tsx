@@ -92,30 +92,29 @@ const
     }
   }
 
-export const
-  View = bond(({ name, state, changed }: Model<State>) => {
-    const
-      render = () => {
-        const
-          { items, overflow_items, secondary_items } = state,
-          commands = toCommands(items),
-          overflowCommands = overflow_items ? toCommands(overflow_items) : undefined,
-          farCommands = secondary_items ? toCommands(secondary_items) : undefined
-        return (
-          <div className={css.card}>
-            <Fluent.CommandBar
-              data-test={name}
-              items={commands}
-              overflowItems={overflowCommands}
-              overflowButtonProps={{ ariaLabel: 'More' }}
-              farItems={farCommands}
-              ariaLabel='Use left and right arrow keys to navigate between commands.'
-              className={css.commandBar}
-            />
-          </div>
-        )
-      }
-    return { render, changed }
-  })
+export const View = bond(({ name, state, changed }: Model<State>) => {
+  const
+    render = () => {
+      const
+        { items, overflow_items, secondary_items } = state,
+        commands = toCommands(items),
+        overflowCommands = overflow_items ? toCommands(overflow_items) : undefined,
+        farCommands = secondary_items ? toCommands(secondary_items) : undefined
+      return (
+        <div className={css.card}>
+          <Fluent.CommandBar
+            data-test={name}
+            items={commands}
+            overflowItems={overflowCommands}
+            overflowButtonProps={{ ariaLabel: 'More' }}
+            farItems={farCommands}
+            ariaLabel='Use left and right arrow keys to navigate between commands.'
+            className={css.commandBar}
+          />
+        </div>
+      )
+    }
+  return { render, changed }
+})
 
 cards.register('toolbar', View, { effect: CardEffect.Transparent })

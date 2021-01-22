@@ -19,8 +19,8 @@ import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { NavGroup, XNav } from './nav'
 import { clas, cssVar, padding } from './theme'
-import { Command, View as Toolbar } from './toolbar'
 import { bond } from './ui'
+import { View as Toolbar } from './toolbar'
 
 const
   iconSize = 24,
@@ -48,9 +48,61 @@ const
       height: iconSize,
       width: iconSize,
     },
+    subtitle: {
+      position: 'relative',
+      top: -5, // nudge up slightly to account for padding
+    },
+    toolbar: {
+      color: cssVar('$card'),
+      $nest: {
+        '&:hover': {
+          backgroundColor: cssVar('$card'),
+          color: cssVar('$text'),
+        }
+      }
+    },
+    toolbarMenu: {
+      backgroundColor: cssVar('$themePriary'),
+      $nest: {
+        '.ms-ContextualMenu-item:hover': {
+          color: cssVar('$text'),
+          background: cssVar('$card')
+        },
+        '.ms-ContextualMenu-itemText': {
+          color: cssVar('$card'),
+          $nest: {
+            '&:hover': {
+              color: cssVar('$text')
+            }
+          }
+        },
+        '.ms-ContextualMenu-link:hover,.ms-ContextualMenu-link.is-expanded': {
+          backgroundColor: cssVar('$card'),
+          $nest: {
+            '.ms-ContextualMenu-itemText': {
+              color: cssVar('$text')
+            }
+          }
+        },
+      }
+    },
+    calloutContainer: {
+      boxShadow: `0px 3px 7px ${cssVar('$card')}`,
+    }
   })
 
-
+interface HeaderItem {
+  /** An identifying name for this component. */
+  name: S
+  /** The text to be displayed. If blank, the `path` is used as the label. */
+  label: S
+  /** The path or URL to link to. */
+  path?: S
+  /** Where to display the link. Setting this to `'_blank'` opens the link in a new tab or window. */
+  target?: S
+  /** Nested header items for sub menus. */
+  items?: HeaderItem[]
+}
 /**
  * Render a page header displaying a title, subtitle and an optional navigation menu.
  * Header cards are typically used for top-level navigation.
@@ -86,7 +138,7 @@ interface State {
    **/
   nav?: NavGroup[]
   /** Items that should be displayed on the right side of the header. */
-  items?: Command[]
+  items?: HeaderItem[]
 }
 
 const
@@ -106,6 +158,7 @@ const
       )
     return { render, isOpenB }
   })
+
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
@@ -134,7 +187,7 @@ export const
               <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>
             </Fluent.StackItem>
             { nav && <Navigation items={nav} isOpenB={navB} />}
-            { items && <Toolbar name={`${name}-toolbar`} changed={changed} state={{ items }} />}
+            { items && <Toolbar name={`${name}-toolbar`} state={{ items }} changed={changed} />}
           </Fluent.Stack >
         )
       }

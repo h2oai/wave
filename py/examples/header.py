@@ -9,15 +9,17 @@ page['header1'] = ui.header_card(
     title='The Amazing Gonkulator',
     subtitle='And now for something completely different!',
     items=[
-        ui.command(
-            name='new', label='New', icon='Add', items=[
-                ui.command(name='email', label='Email Message', icon='Mail'),
-                ui.command(name='calendar', label='Calendar Event', icon='Calendar'),
-            ]
-        ),
-        ui.command(name='upload', label='Upload', icon='Upload'),
-        ui.command(name='share', label='Share', icon='Share'),
-        ui.command(name='download', label='Download', icon='Download'),
+        ui.header_item(name='menu1', label='Menu 1', items=[
+            ui.header_item(name='#submenu1', label='SubMenu 1'),
+            ui.header_item(name='#submenu2', label='SubMenu 2'),
+            ui.header_item(name='#submenu3', label='SubMenu 3', items=[
+                ui.header_item(name='#subsubmenu1', label='SubSubMenu 1'),
+                ui.header_item(name='#subsubmenu2', label='H2O this window', path='https://www.h2o.ai/'),
+                ui.header_item(name='#h2o_new', label='H2O new window', path='https://www.h2o.ai/', target='_blank'),
+            ]),
+        ]),
+        ui.header_item(name='#submenu2', label='Menu 2'),
+        ui.header_item(name='#submenu3', label='Menu 3'),
     ],
     nav=[
         ui.nav_group('Menu', items=[
