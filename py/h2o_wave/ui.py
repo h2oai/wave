@@ -2080,6 +2080,33 @@ def nav_group(
     )
 
 
+def header_item(
+        name: str,
+        label: str,
+        path: Optional[str] = None,
+        target: Optional[str] = None,
+        items: Optional[List[HeaderItem]] = None,
+) -> HeaderItem:
+    """No documentation available.
+
+    Args:
+        name: An identifying name for this component.
+        label: The text to be displayed. If blank, the `path` is used as the label.
+        path: The path or URL to link to.
+        target: Where to display the link. Setting this to `'_blank'` opens the link in a new tab or window.
+        items: Nested header items for sub menus.
+    Returns:
+        A `h2o_wave.types.HeaderItem` instance.
+    """
+    return HeaderItem(
+        name,
+        label,
+        path,
+        target,
+        items,
+    )
+
+
 def header_card(
         box: str,
         title: str,
@@ -2087,6 +2114,7 @@ def header_card(
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         nav: Optional[List[NavGroup]] = None,
+        items: Optional[List[HeaderItem]] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
     """Render a page header displaying a title, subtitle and an optional navigation menu.
@@ -2099,6 +2127,7 @@ def header_card(
         icon: The icon type, displayed to the left.
         icon_color: The icon's color.
         nav: The navigation menu to display when the header's icon is clicked.
+        items: Items that should be displayed on the right side of the header.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.HeaderCard` instance.
@@ -2110,6 +2139,7 @@ def header_card(
         icon,
         icon_color,
         nav,
+        items,
         commands,
     )
 

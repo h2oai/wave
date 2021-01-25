@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
@@ -52,12 +52,25 @@ interface State {
 }
 
 const
-  overflowProps: IButtonProps = { ariaLabel: 'More' },
-  toCommands = (commands: Command[]) => commands.map(toCommand),
-  toCommand = ({ name, label, caption, icon, items }: Command): ICommandBarItemProps => {
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    commandBar: {
+      $nest: {
+        '.ms-Button--commandBar, .ms-Button-icon, .ms-Button-menuIcon, .ms-CommandBar, &:hover': {
+          background: 'inherit',
+          color: 'inherit'
+        }
+      }
+    }
+  }),
+  toCommands = (commands: Command[]) => commands.map(({ name, label, caption, icon, items }: Command): Fluent.ICommandBarItemProps => {
     qd.args[name] = false
     const onClick = () => {
-      if (name[0] === '#') {
+      if (name.startsWith('#')) {
         window.location.hash = name.substr(1)
         return
       }
@@ -74,14 +87,6 @@ const
       subMenuProps: items ? { items: toCommands(items) } : undefined,
       onClick,
     }
-  }
-const
-  css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-    }
   })
 
 export const
@@ -95,13 +100,14 @@ export const
           farCommands = secondary_items ? toCommands(secondary_items) : undefined
         return (
           <div className={css.card}>
-            <CommandBar
+            <Fluent.CommandBar
               data-test={name}
               items={commands}
               overflowItems={overflowCommands}
-              overflowButtonProps={overflowProps}
+              overflowButtonProps={{ ariaLabel: 'More' }}
               farItems={farCommands}
               ariaLabel='Use left and right arrow keys to navigate between commands.'
+              className={css.commandBar}
             />
           </div>
         )
@@ -110,5 +116,3 @@ export const
   })
 
 cards.register('toolbar', View, CardEffect.Transparent)
-
-

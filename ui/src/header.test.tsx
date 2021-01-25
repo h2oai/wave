@@ -13,25 +13,65 @@
 // limitations under the License.
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { View } from './header'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const
   name = 'header',
-  headerProps: T.Card<any> = {
-    name,
-    state: {},
-    changed: T.box(false)
-  }
+  hashName = `#${name}`,
+  label = 'label'
+
+let headerProps: T.Card<any>
 
 describe('Header.tsx', () => {
-  beforeAll(() => initializeIcons())
+  beforeEach(() => {
+    headerProps = {
+      name,
+      state: { items: [{ name: 'header-item', label }] },
+      changed: T.box(false)
+    }
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...headerProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
+  it('Sets args and calls sync on click', () => {
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+
+    const { getByText } = render(<View {...headerProps} />)
+    fireEvent.click(getByText(label))
+
+    expect(T.qd.args['header-item']).toBe(true)
+    expect(syncMock).toHaveBeenCalled()
+    expect(window.location.hash).toBe('')
+  })
+
+  it('Does not set args, calls sync on click, updates browser hash when name starts with hash', () => {
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+    headerProps.state.items[0].name = hashName
+
+    const { getByText } = render(<View {...headerProps} />)
+    fireEvent.click(getByText(label))
+
+    expect(T.qd.args[hashName]).toBe(undefined)
+    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(window.location.hash).toBe(hashName)
+  })
+
+  it('should show nested submenus', () => {
+    const subText = 'SubItem'
+    headerProps.state.items[0].items = [{ name: subText, label: subText, items: [{ name: '' }] }]
+
+    const { getByText, getAllByRole } = render(<View {...headerProps} />)
+
+    fireEvent.click(getByText(label))
+    fireEvent.click(getByText(subText))
+
+    expect(getAllByRole('menu')).toHaveLength(2)
+  })
 })
