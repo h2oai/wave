@@ -27,9 +27,9 @@ interface Props {
 
 const css = stylesheet({
   container: {
-    width: '100%',
-    height: '100%',
-    position: 'relative',
+    // Height 100% is not working in Safari. Without this, container has 0 height and d3 cannot compute properly.
+    position: 'absolute',
+    top: 0, left: 0, right: 0, bottom: 0
   }
 })
 
