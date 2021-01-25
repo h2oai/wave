@@ -16,25 +16,19 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { B, Card, unpack, Rec, S, Data, xid, box, bond } from './qd'
 import { cards, CardView, Format } from './layout'
-import { getTheme } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
     },
     body: {
       flexGrow: 1,
       overflow: 'auto',
       $nest: {
         '>*': {
-          borderBottom: '1px solid ' + theme.colors.text1,
+          borderBottom: '1px solid var(--text1)',
           padding: '5px 0',
         },
       },
@@ -83,7 +77,7 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.title}>{s.title || 'Untitled'}</div>
+            <div className='s12 w6'>{s.title || 'Untitled'}</div>
             <div className={css.body}>
               <table className={css.table}>
                 <thead>
@@ -101,4 +95,3 @@ export const
   })
 
 cards.register('grid', View)
-

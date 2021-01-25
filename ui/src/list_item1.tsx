@@ -16,10 +16,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
 import { bond, Card, unpack, Rec, S } from './qd'
-import { getTheme } from './theme'
+import { clas, cssVar } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     item: {
       display: 'flex',
@@ -31,20 +30,11 @@ const
     right: {
       flexDirection: 'column',
     },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
-    },
     caption: {
-      ...theme.font.s13,
-      color: theme.colors.text5,
-    },
-    value: {
-      ...theme.font.s12,
+      color: cssVar('text5'),
     },
     aux_value: {
-      ...theme.font.s13,
-      color: theme.colors.text5,
+      color: cssVar('text5'),
     },
   })
 
@@ -71,18 +61,18 @@ export const
     const
       render = () => {
         const
-          s = theme.merge(defaults, state),
+          s = { ...defaults, ...state },
           data = unpack(s.data)
 
         return (
           <div data-test={name} className={css.item}>
             <div className={css.left}>
-              <Format data={data} format={s.title} className={css.title} />
-              <Format data={data} format={s.caption} className={css.caption} />
+              <Format data={data} format={s.title} className='s12 w6' />
+              <Format data={data} format={s.caption} className={clas(css.caption, 's13')} />
             </div>
             <div className={css.right}>
-              <Format data={data} format={s.value} className={css.value} />
-              <Format data={data} format={s.aux_value} className={css.aux_value} />
+              <Format data={data} format={s.value} className='s12' />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
             </div>
           </div>
         )

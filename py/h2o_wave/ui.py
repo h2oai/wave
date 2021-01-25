@@ -2452,6 +2452,7 @@ def meta_card(
         icon: Optional[str] = None,
         layouts: Optional[List[Layout]] = None,
         dialog: Optional[Dialog] = None,
+        theme: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2468,6 +2469,7 @@ def meta_card(
         icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
         layouts: The layouts supported by this page.
         dialog: Display a dialog on the page.
+        theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2481,6 +2483,7 @@ def meta_card(
         icon,
         layouts,
         dialog,
+        theme,
         commands,
     )
 

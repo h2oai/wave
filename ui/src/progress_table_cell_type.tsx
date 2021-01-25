@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { ProgressArc } from './parts/progress_arc'
 import { F, S } from './qd'
-import { getTheme } from './theme'
+import { clas, cssVar } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     container: {
       position: 'relative',
@@ -33,7 +31,6 @@ const
       top: 0, left: 0, bottom: 0, right: 0
     },
     percent: {
-      ...theme.font.s12,
       opacity: 0.5,
     },
   })
@@ -51,9 +48,9 @@ export interface ProgressTableCellType {
 
 export const XProgressTableCellType = ({ model: m, progress }: { model: ProgressTableCellType, progress: F }) => (
   <div data-test={m.name} className={css.container}>
-    <ProgressArc thickness={2} color={theme.color(m.color || 'red')} value={progress} />
-    <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={css.percentContainer}>
+    <ProgressArc thickness={2} color={cssVar(m.color || '$red')} value={progress} />
+    <Fluent.Stack horizontalAlign='center' verticalAlign='center' className={clas(css.percentContainer, 's12')}>
       <div className={css.percent}>{`${Math.round(progress * 100)}%`}</div>
     </Fluent.Stack>
-  </div>
+  </div >
 )

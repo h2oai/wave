@@ -17,19 +17,14 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid, substitute } from './layout'
 import { bond, Card, Rec, S, unpack } from './qd'
-import { border, getTheme, padding, palette, pc } from './theme'
+import { border, padding, pc, cssVar } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
       padding: grid.gap,
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
     },
     body: {
       flexGrow: 1,
@@ -37,7 +32,7 @@ const
     markdown: {
       $nest: {
         a: {
-          color: palette.themePrimary,
+          color: cssVar('$themePrimary'),
           $nest: {
             '&:hover': {
               textDecoration: 'none',
@@ -49,7 +44,7 @@ const
           borderCollapse: 'collapse',
         },
         tr: {
-          borderBottom: border(1, theme.colors.text5),
+          borderBottom: border(1, cssVar('$text5')),
         },
         th: {
           padding: padding(11, 6),
@@ -99,7 +94,7 @@ export const
           title = substitute(state.title, data)
         return (
           <div data-test={name} className={css.card}>
-            {title && <div className={css.title}>{title}</div>}
+            {title && <div className='s12 w6'>{title}</div>}
             <div className={css.body}>
               <Markdown source={substitute(state.content, data)} />
             </div>

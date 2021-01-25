@@ -17,10 +17,9 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { getTheme, pc } from './theme'
+import { cssVar, pc, clas } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -46,22 +45,16 @@ const
       alignItems: 'center',
     },
     percent: {
-      ...theme.font.s12,
       opacity: 0.5,
     },
     title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
       overflow: 'visible'
     },
     value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
     },
     aux_value: {
-      ...theme.font.s13,
-      color: theme.colors.text7,
+      color: 'var(--text7)',
       marginLeft: 5,
     }
   })
@@ -89,19 +82,19 @@ export const
       return (
         <div data-test={name} className={css.card}>
           <div className={css.lhs}>
-            <ProgressArc thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <ProgressArc thickness={2} color={cssVar(s.plot_color)} value={s.progress} />
             <div className={css.percentContainer}>
               <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
             </div>
           </div>
           <div className={css.rhs}>
-            <Format data={data} format={s.title} className={css.title} />
+            <Format data={data} format={s.title} className='s12 w6' />
             <div className={css.values}>
-              <Format data={data} format={s.value} className={css.value} />
-              <Format data={data} format={s.aux_value} className={css.aux_value} />
+              <Format data={data} format={s.value} className='s24 w3' />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
             </div>
           </div>
-        </div>
+        </div >
       )
     }
     return { render, changed }

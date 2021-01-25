@@ -17,20 +17,15 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { clas, cssVar } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
       padding: grid.gap,
       position: 'relative',
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
     },
     body: {
       position: 'relative',
@@ -45,13 +40,8 @@ const
       justifyContent: 'center',
       alignItems: 'center',
     },
-    value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
-    },
     aux_value: {
-      ...theme.font.s12,
-      color: theme.colors.text7,
+      color: 'var(--text7)',
     },
   })
 
@@ -77,12 +67,12 @@ export const
       const data = unpack(s.data)
       return (
         <div data-test={name} className={css.card}>
-          <Format data={data} format={s.title} className={css.title} />
+          <Format data={data} format={s.title} className='s12 w6' />
           <div className={css.body}>
-            <ProgressArc thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <ProgressArc thickness={2} color={cssVar(s.plot_color)} value={s.progress} />
             <div className={css.value_overlay}>
-              <Format data={data} format={s.value} className={css.value} />
-              <Format data={data} format={s.aux_value} className={css.aux_value} />
+              <Format data={data} format={s.value} className='s24 w3' />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's12')} />
             </div>
           </div>
         </div>

@@ -16,7 +16,7 @@ import { FontIcon } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { B, Dict, S } from './qd'
-import { clas, getTheme, padding } from './theme'
+import { clas, padding, cssVar } from './theme'
 
 /** Create a set of stats laid out horizontally. */
 export interface Stats {
@@ -43,14 +43,13 @@ export interface Stat {
 }
 
 const
-  theme = getTheme(),
   css = stylesheet({
     stats: {
       display: 'flex',
       alignItems: 'flex-start'
     },
     inset: {
-      background: theme.colors.page,
+      background: cssVar('$page'),
       padding: padding(10, 15),
     },
     stat: {
@@ -58,23 +57,14 @@ const
       alignItems: 'center'
     },
     lhs: {
-      width: '45px',
+      width: 45,
       marginRight: '0.5em',
     },
     icon: {
-      fontSize: '45px',
-    },
-    statLabel: {
-      ...theme.font.s12,
-      ...theme.font.w5,
-    },
-    statValue: {
-      ...theme.font.s24,
-      ...theme.font.w3,
+      fontSize: 45,
     },
     statCaption: {
-      ...theme.font.s13,
-      color: theme.colors.text5,
+      color: cssVar('$text5')
     }
   }),
   justifications: Dict<S> = {
@@ -100,15 +90,15 @@ export const
       justification = justifications[m.justify ?? ''],
       stats = m.items.map(({ label, value, caption, icon, icon_color }, i) => (
         <div key={`${i}:${label}`} className={css.stat} style={statStyle}>
-          { icon && (
-            <div className={css.lhs} style={icon_color ? { color: theme.color(icon_color) } : undefined}>
+          {icon && (
+            <div className={css.lhs} style={icon_color ? { color: cssVar(icon_color) } : undefined}>
               <FontIcon className={css.icon} iconName={icon} />
             </div>
           )}
           <div>
-            <div className={css.statLabel}>{label}</div>
-            {value && <div className={css.statValue}>{value}</div>}
-            {caption && <div className={css.statCaption}>{caption}</div>}
+            <div className='s12 w5'>{label}</div>
+            {value && <div className='s24 w3'>{value}</div>}
+            {caption && <div className={clas(css.statCaption, 's13')}>{caption}</div>}
           </div>
         </div>
       ))

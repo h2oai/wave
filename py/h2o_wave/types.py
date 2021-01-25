@@ -6889,6 +6889,7 @@ class MetaCard:
             icon: Optional[str] = None,
             layouts: Optional[List[Layout]] = None,
             dialog: Optional[Dialog] = None,
+            theme: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MetaCard.box', box, (str,), False, False, False)
@@ -6899,6 +6900,7 @@ class MetaCard:
         _guard_scalar('MetaCard.icon', icon, (str,), False, True, False)
         _guard_vector('MetaCard.layouts', layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', dialog, (Dialog,), False, True, False)
+        _guard_scalar('MetaCard.theme', theme, (str,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6916,6 +6918,8 @@ class MetaCard:
         """The layouts supported by this page."""
         self.dialog = dialog
         """Display a dialog on the page."""
+        self.theme = theme
+        """Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6929,6 +6933,7 @@ class MetaCard:
         _guard_scalar('MetaCard.icon', self.icon, (str,), False, True, False)
         _guard_vector('MetaCard.layouts', self.layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', self.dialog, (Dialog,), False, True, False)
+        _guard_scalar('MetaCard.theme', self.theme, (str,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='meta',
@@ -6940,6 +6945,7 @@ class MetaCard:
             icon=self.icon,
             layouts=None if self.layouts is None else [__e.dump() for __e in self.layouts],
             dialog=None if self.dialog is None else self.dialog.dump(),
+            theme=self.theme,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -6962,6 +6968,8 @@ class MetaCard:
         _guard_vector('MetaCard.layouts', __d_layouts, (Layout,), False, True, False)
         __d_dialog: Any = __d.get('dialog')
         _guard_scalar('MetaCard.dialog', __d_dialog, (Dialog,), False, True, False)
+        __d_theme: Any = __d.get('theme')
+        _guard_scalar('MetaCard.theme', __d_theme, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MetaCard.commands', __d_commands, (Command,), False, True, False)
         box: str = __d_box
@@ -6972,6 +6980,7 @@ class MetaCard:
         icon: Optional[str] = __d_icon
         layouts: Optional[List[Layout]] = None if __d_layouts is None else [Layout.load(__e) for __e in __d_layouts]
         dialog: Optional[Dialog] = None if __d_dialog is None else Dialog.load(__d_dialog)
+        theme: Optional[str] = __d_theme
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -6982,6 +6991,7 @@ class MetaCard:
             icon,
             layouts,
             dialog,
+            theme,
             commands,
         )
 

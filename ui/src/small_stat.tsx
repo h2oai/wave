@@ -16,23 +16,16 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { bond, Card, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { clas } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
       padding: grid.gap,
     },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
-    },
     value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
     }
   })
@@ -53,8 +46,8 @@ export const
       const data = unpack(s.data)
       return (
         <div data-test={name} className={css.card}>
-          <Format data={data} format={s.title} className={css.title} />
-          <Format data={data} format={s.value} className={css.value} />
+          <Format data={data} format={s.title} className='s12 w6' />
+          <Format data={data} format={s.value} className={clas(css.value, 's24 w3')} />
         </div>
       )
     }

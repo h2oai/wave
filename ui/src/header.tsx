@@ -16,12 +16,11 @@ import { FontIcon, Panel, PanelType } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { bond, Box, box, Card, S } from './qd'
-import { clas, getTheme, padding } from './theme'
 import { NavGroup, XNav } from './nav'
+import { bond, Box, box, Card, S, B } from './qd'
+import { clas, cssVar, padding } from './theme'
 
 const
-  theme = getTheme(),
   iconSize = 24,
   css = stylesheet({
     card: {
@@ -39,7 +38,7 @@ const
     burger: {
       $nest: {
         '&:hover': {
-          color: theme.colors.page, // TODO improve
+          color: cssVar('page'),
           cursor: 'pointer',
         },
       },
@@ -52,14 +51,9 @@ const
     rhs: {
       flexGrow: 1
     },
-    title: {
-      ...theme.font.s24,
-      ...theme.font.w3,
-    },
     subtitle: {
       position: 'relative',
       top: -5, // nudge up slightly to account for padding
-      ...theme.font.s12,
     },
   })
 
@@ -82,7 +76,7 @@ interface State {
 }
 
 const
-  Navigation = bond(({ items, isOpenB }: { items: NavGroup[], isOpenB: Box<boolean> }) => {
+  Navigation = bond(({ items, isOpenB }: { items: NavGroup[], isOpenB: Box<B> }) => {
     const
       hideNav = () => isOpenB(false),
       render = () => (
@@ -114,7 +108,7 @@ export const
               </div>
             ) : (
               <div className={css.lhs}>
-                <FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: theme.color(icon_color) }} />
+                <FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />
               </div>
             )
 
@@ -122,8 +116,8 @@ export const
           <div data-test={name} className={css.card}>
             {burger}
             <div className={css.rhs}>
-              <div className={css.title}>{title}</div>
-              <div className={css.subtitle}>{subtitle}</div>
+              <div className='s24 w3'>{title}</div>
+              <div className={clas(css.subtitle, 's12')}>{subtitle}</div>
             </div>
             {nav && <Navigation items={nav} isOpenB={navB} />}
           </div>

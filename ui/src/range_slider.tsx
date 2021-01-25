@@ -18,7 +18,7 @@ import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import { stylesheet } from 'typestyle'
 import { B, bond, box, F, Id, qd, S, U } from './qd'
-import { displayMixin, padding, palette } from './theme'
+import { displayMixin, padding } from './theme'
 
 const
   css = stylesheet({
@@ -32,8 +32,8 @@ const
             '&__slider': {
               borderWidth: 2,
               borderRadius: 10,
-              borderColor: palette.neutralPrimary,
-              background: palette.white,
+              borderColor: 'var(--neutralPrimary)',
+              background: 'var(--white)',
               width: 16,
               height: 16,
               boxSizing: 'border-box',
@@ -50,19 +50,45 @@ const
               fontWeight: 600
             },
             '&__label-container': {
-              color: palette.neutralPrimary
+              color: 'var(--neutralPrimary)'
             },
             '&__track': {
               height: 4,
               borderRadius: 4,
-              background: palette.neutralTertiaryAlt,
+              background: 'var(--neutralTertiaryAlt)',
               cursor: 'initial',
               $nest: {
                 '&--active': {
-                  background: palette.neutralSecondary,
+                  background: 'var(--neutralSecondary)',
                 },
               }
-            }
+            },
+          }
+        },
+        '&:active .input-range': {
+          $nest: {
+            '&__slider': {
+              borderColor: 'var(--themeDark)',
+            },
+            '&__track': {
+              background: 'var(--themeLighter)',
+            },
+            '&__track--active': {
+              background: 'var(--themeDark)',
+            },
+          }
+        },
+        '&:hover .input-range': {
+          $nest: {
+            '&__slider': {
+              borderColor: 'var(--themePrimary)',
+            },
+            '&__track': {
+              background: 'var(--themeLighter)',
+            },
+            '&__track--active': {
+              background: 'var(--themePrimary)',
+            },
           }
         },
       }

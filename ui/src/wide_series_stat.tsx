@@ -18,10 +18,9 @@ import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
-import { getTheme, pc } from './theme'
+import { cssVar, pc, clas } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -35,22 +34,15 @@ const
       width: pc(50),
       paddingLeft: grid.gap,
     },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
-    },
     values: {
       display: 'flex',
       alignItems: 'baseline',
     },
     value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
       lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
     },
     aux_value: {
-      ...theme.font.s13,
-      color: theme.colors.text7,
+      color: cssVar('$text7'),
       marginLeft: 5,
     }
   })
@@ -92,14 +84,14 @@ export const
               data={unpack(s.plot_data)}
               category={s.plot_category}
               value={s.plot_value}
-              color={theme.color(s.plot_color)}
+              color={cssVar(s.plot_color)}
               zeroValue={s.plot_zero_value}
             />
           ) : (
             <MicroArea
               data={unpack(s.plot_data)}
               value={s.plot_value}
-              color={theme.color(s.plot_color)}
+              color={cssVar(s.plot_color)}
               zeroValue={s.plot_zero_value}
               curve={s.plot_curve || 'linear'}
             />
@@ -109,10 +101,10 @@ export const
         <div data-test={name} className={css.card}>
           <div className={css.plot}>{plot}</div>
           <div className={css.text}>
-            <Format data={data} format={s.title} className={css.title} />
+            <Format data={data} format={s.title} className='s12 w6' />
             <div className={css.values}>
-              <Format data={data} format={s.value} className={css.value} />
-              <Format data={data} format={s.aux_value} className={css.aux_value} />
+              <Format data={data} format={s.value} className={clas(css.value, 's24 w3')} />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
             </div>
           </div>
         </div>

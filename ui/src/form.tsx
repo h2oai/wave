@@ -46,7 +46,7 @@ import { Tabs, XTabs } from './tabs'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
-import { clas, getTheme, margin, padding } from './theme'
+import { clas, margin, padding, cssVar } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
@@ -150,7 +150,6 @@ interface State {
 }
 
 const
-  theme = getTheme(),
   defaults: Partial<State> = { items: [] },
   css = stylesheet({
     card: {
@@ -173,7 +172,7 @@ const
       alignItems: 'center',
     },
     inset: {
-      background: theme.colors.page,
+      background: cssVar('$page'),
       padding: padding(10, 15)
     },
     horizontalLeft: {
@@ -190,10 +189,6 @@ const
           margin: margin(0, 0, 0, 25),
         }
       }
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
     },
   })
 
@@ -267,13 +262,13 @@ export const
     const
       render = () => {
         const
-          s = theme.merge(defaults, state),
+          s = { ...defaults, ...state },
           title = s.title,
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
           <div data-test={name} className={css.card}>
-            {title && <div className={css.title}>{title}</div>}
+            {title && <div className='s12 w6'>{title}</div>}
             <XComponents items={items} />
           </div>
         )

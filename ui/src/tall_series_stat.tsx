@@ -18,10 +18,9 @@ import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 import { bond, Card, Data, F, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { clas, cssVar } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -30,17 +29,8 @@ const
     text: {
       padding: grid.gap,
     },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
-    },
-    value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
-    },
     aux_value: {
-      ...theme.font.s12,
-      color: theme.colors.text7,
+      color: 'var(--text7)',
     },
   })
 
@@ -81,14 +71,14 @@ export const
               data={unpack(s.plot_data)}
               category={s.plot_category}
               value={s.plot_value}
-              color={theme.color(s.plot_color)}
+              color={cssVar(s.plot_color)}
               zeroValue={s.plot_zero_value}
             />
           ) : (
             <MicroArea
               data={unpack(s.plot_data)}
               value={s.plot_value}
-              color={theme.color(s.plot_color)}
+              color={cssVar(s.plot_color)}
               zeroValue={s.plot_zero_value}
               curve={s.plot_curve || 'linear'}
             />
@@ -97,9 +87,9 @@ export const
       return (
         <div data-test={name} className={css.card}>
           <div className={css.text}>
-            <Format data={data} format={s.title || 'Untitled'} className={css.title} />
-            <Format data={data} format={s.value} className={css.value} />
-            <Format data={data} format={s.aux_value} className={css.aux_value} />
+            <Format data={data} format={s.title || 'Untitled'} className='s12 w6' />
+            <Format data={data} format={s.value} className='s24 w3' />
+            <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's12')} />
           </div>
           {plot}
         </div>

@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { bond, Card, qd, S } from './qd'
-import { getTheme } from './theme'
+import { clas, cssVar } from './theme'
 
 
 /**
@@ -54,7 +54,6 @@ export interface StatTableItem {
 }
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
@@ -63,40 +62,15 @@ const
       // HACK: for some reason, the overflow on 'items' does not take effect without this line.
       overflow: 'auto',
     },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
-    },
-    subtitle: {
-      ...theme.font.s12,
-    },
     items: {
       flexGrow: 1,
       overflow: 'auto',
       marginTop: '1em',
     },
     table: {
-      ...theme.font.s13,
       borderSpacing: 0,
       width: '100%',
       $nest: {
-        thead: {
-          ...theme.font.w6,
-          opacity: 0.4,
-          $nest: {
-            th: {
-              textAlign: 'right',
-              width: '1%',
-              whiteSpace: 'nowrap',
-              padding: '0.5em 0 0.5em 1em',
-            },
-            'th:first-child': {
-              textAlign: 'left',
-              width: '100%',
-              padding: '0.5em 1em 0.5em 0',
-            }
-          },
-        },
         tbody: {
           $nest: {
             th: {
@@ -116,15 +90,26 @@ const
         }
       }
     },
+    thead: {
+      opacity: 0.4,
+      $nest: {
+        th: {
+          textAlign: 'right',
+          width: '1%',
+          whiteSpace: 'nowrap',
+          padding: '0.5em 0 0.5em 1em',
+        },
+        'th:first-child': {
+          textAlign: 'left',
+          width: '100%',
+          padding: '0.5em 1em 0.5em 0',
+        }
+      },
+    },
     header: {
       display: 'flex',
     },
-    label: {
-      ...theme.font.w6,
-    },
     caption: {
-      ...theme.font.s12,
-      ...theme.font.w4,
       opacity: 0.7,
     },
     icon: {
@@ -158,12 +143,12 @@ export const
               <tr key={rowName ?? `${i}:${label}`} className={onClick ? css.clickable : undefined} onClick={onClick}>
                 <th key='label'>
                   <div className={css.header}>
-                    {icon && <div className={css.icon} style={icon_color ? { color: theme.color(icon_color) } : undefined}>
+                    {icon && <div className={css.icon} style={icon_color ? { color: cssVar(icon_color) } : undefined}>
                       <FontIcon iconName={icon} />
                     </div>}
                     <div>
-                      <div className={css.label}>{label}</div>
-                      {caption && <div className={css.caption}>{caption}</div>}
+                      <div className='w6'>{label}</div>
+                      {caption && <div className={clas(css.caption, 's12 w4')}>{caption}</div>}
                     </div>
                   </div>
                 </th>
@@ -174,11 +159,11 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className={css.title}>{title}</div>
-            { subtitle && <div className={css.subtitle}>{subtitle}</div>}
+            <div className='s12 w6'>{title}</div>
+            {subtitle && <div className='s12'>{subtitle}</div>}
             <div className={css.items}>
-              <table className={css.table}>
-                <thead>
+              <table className={clas(css.table, 's13')}>
+                <thead className={clas(css.thead, 'w6')}>
                   <tr>
                     {header}
                   </tr>

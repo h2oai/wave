@@ -2841,6 +2841,7 @@ ui_dialog <- function(
 #' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
 #' @param layouts The layouts supported by this page.
 #' @param dialog Display a dialog on the page.
+#' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -2853,6 +2854,7 @@ ui_meta_card <- function(
   icon = NULL,
   layouts = NULL,
   dialog = NULL,
+  theme = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -2862,6 +2864,7 @@ ui_meta_card <- function(
   .guard_scalar("icon", "character", icon)
   .guard_vector("layouts", "h2oq_Layout", layouts)
   .guard_scalar("dialog", "h2oq_Dialog", dialog)
+  .guard_scalar("theme", "character", theme)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
@@ -2872,6 +2875,7 @@ ui_meta_card <- function(
     icon=icon,
     layouts=layouts,
     dialog=dialog,
+    theme=theme,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
   return(.o)

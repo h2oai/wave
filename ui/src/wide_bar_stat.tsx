@@ -17,19 +17,14 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressBar } from './parts/progress_bar'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { getTheme } from './theme'
+import { clas, cssVar } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       padding: grid.gap,
       display: 'flex',
       flexDirection: 'column',
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
     },
     content: {
       flexGrow: 1,
@@ -41,14 +36,9 @@ const
       display: 'flex',
       alignItems: 'baseline',
     },
-    value: {
-      ...theme.font.s18,
-      ...theme.font.w3,
-    },
     aux_value: {
-      ...theme.font.s13,
-      color: theme.colors.text7,
       marginLeft: 5,
+      color: cssVar('$text7'),
     }
   })
 
@@ -74,13 +64,13 @@ export const
       const data = unpack(s.data)
       return (
         <div data-test={name} className={css.card}>
-          <Format data={data} format={s.title} className={css.title} />
+          <Format data={data} format={s.title} className='s12 w6' />
           <div className={css.content}>
             <div className={css.values}>
-              <Format data={data} format={s.value} className={css.value} />
-              <Format data={data} format={s.aux_value} className={css.aux_value} />
+              <Format data={data} format={s.value} className='s18 w3' />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
             </div>
-            <ProgressBar thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
+            <ProgressBar thickness={2} color={cssVar(s.plot_color)} value={s.progress} />
           </div>
         </div>
       )

@@ -17,11 +17,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Router from './router'
 import './cards'
-import './index.css'
+import './index.scss'
 import * as serviceWorker from './serviceWorker'
-import { defaultFontStyle, palette } from "./theme"
+import { fluentPalettes } from "./theme"
 
-loadTheme({ defaultFontStyle, palette })
+loadTheme({
+  defaultFontStyle: { fontFamily: 'Inter' },
+  palette: fluentPalettes.light
+})
 
 // Initialize Fluent icons
 initializeIcons()
