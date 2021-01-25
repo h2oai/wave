@@ -35,6 +35,8 @@ const
       position: 'relative',
     },
     frame: {
+      // WORKAROUND: Iframe "height:100%" implementation differs from Chrome/FF despite container being
+      // correctly expanded via "flex-grow:1". Need to position it absolutely instead.
       position: 'absolute',
       top: 0, left: 0, right: 0, bottom: 0
     }
