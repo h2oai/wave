@@ -73,3 +73,7 @@ More at https://h2oai.github.io/wave/docs/examples
 ![Components](assets/visuals/components-1.png)
 
 ![Visualizations](assets/visuals/components-2.png)
+
+### License
+
+H2O Wave is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for more information.

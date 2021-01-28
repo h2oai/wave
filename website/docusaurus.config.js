@@ -105,7 +105,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} <a href='https://h2o.ai' style='color:#ffe52b'>H2O.ai</a>, Inc.`,
+      copyright: `Copyright © ${new Date().getFullYear()} <a href='https://h2o.ai' style='color:#ffe52b'>H2O.ai</a>, Inc. Licensed under the <a href='https://github.com/h2oai/wave/blob/master/LICENSE' style='color:#ffe52b'>Apache License 2.0</a>.`,
     },
   },
   presets: [
