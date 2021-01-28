@@ -31,7 +31,7 @@ jobs:
       - name: Install additional deps
         run: |
           sudo apt-get update
-          apt-get install -y python3-venv make libnss3 libnspr4\
+          sudo apt-get install -y python3-venv make libnss3 libnspr4\
                libatk1.0-0\
                libatk-bridge2.0-0\
                libcups2\
@@ -88,5 +88,5 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "chore: update visual testing golden snapshots"
+          git commit -m "chore: add visual test results"
           git push
