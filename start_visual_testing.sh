@@ -8,4 +8,4 @@ sleep 2
 py/venv/bin/wave run examples.tour &
 sleep 2
 
-make test-ui-visual-ci
+make test-ui-visual-test

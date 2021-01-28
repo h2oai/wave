@@ -1,26 +1,26 @@
-# name: Visual Regression Testing Approve
+name: Visual Regression Testing Approve
 
-# on:
-#   pull_request:
-#     types: [opened]
-#   issue_comment:
-#     types: [created]
+on:
+  pull_request:
+    types: [opened]
+  issue_comment:
+    types: [created]
 
-# jobs:
-#   visual-regression:
-#     name: Run VR Tests
-#     runs-on: ubuntu-18.04
-#     env:
-#       NODE_ENV: test
-#     # if: github.event.pull_request.draft == false
-#     steps:
-#       - uses: khan/pull-request-comment-trigger@master
-#         id: check
-#         with:
-#           trigger: '/update-snapshots'
-#         env:
-#           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-#       - uses: actions/checkout@v2
-#       - name: Update golden snapshots for visual tests
-#         if: steps.check.outputs.triggered == 'true'
-#         run: make approve-visual-test
+jobs:
+  visual-regression:
+    name: Run VR Tests
+    runs-on: ubuntu-18.04
+    env:
+      NODE_ENV: test
+    # if: github.event.pull_request.draft == false
+    steps:
+      - uses: khan/pull-request-comment-trigger@master
+        id: check
+        with:
+          trigger: '/update-snapshots'
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      - uses: actions/checkout@v2
+      - name: Update golden snapshots for visual tests
+        if: steps.check.outputs.triggered == 'true'
+        run: make approve-visual-test
