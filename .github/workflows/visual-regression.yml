@@ -87,8 +87,8 @@ jobs:
       - name: Commit diffs to the branch
         if: ${{ failure() }}
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name github-actions[bot]
+          git config user.email 27856297+dependabot-preview[bot]@users.noreply.github.com
           git add .
           git commit -m "chore: add visual test results"
           git push
