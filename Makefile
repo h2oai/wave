@@ -38,6 +38,12 @@ run-ui: ## Run UI in development mode (hot reloading)
 test-ui-ci: ## Run UI unit tests in CI mode
 	cd ui && $(MAKE) test-ci
 
+test-ui-visual-ci: ## Run UI unit tests in CI mode
+	cd ui && $(MAKE) test-visual-ci
+
+approve-visual-test: ## Approve visual testing snapshots.
+	cd ui && $(MAKE) approve-visual-test
+
 test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test
 

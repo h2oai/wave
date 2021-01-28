@@ -1,0 +1,92 @@
+name: Visual Regression Testing
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  visual-regression:
+    name: Run VR Tests
+    runs-on: ubuntu-18.04
+    env:
+      LC_ALL: C.UTF-8
+      LANG: C.UTF-8
+      NODE_ENV: test
+    # if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.13.10'
+        # TODO: Add caching for npm.
+        # TODO: Add caching for pip.
+        # TODO: Build a custom docker container - no need to install all this every time.
+      - name: Install additional deps
+        run: |
+          sudo apt-get update
+          apt-get install -y python3-venv make libnss3 libnspr4\
+               libatk1.0-0\
+               libatk-bridge2.0-0\
+               libcups2\
+               libxcb1\
+               libdrm2\
+               libxkbcommon0\
+               libx11-6\
+               libxcomposite1\
+               libxdamage1\
+               libxext6\
+               libxfixes3\
+               libxrandr2\
+               libgbm1\
+               libgtk-3-0\
+               libpango-1.0-0\
+               libcairo2\
+               libgdk-pixbuf2.0-0\
+               libasound2\
+               libatspi2.0-0\
+               libbrotli1\
+               libgl1\
+               libegl1\
+               libnotify4\
+               libvpx5\
+               libopus0\
+               libxslt1.1\
+               libwoff1\
+               libharfbuzz-icu0\
+               libgstreamer-plugins-base1.0-0\
+               libgstreamer1.0-0\
+               libgstreamer-gl1.0-0\
+               libgstreamer-plugins-bad1.0-0\
+               libopenjp2-7\
+               libwebpdemux2\
+               libwebp6\
+               libenchant1c2a\
+               libsecret-1-0\
+               libhyphen0\
+               libgles2\
+               gstreamer1.0-libav\
+               libx11-xcb1\
+               libdbus-glib-1-2\
+               libxt6
+      - name: Build the newest changes
+        run: make setup generate build
+      - name: Run wave within CI and test
+        run: |
+          make run &
+          py/venv/bin/wave run examples.tour &
+          make test-ui-visual-ci
+      - name: Commit diffs to the branch
+        if: failed()
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "chore: update visual testing golden snapshots"
+          git push

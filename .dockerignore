@@ -3,6 +3,7 @@
 
 # IDEs
 **/.vscode
+**/.idea
 
 # Python
 **/venv
@@ -15,3 +16,4 @@ node_modules
 
 # build artefacts
 qd
+data
