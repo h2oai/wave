@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       # Needed for python "click" lib.
-      LC_ALL: 'C.UTF-8'
-      LANG: 'C.UTF-8'
+      LC_ALL: 'en_US.UTF-8'
+      LANG: 'en_US.UTF-8'
       # Needed for playwright's Babel.
       NODE_ENV: test
       # Speed up ui build, we don't need sourcemaps or inlining.
