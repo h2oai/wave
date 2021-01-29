@@ -15,9 +15,6 @@ jobs:
     name: Run VR Tests
     runs-on: ubuntu-18.04
     if: github.event.pull_request.draft == false
-    env: 
-      LC_ALL: C.UTF-8 
-      LANG: C.UTF-8 
     steps:
       - uses: actions/checkout@v2
         with:
@@ -108,8 +105,6 @@ jobs:
           py/venv/bin/wave run examples.tour &
           make test-ui-visual-ci
         env: 
-          LC_ALL: C.UTF-8 
-          LANG: C.UTF-8 
           # Needed for playwright's Babel.
           NODE_ENV: test
       - name: Commit diffs to the branch
