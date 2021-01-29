@@ -15,9 +15,14 @@ jobs:
     name: Run VR Tests
     runs-on: ubuntu-18.04
     env:
+      # Needed for python "click" lib.
       LC_ALL: C.UTF-8
       LANG: C.UTF-8
+      # Needed for playwright's Babel.
       NODE_ENV: test
+      # Speed up ui build, we don't need sourcemaps or inlining.
+      GENERATE_SOURCEMAP: false
+      INLINE_RUNTIME_CHUNK: false
     if: github.event.pull_request.draft == false
     steps:
       - uses: actions/checkout@v2
