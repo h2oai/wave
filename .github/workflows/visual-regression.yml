@@ -27,8 +27,25 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '1.13.10'
-        # TODO: Add caching for npm.
-        # TODO: Add caching for pip.
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+              ${{ runner.os }}-
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('py/examples/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
         # TODO: Build a custom docker container - no need to install all this every time.
       - name: Install additional deps
         run: |
