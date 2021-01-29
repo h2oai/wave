@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd /wave
 # Start the primary process and put it in the background
 make run &
 sleep 2

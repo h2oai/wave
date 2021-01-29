@@ -68,4 +68,4 @@ COPY . /wave
 
 RUN make setup generate build
 
-CMD ./start_visual_testing.sh 
+CMD ./ui/test/visual_regression/start_visual_testing.sh 
