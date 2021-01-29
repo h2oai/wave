@@ -1,26 +1,14 @@
 name: Visual Regression Testing Approve
 
 on:
-  pull_request:
-    types: [opened]
   issue_comment:
     types: [created]
 
 jobs:
   visual-regression:
-    name: Run VR Tests
+    if: contains(github.event.comment.html_url, '/pull/') && github.event.comment.body == '/update-snapshots'
     runs-on: ubuntu-18.04
-    env:
-      NODE_ENV: test
     # if: github.event.pull_request.draft == false
     steps:
-      - uses: khan/pull-request-comment-trigger@master
-        id: check
-        with:
-          trigger: '/update-snapshots'
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-      - uses: actions/checkout@v2
-      - name: Update golden snapshots for visual tests
-        if: steps.check.outputs.triggered == 'true'
+      - name: 'Update visual test snapshots'
         run: echo "TODO"

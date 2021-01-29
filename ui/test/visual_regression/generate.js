@@ -10,6 +10,8 @@ fs.readFileSync('../../../py/examples/tour.conf').toString().split('\n').forEach
   content += `
 it("should render ${example} correctly", async ({ page, browserName }) => {
   await page.goto('http://localhost:10101/tour#${example}', { waitUntil: 'networkidle' })
+  // Wait till everything loads
+  await new Promise((res) => setTimeout(() => res('Resolved'), 1000))
   const screenshot = await page.screenshot()
   expect(screenshot).toMatchSnapshot(\`${example}-\${browserName}.png\`, { threshold: 0.2 })
 })
