@@ -15,9 +15,6 @@ jobs:
     name: Run VR Tests
     runs-on: ubuntu-18.04
     env:
-      # Needed for python "click" lib.
-      LC_ALL: 'en_US.UTF-8'
-      LANG: 'en_US.UTF-8'
       # Needed for playwright's Babel.
       NODE_ENV: test
       # Speed up ui build, we don't need sourcemaps or inlining.
@@ -104,7 +101,7 @@ jobs:
       - name: Run wave within CI and test
         run: |
           make run &
-          py/venv/bin/wave run examples.tour &
+          export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && py/venv/bin/wave run examples.tour &
           make test-ui-visual-ci
       - name: Commit diffs to the branch
         if: ${{ failure() }}
