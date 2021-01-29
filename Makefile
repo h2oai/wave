@@ -42,7 +42,7 @@ test-ui-visual-ci: ## Run UI unit tests in CI mode
 	cd ui && $(MAKE) test-visual-ci
 
 approve-visual-test: ## Approve visual testing snapshots.
-	cd ui && $(MAKE) approve-visual-test
+	cd ui/test/visual_regression && node update-snapshots.js	
 
 test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test

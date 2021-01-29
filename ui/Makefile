@@ -20,9 +20,6 @@ test: ## Run unit tests
 test-visual-ci: ## Run visual tests in CI
 	npm run test:visual:ci
 
-approve-visual-test: ## Approve visual tests
-	npm run test:visual:approve
-	
 test-ci: ## Run tests in CI mode
 	npm run test:ci
 
