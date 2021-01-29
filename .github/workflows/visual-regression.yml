@@ -14,12 +14,6 @@ jobs:
   visual-regression:
     name: Run VR Tests
     runs-on: ubuntu-18.04
-    env:
-      # Needed for playwright's Babel.
-      NODE_ENV: test
-      # Speed up ui build, we don't need sourcemaps or inlining.
-      GENERATE_SOURCEMAP: false
-      INLINE_RUNTIME_CHUNK: false
     if: github.event.pull_request.draft == false
     steps:
       - uses: actions/checkout@v2
@@ -98,11 +92,20 @@ jobs:
                libxt6
       - name: Build the newest changes
         run: make setup generate build
+        env:
+          # Speed up ui build, we don't need sourcemaps or inlining.
+          GENERATE_SOURCEMAP: false
+          INLINE_RUNTIME_CHUNK: false
       - name: Run wave within CI and test
         run: |
           make run &
-          export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && py/venv/bin/wave run examples.tour &
+          py/venv/bin/wave run examples.tour &
           make test-ui-visual-ci
+        env: 
+          LC_ALL: C.UTF-8 
+          LANG: C.UTF-8 
+          # Needed for playwright's Babel.
+          NODE_ENV: test
       - name: Commit diffs to the branch
         if: ${{ failure() }}
         run: |
