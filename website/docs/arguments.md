@@ -46,3 +46,100 @@ The table below summarizes how to interpret inputs from various components.
 | `ui.tabs()` | The name of the active tab (a string). |
 | `ui.textbox()` | The value typed in (a string). |
 | `ui.toggle()` | `True` if checked, `False` if unchecked. |
+
+
+## Handling interactivity
+
+A common pattern for inspecting query arguments and determining the appropriate response is a simple `if/elif/else` conditional.
+
+If `add_to_cart`, `empty_cart`, `place_order` and `display_products` are all names of buttons somewhere in the user interface, then you can structure your `serve()` function something like this:
+
+```py {17-24}
+from h2o_wave import Q, main, app
+
+async def add_to_cart(q: Q):
+    pass
+
+async def empty_cart(q: Q):
+    pass
+
+async def place_order(q: Q):
+    pass
+
+async def display_products(q: Q):
+    pass
+
+@app('/hole_foods')
+async def serve(q: Q):
+    if q.args.add_to_cart:
+        await add_to_cart(q)
+    elif q.args.empty_cart:
+        await empty_cart(q)
+    elif q.args.place_order:
+        await place_order(q)
+    else: # Display products
+        await display_products(q)
+
+```
+
+If this feels too repetitive, you can use `on` and `handle_on` to remove some of the boilerplate:
+
+
+```py {3,7,11,15,21}
+from h2o_wave import Q, main, app, on, handle_on
+
+@on('add_to_cart')
+async def add_to_cart(q: Q):
+    pass
+
+@on('empty_cart')
+async def empty_cart(q: Q):
+    pass
+
+@on('place_order')
+async def place_order(q: Q):
+    pass
+
+@on('display_products')
+async def display_products(q: Q):
+    pass
+
+@app('/hole_foods')
+async def serve(q: Q):
+    handle_on(q)
+
+```
+
+In the above example, the `@on('add_to_cart')` is read as "when `q.arg['add_to_cart']` is `True` (or truthy), then invoke the function the `@on()` is applied to" - in this case, `add_to_cart()`.
+
+If the name of the function is the same as the name of the query argument, then the name can be elided. This simplifies the above example to:
+
+
+```py {3,7,11,15}
+from h2o_wave import Q, main, app, on, handle_on
+
+@on()
+async def add_to_cart(q: Q):
+    pass
+
+@on()
+async def empty_cart(q: Q):
+    pass
+
+@on()
+async def place_order(q: Q):
+    pass
+
+@on()
+async def display_products(q: Q):
+    pass
+
+@app('/hole_foods')
+async def serve(q: Q):
+    handle_on(q)
+
+```
+
+:::tip
+`@on()` also supports pattern matching. See [Routing](routing.md) for more information.
+:::
