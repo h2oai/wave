@@ -1,0 +1,35 @@
+name: Verify Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version to verify'
+        required: true
+
+env:
+  VERSION: "${{ github.event.inputs.version }}"
+
+jobs:
+  verify:
+    name: Verify Release on ${{ matrix.os }} with ${{ matrix.python }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        binary: [linux, darwin, windows]
+        python: [3.6.1, 3.7, 3.8, 3.9]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Start Wave Server
+        run: |
+          wget https://github.com/h2oai/wave/releases/download/v0.11.0/wave-${{ env.VERSION }}-${{ matrix.binary }}-amd64.tar.gz -o wave
+          cd wave
+          ./waved
+
+      - name: Start Wave Tour
+        run: |
+          cd wave/examples
+          python3 -m venv venv
+          ./venv/bin/pip install -r requirements.txt
+          ./venv/bin/wave run tour
+
