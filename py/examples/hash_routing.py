@@ -1,4 +1,4 @@
-# Routing
+# Routing / Hash
 # Use the browser's [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash)
 # for #routing using URLs.
 #
