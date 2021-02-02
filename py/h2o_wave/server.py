@@ -342,105 +342,26 @@ class _Main:
 main = _Main()
 
 
-def _guard_async_func(decorator: str, func):
-    if not asyncio.iscoroutinefunction(func):
-        raise ValueError(f'@{decorator} function {func.__name__} must be async')
+def app(route: str, mode=None, on_startup: Optional[Callable] = None,
+        on_shutdown: Optional[Callable] = None):
+    """
+    Indicate that a function is a query handler.
 
+    The function this decorator is applied to must accept exactly one argument that represents the query context,
+    of type `Q` or `Query`
 
-class _Router:
-    def __init__(self):
-        self._arg_handlers = {}
-        self._path_handlers = []
-        self._handle: Optional[Callable] = None
+    Args:
+        route: The route to listen to. e.g. `'/foo'` or `'/foo/bar/baz'`.
+        mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
+        on_startup: A callback to invoke on app startup. Callbacks do not take any arguments, and may be be either standard functions, or async functions.
+        on_shutdown: A callback to invoke on app shutdown. Callbacks do not take any arguments, and may be be either standard functions, or async functions.
+    """
 
-    def __call__(self, route: str, mode=None, on_startup: Optional[Callable] = None,
-                 on_shutdown: Optional[Callable] = None):
-        """
-        Indicate that a function is a query handler.
+    def wrap(handle: HandleAsync):
+        main._app = _App(route, handle, mode, on_startup, on_shutdown)
+        return handle
 
-        The function this decorator is applied to must accept exactly one argument that represents the query context,
-        of type `Q` or `Query`
-
-        Args:
-            route: The route to listen to. e.g. `'/foo'` or `'/foo/bar/baz'`.
-            mode: The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`.
-            on_startup: A callback to invoke on app startup. Callbacks do not take any arguments, and may be be either standard functions, or async functions.
-            on_shutdown: A callback to invoke on app shutdown. Callbacks do not take any arguments, and may be be either standard functions, or async functions.
-        """
-
-        def wrap(handle: HandleAsync):
-            self._handle = handle
-            main._app = _App(route, self._route, mode, on_startup, on_shutdown)
-            return handle
-
-        return wrap
-
-    def on(self, arg: str):
-        """
-        Indicate that a function is a query handler that should be invoked when `q.args` contains an argument that matches a specific name or pattern.
-
-        Examples:
-        A function annotated with @app.on('foo') is invoked whenever q.args['foo'] is found.
-        A function annotated with @app.on('#foo') is invoked whenever q.args['#'] equals 'foo'.
-        A function annotated with @app.on('#foo/bar') is invoked whenever q.args['#'] equals 'foo/bar'.
-        A function annotated with @app.on('#foo/{fruit}') is invoked whenever q.args['#'] matches 'foo/apple', 'foo/orange', etc. The parameter 'fruit' is passed to the function (in this case, 'apple', 'orange', etc.)
-
-        Parameters in patterns (indicated by `{}`) can be converted to `str`, `int`, `float` or `uuid.UUID` instances by suffixing the parameters with `str`, `int`, `float` or `uuid`, respectively.
-
-        Examples:
-        A function annotated with @app.on('#users/{user_id:int}') is invoked with an integer `user_id`.
-        A function annotated with @app.on('#pay/cash/{amount:float}') is invoked with a float `amount`.
-
-        Args:
-            arg: The name of the argument (in case of plain arguments) or a pattern (in case of hash arguments, or q.args['#']).
-        """
-
-        def wrap(func):
-            _guard_async_func('handle', func)
-            if arg.startswith('#'):
-                rx, _, conv = compile_path(arg[1:])
-                self._path_handlers.append((rx, conv, func))
-            else:
-                self._arg_handlers[arg] = func
-            return func
-
-        return wrap
-
-    def arg(self, func):
-        """
-        Indicate that a function is a query handler that should be invoked when `q.args` contains an argument that matches the name of the function.
-
-        `@app.arg` applied to a function named `foo` is simply a shorthand notation for `@app.on('foo')`.
-        """
-        _guard_async_func('handler', func)
-        self._arg_handlers[func.__name__] = func
-        return func
-
-    async def _route(self, q: Q):
-        await self._handle(q)
-        args = expando_to_dict(q.args)
-        for arg in args:
-            if arg == '#':
-                slug = q.args[arg]
-                for rx, conv, func in self._path_handlers:
-                    match = rx.match(slug)
-                    if match:
-                        params = match.groupdict()
-                        for key, value in params.items():
-                            params[key] = conv[key].convert(value)
-                        if len(params):
-                            await func(q, **params)
-                        else:
-                            await func(q)
-                        return
-            else:
-                func = self._arg_handlers.get(arg)
-                if func:
-                    await func(q)
-                    return
-
-
-app = _Router()
+    return wrap
 
 
 def listen(route: str, handle: HandleAsync, mode=None):
