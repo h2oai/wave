@@ -66,10 +66,13 @@ export const
       init = () => {
         const el = ref.current
         if (!el) return
+
+        const spec = JSON.parse(state.specification)
+        if (!isNaN(spec.height)) el.style.height = `${spec.height + 10}px`
         // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
-        if (el.clientHeight < 30) el.style.height = '300px'
+        else if (el.clientHeight < 30) el.style.height = '300px'
+
         const
-          spec = JSON.parse(state.specification),
           data = unpack<any[]>(state.data),
           width = el.clientWidth - 10, // HACK: Vega calculates dimensions with extra 10px for some reason.
           height = el.clientHeight - 10 // HACK: Vega calculates dimensions with extra 10px for some reason.
@@ -123,10 +126,10 @@ export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
-        const { specification, data } = state
+        const { specification, data, title } = state
         return (
           <div data-test={name} className={css.card}>
-            <div className='s12 w6'>{state.title}</div>
+            <div className='s12 w6'>{title}</div>
             <div className={css.body}>
               <XVegaVisualization key={xid()} model={{ specification, data }} />
             </div>
