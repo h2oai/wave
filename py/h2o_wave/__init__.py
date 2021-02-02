@@ -31,7 +31,7 @@ realtime state synchronization between Python and web browsers.
 """
 from .core import Site, AsyncSite, site, Page, Ref, data, pack, Expando, expando_to_dict, clone_expando, copy_expando
 from .server import listen, Q, app, main
-from .routing import on, delegate
+from .routing import on, handle_on
 from .db import TeleDBError, TeleDB
 from .types import *
 from .test import cypress, Cypress

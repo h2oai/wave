@@ -62,13 +62,22 @@ def on(arg: str = None):
     return wrap
 
 
-async def delegate(q: Q):
+async def handle_on(q: Q) -> bool:
+    """
+    Handle the query using a query handler (a function annotated with `@on()`).
+
+    Args:
+        q: The query context.
+
+    Returns:
+        True if a matching query handler was found and invoked, else False.
+    """
     args = expando_to_dict(q.args)
     for arg in args:
+        arg_value = q.args[arg]
         if arg == '#':
-            slug = q.args[arg]
             for rx, conv, func in _path_handlers:
-                match = rx.match(slug)
+                match = rx.match(arg_value)
                 if match:
                     params = match.groupdict()
                     for key, value in params.items():
@@ -77,9 +86,11 @@ async def delegate(q: Q):
                         await func(q, **params)
                     else:
                         await func(q)
-                    return
-        else:
+                    return True
+        elif arg_value:
             func = _arg_handlers.get(arg)
             if func:
                 await func(q)
-                return
+                return True
+
+    return False
