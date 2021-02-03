@@ -68,7 +68,9 @@ export const
         if (!el) return
 
         const spec = JSON.parse(state.specification)
-        if (!isNaN(spec.height)) el.style.height = `${spec.height + 10}px`
+        if (!isNaN(spec.height)) {
+          el.style.height = `${spec.height + 10}px`// HACK: Vega calculates dimensions with extra 10px for some reason, increase container for 10px as well.
+        }
         // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
         else if (el.clientHeight < 30) el.style.height = '300px'
 
