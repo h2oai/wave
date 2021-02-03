@@ -72,7 +72,9 @@ export const
           el.style.height = `${spec.height + 10}px`// HACK: Vega calculates dimensions with extra 10px for some reason, increase container for 10px as well.
         }
         // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
-        else if (el.clientHeight < 30) el.style.height = '300px'
+        else if (el.clientHeight < 30) {
+          el.style.height = '300px'
+        }
 
         const
           data = unpack<any[]>(state.data),
