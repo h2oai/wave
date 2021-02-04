@@ -153,10 +153,6 @@ const
     slot: {
       boxSizing: 'border-box',
       transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
-      position: 'absolute',
-      backgroundColor: cssVar('$card'),
-      borderRadius: 3,
-      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
       overflow: 'auto',
       display: 'flex',
       flexDirection: 'column',
@@ -168,7 +164,7 @@ const
       }
     },
     normal: {
-      backgroundColor: cssVar('card'),
+      backgroundColor: cssVar('$card'),
       boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
       $nest: {
         '&:hover': {
