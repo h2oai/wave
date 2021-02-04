@@ -16,7 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { bond, Card, unpack, F, Rec, S, Data } from './qd'
-import { cssVar } from './theme'
+import { cssVar, padding } from './theme'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
 
@@ -29,7 +29,7 @@ const
     text: {
       display: 'flex',
       justifyContent: 'space-between',
-      padding: grid.gap,
+      padding: padding(8, grid.gap),
     },
   })
 
