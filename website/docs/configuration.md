@@ -88,3 +88,25 @@ Specify `H2O_WAVE_APP_ADDRESS` instead.
 :::
 
 The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.
+
+
+## Web Analytics
+
+You can configure your app's web pages to send basic usage information to a third-party web analytics or tracking site. This lets you measure and analyze how users are interacting with various parts of your app.
+
+By default, Wave apps do not load any third-party trackers or capture usage data. Third-party trackers have to be enabled explicitly by the application's author, and are loaded on-demand.
+
+Once enabled, your app's UI will send events every time the user performs some kind of action that triggers a request from the browser to your app. Only two kinds of information are sent to the third-party trackers:
+
+- The names of the elements that were possibly interacted with (and not values). For example, if a button named `foo` was clicked on, the value `foo=true` is tracked.
+- The hash part of the URL, if any. For example if the page `/foo/bar` was navigated to, the value `#=/foo/bar` is tracked.
+
+### Google Analytics
+
+To enable usage tracking via Google Analytics, create and set a `ui.tracker()` on your page's meta card, with the `id` set to the measurement ID of your web property.
+
+```py {2}
+q.page['meta'] = ui.meta_card('',
+    tracker=ui.tracker(type=ui.TrackerType.GA, id='G-XXXXXXXXXX')
+)
+```
