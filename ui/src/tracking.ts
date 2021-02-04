@@ -20,7 +20,7 @@ const
     for (const k in args) {
       const v = args[k]
       // Don't send actual values; only that certain elements were possibly interacted with.
-      if (v) r[k] = true
+      if (v) r[k] = k === '#' ? v : true
     }
 
     return r
