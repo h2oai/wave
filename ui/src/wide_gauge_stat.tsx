@@ -17,13 +17,13 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
 import { bond, Card, F, Rec, S, unpack } from './qd'
-import { cssVar, pc, clas } from './theme'
+import { cssVar, pc, clas, padding, centerMixin } from './theme'
 
 const
   css = stylesheet({
     card: {
       display: 'flex',
-      padding: grid.gap,
+      padding: padding(8, grid.gap),
     },
     lhs: {
       position: 'relative',
@@ -40,9 +40,7 @@ const
     percentContainer: {
       position: 'absolute',
       top: 0, right: 0, bottom: 0, left: 0,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      ...centerMixin(),
     },
     percent: {
       opacity: 0.5,
@@ -51,10 +49,10 @@ const
       overflow: 'visible'
     },
     value: {
-      lineHeight: '28px', // Override to fit inside 1 unit height in grid layout.
+      lineHeight: 28, // Override to fit inside 1 unit height in grid layout.
     },
     aux_value: {
-      color: 'var(--text7)',
+      color: cssVar('$text7'),
       marginLeft: 5,
     }
   })
@@ -88,7 +86,7 @@ export const
             </div>
           </div>
           <div className={css.rhs}>
-            <Format data={data} format={s.title} className='s12 w6' />
+            <Format data={data} format={s.title} className={clas(css.title, 's12 w6')} />
             <div className={css.values}>
               <Format data={data} format={s.value} className='s24 w3' />
               <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
