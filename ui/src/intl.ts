@@ -71,12 +71,12 @@ export const
     // "foo"
     if (isBareExpr(s)) return [s, undefined]
 
-    // "{{func foo..."
-    const invocation = s.match(/\{\{\s*(\w+)\s+(.+?)\s*\}\}/)
+    // "{{func foo-bar ..."
+    const invocation = s.match(/\{\{\s*(\w+)\s+(\S+)/)
     if (invocation) return [invocation[2], compile(s)]
 
-    // "{{foo..."
-    const bare = s.match(/\{\{\s*(.+?)\s*\}\}/)
+    // "{{foo-bar ..."
+    const bare = s.match(/\{\{\s*(\S+)/)
     if (bare) return [bare[1], undefined]
 
     return null
