@@ -12,6 +12,23 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.12.0
+Feb 3, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.12.0)
+- Added
+  - Add `on` and `handle_on` APIs for query-handling and routing.
+  - Add support for usage tracking via Google Analytics.
+  - Use `H2O_WAVE_APP_MODE` environment variable to determine app sync behavior (as an alternative to `@app(mode=...)`).
+  - Add experimental support for switching theme to a dark-mode "neon" theme.
+- Changed
+  - Stricter type validation for ui.* API parameters.
+  - Stricter validation for non-empty strings when required (name of components, etc.)
+- Fixed
+  - Center breadcrumbs vertically in alloted space.
+  - Fix breakages in Cypress test runner.
+  - Fix `ui.frame()` sizing in Safari.
+  - Fix rendering in Safari for cards that display circular progress bars.
+  - Allow special characters in column names while using template strings for `ui.plot()`.
+
 ## v0.11.0
 Jan 15, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.11.0)
 - Added
