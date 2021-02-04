@@ -29,19 +29,20 @@ def on(arg: str = None):
     Indicate that a function is a query handler that should be invoked when `q.args` contains an argument that matches a specific name or pattern.
 
     Examples:
-    A function annotated with @on('foo') is invoked whenever q.args['foo'] is found.
-    A function annotated with @on('#foo') is invoked whenever q.args['#'] equals 'foo'.
-    A function annotated with @on('#foo/bar') is invoked whenever q.args['#'] equals 'foo/bar'.
-    A function annotated with @on('#foo/{fruit}') is invoked whenever q.args['#'] matches 'foo/apple', 'foo/orange', etc. The parameter 'fruit' is passed to the function (in this case, 'apple', 'orange', etc.)
+    A function annotated with `@on('foo')` is invoked whenever `q.args['foo']` is found.
+    A function annotated with `@on('#foo')` is invoked whenever `q.args['#']` equals 'foo'.
+    A function annotated with `@on('#foo/bar')` is invoked whenever `q.args['#']` equals 'foo/bar'.
+    A function annotated with `@on('#foo/&lcub;fruit&rcub;')` is invoked whenever `q.args['#']` matches 'foo/apple', 'foo/orange', etc. The parameter 'fruit' is passed to the function (in this case, 'apple', 'orange', etc.)
 
-    Parameters in patterns (indicated by `{}`) can be converted to `str`, `int`, `float` or `uuid.UUID` instances by suffixing the parameters with `str`, `int`, `float` or `uuid`, respectively.
+    Parameters in patterns (indicated within curly braces) can be converted to `str`, `int`, `float` or `uuid.UUID` instances by suffixing the parameters with `str`, `int`, `float` or `uuid`, respectively.
 
     Examples:
-    A function annotated with @on('#users/{user_id:int}') is invoked with an integer `user_id`.
-    A function annotated with @on('#pay/cash/{amount:float}') is invoked with a float `amount`.
+    - `user_id:int`: `user_id` is converted to an integer.
+    - `amount:float`: `amount` is converted to a float.
+    - `id:uuid`: `id` is converted to a `uuid.UUID`.
 
     Args:
-        arg: The name of the q.arg argument (in case of plain arguments) or a pattern (in case of hash arguments, or q.args['#']). If not provided, the q.arg argument is assumed to be the same as the name of the function.
+        arg: The name of the `q.arg` argument (in case of plain arguments) or a pattern (in case of hash arguments, or `q.args['#']`). If not provided, the `q.arg` argument is assumed to be the same as the name of the function.
     """
 
     def wrap(func):
