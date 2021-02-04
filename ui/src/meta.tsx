@@ -18,6 +18,7 @@ import { showNotification } from './notification'
 import { bond, box, Card, Id, qd, S, U } from './qd'
 import { Dialog } from './dialog'
 import { changeTheme } from './theme'
+import { setupTracker, Tracker } from './tracking'
 
 /**
  * Represents the layout structure for a page.
@@ -95,12 +96,14 @@ interface State {
   dialog?: Dialog
   /** Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'. */
   theme?: S
+  /** Configure a tracker for the page (for web analytics). */
+  tracker?: Tracker
 }
 
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Card<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme } = state
+    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker } = state
 
     if (title) {
       delete state.title
@@ -147,6 +150,11 @@ export const
     if (layouts) {
       delete state.layouts
       layoutsB(layouts)
+    }
+
+    if (tracker) {
+      delete state.tracker
+      setupTracker(tracker)
     }
   }
 

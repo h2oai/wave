@@ -2828,6 +2828,25 @@ ui_dialog <- function(
   return(.o)
 }
 
+#' Configure user interaction tracking (analytics) for a page.
+#'
+#' @param type The tracking provider. Supported providers are `ga` (Google Analytics) and `gtag` (Google Global Site Tags or gtag.js)
+#'   One of 'ga', 'gtag'. See enum h2o_wave.ui.TrackerType.
+#' @param id The tracking ID or measurement ID.
+#' @return A Tracker instance.
+#' @export
+ui_tracker <- function(
+  type,
+  id) {
+  # TODO Validate type
+  .guard_scalar("id", "character", id)
+  .o <- list(
+    type=type,
+    id=id)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Tracker"))
+  return(.o)
+}
+
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -2842,6 +2861,7 @@ ui_dialog <- function(
 #' @param layouts The layouts supported by this page.
 #' @param dialog Display a dialog on the page.
 #' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
+#' @param tracker Configure a tracker for the page (for web analytics).
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -2855,6 +2875,7 @@ ui_meta_card <- function(
   layouts = NULL,
   dialog = NULL,
   theme = NULL,
+  tracker = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -2865,6 +2886,7 @@ ui_meta_card <- function(
   .guard_vector("layouts", "h2oq_Layout", layouts)
   .guard_scalar("dialog", "h2oq_Dialog", dialog)
   .guard_scalar("theme", "character", theme)
+  .guard_scalar("tracker", "h2oq_Tracker", tracker)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
@@ -2876,6 +2898,7 @@ ui_meta_card <- function(
     layouts=layouts,
     dialog=dialog,
     theme=theme,
+    tracker=tracker,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
   return(.o)

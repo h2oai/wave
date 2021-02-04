@@ -2443,6 +2443,24 @@ def dialog(
     )
 
 
+def tracker(
+        type: str,
+        id: str,
+) -> Tracker:
+    """Configure user interaction tracking (analytics) for a page.
+
+    Args:
+        type: The tracking provider. Supported providers are `ga` (Google Analytics) and `gtag` (Google Global Site Tags or gtag.js) One of 'ga', 'gtag'. See enum h2o_wave.ui.TrackerType.
+        id: The tracking ID or measurement ID.
+    Returns:
+        A `h2o_wave.types.Tracker` instance.
+    """
+    return Tracker(
+        type,
+        id,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2453,6 +2471,7 @@ def meta_card(
         layouts: Optional[List[Layout]] = None,
         dialog: Optional[Dialog] = None,
         theme: Optional[str] = None,
+        tracker: Optional[Tracker] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2470,6 +2489,7 @@ def meta_card(
         layouts: The layouts supported by this page.
         dialog: Display a dialog on the page.
         theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
+        tracker: Configure a tracker for the page (for web analytics).
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2484,6 +2504,7 @@ def meta_card(
         layouts,
         dialog,
         theme,
+        tracker,
         commands,
     )
 

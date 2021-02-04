@@ -6873,6 +6873,53 @@ class Dialog:
         )
 
 
+_TrackerType = ['ga', 'gtag']
+
+
+class TrackerType:
+    GA = 'ga'
+    GTAG = 'gtag'
+
+
+class Tracker:
+    """Configure user interaction tracking (analytics) for a page.
+    """
+    def __init__(
+            self,
+            type: str,
+            id: str,
+    ):
+        _guard_enum('Tracker.type', type, _TrackerType, False)
+        _guard_scalar('Tracker.id', id, (str,), False, False, False)
+        self.type = type
+        """The tracking provider. Supported providers are `ga` (Google Analytics) and `gtag` (Google Global Site Tags or gtag.js) One of 'ga', 'gtag'. See enum h2o_wave.ui.TrackerType."""
+        self.id = id
+        """The tracking ID or measurement ID."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_enum('Tracker.type', self.type, _TrackerType, False)
+        _guard_scalar('Tracker.id', self.id, (str,), False, False, False)
+        return _dump(
+            type=self.type,
+            id=self.id,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Tracker':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_type: Any = __d.get('type')
+        _guard_enum('Tracker.type', __d_type, _TrackerType, False)
+        __d_id: Any = __d.get('id')
+        _guard_scalar('Tracker.id', __d_id, (str,), False, False, False)
+        type: str = __d_type
+        id: str = __d_id
+        return Tracker(
+            type,
+            id,
+        )
+
+
 class MetaCard:
     """Represents page-global state.
 
@@ -6890,6 +6937,7 @@ class MetaCard:
             layouts: Optional[List[Layout]] = None,
             dialog: Optional[Dialog] = None,
             theme: Optional[str] = None,
+            tracker: Optional[Tracker] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MetaCard.box', box, (str,), False, False, False)
@@ -6901,6 +6949,7 @@ class MetaCard:
         _guard_vector('MetaCard.layouts', layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', dialog, (Dialog,), False, True, False)
         _guard_scalar('MetaCard.theme', theme, (str,), False, True, False)
+        _guard_scalar('MetaCard.tracker', tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6920,6 +6969,8 @@ class MetaCard:
         """Display a dialog on the page."""
         self.theme = theme
         """Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'."""
+        self.tracker = tracker
+        """Configure a tracker for the page (for web analytics)."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6934,6 +6985,7 @@ class MetaCard:
         _guard_vector('MetaCard.layouts', self.layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', self.dialog, (Dialog,), False, True, False)
         _guard_scalar('MetaCard.theme', self.theme, (str,), False, True, False)
+        _guard_scalar('MetaCard.tracker', self.tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='meta',
@@ -6946,6 +6998,7 @@ class MetaCard:
             layouts=None if self.layouts is None else [__e.dump() for __e in self.layouts],
             dialog=None if self.dialog is None else self.dialog.dump(),
             theme=self.theme,
+            tracker=None if self.tracker is None else self.tracker.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -6970,6 +7023,8 @@ class MetaCard:
         _guard_scalar('MetaCard.dialog', __d_dialog, (Dialog,), False, True, False)
         __d_theme: Any = __d.get('theme')
         _guard_scalar('MetaCard.theme', __d_theme, (str,), False, True, False)
+        __d_tracker: Any = __d.get('tracker')
+        _guard_scalar('MetaCard.tracker', __d_tracker, (Tracker,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MetaCard.commands', __d_commands, (Command,), False, True, False)
         box: str = __d_box
@@ -6981,6 +7036,7 @@ class MetaCard:
         layouts: Optional[List[Layout]] = None if __d_layouts is None else [Layout.load(__e) for __e in __d_layouts]
         dialog: Optional[Dialog] = None if __d_dialog is None else Dialog.load(__d_dialog)
         theme: Optional[str] = __d_theme
+        tracker: Optional[Tracker] = None if __d_tracker is None else Tracker.load(__d_tracker)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -6992,6 +7048,7 @@ class MetaCard:
             layouts,
             dialog,
             theme,
+            tracker,
             commands,
         )
 

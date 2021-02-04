@@ -15,6 +15,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import * as React from 'react'
 import { Dialog } from './dialog'
+import { track } from './tracking'
 
 //
 // Dataflow
@@ -797,6 +798,7 @@ export const qd: Qd = {
       clearRec(qd.events)
     }
     sock.send(`@ ${qd.path} ${JSON.stringify(args)}`)
+    track(args)
     qd.busyB(true)
   },
   jump: (key: any, value: any) => {
