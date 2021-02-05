@@ -106,7 +106,7 @@ async def display_products(q: Q):
 
 @app('/hole_foods')
 async def serve(q: Q):
-    handle_on(q)
+    await handle_on(q)
 
 ```
 
@@ -136,7 +136,7 @@ async def display_products(q: Q):
 
 @app('/hole_foods')
 async def serve(q: Q):
-    handle_on(q)
+    await handle_on(q)
 
 ```
 
