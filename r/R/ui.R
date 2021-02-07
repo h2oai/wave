@@ -129,6 +129,32 @@ ui_breadcrumbs_card <- function(
   return(.o)
 }
 
+#' Create a card displaying a collaborative Pixel art tool, just for kicks.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title for this card.
+#' @param data The data for this card.
+#' @param commands Contextual menu commands for this component.
+#' @return A ChatRoomCard instance.
+#' @export
+ui_chat_room_card <- function(
+  box,
+  title,
+  data,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  # TODO Validate data: Rec
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ChatRoomCard"))
+  return(.o)
+}
+
 #' EXPERIMENTAL. DO NOT USE.
 #' Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
 #'

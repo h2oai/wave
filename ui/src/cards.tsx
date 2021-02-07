@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import './breadcrumbs'
+import './chat_room'
 import './flex'
 import './form'
 import './footer'

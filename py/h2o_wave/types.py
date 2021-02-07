@@ -241,6 +241,63 @@ class BreadcrumbsCard:
         )
 
 
+class ChatRoomCard:
+    """Create a card displaying a collaborative Pixel art tool, just for kicks.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            data: PackedRecord,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('ChatRoomCard.box', box, (str,), False, False, False)
+        _guard_scalar('ChatRoomCard.title', title, (str,), False, False, False)
+        _guard_vector('ChatRoomCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title for this card."""
+        self.data = data
+        """The data for this card."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('ChatRoomCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('ChatRoomCard.title', self.title, (str,), False, False, False)
+        _guard_vector('ChatRoomCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='chat_room',
+            box=self.box,
+            title=self.title,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'ChatRoomCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('ChatRoomCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('ChatRoomCard.title', __d_title, (str,), False, False, False)
+        __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('ChatRoomCard.commands', __d_commands, (Command,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return ChatRoomCard(
+            box,
+            title,
+            data,
+            commands,
+        )
+
+
 _FlexCardDirection = ['horizontal', 'vertical']
 
 
