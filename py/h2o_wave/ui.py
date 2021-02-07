@@ -103,6 +103,30 @@ def breadcrumbs_card(
     )
 
 
+def chat_room_card(
+        box: str,
+        title: str,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> ChatRoomCard:
+    """Create a card displaying a collaborative Pixel art tool, just for kicks.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        data: The data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.ChatRoomCard` instance.
+    """
+    return ChatRoomCard(
+        box,
+        title,
+        data,
+        commands,
+    )
+
+
 def flex_card(
         box: str,
         item_view: str,
