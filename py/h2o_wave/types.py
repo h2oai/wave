@@ -242,7 +242,7 @@ class BreadcrumbsCard:
 
 
 class ChatRoomCard:
-    """Create a card displaying a collaborative Pixel art tool, just for kicks.
+    """Create a card that displays a chat room. Chat messages
     """
     def __init__(
             self,
@@ -7019,7 +7019,7 @@ class MetaCard:
         self.redirect = redirect
         """Redirect the page to a new URL."""
         self.icon = icon
-        """Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers)."""
+        """Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). Not supported in Safari - the only option is to update "favicon.ico" file in waved server's "www" folder."""
         self.layouts = layouts
         """The layouts supported by this page."""
         self.dialog = dialog

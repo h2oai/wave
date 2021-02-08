@@ -88,7 +88,10 @@ interface State {
   notification?: S
   /** Redirect the page to a new URL. */
   redirect?: S
-  /** Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). */
+  /** 
+   * Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). 
+   * Not supported in Safari - the only option is to update "favicon.ico" file in waved server's "www" folder. 
+  */
   icon?: S
   /** The layouts supported by this page. */
   layouts?: Layout[]
@@ -116,6 +119,7 @@ export const
         iconLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement,
         touchIconLink = document.querySelector("link[rel*='apple-touch-icon']") as HTMLLinkElement
       if (iconLink) iconLink.href = icon
+      // Not working as of Feb 2021 since Safari does not support dynamic favicon changes.
       if (touchIconLink) touchIconLink.href = icon
     }
 
