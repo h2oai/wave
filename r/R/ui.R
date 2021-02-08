@@ -2884,7 +2884,7 @@ ui_tracker <- function(
 #' @param notification Display a desktop notification.
 #' @param redirect Redirect the page to a new URL.
 #' @param icon Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers).
-#'   Not supported in Safari - the only option is to update "favicon.ico" file in waved server's "www" folder.
+#'   Not supported in Safari.
 #' @param layouts The layouts supported by this page.
 #' @param dialog Display a dialog on the page.
 #' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.

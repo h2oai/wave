@@ -90,7 +90,7 @@ interface State {
   redirect?: S
   /** 
    * Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). 
-   * Not supported in Safari - the only option is to update "favicon.ico" file in waved server's "www" folder. 
+   * Not supported in Safari.
   */
   icon?: S
   /** The layouts supported by this page. */

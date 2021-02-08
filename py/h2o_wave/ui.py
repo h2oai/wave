@@ -2509,7 +2509,7 @@ def meta_card(
         refresh: Refresh rate in seconds. A value of 0 turns off live-updates. Values != 0 are currently ignored (reserved for future use).
         notification: Display a desktop notification.
         redirect: Redirect the page to a new URL.
-        icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). Not supported in Safari - the only option is to update "favicon.ico" file in waved server's "www" folder.
+        icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). Not supported in Safari.
         layouts: The layouts supported by this page.
         dialog: Display a dialog on the page.
         theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.

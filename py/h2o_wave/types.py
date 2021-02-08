@@ -7019,7 +7019,7 @@ class MetaCard:
         self.redirect = redirect
         """Redirect the page to a new URL."""
         self.icon = icon
-        """Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). Not supported in Safari - the only option is to update "favicon.ico" file in waved server's "www" folder."""
+        """Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). Not supported in Safari."""
         self.layouts = layouts
         """The layouts supported by this page."""
         self.dialog = dialog
