@@ -109,7 +109,8 @@ def chat_room_card(
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> ChatRoomCard:
-    """Create a card that displays a chat room. Chat messages
+    """Create a card that displays a chat room.
+    The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
 
     Args:
         box: A string indicating how to place this component on the page.

@@ -242,7 +242,8 @@ class BreadcrumbsCard:
 
 
 class ChatRoomCard:
-    """Create a card that displays a chat room. Chat messages
+    """Create a card that displays a chat room.
+    The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
     """
     def __init__(
             self,

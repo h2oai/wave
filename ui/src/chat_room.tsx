@@ -49,7 +49,9 @@ const
     }
   })
 
-/** Create a card that displays a chat room. Chat messages  */
+/** Create a card that displays a chat room.
+ * The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
+ */
 interface State {
   /** The title for this card.*/
   title: S
@@ -59,11 +61,11 @@ interface State {
 
 /** A chat message. */
 interface ChatMessage {
-  /** The message */
+  /** ISO timestamp at which this message was posted. */
   time: S
-  /** The message */
+  /** Username of the sender. */
   user: S
-  /** The message */
+  /** The message contents. */
   message: S
 }
 
