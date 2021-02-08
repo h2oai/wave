@@ -56,4 +56,7 @@ setuptools.setup(
     entry_points=dict(
         console_scripts=["wave = h2o_wave.cli:main"]
     ),
+    extras_require=dict(
+        ml=['h2o_wave_ml']
+    ),
 )
