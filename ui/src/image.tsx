@@ -47,7 +47,7 @@ export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
     const render = () => (
       <div data-test={name} className={css.card}>
-        <Format data={s.data} format={s.title} className='s12 w6' />
+        <Format data={s.data} format={s.title} className='wave-s12 wave-w6' />
         <img className={css.img} alt={s.title} src={`data:image/${s.type};base64,${s.image}`} />
       </div >
     )

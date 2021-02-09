@@ -268,7 +268,7 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            {title && <div className='s12 w6'>{title}</div>}
+            {title && <div className='wave-s12 wave-w6'>{title}</div>}
             <XComponents items={items} />
           </div>
         )

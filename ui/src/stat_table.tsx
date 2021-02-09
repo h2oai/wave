@@ -147,8 +147,8 @@ export const
                       <FontIcon iconName={icon} />
                     </div>}
                     <div>
-                      <div className='w6'>{label}</div>
-                      {caption && <div className={clas(css.caption, 's12 w4')}>{caption}</div>}
+                      <div className='wave-w6'>{label}</div>
+                      {caption && <div className={clas(css.caption, 'wave-s12 wave-w4')}>{caption}</div>}
                     </div>
                   </div>
                 </th>
@@ -159,11 +159,11 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className='s12 w6'>{title}</div>
-            {subtitle && <div className='s12'>{subtitle}</div>}
+            <div className='wave-s12 wave-w6'>{title}</div>
+            {subtitle && <div className='wave-s12'>{subtitle}</div>}
             <div className={css.items}>
-              <table className={clas(css.table, 's13')}>
-                <thead className={clas(css.thead, 'w6')}>
+              <table className={clas(css.table, 'wave-s13')}>
+                <thead className={clas(css.thead, 'wave-w6')}>
                   <tr>
                     {header}
                   </tr>

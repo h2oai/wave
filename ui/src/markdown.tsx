@@ -94,7 +94,7 @@ export const
           title = substitute(state.title, data)
         return (
           <div data-test={name} className={css.card}>
-            {title && <div className='s12 w6'>{title}</div>}
+            {title && <div className='wave-s12 wave-w6'>{title}</div>}
             <div className={css.body}>
               <Markdown source={substitute(state.content, data)} />
             </div>

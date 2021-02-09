@@ -56,12 +56,12 @@ export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
     const render = () => (
       <div data-test={name} className={css.card}>
-        <Format data={s.data} format={s.title} className='s12 w6' />
+        <Format data={s.data} format={s.title} className='wave-s12 wave-w6' />
         <div className={css.values}>
-          <Format data={s.data} defaultValue={s.value} format={s.value} className='s40 w2' />
+          <Format data={s.data} defaultValue={s.value} format={s.value} className='wave-s40 wave-w2' />
           <Format data={s.data} format={s.aux_value} className={css.aux_value} />
         </div>
-        <Format data={s.data} format={s.caption} className={clas(css.caption, 's13')} />
+        <Format data={s.data} format={s.caption} className={clas(css.caption, 'wave-s13')} />
       </div>
     )
 

@@ -101,10 +101,10 @@ export const
         <div data-test={name} className={css.card}>
           <div className={css.plot}>{plot}</div>
           <div className={css.text}>
-            <Format data={data} format={s.title} className='s12 w6' />
+            <Format data={data} format={s.title} className='wave-s12 wave-w6' />
             <div className={css.values}>
-              <Format data={data} format={s.value} className={clas(css.value, 's24 w3')} />
-              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
+              <Format data={data} format={s.value} className={clas(css.value, 'wave-s24 wave-w3')} />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s13')} />
             </div>
           </div>
         </div>

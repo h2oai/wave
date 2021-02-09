@@ -45,7 +45,7 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className='s13'><Markdown source={caption} /></div>
+            <div className='wave-s13'><Markdown source={caption} /></div>
           </div>
         )
       }

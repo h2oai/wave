@@ -72,15 +72,15 @@ export const
       const data = unpack(s.data)
       return (
         <div data-test={name} className={css.card}>
-          <Format data={data} format={s.title} className='s12 w6' />
-          <Format data={data} format={s.caption} className={clas(css.caption, 's13')} />
+          <Format data={data} format={s.title} className='wave-s12 wave-w6' />
+          <Format data={data} format={s.caption} className={clas(css.caption, 'wave-s13')} />
           <div>
-            <div className={clas(css.values, 's18 w3')}>
+            <div className={clas(css.values, 'wave-s18 wave-w3')}>
               <div><Format data={data} format={s.value} /></div>
               <Format data={data} format={s.aux_value} className={css.aux_value} />
             </div>
             <ProgressBar thickness={2} color={cssVar(s.plot_color)} value={s.progress} />
-            <div className={clas(css.captions, 's12')}>
+            <div className={clas(css.captions, 'wave-s12')}>
               <div><Format data={data} format={s.value_caption} /></div>
               <div><Format data={data} format={s.aux_value_caption} /></div>
             </div>

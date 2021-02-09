@@ -83,8 +83,8 @@ export const
       return (
         <div data-test={name} className={css.card}>
           <div className={css.text}>
-            <Format data={data} format={s.title || 'Untitled'} className='s12 w6' />
-            <Format data={data} format={s.value} className='s12' />
+            <Format data={data} format={s.title || 'Untitled'} className='wave-s12 wave-w6' />
+            <Format data={data} format={s.value} className='wave-s12' />
           </div>
           {plot}
         </div>

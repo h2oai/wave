@@ -54,7 +54,7 @@ export const
   ),
   MarkupCard = ({ name, title, content }: { name: S, title: S, content: S }) => (
     <div data-test={name} className={css.card}>
-      {title && <div className='s12 w6'>{title}</div>}
+      {title && <div className='wave-s12 wave-w6'>{title}</div>}
       <div className={css.body}>
         <XMarkup model={{ content }} />
       </div>

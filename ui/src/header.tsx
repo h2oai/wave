@@ -116,8 +116,8 @@ export const
           <div data-test={name} className={css.card}>
             {burger}
             <div className={css.rhs}>
-              <div className='s24 w3'>{title}</div>
-              <div className={clas(css.subtitle, 's12')}>{subtitle}</div>
+              <div className='wave-s24 wave-w3'>{title}</div>
+              <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>
             </div>
             {nav && <Navigation items={nav} isOpenB={navB} />}
           </div>

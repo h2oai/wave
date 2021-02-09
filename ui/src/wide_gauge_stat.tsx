@@ -86,10 +86,10 @@ export const
             </div>
           </div>
           <div className={css.rhs}>
-            <Format data={data} format={s.title} className={clas(css.title, 's12 w6')} />
+            <Format data={data} format={s.title} className={clas(css.title, 'wave-s12 wave-w6')} />
             <div className={css.values}>
-              <Format data={data} format={s.value} className='s24 w3' />
-              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
+              <Format data={data} format={s.value} className='wave-s24 wave-w3' />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s13')} />
             </div>
           </div>
         </div >

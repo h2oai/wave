@@ -66,8 +66,8 @@ export const
         return (
           <div data-test={name} className={css.card}>
             <div className={css.lhs}>
-              <div className='s14 w6'>{title}</div>
-              <div className={clas(css.subtitle, 's12')}><Markdown source={subtitle} /></div>
+              <div className='wave-s14 wave-w6'>{title}</div>
+              <div className={clas(css.subtitle, 'wave-s12')}><Markdown source={subtitle} /></div>
             </div>
             {form}
           </div>
