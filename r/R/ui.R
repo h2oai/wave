@@ -129,6 +129,40 @@ ui_breadcrumbs_card <- function(
   return(.o)
 }
 
+#' Create a card that displays a user-editable drawing canvas.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title for this card.
+#' @param width Canvas width, in pixels
+#' @param height Canvas height, in pixels.
+#' @param data The data for this card.
+#' @param commands Contextual menu commands for this component.
+#' @return A CanvasCard instance.
+#' @export
+ui_canvas_card <- function(
+  box,
+  title,
+  width,
+  height,
+  data,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("width", "numeric", width)
+  .guard_scalar("height", "numeric", height)
+  # TODO Validate data: Rec
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    width=width,
+    height=height,
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_CanvasCard"))
+  return(.o)
+}
+
 #' Create a card that displays a chat room.
 #' The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
 #'
