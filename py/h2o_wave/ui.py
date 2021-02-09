@@ -103,6 +103,36 @@ def breadcrumbs_card(
     )
 
 
+def canvas_card(
+        box: str,
+        title: str,
+        width: int,
+        height: int,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> CanvasCard:
+    """Create a card that displays a user-editable drawing canvas.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        width: Canvas width, in pixels
+        height: Canvas height, in pixels.
+        data: The data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.CanvasCard` instance.
+    """
+    return CanvasCard(
+        box,
+        title,
+        width,
+        height,
+        data,
+        commands,
+    )
+
+
 def chat_room_card(
         box: str,
         title: str,

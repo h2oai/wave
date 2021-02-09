@@ -241,6 +241,83 @@ class BreadcrumbsCard:
         )
 
 
+class CanvasCard:
+    """Create a card that displays a user-editable drawing canvas.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            width: int,
+            height: int,
+            data: PackedRecord,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('CanvasCard.box', box, (str,), False, False, False)
+        _guard_scalar('CanvasCard.title', title, (str,), False, False, False)
+        _guard_scalar('CanvasCard.width', width, (int,), False, False, False)
+        _guard_scalar('CanvasCard.height', height, (int,), False, False, False)
+        _guard_vector('CanvasCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title for this card."""
+        self.width = width
+        """Canvas width, in pixels"""
+        self.height = height
+        """Canvas height, in pixels."""
+        self.data = data
+        """The data for this card."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('CanvasCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('CanvasCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('CanvasCard.width', self.width, (int,), False, False, False)
+        _guard_scalar('CanvasCard.height', self.height, (int,), False, False, False)
+        _guard_vector('CanvasCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='canvas',
+            box=self.box,
+            title=self.title,
+            width=self.width,
+            height=self.height,
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'CanvasCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('CanvasCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('CanvasCard.title', __d_title, (str,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('CanvasCard.width', __d_width, (int,), False, False, False)
+        __d_height: Any = __d.get('height')
+        _guard_scalar('CanvasCard.height', __d_height, (int,), False, False, False)
+        __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('CanvasCard.commands', __d_commands, (Command,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        width: int = __d_width
+        height: int = __d_height
+        data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return CanvasCard(
+            box,
+            title,
+            width,
+            height,
+            data,
+            commands,
+        )
+
+
 class ChatRoomCard:
     """Create a card that displays a chat room.
     The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
