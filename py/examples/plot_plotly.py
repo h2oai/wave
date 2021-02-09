@@ -28,7 +28,7 @@ async def serve(q: Q):
         )
         q.page['plot'] = ui.frame_card(box='1 3 4 5', title='', content='')
 
-    if q.args.points:
+    if q.args.points is not None:
         q.client.points = q.args.points
 
     if q.args.plotly_controls is not None:

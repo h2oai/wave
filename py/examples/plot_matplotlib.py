@@ -29,10 +29,10 @@ async def serve(q: Q):
         )
         q.page['plot'] = ui.markdown_card(box='3 1 2 3', title='Your plot!', content='')
 
-    if q.args.points:
+    if q.args.points is not None:
         q.client.points = q.args.points
 
-    if q.args.alpha:
+    if q.args.alpha is not None:
         q.client.alpha = q.args.alpha
 
     n = q.client.points
