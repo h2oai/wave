@@ -730,6 +730,8 @@ const
     body: {
       flexGrow: 1,
       display: 'flex',
+    },
+    plot: {
       $nest: {
         'canvas': {
           position: 'absolute',
@@ -739,7 +741,7 @@ const
           bottom: 0
         }
       }
-    },
+    }
   })
 
 /** Create a visualization for display inside a form. */
@@ -764,9 +766,19 @@ export const
   XVisualization = bond(({ model }: { model: Visualization }) => {
     let
       currentChart: Chart | null = null,
-      currentPlot: Plot | null = null
+      currentPlot: Plot | null = null,
+      initWidth = 0,
+      initHeight = 0
     const
       container = React.createRef<HTMLDivElement>(),
+      checkDimensionsPostInit = () => {
+        const el = container.current
+        if (!el) return
+        if (el.clientHeight !== initHeight || el.clientWidth !== initWidth) {
+          currentChart?.destroy()
+          init()
+        }
+      },
       init = () => {
         // Map CSS var colors to their hex values.
         cat10 = cat10.map(cssVarValue)
@@ -805,6 +817,11 @@ export const
             }
           }
           chart.render()
+          initHeight = el.clientHeight
+          initWidth = el.clientWidth
+          // React fires mount lifecycle hook before Safari finishes Layout phase so we need recheck if original card dimensions are the
+          // same as after Layout phase. If not, rerender the plot again.
+          setTimeout(checkDimensionsPostInit, 300)
         }
       },
       update = () => {
@@ -821,7 +838,7 @@ export const
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { flexGrow: 1 }
             : { width, height }
-        return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} ref={container} />
+        return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} className={css.plot} ref={container} />
       }
     return { init, update, render }
   })

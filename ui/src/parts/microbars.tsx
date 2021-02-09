@@ -52,8 +52,14 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
     renderViz = () => {
       if (!ref.current) return
 
+      const { width, height } = ref.current.getBoundingClientRect()
+      if (!height) {
+        // Safari has weird event loop meaning this React code can run before Layout phase is finished (flex items not positioned yet).
+        setTimeout(renderViz, 300)
+        return
+      }
+
       const
-        { width, height } = ref.current.getBoundingClientRect(),
         scaleX = d3.scaleBand().domain(data.map(d => d[category])).range([0, width]).paddingInner(0.1),
         scaleY = d3.scaleLinear().domain([minY, maxY]).range([height, 0]),
         rects = data.map((d, i) => {
