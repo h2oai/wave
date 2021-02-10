@@ -15,8 +15,8 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Card, F, Rec, S, U, unpack } from './qd'
-import { simplify, P } from './simplify'
+import { bond, box, Card, F, to, qd, Rec, S, U, unpack } from './qd'
+import { P, simplify } from './simplify'
 
 const
   css = stylesheet({
@@ -49,42 +49,93 @@ interface State {
   data: Rec
 }
 
-/** An item on the canvas. */
-interface CanvasItem {
-  /** Type */
-  t: S
-  /** Points */
-  p: F[]
-  /** Color */
-  c: S
+enum ShapeT { Curve, Line }
+
+type Curve = {
+  t: ShapeT.Curve
+  p: F[] // points
+  c: S // color
 }
 
+type Line = {
+  t: ShapeT.Line
+  p: F[] // points
+  c: S // color
+}
+
+type Shape = Curve | Line
+
+
+export const
+  marshalPoints = (ps: P[]): F[] => {
+    const fs = new Array<F>(ps.length * 2)
+    let i = 0
+    for (const p of ps) {
+      fs[i++] = p.x
+      fs[i++] = p.y
+    }
+    return fs
+  },
+  unmarshalPoints = (fs: F[]): P[] => {
+    const ps = new Array<P>(fs.length / 2)
+    let i = 0
+    for (let j = 0, n = ps.length; j < n; j++) {
+      ps[j] = new P(fs[i++], fs[i++])
+    }
+    return ps
+  }
+
+type G = CanvasRenderingContext2D
+
+type ShapeData = { d: S }
 
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
+      tip = 3, htip = Math.floor(tip / 2)
+
+    const
       fgRef = React.createRef<HTMLCanvasElement>(),
       bgRef = React.createRef<HTMLCanvasElement>(),
-      initPenStyle = (g: CanvasRenderingContext2D) => {
-        g.lineWidth = 3
+      shapesB = box<Shape[]>([]),
+      initPenStyle = (g: G) => {
+        g.lineWidth = tip
         g.lineJoin = 'round'
         g.lineCap = 'round'
       },
-      line = (g: CanvasRenderingContext2D, p1: P, p2: P) => {
+      line = (g: G, p1: P, p2: P) => {
+        if (p1 === p2 || (p1.x === p2.x && p1.y === p2.y)) {
+          dot(g, p1)
+          return
+        }
         g.beginPath()
         g.moveTo(p1.x, p1.y)
         g.lineTo(p2.x, p2.y)
         g.stroke()
       },
-      pline = (g: CanvasRenderingContext2D, pts: P[]) => {
-        g.beginPath()
-        let p = pts[0]
-        g.moveTo(p.x, p.y)
-        for (let i = 1, n = pts.length; i < n; i++) {
-          p = pts[i]
-          g.lineTo(p.x, p.y)
+      dot = (g: G, p: P) => {
+        g.fillRect(p.x - htip, p.y - htip, tip, tip)
+      },
+      pline = (g: G, pts: P[]) => {
+        switch (pts.length) {
+          case 1:
+            dot(g, pts[0])
+            return
+          case 2:
+            line(g, pts[0], pts[1])
+            return
+          default:
+            {
+              g.beginPath()
+              let p = pts[0]
+              g.moveTo(p.x, p.y)
+              for (let i = 1, n = pts.length; i < n; i++) {
+                p = pts[i]
+                g.lineTo(p.x, p.y)
+              }
+              g.stroke()
+            }
         }
-        g.stroke()
       },
       init = () => {
         const
@@ -109,32 +160,50 @@ export const
           pts: P[] = []
         const
           { width, height } = state,
-          all: P[][] = [],
-          draw = () => {
-            const n = pts.length
-            if (!n) return
-            const p0 = pts[n - 1]
+          clear = (g: G) => g.clearRect(0, 0, width, height),
+          move = (x: U, y: U) => {
+            pts.push(new P(x, y))
+            const
+              n = pts.length,
+              p0 = pts[n - 1]
             line(fg, p0, pts.length === 1 ? p0 : pts[n - 2])
           },
-          commit = () => {
+          done = () => {
             if (!pts.length) return
             pts = simplify(pts, 2, true)
             pline(bg, pts)
 
-            all.push(pts)
+            sync({ t: ShapeT.Curve, p: marshalPoints(pts), c: '#000' }) // TODO color
+
             pts = []
-            fg.clearRect(0, 0, width, height)
+            clear(fg)
+          },
+          sync = (shape: Shape) => {
+            const page = qd.page()
+            // TODO actual username
+            // TODO won't work if local time is messed up; use additional key (shape count?)
+            page.set(`${name} data ${(new Date().toISOString())}`, [JSON.stringify(shape)])
+            page.sync()
           },
           onMouseMove = (e: MouseEvent) => {
             const r = fgEl.getBoundingClientRect()
-            pts.push(new P(e.clientX - r.left, e.clientY - r.top))
-            draw()
+            move(e.clientX - r.left, e.clientY - r.top)
           },
           onMouseUp = () => {
             fgEl.removeEventListener('mousemove', onMouseMove)
             fgEl.removeEventListener('mouseup', onMouseUp)
             fgEl.removeEventListener('mouseout', onMouseUp)
-            commit()
+            done()
+          },
+          redraw = (shapes: Shape[]) => {
+            clear(bg)
+            for (const shape of shapes) {
+              switch (shape.t) {
+                case ShapeT.Curve:
+                  pline(bg, unmarshalPoints(shape.p))
+                  break
+              }
+            }
           }
         fgEl.addEventListener('mousedown', e => {
           onMouseMove(e)
@@ -142,12 +211,17 @@ export const
           fgEl.addEventListener('mouseup', onMouseUp)
           fgEl.addEventListener('mouseout', onMouseUp)
         })
+
+        to(shapesB, redraw)
       },
       render = () => {
         const
           { title, width, height } = state,
-          data = unpack<(CanvasItem | null)[]>(state.data)
-        console.log(data)
+          data = unpack<ShapeData[]>(state.data),
+          shapes: Shape[] = data.map(d => JSON.parse(d.d))
+
+        shapesB(shapes)
+
         return (
           <div data-test={name} className={css.card}>
             <div className='s12 w6'>{title}</div>
@@ -155,7 +229,8 @@ export const
               <canvas ref={bgRef} className={css.canvas} width={width} height={height} />
               <canvas ref={fgRef} className={css.canvas} width={width} height={height} />
             </div>
-          </div>)
+          </div>
+        )
 
       }
     return { init, render, changed }
