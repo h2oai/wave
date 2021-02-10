@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, box, Card, F, to, qd, Rec, S, U, unpack } from './qd'
+import { bond, box, Card, F, qd, Rec, S, to, U, unpack } from './qd'
 import { P, simplify } from './simplify'
 
 const
@@ -55,12 +56,14 @@ type Curve = {
   t: ShapeT.Curve
   p: F[] // points
   c: S // color
+  l: U // linewidth
 }
 
 type Line = {
   t: ShapeT.Line
   p: F[] // points
   c: S // color
+  l: U // linewidth
 }
 
 type Shape = Curve | Line
@@ -91,15 +94,19 @@ type ShapeData = { d: S }
 
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
-    const
-      tip = 3, htip = Math.floor(tip / 2)
+    let
+      activeTool = ShapeT.Curve
 
     const
+      colorB = box('black'),
+      lineWidthB = box(3),
+      titleCase = (s: S) => s.charAt(0).toUpperCase() + s.slice(1),
+      availableColors = ['black', 'red', 'green', 'blue'],
+      availableTipSizes: [S, U][] = [['Fine', 3], ['Medium', 5], ['Bold', 7]],
       fgRef = React.createRef<HTMLCanvasElement>(),
       bgRef = React.createRef<HTMLCanvasElement>(),
       shapesB = box<Shape[]>([]),
       initPenStyle = (g: G) => {
-        g.lineWidth = tip
         g.lineJoin = 'round'
         g.lineCap = 'round'
       },
@@ -114,9 +121,12 @@ export const
         g.stroke()
       },
       dot = (g: G, p: P) => {
-        g.fillRect(p.x - htip, p.y - htip, tip, tip)
+        const lw = lineWidthB(), hlw = Math.floor(lw / 2)
+        g.fillRect(p.x - hlw, p.y - hlw, lw, lw)
       },
-      pline = (g: G, pts: P[]) => {
+      pline = (g: G, pts: P[], color: S, lineWidth: U) => {
+        g.strokeStyle = color
+        g.lineWidth = lineWidth
         switch (pts.length) {
           case 1:
             dot(g, pts[0])
@@ -162,18 +172,25 @@ export const
           { width, height } = state,
           clear = (g: G) => g.clearRect(0, 0, width, height),
           move = (x: U, y: U) => {
-            pts.push(new P(x, y))
-            const
-              n = pts.length,
-              p0 = pts[n - 1]
-            line(fg, p0, pts.length === 1 ? p0 : pts[n - 2])
+            switch (activeTool) {
+              case ShapeT.Curve:
+                {
+                  pts.push(new P(x, y))
+                  const
+                    n = pts.length,
+                    p0 = pts[n - 1]
+                  line(fg, p0, pts.length === 1 ? p0 : pts[n - 2])
+
+                }
+                break
+            }
           },
           done = () => {
             if (!pts.length) return
             pts = simplify(pts, 2, true)
-            pline(bg, pts)
+            pline(bg, pts, colorB(), lineWidthB())
 
-            sync({ t: ShapeT.Curve, p: marshalPoints(pts), c: '#000' }) // TODO color
+            sync({ t: ShapeT.Curve, p: marshalPoints(pts), c: colorB(), l: lineWidthB() })
 
             pts = []
             clear(fg)
@@ -200,7 +217,7 @@ export const
             for (const shape of shapes) {
               switch (shape.t) {
                 case ShapeT.Curve:
-                  pline(bg, unmarshalPoints(shape.p))
+                  pline(bg, unmarshalPoints(shape.p), shape.c, shape.l)
                   break
               }
             }
@@ -213,7 +230,82 @@ export const
         })
 
         to(shapesB, redraw)
+
+        to(colorB, c => {
+          fg.strokeStyle = c
+        })
+        to(lineWidthB, lw => {
+          fg.lineWidth = lw
+        })
       },
+      commands: ICommandBarItemProps[] = [
+        {
+          key: 'tool',
+          iconProps: { iconName: 'Edit' },
+          subMenuProps: {
+            items: [
+              {
+                key: 'pen',
+                text: 'Pen',
+                iconProps: { iconName: 'Edit' },
+                onClick: () => { activeTool = ShapeT.Curve },
+              },
+              {
+                key: 'line',
+                text: 'Line',
+                iconProps: { iconName: 'Line' },
+                onClick: () => { activeTool = ShapeT.Line },
+              },
+              {
+                key: 'rect',
+                text: 'Rectangle',
+                iconProps: { iconName: 'RectangleShape' },
+                onClick: () => { activeTool = ShapeT.Line }, // TODO
+              },
+              {
+                key: 'solid_rect',
+                text: 'Solid Rectangle',
+                iconProps: { iconName: 'RectangleShapeSolid' },
+                onClick: () => { activeTool = ShapeT.Line }, // TODO
+              },
+            ],
+          },
+        },
+        {
+          key: 'color',
+          iconProps: { iconName: 'Color' },
+          subMenuProps: {
+            items: availableColors.map(c => ({
+              key: c,
+              text: titleCase(c),
+              iconProps: { iconName: 'CircleFill', style: { color: c } },
+              onClick: () => { colorB(c) },
+            })),
+          },
+        },
+        {
+          key: 'lineWidth',
+          iconProps: { iconName: 'LineThickness' },
+          subMenuProps: {
+            items: availableTipSizes.map(([name, lineWidth]) => ({
+              key: name,
+              text: name,
+              iconProps: { iconName: 'Edit' },
+              onClick: () => { lineWidthB(lineWidth) },
+            }))
+          },
+        },
+        {
+          key: 'erase',
+          iconProps: { iconName: 'EraseTool' },
+          onClick: () => console.log('Download'),
+        },
+        {
+          key: 'clear',
+          iconProps: { iconName: 'Clear' },
+          onClick: () => console.log('Download'),
+        },
+      ],
       render = () => {
         const
           { title, width, height } = state,
@@ -225,13 +317,18 @@ export const
         return (
           <div data-test={name} className={css.card}>
             <div className='s12 w6'>{title}</div>
+            <div>
+              <CommandBar
+                items={commands}
+                ariaLabel="Use left and right arrow keys to navigate between commands"
+              />
+            </div>
             <div className={css.layers}>
               <canvas ref={bgRef} className={css.canvas} width={width} height={height} />
               <canvas ref={fgRef} className={css.canvas} width={width} height={height} />
             </div>
           </div>
         )
-
       }
     return { init, render, changed }
   })
