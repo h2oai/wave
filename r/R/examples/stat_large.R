@@ -28,8 +28,8 @@ while(TRUE)
   card_pc <- as.integer(runif(1,1,100))
   card_value <- as.character(sample(mtcars[['mpg']],1))
   caption <- sample(captions,1)[[1]]
-  page$page[[1]]$value$data$foo <- card_value
-  page$page[[1]]$value$data$bar <- card_pc/100
-  page$page[[1]]$value$caption <- caption
+  page$cards[[1]]$value$data$foo <- card_value
+  page$cards[[1]]$value$data$bar <- card_pc/100
+  page$cards[[1]]$value$caption <- caption
   page$save()
 }
