@@ -189,79 +189,6 @@ Site <- function(name){
 }
 
 
-page <- function(page_name,fun_flag=FALSE,...){
-
-        if(fun_flag == TRUE && current_page != page_name){
-                stop(sprintf("%s page does not exist. Please enter an existing page",page_name))
-        }
-        if(nchar(page_name) == 0){
-             stop(sprintf("page name must not be empty.\n example_page <- page(\"/page_name\")"))
-        }
-        if(is.na(stringr::str_match(page_name,"^/"))){
-             stop(sprintf("page name must be prefixed with \"/\".\n example_page <- page(\"/page_name\")"))
-        }
-        current_page <<- page_name
-        page_instance <- list()
-        class(page_instance) <- append("h2o_q_page",class(page_instance))
-        return(page_instance)
-}
-
-
-#' Function adds one or many cards to the page_instance. 
-#' Each of these cards contains information that will be displayed. 
-#' These cards could be static of dynamic. 
-#' Each card requires a unique name. If a card with a name similar to an existing card
-#' is added then the existing card will be over written. 
-#' The card name cannot be empty. 
-#'
-#' @param page_instance - The page instance object 
-#' @param page_name - name of the page instance
-#' @param card_name name of the card
-#' @param FUN card function to be passed. This could be any card type available in ui.R
-#' @param ... 
-#'
-#' @return page_instance - list() 
-#' @export
-#'
-#' @examples
-
-page.add <- function(page_instance,page_name,card_name,FUN,...){
-        page(page_name,fun_flag=TRUE)
-        o <- FUN
-        o$view = gsub("^ui_(\\w+)_card(.*)","\\1",(deparse(substitute(FUN))))[1]
-
-        if(nchar(o$view) == 0){
-                stop(sprintf("%s, is not a known card. Content on the page need to be a card",card_name))
-        }
-        if("list" %notin% class(o)){
-                stop(sprintf("%s, card needs to be a list",card_name))
-        }
-
-        data = list()
-        bufs = list()
-        for(i in names(o)){
-                    if(class(o[[i]]) == "h2o_q_data"){
-                               data[[i]] <- length(bufs)
-                               class(o[[i]]) <- NULL
-                               bufs[[length(bufs)+1]] <- o[[i]]
-                             }
-}
-
-        for(k in names(data)){
-                o[[k]] <- NULL
-                o[[paste0("~",k)]] <- data[[k]]
-        }
-
-        .opage <- list()
-        .opage$key = card_name
-        .opage$value = o
-        if(length(bufs) > 0) .opage$.b = bufs
-
-        page_instance[[card_name]] <- .opage
-        return(page_instance)
-}
-
-
 #' Function to load/get the data on a page in JSON format
 #' A page name needs to be passed to the function to get back the 
 #' data on a the page in JSON page. 
@@ -353,33 +280,6 @@ is.list.empty <- function(x){
         else return(o)
 }
 
-
-#' Function to save the page, push the page to the Qd server
-#' The function requires the page instance created, and the name of the page. 
-#'
-#' @param page_instance - page instance object
-#' @param page_name - name of the page
-#' @param ... 
-#'
-#' @return return code from sending the page to the server
-#' @export
-#'
-#' @examples
-page.save <- function(page_instance,page_name,...){
-        page(page_name,fun_flag=TRUE)
-        if("h2o_q_delta_data" %in% class(page_instance)) {
-                unlist_o_all <- unlist(lapply(page_instance,function(x){unlist(x,recursive=F,use.names=T)}),recursive=F,use.names=T)
-                unlist_o_unguarded <- as.list(unlist(lapply(unlist_o_all,function(x){if(!is.glist(x)) return(x)}),use.names=T))
-                unlist_o_guarded <- lapply(unlist_o_all,function(x){if(is.glist(x)) return(x)})
-                unlist_o_guarded <- unlist_o_guarded[!sapply(unlist_o_guarded,is.null)]
-                unlist_o <- c(unlist_o_guarded,unlist_o_unguarded)
-                data <- jsonlite::toJSON(list(d=lapply(names(unlist_o),function(x){list(k=.delta_name_change(x),v=unlist_o[[x]])})),auto_unbox=TRUE)
-        }
-        else {data <- jsonlite::toJSON(list(d=lapply(unname(page_instance),function(x){if(length(x) == 3){list(k=x[[1]],d=x[[2]],b=x[[3]])}else{list(k=x[[1]],d=x[[2]])}})),auto_unbox=TRUE)
-        assign(deparse(substitute(page_instance)),page_frame(page_instance),env=parent.frame())
-        }
-        return(.site.save(page_name,data,...))
-}
 
 #' Function to send a page on a site to the Qd server
 #' The function requires the name of the page and the data to be sent
