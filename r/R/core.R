@@ -1,6 +1,7 @@
 library(jsonlite)
 library(httr)
 library(stringr) 
+library(R6)
 
 `%notin%` <- Negate(`%in%`)
 
@@ -83,6 +84,16 @@ data.dump <- function(fields,size,data=NULL){
         return(o)
 }
 
+.reset_while_test <- function(){
+  source("../coreR6.R")
+  source("../ui.R")
+  source("../zzz.R")
+  .onLoad()
+}
+#' This is the new R6 implementation of page. Here we are treating page as an  
+#' object and there are functions, implicit functions that are tied to the     
+#' page object. This essentially means that one can implicitly called the      
+#' functions on the page object. 
 #' Function to create a new page or check the existence of a page
 #' This function is used to create a new page on a site. 
 #' If the name of the page is an empty string then the function returns an error. 
@@ -100,6 +111,84 @@ data.dump <- function(fields,size,data=NULL){
 #' @export
 #'
 #' @examples 
+
+.Site <- R6Class(".Site",
+                 public = list(
+                   page.name = NULL,
+                   page = NULL,
+                   page.register = function(name){
+                     if(nchar(name) == 0) stop(sprintf("page name must not be empty.\n example_page <- page(\"/page_name\")"))
+                     if(is.na(stringr::str_match(name,"^/"))) stop(sprintf("page name must be prefixed with \"/\".\n example_page <- page(\"/page_name\")"))
+                     self$page <- NULL
+                     self$page <- list()
+                     class(self$page) <- append("h2o_q_page",class(self$page))
+                     self$page.name <- name
+                     
+                   },
+                   add.card = function(card_name,FUN,...){
+                     o <- FUN
+                     o$view = gsub("^ui_(\\w+)_card(.*)","\\1",(deparse(substitute(FUN))))[1]
+                     if(nchar(o$view) == 0) stop(sprintf("%s, is not a known card. Content on the page need to be a card",card_name))
+                     if("list" %notin% class(o)) stop(sprintf("%s, card needs to be a list",card_name))
+                     
+                     data = list()
+                     bufs = list()
+                     
+                     for(i in names(o)){
+                       if(class(o[[i]]) == "h2o_q_data"){
+                         data[[i]] <- length(bufs)
+                         class(o[[i]]) <- NULL
+                         bufs[[length(bufs)+1]] <- o[[i]]
+                       }
+                     }
+                     
+                     for(k in names(data)){
+                       o[[k]] <- NULL
+                       o[[paste0("~",k)]] <- data[[k]]
+                     }
+                     .opage <- list()
+                     .opage$key = card_name
+                     .opage$value = o
+                     if(length(bufs) > 0) .opage$.b = bufs
+                     self$page[[card_name]] <- .opage
+                   },
+                   page.drop = function(...){
+                     self$page = NULL
+                     data <- jsonlite::toJSON(list(d=list({})),auto_unbox = TRUE)
+                     .site.save(self$page.name,data,...)
+                   },
+                   page.save = function(...){
+                     page.data <- self$page
+                     if("h2o_q_delta_data" %in% class(page.data)) {
+                       unlist_o_all <- unlist(lapply(page.data,function(x){unlist(x,recursive=F,use.names=T)}),recursive=F,use.names=T)
+                       unlist_o_unguarded <- as.list(unlist(lapply(unlist_o_all,function(x){if(!is.glist(x)) return(x)}),use.names=T))
+                       unlist_o_guarded <- lapply(unlist_o_all,function(x){if(is.glist(x)) return(x)})
+                       unlist_o_guarded <- unlist_o_guarded[!sapply(unlist_o_guarded,is.null)]
+                       unlist_o <- c(unlist_o_guarded,unlist_o_unguarded)
+                       data <- jsonlite::toJSON(list(d=lapply(names(unlist_o),function(x){list(k=.delta_name_change(x),v=unlist_o[[x]])})),auto_unbox=TRUE)
+                     }
+                     else {data <- jsonlite::toJSON(list(d=lapply(unname(page.data),
+                                                                  function(x){if(length(x) == 3){
+                                                                                list(k=x[[1]],d=x[[2]],b=x[[3]])
+                                                                                }
+                                                                              else{
+                                                                                list(k=x[[1]],d=x[[2]])
+                                                                                }
+                                                                    })),auto_unbox=TRUE)
+                                                                    self$page <- page_frame(page.data)
+                                                                    }
+                          .site.save(self$page.name,data,...)
+                   }
+                 ))
+
+
+Site <- function(name){
+  ilsite <- .Site$new()
+  ilsite$page.register(name)
+  return(ilsite)
+}
+
+
 page <- function(page_name,fun_flag=FALSE,...){
 
         if(fun_flag == TRUE && current_page != page_name){
@@ -135,6 +224,7 @@ page <- function(page_name,fun_flag=FALSE,...){
 #' @export
 #'
 #' @examples
+
 page.add <- function(page_instance,page_name,card_name,FUN,...){
         page(page_name,fun_flag=TRUE)
         o <- FUN
@@ -198,30 +288,7 @@ page.load <- function(page_name,...){
 .delta_name_change <- function(x){
         return(gsub("\\."," ",gsub("\\.value\\."," ",x)))
 }
-#' Function to provide the difference between two instances of a page. 
-#' The existing and the new instances of the page. 
-#' The returning data is passed to the page.save() function
-#'This is a (hidden) internal function
-#'
-#' @param ref_page existing page
-#' @param new_page updated page
-#' Adding a list of lists required (temporarily broken) 
-#' @return .page_changes returns the differences in page
-#' @export
-#'
-#' @examples
-#' .page.diff(.test_page, test_page)
-.page.diff <- function(ref_page, new_page){
-        .page_changes <- list()
-        if(length(new_page$value) != length(ref_page$value)){
-                .page_changes <- append(.page_changes,test_2$value[which(!(names(test_2$value) %in% names(test_page$value)))])
-        }
-        .value_changes <- sapply(names(ref_page$value),function(x){if(!(identical(ref_page$value[[x]],new_page[[x]]))){new_page[[x]]}})
-        .value_changes <- .value_changes[!sapply(.value_changes,is.null)]
-        .page_changes <- append(.page_changes,.value_changes)
-        class(.pages_changes) <- append(class(.pages_changes),"h2o_q_page_changes")
-        return(.page_changes)
-}
+
 
 #' Glist - Creating a guarded list. 
 #' This list will be guarded and wont be changed. 
@@ -306,7 +373,6 @@ page.save <- function(page_instance,page_name,...){
                 unlist_o_guarded <- lapply(unlist_o_all,function(x){if(is.glist(x)) return(x)})
                 unlist_o_guarded <- unlist_o_guarded[!sapply(unlist_o_guarded,is.null)]
                 unlist_o <- c(unlist_o_guarded,unlist_o_unguarded)
-                print(str(unlist_o))
                 data <- jsonlite::toJSON(list(d=lapply(names(unlist_o),function(x){list(k=.delta_name_change(x),v=unlist_o[[x]])})),auto_unbox=TRUE)
         }
         else {data <- jsonlite::toJSON(list(d=lapply(unname(page_instance),function(x){if(length(x) == 3){list(k=x[[1]],d=x[[2]],b=x[[3]])}else{list(k=x[[1]],d=x[[2]])}})),auto_unbox=TRUE)
