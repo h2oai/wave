@@ -9,7 +9,6 @@
   "author": "Prithvi Prabhu <prithvi@h2o.ai>",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {},
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
