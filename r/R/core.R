@@ -116,7 +116,7 @@ data <- function(fields,
   return(o)
 }
 
-.reset_while_test <- function() {
+.reset.while.test <- function() {
   source("../core.R")
   source("../ui.R")
   source("../zzz.R")
@@ -194,6 +194,7 @@ data <- function(fields,
         o[[paste0("~", k)]] <- data[[k]]
       }
       .opage <- list()
+      
       .opage$key = card_name
       .opage$value = o
       if (length(bufs) > 0)
@@ -206,6 +207,12 @@ data <- function(fields,
         jsonlite::toJSON(list(d = list({
         })), auto_unbox = TRUE)
       .site.save(self$page.name, data, ...)
+    },
+    set = function(...){
+      base.string <- "self$cards$%s$value$%s$%s <- %s"
+      non.eval.string <- as.list(as.character(substitute(c(...)))[-1L])
+      parse.out <- parse(text=do.call(sprintf,c(fmt=base.string,non.eval.string)))
+      eval(parse.out)
     },
     save = function(...) {
       page.data <- self$cards
@@ -232,7 +239,7 @@ data <- function(fields,
           c(unlist_o_guarded, unlist_o_unguarded)
         data <-
           jsonlite::toJSON(list(d = lapply(names(unlist_o), function(x) {
-            list(k = .delta_name_change(x), v = unlist_o[[x]])
+            list(k = .delta.name.change(x), v = unlist_o[[x]])
           })), auto_unbox = TRUE)
       }
       else {
@@ -283,8 +290,8 @@ page.load <- function(page_name, ...) {
 #' @return
 #' @export
 #' @examples
-.delta_name_change <- function(x) {
-  print(gsub("\\.", " ", gsub("\\.value\\.", " ", x)))
+.delta.name.change <- function(x) {
+  #print(gsub("\\.", " ", gsub("\\.value\\.", " ", x)))
   return(gsub("\\.", " ", gsub("\\.value\\.", " ", x)))
 }
 
