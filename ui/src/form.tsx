@@ -154,8 +154,6 @@ const
   css = stylesheet({
     card: {
       padding: 15,
-      display: 'flex',
-      flexDirection: 'column'
     },
     vertical: {
       display: 'flex',
