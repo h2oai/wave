@@ -37,6 +37,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import ts from 'typescript'
+// @ts-ignore
+import { toXML } from 'jstoxml'
 
 const licenseLines = `Copyright 2020 H2O.ai, Inc.
 
@@ -965,15 +967,100 @@ const
     const api = translateToTypescript(protocol)
     fs.writeFileSync(path.join(outDir, 'defs.ts'), api, 'utf8')
   },
+  generatePyCharmSnippets = (protocol: Protocol) => {
+    const
+      newline = '&#10;',
+      snippetJSON = {
+        _name: 'templateSet',
+        _attrs: {
+          group: 'wave-components'
+        },
+        _content: []
+      },
+      baseTemplateContent = {
+        context: {
+          _name: 'option',
+          _attrs: { name: 'Python', value: 'true' }
+        }
+      },
+      trailingComma = ({ isRoot }: Type) => isRoot ? '' : ',',
+      getSnippetParams = (sm: Member[], rm: Member[]) => sm.map(mapSnippets).join('') + rm.map(mapSnippets).join(''),
+      mapVariables = (m: Member) => ({
+        _name: 'variable',
+        _attrs: {
+          name: m.name,
+          expression: '',
+          defaultValue: '',
+          alwaysStopAt: 'true'
+        }
+      }),
+      mapSnippets = (m: Member) => {
+        let leftSurrounding = '', rightSurrounding = ''
+        if (m.t === MemberT.Enum || m.t === MemberT.Singular && (m.typeName === 'S' || m.typeName === 'Id')) {
+          leftSurrounding = rightSurrounding = "'"
+        }
+        else if (m.t === MemberT.Repeated) {
+          leftSurrounding = `[${newline}\t`
+          rightSurrounding = `\t${newline}]`
+        }
+        return `${m.name}=${leftSurrounding}$${m.name}$${rightSurrounding},`
+      },
+      splitRepeatedAndSingular = (members: Member[]) => members.reduce((acc, m) => {
+        if (m.t === MemberT.Repeated) acc.repeatedMembers.push(m)
+        else acc.singularMembers.push(m)
+        return acc
+      }, { singularMembers: [], repeatedMembers: [] } as { singularMembers: Member[], repeatedMembers: Member[] }),
+      shortTemplates = protocol.types
+        .filter(t => !t.areAllMembersOptional)
+        .map(t => {
+          const
+            name = snakeCase(t.name),
+            { singularMembers, repeatedMembers } = splitRepeatedAndSingular(t.members.filter(m => !m.isOptional)),
+            variables = [...singularMembers.map(mapVariables), ...repeatedMembers.map(mapVariables)]
+
+          return {
+            _name: 'template',
+            _attrs: {
+              name: `w_${name}`,
+              value: `ui.${name}(${getSnippetParams(singularMembers, repeatedMembers)})${trailingComma(t)}$END$`.replace(',)', ')'),
+              description: `Create a minimal Wave ${t.name}.`,
+              toReformat: 'true',
+              toShortenFQNames: 'true'
+            },
+            _content: [...variables, baseTemplateContent]
+          }
+        }),
+      longTemplates = protocol.types.map(t => {
+        const
+          name = snakeCase(t.name),
+          { singularMembers, repeatedMembers } = splitRepeatedAndSingular(t.members),
+          variables = [...singularMembers.map(mapVariables), ...repeatedMembers.map(mapVariables)]
+
+        return {
+          _name: 'template',
+          _attrs: {
+            name: `w_full_${name}`,
+            value: `ui.${name}(${getSnippetParams(singularMembers, repeatedMembers)})${trailingComma(t)}$END$`.replace(',)', ')'),
+            description: `Create Wave ${t.name} with full attributes.`,
+            toReformat: 'true',
+            toShortenFQNames: 'true'
+          },
+          _content: [...variables, baseTemplateContent]
+        }
+      })
+    snippetJSON._content = [...shortTemplates, ...longTemplates] as any
+
+    fs.writeFileSync('wave-components.xml', toXML(snippetJSON, { indent: '  ' }))
+  },
   main = (typescriptSrcDir: S, pyOutDir: S, rOutDir: S) => {
     const files: File[] = []
     processDir(files, typescriptSrcDir)
-    // console.log(JSON.stringify(protocol, null, 2))
     const protocol = makeProtocol(files)
 
     generatePy(protocol, pyOutDir)
     generateR(protocol, rOutDir)
     generateTypescript(protocol, typescriptSrcDir)
+    generatePyCharmSnippets(protocol)
 
     printStats(protocol)
   }
