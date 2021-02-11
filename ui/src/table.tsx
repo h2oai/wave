@@ -18,7 +18,7 @@ import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { B, bond, box, Dict, Id, qd, S, U } from './qd'
-import { displayMixin, rem } from './theme'
+import { displayMixin, rem, cssVar } from './theme'
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {
@@ -357,9 +357,11 @@ export const
         const searchOrFilter = searchableKeys.length || m.columns.some(c => c.filterable)
         if (!props || (!m.downloadable && !m.resettable && !searchOrFilter)) return null
 
-        const footerItems: Fluent.ICommandBarItemProps[] = []
-        if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download })
-        if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset })
+        const
+          footerItems: Fluent.ICommandBarItemProps[] = [],
+          buttonStyles = { root: { background: cssVar('$card') } }
+        if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
+        if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
 
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Footer} isScrollSynced>
@@ -371,7 +373,7 @@ export const
                   </Fluent.Text>
                 )
               }
-              <Fluent.CommandBar items={footerItems} />
+              <Fluent.CommandBar items={footerItems} styles={{ root: { background: cssVar('$card') } }} />
             </Fluent.Stack>
           </Fluent.Sticky>
         )
@@ -490,7 +492,7 @@ export const
             {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
             {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%' } }} />}
           </Fluent.Stack>
-          <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: m.groupable || searchableKeys.length ? 60 : 0 } }}>
+          <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: m.groupable || searchableKeys.length ? 80 : 0 } }}>
             {
               isMultiple
                 ? <Fluent.MarqueeSelection selection={selection}><DataTable /></Fluent.MarqueeSelection>
