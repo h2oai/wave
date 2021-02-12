@@ -45,10 +45,12 @@ export interface State {
   items: NavGroup[]
   /** The name of the active (highlighted) navigation item. */
   value?: S
+  /** The name of the initially active (highlighted) navigation item. */
+  initial_value?: S
 }
 
 export const
-  XNav = ({ items, value }: State) => {
+  XNav = ({ items, value, initial_value }: State) => {
     const groups = items.map((g): INavLinkGroup => ({
       name: g.label,
       collapseByDefault: g.collapsed,
@@ -68,7 +70,7 @@ export const
         }
       }))
     }))
-    return <Nav groups={groups} selectedKey={value} />
+    return <Nav groups={groups} selectedKey={value} initialSelectedKey={initial_value} />
   },
   View = bond(({ name, state, changed }: Card<State>) => {
     const render = () => <div data-test={name}><XNav {...state} /></div>
