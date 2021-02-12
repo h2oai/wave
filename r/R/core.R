@@ -24,45 +24,6 @@ library(R6)
 .default_internal_address = 'ws://localhost:10101'
 
 
-
-#'(Hidden) Function to check if the object that has been passed is a R
-#'primitive. The function checks if the object is of type \code{numeric},
-#'\code{integer},\code{logical},\code{character}, and \code{list}.
-#'@param object
-#'@return TRUE - logical
-#'@export
-#' @examples
-#' .is_primitive()
-.is_primitive <- function(object = NULL) {
-  if (class(object) %in% list("numeric", "integer", "logical"))
-  {
-    return(TRUE)
-  }
-  else if (class(object) == "character" && object == " ") {
-    stop(sprintf("Error. %s cannot be empty.", object))
-  }
-  else if (class(object) == "list")
-  {
-    return(unique(unlist(lapply(object, function(x) {
-      .isprimitive(x)
-    }))))
-  }
-  else{
-    stop(
-      sprintf(
-        "Error. %s is not a primitive.\n Please ensure that object is one of the types:\n
-        1. \"numeric\"
-        2. \"character\"
-        3. \"list\"
-        4. \"integer\"
-        5. \"logical\"\n"
-        ,
-        object
-      )
-    )
-  }
-}
-
 #'Function to create data buffers. The data buffers are of three types,
 #'\code{arrays}, \code{circular}, and \code{map}.
 #'@param fields
@@ -96,6 +57,8 @@ data <- function(fields,
       )
     )
   
+  if (!is.null(rows))
+    d = rows
   
   
   if (!is.null(d)) {
@@ -205,13 +168,22 @@ data <- function(fields,
       self$cards = NULL
       data <-
         jsonlite::toJSON(list(d = list({
+          
         })), auto_unbox = TRUE)
       .site.save(self$page.name, data, ...)
     },
-    set = function(...){
-      base.string <- "self$cards$%s$value$%s$%s <- %s"
-      non.eval.string <- as.list(as.character(substitute(c(...)))[-1L])
-      parse.out <- parse(text=do.call(sprintf,c(fmt=base.string,non.eval.string)))
+    set = function(...) {
+      #base.string <- "self$cards$%s$value$%s$%s <- %s"
+      base.string <- "self$cards$%s$value"
+      non.eval.string <-
+        as.list(as.character(substitute(c(...)))[-1L])
+      for(i in 1:(length(non.eval.string)-2)){
+      base.string <- paste0(base.string,"$%s")
+      }
+      base.string <- paste0(base.string," <- %s")
+      print(length(non.eval.string))
+      parse.out <-
+        parse(text = do.call(sprintf, c(fmt = base.string, non.eval.string)))
       eval(parse.out)
     },
     save = function(...) {
