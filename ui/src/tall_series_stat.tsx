@@ -87,9 +87,9 @@ export const
       return (
         <div data-test={name} className={css.card}>
           <div className={css.text}>
-            <Format data={data} format={s.title || 'Untitled'} className='s12 w6' />
-            <Format data={data} format={s.value} className='s24 w3' />
-            <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's12')} />
+            <Format data={data} format={s.title || 'Untitled'} className='wave-s12 wave-w6' />
+            <Format data={data} format={s.value} className='wave-s24 wave-w3' />
+            <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s12')} />
           </div>
           {plot}
         </div>

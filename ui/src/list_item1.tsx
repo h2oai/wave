@@ -67,12 +67,12 @@ export const
         return (
           <div data-test={name} className={css.item}>
             <div className={css.left}>
-              <Format data={data} format={s.title} className='s12 w6' />
-              <Format data={data} format={s.caption} className={clas(css.caption, 's13')} />
+              <Format data={data} format={s.title} className='wave-s12 wave-w6' />
+              <Format data={data} format={s.caption} className={clas(css.caption, 'wave-s13')} />
             </div>
             <div className={css.right}>
-              <Format data={data} format={s.value} className='s12' />
-              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's13')} />
+              <Format data={data} format={s.value} className='wave-s12' />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s13')} />
             </div>
           </div>
         )

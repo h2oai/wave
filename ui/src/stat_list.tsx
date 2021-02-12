@@ -116,14 +116,14 @@ export const
               <div key={itemName ?? `${i}:${label}`} className={onClick ? clas(css.item, css.clickable) : css.item} onClick={onClick}>
                 {icon && <div className={css.icon} style={icon_color ? { color: cssVar(icon_color) } : undefined}><FontIcon iconName={icon} /></div>}
                 <div className={css.lhs}>
-                  <div className='s12 w6'>{label}</div>
-                  {caption && <div className={clas(css.caption, 's12')}>{caption}</div>}
+                  <div className='wave-s12 wave-w6'>{label}</div>
+                  {caption && <div className={clas(css.caption, 'wave-s12')}>{caption}</div>}
                 </div>
                 <div className={css.rhs}>
                   {value && (
-                    <div className='s13 w6' style={value_color ? { color: cssVar(value_color) } : undefined}>{value}</div>
+                    <div className='wave-s13 wave-w6' style={value_color ? { color: cssVar(value_color) } : undefined}>{value}</div>
                   )}
-                  {aux_value && <div className={clas(css.auxValue, 's12')}>{aux_value}</div>}
+                  {aux_value && <div className={clas(css.auxValue, 'wave-s12')}>{aux_value}</div>}
                 </div>
               </div>
             )
@@ -131,8 +131,8 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className='s12 w6'>{title}</div>
-            {subtitle && <div className='s12'>{subtitle}</div>}
+            <div className='wave-s12 wave-w6'>{title}</div>
+            {subtitle && <div className='wave-s12'>{subtitle}</div>}
             <div className={css.items}>
               {list}
             </div>

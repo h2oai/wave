@@ -101,7 +101,7 @@ export const
           })
         return (
           <div data-test={name} className={css.card}>
-            <div className='s12 w6'>{s.title}</div>
+            <div className='wave-s12 wave-w6'>{s.title}</div>
             <div className={css.canvas}>{pixels}</div>
             <div className={css.swatches}>
               <div className={css.pixel}>

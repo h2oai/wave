@@ -46,8 +46,8 @@ export const
       const data = unpack(s.data)
       return (
         <div data-test={name} className={css.card}>
-          <Format data={data} format={s.title} className='s12 w6' />
-          <Format data={data} format={s.value} className={clas(css.value, 's24 w3')} />
+          <Format data={data} format={s.title} className='wave-s12 wave-w6' />
+          <Format data={data} format={s.value} className={clas(css.value, 'wave-s24 wave-w3')} />
         </div>
       )
     }

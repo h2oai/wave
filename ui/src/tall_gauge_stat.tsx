@@ -67,12 +67,12 @@ export const
       const data = unpack(s.data)
       return (
         <div data-test={name} className={css.card}>
-          <Format data={data} format={s.title} className='s12 w6' />
+          <Format data={data} format={s.title} className='wave-s12 wave-w6' />
           <div className={css.body}>
             <ProgressArc thickness={2} color={cssVar(s.plot_color)} value={s.progress} />
             <div className={css.value_overlay}>
-              <Format data={data} format={s.value} className='s24 w3' />
-              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 's12')} />
+              <Format data={data} format={s.value} className='wave-s24 wave-w3' />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s12')} />
             </div>
           </div>
         </div>

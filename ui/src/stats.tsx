@@ -96,9 +96,9 @@ export const
             </div>
           )}
           <div>
-            <div className='s12 w5'>{label}</div>
-            {value && <div className='s24 w3'>{value}</div>}
-            {caption && <div className={clas(css.statCaption, 's13')}>{caption}</div>}
+            <div className='wave-s12 wave-w5'>{label}</div>
+            {value && <div className='wave-s24 wave-w3'>{value}</div>}
+            {caption && <div className={clas(css.statCaption, 'wave-s13')}>{caption}</div>}
           </div>
         </div>
       ))

@@ -845,7 +845,7 @@ export const
         const { title = 'Untitled', plot, data, events } = state
         return (
           <div className={css.card}>
-            <div className='s12 w6'>{title}</div>
+            <div className='wave-s12 wave-w6'>{title}</div>
             <div className={css.body}>
               <XVisualization model={{ name, plot, data, events }} />
             </div>

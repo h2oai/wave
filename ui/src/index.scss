@@ -118,7 +118,7 @@ $fontTrackings: (
 
 // Generate font tracking classes.
 @each $size, $tracking in $fontTrackings {
-  .s#{$size} {
+  .wave-s#{$size} {
     font-size: $size + px;
     letter-spacing: $tracking + em;
     line-height: round(1.4 * $size) + px;
@@ -127,7 +127,7 @@ $fontTrackings: (
 
 // Generate font weight classes.
 @for $weight from 1 through 9 {
-  .w#{$weight} {
+  .wave-w#{$weight} {
     font-weight: $weight * 100;
   }
 }

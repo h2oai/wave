@@ -119,9 +119,9 @@ export const
             const { time, user, message } = cm
             return (
               <div key={`${user}|${time}|${message}`} className={css.message}>
-                <div className={clas('s12', css.header)}>
-                  <span className={clas('w6', css.user)}>{user}</span>
-                  <span className={clas('s10', css.date)}>{(new Date(time)).toLocaleString()}</span>
+                <div className={clas('wave-s12', css.header)}>
+                  <span className={clas('wave-w6', css.user)}>{user}</span>
+                  <span className={clas('wave-s10', css.date)}>{(new Date(time)).toLocaleString()}</span>
                 </div>
                 <div className={css.body}>{message}</div>
               </div>
@@ -129,7 +129,7 @@ export const
           })
         return (
           <div data-test={name} className={css.card}>
-            <div className='s12 w6'>{s.title}</div>
+            <div className='wave-s12 wave-w6'>{s.title}</div>
             <div ref={messagesRef} className={css.messages}>{messages}</div>
             <div><ChatInputField name={name} /></div>
           </div>)
