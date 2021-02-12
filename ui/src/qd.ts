@@ -202,6 +202,7 @@ export type Packed<T> = T | S
 
 export interface Data {
   list(): (Rec | null)[]
+  dict(): Dict<Rec>
 }
 
 interface OpsD {
@@ -391,9 +392,7 @@ const
         break
     }
     return data
-  }
-
-const
+  },
   keysOf = <T extends {}>(d: Dict<T>): S[] => {
     const a: S[] = []
     for (const k in d) a.push(k)
@@ -498,8 +497,9 @@ const
         const xs: (Rec | null)[] = []
         for (const tup of tups) xs.push(tup ? t.make(tup) : null)
         return xs
-      }
-    return { __buf__: true, n, put, set, seti, get, geti, list }
+      },
+      dict = (): Dict<Rec> => ({})
+    return { __buf__: true, n, put, set, seti, get, geti, list, dict }
   },
   newCycBuf = (t: Typ, tups: (Tup | null)[], i: U): CycBuf => {
     const
@@ -525,8 +525,9 @@ const
           if (tup) xs.push(t.make(tup))
         }
         return xs
-      }
-    return { __buf__: true, put, set, get, list }
+      },
+      dict = (): Dict<Rec> => ({})
+    return { __buf__: true, put, set, get, list, dict }
   },
   newMapBuf = (t: Typ, tups: Dict<Tup>): MapBuf => {
     const
@@ -556,8 +557,13 @@ const
         const xs: Rec[] = []
         for (const k of keys) xs.push(t.make(tups[k]))
         return xs
+      },
+      dict = (): Dict<Rec> => {
+        const d: Dict<Rec> = {}
+        for (const k in tups) d[k] = t.make(tups[k])
+        return d
       }
-    return { __buf__: true, put, set, get, list }
+    return { __buf__: true, put, set, get, list, dict }
   },
   newTups = (n: U) => {
     const xs = new Array<Tup | null>(n)

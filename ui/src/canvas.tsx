@@ -16,8 +16,19 @@ import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, box, Card, F, qd, Rec, S, to, U, unpack } from './qd'
+import { B, bond, box, Card, Data, Dict, F, qd, Rec, S, to, U } from './qd'
 import { P, simplify } from './simplify'
+import { px } from './theme'
+
+declare global {
+  interface CanvasRenderingContext2D {
+    webkitBackingStorePixelRatio: number
+    mozBackingStorePixelRatio: number
+    msBackingStorePixelRatio: number
+    oBackingStorePixelRatio: number
+    backingStorePixelRatio: number
+  }
+}
 
 const
   css = stylesheet({
@@ -29,10 +40,6 @@ const
     },
     layers: {
       position: 'relative',
-    },
-    canvas: {
-      position: 'absolute',
-      cursor: 'crosshair',
     }
   })
 
@@ -50,7 +57,31 @@ interface State {
   data: Rec
 }
 
-enum ShapeT { Curve, Line, Rect, SolidRect }
+type G = CanvasRenderingContext2D
+
+class Color { constructor(public r: U, public g: U, public b: U, public a: U) { } }
+
+type Canvas = {
+  el: HTMLCanvasElement
+  g: G
+  w: U
+  h: U
+  r: F
+}
+
+type Hitmap = {
+  put(index: number): S
+  test(x: number, y: number): number | undefined
+  clear(): void
+}
+
+type ShapeData = { d: S }
+
+enum ShapeT { None, Curve, Line, Rect, SolidRect }
+
+type Nothing = {
+  t: ShapeT.None
+}
 
 type Curve = {
   t: ShapeT.Curve
@@ -79,7 +110,7 @@ type SolidRect = {
   c: S // color
 }
 
-type Shape = Curve | Line | Rect | SolidRect
+type Shape = Nothing | Curve | Line | Rect | SolidRect
 
 
 export const
@@ -99,24 +130,90 @@ export const
       ps[j] = new P(fs[i++], fs[i++])
     }
     return ps
+  },
+
+  newCanvas = (w: U, h: U, _alpha: B): Canvas => {
+    const
+      el = document.createElement('canvas'),
+      g = el.getContext('2d', { alpha: true })
+
+    if (!g) throw new Error('failed obtaining canvas context')
+
+    const
+      dpr = window.devicePixelRatio || 1,
+      bspr = g.webkitBackingStorePixelRatio
+        || g.mozBackingStorePixelRatio
+        || g.msBackingStorePixelRatio
+        || g.oBackingStorePixelRatio
+        || g.backingStorePixelRatio
+        || 1,
+      r = dpr / bspr
+
+    el.style.position = 'absolute'
+
+    if (dpr !== bspr) {
+      el.width = w * r; el.height = h * r
+      g.scale(r, r)
+      el.style.width = px(w); el.style.height = px(h)
+    } else {
+      el.width = w; el.height = h
+    }
+
+    return { el, g, w, h, r }
+  },
+  byteToHex = (b: number): S => {
+    const hex = b.toString(16)
+    return (hex.length === 1) ? `0${hex}` : hex
+  },
+  hexToColor = (hex: S): Color => {
+    const c = parseInt(hex.substring(1), 16)
+    return new Color((c >> 16) & 255, (c >> 8) & 255, c & 255, 255)
+  },
+  hexmap = (() => {
+    const m = new Map<U, S>()
+    for (let i = 0; i < 256; i++) m.set(i, byteToHex(i))
+    return m
+  })(),
+  newHitmap = (init: U, gx: G, ratio: F): Hitmap => {
+    let mru = init
+    const
+      dict = new Map<number, number>(),
+      put = (index: number): S => {
+        const c = mru++
+        if (mru >= 16581375) mru = 0
+        dict.set(c, index)
+
+        const r = (c >> 16) & 255, g = (c >> 8) & 255, b = c & 255
+        return `#${hexmap.get(r)}${hexmap.get(g)}${hexmap.get(b)}`
+      },
+      test = (x: number, y: number): number | undefined => {
+        const img = gx.getImageData(x * ratio, y * ratio, 1, 1).data
+
+        if (img[3] === 255) return dict.get((img[0] << 16) + (img[1] << 8) + img[2])
+
+        return undefined
+      },
+      clear = () => {
+        dict.clear()
+        mru = init
+      }
+
+    return { put, test, clear }
   }
-
-type G = CanvasRenderingContext2D
-
-type ShapeData = { d: S }
 
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
+      shapeKeysB = box<S[]>([]),
+      shapesB = box<Shape[]>([]),
       shapeB = box(ShapeT.Curve),
       colorB = box('black'),
       lineWidthB = box(3),
+      clearB = box<B>(),
       titleCase = (s: S) => s.charAt(0).toUpperCase() + s.slice(1),
       availableColors = ['black', 'red', 'green', 'blue'],
       availableTipSizes: [S, U][] = [['Fine', 3], ['Medium', 5], ['Bold', 7]],
-      fgRef = React.createRef<HTMLCanvasElement>(),
-      bgRef = React.createRef<HTMLCanvasElement>(),
-      shapesB = box<Shape[]>([]),
+      layersRef = React.createRef<HTMLDivElement>(),
       initPenStyle = (g: G) => {
         g.lineJoin = 'round'
         g.lineCap = 'round'
@@ -142,9 +239,7 @@ export const
       fillRect = (g: G, p1: P, p2: P) => {
         g.fillRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y)
       },
-      pline = (g: G, pts: P[], color: S, lineWidth: U) => {
-        g.strokeStyle = color
-        g.lineWidth = lineWidth
+      pline = (g: G, pts: P[]) => {
         switch (pts.length) {
           case 1:
             dot(g, pts[0])
@@ -166,20 +261,26 @@ export const
         }
       },
       init = () => {
-        const
-          fgEl = fgRef.current,
-          bgEl = bgRef.current
+        const layersEl = layersRef.current
 
-        if (!fgEl || !bgEl) {
+        if (!layersEl) {
           window.setTimeout(init, 500)
           return
         }
-
         const
-          fg = fgEl.getContext('2d'),
-          bg = bgEl.getContext('2d')
+          { width, height } = state,
+          fgC = newCanvas(width, height, true), // foreground
+          bgC = newCanvas(width, height, true), // background
+          htC = newCanvas(width, height, true), // hit-testing; off-screen
+          fgEl = fgC.el,
+          fg = fgC.g,
+          bg = bgC.g,
+          ht = htC.g
 
-        if (!fg || !bg) return
+
+        fgEl.style.cursor = 'crosshair'
+        layersEl.appendChild(bgC.el)
+        layersEl.appendChild(fgEl)
 
         initPenStyle(fg)
         initPenStyle(bg)
@@ -187,7 +288,7 @@ export const
         let
           pts: P[] = []
         const
-          { width, height } = state,
+          hitmap = newHitmap(0, ht, htC.r),
           clear = (g: G) => g.clearRect(0, 0, width, height),
           track2 = (p: P) => {
             if (pts.length > 1) {
@@ -232,13 +333,20 @@ export const
                   fillRect(fg, pts[0], pts[1])
                 }
                 break
+              default: // eraser 
+                {
+                  const i = hitmap.test(x, y)
+                  if (i !== undefined) {
+                    const shapeKeys = shapeKeysB()
+                    sync(shapeKeys[i], null)
+                  }
+                }
             }
           },
           marshalShape = (t: ShapeT, c: S, l: U): Shape | undefined => {
             switch (t) {
               case ShapeT.Curve:
-                pts = simplify(pts, 2, true)
-                return { t: ShapeT.Curve, p: marshalPoints(pts), c, l }
+                return { t: ShapeT.Curve, p: marshalPoints(simplify(pts, 2, true)), c, l }
               case ShapeT.Line:
                 if (pts.length === 2) return { t: ShapeT.Line, p: marshalPoints(pts), c, l }
                 return
@@ -253,24 +361,34 @@ export const
           done = () => {
             if (!pts.length) return
             const shape = marshalShape(shapeB(), colorB(), lineWidthB())
-            if (shape) sync(shape)
+            if (shape) commit(shape)
             pts = []
             clear(fg)
           },
-          sync = (shape: Shape) => {
-            draw(shape)
+          commit = (shape: Shape) => {
+            draw(shape, 0)
+            sync(new Date().toISOString(), [JSON.stringify(shape)])
+          },
+          sync = (k: S, v: any) => {
             const page = qd.page()
             // TODO actual username
             // TODO won't work if local time is messed up; use additional key (shape count?)
-            page.set(`${name} data ${(new Date().toISOString())}`, [JSON.stringify(shape)])
+            page.set(`${name} data ${k}`, v)
             page.sync()
+
           },
-          draw = (shape: Shape) => {
+          draw = (shape: Shape, i: U) => {
             switch (shape.t) {
               case ShapeT.Curve:
               case ShapeT.Line:
                 {
-                  pline(bg, unmarshalPoints(shape.p), shape.c, shape.l)
+                  const ps = unmarshalPoints(shape.p)
+                  bg.strokeStyle = shape.c
+                  bg.lineWidth = shape.l
+                  pline(bg, ps)
+                  ht.strokeStyle = hitmap.put(i)
+                  ht.lineWidth = shape.l
+                  pline(ht, ps)
                 }
                 break
               case ShapeT.Rect:
@@ -279,6 +397,9 @@ export const
                   bg.strokeStyle = shape.c
                   bg.lineWidth = shape.l
                   strokeRect(bg, p1, p2)
+                  ht.strokeStyle = hitmap.put(i)
+                  ht.lineWidth = shape.l
+                  strokeRect(ht, p1, p2)
                 }
                 break
               case ShapeT.SolidRect:
@@ -286,14 +407,16 @@ export const
                   const ps = unmarshalPoints(shape.p), [p1, p2] = ps
                   bg.fillStyle = shape.c
                   fillRect(bg, p1, p2)
+                  ht.strokeStyle = hitmap.put(i)
+                  fillRect(ht, p1, p2)
                 }
                 break
             }
-
           },
           redraw = (shapes: Shape[]) => {
             clear(bg)
-            for (const shape of shapes) draw(shape)
+            clear(ht)
+            shapes.forEach(draw)
           },
           onMouseMove = (e: MouseEvent) => {
             const r = fgEl.getBoundingClientRect()
@@ -384,35 +507,40 @@ export const
         {
           key: 'erase',
           iconProps: { iconName: 'EraseTool' },
-          onClick: () => console.log('Download'),
+          onClick: () => { shapeB(ShapeT.None) },
         },
         {
           key: 'clear',
           iconProps: { iconName: 'Clear' },
-          onClick: () => console.log('Download'),
+          onClick: () => { clearB(true) },
         },
       ],
+      unpack = (d: any): Dict<Shape> => {
+        if (!d) return {}
+        const
+          recs = (d as Data).dict(),
+          shapes: Dict<Shape> = {}
+        for (const k in recs) shapes[k] = JSON.parse((recs[k] as ShapeData).d)
+        return shapes
+      },
       render = () => {
         const
-          { title, width, height } = state,
-          data = unpack<ShapeData[]>(state.data),
-          shapes: Shape[] = data.map(d => JSON.parse(d.d))
+          shapeDict = unpack(state.data),
+          shapeKeys = Object.keys(shapeDict).sort()
 
-        shapesB(shapes)
+        shapeKeysB(shapeKeys)
+        shapesB(shapeKeys.map(k => shapeDict[k]))
 
         return (
           <div data-test={name} className={css.card}>
-            <div className='s12 w6'>{title}</div>
+            <div className='s12 w6'>{state.title}</div>
             <div>
               <CommandBar
                 items={commands}
                 ariaLabel="Use left and right arrow keys to navigate between commands"
               />
             </div>
-            <div className={css.layers}>
-              <canvas ref={bgRef} className={css.canvas} width={width} height={height} />
-              <canvas ref={fgRef} className={css.canvas} width={width} height={height} />
-            </div>
+            <div ref={layersRef} className={css.layers} />
           </div>
         )
       }
