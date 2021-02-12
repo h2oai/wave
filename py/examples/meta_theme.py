@@ -1,32 +1,35 @@
 # Meta / Theme
 # Change the base color theme of the app.
 # ---
-from h2o_wave import Q, ui, main, app, cypress, Cypress
+from h2o_wave import Q, ui, main, app
 
 
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
         q.page['meta'] = ui.meta_card(box='')
-        q.page['controls'] = ui.form_card(box='1 1 2 2', items=[
-            ui.text_xl('This is normal theme'),
-            ui.button(name='change', label='Change to see neon theme', primary=True)
+        q.page['controls'] = ui.form_card(box='1 1 2 8', items=[
+            ui.text_xl('Form'),
+            ui.textbox(name='textbox', label='Textbox'),
+            ui.toggle(name='toggle', label='Toggle'),
+            ui.choice_group(name='choice_group', label='Choice group', choices=[
+                ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
+            ]),
+            ui.checklist(name='checklist', label='Checklist', choices=[
+                ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
+            ]),
+            ui.dropdown(name='dropdown', label='Dropdown', choices=[
+                ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
+            ]),
+            ui.slider(name='slider', label='Slider'),
+            ui.button(name='toggle_theme', label='Toggle Theme', primary=True)
         ])
-        q.client.current_theme = 'light'
+        q.client.theme = 'default'
         q.client.initialized = True
 
     meta = q.page['meta']
-    controls = q.page['controls']
 
-    if q.args.change and q.client.current_theme != 'neon':
-        meta.theme = 'neon'
-        q.client.current_theme = 'neon'
-        controls.items[0].text_xl.content = 'This is Neon theme!'
-        controls.items[1].button.label = 'Back to normal'
-    elif q.args.change:
-        meta.theme = 'light'
-        q.client.current_theme = 'light'
-        controls.items[0].text_xl.content = 'This is normal theme'
-        controls.items[1].button.label = 'Change to see neon theme'
+    if q.args.toggle_theme:
+        meta.theme = q.client.theme = 'neon' if q.client.theme == 'default' else 'default'
 
     await q.page.save()
