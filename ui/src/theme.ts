@@ -13,12 +13,17 @@
 // limitations under the License.
 
 import * as Fluent from "@fluentui/react"
-import { F, I, S, U, qd } from "./qd"
+import { F, I, S, U, qd, Dict } from "./qd"
 
 interface Palette {
   text: S
   card: S
   page: S
+}
+
+interface Theme {
+  palette: Palette
+  fluentPalette: Partial<Fluent.IPalette>
 }
 
 export const
@@ -40,88 +45,95 @@ export const
     prop = prop.substring(1)
     return getComputedStyle(document.documentElement).getPropertyValue(`--${prop}`).trim()
   },
-  fluentPalettes: { [id: string]: Partial<Fluent.IPalette> } = {
-    light: {
-      themePrimary: '#000000',
-      themeLighterAlt: '#898989',
-      themeLighter: '#737373',
-      themeLight: '#595959',
-      themeTertiary: '#373737',
-      themeSecondary: '#2f2f2f',
-      themeDarkAlt: '#252525',
-      themeDark: '#151515',
-      themeDarker: '#0b0b0b',
-      neutralLighterAlt: '#faf9f8',
-      neutralLighter: '#f3f2f1',
-      neutralLight: '#edebe9',
-      neutralQuaternaryAlt: '#e1dfdd',
-      neutralQuaternary: '#d0d0d0',
-      neutralTertiaryAlt: '#c8c6c4',
-      neutralTertiary: '#a19f9d',
-      neutralSecondary: '#605e5c',
-      neutralPrimaryAlt: '#3b3a39',
-      neutralPrimary: '#323130',
-      neutralDark: '#201f1e',
-      black: '#000000',
-      white: '#ffffff',
-    },
-    neon: {
-      themePrimary: '#cddc39',
-      themeLighterAlt: '#080902',
-      themeLighter: '#202309',
-      themeLight: '#3d4211',
-      themeTertiary: '#7a8422',
-      themeSecondary: '#b3c132',
-      themeDarkAlt: '#d0df4a',
-      themeDark: '#d7e464',
-      themeDarker: '#e1eb8a',
-      neutralLighterAlt: '#1a1c1e',
-      neutralLighter: '#191b1d',
-      neutralLight: '#181a1c',
-      neutralQuaternaryAlt: '#17181a',
-      neutralQuaternary: '#161719',
-      neutralTertiaryAlt: '#151618',
-      neutralTertiary: '#c8c8c8',
-      neutralSecondary: '#d0d0d0',
-      neutralPrimaryAlt: '#dadada',
-      neutralPrimary: '#ffffff',
-      neutralDark: '#f4f4f4',
-      black: '#f8f8f8',
-      white: '#1b1d1f',
+  themes: Dict<Theme> = {
+    default: {
+      palette: {
+        text: '#323130',
+        card: '#ffffff',
+        page: '#f5f5f5',
+      },
+      fluentPalette: {
+        themePrimary: '#000000',
+        themeLighterAlt: '#898989',
+        themeLighter: '#737373',
+        themeLight: '#595959',
+        themeTertiary: '#373737',
+        themeSecondary: '#2f2f2f',
+        themeDarkAlt: '#252525',
+        themeDark: '#151515',
+        themeDarker: '#0b0b0b',
+        neutralLighterAlt: '#faf9f8',
+        neutralLighter: '#f3f2f1',
+        neutralLight: '#edebe9',
+        neutralQuaternaryAlt: '#e1dfdd',
+        neutralQuaternary: '#d0d0d0',
+        neutralTertiaryAlt: '#c8c6c4',
+        neutralTertiary: '#a19f9d',
+        neutralSecondary: '#605e5c',
+        neutralPrimaryAlt: '#3b3a39',
+        neutralPrimary: '#323130',
+        neutralDark: '#201f1e',
+        black: '#000000',
+        white: '#ffffff',
+      },
     },
     dark: {
-      // TODO: Generate dark fluent color palette.
-    }
+      palette: {
+        text: '#ffffff',
+        card: '#21252b',
+        page: '#282c34',
+      },
+      fluentPalette: {
+        // TODO: Generate dark fluent color palette.
+      },
+    },
+    neon: {
+      palette: {
+        text: '#ffffff',
+        card: '#0d0e0f',
+        page: '#1b1d1f',
+      },
+      fluentPalette: {
+        themePrimary: '#cddc39',
+        themeLighterAlt: '#080902',
+        themeLighter: '#202309',
+        themeLight: '#3d4211',
+        themeTertiary: '#7a8422',
+        themeSecondary: '#b3c132',
+        themeDarkAlt: '#d0df4a',
+        themeDark: '#d7e464',
+        themeDarker: '#e1eb8a',
+        neutralLighterAlt: '#1a1c1e',
+        neutralLighter: '#191b1d',
+        neutralLight: '#181a1c',
+        neutralQuaternaryAlt: '#17181a',
+        neutralQuaternary: '#161719',
+        neutralTertiaryAlt: '#151618',
+        neutralTertiary: '#c8c8c8',
+        neutralSecondary: '#d0d0d0',
+        neutralPrimaryAlt: '#dadada',
+        neutralPrimary: '#ffffff',
+        neutralDark: '#f4f4f4',
+        black: '#f8f8f8',
+        white: '#1b1d1f',
+      },
+    },
   }
 
 const
-  palettes: { [id: string]: Palette } = {
-    light: {
-      text: '#323130',
-      card: '#ffffff',
-      page: '#f5f5f5',
-    },
-    dark: {
-      text: '#ffffff',
-      card: '#21252b',
-      page: '#282c34',
-    },
-    neon: {
-      text: '#ffffff',
-      card: '#0d0e0f',
-      page: '#1b1d1f',
-    },
-  },
   rgb = (hex: S): [U, U, U] => {
     const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
     return x ? [parseInt(x[1], 16), parseInt(x[2], 16), parseInt(x[3], 16)] : [0, 0, 0]
   }
 
 export const
-  changeTheme = (name: S) => {
-    const palette = palettes[name]
-    const fluentPalette = fluentPalettes[name]
+  changeTheme = (themeName: S) => {
+    const
+      theme = themes[themeName] ?? themes['default'],
+      { palette, fluentPalette } = theme
+
     // TODO: Resolve the any.
+    // TODO: This is polluting the global namespace.
     Object.keys(palette).forEach(k => document.body.style.setProperty(`--${k}`, (palette as any)[k]))
     Object.keys(fluentPalette).forEach(k => document.body.style.setProperty(`--${k}`, (fluentPalette as any)[k]))
 
@@ -136,6 +148,6 @@ export const
     }
 
     // Change global Fluent theme.
-    Fluent.loadTheme({ palette: fluentPalettes[name] })
-    qd.theme(name)
+    Fluent.loadTheme({ palette: fluentPalette })
+    qd.theme(themeName)
   }

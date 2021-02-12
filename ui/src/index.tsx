@@ -19,11 +19,11 @@ import Router from './router'
 import './cards'
 import './index.scss'
 import * as serviceWorker from './serviceWorker'
-import { fluentPalettes } from "./theme"
+import { themes } from "./theme"
 
 loadTheme({
   defaultFontStyle: { fontFamily: 'Inter' },
-  palette: fluentPalettes.light
+  palette: themes.default.fluentPalette,
 })
 
 // Initialize Fluent icons

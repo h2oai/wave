@@ -771,7 +771,7 @@ export const qd: Qd = {
   busyB: box(false),
   socket: null,
   dialogB: box(null),
-  theme: box('light'),
+  theme: box('default'),
   page: (path?: S): PageRef => {
     path = path || qd.path
     const
