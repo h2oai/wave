@@ -12,6 +12,13 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.12.1
+Feb 12, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.12.1)
+- Fixed
+  - Fix `ui.frame()` overlapping other components inside a form card.
+  - Fix form card component layout issues in Safari.
+  - Improve layout of stats cards when 1-unit high.
+
 ## v0.12.0
 Feb 3, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.12.0)
 - Added
