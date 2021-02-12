@@ -1,19 +1,17 @@
 #library(h2owave)
 
 
-caption <- "The data was extracted from 1974 Motor Trend US magazine, and it compares fuel consumption along with 10 other variables from 32 automobiles." 
-sample.row <- mtcars[sample(nrow(mtcars),1),]
-card.title <- row.names(sample.row)
-card.value <- sample.row$mpg
-card.aux.value <- sample.row$hp
+crypto.data <- get.crypto.data()
+caption <- paste0("The data shows the closing price (in USD), and net change in price by percentage for ",crypto.data$get.crypto.symbol," on ",crypto.data$get.date)
+print(caption)
 
 if("page.name" %in% names(page)) page$drop()
 page <- Site("/demo")
-page$add.card("mtcars",ui_large_stat_card(box="1 1 2 2"
-                                        ,title=card.title
-                                        ,value='=mpg:{{intl mpg minimum_fraction_digits=1 maximum_fraction_digits=1}}'
-                                        ,aux_value='=hp:{{intl hp}}'
-                                        ,data=list(mpg=card.value,cyl=card.aux.value)
+page$add.card("crypto",ui_large_stat_card(box="1 1 2 2"
+                                        ,title=crypto.data$get.crypto.symbol
+                                        ,value='=${{intl close minimum_fraction_digits=2 maximum_fraction_digits=1}}'
+                                        ,aux_value='={{intl pc style="percent" minimum_fraction_digits=0 maximum_fraction_digits=2}}'
+                                        ,data=list(close=crypto.data$get.symbol.close,pc=crypto.data$get.symbol.net.price.change.percent)
                                         ,caption=caption
                                         ))
 page$save()
@@ -21,13 +19,11 @@ page$save()
 while(TRUE)
 {
         Sys.sleep(3)
-        sample.row <- mtcars[sample(nrow(mtcars),1),]
-        card.title <- row.names(sample.row)
-        card.value <- sample.row$mpg
-        card.aux.value <- sample.row$hp
-        page$set("mtcars","title",card.title)
-        page$set("mtcars","data","mpg",card.value)
-        page$set("mtcars","data","hp",card.aux.value)
-        page$set("mtcars","data","caption",caption)
+        crypto.data <- get.crypto.data()
+        caption <- paste0("The data shows the closing price (in USD), and net change in price by percentage for ",crypto.data$get.crypto.symbol," on ",crypto.data$get.date)
+        page$set("crypto","title",crypto.data$get.crypto.symbol)
+        page$set("crypto","data","close",crypto.data$get.symbol.close)
+        page$set("crypto","data","pc",crypto.data$get.symbol.net.price.change.percent)
+        page$set("crypto","data","caption",caption)
         page$save()
 }
