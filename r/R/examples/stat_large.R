@@ -1,35 +1,33 @@
 #library(h2owave)
 
 
-captions <- list("Our Constitution begins with those three simple words."
-                 ,"Words we've come to recognize mean all the people, not just some."
-                 ,"Words that insist we rise and fall together"
-                 , "That that's how we might perfect our Union."
-                 )
-
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_pc <- as.integer(runif(1,1,100))
+caption <- "The data was extracted from 1974 Motor Trend US magazine, and it compares fuel consumption along with 10 other variables from 32 automobiles." 
+sample.row <- mtcars[sample(nrow(mtcars),1),]
+card.title <- row.names(sample.row)
+card.value <- sample.row$mpg
+card.aux.value <- sample.row$hp
 
 if("page.name" %in% names(page)) page$drop()
 page <- Site("/demo")
-page$add.card("test",ui_large_stat_card(box="1 1 2 2"
-                                                                       ,title=card_title
-                                                                       ,value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                                                       ,aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                                                       ,data=list(foo=card_value,bar=card_pc/100)
-                                                                       ,caption=sample(captions,1)[[1]]
-                                                                       ))
+page$add.card("mtcars",ui_large_stat_card(box="1 1 2 2"
+                                        ,title=card.title
+                                        ,value='=mpg:{{intl mpg minimum_fraction_digits=1 maximum_fraction_digits=1}}'
+                                        ,aux_value='=hp:{{intl hp}}'
+                                        ,data=list(mpg=card.value,cyl=card.aux.value)
+                                        ,caption=caption
+                                        ))
 page$save()
 
 while(TRUE)
 {
-  Sys.sleep(3)
-  card_pc <- as.integer(runif(1,1,100))
-  card_value <- as.character(sample(mtcars[['mpg']],1))
-  caption <- sample(captions,1)[[1]]
-  page$set("test","data","foo",card_value)
-  page$set("test","data","bar",card_pc/100)
-  page$set("test","data","caption",caption)
-  page$save()
+        Sys.sleep(3)
+        sample.row <- mtcars[sample(nrow(mtcars),1),]
+        card.title <- row.names(sample.row)
+        card.value <- sample.row$mpg
+        card.aux.value <- sample.row$hp
+        page$set("mtcars","title",card.title)
+        page$set("mtcars","data","mpg",card.value)
+        page$set("mtcars","data","hp",card.aux.value)
+        page$set("mtcars","data","caption",caption)
+        page$save()
 }
