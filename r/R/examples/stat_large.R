@@ -3,7 +3,6 @@
 
 crypto.data <- get.crypto.data()
 caption <- paste0("The data shows the closing price (in USD), and net change in price by percentage for ",crypto.data$get.crypto.symbol," on ",crypto.data$get.date)
-print(caption)
 
 if("page.name" %in% names(page)) page$drop()
 page <- Site("/demo")
