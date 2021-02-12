@@ -18,7 +18,7 @@ import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
-import { clas, cssVar, pc } from './theme'
+import { clas, cssVar, pc, themeB } from './theme'
 import * as Fluent from '@fluentui/react'
 
 const
@@ -125,7 +125,7 @@ const
         window.removeEventListener('hashchange', onHashChanged)
       }
 
-    return { init, render, dispose, contentB, theme: qd.theme }
+    return { init, render, dispose, contentB, theme: themeB }
   })
 
 export default App

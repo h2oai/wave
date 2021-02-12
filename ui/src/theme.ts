@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from "@fluentui/react"
-import { F, I, S, U, qd, Dict } from "./qd"
+import { box, Dict, F, I, on, S, U } from "./qd"
 
 interface Palette {
   text: S
@@ -44,7 +44,9 @@ export const
     if (!prop.startsWith('$')) return prop
     prop = prop.substring(1)
     return getComputedStyle(document.documentElement).getPropertyValue(`--${prop}`).trim()
-  },
+  }
+
+const
   themes: Dict<Theme> = {
     default: {
       palette: {
@@ -118,36 +120,39 @@ export const
         white: '#1b1d1f',
       },
     },
-  }
-
-const
+  },
   rgb = (hex: S): [U, U, U] => {
     const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
     return x ? [parseInt(x[1], 16), parseInt(x[2], 16), parseInt(x[3], 16)] : [0, 0, 0]
   }
 
 export const
-  changeTheme = (themeName: S) => {
-    const
-      theme = themes[themeName] ?? themes['default'],
-      { palette, fluentPalette } = theme
+  defaultThemeName = 'default',
+  themeB = box(defaultThemeName),
+  defaultTheme = themes[defaultThemeName]
 
-    // TODO: Resolve the any.
-    // TODO: This is polluting the global namespace.
-    Object.keys(palette).forEach(k => document.body.style.setProperty(`--${k}`, (palette as any)[k]))
-    Object.keys(fluentPalette).forEach(k => document.body.style.setProperty(`--${k}`, (fluentPalette as any)[k]))
 
-    // Update text tones.
-    if (palette.text) {
-      const [r, g, b] = rgb(palette.text)
-      let alpha = 0.05
-      for (let i = 0; i < 10; i++) {
-        document.body.style.setProperty(`--text${i}`, `rgba(${r},${g},${b},${alpha})`)
-        alpha += i === 0 ? 0.05 : 0.1
-      }
+on(themeB, themeName => {
+  const
+    theme = themes[themeName] ?? themes[defaultThemeName],
+    { palette, fluentPalette } = theme
+
+  // TODO: Resolve the any.
+  // TODO: This is polluting the global namespace.
+  Object.keys(palette).forEach(k => document.body.style.setProperty(`--${k}`, (palette as any)[k]))
+  Object.keys(fluentPalette).forEach(k => document.body.style.setProperty(`--${k}`, (fluentPalette as any)[k]))
+
+  // Update text tones.
+  if (palette.text) {
+    const [r, g, b] = rgb(palette.text)
+    let alpha = 0.05
+    for (let i = 0; i < 10; i++) {
+      document.body.style.setProperty(`--text${i}`, `rgba(${r},${g},${b},${alpha})`)
+      alpha += i === 0 ? 0.05 : 0.1
     }
-
-    // Change global Fluent theme.
-    Fluent.loadTheme({ palette: fluentPalette })
-    qd.theme(themeName)
   }
+
+  // Change global Fluent theme.
+  Fluent.loadTheme({ palette: fluentPalette })
+})
+

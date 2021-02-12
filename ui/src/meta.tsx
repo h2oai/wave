@@ -17,8 +17,8 @@ import { cards } from './layout'
 import { showNotification } from './notification'
 import { bond, box, Card, Id, qd, S, U } from './qd'
 import { Dialog } from './dialog'
-import { changeTheme } from './theme'
 import { setupTracker, Tracker } from './tracking'
+import { themeB } from './theme'
 
 /**
  * Represents the layout structure for a page.
@@ -133,7 +133,7 @@ export const
 
     if (theme) {
       delete state.theme
-      changeTheme(theme)
+      themeB(theme)
     }
 
     if (notification) {
