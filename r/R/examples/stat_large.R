@@ -24,6 +24,6 @@ while(TRUE)
         page$set("crypto","title",crypto.data$get.crypto.symbol)
         page$set("crypto","data","close",crypto.data$get.symbol.close)
         page$set("crypto","data","pc",crypto.data$get.symbol.net.price.change.percent)
-        page$set("crypto","data","caption",caption)
+        page$set("crypto","caption",caption)
         page$save()
 }
