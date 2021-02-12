@@ -16,7 +16,7 @@ import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { B, bond, box, Card, Data, Dict, F, qd, Rec, S, to, U } from './qd'
+import { B, bond, box, Card, Data, Dict, F, on, PageRef, qd, Rec, S, to, U } from './qd'
 import { P, simplify } from './simplify'
 import { px } from './theme'
 
@@ -187,6 +187,7 @@ export const
         return `#${hexmap.get(r)}${hexmap.get(g)}${hexmap.get(b)}`
       },
       test = (x: number, y: number): number | undefined => {
+        // TODO add radius param and hit-test a larger chunk to improve eraser usability.
         const img = gx.getImageData(x * ratio, y * ratio, 1, 1).data
 
         if (img[3] === 255) return dict.get((img[0] << 16) + (img[1] << 8) + img[2])
@@ -200,7 +201,6 @@ export const
 
     return { put, test, clear }
   }
-
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
@@ -290,6 +290,20 @@ export const
         const
           hitmap = newHitmap(0, ht, htC.r),
           clear = (g: G) => g.clearRect(0, 0, width, height),
+          setAttr = (page: PageRef, k: S, v: any) => {
+            // TODO actual username
+            page.set(`${name} data ${k}`, v)
+          },
+          syncAttr = (k: S, v: any) => {
+            const page = qd.page()
+            setAttr(page, k, v)
+            page.sync()
+          },
+          clearAttrs = (ks: S[]) => {
+            const page = qd.page()
+            for (const k of ks) setAttr(page, k, null)
+            page.sync()
+          },
           track2 = (p: P) => {
             if (pts.length > 1) {
               pts[1] = p
@@ -338,7 +352,7 @@ export const
                   const i = hitmap.test(x, y)
                   if (i !== undefined) {
                     const shapeKeys = shapeKeysB()
-                    sync(shapeKeys[i], null)
+                    syncAttr(shapeKeys[i], null)
                   }
                 }
             }
@@ -361,21 +375,13 @@ export const
           done = () => {
             if (!pts.length) return
             const shape = marshalShape(shapeB(), colorB(), lineWidthB())
-            if (shape) commit(shape)
+            if (shape) {
+              draw(shape, 0)
+              // TODO won't work if local time is messed up; use additional key (shape count?)
+              syncAttr(new Date().toISOString(), [JSON.stringify(shape)])
+            }
             pts = []
             clear(fg)
-          },
-          commit = (shape: Shape) => {
-            draw(shape, 0)
-            sync(new Date().toISOString(), [JSON.stringify(shape)])
-          },
-          sync = (k: S, v: any) => {
-            const page = qd.page()
-            // TODO actual username
-            // TODO won't work if local time is messed up; use additional key (shape count?)
-            page.set(`${name} data ${k}`, v)
-            page.sync()
-
           },
           draw = (shape: Shape, i: U) => {
             switch (shape.t) {
@@ -446,6 +452,8 @@ export const
         to(lineWidthB, lw => {
           fg.lineWidth = lw
         })
+
+        on(clearB, () => clearAttrs(shapeKeysB()))
       },
       commands: ICommandBarItemProps[] = [
         {
@@ -533,7 +541,7 @@ export const
 
         return (
           <div data-test={name} className={css.card}>
-            <div className='s12 w6'>{state.title}</div>
+            <div className='wave-s12 wave-w6'>{state.title}</div>
             <div>
               <CommandBar
                 items={commands}
