@@ -3,7 +3,6 @@ library(httr)
 library(stringr)
 library(R6)
 
-
 #' The 'Negate' variable to invert '%in%'
 `%notin%` <- Negate(`%in%`)
 
@@ -15,8 +14,8 @@ library(R6)
 #' @examples
 #' .get.env.var()
 .get.env.var <- function(object) {
-  var <- Sys.getenv(paste0("h2o_q", object[1]))
-  ifelse(var != "", return(var), return(object[2]))
+        var <- Sys.getenv(paste0("h2o_q", object[1]))
+        ifelse(var != "", return(var), return(object[2]))
 }
 
 
@@ -39,51 +38,50 @@ data <- function(fields,
                  rows = NULL,
                  columns = NULL,
                  pack = FALSE) {
-  f = fields
-  n = size
-  d = rows
-  col = columns
-  if (length(f) == 0)
-    stop(sprintf("fields must be of non-zero length"))
-  else if (length(f) > 0 &&
-           is.character(f))
-    f = as.list(unlist(strsplit(f, " ")))
-  else if (length(f) > 0 && is.list(f))
-    f = f
-  else
-    stop(
-      sprintf(
-        "fields is of unknown type. Please use character: c(\"fruit\".\"vegetable\",\"flower\"), or string: \"fruit vegetable flower\", or list: list(\"fruit\",\"vegetable\",\"flower\")"
-      )
-    )
-  
-  if (!is.null(rows))
-    d = rows
-  
-  
-  if (!is.null(d)) {
-    if (is.list(d))
-      o <- list(m = list(f = f, d = d))
-    else if (n < 0)
-      o <- list(c = list(f = f, d = d))
-    else
-      o <- list(f = list(f = f, d = d))
-  }
-  else if (n == 0)
-    o <- list(m = list(f = f))
-  else if (n < 0)
-    o <- list(c = list(f = f, n = -n))
-  else
-    o <- list(f = list(f = f, n = n))
-  class(o) <- "h2o_q_data"
-  return(o)
+        f = fields
+        n = size
+        d = rows
+        col = columns
+        if (length(f) == 0)
+                stop(sprintf("fields must be of non-zero length"))
+        else if (length(f) > 0 &&
+                 is.character(f))
+                f = as.list(unlist(strsplit(f, " ")))
+        else if (length(f) > 0 && is.list(f))
+                f = f
+        else
+                stop(
+                     sprintf(
+                             "fields is of unknown type. Please use character: c(\"fruit\".\"vegetable\",\"flower\"), or string: \"fruit vegetable flower\", or list: list(\"fruit\",\"vegetable\",\"flower\")"
+                     )
+                )
+
+        if (!is.null(rows))
+                d = rows
+
+        if (!is.null(d)) {
+                if (is.list(d))
+                        o <- list(m = list(f = f, d = d))
+                else if (n < 0)
+                        o <- list(c = list(f = f, d = d))
+                else
+                        o <- list(f = list(f = f, d = d))
+        }
+        else if (n == 0)
+                o <- list(m = list(f = f))
+        else if (n < 0)
+                o <- list(c = list(f = f, n = -n))
+        else
+                o <- list(f = list(f = f, n = n))
+        class(o) <- "h2o_q_data"
+        return(o)
 }
 
 .reset.while.test <- function() {
-  source("../core.R")
-  source("../ui.R")
-  source("../zzz.R")
-  .onLoad()
+        source("../core.R")
+        source("../ui.R")
+        source("../zzz.R")
+        .onLoad()
 }
 
 
@@ -108,138 +106,109 @@ data <- function(fields,
 #' @examples
 
 .Site <- R6Class(
-  ".Site",
-  public = list(
-    page.name = NULL,
-    cards = NULL,
-    register = function(name) {
-      if (nchar(name) == 0)
-        stop(sprintf(
-          "page name must not be empty.\n example_page <- page(\"/page_name\")"
-        ))
-      if (is.na(stringr::str_match(name, "^/")))
-        stop(
-          sprintf(
-            "page name must be prefixed with \"/\".\n example_page <- page(\"/page_name\")"
-          )
-        )
-      self$cards <- NULL
-      self$cards <- list()
-      class(self$cards) <-
-        append("h2o_q_page", class(self$cards))
-      self$page.name <- name
-      
-    },
-    add.card = function(card_name, FUN, ...) {
-      o <- FUN
-      o$view = gsub("^ui_(\\w+)_card(.*)", "\\1", (deparse(substitute(FUN))))[1]
-      if (nchar(o$view) == 0)
-        stop(sprintf(
-          "%s, is not a known card. Content on the page need to be a card",
-          card_name
-        ))
-      if ("list" %notin% class(o))
-        stop(sprintf("%s, card needs to be a list", card_name))
-      
-      data = list()
-      bufs = list()
-      
-      for (i in names(o)) {
-        if (class(o[[i]]) == "h2o_q_data") {
-          data[[i]] <- length(bufs)
-          class(o[[i]]) <- NULL
-          bufs[[length(bufs) + 1]] <- o[[i]]
-        }
-      }
-      
-      for (k in names(data)) {
-        o[[k]] <- NULL
-        o[[paste0("~", k)]] <- data[[k]]
-      }
-      .opage <- list()
-      
-      .opage$key = card_name
-      .opage$value = o
-      if (length(bufs) > 0)
-        .opage$.b = bufs
-      self$cards[[card_name]] <- .opage
-    },
-    drop = function(...) {
-      self$cards = NULL
-      data <-
-        jsonlite::toJSON(list(d = list({
-          
-        })), auto_unbox = TRUE)
-      .site.save(self$page.name, data, ...)
-    },
-    set = function(...) {
-      #base.string <- "self$cards$%s$value$%s$%s <- %s"
-      base.string <- "self$cards$%s$value"
-      non.eval.string <-
-        as.list(as.character(substitute(c(...)))[-1L])
-      for(i in 1:(length(non.eval.string)-2)){
-      base.string <- paste0(base.string,"$%s")
-      }
-      base.string <- paste0(base.string," <- %s")
-      print(length(non.eval.string))
-      parse.out <-
-        parse(text = do.call(sprintf, c(fmt = base.string, non.eval.string)))
-      eval(parse.out)
-    },
-    save = function(...) {
-      page.data <- self$cards
-      if ("h2o_q_delta_data" %in% class(page.data)) {
-        unlist_o_all <-
-          unlist(lapply(page.data, function(x) {
-            unlist(x, recursive = F, use.names = T)
-          }),
-          recursive = F,
-          use.names = T)
-        unlist_o_unguarded <-
-          as.list(unlist(lapply(unlist_o_all, function(x) {
-            if (!is.glist(x))
-              return(x)
-          }), use.names = T))
-        unlist_o_guarded <-
-          lapply(unlist_o_all, function(x) {
-            if (is.glist(x))
-              return(x)
-          })
-        unlist_o_guarded <-
-          unlist_o_guarded[!sapply(unlist_o_guarded, is.null)]
-        unlist_o <-
-          c(unlist_o_guarded, unlist_o_unguarded)
-        data <-
-          jsonlite::toJSON(list(d = lapply(names(unlist_o), function(x) {
-            list(k = .delta.name.change(x), v = unlist_o[[x]])
-          })), auto_unbox = TRUE)
-      }
-      else {
-        data <- jsonlite::toJSON(list(d = lapply(unname(page.data),
-                                                 function(x) {
-                                                   if (length(x) == 3) {
-                                                     list(k = x[[1]],
-                                                          d = x[[2]],
-                                                          b = x[[3]])
-                                                   }
-                                                   else{
-                                                     list(k = x[[1]], d = x[[2]])
-                                                   }
-                                                 })), auto_unbox =
-                                   TRUE)
-        self$cards <-
-          page_frame(page.data)
-      }
-      .site.save(self$page.name, data, ...)
-    }
-  )
+                 ".Site",
+                 public = list(
+                               page.name = NULL,
+                               cards = NULL,
+                               register = function(name) {
+                                       if (nchar(name) == 0)
+                                               stop(sprintf(
+                                                            "page name must not be empty.\n example_page <- page(\"/page_name\")"
+                                                            ))
+                                       if (is.na(stringr::str_match(name, "^/")))
+                                               stop(
+                                                    sprintf(
+                                                            "page name must be prefixed with \"/\".\n example_page <- page(\"/page_name\")"
+                                                    )
+                                               )
+                                       self$cards <- NULL
+                                       self$cards <- list()
+                                       class(self$cards) <- append("h2o_q_page", class(self$cards))
+                                       self$page.name <- name
+
+                               },
+                               add.card = function(card_name, FUN, ...) {
+                                       o <- FUN
+                                       o$view = gsub("^ui_(\\w+)_card(.*)", "\\1", (deparse(substitute(FUN))))[1]
+                                       if (nchar(o$view) == 0)
+                                               stop(sprintf(
+                                                            "%s, is not a known card. Content on the page need to be a card",
+                                                            card_name
+                                                            ))
+                                       if ("list" %notin% class(o))
+                                               stop(sprintf("%s, card needs to be a list", card_name))
+
+                                       data = list()
+                                       bufs = list()
+
+                                       for (i in names(o)) {
+                                               if (class(o[[i]]) == "h2o_q_data") {
+                                                       data[[i]] <- length(bufs)
+                                                       class(o[[i]]) <- NULL
+                                                       bufs[[length(bufs) + 1]] <- o[[i]]
+                                               }
+                                       }
+
+                                       for (k in names(data)) {
+                                               o[[k]] <- NULL
+                                               o[[paste0("~", k)]] <- data[[k]]
+                                       }
+                                       .opage <- list()
+                                       .opage$key = card_name
+                                       .opage$value = o
+                                       if (length(bufs) > 0)
+                                               .opage$.b = bufs
+                                       self$cards[[card_name]] <- .opage
+                               },
+                               drop = function(...) {
+                                       self$cards = NULL
+                                       data <- jsonlite::toJSON(list(d = list({})), auto_unbox = TRUE)
+                                       .site.save(self$page.name, data, ...)
+                               },
+                               set = function(...) {
+                                       base.string <- "self$cards$%s$value"
+                                       non.eval.string <- as.list(as.character(substitute(c(...)))[-1L])
+                                       for(i in 1:(length(non.eval.string)-2)){
+                                               base.string <- paste0(base.string,"$%s")
+                                       }
+                                       base.string <- paste0(base.string," <- %s")
+                                       parse.out <- parse(text = do.call(sprintf, c(fmt = base.string, non.eval.string)))
+                                       eval(parse.out)
+                               },
+                               save = function(...) {
+                                       page.data <- self$cards
+                                       if ("h2o_q_delta_data" %in% class(page.data)) {
+                                               proxy.data.frame <- do.call("cbind",lapply(page.data,data.frame))
+                                               data <- jsonlite::toJSON(list(d = lapply(names(proxy.data.frame), function(x) {
+                                                                                                list(k = .delta.name.change(x), v = proxy.data.frame[[x]])
+})), auto_unbox = TRUE)
+                                       }
+                                       else {
+                                               data <- jsonlite::toJSON(list(d = lapply(unname(page.data),
+                                                                                        function(x) {
+                                                                                                if (length(x) == 3) {
+                                                                                                        list(k = x[["key"]],
+                                                                                                             d = x[["value"]],
+                                                                                                             b = x[[".b"]])
+                                                                                                }
+                                                                                                else{
+                                                                                                        list(k = x[[1]], d = x[[2]])
+                                                                                                }
+                                                                                        })), auto_unbox =
+                                               TRUE)
+                                               self$cards <- list()
+                                               class(self$cards) <- c("h2o_q_delta_data", class(self$cards))
+                                       }
+                                       .site.save(self$page.name, data, ...)
+                               }
+                 )
 )
 
 
 Site <- function(name) {
-  ilsite <- .Site$new()
-  ilsite$register(name)
-  return(ilsite)
+        ilsite <- .Site$new()
+        ilsite$register(name)
+        return(ilsite)
 }
 
 
@@ -253,7 +222,7 @@ Site <- function(name) {
 #'
 #' @examples
 page.load <- function(page_name, ...) {
-  return(site.load(page_name, ...))
+        return(site.load(page_name, ...))
 }
 
 
@@ -263,79 +232,8 @@ page.load <- function(page_name, ...) {
 #' @export
 #' @examples
 .delta.name.change <- function(x) {
-  #print(gsub("\\.", " ", gsub("\\.value\\.", " ", x)))
-  return(gsub("\\.", " ", gsub("\\.value\\.", " ", x)))
-}
-
-
-#' Function to create a guarded list - \it{glist}. This list will be protected
-#' and cannot be modified.
-#' @param ...
-#' @return
-#' @export
-#' @examples
-glist <- function(...) {
-  o <- list(...)
-  class(o) <- append(class(o), c("h2o_q_guarded_list"))
-  return(o)
-}
-
-#' Function to check if the list is a guarded list \it{glist}
-#' @param lname
-#' @param ...
-#'
-#' @return
-#' @export
-#'
-#' @examples
-is.glist <- function(lname, ...) {
-  if ("h2o_q_guarded_list" %in% class(lname))
-    return(TRUE)
-  else
-    return(FALSE)
-}
-
-#' Page Frame Add additional attributes if the page is having a delta frame.
-#'
-#' @param page
-#' @param ...
-#'
-#' @return
-#' @export
-#'
-#' @examples
-page_frame <- function(page, ...) {
-  o <- lapply(page,
-              function(x) {
-                if (is.list(x))
-                  page_frame(x)
-                else
-                  x <- NULL
-              })
-  class(o) <- c("h2o_q_delta_data", class(o))
-  return(o)
-}
-
-#' Function to check if the list is empty
-#'
-#' @param x
-#'
-#' @return
-#' @export
-#'
-#' @examples
-is.list.empty <- function(x) {
-  o <-
-    unique(unlist(lapply(x, function(x) {
-      if (is.list(x))
-        return(is.list.empty(x))
-      else
-        return(is.null(x))
-    })))
-  if (length(o) > 1)
-    return(FALSE)
-  else
-    return(o)
+        #print(gsub("\\.", " ", gsub("\\.value\\.", " ", x)))
+        return(gsub("\\.", " ", gsub("\\.value\\.", " ", x)))
 }
 
 
@@ -352,7 +250,7 @@ is.list.empty <- function(x) {
 #'
 #' @examples
 .site.save <- function(page_name, data, ...) {
-  return(.BAclient.patch(page_name, data, ...))
+        return(.BAclient.patch(page_name, data, ...))
 }
 
 
@@ -369,7 +267,7 @@ is.list.empty <- function(x) {
 #'
 #' @examples
 site.load <- function(page_name, ...) {
-  return(.BAclient.get(page_name, ...))
+        return(.BAclient.get(page_name, ...))
 }
 
 
@@ -385,7 +283,7 @@ site.load <- function(page_name, ...) {
 #'
 #' @examples
 site.upload <- function(files_list, ...) {
-  return(.BAclient.upload(file_list, ...))
+        return(.BAclient.upload(file_list, ...))
 }
 
 #' This function will download file(s) from that Qd server to local disk.
@@ -400,7 +298,7 @@ site.upload <- function(files_list, ...) {
 #'
 #' @examples
 site.download <- function(files_name, path, ...) {
-  return(.BAclient.download(file_name, path, ...))
+        return(.BAclient.download(file_name, path, ...))
 }
 
 #' Function to unload a page on site on the Qd server
@@ -416,7 +314,7 @@ site.download <- function(files_name, path, ...) {
 #'
 #' @examples
 site.unload <- function(page_name, ...) {
-  return(.BAclient.unload(page_name, ...))
+        return(.BAclient.unload(page_name, ...))
 }
 
 #' Basic Authentication HTTP patch function
@@ -433,25 +331,22 @@ site.unload <- function(page_name, ...) {
 #'
 #' @examples
 .BAclient.patch <- function(page_name, data, ...) {
-  resp <- httr::PATCH(
-    paste0(.config$hub_address, page_name)
-    ,
-    httr::content_type_json()
-    ,
-    body = data
-    ,
-    httr::authenticate(
-      user = .config$hub_access_key_id,
-      password = .config$hub_access_key_secret
-    )
-  )
-  
-  if (resp$status_code != 200)
-    stop(sprintf(
-      "Request failed with code %s and message %s",
-      resp$status_code,
-      rawToChar(resp$output)
-    ))
+        resp <- httr::PATCH(
+                            paste0(.config$hub_address, page_name)
+                            ,httr::content_type_json()
+                            ,body = data
+                            ,httr::authenticate(
+                                                user = .config$hub_access_key_id,
+                                                password = .config$hub_access_key_secret
+                            )       
+        )
+
+        if (resp$status_code != 200)
+                stop(sprintf(
+                             "Request failed with code %s and message %s",
+                             resp$status_code,
+                             rawToChar(resp$output)
+                             ))
 }
 
 
@@ -468,24 +363,22 @@ site.unload <- function(page_name, ...) {
 #'
 #' @examples
 .BAclient.get <- function(page_name, ...) {
-  resp <- httr::GET(
-    paste0(.config$hub_address, page_name)
-    ,
-    httr::content_type_json()
-    ,
-    httr::authenticate(
-      user = .config$hub_access_key_id,
-      password = .config$hub_access_key_secret
-    )
-  )
-  
-  if (resp$status_code != 200)
-    stop(sprintf(
-      "Request failed with code %s and message %s",
-      resp$status_code,
-      ifelse(rawToChar(resp$content), rawToChar(resp$content), NULL)
-    ))
-  return(jsonlite::toJSON(rawToChar(resp$content)))
+        resp <- httr::GET(
+                          paste0(.config$hub_address, page_name)
+                          ,httr::content_type_json()
+                          ,httr::authenticate(
+                                              user = .config$hub_access_key_id,
+                                              password = .config$hub_access_key_secret
+                          )
+        )
+
+        if (resp$status_code != 200)
+                stop(sprintf(
+                             "Request failed with code %s and message %s",
+                             resp$status_code,
+                             ifelse(rawToChar(resp$content), rawToChar(resp$content), NULL)
+                             ))
+        return(jsonlite::toJSON(rawToChar(resp$content)))
 }
 
 #' Basic Authentication HTTP upload with post function
@@ -500,32 +393,30 @@ site.unload <- function(page_name, ...) {
 #'
 #' @examples
 .BAclient.upload <- function(files_list, ...) {
-  fs <- lapply(files_list, function(x) {
-    upload_file(x)
-  })
-  names(fs) <- rep("files", length(fs))
-  resp <- httr::POST(
-    paste0(.config$hub_address, "/_f")
-    ,
-    body = fs
-    ,
-    httr::authenticate(
-      user = .config$hub_access_key_id,
-      password = .config$hub_access_key_secret
-    )
-  )
-  if (resp$status_code != 200) {
-    stop(
-      sprintf(
-        "Upload failed with error code %s and message %s",
-        resp$status_code,
-        ifelse(rawToChar(resp$content), rawToChar(resp$content), NULL)
-      )
-    )
-  }
-  else{
-    return(jsonlite::fromJSON(rawToChar(resp$content)))
-  }
+        fs <- lapply(files_list, function(x) {
+                             upload_file(x)
+        })
+        names(fs) <- rep("files", length(fs))
+        resp <- httr::POST(
+                           paste0(.config$hub_address, "/_f")
+                           ,body = fs
+                           ,httr::authenticate(
+                                               user = .config$hub_access_key_id,
+                                               password = .config$hub_access_key_secret
+                           )
+        )
+        if (resp$status_code != 200) {
+                stop(
+                     sprintf(
+                             "Upload failed with error code %s and message %s",
+                             resp$status_code,
+                             ifelse(rawToChar(resp$content), rawToChar(resp$content), NULL)
+                     )
+                )
+        }
+        else{
+                return(jsonlite::fromJSON(rawToChar(resp$content)))
+        }
 }
 
 #' Basic Authentication HTTP download with get function
@@ -541,20 +432,19 @@ site.unload <- function(page_name, ...) {
 #'
 #' @examples
 .BAclient.download <- function(file_name, path, ...) {
-  resp <-
-    httr::GET(paste0(.config$hub_address, page_name), write_disk(path))
-  if (resp$status_code != 200) {
-    stop(
-      sprintf(
-        "Unload failed with error code %s and message %s",
-        resp$status_code,
-        rawToChar(resp$content)
-      )
-    )
-  }
-  else{
-    return(jsonlite::fromJSON(rawToChar(resp$content)))
-  }
+        resp <- httr::GET(paste0(.config$hub_address, page_name), write_disk(path))
+        if (resp$status_code != 200) {
+                stop(
+                     sprintf(
+                             "Unload failed with error code %s and message %s",
+                             resp$status_code,
+                             rawToChar(resp$content)
+                     )
+                )
+        }
+        else{
+                return(jsonlite::fromJSON(rawToChar(resp$content)))
+        }
 }
 
 #' Basic Authentication HTTP delete function
@@ -569,17 +459,17 @@ site.unload <- function(page_name, ...) {
 #'
 #' @examples
 .BAclient.unload <- function(page_name, ...) {
-  resp <- httr::DELETE(paste0(.config$hub_address, page_name))
-  if (resp$status_code != 200) {
-    stop(
-      sprintf(
-        "Unload failed with error code %s and message %s",
-        resp$status_code,
-        rawToChar(resp$content)
-      )
-    )
-  }
-  else{
-    return(jsonlite::fromJSON(rawToChar(resp$content)))
-  }
+        resp <- httr::DELETE(paste0(.config$hub_address, page_name))
+        if (resp$status_code != 200) {
+                stop(
+                     sprintf(
+                             "Unload failed with error code %s and message %s",
+                             resp$status_code,
+                             rawToChar(resp$content)
+                     )
+                )
+        }
+        else{
+                return(jsonlite::fromJSON(rawToChar(resp$content)))
+        }
 }
