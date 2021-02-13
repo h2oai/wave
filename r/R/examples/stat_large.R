@@ -1,16 +1,18 @@
 #library(h2owave)
 
-
-crypto.data <- get.crypto.data()
-caption <- paste0("The data shows the closing price (in USD), and net change in price by percentage for ",crypto.data$get.crypto.symbol," on ",crypto.data$get.date)
+crypto.name <- c("ETH","BTC","ZCH","LTC")
+sample.crypto.name <- crypto.name[sample(1:length(crypto.name),1)]
+sample.crypto.price <- runif(1,1,500)
+sample.crypto.price.percent.change <- runif(1,0,1)
+caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample.crypto.name,".")
 
 if("page.name" %in% names(page)) page$drop()
 page <- Site("/demo")
 page$add.card("crypto",ui_large_stat_card(box="1 1 2 2"
-                                        ,title=crypto.data$get.crypto.symbol
-                                        ,value='=${{intl close minimum_fraction_digits=2 maximum_fraction_digits=1}}'
-                                        ,aux_value='={{intl pc style="percent" minimum_fraction_digits=0 maximum_fraction_digits=2}}'
-                                        ,data=list(close=crypto.data$get.symbol.close,pc=crypto.data$get.symbol.net.price.change.percent)
+                                        ,title=sample.crypto.name
+                                        ,value='=${{intl price minimum_fraction_digits=0 maximum_fraction_digits=1}}'
+                                        ,aux_value='={{intl change style="percent" minimum_fraction_digits=0 maximum_fraction_digits=1}}'
+                                        ,data=list(price=sample.crypto.price,change=sample.crypto.price.percent.change)
                                         ,caption=caption
                                         ))
 page$save()
@@ -18,11 +20,14 @@ page$save()
 while(TRUE)
 {
         Sys.sleep(3)
-        crypto.data <- get.crypto.data()
-        caption <- paste0("The data shows the closing price (in USD), and net change in price by percentage for ",crypto.data$get.crypto.symbol," on ",crypto.data$get.date)
-        page$set("crypto","title",crypto.data$get.crypto.symbol)
-        page$set("crypto","data","close",crypto.data$get.symbol.close)
-        page$set("crypto","data","pc",crypto.data$get.symbol.net.price.change.percent)
+        sample.crypto.name <- crypto.name[sample(1:length(crypto.name),1)]
+        sample.crypto.price <- runif(1,1,500)
+        sample.crypto.price.percent.change <- runif(1,0,1)
+        caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample.crypto.name,".")
+        
+        page$set("crypto","title",sample.crypto.name)
+        page$set("crypto","data","price",sample.crypto.price)
+        page$set("crypto","data","change",sample.crypto.price.percent.change)
         page$set("crypto","caption",caption)
         page$save()
 }
