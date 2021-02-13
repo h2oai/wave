@@ -192,7 +192,7 @@ data <- function(fields,
                                                                                                              b = x[[".b"]])
                                                                                                 }
                                                                                                 else{
-                                                                                                        list(k = x[[1]], d = x[[2]])
+                                                                                                        list(k = x[[key]], d = x[[value]])
                                                                                                 }
                                                                                         })), auto_unbox =
                                                TRUE)
@@ -232,7 +232,6 @@ page.load <- function(page_name, ...) {
 #' @export
 #' @examples
 .delta.name.change <- function(x) {
-        #print(gsub("\\.", " ", gsub("\\.value\\.", " ", x)))
         return(gsub("\\.", " ", gsub("\\.value\\.", " ", x)))
 }
 
