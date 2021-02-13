@@ -192,7 +192,7 @@ data <- function(fields,
                                                                                                              b = x[[".b"]])
                                                                                                 }
                                                                                                 else{
-                                                                                                        list(k = x[[key]], d = x[[value]])
+                                                                                                        list(k = x[["key"]], d = x[["value"]])
                                                                                                 }
                                                                                         })), auto_unbox =
                                                TRUE)
