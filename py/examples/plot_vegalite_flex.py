@@ -1,4 +1,4 @@
-# Plot / Vega
+# Plot / Vega-lite / Flex
 # Place Vegalite plots in a flexible layout.
 # ---
 from h2o_wave import site, ui, data
