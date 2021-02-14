@@ -165,10 +165,10 @@ data <- function(fields,
                                        data <- jsonlite::toJSON(list(d = list({})), auto_unbox = TRUE)
                                        .site.save(self$page.name, data, ...)
                                },
-                               set = function(...) {
-                                       base.string <- "self$cards$%s$value"
+                               set = function(card=NULL,...) {
+                                       base.string <- paste0("self$cards$",card,"$value")
                                        non.eval.string <- as.list(as.character(substitute(c(...)))[-1L])
-                                       for(i in 1:(length(non.eval.string)-2)){
+                                       for(i in 1:(length(non.eval.string)-1)){
                                                base.string <- paste0(base.string,"$%s")
                                        }
                                        base.string <- paste0(base.string," <- %s")
