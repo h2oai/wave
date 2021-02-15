@@ -8,15 +8,14 @@ on:
         default: 'docs: Publish documentation website'
         required: false
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
   publish:
     name: Publish Docs
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
 
       - name: Setup
         run: make setup
