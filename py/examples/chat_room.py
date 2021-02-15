@@ -12,9 +12,6 @@ page.drop()
 page.add('example', ui.chat_room_card(
     box='1 1 4 6',
     title='Chat room',
-    # The data structure for the chat room must be defined exactly as below.
-    # This chat room holds a maximum of 10 messages.
-    # If you want the room to retain more messages, say 1000, set the size to -1000.
-    data=data('user time message', -10),
+    data=dict(),
 ))
 page.save()

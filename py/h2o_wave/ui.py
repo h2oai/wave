@@ -111,7 +111,9 @@ def canvas_card(
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> CanvasCard:
-    """Create a card that displays a user-editable drawing canvas.
+    """WARNING: Experimental and subject to change.
+
+    Create a card that displays a user-editable drawing canvas.
 
     Args:
         box: A string indicating how to place this component on the page.
@@ -139,7 +141,9 @@ def chat_room_card(
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> ChatRoomCard:
-    """Create a card that displays a chat room.
+    """WARNING: Experimental and subject to change.
+
+    Create a card that displays a chat room.
     The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
 
     Args:

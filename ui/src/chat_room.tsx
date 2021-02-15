@@ -16,7 +16,7 @@ import { TextField } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Card, qd, Rec, S, unpack } from './qd'
+import { bond, Card, Dict, qd, Rec, S } from './qd'
 import { border, clas, cssVar, padding } from './theme'
 
 const
@@ -49,7 +49,10 @@ const
     }
   })
 
-/** Create a card that displays a chat room.
+/**
+ * WARNING: Experimental and subject to change.
+ *
+ * Create a card that displays a chat room.
  * The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
  */
 interface State {
@@ -59,14 +62,11 @@ interface State {
   data: Rec
 }
 
-/** A chat message. */
-interface ChatMessage {
-  /** ISO timestamp at which this message was posted. */
-  time: S
+type ChatMessage = {
   /** Username of the sender. */
-  user: S
+  u: S
   /** The message contents. */
-  message: S
+  m: S
 }
 
 type HTMLTextBox = HTMLInputElement | HTMLTextAreaElement
@@ -89,7 +89,8 @@ const
           setVal('') // clear input field
           const page = qd.page()
           // TODO actual username
-          page.set(`${name} data -1`, ['admin', (new Date()).toISOString(), message])
+          const cm: ChatMessage = { u: 'admin', m: message }
+          page.set(`${name} data ${(new Date()).toISOString()}`, JSON.stringify(cm))
           page.sync()
         }
       }
@@ -101,6 +102,12 @@ const
         onChange={onChange}
         value={val} />
     )
+  },
+  unpack = (d: any): Dict<ChatMessage> => {
+    if (!d) return {}
+    const shapes: Dict<ChatMessage> = {}
+    for (const k in d) shapes[k] = JSON.parse(d[k])
+    return shapes
   }
 
 export const
@@ -113,10 +120,10 @@ export const
       },
       render = () => {
         const
-          data = unpack<(ChatMessage | null)[]>(s.data),
-          messages = data.map(cm => {
-            if (!cm) return
-            const { time, user, message } = cm
+          messageDict = unpack(s.data),
+          messageKeys = Object.keys(messageDict).sort(),
+          messages = messageKeys.map(time => {
+            const { u: user, m: message } = messageDict[time]
             return (
               <div key={`${user}|${time}|${message}`} className={css.message}>
                 <div className={clas('wave-s12', css.header)}>

@@ -43,7 +43,9 @@ const
     }
   })
 
-/** 
+/**
+ * WARNING: Experimental and subject to change.
+ *
  * Create a card that displays a user-editable drawing canvas.
  */
 interface State {
@@ -376,7 +378,7 @@ export const
             if (shape) {
               draw(shape, 0)
               // TODO won't work if local time is messed up; use additional key (shape count?)
-              syncAttr(new Date().toISOString(), [JSON.stringify(shape)])
+              syncAttr(new Date().toISOString(), JSON.stringify(shape))
             }
             pts = []
             clear(fg)

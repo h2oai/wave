@@ -129,6 +129,8 @@ ui_breadcrumbs_card <- function(
   return(.o)
 }
 
+#' WARNING: Experimental and subject to change.
+#' 
 #' Create a card that displays a user-editable drawing canvas.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -163,6 +165,8 @@ ui_canvas_card <- function(
   return(.o)
 }
 
+#' WARNING: Experimental and subject to change.
+#' 
 #' Create a card that displays a chat room.
 #' The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
 #'

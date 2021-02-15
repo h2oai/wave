@@ -242,7 +242,9 @@ class BreadcrumbsCard:
 
 
 class CanvasCard:
-    """Create a card that displays a user-editable drawing canvas.
+    """WARNING: Experimental and subject to change.
+
+    Create a card that displays a user-editable drawing canvas.
     """
     def __init__(
             self,
@@ -319,7 +321,9 @@ class CanvasCard:
 
 
 class ChatRoomCard:
-    """Create a card that displays a chat room.
+    """WARNING: Experimental and subject to change.
+
+    Create a card that displays a chat room.
     The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
     """
     def __init__(
