@@ -16,7 +16,7 @@ import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { B, bond, box, Card, Data, Dict, F, on, PageRef, qd, Rec, S, to, U } from './qd'
+import { B, bond, box, Card, Dict, F, on, PageRef, qd, Rec, S, to, U } from './qd'
 import { P, simplify } from './simplify'
 import { px } from './theme'
 
@@ -74,8 +74,6 @@ type Hitmap = {
   test(x: number, y: number): number | undefined
   clear(): void
 }
-
-type ShapeData = { d: S }
 
 enum ShapeT { None, Curve, Line, Rect, SolidRect }
 
@@ -525,10 +523,8 @@ export const
       ],
       unpack = (d: any): Dict<Shape> => {
         if (!d) return {}
-        const
-          recs = (d as Data).dict(),
-          shapes: Dict<Shape> = {}
-        for (const k in recs) shapes[k] = JSON.parse((recs[k] as ShapeData).d)
+        const shapes: Dict<Shape> = {}
+        for (const k in d) shapes[k] = JSON.parse(d[k])
         return shapes
       },
       render = () => {

@@ -14,7 +14,6 @@ page.add('example', ui.canvas_card(
     title='Sample Canvas',
     width=500,
     height=500,
-    # The data structure for the canvas must be defined exactly as below.
-    data=data('d'),
+    data=dict(),
 ))
 page.save()
