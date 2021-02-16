@@ -324,17 +324,18 @@ class ChatRoomCard:
     """WARNING: Experimental and subject to change.
 
     Create a card that displays a chat room.
-    The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
     """
     def __init__(
             self,
             box: str,
             title: str,
             data: PackedRecord,
+            capacity: Optional[int] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ChatRoomCard.box', box, (str,), False, False, False)
         _guard_scalar('ChatRoomCard.title', title, (str,), False, False, False)
+        _guard_scalar('ChatRoomCard.capacity', capacity, (int,), False, True, False)
         _guard_vector('ChatRoomCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -342,6 +343,8 @@ class ChatRoomCard:
         """The title for this card."""
         self.data = data
         """The data for this card."""
+        self.capacity = capacity
+        """The maximum number of messages contained in this card. Defaults to 50 messages."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -349,12 +352,14 @@ class ChatRoomCard:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ChatRoomCard.box', self.box, (str,), False, False, False)
         _guard_scalar('ChatRoomCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('ChatRoomCard.capacity', self.capacity, (int,), False, True, False)
         _guard_vector('ChatRoomCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='chat_room',
             box=self.box,
             title=self.title,
             data=self.data,
+            capacity=self.capacity,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -366,16 +371,20 @@ class ChatRoomCard:
         __d_title: Any = __d.get('title')
         _guard_scalar('ChatRoomCard.title', __d_title, (str,), False, False, False)
         __d_data: Any = __d.get('data')
+        __d_capacity: Any = __d.get('capacity')
+        _guard_scalar('ChatRoomCard.capacity', __d_capacity, (int,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ChatRoomCard.commands', __d_commands, (Command,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
+        capacity: Optional[int] = __d_capacity
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ChatRoomCard(
             box,
             title,
             data,
+            capacity,
             commands,
         )
 

@@ -16,7 +16,7 @@ import { TextField } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Card, Dict, qd, Rec, S } from './qd'
+import { bond, Box, box, Card, Dict, on, qd, Rec, S, U } from './qd'
 import { border, clas, cssVar, padding } from './theme'
 
 const
@@ -27,7 +27,7 @@ const
       padding: grid.gap,
       overflow: 'auto',
     },
-    messages: {
+    history: {
       flexGrow: 1,
       overflow: 'auto',
     },
@@ -53,13 +53,14 @@ const
  * WARNING: Experimental and subject to change.
  *
  * Create a card that displays a chat room.
- * The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
  */
 interface State {
   /** The title for this card.*/
   title: S
   /** The data for this card.*/
   data: Rec
+  /** The maximum number of messages contained in this card. Defaults to 50 messages. */
+  capacity?: U
 }
 
 type ChatMessage = {
@@ -72,26 +73,21 @@ type ChatMessage = {
 type HTMLTextBox = HTMLInputElement | HTMLTextAreaElement
 
 const
-  ChatInputField = ({ name }: { name: S }) => {
+  ChatInputField = ({ inputB }: { inputB: Box<S> }) => {
     const
-      [val, setVal] = React.useState(''),
+      [value, setValue] = React.useState(''),
       onChange = React.useCallback(
         (_event: React.FormEvent<HTMLTextBox>, newValue?: string) => {
-          setVal(newValue || '')
+          setValue(newValue || '')
         },
         [],
       ),
       onKeyUp = ({ key, target }: React.KeyboardEvent<HTMLTextBox>, v?: S) => {
         if (key == 'Enter') {
-          const message = v ?? (target as HTMLTextBox).value
-          if (!message || (message && !message.length)) return // no message
-
-          setVal('') // clear input field
-          const page = qd.page()
-          // TODO actual username
-          const cm: ChatMessage = { u: 'admin', m: message }
-          page.set(`${name} data ${(new Date()).toISOString()}`, JSON.stringify(cm))
-          page.sync()
+          const input = v ?? (target as HTMLTextBox).value
+          if (!input || (input && !input.length)) return // no input
+          setValue('') // clear input field
+          inputB(input)
         }
       }
     return (
@@ -100,7 +96,7 @@ const
         multiline autoAdjustHeight
         onKeyUp={onKeyUp}
         onChange={onChange}
-        value={val} />
+        value={value} />
     )
   },
   unpack = (d: any): Dict<ChatMessage> => {
@@ -111,19 +107,21 @@ const
   }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Card<State>) => {
+    let _keys: S[] = []
     const
       messagesRef = React.createRef<HTMLDivElement>(),
+      inputB = box('', () => false),
       scroll = () => {
         const ref = messagesRef.current
         if (ref) ref.scrollTop = ref.scrollHeight
       },
       render = () => {
         const
-          messageDict = unpack(s.data),
-          messageKeys = Object.keys(messageDict).sort(),
-          messages = messageKeys.map(time => {
-            const { u: user, m: message } = messageDict[time]
+          messages = unpack(state.data),
+          keys = Object.keys(messages).sort(),
+          history = keys.map(time => {
+            const { u: user, m: message } = messages[time]
             return (
               <div key={`${user}|${time}|${message}`} className={css.message}>
                 <div className={clas('wave-s12', css.header)}>
@@ -134,14 +132,32 @@ export const
               </div>
             )
           })
+        _keys = keys
         return (
           <div data-test={name} className={css.card}>
-            <div className='wave-s12 wave-w6'>{s.title}</div>
-            <div ref={messagesRef} className={css.messages}>{messages}</div>
-            <div><ChatInputField name={name} /></div>
-          </div>)
-
+            <div className='wave-s12 wave-w6'>{state.title}</div>
+            <div ref={messagesRef} className={css.history}>{history}</div>
+            <div><ChatInputField inputB={inputB} /></div>
+          </div>
+        )
       }
+
+    on(inputB, input => {
+      const
+        page = qd.page(),
+        cap = state.capacity ?? 50,
+        n = _keys.length
+
+      // TODO actual username
+
+      if (n >= cap) {
+        for (let i = 0; i < n - cap + 1; i++) page.set(`${name} data ${_keys[i]}`, null)
+      }
+      const cm: ChatMessage = { u: 'admin', m: input }
+      page.set(`${name} data ${(new Date()).toISOString()}`, JSON.stringify(cm))
+      page.sync()
+    })
+
     return { render, init: scroll, update: scroll, changed }
   })
 

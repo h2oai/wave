@@ -139,17 +139,18 @@ def chat_room_card(
         box: str,
         title: str,
         data: PackedRecord,
+        capacity: Optional[int] = None,
         commands: Optional[List[Command]] = None,
 ) -> ChatRoomCard:
     """WARNING: Experimental and subject to change.
 
     Create a card that displays a chat room.
-    The number of chat messages retained is determined by the size of the data buffer (`data`) linked to this card.
 
     Args:
         box: A string indicating how to place this component on the page.
         title: The title for this card.
         data: The data for this card.
+        capacity: The maximum number of messages contained in this card. Defaults to 50 messages.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ChatRoomCard` instance.
@@ -158,6 +159,7 @@ def chat_room_card(
         box,
         title,
         data,
+        capacity,
         commands,
     )
 
