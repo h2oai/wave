@@ -320,7 +320,7 @@ class CanvasCard:
         )
 
 
-class ChatRoomCard:
+class ChatCard:
     """WARNING: Experimental and subject to change.
 
     Create a card that displays a chat room.
@@ -333,10 +333,10 @@ class ChatRoomCard:
             capacity: Optional[int] = None,
             commands: Optional[List[Command]] = None,
     ):
-        _guard_scalar('ChatRoomCard.box', box, (str,), False, False, False)
-        _guard_scalar('ChatRoomCard.title', title, (str,), False, False, False)
-        _guard_scalar('ChatRoomCard.capacity', capacity, (int,), False, True, False)
-        _guard_vector('ChatRoomCard.commands', commands, (Command,), False, True, False)
+        _guard_scalar('ChatCard.box', box, (str,), False, False, False)
+        _guard_scalar('ChatCard.title', title, (str,), False, False, False)
+        _guard_scalar('ChatCard.capacity', capacity, (int,), False, True, False)
+        _guard_vector('ChatCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
@@ -350,12 +350,12 @@ class ChatRoomCard:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('ChatRoomCard.box', self.box, (str,), False, False, False)
-        _guard_scalar('ChatRoomCard.title', self.title, (str,), False, False, False)
-        _guard_scalar('ChatRoomCard.capacity', self.capacity, (int,), False, True, False)
-        _guard_vector('ChatRoomCard.commands', self.commands, (Command,), False, True, False)
+        _guard_scalar('ChatCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('ChatCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('ChatCard.capacity', self.capacity, (int,), False, True, False)
+        _guard_vector('ChatCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
-            view='chat_room',
+            view='chat',
             box=self.box,
             title=self.title,
             data=self.data,
@@ -364,23 +364,23 @@ class ChatRoomCard:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'ChatRoomCard':
+    def load(__d: Dict) -> 'ChatCard':
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
-        _guard_scalar('ChatRoomCard.box', __d_box, (str,), False, False, False)
+        _guard_scalar('ChatCard.box', __d_box, (str,), False, False, False)
         __d_title: Any = __d.get('title')
-        _guard_scalar('ChatRoomCard.title', __d_title, (str,), False, False, False)
+        _guard_scalar('ChatCard.title', __d_title, (str,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_capacity: Any = __d.get('capacity')
-        _guard_scalar('ChatRoomCard.capacity', __d_capacity, (int,), False, True, False)
+        _guard_scalar('ChatCard.capacity', __d_capacity, (int,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('ChatRoomCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('ChatCard.commands', __d_commands, (Command,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
         capacity: Optional[int] = __d_capacity
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
-        return ChatRoomCard(
+        return ChatCard(
             box,
             title,
             data,

@@ -84,10 +84,11 @@ const
       ),
       onKeyUp = ({ key, target }: React.KeyboardEvent<HTMLTextBox>, v?: S) => {
         if (key == 'Enter') {
-          const input = v ?? (target as HTMLTextBox).value
-          if (!input || (input && !input.length)) return // no input
+          let input = v ?? (target as HTMLTextBox).value
+          if (!input) return
+          input = input.trim()
           setValue('') // clear input field
-          inputB(input)
+          if (input.length) inputB(input)
         }
       }
     return (
@@ -161,4 +162,4 @@ export const
     return { render, init: scroll, update: scroll, changed }
   })
 
-cards.register('chat_room', View)
+cards.register('chat', View)

@@ -14,7 +14,7 @@
 
 import './breadcrumbs'
 import './canvas'
-import './chat_room'
+import './chat'
 import './flex'
 import './form'
 import './footer'

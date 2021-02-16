@@ -9,7 +9,7 @@ from h2o_wave import site, data, ui
 page = site['/demo']
 page.drop()
 
-page.add('example', ui.chat_room_card(
+page.add('example', ui.chat_card(
     box='1 1 4 6',
     title='Chat room',
     data=dict(),

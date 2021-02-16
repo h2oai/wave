@@ -135,13 +135,13 @@ def canvas_card(
     )
 
 
-def chat_room_card(
+def chat_card(
         box: str,
         title: str,
         data: PackedRecord,
         capacity: Optional[int] = None,
         commands: Optional[List[Command]] = None,
-) -> ChatRoomCard:
+) -> ChatCard:
     """WARNING: Experimental and subject to change.
 
     Create a card that displays a chat room.
@@ -153,9 +153,9 @@ def chat_room_card(
         capacity: The maximum number of messages contained in this card. Defaults to 50 messages.
         commands: Contextual menu commands for this component.
     Returns:
-        A `h2o_wave.types.ChatRoomCard` instance.
+        A `h2o_wave.types.ChatCard` instance.
     """
-    return ChatRoomCard(
+    return ChatCard(
         box,
         title,
         data,

@@ -174,9 +174,9 @@ ui_canvas_card <- function(
 #' @param data The data for this card.
 #' @param capacity The maximum number of messages contained in this card. Defaults to 50 messages.
 #' @param commands Contextual menu commands for this component.
-#' @return A ChatRoomCard instance.
+#' @return A ChatCard instance.
 #' @export
-ui_chat_room_card <- function(
+ui_chat_card <- function(
   box,
   title,
   data,
@@ -193,7 +193,7 @@ ui_chat_room_card <- function(
     data=data,
     capacity=capacity,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ChatRoomCard"))
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ChatCard"))
   return(.o)
 }
 
