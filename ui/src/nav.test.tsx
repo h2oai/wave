@@ -16,6 +16,7 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { View, State } from './nav'
 import * as T from './qd'
+import { resetArgs } from './setupTests'
 
 const
   name = 'nav',
@@ -40,16 +41,11 @@ const
     changed: T.box(false)
   }
 describe('Nav.tsx', () => {
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(resetArgs)
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...navProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Sets args - init', () => {
-    render(<View {...navProps} />)
-    expect(T.qd.args[name]).toBeNull()
   })
 
   it('Makes link active when value specified', () => {
@@ -58,6 +54,64 @@ describe('Nav.tsx', () => {
     expect(getByTitle(label).parentElement).toHaveClass('is-selected')
   })
 
+  it('Allows further user clicks after initial value', () => {
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+    const props: T.Card<State> = {
+      ...navProps, state: {
+        value: 'eggs', items: [
+          {
+            label: 'group1', items: [
+              { name: 'ham', label: 'Ham' },
+              { name: 'spam', label: 'Spam' },
+              { name: 'eggs', label: 'Eggs' },
+            ]
+          }
+        ]
+      }
+    }
+    const { getByTitle } = render(<View {...props} />)
+    expect(getByTitle('Eggs').parentElement).toHaveClass('is-selected')
+    fireEvent.click(getByTitle('Ham'))
+    expect(getByTitle('Ham').parentElement).toHaveClass('is-selected')
+    expect(syncMock).toHaveBeenCalled()
+    expect(T.qd.args['ham']).toBe(true)
+  })
+
+  it('Does not allow further user clicks after explicit value change', () => {
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+    const props: T.Card<State> = {
+      ...navProps, state: {
+        value: 'eggs', items: [
+          {
+            label: 'group1', items: [
+              { name: 'ham', label: 'Ham' },
+              { name: 'spam', label: 'Spam' },
+              { name: 'eggs', label: 'Eggs' },
+            ]
+          }
+        ]
+      }
+    }
+    const { container, getByTitle } = render(<View {...props} />)
+    expect(getByTitle('Eggs').parentElement).toHaveClass('is-selected')
+
+    props.state.value = 'spam'
+    render(<View {...props} />, { container })
+
+    // Triggers qd.sync() on explicit value change.
+    expect(getByTitle('Spam').parentElement).toHaveClass('is-selected')
+    expect(syncMock).toHaveBeenCalled()
+    expect(T.qd.args['spam']).toBe(true)
+
+    syncMock.mockReset()
+    fireEvent.click(getByTitle('Ham'))
+
+    expect(getByTitle('Ham').parentElement).not.toHaveClass('is-selected')
+    expect(syncMock).not.toHaveBeenCalled()
+    expect(T.qd.args['ham']).not.toBe(true)
+  })
   it('Makes link inactive when disabled is true', () => {
     const props: T.Card<State> = {
       ...navProps,
@@ -89,7 +143,7 @@ describe('Nav.tsx', () => {
     const { getByTitle } = render(<View {...navPropsHash} />)
     fireEvent.click(getByTitle(label))
 
-    expect(T.qd.args[name]).toBeNull()
+    expect(T.qd.args[name]).toBeUndefined()
     expect(syncMock).toHaveBeenCalledTimes(0)
   })
 

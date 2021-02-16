@@ -15,7 +15,7 @@ async def serve(q: Q):
         ])
         q.page['nav'] = ui.nav_card(
             box='1 1 2 5',
-            value='#menu/spam',
+            value='#menu/eggs',
             items=[
                 ui.nav_group('Menu', items=[
                     ui.nav_item(name='#menu/spam', label='Spam'),
@@ -35,4 +35,6 @@ async def serve(q: Q):
     elif q.args.eggs:
         q.page['nav'].value = '#menu/eggs'
 
+    # Hack to prevent infinite loading screen.
+    q.page['hack'].items = []
     await q.page.save()

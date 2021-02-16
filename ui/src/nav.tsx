@@ -45,32 +45,43 @@ export interface State {
   items: NavGroup[]
   /** The name of the active (highlighted) navigation item. */
   value?: S
-  /** The name of the initially active (highlighted) navigation item. */
-  initial_value?: S
 }
 
 export const
-  XNav = ({ items, value, initial_value }: State) => {
-    const groups = items.map((g): INavLinkGroup => ({
-      name: g.label,
-      collapseByDefault: g.collapsed,
-      links: g.items.map(({ name, label, icon, disabled }): INavLink => ({
-        key: name,
-        name: label,
-        icon,
-        disabled,
-        url: '',
-        onClick: () => {
-          if (name.startsWith('#')) {
-            window.location.hash = name.substr(1)
-            return
-          }
-          qd.args[name] = true
-          qd.sync()
+  XNav = ({ items, value }: State) => {
+    const
+      isInitialized = React.useRef(false),
+      [isClickSelection, setIsClickSelection] = React.useState(true),
+      onClick = (name: S) => {
+        if (name.startsWith('#')) {
+          window.location.hash = name.substr(1)
+          return
         }
+        qd.args[name] = true
+        qd.sync()
+      },
+      groups = items.map((g): INavLinkGroup => ({
+        name: g.label,
+        collapseByDefault: g.collapsed,
+        links: g.items.map(({ name, label, icon, disabled }): INavLink => ({
+          key: name,
+          name: label,
+          icon,
+          disabled,
+          url: '',
+          onClick: () => { if (isClickSelection) onClick(name) }
+        }))
       }))
-    }))
-    return <Nav groups={groups} selectedKey={value} initialSelectedKey={initial_value} />
+
+    React.useEffect(() => {
+      if (isInitialized.current) {
+        setIsClickSelection(false)
+        onClick(value || '')
+      }
+    }, [value])
+    React.useEffect(() => { isInitialized.current = true }, [])
+
+    return <Nav groups={groups} initialSelectedKey={value} selectedKey={isClickSelection ? undefined : value} />
   },
   View = bond(({ name, state, changed }: Card<State>) => {
     const render = () => <div data-test={name}><XNav {...state} /></div>

@@ -16,6 +16,9 @@ import '@testing-library/jest-dom/extend-expect'
 import { configure } from '@testing-library/dom'
 import 'jest-canvas-mock'
 import { initializeIcons } from '@fluentui/react'
+import * as T from './qd'
 
 configure({ testIdAttribute: 'data-test' })
 initializeIcons()
+
+export const resetArgs = () => Object.keys(T.qd.args).forEach(k => delete T.qd.args[k])
