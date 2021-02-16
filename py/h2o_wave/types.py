@@ -7196,13 +7196,11 @@ class NavCard:
             box: str,
             items: List[NavGroup],
             value: Optional[str] = None,
-            initial_value: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('NavCard.box', box, (str,), False, False, False)
         _guard_vector('NavCard.items', items, (NavGroup,), False, False, False)
         _guard_scalar('NavCard.value', value, (str,), False, True, False)
-        _guard_scalar('NavCard.initial_value', initial_value, (str,), False, True, False)
         _guard_vector('NavCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7210,8 +7208,6 @@ class NavCard:
         """The navigation groups contained in this pane."""
         self.value = value
         """The name of the active (highlighted) navigation item."""
-        self.initial_value = initial_value
-        """The name of the initially active (highlighted) navigation item."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -7220,14 +7216,12 @@ class NavCard:
         _guard_scalar('NavCard.box', self.box, (str,), False, False, False)
         _guard_vector('NavCard.items', self.items, (NavGroup,), False, False, False)
         _guard_scalar('NavCard.value', self.value, (str,), False, True, False)
-        _guard_scalar('NavCard.initial_value', self.initial_value, (str,), False, True, False)
         _guard_vector('NavCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='nav',
             box=self.box,
             items=[__e.dump() for __e in self.items],
             value=self.value,
-            initial_value=self.initial_value,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -7240,20 +7234,16 @@ class NavCard:
         _guard_vector('NavCard.items', __d_items, (NavGroup,), False, False, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('NavCard.value', __d_value, (str,), False, True, False)
-        __d_initial_value: Any = __d.get('initial_value')
-        _guard_scalar('NavCard.initial_value', __d_initial_value, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('NavCard.commands', __d_commands, (Command,), False, True, False)
         box: str = __d_box
         items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
         value: Optional[str] = __d_value
-        initial_value: Optional[str] = __d_initial_value
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return NavCard(
             box,
             items,
             value,
-            initial_value,
             commands,
         )
 

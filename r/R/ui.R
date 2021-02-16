@@ -2971,7 +2971,6 @@ ui_meta_card <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param items The navigation groups contained in this pane.
 #' @param value The name of the active (highlighted) navigation item.
-#' @param initial_value The name of the initially active (highlighted) navigation item.
 #' @param commands Contextual menu commands for this component.
 #' @return A NavCard instance.
 #' @export
@@ -2979,18 +2978,15 @@ ui_nav_card <- function(
   box,
   items,
   value = NULL,
-  initial_value = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_vector("items", "h2oq_NavGroup", items)
   .guard_scalar("value", "character", value)
-  .guard_scalar("initial_value", "character", initial_value)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
     items=items,
     value=value,
-    initial_value=initial_value,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavCard"))
   return(.o)

@@ -2568,7 +2568,6 @@ def nav_card(
         box: str,
         items: List[NavGroup],
         value: Optional[str] = None,
-        initial_value: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> NavCard:
     """Create a card containing a navigation pane.
@@ -2577,7 +2576,6 @@ def nav_card(
         box: A string indicating how to place this component on the page.
         items: The navigation groups contained in this pane.
         value: The name of the active (highlighted) navigation item.
-        initial_value: The name of the initially active (highlighted) navigation item.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.NavCard` instance.
@@ -2586,7 +2584,6 @@ def nav_card(
         box,
         items,
         value,
-        initial_value,
         commands,
     )
 
