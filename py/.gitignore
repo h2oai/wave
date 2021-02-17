@@ -126,6 +126,6 @@ dmypy.json
 .idea/
 
 # Custom
-*.state
+*.checkpoint
 *.gz
 

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import asyncio
 from concurrent.futures import Executor
 
@@ -207,9 +208,8 @@ class _App:
         self._mode = mode or _config.app_mode
         self._route = route
         self._handle = handle
-        # TODO load from remote store if configured
         self._wave: _Wave = _Wave()
-        self._state: WebAppState = (Expando(), dict(), dict())
+        self._state: WebAppState = _load_state()
         self._site: AsyncSite = AsyncSite()
 
         logger.info(f'Server Mode: {mode}')
@@ -292,14 +292,70 @@ class _App:
                 logger.exception('Failed transmitting unhandled exception')
 
     def _shutdown(self):
-        # TODO save to remote store if configured
-        app_state, sessions, clients = self._state
-        state = (
-            expando_to_dict(app_state),
-            {k: expando_to_dict(v) for k, v in sessions.items()},
-            {k: expando_to_dict(v) for k, v in clients.items()},
-        )
-        pickle.dump(state, open('h2o_wave.state', 'wb'))
+        _save_state(self._state)
+
+
+_CHECKPOINT_DIR_ENV_VAR = 'H2O_WAVE_CHECKPOINT_DIR'
+
+
+def _to_checkpoint_file_path(d: str) -> str:
+    return os.path.join(d, 'h2o_wave.checkpoint')
+
+
+def _get_checkpoint_file_path() -> Optional[str]:
+    d = os.environ.get(_CHECKPOINT_DIR_ENV_VAR)
+
+    if not d:
+        return None
+
+    if os.path.exists(d):
+        if os.path.isdir(d):
+            return _to_checkpoint_file_path(d)
+        raise ValueError(f'{_CHECKPOINT_DIR_ENV_VAR} is not a directory: {d}')
+
+    logger.info(f'Creating checkpoint directory {d} ...')
+    os.makedirs(d)
+
+    return _to_checkpoint_file_path(d)
+
+
+def _empty_state() -> WebAppState:
+    return Expando(), {}, {}
+
+
+def _load_state() -> WebAppState:
+    f = _get_checkpoint_file_path()
+    if not f:
+        return _empty_state()
+
+    if not os.path.isfile(f):
+        return _empty_state()
+
+    logger.info(f'Loading checkpoint at {f} ...')
+    # noinspection PyBroadException,PyPep8
+    try:
+        with open(f, 'rb') as p:
+            app_state, sessions = pickle.load(p)
+            return Expando(app_state), {k: Expando(v) for k, v in sessions.items()}, {}
+    except Exception as e:
+        # Log error and start app with a blank slate
+        logger.error(f'Failed loading checkpoint: %s', e)
+        return _empty_state()
+
+
+def _save_state(state: WebAppState):
+    f = _get_checkpoint_file_path()
+    if not f:
+        return
+
+    app_state, sessions, _ = state
+    checkpoint = (
+        expando_to_dict(app_state),
+        {k: expando_to_dict(v) for k, v in sessions.items()},
+    )
+    logger.info(f'Creating checkpoint at {f} ...')
+    with open(f, 'wb') as p:
+        pickle.dump(checkpoint, p)
 
 
 def _parse_query(query: str) -> Tuple[str, str, str, str, str, str]:
