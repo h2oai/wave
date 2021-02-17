@@ -89,6 +89,12 @@ Specify `H2O_WAVE_APP_ADDRESS` instead.
 
 The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.
 
+### H2O_WAVE_CHECKPOINT_DIR
+The directory to save/load application and session state. Enables checkpointing. If set, the app saves the contents of `q.app` and `q.user` before exiting. When restarted, the contents of `q.app` and `q.user` are restored. The directory is automatically created if it does not exist. 
+
+You can use checkpointing as a simple way to save/load your app's data while prototyping.
+
+The checkpoint file is named `h2o_wave.checkpoint`, and is serialized using Python's [pickle](https://docs.python.org/3/library/pickle.html) protocol. Due to the nature of the `pickle` format, checkpointing is only guaranteed to work if the Python version and the versions of your app's dependencies are a perfect match, down to the patch version. In other words, do not expect checkpointing to work if an app is restarted using a newer/older Python version or a newer/older package. If you use checkpointing, it is recommended that you explicitly use `==` to set the `major.minor.patch` version of every package in your app's `requirements.txt` or `setup.py`.
 
 ## Web Analytics
 
