@@ -30,7 +30,7 @@ setuptools.setup(
     # conda_description is a hack to read Anaconda description from a file. Not needed for Pypi.
     conda_description=conda_description,
     url='https://h2o.ai/products/h2o-wave',
-    packages=setuptools.find_packages(),
+    packages=['h2o_wave'],
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
