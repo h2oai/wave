@@ -732,6 +732,7 @@ const
 
 export interface PageRef {
   get(key: S): Ref
+  put(key: S, data: any): void
   set(key: S, value: any): void
   del(key: S): void
   drop(): void
@@ -781,6 +782,7 @@ export const qd: Qd = {
         return { get, set }
       },
       get = (key: S) => ref(key),
+      put = (key: S, data: any) => changes.push({ k: key, d: data }),
       set = (key: S, value: any) => changes.push({ k: keyseq(key), v: value }),
       del = (key: S) => changes.push({ k: key }),
       drop = () => changes.push({}),
@@ -790,7 +792,7 @@ export const qd: Qd = {
         const opsd: OpsD = { d: changes }
         sock.send(`* ${path} ${JSON.stringify(opsd)}`)
       }
-    return { get, set, del, drop, sync }
+    return { get, put, set, del, drop, sync }
   },
   sync: () => {
     const sock = qd.socket
