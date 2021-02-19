@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Spinner, SpinnerSize } from '@fluentui/react'
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, cssVar, pc, themeB } from './theme'
-import * as Fluent from '@fluentui/react'
 
 const
   css = stylesheet({
@@ -60,7 +59,7 @@ const
       spinB = box(false),
       render = () => (
         <div className={busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
-          <Spinner className={css.centerFullHeight} style={{ opacity: spinB() ? 0.8 : 0 }} label='Loading...' size={SpinnerSize.large} />
+          <Fluent.Spinner className={css.centerFullHeight} style={{ opacity: spinB() ? 0.8 : 0 }} label='Loading...' size={Fluent.SpinnerSize.large} />
         </div>
       )
     on(busyB, busy => {
@@ -72,6 +71,23 @@ const
       }
     })
     return { render, busyB, spinB }
+  }),
+  NotFoundOverlay = bond(() => {
+    const
+      onClick = () => {
+        const page = qd.edit()
+        page.put('__editor__', { view: 'editor', box: '', title: 'Modify this page' })
+        page.sync()
+      },
+      render = () => {
+        return (
+          <>
+            <Fluent.Spinner label='Waiting for content...' size={Fluent.SpinnerSize.large} />
+            <Fluent.Link onClick={onClick}>Add Content</Fluent.Link>
+          </>
+        )
+      }
+    return { render }
   }),
   App = bond(() => {
     const
@@ -105,11 +121,11 @@ const
         // TODO prettier error section
         if (error) {
           const errorMessage = error === 'not_found'
-            ? <Spinner label='Waiting for content...' size={SpinnerSize.large} />
+            ? <NotFoundOverlay />
             : error
           return <div className={clas(css.centerFullHeight, css.app)}>{errorMessage}</div>
         }
-        if (!page) return <Spinner className={css.centerFullHeight} size={SpinnerSize.large} label='Loading ...' />
+        if (!page) return <Fluent.Spinner className={css.centerFullHeight} size={Fluent.SpinnerSize.large} label='Loading ...' />
 
         return (
           <Fluent.Fabric applyTheme>
