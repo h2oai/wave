@@ -145,7 +145,7 @@ export const
 
     on(inputB, input => {
       const
-        page = qd.page(),
+        page = qd.edit(),
         cap = state.capacity ?? 50,
         n = _keys.length
 

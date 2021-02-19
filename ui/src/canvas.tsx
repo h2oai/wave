@@ -295,12 +295,12 @@ export const
             page.set(`${name} data ${k}`, v)
           },
           syncAttr = (k: S, v: any) => {
-            const page = qd.page()
+            const page = qd.edit()
             setAttr(page, k, v)
             page.sync()
           },
           clearAttrs = (ks: S[]) => {
-            const page = qd.page()
+            const page = qd.edit()
             for (const k of ks) setAttr(page, k, null)
             page.sync()
           },
