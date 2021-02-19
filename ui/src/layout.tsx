@@ -200,7 +200,7 @@ export const
         const
           placement = grid.place(c.state.box),
           { left, top, right, bottom, width, height } = placement,
-          display = placement === badPlacement ? 'none' : undefined,
+          display = placement === badPlacement ? c.state.view === 'editor' ? undefined : 'none' : undefined,
           zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
         return (
           <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex }}>
