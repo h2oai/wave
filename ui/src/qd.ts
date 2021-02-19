@@ -750,9 +750,9 @@ export interface Qd {
   readonly events: Dict<any>
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
+  readonly dialogB: Box<Dialog | null>
   socket: WebSocket | null
-  dialogB: Box<Dialog | null>
-  page(): PageRef
+  edit(): PageRef
   sync(): void
   jump(key: any, value: any): void
 }
@@ -771,7 +771,7 @@ export const qd: Qd = {
   busyB: box(false),
   socket: null,
   dialogB: box(null),
-  page: (path?: S): PageRef => {
+  edit: (path?: S): PageRef => {
     path = path || qd.path
     const
       changes: OpD[] = [],

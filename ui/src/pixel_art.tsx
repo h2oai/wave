@@ -73,7 +73,7 @@ export const
     let brush = '#000'
     const
       paint = (i: U) => {
-        const page = qd.page()
+        const page = qd.edit()
         page.set(`${name} data ${i}`, brush === 'none' ? null : [brush])
         page.sync()
       },
