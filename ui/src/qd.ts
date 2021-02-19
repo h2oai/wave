@@ -752,6 +752,7 @@ export interface Qd {
   readonly busyB: Box<B>
   readonly dialogB: Box<Dialog | null>
   socket: WebSocket | null
+  page: Page | null
   edit(): PageRef
   sync(): void
   jump(key: any, value: any): void
@@ -770,6 +771,7 @@ export const qd: Qd = {
   refreshRateB: box(-1),
   busyB: box(false),
   socket: null,
+  page: null,
   dialogB: box(null),
   edit: (path?: S): PageRef => {
     path = path || qd.path
@@ -837,7 +839,7 @@ export interface SockMessage { t: SockEventType.Message, type: SockMessageType, 
 export interface SockReload { t: SockEventType.Reset }
 type SockHandler = (e: SockEvent) => void
 
-let backoff = 1, currentPage: Page | null = null
+let backoff = 1
 const
   toSocketAddress = (path: S): S => {
     const
@@ -875,14 +877,14 @@ const
         try {
           const msg = JSON.parse(line) as OpsD
           if (msg.d) {
-            const page = exec(currentPage || newPage(), msg.d)
-            if (currentPage !== page) {
-              currentPage = page
+            const page = exec(qd.page || newPage(), msg.d)
+            if (qd.page !== page) {
+              qd.page = page
               if (page) handle({ t: SockEventType.Data, page: page })
             }
           } else if (msg.p) {
-            currentPage = load(msg.p)
-            handle({ t: SockEventType.Data, page: currentPage })
+            qd.page = load(msg.p)
+            handle({ t: SockEventType.Data, page: qd.page })
           } else if (msg.e) {
             handle({ t: SockEventType.Message, type: SockMessageType.Err, message: msg.e })
           } else if (msg.r) {
