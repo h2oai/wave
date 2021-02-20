@@ -196,6 +196,7 @@ export const
   getCardEffect = (c: C): CardEffect => cards.lookup(c.state.view).effect,
   GridLayout = ({ name, cards: cs }: { name: S, cards: C[] }) => {
     const
+      hasEditor = cs.find(c => c.state.view === 'editor') ? true : false,
       children = cs.map(c => {
         const
           placement = grid.place(c.state.box),
@@ -205,7 +206,7 @@ export const
         return (
           <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex }}>
             <CardView card={c} />
-            {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
+            <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} canEdit={hasEditor} />
           </div>
         )
       })

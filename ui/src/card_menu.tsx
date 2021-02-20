@@ -46,9 +46,14 @@ const
   })
 
 const
+  editCommand: Command = { name: '__edit__', label: 'Edit this card', icon: 'Edit' },
   toContextMenuItem = (c: Command): IContextualMenuItem => {
     const
       onClick = () => {
+        if (c === editCommand) {
+          // TODO show edit panel
+          return
+        }
         if (c.name.startsWith('#')) {
           window.location.hash = c.name.substr(1)
           return
@@ -67,24 +72,26 @@ const
   }
 
 export const
-  CardMenu = bond(({ commands, name, changedB }: { commands: Command[], name?: S, changedB?: Box<B> }) => {
+  CardMenu = bond(({ commands, name, changedB, canEdit }: { commands: Command[] | null, name?: S, changedB?: Box<B>, canEdit?: B }) => {
     const
       target = React.createRef<HTMLDivElement>(),
       hiddenB = box(true),
       show = () => hiddenB(false),
       hide = () => hiddenB(true),
       render = () => {
+        const cmds = commands ?? []
+        if (canEdit) cmds.push(editCommand)
         const
           hidden = hiddenB(),
-          items = commands.map(toContextMenuItem)
-        return (
+          items = cmds.map(toContextMenuItem)
+        return items.length ? (
           <div className={css.menu} data-test={name}>
             <div className={css.target} ref={target} onClick={show}>
               <Icon className={css.icon} iconName='MoreVertical' />
             </div>
             <ContextualMenu target={target} items={items} hidden={hidden} onItemClick={hide} onDismiss={hide} />
           </div>
-        )
+        ) : <></>
       }
     return { render, changedB, hiddenB }
   })
