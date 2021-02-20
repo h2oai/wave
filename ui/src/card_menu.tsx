@@ -17,6 +17,7 @@ import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { Command } from './toolbar'
 import { bond, box, qd, Box, B, S } from './qd'
+import { editCard } from './editing'
 
 const
   css = stylesheet({
@@ -46,12 +47,12 @@ const
   })
 
 const
-  editCommand: Command = { name: '__edit__', label: 'Edit this card', icon: 'Edit' },
+  editCommand = '__edit__',
   toContextMenuItem = (c: Command): IContextualMenuItem => {
     const
       onClick = () => {
-        if (c === editCommand) {
-          // TODO show edit panel
+        if (c.name === editCommand) {
+          if (c.value) editCard(c.value)
           return
         }
         if (c.name.startsWith('#')) {
@@ -80,7 +81,7 @@ export const
       hide = () => hiddenB(true),
       render = () => {
         const cmds = commands ?? []
-        if (canEdit) cmds.push(editCommand)
+        if (canEdit) cmds.push({ name: editCommand, label: 'Edit this card', icon: 'Edit', value: name })
         const
           hidden = hiddenB(),
           items = cmds.map(toContextMenuItem)
