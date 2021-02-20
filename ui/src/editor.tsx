@@ -15,38 +15,10 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { editorActionB, EditorActionT, noAction, pickCard } from './editing'
 import { cards } from './layout'
-import { B, bond, Box, box, Card, Dict, Page, qd, S } from './qd'
-import { cssVar } from './theme'
-
-const
-  css = stylesheet({
-    fab: {
-      position: 'fixed',
-      right: 20,
-      bottom: 20,
-      width: 56,
-      height: 56,
-      borderRadius: '50%',
-      background: 'black',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
-      $nest: {
-        '&:hover': {
-          boxShadow: `0px 12px 20px ${cssVar('$text2')}`,
-        }
-      },
-    },
-    fabIcon: {
-      color: 'white',
-    },
-    panelActions: {
-      marginTop: 10,
-    }
-  })
+import { B, bond, Card, Dict, qd, S } from './qd'
+import { border, cssVar } from './theme'
 
 /**
  * Create a card that enables WYSIWYG editing on a page.
@@ -67,28 +39,78 @@ type Attr = {
 }
 
 type AttrPanel = {
+  icon: S
   view: S
   attrs: Attr[]
 }
 
-type EditOp = {
-  name?: S
-  panel: AttrPanel
-}
-
 const
+  css = stylesheet({
+    fab: {
+      position: 'fixed',
+      right: 20,
+      bottom: 20,
+      width: 56,
+      height: 56,
+      color: '#000',
+      background: '#ffd700',
+      border: border(1, '#f2cc00'),
+      borderRadius: '50%',
+      fontSize: 20,
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
+      $nest: {
+        '&:hover': {
+          boxShadow: `0px 12px 20px ${cssVar('$text2')}`,
+        }
+      },
+    },
+    panelActions: {
+      marginTop: 10,
+    },
+  }),
   attr = (t: AttrT, name: S, value: S = '', optional: B = false) => ({ t, name, value, optional }),
-  MarkdownCardAttrPanel: AttrPanel = {
-    view: 'markdown',
-    attrs: [
-      attr(AttrT.S, 'box', '1 1 2 2'),
-      attr(AttrT.S, 'title', 'Card title'),
-      attr(AttrT.P, 'content', 'Some *content*.'),
-    ],
+  toDict = <T extends unknown>(xs: T[], k: (x: T) => S): Dict<T> => {
+    const d: Dict<T> = {}
+    for (const x of xs) d[k(x)] = x
+    return d
   },
-  AttrPanelView = bond(({ opB }: { opB: Box<EditOp | null> }) => {
+  panelDefs: AttrPanel[] = [
+    {
+      view: 'markdown',
+      icon: 'InsertTextBox',
+      attrs: [
+        attr(AttrT.S, 'box', '1 1 2 2'),
+        attr(AttrT.S, 'title', 'Card title'),
+        attr(AttrT.P, 'content', 'Some *content*.'),
+      ],
+    },
+    {
+      view: 'chat',
+      icon: 'OfficeChat',
+      attrs: [
+        attr(AttrT.S, 'box', '1 1 2 2'),
+        attr(AttrT.S, 'title', 'Card title'),
+        attr(AttrT.P, 'content', 'Some *content*.'),
+      ],
+    },
+    {
+      view: 'canvas',
+      icon: 'EditCreate',
+      attrs: [
+        attr(AttrT.S, 'box', '1 1 2 2'),
+        attr(AttrT.S, 'title', 'Card title'),
+        attr(AttrT.P, 'content', 'Some *content*.'),
+      ],
+    },
+  ],
+  panelLookup = toDict(panelDefs, d => d.view),
+  AttrPanelView = bond(({ name, panel }: { name?: S, panel: AttrPanel }) => {
     const
-      { name, panel: { view, attrs } } = opB() as EditOp, // never null when initialized
+      { view, attrs } = panel,
       isNew = name ? false : true,
       original: Dict<any> = {},
       changes: Dict<any> = {}
@@ -98,6 +120,7 @@ const
     let cardName = name ? name : `${view}${(new Date()).toISOString()}`
 
     const
+      onDismiss = () => { editorActionB(noAction) },
       save = () => {
         const page = qd.edit()
         if (isNew) {
@@ -112,135 +135,130 @@ const
           }
         }
         page.sync()
-        opB(null)
+        editorActionB(noAction)
       },
-      cancel = () => {
-        opB(null)
-      },
+      goBack = () => { editorActionB(pickCard) },
+      abort = () => { editorActionB(noAction) },
       onChangeCardName = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
         cardName = v || (target as HTMLInputElement).value
       },
-      render = () => {
-        const fields = attrs.map(({ t, name }) => {
-          switch (t) {
-            case AttrT.S:
-            case AttrT.P:
-              {
-                const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
-                  changes[name] = v || (target as HTMLInputElement).value
-                }
-                return (
-                  <Fluent.TextField
-                    key={name}
-                    label={name}
-                    defaultValue={changes[name]}
-                    multiline={t === AttrT.P}
-                    onChange={onChange} />
-                )
-              }
-            default:
-              return (
-                <div key={name}>
-                  <Fluent.Label>{name}</Fluent.Label>
-                  <Fluent.MessageBar messageBarType={Fluent.MessageBarType.warning}>Could not render field</Fluent.MessageBar>
-                </div>
-              )
-          }
-        })
+      renderFooter = () => {
         return (
-          <div>
+          <Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>
+            <Fluent.PrimaryButton onClick={save}>{isNew ? 'Add card' : 'Save changes'}</Fluent.PrimaryButton>
+            <Fluent.DefaultButton onClick={isNew ? goBack : abort}>Back</Fluent.DefaultButton>
+          </Fluent.Stack>
+        )
+      },
+      render = () => {
+        const
+          fields = attrs.map(({ t, name }) => {
+            switch (t) {
+              case AttrT.S:
+              case AttrT.P:
+                {
+                  const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
+                    changes[name] = v || (target as HTMLInputElement).value
+                  }
+                  return (
+                    <Fluent.TextField
+                      key={name}
+                      label={name}
+                      defaultValue={changes[name]}
+                      multiline={t === AttrT.P}
+                      onChange={onChange} />
+                  )
+                }
+              default:
+                return (
+                  <div key={name}>
+                    <Fluent.Label>{name}</Fluent.Label>
+                    <Fluent.MessageBar messageBarType={Fluent.MessageBarType.warning}>Could not render field</Fluent.MessageBar>
+                  </div>
+                )
+            }
+          })
+        return (
+          <Fluent.Panel
+            headerText={isNew ? 'Add card' : 'Edit card'}
+            isOpen={true}
+            isLightDismiss={true}
+            onDismiss={onDismiss}
+            onRenderFooterContent={renderFooter}
+            isFooterAtBottom={true}
+          >
             <Fluent.Separator>{view}</Fluent.Separator>
             {isNew ? <Fluent.TextField label='Card Name' defaultValue={cardName} onChange={onChangeCardName} /> : null}
-            <div>
-              {fields}
-            </div>
-            <Fluent.Stack horizontal tokens={{ childrenGap: 10 }} className={css.panelActions}>
-              <Fluent.PrimaryButton onClick={save}>{isNew ? 'Add card' : 'Save changes'}</Fluent.PrimaryButton>
-              <Fluent.DefaultButton onClick={cancel}>Back</Fluent.DefaultButton>
-            </Fluent.Stack>
-          </div>
-        )
-      }
-    return { render }
-  }),
-  Editor = bond(({ activeB }: { activeB: Box<B> }) => {
-    const
-      pageChangedB = (qd.page as Page).changed, // can never be null, since the Editor wouldn't exist otherwise.
-      opB = box<EditOp | null>(null),
-      onDismiss = () => {
-        activeB(false)
-      },
-      addMarkdownCard = () => {
-        opB({ panel: MarkdownCardAttrPanel })
-      },
-      addChatCard = () => {
-        const page = qd.edit()
-        page.put('markdown1', { view: 'editor', box: '1 1 2 2', title: 'Modify this page', content: 'Hello world' })
-        page.sync()
-      },
-      addCanvasCard = () => {
-        const page = qd.edit()
-        page.put('markdown1', { view: 'editor', box: '1 1 2 2', title: 'Modify this page', content: 'Hello world' })
-        page.sync()
-      },
-      tools: Fluent.ICommandBarItemProps[] = [
-        {
-          key: 'addCard',
-          text: 'Add Card',
-          iconProps: { iconName: 'Add' },
-          subMenuProps: {
-            items: [
-              {
-                key: 'markdown',
-                text: 'Markdown',
-                iconProps: { iconName: 'InsertTextBox' },
-                onClick: addMarkdownCard,
-              },
-              {
-                key: 'chat',
-                text: 'Chat',
-                iconProps: { iconName: 'OfficeChat' },
-                onClick: addChatCard,
-              },
-              {
-                key: 'canvas',
-                text: 'Canvas',
-                iconProps: { iconName: 'EditCreate' },
-                onClick: addCanvasCard,
-              },
-            ],
-          },
-        },
-      ],
-      render = () => {
-        const op = opB()
-        return (
-          <Fluent.Panel headerText={op ? 'Edit Card' : 'Edit Page'} isLightDismiss={true} isOpen={activeB()} onDismiss={onDismiss} >
-            { op ? (
-              <AttrPanelView opB={opB} />
-            ) : (
-                <Fluent.CommandBar items={tools} styles={{ root: { padding: 0 } }} />
-              )}
+            <div>{fields}</div>
           </Fluent.Panel>
         )
       }
-    return { render, activeB, opB, pageChangedB }
+    return { render }
   })
 
 export const
   View = bond(({ name, changed }: Card<State>) => {
     const
-      editingB = box(false),
-      onClick = () => { editingB(true) },
+      addCard = () => { editorActionB(pickCard) },
+      onDismiss = () => { editorActionB(noAction) },
       render = () => {
+        let content: JSX.Element | null = null
+        const
+          action = editorActionB()
+
+        switch (action.t) {
+          case EditorActionT.Add:
+            {
+              const
+                { view } = action,
+                panel = panelLookup[view]
+              content = <AttrPanelView panel={panel} />
+            }
+            break
+          case EditorActionT.Edit:
+            {
+              const page = qd.page
+              if (page) {
+                const
+                  { name } = action,
+                  card = page.get(name)
+                if (card) {
+                  const
+                    { view } = card.state,
+                    panel = panelLookup[view]
+                  content = <AttrPanelView name={name} panel={panel} />
+                }
+              }
+            }
+            break
+          case EditorActionT.Pick:
+            {
+              const choices = panelDefs.map(({ view, icon }) => {
+                const onClick = () => { editorActionB({ t: EditorActionT.Add, view }) }
+                return (
+                  <div key={view} onClick={onClick}>
+                    <div><Fluent.FontIcon iconName={icon} />{view}</div>
+                  </div>
+                )
+              })
+              content = (
+                <Fluent.Panel headerText='Add a card' isLightDismiss={true} onDismiss={onDismiss} isOpen={true} >
+                  <div>{choices}</div>
+                </Fluent.Panel>
+              )
+            }
+            break
+        }
         return (
-          <div data-test={name} className={css.fab} onClick={onClick} >
-            <Fluent.FontIcon iconName='Edit' className={css.fabIcon} />
-            <Editor activeB={editingB} />
+          <div data-test={name}>
+            <div className={css.fab} onClick={addCard} >
+              <Fluent.FontIcon iconName='Add' />
+            </div>
+            {content}
           </div>
         )
       }
-    return { render, changed }
+    return { render, changed, editorActionB }
   })
 
 cards.register('editor', View)
