@@ -15,9 +15,10 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { editorActionB, EditorActionT, noAction, pickCard } from './editing'
+import { cardDefs } from './defs'
+import { CardAttrT, editorActionB, EditorActionT, noAction, pickCard } from './editing'
 import { cards } from './layout'
-import { B, bond, Card, Dict, qd, S, C } from './qd'
+import { bond, C, Card, Dict, qd, S } from './qd'
 import { border, cssVar } from './theme'
 
 /**
@@ -27,21 +28,6 @@ import { border, cssVar } from './theme'
 interface State {
   /** The title for this card.*/
   title: S
-}
-
-enum AttrT { S, P }
-
-type Attr = {
-  t: AttrT
-  name: S
-  value: S
-  optional: B
-}
-
-type AttrPanel = {
-  icon: S
-  view: S
-  attrs: Attr[]
 }
 
 const
@@ -111,46 +97,16 @@ const
       textAlign: 'center',
     }
   }),
-  attr = (t: AttrT, name: S, value: S = '', optional: B = false) => ({ t, name, value, optional }),
+  labelize = (s: S) => s.split('_').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' '),
   toDict = <T extends unknown>(xs: T[], k: (x: T) => S): Dict<T> => {
     const d: Dict<T> = {}
     for (const x of xs) d[k(x)] = x
     return d
   },
-  labelize = (s: S) => s.split('_').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' '),
-  panelDefs: AttrPanel[] = [
-    {
-      view: 'markdown',
-      icon: 'InsertTextBox',
-      attrs: [
-        attr(AttrT.S, 'box', '1 1 2 2'),
-        attr(AttrT.S, 'title', 'Card title'),
-        attr(AttrT.P, 'content', 'Some *content*.'),
-      ],
-    },
-    {
-      view: 'chat',
-      icon: 'OfficeChat',
-      attrs: [
-        attr(AttrT.S, 'box', '1 1 2 2'),
-        attr(AttrT.S, 'title', 'Card title'),
-        attr(AttrT.P, 'content', 'Some *content*.'),
-      ],
-    },
-    {
-      view: 'canvas',
-      icon: 'EditCreate',
-      attrs: [
-        attr(AttrT.S, 'box', '1 1 2 2'),
-        attr(AttrT.S, 'title', 'Card title'),
-        attr(AttrT.P, 'content', 'Some *content*.'),
-      ],
-    },
-  ],
-  panelLookup = toDict(panelDefs, d => d.view),
+  cardDefLookup = toDict(cardDefs, d => d.view),
   AttrPanelView = bond(({ view, card }: { view: S, card?: C }) => {
     const
-      { attrs } = panelLookup[view],
+      { attrs } = cardDefLookup[view],
       isNew = card ? false : true,
       original: Dict<any> = {},
       changes: Dict<any> = {}
@@ -199,8 +155,8 @@ const
         const
           fields = attrs.map(({ t, name }) => {
             switch (t) {
-              case AttrT.S:
-              case AttrT.P:
+              case CardAttrT.String:
+              case CardAttrT.Text:
                 {
                   const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
                     changes[name] = v || (target as HTMLInputElement).value
@@ -210,7 +166,7 @@ const
                       key={name}
                       label={labelize(name)}
                       defaultValue={changes[name]}
-                      multiline={t === AttrT.P}
+                      multiline={t === CardAttrT.Text}
                       onChange={onChange} />
                   )
                 }
@@ -268,7 +224,7 @@ export const
             break
           case EditorActionT.Pick:
             {
-              const choices = panelDefs.map(({ view, icon }) => {
+              const choices = cardDefs.map(({ view, icon }) => {
                 const onClick = () => { editorActionB({ t: EditorActionT.Add, view }) }
                 return (
                   <div key={view} className={css.card} onClick={onClick}>

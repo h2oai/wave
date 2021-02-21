@@ -1,4 +1,19 @@
-import { box, S } from "./qd"
+import { B, box, S } from "./qd"
+
+export enum CardAttrT { String, Text }
+
+export type CardAttr = {
+  t: CardAttrT
+  name: S
+  value: S
+  optional: B
+}
+
+export type CardDef = {
+  icon: S
+  view: S
+  attrs: CardAttr[]
+}
 
 export enum EditorActionT { None, Pick, Add, Edit }
 export type NoAction = { t: EditorActionT.None }
