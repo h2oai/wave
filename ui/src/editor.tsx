@@ -84,8 +84,8 @@ const
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
-      margin: 5,
-      padding: 5,
+      margin: 3,
+      padding: 3,
       border: border(1, cssVar('$text3')),
       $nest: {
         '&:hover': {
@@ -105,7 +105,7 @@ const
     cardCaption: {
       marginTop: 5,
       fontSize: 11,
-      width: 75,
+      width: 82,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
