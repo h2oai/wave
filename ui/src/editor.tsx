@@ -71,6 +71,46 @@ const
     panelActions: {
       marginTop: 10,
     },
+    cards: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      alignContent: 'flex-start',
+    },
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      margin: 5,
+      padding: 5,
+      border: border(1, cssVar('$text3')),
+      $nest: {
+        '&:hover': {
+          backgroundColor: cssVar('$text0'),
+        }
+      }
+    },
+    cardIcon: {
+      width: 50,
+      height: 50,
+      fontSize: 22,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: cssVar('$text7'),
+    },
+    cardCaption: {
+      marginTop: 5,
+      fontSize: 11,
+      width: 75,
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      textAlign: 'center',
+    }
   }),
   attr = (t: AttrT, name: S, value: S = '', optional: B = false) => ({ t, name, value, optional }),
   toDict = <T extends unknown>(xs: T[], k: (x: T) => S): Dict<T> => {
@@ -78,6 +118,7 @@ const
     for (const x of xs) d[k(x)] = x
     return d
   },
+  labelize = (s: S) => s.split('_').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' '),
   panelDefs: AttrPanel[] = [
     {
       view: 'markdown',
@@ -163,7 +204,7 @@ const
                   return (
                     <Fluent.TextField
                       key={name}
-                      label={name}
+                      label={labelize(name)}
                       defaultValue={changes[name]}
                       multiline={t === AttrT.P}
                       onChange={onChange} />
@@ -172,7 +213,7 @@ const
               default:
                 return (
                   <div key={name}>
-                    <Fluent.Label>{name}</Fluent.Label>
+                    <Fluent.Label>{labelize(name)}</Fluent.Label>
                     <Fluent.MessageBar messageBarType={Fluent.MessageBarType.warning}>Could not render field</Fluent.MessageBar>
                   </div>
                 )
@@ -187,7 +228,7 @@ const
             onRenderFooterContent={renderFooter}
             isFooterAtBottom={true}
           >
-            <Fluent.Separator>{view}</Fluent.Separator>
+            <Fluent.Separator>{labelize(view)} Card</Fluent.Separator>
             {isNew ? <Fluent.TextField label='Card Name' defaultValue={cardName} onChange={onChangeCardName} /> : null}
             <div>{fields}</div>
           </Fluent.Panel>
@@ -236,14 +277,17 @@ export const
               const choices = panelDefs.map(({ view, icon }) => {
                 const onClick = () => { editorActionB({ t: EditorActionT.Add, view }) }
                 return (
-                  <div key={view} onClick={onClick}>
-                    <div><Fluent.FontIcon iconName={icon} />{view}</div>
+                  <div key={view} className={css.card} onClick={onClick}>
+                    <div className={css.cardIcon} >
+                      <Fluent.FontIcon iconName={icon} />
+                    </div>
+                    <div className={css.cardCaption}>{labelize(view)}</div>
                   </div>
                 )
               })
               content = (
                 <Fluent.Panel headerText='Add a card' isLightDismiss={true} onDismiss={onDismiss} isOpen={true} >
-                  <div>{choices}</div>
+                  <div className={css.cards}>{choices}</div>
                 </Fluent.Panel>
               )
             }
