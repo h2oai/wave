@@ -16,6 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
+import { Logo } from './logo'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, cssVar, pc, themeB } from './theme'
@@ -28,6 +29,7 @@ const
       backgroundColor: cssVar('$page'),
       color: cssVar('$text'),
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center',
       overflow: 'auto'
     },
@@ -82,8 +84,8 @@ const
       render = () => {
         return (
           <>
-            <Fluent.Spinner label='Waiting for content...' size={Fluent.SpinnerSize.large} />
-            <Fluent.Link onClick={onClick}>Add Content</Fluent.Link>
+            <Logo />
+            <Fluent.PrimaryButton onClick={onClick}>Edit this page</Fluent.PrimaryButton>
           </>
         )
       }

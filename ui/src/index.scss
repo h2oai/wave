@@ -131,3 +131,13 @@ $fontTrackings: (
     font-weight: $weight * 100;
   }
 }
+
+// Used by the Wave logo on empty pages.
+.wave-pulse path {
+  animation: pulsate 1s linear 0s infinite;
+}
+@keyframes pulsate {
+  0% { fill: #fff; }
+  20% { fill:  #000; }
+  100% { fill: #fff; }
+}
