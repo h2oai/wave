@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { editorActionB, EditorActionT, noAction, pickCard } from './editing'
 import { cards } from './layout'
-import { B, bond, Card, Dict, qd, S } from './qd'
+import { B, bond, Card, Dict, qd, S, C } from './qd'
 import { border, cssVar } from './theme'
 
 /**
@@ -149,25 +149,30 @@ const
     },
   ],
   panelLookup = toDict(panelDefs, d => d.view),
-  AttrPanelView = bond(({ name, panel }: { name?: S, panel: AttrPanel }) => {
+  AttrPanelView = bond(({ view, card }: { view: S, card?: C }) => {
     const
-      { view, attrs } = panel,
-      isNew = name ? false : true,
+      { attrs } = panelLookup[view],
+      isNew = card ? false : true,
       original: Dict<any> = {},
       changes: Dict<any> = {}
 
     for (const { name, value } of attrs) original[name] = changes[name] = value
 
-    let cardName = name ? name : `${view}${(new Date()).toISOString()}`
+    if (card) {
+      const { state } = card
+      for (const k in state) {
+        original[k] = changes[k] = state[k]
+      }
+    }
+
+    let cardName = card ? card.name : `${view}${(new Date()).toISOString()}`
 
     const
       onDismiss = () => { editorActionB(noAction) },
       save = () => {
         const page = qd.edit()
         if (isNew) {
-          const card: Dict<any> = { view }
-          for (const k in original) card[k] = original[k]
-          for (const k in changes) card[k] = changes[k]
+          const card: Dict<any> = { ...{ view }, ...original, ...changes }
           page.put(cardName, card)
         } else {
           for (const k in changes) {
@@ -249,12 +254,7 @@ export const
 
         switch (action.t) {
           case EditorActionT.Add:
-            {
-              const
-                { view } = action,
-                panel = panelLookup[view]
-              content = <AttrPanelView panel={panel} />
-            }
+            content = <AttrPanelView view={action.view} />
             break
           case EditorActionT.Edit:
             {
@@ -263,12 +263,7 @@ export const
                 const
                   { name } = action,
                   card = page.get(name)
-                if (card) {
-                  const
-                    { view } = card.state,
-                    panel = panelLookup[view]
-                  content = <AttrPanelView name={name} panel={panel} />
-                }
+                if (card) content = <AttrPanelView view={card.state.view} card={card} />
               }
             }
             break
