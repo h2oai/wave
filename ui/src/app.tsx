@@ -29,7 +29,6 @@ const
       backgroundColor: cssVar('$page'),
       color: cssVar('$text'),
       display: 'flex',
-      flexDirection: 'column',
       justifyContent: 'center',
       overflow: 'auto'
     },
@@ -49,6 +48,10 @@ const
     busyOverlay: {
       display: 'block',
     },
+    waitingOverlay: {
+      display: 'flex',
+      flexDirection: 'column',
+    }
   })
 
 const
@@ -83,10 +86,10 @@ const
       },
       render = () => {
         return (
-          <>
+          <div className={css.waitingOverlay}>
             <Logo />
             <Fluent.PrimaryButton onClick={onClick}>Edit this page</Fluent.PrimaryButton>
-          </>
+          </div>
         )
       }
     return { render }
