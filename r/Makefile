@@ -16,6 +16,9 @@ all: clean tarball check install
 check: $(PKG_NAME)_$(PKG_VERSION).tar.gz 
 		R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
+doc:
+		Rscript -e "library(devtools);library(roxygen2);document()"
+
 preinstall:
 		Rscript R/requirements.R
 
