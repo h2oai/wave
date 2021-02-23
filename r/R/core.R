@@ -97,7 +97,6 @@ data <- function(fields,
 #' not exist, then the function returns an error. \code{fun_flag} is a variable
 #' that is used when another function calls this \code{page} function. It could
 #' @param page_name - the name of the page to be created, or to be checked
-#' @param fun_flag  - a flag set when other functions call this function.
 #' @param ...
 #'
 #' @return page_instance - list()

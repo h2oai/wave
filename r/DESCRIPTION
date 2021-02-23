@@ -11,6 +11,8 @@ License: Apache License (>= 2.0)
 Encoding: UTF-8
 LazyData: true
 Imports:
+    devtools,
+    roxygen2,
     jsonlite,
     httr,
     stringr,
