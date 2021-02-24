@@ -389,6 +389,57 @@ class ChatCard:
         )
 
 
+class EditorCard:
+    """Create a card that enables WYSIWYG editing on a page.
+    Adding this card to a page makes it editable by end-users.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('EditorCard.box', box, (str,), False, False, False)
+        _guard_scalar('EditorCard.title', title, (str,), False, False, False)
+        _guard_vector('EditorCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The title for this card."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('EditorCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('EditorCard.title', self.title, (str,), False, False, False)
+        _guard_vector('EditorCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='editor',
+            box=self.box,
+            title=self.title,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'EditorCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('EditorCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('EditorCard.title', __d_title, (str,), False, False, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('EditorCard.commands', __d_commands, (Command,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return EditorCard(
+            box,
+            title,
+            commands,
+        )
+
+
 _FlexCardDirection = ['horizontal', 'vertical']
 
 

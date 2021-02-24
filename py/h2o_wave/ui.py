@@ -164,6 +164,28 @@ def chat_card(
     )
 
 
+def editor_card(
+        box: str,
+        title: str,
+        commands: Optional[List[Command]] = None,
+) -> EditorCard:
+    """Create a card that enables WYSIWYG editing on a page.
+    Adding this card to a page makes it editable by end-users.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.EditorCard` instance.
+    """
+    return EditorCard(
+        box,
+        title,
+        commands,
+    )
+
+
 def flex_card(
         box: str,
         item_view: str,
