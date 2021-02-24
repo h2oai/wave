@@ -197,6 +197,29 @@ ui_chat_card <- function(
   return(.o)
 }
 
+#' Create a card that enables WYSIWYG editing on a page.
+#' Adding this card to a page makes it editable by end-users.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title for this card.
+#' @param commands Contextual menu commands for this component.
+#' @return A EditorCard instance.
+#' @export
+ui_editor_card <- function(
+  box,
+  title,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_EditorCard"))
+  return(.o)
+}
+
 #' EXPERIMENTAL. DO NOT USE.
 #' Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
 #'
