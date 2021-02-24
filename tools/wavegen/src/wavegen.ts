@@ -13,7 +13,7 @@
 // limitations under the License.
 
 //
-// QGen
+// WaveGen
 // =======
 //
 // This tool scans the Typescript src directory for interface definitions and
@@ -65,11 +65,17 @@ interface OneOf {
   type: Type
 }
 
+interface Tag {
+  name: S
+  value: any
+}
+
 enum MemberT { Enum, Singular, Repeated }
 interface MemberBase {
   readonly name: S
   readonly comments: S[]
   readonly isOptional: B
+  readonly tags: Tag[]
 }
 interface EnumMember extends MemberBase {
   readonly t: MemberT.Enum
@@ -93,6 +99,7 @@ interface Type {
   readonly members: Member[]
   readonly isRoot: B
   readonly areAllMembersOptional: B
+  readonly tags: Tag[]
   isUnion: B
   oneOf?: OneOf
 }
@@ -183,9 +190,29 @@ const
     for (const xs of xss) ys.push(...xs)
     return ys
   },
-  collectComments = (node: any): S[] => {
-    const comments: S[] = ((node as any).jsDoc?.map((c: any) => c?.comment) || []) // FIXME Undocumented API
-    return flatten(comments.filter(c => !!c).map(c => c.split(/\n/g).map(c => c.trim())))
+  segregate = <T>(xs: T[], p: (x: T) => boolean): [T[], T[]] => {
+    const a: T[] = [], b: T[] = []
+    for (const x of xs) {
+      if (p(x)) {
+        a.push(x)
+      } else {
+        b.push(x)
+      }
+    }
+    return [a, b]
+  },
+  parseComments = (node: any): [S[], Tag[]] => {
+    const
+      lines: S[] = ((node as any).jsDoc?.map((c: any) => c?.comment) || []), // FIXME Undocumented API
+      nonEmpty = flatten(lines.filter(c => !!c).map(c => c.split(/\n/g).map(c => c.trim()))),
+      [tagged, comments] = segregate(nonEmpty, x => x.charAt(0) === ':'),
+      tags = tagged.map((x): Tag => {
+        const m = x.match(/^:\s*(.+?)\s+(.+)/) // :key json_value
+        if (!m) throw Error(`bad tag: ${x}`)
+        console.log(m[2])
+        return { name: m[1].substr(1), value: JSON.parse(m[2]) }
+      })
+    return [comments, tags]
   },
   collectMember = (component: S, typename: S, member: ts.TypeElement): Member => {
     if (member.kind === ts.SyntaxKind.PropertySignature) {
@@ -194,7 +221,7 @@ const
         optional = m.questionToken ? true : false,
         memberName = m.name.getText(),
         memberType = m.type,
-        comments = collectComments(m)
+        [comments, tags] = parseComments(m)
 
       for (const w of reservedWords) if (memberName === w) throw new CodeGenError(`${component}.${typename}.${memberName}: "${w}" is a reserved name`)
 
@@ -210,26 +237,26 @@ const
       if (pt) {
         tt = collectRepeatedType(pt)
         if (tt) {
-          return { t: MemberT.Repeated, name: memberName, typeName: tt, isOptional: optional, comments, isPacked: true }
+          return { t: MemberT.Repeated, name: memberName, typeName: tt, isOptional: optional, comments, tags, isPacked: true }
         }
         tt = collectSingularType(pt)
         if (tt) {
-          return { t: MemberT.Singular, name: memberName, typeName: tt, isOptional: optional, comments, isPacked: true }
+          return { t: MemberT.Singular, name: memberName, typeName: tt, isOptional: optional, comments, tags, isPacked: true }
         }
       }
 
       tt = collectRepeatedType(memberType)
       if (tt) {
-        return { t: MemberT.Repeated, name: memberName, typeName: tt, isOptional: optional, comments, isPacked: false }
+        return { t: MemberT.Repeated, name: memberName, typeName: tt, isOptional: optional, comments, tags, isPacked: false }
       }
       tt = collectSingularType(memberType)
       if (tt) {
-        return { t: MemberT.Singular, name: memberName, typeName: tt, isOptional: optional, comments, isPacked: false }
+        return { t: MemberT.Singular, name: memberName, typeName: tt, isOptional: optional, comments, tags, isPacked: false }
       }
       const values = collectEnumType(memberType)
       if (values) {
         comments.push(`One of ${values.map(v => `'${v}'`).join(', ')}. See enum h2o_wave.ui.${typename}${titlecase(memberName)}.`)
-        return { t: MemberT.Enum, name: memberName, values, isOptional: optional, comments }
+        return { t: MemberT.Enum, name: memberName, values, isOptional: optional, comments, tags }
       }
     }
     throw new CodeGenError(`unsupported member kind on ${component}.${typename}`)
@@ -244,7 +271,7 @@ const
             isRoot = nodeName === 'State',
             typeName = isRoot ? titlecase(`${file.name}_card`) : nodeName,
             members = n.members.map(m => collectMember(component, typeName, m)),
-            comments = collectComments(n)
+            [comments, tags] = parseComments(n)
 
           if (!comments.length) {
             comments.push(noComment)
@@ -252,13 +279,13 @@ const
           }
 
           // All cards must have a box defined.
-          if (isRoot) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], isPacked: false })
+          if (isRoot) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], tags, isPacked: false })
 
           // All cards can optionally have a contextual menu.
-          if (isRoot) members.push({ t: MemberT.Repeated, name: 'commands', typeName: 'Command', isOptional: true, comments: [commandsComment], isPacked: false })
+          if (isRoot) members.push({ t: MemberT.Repeated, name: 'commands', typeName: 'Command', isOptional: true, comments: [commandsComment], tags, isPacked: false })
 
           const areAllMembersOptional = !members.filter(m => !m.isOptional).length // all members are optional?
-          file.types.push({ name: typeName, file: file.name, comments, members, isRoot, areAllMembersOptional, isUnion: false })
+          file.types.push({ name: typeName, file: file.name, comments, tags, members, isRoot, areAllMembersOptional, isUnion: false })
         }
       }
     })
