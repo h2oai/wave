@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
-import { CardAttrT, editorActionB, EditorActionT, noAction, pickCard } from './editing'
+import { editorActionB, EditorActionT, noAction, pickCard } from './editing'
 import { cards } from './layout'
 import { bond, C, Card, Dict, qd, S } from './qd'
 import { border, cssVar } from './theme'
@@ -156,7 +156,7 @@ const
           fields = attrs.map(attr => {
             const { name } = attr
             switch (attr.t) {
-              case CardAttrT.String:
+              case 'textbox':
                 {
                   const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
                     changes[name] = v || (target as HTMLInputElement).value
@@ -169,7 +169,7 @@ const
                       onChange={onChange} />
                   )
                 }
-              case CardAttrT.Text:
+              case 'textarea':
                 {
                   const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
                     changes[name] = v || (target as HTMLInputElement).value
@@ -183,7 +183,7 @@ const
                       onChange={onChange} />
                   )
                 }
-              case CardAttrT.Integer:
+              case 'spinbox':
                 {
                   const
                     { min, max, step, value } = attr,
@@ -228,7 +228,7 @@ const
                     />
                   )
                 }
-              case CardAttrT.Record:
+              case 'record':
                 return (
                   <div key={name}>
                     <Fluent.Label>{labelize(name)}</Fluent.Label>
