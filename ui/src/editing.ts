@@ -1,24 +1,22 @@
 import { B, box, S, U } from "./qd"
 
-export enum CardAttrT { String, Text, Integer, Record }
-
 export type CardAttr = {
   name: S
   optional: B
 } & ({
-  t: CardAttrT.String
+  t: 'textbox'
   value: S
 } | {
-  t: CardAttrT.Text
+  t: 'textarea'
   value: S
 } | {
-  t: CardAttrT.Integer
+  t: 'spinbox'
   value: U
   min: U
   max: U
   step: U
 } | {
-  t: CardAttrT.Record
+  t: 'record'
   value: any
 })
 
