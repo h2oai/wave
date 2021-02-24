@@ -70,7 +70,7 @@ export const
   },
   // Src: https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/
   getContrast = (color: S) => {
-    if (color.startsWith('$')) color = getComputedStyle(document.documentElement).getPropertyValue(`--${color.slice(1)}`).trim()
+    if (color.startsWith('$')) color = cssVarValue(color)
     if (color.startsWith('#')) color = color.slice(1)
     if (color.length === 3) color = color.split('').map(hex => `${hex}${hex}`).join('')
 
