@@ -47,15 +47,38 @@ const
  * WARNING: Experimental and subject to change.
  *
  * Create a card that displays a user-editable drawing canvas.
+ * :icon "EditCreate"
  */
 interface State {
-  /** The title for this card. */
+  /**
+   * The title for this card.
+   * :t "textbox"
+   * :value "Card title"
+   */
   title: S
-  /** Canvas width, in pixels */
+  /**
+   * Canvas width, in pixels.
+   * :t "spinbox"
+   * :value 400
+   * :min 400
+   * :max 2048
+   * :step 50
+   */
   width: U
-  /** Canvas height, in pixels. */
+  /**
+   * Canvas height, in pixels.
+   * :t "spinbox"
+   * :value 300
+   * :min 300
+   * :max 1536
+   * :step 50
+   */
   height: U
-  /** The data for this card. */
+  /**
+   * The data for this card.
+   * :t "record"
+   * :value {}
+   */
   data: Rec
 }
 

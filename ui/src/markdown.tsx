@@ -75,13 +75,24 @@ export const
  * HTML markup is allowed in markdown content.
  * URLs, if found, are displayed as hyperlinks.
  * Copyright, reserved, trademark, quotes, etc. are replaced with language-neutral symbols.
+ * :icon "InsertTextBox"
  */
 interface State {
-  /** The title for this card.*/
+  /**
+   * The title for this card.
+   * :t "textbox"
+   * :value "Card title"
+   **/
   title: S
-  /** The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/ */
+  /**
+   * The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
+   * :t "textarea"
+   * :value "Card content"
+   **/
   content: S
-  /** Additional data for the card. */
+  /**
+   * Additional data for the card.
+   **/
   data?: Rec
 }
 
