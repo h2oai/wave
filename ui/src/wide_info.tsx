@@ -19,33 +19,35 @@ import { cards, grid } from './layout'
 import { bond, Card, qd, S } from './qd'
 import { clas, pc, getContrast, cssVar } from './theme'
 
-const css = stylesheet({
-  card: {
-    display: 'flex',
-    padding: grid.gap
-  },
-  lhs: {
-    paddingRight: grid.gap,
-    textAlign: 'center',
-    display: 'flex'
-  },
-  imgSpecified: {
-    $nest: {
-      '& > div': {
-        width: pc(50)
+const
+  iconStyles: Fluent.IIconStyles = { root: { fontSize: 80 } },
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      padding: grid.gap
+    },
+    lhs: {
+      paddingRight: grid.gap,
+      textAlign: 'center',
+      display: 'flex'
+    },
+    imgSpecified: {
+      $nest: {
+        '& > div': {
+          width: pc(50)
+        }
       }
+    },
+    clickable: {
+      cursor: 'pointer'
+    },
+    img: {
+      flexGrow: 1,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center'
     }
-  },
-  clickable: {
-    cursor: 'pointer'
-  },
-  img: {
-    flexGrow: 1,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center'
-  }
-})
+  })
 /** Create a clickable card to provide more info content to your app. */
 interface State {
   /** The card's title. */
@@ -89,10 +91,10 @@ export const View = bond(({ name, state, changed }: Card<State>) => {
         <div className={css.lhs}>
           {
             icon
-              ? <Fluent.Icon iconName={icon} styles={{ root: { fontSize: 80 } }} />
+              ? <Fluent.Icon iconName={icon} styles={iconStyles} />
               : image
                 ? <div className={css.img} style={{ backgroundImage: `url('${getImageURL()}')` }}></div>
-                : <Fluent.Icon iconName='MiniExpand' styles={{ root: { fontSize: 80 } }} />
+                : <Fluent.Icon iconName='MiniExpand' styles={iconStyles} />
           }
         </div>
         <div style={{ color: color ? getContrast(color) : 'inherit' }}>
