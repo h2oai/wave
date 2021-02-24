@@ -3727,6 +3727,56 @@ ui_wide_gauge_stat_card <- function(
   return(.o)
 }
 
+#' Create a clickable card to provide more info content to your app.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title.
+#' @param caption The card's caption, displayed below the title.
+#' @param icon The card's icon.
+#' @param image The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`).
+#' @param image_type The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. This property has to be set when base64 encoded image is specified.
+#' @param category The card's category, displayed above the title.
+#' @param name An identifying name for this card. Makes the card clickable, similat to a button.
+#' @param color The card's background color. Use HEX or $ prefixed wave colors.
+#' @param commands Contextual menu commands for this component.
+#' @return A WideInfoCard instance.
+#' @export
+ui_wide_info_card <- function(
+  box,
+  title,
+  caption,
+  icon = NULL,
+  image = NULL,
+  image_type = NULL,
+  category = NULL,
+  name = NULL,
+  color = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("image_type", "character", image_type)
+  .guard_scalar("category", "character", category)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("color", "character", color)
+  .guard_vector("commands", "h2oq_Command", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    caption=caption,
+    icon=icon,
+    image=image,
+    image_type=image_type,
+    category=category,
+    name=name,
+    color=color,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideInfoCard"))
+  return(.o)
+}
+
 #' Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
 #'
 #' @param box A string indicating how to place this component on the page.

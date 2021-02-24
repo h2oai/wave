@@ -3211,6 +3211,48 @@ def wide_gauge_stat_card(
     )
 
 
+def wide_info_card(
+        box: str,
+        title: str,
+        caption: str,
+        icon: Optional[str] = None,
+        image: Optional[str] = None,
+        image_type: Optional[str] = None,
+        category: Optional[str] = None,
+        name: Optional[str] = None,
+        color: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> WideInfoCard:
+    """Create a clickable card to provide more info content to your app.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        caption: The card's caption, displayed below the title.
+        icon: The card's icon.
+        image: The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`).
+        image_type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. This property has to be set when base64 encoded image is specified.
+        category: The card's category, displayed above the title.
+        name: An identifying name for this card. Makes the card clickable, similat to a button.
+        color: The card's background color. Use HEX or $ prefixed wave colors.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.WideInfoCard` instance.
+    """
+    return WideInfoCard(
+        box,
+        title,
+        caption,
+        icon,
+        image,
+        image_type,
+        category,
+        name,
+        color,
+        commands,
+    )
+
+
 def wide_series_stat_card(
         box: str,
         title: str,

@@ -8939,6 +8939,126 @@ class WideGaugeStatCard:
         )
 
 
+class WideInfoCard:
+    """Create a clickable card to provide more info content to your app.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            caption: str,
+            icon: Optional[str] = None,
+            image: Optional[str] = None,
+            image_type: Optional[str] = None,
+            category: Optional[str] = None,
+            name: Optional[str] = None,
+            color: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('WideInfoCard.box', box, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.title', title, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.caption', caption, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.icon', icon, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.image', image, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.image_type', image_type, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.category', category, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.name', name, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.color', color, (str,), False, True, False)
+        _guard_vector('WideInfoCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The card's title."""
+        self.caption = caption
+        """The card's caption, displayed below the title."""
+        self.icon = icon
+        """The card's icon."""
+        self.image = image
+        """The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`)."""
+        self.image_type = image_type
+        """The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. This property has to be set when base64 encoded image is specified."""
+        self.category = category
+        """The card's category, displayed above the title."""
+        self.name = name
+        """An identifying name for this card. Makes the card clickable, similat to a button."""
+        self.color = color
+        """The card's background color. Use HEX or $ prefixed wave colors."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('WideInfoCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.caption', self.caption, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.icon', self.icon, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.image', self.image, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.image_type', self.image_type, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.category', self.category, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.name', self.name, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.color', self.color, (str,), False, True, False)
+        _guard_vector('WideInfoCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='wide_info',
+            box=self.box,
+            title=self.title,
+            caption=self.caption,
+            icon=self.icon,
+            image=self.image,
+            image_type=self.image_type,
+            category=self.category,
+            name=self.name,
+            color=self.color,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'WideInfoCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('WideInfoCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('WideInfoCard.title', __d_title, (str,), False, False, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('WideInfoCard.caption', __d_caption, (str,), False, False, False)
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('WideInfoCard.icon', __d_icon, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('WideInfoCard.image', __d_image, (str,), False, True, False)
+        __d_image_type: Any = __d.get('image_type')
+        _guard_scalar('WideInfoCard.image_type', __d_image_type, (str,), False, True, False)
+        __d_category: Any = __d.get('category')
+        _guard_scalar('WideInfoCard.category', __d_category, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('WideInfoCard.name', __d_name, (str,), False, True, False)
+        __d_color: Any = __d.get('color')
+        _guard_scalar('WideInfoCard.color', __d_color, (str,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('WideInfoCard.commands', __d_commands, (Command,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        caption: str = __d_caption
+        icon: Optional[str] = __d_icon
+        image: Optional[str] = __d_image
+        image_type: Optional[str] = __d_image_type
+        category: Optional[str] = __d_category
+        name: Optional[str] = __d_name
+        color: Optional[str] = __d_color
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return WideInfoCard(
+            box,
+            title,
+            caption,
+            icon,
+            image,
+            image_type,
+            category,
+            name,
+            color,
+            commands,
+        )
+
+
 _WideSeriesStatCardPlotType = ['area', 'interval']
 
 

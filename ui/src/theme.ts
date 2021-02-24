@@ -39,6 +39,7 @@ export const
   displayMixin = (visible = true): React.CSSProperties => visible ? {} : { display: 'none' },
   // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
   // TODO this is ugly - why does the argument need a '$' prefix?
+  // Answer: this function is used for converting user specified colors as well. The logic was agreed to $color - pick from Wave custom colors otherwise use browser color ($red vs red).
   cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color,
   cssVarValue = (prop: S) => {
     if (!prop.startsWith('$')) return prop
@@ -66,6 +67,20 @@ export const
     violet: '#673ab7',
     white: '#fff',
     yellow: '#ffeb3b',
+  },
+  // Src: https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/
+  getContrast = (color: S) => {
+    if (color.startsWith('$')) color = getComputedStyle(document.documentElement).getPropertyValue(`--${color.slice(1)}`).trim()
+    if (color.startsWith('#')) color = color.slice(1)
+    if (color.length === 3) color = color.split('').map(hex => `${hex}${hex}`).join('')
+
+    const
+      r = parseInt(color.substr(0, 2), 16),
+      g = parseInt(color.substr(2, 2), 16),
+      b = parseInt(color.substr(4, 2), 16),
+      yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000
+
+    return yiq >= 128 ? 'black' : 'white'
   }
 
 const
