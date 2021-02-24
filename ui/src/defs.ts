@@ -1,8 +1,11 @@
-import { CardAttrT, CardDef } from './editing'
-import { B, S } from './qd'
+import { CardAttr, CardAttrT, CardDef } from './editing'
+import { B, S, U } from './qd'
 
 const
-  attr = (t: CardAttrT, name: S, value: S = '', optional: B = false) => ({ t, name, value, optional })
+  strAttr = (name: S, value: S, optional: B = false): CardAttr => ({ t: CardAttrT.String, name, value, optional }),
+  textAttr = (name: S, value: S, optional: B = false): CardAttr => ({ t: CardAttrT.Text, name, value, optional }),
+  intAttr = (name: S, value: U, min: U, max: U, step: U, optional: B = false): CardAttr => ({ t: CardAttrT.Integer, name, value, min, max, step, optional }),
+  recAttr = (name: S, value: any, optional: B = false): CardAttr => ({ t: CardAttrT.Record, name, value, optional })
 
 export const
   cardDefs: CardDef[] = [
@@ -10,27 +13,29 @@ export const
       view: 'markdown',
       icon: 'InsertTextBox',
       attrs: [
-        attr(CardAttrT.String, 'box', '1 1 2 2'),
-        attr(CardAttrT.String, 'title', 'Card title'),
-        attr(CardAttrT.Text, 'content', 'Some *content*.'),
+        strAttr('box', '1 1 2 2'),
+        strAttr('title', 'Card title'),
+        textAttr('content', 'Some *content*.'),
       ],
     },
     {
       view: 'chat',
       icon: 'OfficeChat',
       attrs: [
-        attr(CardAttrT.String, 'box', '1 1 2 2'),
-        attr(CardAttrT.String, 'title', 'Card title'),
-        attr(CardAttrT.Text, 'content', 'Some *content*.'),
+        strAttr('box', '1 1 2 2'),
+        strAttr('title', 'Card title'),
+        textAttr('content', 'Some *content*.'),
       ],
     },
     {
       view: 'canvas',
       icon: 'EditCreate',
       attrs: [
-        attr(CardAttrT.String, 'box', '1 1 2 2'),
-        attr(CardAttrT.String, 'title', 'Card title'),
-        attr(CardAttrT.Text, 'content', 'Some *content*.'),
+        strAttr('box', '1 1 2 2'),
+        strAttr('title', 'Card title'),
+        intAttr('width', 400, 0, 1024 * 2, 1),
+        intAttr('height', 300, 0, 768 * 2, 1),
+        recAttr('data', {}),
       ],
     },
   ]

@@ -1,13 +1,26 @@
-import { B, box, S } from "./qd"
+import { B, box, S, U } from "./qd"
 
-export enum CardAttrT { String, Text }
+export enum CardAttrT { String, Text, Integer, Record }
 
 export type CardAttr = {
-  t: CardAttrT
   name: S
-  value: S
   optional: B
-}
+} & ({
+  t: CardAttrT.String
+  value: S
+} | {
+  t: CardAttrT.Text
+  value: S
+} | {
+  t: CardAttrT.Integer
+  value: U
+  min: U
+  max: U
+  step: U
+} | {
+  t: CardAttrT.Record
+  value: any
+})
 
 export type CardDef = {
   icon: S

@@ -153,9 +153,22 @@ const
       },
       render = () => {
         const
-          fields = attrs.map(({ t, name }) => {
-            switch (t) {
+          fields = attrs.map(attr => {
+            const { name } = attr
+            switch (attr.t) {
               case CardAttrT.String:
+                {
+                  const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
+                    changes[name] = v || (target as HTMLInputElement).value
+                  }
+                  return (
+                    <Fluent.TextField
+                      key={name}
+                      label={labelize(name)}
+                      defaultValue={changes[name]}
+                      onChange={onChange} />
+                  )
+                }
               case CardAttrT.Text:
                 {
                   const onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
@@ -166,11 +179,56 @@ const
                       key={name}
                       label={labelize(name)}
                       defaultValue={changes[name]}
-                      multiline={t === CardAttrT.Text}
+                      multiline={true}
                       onChange={onChange} />
                   )
                 }
-              default:
+              case CardAttrT.Integer:
+                {
+                  const
+                    { min, max, step, value } = attr,
+                    defaultValue = (value < min) ? min : ((value > max) ? max : value)
+
+                  changes[name] = defaultValue
+
+                  const
+                    parseValue = (v: string) => {
+                      const x = parseFloat(v)
+                      return (!isNaN(x) && isFinite(x)) ? x : value
+                    },
+                    onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+                      changes[name] = parseValue(e.target.value)
+                    },
+                    onIncrement = (v: string) => {
+                      const
+                        value = parseValue(v),
+                        newValue = (value + step > max) ? max : value + step
+                      changes[name] = newValue
+                      return String(newValue)
+                    },
+                    onDecrement = (v: string) => {
+                      const
+                        value = parseValue(v),
+                        newValue = (value - step < min) ? min : value - step
+                      changes[name] = newValue
+                      return String(newValue)
+                    }
+
+                  return (
+                    <Fluent.SpinButton
+                      key={name}
+                      label={labelize(name)}
+                      min={min}
+                      max={max}
+                      step={step}
+                      defaultValue={`${changes[name]}`}
+                      onBlur={onBlur}
+                      onIncrement={onIncrement}
+                      onDecrement={onDecrement}
+                    />
+                  )
+                }
+              case CardAttrT.Record:
                 return (
                   <div key={name}>
                     <Fluent.Label>{labelize(name)}</Fluent.Label>
