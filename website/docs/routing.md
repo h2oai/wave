@@ -115,7 +115,7 @@ from h2o_wave import Q, main, app, ui
 async def on_heads(q: Q):
     q.page['sides'].items = [ui.message_bar(text='Heads!')]
 
-async def on_heads(q: Q):
+async def on_tails(q: Q):
     q.page['sides'].items = [ui.message_bar(text='Tails!')]
 
 async def setup_page(q: Q):
@@ -154,7 +154,7 @@ async def on_heads(q: Q):
     q.page['sides'].items = [ui.message_bar(text='Heads!')]
 
 @on('#tails')
-async def on_heads(q: Q):
+async def on_tails(q: Q):
     q.page['sides'].items = [ui.message_bar(text='Tails!')]
 
 async def setup_page(q: Q):
