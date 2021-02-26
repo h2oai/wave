@@ -1,41 +1,88 @@
-import { CardAttr, CardDef } from './editing'
-import { B, S, U } from './qd'
+//
+// THIS FILE IS GENERATED; DO NOT EDIT
+//
 
-const
-  strAttr = (name: S, value: S, optional: B = false): CardAttr => ({ t: 'textbox', name, value, optional }),
-  textAttr = (name: S, value: S, optional: B = false): CardAttr => ({ t: 'textarea', name, value, optional }),
-  intAttr = (name: S, value: U, min: U, max: U, step: U, optional: B = false): CardAttr => ({ t: 'spinbox', name, value, min, max, step, optional }),
-  recAttr = (name: S, value: any, optional: B = false): CardAttr => ({ t: 'record', name, value, optional })
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-export const
-  cardDefs: CardDef[] = [
-    {
-      view: 'markdown',
-      icon: 'InsertTextBox',
-      attrs: [
-        strAttr('box', '1 1 2 2'),
-        strAttr('title', 'Card title'),
-        textAttr('content', 'Some *content*.'),
-      ],
-    },
-    {
-      view: 'chat',
-      icon: 'OfficeChat',
-      attrs: [
-        strAttr('box', '1 1 2 2'),
-        strAttr('title', 'Card title'),
-        textAttr('content', 'Some *content*.'),
-      ],
-    },
-    {
-      view: 'canvas',
-      icon: 'EditCreate',
-      attrs: [
-        strAttr('box', '1 1 2 2'),
-        strAttr('title', 'Card title'),
-        intAttr('width', 400, 0, 1024 * 2, 1),
-        intAttr('height', 300, 0, 768 * 2, 1),
-        recAttr('data', {}),
-      ],
-    },
-  ]
+import { CardDef } from './editing'
+
+export const cardDefs: CardDef[] = [
+  {
+    "view": "canvas",
+    "icon": "EditCreate",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "textbox",
+        "value": ""
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Card title"
+      },
+      {
+        "name": "width",
+        "optional": false,
+        "t": "spinbox",
+        "value": 400,
+        "min": 400,
+        "max": 2048,
+        "step": 50
+      },
+      {
+        "name": "height",
+        "optional": false,
+        "t": "spinbox",
+        "value": 300,
+        "min": 300,
+        "max": 1536,
+        "step": 50
+      },
+      {
+        "name": "data",
+        "optional": false,
+        "t": "record",
+        "value": {}
+      }
+    ]
+  },
+  {
+    "view": "markdown",
+    "icon": "InsertTextBox",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "textbox",
+        "value": ""
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Card title"
+      },
+      {
+        "name": "content",
+        "optional": false,
+        "t": "textarea",
+        "value": "Card content"
+      }
+    ]
+  }
+]
