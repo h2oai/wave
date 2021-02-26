@@ -33,7 +33,7 @@ export const cardDefs: CardDef[] = [
         "name": "title",
         "optional": false,
         "t": "textbox",
-        "value": "Card title"
+        "value": "Untitled Canvas"
       },
       {
         "name": "width",
@@ -75,7 +75,7 @@ export const cardDefs: CardDef[] = [
         "name": "title",
         "optional": false,
         "t": "textbox",
-        "value": "Card title"
+        "value": "Untitled Chat"
       },
       {
         "name": "data",
@@ -95,6 +95,90 @@ export const cardDefs: CardDef[] = [
     ]
   },
   {
+    "view": "footer",
+    "icon": "Footer",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "textbox",
+        "value": ""
+      },
+      {
+        "name": "caption",
+        "optional": false,
+        "t": "textbox",
+        "value": "(c) Your Company, Inc."
+      }
+    ]
+  },
+  {
+    "view": "frame",
+    "icon": "FileHTML",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "textbox",
+        "value": ""
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Untitled Frame"
+      },
+      {
+        "name": "path",
+        "optional": true,
+        "t": "textbox",
+        "value": ""
+      },
+      {
+        "name": "content",
+        "optional": true,
+        "t": "textarea",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "view": "header",
+    "icon": "Header",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "textbox",
+        "value": ""
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Untitled Page"
+      },
+      {
+        "name": "subtitle",
+        "optional": false,
+        "t": "textbox",
+        "value": "Powered by H2O Wave."
+      },
+      {
+        "name": "icon",
+        "optional": true,
+        "t": "textbox",
+        "value": "AppIconDefault"
+      },
+      {
+        "name": "icon_color",
+        "optional": true,
+        "t": "textbox",
+        "value": "yellow"
+      }
+    ]
+  },
+  {
     "view": "markdown",
     "icon": "InsertTextBox",
     "attrs": [
@@ -108,13 +192,37 @@ export const cardDefs: CardDef[] = [
         "name": "title",
         "optional": false,
         "t": "textbox",
-        "value": "Card title"
+        "value": "Untitled Content"
       },
       {
         "name": "content",
         "optional": false,
         "t": "textarea",
-        "value": "Card content"
+        "value": "Hello, World!"
+      }
+    ]
+  },
+  {
+    "view": "markup",
+    "icon": "FileHTML",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "textbox",
+        "value": ""
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Untitled Content"
+      },
+      {
+        "name": "content",
+        "optional": false,
+        "t": "textarea",
+        "value": "<div/>"
       }
     ]
   }

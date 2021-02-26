@@ -61,17 +61,36 @@ const
 /**
  * Render a page header displaying a title, subtitle and an optional navigation menu.
  * Header cards are typically used for top-level navigation.
+ * :icon "Header"
  */
 interface State {
-  /** The title. */
+  /**
+   * The title.
+   * :t "textbox"
+   * :value "Untitled Page"
+   **/
   title: S
-  /** The subtitle, displayed below the title. */
+  /**
+   * The subtitle, displayed below the title.
+   * :t "textbox"
+   * :value "Powered by H2O Wave."
+   **/
   subtitle: S
-  /** The icon type, displayed to the left. */
+  /**
+   * The icon, displayed to the left.
+   * :t "textbox"
+   * :value "AppIconDefault"
+   **/
   icon?: S
-  /** The icon's color. */
+  /**
+   * The icon's color.
+   * :t "textbox"
+   * :value "yellow"
+   **/
   icon_color?: S
-  /** The navigation menu to display when the header's icon is clicked. */
+  /**
+   * The navigation menu to display when the header's icon is clicked.
+   **/
   nav?: NavGroup[]
 }
 

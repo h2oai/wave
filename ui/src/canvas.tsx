@@ -53,7 +53,7 @@ interface State {
   /**
    * The title for this card.
    * :t "textbox"
-   * :value "Card title"
+   * :value "Untitled Canvas"
    */
   title: S
   /**

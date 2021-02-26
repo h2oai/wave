@@ -30,9 +30,14 @@ const
 /**
  * Render a page footer displaying a caption.
  * Footer cards are typically displayed at the bottom of a page.
+ * :icon "Footer"
  */
 interface State {
-  /** The caption. Supports markdown. */
+  /**
+   * The caption. Supports markdown.
+   * :t "textbox"
+   * :value "(c) Your Company, Inc."
+   **/
   caption: S
 }
 

@@ -81,13 +81,13 @@ interface State {
   /**
    * The title for this card.
    * :t "textbox"
-   * :value "Card title"
+   * :value "Untitled Content"
    **/
   title: S
   /**
    * The markdown content. Supports Github Flavored Markdown (GFM): https://guides.github.com/features/mastering-markdown/
    * :t "textarea"
-   * :value "Card content"
+   * :value "Hello, World!"
    **/
   content: S
   /**

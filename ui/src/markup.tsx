@@ -40,11 +40,22 @@ export interface Markup {
   visible?: B
 }
 
-/** Render HTML content. */
+/**
+ * Render HTML content.
+ * :icon "FileHTML"
+ **/
 interface State {
-  /** The title for this card.*/
+  /**
+   * The title for this card.
+   * :t "textbox"
+   * :value "Untitled Content"
+   **/
   title: S
-  /** The HTML content. */
+  /**
+   * The HTML content.
+   * :t "textarea"
+   * :value "<div/>"
+   **/
   content: S
 }
 

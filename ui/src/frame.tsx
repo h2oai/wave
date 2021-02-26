@@ -61,13 +61,26 @@ export interface Frame {
  * Render a card containing a HTML page inside an inline frame (an `iframe`).
  *
  * Either a path or content can be provided as arguments.
+ * :icon "FileHTML"
  */
 interface State {
-  /** The title for this card.*/
+  /**
+   * The title for this card.
+   * :t "textbox"
+   * :value "Untitled Frame"
+   **/
   title: S
-  /** The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html` */
+  /**
+   * The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`.
+   * :t "textbox"
+   * :value ""
+   **/
   path?: S
-  /** The HTML content of the page. A string containing `<html>...</html>` */
+  /**
+   * The HTML content of the page. A string containing `<html>...</html>`.
+   * :t "textarea"
+   * :value ""
+   */
   content?: S
 }
 
