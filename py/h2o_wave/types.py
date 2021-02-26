@@ -265,7 +265,7 @@ class CanvasCard:
         self.title = title
         """The title for this card."""
         self.width = width
-        """Canvas width, in pixels"""
+        """Canvas width, in pixels."""
         self.height = height
         """Canvas height, in pixels."""
         self.data = data

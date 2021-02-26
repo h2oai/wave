@@ -62,6 +62,39 @@ export const cardDefs: CardDef[] = [
     ]
   },
   {
+    "view": "chat",
+    "icon": "OfficeChat",
+    "attrs": [
+      {
+        "name": "box",
+        "optional": false,
+        "t": "textbox",
+        "value": ""
+      },
+      {
+        "name": "title",
+        "optional": false,
+        "t": "textbox",
+        "value": "Card title"
+      },
+      {
+        "name": "data",
+        "optional": false,
+        "t": "record",
+        "value": {}
+      },
+      {
+        "name": "capacity",
+        "optional": true,
+        "t": "spinbox",
+        "value": 50,
+        "min": 10,
+        "max": 10000,
+        "step": 10
+      }
+    ]
+  },
+  {
     "view": "markdown",
     "icon": "InsertTextBox",
     "attrs": [

@@ -135,7 +135,7 @@ ui_breadcrumbs_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title for this card.
-#' @param width Canvas width, in pixels
+#' @param width Canvas width, in pixels.
 #' @param height Canvas height, in pixels.
 #' @param data The data for this card.
 #' @param commands Contextual menu commands for this component.
