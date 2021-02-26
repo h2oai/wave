@@ -10,7 +10,7 @@ tags: [release]
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Today, we're delighted to announce H2O Wave ML - the automatic machine learning (AutoML) for Wave apps. Let's introduce the library and have a look into API and few examples. 
+Today, we're delighted to announce H2O Wave ML - the automatic machine learning (AutoML) for Wave apps. Let's introduce the library and have a look into API and few examples.
 
 <!--truncate-->
 
@@ -38,7 +38,7 @@ import h2o_wave_ml
 
 ## API Calls in Examples
 
-Just four functions and one method are available to the user currently. You can check full API on Github page [here](https://github.com/h2oai/wave-ml#api). Let's have a look in examples.
+Just four functions and one method are available to the user currently. You can check full API on Github page [here](https://github.com/h2oai/wave-ml#api). Let's have a look at examples.
 
 To train a model use [`build_model()`](https://github.com/h2oai/wave-ml#build_model). The function needs a dataset in `.csv` format and a target column (column to be predicted):
 
@@ -84,9 +84,9 @@ model = load_model('./MyModel')
 predictions = model.predict(file_path='./creditcard_test.csv')
 ```
 
-## Example Wave Application
+## The First Example
 
-Now, equipped with the right tools let's build a simple, predictive Wave application. We will build a [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) based on a [Titanic](https://www.kaggle.com/c/titanic/data) dataset using *Survived* as a target column and a threshold slider. The full source of this example can be found [here](https://github.com/h2oai/wave-ml/blob/main/examples/quickstart.py).
+Now, equipped with the right tools let's build a simple Wave application. We will build a [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) based on a Titanic dataset using *Survived* as a target column and a threshold slider. The full source of this example can be found [here](https://github.com/h2oai/wave-ml/blob/main/examples/quickstart.py).
 
 ![confusion matrix](assets/2021-02-19/cm.gif)
 
@@ -103,14 +103,15 @@ prediction = model.predict(file_path=dataset)
 ```
 
 The output of a `model.predict()` call should have the following structure:
- ```py
+
+```py
 [
     ...
     (False, 0.7299433836535241, 0.2700566163464759),
     (False, 0.8614792168232073, 0.1385207831767927),
     ...
 ]
- ``` 
+```
 
 To construct a confusion matrix we also need the actual, **true** values for *Survived* column. We will extract it with a help of [datatable](https://datatable.readthedocs.io/en/latest/) library:
 
@@ -125,6 +126,7 @@ y_true = df[target_column].to_list()[0]
 ```
 
 The `y_true` now holds the following structure:
+
 ```py
 [..., False, True, True, True, False, False, ...]
 ```
@@ -138,7 +140,7 @@ y_pred = [p[1] < threshold for p in prediction]
 tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
 ```
 
-Since we don't have confusion matrix component inside Wave (yet) we need to construct the table using markdown. We align the `tn`, `fp`, `fn` and `tp` based on description [here](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html) into the template:
+Since we don't have a confusion matrix component inside Wave (yet) we need to construct the table using markdown. We align the `tn`, `fp`, `fn` and `tp` based on description [here](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html) into the template:
 
 ```py
 template = '''
@@ -164,4 +166,100 @@ and use it inside the form:
         ...
 ```
 
-That's it! See the full example [here](https://github.com/h2oai/wave-ml/blob/main/examples/quickstart.py). 
+That's it! See the full example [here](https://github.com/h2oai/wave-ml/blob/main/examples/quickstart.py).
+
+## The Second Example
+
+Let's do something more fun. What about predicting a rating of a wine based on it's features? We will use [the wine dataset](https://www.kaggle.com/christopheiv/winemagdata130k) and preprocess it slightly to contain just the following columns: `country`, `points`, `price`, `province`, `region_1`, `variety` and `winery`. The full example can be found here.
+
+![confusion matrix](assets/2021-02-19/wine.gif)
+
+The first step is simple, we train the model using dataset on `points` column:
+
+```py
+from h2o_wave_ml import build_model
+
+model = build_model('./winemag_edit.csv', target_column='points')
+```
+
+We will do predictions later based on a user interaction.
+
+Our example contains a form and dropdown components and we need to feed it with values. We can name it by hand but we
+would be polluting code too much as they are plenty. Let's do it automatically.
+
+To prepare the values, we use a datatable to identify unique items within column:
+
+```py {5,6,7}
+import datatable as dt
+
+df = dt.fread(dataset)
+
+countries = dt.unique(df['country']).to_list()[0]
+...  # The rest
+wineries = dt.unique(df['winery']).to_list()[0]
+```
+
+This will get us a list of strings but `dropdown` component needs a list of choices:
+
+```py {3,4,5}
+from h2o_wave import ui
+
+country_choices = [ui.choice(c, c) for c in countries if c]
+...  # The rest
+winery_choices = [ui.choice(w, w) for w in wineries if w]
+```
+
+To do predictions, we need to prepare input data for `model.predict()` method. We do this every call since we want to
+see the rating being updated immediately: 
+
+```py {5,6,7,8}
+from h2o_wave import app, Q
+
+@app('/demo')
+async def serve(q: Q):
+    country = q.args.country if 'country' in q.args else choice(country_choices).name
+    price = float(q.args.price) if 'price' in q.args else randrange(4, 150)
+    ...  # The rest
+    winery = q.args.winery if 'winery' in q.args else choice(winery_choices).name
+```
+
+We choose to use either a value supplied by query handler `serve()` or use a random choice by default.
+
+Now we can do predictions:
+
+```py {3}
+    input_data = [['country', 'price', 'province', 'region_1', 'variety', 'winery'],
+                  [country, price, province, region, variety, winery]]
+    rating = model.predict(input_data)
+    rating = rating[0][0]
+```
+
+Rating now contains points we want to show up on a page. The page needs to be set up before the use with suitable
+components. We use `tall_gauge_stat_card` for that:
+
+```py {3}
+    if not q.client.initialized:
+        ...
+        q.page['result'] = ui.tall_gauge_stat_card(
+            box='1 2 3 2',
+            title='',
+            value=str(rating),
+            aux_value='points',
+            plot_color='$red' if rating < 90 else '$green',
+            progress=rating/100,
+        )
+        ...
+        q.client.initialized = True
+```
+
+For every other call we need to update the stat card and we are done:
+
+```py
+        ...
+        q.page['result'].value = str(rating)
+        q.page['result'].progress = rating/100
+        q.page['result'].plot_color = '$red' if rating < 90 else '$green'
+        ...
+```
+
+See the full example here.
