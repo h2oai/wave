@@ -5781,9 +5781,9 @@ class FrameCard:
         self.title = title
         """The title for this card."""
         self.path = path
-        """The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`"""
+        """The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`."""
         self.content = content
-        """The HTML content of the page. A string containing `<html>...</html>`"""
+        """The HTML content of the page. A string containing `<html>...</html>`."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6114,7 +6114,7 @@ class HeaderCard:
         self.subtitle = subtitle
         """The subtitle, displayed below the title."""
         self.icon = icon
-        """The icon type, displayed to the left."""
+        """The icon, displayed to the left."""
         self.icon_color = icon_color
         """The icon's color."""
         self.nav = nav

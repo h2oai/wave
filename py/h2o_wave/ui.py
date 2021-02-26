@@ -2043,8 +2043,8 @@ def frame_card(
     Args:
         box: A string indicating how to place this component on the page.
         title: The title for this card.
-        path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
-        content: The HTML content of the page. A string containing `<html>...</html>`
+        path: The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`.
+        content: The HTML content of the page. A string containing `<html>...</html>`.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.FrameCard` instance.
@@ -2179,7 +2179,7 @@ def header_card(
         box: A string indicating how to place this component on the page.
         title: The title.
         subtitle: The subtitle, displayed below the title.
-        icon: The icon type, displayed to the left.
+        icon: The icon, displayed to the left.
         icon_color: The icon's color.
         nav: The navigation menu to display when the header's icon is clicked.
         commands: Contextual menu commands for this component.

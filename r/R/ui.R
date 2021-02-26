@@ -2344,8 +2344,8 @@ ui_form_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title for this card.
-#' @param path The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
-#' @param content The HTML content of the page. A string containing `<html>...</html>`
+#' @param path The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`.
+#' @param content The HTML content of the page. A string containing `<html>...</html>`.
 #' @param commands Contextual menu commands for this component.
 #' @return A FrameCard instance.
 #' @export
@@ -2497,7 +2497,7 @@ ui_nav_group <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title.
 #' @param subtitle The subtitle, displayed below the title.
-#' @param icon The icon type, displayed to the left.
+#' @param icon The icon, displayed to the left.
 #' @param icon_color The icon's color.
 #' @param nav The navigation menu to display when the header's icon is clicked.
 #' @param commands Contextual menu commands for this component.
