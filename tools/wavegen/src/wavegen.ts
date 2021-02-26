@@ -133,6 +133,7 @@ const
   },
   reservedWords = ['view', 'box'],
   boxComment = 'A string indicating how to place this component on the page.',
+  boxTags: Tag[] = [{ name: 't', value: 'textbox' }, { name: 'value', value: '' }],
   commandsComment = 'Contextual menu commands for this component.',
   noComment = 'No documentation available.',
   toLookup = (xs: S[]): Dict<B> => {
@@ -209,8 +210,7 @@ const
       tags = tagged.map((x): Tag => {
         const m = x.match(/^:\s*(.+?)\s+(.+)/) // :key json_value
         if (!m) throw Error(`bad tag: ${x}`)
-        console.log(m[2])
-        return { name: m[1].substr(1), value: JSON.parse(m[2]) }
+        return { name: m[1], value: JSON.parse(m[2]) }
       })
     return [comments, tags]
   },
@@ -279,10 +279,10 @@ const
           }
 
           // All cards must have a box defined.
-          if (isRoot) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], tags, isPacked: false })
+          if (isRoot) members.unshift({ t: MemberT.Singular, name: 'box', typeName: 'S', isOptional: false, comments: [boxComment], tags: boxTags, isPacked: false })
 
           // All cards can optionally have a contextual menu.
-          if (isRoot) members.push({ t: MemberT.Repeated, name: 'commands', typeName: 'Command', isOptional: true, comments: [commandsComment], tags, isPacked: false })
+          if (isRoot) members.push({ t: MemberT.Repeated, name: 'commands', typeName: 'Command', isOptional: true, comments: [commandsComment], tags: [], isPacked: false })
 
           const areAllMembersOptional = !members.filter(m => !m.isOptional).length // all members are optional?
           file.types.push({ name: typeName, file: file.name, comments, tags, members, isRoot, areAllMembersOptional, isUnion: false })
@@ -826,6 +826,42 @@ const
       }
     return genFuncs()
   },
+  translateToTypescript = (protocol: Protocol): S => {
+    const
+      lines: S[] = [],
+      p = (line: S) => lines.push(line),
+      defs: any[] = []
+
+    p('//')
+    p('// THIS FILE IS GENERATED; DO NOT EDIT')
+    p('//')
+    p('')
+
+    for (const line of licenseLines) p(line ? `// ${line}` : '//')
+
+    p('')
+    p("import { CardDef } from './editing'")
+    p('')
+
+    for (const t of protocol.types) {
+      if (!t.tags.length) continue
+      const
+        def: any = { view: t.file },
+        attrs: any[] = []
+
+      for (const { name, value } of t.tags) def[name] = value
+      for (const m of t.members) {
+        if (!m.tags.length) continue
+        const attr: any = { name: m.name, optional: m.isOptional }
+        for (const { name, value } of m.tags) attr[name] = value
+        attrs.push(attr)
+      }
+      def.attrs = attrs
+      defs.push(def)
+    }
+    p('export const cardDefs: CardDef[] = ' + JSON.stringify(defs, null, 2))
+    return lines.join('\n')
+  },
   makeProtocol = (files: File[]): Protocol => {
     // Build type lookup
     const
@@ -882,6 +918,10 @@ const
     const api = translateToR(protocol)
     fs.writeFileSync(path.join(outDir, 'ui.R'), api, 'utf8')
   },
+  generateTypescript = (protocol: Protocol, outDir: S) => {
+    const api = translateToTypescript(protocol)
+    fs.writeFileSync(path.join(outDir, 'defs.ts'), api, 'utf8')
+  },
   main = (typescriptSrcDir: S, pyOutDir: S, rOutDir: S) => {
     const files: File[] = []
     processDir(files, typescriptSrcDir)
@@ -890,6 +930,7 @@ const
 
     generatePy(protocol, pyOutDir)
     generateR(protocol, rOutDir)
+    generateTypescript(protocol, typescriptSrcDir)
 
     const [typeCount, memberCount] = measureStats(protocol)
     console.log(`API surface: ${typeCount} types, ${memberCount} members.`)
