@@ -53,13 +53,29 @@ const
  * WARNING: Experimental and subject to change.
  *
  * Create a card that displays a chat room.
+ * :icon "OfficeChat"
  */
 interface State {
-  /** The title for this card.*/
+  /**
+   * The title for this card.
+   * :t "textbox"
+   * :value "Card title"
+   */
   title: S
-  /** The data for this card.*/
+  /**
+   * The data for this card.
+   * :t "record"
+   * :value {}
+   */
   data: Rec
-  /** The maximum number of messages contained in this card. Defaults to 50 messages. */
+  /**
+   * The maximum number of messages contained in this card. Defaults to 50 messages.
+   * :t "spinbox"
+   * :value 50
+   * :min 10
+   * :max 10000
+   * :step 10
+   **/
   capacity?: U
 }
 

@@ -118,7 +118,7 @@ def canvas_card(
     Args:
         box: A string indicating how to place this component on the page.
         title: The title for this card.
-        width: Canvas width, in pixels
+        width: Canvas width, in pixels.
         height: Canvas height, in pixels.
         data: The data for this card.
         commands: Contextual menu commands for this component.
