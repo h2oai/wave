@@ -859,6 +859,7 @@ const
       def.attrs = attrs
       defs.push(def)
     }
+    defs.sort((a, b) => a.view > b.view ? 1 : -1)
     p('export const cardDefs: CardDef[] = ' + JSON.stringify(defs, null, 2))
     return lines.join('\n')
   },
