@@ -26,8 +26,8 @@ export const cardDefs: CardDef[] = [
       {
         "name": "box",
         "optional": false,
-        "t": "textbox",
-        "value": ""
+        "t": "box",
+        "value": {}
       },
       {
         "name": "title",
@@ -68,8 +68,8 @@ export const cardDefs: CardDef[] = [
       {
         "name": "box",
         "optional": false,
-        "t": "textbox",
-        "value": ""
+        "t": "box",
+        "value": {}
       },
       {
         "name": "title",
@@ -101,8 +101,8 @@ export const cardDefs: CardDef[] = [
       {
         "name": "box",
         "optional": false,
-        "t": "textbox",
-        "value": ""
+        "t": "box",
+        "value": {}
       },
       {
         "name": "caption",
@@ -119,8 +119,8 @@ export const cardDefs: CardDef[] = [
       {
         "name": "box",
         "optional": false,
-        "t": "textbox",
-        "value": ""
+        "t": "box",
+        "value": {}
       },
       {
         "name": "title",
@@ -149,8 +149,8 @@ export const cardDefs: CardDef[] = [
       {
         "name": "box",
         "optional": false,
-        "t": "textbox",
-        "value": ""
+        "t": "box",
+        "value": {}
       },
       {
         "name": "title",
@@ -185,8 +185,8 @@ export const cardDefs: CardDef[] = [
       {
         "name": "box",
         "optional": false,
-        "t": "textbox",
-        "value": ""
+        "t": "box",
+        "value": {}
       },
       {
         "name": "title",
@@ -209,8 +209,8 @@ export const cardDefs: CardDef[] = [
       {
         "name": "box",
         "optional": false,
-        "t": "textbox",
-        "value": ""
+        "t": "box",
+        "value": {}
       },
       {
         "name": "title",

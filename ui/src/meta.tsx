@@ -20,6 +20,10 @@ import { Dialog } from './dialog'
 import { setupTracker, Tracker } from './tracking'
 import { themeB } from './theme'
 
+
+export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>
+
+
 /**
  * Represents the layout structure for a page.
  */

@@ -133,7 +133,7 @@ const
   },
   reservedWords = ['view', 'box'],
   boxComment = 'A string indicating how to place this component on the page.',
-  boxTags: Tag[] = [{ name: 't', value: 'textbox' }, { name: 'value', value: '' }],
+  boxTags: Tag[] = [{ name: 't', value: 'box' }, { name: 'value', value: {} }],
   commandsComment = 'Contextual menu commands for this component.',
   noComment = 'No documentation available.',
   toLookup = (xs: S[]): Dict<B> => {

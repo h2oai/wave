@@ -1,9 +1,13 @@
+import { FlexBox } from "./meta"
 import { B, box, S, U } from "./qd"
 
 export type CardAttr = {
   name: S
   optional: B
 } & ({
+  t: 'box'
+  value: FlexBox
+} | {
   t: 'textbox'
   value: S
 } | {
