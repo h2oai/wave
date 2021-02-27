@@ -17,6 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
 import { Logo } from './logo'
+import { Layout } from './meta'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, cssVar, pc, themeB } from './theme'
@@ -81,7 +82,20 @@ const
     const
       onClick = () => {
         const page = qd.edit()
-        page.put('__editor__', { view: 'editor', box: '', title: 'Modify this page' })
+        page.put('__editor__', { view: 'editor', box: '', title: '' })
+        const layout: Layout = {
+          breakpoint: 'xs', zones: [
+            { name: 'Header', },
+            {
+              name: 'Main', direction: 'row', zones: [
+                { name: 'Sidebar', size: '256px' },
+                { name: 'Body' },
+              ]
+            },
+            { name: 'Footer' },
+          ]
+        }
+        page.put('__meta__', { view: 'meta', box: '', layouts: [layout] })
         page.sync()
       },
       render = () => {
