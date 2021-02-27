@@ -16,9 +16,9 @@ import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { CardEffect, CardView, getCardEffect, GridLayout } from './layout'
-import { Layout, layoutsB, preload, Zone } from './meta'
+import { FlexBox, Layout, layoutsB, preload, Zone } from './meta'
 import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
-import { clas, margin, cssVar } from './theme'
+import { clas, cssVar, margin } from './theme'
 
 
 type Breakpoint = {
@@ -61,8 +61,8 @@ const
   resizedB = box(), // breakpoint changed?
   parseBreakpoint = (spec: S): U => parseInt(presetBreakpoints[spec] ?? spec, 10),
   badSlot: Slot = { order: 0 },
-  parseBox = ({ zone, order, size, width, height }: any): Slot => {
-    return { zone, order: order ? order : 0, grow: parseU(size), width, height }
+  parseBox = ({ zone, order, size, width, height }: FlexBox): Slot => {
+    return { zone, order: order ? order : 0, grow: size ? parseU(size) : NaN, width, height }
   },
   parseBoxes = (index: U, spec: S): Slot => {
     try {
@@ -255,18 +255,18 @@ const
     }
     section.cardslots.sort((a, b) => a.slot.order - b.slot.order)
   },
-  FlexSection = ({ section, direction }: { section: Section, direction?: S }) => {
+  FlexSection = ({ section, hasEditor, direction }: { section: Section, hasEditor: B, direction?: S }) => {
     const
       { zone, cardslots, sections } = section,
       children = sections
-        ? sections.map(section => <FlexSection key={section.zone.name} direction={zone.direction} section={section} />)
+        ? sections.map(section => <FlexSection key={section.zone.name} section={section} hasEditor={hasEditor} direction={zone.direction} />)
         : cardslots.length ?
           cardslots.map(cardslot => {
             const { card: c } = cardslot
             return (
               <div key={c.id} className={getCardEffectClass(c)} style={toSlotStyle(cardslot)}>
                 <CardView card={c} />
-                {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} />}
+                {!!c.state.commands?.length && <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} canEdit={hasEditor} />}
               </div>
             )
           })
@@ -284,7 +284,9 @@ const
     const
       { layout, index } = layoutIndex,
       section = toSection({ name: 'main', zones: layout.zones }),
-      { width, min_width, max_width, height, min_height, max_height } = layout
+      { width, min_width, max_width, height, min_height, max_height } = layout,
+      editor = cards.find(c => c.state.view === 'editor')
+
     for (const card of cards) {
       const
         slot = parseBoxes(index, card.state.box),
@@ -308,7 +310,8 @@ const
     }
     return (
       <div data-test={name} style={style}>
-        <FlexSection section={section} />
+        <FlexSection section={section} hasEditor={editor ? true : false} />
+        {editor && <CardView card={editor} />}
       </div>
     )
   }
