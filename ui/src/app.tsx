@@ -19,7 +19,7 @@ import Dialog from './dialog'
 import { Logo } from './logo'
 import { Layout } from './meta'
 import { PageLayout } from './page'
-import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
+import { B, bond, Box, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, cssVar, pc, themeB } from './theme'
 
 const
@@ -55,7 +55,114 @@ const
     }
   })
 
+type LayoutDef = {
+  name: S
+  layout: Layout
+}
+
 const
+  layoutDefs: LayoutDef[] = [
+    {
+      name: 'Sidebar on Left',
+      layout: {
+        breakpoint: 'xs',
+        min_height: '512px',
+        zones: [
+          { name: 'Header', },
+          {
+            name: 'Main',
+            direction: 'row',
+            zones: [
+              { name: 'Sidebar', size: '256px' },
+              { name: 'Body' },
+            ],
+          },
+          { name: 'Footer' },
+        ]
+      }
+    },
+    {
+      name: 'Sidebar on Right',
+      layout: {
+        breakpoint: 'xs',
+        min_height: '512px',
+        zones: [
+          { name: 'Header', },
+          {
+            name: 'Main',
+            direction: 'row',
+            zones: [
+              { name: 'Body' },
+              { name: 'Sidebar', size: '256px' },
+            ],
+          },
+          { name: 'Footer' },
+        ]
+      }
+    },
+    {
+      name: 'No Sidebar',
+      layout: {
+        breakpoint: 'xs',
+        min_height: '512px',
+        zones: [
+          { name: 'Header', },
+          { name: 'Body' },
+          { name: 'Footer' },
+        ],
+      }
+    },
+    {
+      name: 'Body Only',
+      layout: {
+        breakpoint: 'xs',
+        zones: [
+          { name: 'Body' },
+        ],
+      }
+    },
+  ]
+
+const
+  LayoutPicker = bond(({ visibleB }: { visibleB: Box<B> }) => {
+    let selectedLayout = layoutDefs[0]
+    const
+      setLayout = (layout: Layout) => {
+        const page = qd.edit()
+        page.put('__editor__', { view: 'editor', box: '', title: '' })
+        page.put('__meta__', { view: 'meta', box: '', layouts: [layout] })
+        page.sync()
+      },
+      options: Fluent.IChoiceGroupOption[] = layoutDefs.map(({ name: key }) => ({ key, text: key })),
+      onChange = (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, option?: Fluent.IChoiceGroupOption) => {
+        if (!option) return
+        const layout = layoutDefs.find(d => d.name === option.key)
+        if (layout) selectedLayout = layout
+      },
+      accept = () => { setLayout(selectedLayout.layout) },
+      cancel = () => { visibleB(false) },
+      render = () => {
+        return (
+          <Fluent.Dialog
+            hidden={!visibleB()}
+            onDismiss={cancel}
+            dialogContentProps={{
+              type: Fluent.DialogType.largeHeader,
+              title: 'Choose a page layout',
+              subText: 'This page will be made editable, and the chosen layout will be applied to the page. ',
+            }}
+            modalProps={{ isBlocking: false, styles: { main: { maxWidth: 450 } } }}
+          >
+            <Fluent.ChoiceGroup options={options} defaultSelectedKey={selectedLayout.name} onChange={onChange} />
+            <Fluent.DialogFooter>
+              <Fluent.DefaultButton onClick={cancel} text="Back to safety" />
+              <Fluent.PrimaryButton onClick={accept} text="Apply Layout" />
+            </Fluent.DialogFooter>
+          </Fluent.Dialog >
+        )
+      }
+    return { render, visibleB }
+  }),
   BusyOverlay = bond(() => {
     let
       spinTimeout = 0
@@ -80,29 +187,16 @@ const
   }),
   NotFoundOverlay = bond(() => {
     const
+      pickingLayoutB = box(false),
       onClick = () => {
-        const page = qd.edit()
-        page.put('__editor__', { view: 'editor', box: '', title: '' })
-        const layout: Layout = {
-          breakpoint: 'xs', zones: [
-            { name: 'Header', },
-            {
-              name: 'Main', direction: 'row', zones: [
-                { name: 'Sidebar', size: '256px' },
-                { name: 'Body' },
-              ]
-            },
-            { name: 'Footer' },
-          ]
-        }
-        page.put('__meta__', { view: 'meta', box: '', layouts: [layout] })
-        page.sync()
+        pickingLayoutB(true)
       },
       render = () => {
         return (
           <div className={css.waitingOverlay}>
             <Logo />
             <Fluent.PrimaryButton onClick={onClick}>Edit this page</Fluent.PrimaryButton>
+            <LayoutPicker visibleB={pickingLayoutB} />
           </div>
         )
       }
