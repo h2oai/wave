@@ -49,7 +49,7 @@ train_set = './creditcard_train.csv'
 model = build_model(train_set, target_column='DEFAULT_PAYMENT_NEXT_MONTH')
 ```
 
-Few things are happening under the hood now. The underlying backend is being chose, the dataset is examined, a prediction task is determined (classification or regression) and the building process started.
+Few things are happening under the hood now. The underlying backend is being chosen, the dataset is examined, a prediction task is determined (classification or regression) and the building process started.
 
 Once the model is built we can do predictions using the [`.predict()`](https://github.com/h2oai/wave-ml#modelpredict) method:
 
