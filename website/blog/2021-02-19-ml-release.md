@@ -18,9 +18,9 @@ Today, we're delighted to announce H2O Wave ML - the automatic machine learning 
 
 The main goal of H2O Wave ML is to integrate AI/ML models into your applications in a **quick** and **easy** way. It provides a simple, high-level API for training, deploying, scoring and explaining machine learning models, letting you build predictive and decision-support applications entirely in Python.
 
-Wave ML is doing a lot behind the scenes. It picks the adequate engine to support the building and training process and transform the user inputs to fit them with engines. You might be using [*H2O-3*](https://www.h2o.ai/products/h2o/) locally and [*Driverless AI*](https://www.h2o.ai/products/h2o-driverless-ai/) on a [Cloud](https://www.h2o.ai/hybrid-cloud/) and you might not know about it. Wave ML hides complexity but for a cost of features. Right now only *H2O-3* support is available.
+Wave ML is doing a lot behind the scenes. It picks the adequate engine to support the building and training process and transforms the user inputs to fit them with engines. You might be using [*H2O-3*](https://www.h2o.ai/products/h2o/) locally and [*Driverless AI*](https://www.h2o.ai/products/h2o-driverless-ai/) on a [Cloud](https://www.h2o.ai/hybrid-cloud/) and you might not know about it. Wave ML hides complexity but for a cost of features. Right now only *H2O-3* support is available.
 
-Wave ML is in experimental stage and might be subject of change.
+Wave ML is in the experimental stage and might be subject to change.
 
 ## Installation
 
@@ -30,7 +30,7 @@ H2O Wave ML is a Python library designed to be a companion package for H2O Wave.
 (venv) $ pip install h2o-wave[ml]
 ```
 
-You should be able to import library by:
+You should be able to import the library by:
 
 ```py
 import h2o_wave_ml
@@ -38,7 +38,7 @@ import h2o_wave_ml
 
 ## API Calls in Examples
 
-Just four functions and one method are available to the user currently. You can check full API on Github page [here](https://github.com/h2oai/wave-ml#api). Let's have a look at examples.
+Just four functions and one method are available to the user currently. You can check the full API on the Github page [here](https://github.com/h2oai/wave-ml#api). Let's have a look at examples.
 
 To train a model use [`build_model()`](https://github.com/h2oai/wave-ml#build_model). The function needs a dataset in `.csv` format and a target column (column to be predicted):
 
@@ -49,7 +49,7 @@ train_set = './creditcard_train.csv'
 model = build_model(train_set, target_column='DEFAULT_PAYMENT_NEXT_MONTH')
 ```
 
-There are few things happening under the hood now. The underlying backend are being chose, dataset is examined, a prediction task is determined (classification or regression) and building process started.
+Few things are happening under the hood now. The underlying backend is being chose, the dataset is examined, a prediction task is determined (classification or regression) and the building process started.
 
 Once the model is built we can do predictions using the [`.predict()`](https://github.com/h2oai/wave-ml#modelpredict) method:
 
@@ -63,7 +63,7 @@ model = build_model(train_set, target_column='DEFAULT_PAYMENT_NEXT_MONTH')
 predictions = model.predict(file_path=test_set)
 ```
 
-The training dataset may be specified by file path or directly by passing values.
+The training dataset may be specified by file path or directly by passing the values.
 
 You can store model onto the disk by using [`save_model()`](https://github.com/h2oai/wave-ml#save_model) which returns the file path:
 
@@ -170,11 +170,11 @@ That's it! See the full example [here](https://github.com/h2oai/wave-ml/blob/mai
 
 ## The Second Example
 
-Let's do something more fun. What about predicting a rating of a wine based on it's features? We will use [the wine dataset](https://www.kaggle.com/christopheiv/winemagdata130k) and preprocess it slightly to contain just the following columns: `country`, `points`, `price`, `province`, `region_1`, `variety` and `winery`. The full example can be found here.
+Let's do something more fun. What about predicting a rating of a wine based on its features? We will use [the wine dataset](https://www.kaggle.com/christopheiv/winemagdata130k) and preprocess it slightly to contain just the following columns: `country`, `points`, `price`, `province`, `region_1`, `variety` and `winery`. The full example can be found here.
 
 ![confusion matrix](assets/2021-02-19/wine.gif)
 
-The first step is simple, we train the model using dataset on `points` column:
+The first step is simple, we train the model using the dataset on `points` column:
 
 ```py
 from h2o_wave_ml import build_model
@@ -182,66 +182,50 @@ from h2o_wave_ml import build_model
 model = build_model('./winemag_edit.csv', target_column='points')
 ```
 
-We will do predictions later based on a user interaction.
+We will do predictions later based on user interaction.
 
-Our example contains a form and dropdown components and we need to feed it with values. We can name it by hand but we
-would be polluting code too much as they are plenty. Let's do it automatically.
+Our example contains a form and dropdown components and we need to feed it with values. We can name it by hand but we would be polluting code too much as they are plenty. Let's do it automatically. To prepare the values, we use a datatable to identify unique items within the column:
 
-To prepare the values, we use a datatable to identify unique items within column:
-
-```py {5,6,7}
+```py {6,7}
 import datatable as dt
 
 df = dt.fread(dataset)
 
-countries = dt.unique(df['country']).to_list()[0]
-...  # The rest
-wineries = dt.unique(df['winery']).to_list()[0]
+features = ['country', 'price', 'province', 'region_1', 'variety', 'winery']
+columns = {f: dt.unique(df[f]).to_list()[0] for f in features}
+choices = {key: [ui.choice(str(item)) for item in columns[key] if item] for key in columns}
 ```
 
-This will get us a list of strings but `dropdown` component needs a list of choices:
-
-```py {3,4,5}
-from h2o_wave import ui
-
-country_choices = [ui.choice(c, c) for c in countries if c]
-...  # The rest
-winery_choices = [ui.choice(w, w) for w in wineries if w]
-```
-
-To do predictions, we need to prepare input data for `model.predict()` method. We do this every call since we want to
-see the rating being updated immediately: 
+To do predictions, we need to prepare input data for `model.predict()` method. We do this every call since we want to see the rating being updated immediately:
 
 ```py {5,6,7,8}
 from h2o_wave import app, Q
 
 @app('/demo')
 async def serve(q: Q):
-    country = q.args.country if 'country' in q.args else choice(country_choices).name
-    price = float(q.args.price) if 'price' in q.args else randrange(4, 150)
-    ...  # The rest
-    winery = q.args.winery if 'winery' in q.args else choice(winery_choices).name
+    country = q.args.country if 'country' in q.args else 'US'
+    price = float(q.args.price) if 'price' in q.args else 14.0
+    # The rest.
+    winery = q.args.winery if 'winery' in q.args else 'Rainstorm'
 ```
 
-We choose to use either a value supplied by query handler `serve()` or use a random choice by default.
+We choose to either use a value supplied by the query handler `serve()` or use a default value.
 
-Now we can do predictions:
+Now we can do the predictions:
 
 ```py {3}
-    input_data = [['country', 'price', 'province', 'region_1', 'variety', 'winery'],
-                  [country, price, province, region, variety, winery]]
+    input_data = [features, [country, price, province, region, variety, winery]]
     rating = model.predict(input_data)
     rating = rating[0][0]
 ```
 
-Rating now contains points we want to show up on a page. The page needs to be set up before the use with suitable
-components. We use `tall_gauge_stat_card` for that:
+Rating now contains points we want to show up on a page. The page needs to be set up before the use with suitable components. We use `tall_gauge_stat_card` for that:
 
 ```py {3}
     if not q.client.initialized:
         ...
         q.page['result'] = ui.tall_gauge_stat_card(
-            box='1 2 3 2',
+            box=ui.box('body', height='180px'),
             title='',
             value=str(rating),
             aux_value='points',
@@ -252,7 +236,7 @@ components. We use `tall_gauge_stat_card` for that:
         q.client.initialized = True
 ```
 
-For every other call we need to update the stat card and we are done:
+For every other call, we need to update the stat card and we are done:
 
 ```py
         ...
