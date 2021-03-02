@@ -1,4 +1,3 @@
-import { FlexBox } from "./meta"
 import { B, box, S, U } from "./qd"
 
 export type CardAttr = {
@@ -6,7 +5,7 @@ export type CardAttr = {
   optional: B
 } & ({
   t: 'box'
-  value: FlexBox
+  value: S // JSON-stringified FlexBox
 } | {
   t: 'textbox'
   value: S

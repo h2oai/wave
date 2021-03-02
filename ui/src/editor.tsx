@@ -13,12 +13,14 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { IDropdownOption } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
 import { editorActionB, EditorActionT, noAction, pickCard } from './editing'
 import { cards } from './layout'
-import { bond, C, Card, Dict, qd, S } from './qd'
+import { FlexBox } from './meta'
+import { bond, C, Card, Dict, parseU, qd, S, U } from './qd'
 import { border, cssVar } from './theme'
 
 /**
@@ -217,7 +219,7 @@ const
                   return (
                     <Fluent.SpinButton
                       key={name}
-                      label={labelize(name)}
+                      label={labelize(name) + ':'}
                       min={min}
                       max={max}
                       step={step}
@@ -235,6 +237,45 @@ const
                     <Fluent.MessageBar messageBarType={Fluent.MessageBarType.warning}>Could not render field</Fluent.MessageBar>
                   </div>
                 )
+              case 'box':
+                {
+                  const
+                    options: IDropdownOption[] = ['Header', 'Sidebar', 'Body', 'Footer'].map(text => ({ key: text, text })),
+                    setBox = (k: keyof FlexBox, v: any) => {
+                      const box = JSON.parse(changes[name])
+                      box[k] = v
+                      changes[name] = JSON.stringify(box)
+                    },
+                    onZoneChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
+                      if (!option) return
+                      setBox('zone', option.key)
+                    },
+                    parseOrder = (s: S): U => {
+                      const v = parseU(s)
+                      return isNaN(v) ? 0 : v
+                    },
+                    onOrderBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+                      setBox('order', parseOrder(e.target.value))
+                    },
+                    onOrderChange = (v: S) => {
+                      const order = parseOrder(v)
+                      setBox('order', order)
+                      return String(order)
+                    }
+                  return (
+                    <div key={name}>
+                      <Fluent.Dropdown label='Zone' options={options} onChange={onZoneChange} />
+                      <Fluent.SpinButton
+                        defaultValue='0'
+                        label='Order:'
+                        min={0}
+                        onBlur={onOrderBlur}
+                        onIncrement={onOrderChange}
+                        onDecrement={onOrderChange}
+                      />
+                    </div>
+                  )
+                }
             }
           })
         return (
@@ -302,12 +343,12 @@ export const
             break
         }
         return (
-          <div data-test={name}>
-            <div className={css.fab} onClick={addCard} >
+          <>
+            <div data-test={name} className={css.fab} onClick={addCard} >
               <Fluent.FontIcon iconName='Add' />
             </div>
             {content}
-          </div>
+          </>
         )
       }
     return { render, changed, editorActionB }

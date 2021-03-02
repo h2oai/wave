@@ -27,7 +27,7 @@ export const cardDefs: CardDef[] = [
         "name": "box",
         "optional": false,
         "t": "box",
-        "value": {}
+        "value": "{\"zone\":\"Body\"}"
       },
       {
         "name": "title",
@@ -69,7 +69,7 @@ export const cardDefs: CardDef[] = [
         "name": "box",
         "optional": false,
         "t": "box",
-        "value": {}
+        "value": "{\"zone\":\"Body\"}"
       },
       {
         "name": "title",
@@ -102,7 +102,7 @@ export const cardDefs: CardDef[] = [
         "name": "box",
         "optional": false,
         "t": "box",
-        "value": {}
+        "value": "{\"zone\":\"Body\"}"
       },
       {
         "name": "caption",
@@ -120,7 +120,7 @@ export const cardDefs: CardDef[] = [
         "name": "box",
         "optional": false,
         "t": "box",
-        "value": {}
+        "value": "{\"zone\":\"Body\"}"
       },
       {
         "name": "title",
@@ -150,7 +150,7 @@ export const cardDefs: CardDef[] = [
         "name": "box",
         "optional": false,
         "t": "box",
-        "value": {}
+        "value": "{\"zone\":\"Body\"}"
       },
       {
         "name": "title",
@@ -186,7 +186,7 @@ export const cardDefs: CardDef[] = [
         "name": "box",
         "optional": false,
         "t": "box",
-        "value": {}
+        "value": "{\"zone\":\"Body\"}"
       },
       {
         "name": "title",
@@ -210,7 +210,7 @@ export const cardDefs: CardDef[] = [
         "name": "box",
         "optional": false,
         "t": "box",
-        "value": {}
+        "value": "{\"zone\":\"Body\"}"
       },
       {
         "name": "title",
