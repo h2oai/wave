@@ -106,6 +106,21 @@ const
     return d
   },
   cardDefLookup = toDict(cardDefs, d => d.view),
+  separatorStyle: Partial<Fluent.ISeparatorStyles> = {
+    root: {
+      marginTop: 15,
+    },
+  },
+  Divider = ({ children }: { children: React.ReactNode }) => <Fluent.Separator styles={separatorStyle}>{children}</Fluent.Separator>,
+  spinBoxStyle: Partial<Fluent.ISpinButtonStyles> = {
+    root: {
+      marginTop: 5,
+      marginBottom: 5,
+    },
+    labelWrapper: {
+      width: 90,
+    },
+  },
   SpinBox = bond(({ label, defaultValue, min, max, step, onChange }: { label: S, defaultValue: U, min: U, max: U, step: U, onChange: (v: U) => void }) => {
     const
       parseValue = (s: string): U => {
@@ -133,6 +148,7 @@ const
             onBlur={onBlur}
             onIncrement={onIncrement}
             onDecrement={onDecrement}
+            styles={spinBoxStyle}
           />
         )
       }
@@ -275,7 +291,7 @@ const
                     { zone: zone0, order: order0, size: size0, width: width0, height: height0 } = JSON.parse(changes[name]) as FlexBox
                   return (
                     <div key={name}>
-                      <Fluent.Separator>Box</Fluent.Separator>
+                      <Divider>Box</Divider>
                       <Fluent.Dropdown label='Zone' options={options} selectedKey={zone0} onChange={onZoneChange} />
                       <SpinBox
                         defaultValue={order0 ?? 0}
@@ -301,7 +317,7 @@ const
                         min={0} max={10000} step={10}
                         onChange={onHeightChange}
                       />
-                      <Fluent.Separator>Properties</Fluent.Separator>
+                      <Divider>Properties</Divider>
                     </div>
                   )
                 }
@@ -316,7 +332,7 @@ const
             onRenderFooterContent={renderFooter}
             isFooterAtBottom={true}
           >
-            <Fluent.Separator>{labelize(view)} Card</Fluent.Separator>
+            <Divider>{labelize(view)} Card</Divider>
             {isNew ? <Fluent.TextField label='Card Name' defaultValue={cardName} onChange={onChangeCardName} /> : null}
             <div>{fields}</div>
           </Fluent.Panel>
