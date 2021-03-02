@@ -106,6 +106,38 @@ const
     return d
   },
   cardDefLookup = toDict(cardDefs, d => d.view),
+  SpinBox = bond(({ label, defaultValue, min, max, step, onChange }: { label: S, defaultValue: U, min: U, max: U, step: U, onChange: (v: U) => void }) => {
+    const
+      parseValue = (s: string): U => {
+        const u = parseU(s)
+        return isNaN(u) ? 0 : u
+      },
+      onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        onChange(parseValue(e.target.value))
+      },
+      increment = (s: S, step: U) => {
+        const v = Math.min(max, parseValue(s) + step)
+        onChange(v)
+        return String(v)
+      },
+      onIncrement = (s: S) => increment(s, step),
+      onDecrement = (s: S) => increment(s, -step),
+      render = () => {
+        return (
+          <Fluent.SpinButton
+            label={label}
+            min={min}
+            max={max}
+            step={step}
+            defaultValue={'' + defaultValue}
+            onBlur={onBlur}
+            onIncrement={onIncrement}
+            onDecrement={onDecrement}
+          />
+        )
+      }
+    return { render }
+  }),
   AttrPanelView = bond(({ view, card }: { view: S, card?: C }) => {
     const
       { attrs } = cardDefLookup[view],
@@ -189,44 +221,20 @@ const
                 {
                   const
                     { min, max, step, value } = attr,
-                    defaultValue = (value < min) ? min : ((value > max) ? max : value)
+                    defaultValue = (value < min) ? min : ((value > max) ? max : value),
+                    onChange = (v: U) => {
+                      changes[name] = v
+                    }
 
                   changes[name] = defaultValue
 
-                  const
-                    parseValue = (v: string) => {
-                      const x = parseFloat(v)
-                      return (!isNaN(x) && isFinite(x)) ? x : value
-                    },
-                    onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-                      changes[name] = parseValue(e.target.value)
-                    },
-                    onIncrement = (v: string) => {
-                      const
-                        value = parseValue(v),
-                        newValue = (value + step > max) ? max : value + step
-                      changes[name] = newValue
-                      return String(newValue)
-                    },
-                    onDecrement = (v: string) => {
-                      const
-                        value = parseValue(v),
-                        newValue = (value - step < min) ? min : value - step
-                      changes[name] = newValue
-                      return String(newValue)
-                    }
-
                   return (
-                    <Fluent.SpinButton
+                    <SpinBox
                       key={name}
                       label={labelize(name) + ':'}
-                      min={min}
-                      max={max}
-                      step={step}
-                      defaultValue={`${changes[name]}`}
-                      onBlur={onBlur}
-                      onIncrement={onIncrement}
-                      onDecrement={onDecrement}
+                      min={min} max={max} step={step}
+                      defaultValue={changes[name]}
+                      onChange={onChange}
                     />
                   )
                 }
@@ -246,65 +254,54 @@ const
                       f(b)
                       changes[name] = JSON.stringify(b)
                     },
-                    setBox = (k: keyof FlexBox, v: any) => changeBox(b => b[k] = v),
+                    setBox = (k: keyof FlexBox, v: S | U) => changeBox(b => b[k] = v),
                     unsetBox = (k: keyof FlexBox) => changeBox(b => { delete b[k] }),
                     onZoneChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
-                      if (!option) return
-                      setBox('zone', option.key)
+                      if (option) setBox('zone', option.key)
                     },
-                    parseU0 = (s: S): U => {
-                      const v = parseU(s)
-                      return isNaN(v) ? 0 : v
-                    },
-                    onOrderChange = (_e: React.SyntheticEvent<HTMLInputElement>, s?: S) => {
-                      const v = parseU0(s ?? '0')
+                    onOrderChange = (v: U) => {
                       if (v) { setBox('order', v) } else { unsetBox('order') }
                     },
-                    onSizeChange = (_e: React.SyntheticEvent<HTMLInputElement>, s?: S) => {
-                      const v = parseU0(s ?? '0')
+                    onSizeChange = (v: U) => {
                       if (v) { setBox('size', `${v}`) } else { unsetBox('size') }
                     },
-                    onWidthChange = (_e: React.SyntheticEvent<HTMLInputElement>, s?: S) => {
-                      const v = parseU0(s ?? '0')
+                    onWidthChange = (v: U) => {
                       if (v) { setBox('width', `${v}px`) } else { unsetBox('width') }
                     },
-                    onHeightChange = (_e: React.SyntheticEvent<HTMLInputElement>, s?: S) => {
-                      const v = parseU0(s ?? '0')
+                    onHeightChange = (v: U) => {
                       if (v) { setBox('height', `${v}px`) } else { unsetBox('height') }
                     },
-                    parsePx = (s: S) => { return s.replace(/px$/, '') },
+                    parsePx = (s: S) => parseU(s.replace(/px$/, '')),
                     { zone: zone0, order: order0, size: size0, width: width0, height: height0 } = JSON.parse(changes[name]) as FlexBox
                   return (
                     <div key={name}>
+                      <Fluent.Separator>Box</Fluent.Separator>
                       <Fluent.Dropdown label='Zone' options={options} selectedKey={zone0} onChange={onZoneChange} />
-                      <Fluent.SpinButton
-                        defaultValue={order0 ? `${order0}` : '0'}
+                      <SpinBox
+                        defaultValue={order0 ?? 0}
                         label='Order:'
-                        min={0}
+                        min={0} max={25} step={1}
                         onChange={onOrderChange}
                       />
-                      <Fluent.SpinButton
-                        defaultValue={size0 ?? '0'}
+                      <SpinBox
+                        defaultValue={size0 ? parseU(size0) : 0}
                         label='Size:'
-                        min={0}
+                        min={0} max={25} step={1}
                         onChange={onSizeChange}
                       />
-                      <Fluent.SpinButton
-                        defaultValue={width0 ? parsePx(width0) : '0'}
-                        label='Width:'
-                        min={0}
-                        max={10000}
-                        step={10}
+                      <SpinBox
+                        defaultValue={width0 ? parsePx(width0) : 0}
+                        label='Width (px):'
+                        min={0} max={10000} step={10}
                         onChange={onWidthChange}
                       />
-                      <Fluent.SpinButton
-                        defaultValue={height0 ? parsePx(height0) : '0'}
-                        label='Height:'
-                        min={0}
-                        max={10000}
-                        step={10}
+                      <SpinBox
+                        defaultValue={height0 ? parsePx(height0) : 0}
+                        label='Height (px):'
+                        min={0} max={10000} step={10}
                         onChange={onHeightChange}
                       />
+                      <Fluent.Separator>Properties</Fluent.Separator>
                     </div>
                   )
                 }
