@@ -17,10 +17,10 @@ import { DialogType, IDropdownOption } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
-import { editorActionB, EditorActionT, defaultLayoutDef, noAction, pickCard } from './editing'
+import { editorActionB, EditorActionT, defaultLayoutDef, noAction, pickCard, layoutDefs } from './editing'
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
-import { bond, box, C, Card, Dict, parseU, qd, S, U, xid } from './qd'
+import { B, bond, Box, box, C, Card, Dict, parseU, qd, S, U, xid } from './qd'
 import { border, cssVar } from './theme'
 
 /**
@@ -130,13 +130,16 @@ const
       onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         onChange(parseValue(e.target.value))
       },
-      increment = (s: S, step: U) => {
+      onIncrement = (s: S) => {
         const v = Math.min(max, parseValue(s) + step)
         onChange(v)
         return String(v)
       },
-      onIncrement = (s: S) => increment(s, step),
-      onDecrement = (s: S) => increment(s, -step),
+      onDecrement = (s: S) => {
+        const v = Math.max(min, parseValue(s) - step)
+        onChange(v)
+        return String(v)
+      },
       render = () => {
         return (
           <Fluent.SpinButton
@@ -380,6 +383,55 @@ const
   })
 
 export const
+  LayoutPicker = bond(({ visibleB }: { visibleB: Box<B> }) => {
+    let
+      selectedLayout = layoutDefs[0],
+      selectedWidth = 0
+    const
+      layoutOptions: Fluent.IDropdownOption[] = layoutDefs.map(({ name: key }) => ({ key, text: key })),
+      onLayoutChange = (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, option?: Fluent.IDropdownOption) => {
+        if (!option) return
+        const layout = layoutDefs.find(d => d.name === option.key)
+        if (layout) selectedLayout = layout
+      },
+      onWidthChange = (width: U) => { selectedWidth = width },
+      accept = () => {
+        const
+          layout: Layout = { ...selectedLayout.layout, width: `${selectedWidth}px` },
+          page = qd.edit()
+        page.put('__editor__', { view: 'editor', box: '', title: '' })
+        page.put('__meta__', { view: 'meta', box: '', layouts: [layout] })
+        page.sync()
+      },
+      cancel = () => { visibleB(false) },
+      render = () => {
+        return (
+          <Fluent.Dialog
+            hidden={!visibleB()}
+            onDismiss={cancel}
+            dialogContentProps={{
+              type: Fluent.DialogType.largeHeader,
+              title: 'Choose a page layout',
+              subText: 'This page will be made editable, and the chosen layout will be applied to the page. ',
+            }}
+            modalProps={{ isBlocking: false, styles: { main: { maxWidth: 450 } } }}
+          >
+            <Fluent.Dropdown label='Page Layout' options={layoutOptions} defaultSelectedKey={selectedLayout.name} onChange={onLayoutChange} />
+            <SpinBox
+              defaultValue={selectedWidth}
+              label='Page Width:'
+              min={0} max={4000} step={50}
+              onChange={onWidthChange}
+            />
+            <Fluent.DialogFooter>
+              <Fluent.DefaultButton onClick={cancel} text="Back to safety" />
+              <Fluent.PrimaryButton onClick={accept} text="Apply Layout" />
+            </Fluent.DialogFooter>
+          </Fluent.Dialog >
+        )
+      }
+    return { render, visibleB }
+  }),
   View = bond(({ name, changed }: Card<State>) => {
     const
       addCard = () => { editorActionB(pickCard) },

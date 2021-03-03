@@ -16,11 +16,10 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
-import { layoutDefs } from './editing'
+import { LayoutPicker } from './editor'
 import { Logo } from './logo'
-import { Layout } from './meta'
 import { PageLayout } from './page'
-import { B, bond, Box, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
+import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, cssVar, pc, themeB } from './theme'
 
 const
@@ -57,45 +56,6 @@ const
   })
 
 const
-  LayoutPicker = bond(({ visibleB }: { visibleB: Box<B> }) => {
-    let selectedLayout = layoutDefs[0]
-    const
-      setLayout = (layout: Layout) => {
-        const page = qd.edit()
-        page.put('__editor__', { view: 'editor', box: '', title: '' })
-        page.put('__meta__', { view: 'meta', box: '', layouts: [layout] })
-        page.sync()
-      },
-      options: Fluent.IChoiceGroupOption[] = layoutDefs.map(({ name: key }) => ({ key, text: key })),
-      onChange = (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, option?: Fluent.IChoiceGroupOption) => {
-        if (!option) return
-        const layout = layoutDefs.find(d => d.name === option.key)
-        if (layout) selectedLayout = layout
-      },
-      accept = () => { setLayout(selectedLayout.layout) },
-      cancel = () => { visibleB(false) },
-      render = () => {
-        return (
-          <Fluent.Dialog
-            hidden={!visibleB()}
-            onDismiss={cancel}
-            dialogContentProps={{
-              type: Fluent.DialogType.largeHeader,
-              title: 'Choose a page layout',
-              subText: 'This page will be made editable, and the chosen layout will be applied to the page. ',
-            }}
-            modalProps={{ isBlocking: false, styles: { main: { maxWidth: 450 } } }}
-          >
-            <Fluent.ChoiceGroup options={options} defaultSelectedKey={selectedLayout.name} onChange={onChange} />
-            <Fluent.DialogFooter>
-              <Fluent.DefaultButton onClick={cancel} text="Back to safety" />
-              <Fluent.PrimaryButton onClick={accept} text="Apply Layout" />
-            </Fluent.DialogFooter>
-          </Fluent.Dialog >
-        )
-      }
-    return { render, visibleB }
-  }),
   BusyOverlay = bond(() => {
     let
       spinTimeout = 0
