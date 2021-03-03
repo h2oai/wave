@@ -17,9 +17,9 @@ import { IDropdownOption } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
-import { editorActionB, EditorActionT, noAction, pickCard } from './editing'
+import { editorActionB, EditorActionT, defaultLayoutDef, noAction, pickCard } from './editing'
 import { cards } from './layout'
-import { FlexBox } from './meta'
+import { FlexBox, Layout, layoutsB, Zone } from './meta'
 import { bond, C, Card, Dict, parseU, qd, S, U } from './qd'
 import { border, cssVar } from './theme'
 
@@ -154,12 +154,24 @@ const
       }
     return { render }
   }),
-  AttrPanelView = bond(({ view, card }: { view: S, card?: C }) => {
+  collectZones = (zoneNames: S[], zones: Zone[]) => {
+    for (const zone of zones) {
+      if (zone.zones) {
+        collectZones(zoneNames, zone.zones)
+      } else {
+        zoneNames.push(zone.name)
+      }
+    }
+  },
+  AttrPanelView = bond(({ view, layout, card }: { view: S, layout: Layout, card?: C }) => {
     const
       { attrs } = cardDefLookup[view],
       isNew = card ? false : true,
       original: Dict<any> = {},
-      changes: Dict<any> = {}
+      changes: Dict<any> = {},
+      zones: S[] = []
+
+    collectZones(zones, layout.zones)
 
     for (const { name, value } of attrs) original[name] = changes[name] = value
 
@@ -255,16 +267,14 @@ const
                   )
                 }
               case 'record':
+                // TODO
                 return (
-                  <div key={name}>
-                    <Fluent.Label>{labelize(name)}</Fluent.Label>
-                    <Fluent.MessageBar messageBarType={Fluent.MessageBarType.warning}>Could not render field</Fluent.MessageBar>
-                  </div>
+                  <div key={name} />
                 )
               case 'box':
                 {
                   const
-                    options: IDropdownOption[] = ['Header', 'Sidebar', 'Body', 'Footer'].map(text => ({ key: text, text })),
+                    zoneOptions: IDropdownOption[] = zones.map(key => ({ key, text: key })),
                     changeBox = (f: (b: Dict<any>) => void) => {
                       const b = JSON.parse(changes[name])
                       f(b)
@@ -292,7 +302,7 @@ const
                   return (
                     <div key={name}>
                       <Divider>Box</Divider>
-                      <Fluent.Dropdown label='Zone' options={options} selectedKey={zone0} onChange={onZoneChange} />
+                      <Fluent.Dropdown label='Zone' options={zoneOptions} defaultSelectedKey={zone0} onChange={onZoneChange} />
                       <SpinBox
                         defaultValue={order0 ?? 0}
                         label='Order:'
@@ -339,7 +349,11 @@ const
         )
       }
     return { render }
-  })
+  }),
+  getActiveLayout = (): Layout => {
+    const layouts = layoutsB()
+    return layouts && layouts.length ? layouts[0] : defaultLayoutDef.layout
+  }
 
 export const
   View = bond(({ name, changed }: Card<State>) => {
@@ -353,7 +367,9 @@ export const
 
         switch (action.t) {
           case EditorActionT.Add:
-            content = <AttrPanelView view={action.view} />
+            {
+              content = <AttrPanelView view={action.view} layout={getActiveLayout()} />
+            }
             break
           case EditorActionT.Edit:
             {
@@ -362,7 +378,7 @@ export const
                 const
                   { name } = action,
                   card = page.get(name)
-                if (card) content = <AttrPanelView view={card.state.view} card={card} />
+                if (card) content = <AttrPanelView view={card.state.view} layout={getActiveLayout()} card={card} />
               }
             }
             break

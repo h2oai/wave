@@ -1,3 +1,4 @@
+import { Layout } from "./meta"
 import { B, box, S, U } from "./qd"
 
 export type CardAttr = {
@@ -42,3 +43,72 @@ export const
   editCard = (name: S) => {
     editorActionB({ t: EditorActionT.Edit, name })
   }
+
+export type LayoutDef = {
+  name: S
+  layout: Layout
+}
+
+export const
+  layoutDefs: LayoutDef[] = [
+    {
+      name: 'Sidebar on Left',
+      layout: {
+        breakpoint: 'xs',
+        min_height: '512px',
+        zones: [
+          { name: 'Header', },
+          {
+            name: 'Main',
+            direction: 'row',
+            zones: [
+              { name: 'Sidebar', size: '256px' },
+              { name: 'Body' },
+            ],
+          },
+          { name: 'Footer' },
+        ]
+      }
+    },
+    {
+      name: 'Sidebar on Right',
+      layout: {
+        breakpoint: 'xs',
+        min_height: '512px',
+        zones: [
+          { name: 'Header', },
+          {
+            name: 'Main',
+            direction: 'row',
+            zones: [
+              { name: 'Body' },
+              { name: 'Sidebar', size: '256px' },
+            ],
+          },
+          { name: 'Footer' },
+        ]
+      }
+    },
+    {
+      name: 'No Sidebar',
+      layout: {
+        breakpoint: 'xs',
+        min_height: '512px',
+        zones: [
+          { name: 'Header', },
+          { name: 'Body' },
+          { name: 'Footer' },
+        ],
+      }
+    },
+    {
+      name: 'Body Only',
+      layout: {
+        breakpoint: 'xs',
+        zones: [
+          { name: 'Body' },
+        ],
+      }
+    },
+  ],
+  defaultLayoutDef = layoutDefs[0]

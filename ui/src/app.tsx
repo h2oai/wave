@@ -16,6 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
+import { layoutDefs } from './editing'
 import { Logo } from './logo'
 import { Layout } from './meta'
 import { PageLayout } from './page'
@@ -54,74 +55,6 @@ const
       flexDirection: 'column',
     }
   })
-
-type LayoutDef = {
-  name: S
-  layout: Layout
-}
-
-const
-  layoutDefs: LayoutDef[] = [
-    {
-      name: 'Sidebar on Left',
-      layout: {
-        breakpoint: 'xs',
-        min_height: '512px',
-        zones: [
-          { name: 'Header', },
-          {
-            name: 'Main',
-            direction: 'row',
-            zones: [
-              { name: 'Sidebar', size: '256px' },
-              { name: 'Body' },
-            ],
-          },
-          { name: 'Footer' },
-        ]
-      }
-    },
-    {
-      name: 'Sidebar on Right',
-      layout: {
-        breakpoint: 'xs',
-        min_height: '512px',
-        zones: [
-          { name: 'Header', },
-          {
-            name: 'Main',
-            direction: 'row',
-            zones: [
-              { name: 'Body' },
-              { name: 'Sidebar', size: '256px' },
-            ],
-          },
-          { name: 'Footer' },
-        ]
-      }
-    },
-    {
-      name: 'No Sidebar',
-      layout: {
-        breakpoint: 'xs',
-        min_height: '512px',
-        zones: [
-          { name: 'Header', },
-          { name: 'Body' },
-          { name: 'Footer' },
-        ],
-      }
-    },
-    {
-      name: 'Body Only',
-      layout: {
-        breakpoint: 'xs',
-        zones: [
-          { name: 'Body' },
-        ],
-      }
-    },
-  ]
 
 const
   LayoutPicker = bond(({ visibleB }: { visibleB: Box<B> }) => {
