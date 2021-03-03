@@ -114,7 +114,7 @@ export const cardDefs: CardDef[] = [
   },
   {
     "view": "frame",
-    "icon": "FileHTML",
+    "icon": "PageAdd",
     "attrs": [
       {
         "name": "box",

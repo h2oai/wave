@@ -13,14 +13,14 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { IDropdownOption } from '@fluentui/react'
+import { DialogType, IDropdownOption } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
 import { editorActionB, EditorActionT, defaultLayoutDef, noAction, pickCard } from './editing'
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
-import { bond, C, Card, Dict, parseU, qd, S, U } from './qd'
+import { bond, box, C, Card, Dict, parseU, qd, S, U } from './qd'
 import { border, cssVar } from './theme'
 
 /**
@@ -353,7 +353,30 @@ const
   getActiveLayout = (): Layout => {
     const layouts = layoutsB()
     return layouts && layouts.length ? layouts[0] : defaultLayoutDef.layout
-  }
+  },
+  ConfirmDialog = bond(({ title, text, acceptCaption, cancelCaption, onAccept }: { title: S, text: S, acceptCaption: S, cancelCaption: S, onAccept: () => void }) => {
+    const
+      hiddenB = box(false),
+      cancel = () => { hiddenB(true) },
+      accept = () => {
+        onAccept()
+        hiddenB(true)
+      },
+      render = () => (
+        <Fluent.Dialog
+          hidden={hiddenB()}
+          onDismiss={cancel}
+          dialogContentProps={{ type: DialogType.normal, title, subText: text }}
+          modalProps={{ styles: { main: { maxWidth: 450 } } }}
+        >
+          <Fluent.DialogFooter>
+            <Fluent.DefaultButton onClick={cancel} text={cancelCaption} />
+            <Fluent.PrimaryButton onClick={accept} text={acceptCaption} />
+          </Fluent.DialogFooter>
+        </Fluent.Dialog>
+      )
+    return { render, hiddenB }
+  })
 
 export const
   View = bond(({ name, changed }: Card<State>) => {
@@ -382,6 +405,24 @@ export const
               }
             }
             break
+          case EditorActionT.Delete:
+            {
+              const
+                { name } = action,
+                onAccept = () => {
+                  const page = qd.edit()
+                  page.del(name)
+                  page.sync()
+                }
+              content = <ConfirmDialog
+                title='Delete Card?'
+                text='This card will be permanently deleted.'
+                acceptCaption='Delete Card'
+                cancelCaption="Don't delete"
+                onAccept={onAccept}
+              />
+            }
+            break
           case EditorActionT.Pick:
             {
               const choices = cardDefs.map(({ view, icon }) => {
@@ -396,7 +437,7 @@ export const
                 )
               })
               content = (
-                <Fluent.Panel headerText='Add a card' isLightDismiss={true} onDismiss={onDismiss} isOpen={true} >
+                <Fluent.Panel headerText='Add content' isLightDismiss={true} onDismiss={onDismiss} isOpen={true} >
                   <div className={css.cards}>{choices}</div>
                 </Fluent.Panel>
               )

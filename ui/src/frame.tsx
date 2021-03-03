@@ -61,7 +61,7 @@ export interface Frame {
  * Render a card containing a HTML page inside an inline frame (an `iframe`).
  *
  * Either a path or content can be provided as arguments.
- * :icon "FileHTML"
+ * :icon "PageAdd"
  */
 interface State {
   /**

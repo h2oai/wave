@@ -17,7 +17,7 @@ import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { Command } from './toolbar'
 import { bond, box, qd, Box, B, S } from './qd'
-import { editCard } from './editing'
+import { deleteCard, editCard } from './editing'
 
 const
   css = stylesheet({
@@ -48,11 +48,16 @@ const
 
 const
   editCommand = '__edit__',
+  deleteCommand = '__delete__',
   toContextMenuItem = (c: Command): IContextualMenuItem => {
     const
       onClick = () => {
         if (c.name === editCommand) {
           if (c.value) editCard(c.value)
+          return
+        }
+        if (c.name === deleteCommand) {
+          if (c.value) deleteCard(c.value)
           return
         }
         if (c.name.startsWith('#')) {
@@ -81,7 +86,12 @@ export const
       hide = () => hiddenB(true),
       render = () => {
         const cmds = commands ?? []
-        if (canEdit) cmds.push({ name: editCommand, label: 'Edit this card', icon: 'Edit', value: name })
+        if (canEdit) {
+          cmds.push(
+            { name: editCommand, label: 'Edit this card', icon: 'Edit', value: name },
+            { name: deleteCommand, label: 'Delete this card', icon: 'Delete', value: name },
+          )
+        }
         const
           hidden = hiddenB(),
           items = cmds.map(toContextMenuItem)

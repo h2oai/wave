@@ -30,18 +30,22 @@ export type CardDef = {
   attrs: CardAttr[]
 }
 
-export enum EditorActionT { None, Pick, Add, Edit }
+export enum EditorActionT { None, Pick, Add, Edit, Delete }
 export type NoAction = { t: EditorActionT.None }
 export type PickCard = { t: EditorActionT.Pick }
 export type AddCard = { t: EditorActionT.Add, view: S }
 export type EditCard = { t: EditorActionT.Edit, name: S }
-export type EditorAction = NoAction | PickCard | AddCard | EditCard
+export type DeleteCard = { t: EditorActionT.Delete, name: S }
+export type EditorAction = NoAction | PickCard | AddCard | EditCard | DeleteCard
 export const
   noAction: EditorAction = { t: EditorActionT.None },
   pickCard: EditorAction = { t: EditorActionT.Pick },
   editorActionB = box<EditorAction>(noAction),
   editCard = (name: S) => {
     editorActionB({ t: EditorActionT.Edit, name })
+  },
+  deleteCard = (name: S) => {
+    editorActionB({ t: EditorActionT.Delete, name })
   }
 
 export type LayoutDef = {
