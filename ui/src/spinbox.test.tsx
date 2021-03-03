@@ -17,12 +17,21 @@ import React from 'react'
 import { Spinbox, XSpinbox } from './spinbox'
 import { wave } from './ui'
 
-const name = 'spinbox'
-const spinboxProps: Spinbox = { name }
+const
+  name = 'spinbox',
+  spinboxProps: Spinbox = { name },
+  pushMock = jest.fn()
 
 const mouseEvent = { clientX: 0, clientY: 0 }
 describe('Spinbox.tsx', () => {
-  beforeEach(() => { wave.args[name] = null })
+  beforeAll(() => {
+    jest.useFakeTimers()
+    wave.push = pushMock
+  })
+  beforeEach(() => {
+    wave.args[name] = null
+    pushMock.mockReset()
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XSpinbox model={spinboxProps} />)
@@ -71,24 +80,72 @@ describe('Spinbox.tsx', () => {
     expect(wave.args[name]).toBe(1)
   })
 
-  it('Sets args on decrement', () => {
-    const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1 }} />)
-    const incrementBtn = container.querySelector('.ms-DownButton')!
+  it('Calls sync on increment if trigger specified', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
+    const incrementBtn = container.querySelector('.ms-UpButton')!
 
     fireEvent.mouseDown(incrementBtn, mouseEvent)
     fireEvent.mouseUp(incrementBtn, mouseEvent)
+
+    expect(wave.args[name]).toBe(0)
+    expect(pushMock).toHaveBeenCalled()
+  })
+
+  it('Sets args on decrement', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1 }} />)
+    const decrementBtn = container.querySelector('.ms-DownButton')!
+
+    fireEvent.mouseDown(decrementBtn, mouseEvent)
+    fireEvent.mouseUp(decrementBtn, mouseEvent)
 
     expect(wave.args[name]).toBe(0)
   })
 
   it('Sets args on decrement - not beyond min', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1, min: 1 }} />)
-    const incrementBtn = container.querySelector('.ms-DownButton')!
+    const decrementBtn = container.querySelector('.ms-DownButton')!
 
-    fireEvent.mouseDown(incrementBtn, mouseEvent)
-    fireEvent.mouseUp(incrementBtn, mouseEvent)
+    fireEvent.mouseDown(decrementBtn, mouseEvent)
+    fireEvent.mouseUp(decrementBtn, mouseEvent)
 
     expect(wave.args[name]).toBe(1)
   })
 
+  it('Calls sync on decrement if trigger specified', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
+    const decrementBtn = container.querySelector('.ms-DownButton')!
+
+    fireEvent.mouseDown(decrementBtn, mouseEvent)
+    fireEvent.mouseUp(decrementBtn, mouseEvent)
+
+    expect(pushMock).toHaveBeenCalled()
+  })
+
+  it('Sets args on input', () => {
+    expect(wave.args[name]).toBeNull()
+    const { getByTestId } = render(<XSpinbox model={spinboxProps} />)
+    fireEvent.input(getByTestId(name), { target: { value: 50 } })
+    expect(wave.args[name]).toBe(50)
+  })
+
+  it('Sets args on input - not beyond min', () => {
+    expect(wave.args[name]).toBeNull()
+    const { getByTestId } = render(<XSpinbox model={{ ...spinboxProps, min: 1 }} />)
+    fireEvent.input(getByTestId(name), { target: { value: 0 } })
+    expect(wave.args[name]).toBe(1)
+  })
+
+  it('Sets args on input - not beyond max', () => {
+    expect(wave.args[name]).toBeNull()
+    const { getByTestId } = render(<XSpinbox model={{ ...spinboxProps, max: 1 }} />)
+    fireEvent.input(getByTestId(name), { target: { value: 2 } })
+    expect(wave.args[name]).toBe(1)
+  })
+
+  it('Calls sync on input if trigger specified', () => {
+    const { getByTestId } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
+    fireEvent.input(getByTestId(name), { target: { value: 50 } })
+    jest.runAllTimers()
+    expect(pushMock).toHaveBeenCalled()
+  })
 })
