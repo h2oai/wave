@@ -2467,6 +2467,7 @@ def layout(
         height: Optional[str] = None,
         min_height: Optional[str] = None,
         max_height: Optional[str] = None,
+        name: Optional[str] = None,
 ) -> Layout:
     """Represents the layout structure for a page.
 
@@ -2479,6 +2480,7 @@ def layout(
         height: The height of the layout. Defaults to `auto`.
         min_height: The minimum height of the layout.
         max_height: The maximum height of the layout.
+        name: An identifying name for this zone.
     Returns:
         A `h2o_wave.types.Layout` instance.
     """
@@ -2491,6 +2493,7 @@ def layout(
         height,
         min_height,
         max_height,
+        name,
     )
 
 

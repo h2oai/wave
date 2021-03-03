@@ -58,6 +58,7 @@ export const
     {
       name: 'Sidebar on Left',
       layout: {
+        name: 'hsbf',
         breakpoint: 'xs',
         min_height: '512px',
         zones: [
@@ -77,6 +78,7 @@ export const
     {
       name: 'Sidebar on Right',
       layout: {
+        name: 'hbsf',
         breakpoint: 'xs',
         min_height: '512px',
         zones: [
@@ -96,6 +98,7 @@ export const
     {
       name: 'No Sidebar',
       layout: {
+        name: 'hbf',
         breakpoint: 'xs',
         min_height: '512px',
         zones: [
@@ -108,6 +111,7 @@ export const
     {
       name: 'Body Only',
       layout: {
+        name: 'b',
         breakpoint: 'xs',
         zones: [
           { name: 'Body' },

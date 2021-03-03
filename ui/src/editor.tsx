@@ -106,6 +106,23 @@ const
     return d
   },
   cardDefLookup = toDict(cardDefs, d => d.view),
+  parsePx = (s: S) => parseU(s.replace(/px$/, '')),
+  collectZones = (zoneNames: S[], zones: Zone[]) => {
+    for (const zone of zones) {
+      if (zone.zones) {
+        collectZones(zoneNames, zone.zones)
+      } else {
+        zoneNames.push(zone.name)
+      }
+    }
+  },
+  getActiveLayout = (): Layout => {
+    const layouts = layoutsB()
+    return layouts && layouts.length ? layouts[0] : defaultLayoutDef.layout
+  },
+  identifyLayoutDef = (layout: Layout): LayoutDef => {
+    return layoutDefs.find(ld => ld.layout.name === layout.name) ?? defaultLayoutDef
+  },
   separatorStyle: Partial<Fluent.ISeparatorStyles> = {
     root: {
       marginTop: 15,
@@ -157,22 +174,14 @@ const
       }
     return { render }
   }),
-  collectZones = (zoneNames: S[], zones: Zone[]) => {
-    for (const zone of zones) {
-      if (zone.zones) {
-        collectZones(zoneNames, zone.zones)
-      } else {
-        zoneNames.push(zone.name)
-      }
-    }
-  },
-  AttrPanelView = bond(({ view, layout, card }: { view: S, layout: Layout, card?: C }) => {
+  AttrPanelView = bond(({ view, card }: { view: S, card?: C }) => {
     const
       { attrs } = cardDefLookup[view],
       isNew = card ? false : true,
       original: Dict<any> = {},
       changes: Dict<any> = {},
-      zones: S[] = []
+      zones: S[] = [],
+      layout = getActiveLayout()
 
     collectZones(zones, layout.zones)
 
@@ -301,7 +310,6 @@ const
                     onHeightChange = (v: U) => {
                       if (v) { setBox('height', `${v}px`) } else { unsetBox('height') }
                     },
-                    parsePx = (s: S) => parseU(s.replace(/px$/, '')),
                     { zone: zone0, order: order0, size: size0, width: width0, height: height0 } = JSON.parse(changes[name]) as FlexBox
                   return (
                     <div key={name}>
@@ -354,10 +362,6 @@ const
       }
     return { render }
   }),
-  getActiveLayout = (): Layout => {
-    const layouts = layoutsB()
-    return layouts && layouts.length ? layouts[0] : defaultLayoutDef.layout
-  },
   ConfirmDialog = bond(({ title, text, acceptCaption, cancelCaption, onAccept }: { title: S, text: S, acceptCaption: S, cancelCaption: S, onAccept: () => void }) => {
     const
       hiddenB = box(false),
@@ -431,8 +435,11 @@ export const
       accept = () => {
         const
           { layoutDef, width } = pageSetupB(),
-          layout: Layout = { ...layoutDef.layout, width: `${width}px` },
+          layout: Layout = { ...layoutDef.layout },
           page = qd.edit()
+
+        if (width) layout.width = `${width}px`
+
         page.put('__editor__', { view: 'editor', box: '', title: '' })
         page.put('__meta__', { view: 'meta', box: '', layouts: [layout] })
         page.sync()
@@ -472,7 +479,7 @@ export const
         switch (action.t) {
           case EditorActionT.Add:
             {
-              content = <AttrPanelView view={action.view} layout={getActiveLayout()} />
+              content = <AttrPanelView view={action.view} />
             }
             break
           case EditorActionT.Edit:
@@ -482,7 +489,7 @@ export const
                 const
                   { name } = action,
                   card = page.get(name)
-                if (card) content = <AttrPanelView view={card.state.view} layout={getActiveLayout()} card={card} />
+                if (card) content = <AttrPanelView view={card.state.view} card={card} />
               }
             }
             break
@@ -508,8 +515,11 @@ export const
           case EditorActionT.Pick:
             {
               const
-                // XXX init from active layout
-                pageSetupB = box<PageSetup>({ layoutDef: defaultLayoutDef, width: 0 }),
+                layout = getActiveLayout(),
+                pageSetupB = box<PageSetup>({
+                  layoutDef: identifyLayoutDef(layout),
+                  width: layout.width ? parsePx(layout.width) : 0,
+                }),
                 choices = cardDefs.map(({ view, icon }) => {
                   const onClick = () => { editorActionB({ t: EditorActionT.Add, view }) }
                   return (
@@ -520,13 +530,23 @@ export const
                       <div className={css.cardCaption}>{labelize(view)}</div>
                     </div>
                   )
-                })
+                }),
+                applyPageSetup = () => {
+                  const
+                    page = qd.edit(),
+                    { layoutDef, width } = pageSetupB(),
+                    layout = { ...layoutDef.layout }
+                  if (width) layout.width = `${width}px`
+                  page.set('__meta__ layouts 0', layout)
+                  page.sync()
+                }
               content = (
                 <Fluent.Panel headerText='Edit this page' isLightDismiss={true} onDismiss={onDismiss} isOpen={true} >
                   <Divider>Add Content</Divider>
                   <div className={css.cards}>{choices}</div>
                   <Divider>Page Setup</Divider>
                   <PageSetupView pageSetupB={pageSetupB} />
+                  <Fluent.PrimaryButton onClick={applyPageSetup}>Apply Changes</Fluent.PrimaryButton>
                 </Fluent.Panel>
               )
             }

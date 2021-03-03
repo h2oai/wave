@@ -6905,6 +6905,7 @@ class Layout:
             height: Optional[str] = None,
             min_height: Optional[str] = None,
             max_height: Optional[str] = None,
+            name: Optional[str] = None,
     ):
         _guard_scalar('Layout.breakpoint', breakpoint, (str,), False, False, False)
         _guard_vector('Layout.zones', zones, (Zone,), False, False, False)
@@ -6914,6 +6915,7 @@ class Layout:
         _guard_scalar('Layout.height', height, (str,), False, True, False)
         _guard_scalar('Layout.min_height', min_height, (str,), False, True, False)
         _guard_scalar('Layout.max_height', max_height, (str,), False, True, False)
+        _guard_scalar('Layout.name', name, (str,), True, True, False)
         self.breakpoint = breakpoint
         """The minimum viewport width at which to use this layout. Values must be pixel widths (e.g. '0px', '576px', '768px') or a named preset. The named presets are: 'xs': '0px' for extra small devices (portrait phones), 's': '576px' for small devices (landscape phones), 'm': '768px' for medium devices (tablets), 'l': '992px' for large devices (desktops), 'xl': '1200px' for extra large devices (large desktops).  A breakpoint value of 'xs' (or '0') matches all viewport widths, unless other breakpoints are set."""
         self.zones = zones
@@ -6930,6 +6932,8 @@ class Layout:
         """The minimum height of the layout."""
         self.max_height = max_height
         """The maximum height of the layout."""
+        self.name = name
+        """An identifying name for this zone."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6941,6 +6945,7 @@ class Layout:
         _guard_scalar('Layout.height', self.height, (str,), False, True, False)
         _guard_scalar('Layout.min_height', self.min_height, (str,), False, True, False)
         _guard_scalar('Layout.max_height', self.max_height, (str,), False, True, False)
+        _guard_scalar('Layout.name', self.name, (str,), True, True, False)
         return _dump(
             breakpoint=self.breakpoint,
             zones=[__e.dump() for __e in self.zones],
@@ -6950,6 +6955,7 @@ class Layout:
             height=self.height,
             min_height=self.min_height,
             max_height=self.max_height,
+            name=self.name,
         )
 
     @staticmethod
@@ -6971,6 +6977,8 @@ class Layout:
         _guard_scalar('Layout.min_height', __d_min_height, (str,), False, True, False)
         __d_max_height: Any = __d.get('max_height')
         _guard_scalar('Layout.max_height', __d_max_height, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Layout.name', __d_name, (str,), True, True, False)
         breakpoint: str = __d_breakpoint
         zones: List[Zone] = [Zone.load(__e) for __e in __d_zones]
         width: Optional[str] = __d_width
@@ -6979,6 +6987,7 @@ class Layout:
         height: Optional[str] = __d_height
         min_height: Optional[str] = __d_min_height
         max_height: Optional[str] = __d_max_height
+        name: Optional[str] = __d_name
         return Layout(
             breakpoint,
             zones,
@@ -6988,6 +6997,7 @@ class Layout:
             height,
             min_height,
             max_height,
+            name,
         )
 
 

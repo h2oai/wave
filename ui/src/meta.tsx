@@ -55,6 +55,8 @@ export interface Layout {
   min_height?: S
   /** The maximum height of the layout. */
   max_height?: S
+  /** An identifying name for this zone. */
+  name?: Id
 }
 
 /**

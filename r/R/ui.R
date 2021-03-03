@@ -2851,6 +2851,7 @@ ui_zone <- function(
 #' @param height The height of the layout. Defaults to `auto`.
 #' @param min_height The minimum height of the layout.
 #' @param max_height The maximum height of the layout.
+#' @param name An identifying name for this zone.
 #' @return A Layout instance.
 #' @export
 ui_layout <- function(
@@ -2861,7 +2862,8 @@ ui_layout <- function(
   max_width = NULL,
   height = NULL,
   min_height = NULL,
-  max_height = NULL) {
+  max_height = NULL,
+  name = NULL) {
   .guard_scalar("breakpoint", "character", breakpoint)
   .guard_vector("zones", "h2oq_Zone", zones)
   .guard_scalar("width", "character", width)
@@ -2870,6 +2872,7 @@ ui_layout <- function(
   .guard_scalar("height", "character", height)
   .guard_scalar("min_height", "character", min_height)
   .guard_scalar("max_height", "character", max_height)
+  .guard_scalar("name", "character", name)
   .o <- list(
     breakpoint=breakpoint,
     zones=zones,
@@ -2878,7 +2881,8 @@ ui_layout <- function(
     max_width=max_width,
     height=height,
     min_height=min_height,
-    max_height=max_height)
+    max_height=max_height,
+    name=name)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Layout"))
   return(.o)
 }
