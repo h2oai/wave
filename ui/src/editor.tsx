@@ -20,7 +20,7 @@ import { cardDefs } from './defs'
 import { editorActionB, EditorActionT, defaultLayoutDef, noAction, pickCard } from './editing'
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
-import { bond, box, C, Card, Dict, parseU, qd, S, U } from './qd'
+import { bond, box, C, Card, Dict, parseU, qd, S, U, xid } from './qd'
 import { border, cssVar } from './theme'
 
 /**
@@ -242,7 +242,8 @@ const
                       label={labelize(name)}
                       defaultValue={changes[name]}
                       multiline={true}
-                      onChange={onChange} />
+                      onChange={onChange}
+                      styles={{ field: { minHeight: 300 } }} />
                   )
                 }
               case 'spinbox':
@@ -415,6 +416,7 @@ export const
                   page.sync()
                 }
               content = <ConfirmDialog
+                key={xid()}
                 title='Delete Card?'
                 text='This card will be permanently deleted.'
                 acceptCaption='Delete Card'
