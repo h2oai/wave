@@ -28,7 +28,7 @@ export interface Spinbox {
   name: Id
   /** Text to be displayed alongside the component. */
   label?: S
-  /** The minimum value of the spinbox. Defaults to "1". */
+  /** The minimum value of the spinbox. Defaults to "0". */
   min?: F
   /** The maximum value of the spinbox. Defaults to "100". */
   max?: F
