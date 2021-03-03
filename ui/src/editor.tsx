@@ -17,7 +17,7 @@ import { DialogType, IDropdownOption } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
-import { editorActionB, EditorActionT, defaultLayoutDef, noAction, pickCard, layoutDefs } from './editing'
+import { editorActionB, EditorActionT, defaultLayoutDef, noAction, pickCard, layoutDefs, LayoutDef } from './editing'
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
 import { B, bond, Box, box, C, Card, Dict, parseU, qd, S, U, xid } from './qd'
@@ -380,24 +380,58 @@ const
         </Fluent.Dialog>
       )
     return { render, hiddenB }
-  })
-
-export const
-  LayoutPicker = bond(({ visibleB }: { visibleB: Box<B> }) => {
-    let
-      selectedLayout = layoutDefs[0],
-      selectedWidth = 0
+  }),
+  PageSetupView = bond(({ pageSetupB }: { pageSetupB: Box<PageSetup> }) => {
     const
+      pageSetup = pageSetupB(),
       layoutOptions: Fluent.IDropdownOption[] = layoutDefs.map(({ name: key }) => ({ key, text: key })),
       onLayoutChange = (_ev?: React.FormEvent<HTMLElement | HTMLInputElement>, option?: Fluent.IDropdownOption) => {
         if (!option) return
-        const layout = layoutDefs.find(d => d.name === option.key)
-        if (layout) selectedLayout = layout
+        const def = layoutDefs.find(d => d.name === option.key)
+        if (def) {
+          pageSetup.layoutDef = def
+          pageSetupB({ ...pageSetup })
+        }
       },
-      onWidthChange = (width: U) => { selectedWidth = width },
+      onWidthChange = (width: U) => {
+        pageSetup.width = width
+        pageSetupB({ ...pageSetup })
+      },
+      render = () => (
+        <>
+          <Fluent.Dropdown
+            label='Page Layout'
+            options={layoutOptions}
+            defaultSelectedKey={pageSetup.layoutDef.name}
+            onChange={onLayoutChange} />
+          <SpinBox
+            defaultValue={pageSetup.width}
+            label='Page Width:'
+            min={0} max={4000} step={50}
+            onChange={onWidthChange}
+          />
+        </>
+      )
+
+    return { render }
+  })
+
+type PageSetup = {
+  layoutDef: LayoutDef
+  width: U
+}
+
+export const
+  LayoutPicker = bond(({ visibleB }: { visibleB: Box<B> }) => {
+    const
+      pageSetupB = box<PageSetup>({
+        layoutDef: defaultLayoutDef,
+        width: 0,
+      }),
       accept = () => {
         const
-          layout: Layout = { ...selectedLayout.layout, width: `${selectedWidth}px` },
+          { layoutDef, width } = pageSetupB(),
+          layout: Layout = { ...layoutDef.layout, width: `${width}px` },
           page = qd.edit()
         page.put('__editor__', { view: 'editor', box: '', title: '' })
         page.put('__meta__', { view: 'meta', box: '', layouts: [layout] })
@@ -416,13 +450,7 @@ export const
             }}
             modalProps={{ isBlocking: false, styles: { main: { maxWidth: 450 } } }}
           >
-            <Fluent.Dropdown label='Page Layout' options={layoutOptions} defaultSelectedKey={selectedLayout.name} onChange={onLayoutChange} />
-            <SpinBox
-              defaultValue={selectedWidth}
-              label='Page Width:'
-              min={0} max={4000} step={50}
-              onChange={onWidthChange}
-            />
+            <PageSetupView pageSetupB={pageSetupB} />
             <Fluent.DialogFooter>
               <Fluent.DefaultButton onClick={cancel} text="Back to safety" />
               <Fluent.PrimaryButton onClick={accept} text="Apply Layout" />
@@ -479,20 +507,26 @@ export const
             break
           case EditorActionT.Pick:
             {
-              const choices = cardDefs.map(({ view, icon }) => {
-                const onClick = () => { editorActionB({ t: EditorActionT.Add, view }) }
-                return (
-                  <div key={view} className={css.card} onClick={onClick}>
-                    <div className={css.cardIcon} >
-                      <Fluent.FontIcon iconName={icon} />
+              const
+                // XXX init from active layout
+                pageSetupB = box<PageSetup>({ layoutDef: defaultLayoutDef, width: 0 }),
+                choices = cardDefs.map(({ view, icon }) => {
+                  const onClick = () => { editorActionB({ t: EditorActionT.Add, view }) }
+                  return (
+                    <div key={view} className={css.card} onClick={onClick}>
+                      <div className={css.cardIcon} >
+                        <Fluent.FontIcon iconName={icon} />
+                      </div>
+                      <div className={css.cardCaption}>{labelize(view)}</div>
                     </div>
-                    <div className={css.cardCaption}>{labelize(view)}</div>
-                  </div>
-                )
-              })
+                  )
+                })
               content = (
-                <Fluent.Panel headerText='Add content' isLightDismiss={true} onDismiss={onDismiss} isOpen={true} >
+                <Fluent.Panel headerText='Edit this page' isLightDismiss={true} onDismiss={onDismiss} isOpen={true} >
+                  <Divider>Add Content</Divider>
                   <div className={css.cards}>{choices}</div>
+                  <Divider>Page Setup</Divider>
+                  <PageSetupView pageSetupB={pageSetupB} />
                 </Fluent.Panel>
               )
             }
@@ -501,7 +535,7 @@ export const
         return (
           <>
             <div data-test={name} className={css.fab} onClick={addCard} >
-              <Fluent.FontIcon iconName='Add' />
+              <Fluent.FontIcon iconName='WindowEdit' />
             </div>
             {content}
           </>
