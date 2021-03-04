@@ -42,3 +42,5 @@ __pdoc__ = {
     'db': False,
     'ide': False,
 }
+
+__version__ = '1.12.1'
