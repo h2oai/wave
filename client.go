@@ -46,22 +46,27 @@ var (
 	}
 )
 
-// Client represent a websocket (UI) client.
-type Client struct {
-	id           string          // unique id
-	addr         string          // remote address
-	username     string          // username, or "default-user"
-	subject      string          // oidc subject identifier
-	accessToken  string          // oidc access token
-	refreshToken string          // oidc refresh token
-	broker       *Broker         // broker
-	conn         *websocket.Conn // connection
-	routes       []string        // watched routes
-	data         chan []byte     // send data
+// User represents a user.
+type User struct {
+	name         string // username, or "default-user"
+	subject      string // oidc subject identifier
+	accessToken  string // oidc access token
+	refreshToken string // oidc refresh token
 }
 
-func newClient(addr, username, subject, accessToken, refreshToken string, broker *Broker, conn *websocket.Conn) *Client {
-	return &Client{uuid.New().String(), addr, username, subject, accessToken, refreshToken, broker, conn, nil, make(chan []byte, 256)}
+// Client represent a websocket (UI) client.
+type Client struct {
+	id     string          // unique id
+	addr   string          // remote address
+	user   *User           // user
+	broker *Broker         // broker
+	conn   *websocket.Conn // connection
+	routes []string        // watched routes
+	data   chan []byte     // send data
+}
+
+func newClient(addr string, user *User, broker *Broker, conn *websocket.Conn) *Client {
+	return &Client{uuid.New().String(), addr, user, broker, conn, nil, make(chan []byte, 256)}
 }
 
 func (c *Client) listen() {
@@ -103,7 +108,7 @@ func (c *Client) listen() {
 				case unicastMode:
 					c.subscribe("/" + c.id) // client-level
 				case multicastMode:
-					c.subscribe("/" + c.username) // user-level
+					c.subscribe("/" + c.user.name) // user-level
 				}
 
 				boot := emptyJSON
@@ -200,12 +205,14 @@ var (
 func (c *Client) format(data []byte) []byte {
 	var buf bytes.Buffer
 
+	u := c.user
+
 	buf.Write(usernameHeader)
-	buf.WriteString(c.username)
+	buf.WriteString(u.name)
 	buf.WriteByte('\n')
 
 	buf.Write(subjectHeader)
-	buf.WriteString(c.subject)
+	buf.WriteString(u.subject)
 	buf.WriteByte('\n')
 
 	buf.Write(clientIDHeader)
@@ -213,11 +220,11 @@ func (c *Client) format(data []byte) []byte {
 	buf.WriteByte('\n')
 
 	buf.Write(accessTokenHeader)
-	buf.WriteString(c.accessToken)
+	buf.WriteString(u.accessToken)
 	buf.WriteByte('\n')
 
 	buf.Write(refreshTokenHeader)
-	buf.WriteString(c.refreshToken)
+	buf.WriteString(u.refreshToken)
 	buf.Write(queryBodySep)
 
 	buf.Write(data)

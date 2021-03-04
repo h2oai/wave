@@ -37,28 +37,37 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		echo(Log{"t": "socket_upgrade", "err": err.Error()})
 		return
 	}
-	username, subject, accessToken, refreshToken := getIdentity(r, s.sessions)
-	client := newClient(getRemoteAddr(r), username, subject, accessToken, refreshToken, s.broker, conn)
+	user := getIdentity(r, s.sessions)
+	client := newClient(getRemoteAddr(r), user, s.broker, conn)
 	go client.flush()
 	go client.listen()
 }
 
-func getIdentity(r *http.Request, sessions *OIDCSessions) (username, subject, accessToken, refreshToken string) {
-	username = "default-user"
-	subject = "no-subject"
-	accessToken = ""
-	refreshToken = ""
+var (
+	defaultUser = &User{
+		name:         "default-user",
+		subject:      "no-subject",
+		accessToken:  "",
+		refreshToken: "",
+	}
+)
 
+func getIdentity(r *http.Request, sessions *OIDCSessions) *User {
 	cookie, err := r.Cookie(oidcSessionKey)
 	if err != nil {
-		return
+		return defaultUser
 	}
 	sessionID := cookie.Value
 	session, ok := sessions.get(sessionID)
 	if !ok {
-		return
+		return defaultUser
 	}
-	return session.username, session.subject, session.token.AccessToken, session.token.RefreshToken
+	return &User{
+		name:         session.username,
+		subject:      session.subject,
+		accessToken:  session.token.AccessToken,
+		refreshToken: session.token.RefreshToken,
+	}
 }
 
 func getRemoteAddr(r *http.Request) string {
