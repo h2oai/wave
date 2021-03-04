@@ -172,6 +172,7 @@ export const
         || 1,
       r = dpr / bspr
 
+    el.style.outline = '1px solid #ccc'
     el.style.position = 'absolute'
 
     if (dpr !== bspr) {
