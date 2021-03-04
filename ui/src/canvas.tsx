@@ -437,7 +437,7 @@ export const
                   const ps = unmarshalPoints(shape.p), [p1, p2] = ps
                   bg.fillStyle = shape.c
                   fillRect(bg, p1, p2)
-                  ht.strokeStyle = hitmap.put(i)
+                  ht.fillStyle = hitmap.put(i)
                   fillRect(ht, p1, p2)
                 }
                 break
