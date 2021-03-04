@@ -170,7 +170,7 @@ export const
       if (n >= cap) {
         for (let i = 0; i < n - cap + 1; i++) page.set(`${name} data ${_keys[i]}`, null)
       }
-      const cm: ChatMessage = { u: 'admin', m: input }
+      const cm: ChatMessage = { u: qd.username ?? '?', m: input }
       page.set(`${name} data ${(new Date()).toISOString()}`, JSON.stringify(cm))
       page.sync()
     })
