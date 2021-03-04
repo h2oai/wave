@@ -122,6 +122,10 @@ func (c *Client) listen() {
 				continue
 			}
 
+			if headers, err := json.Marshal(OpsD{H: map[string]interface{}{"username": c.user.name}}); err == nil {
+				c.send(headers)
+			}
+
 			if page := c.broker.site.at(m.addr); page != nil { // is page?
 				if data := page.marshal(); data != nil {
 					c.send(data)
