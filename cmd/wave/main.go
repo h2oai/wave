@@ -55,6 +55,7 @@ func main() {
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
+	flag.BoolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
 
 	const (

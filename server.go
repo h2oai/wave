@@ -102,7 +102,7 @@ func Run(conf ServerConf) {
 	}
 
 	// XXX wrap special _ routes in a separate handler
-	http.Handle("/_s", newSocketServer(broker, sessions))
+	http.Handle("/_s", newSocketServer(broker, sessions, conf.Editable))
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))                                                                  // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir))                                                                // XXX secure

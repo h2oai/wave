@@ -22,12 +22,14 @@ import (
 type SocketServer struct {
 	broker   *Broker
 	sessions *OIDCSessions
+	editable bool
 }
 
-func newSocketServer(broker *Broker, sessions *OIDCSessions) *SocketServer {
+func newSocketServer(broker *Broker, sessions *OIDCSessions, editable bool) *SocketServer {
 	return &SocketServer{
 		broker,
 		sessions,
+		editable,
 	}
 }
 
@@ -38,7 +40,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user := getIdentity(r, s.sessions)
-	client := newClient(getRemoteAddr(r), user, s.broker, conn)
+	client := newClient(getRemoteAddr(r), user, s.broker, conn, s.editable)
 	go client.flush()
 	go client.listen()
 }

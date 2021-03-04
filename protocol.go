@@ -16,11 +16,17 @@ package wave
 
 // OpsD represents the set of changes to be applied to a Page. This is a discriminated union.
 type OpsD struct {
-	P *PageD                 `json:"p,omitempty"` // page
-	D []OpD                  `json:"d,omitempty"` // deltas
-	R int                    `json:"r,omitempty"` // reset
-	E string                 `json:"e,omitempty"` // error
-	H map[string]interface{} `json:"h,omitempty"` // headers
+	P *PageD `json:"p,omitempty"` // page
+	D []OpD  `json:"d,omitempty"` // deltas
+	R int    `json:"r,omitempty"` // reset
+	E string `json:"e,omitempty"` // error
+	M Meta   `json:"m,omitempty"` // metadata
+}
+
+// Meta represents metadata unrelated to commands
+type Meta struct {
+	Username string `json:"u"` // active user's username
+	Editor   bool   `json:"e"` // can the user edit pages?
 }
 
 // OpD represents a delta operation (effector)

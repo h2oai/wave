@@ -56,17 +56,18 @@ type User struct {
 
 // Client represent a websocket (UI) client.
 type Client struct {
-	id     string          // unique id
-	addr   string          // remote address
-	user   *User           // user
-	broker *Broker         // broker
-	conn   *websocket.Conn // connection
-	routes []string        // watched routes
-	data   chan []byte     // send data
+	id       string          // unique id
+	addr     string          // remote address
+	user     *User           // user
+	broker   *Broker         // broker
+	conn     *websocket.Conn // connection
+	routes   []string        // watched routes
+	data     chan []byte     // send data
+	editable bool            // allow editing? TODO move to user; tie to role
 }
 
-func newClient(addr string, user *User, broker *Broker, conn *websocket.Conn) *Client {
-	return &Client{uuid.New().String(), addr, user, broker, conn, nil, make(chan []byte, 256)}
+func newClient(addr string, user *User, broker *Broker, conn *websocket.Conn, editable bool) *Client {
+	return &Client{uuid.New().String(), addr, user, broker, conn, nil, make(chan []byte, 256), editable}
 }
 
 func (c *Client) listen() {
@@ -122,7 +123,7 @@ func (c *Client) listen() {
 				continue
 			}
 
-			if headers, err := json.Marshal(OpsD{H: map[string]interface{}{"username": c.user.name}}); err == nil {
+			if headers, err := json.Marshal(OpsD{M: Meta{Username: c.user.name, Editor: c.editable}}); err == nil {
 				c.send(headers)
 			}
 

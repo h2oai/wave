@@ -210,8 +210,9 @@ interface OpsD {
   d?: OpD[] // deltas
   r?: U // reset
   e?: S // error
-  h?: { // headers
-    username: S
+  m?: { // metadata
+    u: S // active user's username
+    e: B // can the user edit pages?
   }
 }
 interface OpD {
@@ -757,6 +758,7 @@ export interface Qd {
   socket: WebSocket | null
   page: Page | null
   username: S | null
+  editable: B
   edit(): PageRef
   sync(): void
   jump(key: any, value: any): void
@@ -777,6 +779,7 @@ export const qd: Qd = {
   socket: null,
   page: null,
   username: null,
+  editable: false,
   dialogB: box(null),
   edit: (path?: S): PageRef => {
     path = path || qd.path
@@ -894,9 +897,10 @@ const
             handle({ t: SockEventType.Message, type: SockMessageType.Err, message: msg.e })
           } else if (msg.r) {
             handle({ t: SockEventType.Reset })
-          } else if (msg.h) {
-            const h = msg.h
-            qd.username = h.username
+          } else if (msg.m) {
+            const { u, e } = msg.m
+            qd.username = u
+            qd.editable = e
           }
         } catch (err) {
           console.error(err)

@@ -27,6 +27,7 @@ type ServerConf struct {
 	Compact           string
 	CertFile          string
 	KeyFile           string
+	Editable          bool
 	Debug             bool
 	OIDCClientID      string
 	OIDCClientSecret  string
