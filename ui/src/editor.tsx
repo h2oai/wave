@@ -450,15 +450,15 @@ export const
             onDismiss={cancel}
             dialogContentProps={{
               type: Fluent.DialogType.largeHeader,
-              title: 'Choose a page layout',
-              subText: 'This page will be made editable, and the chosen layout will be applied to the page. ',
+              title: 'Edit this page?',
+              subText: "Don't worry, you can always change these settings later.",
             }}
             modalProps={{ isBlocking: false, styles: { main: { maxWidth: 450 } } }}
           >
             <PageSetupView pageSetupB={pageSetupB} />
             <Fluent.DialogFooter>
               <Fluent.DefaultButton onClick={cancel} text="Back to safety" />
-              <Fluent.PrimaryButton onClick={accept} text="Apply Layout" />
+              <Fluent.PrimaryButton onClick={accept} text="Start Editing" />
             </Fluent.DialogFooter>
           </Fluent.Dialog >
         )
