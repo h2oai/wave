@@ -283,7 +283,7 @@ const
     if (!layoutIndex) return <></>
     const
       { layout, index } = layoutIndex,
-      section = toSection({ name: 'main', zones: layout.zones }),
+      section = toSection({ name: '__main__', zones: layout.zones }),
       { width, min_width, max_width, height, min_height, max_height } = layout,
       editor = cards.find(c => c.state.view === 'editor')
 
