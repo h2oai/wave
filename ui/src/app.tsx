@@ -20,7 +20,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
-import { clas, cssVar, pc, themeB } from './theme'
+import { clas, cssVar, padding, pc, themeB } from './theme'
 
 const
   css = stylesheet({
@@ -49,9 +49,19 @@ const
     busyOverlay: {
       display: 'block',
     },
-    waitingOverlay: {
+    notFoundOverlay: {
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'center',
+    },
+    live: {
+      backgroundColor: '#ff2938',
+      color: '#fff',
+      padding: padding(4, 10),
+      fontWeight: 700,
+      borderRadius: 3,
+      letterSpacing: 3,
+      fontSize: 11,
     }
   })
 
@@ -85,11 +95,16 @@ const
         pickingLayoutB(true)
       },
       render = () => {
-        return (
-          <div className={css.waitingOverlay}>
-            <Logo />
+        const edit = qd.editable ? (
+          <>
             <Fluent.PrimaryButton onClick={onClick}>Edit this page</Fluent.PrimaryButton>
             <LayoutPicker visibleB={pickingLayoutB} />
+          </>
+        ) : <div className={css.live}>LIVE</div>
+        return (
+          <div className={css.notFoundOverlay}>
+            <Logo />
+            {edit}
           </div>
         )
       }
