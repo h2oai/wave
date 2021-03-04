@@ -217,14 +217,12 @@ const
       onChangeCardName = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
         cardName = v || (target as HTMLInputElement).value
       },
-      renderFooter = () => {
-        return (
-          <Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>
-            <Fluent.PrimaryButton onClick={save}>{isNew ? 'Add card' : 'Save changes'}</Fluent.PrimaryButton>
-            <Fluent.DefaultButton onClick={isNew ? goBack : abort}>Back</Fluent.DefaultButton>
-          </Fluent.Stack>
-        )
-      },
+      renderFooter = () => (
+        <Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>
+          <Fluent.PrimaryButton onClick={save}>{isNew ? 'Add card' : 'Save changes'}</Fluent.PrimaryButton>
+          <Fluent.DefaultButton onClick={isNew ? goBack : abort}>Back</Fluent.DefaultButton>
+        </Fluent.Stack>
+      ),
       render = () => {
         const
           fields = attrs.map(attr => {
@@ -531,7 +529,7 @@ export const
                     </div>
                   )
                 }),
-                applyPageSetup = () => {
+                save = () => {
                   const
                     page = qd.edit(),
                     { layoutDef, width } = pageSetupB(),
@@ -539,14 +537,25 @@ export const
                   if (width) layout.width = `${width}px`
                   page.set('__meta__ layouts 0', layout)
                   page.sync()
-                }
+                },
+                renderFooter = () => (
+                  <Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>
+                    <Fluent.PrimaryButton onClick={save}>Save changes</Fluent.PrimaryButton>
+                  </Fluent.Stack>
+                )
               content = (
-                <Fluent.Panel headerText='Edit this page' isLightDismiss={true} onDismiss={onDismiss} isOpen={true} >
+                <Fluent.Panel
+                  headerText='Edit this page'
+                  isLightDismiss={true}
+                  onDismiss={onDismiss}
+                  isOpen={true}
+                  onRenderFooterContent={renderFooter}
+                  isFooterAtBottom={true}
+                >
                   <Divider>Add Content</Divider>
                   <div className={css.cards}>{choices}</div>
                   <Divider>Page Setup</Divider>
                   <PageSetupView pageSetupB={pageSetupB} />
-                  <Fluent.PrimaryButton onClick={applyPageSetup}>Apply Changes</Fluent.PrimaryButton>
                 </Fluent.Panel>
               )
             }
