@@ -55,7 +55,7 @@ build-docker:
 		.
 
 run: ## Run server
-	go run cmd/wave/main.go -web-dir ./ui/build -debug
+	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable
 
 run-cypress: ## Run Cypress
 	cd test && ./node_modules/.bin/cypress open
