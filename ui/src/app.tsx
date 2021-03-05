@@ -90,7 +90,7 @@ const
           <Logo />
           {qd.editable && (
             <>
-              <Fluent.ActionButton iconProps={{ iconName: 'Edit' }} onClick={onClick} >Edit this page...</Fluent.ActionButton>
+              <Fluent.DefaultButton onClick={onClick} >Edit this page...</Fluent.DefaultButton>
               <LayoutPicker visibleB={pickingLayoutB} />
             </>
           )}
