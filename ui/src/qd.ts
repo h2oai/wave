@@ -682,10 +682,13 @@ const
           dirty = true
           return
         }
-        const c = cards[ks[0]]
+        const cn = ks[0], c = cards[cn]
         if (c) {
           c.set(ks.slice(1), v)
-          dirties[ks[0]] = true
+          dirties[cn] = true
+          // Special-case *_card.box and meta_card.layouts: changes require page invalidation
+          const p = ks[1]
+          if (p && (p === 'box' || (c.state.view === 'meta' && p === 'layouts'))) dirty = true
         }
       },
       sync = () => {
