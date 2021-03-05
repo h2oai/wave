@@ -540,7 +540,7 @@ export const
                 },
                 renderFooter = () => (
                   <Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>
-                    <Fluent.PrimaryButton onClick={save}>Save changes</Fluent.PrimaryButton>
+                    <Fluent.PrimaryButton onClick={save}>Apply changes</Fluent.PrimaryButton>
                   </Fluent.Stack>
                 )
               content = (
