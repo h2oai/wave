@@ -40,8 +40,14 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
     renderViz = () => {
       if (!ref.current) return
 
+      const { width, height } = ref.current.getBoundingClientRect()
+      if (!height) {
+        // Safari has weird event loop meaning this React code can run before Layout phase is finished (flex items not positioned yet).
+        setTimeout(renderViz, 300)
+        return
+      }
+
       const
-        { width, height } = ref.current.getBoundingClientRect(),
         diameter = Math.min(width, height),
         outerRadius = diameter / 2,
         innerRadius = diameter / 2 - thickness,

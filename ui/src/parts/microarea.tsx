@@ -60,8 +60,13 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
     renderViz = () => {
       if (!ref.current) return
 
+      const { width, height } = ref.current.getBoundingClientRect()
+      if (!height) {
+        // Safari has weird event loop meaning this React code can run before Layout phase is finished (flex items not positioned yet).
+        setTimeout(renderViz, 300)
+        return
+      }
       const
-        { width, height } = ref.current.getBoundingClientRect(),
         scaleX = d3.scaleLinear().domain([0, data.length - 1]).range([0, width]),
         scaleY = d3.scaleLinear().domain([minY, maxY]).range([height, 2]),
         fcurve = curves[curve] || d3.curveLinear,
