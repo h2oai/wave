@@ -173,7 +173,7 @@ async def setup_page(q: Q):
     )
 
     q.page['examples'] = ui.nav_card(
-        box='1 2 2 -1',
+        box='1 2 2 9',
         items=[
             ui.nav_group(
                 label='Examples',
@@ -188,12 +188,12 @@ async def setup_page(q: Q):
     )
 
     q.page['code'] = ui.frame_card(
-        box='3 4 5 -1',
+        box='3 4 5 7',
         title='',
         content='',
     )
     q.page['preview'] = ui.frame_card(
-        box='8 1 5 -1',
+        box='8 1 5 10',
         title='Preview',
         path='/demo',
     )

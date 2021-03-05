@@ -283,7 +283,7 @@ class _App:
                 q.page.drop()
                 # TODO replace this with a custom-designed error display
                 q.page['__unhandled_error__'] = markdown_card(
-                    box='1 1 -1 -1',
+                    box='1 1 12 10',
                     title='Error',
                     content=f'```\n{traceback.format_exc()}\n```',
                 )

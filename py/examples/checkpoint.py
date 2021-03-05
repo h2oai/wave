@@ -16,7 +16,7 @@ async def serve(q: Q):
     elif q.args.increment_client:
         q.client.count = (q.client.count or 0) + 1
 
-    q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
+    q.page['example'] = ui.form_card(box='1 1 12 10', items=[
         ui.button(name='increment_app', label=f'App Count={q.app.count or 0}'),
         ui.button(name='increment_user', label=f'User Count={q.user.count or 0}'),
         ui.button(name='increment_client', label=f'Client Count={q.client.count or 0}'),

@@ -7,7 +7,7 @@ from h2o_wave import site, ui
 page = site['/demo']
 
 page['example'] = ui.form_card(
-    box='1 1 4 -1',
+    box='1 1 4 10',
     items=[
         ui.link(label='Internal link', path='/starred'),
         ui.link(label='Internal link, new tab', path='/starred', target=''),

@@ -15,7 +15,7 @@ def blocking_function(secs) -> str:
 @app('/demo')
 async def serve(q: Q):
     if q.args.start:
-        q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[ui.progress('Running...')])
+        q.page['form'] = ui.form_card(box='1 1 12 10', items=[ui.progress('Running...')])
         await q.page.save()
 
         seconds = random.randint(1, 6)
@@ -27,8 +27,8 @@ async def serve(q: Q):
         # Do this instead:
         message = await q.run(blocking_function, seconds)
 
-        q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[ui.message_bar('info', message)])
+        q.page['form'] = ui.form_card(box='1 1 12 10', items=[ui.message_bar('info', message)])
         await q.page.save()
     else:
-        q.page['form'] = ui.form_card(box='1 1 -1 -1', items=[ui.button(name='start', label='Start')])
+        q.page['form'] = ui.form_card(box='1 1 12 10', items=[ui.button(name='start', label='Start')])
         await q.page.save()

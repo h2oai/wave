@@ -86,7 +86,7 @@ def _make_app_py(app_name: str):
 @app('/{app_name}')
 async def serve(q: Q):
     q.page['example'] = ui.form_card(
-        box='1 1 -1 -1', items=[
+        box='1 1 12 10', items=[
             ui.text('Hello!'),
         ]
     )

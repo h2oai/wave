@@ -44,7 +44,7 @@ def make_issue_table(allow_multiple_selection=False):
 
 async def edit_multiple(q: Q):
     q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
+        box='1 1 4 10',
         items=[
             make_issue_table(allow_multiple_selection=True),  # This time, allow multiple selections
             ui.buttons([
@@ -59,7 +59,7 @@ async def edit_multiple(q: Q):
 
 async def show_issues(q: Q):
     q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
+        box='1 1 4 10',
         items=[
             make_issue_table(),
             ui.buttons([ui.button(name='edit_multiple', label='Edit Multiple...', primary=True)]),
@@ -75,7 +75,7 @@ async def show_issue(q: Q, issue_id: str):
     q.client.active_issue_id = issue_id
 
     q.page['form'] = ui.form_card(
-        box='1 1 4 -1',
+        box='1 1 4 10',
         items=[
             ui.text_xl(f'Issue {issue.id}'),
             ui.text(issue.text),

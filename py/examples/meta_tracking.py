@@ -15,7 +15,7 @@ async def serve(q: Q):
         # That's all you need to do - set up a tracker.
         # The rest of this example does not do anything special related to tracking.
 
-        q.page['example'] = ui.form_card(box='1 1 -1 -1', items=[
+        q.page['example'] = ui.form_card(box='1 1 12 10', items=[
             ui.button(name='increment', label=f'Count={count}')
         ])
         q.client.initialized = True
