@@ -189,31 +189,51 @@ Our example contains a form and dropdown components and we need to feed it with 
 ```py {6,7}
 import datatable as dt
 
-df = dt.fread(dataset)
+df = dt.fread('./winemag_edit.csv')
 
 features = ['country', 'price', 'province', 'region_1', 'variety', 'winery']
 columns = {f: dt.unique(df[f]).to_list()[0] for f in features}
 choices = {key: [ui.choice(str(item)) for item in columns[key] if item] for key in columns}
 ```
 
-To do predictions, we need to prepare input data for `model.predict()` method. We do this every call since we want to see the rating being updated immediately:
+We do this in two steps. First, we extract the unique values for a given column. The resulting `columns` variable should be structured like this:
+
+```py
+{
+    'country': ['', 'Argentina', 'Armenia', 'Australia', 'Austria', ...],
+    'province': ['', 'Achaia', 'Aconcagua Costa', 'Aconcagua Valley', 'Aegean', 'Agioritikos', 'Ahr', ...],
+    ...
+}
+```
+
+In the next step, we create a similar dict but with a list of `Choice` objects using the `columns` and save it to `choices`:
+
+```py
+{
+    'country': [<Choice object>, <Choice object>, ...],
+    'province': [<Choice object>, <Choice object>, ...],
+    ...
+}
+```
+
+To do the predictions, we need to prepare input data for `model.predict()` method. We do this every call since we want to see the rating being updated immediately:
 
 ```py {5,6,7,8}
 from h2o_wave import app, Q
 
 @app('/demo')
 async def serve(q: Q):
-    country = q.args.country if 'country' in q.args else 'US'
-    price = float(q.args.price) if 'price' in q.args else 14.0
-    # The rest.
-    winery = q.args.winery if 'winery' in q.args else 'Rainstorm'
+    country = q.args.country or default_value['country']
+    price = float(q.args.price) if q.args.price else default_value['price']
+    ...  # The rest
+    winery = q.args.winery or default_value['winery']
 ```
 
 We choose to either use a value supplied by the query handler `serve()` or use a default value.
 
 Now we can do the predictions:
 
-```py {3}
+```py {2}
     input_data = [features, [country, price, province, region, variety, winery]]
     rating = model.predict(input_data)
     rating = rating[0][0]
