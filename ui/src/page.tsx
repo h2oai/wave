@@ -15,7 +15,7 @@
 import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
-import { CardEffect, CardView, getCardEffect, GridLayout } from './layout'
+import { CardEffect, CardView, getCardStyle, GridLayout } from './layout'
 import { FlexBox, Layout, layoutsB, preload, Zone } from './meta'
 import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
 import { clas, cssVar, margin } from './theme'
@@ -154,7 +154,7 @@ const
     },
   }),
   getCardEffectClass = (c: C) => {
-    const effect = getCardEffect(c)
+    const { effect } = getCardStyle(c)
     return clas(css.slot, effect === CardEffect.Normal
       ? css.normal
       : effect === CardEffect.Raised

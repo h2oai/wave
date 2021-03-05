@@ -57,7 +57,7 @@ export const
     return { render, changed }
   })
 
-cards.register('footer', View, CardEffect.Transparent)
+cards.register('footer', View, { effect: CardEffect.Transparent })
 
 
 

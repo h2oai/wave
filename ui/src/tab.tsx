@@ -72,4 +72,4 @@ export const
     return { render, changed }
   })
 
-cards.register('tab', View, CardEffect.Transparent)
+cards.register('tab', View, { effect: CardEffect.Transparent })

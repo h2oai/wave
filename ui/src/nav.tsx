@@ -75,4 +75,4 @@ export const
     return { render, changed }
   })
 
-cards.register('nav', View, CardEffect.Flat)
+cards.register('nav', View, { effect: CardEffect.Flat })

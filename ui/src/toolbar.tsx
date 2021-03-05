@@ -109,6 +109,6 @@ export const
     return { render, changed }
   })
 
-cards.register('toolbar', View, CardEffect.Transparent)
+cards.register('toolbar', View, { effect: CardEffect.Transparent })
 
 

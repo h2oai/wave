@@ -145,6 +145,6 @@ export const
     return { render, changed }
   })
 
-cards.register('header', View, CardEffect.Raised)
+cards.register('header', View, { effect: CardEffect.Raised })
 
 

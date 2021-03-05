@@ -76,7 +76,5 @@ export const
     return { render, changed }
   })
 
-cards.register('section', View, CardEffect.Transparent)
-
-
+cards.register('section', View, { effect: CardEffect.Transparent })
 

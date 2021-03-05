@@ -73,4 +73,4 @@ export const
     return { render, changed }
   })
 
-cards.register('breadcrumbs', View, CardEffect.Transparent)
+cards.register('breadcrumbs', View, { effect: CardEffect.Transparent })

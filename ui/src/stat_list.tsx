@@ -15,7 +15,7 @@
 import { FontIcon } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { CardEffect, cards } from './layout'
+import { cards } from './layout'
 import { bond, Card, qd, S } from './qd'
 import { clas, cssVar } from './theme'
 
@@ -142,7 +142,7 @@ export const
     return { render, changed }
   })
 
-cards.register('stat_list', View, CardEffect.Normal)
+cards.register('stat_list', View)
 
 
 

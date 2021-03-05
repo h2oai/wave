@@ -31,11 +31,19 @@ type Slot = {
 
 export enum CardEffect { Transparent, Normal, Raised, Flat }
 
+export type CardStyle = {
+  effect: CardEffect
+  overflow?: B
+}
+
 const
+  defaultCardStyle: CardStyle = { effect: CardEffect.Normal },
   newCardRegistry = () => {
     const
-      m: Dict<{ ctor: typeof React.Component, effect: CardEffect }> = {},
-      register = (name: S, ctor: typeof React.Component, effect: CardEffect = CardEffect.Normal) => m[name] = { ctor, effect },
+      m: Dict<{ ctor: typeof React.Component, style: CardStyle }> = {},
+      register = (name: S, ctor: typeof React.Component, style: CardStyle = defaultCardStyle) => (
+        m[name] = { ctor, style }
+      ),
       lookup = (name: S) => m[name] || m['']
     return { register, lookup }
   }
@@ -183,7 +191,7 @@ const
     },
   }),
   getCardEffectClass = (c: C) => {
-    const effect = getCardEffect(c)
+    const { effect } = getCardStyle(c)
     return clas(css.slot, effect === CardEffect.Normal
       ? css.normal
       : effect === CardEffect.Raised
@@ -193,7 +201,7 @@ const
   }
 
 export const
-  getCardEffect = (c: C): CardEffect => cards.lookup(c.state.view).effect,
+  getCardStyle = (c: C): CardStyle => cards.lookup(c.state.view).style,
   GridLayout = ({ name, cards: cs }: { name: S, cards: C[] }) => {
     const
       hasEditor = cs.find(c => c.state.view === 'editor') ? true : false,
