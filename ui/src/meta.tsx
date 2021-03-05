@@ -15,7 +15,7 @@
 import React from 'react'
 import { cards } from './layout'
 import { showNotification } from './notification'
-import { bond, box, Card, Id, qd, S, U } from './qd'
+import { bond, box, Card, Id, on, qd, S, U } from './qd'
 import { Dialog } from './dialog'
 import { setupTracker, Tracker } from './tracking'
 import { themeB } from './theme'
@@ -109,46 +109,26 @@ interface State {
   tracker?: Tracker
 }
 
+const
+  windowTitleB = box(''),
+  windowIconB = box('')
+
+on(windowTitleB, t => window.document.title = t)
+on(windowIconB, icon => {
+  const
+    iconLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement,
+    touchIconLink = document.querySelector("link[rel*='apple-touch-icon']") as HTMLLinkElement
+  if (iconLink) iconLink.href = icon
+  // Not working as of Feb 2021 since Safari does not support dynamic favicon changes.
+  if (touchIconLink) touchIconLink.href = icon
+})
+
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Card<State>) => {
     const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker } = state
 
-    if (title) {
-      delete state.title
-      window.document.title = title
-    }
-
-    if (icon) {
-      delete state.icon
-      const
-        iconLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement,
-        touchIconLink = document.querySelector("link[rel*='apple-touch-icon']") as HTMLLinkElement
-      if (iconLink) iconLink.href = icon
-      // Not working as of Feb 2021 since Safari does not support dynamic favicon changes.
-      if (touchIconLink) touchIconLink.href = icon
-    }
-
-    if (typeof refresh === 'number') {
-      delete state.refresh
-      qd.refreshRateB(refresh)
-    }
-
-    // Force new obj reference to rerender Dialog component with most recent changes.
-    qd.dialogB(dialog ? { ...dialog } : null)
-
-    if (theme) {
-      delete state.theme
-      themeB(theme)
-    }
-
-    if (notification) {
-      delete state.notification
-      showNotification(notification)
-    }
-
     if (redirect) {
-      delete state.redirect
       try {
         const url = new URL(redirect)
         if (redirect === url.hash) {
@@ -161,15 +141,15 @@ export const
       }
     }
 
-    if (layouts) {
-      delete state.layouts
-      layoutsB(layouts)
-    }
+    qd.dialogB(dialog ? { ...dialog } : null)
 
-    if (tracker) {
-      delete state.tracker
-      setupTracker(tracker)
-    }
+    if (title) windowTitleB(title)
+    if (icon) windowIconB(icon)
+    if (typeof refresh === 'number') qd.refreshRateB(refresh)
+    if (theme) themeB(theme)
+    if (notification) showNotification(notification)
+    if (tracker) setupTracker(tracker)
+    if (layouts) layoutsB(layouts)
   }
 
 export const View = bond(() => ({ render: () => <></> }))
