@@ -126,6 +126,7 @@ const
       display: 'flex',
       flexDirection: 'column',
       margin: margin(7), // Approx 15px gutter between cards.
+      overflow: 'auto',
       $nest: {
         '>*': {
           boxSizing: 'border-box',
