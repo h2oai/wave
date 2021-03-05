@@ -766,15 +766,13 @@ export const
   XVisualization = bond(({ model }: { model: Visualization }) => {
     let
       currentChart: Chart | null = null,
-      currentPlot: Plot | null = null,
-      initWidth = 0,
-      initHeight = 0
+      currentPlot: Plot | null = null
     const
       container = React.createRef<HTMLDivElement>(),
-      checkDimensionsPostInit = () => {
+      checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
         const el = container.current
         if (!el) return
-        if (el.clientHeight !== initHeight || el.clientWidth !== initWidth) {
+        if (el.clientHeight !== h || el.clientWidth !== w) {
           currentChart?.destroy()
           init()
         }
@@ -817,11 +815,9 @@ export const
             }
           }
           chart.render()
-          initHeight = el.clientHeight
-          initWidth = el.clientWidth
           // React fires mount lifecycle hook before Safari finishes Layout phase so we need recheck if original card dimensions are the
           // same as after Layout phase. If not, rerender the plot again.
-          setTimeout(checkDimensionsPostInit, 300)
+          setTimeout(() => checkDimensionsPostInit(el.clientWidth, el.clientHeight), 300)
         }
       },
       update = () => {
