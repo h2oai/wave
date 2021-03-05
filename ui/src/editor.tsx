@@ -535,7 +535,7 @@ export const
                     { layoutDef, width } = pageSetupB(),
                     layout = { ...layoutDef.layout }
                   if (width) layout.width = `${width}px`
-                  page.set('__meta__ layouts 0', layout)
+                  page.set('__meta__ layouts', [layout])
                   page.sync()
                 },
                 renderFooter = () => (
