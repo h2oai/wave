@@ -24,12 +24,14 @@ import { B, bond, Box, box, C, Card, Dict, parseU, qd, S, U, xid } from './qd'
 import { border, cssVar } from './theme'
 
 /**
+ * WARNING: Experimental and subject to change.
+ *
  * Create a card that enables WYSIWYG editing on a page.
- * Adding this card to a page makes it editable by end-users.
+ * Adding this card to a page makes the page editable by end-users.
  */
 interface State {
-  /** The title for this card.*/
-  title: S
+  /** The editing mode. Defaults to `public`.*/
+  mode: 'public' | 'private'
 }
 
 const
@@ -438,7 +440,7 @@ export const
 
         if (width) layout.width = `${width}px`
 
-        page.put('__editor__', { view: 'editor', box: '', title: '' })
+        page.put('__editor__', { view: 'editor', box: '', mode: 'public' })
         page.put('__meta__', { view: 'meta', box: '', layouts: [layout] })
         page.sync()
       },

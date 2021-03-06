@@ -131,7 +131,7 @@ ui_breadcrumbs_card <- function(
 
 #' WARNING: Experimental and subject to change.
 #' 
-#' Create a card that displays a user-editable drawing canvas.
+#' Create a card that displays a drawing canvas (whiteboard).
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title for this card.
@@ -197,24 +197,27 @@ ui_chat_card <- function(
   return(.o)
 }
 
+#' WARNING: Experimental and subject to change.
+#' 
 #' Create a card that enables WYSIWYG editing on a page.
-#' Adding this card to a page makes it editable by end-users.
+#' Adding this card to a page makes the page editable by end-users.
 #'
 #' @param box A string indicating how to place this component on the page.
-#' @param title The title for this card.
+#' @param mode The editing mode. Defaults to `public`.
+#'   One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode.
 #' @param commands Contextual menu commands for this component.
 #' @return A EditorCard instance.
 #' @export
 ui_editor_card <- function(
   box,
-  title,
+  mode,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_scalar("title", "character", title)
+  # TODO Validate mode
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
     box=box,
-    title=title,
+    mode=mode,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_EditorCard"))
   return(.o)

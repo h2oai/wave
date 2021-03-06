@@ -46,7 +46,7 @@ const
 /**
  * WARNING: Experimental and subject to change.
  *
- * Create a card that displays a user-editable drawing canvas.
+ * Create a card that displays a drawing canvas (whiteboard).
  * :icon "EditCreate"
  */
 interface State {

@@ -244,7 +244,7 @@ class BreadcrumbsCard:
 class CanvasCard:
     """WARNING: Experimental and subject to change.
 
-    Create a card that displays a user-editable drawing canvas.
+    Create a card that displays a drawing canvas (whiteboard).
     """
     def __init__(
             self,
@@ -389,35 +389,45 @@ class ChatCard:
         )
 
 
+_EditorCardMode = ['public', 'private']
+
+
+class EditorCardMode:
+    PUBLIC = 'public'
+    PRIVATE = 'private'
+
+
 class EditorCard:
-    """Create a card that enables WYSIWYG editing on a page.
-    Adding this card to a page makes it editable by end-users.
+    """WARNING: Experimental and subject to change.
+
+    Create a card that enables WYSIWYG editing on a page.
+    Adding this card to a page makes the page editable by end-users.
     """
     def __init__(
             self,
             box: str,
-            title: str,
+            mode: str,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('EditorCard.box', box, (str,), False, False, False)
-        _guard_scalar('EditorCard.title', title, (str,), False, False, False)
+        _guard_enum('EditorCard.mode', mode, _EditorCardMode, False)
         _guard_vector('EditorCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
-        self.title = title
-        """The title for this card."""
+        self.mode = mode
+        """The editing mode. Defaults to `public`. One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('EditorCard.box', self.box, (str,), False, False, False)
-        _guard_scalar('EditorCard.title', self.title, (str,), False, False, False)
+        _guard_enum('EditorCard.mode', self.mode, _EditorCardMode, False)
         _guard_vector('EditorCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='editor',
             box=self.box,
-            title=self.title,
+            mode=self.mode,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -426,16 +436,16 @@ class EditorCard:
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         _guard_scalar('EditorCard.box', __d_box, (str,), False, False, False)
-        __d_title: Any = __d.get('title')
-        _guard_scalar('EditorCard.title', __d_title, (str,), False, False, False)
+        __d_mode: Any = __d.get('mode')
+        _guard_enum('EditorCard.mode', __d_mode, _EditorCardMode, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('EditorCard.commands', __d_commands, (Command,), False, True, False)
         box: str = __d_box
-        title: str = __d_title
+        mode: str = __d_mode
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return EditorCard(
             box,
-            title,
+            mode,
             commands,
         )
 

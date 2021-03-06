@@ -113,7 +113,7 @@ def canvas_card(
 ) -> CanvasCard:
     """WARNING: Experimental and subject to change.
 
-    Create a card that displays a user-editable drawing canvas.
+    Create a card that displays a drawing canvas (whiteboard).
 
     Args:
         box: A string indicating how to place this component on the page.
@@ -166,22 +166,24 @@ def chat_card(
 
 def editor_card(
         box: str,
-        title: str,
+        mode: str,
         commands: Optional[List[Command]] = None,
 ) -> EditorCard:
-    """Create a card that enables WYSIWYG editing on a page.
-    Adding this card to a page makes it editable by end-users.
+    """WARNING: Experimental and subject to change.
+
+    Create a card that enables WYSIWYG editing on a page.
+    Adding this card to a page makes the page editable by end-users.
 
     Args:
         box: A string indicating how to place this component on the page.
-        title: The title for this card.
+        mode: The editing mode. Defaults to `public`. One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.EditorCard` instance.
     """
     return EditorCard(
         box,
-        title,
+        mode,
         commands,
     )
 
