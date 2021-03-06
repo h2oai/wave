@@ -8,6 +8,9 @@ on:
         default: 'docs: Publish documentation website'
         required: false
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   publish:
     name: Publish Docs
@@ -30,4 +33,3 @@ jobs:
         with:
           add: '.'
           message: "${{ github.event.inputs.commit }}"
-
