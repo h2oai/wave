@@ -44,6 +44,28 @@ export const
     if (!prop.startsWith('$')) return prop
     prop = prop.substring(1)
     return getComputedStyle(document.documentElement).getPropertyValue(`--${prop}`).trim()
+  },
+  spectrum: Dict<S> = {
+    amber: '#ffc107',
+    azure: '#03a9f4',
+    black: '#000',
+    blue: '#2196f3',
+    brown: '#795548',
+    cyan: '#00bcd4',
+    gray: '#9e9e9e',
+    green: '#8bc34a',
+    indigo: '#3f51b5',
+    lime: '#cddc39',
+    mint: '#4caf50',
+    orange: '#ff9800',
+    pink: '#e91e63',
+    purple: '#9c27b0',
+    red: '#f44336',
+    tangerine: '#ff5722',
+    teal: '#009688',
+    violet: '#673ab7',
+    white: '#fff',
+    yellow: '#ffeb3b',
   }
 
 const

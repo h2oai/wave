@@ -18,7 +18,7 @@ import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { B, bond, box, Card, Dict, F, on, PageRef, qd, Rec, S, to, U } from './qd'
 import { P, simplify } from './simplify'
-import { px } from './theme'
+import { px, spectrum } from './theme'
 
 declare global {
   interface CanvasRenderingContext2D {
@@ -224,7 +224,14 @@ export const
       }
 
     return { put, test, clear }
-  }
+  },
+  titleCase = (s: S) => s.charAt(0).toUpperCase() + s.slice(1),
+  inks = (() => {
+    const inks: Array<{ name: S, color: S }> = []
+    for (const k in spectrum) inks.push({ name: titleCase(k), color: spectrum[k] })
+    return inks
+  })()
+
 export const
   View = bond(({ name, state, changed }: Card<State>) => {
     const
@@ -234,8 +241,6 @@ export const
       colorB = box('black'),
       lineWidthB = box(3),
       clearB = box<B>(),
-      titleCase = (s: S) => s.charAt(0).toUpperCase() + s.slice(1),
-      availableColors = ['black', 'red', 'green', 'blue'],
       availableTipSizes: [S, U][] = [['Fine', 3], ['Medium', 5], ['Bold', 7]],
       layersRef = React.createRef<HTMLDivElement>(),
       initPenStyle = (g: G) => {
@@ -516,11 +521,11 @@ export const
           key: 'color',
           iconProps: { iconName: 'Color' },
           subMenuProps: {
-            items: availableColors.map(c => ({
-              key: c,
-              text: titleCase(c),
-              iconProps: { iconName: 'CircleFill', style: { color: c } },
-              onClick: () => { colorB(c) },
+            items: inks.map(({ name: text, color }) => ({
+              key: color,
+              text,
+              iconProps: { iconName: 'CircleFill', style: { color } },
+              onClick: () => { colorB(color) },
             })),
           },
         },
