@@ -12,6 +12,27 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.13.0
+Mar 5, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.13.0)
+- Added
+  - *New:* Start the server with `-editable` to allow visitors to edit pages - turns the Wave server into a realtime collaborative wiki. 
+  - *New:* Add a whiteboard (`ui.canvas_card()`) to a page to enable collaborative drawing between the page's visitors.
+  - *New:* Add a chat room (`ui.chat_card()`) to a page to enable discussions between the page's visitors.
+  - Checkpointing: Save and restore application and session state on restart.
+- Changed
+  - Display Wave logo on empty pages instead of spinner.
+  - Reduce size of h2o_wave wheel file.
+- Fixed
+  - Display scrollbars if content overflows in flex layout.
+  - Fix flex layout viz rendering issues in Safari.
+  - Fix form layout issues in Safari.
+  - Improve tab_card example.
+  - Improve visual design of footer in uitable.
+  - Invalidate page when layouts or a card's box is changed.
+  - Make stats cards not overflow 1-unit high zones.
+  - Prevent iframes from overlapping other elements in forms.
+  - Remove hard-coded "main" default zone in flex layouts.
+
 ## v0.12.1
 Feb 12, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.12.1)
 - Fixed
