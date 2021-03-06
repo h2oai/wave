@@ -555,7 +555,7 @@ export const
                   <Divider>Add Content</Divider>
                   <div className={css.cards}>{choices}</div>
                   <Divider>Page Setup</Divider>
-                  <PageSetupView pageSetupB={pageSetupB} />
+                  <PageSetupView key={xid()} pageSetupB={pageSetupB} />
                 </Fluent.Panel>
               )
             }
