@@ -88,7 +88,7 @@ predictions = model.predict(file_path='./creditcard_test.csv')
 
 Now, equipped with the right tools let's build a simple Wave application. We will build a [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) based on a Titanic dataset using *Survived* as a target column and a threshold slider. The full source of this example can be found [here](https://github.com/h2oai/wave-ml/blob/main/examples/quickstart.py).
 
-![confusion matrix](assets/2021-02-19/cm.gif)
+![confusion matrix](assets/2021-03-08/cm.gif)
 
 Let's train and predict on a model using the same dataset:
 
@@ -172,7 +172,7 @@ That's it! See the full example [here](https://github.com/h2oai/wave-ml/blob/mai
 
 Let's do something more fun. What about predicting a rating of a wine based on its features? We will use [the wine dataset](https://www.kaggle.com/christopheiv/winemagdata130k) and preprocess it slightly to contain just the following columns: `country`, `points`, `price`, `province`, `region_1`, `variety` and `winery`. The full example can be found [here](https://github.com/h2oai/wave-ml/blob/main/examples/wine.py).
 
-![confusion matrix](assets/2021-02-19/wine.gif)
+![confusion matrix](assets/2021-03-08/wine.gif)
 
 The first step is simple, we train the model using the dataset on `points` column:
 
