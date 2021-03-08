@@ -16,11 +16,21 @@ Today, we're delighted to announce H2O Wave ML - the automatic machine learning 
 
 ## Introduction
 
-The main goal of H2O Wave ML is to integrate AI/ML models into your applications in a **quick** and **easy** way. It provides a simple, high-level API for training, deploying, scoring and explaining machine learning models, letting you build predictive and decision-support applications entirely in Python.
+After the announcement of H2O Wave in late 2020 and H2O AI Hybrid Cloud in early 2021, H2O Wave ML was designed as another kid to the family.
 
-Wave ML is doing a lot behind the scenes. It picks the adequate engine to support the building and training process and transforms the user inputs to fit them with engines. You might be using [*H2O-3*](https://www.h2o.ai/products/h2o/) locally and [*Driverless AI*](https://www.h2o.ai/products/h2o-driverless-ai/) on a [Cloud](https://www.h2o.ai/hybrid-cloud/) and you might not know about it. Wave ML hides complexity but for a cost of features. Right now only *H2O-3* support is available.
+With Wave, you can create your applications entirely in Python and run them in a browser without touching the client-side technologies. You can push your work to the Cloud later and show it to the world.
 
-Wave ML is in the experimental stage and might be subject to change.
+While you can (and should) use any machine learning libraries and technologies in your Wave application, we think there is space for improvement for people who don't want to tackle with complexness of such tools in exchange for fewer features.
+
+We are introducing **H2O Wave ML**.
+
+The library, able to blend Wave, Cloud, and other technologies from the H2O stack to make the applications **predictive**.
+
+The main goal of Wave ML is to integrate AI/ML models into your applications quickly and easily. It will provide a simple, high-level API for training, deploying, scoring, and explaining machine learning models, letting you build predictive and decision-support applications entirely in Python.
+
+Wave ML is trying hard behind the scenes. It picks the adequate engine to support the building and training process and unifies the user inputs to work with those engines. You might be using [*H2O-3*](https://www.h2o.ai/products/h2o/) locally and [*Driverless AI*](https://www.h2o.ai/products/h2o-driverless-ai/) on Cloud, and you might not know about it.
+
+Wave ML is in the early stages, and API might be subject to change.
 
 ## Installation
 
@@ -269,3 +279,5 @@ For every other call, we need to update the stat card and we are done:
 ```
 
 See the full example [here](https://github.com/h2oai/wave-ml/blob/main/examples/wine.py).
+
+Stay tuned, for the more updates will come!
