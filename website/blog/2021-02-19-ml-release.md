@@ -2,7 +2,7 @@
 slug: ml-release-0.3.0
 title: Introducing, AutoML for Wave Apps
 author: Peter Szabó
-author_title: Software Engineer @ H2O.ai
+author_title: Lead Software Engineer @ H2O.ai
 author_url: https://github.com/geomodular
 author_image_url: https://www.gravatar.com/avatar/17c05e511a981a1f0b35eb8d4648947c
 tags: [release]
@@ -10,7 +10,7 @@ tags: [release]
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Today, we're delighted to announce H2O Wave ML - the automatic machine learning (AutoML) for Wave apps. Let's introduce the library and have a look into API and few examples.
+Today, we're delighted to announce H2O Wave ML - the automatic machine learning (AutoML) for Wave apps. Let's introduce the library and have a look at API and a few examples.
 
 <!--truncate-->
 
@@ -170,7 +170,7 @@ That's it! See the full example [here](https://github.com/h2oai/wave-ml/blob/mai
 
 ## The Second Example
 
-Let's do something more fun. What about predicting a rating of a wine based on its features? We will use [the wine dataset](https://www.kaggle.com/christopheiv/winemagdata130k) and preprocess it slightly to contain just the following columns: `country`, `points`, `price`, `province`, `region_1`, `variety` and `winery`. The full example can be found here.
+Let's do something more fun. What about predicting a rating of a wine based on its features? We will use [the wine dataset](https://www.kaggle.com/christopheiv/winemagdata130k) and preprocess it slightly to contain just the following columns: `country`, `points`, `price`, `province`, `region_1`, `variety` and `winery`. The full example can be found [here](https://github.com/h2oai/wave-ml/blob/main/examples/wine.py).
 
 ![confusion matrix](assets/2021-02-19/wine.gif)
 
@@ -186,14 +186,15 @@ We will do predictions later based on user interaction.
 
 Our example contains a form and dropdown components and we need to feed it with values. We can name it by hand but we would be polluting code too much as they are plenty. Let's do it automatically. To prepare the values, we use a datatable to identify unique items within the column:
 
-```py {6,7}
+```py {6,7,8}
 import datatable as dt
 
 df = dt.fread('./winemag_edit.csv')
 
 features = ['country', 'price', 'province', 'region_1', 'variety', 'winery']
 columns = {f: dt.unique(df[f]).to_list()[0] for f in features}
-choices = {key: [ui.choice(str(item)) for item in columns[key] if item] for key in columns}
+choices = {key: [ui.choice(str(item)) for item in columns[key] if item]
+           for key in columns}
 ```
 
 We do this in two steps. First, we extract the unique values for a given column. The resulting `columns` variable should be structured like this:
@@ -206,7 +207,7 @@ We do this in two steps. First, we extract the unique values for a given column.
 }
 ```
 
-In the next step, we create a similar dict but with a list of `Choice` objects using the `columns` and save it to `choices`:
+In the next step, we create a similar dict but with a list of [`Choice`](https://h2oai.github.io/wave/docs/api/types#choice) objects using the `columns` and save it to `choices`:
 
 ```py
 {
@@ -233,8 +234,9 @@ We choose to either use a value supplied by the query handler `serve()` or use a
 
 Now we can do the predictions:
 
-```py {2}
-    input_data = [features, [country, price, province, region, variety, winery]]
+```py {1,2}
+    input_data = [features, [country, price, province, region, variety,
+                             winery]]
     rating = model.predict(input_data)
     rating = rating[0][0]
 ```
@@ -266,4 +268,4 @@ For every other call, we need to update the stat card and we are done:
         ...
 ```
 
-See the full example here.
+See the full example [here](https://github.com/h2oai/wave-ml/blob/main/examples/wine.py).
