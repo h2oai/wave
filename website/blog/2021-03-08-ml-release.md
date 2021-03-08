@@ -20,7 +20,7 @@ After the announcement of H2O Wave in late 2020 and H2O AI Hybrid Cloud in early
 
 With Wave, you can create your applications entirely in Python and run them in a browser without touching the client-side technologies. You can push your work to the Cloud later and show it to the world.
 
-While you can (and should) use any machine learning libraries and technologies in your Wave application, we think there is space for improvement for people who don't want to tackle the complexities of such tools and the simple approach to the solution is enough.
+While you can (and should) use any machine learning libraries and technologies in your Wave application, we think there is space for improvement for people who don't want to tackle the complexities of such tools, and the simple approach to the solution is enough.
 
 We are introducing **H2O Wave ML**.
 
