@@ -14,6 +14,7 @@
 
 import * as Fluent from "@fluentui/react"
 import { box, Dict, F, I, on, S, U } from 'h2o-wave'
+import { Theme } from "./meta"
 
 interface Palette {
   text: S
@@ -21,7 +22,7 @@ interface Palette {
   page: S
 }
 
-interface Theme {
+interface PredefinedTheme {
   palette: Palette
   fluentPalette: Partial<Fluent.IPalette>
 }
@@ -85,7 +86,7 @@ export const
   }
 
 const
-  themes: Dict<Theme> = {
+  themes: Dict<PredefinedTheme> = {
     default: {
       palette: {
         text: '#323130',
@@ -192,11 +193,36 @@ const
   rgb = (hex: S): [U, U, U] => {
     const x = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
     return x ? [parseInt(x[1], 16), parseInt(x[2], 16), parseInt(x[3], 16)] : [0, 0, 0]
+  },
+  themeRules = Fluent.themeRulesStandardCreator(),
+  changeTheme = (themeName: S) => {
+    const
+      theme = themes[themeName] ?? themes[defaultThemeName],
+      { palette, fluentPalette } = theme
+
+    // TODO: This is polluting the global namespace.
+    Object.keys(palette).forEach(k => document.body.style.setProperty(`--${k}`, palette[k as keyof Palette]))
+    Object.keys(fluentPalette).forEach(k => document.body.style.setProperty(`--${k}`, fluentPalette[k as keyof Fluent.IPalette] || null))
+
+    // Update text tones.
+    if (palette.text) {
+      const [r, g, b] = rgb(palette.text)
+      let alpha = 0.05
+      for (let i = 0; i < 10; i++) {
+        document.body.style.setProperty(`--text${i}`, `rgba(${r},${g},${b},${alpha})`)
+        alpha += i === 0 ? 0.05 : 0.1
+      }
+    }
+    // HACK: Execute as microtask to prevent race condition. Since meta is handled in page.tsx:render,
+    // Fluent wants to update all components present (Spinner), but throws warning it cannot update unmounted element (Spinner)
+    // because it is replaced by our new component tree in the meanwhile.
+    setTimeout(() => Fluent.loadTheme({ palette: fluentPalette }), 0)
   }
 
 export const
   defaultThemeName = 'default',
   themeB = box(defaultThemeName),
+  themesB = box<Theme[]>([]),
   defaultTheme = themes[defaultThemeName],
   directions: Dict<S> = {
     horizontal: 'row',
@@ -225,28 +251,26 @@ export const
     stretch: 'stretch',
   }
 
+on(themesB, newThemes => {
+  newThemes.forEach(t => {
+    const
+      primaryColor = Fluent.getColorFromString(t.colors.primary)!,
+      textColor = Fluent.getColorFromString(t.colors.text)!,
+      cardColor = Fluent.getColorFromString(t.colors.card)!
 
-on(themeB, themeName => {
-  const
-    theme = themes[themeName] ?? themes[defaultThemeName],
-    { palette, fluentPalette } = theme
+    Fluent.ThemeGenerator.setSlot(themeRules[Fluent.BaseSlots[Fluent.BaseSlots.primaryColor]], primaryColor, Fluent.isDark(primaryColor), true, true)
+    Fluent.ThemeGenerator.setSlot(themeRules[Fluent.BaseSlots[Fluent.BaseSlots.foregroundColor]], textColor, Fluent.isDark(textColor), true, true)
+    Fluent.ThemeGenerator.setSlot(themeRules[Fluent.BaseSlots[Fluent.BaseSlots.backgroundColor]], cardColor, Fluent.isDark(cardColor), true, true)
+    Fluent.ThemeGenerator.insureSlots(themeRules, Fluent.isDark(cardColor))
 
-  // TODO: Resolve the any.
-  // TODO: This is polluting the global namespace.
-  Object.keys(palette).forEach(k => document.body.style.setProperty(`--${k}`, (palette as any)[k]))
-  Object.keys(fluentPalette).forEach(k => document.body.style.setProperty(`--${k}`, (fluentPalette as any)[k]))
+    const { palette } = Fluent.createTheme({
+      ...{ palette: Fluent.ThemeGenerator.getThemeAsJson(themeRules) },
+      isInverted: Fluent.isDark(cardColor),
+    })
 
-  // Update text tones.
-  if (palette.text) {
-    const [r, g, b] = rgb(palette.text)
-    let alpha = 0.05
-    for (let i = 0; i < 10; i++) {
-      document.body.style.setProperty(`--text${i}`, `rgba(${r},${g},${b},${alpha})`)
-      alpha += i === 0 ? 0.05 : 0.1
-    }
-  }
-
-  // Change global Fluent theme.
-  Fluent.loadTheme({ palette: fluentPalette })
+    themes[t.name] = { fluentPalette: palette, palette: t.colors }
+  })
+  changeTheme(themeB())
 })
 
+on(themeB, changeTheme)

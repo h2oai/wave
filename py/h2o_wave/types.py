@@ -2839,10 +2839,7 @@ class DatePicker:
 
 
 class ColorPicker:
-    """Create a color picker.
-
-    A date picker allows a user to pick a color value.
-    If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
+    """No documentation available.
     """
     def __init__(
             self,
@@ -2872,9 +2869,9 @@ class ColorPicker:
         self.choices = choices
         """A list of colors (CSS-compatible strings) to limit color choices to."""
         self.width = width
-        """The width of the color picker, e.g. '100px'. Defaults to '300px'."""
+        """No documentation available."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """No documentation available."""
         self.trigger = trigger
         """True if the form should be submitted when the color picker value changes."""
         self.tooltip = tooltip
@@ -7820,6 +7817,104 @@ class SidePanel:
         )
 
 
+class Colors:
+    """Represents colors to be used in your app.
+    """
+    def __init__(
+            self,
+            text: str,
+            card: str,
+            page: str,
+            primary: str,
+    ):
+        _guard_scalar('Colors.text', text, (str,), False, False, False)
+        _guard_scalar('Colors.card', card, (str,), False, False, False)
+        _guard_scalar('Colors.page', page, (str,), False, False, False)
+        _guard_scalar('Colors.primary', primary, (str,), False, False, False)
+        self.text = text
+        """Base color of the textual components."""
+        self.card = card
+        """Card background color."""
+        self.page = page
+        """Page background color."""
+        self.primary = primary
+        """Primary color used to accent components."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Colors.text', self.text, (str,), False, False, False)
+        _guard_scalar('Colors.card', self.card, (str,), False, False, False)
+        _guard_scalar('Colors.page', self.page, (str,), False, False, False)
+        _guard_scalar('Colors.primary', self.primary, (str,), False, False, False)
+        return _dump(
+            text=self.text,
+            card=self.card,
+            page=self.page,
+            primary=self.primary,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Colors':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_text: Any = __d.get('text')
+        _guard_scalar('Colors.text', __d_text, (str,), False, False, False)
+        __d_card: Any = __d.get('card')
+        _guard_scalar('Colors.card', __d_card, (str,), False, False, False)
+        __d_page: Any = __d.get('page')
+        _guard_scalar('Colors.page', __d_page, (str,), False, False, False)
+        __d_primary: Any = __d.get('primary')
+        _guard_scalar('Colors.primary', __d_primary, (str,), False, False, False)
+        text: str = __d_text
+        card: str = __d_card
+        page: str = __d_page
+        primary: str = __d_primary
+        return Colors(
+            text,
+            card,
+            page,
+            primary,
+        )
+
+
+class Theme:
+    """Theme (color scheme) to apply colors to the app.
+    """
+    def __init__(
+            self,
+            name: str,
+            colors: Colors,
+    ):
+        _guard_scalar('Theme.name', name, (str,), True, False, False)
+        _guard_scalar('Theme.colors', colors, (Colors,), False, False, False)
+        self.name = name
+        """An identifying name for this theme."""
+        self.colors = colors
+        """Specific colors to be used in the app."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Theme.name', self.name, (str,), True, False, False)
+        _guard_scalar('Theme.colors', self.colors, (Colors,), False, False, False)
+        return _dump(
+            name=self.name,
+            colors=self.colors.dump(),
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Theme':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Theme.name', __d_name, (str,), True, False, False)
+        __d_colors: Any = __d.get('colors')
+        _guard_scalar('Theme.colors', __d_colors, (dict,), False, False, False)
+        name: str = __d_name
+        colors: Colors = Colors.load(__d_colors)
+        return Theme(
+            name,
+            colors,
+        )
+
+
 _TrackerType = ['ga', 'gtag']
 
 
@@ -8091,6 +8186,7 @@ class MetaCard:
             dialog: Optional[Dialog] = None,
             side_panel: Optional[SidePanel] = None,
             theme: Optional[str] = None,
+            themes: Optional[List[Theme]] = None,
             tracker: Optional[Tracker] = None,
             scripts: Optional[List[Script]] = None,
             script: Optional[InlineScript] = None,
@@ -8108,6 +8204,7 @@ class MetaCard:
         _guard_scalar('MetaCard.dialog', dialog, (Dialog,), False, True, False)
         _guard_scalar('MetaCard.side_panel', side_panel, (SidePanel,), False, True, False)
         _guard_scalar('MetaCard.theme', theme, (str,), False, True, False)
+        _guard_vector('MetaCard.themes', themes, (Theme,), False, True, False)
         _guard_scalar('MetaCard.tracker', tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', scripts, (Script,), False, True, False)
         _guard_scalar('MetaCard.script', script, (InlineScript,), False, True, False)
@@ -8134,6 +8231,8 @@ class MetaCard:
         """Display a side panel on the page."""
         self.theme = theme
         """Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'."""
+        self.themes = themes
+        """* Themes (color schemes) that define color used in the app."""
         self.tracker = tracker
         """Configure a tracker for the page (for web analytics)."""
         self.scripts = scripts
@@ -8159,6 +8258,7 @@ class MetaCard:
         _guard_scalar('MetaCard.dialog', self.dialog, (Dialog,), False, True, False)
         _guard_scalar('MetaCard.side_panel', self.side_panel, (SidePanel,), False, True, False)
         _guard_scalar('MetaCard.theme', self.theme, (str,), False, True, False)
+        _guard_vector('MetaCard.themes', self.themes, (Theme,), False, True, False)
         _guard_scalar('MetaCard.tracker', self.tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', self.scripts, (Script,), False, True, False)
         _guard_scalar('MetaCard.script', self.script, (InlineScript,), False, True, False)
@@ -8177,6 +8277,7 @@ class MetaCard:
             dialog=None if self.dialog is None else self.dialog.dump(),
             side_panel=None if self.side_panel is None else self.side_panel.dump(),
             theme=self.theme,
+            themes=None if self.themes is None else [__e.dump() for __e in self.themes],
             tracker=None if self.tracker is None else self.tracker.dump(),
             scripts=None if self.scripts is None else [__e.dump() for __e in self.scripts],
             script=None if self.script is None else self.script.dump(),
@@ -8208,6 +8309,8 @@ class MetaCard:
         _guard_scalar('MetaCard.side_panel', __d_side_panel, (dict,), False, True, False)
         __d_theme: Any = __d.get('theme')
         _guard_scalar('MetaCard.theme', __d_theme, (str,), False, True, False)
+        __d_themes: Any = __d.get('themes')
+        _guard_vector('MetaCard.themes', __d_themes, (dict,), False, True, False)
         __d_tracker: Any = __d.get('tracker')
         _guard_scalar('MetaCard.tracker', __d_tracker, (dict,), False, True, False)
         __d_scripts: Any = __d.get('scripts')
@@ -8230,6 +8333,7 @@ class MetaCard:
         dialog: Optional[Dialog] = None if __d_dialog is None else Dialog.load(__d_dialog)
         side_panel: Optional[SidePanel] = None if __d_side_panel is None else SidePanel.load(__d_side_panel)
         theme: Optional[str] = __d_theme
+        themes: Optional[List[Theme]] = None if __d_themes is None else [Theme.load(__e) for __e in __d_themes]
         tracker: Optional[Tracker] = None if __d_tracker is None else Tracker.load(__d_tracker)
         scripts: Optional[List[Script]] = None if __d_scripts is None else [Script.load(__e) for __e in __d_scripts]
         script: Optional[InlineScript] = None if __d_script is None else InlineScript.load(__d_script)
@@ -8247,6 +8351,7 @@ class MetaCard:
             dialog,
             side_panel,
             theme,
+            themes,
             tracker,
             scripts,
             script,

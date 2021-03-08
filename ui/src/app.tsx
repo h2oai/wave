@@ -17,11 +17,11 @@ import { box, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
-import SidePanel from './side_panel'
 import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
-import { clas, cssVar, pc, themeB } from './theme'
+import SidePanel from './side_panel'
+import { clas, cssVar, pc } from './theme'
 import { bond, busyB, config, contentB, listen, wave } from './ui'
 
 const
@@ -150,7 +150,7 @@ const
         window.removeEventListener('md-link-click', onMdLinkClick)
       }
 
-    return { init, render, dispose, contentB, themeB }
+    return { init, render, dispose, contentB }
   })
 
 export default App

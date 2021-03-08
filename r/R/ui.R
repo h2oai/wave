@@ -1294,17 +1294,14 @@ ui_date_picker <- function(
   return(.o)
 }
 
-#' Create a color picker.
-#' 
-#' A date picker allows a user to pick a color value.
-#' If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
+#' No documentation available.
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
 #' @param value The selected color (CSS-compatible string).
 #' @param choices A list of colors (CSS-compatible strings) to limit color choices to.
-#' @param width The width of the color picker, e.g. '100px'. Defaults to '300px'.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width No documentation available.
+#' @param visible No documentation available.
 #' @param trigger True if the form should be submitted when the color picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ColorPicker instance.
@@ -3227,6 +3224,50 @@ ui_side_panel <- function(
   return(.o)
 }
 
+#' Represents colors to be used in your app.
+#'
+#' @param text Base color of the textual components.
+#' @param card Card background color.
+#' @param page Page background color.
+#' @param primary Primary color used to accent components.
+#' @return A Colors instance.
+#' @export
+ui_colors <- function(
+  text,
+  card,
+  page,
+  primary) {
+  .guard_scalar("text", "character", text)
+  .guard_scalar("card", "character", card)
+  .guard_scalar("page", "character", page)
+  .guard_scalar("primary", "character", primary)
+  .o <- list(
+    text=text,
+    card=card,
+    page=page,
+    primary=primary)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveColors"))
+  return(.o)
+}
+
+#' Theme (color scheme) to apply colors to the app.
+#'
+#' @param name An identifying name for this theme.
+#' @param colors Specific colors to be used in the app.
+#' @return A Theme instance.
+#' @export
+ui_theme <- function(
+  name,
+  colors) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("colors", "WaveColors", colors)
+  .o <- list(
+    name=name,
+    colors=colors)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTheme"))
+  return(.o)
+}
+
 #' Configure user interaction tracking (analytics) for a page.
 #'
 #' @param type The tracking provider. Supported providers are `ga` (Google Analytics) and `gtag` (Google Global Site Tags or gtag.js)
@@ -3354,6 +3395,7 @@ ui_stylesheet <- function(
 #' @param dialog Display a dialog on the page.
 #' @param side_panel Display a side panel on the page.
 #' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'.
+#' @param themes * Themes (color schemes) that define color used in the app.
 #' @param tracker Configure a tracker for the page (for web analytics).
 #' @param scripts External Javascript files to load into the page.
 #' @param script Javascript code to execute on this page.
@@ -3373,6 +3415,7 @@ ui_meta_card <- function(
   dialog = NULL,
   side_panel = NULL,
   theme = NULL,
+  themes = NULL,
   tracker = NULL,
   scripts = NULL,
   script = NULL,
@@ -3389,6 +3432,7 @@ ui_meta_card <- function(
   .guard_scalar("dialog", "WaveDialog", dialog)
   .guard_scalar("side_panel", "WaveSidePanel", side_panel)
   .guard_scalar("theme", "character", theme)
+  .guard_vector("themes", "WaveTheme", themes)
   .guard_scalar("tracker", "WaveTracker", tracker)
   .guard_vector("scripts", "WaveScript", scripts)
   .guard_scalar("script", "WaveInlineScript", script)
@@ -3406,6 +3450,7 @@ ui_meta_card <- function(
     dialog=dialog,
     side_panel=side_panel,
     theme=theme,
+    themes=themes,
     tracker=tracker,
     scripts=scripts,
     script=script,

@@ -1116,18 +1116,15 @@ def color_picker(
         trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
-    """Create a color picker.
-
-    A date picker allows a user to pick a color value.
-    If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
+    """No documentation available.
 
     Args:
         name: An identifying name for this component.
         label: Text to be displayed alongside the component.
         value: The selected color (CSS-compatible string).
         choices: A list of colors (CSS-compatible strings) to limit color choices to.
-        width: The width of the color picker, e.g. '100px'. Defaults to '300px'.
-        visible: True if the component should be visible. Defaults to true.
+        width: No documentation available.
+        visible: No documentation available.
         trigger: True if the form should be submitted when the color picker value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
@@ -2759,6 +2756,48 @@ def side_panel(
     )
 
 
+def colors(
+        text: str,
+        card: str,
+        page: str,
+        primary: str,
+) -> Colors:
+    """Represents colors to be used in your app.
+
+    Args:
+        text: Base color of the textual components.
+        card: Card background color.
+        page: Page background color.
+        primary: Primary color used to accent components.
+    Returns:
+        A `h2o_wave.types.Colors` instance.
+    """
+    return Colors(
+        text,
+        card,
+        page,
+        primary,
+    )
+
+
+def theme(
+        name: str,
+        colors: Colors,
+) -> Theme:
+    """Theme (color scheme) to apply colors to the app.
+
+    Args:
+        name: An identifying name for this theme.
+        colors: Specific colors to be used in the app.
+    Returns:
+        A `h2o_wave.types.Theme` instance.
+    """
+    return Theme(
+        name,
+        colors,
+    )
+
+
 def tracker(
         type: str,
         id: str,
@@ -2875,6 +2914,7 @@ def meta_card(
         dialog: Optional[Dialog] = None,
         side_panel: Optional[SidePanel] = None,
         theme: Optional[str] = None,
+        themes: Optional[List[Theme]] = None,
         tracker: Optional[Tracker] = None,
         scripts: Optional[List[Script]] = None,
         script: Optional[InlineScript] = None,
@@ -2898,6 +2938,7 @@ def meta_card(
         dialog: Display a dialog on the page.
         side_panel: Display a side panel on the page.
         theme: Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'.
+        themes: * Themes (color schemes) that define color used in the app.
         tracker: Configure a tracker for the page (for web analytics).
         scripts: External Javascript files to load into the page.
         script: Javascript code to execute on this page.
@@ -2918,6 +2959,7 @@ def meta_card(
         dialog,
         side_panel,
         theme,
+        themes,
         tracker,
         scripts,
         script,
