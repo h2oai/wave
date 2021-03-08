@@ -2839,7 +2839,10 @@ class DatePicker:
 
 
 class ColorPicker:
-    """No documentation available.
+    """Create a color picker.
+
+    A date picker allows a user to pick a color value.
+    If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
     """
     def __init__(
             self,
@@ -2848,6 +2851,8 @@ class ColorPicker:
             value: Optional[str] = None,
             choices: Optional[List[str]] = None,
             width: Optional[str] = None,
+            alpha: Optional[bool] = None,
+            inline: Optional[bool] = None,
             visible: Optional[bool] = None,
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
@@ -2857,6 +2862,8 @@ class ColorPicker:
         _guard_scalar('ColorPicker.value', value, (str,), False, True, False)
         _guard_vector('ColorPicker.choices', choices, (str,), False, True, False)
         _guard_scalar('ColorPicker.width', width, (str,), False, True, False)
+        _guard_scalar('ColorPicker.alpha', alpha, (bool,), False, True, False)
+        _guard_scalar('ColorPicker.inline', inline, (bool,), False, True, False)
         _guard_scalar('ColorPicker.visible', visible, (bool,), False, True, False)
         _guard_scalar('ColorPicker.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('ColorPicker.tooltip', tooltip, (str,), False, True, False)
@@ -2869,9 +2876,13 @@ class ColorPicker:
         self.choices = choices
         """A list of colors (CSS-compatible strings) to limit color choices to."""
         self.width = width
-        """No documentation available."""
+        """The width of the color picker, e.g. '100px'. Defaults to '300px'."""
+        self.alpha = alpha
+        """True if user should be allowed to pick color transparency. Defaults to "true"."""
+        self.inline = inline
+        """True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to "false"."""
         self.visible = visible
-        """No documentation available."""
+        """True if the component should be visible. Defaults to true."""
         self.trigger = trigger
         """True if the form should be submitted when the color picker value changes."""
         self.tooltip = tooltip
@@ -2884,6 +2895,8 @@ class ColorPicker:
         _guard_scalar('ColorPicker.value', self.value, (str,), False, True, False)
         _guard_vector('ColorPicker.choices', self.choices, (str,), False, True, False)
         _guard_scalar('ColorPicker.width', self.width, (str,), False, True, False)
+        _guard_scalar('ColorPicker.alpha', self.alpha, (bool,), False, True, False)
+        _guard_scalar('ColorPicker.inline', self.inline, (bool,), False, True, False)
         _guard_scalar('ColorPicker.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('ColorPicker.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('ColorPicker.tooltip', self.tooltip, (str,), False, True, False)
@@ -2893,6 +2906,8 @@ class ColorPicker:
             value=self.value,
             choices=self.choices,
             width=self.width,
+            alpha=self.alpha,
+            inline=self.inline,
             visible=self.visible,
             trigger=self.trigger,
             tooltip=self.tooltip,
@@ -2911,6 +2926,10 @@ class ColorPicker:
         _guard_vector('ColorPicker.choices', __d_choices, (str,), False, True, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('ColorPicker.width', __d_width, (str,), False, True, False)
+        __d_alpha: Any = __d.get('alpha')
+        _guard_scalar('ColorPicker.alpha', __d_alpha, (bool,), False, True, False)
+        __d_inline: Any = __d.get('inline')
+        _guard_scalar('ColorPicker.inline', __d_inline, (bool,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('ColorPicker.visible', __d_visible, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
@@ -2922,6 +2941,8 @@ class ColorPicker:
         value: Optional[str] = __d_value
         choices: Optional[List[str]] = __d_choices
         width: Optional[str] = __d_width
+        alpha: Optional[bool] = __d_alpha
+        inline: Optional[bool] = __d_inline
         visible: Optional[bool] = __d_visible
         trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
@@ -2931,6 +2952,8 @@ class ColorPicker:
             value,
             choices,
             width,
+            alpha,
+            inline,
             visible,
             trigger,
             tooltip,

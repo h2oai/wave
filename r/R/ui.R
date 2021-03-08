@@ -1294,14 +1294,19 @@ ui_date_picker <- function(
   return(.o)
 }
 
-#' No documentation available.
+#' Create a color picker.
+#' 
+#' A date picker allows a user to pick a color value.
+#' If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
 #' @param value The selected color (CSS-compatible string).
 #' @param choices A list of colors (CSS-compatible strings) to limit color choices to.
-#' @param width No documentation available.
-#' @param visible No documentation available.
+#' @param width The width of the color picker, e.g. '100px'. Defaults to '300px'.
+#' @param alpha True if user should be allowed to pick color transparency. Defaults to "true".
+#' @param inline True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to "false".
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param trigger True if the form should be submitted when the color picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ColorPicker instance.
@@ -1312,6 +1317,8 @@ ui_color_picker <- function(
   value = NULL,
   choices = NULL,
   width = NULL,
+  alpha = NULL,
+  inline = NULL,
   visible = NULL,
   trigger = NULL,
   tooltip = NULL) {
@@ -1320,6 +1327,8 @@ ui_color_picker <- function(
   .guard_scalar("value", "character", value)
   .guard_vector("choices", "character", choices)
   .guard_scalar("width", "character", width)
+  .guard_scalar("alpha", "logical", alpha)
+  .guard_scalar("inline", "logical", inline)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1329,6 +1338,8 @@ ui_color_picker <- function(
     value=value,
     choices=choices,
     width=width,
+    alpha=alpha,
+    inline=inline,
     visible=visible,
     trigger=trigger,
     tooltip=tooltip))
