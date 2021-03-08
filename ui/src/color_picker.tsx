@@ -54,7 +54,8 @@ const
     inlinePickerContainer: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      maxWidth: 250
     },
     preview: {
       width: 20,
