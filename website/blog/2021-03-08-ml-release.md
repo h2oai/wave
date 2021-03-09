@@ -20,7 +20,9 @@ After the announcement of H2O Wave in late 2020 and H2O AI Hybrid Cloud in early
 
 With Wave, you can create your applications entirely in Python and run them in a browser without touching the client-side technologies. You can push your work to the Cloud later and show it to the world.
 
-While you can (and should) use any machine learning libraries and technologies in your Wave application, we think there is space for improvement for people who don't want to tackle the complexities of such tools, and the simple approach to the solution is enough.
+## Why H2O Wave ML
+
+Even as the number of data scientists worldwide is increasing by leaps and bounds, there are even more developers who are building applications for various business needs. There are anywhere from 7 to 23M Python developers in the world currently, of which many are not proficient with data science. With H2O Wave ML, we abstract away the complexity of machine learning and let the developers solve business needs in their applications with the power of AutoML.
 
 We are introducing **H2O Wave ML**.
 
@@ -28,7 +30,7 @@ The library, able to blend Wave, Cloud, and other technologies from the H2O stac
 
 The main goal of Wave ML is to integrate AI/ML models into your applications quickly and easily. It will provide a simple, high-level API for training, deploying, scoring, and explaining machine learning models, letting you build predictive and decision-support applications entirely in Python.
 
-Wave ML is trying hard behind the scenes. It picks the adequate engine to support the building and training process and unifies the user inputs to work with those engines. You might be using [*H2O-3*](https://www.h2o.ai/products/h2o/) locally and [*Driverless AI*](https://www.h2o.ai/products/h2o-driverless-ai/) on Cloud, and you might not know about it.
+Behind the scenes Wave ML is working smartly to pick the optimal engine to support the building and training process and unifies the user inputs to work with those engines. You might be using [*H2O-3*](https://www.h2o.ai/products/h2o/) locally and [*Driverless AI*](https://www.h2o.ai/products/h2o-driverless-ai/) on Cloud, and you might not know about it.
 
 Wave ML is in the early stages, and the API might be subject to change.
 
@@ -48,7 +50,7 @@ import h2o_wave_ml
 
 ## API Calls in Examples
 
-Four functions and one method are available to the user currently. You can check the full API on the Github page [here](https://github.com/h2oai/wave-ml#api). Let's have a look at some examples.
+The following functions are available to the user currently. You can check the full API on the Github page [here](https://github.com/h2oai/wave-ml#api). Let's have a look at some examples.
 
 To train a model use, [`build_model()`](https://github.com/h2oai/wave-ml#build_model). The function needs a dataset in `.csv` format and a target column (column to be predicted):
 
@@ -112,7 +114,7 @@ model = build_model(dataset, target_column=target_column)
 prediction = model.predict(file_path=dataset)
 ```
 
-The output of a `model.predict()` call has the following structure:
+The output of the `model.predict()` call has the following structure:
 
 ```py
 [
@@ -251,7 +253,7 @@ Now we can do the predictions:
     rating = rating[0][0]
 ```
 
-Rating now contains the points that we want to show up on a page. The page needs to be set up with suitable components before use. We use `tall_gauge_stat_card` for that:
+The rating now contains the points that we want to show up on a page. The page needs to be set up with suitable components before use. We use `tall_gauge_stat_card` for that:
 
 ```py {3}
     if not q.client.initialized:
@@ -279,5 +281,3 @@ For every other call, we need to update the stat card and we are done:
 ```
 
 See the full example [here](https://github.com/h2oai/wave-ml/blob/main/examples/wine.py).
-
-Stay tuned, for the more updates will come!
