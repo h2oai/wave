@@ -17,6 +17,8 @@
 
 ### Realtime Web Apps and Dashboards for Python
 
+**New!** *Easily integrate AI/ML models into your apps using [Wave ML](https://github.com/h2oai/wave-ml) for automatic machine learning.*
+
 H2O Wave is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python without using HTML, Javascript, or CSS.
 
 H2O Wave excels at capturing information from multiple sources and broadcasting them live over the web, letting you build and deploy realtime analytics with dramatically less effort.
