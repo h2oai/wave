@@ -242,8 +242,6 @@ async def serve(q: Q):
 
 [Source](https://github.com/h2oai/wave-ml/blob/main/examples/quickstart.py).
 
-That's it! See the full example [here](https://github.com/h2oai/wave-ml/blob/main/examples/quickstart.py).
-
 ## Conclusion
 
 With just a couple of lines of code, you can now harness the power of the H2O platform and integrate predictive models into your Wave apps. In an upcoming release, we'll be automating this even further, letting you code-generate complete, interactive apps like the examples above with a single command. Stay tuned!
