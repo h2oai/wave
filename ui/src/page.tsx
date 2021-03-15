@@ -185,7 +185,7 @@ const
     around: 'space-around',
     stretch: 'stretch',
   },
-  toSectionStyle = (zone: Zone, direction?: S): React.CSSProperties => {
+  toSectionStyle = (zone: Zone, cardSlots: CardSlot[], direction?: S): React.CSSProperties => {
     const
       style: React.CSSProperties = {
         flexDirection: zone.direction === 'row' ? 'row' : 'column',
@@ -208,8 +208,8 @@ const
         }
       }
     } else { // no size
-      // expand to fit if horizontal
-      if (direction === 'row') {
+      // expand to fit if horizontal and is not empty
+      if (direction === 'row' && (zone.zones?.length || cardSlots.length)) {
         style.flexGrow = 1
       }
     }
@@ -274,7 +274,7 @@ const
           : null
 
     return (
-      <div data-test={zone.name} className={css.flex} style={toSectionStyle(zone, direction)}>
+      <div data-test={zone.name} className={css.flex} style={toSectionStyle(zone, cardslots, direction)}>
         {children}
       </div>
     )
@@ -311,7 +311,7 @@ const
     }
     return (
       <div data-test={name} style={style}>
-        <FlexSection section={section} hasEditor={editor ? true : false} />
+        <FlexSection section={section} hasEditor={!!editor} />
         {editor && <CardView card={editor} />}
       </div>
     )
