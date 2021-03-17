@@ -352,7 +352,6 @@ export const
           </Fluent.Sticky>
         )
       },
-
       onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
         const searchOrFilter = searchableKeys.length || m.columns.some(c => c.filterable)
         if (!props || (!m.downloadable && !m.resettable && !searchOrFilter)) return null
@@ -368,12 +367,14 @@ export const
             <Fluent.Stack horizontal horizontalAlign={searchOrFilter ? 'space-between' : 'end'} verticalAlign='center'>
               {
                 searchOrFilter && (
-                  <Fluent.Text variant='smallPlus' block >Rows:
+                  <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
                     <b style={{ paddingLeft: 5 }}>{formatNum(filteredItemsB().length)} of {formatNum(items.length)}</b>
                   </Fluent.Text>
                 )
               }
-              <Fluent.CommandBar items={footerItems} styles={{ root: { background: cssVar('$card') } }} />
+              <div style={{ width: '80%' }}>
+                <Fluent.CommandBar items={footerItems} styles={{ root: { background: cssVar('$card') }, primarySet: { justifyContent: 'flex-end' } }} />
+              </div>
             </Fluent.Stack>
           </Fluent.Sticky>
         )
