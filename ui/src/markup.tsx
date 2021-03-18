@@ -16,7 +16,6 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { bond, Card, S, B } from './qd'
-import { displayMixin } from './theme'
 
 const
   css = stylesheet({
@@ -60,8 +59,8 @@ interface State {
 }
 
 export const
-  XMarkup = ({ model: { content, visible, name } }: { model: Markup }) => (
-    <div data-test={name} dangerouslySetInnerHTML={{ __html: content }} style={displayMixin(visible)} />
+  XMarkup = ({ model: { content, name } }: { model: Markup }) => (
+    <div data-test={name} dangerouslySetInnerHTML={{ __html: content }} />
   ),
   MarkupCard = ({ name, title, content }: { name: S, title: S, content: S }) => (
     <div data-test={name} className={css.card}>

@@ -17,7 +17,6 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
 import { B, bond, Dict, Id, qd, S } from './qd'
-import { displayMixin } from './theme'
 import { XToolTip } from './tooltip'
 
 /**
@@ -99,16 +98,17 @@ const
         qd.sync()
       },
       render = () => {
+        const styles: Fluent.IButtonStyles = { root: m.visible ?? true ? {} : { display: 'none' } }
         if (m.link) {
-          return <Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>
+          return <Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick} styles={styles}>{m.label}</Fluent.Link>
         }
         return m.caption?.length
           ? m.primary
-            ? <Fluent.CompoundButton data-test={m.name} primary text={m.label} secondaryText={m.caption} disabled={m.disabled} onClick={onClick} />
-            : <Fluent.CompoundButton data-test={m.name} text={m.label} secondaryText={m.caption} disabled={m.disabled} onClick={onClick} />
+            ? <Fluent.CompoundButton data-test={m.name} primary text={m.label} secondaryText={m.caption} disabled={m.disabled} onClick={onClick} styles={styles} />
+            : <Fluent.CompoundButton data-test={m.name} text={m.label} secondaryText={m.caption} disabled={m.disabled} onClick={onClick} styles={styles} />
           : m.primary
-            ? <Fluent.PrimaryButton data-test={m.name} text={m.label} disabled={m.disabled} onClick={onClick} />
-            : <Fluent.DefaultButton data-test={m.name} text={m.label} disabled={m.disabled} onClick={onClick} />
+            ? <Fluent.PrimaryButton data-test={m.name} text={m.label} disabled={m.disabled} onClick={onClick} styles={styles} />
+            : <Fluent.DefaultButton data-test={m.name} text={m.label} disabled={m.disabled} onClick={onClick} styles={styles} />
       }
     return { render }
   })
@@ -121,13 +121,13 @@ export const
         </XToolTip>
       ))
     return (
-      <div data-test={m.name} className={css.buttons} style={displayMixin(m.visible)}>
+      <div data-test={m.name} className={css.buttons}>
         <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
       </div>
     )
   },
   XStandAloneButton = ({ model: m }: { model: Button }) => (
-    <div className={css.buttons} style={displayMixin(m.visible)}>
+    <div className={css.buttons}>
       <XButton key={m.name} model={m}>{m.label}</XButton>
     </div>
   )

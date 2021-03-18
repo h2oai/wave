@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { B, bond, box, F, Id, qd, S, U, xid } from './qd'
-import { centerMixin, clas, dashed, displayMixin, padding } from './theme'
+import { centerMixin, clas, dashed, padding } from './theme'
 
 /**
  * Create a file upload component.
@@ -281,7 +281,7 @@ export const
       render = () => {
         const uploadClasses = isDraggingB() && !errorB() && !successMsgB() ? clas(css.upload, css.uploadDragging) : css.upload
         return (
-          <div style={displayMixin(model.visible)}>
+          <>
             <form
               className={uploadClasses}
               style={{ height: model.height || 300 }}
@@ -298,7 +298,7 @@ export const
               disabled={!!percentCompleteB() || !filesB().length}
               text={model.label}
               onClick={upload} />
-          </div>
+          </>
         )
       }
 

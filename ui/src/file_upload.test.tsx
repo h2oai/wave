@@ -16,14 +16,12 @@ import React from 'react'
 import { render, fireEvent, createEvent, wait } from '@testing-library/react'
 import { XFileUpload, FileUpload } from './file_upload'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'fileUpload'
 const fileUploadProps: FileUpload = { name }
 interface FileObj { name: T.S; size?: T.F }
 
 describe('FileUpload.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
     T.qd.args[name] = null
@@ -48,12 +46,6 @@ describe('FileUpload.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XFileUpload model={fileUploadProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display file upload when visible is false', () => {
-    const { queryByTestId } = render(<XFileUpload model={{ ...fileUploadProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Shows dragging screen on dragging', () => {

@@ -15,13 +15,11 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { XStepper, Stepper } from './stepper'
-import { initializeIcons } from '@fluentui/react'
 
 let stepperProps: Stepper
 const name = 'stepper'
 
 describe('Stepper.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     stepperProps = {
       name,
@@ -36,11 +34,6 @@ describe('Stepper.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XStepper model={stepperProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display stepper when visible is false', () => {
-    const { queryByTestId } = render(<XStepper model={{ ...stepperProps, visible: false }} />)
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Renders step numbers by default', () => {

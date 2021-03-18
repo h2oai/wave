@@ -16,12 +16,10 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XChecklist, Checklist } from './checklist'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'checklist'
 const checklistProps: Checklist = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }
 describe('Checklist.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
     T.qd.args[name] = null
@@ -30,12 +28,6 @@ describe('Checklist.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XChecklist model={checklistProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display checklist when visible is false', () => {
-    const { queryByTestId } = render(<XChecklist model={{ ...checklistProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - single selection', () => {

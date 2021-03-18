@@ -48,12 +48,6 @@ describe('Table.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Does not display table when visible is false', () => {
-    const { queryByTestId } = render(<XTable model={{ ...tableProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
-  })
-
   describe('Height compute', () => {
 
     it('Computes properly for simple table - header, rows', () => {

@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, box, Id, qd, S } from './qd'
-import { displayMixin } from './theme'
 
 /**
  * Create a combobox.
@@ -66,7 +65,6 @@ export const
       render = () => (
         <Fluent.ComboBox
           data-test={m.name}
-          style={displayMixin(m.visible)}
           label={m.label}
           placeholder={m.placeholder}
           options={options}

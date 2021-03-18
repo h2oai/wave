@@ -53,12 +53,6 @@ describe('Vega.tsx', () => {
   describe('Form Vega', () => {
     const formVegaProps: VegaVisualization = { name, specification }
 
-    it('Does not display expander when visible is false', () => {
-      const { queryByTestId } = render(<XVegaVisualization model={{ ...formVegaProps, visible: false }} />)
-      expect(queryByTestId(name)).toBeInTheDocument()
-      expect(queryByTestId(name)).not.toBeVisible()
-    })
-
     it('Does not render data-test attr', () => {
       const { container } = render(<XVegaVisualization model={{ specification }} />)
       expect(container.querySelectorAll('[data-test]')).toHaveLength(0)

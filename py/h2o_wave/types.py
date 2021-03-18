@@ -665,22 +665,22 @@ class Text:
     def __init__(
             self,
             content: str,
-            size: Optional[str] = None,
             visible: Optional[bool] = None,
+            size: Optional[str] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('Text.content', content, (str,), False, False, False)
-        _guard_enum('Text.size', size, _TextSize, True)
         _guard_scalar('Text.visible', visible, (bool,), False, True, False)
+        _guard_enum('Text.size', size, _TextSize, True)
         _guard_scalar('Text.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Text.name', name, (str,), False, True, False)
         self.content = content
         """The text content."""
-        self.size = size
-        """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
+        self.size = size
+        """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -689,14 +689,14 @@ class Text:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Text.content', self.content, (str,), False, False, False)
-        _guard_enum('Text.size', self.size, _TextSize, True)
         _guard_scalar('Text.visible', self.visible, (bool,), False, True, False)
+        _guard_enum('Text.size', self.size, _TextSize, True)
         _guard_scalar('Text.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Text.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
-            size=self.size,
             visible=self.visible,
+            size=self.size,
             tooltip=self.tooltip,
             name=self.name,
         )
@@ -706,23 +706,23 @@ class Text:
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
         _guard_scalar('Text.content', __d_content, (str,), False, False, False)
-        __d_size: Any = __d.get('size')
-        _guard_enum('Text.size', __d_size, _TextSize, True)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Text.visible', __d_visible, (bool,), False, True, False)
+        __d_size: Any = __d.get('size')
+        _guard_enum('Text.size', __d_size, _TextSize, True)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('Text.tooltip', __d_tooltip, (str,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('Text.name', __d_name, (str,), False, True, False)
         content: str = __d_content
-        size: Optional[str] = __d_size
         visible: Optional[bool] = __d_visible
+        size: Optional[str] = __d_size
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return Text(
             content,
-            size,
             visible,
+            size,
             tooltip,
             name,
         )
@@ -1931,7 +1931,6 @@ class Checklist:
             values: Optional[List[str]] = None,
             choices: Optional[List[Choice]] = None,
             trigger: Optional[bool] = None,
-            visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         _guard_scalar('Checklist.name', name, (str,), True, False, False)
@@ -1939,7 +1938,6 @@ class Checklist:
         _guard_vector('Checklist.values', values, (str,), False, True, False)
         _guard_vector('Checklist.choices', choices, (Choice,), False, True, False)
         _guard_scalar('Checklist.trigger', trigger, (bool,), False, True, False)
-        _guard_scalar('Checklist.visible', visible, (bool,), False, True, False)
         _guard_scalar('Checklist.tooltip', tooltip, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
@@ -1951,8 +1949,6 @@ class Checklist:
         """The choices to be presented."""
         self.trigger = trigger
         """True if the form should be submitted when the checklist value changes."""
-        self.visible = visible
-        """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -1963,7 +1959,6 @@ class Checklist:
         _guard_vector('Checklist.values', self.values, (str,), False, True, False)
         _guard_vector('Checklist.choices', self.choices, (Choice,), False, True, False)
         _guard_scalar('Checklist.trigger', self.trigger, (bool,), False, True, False)
-        _guard_scalar('Checklist.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Checklist.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
             name=self.name,
@@ -1971,7 +1966,6 @@ class Checklist:
             values=self.values,
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             trigger=self.trigger,
-            visible=self.visible,
             tooltip=self.tooltip,
         )
 
@@ -1988,8 +1982,6 @@ class Checklist:
         _guard_vector('Checklist.choices', __d_choices, (Choice,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('Checklist.trigger', __d_trigger, (bool,), False, True, False)
-        __d_visible: Any = __d.get('visible')
-        _guard_scalar('Checklist.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('Checklist.tooltip', __d_tooltip, (str,), False, True, False)
         name: str = __d_name
@@ -1997,7 +1989,6 @@ class Checklist:
         values: Optional[List[str]] = __d_values
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
         trigger: Optional[bool] = __d_trigger
-        visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Checklist(
             name,
@@ -2005,7 +1996,6 @@ class Checklist:
             values,
             choices,
             trigger,
-            visible,
             tooltip,
         )
 
@@ -5211,26 +5201,32 @@ class Stats:
             items: List[Stat],
             justify: Optional[str] = None,
             inset: Optional[bool] = None,
+            visible: Optional[bool] = None,
     ):
         _guard_vector('Stats.items', items, (Stat,), False, False, False)
         _guard_enum('Stats.justify', justify, _StatsJustify, True)
         _guard_scalar('Stats.inset', inset, (bool,), False, True, False)
+        _guard_scalar('Stats.visible', visible, (bool,), False, True, False)
         self.items = items
         """The individual stats to be displayed."""
         self.justify = justify
         """Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify."""
         self.inset = inset
         """Whether to display the stats with a contrasting background."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_vector('Stats.items', self.items, (Stat,), False, False, False)
         _guard_enum('Stats.justify', self.justify, _StatsJustify, True)
         _guard_scalar('Stats.inset', self.inset, (bool,), False, True, False)
+        _guard_scalar('Stats.visible', self.visible, (bool,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             inset=self.inset,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -5242,13 +5238,17 @@ class Stats:
         _guard_enum('Stats.justify', __d_justify, _StatsJustify, True)
         __d_inset: Any = __d.get('inset')
         _guard_scalar('Stats.inset', __d_inset, (bool,), False, True, False)
+        __d_visible: Any = __d.get('visible')
+        _guard_scalar('Stats.visible', __d_visible, (bool,), False, True, False)
         items: List[Stat] = [Stat.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         inset: Optional[bool] = __d_inset
+        visible: Optional[bool] = __d_visible
         return Stats(
             items,
             justify,
             inset,
+            visible,
         )
 
 
@@ -5268,26 +5268,32 @@ class Inline:
             items: List['Component'],
             justify: Optional[str] = None,
             inset: Optional[bool] = None,
+            visible: Optional[bool] = None,
     ):
         _guard_vector('Inline.items', items, (Component,), False, False, False)
         _guard_enum('Inline.justify', justify, _InlineJustify, True)
         _guard_scalar('Inline.inset', inset, (bool,), False, True, False)
+        _guard_scalar('Inline.visible', visible, (bool,), False, True, False)
         self.items = items
         """The components laid out inline."""
         self.justify = justify
         """Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify."""
         self.inset = inset
         """Whether to display the components inset from the parent form, with a contrasting background."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_vector('Inline.items', self.items, (Component,), False, False, False)
         _guard_enum('Inline.justify', self.justify, _InlineJustify, True)
         _guard_scalar('Inline.inset', self.inset, (bool,), False, True, False)
+        _guard_scalar('Inline.visible', self.visible, (bool,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             inset=self.inset,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -5299,13 +5305,17 @@ class Inline:
         _guard_enum('Inline.justify', __d_justify, _InlineJustify, True)
         __d_inset: Any = __d.get('inset')
         _guard_scalar('Inline.inset', __d_inset, (bool,), False, True, False)
+        __d_visible: Any = __d.get('visible')
+        _guard_scalar('Inline.visible', __d_visible, (bool,), False, True, False)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         inset: Optional[bool] = __d_inset
+        visible: Optional[bool] = __d_visible
         return Inline(
             items,
             justify,
             inset,
+            visible,
         )
 
 

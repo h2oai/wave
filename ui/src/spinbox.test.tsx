@@ -16,25 +16,17 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XSpinbox, Spinbox } from './spinbox'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'spinbox'
 const spinboxProps: Spinbox = { name }
 
 const mouseEvent = { clientX: 0, clientY: 0 }
 describe('Spinbox.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XSpinbox model={spinboxProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display spinbox when visible is false', () => {
-    const { queryByTestId } = render(<XSpinbox model={{ ...spinboxProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init', () => {

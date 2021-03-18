@@ -16,7 +16,6 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XDropdown, Dropdown } from './dropdown'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'dropdown-test'
 const defaultProps: Dropdown = {
@@ -31,17 +30,9 @@ const defaultProps: Dropdown = {
 }
 describe('Dropdown.tsx', () => {
 
-  beforeAll(() => initializeIcons())
-
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XDropdown model={defaultProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display dropdown when visible is false', () => {
-    const { queryByTestId } = render(<XDropdown model={{ ...defaultProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Calls qd.sync() when trigger is on', () => {

@@ -15,14 +15,12 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XLink, Link } from './link'
-import { initializeIcons } from '@fluentui/react'
 
 const
   name = 'link',
   linkProps: Link = { name, path: name }
 
 describe('Link.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { jest.clearAllMocks() })
 
   it('Does not render data-test attr', () => {
@@ -33,12 +31,6 @@ describe('Link.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XLink model={linkProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display link when visible is false', () => {
-    const { queryByTestId } = render(<XLink model={{ ...linkProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets default label when not specified', () => {

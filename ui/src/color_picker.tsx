@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, Id, qd, S } from './qd'
-import { displayMixin } from './theme'
 
 /**
  * Create a color picker.
@@ -58,7 +57,7 @@ export const
         if (m.trigger) qd.sync()
       },
       render = () => (
-        <div data-test={m.name} style={displayMixin(m.visible)}>
+        <div data-test={m.name}>
           <Fluent.Label>{m.label}</Fluent.Label>
           {
             m.choices?.length

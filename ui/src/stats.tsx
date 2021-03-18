@@ -26,6 +26,8 @@ export interface Stats {
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** Whether to display the stats with a contrasting background. */
   inset?: B
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
 }
 
 /** Create a stat (a label-value pair) for displaying a metric. */

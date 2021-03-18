@@ -300,28 +300,28 @@ ui_footer_card <- function(
 #' Create text content.
 #'
 #' @param content The text content.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @param size The font size of the text content.
 #'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
-#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A Text instance.
 #' @export
 ui_text <- function(
   content,
-  size = NULL,
   visible = NULL,
+  size = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
-  # TODO Validate size
   .guard_scalar("visible", "logical", visible)
+  # TODO Validate size
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text=list(
     content=content,
-    size=size,
     visible=visible,
+    size=size,
     tooltip=tooltip,
     name=name))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
@@ -881,7 +881,6 @@ ui_choice_group <- function(
 #' @param values The names of the selected choices.
 #' @param choices The choices to be presented.
 #' @param trigger True if the form should be submitted when the checklist value changes.
-#' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checklist instance.
 #' @export
@@ -891,14 +890,12 @@ ui_checklist <- function(
   values = NULL,
   choices = NULL,
   trigger = NULL,
-  visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_vector("values", "character", values)
   .guard_vector("choices", "h2oq_Choice", choices)
   .guard_scalar("trigger", "logical", trigger)
-  .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(checklist=list(
     name=name,
@@ -906,7 +903,6 @@ ui_checklist <- function(
     values=values,
     choices=choices,
     trigger=trigger,
-    visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
@@ -2275,19 +2271,23 @@ ui_stat <- function(
 #' @param justify Specifies how to lay out the individual stats. Defaults to 'start'.
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
 #' @param inset Whether to display the stats with a contrasting background.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Stats instance.
 #' @export
 ui_stats <- function(
   items,
   justify = NULL,
-  inset = NULL) {
+  inset = NULL,
+  visible = NULL) {
   .guard_vector("items", "h2oq_Stat", items)
   # TODO Validate justify
   .guard_scalar("inset", "logical", inset)
+  .guard_scalar("visible", "logical", visible)
   .o <- list(stats=list(
     items=items,
     justify=justify,
-    inset=inset))
+    inset=inset,
+    visible=visible))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }
@@ -2298,19 +2298,23 @@ ui_stats <- function(
 #' @param justify Specifies how to lay out the individual components. Defaults to 'start'.
 #'   One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify.
 #' @param inset Whether to display the components inset from the parent form, with a contrasting background.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Inline instance.
 #' @export
 ui_inline <- function(
   items,
   justify = NULL,
-  inset = NULL) {
+  inset = NULL,
+  visible = NULL) {
   .guard_vector("items", "h2oq_Component", items)
   # TODO Validate justify
   .guard_scalar("inset", "logical", inset)
+  .guard_scalar("visible", "logical", visible)
   .o <- list(inline=list(
     items=items,
     justify=justify,
-    inset=inset))
+    inset=inset,
+    visible=visible))
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
   return(.o)
 }

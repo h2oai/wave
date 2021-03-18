@@ -18,8 +18,8 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { displayMixin, cssVarValue, } from './theme'
-import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V, qd } from './qd'
+import { B, bond, Card, Dict, F, parseI, parseU, qd, Rec, S, unpack, V } from './qd'
+import { cssVarValue } from './theme'
 
 let
   cat10 = [
@@ -830,11 +830,11 @@ export const
       },
       render = () => {
         const
-          { width = 'auto', height = 'auto', visible, name } = model,
+          { width = 'auto', height = 'auto', name } = model,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { flexGrow: 1 }
             : { width, height }
-        return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} className={css.plot} ref={container} />
+        return <div data-test={name} style={style} className={css.plot} ref={container} />
       }
     return { init, update, render }
   })

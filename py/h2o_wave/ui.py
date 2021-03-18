@@ -252,8 +252,8 @@ def footer_card(
 
 def text(
         content: str,
-        size: Optional[str] = None,
         visible: Optional[bool] = None,
+        size: Optional[str] = None,
         tooltip: Optional[str] = None,
         name: Optional[str] = None,
 ) -> Component:
@@ -261,8 +261,8 @@ def text(
 
     Args:
         content: The text content.
-        size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
         visible: True if the component should be visible. Defaults to true.
+        size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -270,8 +270,8 @@ def text(
     """
     return Component(text=Text(
         content,
-        size,
         visible,
+        size,
         tooltip,
         name,
     ))
@@ -769,7 +769,6 @@ def checklist(
         values: Optional[List[str]] = None,
         choices: Optional[List[Choice]] = None,
         trigger: Optional[bool] = None,
-        visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a set of checkboxes.
@@ -782,7 +781,6 @@ def checklist(
         values: The names of the selected choices.
         choices: The choices to be presented.
         trigger: True if the form should be submitted when the checklist value changes.
-        visible: True if the component should be visible. Defaults to true.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Checklist` instance.
@@ -793,7 +791,6 @@ def checklist(
         values,
         choices,
         trigger,
-        visible,
         tooltip,
     ))
 
@@ -1969,6 +1966,7 @@ def stats(
         items: List[Stat],
         justify: Optional[str] = None,
         inset: Optional[bool] = None,
+        visible: Optional[bool] = None,
 ) -> Component:
     """Create a set of stats laid out horizontally.
 
@@ -1976,6 +1974,7 @@ def stats(
         items: The individual stats to be displayed.
         justify: Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
         inset: Whether to display the stats with a contrasting background.
+        visible: True if the component should be visible. Defaults to true.
     Returns:
         A `h2o_wave.types.Stats` instance.
     """
@@ -1983,6 +1982,7 @@ def stats(
         items,
         justify,
         inset,
+        visible,
     ))
 
 
@@ -1990,6 +1990,7 @@ def inline(
         items: List[Component],
         justify: Optional[str] = None,
         inset: Optional[bool] = None,
+        visible: Optional[bool] = None,
 ) -> Component:
     """Create an inline (horizontal) list of components.
 
@@ -1997,6 +1998,7 @@ def inline(
         items: The components laid out inline.
         justify: Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify.
         inset: Whether to display the components inset from the parent form, with a contrasting background.
+        visible: True if the component should be visible. Defaults to true.
     Returns:
         A `h2o_wave.types.Inline` instance.
     """
@@ -2004,6 +2006,7 @@ def inline(
         items,
         justify,
         inset,
+        visible,
     ))
 
 

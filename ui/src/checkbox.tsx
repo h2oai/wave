@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, Id, qd, S } from './qd'
-import { displayMixin } from './theme'
 
 /**
  * Create a checkbox.
@@ -63,7 +62,6 @@ export const
       render = () => (
         <Fluent.Checkbox
           data-test={m.name}
-          style={displayMixin(m.visible)}
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
           defaultIndeterminate={m.indeterminate}

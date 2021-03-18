@@ -16,7 +16,6 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XRangeSlider, RangeSlider } from './range_slider'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'rangeSlider'
 const rangeSliderProps: RangeSlider = { name, min: 0, max: 100 }
@@ -24,18 +23,11 @@ const defaultRect = { left: 0, top: 0, right: 0, bottom: 0, width: 100, height: 
 const mouseEvent = { clientX: 50, clientY: 0 }
 
 describe('rangeSlider.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XRangeSlider model={rangeSliderProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display range slider when visible is false', () => {
-    const { queryByTestId } = render(<XRangeSlider model={{ ...rangeSliderProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init', () => {

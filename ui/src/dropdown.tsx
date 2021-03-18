@@ -16,7 +16,6 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { Choice } from './choice_group'
 import { B, bond, box, Id, qd, S } from './qd'
-import { displayMixin } from './theme'
 
 /**
  * Create a dropdown.
@@ -107,7 +106,7 @@ export const
         onChange()
       },
       render = () =>
-        <div style={displayMixin(m.visible)}>
+        <>
           <Fluent.Dropdown
             data-test={m.name}
             label={m.label}
@@ -128,7 +127,7 @@ export const
               </Fluent.Text>
             </div>
           }
-        </div>
+        </>
 
     return { render, selectedOptionsB }
   })

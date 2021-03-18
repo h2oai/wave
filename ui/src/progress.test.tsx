@@ -33,8 +33,4 @@ describe('Progress.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Does not display progress when visible is false', () => {
-    const { queryByTestId } = render(<XProgress model={{ ...progressProps, visible: false }} />)
-    expect(queryByTestId(name)).not.toBeVisible()
-  })
 })

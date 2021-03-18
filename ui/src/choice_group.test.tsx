@@ -16,23 +16,15 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XChoiceGroup, ChoiceGroup } from './choice_group'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'choiceGroup'
 const choiceGroupProps: ChoiceGroup = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }
 describe('ChoiceGroup.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XChoiceGroup model={choiceGroupProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display choice group when visible is false', () => {
-    const { queryByTestId } = render(<XChoiceGroup model={{ ...choiceGroupProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - single selection', () => {

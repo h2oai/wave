@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, Id, qd, S } from './qd'
-import { displayMixin } from './theme'
 
 /**
  *  Create a choice for a checklist, choice group or dropdown.
@@ -72,7 +71,6 @@ export const
       render = () => (
         <Fluent.ChoiceGroup
           data-test={m.name}
-          style={displayMixin(m.visible)}
           label={m.label}
           required={m.required}
           defaultSelectedKey={m.value}

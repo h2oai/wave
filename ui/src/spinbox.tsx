@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, F, Id, qd, S } from './qd'
-import { displayMixin } from './theme'
 
 /**
  * Create a spinbox.
@@ -76,7 +75,6 @@ export const
       },
       render = () => (
         <Fluent.SpinButton
-          styles={{ root: displayMixin(m.visible) as Fluent.IStyle }}
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
           min={min}

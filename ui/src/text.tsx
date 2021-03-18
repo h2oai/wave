@@ -17,18 +17,18 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { Markdown } from './markdown'
-import { B, Dict, S } from './qd'
-import { displayMixin, margin } from './theme'
+import { Dict, S, B } from './qd'
+import { margin } from './theme'
 import { Command } from './toolbar'
 
 /** Create text content. */
 export interface Text {
   /** The text content. */
   content: S
-  /** The font size of the text content. */
-  size?: 'xl' | 'l' | 'm' | 's' | 'xs'
   /** True if the component should be visible. Defaults to true. */
   visible?: B
+  /** The font size of the text content. */
+  size?: 'xl' | 'l' | 'm' | 's' | 'xs'
   /** Tooltip message. */
   tooltip?: S
   /** An identifying name for this component. */
@@ -121,10 +121,10 @@ const
   toTextVariant = (s: S) => textVariants[s] || 'mediumPlus'
 
 export const
-  XText = ({ content, name, size, commands, visibility = true }: { content: S, name?: S, size?: S, commands?: Command[], visibility?: B }) => {
+  XText = ({ content, name, size, commands }: { content: S, name?: S, size?: S, commands?: Command[] }) => {
     const menuName = name ? `${name}-menu` : name
     return (
-      <div className={css.text} style={displayMixin(visibility)}>
+      <div className={css.text}>
         <Fluent.Text data-test={name} variant={toTextVariant(size || 'm')} block>
           <Markdown source={content} />
         </Fluent.Text>

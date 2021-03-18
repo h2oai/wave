@@ -47,9 +47,5 @@ describe('Markup.tsx', () => {
       expect(queryByTestId(name)).not.toBeInTheDocument()
     })
 
-    it('Does not display Markup when visible is false', () => {
-      const { queryByTestId } = render(<XMarkup model={{ ...formMarkupProps, visible: false }} />)
-      expect(queryByTestId(name)).not.toBeVisible()
-    })
   })
 })

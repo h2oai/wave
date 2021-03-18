@@ -28,7 +28,7 @@ function runRelatedTests(command, stagedFiles) {
 const
   files = execSync('git diff --cached --name-only --diff-filter=d').toString().split('\n').filter(Boolean).reduce((groups, f) => {
     if (f.match(/^ui.+(ts|tsx)/)) groups.uiTs.push(f)
-    else if (f.match(/^tools\/wavegen.+(ts|tsx)/)) groups.uiTs.push(f)
+    else if (f.match(/^tools\/wavegen.+(ts|tsx)/)) groups.wavegenTs.push(f)
     else if (f.endsWith('.py')) groups.py.push(f)
     else if (f.endsWith('.go')) groups.go.push(f)
     else if (f.endsWith('.md')) groups.md.push(f)

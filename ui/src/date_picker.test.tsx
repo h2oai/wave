@@ -16,23 +16,15 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XDatePicker, DatePicker } from './date_picker'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'datepicker'
 const datepickerProps: DatePicker = { name }
 describe('Datepicker.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XDatePicker model={datepickerProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display date picker when visible is false', () => {
-    const { queryByTestId } = render(<XDatePicker model={{ ...datepickerProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init - value not specified', () => {

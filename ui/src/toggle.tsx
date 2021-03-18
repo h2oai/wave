@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { B, bond, Id, qd, S } from './qd'
-import { displayMixin } from './theme'
 
 /**
  * Create a toggle.
@@ -55,7 +54,6 @@ export const
       render = () => (
         <Fluent.Toggle
           data-test={m.name}
-          style={displayMixin(m.visible)}
           label={m.label}
           defaultChecked={m.value}
           onChange={onChange}

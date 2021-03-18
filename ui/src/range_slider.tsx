@@ -18,7 +18,7 @@ import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import { stylesheet } from 'typestyle'
 import { B, bond, box, F, Id, qd, S, U } from './qd'
-import { displayMixin, padding } from './theme'
+import { padding } from './theme'
 
 const
   css = stylesheet({
@@ -149,7 +149,7 @@ export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
       if (m.trigger) qd.sync()
     },
     render = () => (
-      <div data-test={m.name} style={displayMixin(m.visible)}>
+      <div data-test={m.name}>
         {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
         <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
           <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={valueB()} onChange={onChange} />

@@ -17,7 +17,6 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
 import { B, bond, box, Id, qd, S } from './qd'
-import { displayMixin } from './theme'
 
 /**
  * Creates a new expander.
@@ -75,7 +74,7 @@ export const
           className = isOpenB() ? css.expanderOpen : css.expanderClosed
 
         return (
-          <div data-test={m.name} className={className} style={displayMixin(m.visible)}>
+          <div data-test={m.name} className={className}>
             <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
               <Fluent.ActionButton
                 title={actionTitle}

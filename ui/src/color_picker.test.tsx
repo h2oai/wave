@@ -16,23 +16,15 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XColorPicker, ColorPicker } from './color_picker'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
 const name = 'colorPicker'
 const colorPickerProps: ColorPicker = { name }
 describe('ColorPicker.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { T.qd.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XColorPicker model={colorPickerProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display color picker when visible is false', () => {
-    const { queryByTestId } = render(<XColorPicker model={{ ...colorPickerProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init - value not specified', () => {
