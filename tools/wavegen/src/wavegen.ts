@@ -582,6 +582,7 @@ const
       p = (line: S) => lines.push(line),
       printLicense = () => { for (const line of licenseLines) p(line ? `# ${line}` : '#') },
       flush = (): S => { const s = lines.join('\n'); lines.length = 0; return s },
+      classes: Dict<Declaration> = {},
       apis: Dict<B> = {},
       knownTypes = ((): Dict<Type> => {
         const d: Dict<Type> = {}
@@ -606,6 +607,102 @@ const
       },
       genComments = (comments: S[]): S => {
         return comments.map(c => "#' " + c.trimRight()).join('\n').trim()
+      },
+      genClass = (type: Type) => {
+        if (classes[type.name] === Declaration.Declared || classes[type.name] === Declaration.Forward) return
+
+        classes[type.name] = Declaration.Forward
+
+        // generate member types first so that we don't have to forward-declare.
+        for (const m of type.members) {
+          const memberType = getKnownTypeOf(m)
+          if (memberType) genClass(memberType)
+        }
+
+        console.log(`Generating ${type.name}...`)
+        p('')
+        p(`class ${type.name}:`)
+        p(`    """` + genComments(type.comments))
+        p(`    """`)
+        p(`    def __init__(`)
+        p(`            self,`)
+        for (const m of type.members) {
+          p(`            ${getSigWithDefault(m)},`)
+        }
+        p(`    ):`)
+        for (const m of type.members) {
+          p(`        self.${m.name} = ${m.name}`)
+          p(`        """${m.comments.join(' ')}"""`)
+        }
+        p('')
+        p(`    def dump(self) -> Dict:`)
+        p(`        """Returns the contents of this object as a dict."""`)
+        for (const m of type.members) { // guard
+          if (!m.isOptional) {
+            p(`        if self.${m.name} is None:`)
+            p(`            raise ValueError('${type.name}.${m.name} is required.')`)
+            if (m.t === MemberT.Enum) {
+              p(`        if self.${m.name} not in (${m.values.map(v => `'${v}'`).join(', ')}):`)
+              p(`            raise ValueError(f'Invalid value "{self.${m.name}}" for ${type.name}.${m.name}.')`)
+            }
+          }
+        }
+        p(`        return _dump(`)
+        if (type.isRoot) {
+          p(`            view='${type.file}',`)
+        }
+        for (const m of type.members) { // pack
+          if (getKnownTypeOf(m)) {
+            if (m.t === MemberT.Repeated || m.t === MemberT.Singular) {
+              let code = m.t === MemberT.Repeated
+                ? `[__e.dump() for __e in self.${m.name}]`
+                : `self.${m.name}.dump()`
+              if (m.isPacked) code = `self.${m.name} if isinstance(self.${m.name}, str) else ` + code
+              if (m.isOptional) code = `None if self.${m.name} is None else ` + code
+              p(`            ${m.name}=${code},`)
+            }
+          } else {
+            p(`            ${m.name}=self.${m.name},`)
+          }
+        }
+        p(`        )`)
+        p('')
+        p(`    @staticmethod`)
+        p(`    def load(__d: Dict) -> '${type.name}':`)
+        p(`        """Creates an instance of this class using the contents of a dict."""`)
+        for (const m of type.members) {
+          const rval = `__d_${m.name}`
+          p(`        ${rval}: Any = __d.get('${m.name}')`)
+          if (!m.isOptional) {
+            p(`        if ${rval} is None:`)
+            p(`            raise ValueError('${type.name}.${m.name} is required.')`)
+          }
+        }
+        for (const m of type.members) {
+          const rval = `__d_${m.name}`
+          const memberType = getKnownTypeOf(m)
+          if (memberType) {
+            if (m.t === MemberT.Repeated || m.t === MemberT.Singular) {
+              let code = m.t === MemberT.Repeated
+                ? `[${memberType.name}.load(__e) for __e in ${rval}]`
+                : `${memberType.name}.load(${rval})`
+              if (m.isOptional) code = `None if ${rval} is None else ` + code
+              // TODO this should call unpack(__d_foo) if str
+              if (m.isPacked) code = `${rval} if isinstance(${rval}, str) else ` + code
+              p(`        ${genSig(m)} = ${code}`)
+            }
+          } else {
+            p(`        ${genSig(m)} = ${rval}`)
+          }
+        }
+        p(`        return ${type.name}(`)
+        for (const m of type.members) {
+          p(`            ${m.name},`)
+        }
+        p(`        )`)
+        p('')
+
+        classes[type.name] = Declaration.Declared
       },
       layoutParams = (xs: S[], pad: S) => {
         const lines = pad + xs.join(',\n' + pad)
