@@ -205,7 +205,7 @@ def create_dashboard(update_freq=0.0):
 
         for f, c in simples:
             val, pc = f.next()
-            c.value = f'${val:.2f}',
+            c.value = f'${val:.2f}'
 
         for f, c in simples_colored:
             cat, val, pc = f.next()
