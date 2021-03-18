@@ -14,7 +14,6 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { XButtons } from './button'
 import { Component, XComponents } from './form'
 import { B, bond, qd, S } from './qd'
 
@@ -53,13 +52,11 @@ export default bond(() => {
             : primary
               ? Fluent.DialogType.largeHeader
               : Fluent.DialogType.normal
-        },
-        lastComponent = items.pop()
+        }
 
       return (
         <Fluent.Dialog hidden={!dialogB()} dialogContentProps={dialogContentProps} modalProps={{ isBlocking: blocking }} minWidth={width} maxWidth={width}>
           <XComponents items={items} />
-          {lastComponent?.buttons && <Fluent.DialogFooter><XButtons model={lastComponent.buttons} /></Fluent.DialogFooter>}
         </Fluent.Dialog>
       )
     }
