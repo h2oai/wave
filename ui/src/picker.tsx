@@ -68,7 +68,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
     init = () => qd.args[m.name] = m.values || null,
     render = () => (
       <div style={displayMixin(m.visible)}>
-        {m.label && <Fluent.Text>{m.label}</Fluent.Text>}
+        {m.label && <Fluent.Label>{m.label}</Fluent.Label>}
         <Fluent.TagPicker
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           removeButtonAriaLabel="Remove"

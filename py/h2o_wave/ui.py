@@ -1042,6 +1042,8 @@ def color_picker(
         label: Optional[str] = None,
         value: Optional[str] = None,
         choices: Optional[List[str]] = None,
+        alpha: Optional[bool] = None,
+        inline: Optional[bool] = None,
         visible: Optional[bool] = None,
         trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
@@ -1056,6 +1058,8 @@ def color_picker(
         label: Text to be displayed alongside the component.
         value: The selected color (CSS-compatible string).
         choices: A list of colors (CSS-compatible strings) to limit color choices to.
+        alpha: True if user should be allowed to pick color transparency. Defaults to "true".
+        inline: True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to "false".
         visible: True if the component should be visible. Defaults to true.
         trigger: True if the form should be submitted when the color picker value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -1067,6 +1071,8 @@ def color_picker(
         label,
         value,
         choices,
+        alpha,
+        inline,
         visible,
         trigger,
         tooltip,
@@ -2531,6 +2537,48 @@ def dialog(
     )
 
 
+def colors(
+        text: str,
+        card: str,
+        page: str,
+        primary: str,
+) -> Colors:
+    """Represents colors to be used in your app.
+
+    Args:
+        text: Base color of the textual components.
+        card: Card background color.
+        page: Page background color.
+        primary: Primary color used to accent components.
+    Returns:
+        A `h2o_wave.types.Colors` instance.
+    """
+    return Colors(
+        text,
+        card,
+        page,
+        primary,
+    )
+
+
+def theme(
+        name: str,
+        colors: Colors,
+) -> Theme:
+    """Theme (color scheme) to apply colors to the app.
+
+    Args:
+        name: An identifying name for this theme.
+        colors: Specific colors to be used in the app.
+    Returns:
+        A `h2o_wave.types.Theme` instance.
+    """
+    return Theme(
+        name,
+        colors,
+    )
+
+
 def tracker(
         type: str,
         id: str,
@@ -2559,6 +2607,7 @@ def meta_card(
         layouts: Optional[List[Layout]] = None,
         dialog: Optional[Dialog] = None,
         theme: Optional[str] = None,
+        themes: Optional[List[Theme]] = None,
         tracker: Optional[Tracker] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
@@ -2577,6 +2626,7 @@ def meta_card(
         layouts: The layouts supported by this page.
         dialog: Display a dialog on the page.
         theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
+        themes: * Themes (color schemes) that define color used in the app.
         tracker: Configure a tracker for the page (for web analytics).
         commands: Contextual menu commands for this component.
     Returns:
@@ -2592,6 +2642,7 @@ def meta_card(
         layouts,
         dialog,
         theme,
+        themes,
         tracker,
         commands,
     )

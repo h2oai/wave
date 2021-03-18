@@ -1197,6 +1197,8 @@ ui_date_picker <- function(
 #' @param label Text to be displayed alongside the component.
 #' @param value The selected color (CSS-compatible string).
 #' @param choices A list of colors (CSS-compatible strings) to limit color choices to.
+#' @param alpha True if user should be allowed to pick color transparency. Defaults to "true".
+#' @param inline True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to "false".
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param trigger True if the form should be submitted when the color picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -1207,6 +1209,8 @@ ui_color_picker <- function(
   label = NULL,
   value = NULL,
   choices = NULL,
+  alpha = NULL,
+  inline = NULL,
   visible = NULL,
   trigger = NULL,
   tooltip = NULL) {
@@ -1214,6 +1218,8 @@ ui_color_picker <- function(
   .guard_scalar("label", "character", label)
   .guard_scalar("value", "character", value)
   .guard_vector("choices", "character", choices)
+  .guard_scalar("alpha", "logical", alpha)
+  .guard_scalar("inline", "logical", inline)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1222,6 +1228,8 @@ ui_color_picker <- function(
     label=label,
     value=value,
     choices=choices,
+    alpha=alpha,
+    inline=inline,
     visible=visible,
     trigger=trigger,
     tooltip=tooltip))
@@ -2926,6 +2934,50 @@ ui_dialog <- function(
   return(.o)
 }
 
+#' Represents colors to be used in your app.
+#'
+#' @param text Base color of the textual components.
+#' @param card Card background color.
+#' @param page Page background color.
+#' @param primary Primary color used to accent components.
+#' @return A Colors instance.
+#' @export
+ui_colors <- function(
+  text,
+  card,
+  page,
+  primary) {
+  .guard_scalar("text", "character", text)
+  .guard_scalar("card", "character", card)
+  .guard_scalar("page", "character", page)
+  .guard_scalar("primary", "character", primary)
+  .o <- list(
+    text=text,
+    card=card,
+    page=page,
+    primary=primary)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Colors"))
+  return(.o)
+}
+
+#' Theme (color scheme) to apply colors to the app.
+#'
+#' @param name An identifying name for this theme.
+#' @param colors Specific colors to be used in the app.
+#' @return A Theme instance.
+#' @export
+ui_theme <- function(
+  name,
+  colors) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("colors", "h2oq_Colors", colors)
+  .o <- list(
+    name=name,
+    colors=colors)
+  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Theme"))
+  return(.o)
+}
+
 #' Configure user interaction tracking (analytics) for a page.
 #'
 #' @param type The tracking provider. Supported providers are `ga` (Google Analytics) and `gtag` (Google Global Site Tags or gtag.js)
@@ -2960,6 +3012,7 @@ ui_tracker <- function(
 #' @param layouts The layouts supported by this page.
 #' @param dialog Display a dialog on the page.
 #' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
+#' @param themes * Themes (color schemes) that define color used in the app.
 #' @param tracker Configure a tracker for the page (for web analytics).
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
@@ -2974,6 +3027,7 @@ ui_meta_card <- function(
   layouts = NULL,
   dialog = NULL,
   theme = NULL,
+  themes = NULL,
   tracker = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
@@ -2985,6 +3039,7 @@ ui_meta_card <- function(
   .guard_vector("layouts", "h2oq_Layout", layouts)
   .guard_scalar("dialog", "h2oq_Dialog", dialog)
   .guard_scalar("theme", "character", theme)
+  .guard_vector("themes", "h2oq_Theme", themes)
   .guard_scalar("tracker", "h2oq_Tracker", tracker)
   .guard_vector("commands", "h2oq_Command", commands)
   .o <- list(
@@ -2997,6 +3052,7 @@ ui_meta_card <- function(
     layouts=layouts,
     dialog=dialog,
     theme=theme,
+    themes=themes,
     tracker=tracker,
     commands=commands)
   class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))

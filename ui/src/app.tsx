@@ -20,7 +20,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
 import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
-import { clas, cssVar, pc, themeB } from './theme'
+import { clas, cssVar, pc } from './theme'
 
 const
   css = stylesheet({
@@ -151,7 +151,7 @@ const
         window.removeEventListener('hashchange', onHashChanged)
       }
 
-    return { init, render, dispose, contentB, theme: themeB }
+    return { init, render, dispose, contentB }
   })
 
 export default App

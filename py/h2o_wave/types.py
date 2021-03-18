@@ -2625,6 +2625,8 @@ class ColorPicker:
             label: Optional[str] = None,
             value: Optional[str] = None,
             choices: Optional[List[str]] = None,
+            alpha: Optional[bool] = None,
+            inline: Optional[bool] = None,
             visible: Optional[bool] = None,
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
@@ -2633,6 +2635,8 @@ class ColorPicker:
         _guard_scalar('ColorPicker.label', label, (str,), False, True, False)
         _guard_scalar('ColorPicker.value', value, (str,), False, True, False)
         _guard_vector('ColorPicker.choices', choices, (str,), False, True, False)
+        _guard_scalar('ColorPicker.alpha', alpha, (bool,), False, True, False)
+        _guard_scalar('ColorPicker.inline', inline, (bool,), False, True, False)
         _guard_scalar('ColorPicker.visible', visible, (bool,), False, True, False)
         _guard_scalar('ColorPicker.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('ColorPicker.tooltip', tooltip, (str,), False, True, False)
@@ -2644,6 +2648,10 @@ class ColorPicker:
         """The selected color (CSS-compatible string)."""
         self.choices = choices
         """A list of colors (CSS-compatible strings) to limit color choices to."""
+        self.alpha = alpha
+        """True if user should be allowed to pick color transparency. Defaults to "true"."""
+        self.inline = inline
+        """True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to "false"."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.trigger = trigger
@@ -2657,6 +2665,8 @@ class ColorPicker:
         _guard_scalar('ColorPicker.label', self.label, (str,), False, True, False)
         _guard_scalar('ColorPicker.value', self.value, (str,), False, True, False)
         _guard_vector('ColorPicker.choices', self.choices, (str,), False, True, False)
+        _guard_scalar('ColorPicker.alpha', self.alpha, (bool,), False, True, False)
+        _guard_scalar('ColorPicker.inline', self.inline, (bool,), False, True, False)
         _guard_scalar('ColorPicker.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('ColorPicker.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('ColorPicker.tooltip', self.tooltip, (str,), False, True, False)
@@ -2665,6 +2675,8 @@ class ColorPicker:
             label=self.label,
             value=self.value,
             choices=self.choices,
+            alpha=self.alpha,
+            inline=self.inline,
             visible=self.visible,
             trigger=self.trigger,
             tooltip=self.tooltip,
@@ -2681,6 +2693,10 @@ class ColorPicker:
         _guard_scalar('ColorPicker.value', __d_value, (str,), False, True, False)
         __d_choices: Any = __d.get('choices')
         _guard_vector('ColorPicker.choices', __d_choices, (str,), False, True, False)
+        __d_alpha: Any = __d.get('alpha')
+        _guard_scalar('ColorPicker.alpha', __d_alpha, (bool,), False, True, False)
+        __d_inline: Any = __d.get('inline')
+        _guard_scalar('ColorPicker.inline', __d_inline, (bool,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('ColorPicker.visible', __d_visible, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
@@ -2691,6 +2707,8 @@ class ColorPicker:
         label: Optional[str] = __d_label
         value: Optional[str] = __d_value
         choices: Optional[List[str]] = __d_choices
+        alpha: Optional[bool] = __d_alpha
+        inline: Optional[bool] = __d_inline
         visible: Optional[bool] = __d_visible
         trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
@@ -2699,6 +2717,8 @@ class ColorPicker:
             label,
             value,
             choices,
+            alpha,
+            inline,
             visible,
             trigger,
             tooltip,
@@ -7092,6 +7112,104 @@ class Dialog:
         )
 
 
+class Colors:
+    """Represents colors to be used in your app.
+    """
+    def __init__(
+            self,
+            text: str,
+            card: str,
+            page: str,
+            primary: str,
+    ):
+        _guard_scalar('Colors.text', text, (str,), False, False, False)
+        _guard_scalar('Colors.card', card, (str,), False, False, False)
+        _guard_scalar('Colors.page', page, (str,), False, False, False)
+        _guard_scalar('Colors.primary', primary, (str,), False, False, False)
+        self.text = text
+        """Base color of the textual components."""
+        self.card = card
+        """Card background color."""
+        self.page = page
+        """Page background color."""
+        self.primary = primary
+        """Primary color used to accent components."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Colors.text', self.text, (str,), False, False, False)
+        _guard_scalar('Colors.card', self.card, (str,), False, False, False)
+        _guard_scalar('Colors.page', self.page, (str,), False, False, False)
+        _guard_scalar('Colors.primary', self.primary, (str,), False, False, False)
+        return _dump(
+            text=self.text,
+            card=self.card,
+            page=self.page,
+            primary=self.primary,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Colors':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_text: Any = __d.get('text')
+        _guard_scalar('Colors.text', __d_text, (str,), False, False, False)
+        __d_card: Any = __d.get('card')
+        _guard_scalar('Colors.card', __d_card, (str,), False, False, False)
+        __d_page: Any = __d.get('page')
+        _guard_scalar('Colors.page', __d_page, (str,), False, False, False)
+        __d_primary: Any = __d.get('primary')
+        _guard_scalar('Colors.primary', __d_primary, (str,), False, False, False)
+        text: str = __d_text
+        card: str = __d_card
+        page: str = __d_page
+        primary: str = __d_primary
+        return Colors(
+            text,
+            card,
+            page,
+            primary,
+        )
+
+
+class Theme:
+    """Theme (color scheme) to apply colors to the app.
+    """
+    def __init__(
+            self,
+            name: str,
+            colors: Colors,
+    ):
+        _guard_scalar('Theme.name', name, (str,), True, False, False)
+        _guard_scalar('Theme.colors', colors, (Colors,), False, False, False)
+        self.name = name
+        """An identifying name for this theme."""
+        self.colors = colors
+        """Specific colors to be used in the app."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Theme.name', self.name, (str,), True, False, False)
+        _guard_scalar('Theme.colors', self.colors, (Colors,), False, False, False)
+        return _dump(
+            name=self.name,
+            colors=self.colors.dump(),
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Theme':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Theme.name', __d_name, (str,), True, False, False)
+        __d_colors: Any = __d.get('colors')
+        _guard_scalar('Theme.colors', __d_colors, (Colors,), False, False, False)
+        name: str = __d_name
+        colors: Colors = Colors.load(__d_colors)
+        return Theme(
+            name,
+            colors,
+        )
+
+
 _TrackerType = ['ga', 'gtag']
 
 
@@ -7156,6 +7274,7 @@ class MetaCard:
             layouts: Optional[List[Layout]] = None,
             dialog: Optional[Dialog] = None,
             theme: Optional[str] = None,
+            themes: Optional[List[Theme]] = None,
             tracker: Optional[Tracker] = None,
             commands: Optional[List[Command]] = None,
     ):
@@ -7168,6 +7287,7 @@ class MetaCard:
         _guard_vector('MetaCard.layouts', layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', dialog, (Dialog,), False, True, False)
         _guard_scalar('MetaCard.theme', theme, (str,), False, True, False)
+        _guard_vector('MetaCard.themes', themes, (Theme,), False, True, False)
         _guard_scalar('MetaCard.tracker', tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
@@ -7188,6 +7308,8 @@ class MetaCard:
         """Display a dialog on the page."""
         self.theme = theme
         """Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'."""
+        self.themes = themes
+        """* Themes (color schemes) that define color used in the app."""
         self.tracker = tracker
         """Configure a tracker for the page (for web analytics)."""
         self.commands = commands
@@ -7204,6 +7326,7 @@ class MetaCard:
         _guard_vector('MetaCard.layouts', self.layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', self.dialog, (Dialog,), False, True, False)
         _guard_scalar('MetaCard.theme', self.theme, (str,), False, True, False)
+        _guard_vector('MetaCard.themes', self.themes, (Theme,), False, True, False)
         _guard_scalar('MetaCard.tracker', self.tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
@@ -7217,6 +7340,7 @@ class MetaCard:
             layouts=None if self.layouts is None else [__e.dump() for __e in self.layouts],
             dialog=None if self.dialog is None else self.dialog.dump(),
             theme=self.theme,
+            themes=None if self.themes is None else [__e.dump() for __e in self.themes],
             tracker=None if self.tracker is None else self.tracker.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
@@ -7242,6 +7366,8 @@ class MetaCard:
         _guard_scalar('MetaCard.dialog', __d_dialog, (Dialog,), False, True, False)
         __d_theme: Any = __d.get('theme')
         _guard_scalar('MetaCard.theme', __d_theme, (str,), False, True, False)
+        __d_themes: Any = __d.get('themes')
+        _guard_vector('MetaCard.themes', __d_themes, (Theme,), False, True, False)
         __d_tracker: Any = __d.get('tracker')
         _guard_scalar('MetaCard.tracker', __d_tracker, (Tracker,), False, True, False)
         __d_commands: Any = __d.get('commands')
@@ -7255,6 +7381,7 @@ class MetaCard:
         layouts: Optional[List[Layout]] = None if __d_layouts is None else [Layout.load(__e) for __e in __d_layouts]
         dialog: Optional[Dialog] = None if __d_dialog is None else Dialog.load(__d_dialog)
         theme: Optional[str] = __d_theme
+        themes: Optional[List[Theme]] = None if __d_themes is None else [Theme.load(__e) for __e in __d_themes]
         tracker: Optional[Tracker] = None if __d_tracker is None else Tracker.load(__d_tracker)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
@@ -7267,6 +7394,7 @@ class MetaCard:
             layouts,
             dialog,
             theme,
+            themes,
             tracker,
             commands,
         )

@@ -18,7 +18,7 @@ import { showNotification } from './notification'
 import { bond, box, Card, Id, on, qd, S, U } from './qd'
 import { Dialog } from './dialog'
 import { setupTracker, Tracker } from './tracking'
-import { themeB } from './theme'
+import { themeB, themesB } from './theme'
 
 
 export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>
@@ -80,6 +80,30 @@ export interface Zone {
 }
 
 /**
+ * Represents colors to be used in your app.
+ */
+interface Colors {
+  /** Base color of the textual components. */
+  text: S
+  /** Card background color. */
+  card: S
+  /** Page background color. */
+  page: S
+  /** Primary color used to accent components. */
+  primary: S
+
+}
+/** 
+ * Theme (color scheme) to apply colors to the app.
+*/
+export interface Theme {
+  /** An identifying name for this theme. */
+  name: Id
+  /** Specific colors to be used in the app. */
+  colors: Colors
+}
+
+/**
  * Represents page-global state.
  *
  * This card is invisible.
@@ -105,6 +129,8 @@ interface State {
   dialog?: Dialog
   /** Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'. */
   theme?: S
+  /** * Themes (color schemes) that define color used in the app. */
+  themes?: Theme[]
   /** Configure a tracker for the page (for web analytics). */
   tracker?: Tracker
 }
@@ -126,7 +152,7 @@ on(windowIconB, icon => {
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Card<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker } = state
+    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, themes, tracker } = state
 
     if (redirect) {
       try {
@@ -147,6 +173,7 @@ export const
     if (icon) windowIconB(icon)
     if (typeof refresh === 'number') qd.refreshRateB(refresh)
     if (theme) themeB(theme)
+    if (themes) themesB(themes)
     if (notification) showNotification(notification)
     if (tracker) setupTracker(tracker)
     if (layouts) layoutsB(layouts)
