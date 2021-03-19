@@ -803,7 +803,7 @@ export const
                   chart.interaction('element-single-selected')
                   chart.on('element:statechange', (ev: any) => {
                     const e = ev.gEvent.originalEvent
-                    if (e.stateStatus) {
+                    if (e.stateStatus && e.state === 'selected') {
                       if (model.name) {
                         qd.events[model.name] = { select_marks: [e.element?.data] }
                         qd.sync()
