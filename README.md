@@ -32,7 +32,7 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 - Python Package: https://pypi.org/project/h2o-wave/
 - Blog: https://h2oai.github.io/wave/blog/
 - Twitter: https://twitter.com/h2o_wave
-- Discuss: https://h2owave.h2o.ai/
+- Discuss / Support / Q&A / Ideas: https://github.com/h2oai/wave/discussions
 
 ---
 
