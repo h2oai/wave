@@ -29,7 +29,7 @@ build-ide: ## Build IDE
 	rm -rf ui/build/_ide
 	mv ide/dist ui/build/_ide
 
-build-wavegen: ## Build wavegen
+generator: ## Build driver generator
 	cd tools/wavegen && $(MAKE) build
 
 run-ui: ## Run UI in development mode (hot reloading)
