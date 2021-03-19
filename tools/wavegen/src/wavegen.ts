@@ -699,7 +699,7 @@ const
         const lines = pad + xs.join(',\n' + pad)
         return '\n' + lines
       },
-      genClassName = (t: S) => `h2oq_${t}`,
+      genClassName = (t: S) => `Wave${t}`,
       genParamValidation = (n: S, t: S) => p(`  .guard_scalar("${n}", "${t}", ${n})`),
       genRepeatedParamValidation = (n: S, t: S) => p(`  .guard_vector("${n}", "${t}", ${n})`),
       genFunc = (type: Type) => {
@@ -779,7 +779,7 @@ const
           p(`  .o <- list(${layoutParams(assigns, '    ')})`)
         }
         const typeName = type.oneOf ? type.oneOf.type.name : type.name
-        p(`  class(.o) <- append(class(.o), c(.h2oq_obj, "${genClassName(typeName)}"))`)
+        p(`  class(.o) <- append(class(.o), c(.wave_obj, "${genClassName(typeName)}"))`)
         p('  return(.o)')
         p('}')
       },
@@ -806,10 +806,10 @@ const
         p(`    stop(sprintf("%s: expected list of %s", n, t))`)
         p(`  }`)
         p(`}`)
-        p(`.h2oq_obj <- "h2oq_Object"`)
+        p(`.wave_obj <- "WaveObject"`)
         p(``)
         p(`dump_object <- function(x) {`)
-        p(`  if(is(x, .h2oq_obj)) {`)
+        p(`  if(is(x, .wave_obj)) {`)
         p(`    .to_json(x)`)
         p(`  } else {`)
         p(`    stop("cannot dump")`)

@@ -32,10 +32,10 @@
     stop(sprintf("%s: expected list of %s", n, t))
   }
 }
-.h2oq_obj <- "h2oq_Object"
+.wave_obj <- "WaveObject"
 
 dump_object <- function(x) {
-  if(is(x, .h2oq_obj)) {
+  if(is(x, .wave_obj)) {
     .to_json(x)
   } else {
     stop("cannot dump")
@@ -57,7 +57,7 @@ ui_breadcrumb <- function(
   .o <- list(
     name=name,
     label=label)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Breadcrumb"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumb"))
   return(.o)
 }
 
@@ -86,7 +86,7 @@ ui_command <- function(
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("icon", "character", icon)
-  .guard_vector("items", "h2oq_Command", items)
+  .guard_vector("items", "WaveCommand", items)
   .guard_scalar("value", "character", value)
   .guard_scalar("data", "character", data)
   .o <- list(
@@ -97,7 +97,7 @@ ui_command <- function(
     items=items,
     value=value,
     data=data)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Command"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveCommand"))
   return(.o)
 }
 
@@ -119,13 +119,13 @@ ui_breadcrumbs_card <- function(
   items,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_vector("items", "h2oq_Breadcrumb", items)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("items", "WaveBreadcrumb", items)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_BreadcrumbsCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumbsCard"))
   return(.o)
 }
 
@@ -153,7 +153,7 @@ ui_canvas_card <- function(
   .guard_scalar("width", "numeric", width)
   .guard_scalar("height", "numeric", height)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -161,7 +161,7 @@ ui_canvas_card <- function(
     height=height,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_CanvasCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveCanvasCard"))
   return(.o)
 }
 
@@ -186,14 +186,14 @@ ui_chat_card <- function(
   .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
   .guard_scalar("capacity", "numeric", capacity)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     data=data,
     capacity=capacity,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ChatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveChatCard"))
   return(.o)
 }
 
@@ -214,12 +214,12 @@ ui_editor_card <- function(
   commands = NULL) {
   .guard_scalar("box", "character", box)
   # TODO Validate mode
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     mode=mode,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_EditorCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveEditorCard"))
   return(.o)
 }
 
@@ -259,7 +259,7 @@ ui_flex_card <- function(
   # TODO Validate justify
   # TODO Validate align
   # TODO Validate wrap
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     item_view=item_view,
@@ -270,7 +270,7 @@ ui_flex_card <- function(
     align=align,
     wrap=wrap,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FlexCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveFlexCard"))
   return(.o)
 }
 
@@ -288,12 +288,12 @@ ui_footer_card <- function(
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("caption", "character", caption)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     caption=caption,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FooterCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveFooterCard"))
   return(.o)
 }
 
@@ -324,7 +324,7 @@ ui_text <- function(
     visible=visible,
     tooltip=tooltip,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -346,7 +346,7 @@ ui_text_xl <- function(
   .guard_scalar("content", "character", content)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .guard_scalar("name", "character", name)
   .o <- list(text_xl=list(
     content=content,
@@ -354,7 +354,7 @@ ui_text_xl <- function(
     tooltip=tooltip,
     commands=commands,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -376,7 +376,7 @@ ui_text_l <- function(
   .guard_scalar("content", "character", content)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .guard_scalar("name", "character", name)
   .o <- list(text_l=list(
     content=content,
@@ -384,7 +384,7 @@ ui_text_l <- function(
     tooltip=tooltip,
     commands=commands,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -410,7 +410,7 @@ ui_text_m <- function(
     visible=visible,
     tooltip=tooltip,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -436,7 +436,7 @@ ui_text_s <- function(
     visible=visible,
     tooltip=tooltip,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -462,7 +462,7 @@ ui_text_xs <- function(
     visible=visible,
     tooltip=tooltip,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -502,7 +502,7 @@ ui_label <- function(
     visible=visible,
     tooltip=tooltip,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -526,7 +526,7 @@ ui_separator <- function(
     label=label,
     name=name,
     visible=visible))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -578,7 +578,7 @@ ui_progress <- function(
     visible=visible,
     tooltip=tooltip,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -609,7 +609,7 @@ ui_message_bar <- function(
     text=text,
     name=name,
     visible=visible))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -695,7 +695,7 @@ ui_textbox <- function(
     height=height,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -750,7 +750,7 @@ ui_checkbox <- function(
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -795,7 +795,7 @@ ui_toggle <- function(
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -817,7 +817,7 @@ ui_choice <- function(
     name=name,
     label=label,
     disabled=disabled)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Choice"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveChoice"))
   return(.o)
 }
 
@@ -854,7 +854,7 @@ ui_choice_group <- function(
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("value", "character", value)
-  .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("required", "logical", required)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("visible", "logical", visible)
@@ -868,7 +868,7 @@ ui_choice_group <- function(
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -896,7 +896,7 @@ ui_checklist <- function(
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_vector("values", "character", values)
-  .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
@@ -908,7 +908,7 @@ ui_checklist <- function(
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -954,7 +954,7 @@ ui_dropdown <- function(
   .guard_scalar("placeholder", "character", placeholder)
   .guard_scalar("value", "character", value)
   .guard_vector("values", "character", values)
-  .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("required", "logical", required)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
@@ -972,7 +972,7 @@ ui_dropdown <- function(
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1028,7 +1028,7 @@ ui_combobox <- function(
     disabled=disabled,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1091,7 +1091,7 @@ ui_slider <- function(
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1140,7 +1140,7 @@ ui_spinbox <- function(
     disabled=disabled,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1184,7 +1184,7 @@ ui_date_picker <- function(
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1225,7 +1225,7 @@ ui_color_picker <- function(
     visible=visible,
     trigger=trigger,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1286,7 +1286,7 @@ ui_button <- function(
     link=link,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1304,7 +1304,7 @@ ui_buttons <- function(
   justify = NULL,
   name = NULL,
   visible = NULL) {
-  .guard_vector("items", "h2oq_Component", items)
+  .guard_vector("items", "WaveComponent", items)
   # TODO Validate justify
   .guard_scalar("name", "character", name)
   .guard_scalar("visible", "logical", visible)
@@ -1313,7 +1313,7 @@ ui_buttons <- function(
     justify=justify,
     name=name,
     visible=visible))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1360,7 +1360,7 @@ ui_file_upload <- function(
     height=height,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1379,7 +1379,7 @@ ui_progress_table_cell_type <- function(
   .o <- list(progress=list(
     color=color,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
   return(.o)
 }
 
@@ -1398,7 +1398,7 @@ ui_icon_table_cell_type <- function(
   .o <- list(icon=list(
     color=color,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableCellType"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
   return(.o)
 }
 
@@ -1437,7 +1437,7 @@ ui_table_column <- function(
   .guard_scalar("filterable", "logical", filterable)
   .guard_scalar("link", "logical", link)
   # TODO Validate data_type
-  .guard_scalar("cell_type", "h2oq_TableCellType", cell_type)
+  .guard_scalar("cell_type", "WaveTableCellType", cell_type)
   .o <- list(
     name=name,
     label=label,
@@ -1449,7 +1449,7 @@ ui_table_column <- function(
     link=link,
     data_type=data_type,
     cell_type=cell_type)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableColumn"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTableColumn"))
   return(.o)
 }
 
@@ -1467,7 +1467,7 @@ ui_table_row <- function(
   .o <- list(
     name=name,
     cells=cells)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TableRow"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTableRow"))
   return(.o)
 }
 
@@ -1513,8 +1513,8 @@ ui_table <- function(
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
-  .guard_vector("columns", "h2oq_TableColumn", columns)
-  .guard_vector("rows", "h2oq_TableRow", rows)
+  .guard_vector("columns", "WaveTableColumn", columns)
+  .guard_vector("rows", "WaveTableRow", rows)
   .guard_scalar("multiple", "logical", multiple)
   .guard_scalar("groupable", "logical", groupable)
   .guard_scalar("downloadable", "logical", downloadable)
@@ -1535,7 +1535,7 @@ ui_table <- function(
     values=values,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1585,7 +1585,7 @@ ui_link <- function(
     target=target,
     tooltip=tooltip,
     name=name))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1607,7 +1607,7 @@ ui_tab <- function(
     name=name,
     label=label,
     icon=icon)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Tab"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTab"))
   return(.o)
 }
 
@@ -1628,7 +1628,7 @@ ui_tabs <- function(
   link = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("value", "character", value)
-  .guard_vector("items", "h2oq_Tab", items)
+  .guard_vector("items", "WaveTab", items)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("link", "logical", link)
   .o <- list(tabs=list(
@@ -1637,7 +1637,7 @@ ui_tabs <- function(
     items=items,
     visible=visible,
     link=link))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1661,7 +1661,7 @@ ui_expander <- function(
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("expanded", "logical", expanded)
-  .guard_vector("items", "h2oq_Component", items)
+  .guard_vector("items", "WaveComponent", items)
   .guard_scalar("visible", "logical", visible)
   .o <- list(expander=list(
     name=name,
@@ -1669,7 +1669,7 @@ ui_expander <- function(
     expanded=expanded,
     items=items,
     visible=visible))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1703,7 +1703,7 @@ ui_frame <- function(
     height=height,
     name=name,
     visible=visible))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1725,7 +1725,7 @@ ui_markup <- function(
     content=content,
     name=name,
     visible=visible))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1751,7 +1751,7 @@ ui_template <- function(
     data=data,
     name=name,
     visible=visible))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1781,7 +1781,7 @@ ui_picker <- function(
   trigger = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
-  .guard_vector("choices", "h2oq_Choice", choices)
+  .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("label", "character", label)
   .guard_vector("values", "character", values)
   .guard_scalar("max_choices", "numeric", max_choices)
@@ -1799,7 +1799,7 @@ ui_picker <- function(
     visible=visible,
     trigger=trigger,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1857,7 +1857,7 @@ ui_range_slider <- function(
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1879,7 +1879,7 @@ ui_step <- function(
     label=label,
     icon=icon,
     done=done)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Step"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveStep"))
   return(.o)
 }
 
@@ -1898,7 +1898,7 @@ ui_stepper <- function(
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
-  .guard_vector("items", "h2oq_Step", items)
+  .guard_vector("items", "WaveStep", items)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(stepper=list(
@@ -1906,7 +1906,7 @@ ui_stepper <- function(
     items=items,
     visible=visible,
     tooltip=tooltip))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -2149,7 +2149,7 @@ ui_mark <- function(
     ref_stroke_opacity=ref_stroke_opacity,
     ref_stroke_size=ref_stroke_size,
     ref_stroke_dash=ref_stroke_dash)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Mark"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveMark"))
   return(.o)
 }
 
@@ -2160,10 +2160,10 @@ ui_mark <- function(
 #' @export
 ui_plot <- function(
   marks) {
-  .guard_vector("marks", "h2oq_Mark", marks)
+  .guard_vector("marks", "WaveMark", marks)
   .o <- list(
     marks=marks)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Plot"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePlot"))
   return(.o)
 }
 
@@ -2186,7 +2186,7 @@ ui_visualization <- function(
   name = NULL,
   visible = NULL,
   events = NULL) {
-  .guard_scalar("plot", "h2oq_Plot", plot)
+  .guard_scalar("plot", "WavePlot", plot)
   # TODO Validate data: Rec
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
@@ -2201,7 +2201,7 @@ ui_visualization <- function(
     name=name,
     visible=visible,
     events=events))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -2235,7 +2235,7 @@ ui_vega_visualization <- function(
     height=height,
     name=name,
     visible=visible))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -2265,7 +2265,7 @@ ui_stat <- function(
     caption=caption,
     icon=icon,
     icon_color=icon_color)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Stat"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveStat"))
   return(.o)
 }
 
@@ -2281,14 +2281,14 @@ ui_stats <- function(
   items,
   justify = NULL,
   inset = NULL) {
-  .guard_vector("items", "h2oq_Stat", items)
+  .guard_vector("items", "WaveStat", items)
   # TODO Validate justify
   .guard_scalar("inset", "logical", inset)
   .o <- list(stats=list(
     items=items,
     justify=justify,
     inset=inset))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -2304,14 +2304,14 @@ ui_inline <- function(
   items,
   justify = NULL,
   inset = NULL) {
-  .guard_vector("items", "h2oq_Component", items)
+  .guard_vector("items", "WaveComponent", items)
   # TODO Validate justify
   .guard_scalar("inset", "logical", inset)
   .o <- list(inline=list(
     items=items,
     justify=justify,
     inset=inset))
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Component"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -2329,15 +2329,15 @@ ui_form_card <- function(
   title = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_vector("items", "h2oq_Component", items)
+  .guard_vector("items", "WaveComponent", items)
   .guard_scalar("title", "character", title)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
     title=title,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FormCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveFormCard"))
   return(.o)
 }
 
@@ -2362,14 +2362,14 @@ ui_frame_card <- function(
   .guard_scalar("title", "character", title)
   .guard_scalar("path", "character", path)
   .guard_scalar("content", "character", content)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     path=path,
     content=content,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_FrameCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveFrameCard"))
   return(.o)
 }
 
@@ -2403,7 +2403,7 @@ ui_graphics_card <- function(
   # TODO Validate scene: Data
   .guard_scalar("width", "character", width)
   .guard_scalar("height", "character", height)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     view_box=view_box,
@@ -2412,7 +2412,7 @@ ui_graphics_card <- function(
     width=width,
     height=height,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_GraphicsCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveGraphicsCard"))
   return(.o)
 }
 
@@ -2435,14 +2435,14 @@ ui_grid_card <- function(
   .guard_scalar("title", "character", title)
   # TODO Validate cells: Data
   # TODO Validate data: Data
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     cells=cells,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_GridCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveGridCard"))
   return(.o)
 }
 
@@ -2468,7 +2468,7 @@ ui_nav_item <- function(
     label=label,
     icon=icon,
     disabled=disabled)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavItem"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveNavItem"))
   return(.o)
 }
 
@@ -2484,13 +2484,13 @@ ui_nav_group <- function(
   items,
   collapsed = NULL) {
   .guard_scalar("label", "character", label)
-  .guard_vector("items", "h2oq_NavItem", items)
+  .guard_vector("items", "WaveNavItem", items)
   .guard_scalar("collapsed", "logical", collapsed)
   .o <- list(
     label=label,
     items=items,
     collapsed=collapsed)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavGroup"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveNavGroup"))
   return(.o)
 }
 
@@ -2519,8 +2519,8 @@ ui_header_card <- function(
   .guard_scalar("subtitle", "character", subtitle)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
-  .guard_vector("nav", "h2oq_NavGroup", nav)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("nav", "WaveNavGroup", nav)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2529,7 +2529,7 @@ ui_header_card <- function(
     icon_color=icon_color,
     nav=nav,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_HeaderCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveHeaderCard"))
   return(.o)
 }
 
@@ -2555,7 +2555,7 @@ ui_image_card <- function(
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2563,7 +2563,7 @@ ui_image_card <- function(
     image=image,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ImageCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveImageCard"))
   return(.o)
 }
 
@@ -2604,7 +2604,7 @@ ui_large_bar_stat_card <- function(
   .guard_scalar("progress", "numeric", progress)
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2617,7 +2617,7 @@ ui_large_bar_stat_card <- function(
     plot_color=plot_color,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_LargeBarStatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveLargeBarStatCard"))
   return(.o)
 }
 
@@ -2646,7 +2646,7 @@ ui_large_stat_card <- function(
   .guard_scalar("aux_value", "character", aux_value)
   .guard_scalar("caption", "character", caption)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2655,7 +2655,7 @@ ui_large_stat_card <- function(
     caption=caption,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_LargeStatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveLargeStatCard"))
   return(.o)
 }
 
@@ -2682,7 +2682,7 @@ ui_list_card <- function(
   .guard_scalar("item_view", "character", item_view)
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2690,7 +2690,7 @@ ui_list_card <- function(
     item_props=item_props,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ListCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveListCard"))
   return(.o)
 }
 
@@ -2719,7 +2719,7 @@ ui_list_item1_card <- function(
   .guard_scalar("value", "character", value)
   .guard_scalar("aux_value", "character", aux_value)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2728,7 +2728,7 @@ ui_list_item1_card <- function(
     aux_value=aux_value,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ListItem1Card"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveListItem1Card"))
   return(.o)
 }
 
@@ -2756,14 +2756,14 @@ ui_markdown_card <- function(
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MarkdownCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveMarkdownCard"))
   return(.o)
 }
 
@@ -2783,13 +2783,13 @@ ui_markup_card <- function(
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MarkupCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveMarkupCard"))
   return(.o)
 }
 
@@ -2822,7 +2822,7 @@ ui_zone <- function(
   # TODO Validate justify
   # TODO Validate align
   # TODO Validate wrap
-  .guard_vector("zones", "h2oq_Zone", zones)
+  .guard_vector("zones", "WaveZone", zones)
   .o <- list(
     name=name,
     size=size,
@@ -2831,7 +2831,7 @@ ui_zone <- function(
     align=align,
     wrap=wrap,
     zones=zones)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Zone"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveZone"))
   return(.o)
 }
 
@@ -2868,7 +2868,7 @@ ui_layout <- function(
   max_height = NULL,
   name = NULL) {
   .guard_scalar("breakpoint", "character", breakpoint)
-  .guard_vector("zones", "h2oq_Zone", zones)
+  .guard_vector("zones", "WaveZone", zones)
   .guard_scalar("width", "character", width)
   .guard_scalar("min_width", "character", min_width)
   .guard_scalar("max_width", "character", max_width)
@@ -2886,7 +2886,7 @@ ui_layout <- function(
     min_height=min_height,
     max_height=max_height,
     name=name)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Layout"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveLayout"))
   return(.o)
 }
 
@@ -2910,7 +2910,7 @@ ui_dialog <- function(
   blocking = NULL,
   primary = NULL) {
   .guard_scalar("title", "character", title)
-  .guard_vector("items", "h2oq_Component", items)
+  .guard_vector("items", "WaveComponent", items)
   .guard_scalar("width", "character", width)
   .guard_scalar("closable", "logical", closable)
   .guard_scalar("blocking", "logical", blocking)
@@ -2922,7 +2922,7 @@ ui_dialog <- function(
     closable=closable,
     blocking=blocking,
     primary=primary)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Dialog"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveDialog"))
   return(.o)
 }
 
@@ -2941,7 +2941,7 @@ ui_tracker <- function(
   .o <- list(
     type=type,
     id=id)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_Tracker"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTracker"))
   return(.o)
 }
 
@@ -2982,11 +2982,11 @@ ui_meta_card <- function(
   .guard_scalar("notification", "character", notification)
   .guard_scalar("redirect", "character", redirect)
   .guard_scalar("icon", "character", icon)
-  .guard_vector("layouts", "h2oq_Layout", layouts)
-  .guard_scalar("dialog", "h2oq_Dialog", dialog)
+  .guard_vector("layouts", "WaveLayout", layouts)
+  .guard_scalar("dialog", "WaveDialog", dialog)
   .guard_scalar("theme", "character", theme)
-  .guard_scalar("tracker", "h2oq_Tracker", tracker)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_scalar("tracker", "WaveTracker", tracker)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -2999,7 +2999,7 @@ ui_meta_card <- function(
     theme=theme,
     tracker=tracker,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_MetaCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveMetaCard"))
   return(.o)
 }
 
@@ -3017,15 +3017,15 @@ ui_nav_card <- function(
   value = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_vector("items", "h2oq_NavGroup", items)
+  .guard_vector("items", "WaveNavGroup", items)
   .guard_scalar("value", "character", value)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
     value=value,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_NavCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveNavCard"))
   return(.o)
 }
 
@@ -3045,13 +3045,13 @@ ui_pixel_art_card <- function(
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_PixelArtCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePixelArtCard"))
   return(.o)
 }
 
@@ -3075,9 +3075,9 @@ ui_plot_card <- function(
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   # TODO Validate data: Rec
-  .guard_scalar("plot", "h2oq_Plot", plot)
+  .guard_scalar("plot", "WavePlot", plot)
   .guard_vector("events", "character", events)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3085,7 +3085,7 @@ ui_plot_card <- function(
     plot=plot,
     events=events,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_PlotCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePlotCard"))
   return(.o)
 }
 
@@ -3109,14 +3109,14 @@ ui_repeat_card <- function(
   .guard_scalar("item_view", "character", item_view)
   # TODO Validate item_props: Rec
   # TODO Validate data: Data
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     item_view=item_view,
     item_props=item_props,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_RepeatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveRepeatCard"))
   return(.o)
 }
 
@@ -3139,15 +3139,15 @@ ui_section_card <- function(
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("subtitle", "character", subtitle)
-  .guard_vector("items", "h2oq_Component", items)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     subtitle=subtitle,
     items=items,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SectionCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveSectionCard"))
   return(.o)
 }
 
@@ -3193,7 +3193,7 @@ ui_small_series_stat_card <- function(
   # TODO Validate plot_curve
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3207,7 +3207,7 @@ ui_small_series_stat_card <- function(
     plot_color=plot_color,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SmallSeriesStatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveSmallSeriesStatCard"))
   return(.o)
 }
 
@@ -3230,14 +3230,14 @@ ui_small_stat_card <- function(
   .guard_scalar("title", "character", title)
   .guard_scalar("value", "character", value)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     value=value,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_SmallStatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveSmallStatCard"))
   return(.o)
 }
 
@@ -3279,7 +3279,7 @@ ui_stat_list_item <- function(
     aux_value=aux_value,
     icon=icon,
     icon_color=icon_color)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_StatListItem"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveStatListItem"))
   return(.o)
 }
 
@@ -3302,10 +3302,10 @@ ui_stat_list_card <- function(
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
-  .guard_vector("items", "h2oq_StatListItem", items)
+  .guard_vector("items", "WaveStatListItem", items)
   .guard_scalar("name", "character", name)
   .guard_scalar("subtitle", "character", subtitle)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3313,7 +3313,7 @@ ui_stat_list_card <- function(
     name=name,
     subtitle=subtitle,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_StatListCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveStatListCard"))
   return(.o)
 }
 
@@ -3347,7 +3347,7 @@ ui_stat_table_item <- function(
     caption=caption,
     icon=icon,
     icon_color=icon_color)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_StatTableItem"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveStatTableItem"))
   return(.o)
 }
 
@@ -3373,10 +3373,10 @@ ui_stat_table_card <- function(
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_vector("columns", "character", columns)
-  .guard_vector("items", "h2oq_StatTableItem", items)
+  .guard_vector("items", "WaveStatTableItem", items)
   .guard_scalar("name", "character", name)
   .guard_scalar("subtitle", "character", subtitle)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3385,7 +3385,7 @@ ui_stat_table_card <- function(
     name=name,
     subtitle=subtitle,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_StatTableCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveStatTableCard"))
   return(.o)
 }
 
@@ -3407,11 +3407,11 @@ ui_tab_card <- function(
   name = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_vector("items", "h2oq_Tab", items)
+  .guard_vector("items", "WaveTab", items)
   .guard_scalar("value", "character", value)
   .guard_scalar("link", "logical", link)
   .guard_scalar("name", "character", name)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
@@ -3419,7 +3419,7 @@ ui_tab_card <- function(
     link=link,
     name=name,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TabCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTabCard"))
   return(.o)
 }
 
@@ -3451,7 +3451,7 @@ ui_tall_gauge_stat_card <- function(
   .guard_scalar("progress", "numeric", progress)
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3461,7 +3461,7 @@ ui_tall_gauge_stat_card <- function(
     plot_color=plot_color,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TallGaugeStatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTallGaugeStatCard"))
   return(.o)
 }
 
@@ -3510,7 +3510,7 @@ ui_tall_series_stat_card <- function(
   # TODO Validate plot_curve
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3525,7 +3525,7 @@ ui_tall_series_stat_card <- function(
     plot_color=plot_color,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TallSeriesStatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTallSeriesStatCard"))
   return(.o)
 }
 
@@ -3548,14 +3548,14 @@ ui_template_card <- function(
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_TemplateCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTemplateCard"))
   return(.o)
 }
 
@@ -3575,17 +3575,17 @@ ui_toolbar_card <- function(
   overflow_items = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
-  .guard_vector("items", "h2oq_Command", items)
-  .guard_vector("secondary_items", "h2oq_Command", secondary_items)
-  .guard_vector("overflow_items", "h2oq_Command", overflow_items)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("items", "WaveCommand", items)
+  .guard_vector("secondary_items", "WaveCommand", secondary_items)
+  .guard_vector("overflow_items", "WaveCommand", overflow_items)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     items=items,
     secondary_items=secondary_items,
     overflow_items=overflow_items,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_ToolbarCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveToolbarCard"))
   return(.o)
 }
 
@@ -3608,14 +3608,14 @@ ui_vega_card <- function(
   .guard_scalar("title", "character", title)
   .guard_scalar("specification", "character", specification)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     specification=specification,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_VegaCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveVegaCard"))
   return(.o)
 }
 
@@ -3647,7 +3647,7 @@ ui_wide_bar_stat_card <- function(
   .guard_scalar("progress", "numeric", progress)
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3657,7 +3657,7 @@ ui_wide_bar_stat_card <- function(
     plot_color=plot_color,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideBarStatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideBarStatCard"))
   return(.o)
 }
 
@@ -3689,7 +3689,7 @@ ui_wide_gauge_stat_card <- function(
   .guard_scalar("progress", "numeric", progress)
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3699,7 +3699,7 @@ ui_wide_gauge_stat_card <- function(
     plot_color=plot_color,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideGaugeStatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideGaugeStatCard"))
   return(.o)
 }
 
@@ -3748,7 +3748,7 @@ ui_wide_series_stat_card <- function(
   # TODO Validate plot_curve
   .guard_scalar("plot_color", "character", plot_color)
   # TODO Validate data: Rec
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3763,6 +3763,6 @@ ui_wide_series_stat_card <- function(
     plot_color=plot_color,
     data=data,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideSeriesStatCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideSeriesStatCard"))
   return(.o)
 }
