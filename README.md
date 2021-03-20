@@ -8,6 +8,7 @@
   <img alt="Discourse topics" src="https://img.shields.io/discourse/topics?server=https%3A%2F%2Fh2owave.h2o.ai%2F">
   <img alt="PyPI" src="https://img.shields.io/pypi/v/h2o-wave?label=current-version">
   <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/h2o_wave">
+  <img alt="Contributor covenant" src="https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg">
 </p>
 <p>
   <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/h2o-wave?color=3677AF">

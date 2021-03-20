@@ -86,6 +86,10 @@ module.exports = {
               label: 'Twitter',
               href: 'https://twitter.com/h2o_wave',
             },
+            {
+              label: 'Code of Conduct',
+              href: 'https://github.com/h2oai/wave/blob/master/.github/CODE_OF_CONDUCT.md',
+            },
           ],
         },
         {
