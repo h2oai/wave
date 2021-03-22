@@ -3,8 +3,8 @@
 ## Setup and Run
 
 ```sh
-git clone https://github.com/h2oai/qd.git
-cd qd
+git clone https://github.com/h2oai/wave.git
+cd wave
 make
 make run
 ```
