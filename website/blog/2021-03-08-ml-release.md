@@ -10,7 +10,13 @@ tags: [release]
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-Today, we're excited to announce H2O Wave ML, an open-source automatic machine learning package for Wave apps. In this article, we look at what Wave ML can do for you, how to get started, and what predictive applications look like in practice.
+Today, we're excited to announce H2O Wave ML, an open-source extension to Wave that makes it easy to use automatic machine learning in your Wave apps.
+
+```
+$ pip install h2o-wave[ml]
+```
+
+In this article, we look at what Wave ML can do for you, how to get started, and what predictive applications look like in practice.
 
 <!--truncate-->
 
