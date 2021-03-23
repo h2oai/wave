@@ -3,6 +3,7 @@ all: build ## Build h2o_wave wheel
 .PHONY: build
 build: purge
 	sed -i -r -e "s/version.+/version='$(VERSION)',/" setup.py
+	sed -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/__init__.py
 	./venv/bin/python3 setup.py bdist_wheel
 
 setup: ## Install dependencies
