@@ -54,14 +54,14 @@ interface State {
 const
   overflowProps: IButtonProps = { ariaLabel: 'More' },
   toCommands = (commands: Command[]) => commands.map(toCommand),
-  toCommand = ({ name, label, caption, icon, items }: Command): ICommandBarItemProps => {
+  toCommand = ({ name, label, caption, icon, items, value }: Command): ICommandBarItemProps => {
     qd.args[name] = false
     const onClick = () => {
       if (name[0] === '#') {
         window.location.hash = name.substr(1)
         return
       }
-      qd.args[name] = true
+      qd.args[name] = value === undefined || value
       qd.sync()
     }
     return {
