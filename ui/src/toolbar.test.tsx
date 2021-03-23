@@ -13,22 +13,60 @@
 // limitations under the License.
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { View } from './toolbar'
 import * as T from './qd'
 
 const
   name = 'toolbar',
+  commandName = 'toolbar_command',
+  commandValue = 'toolbar_command_value',
+  commandLabel = commandName,
   toolbarProps: T.Card<any> = {
     name,
     state: { items: [] },
     changed: T.box(false)
+  },
+  toolbarPropsWithValueAttr: T.Card<any> = {
+    name,
+    state: { items: [{ name: commandName, value: commandValue, label: commandLabel }] },
+    changed: T.box(false)
+  },
+  toolbarPropsWithoutValueAttr: T.Card<any> = {
+    name,
+    state: { items: [{ name: commandName, label: commandLabel }] },
+    changed: T.box(false)
   }
 
 describe('Toolbar.tsx', () => {
+  beforeEach(() => {
+    T.qd.args[commandName] = null
+    jest.clearAllMocks()
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...toolbarProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
+
+  it('Sets args and calls sync on click - with value attr', () => {
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+
+    const {getByText} = render(<View {...toolbarPropsWithValueAttr} />)
+    fireEvent.click(getByText(commandLabel))
+
+    expect(T.qd.args[commandName]).toBe(commandValue)
+  })
+
+  it('Sets args and calls sync on click - without value attr', () => {
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+
+    const {getByText} = render(<View {...toolbarPropsWithoutValueAttr} />)
+    fireEvent.click(getByText(commandLabel))
+
+    expect(T.qd.args[commandName]).toBe(true)
+  })
+
 })
