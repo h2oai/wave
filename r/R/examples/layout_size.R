@@ -1,8 +1,15 @@
-library(h2owave)
+# Each line of code has an associated description
+# Layout / Size
+# How to adjust the size of cards on a page
 
-rm(test_page)
-test_page <- page("/page_demo")
+#library(h2owave)
 
+# Check if a variable with the name "page_name" exists in an object page. This is a check to remove any previous page objects.
+if("page_name" %in% names(page)) page$drop()
+# Create a new page called "demo". 
+page <- Site("/demo")
+
+# A vector of box specifications for cards. Each value encloses, the column and the row number where the card is placed, and the number of columns and rows it occupies.
 boxes <- c("1 1 1 1",
 	"2 1 2 1",
 	"4 1 3 1",
@@ -17,10 +24,13 @@ boxes <- c("1 1 1 1",
 	"11 9 2 2",
 	"11 3 2 6"
     )
-
+# For-loop to cycle through the vector of box specifications for cards. 
 for(box in boxes){
-        test_page <- page.add(test_page,"/page_demo",paste0("card_",gsub(" ","_",box)),
+        # Each card is named according to its position by pasting the column and row number. 
+        page$add_card(paste0("card_",gsub(" ","_",box)),
+                        	# Each card is a markdown card.
                               ui_markdown_card(box=box,title=box,content='')
                               )
 }
-page.save(test_page,"/page_demo")
+# Save the page object. Saving the page object pushes the card object to the wave server. 
+page$save()

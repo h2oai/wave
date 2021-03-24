@@ -1,33 +1,65 @@
-#library(h2owave)
+# Each line of code has an associated description
+# Stat / Large
+# Create a stat card displaying a primary value, an auxiliary value, and a caption.
+# ui_large_stat_card
 
-crypto.name <- c("ETH","BTC","ZCH","LTC")
-sample.crypto.name <- crypto.name[sample(1:length(crypto.name),1)]
-sample.crypto.price <- runif(1,1,500)
-sample.crypto.price.percent.change <- runif(1,0,1)
-caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample.crypto.name,".")
+# library(h2owave)
 
-if("page.name" %in% names(page)) page$drop()
+# Combining 5 different crypto currency symbols into a vector.
+crypto_name <- c("ETH","BTC","ZCH","LTC")
+# Sample a single crypto currency symbol from the above created vector.
+sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+# Generate a random value from an uniform distribution between 1 - 500.
+sample_crypto_price <- runif(1,1,500)
+# Generate a random decimal value from an uniform distribution between 0 - 1.
+sample_crypto_price_percent_change <- runif(1,0,1)
+# Create a dynamic caption that appends the sampled crypto currency symbol. 
+caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample_crypto_name,".")
+
+# Check if a variable with the name "page_name" exists in an object page. This is a check to remove any previous page objects.
+if("page_name" %in% names(page)) page$drop()
+# Create a new page called "demo". 
 page <- Site("/demo")
-page$add.card("crypto",ui_large_stat_card(box="1 1 2 2"
-                                        ,title=sample.crypto.name
+# Add a new card called "crypto", which is a large stat card on the newly created page "demo".
+# The position of the card is at column 1, and row 1, and the card occupies 2 rows and 2 columns.
+page$add_card("crypto",ui_large_stat_card(box="1 1 2 2"
+                                        # Set the title of the card with the sample crypto currency symbol.
+                                        ,title=sample_crypto_name
+                                        # Set the card value type to be integer, the variable name for the value "price", with minimum decimal -0, and maximum -1. 
                                         ,value='=${{intl price minimum_fraction_digits=0 maximum_fraction_digits=1}}'
+                                        # Set the card auxiliary value type to be integer, the variable name for the aux value "change", with minimum decimal - 0, and maximum - 1.
                                         ,aux_value='={{intl change style="percent" minimum_fraction_digits=0 maximum_fraction_digits=1}}'
-                                        ,data=list(price=sample.crypto.price,change=sample.crypto.price.percent.change)
+                                        # Setup the variables which will feed the data for the "value" in the card. the variable "price" is fed data from sample_crypto_price, and the variable "change" is fed data from sample_crypto_price_percentage_change.
+                                        ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
+                                        # Assign the dynamic caption variable to caption.
                                         ,caption=caption
                                         ))
+# Save the page object. Saving the page object pushes the card object to the wave server. 
 page$save()
 
+# (The cool part)Setup an infinite while loop to show a dynamically changing card.
 while(TRUE)
 {
+        # Provide 3 seconds between card updates
         Sys.sleep(3)
-        sample.crypto.name <- crypto.name[sample(1:length(crypto.name),1)]
-        sample.crypto.price <- runif(1,1,500)
-        sample.crypto.price.percent.change <- runif(1,0,1)
-        caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample.crypto.name,".")
+        # Sample a single crypto currency symbol from the above created vector.
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        # Generate a random value from an uniform distribution between 1 - 500.
+        sample_crypto_price <- runif(1,1,500)
+        # Generate a random decimal value from an uniform distribution between 0 - 1.
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        # Create a dynamic caption that appends the sampled crypto currency symbol. 
+        caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample_crypto_name,".")
+
         
-        page$set("crypto","title",sample.crypto.name)
-        page$set("crypto","data","price",sample.crypto.price)
-        page$set("crypto","data","change",sample.crypto.price.percent.change)
+        # Set the title of the card with the sample crypto currency symbol.
+        page$set("crypto","title",sample_crypto_name)
+        # Feed sample_crypto_price to "price" variable
+        page$set("crypto","data","price",sample_crypto_price)
+        # Feed sample_crypto_percent_change to "change" variable
+        page$set("crypto","data","change",sample_crypto_price_percent_change)
+        # Create a dynamic caption that appends the sampled crypto currency symbol. 
         page$set("crypto","caption",caption)
+        # Save the page object. Saving the page object pushes the card object to the wave server. 
         page$save()
 }

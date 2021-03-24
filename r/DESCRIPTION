@@ -1,6 +1,6 @@
 Package: h2owave
 Title: R driver for H2O Wave Realtime Apps
-Version: 0.0.13
+Version: 0.0.14
 Authors@R: 
     person(given = "Ashrith",
            family = "Barthur",
@@ -16,6 +16,6 @@ Imports:
     jsonlite,
     httr,
     stringr,
-    R6
+    R6,
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1.9000
