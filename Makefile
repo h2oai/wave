@@ -38,6 +38,15 @@ run-ui: ## Run UI in development mode (hot reloading)
 test-ui-ci: ## Run UI unit tests in CI mode
 	cd ui && $(MAKE) test-ci
 
+test-ui-visual-ci: ## Run UI unit tests in CI mode
+	cd ui && $(MAKE) test-visual-ci
+
+approve-visual-test: ## Approve visual testing snapshots.
+	cd ui/test/visual_regression && node update-snapshots.js	
+
+generate-visual-test: ## Generate test cases for Tour examples.
+	cd ui/test/visual_regression && node generate.js	
+
 test-ui-watch: ## Run UI unit tests
 	cd ui && $(MAKE) test
 

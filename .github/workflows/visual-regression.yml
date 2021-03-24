@@ -1,0 +1,117 @@
+name: Visual Regression Testing
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  visual-regression:
+    name: Run VR Tests
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.13.10'
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+              ${{ runner.os }}-
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('py/examples/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+        # TODO: Build a custom docker container - no need to install all this every time.
+      - name: Install additional deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-venv make libnss3 libnspr4\
+               libatk1.0-0\
+               libatk-bridge2.0-0\
+               libcups2\
+               libxcb1\
+               libdrm2\
+               libxkbcommon0\
+               libx11-6\
+               libxcomposite1\
+               libxdamage1\
+               libxext6\
+               libxfixes3\
+               libxrandr2\
+               libgbm1\
+               libgtk-3-0\
+               libpango-1.0-0\
+               libcairo2\
+               libgdk-pixbuf2.0-0\
+               libasound2\
+               libatspi2.0-0\
+               libbrotli1\
+               libgl1\
+               libegl1\
+               libnotify4\
+               libvpx5\
+               libopus0\
+               libxslt1.1\
+               libwoff1\
+               libharfbuzz-icu0\
+               libgstreamer-plugins-base1.0-0\
+               libgstreamer1.0-0\
+               libgstreamer-gl1.0-0\
+               libgstreamer-plugins-bad1.0-0\
+               libopenjp2-7\
+               libwebpdemux2\
+               libwebp6\
+               libenchant1c2a\
+               libsecret-1-0\
+               libhyphen0\
+               libgles2\
+               gstreamer1.0-libav\
+               libx11-xcb1\
+               libdbus-glib-1-2\
+               libxt6
+      - name: Build the newest changes
+        run: make setup generate build
+        env:
+          # Speed up ui build, we don't need sourcemaps or inlining.
+          GENERATE_SOURCEMAP: false
+          INLINE_RUNTIME_CHUNK: false
+      - name: Run wave within CI and test
+        run: |
+          make run &
+          py/venv/bin/wave run examples.tour &
+          make test-ui-visual-ci
+        env: 
+          # Needed for playwright's Babel.
+          NODE_ENV: test
+      - name: Commit diffs to the branch
+        if: ${{ failure() }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+dependabot-preview[bot]@users.noreply.github.com
+          git add .
+          git commit -m "chore: add visual test results"
+          git push

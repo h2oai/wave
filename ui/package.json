@@ -73,7 +73,7 @@
     "react-scripts": "3.4.0",
     "react-test-renderer": "^16.13.1",
     "resolve": "1.15.0",
-    "resolve-url-loader": "3.1.1",
+    "resolve-url-loader": "^3.1.2",
     "sass-loader": "8.0.2",
     "semver": "6.3.0",
     "style-loader": "0.23.1",
@@ -86,7 +86,7 @@
     "vega-embed": "^6.9.0",
     "vega-lite": "^4.13.1",
     "webpack": "4.41.5",
-    "webpack-dev-server": "3.10.2",
+    "webpack-dev-server": "^3.11.2",
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "4.3.1"
   },
@@ -95,9 +95,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "test:ci": "CI=true node scripts/test.js",
-    "lint-staged:typescript": "tsc --jsx react --esModuleInterop --noEmit",
-    "lint-staged:eslint": "eslint",
-    "lint-staged:tests": "npx jest --findRelatedTests --bail"
+    "test:visual:ci": "cd test/visual_regression && export NODE_ENV=test && npx folio",
+    "test:visual:approve": "cd test/visual_regression && export NODE_ENV=test && npx folio --update-snapshots"
   },
   "browserslist": {
     "production": [
@@ -111,5 +110,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:10101"
+  "proxy": "http://localhost:10101",
+  "devDependencies": {
+    "@playwright/test": "^0.171.0"
+  }
 }

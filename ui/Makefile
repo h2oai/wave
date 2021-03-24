@@ -14,8 +14,11 @@ run: ## Launch server in development mode
 build: ## Build front-end (production)
 	npm run build
 
-test: ## Run tests
+test: ## Run unit tests
 	npm test
+
+test-visual-ci: ## Run visual tests in CI
+	npm run test:visual:ci
 
 test-ci: ## Run tests in CI mode
 	npm run test:ci
