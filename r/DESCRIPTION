@@ -1,6 +1,7 @@
 Package: h2owave
-Title: R driver for H2O Wave Realtime Apps
+Title: R driver for H2O Wave Realtime Apps Framework
 Version: 0.0.14
+Date: 2021-03-24
 Authors@R:c( 
     person(given = "Ashrith",
            family = "Barthur",
@@ -10,11 +11,15 @@ Authors@R:c(
             family = "Prabhu",
             role = c("aut","cre"),
             email = "prithvi.prabhu@h2o.ai")
-            )
+            )  
+Maintainer: Ashrith Barthur <ashrith.barthur@h2o.ai>
 Description: H2O Wave is a lightweight software stack for programming interactive web applications entirely in R (no HTML/Javascript/CSS) required. It is designed to make it fast, fun and easy to build low-latency, realtime, collaborative, web-based applications. It ships batteries-included with a suite of form and data visualization components for rapidly prototyping analytical and decision-support applications. Wave’s components work in conjunction with the Wave relay server that facilitates realtime state synchronization between R and web browsers.
 License: Apache License (>= 2.0)
+URL: https://github.com/h2oai/wave
+BugReports: https://github.com/h2oai/wave/issues
 Encoding: UTF-8
 LazyData: true
+Depends: R(>=3.5), R6(>=2.0)
 Imports:
     devtools,
     roxygen2,
