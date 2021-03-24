@@ -558,6 +558,8 @@ const
         p('        return')
         p('    if packed and isinstance(values, str):')
         p('        return')
+        p('    if not isinstance(values, list):')
+        p("        raise ValueError(f'{name}: want list of {types}, got {type(values)}')")
         p('    for value in values:')
         p("        _guard_scalar(f'{name} element', value, types, False, non_empty, False)")
         p('')

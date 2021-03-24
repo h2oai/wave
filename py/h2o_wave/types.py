@@ -44,6 +44,8 @@ def _guard_vector(name: str, values: Any, types, non_empty: bool, optional: bool
         return
     if packed and isinstance(values, str):
         return
+    if not isinstance(values, list):
+        raise ValueError(f'{name}: want list of {types}, got {type(values)}')
     for value in values:
         _guard_scalar(f'{name} element', value, types, False, non_empty, False)
 
