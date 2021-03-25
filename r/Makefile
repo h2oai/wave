@@ -7,7 +7,7 @@ PKG_FILES := DESCRIPTION NAMESPACE $(R_FILES) $(SRC_FILES)
 
 .PHONY: doc preinstall tarball install check clean 
 
-tarball: $(PKG_NAME)_$(PKG_VERSION).tar.gz
+tarball: doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
 	R CMD build .
 
