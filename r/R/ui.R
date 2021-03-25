@@ -17,7 +17,7 @@
 # limitations under the License.
 
 .to_json <- function(x) {
-  # TODO: Eliminate NULL-valued entries from x first.
+  x[sapply(x,is.null)] <- NULL
   jsonlite::toJSON(x, auto_unbox = TRUE)
 }
 

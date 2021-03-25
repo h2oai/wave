@@ -793,7 +793,6 @@ const
         printLicense()
         p('')
         p(`.to_json <- function(x) {`)
-        p(`  # TODO: Eliminate NULL-valued entries from x first.`)
         p(`  x[sapply(x,is.null)] <- NULL`)
         p(`  jsonlite::toJSON(x, auto_unbox = TRUE)`)
         p(`}`)
