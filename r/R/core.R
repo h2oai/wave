@@ -202,6 +202,7 @@ data <- function(fields
                                        else {
                                                data <- jsonlite::toJSON(list(d = lapply(unname(page_data),
                                                                                         function(x) {
+                                                                                                x[["value"]][sapply(x[["value"]],is.null)] <- NULL
                                                                                                 if (length(x) == 3) {
                                                                                                         list(k = x[["key"]],
                                                                                                              d = x[["value"]],
