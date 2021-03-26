@@ -777,18 +777,11 @@ export const
           init()
         }
       },
-      onScroll = (e: WheelEvent) => {
-        const isFirefox = window.navigator.userAgent.includes('Firefox')
-        // Plot zoom-view doesn't work on Firefox so no need to prevent scrolling.
-        if (!isFirefox) e.preventDefault()
-      },
       init = () => {
         // Map CSS var colors to their hex values.
         cat10 = cat10.map(cssVarValue)
         const el = container.current
         if (!el) return
-        // Prevent page scroll from interfering with plot zooming.
-        if (!el.onwheel) el.onwheel = onScroll
         // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
         if (el.clientHeight < 30) el.style.height = '300px'
         const
@@ -835,9 +828,6 @@ export const
           data = refactorData(raw_data, currentPlot.marks)
         currentChart.changeData(data)
       },
-      dispose = () => {
-        container.current?.removeEventListener('wheel', onScroll)
-      },
       render = () => {
         const
           { width = 'auto', height = 'auto', visible, name } = model,
@@ -846,7 +836,7 @@ export const
             : { width, height }
         return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} className={css.plot} ref={container} />
       }
-    return { init, update, render, dispose }
+    return { init, update, render }
   })
 
 /** Create a card displaying a plot. */
