@@ -708,7 +708,6 @@ const
         geometries,
         annotations,
         interactions: [
-          { type: 'view-zoom' },
           { type: 'drag-move' }, // custom
         ],
         tooltip: {
