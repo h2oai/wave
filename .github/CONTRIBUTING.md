@@ -65,7 +65,7 @@ This Code of Conduct provides community guidelines for a safe, respectful, produ
 
 ## Development Setup
 
-You will need [Node.js](http://nodejs.org) **version 10+**, [Go](https://golang.org/) **version 1.13.10+**, [Python](https://www.python.org/) **version 3.7**
+You will need [Node.js](http://nodejs.org) 10+, [Go](https://golang.org/) 1.13+, [Python](https://www.python.org/) 3.6+.
 After cloning the repo, run:
 
 ``` bash

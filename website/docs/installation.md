@@ -6,7 +6,7 @@ To set up H2O Wave, simply download and extract a release (~10MB). The release s
 
 ## Prerequisites
 
-H2O Wave runs on Linux, macOS, and Windows, having Python 3.6.1 or later.
+H2O Wave runs on Linux, macOS, and Windows, having Python 3.6+.
 
 ## Setup
 
