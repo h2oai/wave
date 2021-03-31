@@ -28,40 +28,40 @@ func TestParseBytes(t *testing.T) {
 	for i, unit := range units {
 		v := values[i]
 
-		b, err := parseBytes("5" + unit)
+		b, err := ParseBytes("5" + unit)
 		no(err)
 		ok(uint64(5*v) == b, "int without B")
 
-		b, err = parseBytes("0" + unit)
+		b, err = ParseBytes("0" + unit)
 		no(err)
 		ok(0 == b, "zero")
 
-		b, err = parseBytes("5" + unit + "b")
+		b, err = ParseBytes("5" + unit + "b")
 		no(err)
 		ok(uint64(5*v) == b, "int with B")
 
-		b, err = parseBytes("5" + unit + "ib")
+		b, err = ParseBytes("5" + unit + "ib")
 		no(err)
 		ok(uint64(5*v) == b, "int with iB")
 
-		b, err = parseBytes("4.2" + unit + "ib")
+		b, err = ParseBytes("4.2" + unit + "ib")
 		no(err)
 		ok(uint64(4.2*float64(v)) == b, "float values")
 	}
 
-	b, err := parseBytes("  \n\t5MB\t")
+	b, err := ParseBytes("  \n\t5MB\t")
 	ok(uint64(5*MEGABYTE) == b, "allows whitespace")
 	no(err)
 
-	_, err = parseBytes("5")
+	_, err = ParseBytes("5")
 	ok(err != nil, "no unit")
 
-	_, err = parseBytes("-5bb")
+	_, err = ParseBytes("-5bb")
 	ok(err != nil, "bad unit")
 
-	_, err = parseBytes("-5mbb")
+	_, err = ParseBytes("-5mbb")
 	ok(err != nil, "bad unit")
 
-	_, err = parseBytes("-5mb")
+	_, err = ParseBytes("-5mb")
 	ok(err != nil, "negative values")
 }

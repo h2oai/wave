@@ -15,8 +15,10 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -41,8 +43,11 @@ func main() {
 	// TODO Use github.com/gosidekick/goconfig instead.
 
 	var (
-		conf    wave.ServerConf
-		version bool
+		conf                 wave.ServerConf
+		version              bool
+		maxRequestSize       string
+		maxProxyRequestSize  string
+		maxProxyResponseSize string
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
@@ -56,9 +61,9 @@ func main() {
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	flag.BoolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
-	flag.StringVar(&conf.MaxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
-	flag.StringVar(&conf.MaxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
-	flag.StringVar(&conf.MaxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
+	flag.StringVar(&maxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
+	flag.StringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
+	flag.StringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
 
 	const (
@@ -91,6 +96,23 @@ func main() {
 		return
 	}
 
+	var err error
+
+	conf.MaxRequestSize, err = parseReadSize("max request size", maxRequestSize)
+	if err != nil {
+		panic(err)
+	}
+
+	conf.MaxProxyRequestSize, err = parseReadSize("max proxy request size", maxProxyRequestSize)
+	if err != nil {
+		panic(err)
+	}
+
+	conf.MaxProxyResponseSize, err = parseReadSize("max proxy response size", maxProxyResponseSize)
+	if err != nil {
+		panic(err)
+	}
+
 	conf.WebDir, _ = filepath.Abs(conf.WebDir)
 	conf.DataDir, _ = filepath.Abs(conf.DataDir)
 
@@ -103,4 +125,22 @@ func main() {
 func envVarName(n string) string {
 	envVar := strings.ToUpper(strings.ReplaceAll(n, "-", "_"))
 	return fmt.Sprintf("%s_%s", envVarNamePrefix, envVar)
+}
+
+var (
+	errMaxReadSizeTooLarge = errors.New("size too large (want <= max int64)")
+)
+
+func parseReadSize(label, value string) (int64, error) {
+	n, err := wave.ParseBytes(value)
+
+	if err != nil {
+		return 0, fmt.Errorf("failed parsing %s: %v", label, err)
+	}
+
+	if n > math.MaxInt64 {
+		return 0, fmt.Errorf("%s size too large", label)
+	}
+
+	return int64(n), nil
 }

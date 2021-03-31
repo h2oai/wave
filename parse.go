@@ -35,8 +35,8 @@ const (
 
 var invalidByteSizeError = errors.New("invalid byte size")
 
-// parseBytes parses string representations (e.g. 42K or 42KB or 42KiB) to bytes
-func parseBytes(s string) (uint64, error) {
+// ParseBytes parses string representations (e.g. 42K or 42KB or 42KiB) to bytes
+func ParseBytes(s string) (uint64, error) {
 	s = strings.ToUpper(strings.TrimSpace(s))
 	i := strings.IndexFunc(s, unicode.IsLetter)
 

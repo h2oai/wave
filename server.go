@@ -17,12 +17,10 @@ package wave
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
-	"math"
 	"net/http"
 	"path"
 	"path/filepath"
@@ -51,45 +49,12 @@ func echo(m Log) {
 	}
 }
 
-var (
-	errMaxReadSizeTooLarge = errors.New("size too large (want <= max int64)")
-)
-
-func parseReadSize(label, value string) (int64, error) {
-	n, err := parseBytes(value)
-
-	if err != nil {
-		return 0, fmt.Errorf("failed parsing %s: %v", label, err)
-	}
-
-	if n > math.MaxInt64 {
-		return 0, fmt.Errorf("%s size too large", label)
-	}
-
-	return int64(n), nil
-}
-
 // Run runs the HTTP server.
 func Run(conf ServerConf) {
 	accessKeyHash, err := bcrypt.GenerateFromPassword([]byte(conf.AccessKeySecret), bcrypt.DefaultCost)
 	if err != nil {
 		echo(Log{"t": "users_init", "error": err.Error()})
 		return
-	}
-
-	maxRequestSize, err := parseReadSize("max request size", conf.MaxRequestSize)
-	if err != nil {
-		panic(err)
-	}
-
-	maxProxyRequestSize, err := parseReadSize("max proxy request size", conf.MaxProxyRequestSize)
-	if err != nil {
-		panic(err)
-	}
-
-	maxProxyResponseSize, err := parseReadSize("max proxy response size", conf.MaxProxyResponseSize)
-	if err != nil {
-		panic(err)
 	}
 
 	// FIXME RBAC
@@ -143,10 +108,10 @@ func Run(conf ServerConf) {
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))                                                                  // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir))                                                                // XXX secure
-	http.Handle("/_p", newProxy(maxProxyRequestSize, maxProxyResponseSize))                                    // XXX secure
-	http.Handle("/_c/", newCache("/_c/", maxRequestSize))                                                      // XXX secure
+	http.Handle("/_p", newProxy(conf.MaxProxyRequestSize, conf.MaxProxyResponseSize))                          // XXX secure
+	http.Handle("/_c/", newCache("/_c/", conf.MaxRequestSize))                                                 // XXX secure
 	http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, maxRequestSize, conf.oidcEnabled(), sessions, oauth2Config, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, users, conf.MaxRequestSize, conf.oidcEnabled(), sessions, oauth2Config, conf.WebDir))
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)

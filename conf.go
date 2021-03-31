@@ -28,9 +28,9 @@ type ServerConf struct {
 	CertFile             string
 	KeyFile              string
 	Editable             bool
-	MaxRequestSize       string
-	MaxProxyRequestSize  string
-	MaxProxyResponseSize string
+	MaxRequestSize       int64
+	MaxProxyRequestSize  int64
+	MaxProxyResponseSize int64
 	Debug                bool
 	OIDCClientID         string
 	OIDCClientSecret     string
