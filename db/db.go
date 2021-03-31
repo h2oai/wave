@@ -152,7 +152,7 @@ func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
 		switch r.Header.Get("Content-Type") {
 		case "application/json":
 			var request DBRequest
-			in, err := ioutil.ReadAll(r.Body) // XXX add limit
+			in, err := ioutil.ReadAll(http.MaxBytesReader(w, r.Body, 5<<20)) // limit to 5MB per request
 			if err != nil {
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return

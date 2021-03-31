@@ -76,7 +76,7 @@ func (app *App) send(data []byte) bool {
 		return false
 	}
 	defer resp.Body.Close()
-	if _, err := ioutil.ReadAll(resp.Body); err != nil {
+	if _, err := ioutil.ReadAll(resp.Body); err != nil { // XXX limit
 		echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error()})
 		return false
 	}

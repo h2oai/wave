@@ -16,7 +16,6 @@ package wave
 
 import (
 	"bytes"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"sync"
@@ -31,12 +30,17 @@ type Shard struct {
 // Cache represents a collection of shards.
 type Cache struct {
 	sync.RWMutex
-	prefix string
-	shards map[string]*Shard
+	prefix         string
+	shards         map[string]*Shard
+	maxRequestSize uint64
 }
 
-func newCache(prefix string) *Cache {
-	return &Cache{prefix: prefix, shards: make(map[string]*Shard)}
+func newCache(prefix string, maxRequestSize uint64) *Cache {
+	return &Cache{
+		prefix:         prefix,
+		shards:         make(map[string]*Shard),
+		maxRequestSize: maxRequestSize,
+	}
 }
 
 func (c *Cache) at(s string) *Shard {
@@ -118,7 +122,7 @@ func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	case http.MethodPut:
-		v, err := ioutil.ReadAll(r.Body) // XXX limit
+		v, err := readAllWithLimit(w, r.Body, c.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read cache request body", "error": err.Error()})
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

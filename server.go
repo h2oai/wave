@@ -18,6 +18,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"path"
@@ -53,6 +55,11 @@ func Run(conf ServerConf) {
 	if err != nil {
 		echo(Log{"t": "users_init", "error": err.Error()})
 		return
+	}
+
+	maxRequestSize, err := parseBytes(conf.MaxRequestSize)
+	if err != nil {
+		panic(err)
 	}
 
 	// FIXME RBAC
@@ -106,10 +113,10 @@ func Run(conf ServerConf) {
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))                                                                  // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir))                                                                // XXX secure
-	http.Handle("/_p", newProxy())                                                                             // XXX secure
-	http.Handle("/_c/", newCache("/_c/"))                                                                      // XXX secure
+	http.Handle("/_p", newProxy(maxRequestSize))                                                               // XXX secure
+	http.Handle("/_c/", newCache("/_c/", maxRequestSize))                                                      // XXX secure
 	http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, conf.oidcEnabled(), sessions, oauth2Config, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, users, maxRequestSize, conf.oidcEnabled(), sessions, oauth2Config, conf.WebDir))
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)
@@ -126,4 +133,8 @@ func Run(conf ServerConf) {
 			echo(Log{"t": "listen_no_tls", "error": err.Error()})
 		}
 	}
+}
+
+func readAllWithLimit(w http.ResponseWriter, r io.ReadCloser, n uint64) ([]byte, error) {
+	return ioutil.ReadAll(http.MaxBytesReader(w, r, int64(n)))
 }

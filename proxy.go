@@ -25,7 +25,8 @@ import (
 
 // Proxy represents a HTTP proxy
 type Proxy struct {
-	client *http.Client
+	client         *http.Client
+	maxRequestSize uint64
 }
 
 // ProxyRequest represents the request to be sent to the upstream server.
@@ -50,18 +51,19 @@ type ProxyResult struct {
 	Result *ProxyResponse `json:"result"`
 }
 
-func newProxy() *Proxy {
+func newProxy(maxRequestSize uint64) *Proxy {
 	return &Proxy{
 		&http.Client{
 			Timeout: time.Second * 10,
 		},
+		maxRequestSize,
 	}
 }
 
 func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		req, err := ioutil.ReadAll(r.Body) // XXX limit
+		req, err := readAllWithLimit(w, r.Body, p.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read proxy request body", "error": err.Error()})
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

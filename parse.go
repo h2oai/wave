@@ -21,6 +21,8 @@ import (
 	"unicode"
 )
 
+// Adapted from https://github.com/cloudfoundry/bytefmt
+
 const (
 	BYTE = 1 << (10 * iota)
 	KILOBYTE

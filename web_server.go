@@ -17,7 +17,6 @@ package wave
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
@@ -28,10 +27,11 @@ import (
 
 // WebServer represents a web server (d'oh).
 type WebServer struct {
-	site   *Site
-	broker *Broker
-	fs     http.Handler
-	users  map[string][]byte
+	site           *Site
+	broker         *Broker
+	fs             http.Handler
+	users          map[string][]byte
+	maxRequestSize uint64
 }
 
 const (
@@ -42,6 +42,7 @@ func newWebServer(
 	site *Site,
 	broker *Broker,
 	users map[string][]byte,
+	maxRequestSize uint64,
 	oidcEnabled bool,
 	sessions *OIDCSessions,
 	oauth2Config oauth2.Config,
@@ -51,7 +52,7 @@ func newWebServer(
 	if oidcEnabled {
 		fs = checkSession(oauth2Config, sessions, fs)
 	}
-	return &WebServer{site, broker, fs, users}
+	return &WebServer{site, broker, fs, users, maxRequestSize}
 }
 
 func (s *WebServer) authenticate(username, password string) bool {
@@ -98,7 +99,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *WebServer) patch(w http.ResponseWriter, r *http.Request) {
-	data, err := ioutil.ReadAll(r.Body) // XXX add limit
+	data, err := readAllWithLimit(w, r.Body, s.maxRequestSize)
 	if err != nil {
 		echo(Log{"t": "read patch request body", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -130,7 +131,8 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	switch r.Header.Get("Content-Type") {
 	case contentTypeJSON: // data
 		var req AppRequest
-		b, err := ioutil.ReadAll(r.Body) // XXX add limit
+
+		b, err := readAllWithLimit(w, r.Body, s.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read post request body", "error": err.Error()})
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
