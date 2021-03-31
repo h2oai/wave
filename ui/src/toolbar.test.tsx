@@ -20,22 +20,17 @@ import * as T from './qd'
 const
   name = 'toolbar',
   commandName = 'toolbar_command',
+  commandNameWithHash = '#toolbar_command',
   commandValue = 'toolbar_command_value',
-  commandLabel = commandName,
   toolbarProps: T.Card<any> = {
     name,
-    state: { items: [] },
-    changed: T.box(false)
+    state: { items: [{ name: commandName, label: commandName }] },
+    changed: T.box(true)
   },
-  toolbarPropsWithValueAttr: T.Card<any> = {
+  toolbarPropsWithHash: T.Card<any> = {
     name,
-    state: { items: [{ name: commandName, value: commandValue, label: commandLabel }] },
-    changed: T.box(false)
-  },
-  toolbarPropsWithoutValueAttr: T.Card<any> = {
-    name,
-    state: { items: [{ name: commandName, label: commandLabel }] },
-    changed: T.box(false)
+    state: { items: [{ name: commandNameWithHash, label: commandNameWithHash }] },
+    changed: T.box(true)
   }
 
 describe('Toolbar.tsx', () => {
@@ -53,9 +48,19 @@ describe('Toolbar.tsx', () => {
     const syncMock = jest.fn()
     T.qd.sync = syncMock
 
-    const {getByText} = render(<View {...toolbarPropsWithValueAttr} />)
-    fireEvent.click(getByText(commandLabel))
+    const {getByText} = render(<View {...toolbarProps} {...{
+      state: {
+        items: [{
+          name: commandName,
+          value: commandValue,
+          label: commandName
+        }]
+      }
+    }} />)
 
+    fireEvent.click(getByText(commandName))
+
+    expect(syncMock).toBeCalled()
     expect(T.qd.args[commandName]).toBe(commandValue)
   })
 
@@ -63,10 +68,29 @@ describe('Toolbar.tsx', () => {
     const syncMock = jest.fn()
     T.qd.sync = syncMock
 
-    const {getByText} = render(<View {...toolbarPropsWithoutValueAttr} />)
-    fireEvent.click(getByText(commandLabel))
+    const {getByText} = render(<View {...toolbarProps} />)
+    fireEvent.click(getByText(commandName))
 
+    expect(syncMock).toBeCalled()
     expect(T.qd.args[commandName]).toBe(true)
+  })
+
+  it('Does not set args and calls sync on click when command name starts with hash', () => {
+    const syncMock = jest.fn()
+    T.qd.sync = syncMock
+
+    const {getByText} = render(<View {...toolbarPropsWithHash} />)
+
+    fireEvent.click(getByText(commandNameWithHash))
+    expect(T.qd.args[commandNameWithHash]).toBe(false)
+    expect(syncMock).toHaveBeenCalledTimes(0)
+  })
+
+  it('Sets window location hash when command name starts with hash', () => {
+    const {getByText} = render(<View {...toolbarPropsWithHash} />)
+    fireEvent.click(getByText(commandNameWithHash))
+
+    expect(window.location.hash).toBe(commandNameWithHash)
   })
 
 })
