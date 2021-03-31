@@ -32,10 +32,10 @@ type Cache struct {
 	sync.RWMutex
 	prefix         string
 	shards         map[string]*Shard
-	maxRequestSize uint64
+	maxRequestSize int64
 }
 
-func newCache(prefix string, maxRequestSize uint64) *Cache {
+func newCache(prefix string, maxRequestSize int64) *Cache {
 	return &Cache{
 		prefix:         prefix,
 		shards:         make(map[string]*Shard),
@@ -122,7 +122,7 @@ func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	case http.MethodPut:
-		v, err := readAllWithLimit(w, r.Body, c.maxRequestSize)
+		v, err := readRequestWithLimit(w, r.Body, c.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read cache request body", "error": err.Error()})
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

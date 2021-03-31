@@ -17,7 +17,6 @@ package wave
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -25,8 +24,9 @@ import (
 
 // Proxy represents a HTTP proxy
 type Proxy struct {
-	client         *http.Client
-	maxRequestSize uint64
+	client          *http.Client
+	maxRequestSize  int64
+	maxResponseSize int64
 }
 
 // ProxyRequest represents the request to be sent to the upstream server.
@@ -51,19 +51,20 @@ type ProxyResult struct {
 	Result *ProxyResponse `json:"result"`
 }
 
-func newProxy(maxRequestSize uint64) *Proxy {
+func newProxy(maxRequestSize, maxResponseSize int64) *Proxy {
 	return &Proxy{
 		&http.Client{
 			Timeout: time.Second * 10,
 		},
 		maxRequestSize,
+		maxResponseSize,
 	}
 }
 
 func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		req, err := readAllWithLimit(w, r.Body, p.maxRequestSize)
+		req, err := readRequestWithLimit(w, r.Body, p.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read proxy request body", "error": err.Error()})
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -120,7 +121,7 @@ func (p *Proxy) do(pr ProxyRequest) (ProxyResponse, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body) // XXX limit
+	body, err := readWithLimit(resp.Body, p.maxResponseSize)
 	if err != nil {
 		return none, err
 	}

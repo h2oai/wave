@@ -56,7 +56,9 @@ func main() {
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	flag.BoolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
-	flag.StringVar(&conf.MaxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP request (e.g. 5M or 5MB or 5MiB)")
+	flag.StringVar(&conf.MaxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
+	flag.StringVar(&conf.MaxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
+	flag.StringVar(&conf.MaxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
 
 	const (

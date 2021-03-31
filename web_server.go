@@ -31,7 +31,7 @@ type WebServer struct {
 	broker         *Broker
 	fs             http.Handler
 	users          map[string][]byte
-	maxRequestSize uint64
+	maxRequestSize int64
 }
 
 const (
@@ -42,7 +42,7 @@ func newWebServer(
 	site *Site,
 	broker *Broker,
 	users map[string][]byte,
-	maxRequestSize uint64,
+	maxRequestSize int64,
 	oidcEnabled bool,
 	sessions *OIDCSessions,
 	oauth2Config oauth2.Config,
@@ -99,7 +99,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *WebServer) patch(w http.ResponseWriter, r *http.Request) {
-	data, err := readAllWithLimit(w, r.Body, s.maxRequestSize)
+	data, err := readRequestWithLimit(w, r.Body, s.maxRequestSize)
 	if err != nil {
 		echo(Log{"t": "read patch request body", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -132,7 +132,7 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	case contentTypeJSON: // data
 		var req AppRequest
 
-		b, err := readAllWithLimit(w, r.Body, s.maxRequestSize)
+		b, err := readRequestWithLimit(w, r.Body, s.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read post request body", "error": err.Error()})
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

@@ -17,10 +17,12 @@ package wave
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"path"
 	"path/filepath"
@@ -49,6 +51,24 @@ func echo(m Log) {
 	}
 }
 
+var (
+	errMaxReadSizeTooLarge = errors.New("size too large (want <= max int64)")
+)
+
+func parseReadSize(label, value string) (int64, error) {
+	n, err := parseBytes(value)
+
+	if err != nil {
+		return 0, fmt.Errorf("failed parsing %s: %v", label, err)
+	}
+
+	if n > math.MaxInt64 {
+		return 0, fmt.Errorf("%s size too large", label)
+	}
+
+	return int64(n), nil
+}
+
 // Run runs the HTTP server.
 func Run(conf ServerConf) {
 	accessKeyHash, err := bcrypt.GenerateFromPassword([]byte(conf.AccessKeySecret), bcrypt.DefaultCost)
@@ -57,7 +77,17 @@ func Run(conf ServerConf) {
 		return
 	}
 
-	maxRequestSize, err := parseBytes(conf.MaxRequestSize)
+	maxRequestSize, err := parseReadSize("max request size", conf.MaxRequestSize)
+	if err != nil {
+		panic(err)
+	}
+
+	maxProxyRequestSize, err := parseReadSize("max proxy request size", conf.MaxProxyRequestSize)
+	if err != nil {
+		panic(err)
+	}
+
+	maxProxyResponseSize, err := parseReadSize("max proxy response size", conf.MaxProxyResponseSize)
 	if err != nil {
 		panic(err)
 	}
@@ -113,7 +143,7 @@ func Run(conf ServerConf) {
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))                                                                  // XXX secure
 	http.Handle("/_f/", newFileServer(fileDir))                                                                // XXX secure
-	http.Handle("/_p", newProxy(maxRequestSize))                                                               // XXX secure
+	http.Handle("/_p", newProxy(maxProxyRequestSize, maxProxyResponseSize))                                    // XXX secure
 	http.Handle("/_c/", newCache("/_c/", maxRequestSize))                                                      // XXX secure
 	http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
 	http.Handle("/", newWebServer(site, broker, users, maxRequestSize, conf.oidcEnabled(), sessions, oauth2Config, conf.WebDir))
@@ -135,6 +165,10 @@ func Run(conf ServerConf) {
 	}
 }
 
-func readAllWithLimit(w http.ResponseWriter, r io.ReadCloser, n uint64) ([]byte, error) {
-	return ioutil.ReadAll(http.MaxBytesReader(w, r, int64(n)))
+func readRequestWithLimit(w http.ResponseWriter, r io.ReadCloser, n int64) ([]byte, error) {
+	return ioutil.ReadAll(http.MaxBytesReader(w, r, n))
+}
+
+func readWithLimit(r io.Reader, n int64) ([]byte, error) {
+	return ioutil.ReadAll(io.LimitReader(r, n))
 }
