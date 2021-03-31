@@ -28,6 +28,7 @@ type ServerConf struct {
 	CertFile          string
 	KeyFile           string
 	Editable          bool
+	MaxRequestSize    string
 	Debug             bool
 	OIDCClientID      string
 	OIDCClientSecret  string
