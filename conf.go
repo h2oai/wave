@@ -29,6 +29,7 @@ type ServerConf struct {
 	KeyFile              string
 	Editable             bool
 	MaxRequestSize       int64
+	MaxCacheRequestSize  int64
 	MaxProxyRequestSize  int64
 	MaxProxyResponseSize int64
 	Debug                bool

@@ -46,6 +46,7 @@ func main() {
 		conf                 wave.ServerConf
 		version              bool
 		maxRequestSize       string
+		maxCacheRequestSize  string
 		maxProxyRequestSize  string
 		maxProxyResponseSize string
 	)
@@ -62,6 +63,7 @@ func main() {
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	flag.BoolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
 	flag.StringVar(&maxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
+	flag.StringVar(&maxCacheRequestSize, "max-cache-request-size", "5M", "maximum allowed size of HTTP requests to the server cache (e.g. 5M or 5MB or 5MiB)")
 	flag.StringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
 	flag.StringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
@@ -99,6 +101,11 @@ func main() {
 	var err error
 
 	conf.MaxRequestSize, err = parseReadSize("max request size", maxRequestSize)
+	if err != nil {
+		panic(err)
+	}
+
+	conf.MaxCacheRequestSize, err = parseReadSize("max cache request size", maxCacheRequestSize)
 	if err != nil {
 		panic(err)
 	}
