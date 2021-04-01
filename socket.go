@@ -39,7 +39,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		echo(Log{"t": "socket_upgrade", "err": err.Error()})
 		return
 	}
-	user := getIdentity(r, s.sessions)
+	user := identifyUser(r, s.sessions)
 	client := newClient(getRemoteAddr(r), user, s.broker, conn, s.editable)
 	go client.flush()
 	go client.listen()
@@ -54,7 +54,7 @@ var (
 	}
 )
 
-func getIdentity(r *http.Request, sessions *OIDCSessions) *User {
+func identifyUser(r *http.Request, sessions *OIDCSessions) *User {
 	cookie, err := r.Cookie(oidcSessionKey)
 	if err != nil {
 		return defaultUser

@@ -15,7 +15,6 @@
 package wave
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"net/url"
@@ -155,6 +154,14 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func createLoginRedirectURL(r *http.Request) string {
+	u, _ := url.Parse("/_login")
+	query := u.Query()
+	query.Set("next", r.URL.Path)
+	u.RawQuery = query.Encode()
+	return u.String()
+}
+
 func checkSession(oauth2Config oauth2.Config, sessions *OIDCSessions, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if len(path.Ext(r.URL.Path)) > 0 || r.URL.Path == "/_login" {
@@ -162,31 +169,30 @@ func checkSession(oauth2Config oauth2.Config, sessions *OIDCSessions, h http.Han
 			return
 		}
 
-		u, _ := url.Parse("/_login")
-		q := u.Query()
-		q.Set("next", r.URL.Path)
-		u.RawQuery = q.Encode()
-
 		cookie, err := r.Cookie(oidcSessionKey)
 		if err != nil {
-			http.Redirect(w, r, u.String(), http.StatusFound)
+			echo(Log{"t": "oauth2_cookie_read_fail", "error": err.Error()})
+			http.Redirect(w, r, createLoginRedirectURL(r), http.StatusFound)
 			return
 		}
+
 		sessionID := cookie.Value
 		session, ok := sessions.get(sessionID)
 		if !ok {
-			http.Redirect(w, r, u.String(), http.StatusFound)
+			echo(Log{"t": "oauth2_session_missing"})
+			http.Redirect(w, r, createLoginRedirectURL(r), http.StatusFound)
 			return
 		}
 
-		t, err := ensureValidOidcToken(r.Context(), oauth2Config, session.token)
+		token, err := oauth2Config.TokenSource(r.Context(), session.token).Token()
 		if err != nil {
-			echo(Log{"t": "access_token_refresh", "error": err.Error()})
-			http.Redirect(w, r, u.String(), http.StatusFound)
+			echo(Log{"t": "oauth2_token_refresh_fail", "error": err.Error()})
+			http.Redirect(w, r, createLoginRedirectURL(r), http.StatusFound)
 			return
 		}
-		if session.token != t {
-			session.token = t
+
+		if session.token != token {
+			session.token = token
 			sessions.set(sessionID, session)
 		}
 
@@ -210,8 +216,4 @@ func fallback(prefix string, h http.Handler) http.Handler {
 		r2.URL.Path = prefix
 		h.ServeHTTP(w, r2)
 	})
-}
-
-func ensureValidOidcToken(c context.Context, cfg oauth2.Config, t *oauth2.Token) (*oauth2.Token, error) {
-	return cfg.TokenSource(c, t).Token()
 }

@@ -39,7 +39,3 @@ type ServerConf struct {
 	OIDCRedirectURL      string
 	OIDCEndSessionURL    string
 }
-
-func (c *ServerConf) oidcEnabled() bool {
-	return c.OIDCClientID != "" && c.OIDCClientSecret != "" && c.OIDCProviderURL != "" && c.OIDCRedirectURL != ""
-}

@@ -81,7 +81,10 @@ func Run(conf ServerConf) {
 	}
 
 	var oauth2Config oauth2.Config
-	if conf.oidcEnabled() {
+
+	enableOIDC := conf.OIDCClientID != "" && conf.OIDCClientSecret != "" && conf.OIDCProviderURL != "" && conf.OIDCRedirectURL != ""
+
+	if enableOIDC {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		provider, err := oidc.NewProvider(ctx, conf.OIDCProviderURL)
@@ -111,7 +114,7 @@ func Run(conf ServerConf) {
 	http.Handle("/_p", newProxy(conf.MaxProxyRequestSize, conf.MaxProxyResponseSize))                          // XXX secure
 	http.Handle("/_c/", newCache("/_c/", conf.MaxCacheRequestSize))                                            // XXX secure
 	http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, conf.MaxRequestSize, conf.oidcEnabled(), sessions, oauth2Config, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, users, conf.MaxRequestSize, enableOIDC, sessions, oauth2Config, conf.WebDir))
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)
