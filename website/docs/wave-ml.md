@@ -33,7 +33,7 @@ Wave ML provides four high-level functions:
 - [`save_model()`](wave-ml#save_model): Save your model.
 - [`load_model()`](wave-ml#load_model): Load your previously saved model.
 
-Use [`build_model()`](https://github.com/h2oai/wave-ml#build_model) to train a model. The function accepts a dataset and a *target column* (the column to be predicted):
+Use [`build_model()`](wave-ml#build_model) to train a model. The function accepts a dataset and a *target column* (the column to be predicted):
 
 ```py {3}
 from h2o_wave_ml import build_model
@@ -43,7 +43,7 @@ model = build_model('./train.csv', target_column='depth')
 
 The call to `build_model()` automatically determines if the prediction task is *classification* (predict a category or class) or *regression* (predict a real value, often a quantity).
 
-Once the model is built, we can get the model's predictions using its [`predict()`](https://github.com/h2oai/wave-ml#modelpredict) method:
+Once the model is built, we can get the model's predictions using its [`predict()`](wave-ml#modelpredict) method:
 
 ```py {4}
 from h2o_wave_ml import build_model
@@ -63,7 +63,7 @@ predictions = model.predict([
 ])
 ```
 
-To save this model locally, use [`save_model()`](https://github.com/h2oai/wave-ml#save_model):
+To save this model locally, use [`save_model()`](wave-ml#save_model):
 
 ```py {4}
 from h2o_wave_ml import build_model, save_model
@@ -72,7 +72,7 @@ model = build_model('./train.csv', target_column='depth')
 model_path = save_model(model, output_dir_path='./')
 ```
 
-To load a saved model, use [`load_model()`](https://github.com/h2oai/wave-ml#load_model):
+To load a saved model, use [`load_model()`](wave-ml#load_model):
 
 ```py {1}
 model = load_model(model_path)
