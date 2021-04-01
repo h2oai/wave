@@ -22,7 +22,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -80,11 +79,9 @@ func Run(conf ServerConf) {
 		http.Handle("/_d/site", newDebugHandler(broker))
 	}
 
-	var oauth2Config oauth2.Config
+	var oauth2Config *oauth2.Config
 
-	enableOIDC := conf.OIDCClientID != "" && conf.OIDCClientSecret != "" && conf.OIDCProviderURL != "" && conf.OIDCRedirectURL != ""
-
-	if enableOIDC {
+	if conf.OIDCClientID != "" && conf.OIDCClientSecret != "" && conf.OIDCProviderURL != "" && conf.OIDCRedirectURL != "" {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		provider, err := oidc.NewProvider(ctx, conf.OIDCProviderURL)
@@ -92,7 +89,7 @@ func Run(conf ServerConf) {
 			panic(err)
 		}
 
-		oauth2Config = oauth2.Config{
+		oauth2Config = &oauth2.Config{
 			ClientID:     conf.OIDCClientID,
 			ClientSecret: conf.OIDCClientSecret,
 			Endpoint:     provider.Endpoint(),
@@ -109,12 +106,13 @@ func Run(conf ServerConf) {
 	// XXX wrap special _ routes in a separate handler
 	http.Handle("/_s", newSocketServer(broker, sessions, conf.Editable))
 	fileDir := filepath.Join(conf.DataDir, "f")
-	http.Handle("/_f", newFileStore(fileDir))                                                                  // XXX secure
-	http.Handle("/_f/", newFileServer(fileDir))                                                                // XXX secure
-	http.Handle("/_p", newProxy(conf.MaxProxyRequestSize, conf.MaxProxyResponseSize))                          // XXX secure
-	http.Handle("/_c/", newCache("/_c/", conf.MaxCacheRequestSize))                                            // XXX secure
-	http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, conf.MaxRequestSize, enableOIDC, sessions, oauth2Config, conf.WebDir))
+	http.Handle("/_f", newFileStore(fileDir))                                         // XXX secure
+	http.Handle("/_f/", newFileServer(fileDir))                                       // XXX secure
+	http.Handle("/_p", newProxy(conf.MaxProxyRequestSize, conf.MaxProxyResponseSize)) // XXX secure
+	http.Handle("/_c/", newCache("/_c/", conf.MaxCacheRequestSize))                   // XXX secure
+	// TODO enable when IDE is ready for release
+	// http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
+	http.Handle("/", newWebServer(site, broker, users, conf.MaxRequestSize, sessions, oauth2Config, conf.WebDir))
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)

@@ -42,13 +42,12 @@ func newWebServer(
 	broker *Broker,
 	users map[string][]byte,
 	maxRequestSize int64,
-	oidcEnabled bool,
 	sessions *OIDCSessions,
-	oauth2Config oauth2.Config,
+	oauth2Config *oauth2.Config,
 	www string,
 ) *WebServer {
 	fs := fallback("/", http.FileServer(http.Dir(www)))
-	if oidcEnabled {
+	if oauth2Config != nil {
 		fs = checkSession(oauth2Config, sessions, fs)
 	}
 	return &WebServer{site, broker, fs, users, maxRequestSize}
@@ -82,7 +81,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet: // reads
 		switch r.Header.Get("Content-Type") {
 		case contentTypeJSON: // data
-			s.get(w, r)
+			s.get(w, r) // XXX guard?
 		default: // template
 			s.fs.ServeHTTP(w, r)
 		}
@@ -162,7 +161,7 @@ func createLoginRedirectURL(r *http.Request) string {
 	return u.String()
 }
 
-func checkSession(oauth2Config oauth2.Config, sessions *OIDCSessions, h http.Handler) http.Handler {
+func checkSession(oauth2Config *oauth2.Config, sessions *OIDCSessions, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if len(path.Ext(r.URL.Path)) > 0 || r.URL.Path == "/_login" {
 			h.ServeHTTP(w, r)

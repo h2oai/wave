@@ -80,10 +80,10 @@ func generateRandomKey(byteCount int) (string, error) {
 // OIDCInitHandler handles auth requests
 type OIDCInitHandler struct {
 	sessions     *OIDCSessions
-	oauth2Config oauth2.Config
+	oauth2Config *oauth2.Config
 }
 
-func newOIDCInitHandler(sessions *OIDCSessions, oauth2Config oauth2.Config) http.Handler {
+func newOIDCInitHandler(sessions *OIDCSessions, oauth2Config *oauth2.Config) http.Handler {
 	return &OIDCInitHandler{
 		sessions:     sessions,
 		oauth2Config: oauth2Config,
@@ -125,11 +125,11 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // OAuth2Handler handles OAuth2 requests
 type OAuth2Handler struct {
 	sessions     *OIDCSessions
-	oauth2Config oauth2.Config
+	oauth2Config *oauth2.Config
 	providerURL  string
 }
 
-func newOAuth2Handler(sessions *OIDCSessions, oauth2Config oauth2.Config, providerURL string) http.Handler {
+func newOAuth2Handler(sessions *OIDCSessions, oauth2Config *oauth2.Config, providerURL string) http.Handler {
 	return &OAuth2Handler{
 		sessions:     sessions,
 		oauth2Config: oauth2Config,
