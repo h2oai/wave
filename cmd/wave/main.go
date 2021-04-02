@@ -22,13 +22,10 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 
 	"github.com/h2oai/wave"
-)
-
-const (
-	envVarNamePrefix = "H2O_WAVE"
 )
 
 var (
@@ -74,22 +71,26 @@ func main() {
 		oidcProviderURL   = "oidc-provider-url"
 		oidcRedirectURL   = "oidc-redirect-url"
 		oidcEndSessionURL = "oidc-end-session-url"
+		oidcSkipLogin     = "oidc-skip-login"
 	)
 
-	conf.OIDCClientID = os.Getenv(envVarName(oidcClientID))
+	conf.OIDCClientID = os.Getenv(toEnvVar(oidcClientID))
 	flag.StringVar(&conf.OIDCClientID, oidcClientID, conf.OIDCClientID, "OIDC client ID")
 
-	conf.OIDCClientSecret = os.Getenv(envVarName(oidcClientSecret))
+	conf.OIDCClientSecret = os.Getenv(toEnvVar(oidcClientSecret))
 	flag.StringVar(&conf.OIDCClientSecret, oidcClientSecret, conf.OIDCClientSecret, "OIDC client secret")
 
-	conf.OIDCProviderURL = os.Getenv(envVarName(oidcProviderURL))
+	conf.OIDCProviderURL = os.Getenv(toEnvVar(oidcProviderURL))
 	flag.StringVar(&conf.OIDCProviderURL, oidcProviderURL, conf.OIDCProviderURL, "OIDC provider URL")
 
-	conf.OIDCRedirectURL = os.Getenv(envVarName(oidcRedirectURL))
+	conf.OIDCRedirectURL = os.Getenv(toEnvVar(oidcRedirectURL))
 	flag.StringVar(&conf.OIDCRedirectURL, oidcRedirectURL, conf.OIDCRedirectURL, "OIDC redirect URL")
 
-	conf.OIDCEndSessionURL = os.Getenv(envVarName(oidcEndSessionURL))
+	conf.OIDCEndSessionURL = os.Getenv(toEnvVar(oidcEndSessionURL))
 	flag.StringVar(&conf.OIDCEndSessionURL, oidcEndSessionURL, conf.OIDCEndSessionURL, "OIDC end session URL")
+
+	conf.OIDCSkipLogin = getEnvBool(toEnvVar(oidcSkipLogin))
+	flag.BoolVar(&conf.OIDCSkipLogin, oidcSkipLogin, conf.OIDCSkipLogin, "don't show the login form during OIDC authorization")
 
 	flag.Parse()
 
@@ -129,9 +130,20 @@ func main() {
 	wave.Run(conf)
 }
 
-func envVarName(n string) string {
-	envVar := strings.ToUpper(strings.ReplaceAll(n, "-", "_"))
-	return fmt.Sprintf("%s_%s", envVarNamePrefix, envVar)
+func toEnvVar(name string) string {
+	return fmt.Sprintf("H2O_WAVE_%s", strings.ToUpper(strings.ReplaceAll(name, "-", "_")))
+}
+
+func getEnvBool(name string) bool {
+	s, ok := os.LookupEnv(name)
+	if !ok {
+		return false
+	}
+	v, err := strconv.ParseBool(strings.ToLower(s))
+	if err != nil {
+		panic(fmt.Errorf("invalid setting for environment variable %s: %v", name, err))
+	}
+	return v
 }
 
 var (

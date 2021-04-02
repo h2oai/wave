@@ -38,4 +38,5 @@ type ServerConf struct {
 	OIDCProviderURL      string
 	OIDCRedirectURL      string
 	OIDCEndSessionURL    string
+	OIDCSkipLogin        bool
 }

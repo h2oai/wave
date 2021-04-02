@@ -44,11 +44,12 @@ func newWebServer(
 	maxRequestSize int64,
 	sessions *OIDCSessions,
 	oauth2Config *oauth2.Config,
+	skipLogin bool,
 	www string,
 ) *WebServer {
 	fs := fallback("/", http.FileServer(http.Dir(www)))
 	if oauth2Config != nil {
-		fs = checkSession(oauth2Config, sessions, fs)
+		fs = checkSession(oauth2Config, sessions, skipLogin, fs)
 	}
 	return &WebServer{site, broker, fs, users, maxRequestSize}
 }
@@ -153,17 +154,40 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func createLoginRedirectURL(r *http.Request) string {
+func redirectToLogin(w http.ResponseWriter, r *http.Request) {
+	// X -> /_login?next=X
 	u, _ := url.Parse("/_login")
-	query := u.Query()
-	query.Set("next", r.URL.Path)
-	u.RawQuery = query.Encode()
-	return u.String()
+	q := u.Query()
+	q.Set("next", r.URL.Path)
+	u.RawQuery = q.Encode()
+	http.Redirect(w, r, u.String(), http.StatusFound)
 }
 
-func checkSession(oauth2Config *oauth2.Config, sessions *OIDCSessions, h http.Handler) http.Handler {
+func redirectToAuth(w http.ResponseWriter, r *http.Request) {
+	// /_login -> /_auth/init
+	// /_login?next=X -> /_auth/init?next=X
+	u, _ := url.Parse("/_auth/init")
+	next := r.URL.Query().Get("next")
+	if next != "" {
+		q := u.Query()
+		q.Set("next", next)
+		u.RawQuery = q.Encode()
+	}
+	http.Redirect(w, r, u.String(), http.StatusFound)
+}
+
+func checkSession(oauth2Config *oauth2.Config, sessions *OIDCSessions, skipLogin bool, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if len(path.Ext(r.URL.Path)) > 0 || r.URL.Path == "/_login" {
+		if len(path.Ext(r.URL.Path)) > 0 {
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		if r.URL.Path == "/_login" {
+			if skipLogin {
+				redirectToAuth(w, r)
+				return
+			}
 			h.ServeHTTP(w, r)
 			return
 		}
@@ -171,7 +195,7 @@ func checkSession(oauth2Config *oauth2.Config, sessions *OIDCSessions, h http.Ha
 		cookie, err := r.Cookie(oidcSessionKey)
 		if err != nil {
 			echo(Log{"t": "oauth2_cookie_read_fail", "error": err.Error()})
-			http.Redirect(w, r, createLoginRedirectURL(r), http.StatusFound)
+			redirectToLogin(w, r)
 			return
 		}
 
@@ -179,14 +203,14 @@ func checkSession(oauth2Config *oauth2.Config, sessions *OIDCSessions, h http.Ha
 		session, ok := sessions.get(sessionID)
 		if !ok {
 			echo(Log{"t": "oauth2_session_missing"})
-			http.Redirect(w, r, createLoginRedirectURL(r), http.StatusFound)
+			redirectToLogin(w, r)
 			return
 		}
 
 		token, err := oauth2Config.TokenSource(r.Context(), session.token).Token()
 		if err != nil {
 			echo(Log{"t": "oauth2_token_refresh_fail", "error": err.Error()})
-			http.Redirect(w, r, createLoginRedirectURL(r), http.StatusFound)
+			redirectToLogin(w, r)
 			return
 		}
 

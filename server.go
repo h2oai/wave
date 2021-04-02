@@ -112,7 +112,7 @@ func Run(conf ServerConf) {
 	http.Handle("/_c/", newCache("/_c/", conf.MaxCacheRequestSize))                   // XXX secure
 	// TODO enable when IDE is ready for release
 	// http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, conf.MaxRequestSize, sessions, oauth2Config, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, users, conf.MaxRequestSize, sessions, oauth2Config, conf.OIDCSkipLogin, conf.WebDir))
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)
