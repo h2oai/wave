@@ -88,29 +88,29 @@ Keycloak should now be running at http://localhost:8080/.
 Next, create a *client* in Keycloak to represent our app:
 
 - Go to Keycloak at http://localhost:8080/.
-- Click on Administration Console.
+- Click on "Administration Console".
 - Log in with username `admin`, password `admin`.
-- Under Configure, click on Clients
-	- Click the Create button to create a new client.
-	- Set Client ID to `wave-app`.
-	- Click Save.
-	- In the Settings tab, change Access Type to `confidential`.
-	- Set Valid Redirect URIs to `*`.
-	- Click Save.
-	- Copy the Secret field (e.g. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
+- Under "Configure", click on "Clients"
+	- Click the "Create" button to create a new client.
+	- Set "Client ID" to `wave-app`.
+	- Click "Save".
+	- In the "Settings" tab, change "Access Type" to `confidential`.
+	- Set "Valid Redirect URIs" to `*`.
+	- Click "Save".
+	- Copy the "Secret" field (e.g. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
 
 ### Add test users
 
 Next, add one or more users to Keycloak:
 
-- Under Manage, click on Users.
-	- Click the Add User button to create a new user.
-	- Set the Username field.
-	- Click Save.
-	- Go to the Credentials tab
+- Under "Manage", click on "Users".
+	- Click the "Add User" button to create a new user.
+	- Set the "Username" field.
+	- Click "Save".
+	- Go to the "Credentials" tab
 	- Set the password fields.
-	- Change Temporary to OFF.
-	- Click Set Password
+	- Change "Temporary" to "OFF".
+	- Click "Set Password"
 
 ### Point Wave to Keycloak
 
