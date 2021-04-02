@@ -58,3 +58,74 @@ The command `wave run --no-reload foo` is equivalent to `python -m h2o_wave run 
 - Set "Module name" to `h2o_wave`.
 - Set "Parameters" to `run foo` (assuming your app's source code is in `foo.py`)
 
+## Using OpenID Connect
+
+You can set up a local [Keycloak](https://www.keycloak.org/) instance for developing apps that use OpenID Connect, OAuth 2.0, or SAML 2.0 for authentication, single sign-on, and so on.
+
+### Run Keycloak
+
+First, create a local directory to persist all the realms, clients, and users you'll be adding to Keycloak:
+
+```
+mkdir ~/.keycloak
+```
+
+Run Keycloak using Docker:
+
+```
+$ docker run \
+  -p 8080:8080 \
+  -e KEYCLOAK_USER=admin \
+  -e KEYCLOAK_PASSWORD=admin \
+  --volume ~/.keycloak:/opt/jboss/keycloak/standalone/data \
+  quay.io/keycloak/keycloak:10.0.2
+```
+
+Keycloak should now be running at http://localhost:8080/.
+
+### Add a client
+
+Next, create a *client* in Keycloak to represent our app:
+
+- Go to Keycloak at http://localhost:8080/.
+- Click on Administration Console.
+- Log in with username `admin`, password `admin`.
+- Under Configure, click on Clients
+	- Click the Create button to create a new client.
+	- Set Client ID to `wave-app`.
+	- Click Save.
+	- In the Settings tab, change Access Type to `confidential`.
+	- Set Valid Redirect URIs to `*`.
+	- Click Save.
+	- Copy the Secret field (e.g. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
+
+### Add test users
+
+Next, add one or more users to Keycloak:
+
+- Under Manage, click on Users.
+	- Click the Add User button to create a new user.
+	- Set the Username field.
+	- Click Save.
+	- Go to the Credentials tab
+	- Set the password fields.
+	- Change Temporary to OFF.
+	- Click Set Password
+
+### Point Wave to Keycloak
+
+We're ready to use Keycloak now. Make sure you log out of Keycloak, otherwise you'll be logged in as `admin` when you access your Wave app!
+
+Finally, start the Wave daemon with the following `-oidc-` command line arguments (use the client secret you copied above):
+
+```
+./waved \
+    -oidc-client-id wave-app \
+    -oidc-client-secret xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx \
+    -oidc-redirect-url http://localhost:10101/_auth/callback \
+    -oidc-provider-url http://localhost:8080/auth/realms/master \
+    -oidc-end-session-url http://localhost:8080/auth/realms/master/protocol/openid-connect/logout
+
+```
+
+Now, when you launch and access your Wave app, you should see a OpenID prompt which you can use to log in one of the users you created in Keycloak.
