@@ -86,7 +86,7 @@ func Run(conf ServerConf) {
 		defer cancel()
 		provider, err := oidc.NewProvider(ctx, conf.OIDCProviderURL)
 		if err != nil {
-			panic(err)
+			panic(fmt.Errorf("failed connecting to OIDC provider: %v", err))
 		}
 
 		oauth2Config = &oauth2.Config{
