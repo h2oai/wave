@@ -49,14 +49,6 @@ func echo(m Log) {
 
 // Run runs the HTTP server.
 func Run(conf ServerConf) {
-	// FIXME SESSIONS
-	sessions := newOIDCSessions()
-
-	if len(conf.Compact) > 0 {
-		compactSite(conf.Compact)
-		return
-	}
-
 	site := newSite()
 	if len(conf.Init) > 0 {
 		initSite(site, conf.Init)
@@ -70,6 +62,7 @@ func Run(conf ServerConf) {
 	}
 
 	var oauth2Config *oauth2.Config
+	sessions := newOIDCSessions()
 
 	if conf.OIDCClientID != "" && conf.OIDCClientSecret != "" && conf.OIDCProviderURL != "" && conf.OIDCRedirectURL != "" {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

@@ -77,7 +77,7 @@ func initSite(site *Site, aofPath string) {
 	}
 }
 
-func compactSite(aofPath string) {
+func CompactSite(aofPath string) {
 	site := newSite()
 	initSite(site, aofPath)
 	for url, page := range site.pages {

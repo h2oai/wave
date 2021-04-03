@@ -126,6 +126,11 @@ func main() {
 		return
 	}
 
+	if len(conf.Compact) > 0 {
+		wave.CompactSite(conf.Compact)
+		return
+	}
+
 	keychain, err := wave.LoadKeychain(accessKeyFile)
 	if err != nil {
 		panic(fmt.Errorf("failed loading keychain: %v", err))
@@ -204,8 +209,6 @@ func main() {
 
 	conf.Version = Version
 	conf.BuildDate = BuildDate
-
-	// TODO perform init and compact here instead of inside Run(); rename Run() to Listen()
 
 	wave.Run(conf)
 }
