@@ -20,7 +20,7 @@
 /data
 /waved
 /surf
-.wave-keys
+.wave-keychain
 /*.db
 *.log
 *.swp
