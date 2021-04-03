@@ -36,6 +36,22 @@ var (
 	BuildDate = "(build)"
 )
 
+const (
+	keygenTemplate = `
+SUCCESS!
+
+Make sure to copy your new access key ID and secret now.
+You won't be able to see it again!
+
+H2O_WAVE_ACCESS_KEY_ID=%s
+H2O_WAVE_ACCESS_KEY_SECRET=%s
+
+Your key was also added to the access control file located at
+%s
+
+`
+)
+
 func main() {
 	// TODO Use github.com/gosidekick/goconfig instead.
 
@@ -46,6 +62,7 @@ func main() {
 		maxCacheRequestSize  string
 		maxProxyRequestSize  string
 		maxProxyResponseSize string
+		keygen               bool
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
@@ -54,6 +71,8 @@ func main() {
 	flag.StringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
 	flag.StringVar(&conf.AccessKeyID, "access-key-id", "access_key_id", "default access key ID")
 	flag.StringVar(&conf.AccessKeySecret, "access-key-secret", "access_key_secret", "default access key secret")
+	flag.StringVar(&conf.AccessKeyFile, "access-key-file", ".wave-keys", "path to file containing access keys")
+	flag.BoolVar(&keygen, "keygen", false, "generate a new access key secret and hash pair")
 	flag.StringVar(&conf.Init, "init", "", "initialize site content from AOF log")
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
@@ -99,6 +118,23 @@ func main() {
 		return
 	}
 
+	if keygen {
+		keys, err := wave.LoadAccessControlFile(conf.AccessKeyFile)
+		if err != nil {
+			panic(fmt.Errorf("failed loading access control file: %v", err))
+		}
+		id, secret, hash, err := wave.GenerateAccessKey()
+		if err != nil {
+			panic(fmt.Errorf("failed generating access key: %v", err))
+		}
+		keys[id] = hash
+		if wave.DumpAccessControlFile(keys, conf.AccessKeyFile); err != nil {
+			panic(fmt.Errorf("failed writing access control file: %v", err))
+		}
+		fmt.Printf(keygenTemplate, id, secret, conf.AccessKeyFile)
+		return
+	}
+
 	var err error
 
 	conf.MaxRequestSize, err = parseReadSize("max request size", maxRequestSize)
@@ -126,6 +162,8 @@ func main() {
 
 	conf.Version = Version
 	conf.BuildDate = BuildDate
+
+	// TODO perform init and compact here instead of inside Run(); rename Run() to Listen()
 
 	wave.Run(conf)
 }

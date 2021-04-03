@@ -23,6 +23,7 @@ type ServerConf struct {
 	DataDir              string
 	AccessKeyID          string
 	AccessKeySecret      string
+	AccessKeyFile        string
 	Init                 string
 	Compact              string
 	CertFile             string
