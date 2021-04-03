@@ -5,43 +5,62 @@ title: Configuration
 ## Configuring the server
 
 ### Command line options
-Execute `waved -help` to see all available command line options:
+
+Run `waved -help` to view all available command line options:
 
 ```
 $ ./waved -help
-Usage of ./waved:
   -access-key-id string
-    	default access key ID (default "access_key_id")
+        default app access key ID (default "access_key_id")
   -access-key-secret string
-    	default access key secret (default "access_key_secret")
+        default app access key secret (default "access_key_secret")
+  -access-keychain string
+        path to file containing app access keys (default ".wave-keychain")
+  -add-access-key
+        generate and add a new app access key ID and secret pair to the keychain
   -compact string
-    	compact AOF log
+        compact AOF log
   -data-dir string
-    	directory to store site data (default "./data")
+        directory to store site data (default "./data")
   -debug
-    	enable debug mode (profiling, inspection, etc.)
+        enable debug mode (profiling, inspection, etc.)
+  -del-access-key
+        remove an app access key from the keychain
+  -editable
+        allow users to edit web pages
   -init string
-    	initialize site content from AOF log
+        initialize site content from AOF log
   -listen string
-    	listen on this address (default ":10101")
+        listen on this address (default ":10101")
+  -max-cache-request-size string
+        maximum allowed size of HTTP requests to the server cache (e.g. 5M or 5MB or 5MiB) (default "5M")
+  -max-proxy-request-size string
+        maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB) (default "5M")
+  -max-proxy-response-size string
+        maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB) (default "5M")
+  -max-request-size string
+        maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB) (default "5M")
   -oidc-client-id string
-    	OIDC client ID
+        OIDC client ID
   -oidc-client-secret string
-    	OIDC client secret
+        OIDC client secret
   -oidc-end-session-url string
-    	OIDC end session URL
+        OIDC end session URL
   -oidc-provider-url string
-    	OIDC provider URL
+        OIDC provider URL
   -oidc-redirect-url string
-    	OIDC redirect URL
+        OIDC redirect URL
+  -oidc-skip-login
+        don't show the login form during OIDC authorization
   -tls-cert-file string
-    	path to certificate file (TLS only)
+        path to certificate file (TLS only)
   -tls-key-file string
-    	path to private key file (TLS only)
+        path to private key file (TLS only)
   -version
-    	print version and exit
+        print version and exit
   -web-dir string
-    	directory to serve web assets from (default "./www")
+        directory to serve web assets from (default "./www")
+
 ```
 
 ## Configuring your app
