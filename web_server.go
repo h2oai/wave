@@ -20,7 +20,6 @@ import (
 	"net/url"
 	"path"
 
-	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 )
 
@@ -29,7 +28,7 @@ type WebServer struct {
 	site           *Site
 	broker         *Broker
 	fs             http.Handler
-	keychain       map[string][]byte
+	keychain       *Keychain
 	maxRequestSize int64
 }
 
@@ -40,7 +39,7 @@ const (
 func newWebServer(
 	site *Site,
 	broker *Broker,
-	keychain map[string][]byte,
+	keychain *Keychain,
 	maxRequestSize int64,
 	sessions *OIDCSessions,
 	oauth2Config *oauth2.Config,
@@ -54,18 +53,9 @@ func newWebServer(
 	return &WebServer{site, broker, fs, keychain, maxRequestSize}
 }
 
-func (s *WebServer) authenticate(id, secret string) bool {
-	hash, ok := s.keychain[id]
-	if !ok {
-		return false
-	}
-	err := bcrypt.CompareHashAndPassword(hash, []byte(secret))
-	return err == nil
-}
-
 func (s *WebServer) guard(w http.ResponseWriter, r *http.Request) bool {
 	id, secret, ok := r.BasicAuth()
-	if !ok || !s.authenticate(id, secret) {
+	if !ok || !s.keychain.Verify(id, secret) {
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return false
 	}

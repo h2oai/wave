@@ -37,19 +37,20 @@ func TestCreateAccessKey(t *testing.T) {
 
 func TestKeychainSerialization(t *testing.T) {
 	eq, _, no := Assert(t)
-	kc1 := make(map[string][]byte)
+	kc1, err := LoadKeychain(".wave-keychain")
+	no(err)
 	for i := 0; i < 5; i++ {
 		id, _, hash, err := CreateAccessKey()
 		no(err)
-		kc1[id] = hash
+		kc1.Add(id, hash)
 	}
-	err := DumpKeychain(kc1, ".wave-keychain")
+	err = kc1.Save()
 	no(err)
 	kc2, err := LoadKeychain(".wave-keychain")
 	no(err)
-	eq(len(kc1), len(kc2))
-	for k, v1 := range kc1 {
-		v2 := kc2[k]
+	eq(len(kc1.keys), len(kc2.keys))
+	for k, v1 := range kc1.keys {
+		v2 := kc2.keys[k]
 		eq(bytes.Compare(v1, v2), 0)
 	}
 }

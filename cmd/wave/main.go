@@ -132,12 +132,7 @@ func main() {
 	}
 
 	if listAccessKeys {
-		keys := make([]string, len(keychain))
-		i := 0
-		for k := range keychain {
-			keys[i] = k
-			i++
-		}
+		keys := keychain.IDs()
 		sort.Strings(keys)
 		for _, key := range keys {
 			fmt.Println(key)
@@ -146,16 +141,15 @@ func main() {
 	}
 
 	if removeAccessKey {
-		if _, ok := keychain[accessKeyID]; !ok {
-			fmt.Printf("error: access key ID %s not found in keychain %s\n", accessKeyID, accessKeyFile)
+		if ok := keychain.Remove(accessKeyID); !ok {
+			fmt.Printf("error: access key ID %s not found in keychain %s\n", accessKeyID, keychain.Name)
 			os.Exit(1)
 		}
 
-		delete(keychain, accessKeyID)
-		if wave.DumpKeychain(keychain, accessKeyFile); err != nil {
+		if err := keychain.Save(); err != nil {
 			panic(fmt.Errorf("failed writing keychain: %v", err))
 		}
-		fmt.Printf("Success! Key %s removed from keychain %s\n", accessKeyID, accessKeyFile)
+		fmt.Printf("Success! Key %s removed from keychain %s\n", accessKeyID, keychain.Name)
 		return
 	}
 
@@ -164,15 +158,15 @@ func main() {
 		if err != nil {
 			panic(fmt.Errorf("failed generating access key: %v", err))
 		}
-		keychain[id] = hash
-		if wave.DumpKeychain(keychain, accessKeyFile); err != nil {
+		keychain.Add(id, hash)
+		if err := keychain.Save(); err != nil {
 			panic(fmt.Errorf("failed writing keychain: %v", err))
 		}
-		fmt.Printf(createAccessKeyMessage, id, secret, accessKeyFile)
+		fmt.Printf(createAccessKeyMessage, id, secret, keychain.Name)
 		return
 	}
 
-	if len(keychain) == 0 {
+	if keychain.Len() == 0 {
 		if len(accessKeyID) == 0 || len(accessKeySecret) == 0 {
 			panic("default access key ID or secret cannot be empty")
 		}
@@ -180,7 +174,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		keychain[accessKeyID] = hash
+		keychain.Add(accessKeyID, hash)
 	}
 
 	conf.Keychain = keychain

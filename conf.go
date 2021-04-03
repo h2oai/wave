@@ -21,7 +21,7 @@ type ServerConf struct {
 	Listen               string
 	WebDir               string
 	DataDir              string
-	Keychain             map[string][]byte
+	Keychain             *Keychain
 	Init                 string
 	Compact              string
 	CertFile             string

@@ -26,9 +26,10 @@ import (
 )
 
 var (
-	idChars     = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	secretChars = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
-	colon       = []byte(":")
+	idChars              = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	secretChars          = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+	colon                = []byte(":")
+	invalidKeychainEntry = errors.New("invalid entry found in keychain")
 )
 
 func generateRandString(chars []byte, n int) (string, error) {
@@ -65,6 +66,11 @@ func HashSecret(secret string) ([]byte, error) {
 	return h, nil
 }
 
+type Keychain struct {
+	Name string
+	keys map[string][]byte
+}
+
 func CreateAccessKey() (id, secret string, hash []byte, err error) {
 	if id, err = generateRandString(idChars, 20); err != nil {
 		return
@@ -76,13 +82,46 @@ func CreateAccessKey() (id, secret string, hash []byte, err error) {
 	return
 }
 
-var invalidKeychainEntry = errors.New("invalid entry found in keychain")
+func (kc *Keychain) Add(id string, hash []byte) {
+	kc.keys[id] = hash
+}
 
-func LoadKeychain(name string) (map[string][]byte, error) {
+func (kc *Keychain) Verify(id, secret string) bool {
+	hash, ok := kc.keys[id]
+	if !ok {
+		return false
+	}
+	err := bcrypt.CompareHashAndPassword(hash, []byte(secret))
+	return err == nil
+}
+
+func (kc *Keychain) Remove(id string) bool {
+	if _, ok := kc.keys[id]; ok {
+		delete(kc.keys, id)
+		return true
+	}
+	return false
+}
+
+func (kc *Keychain) IDs() []string {
+	ids := make([]string, len(kc.keys))
+	i := 0
+	for id := range kc.keys {
+		ids[i] = id
+		i++
+	}
+	return ids
+}
+
+func (kc *Keychain) Len() int {
+	return len(kc.keys)
+}
+
+func LoadKeychain(name string) (*Keychain, error) {
 	keys := make(map[string][]byte)
 
 	if _, err := os.Stat(name); os.IsNotExist(err) {
-		return keys, nil
+		return &Keychain{name, keys}, nil
 	}
 
 	file, err := os.Open(name)
@@ -111,20 +150,20 @@ func LoadKeychain(name string) (map[string][]byte, error) {
 		keys[string(id)] = hash
 	}
 
-	return keys, nil
+	return &Keychain{name, keys}, nil
 }
 
-func DumpKeychain(keys map[string][]byte, name string) error {
+func (kc *Keychain) Save() error {
 	var sb bytes.Buffer
-	for id, hash := range keys {
+	for id, hash := range kc.keys {
 		sb.WriteString(id)
 		sb.Write(colon)
 		sb.Write(hash)
 		sb.Write(newline)
 	}
 
-	if err := os.WriteFile(name, sb.Bytes(), 0600); err != nil {
-		return fmt.Errorf("failed writing %s: %v", name, err)
+	if err := os.WriteFile(kc.Name, sb.Bytes(), 0600); err != nil {
+		return fmt.Errorf("failed writing %s: %v", kc.Name, err)
 	}
 
 	return nil
