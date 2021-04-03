@@ -173,6 +173,9 @@ func main() {
 	}
 
 	if len(keychain) == 0 {
+		if len(accessKeyID) == 0 || len(accessKeySecret) == 0 {
+			panic("default access key ID or secret cannot be empty")
+		}
 		hash, err := wave.HashSecret(accessKeySecret)
 		if err != nil {
 			panic(err)
