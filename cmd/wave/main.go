@@ -37,7 +37,7 @@ var (
 )
 
 const (
-	keygenTemplate = `
+	createAccessKeyMessage = `
 SUCCESS!
 
 Make sure to copy your new access key ID and secret now.
@@ -65,7 +65,7 @@ func main() {
 		accessKeyID          string
 		accessKeySecret      string
 		accessKeyFile        string
-		generateAccessKey    bool
+		createAccessKey      bool
 		removeAccessKey      bool
 	)
 
@@ -76,7 +76,7 @@ func main() {
 	flag.StringVar(&accessKeyID, "access-key-id", "access_key_id", "default app access key ID")
 	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default app access key secret")
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing app access keys")
-	flag.BoolVar(&generateAccessKey, "add-access-key", false, "generate and add a new app access key ID and secret pair to the keychain")
+	flag.BoolVar(&createAccessKey, "create-access-key", false, "generate and add a new app access key ID and secret pair to the keychain")
 	flag.BoolVar(&removeAccessKey, "del-access-key", false, "remove an app access key from the keychain")
 	flag.StringVar(&conf.Init, "init", "", "initialize site content from AOF log")
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
@@ -128,8 +128,8 @@ func main() {
 		panic(fmt.Errorf("failed loading keychain: %v", err))
 	}
 
-	if generateAccessKey {
-		id, secret, hash, err := wave.GenerateAccessKey()
+	if createAccessKey {
+		id, secret, hash, err := wave.CreateAccessKey()
 		if err != nil {
 			panic(fmt.Errorf("failed generating access key: %v", err))
 		}
@@ -137,7 +137,7 @@ func main() {
 		if wave.DumpKeychain(keychain, accessKeyFile); err != nil {
 			panic(fmt.Errorf("failed writing keychain: %v", err))
 		}
-		fmt.Printf(keygenTemplate, id, secret, accessKeyFile)
+		fmt.Printf(createAccessKeyMessage, id, secret, accessKeyFile)
 		return
 	}
 

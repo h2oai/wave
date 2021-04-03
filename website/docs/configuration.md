@@ -10,16 +10,17 @@ Run `waved -help` to view all available command line options:
 
 ```
 $ ./waved -help
+Usage of ./waved:
   -access-key-id string
         default app access key ID (default "access_key_id")
   -access-key-secret string
         default app access key secret (default "access_key_secret")
   -access-keychain string
         path to file containing app access keys (default ".wave-keychain")
-  -add-access-key
-        generate and add a new app access key ID and secret pair to the keychain
   -compact string
         compact AOF log
+  -create-access-key
+        generate and add a new app access key ID and secret pair to the keychain
   -data-dir string
         directory to store site data (default "./data")
   -debug

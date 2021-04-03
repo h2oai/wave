@@ -31,7 +31,7 @@ var (
 	colon       = []byte(":")
 )
 
-func generateSecret(chars []byte, n int) (string, error) {
+func generateRandString(chars []byte, n int) (string, error) {
 	secret := make([]byte, n)
 	rb := make([]byte, n+(n/4))
 
@@ -65,11 +65,11 @@ func HashSecret(secret string) ([]byte, error) {
 	return h, nil
 }
 
-func GenerateAccessKey() (id, secret string, hash []byte, err error) {
-	if id, err = generateSecret(idChars, 20); err != nil {
+func CreateAccessKey() (id, secret string, hash []byte, err error) {
+	if id, err = generateRandString(idChars, 20); err != nil {
 		return
 	}
-	if secret, err = generateSecret(secretChars, 40); err != nil {
+	if secret, err = generateRandString(secretChars, 40); err != nil {
 		return
 	}
 	hash, err = HashSecret(secret)

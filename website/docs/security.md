@@ -25,14 +25,14 @@ If you change the ID and secret, you'll need to ensure that your app or script u
 For production deployments, you should generate cryptographically secure random ID/secret pairs like this:
 
 ```shell
-$ ./waved -add-access-key
+$ ./waved -create-access-key
 
 SUCCESS!
 
 Make sure to copy your new access key ID and secret now.
 You won't be able to see it again!
 
-H2O_WAVE_ACCESS_KEY_ID=E34W9PXU0X1UPOPTAS3P
+H2O_WAVE_ACCESS_KEY_ID=ENHL90KR2HZD6X2ZIYLZ
 H2O_WAVE_ACCESS_KEY_SECRET=dxQPcenUJJgLes8rxkp7rUj02t2y3hCqBteyvY2I
 
 Your key was also added to the keychain located at
@@ -42,10 +42,10 @@ Your key was also added to the keychain located at
 
 The above command also stores the credentials in a file named `.wave-keychain` in the current working directory. The file format is similar to a [.htpasswd](https://en.wikipedia.org/wiki/.htpasswd) file, but always uses [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) hashes. Note that the access key secret displayed on the console is not stored anywhere, and cannot be recovered. If you lose the secret, simply generate a new one and reconfigure your app to use the new secret.
 
-You can also make the `-add-access-key` command use a keychain file located elsewhere, like this:
+You can also make the `-create-access-key` command use a keychain file located elsewhere, like this:
 
 ```shell
-$ ./waved -add-access-key -access-keychain /path/to/file.extension
+$ ./waved -create-access-key -access-keychain /path/to/file.extension
 ```
 
 The Wave server uses the keychain file to authenticate requests from apps and scripts. By default, it automatically loads the `.wave-keychain` file if present in the current working directory.
