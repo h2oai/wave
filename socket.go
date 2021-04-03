@@ -46,9 +46,9 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 var (
-	defaultUser = &User{
-		name:         "default-user",
-		subject:      "no-subject",
+	anonymous = &User{
+		subject:      "anonymous",
+		name:         "anonymous",
 		accessToken:  "",
 		refreshToken: "",
 	}
@@ -57,16 +57,16 @@ var (
 func identifyUser(r *http.Request, sessions *OIDCSessions) *User {
 	cookie, err := r.Cookie(oidcSessionKey)
 	if err != nil {
-		return defaultUser
+		return anonymous
 	}
 	sessionID := cookie.Value
 	session, ok := sessions.get(sessionID)
 	if !ok {
-		return defaultUser
+		return anonymous
 	}
 	return &User{
-		name:         session.username,
 		subject:      session.subject,
+		name:         session.username,
 		accessToken:  session.token.AccessToken,
 		refreshToken: session.token.RefreshToken,
 	}
