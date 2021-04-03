@@ -29,37 +29,37 @@ import (
 
 const oidcSessionKey = "oidcsession"
 
-// OIDCSessions represents active OIDC sessions
-type OIDCSessions struct {
+// Auth represents active OIDC sessions
+type Auth struct {
 	sync.RWMutex
-	sessions map[string]OIDCSession
+	sessions map[string]Session
 }
 
-func newOIDCSessions() *OIDCSessions {
-	return &OIDCSessions{sessions: make(map[string]OIDCSession)}
+func newAuth() *Auth {
+	return &Auth{sessions: make(map[string]Session)}
 }
 
-func (s *OIDCSessions) get(key string) (OIDCSession, bool) {
+func (s *Auth) get(key string) (Session, bool) {
 	s.RLock()
 	defer s.RUnlock()
 	session, ok := s.sessions[key]
 	return session, ok
 }
 
-func (s *OIDCSessions) set(key string, session OIDCSession) {
+func (s *Auth) set(key string, session Session) {
 	s.Lock()
 	defer s.Unlock()
 	s.sessions[key] = session
 }
 
-func (s *OIDCSessions) remove(key string) {
+func (s *Auth) remove(key string) {
 	s.Lock()
 	defer s.Unlock()
 	delete(s.sessions, key)
 }
 
-// OIDCSession represents an OIDC session
-type OIDCSession struct {
+// Session represents an OIDC session
+type Session struct {
 	state      string
 	nonce      string
 	subject    string
@@ -79,11 +79,11 @@ func generateRandomKey(byteCount int) (string, error) {
 
 // OIDCInitHandler handles auth requests
 type OIDCInitHandler struct {
-	sessions     *OIDCSessions
+	sessions     *Auth
 	oauth2Config *oauth2.Config
 }
 
-func newOIDCInitHandler(sessions *OIDCSessions, oauth2Config *oauth2.Config) http.Handler {
+func newOIDCInitHandler(sessions *Auth, oauth2Config *oauth2.Config) http.Handler {
 	return &OIDCInitHandler{
 		sessions:     sessions,
 		oauth2Config: oauth2Config,
@@ -115,7 +115,7 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Session ID stored in cookie.
 	sessionID := uuid.New().String()
 
-	h.sessions.set(sessionID, OIDCSession{state: state, nonce: nonce, successURL: successURL})
+	h.sessions.set(sessionID, Session{state: state, nonce: nonce, successURL: successURL})
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 	cookie := http.Cookie{Name: oidcSessionKey, Value: sessionID, Path: "/", Expires: expiration}
 	http.SetCookie(w, &cookie)
@@ -124,12 +124,12 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // OAuth2Handler handles OAuth2 requests
 type OAuth2Handler struct {
-	sessions     *OIDCSessions
+	sessions     *Auth
 	oauth2Config *oauth2.Config
 	providerURL  string
 }
 
-func newOAuth2Handler(sessions *OIDCSessions, oauth2Config *oauth2.Config, providerURL string) http.Handler {
+func newOAuth2Handler(sessions *Auth, oauth2Config *oauth2.Config, providerURL string) http.Handler {
 	return &OAuth2Handler{
 		sessions:     sessions,
 		oauth2Config: oauth2Config,
@@ -232,11 +232,11 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // OIDCLogoutHandler handles logout requests
 type OIDCLogoutHandler struct {
-	sessions      *OIDCSessions
+	sessions      *Auth
 	endSessionURL string
 }
 
-func newOIDCLogoutHandler(sessions *OIDCSessions, endSessionURL string) http.Handler {
+func newOIDCLogoutHandler(sessions *Auth, endSessionURL string) http.Handler {
 	return &OIDCLogoutHandler{sessions, endSessionURL}
 }
 

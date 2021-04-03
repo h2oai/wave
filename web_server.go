@@ -41,7 +41,7 @@ func newWebServer(
 	broker *Broker,
 	keychain *Keychain,
 	maxRequestSize int64,
-	sessions *OIDCSessions,
+	sessions *Auth,
 	oauth2Config *oauth2.Config,
 	skipLogin bool,
 	www string,
@@ -166,7 +166,7 @@ func redirectToAuth(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, u.String(), http.StatusFound)
 }
 
-func checkSession(oauth2Config *oauth2.Config, sessions *OIDCSessions, skipLogin bool, h http.Handler) http.Handler {
+func checkSession(oauth2Config *oauth2.Config, sessions *Auth, skipLogin bool, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if len(path.Ext(r.URL.Path)) > 0 {
 			h.ServeHTTP(w, r)

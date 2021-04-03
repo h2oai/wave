@@ -62,7 +62,7 @@ func Run(conf ServerConf) {
 	}
 
 	var oauth2Config *oauth2.Config
-	sessions := newOIDCSessions()
+	sessions := newAuth()
 
 	if conf.OIDCClientID != "" && conf.OIDCClientSecret != "" && conf.OIDCProviderURL != "" && conf.OIDCRedirectURL != "" {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -86,14 +86,13 @@ func Run(conf ServerConf) {
 		http.Handle("/_logout", newOIDCLogoutHandler(sessions, conf.OIDCEndSessionURL))
 	}
 
-	// XXX wrap special _ routes in a separate handler
-	http.Handle("/_s", newSocketServer(broker, sessions, conf.Editable))
+	http.Handle("/_s", newSocketServer(broker, sessions, conf.Editable)) // XXX secure (ui)
 	fileDir := filepath.Join(conf.DataDir, "f")
-	http.Handle("/_f", newFileStore(fileDir))                                         // XXX secure
-	http.Handle("/_f/", newFileServer(fileDir))                                       // XXX secure
-	http.Handle("/_p", newProxy(conf.MaxProxyRequestSize, conf.MaxProxyResponseSize)) // XXX secure
-	http.Handle("/_c/", newCache("/_c/", conf.MaxCacheRequestSize))                   // XXX secure
+	http.Handle("/_f", newFileStore(fileDir))                       // XXX secure (ui, api)
+	http.Handle("/_f/", newFileServer(fileDir))                     // XXX secure (ui, api)
+	http.Handle("/_c/", newCache("/_c/", conf.MaxCacheRequestSize)) // XXX secure (api)
 	// TODO enable when IDE is ready for release
+	// http.Handle("/_p", newProxy(conf.MaxProxyRequestSize, conf.MaxProxyResponseSize)) // XXX secure (ui)
 	// http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
 	http.Handle("/", newWebServer(site, broker, conf.Keychain, conf.MaxRequestSize, sessions, oauth2Config, conf.OIDCSkipLogin, conf.WebDir))
 

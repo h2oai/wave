@@ -21,11 +21,11 @@ import (
 // SocketServer represents a websocket server.
 type SocketServer struct {
 	broker   *Broker
-	sessions *OIDCSessions
+	sessions *Auth
 	editable bool
 }
 
-func newSocketServer(broker *Broker, sessions *OIDCSessions, editable bool) *SocketServer {
+func newSocketServer(broker *Broker, sessions *Auth, editable bool) *SocketServer {
 	return &SocketServer{
 		broker,
 		sessions,
@@ -54,7 +54,7 @@ var (
 	}
 )
 
-func identifyUser(r *http.Request, sessions *OIDCSessions) *User {
+func identifyUser(r *http.Request, sessions *Auth) *User {
 	cookie, err := r.Cookie(oidcSessionKey)
 	if err != nil {
 		return anonymous
