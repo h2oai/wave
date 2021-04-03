@@ -62,6 +62,9 @@ func main() {
 		maxCacheRequestSize  string
 		maxProxyRequestSize  string
 		maxProxyResponseSize string
+		accessKeyID          string
+		accessKeySecret      string
+		accessKeyFile        string
 		keygen               bool
 	)
 
@@ -69,10 +72,10 @@ func main() {
 	flag.StringVar(&conf.Listen, "listen", ":10101", "listen on this address")
 	flag.StringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from")
 	flag.StringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
-	flag.StringVar(&conf.AccessKeyID, "access-key-id", "access_key_id", "default access key ID")
-	flag.StringVar(&conf.AccessKeySecret, "access-key-secret", "access_key_secret", "default access key secret")
-	flag.StringVar(&conf.AccessKeyFile, "access-key-file", ".wave-keys", "path to file containing access keys")
-	flag.BoolVar(&keygen, "keygen", false, "generate a new access key secret and hash pair")
+	flag.StringVar(&accessKeyID, "access-key-id", "access_key_id", "default app access key ID")
+	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default app access key secret")
+	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing app access keys")
+	flag.BoolVar(&keygen, "keygen", false, "generate a new app access key secret and hash pair")
 	flag.StringVar(&conf.Init, "init", "", "initialize site content from AOF log")
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
@@ -114,28 +117,37 @@ func main() {
 	flag.Parse()
 
 	if version {
-		fmt.Printf("Wave Development Server\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
+		fmt.Printf("Wave Daemon\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
 		return
 	}
 
+	keychain, err := wave.LoadKeychain(accessKeyFile)
+	if err != nil {
+		panic(fmt.Errorf("failed loading keychain: %v", err))
+	}
+
 	if keygen {
-		keys, err := wave.LoadAccessControlFile(conf.AccessKeyFile)
-		if err != nil {
-			panic(fmt.Errorf("failed loading access control file: %v", err))
-		}
 		id, secret, hash, err := wave.GenerateAccessKey()
 		if err != nil {
 			panic(fmt.Errorf("failed generating access key: %v", err))
 		}
-		keys[id] = hash
-		if wave.DumpAccessControlFile(keys, conf.AccessKeyFile); err != nil {
-			panic(fmt.Errorf("failed writing access control file: %v", err))
+		keychain[id] = hash
+		if wave.DumpKeychain(keychain, accessKeyFile); err != nil {
+			panic(fmt.Errorf("failed writing keychain: %v", err))
 		}
-		fmt.Printf(keygenTemplate, id, secret, conf.AccessKeyFile)
+		fmt.Printf(keygenTemplate, id, secret, accessKeyFile)
 		return
 	}
 
-	var err error
+	if len(keychain) == 0 {
+		hash, err := wave.HashSecret(accessKeySecret)
+		if err != nil {
+			panic(err)
+		}
+		keychain[accessKeyID] = hash
+	}
+
+	conf.Keychain = keychain
 
 	conf.MaxRequestSize, err = parseReadSize("max request size", maxRequestSize)
 	if err != nil {

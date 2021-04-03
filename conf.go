@@ -21,9 +21,7 @@ type ServerConf struct {
 	Listen               string
 	WebDir               string
 	DataDir              string
-	AccessKeyID          string
-	AccessKeySecret      string
-	AccessKeyFile        string
+	Keychain             map[string][]byte
 	Init                 string
 	Compact              string
 	CertFile             string

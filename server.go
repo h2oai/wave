@@ -27,7 +27,6 @@ import (
 	"time"
 
 	"github.com/coreos/go-oidc"
-	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 )
 
@@ -50,15 +49,6 @@ func echo(m Log) {
 
 // Run runs the HTTP server.
 func Run(conf ServerConf) {
-	accessKeyHash, err := bcrypt.GenerateFromPassword([]byte(conf.AccessKeySecret), bcrypt.DefaultCost)
-	if err != nil {
-		echo(Log{"t": "users_init", "error": err.Error()})
-		return
-	}
-
-	// FIXME RBAC
-	users := map[string][]byte{conf.AccessKeyID: accessKeyHash}
-
 	// FIXME SESSIONS
 	sessions := newOIDCSessions()
 
@@ -112,7 +102,7 @@ func Run(conf ServerConf) {
 	http.Handle("/_c/", newCache("/_c/", conf.MaxCacheRequestSize))                   // XXX secure
 	// TODO enable when IDE is ready for release
 	// http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
-	http.Handle("/", newWebServer(site, broker, users, conf.MaxRequestSize, sessions, oauth2Config, conf.OIDCSkipLogin, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, conf.Keychain, conf.MaxRequestSize, sessions, oauth2Config, conf.OIDCSkipLogin, conf.WebDir))
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)

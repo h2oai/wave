@@ -29,7 +29,7 @@ type WebServer struct {
 	site           *Site
 	broker         *Broker
 	fs             http.Handler
-	users          map[string][]byte
+	keychain       map[string][]byte
 	maxRequestSize int64
 }
 
@@ -40,7 +40,7 @@ const (
 func newWebServer(
 	site *Site,
 	broker *Broker,
-	users map[string][]byte,
+	keychain map[string][]byte,
 	maxRequestSize int64,
 	sessions *OIDCSessions,
 	oauth2Config *oauth2.Config,
@@ -51,21 +51,21 @@ func newWebServer(
 	if oauth2Config != nil {
 		fs = checkSession(oauth2Config, sessions, skipLogin, fs)
 	}
-	return &WebServer{site, broker, fs, users, maxRequestSize}
+	return &WebServer{site, broker, fs, keychain, maxRequestSize}
 }
 
-func (s *WebServer) authenticate(username, password string) bool {
-	hash, ok := s.users[username]
+func (s *WebServer) authenticate(id, secret string) bool {
+	hash, ok := s.keychain[id]
 	if !ok {
 		return false
 	}
-	err := bcrypt.CompareHashAndPassword(hash, []byte(password))
+	err := bcrypt.CompareHashAndPassword(hash, []byte(secret))
 	return err == nil
 }
 
 func (s *WebServer) guard(w http.ResponseWriter, r *http.Request) bool {
-	username, password, ok := r.BasicAuth()
-	if !ok || !s.authenticate(username, password) {
+	id, secret, ok := r.BasicAuth()
+	if !ok || !s.authenticate(id, secret) {
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return false
 	}

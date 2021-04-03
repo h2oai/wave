@@ -25,14 +25,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type Accessor struct {
-	keys map[string][]byte
-}
-
-func newAccessor() *Accessor {
-	return &Accessor{make(map[string][]byte)}
-}
-
 var (
 	idChars     = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	secretChars = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
@@ -65,10 +57,10 @@ func generateSecret(chars []byte, n int) (string, error) {
 	}
 }
 
-func hashSecret(secret string) ([]byte, error) {
+func HashSecret(secret string) ([]byte, error) {
 	h, err := bcrypt.GenerateFromPassword([]byte(secret), bcrypt.DefaultCost)
 	if err != nil {
-		return nil, fmt.Errorf("failed hashing secret")
+		return nil, fmt.Errorf("failed hashing secret: %v", err)
 	}
 	return h, nil
 }
@@ -80,13 +72,13 @@ func GenerateAccessKey() (id, secret string, hash []byte, err error) {
 	if secret, err = generateSecret(secretChars, 40); err != nil {
 		return
 	}
-	hash, err = hashSecret(secret)
+	hash, err = HashSecret(secret)
 	return
 }
 
-var invalidAccessControlLine = errors.New("invalid line found in access control file")
+var invalidKeychainEntry = errors.New("invalid entry found in keychain")
 
-func LoadAccessControlFile(name string) (map[string][]byte, error) {
+func LoadKeychain(name string) (map[string][]byte, error) {
 	keys := make(map[string][]byte)
 
 	if _, err := os.Stat(name); os.IsNotExist(err) {
@@ -105,18 +97,24 @@ func LoadAccessControlFile(name string) (map[string][]byte, error) {
 	}
 
 	for _, line := range bytes.Split(all, newline) {
+		if len(line) == 0 {
+			continue
+		}
 		tokens := bytes.SplitN(line, colon, 2)
 		if len(tokens) != 2 {
-			return nil, invalidByteSizeError
+			return nil, invalidKeychainEntry
 		}
 		id, hash := tokens[0], tokens[1]
+		if len(id) == 0 || len(hash) == 0 {
+			return nil, invalidKeychainEntry
+		}
 		keys[string(id)] = hash
 	}
 
 	return keys, nil
 }
 
-func DumpAccessControlFile(keys map[string][]byte, name string) error {
+func DumpKeychain(keys map[string][]byte, name string) error {
 	var sb bytes.Buffer
 	for id, hash := range keys {
 		sb.WriteString(id)
