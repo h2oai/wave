@@ -48,8 +48,8 @@ var (
 
 // User represents a user.
 type User struct {
-	name         string // username, or "default-user"
-	subject      string // oidc subject identifier
+	subject      string // oidc subject identifier or "anonymous" (unique)
+	name         string // oidc preferred_username or "anonymous" (not unique)
 	accessToken  string // oidc access token
 	refreshToken string // oidc refresh token
 }
@@ -109,7 +109,7 @@ func (c *Client) listen() {
 				case unicastMode:
 					c.subscribe("/" + c.id) // client-level
 				case multicastMode:
-					c.subscribe("/" + c.user.name) // user-level
+					c.subscribe("/" + c.user.subject) // user-level
 				}
 
 				boot := emptyJSON

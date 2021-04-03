@@ -33,7 +33,7 @@ import uvicorn
 import httpx
 from starlette.types import Scope, Receive, Send
 from starlette.applications import Router
-from starlette.routing import Route, compile_path
+from starlette.routing import Route
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 from starlette.background import BackgroundTask
@@ -85,13 +85,12 @@ class Query:
             self,
             site: AsyncSite,
             mode: str,
-            username: str,
+            auth: Auth,
             client_id: str,
             route: str,
             app_state: Expando,
             user_state: Expando,
             client_state: Expando,
-            auth: Auth,
             args: Expando,
             events: Expando,
     ):
@@ -99,7 +98,7 @@ class Query:
         """The server mode. One of `'unicast'` (default),`'multicast'` or `'broadcast'`."""
         self.site = site
         """A reference to the current site."""
-        self.page = site[f'/{client_id}' if mode == UNICAST else f'/{username}' if mode == MULTICAST else route]
+        self.page = site[f'/{client_id}' if mode == UNICAST else f'/{auth.subject}' if mode == MULTICAST else route]
         """A reference to the current page."""
         self.app = app_state
         """A `h2o_wave.core.Expando` instance to hold application-specific state."""
@@ -111,12 +110,12 @@ class Query:
         """A `h2o_wave.core.Expando` instance containing arguments from the active request."""
         self.events = events
         """A `h2o_wave.core.Expando` instance containing events from the active request."""
-        self.username = username
-        """The username of the user who initiated the active request."""
+        self.username = auth.username
+        """The username of the user who initiated the active request. (DEPRECATED: Use q.auth.username instead)"""
         self.route = route
         """The route served by the server."""
         self.auth = auth
-        """The username and subject ID of the authenticated user."""
+        """The authentication / authorization details of the user who initiated this query."""
 
     async def sleep(self, delay: float, result=None) -> Any:
         """
@@ -263,13 +262,12 @@ class _App:
         q = Q(
             site=self._site,
             mode=self._mode,
-            username=username,
+            auth=Auth(username, subject, access_token, refresh_token),
             client_id=client_id,
             route=self._route,
             app_state=app_state,
             user_state=_session_for(user_state, username),
             client_state=_session_for(client_state, client_id),
-            auth=Auth(username, subject, access_token, refresh_token),
             args=Expando(args_state),
             events=Expando(events_state),
         )
