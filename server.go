@@ -15,7 +15,6 @@
 package wave
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -24,10 +23,6 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
-	"time"
-
-	"github.com/coreos/go-oidc"
-	"golang.org/x/oauth2"
 )
 
 const logo = `
@@ -61,32 +56,19 @@ func Run(conf ServerConf) {
 		http.Handle("/_d/site", newDebugHandler(broker))
 	}
 
-	var oauth2Config *oauth2.Config
-	sessions := newAuth()
+	var auth *Auth
 
-	if conf.OIDCClientID != "" && conf.OIDCClientSecret != "" && conf.OIDCProviderURL != "" && conf.OIDCRedirectURL != "" {
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		provider, err := oidc.NewProvider(ctx, conf.OIDCProviderURL)
-		if err != nil {
+	if conf.Auth != nil {
+		var err error
+		if auth, err = newAuth(conf.Auth); err != nil {
 			panic(fmt.Errorf("failed connecting to OIDC provider: %v", err))
 		}
-
-		oauth2Config = &oauth2.Config{
-			ClientID:     conf.OIDCClientID,
-			ClientSecret: conf.OIDCClientSecret,
-			Endpoint:     provider.Endpoint(),
-			RedirectURL:  conf.OIDCRedirectURL,
-			//TODO: make configurable
-			Scopes: []string{oidc.ScopeOpenID},
-		}
-
-		http.Handle("/_auth/init", newOIDCInitHandler(sessions, oauth2Config))
-		http.Handle("/_auth/callback", newOAuth2Handler(sessions, oauth2Config, conf.OIDCProviderURL))
-		http.Handle("/_logout", newOIDCLogoutHandler(sessions, conf.OIDCEndSessionURL))
+		http.Handle("/_auth/init", newOIDCInitHandler(auth))
+		http.Handle("/_auth/callback", newOAuth2Handler(auth))
+		http.Handle("/_logout", newOIDCLogoutHandler(auth))
 	}
 
-	http.Handle("/_s", newSocketServer(broker, sessions, conf.Editable)) // XXX secure (ui)
+	http.Handle("/_s", newSocketServer(broker, auth, conf.Editable)) // XXX secure (ui)
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir))                       // XXX secure (ui, api)
 	http.Handle("/_f/", newFileServer(fileDir))                     // XXX secure (ui, api)
@@ -94,7 +76,7 @@ func Run(conf ServerConf) {
 	// TODO enable when IDE is ready for release
 	// http.Handle("/_p", newProxy(conf.MaxProxyRequestSize, conf.MaxProxyResponseSize)) // XXX secure (ui)
 	// http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure
-	http.Handle("/", newWebServer(site, broker, conf.Keychain, conf.MaxRequestSize, sessions, oauth2Config, conf.OIDCSkipLogin, conf.WebDir))
+	http.Handle("/", newWebServer(site, broker, auth, conf.Keychain, conf.MaxRequestSize, conf.WebDir))
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println("#", line)

@@ -21,14 +21,14 @@ import (
 // SocketServer represents a websocket server.
 type SocketServer struct {
 	broker   *Broker
-	sessions *Auth
+	auth     *Auth
 	editable bool
 }
 
-func newSocketServer(broker *Broker, sessions *Auth, editable bool) *SocketServer {
+func newSocketServer(broker *Broker, auth *Auth, editable bool) *SocketServer {
 	return &SocketServer{
 		broker,
-		sessions,
+		auth,
 		editable,
 	}
 }
@@ -39,7 +39,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		echo(Log{"t": "socket_upgrade", "err": err.Error()})
 		return
 	}
-	user := identifyUser(r, s.sessions)
+	user := identifyUser(r, s.auth)
 	client := newClient(getRemoteAddr(r), user, s.broker, conn, s.editable)
 	go client.flush()
 	go client.listen()
@@ -54,13 +54,16 @@ var (
 	}
 )
 
-func identifyUser(r *http.Request, sessions *Auth) *User {
+func identifyUser(r *http.Request, auth *Auth) *User {
+	if auth == nil {
+		return anonymous
+	}
 	cookie, err := r.Cookie(oidcSessionKey)
 	if err != nil {
 		return anonymous
 	}
 	sessionID := cookie.Value
-	session, ok := sessions.get(sessionID)
+	session, ok := auth.get(sessionID)
 	if !ok {
 		return anonymous
 	}

@@ -32,10 +32,14 @@ type ServerConf struct {
 	MaxProxyRequestSize  int64
 	MaxProxyResponseSize int64
 	Debug                bool
-	OIDCClientID         string
-	OIDCClientSecret     string
-	OIDCProviderURL      string
-	OIDCRedirectURL      string
-	OIDCEndSessionURL    string
-	OIDCSkipLogin        bool
+	Auth                 *AuthConf
+}
+
+type AuthConf struct {
+	ClientID      string
+	ClientSecret  string
+	ProviderURL   string
+	RedirectURL   string
+	EndSessionURL string
+	SkipLogin     bool
 }

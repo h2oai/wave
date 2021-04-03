@@ -58,6 +58,7 @@ func main() {
 
 	var (
 		conf                 wave.ServerConf
+		auth                 wave.AuthConf
 		version              bool
 		maxRequestSize       string
 		maxCacheRequestSize  string
@@ -101,23 +102,23 @@ func main() {
 		oidcSkipLogin     = "oidc-skip-login"
 	)
 
-	conf.OIDCClientID = os.Getenv(toEnvVar(oidcClientID))
-	flag.StringVar(&conf.OIDCClientID, oidcClientID, conf.OIDCClientID, "OIDC client ID")
+	auth.ClientID = os.Getenv(toEnvVar(oidcClientID))
+	flag.StringVar(&auth.ClientID, oidcClientID, auth.ClientID, "OIDC client ID")
 
-	conf.OIDCClientSecret = os.Getenv(toEnvVar(oidcClientSecret))
-	flag.StringVar(&conf.OIDCClientSecret, oidcClientSecret, conf.OIDCClientSecret, "OIDC client secret")
+	auth.ClientSecret = os.Getenv(toEnvVar(oidcClientSecret))
+	flag.StringVar(&auth.ClientSecret, oidcClientSecret, auth.ClientSecret, "OIDC client secret")
 
-	conf.OIDCProviderURL = os.Getenv(toEnvVar(oidcProviderURL))
-	flag.StringVar(&conf.OIDCProviderURL, oidcProviderURL, conf.OIDCProviderURL, "OIDC provider URL")
+	auth.ProviderURL = os.Getenv(toEnvVar(oidcProviderURL))
+	flag.StringVar(&auth.ProviderURL, oidcProviderURL, auth.ProviderURL, "OIDC provider URL")
 
-	conf.OIDCRedirectURL = os.Getenv(toEnvVar(oidcRedirectURL))
-	flag.StringVar(&conf.OIDCRedirectURL, oidcRedirectURL, conf.OIDCRedirectURL, "OIDC redirect URL")
+	auth.RedirectURL = os.Getenv(toEnvVar(oidcRedirectURL))
+	flag.StringVar(&auth.RedirectURL, oidcRedirectURL, auth.RedirectURL, "OIDC redirect URL")
 
-	conf.OIDCEndSessionURL = os.Getenv(toEnvVar(oidcEndSessionURL))
-	flag.StringVar(&conf.OIDCEndSessionURL, oidcEndSessionURL, conf.OIDCEndSessionURL, "OIDC end session URL")
+	auth.EndSessionURL = os.Getenv(toEnvVar(oidcEndSessionURL))
+	flag.StringVar(&auth.EndSessionURL, oidcEndSessionURL, auth.EndSessionURL, "OIDC end session URL")
 
-	conf.OIDCSkipLogin = getEnvBool(toEnvVar(oidcSkipLogin))
-	flag.BoolVar(&conf.OIDCSkipLogin, oidcSkipLogin, conf.OIDCSkipLogin, "don't show the login form during OIDC authorization")
+	auth.SkipLogin = getEnvBool(toEnvVar(oidcSkipLogin))
+	flag.BoolVar(&auth.SkipLogin, oidcSkipLogin, auth.SkipLogin, "don't show the login form during OIDC authorization")
 
 	flag.Parse()
 
@@ -182,8 +183,6 @@ func main() {
 		keychain.Add(accessKeyID, hash)
 	}
 
-	conf.Keychain = keychain
-
 	conf.MaxRequestSize, err = parseReadSize("max request size", maxRequestSize)
 	if err != nil {
 		panic(err)
@@ -209,6 +208,12 @@ func main() {
 
 	conf.Version = Version
 	conf.BuildDate = BuildDate
+
+	conf.Keychain = keychain
+
+	if auth.ClientID != "" && auth.ClientSecret != "" && auth.ProviderURL != "" && auth.RedirectURL != "" {
+		conf.Auth = &auth
+	}
 
 	wave.Run(conf)
 }

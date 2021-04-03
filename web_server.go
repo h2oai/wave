@@ -19,8 +19,6 @@ import (
 	"net/http"
 	"net/url"
 	"path"
-
-	"golang.org/x/oauth2"
 )
 
 // WebServer represents a web server (d'oh).
@@ -39,16 +37,14 @@ const (
 func newWebServer(
 	site *Site,
 	broker *Broker,
+	auth *Auth,
 	keychain *Keychain,
 	maxRequestSize int64,
-	sessions *Auth,
-	oauth2Config *oauth2.Config,
-	skipLogin bool,
 	www string,
 ) *WebServer {
 	fs := fallback("/", http.FileServer(http.Dir(www)))
-	if oauth2Config != nil {
-		fs = checkSession(oauth2Config, sessions, skipLogin, fs)
+	if auth != nil {
+		fs = checkSession(auth, fs)
 	}
 	return &WebServer{site, broker, fs, keychain, maxRequestSize}
 }
@@ -166,7 +162,7 @@ func redirectToAuth(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, u.String(), http.StatusFound)
 }
 
-func checkSession(oauth2Config *oauth2.Config, sessions *Auth, skipLogin bool, h http.Handler) http.Handler {
+func checkSession(auth *Auth, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if len(path.Ext(r.URL.Path)) > 0 {
 			h.ServeHTTP(w, r)
@@ -174,7 +170,7 @@ func checkSession(oauth2Config *oauth2.Config, sessions *Auth, skipLogin bool, h
 		}
 
 		if r.URL.Path == "/_login" {
-			if skipLogin {
+			if auth.conf.SkipLogin {
 				redirectToAuth(w, r)
 				return
 			}
@@ -190,14 +186,14 @@ func checkSession(oauth2Config *oauth2.Config, sessions *Auth, skipLogin bool, h
 		}
 
 		sessionID := cookie.Value
-		session, ok := sessions.get(sessionID)
+		session, ok := auth.get(sessionID)
 		if !ok {
 			echo(Log{"t": "oauth2_session_missing"})
 			redirectToLogin(w, r)
 			return
 		}
 
-		token, err := oauth2Config.TokenSource(r.Context(), session.token).Token()
+		token, err := auth.oauth.TokenSource(r.Context(), session.token).Token()
 		if err != nil {
 			echo(Log{"t": "oauth2_token_refresh_fail", "error": err.Error()})
 			redirectToLogin(w, r)
@@ -206,7 +202,7 @@ func checkSession(oauth2Config *oauth2.Config, sessions *Auth, skipLogin bool, h
 
 		if session.token != token {
 			session.token = token
-			sessions.set(sessionID, session)
+			auth.set(sessionID, session)
 		}
 
 		h.ServeHTTP(w, r)

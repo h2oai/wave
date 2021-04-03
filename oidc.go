@@ -15,6 +15,7 @@
 package wave
 
 import (
+	"context"
 	"crypto/rand"
 	"fmt"
 	"net/http"
@@ -29,14 +30,42 @@ import (
 
 const oidcSessionKey = "oidcsession"
 
+func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	provider, err := oidc.NewProvider(ctx, conf.ProviderURL)
+	if err != nil {
+		return nil, err
+	}
+	return &oauth2.Config{
+		ClientID:     conf.ClientID,
+		ClientSecret: conf.ClientSecret,
+		Endpoint:     provider.Endpoint(),
+		RedirectURL:  conf.RedirectURL,
+		//TODO: make configurable
+		//TODO review: does this return preferred_username if Profile is not included in scope?
+		Scopes: []string{oidc.ScopeOpenID},
+	}, nil
+}
+
 // Auth represents active OIDC sessions
 type Auth struct {
 	sync.RWMutex
+	conf     *AuthConf
+	oauth    *oauth2.Config
 	sessions map[string]Session
 }
 
-func newAuth() *Auth {
-	return &Auth{sessions: make(map[string]Session)}
+func newAuth(conf *AuthConf) (*Auth, error) {
+	oauth, err := connectToProvider(conf)
+	if err != nil {
+		return nil, err
+	}
+	return &Auth{
+		conf:     conf,
+		oauth:    oauth,
+		sessions: make(map[string]Session),
+	}, nil
 }
 
 func (s *Auth) get(key string) (Session, bool) {
@@ -79,14 +108,12 @@ func generateRandomKey(byteCount int) (string, error) {
 
 // OIDCInitHandler handles auth requests
 type OIDCInitHandler struct {
-	sessions     *Auth
-	oauth2Config *oauth2.Config
+	auth *Auth
 }
 
-func newOIDCInitHandler(sessions *Auth, oauth2Config *oauth2.Config) http.Handler {
+func newOIDCInitHandler(auth *Auth) http.Handler {
 	return &OIDCInitHandler{
-		sessions:     sessions,
-		oauth2Config: oauth2Config,
+		auth: auth,
 	}
 }
 
@@ -115,25 +142,21 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Session ID stored in cookie.
 	sessionID := uuid.New().String()
 
-	h.sessions.set(sessionID, Session{state: state, nonce: nonce, successURL: successURL})
+	h.auth.set(sessionID, Session{state: state, nonce: nonce, successURL: successURL})
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 	cookie := http.Cookie{Name: oidcSessionKey, Value: sessionID, Path: "/", Expires: expiration}
 	http.SetCookie(w, &cookie)
-	http.Redirect(w, r, h.oauth2Config.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
+	http.Redirect(w, r, h.auth.oauth.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
 }
 
 // OAuth2Handler handles OAuth2 requests
 type OAuth2Handler struct {
-	sessions     *Auth
-	oauth2Config *oauth2.Config
-	providerURL  string
+	auth *Auth
 }
 
-func newOAuth2Handler(sessions *Auth, oauth2Config *oauth2.Config, providerURL string) http.Handler {
+func newOAuth2Handler(auth *Auth) http.Handler {
 	return &OAuth2Handler{
-		sessions:     sessions,
-		oauth2Config: oauth2Config,
-		providerURL:  providerURL,
+		auth: auth,
 	}
 }
 
@@ -147,7 +170,7 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sessionID := cookie.Value
-	session, ok := h.sessions.get(sessionID)
+	session, ok := h.auth.get(sessionID)
 	if !ok {
 		echo(Log{"t": "oauth2_session", "error": "not found"})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -170,14 +193,14 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	oAuth2Provider, err := oidc.NewProvider(r.Context(), h.providerURL)
+	oAuth2Provider, err := oidc.NewProvider(r.Context(), h.auth.conf.ProviderURL)
 	if err != nil {
 		echo(Log{"t": "oauth2_oidc_provider", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
-	oauth2Token, err := h.oauth2Config.Exchange(r.Context(), r.URL.Query().Get("code"))
+	oauth2Token, err := h.auth.oauth.Exchange(r.Context(), r.URL.Query().Get("code"))
 	if err != nil {
 		echo(Log{"t": "oauth2_exchange", "error": "failed exchanging code with provider"})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -191,7 +214,7 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	oidcVerifier := oAuth2Provider.Verifier(&oidc.Config{ClientID: h.oauth2Config.ClientID})
+	oidcVerifier := oAuth2Provider.Verifier(&oidc.Config{ClientID: h.auth.oauth.ClientID})
 	idToken, err := oidcVerifier.Verify(r.Context(), rawIDToken)
 	if err != nil {
 		echo(Log{"t": "oauth2_oidc_verifier", "error": "failed verifying id_token"})
@@ -225,38 +248,38 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	echo(Log{"t": "login", "subject": session.subject, "username": session.username})
 
-	h.sessions.set(sessionID, session)
+	h.auth.set(sessionID, session)
 
 	http.Redirect(w, r, session.successURL, http.StatusFound)
 }
 
 // OIDCLogoutHandler handles logout requests
 type OIDCLogoutHandler struct {
-	sessions      *Auth
-	endSessionURL string
+	auth *Auth
 }
 
-func newOIDCLogoutHandler(sessions *Auth, endSessionURL string) http.Handler {
-	return &OIDCLogoutHandler{sessions, endSessionURL}
+func newOIDCLogoutHandler(auth *Auth) http.Handler {
+	return &OIDCLogoutHandler{auth}
 }
 
 func (h *OIDCLogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Request) {
-	if h.endSessionURL == "" {
+	if h.auth.conf.EndSessionURL == "" {
 		http.Redirect(w, r, "/", http.StatusFound)
-	} else {
-		redirectURL, err := url.Parse(h.endSessionURL)
-		if err != nil {
-			echo(Log{"t": "logout_redirect_parse", "error": err.Error()})
-			return
-		}
-
-		query := redirectURL.Query()
-		// TODO (#291): some providers, for example OKTA, require id_token_hint
-		query.Set("post_logout_redirect_uri", r.Host)
-		redirectURL.RawQuery = query.Encode()
-
-		http.Redirect(w, r, redirectURL.String(), http.StatusFound)
+		return
 	}
+
+	redirectURL, err := url.Parse(h.auth.conf.EndSessionURL)
+	if err != nil {
+		echo(Log{"t": "logout_redirect_parse", "error": err.Error()})
+		return
+	}
+
+	query := redirectURL.Query()
+	// TODO (#291): some providers, for example OKTA, require id_token_hint
+	query.Set("post_logout_redirect_uri", r.Host)
+	redirectURL.RawQuery = query.Encode()
+
+	http.Redirect(w, r, redirectURL.String(), http.StatusFound)
 }
 
 func (h *OIDCLogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -275,13 +298,13 @@ func (h *OIDCLogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, cookie)
 
 	// Clean up session.
-	_, ok := h.sessions.get(sessionID)
+	_, ok := h.auth.get(sessionID)
 	if !ok {
 		echo(Log{"t": "logout_session", "error": "not found"})
 		h.logoutRedirect(w, r)
 		return
 	}
-	h.sessions.remove(sessionID)
+	h.auth.remove(sessionID)
 
 	h.logoutRedirect(w, r)
 }
