@@ -56,8 +56,17 @@ To make the Wave server use a specific keychain file, launch it like this:
 $ ./waved -access-keychain /path/to/file.extension
 ```
 
+To view a sorted list of all the keys in a keychain file, use `-list-access-keys`, like this:
 
 ```shell
+$ ./waved -list-access-keys
+ENHL90KR2HZD6X2ZIYLZ
+IDID44ZK0L7NG8NDD7IC
+N8CK63JT6OZIOX2SWALR
+PCBTV5TNQKOSAU2EBD6D
+VAKQY6QJN3RRQDU5LD0E
+```
+
 To remove a key from a keychain file, use `-remove-access-key`, like this:
 
 ```shell

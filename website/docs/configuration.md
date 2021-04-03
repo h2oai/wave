@@ -29,6 +29,8 @@ Usage of ./waved:
         allow users to edit web pages
   -init string
         initialize site content from AOF log
+  -list-access-keys
+        list all the access key IDs in the keychain
   -listen string
         listen on this address (default ":10101")
   -max-cache-request-size string

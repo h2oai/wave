@@ -22,6 +22,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -66,6 +67,7 @@ func main() {
 		accessKeySecret      string
 		accessKeyFile        string
 		createAccessKey      bool
+		listAccessKeys       bool
 		removeAccessKey      bool
 	)
 
@@ -77,6 +79,7 @@ func main() {
 	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default app access key secret")
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing app access keys")
 	flag.BoolVar(&createAccessKey, "create-access-key", false, "generate and add a new app access key ID and secret pair to the keychain")
+	flag.BoolVar(&listAccessKeys, "list-access-keys", false, "list all the access key IDs in the keychain")
 	flag.BoolVar(&removeAccessKey, "remove-access-key", false, "remove an app access key from the keychain")
 	flag.StringVar(&conf.Init, "init", "", "initialize site content from AOF log")
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
@@ -126,6 +129,20 @@ func main() {
 	keychain, err := wave.LoadKeychain(accessKeyFile)
 	if err != nil {
 		panic(fmt.Errorf("failed loading keychain: %v", err))
+	}
+
+	if listAccessKeys {
+		keys := make([]string, len(keychain))
+		i := 0
+		for k := range keychain {
+			keys[i] = k
+			i++
+		}
+		sort.Strings(keys)
+		for _, key := range keys {
+			fmt.Println(key)
+		}
+		return
 	}
 
 	if removeAccessKey {
