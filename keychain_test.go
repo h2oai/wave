@@ -54,3 +54,51 @@ func TestKeychainSerialization(t *testing.T) {
 		eq(bytes.Compare(v1, v2), 0)
 	}
 }
+
+func TestKeychainVerify(t *testing.T) {
+	_, ok, no := Assert(t)
+	kc, err := LoadKeychain(".wave-keychain")
+	no(err)
+
+	id, secret, hash, err := CreateAccessKey()
+	no(err)
+
+	kc.Add(id, hash)
+	ok(kc.Verify(id, secret))
+}
+
+func TestKeychainManagement(t *testing.T) {
+	eq, ok, no := Assert(t)
+
+	// drain
+	kc, err := LoadKeychain(".wave-keychain")
+	no(err)
+	for _, id := range kc.IDs() { // clear
+		kc.Remove(id)
+	}
+	err = kc.Save()
+	no(err)
+
+	// load empty
+	kc, err = LoadKeychain(".wave-keychain")
+	no(err)
+	eq(0, kc.Len())
+
+	// fill
+	for i := 0; i < 5; i++ {
+		id, _, hash, err := CreateAccessKey()
+		no(err)
+		kc.Add(id, hash)
+	}
+	eq(5, kc.Len())
+
+	// ids must match
+	ids := kc.IDs()
+	eq(5, len(ids))
+	for _, id := range ids {
+		ok(kc.Remove(id))
+	}
+
+	// should be empty now
+	eq(0, kc.Len())
+}
