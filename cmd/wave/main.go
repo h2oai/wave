@@ -77,7 +77,7 @@ func main() {
 	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default app access key secret")
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing app access keys")
 	flag.BoolVar(&createAccessKey, "create-access-key", false, "generate and add a new app access key ID and secret pair to the keychain")
-	flag.BoolVar(&removeAccessKey, "del-access-key", false, "remove an app access key from the keychain")
+	flag.BoolVar(&removeAccessKey, "remove-access-key", false, "remove an app access key from the keychain")
 	flag.StringVar(&conf.Init, "init", "", "initialize site content from AOF log")
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
@@ -126,6 +126,20 @@ func main() {
 	keychain, err := wave.LoadKeychain(accessKeyFile)
 	if err != nil {
 		panic(fmt.Errorf("failed loading keychain: %v", err))
+	}
+
+	if removeAccessKey {
+		if _, ok := keychain[accessKeyID]; !ok {
+			fmt.Printf("error: access key ID %s not found in keychain %s\n", accessKeyID, accessKeyFile)
+			os.Exit(1)
+		}
+
+		delete(keychain, accessKeyID)
+		if wave.DumpKeychain(keychain, accessKeyFile); err != nil {
+			panic(fmt.Errorf("failed writing keychain: %v", err))
+		}
+		fmt.Printf("Success! Key %s removed from keychain %s\n", accessKeyID, accessKeyFile)
+		return
 	}
 
 	if createAccessKey {

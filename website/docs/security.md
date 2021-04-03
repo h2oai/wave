@@ -56,10 +56,12 @@ To make the Wave server use a specific keychain file, launch it like this:
 $ ./waved -access-keychain /path/to/file.extension
 ```
 
-To remove a key from a keychain file, use `-del-access-key`, like this:
 
 ```shell
-$ ./waved -del-access-key -access-keychain some_file -access-key-id some_id
+To remove a key from a keychain file, use `-remove-access-key`, like this:
+
+```shell
+$ ./waved -remove-access-key -access-keychain some_file -access-key-id some_id
 ```
 
 ## HTTPS

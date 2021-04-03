@@ -25,8 +25,6 @@ Usage of ./waved:
         directory to store site data (default "./data")
   -debug
         enable debug mode (profiling, inspection, etc.)
-  -del-access-key
-        remove an app access key from the keychain
   -editable
         allow users to edit web pages
   -init string
@@ -53,6 +51,8 @@ Usage of ./waved:
         OIDC redirect URL
   -oidc-skip-login
         don't show the login form during OIDC authorization
+  -remove-access-key
+        remove an app access key from the keychain
   -tls-cert-file string
         path to certificate file (TLS only)
   -tls-key-file string
