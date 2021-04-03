@@ -46,7 +46,7 @@ You won't be able to see it again!
 H2O_WAVE_ACCESS_KEY_ID=%s
 H2O_WAVE_ACCESS_KEY_SECRET=%s
 
-Your key was also added to the access control file located at
+Your key was also added to the keychain located at
 %s
 
 `
@@ -65,7 +65,8 @@ func main() {
 		accessKeyID          string
 		accessKeySecret      string
 		accessKeyFile        string
-		keygen               bool
+		generateAccessKey    bool
+		removeAccessKey      bool
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
@@ -75,7 +76,8 @@ func main() {
 	flag.StringVar(&accessKeyID, "access-key-id", "access_key_id", "default app access key ID")
 	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default app access key secret")
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing app access keys")
-	flag.BoolVar(&keygen, "keygen", false, "generate a new app access key secret and hash pair")
+	flag.BoolVar(&generateAccessKey, "add-access-key", false, "generate and add a new app access key ID and secret pair to the keychain")
+	flag.BoolVar(&removeAccessKey, "del-access-key", false, "remove an app access key from the keychain")
 	flag.StringVar(&conf.Init, "init", "", "initialize site content from AOF log")
 	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
@@ -126,7 +128,7 @@ func main() {
 		panic(fmt.Errorf("failed loading keychain: %v", err))
 	}
 
-	if keygen {
+	if generateAccessKey {
 		id, secret, hash, err := wave.GenerateAccessKey()
 		if err != nil {
 			panic(fmt.Errorf("failed generating access key: %v", err))
