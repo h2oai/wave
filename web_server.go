@@ -141,8 +141,8 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 }
 
 func redirectToLogin(w http.ResponseWriter, r *http.Request) {
-	// X -> /_login?next=X
-	u, _ := url.Parse("/_login")
+	// X -> /_auth/login?next=X
+	u, _ := url.Parse("/_auth/login")
 	q := u.Query()
 	q.Set("next", r.URL.Path)
 	u.RawQuery = q.Encode()
@@ -150,8 +150,8 @@ func redirectToLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func redirectToAuth(w http.ResponseWriter, r *http.Request) {
-	// /_login -> /_auth/init
-	// /_login?next=X -> /_auth/init?next=X
+	// /_auth/login -> /_auth/init
+	// /_auth/login?next=X -> /_auth/init?next=X
 	u, _ := url.Parse("/_auth/init")
 	next := r.URL.Query().Get("next")
 	if next != "" {
@@ -169,7 +169,7 @@ func checkSession(auth *Auth, h http.Handler) http.Handler {
 			return
 		}
 
-		if r.URL.Path == "/_login" {
+		if r.URL.Path == "/_auth/login" {
 			if auth.conf.SkipLogin {
 				redirectToAuth(w, r)
 				return

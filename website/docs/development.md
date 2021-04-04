@@ -92,7 +92,7 @@ Next, create a *client* in Keycloak to represent our app:
 - Log in with username `admin`, password `admin`.
 - Under "Configure", click on "Clients"
 	- Click the "Create" button to create a new client.
-	- Set "Client ID" to `wave-app`.
+	- Set "Client ID" to `wave`.
 	- Click "Save".
 	- In the "Settings" tab, change "Access Type" to `confidential`.
 	- Set "Valid Redirect URIs" to `*`.
@@ -120,7 +120,7 @@ Finally, start the Wave daemon with the following `-oidc-` command line argument
 
 ```
 ./waved \
-    -oidc-client-id wave-app \
+    -oidc-client-id wave \
     -oidc-client-secret xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx \
     -oidc-redirect-url http://localhost:10101/_auth/callback \
     -oidc-provider-url http://localhost:8080/auth/realms/master \

@@ -22,7 +22,7 @@ const
     const
       routes = [
         {
-          path: '/_login',
+          path: '/_auth/login',
           exact: true,
           render: () => <Login />,
         },
