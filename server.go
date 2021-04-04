@@ -63,9 +63,9 @@ func Run(conf ServerConf) {
 		if auth, err = newAuth(conf.Auth); err != nil {
 			panic(fmt.Errorf("failed connecting to OIDC provider: %v", err))
 		}
-		http.Handle("/_auth/init", newOIDCInitHandler(auth))
-		http.Handle("/_auth/callback", newOAuth2Handler(auth))
-		http.Handle("/_logout", newOIDCLogoutHandler(auth))
+		http.Handle("/_auth/init", newLoginHandler(auth))
+		http.Handle("/_auth/callback", newAuthHandler(auth))
+		http.Handle("/_logout", newLogoutHandler(auth))
 	}
 
 	http.Handle("/_s", newSocketServer(broker, auth, conf.Editable)) // XXX secure (ui)

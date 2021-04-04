@@ -106,18 +106,16 @@ func generateRandomKey(byteCount int) (string, error) {
 	return fmt.Sprintf("%x", b), nil
 }
 
-// OIDCInitHandler handles auth requests
-type OIDCInitHandler struct {
+// LoginHandler handles auth requests
+type LoginHandler struct {
 	auth *Auth
 }
 
-func newOIDCInitHandler(auth *Auth) http.Handler {
-	return &OIDCInitHandler{
-		auth: auth,
-	}
+func newLoginHandler(auth *Auth) http.Handler {
+	return &LoginHandler{auth}
 }
 
-func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// `state` is to protect from CSRF (OAuth2 part).
 	state, err := generateRandomKey(4)
 	if err != nil {
@@ -149,18 +147,16 @@ func (h *OIDCInitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, h.auth.oauth.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
 }
 
-// OAuth2Handler handles OAuth2 requests
-type OAuth2Handler struct {
+// AuthHandler handles OAuth2 requests
+type AuthHandler struct {
 	auth *Auth
 }
 
-func newOAuth2Handler(auth *Auth) http.Handler {
-	return &OAuth2Handler{
-		auth: auth,
-	}
+func newAuthHandler(auth *Auth) http.Handler {
+	return &AuthHandler{auth}
 }
 
-func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Retrieve saved session.
 	cookie, err := r.Cookie(oidcSessionKey)
@@ -253,16 +249,16 @@ func (h *OAuth2Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, session.successURL, http.StatusFound)
 }
 
-// OIDCLogoutHandler handles logout requests
-type OIDCLogoutHandler struct {
+// LogoutHandler handles logout requests
+type LogoutHandler struct {
 	auth *Auth
 }
 
-func newOIDCLogoutHandler(auth *Auth) http.Handler {
-	return &OIDCLogoutHandler{auth}
+func newLogoutHandler(auth *Auth) http.Handler {
+	return &LogoutHandler{auth}
 }
 
-func (h *OIDCLogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Request) {
+func (h *LogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Request) {
 	if h.auth.conf.EndSessionURL == "" {
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
@@ -282,7 +278,7 @@ func (h *OIDCLogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Reques
 	http.Redirect(w, r, redirectURL.String(), http.StatusFound)
 }
 
-func (h *OIDCLogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Retrieve saved session.
 	cookie, err := r.Cookie(oidcSessionKey)
