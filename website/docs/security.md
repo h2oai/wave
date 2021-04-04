@@ -70,8 +70,15 @@ VAKQY6QJN3RRQDU5LD0E
 To remove a key from a keychain file, use `-remove-access-key`, like this:
 
 ```shell
-$ ./waved -remove-access-key -access-keychain some_file -access-key-id some_id
+$ ./waved -remove-access-key ENHL90KR2HZD6X2ZIYLZ
 ```
+
+To remove a key from a keychain file located elsewhere, do this:
+
+```shell
+$ ./waved -remove-access-key ENHL90KR2HZD6X2ZIYLZ -access-keychain /path/to/file.extension
+```
+
 
 ## HTTPS
 
