@@ -67,6 +67,7 @@ func HashSecret(secret string) ([]byte, error) {
 	return h, nil
 }
 
+// Keychain represents a collection of access keys that are allowed to use the API
 type Keychain struct {
 	Name string
 	keys map[string][]byte
@@ -87,7 +88,7 @@ func (kc *Keychain) Add(id string, hash []byte) {
 	kc.keys[id] = hash
 }
 
-func (kc *Keychain) Verify(id, secret string) bool {
+func (kc *Keychain) verify(id, secret string) bool {
 	hash, ok := kc.keys[id]
 	if !ok {
 		return false
@@ -170,9 +171,13 @@ func (kc *Keychain) Save() error {
 	return nil
 }
 
-func (kc *Keychain) Guard(w http.ResponseWriter, r *http.Request) bool {
+func (kc *Keychain) check(r *http.Request) bool {
 	id, secret, ok := r.BasicAuth()
-	if !ok || !kc.Verify(id, secret) {
+	return ok && kc.verify(id, secret)
+}
+
+func (kc *Keychain) guard(w http.ResponseWriter, r *http.Request) bool {
+	if !kc.check(r) {
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return false
 	}

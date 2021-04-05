@@ -52,14 +52,14 @@ func newWebServer(
 func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPatch: // writes
-		if !s.keychain.Guard(w, r) {
+		if !s.keychain.guard(w, r) {
 			return
 		}
 		s.patch(w, r)
 	case http.MethodGet: // reads
 		switch r.Header.Get("Content-Type") {
 		case contentTypeJSON: // data
-			if !s.keychain.Guard(w, r) {
+			if !s.keychain.guard(w, r) {
 				return
 			}
 			s.get(w, r)
@@ -67,7 +67,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			s.fs.ServeHTTP(w, r)
 		}
 	case http.MethodPost: // all other APIs
-		if !s.keychain.Guard(w, r) {
+		if !s.keychain.guard(w, r) {
 			return
 		}
 		s.post(w, r)

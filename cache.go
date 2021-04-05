@@ -46,7 +46,7 @@ func newCache(prefix string, keychain *Keychain, maxRequestSize int64) *Cache {
 }
 
 func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if !c.keychain.Guard(w, r) {
+	if !c.keychain.guard(w, r) {
 		return
 	}
 

@@ -64,7 +64,7 @@ func TestKeychainVerify(t *testing.T) {
 	no(err)
 
 	kc.Add(id, hash)
-	ok(kc.Verify(id, secret))
+	ok(kc.verify(id, secret))
 }
 
 func TestKeychainManagement(t *testing.T) {
