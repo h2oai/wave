@@ -53,8 +53,10 @@ Usage of ./waved:
         OIDC redirect URL
   -oidc-skip-login
         don't show the login form during OIDC authorization
-  -remove-access-key
-        remove an app access key from the keychain
+  -proxy
+        enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)
+  -remove-access-key string
+        remove the specified app access key ID from the keychain
   -tls-cert-file string
         path to certificate file (TLS only)
   -tls-key-file string

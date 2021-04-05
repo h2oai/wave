@@ -89,6 +89,7 @@ func main() {
 	flag.BoolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
 	flag.StringVar(&maxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
 	flag.StringVar(&maxCacheRequestSize, "max-cache-request-size", "5M", "maximum allowed size of HTTP requests to the server cache (e.g. 5M or 5MB or 5MiB)")
+	flag.BoolVar(&conf.Proxy, "proxy", false, "enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)")
 	flag.StringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
 	flag.StringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
@@ -214,6 +215,8 @@ func main() {
 	if auth.ClientID != "" && auth.ClientSecret != "" && auth.ProviderURL != "" && auth.RedirectURL != "" {
 		conf.Auth = &auth
 	}
+
+	// TODO enable conf.Proxy automatically if conf.IDE is set.
 
 	wave.Run(conf)
 }

@@ -29,6 +29,7 @@ type ServerConf struct {
 	Editable             bool
 	MaxRequestSize       int64
 	MaxCacheRequestSize  int64
+	Proxy                bool
 	MaxProxyRequestSize  int64
 	MaxProxyResponseSize int64
 	Debug                bool
