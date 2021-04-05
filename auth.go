@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"path"
 	"sync"
 	"time"
 
@@ -68,23 +69,98 @@ func newAuth(conf *AuthConf) (*Auth, error) {
 	}, nil
 }
 
-func (s *Auth) get(key string) (Session, bool) {
-	s.RLock()
-	defer s.RUnlock()
-	session, ok := s.sessions[key]
+func (auth *Auth) get(key string) (Session, bool) {
+	auth.RLock()
+	defer auth.RUnlock()
+	session, ok := auth.sessions[key]
 	return session, ok
 }
 
-func (s *Auth) set(key string, session Session) {
-	s.Lock()
-	defer s.Unlock()
-	s.sessions[key] = session
+func (auth *Auth) set(key string, session Session) {
+	auth.Lock()
+	defer auth.Unlock()
+	auth.sessions[key] = session
 }
 
-func (s *Auth) remove(key string) {
-	s.Lock()
-	defer s.Unlock()
-	delete(s.sessions, key)
+func (auth *Auth) remove(key string) {
+	auth.Lock()
+	defer auth.Unlock()
+	delete(auth.sessions, key)
+}
+
+func (auth *Auth) check(r *http.Request) bool {
+	cookie, err := r.Cookie(oidcSessionKey)
+	if err != nil {
+		echo(Log{"t": "oauth2_cookie_read", "error": err.Error()})
+		return false
+	}
+
+	sessionID := cookie.Value
+	session, ok := auth.get(sessionID)
+	if !ok {
+		echo(Log{"t": "oauth2_session", "error": "session not found"})
+		return false
+	}
+
+	token, err := auth.oauth.TokenSource(r.Context(), session.token).Token()
+	if err != nil {
+		echo(Log{"t": "oauth2_token_refresh", "error": err.Error()})
+		return false
+	}
+
+	if session.token != token {
+		session.token = token
+		auth.set(sessionID, session)
+	}
+
+	return true
+}
+
+func (auth *Auth) wrap(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if len(path.Ext(r.URL.Path)) > 0 {
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		if r.URL.Path == "/_auth/login" {
+			if auth.conf.SkipLogin {
+				redirectToAuth(w, r)
+				return
+			}
+			h.ServeHTTP(w, r)
+			return
+		}
+
+		if !auth.check(r) {
+			redirectToLogin(w, r)
+			return
+		}
+
+		h.ServeHTTP(w, r)
+	})
+}
+
+func redirectToLogin(w http.ResponseWriter, r *http.Request) {
+	// X -> /_auth/login?next=X
+	u, _ := url.Parse("/_auth/login")
+	q := u.Query()
+	q.Set("next", r.URL.Path)
+	u.RawQuery = q.Encode()
+	http.Redirect(w, r, u.String(), http.StatusFound)
+}
+
+func redirectToAuth(w http.ResponseWriter, r *http.Request) {
+	// /_auth/login -> /_auth/init
+	// /_auth/login?next=X -> /_auth/init?next=X
+	u, _ := url.Parse("/_auth/init")
+	next := r.URL.Query().Get("next")
+	if next != "" {
+		q := u.Query()
+		q.Set("next", next)
+		u.RawQuery = q.Encode()
+	}
+	http.Redirect(w, r, u.String(), http.StatusFound)
 }
 
 // Session represents an OIDC session

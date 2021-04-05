@@ -44,7 +44,7 @@ func newWebServer(
 ) *WebServer {
 	fs := fallback("/", http.FileServer(http.Dir(www)))
 	if auth != nil {
-		fs = checkSession(auth, fs)
+		fs = auth.wrap(fs)
 	}
 	return &WebServer{site, broker, fs, keychain, maxRequestSize}
 }
@@ -131,75 +131,6 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	default:
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 	}
-}
-
-func redirectToLogin(w http.ResponseWriter, r *http.Request) {
-	// X -> /_auth/login?next=X
-	u, _ := url.Parse("/_auth/login")
-	q := u.Query()
-	q.Set("next", r.URL.Path)
-	u.RawQuery = q.Encode()
-	http.Redirect(w, r, u.String(), http.StatusFound)
-}
-
-func redirectToAuth(w http.ResponseWriter, r *http.Request) {
-	// /_auth/login -> /_auth/init
-	// /_auth/login?next=X -> /_auth/init?next=X
-	u, _ := url.Parse("/_auth/init")
-	next := r.URL.Query().Get("next")
-	if next != "" {
-		q := u.Query()
-		q.Set("next", next)
-		u.RawQuery = q.Encode()
-	}
-	http.Redirect(w, r, u.String(), http.StatusFound)
-}
-
-func checkSession(auth *Auth, h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if len(path.Ext(r.URL.Path)) > 0 {
-			h.ServeHTTP(w, r)
-			return
-		}
-
-		if r.URL.Path == "/_auth/login" {
-			if auth.conf.SkipLogin {
-				redirectToAuth(w, r)
-				return
-			}
-			h.ServeHTTP(w, r)
-			return
-		}
-
-		cookie, err := r.Cookie(oidcSessionKey)
-		if err != nil {
-			echo(Log{"t": "oauth2_cookie_read_fail", "error": err.Error()})
-			redirectToLogin(w, r)
-			return
-		}
-
-		sessionID := cookie.Value
-		session, ok := auth.get(sessionID)
-		if !ok {
-			echo(Log{"t": "oauth2_session_missing"})
-			redirectToLogin(w, r)
-			return
-		}
-
-		token, err := auth.oauth.TokenSource(r.Context(), session.token).Token()
-		if err != nil {
-			echo(Log{"t": "oauth2_token_refresh_fail", "error": err.Error()})
-			redirectToLogin(w, r)
-			return
-		}
-
-		if session.token != token {
-			session.token = token
-			auth.set(sessionID, session)
-		}
-
-		h.ServeHTTP(w, r)
-	})
 }
 
 func fallback(prefix string, h http.Handler) http.Handler {
