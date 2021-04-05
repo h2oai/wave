@@ -34,45 +34,24 @@ func newSocketServer(broker *Broker, auth *Auth, editable bool) *SocketServer {
 }
 
 func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	user := anonymous
+	if s.auth != nil {
+		user = s.auth.identify(r)
+		if user == nil {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		echo(Log{"t": "socket_upgrade", "err": err.Error()})
 		return
 	}
-	user := identifyUser(r, s.auth)
+
 	client := newClient(getRemoteAddr(r), user, s.broker, conn, s.editable)
 	go client.flush()
 	go client.listen()
-}
-
-var (
-	anonymous = &User{
-		subject:      "anonymous",
-		name:         "anonymous",
-		accessToken:  "",
-		refreshToken: "",
-	}
-)
-
-func identifyUser(r *http.Request, auth *Auth) *User {
-	if auth == nil {
-		return anonymous
-	}
-	cookie, err := r.Cookie(oidcSessionKey)
-	if err != nil {
-		return anonymous
-	}
-	sessionID := cookie.Value
-	session, ok := auth.get(sessionID)
-	if !ok {
-		return anonymous
-	}
-	return &User{
-		subject:      session.subject,
-		name:         session.username,
-		accessToken:  session.token.AccessToken,
-		refreshToken: session.token.RefreshToken,
-	}
 }
 
 func getRemoteAddr(r *http.Request) string {

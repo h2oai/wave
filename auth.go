@@ -49,6 +49,21 @@ func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 	}, nil
 }
 
+// User represents a user.
+type User struct {
+	subject      string // oidc subject identifier or "anonymous" (unique)
+	name         string // oidc preferred_username or "anonymous" (not unique)
+	accessToken  string // oidc access token
+	refreshToken string // oidc refresh token
+}
+
+var anonymous = &User{
+	subject:      "anonymous",
+	name:         "anonymous",
+	accessToken:  "",
+	refreshToken: "",
+}
+
 // Auth represents active OIDC sessions
 type Auth struct {
 	sync.RWMutex
@@ -88,24 +103,24 @@ func (auth *Auth) remove(key string) {
 	delete(auth.sessions, key)
 }
 
-func (auth *Auth) allow(r *http.Request) bool {
+func (auth *Auth) identify2(r *http.Request) *Session {
 	cookie, err := r.Cookie(oidcSessionKey)
 	if err != nil {
 		echo(Log{"t": "oauth2_cookie_read", "error": err.Error()})
-		return false
+		return nil
 	}
 
 	sessionID := cookie.Value
 	session, ok := auth.get(sessionID)
 	if !ok {
 		echo(Log{"t": "oauth2_session", "error": "session not found"})
-		return false
+		return nil
 	}
 
 	token, err := auth.oauth.TokenSource(r.Context(), session.token).Token()
 	if err != nil {
 		echo(Log{"t": "oauth2_token_refresh", "error": err.Error()})
-		return false
+		return nil
 	}
 
 	if session.token != token {
@@ -113,7 +128,24 @@ func (auth *Auth) allow(r *http.Request) bool {
 		auth.set(sessionID, session)
 	}
 
-	return true
+	return &session
+}
+
+func (auth *Auth) allow(r *http.Request) bool {
+	session := auth.identify(r)
+	return session != nil
+}
+
+func (auth *Auth) identify(r *http.Request) *User {
+	if session := auth.identify2(r); session != nil {
+		return &User{
+			subject:      session.subject,
+			name:         session.username,
+			accessToken:  session.token.AccessToken,
+			refreshToken: session.token.RefreshToken,
+		}
+	}
+	return nil
 }
 
 func (auth *Auth) wrap(h http.Handler) http.Handler {

@@ -46,14 +46,6 @@ var (
 	}
 )
 
-// User represents a user.
-type User struct {
-	subject      string // oidc subject identifier or "anonymous" (unique)
-	name         string // oidc preferred_username or "anonymous" (not unique)
-	accessToken  string // oidc access token
-	refreshToken string // oidc refresh token
-}
-
 // Client represent a websocket (UI) client.
 type Client struct {
 	id       string          // unique id
