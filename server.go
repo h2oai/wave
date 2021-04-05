@@ -70,9 +70,9 @@ func Run(conf ServerConf) {
 
 	http.Handle("/_s", newSocketServer(broker, auth, conf.Editable)) // XXX secure (ui)
 	fileDir := filepath.Join(conf.DataDir, "f")
-	http.Handle("/_f", newFileStore(fileDir))                       // XXX secure (ui, api)
-	http.Handle("/_f/", newFileServer(fileDir))                     // XXX secure (ui, api)
-	http.Handle("/_c/", newCache("/_c/", conf.MaxCacheRequestSize)) // XXX secure (api)
+	http.Handle("/_f", newFileStore(fileDir))   // XXX secure (ui, api)
+	http.Handle("/_f/", newFileServer(fileDir)) // XXX secure (ui, api)
+	http.Handle("/_c/", newCache("/_c/", conf.Keychain, conf.MaxCacheRequestSize))
 	// TODO enable when IDE is ready for release
 	// http.Handle("/_p", newProxy(conf.MaxProxyRequestSize, conf.MaxProxyResponseSize)) // XXX secure (ui)
 	// http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure (ui)

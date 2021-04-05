@@ -31,15 +31,54 @@ type Shard struct {
 type Cache struct {
 	sync.RWMutex
 	prefix         string
+	keychain       *Keychain
 	shards         map[string]*Shard
 	maxRequestSize int64
 }
 
-func newCache(prefix string, maxRequestSize int64) *Cache {
+func newCache(prefix string, keychain *Keychain, maxRequestSize int64) *Cache {
 	return &Cache{
 		prefix:         prefix,
+		keychain:       keychain,
 		shards:         make(map[string]*Shard),
 		maxRequestSize: maxRequestSize,
+	}
+}
+
+func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if !c.keychain.Guard(w, r) {
+		return
+	}
+
+	s, k := c.parse(r.URL.Path)
+	switch r.Method {
+	case http.MethodGet:
+		if len(k) > 0 {
+			if v, ok := c.get(s, k); ok {
+				w.Write(v)
+				return
+			}
+		} else {
+			if v, ok := c.keys(s); ok {
+				w.Write(v)
+				return
+			}
+		}
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+	case http.MethodPut:
+		v, err := readRequestWithLimit(w, r.Body, c.maxRequestSize)
+		if err != nil {
+			echo(Log{"t": "read cache request body", "error": err.Error()})
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		c.set(s, k, v)
+
+	case http.MethodDelete:
+		c.del(s, k)
+
+	default:
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 	}
 }
 
@@ -103,37 +142,4 @@ func (c *Cache) parse(url string) (string, string) {
 		return p[0], p[1]
 	}
 	return p[0], ""
-}
-
-func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s, k := c.parse(r.URL.Path)
-	switch r.Method {
-	case http.MethodGet:
-		if len(k) > 0 {
-			if v, ok := c.get(s, k); ok {
-				w.Write(v)
-				return
-			}
-		} else {
-			if v, ok := c.keys(s); ok {
-				w.Write(v)
-				return
-			}
-		}
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-	case http.MethodPut:
-		v, err := readRequestWithLimit(w, r.Body, c.maxRequestSize)
-		if err != nil {
-			echo(Log{"t": "read cache request body", "error": err.Error()})
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
-		c.set(s, k, v)
-
-	case http.MethodDelete:
-		c.del(s, k)
-
-	default:
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-	}
 }
