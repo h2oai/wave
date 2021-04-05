@@ -25,13 +25,17 @@ import (
 
 // FileServer represents a file server.
 type FileServer struct {
-	dir     string
-	handler http.Handler
+	dir      string
+	keychain *Keychain
+	auth     *Auth
+	handler  http.Handler
 }
 
-func newFileServer(dir string) http.Handler {
+func newFileServer(dir string, keychain *Keychain, auth *Auth) http.Handler {
 	return &FileServer{
 		dir,
+		keychain,
+		auth,
 		http.FileServer(http.Dir(dir)),
 	}
 }
@@ -43,6 +47,11 @@ var (
 func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
+		if !fs.keychain.check(r) && (fs.auth != nil && !fs.auth.check(r)) { // API or UI
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
 		if path.Ext(r.URL.Path) == "" { // ignore requests for directories and ext-less files
 			echo(Log{"t": "file_download", "path": r.URL.Path, "error": "not found"})
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
@@ -53,8 +62,14 @@ func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = strings.TrimPrefix(r.URL.Path, "/_f") // public
 		fs.handler.ServeHTTP(w, r)
 
-	case http.MethodDelete: // TODO garbage collection
-		if err := fs.unloadFile(r.URL.Path); err != nil {
+	case http.MethodDelete:
+		// TODO garbage collection
+
+		if !fs.keychain.guard(w, r) { // Allow APIs only
+			return
+		}
+
+		if err := fs.deleteFile(r.URL.Path); err != nil {
 			echo(Log{"t": "file_unload", "path": r.URL.Path, "error": err.Error()})
 			return
 		}
@@ -66,7 +81,7 @@ func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (fs *FileServer) unloadFile(url string) error {
+func (fs *FileServer) deleteFile(url string) error {
 	tokens := strings.Split(path.Clean(url), "/")
 	if len(tokens) != 4 { // /_f/uuid/file.ext
 		return errInvalidUnloadPath

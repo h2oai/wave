@@ -29,11 +29,13 @@ import (
 
 // FileStore represents a file store.
 type FileStore struct {
-	dir string
+	dir      string
+	keychain *Keychain
+	auth     *Auth
 }
 
-func newFileStore(dir string) http.Handler {
-	return &FileStore{dir}
+func newFileStore(dir string, keychain *Keychain, auth *Auth) http.Handler {
+	return &FileStore{dir, keychain, auth}
 }
 
 // UploadResponse represents a response to a file upload operation.
@@ -41,7 +43,36 @@ type UploadResponse struct {
 	Files []string `json:"files"`
 }
 
-func (fs *FileStore) uploadFiles(r *http.Request) ([]string, error) {
+func (fs *FileStore) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		if !fs.keychain.check(r) && (fs.auth != nil && !fs.auth.check(r)) { // API or UI
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		files, err := fs.acceptFiles(r)
+		if err != nil {
+			echo(Log{"t": "file_upload", "error": err.Error()})
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		res, err := json.Marshal(UploadResponse{Files: files})
+		if err != nil {
+			echo(Log{"t": "file_upload", "error": err.Error()})
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(res)
+	default:
+		echo(Log{"t": "file_upload", "method": r.Method, "path": r.URL.Path, "error": "method not allowed"})
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+	}
+}
+
+func (fs *FileStore) acceptFiles(r *http.Request) ([]string, error) {
 	if err := r.ParseMultipartForm(32 << 20); err != nil { // 32 MB
 		return nil, fmt.Errorf("failed parsing upload form from request: %v", err)
 	}
@@ -89,28 +120,4 @@ func (fs *FileStore) uploadFiles(r *http.Request) ([]string, error) {
 		uploadPaths[i] = path.Join("/_f", fileID, basename)
 	}
 	return uploadPaths, nil
-}
-
-func (fs *FileStore) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		files, err := fs.uploadFiles(r)
-		if err != nil {
-			echo(Log{"t": "file_upload", "error": err.Error()})
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
-
-		res, err := json.Marshal(UploadResponse{Files: files})
-		if err != nil {
-			echo(Log{"t": "file_upload", "error": err.Error()})
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(res)
-	default:
-		echo(Log{"t": "file_upload", "method": r.Method, "path": r.URL.Path, "error": "method not allowed"})
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-	}
 }
