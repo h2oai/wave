@@ -49,19 +49,10 @@ func newWebServer(
 	return &WebServer{site, broker, fs, keychain, maxRequestSize}
 }
 
-func (s *WebServer) guard(w http.ResponseWriter, r *http.Request) bool {
-	id, secret, ok := r.BasicAuth()
-	if !ok || !s.keychain.Verify(id, secret) {
-		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-		return false
-	}
-	return true
-}
-
 func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPatch: // writes
-		if !s.guard(w, r) {
+		if !s.keychain.Guard(w, r) {
 			return
 		}
 		s.patch(w, r)
@@ -73,11 +64,10 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			s.fs.ServeHTTP(w, r)
 		}
 	case http.MethodPost: // all other APIs
-		if !s.guard(w, r) {
+		if !s.keychain.Guard(w, r) {
 			return
 		}
 		s.post(w, r)
-	// TODO case http.MethodPut: // file uploads
 	default:
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	}

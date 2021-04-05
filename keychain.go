@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 
 	"golang.org/x/crypto/bcrypt"
@@ -167,4 +168,13 @@ func (kc *Keychain) Save() error {
 	}
 
 	return nil
+}
+
+func (kc *Keychain) Guard(w http.ResponseWriter, r *http.Request) bool {
+	id, secret, ok := r.BasicAuth()
+	if !ok || !kc.Verify(id, secret) {
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return false
+	}
+	return true
 }
