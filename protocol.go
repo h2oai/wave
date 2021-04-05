@@ -20,7 +20,7 @@ type OpsD struct {
 	D []OpD  `json:"d,omitempty"` // deltas
 	R int    `json:"r,omitempty"` // reset
 	E string `json:"e,omitempty"` // error
-	M Meta   `json:"m,omitempty"` // metadata
+	M *Meta  `json:"m,omitempty"` // metadata
 }
 
 // Meta represents metadata unrelated to commands

@@ -123,7 +123,7 @@ func (c *Client) listen() {
 				continue
 			}
 
-			if headers, err := json.Marshal(OpsD{M: Meta{Username: c.user.name, Editor: c.editable}}); err == nil {
+			if headers, err := json.Marshal(OpsD{M: &Meta{Username: c.user.name, Editor: c.editable}}); err == nil {
 				c.send(headers)
 			}
 
