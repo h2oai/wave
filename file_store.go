@@ -46,7 +46,10 @@ type UploadResponse struct {
 func (fs *FileStore) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		if !fs.keychain.check(r) && (fs.auth != nil && !fs.auth.check(r)) { // API or UI
+		// Disallow if:
+		// - unauthorized api call
+		// - auth not enabled or auth enabled and unauthorized
+		if !fs.keychain.allow(r) && (fs.auth == nil || (fs.auth != nil && !fs.auth.allow(r))) { // API or UI
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}

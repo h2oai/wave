@@ -88,7 +88,7 @@ func (auth *Auth) remove(key string) {
 	delete(auth.sessions, key)
 }
 
-func (auth *Auth) check(r *http.Request) bool {
+func (auth *Auth) allow(r *http.Request) bool {
 	cookie, err := r.Cookie(oidcSessionKey)
 	if err != nil {
 		echo(Log{"t": "oauth2_cookie_read", "error": err.Error()})
@@ -132,7 +132,7 @@ func (auth *Auth) wrap(h http.Handler) http.Handler {
 			return
 		}
 
-		if !auth.check(r) {
+		if !auth.allow(r) {
 			redirectToLogin(w, r)
 			return
 		}

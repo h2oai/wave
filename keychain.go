@@ -171,13 +171,13 @@ func (kc *Keychain) Save() error {
 	return nil
 }
 
-func (kc *Keychain) check(r *http.Request) bool {
+func (kc *Keychain) allow(r *http.Request) bool {
 	id, secret, ok := r.BasicAuth()
 	return ok && kc.verify(id, secret)
 }
 
 func (kc *Keychain) guard(w http.ResponseWriter, r *http.Request) bool {
-	if !kc.check(r) {
+	if !kc.allow(r) {
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return false
 	}

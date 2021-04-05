@@ -47,7 +47,10 @@ var (
 func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		if !fs.keychain.check(r) && (fs.auth != nil && !fs.auth.check(r)) { // API or UI
+		// Disallow if:
+		// - unauthorized api call
+		// - auth enabled and unauthorized
+		if !fs.keychain.allow(r) && (fs.auth != nil && !fs.auth.allow(r)) { // API or UI
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
