@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -68,16 +69,29 @@ func Run(conf ServerConf) {
 		http.Handle("/_auth/logout", newLogoutHandler(auth))
 	}
 
-	http.Handle("/_s", newSocketServer(broker, auth, conf.Editable)) // XXX secure (ui)
+	http.Handle("/_s", newSocketServer(broker, auth, conf.Editable)) // XXX terminate sockets when logged out
+
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir, conf.Keychain, auth))
 	http.Handle("/_f/", newFileServer(fileDir, conf.Keychain, auth))
+
 	http.Handle("/_c/", newCache("/_c/", conf.Keychain, conf.MaxCacheRequestSize))
+
 	if conf.Proxy {
 		http.Handle("/_p", newProxy(auth, conf.MaxProxyRequestSize, conf.MaxProxyResponseSize))
 	}
-	// TODO enable when IDE is ready for release
-	// http.Handle("/_ide", http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))) // XXX secure (ui)
+
+	if conf.IDE {
+		ide := http.StripPrefix("/_ide", http.FileServer(http.Dir(path.Join(conf.WebDir, "_ide"))))
+		http.Handle("/_ide", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if auth != nil && !auth.allow(r) {
+				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+				return
+			}
+			ide.ServeHTTP(w, r)
+		}))
+	}
+
 	http.Handle("/", newWebServer(site, broker, auth, conf.Keychain, conf.MaxRequestSize, conf.WebDir))
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {

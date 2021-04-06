@@ -92,6 +92,8 @@ func main() {
 	flag.BoolVar(&conf.Proxy, "proxy", false, "enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)")
 	flag.StringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
 	flag.StringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
+	// TODO enable when IDE is released
+	// flag.BoolVar(&conf.IDE, "ide", false, "enable Wave IDE (experimental)")
 	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
 
 	const (
@@ -216,7 +218,9 @@ func main() {
 		conf.Auth = &auth
 	}
 
-	// TODO enable conf.Proxy automatically if conf.IDE is set.
+	if conf.IDE {
+		conf.Proxy = true // IDE won't function without proxy
+	}
 
 	wave.Run(conf)
 }
