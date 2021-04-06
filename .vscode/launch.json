@@ -26,6 +26,20 @@
       "protocol": "inspector",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "Debug Wave Server",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/cmd/wave/main.go",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "-web-dir",
+        "./ui/build",
+        "-debug",
+        "-editable",
+      ]
     }
   ]
 }
