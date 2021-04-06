@@ -49,13 +49,13 @@ var (
 // Client represent a websocket (UI) client.
 type Client struct {
 	id       string          // unique id
-	addr     string          // remote address
+	addr     string          // remote IP:port, used for logging only
 	user     *User           // user
 	broker   *Broker         // broker
 	conn     *websocket.Conn // connection
 	routes   []string        // watched routes
 	data     chan []byte     // send data
-	editable bool            // allow editing? TODO move to user; tie to role
+	editable bool            // allow editing? // TODO move to user; tie to role
 }
 
 func newClient(addr string, user *User, broker *Broker, conn *websocket.Conn, editable bool) *Client {
@@ -85,7 +85,9 @@ func (c *Client) listen() {
 		m := parseMsg(msg)
 		switch m.t {
 		case patchMsgT:
-			c.broker.patch(m.addr, m.data)
+			if c.editable { // allow only if editing is enabled
+				c.broker.patch(m.addr, m.data)
+			}
 		case queryMsgT:
 			app := c.broker.getApp(m.addr)
 			if app == nil {
@@ -110,7 +112,7 @@ func (c *Client) listen() {
 						boot = j
 					}
 				}
-				// echo(Log{"t": "boot", "client": c.addr, "route": m.addr, "addr": app.addr, "location": string(boot)})
+
 				app.forward(c.format(boot))
 				continue
 			}
@@ -132,7 +134,7 @@ func (c *Client) listen() {
 }
 
 func (c *Client) subscribe(route string) {
-	c.routes = append(c.routes, route) // TODO review
+	c.routes = append(c.routes, route)
 	c.broker.subscribe <- Sub{route, c}
 }
 
