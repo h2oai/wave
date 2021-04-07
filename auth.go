@@ -29,7 +29,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const oidcSessionKey = "oidcsession"
+const cookieSessionIDKey = "oidcsession"
 
 func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -49,22 +49,23 @@ func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 	}, nil
 }
 
-// User represents a user.
-type User struct {
-	subject      string // oidc subject identifier or "anonymous" (unique)
-	name         string // oidc preferred_username or "anonymous" (not unique)
-	accessToken  string // oidc access token
-	refreshToken string // oidc refresh token
+// Session represents an end-user session
+type Session struct {
+	state      string
+	nonce      string
+	subject    string
+	username   string
+	successURL string
+	token      *oauth2.Token
 }
 
-var anonymous = &User{
-	subject:      "anonymous",
-	name:         "anonymous",
-	accessToken:  "",
-	refreshToken: "",
+var anonymous = &Session{
+	subject:  "anonymous",
+	username: "anonymous",
+	token:    &oauth2.Token{},
 }
 
-// Auth represents active OIDC sessions
+// Auth holds authenticated end-user sessions
 type Auth struct {
 	sync.RWMutex
 	conf     *AuthConf
@@ -103,8 +104,8 @@ func (auth *Auth) remove(key string) {
 	delete(auth.sessions, key)
 }
 
-func (auth *Auth) identify2(r *http.Request) *Session {
-	cookie, err := r.Cookie(oidcSessionKey)
+func (auth *Auth) identify(r *http.Request) *Session {
+	cookie, err := r.Cookie(cookieSessionIDKey)
 	if err != nil {
 		echo(Log{"t": "oauth2_cookie_read", "error": err.Error()})
 		return nil
@@ -113,7 +114,7 @@ func (auth *Auth) identify2(r *http.Request) *Session {
 	sessionID := cookie.Value
 	session, ok := auth.get(sessionID)
 	if !ok {
-		echo(Log{"t": "oauth2_session", "error": "session not found"})
+		echo(Log{"t": "oauth2_session", "error": "invalid session"})
 		return nil
 	}
 
@@ -132,20 +133,7 @@ func (auth *Auth) identify2(r *http.Request) *Session {
 }
 
 func (auth *Auth) allow(r *http.Request) bool {
-	session := auth.identify(r)
-	return session != nil
-}
-
-func (auth *Auth) identify(r *http.Request) *User {
-	if session := auth.identify2(r); session != nil {
-		return &User{
-			subject:      session.subject,
-			name:         session.username,
-			accessToken:  session.token.AccessToken,
-			refreshToken: session.token.RefreshToken,
-		}
-	}
-	return nil
+	return auth.identify(r) != nil
 }
 
 func (auth *Auth) wrap(h http.Handler) http.Handler {
@@ -195,16 +183,6 @@ func redirectToAuth(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, u.String(), http.StatusFound)
 }
 
-// Session represents an OIDC session
-type Session struct {
-	state      string
-	nonce      string
-	subject    string
-	username   string
-	successURL string
-	token      *oauth2.Token
-}
-
 func generateRandomKey(byteCount int) (string, error) {
 	b := make([]byte, byteCount)
 	_, err := rand.Read(b)
@@ -250,7 +228,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	h.auth.set(sessionID, Session{state: state, nonce: nonce, successURL: successURL})
 	expiration := time.Now().Add(365 * 24 * time.Hour)
-	cookie := http.Cookie{Name: oidcSessionKey, Value: sessionID, Path: "/", Expires: expiration}
+	cookie := http.Cookie{Name: cookieSessionIDKey, Value: sessionID, Path: "/", Expires: expiration}
 	http.SetCookie(w, &cookie)
 	http.Redirect(w, r, h.auth.oauth.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
 }
@@ -265,14 +243,14 @@ func newAuthHandler(auth *Auth) http.Handler {
 }
 
 func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	// Retrieve saved session.
-	cookie, err := r.Cookie(oidcSessionKey)
+	cookie, err := r.Cookie(cookieSessionIDKey)
 	if err != nil {
 		echo(Log{"t": "oauth2_cookie", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
+
 	sessionID := cookie.Value
 	session, ok := h.auth.get(sessionID)
 	if !ok {
@@ -389,7 +367,7 @@ func (h *LogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Request) {
 func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Retrieve saved session.
-	cookie, err := r.Cookie(oidcSessionKey)
+	cookie, err := r.Cookie(cookieSessionIDKey)
 	if err != nil {
 		echo(Log{"t": "logout_cookie", "error": "not found"})
 		h.logoutRedirect(w, r)

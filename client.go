@@ -50,7 +50,7 @@ var (
 type Client struct {
 	id       string          // unique id
 	addr     string          // remote IP:port, used for logging only
-	user     *User           // user
+	session  *Session        // end-user session
 	broker   *Broker         // broker
 	conn     *websocket.Conn // connection
 	routes   []string        // watched routes
@@ -58,8 +58,8 @@ type Client struct {
 	editable bool            // allow editing? // TODO move to user; tie to role
 }
 
-func newClient(addr string, user *User, broker *Broker, conn *websocket.Conn, editable bool) *Client {
-	return &Client{uuid.New().String(), addr, user, broker, conn, nil, make(chan []byte, 256), editable}
+func newClient(addr string, session *Session, broker *Broker, conn *websocket.Conn, editable bool) *Client {
+	return &Client{uuid.New().String(), addr, session, broker, conn, nil, make(chan []byte, 256), editable}
 }
 
 func (c *Client) listen() {
@@ -103,7 +103,7 @@ func (c *Client) listen() {
 				case unicastMode:
 					c.subscribe("/" + c.id) // client-level
 				case multicastMode:
-					c.subscribe("/" + c.user.subject) // user-level
+					c.subscribe("/" + c.session.subject) // user-level
 				}
 
 				boot := emptyJSON
@@ -117,7 +117,7 @@ func (c *Client) listen() {
 				continue
 			}
 
-			if headers, err := json.Marshal(OpsD{M: &Meta{Username: c.user.name, Editor: c.editable}}); err == nil {
+			if headers, err := json.Marshal(OpsD{M: &Meta{Username: c.session.username, Editor: c.editable}}); err == nil {
 				c.send(headers)
 			}
 
@@ -204,14 +204,14 @@ var (
 func (c *Client) format(data []byte) []byte {
 	var buf bytes.Buffer
 
-	u := c.user
+	s := c.session
 
 	buf.Write(usernameHeader)
-	buf.WriteString(u.name)
+	buf.WriteString(s.username)
 	buf.WriteByte('\n')
 
 	buf.Write(subjectHeader)
-	buf.WriteString(u.subject)
+	buf.WriteString(s.subject)
 	buf.WriteByte('\n')
 
 	buf.Write(clientIDHeader)
@@ -219,11 +219,11 @@ func (c *Client) format(data []byte) []byte {
 	buf.WriteByte('\n')
 
 	buf.Write(accessTokenHeader)
-	buf.WriteString(u.accessToken)
+	buf.WriteString(s.token.AccessToken)
 	buf.WriteByte('\n')
 
 	buf.Write(refreshTokenHeader)
-	buf.WriteString(u.refreshToken)
+	buf.WriteString(s.token.AccessToken)
 	buf.Write(queryBodySep)
 
 	buf.Write(data)
