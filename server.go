@@ -66,7 +66,7 @@ func Run(conf ServerConf) {
 		}
 		http.Handle("/_auth/init", newLoginHandler(auth))
 		http.Handle("/_auth/callback", newAuthHandler(auth))
-		http.Handle("/_auth/logout", newLogoutHandler(auth))
+		http.Handle("/_auth/logout", newLogoutHandler(auth, broker))
 	}
 
 	http.Handle("/_s", newSocketServer(broker, auth, conf.Editable)) // XXX terminate sockets when logged out

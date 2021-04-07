@@ -61,10 +61,11 @@ type Sub struct {
 // Broker represents a message broker.
 type Broker struct {
 	site        *Site
-	clients     map[string]map[*Client]interface{} // route => clients
+	clients     map[string]map[*Client]interface{} // route => client-set
 	publish     chan Pub
 	subscribe   chan Sub
 	unsubscribe chan *Client
+	logout      chan Pub
 	apps        map[string]*App // route => app
 	appsMux     sync.RWMutex    // mutex for tracking apps
 }
@@ -73,9 +74,10 @@ func newBroker(site *Site) *Broker {
 	return &Broker{
 		site,
 		make(map[string]map[*Client]interface{}),
-		make(chan Pub, 1024),
-		make(chan Sub),
-		make(chan *Client),
+		make(chan Pub, 1024),     // TODO tune
+		make(chan Sub, 1024),     // TODO tune
+		make(chan *Client, 1024), // TODO tune
+		make(chan Pub, 1024),     // TODO tune
 		make(map[string]*App),
 		sync.RWMutex{},
 	}
@@ -91,7 +93,7 @@ func (b *Broker) addApp(mode, route, addr string) {
 	echo(Log{"t": "app_add", "route": route, "host": addr})
 
 	// Force-reload all browsers listening to this app
-	b.reset(route) // TODO allow only in debug mode?
+	b.resetSubscribers(route)
 }
 
 func (b *Broker) getApp(route string) *App {
@@ -109,7 +111,7 @@ func (b *Broker) dropApp(route string) {
 	echo(Log{"t": "app_drop", "route": route})
 
 	// Force-reload all browsers listening to this app
-	b.reset(route) // TODO allow only in debug mode?
+	b.resetSubscribers(route)
 }
 
 func parseMsgT(s []byte) MsgT {
@@ -154,10 +156,15 @@ func (b *Broker) patch(route string, data []byte) {
 	}
 }
 
-// TODO allow only in debug mode?
-func (b *Broker) reset(route string) {
+func (b *Broker) resetSubscribers(route string) {
 	if data, err := json.Marshal(OpsD{R: 1}); err == nil {
 		b.publish <- Pub{route, data}
+	}
+}
+
+func (b *Broker) resetClients(subjectID string) {
+	if data, err := json.Marshal(OpsD{R: 1}); err == nil {
+		b.logout <- Pub{subjectID, data}
 	}
 }
 
@@ -171,12 +178,27 @@ func (b *Broker) run() {
 			b.dropClient(client)
 		case pub := <-b.publish:
 			if clients, ok := b.clients[pub.route]; ok {
+				b.sendAll(clients, pub.data)
+			}
+		case pub := <-b.logout:
+			targets := make(map[*Client]interface{})
+			// TODO speed up using another map?
+			for _, clients := range b.clients {
 				for client := range clients {
-					if !client.send(pub.data) {
-						b.dropClient(client)
+					if client.session.subject == pub.route {
+						targets[client] = nil
 					}
 				}
 			}
+			b.sendAll(targets, pub.data)
+		}
+	}
+}
+
+func (b *Broker) sendAll(clients map[*Client]interface{}, data []byte) {
+	for client := range clients {
+		if !client.send(data) {
+			b.dropClient(client)
 		}
 	}
 }

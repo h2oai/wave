@@ -29,7 +29,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const cookieSessionIDKey = "oidcsession"
+const authCookieName = "oidcsession"
 
 func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -105,7 +105,7 @@ func (auth *Auth) remove(key string) {
 }
 
 func (auth *Auth) identify(r *http.Request) *Session {
-	cookie, err := r.Cookie(cookieSessionIDKey)
+	cookie, err := r.Cookie(authCookieName)
 	if err != nil {
 		echo(Log{"t": "oauth2_cookie_read", "error": err.Error()})
 		return nil
@@ -228,7 +228,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	h.auth.set(sessionID, Session{state: state, nonce: nonce, successURL: successURL})
 	expiration := time.Now().Add(365 * 24 * time.Hour)
-	cookie := http.Cookie{Name: cookieSessionIDKey, Value: sessionID, Path: "/", Expires: expiration}
+	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: "/", Expires: expiration}
 	http.SetCookie(w, &cookie)
 	http.Redirect(w, r, h.auth.oauth.AuthCodeURL(state, oidc.Nonce(nonce)), http.StatusFound)
 }
@@ -244,7 +244,7 @@ func newAuthHandler(auth *Auth) http.Handler {
 
 func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Retrieve saved session.
-	cookie, err := r.Cookie(cookieSessionIDKey)
+	cookie, err := r.Cookie(authCookieName)
 	if err != nil {
 		echo(Log{"t": "oauth2_cookie", "error": err.Error()})
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -337,11 +337,12 @@ func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // LogoutHandler handles logout requests
 type LogoutHandler struct {
-	auth *Auth
+	auth   *Auth
+	broker *Broker
 }
 
-func newLogoutHandler(auth *Auth) http.Handler {
-	return &LogoutHandler{auth}
+func newLogoutHandler(auth *Auth, broker *Broker) http.Handler {
+	return &LogoutHandler{auth, broker}
 }
 
 func (h *LogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Request) {
@@ -365,15 +366,16 @@ func (h *LogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	// Retrieve saved session.
-	cookie, err := r.Cookie(cookieSessionIDKey)
+	cookie, err := r.Cookie(authCookieName)
 	if err != nil {
 		echo(Log{"t": "logout_cookie", "error": "not found"})
 		h.logoutRedirect(w, r)
 		return
 	}
+
 	sessionID := cookie.Value
+	session, ok := h.auth.get(sessionID)
 
 	// Delete cookie.
 	cookie.MaxAge = -1
@@ -381,6 +383,11 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Purge session
 	h.auth.remove(sessionID)
+
+	// Reload all of this user's browser tabs
+	if ok {
+		h.broker.resetClients(session.subject)
+	}
 
 	h.logoutRedirect(w, r)
 }
