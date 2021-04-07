@@ -156,16 +156,23 @@ func (b *Broker) patch(route string, data []byte) {
 	}
 }
 
-func (b *Broker) resetSubscribers(route string) {
-	if data, err := json.Marshal(OpsD{R: 1}); err == nil {
-		b.publish <- Pub{route, data}
+var (
+	resetMsg []byte
+)
+
+func init() {
+	var err error
+	if resetMsg, err = json.Marshal(OpsD{R: 1}); err != nil {
+		panic("failed marshaling reset message")
 	}
 }
 
+func (b *Broker) resetSubscribers(route string) {
+	b.publish <- Pub{route, resetMsg}
+}
+
 func (b *Broker) resetClients(subjectID string) {
-	if data, err := json.Marshal(OpsD{R: 1}); err == nil {
-		b.logout <- Pub{subjectID, data}
-	}
+	b.logout <- Pub{subjectID, resetMsg}
 }
 
 // run starts i/o between the broker and clients.
