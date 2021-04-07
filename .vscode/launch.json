@@ -40,6 +40,30 @@
         "-debug",
         "-editable",
       ]
+    },
+    {
+      "name": "Debug Wave Server (OIDC)",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/cmd/wave/main.go",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "-web-dir",
+        "./ui/build",
+        "-debug",
+        "-editable",
+        "-oidc-client-id",
+        "${env:OIDC_CLIENT_ID}",
+        "-oidc-client-secret",
+        "${env:OIDC_CLIENT_SECRET}",
+        "-oidc-provider-url",
+        "http://localhost:8080/auth/realms/master",
+        "-oidc-redirect-url",
+        "http://localhost:10101/_auth/callback",
+        "-oidc-redirect-url",
+        "http://localhost:10101/_auth/callback",
+      ]
     }
   ]
 }
