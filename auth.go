@@ -379,13 +379,7 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	cookie.MaxAge = -1
 	http.SetCookie(w, cookie)
 
-	// Clean up session.
-	_, ok := h.auth.get(sessionID)
-	if !ok {
-		echo(Log{"t": "logout_session", "error": "not found"})
-		h.logoutRedirect(w, r)
-		return
-	}
+	// Purge session
 	h.auth.remove(sessionID)
 
 	h.logoutRedirect(w, r)
