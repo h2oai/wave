@@ -345,32 +345,14 @@ func newLogoutHandler(auth *Auth, broker *Broker) http.Handler {
 	return &LogoutHandler{auth, broker}
 }
 
-func (h *LogoutHandler) logoutRedirect(w http.ResponseWriter, r *http.Request) {
-	if h.auth.conf.EndSessionURL == "" {
-		http.Redirect(w, r, "/", http.StatusFound)
-		return
-	}
-
-	redirectURL, err := url.Parse(h.auth.conf.EndSessionURL)
-	if err != nil {
-		echo(Log{"t": "logout_redirect_parse", "error": err.Error()})
-		return
-	}
-
-	query := redirectURL.Query()
-	// TODO (#291): some providers, for example OKTA, require id_token_hint
-	query.Set("post_logout_redirect_uri", r.Host)
-	redirectURL.RawQuery = query.Encode()
-
-	http.Redirect(w, r, redirectURL.String(), http.StatusFound)
-}
-
 func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var idToken string
+
 	// Retrieve saved session.
 	cookie, err := r.Cookie(authCookieName)
 	if err != nil {
 		echo(Log{"t": "logout_cookie", "error": "not found"})
-		h.logoutRedirect(w, r)
+		h.redirect(w, r, idToken)
 		return
 	}
 
@@ -384,10 +366,35 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Purge session
 	h.auth.remove(sessionID)
 
-	// Reload all of this user's browser tabs
 	if ok {
+		// Reload all of this user's browser tabs
 		h.broker.resetClients(session.subject)
+		idToken, _ = session.token.Extra("id_token").(string) // raw id_token (required by Okta)
 	}
 
-	h.logoutRedirect(w, r)
+	h.redirect(w, r, idToken)
+}
+
+func (h *LogoutHandler) redirect(w http.ResponseWriter, r *http.Request, idToken string) {
+	if h.auth.conf.EndSessionURL == "" {
+		http.Redirect(w, r, "/", http.StatusFound)
+		return
+	}
+
+	redirectURL, err := url.Parse(h.auth.conf.EndSessionURL)
+	if err != nil {
+		echo(Log{"t": "logout_redirect_parse", "error": err.Error()})
+		return
+	}
+
+	query := redirectURL.Query()
+	query.Set("post_logout_redirect_uri", r.Host)
+	if len(idToken) > 0 {
+		// required by Okta
+		// https://developer.okta.com/docs/reference/api/oidc/#logout
+		query.Set("id_token_hint", idToken)
+	}
+	redirectURL.RawQuery = query.Encode()
+
+	http.Redirect(w, r, redirectURL.String(), http.StatusFound)
 }
