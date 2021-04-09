@@ -23,8 +23,14 @@ yarn-error.log*
 
 # Generated content
 /examples.js
+/components.js
+/cards.js
 /docs/examples/*.md
 /docs/api/*.md
 /docs/api/h2o_wave_ml/*.md
+/docs/components/*.md
+/docs/components/assets/*
+/docs/cards/*.md
+/docs/cards/assets/*
 /serve-linux
 /serve-darwin
