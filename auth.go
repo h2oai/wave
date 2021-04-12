@@ -51,6 +51,7 @@ func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 
 // Session represents an end-user session
 type Session struct {
+	id         string
 	state      string
 	nonce      string
 	subject    string
@@ -92,10 +93,10 @@ func (auth *Auth) get(key string) (Session, bool) {
 	return session, ok
 }
 
-func (auth *Auth) set(key string, session Session) {
+func (auth *Auth) set(session Session) {
 	auth.Lock()
 	defer auth.Unlock()
-	auth.sessions[key] = session
+	auth.sessions[session.id] = session
 }
 
 func (auth *Auth) remove(key string) {
@@ -118,7 +119,7 @@ func (auth *Auth) identify(r *http.Request) *Session {
 		return nil
 	}
 
-	token, err := auth.oauth.TokenSource(r.Context(), session.token).Token()
+	token, err := auth.ensureValidOAuth2Token(r.Context(), session.token)
 	if err != nil {
 		echo(Log{"t": "oauth2_token_refresh", "error": err.Error()})
 		return nil
@@ -126,7 +127,7 @@ func (auth *Auth) identify(r *http.Request) *Session {
 
 	if session.token != token {
 		session.token = token
-		auth.set(sessionID, session)
+		auth.set(session)
 	}
 
 	return &session
@@ -159,6 +160,10 @@ func (auth *Auth) wrap(h http.Handler) http.Handler {
 
 		h.ServeHTTP(w, r)
 	})
+}
+
+func (auth *Auth) ensureValidOAuth2Token(ctx context.Context, token *oauth2.Token) (*oauth2.Token, error) {
+	return auth.oauth.TokenSource(ctx, token).Token()
 }
 
 func redirectToLogin(w http.ResponseWriter, r *http.Request) {
@@ -226,7 +231,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Session ID stored in cookie.
 	sessionID := uuid.New().String()
 
-	h.auth.set(sessionID, Session{state: state, nonce: nonce, successURL: successURL})
+	h.auth.set(Session{id: sessionID, state: state, nonce: nonce, successURL: successURL})
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 	cookie := http.Cookie{Name: authCookieName, Value: sessionID, Path: "/", Expires: expiration}
 	http.SetCookie(w, &cookie)
@@ -330,7 +335,7 @@ func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	echo(Log{"t": "login", "subject": session.subject, "username": session.username})
 
-	h.auth.set(sessionID, session)
+	h.auth.set(session)
 
 	http.Redirect(w, r, session.successURL, http.StatusFound)
 }
