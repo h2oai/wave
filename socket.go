@@ -49,7 +49,7 @@ func (s *SocketServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := newClient(getRemoteAddr(r), user, s.broker, conn, s.editable)
+	client := newClient(getRemoteAddr(r), s.auth, user, s.broker, conn, s.editable)
 	go client.flush()
 	go client.listen()
 }

@@ -16,6 +16,7 @@ package wave
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"time"
 
@@ -49,6 +50,7 @@ var (
 // Client represent a websocket (UI) client.
 type Client struct {
 	id       string          // unique id
+	auth     *Auth           // auth provider, might be nil
 	addr     string          // remote IP:port, used for logging only
 	session  *Session        // end-user session
 	broker   *Broker         // broker
@@ -58,8 +60,23 @@ type Client struct {
 	editable bool            // allow editing? // TODO move to user; tie to role
 }
 
-func newClient(addr string, session *Session, broker *Broker, conn *websocket.Conn, editable bool) *Client {
-	return &Client{uuid.New().String(), addr, session, broker, conn, nil, make(chan []byte, 256), editable}
+func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool) *Client {
+	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable}
+}
+
+func (c *Client) refreshToken() error {
+	if c.auth != nil && c.session.token != nil {
+		// TODO: use more meaningful context, e.g. context of current message
+		ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+		defer cancel()
+
+		token, err := c.auth.ensureValidOAuth2Token(ctx, c.session.token)
+		if err != nil {
+			return err
+		}
+		c.session.token = token
+	}
+	return nil
 }
 
 func (c *Client) listen() {
@@ -80,6 +97,12 @@ func (c *Client) listen() {
 				echo(Log{"t": "socket_read", "client": c.addr, "err": err.Error()})
 			}
 			break
+		}
+
+		if err := c.refreshToken(); err != nil {
+			// token refresh failed, this is not fatal err, try next time
+			// TODO kick user out?
+			echo(Log{"t": "refresh_oauth2_token", "client": c.addr, "err": err.Error()})
 		}
 
 		m := parseMsg(msg)
