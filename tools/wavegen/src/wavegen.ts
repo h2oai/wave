@@ -796,7 +796,7 @@ const
         p(` attribute_holder <- attributes(x)$class`)  
         p(` x <- lapply(x,function(y){`)
         p(`     if(is.list(y)){`)  
-        p(`         .return(recursive_null_extractor(y))`)        
+        p(`         return(.recursive_null_extractor(y))`)        
         p(`     }`)
         p(`     else {`)
         p(`         return(y)`)        
