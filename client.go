@@ -101,6 +101,7 @@ func (c *Client) listen() {
 
 		if err := c.refreshToken(); err != nil {
 			// token refresh failed, this is not fatal err, try next time
+			// TODO kick user out?
 			echo(Log{"t": "refresh_oauth2_token", "client": c.addr, "err": err.Error()})
 		}
 
