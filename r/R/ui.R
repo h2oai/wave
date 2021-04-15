@@ -20,7 +20,7 @@
  attribute_holder <- attributes(x)$class
  x <- lapply(x,function(y){
      if(is.list(y)){
-         .return(recursive_null_extractor(y))
+         return(.recursive_null_extractor(y))
      }
      else {
          return(y)
