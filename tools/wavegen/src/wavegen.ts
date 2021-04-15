@@ -793,7 +793,6 @@ const
         printLicense()
         p('')
         p(`.recursive_null_extractor <- function(x){`)
-<<<<<<< HEAD
         p(`     attribute_holder <- attributes(x)$class`)  
         p(`     x <- lapply(x,function(y){`)
         p(`          if(is.list(y)){`)  
@@ -805,7 +804,6 @@ const
         p(`     })`)
         p(`     x[sapply(x,is.null)] <- NULL`)
         p(`     attributes(x)$class <- attribute_holder`)
-=======
         p(` attribute_holder <- attributes(x)$class`)  
         p(` x <- lapply(x,function(y){`)
         p(`     if(is.list(y)){`)  
@@ -817,7 +815,6 @@ const
         p(` })`)
         p(` x[sapply(x,is.null)] <- NULL`)
         p(` attributes(x)$class <- attribute_holder`)
->>>>>>> 03eda4172dace417b866fee86a0be3fb0511b566
         p(` return(x)`)
         p(`}`)
         p(``)
