@@ -95,6 +95,8 @@ export interface Table {
   height?: S
   /** The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`). */
   values?: S[]
+  /** Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'onHover'. */
+  checkbox_visibility?: 'always' | 'onHover' | 'hidden'
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
@@ -379,11 +381,9 @@ export const
           </Fluent.Sticky>
         )
       },
-      onRenderRow = (props?: Fluent.IDetailsRowProps) => {
-        if (!props) return <span />
-
-        return <Fluent.DetailsRow {...props} styles={{ cell: { alignSelf: 'center' }, root: { width: '100%' } }} />
-      },
+      onRenderRow = (props?: Fluent.IDetailsRowProps) => props
+        ? <Fluent.DetailsRow {...props} styles={{ cell: { alignSelf: 'center' }, checkCell: { display: 'flex', alignItems: 'center' }, root: { width: '100%' } }} />
+        : null,
       onColumnClick = (e: React.MouseEvent<HTMLElement>, column: QColumn) => {
         const isMenuClicked = (e.target as HTMLElement).getAttribute('data-icon-name') === 'ChevronDown'
 
@@ -483,6 +483,7 @@ export const
             onRenderItemColumn={onRenderItemColumn}
             onRenderDetailsHeader={onRenderDetailsHeader}
             onRenderDetailsFooter={onRenderDetailsFooter}
+            checkboxVisibility={Fluent.CheckboxVisibility[m.checkbox_visibility || 'onHover']}
           />
           {colContextMenuListB() && <Fluent.ContextualMenu {...(colContextMenuListB() as Fluent.IContextualMenuProps)} />}
         </>
