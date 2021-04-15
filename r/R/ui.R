@@ -16,8 +16,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+.recursive_null_extractor <- function(x){
+     attribute_holder <- attributes(x)$class
+     x <- lapply(x,function(y){
+          if(is.list(y)){
+             return(.recursive_null_extractor(y))
+          }
+          else {
+             return(y)
+          }
+     })
+     x[sapply(x,is.null)] <- NULL
+     attributes(x)$class <- attribute_holder
+ attribute_holder <- attributes(x)$class
+ x <- lapply(x,function(y){
+     if(is.list(y)){
+         return(.recursive_null_extractor(y))
+     }
+     else {
+         return(y)
+     }
+ })
+ x[sapply(x,is.null)] <- NULL
+ attributes(x)$class <- attribute_holder
+ return(x)
+}
+
 .to_json <- function(x) {
-  x[sapply(x,is.null)] <- NULL
+  x <- .recursive_null_extractor(x)
   jsonlite::toJSON(x, auto_unbox = TRUE)
 }
 
