@@ -53,6 +53,8 @@ export interface Button {
   disabled?: B
   /** True if the button should be rendered as link text and not a standard button. */
   link?: B
+  /** An optional icon to display next to the button label (not applicable for links). */
+  icon?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
@@ -102,13 +104,14 @@ const
         if (m.link) {
           return <Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>
         }
+        const btnProps: Fluent.IButtonProps = { text: m.label, disabled: m.disabled, onClick, iconProps: { iconName: m.icon } }
         return m.caption?.length
           ? m.primary
-            ? <Fluent.CompoundButton data-test={m.name} primary text={m.label} secondaryText={m.caption} disabled={m.disabled} onClick={onClick} />
-            : <Fluent.CompoundButton data-test={m.name} text={m.label} secondaryText={m.caption} disabled={m.disabled} onClick={onClick} />
+            ? <Fluent.CompoundButton {...btnProps} data-test={m.name} primary secondaryText={m.caption} />
+            : <Fluent.CompoundButton {...btnProps} data-test={m.name} secondaryText={m.caption} />
           : m.primary
-            ? <Fluent.PrimaryButton data-test={m.name} text={m.label} disabled={m.disabled} onClick={onClick} />
-            : <Fluent.DefaultButton data-test={m.name} text={m.label} disabled={m.disabled} onClick={onClick} />
+            ? <Fluent.PrimaryButton {...btnProps} data-test={m.name} />
+            : <Fluent.DefaultButton {...btnProps} data-test={m.name} />
       }
     return { render }
   })
