@@ -57,6 +57,8 @@ module.exports = {
       'api/graphics',
       'api/types',
       'api/test',
+      'api/h2o_wave_ml/index',
+      'api/h2o_wave_ml/ml',
     ],
   },
 };

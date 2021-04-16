@@ -9,15 +9,20 @@ build: purge
 setup: ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
-	./venv/bin/python -m pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
+	./venv/bin/python -m pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8 h2o-wave-ml==v0.3.0
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
 
+h2o_wave_ml:
+	git clone --depth 1 --branch v0.3.0 https://github.com/h2oai/wave-ml.git h2o_wave_ml
+
 .PHONY: docs
-docs: ## Build API docs
+docs: h2o_wave_ml ## Build API docs
 	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_wave
-	mkdir -p ../website/docs/api/
+	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_wave_ml/h2o_wave_ml
+	mkdir -p ../website/docs/api/h2o_wave_ml
 	mv build/docs/h2o_wave/* ../website/docs/api/
+	mv build/docs/h2o_wave_ml/* ../website/docs/api/h2o_wave_ml/
 	./venv/bin/python sync_examples.py
 
 purge: ## Purge previous build
