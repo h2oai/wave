@@ -35,7 +35,7 @@ Relevant environment variables:
 - `WAVE_APP_ADDRESS`: The `protocol://ip:port` of the app server as visible from the Wave server.
 - `WAVE_APP_MODE`: The sync mode of the app, one of `unicast`, `multicast` or `broadcast`.
 - `WAVE_ACCESS_KEY_ID`: The API access key ID, typically a 20-character cryptographically random string.
-- `WAVE_ACCESS_KEY_SECRET: The API access key secret, typically a 40-character cryptographically random string.
+- `WAVE_ACCESS_KEY_SECRET`: The API access key secret, typically a 40-character cryptographically random string.
 
 ### Startup
 
@@ -59,47 +59,25 @@ Before parsing the HTTP request and handing over control to the app, the body of
 
 ### Processing requests
 
-The body of each HTTP request looks like this:
+The HTTP request body is UTF-8 encoded JSON.  The body is parsed to get the `args` dictionary. Additionally, if the `args` dictionary contains a empty-string key, it is removed from the `args` dictionary and treated as the `events` dictionary.
 
-```
-u:username
-s:subject_id
-c:client_id
-a:access_token
-r:refresh_token
-
-{
-  "foo": "zaphod",
-  "bar": 42,
-  "qux": true,
-  "": {
-    "quux_clicked": true,
-  }
-}
-```
-
-To process the request: 
-- The request body is split at `\n\n` into a head and a body.
-- The head is split by `\n` into headers.
-    - Each header is split at `:` into a name-value pair. 
-      - `u`: OIDC preferred username.
-      - `s`: OIDC subject ID (each user has a unique subject ID).
-      - `c`: Client ID (each browser tab has a unique client ID).
-      - `a`: OIDC access token.
-      - `r`: OIDC refresh token.
-- The body is parsed as JSON to get the `args` dictionary.
-  - If the `args` dictionary contains a empty-string key, it is removed from the `args` dictionary and treated as the `events` dictionary.
+The client and authentication details are sent as headers:
+- `Wave-Client-ID`: Client ID (each browser tab has a unique client ID).
+- `Wave-Subject-ID`: OIDC subject ID (each user has a unique subject ID).
+- `Wave-Username`: OIDC preferred username.
+- `Wave-Access-Token`: OIDC access token.
+- `Wave-Refresh-Token`: OIDC refresh token.
 
 At this point, a `page` instance is initialized for the app. The location of the page depends on `$WAVE_APP_MODE`:
 - `unicast`: `/client_id` (the client ID, which uniquely identifies the browser tab).
 - `multicast`: `/subject` (the OIDC subject id, which uniquely identifies the user).
 - `broadcast`: `/foo` (the route the app is responding to).
 
-Finally, all the above items are passed on to the app for further processing.
+Finally, all the above items (args, events, headers, page) are passed on to the app for further processing.
 
 ### Shutdown
 
-On app termination, de-registers itself from the Wave server by sending a `POST` request to `$WAVE_ADDRESS` (with `Content-Type: application/json`).
+On app termination, the app de-registers itself from the Wave server by sending a `POST` request to `$WAVE_ADDRESS` (with `Content-Type: application/json`).
 
 ```
 {
