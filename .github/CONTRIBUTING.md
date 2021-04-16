@@ -54,36 +54,76 @@ If you discover a security vulnerability within H2O Wave, please send an email t
 
 ## Development Setup
 
-You will need [Node.js](http://nodejs.org) 10+, [Go](https://golang.org/) 1.13+, [Python](https://www.python.org/) 3.6+.
-After cloning the repo, run:
+:warning: This project is best developed on OSX or Linux at the moment. If you develop on Windows, [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) is recommended.
+
+You will need [Go](https://golang.org/) 1.13+, [Node.js](http://nodejs.org) 10+, [Python](https://www.python.org/) 3.6+. You should already have Python 3.6+ on a modern OS. It is recommended that you get Go and Node.js from their websites, since your OS package managers (`apt`, `brew`, etc.) are likely to have old packages.
+
+### Getting started
+
+To set up all development dependencies, clone the repo and run:
 
 ``` bash
-make all
+$ make all
 ```
 
-After successful setup, you need to run:
-
-- Wave server (Go server) with command
+To launch the Wave server, run:
 
 ``` bash
-make run
+$ make run
 ```
 
-:warning: This project is best developed on OSX or Linux at the moment. If you develop on Windows, we suggest using [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).
-
-- Wave app (this will run `tour.py`, but can be any app)
+Try running the Wave tour to verify if your setup is functional:
 
 ``` bash
-cd py && ./venv/bin/python examples/tour.py
+$ cd py && ./venv/bin/wave examples.tour
 ```
 
-- Hot reload webpack server (for easier UI development)
+You should now see the Wave Tour at http://localhost:10101/tour, and examples running at http://localhost:10101/demo.
+
+For front-end development, you'll also need to start the Webpack dev server:
 
 ``` bash
-make run-ui
+$ make run-ui
 ```
 
-After that you can go to `http://localhost:10101/tour` (`http://localhost:3000/tour` if you enabled hot reload server).
+You should now see the Wave Tour at http://localhost:3000/tour, and examples running at http://localhost:3000/demo.
+
+Once you have the Webpack dev server running, you should be able to visualize any changes to `./ui` in real time. 
+
+Happy hacking!
+
+### Daily development
+
+For daily development, you'll only need to pull `master` from git and run `make run` and `make run-ui`. Running `make setup` is not necessary unless `make run` or `make run-ui` fail due to missing dependencies.
+
+### Other make targets
+
+``` bash
+# Generates Python and R APIs.
+# Run only if you add new cards/components or fix docs).
+$ make generate
+
+# Starts jest UI unit tests in watch mode.
+$ make test-ui-watch
+
+# Starts Cypress e2e server for python tests.
+$ make run-cypress-bridge
+```
+
+## Repo Structure
+
+- `cmd`: Go executables
+- `data`: contains data created by a Wave-app itself (e.g. file upload files)
+- `py`: Python package
+- `r`: R package
+- `tools/wavegen`: Typescript to Python/R code-generator
+- `ui`: Typescript + React sources, primarily built using Fluent UI.
+  - `config` contains webpack configuration
+  - `eslint` contains custom eslint rules for `ts` and `tsx` files.  It is required to run `npm ci` after changing `linter.js` in order for changes to take effect.
+- `docs`: published documentation website
+- `website`: documentation sources
+- `ide`: Browser-based IDE (future)
+- `db`: Application Database (future)
 
 ### Committing Changes
 
@@ -96,41 +136,3 @@ Commit messages must follow [Conventional commits](https://www.conventionalcommi
 If any of these checks fails, the commit is aborted and you have to fix the errors first.
 
 Make sure your commit message also ends with an issue number e.g. `fix: Typo #11`. (Tip: If you name your branch name in format `something-#GITHUB_ISSUE_NUM`, the issue number will get appended automatically to your commit message.)
-
-### Commonly used make targets
-
-``` bash
-# Compiles Typescript API to Python API.
-$ make generate
-
-# Starts Wave server.
-$ make run
-
-# Starts hot reload dev server for UI.
-$ make run-ui
-
-# Starts jest UI unit tests in watch mode.
-$ make test-ui-watch
-
-# Starts Cypress e2e server for python tests.
-$ make run-cypress-bridge
-```
-
-## Project Structure
-
-- **`data`**: contains data created by a Wave-app itself (e.g. file upload files)
-
-- **`docs`**: contains documentation page related files
-
-- **`website`**: documentation page source files
-
-- **`py`**: contains Python lib that is exported as a package
-
-- **`r`**: contains R lib that is exported as a package
-
-- **`tools`**: contains Typescript to Python generator
-
-- **`ui`**: contains UI components written in React + Typescript that are later translated to Python
-  - **`config`** contains webpack configuration
-  - **`eslint`** contains custom eslint rules for `ts` and `tsx` files
-  It is required to run `npm ci` after changing `linter.js` in order for changes to take effect.
