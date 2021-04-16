@@ -2734,6 +2734,7 @@ class Button:
             primary: Optional[bool] = None,
             disabled: Optional[bool] = None,
             link: Optional[bool] = None,
+            icon: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -2744,6 +2745,7 @@ class Button:
         _guard_scalar('Button.primary', primary, (bool,), False, True, False)
         _guard_scalar('Button.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('Button.link', link, (bool,), False, True, False)
+        _guard_scalar('Button.icon', icon, (str,), False, True, False)
         _guard_scalar('Button.visible', visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -2760,6 +2762,8 @@ class Button:
         """True if the button should be disabled."""
         self.link = link
         """True if the button should be rendered as link text and not a standard button."""
+        self.icon = icon
+        """An optional icon to display next to the button label (not applicable for links)."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -2774,6 +2778,7 @@ class Button:
         _guard_scalar('Button.primary', self.primary, (bool,), False, True, False)
         _guard_scalar('Button.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('Button.link', self.link, (bool,), False, True, False)
+        _guard_scalar('Button.icon', self.icon, (str,), False, True, False)
         _guard_scalar('Button.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -2784,6 +2789,7 @@ class Button:
             primary=self.primary,
             disabled=self.disabled,
             link=self.link,
+            icon=self.icon,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -2805,6 +2811,8 @@ class Button:
         _guard_scalar('Button.disabled', __d_disabled, (bool,), False, True, False)
         __d_link: Any = __d.get('link')
         _guard_scalar('Button.link', __d_link, (bool,), False, True, False)
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('Button.icon', __d_icon, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Button.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -2816,6 +2824,7 @@ class Button:
         primary: Optional[bool] = __d_primary
         disabled: Optional[bool] = __d_disabled
         link: Optional[bool] = __d_link
+        icon: Optional[str] = __d_icon
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Button(
@@ -2826,6 +2835,7 @@ class Button:
             primary,
             disabled,
             link,
+            icon,
             visible,
             tooltip,
         )
