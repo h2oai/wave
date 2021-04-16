@@ -246,29 +246,33 @@ class _App:
         logger.debug('Unregister: success!')
 
     async def _receive(self, req: Request):
-        b = await req.body()
-        return PlainTextResponse('', background=BackgroundTask(self._process, b.decode('utf-8')))
+        client_id = req.headers.get('Wave-Client-ID')
+        subject = req.headers.get('Wave-Subject-ID')
+        username = req.headers.get('Wave-Username')
+        access_token = req.headers.get('Wave-Access-Token')
+        refresh_token = req.headers.get('Wave-Refresh-Token')
+        auth = Auth(username, subject, access_token, refresh_token)
+        args = await req.json()
+        return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, args))
 
-    async def _process(self, query: str):
-        username, subject, client_id, access_token, refresh_token, args = _parse_query(query)
-        logger.debug(f'user: {username}, client: {client_id}')
+    async def _process(self, client_id: str, auth: Auth, args: dict):
+        logger.debug(f'user: {auth.username}, client: {client_id}')
         logger.debug(args)
         app_state, user_state, client_state = self._state
-        args_state: dict = unmarshal(args)
-        events_state: Optional[dict] = args_state.get('', None)
+        events_state: Optional[dict] = args.get('', None)
         if isinstance(events_state, dict):
             events_state = {k: Expando(v) for k, v in events_state.items()}
-            del args_state['']
+            del args['']
         q = Q(
             site=self._site,
             mode=self._mode,
-            auth=Auth(username, subject, access_token, refresh_token),
+            auth=auth,
             client_id=client_id,
             route=self._route,
             app_state=app_state,
-            user_state=_session_for(user_state, username),
+            user_state=_session_for(user_state, auth.subject),
             client_state=_session_for(client_state, client_id),
-            args=Expando(args_state),
+            args=Expando(args),
             events=Expando(events_state),
         )
         # noinspection PyBroadException,PyPep8
@@ -354,35 +358,6 @@ def _save_state(state: WebAppState):
     logger.info(f'Creating checkpoint at {f} ...')
     with open(f, 'wb') as p:
         pickle.dump(checkpoint, p)
-
-
-def _parse_query(query: str) -> Tuple[str, str, str, str, str, str]:
-    username = ''
-    subject = ''
-    client_id = ''
-    access_token = ''
-    refresh_token = ''
-
-    # format:
-    # u:username\ns:subject\nc:client_id\na:access_token\nr:refresh_token\n\nbody
-
-    head, body = query.split('\n\n', maxsplit=1)
-    for line in head.splitlines():
-        kv = line.split(':', maxsplit=1)
-        if len(kv) == 2:
-            k, v = kv
-            if k == 'u':
-                username = v
-            elif k == 's':
-                subject = v
-            elif k == 'c':
-                client_id = v
-            elif k == 'a':
-                access_token = v
-            elif k == 'r':
-                refresh_token = v
-
-    return username, subject, client_id, access_token, refresh_token, body
 
 
 class _Main:

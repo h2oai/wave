@@ -60,9 +60,13 @@ type Session struct {
 	token      *oauth2.Token
 }
 
+const (
+	anon = "anon"
+)
+
 var anonymous = &Session{
-	subject:  "anonymous",
-	username: "anonymous",
+	subject:  anon,
+	username: anon,
 	token:    &oauth2.Token{},
 }
 
