@@ -26,7 +26,7 @@ docs: h2o_wave_ml ## Build API docs
 	./venv/bin/python sync_examples.py
 
 purge: ## Purge previous build
-	rm -rf build dist h2o_wave.egg-info
+	rm -rf build dist h2o_wave.egg-info h2o_wave_ml
 
 .PHONY: examples
 examples:
