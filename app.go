@@ -31,11 +31,13 @@ const (
 
 // App represents an app
 type App struct {
-	broker *Broker
-	client *http.Client
-	mode   AppMode // mode
-	route  string  // route
-	addr   string  // upstream address http://host:port
+	broker    *Broker
+	client    *http.Client
+	mode      AppMode // mode
+	route     string  // route
+	addr      string  // upstream address http://host:port
+	keyID     string  // access key ID
+	keySecret string  // access key secret
 }
 
 // Boot represents the initial message sent when a client connects to an app
@@ -53,13 +55,15 @@ func toAppMode(mode string) AppMode {
 	return unicastMode
 }
 
-func newApp(broker *Broker, mode, route, addr string) *App {
+func newApp(broker *Broker, mode, route, addr, keyID, keySecret string) *App {
 	return &App{
 		broker,
 		&http.Client{}, // TODO tune keep-alive and idle timeout
 		toAppMode(mode),
 		route,
 		addr,
+		keyID,
+		keySecret,
 	}
 }
 
@@ -76,6 +80,8 @@ func (app *App) send(clientID string, session *Session, data []byte) error {
 		return fmt.Errorf("failed creating request: %v", err)
 	}
 
+	req.SetBasicAuth(app.keyID, app.keySecret)
+
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Set("Wave-Client-ID", clientID)
 	if session.subject != anon {
@@ -87,9 +93,12 @@ func (app *App) send(clientID string, session *Session, data []byte) error {
 
 	resp, err := app.client.Do(req)
 	if err != nil {
-		return fmt.Errorf("failed sending request: %v", err)
+		return fmt.Errorf("request failed: %v", err)
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("request failed: %s", http.StatusText(resp.StatusCode))
+	}
 	if _, err := readWithLimit(resp.Body, 0); err != nil { // apps always return empty plain-text responses.
 		return fmt.Errorf("failed reading response: %v", err)
 	}

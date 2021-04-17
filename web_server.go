@@ -123,7 +123,7 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 		}
 		if req.RegisterApp != nil {
 			q := req.RegisterApp
-			s.broker.addApp(q.Mode, q.Route, q.Address)
+			s.broker.addApp(q.Mode, q.Route, q.Address, q.KeyID, q.KeySecret)
 		} else if req.UnregisterApp != nil {
 			q := req.UnregisterApp
 			s.broker.dropApp(q.Route)

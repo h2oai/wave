@@ -34,8 +34,10 @@ Relevant environment variables:
 - `WAVE_ADDRESS`: The `protocol://ip:port` of the Wave server as visible from the app server.
 - `WAVE_APP_ADDRESS`: The `protocol://ip:port` of the app server as visible from the Wave server.
 - `WAVE_APP_MODE`: The sync mode of the app, one of `unicast`, `multicast` or `broadcast`.
-- `WAVE_ACCESS_KEY_ID`: The API access key ID, typically a 20-character cryptographically random string.
-- `WAVE_ACCESS_KEY_SECRET`: The API access key secret, typically a 40-character cryptographically random string.
+- `WAVE_ACCESS_KEY_ID`: The Wave server API access key ID, typically a cryptographically random string.
+- `WAVE_ACCESS_KEY_SECRET`: The Wave server API access key secret, typically a cryptographically random string.
+- `WAVE_APP_ACCESS_KEY_ID`: The app server API access key ID, typically a cryptographically random string.
+- `WAVE_APP_ACCESS_KEY_SECRET`: The app server API access key secret, typically a cryptographically random string.
 
 ### Startup
 
@@ -46,16 +48,23 @@ On app launch, the app registers itself with the Wave server by sending a `POST`
   "register_app": {
     "mode": "$WAVE_APP_MODE",
     "address": "$WAVE_APP_ADDRESS"
+    "key_id": "$WAVE_APP_ACCESS_KEY_ID",
+    "key_secret": "$WAVE_APP_ACCESS_KEY_SECRET",
     "route": "/foo",
   }
 }
 ```
 
+The `key_id` and `key_secret` are automatically generated at startup if `$WAVE_APP_ACCESS_KEY_ID` or `$WAVE_APP_ACCESS_KEY_SECRET` are empty.
+
 ### Accepting requests
 
 The Wave server now starts forwarding browser requests from the Wave server's `/foo` to the app server's `/`. Consequently, the app framework requires exactly one HTTP handler, listening to `POST` requests at `/`.
 
-Before parsing the HTTP request and handing over control to the app, the body of the HTTP request is captured and a plain-text empty-string response is sent to the Wave server. The Wave server ignores responses.
+On receiving a request, the app server:
+1. Verifies if the credentials in the request's basic-authentication header match `$WAVE_APP_ACCESS_KEY_ID` and `$WAVE_APP_ACCESS_KEY_SECRET`.
+2. Captures the headers and body of the HTTP request.
+3. Responds with a plain-text empty-string (200 status code). Note that the Wave server ignores responses.
 
 ### Processing requests
 

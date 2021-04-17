@@ -83,8 +83,8 @@ func newBroker(site *Site) *Broker {
 	}
 }
 
-func (b *Broker) addApp(mode, route, addr string) {
-	s := newApp(b, mode, route, addr)
+func (b *Broker) addApp(mode, route, addr, keyID, keySecret string) {
+	s := newApp(b, mode, route, addr, keyID, keySecret)
 
 	b.appsMux.Lock()
 	b.apps[route] = s

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import json
+import secrets
 import warnings
 import logging
 import os
@@ -47,6 +48,8 @@ class _Config:
         self.hub_address = _get_env('ADDRESS', 'http://127.0.0.1:10101')
         self.hub_access_key_id: str = _get_env('ACCESS_KEY_ID', 'access_key_id')
         self.hub_access_key_secret: str = _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
+        self.app_access_key_id: str = _get_env('APP_ACCESS_KEY_ID', None) or secrets.token_urlsafe(16)
+        self.app_access_key_secret: str = _get_env('APP_ACCESS_KEY_SECRET', None) or secrets.token_urlsafe(16)
 
 
 _config = _Config()

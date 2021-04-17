@@ -26,6 +26,8 @@ import functools
 import warnings
 import pickle
 import traceback
+import base64
+import binascii
 from typing import Dict, Tuple, Callable, Any, Awaitable, Optional
 from urllib.parse import urlparse
 
@@ -38,8 +40,8 @@ from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 from starlette.background import BackgroundTask
 
-from .core import Expando, expando_to_dict, _config, marshal, unmarshal, _content_type_json, AsyncSite, _get_env, \
-    UNICAST, MULTICAST
+from .core import Expando, expando_to_dict, _config, marshal, _content_type_json, AsyncSite, _get_env, UNICAST, \
+    MULTICAST
 from .ui import markdown_card
 
 logger = logging.getLogger(__name__)
@@ -237,7 +239,14 @@ class _App:
     async def _register(self):
         app_address = _get_env('APP_ADDRESS', _config.app_address)
         logger.debug(f'Registering app at {app_address} ...')
-        await self._wave.call('register_app', mode=self._mode, route=self._route, address=app_address)
+        await self._wave.call(
+            'register_app',
+            mode=self._mode,
+            route=self._route,
+            address=app_address,
+            key_id=_config.app_access_key_id,
+            key_secret=_config.app_access_key_secret,
+        )
         logger.debug('Register: success!')
 
     async def _unregister(self):
@@ -246,6 +255,21 @@ class _App:
         logger.debug('Unregister: success!')
 
     async def _receive(self, req: Request):
+        basic_auth = req.headers.get("Authorization")
+        if basic_auth is None:
+            return PlainTextResponse(content='Unauthorized', status_code=401)
+        try:
+            scheme, credentials = basic_auth.split()
+            if scheme.lower() != 'basic':
+                return PlainTextResponse(content='Unauthorized', status_code=401)
+            decoded = base64.b64decode(credentials).decode("ascii")
+        except (ValueError, UnicodeDecodeError, binascii.Error) as exc:
+            return PlainTextResponse(content='Unauthorized', status_code=401)
+
+        key_id, _, key_secret = decoded.partition(":")
+        if key_id != _config.app_access_key_id or key_secret != _config.app_access_key_secret:
+            return PlainTextResponse(content='Unauthorized', status_code=401)
+
         client_id = req.headers.get('Wave-Client-ID')
         subject = req.headers.get('Wave-Subject-ID')
         username = req.headers.get('Wave-Username')
@@ -253,6 +277,7 @@ class _App:
         refresh_token = req.headers.get('Wave-Refresh-Token')
         auth = Auth(username, subject, access_token, refresh_token)
         args = await req.json()
+
         return PlainTextResponse('', background=BackgroundTask(self._process, client_id, auth, args))
 
     async def _process(self, client_id: str, auth: Auth, args: dict):
