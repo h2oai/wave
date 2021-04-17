@@ -19,6 +19,7 @@ async def serve(q: Q):
             ui.text(f'primary_compound_button={q.args.primary_compound_button}'),
             ui.text(f'basic_compound_disabled_button={q.args.basic_compound_disabled_button}'),
             ui.text(f'primary_compound_disabled_button={q.args.primary_compound_disabled_button}'),
+            ui.text(f'icon_button={q.args.icon_button}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
@@ -35,5 +36,6 @@ async def serve(q: Q):
                       disabled=True),
             ui.button(name='primary_compound_disabled_button', label='Primary (Disabled)', caption='Compound Button',
                       primary=True, disabled=True),
+            ui.button(name='icon_button', label='Icon button', icon='Search'),
         ])
     await q.page.save()

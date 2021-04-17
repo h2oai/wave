@@ -1268,6 +1268,7 @@ ui_color_picker <- function(
 #' @param primary True if the button should be rendered as the primary button in the set.
 #' @param disabled True if the button should be disabled.
 #' @param link True if the button should be rendered as link text and not a standard button.
+#' @param icon An optional icon to display next to the button label (not applicable for links).
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Button instance.
@@ -1280,6 +1281,7 @@ ui_button <- function(
   primary = NULL,
   disabled = NULL,
   link = NULL,
+  icon = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1289,6 +1291,7 @@ ui_button <- function(
   .guard_scalar("primary", "logical", primary)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("link", "logical", link)
+  .guard_scalar("icon", "character", icon)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(button=list(
@@ -1299,6 +1302,7 @@ ui_button <- function(
     primary=primary,
     disabled=disabled,
     link=link,
+    icon=icon,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))

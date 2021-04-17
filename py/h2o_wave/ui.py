@@ -1081,6 +1081,7 @@ def button(
         primary: Optional[bool] = None,
         disabled: Optional[bool] = None,
         link: Optional[bool] = None,
+        icon: Optional[str] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
@@ -1109,6 +1110,7 @@ def button(
         primary: True if the button should be rendered as the primary button in the set.
         disabled: True if the button should be disabled.
         link: True if the button should be rendered as link text and not a standard button.
+        icon: An optional icon to display next to the button label (not applicable for links).
         visible: True if the component should be visible. Defaults to true.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
@@ -1122,6 +1124,7 @@ def button(
         primary,
         disabled,
         link,
+        icon,
         visible,
         tooltip,
     ))

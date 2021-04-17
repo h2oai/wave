@@ -16,6 +16,7 @@ package wave
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 )
 
@@ -30,11 +31,13 @@ const (
 
 // App represents an app
 type App struct {
-	broker *Broker
-	client *http.Client
-	mode   AppMode // mode
-	route  string  // route
-	addr   string  // upstream address http://host:port
+	broker    *Broker
+	client    *http.Client
+	mode      AppMode // mode
+	route     string  // route
+	addr      string  // upstream address http://host:port
+	keyID     string  // access key ID
+	keySecret string  // access key secret
 }
 
 // Boot represents the initial message sent when a client connects to an app
@@ -52,32 +55,52 @@ func toAppMode(mode string) AppMode {
 	return unicastMode
 }
 
-func newApp(broker *Broker, mode, route, addr string) *App {
+func newApp(broker *Broker, mode, route, addr, keyID, keySecret string) *App {
 	return &App{
 		broker,
 		&http.Client{}, // TODO tune keep-alive and idle timeout
 		toAppMode(mode),
 		route,
 		addr,
+		keyID,
+		keySecret,
 	}
 }
 
-func (app *App) forward(data []byte) {
-	if !app.send(data) {
+func (app *App) forward(clientID string, session *Session, data []byte) {
+	if err := app.send(clientID, session, data); err != nil {
+		echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error()})
 		app.broker.dropApp(app.route)
 	}
 }
 
-func (app *App) send(data []byte) bool {
-	resp, err := app.client.Post(app.addr, "text/plain; charset=utf-8", bytes.NewReader(data))
+func (app *App) send(clientID string, session *Session, data []byte) error {
+	req, err := http.NewRequest("POST", app.addr, bytes.NewReader(data))
 	if err != nil {
-		echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error()})
-		return false
+		return fmt.Errorf("failed creating request: %v", err)
+	}
+
+	req.SetBasicAuth(app.keyID, app.keySecret)
+
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Set("Wave-Client-ID", clientID)
+	if session.subject != anon {
+		req.Header.Set("Wave-Subject-ID", session.subject)
+		req.Header.Set("Wave-Username", session.username)
+		req.Header.Set("Wave-Access-Token", session.token.AccessToken)
+		req.Header.Set("Wave-Refresh-Token", session.token.RefreshToken)
+	}
+
+	resp, err := app.client.Do(req)
+	if err != nil {
+		return fmt.Errorf("request failed: %v", err)
 	}
 	defer resp.Body.Close()
-	if _, err := readWithLimit(resp.Body, 0); err != nil { // apps always return empty plain-text responses.
-		echo(Log{"t": "app", "route": app.route, "host": app.addr, "error": err.Error()})
-		return false
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("request failed: %s", http.StatusText(resp.StatusCode))
 	}
-	return true
+	if _, err := readWithLimit(resp.Body, 0); err != nil { // apps always return empty plain-text responses.
+		return fmt.Errorf("failed reading response: %v", err)
+	}
+	return nil
 }
