@@ -2,7 +2,7 @@
 title: Security
 ---
 
-## App Access Keys
+## Wave Server API Access Keys
 
 Wave apps and scripts access the Wave server using access keys via [HTTP Basic Authentication](https://tools.ietf.org/html/rfc7617).
 
@@ -79,7 +79,6 @@ To remove a key from a keychain file located elsewhere, do this:
 $ ./waved -remove-access-key ENHL90KR2HZD6X2ZIYLZ -access-keychain /path/to/file.extension
 ```
 
-
 ## HTTPS
 
 To enable HTTP over TLS to secure your Wave server, pass the following flags when starting the Wave server:
@@ -131,3 +130,8 @@ depends on a provider settings but usually it's short. Access token is refreshed
 the query handler `serve()` is called.
 :::
 
+
+
+## App Server API Access Keys
+
+Access to a Wave app is controlled via [HTTP Basic Authentication](https://tools.ietf.org/html/rfc7617). The basic authentication username/password pair is automatically generated on app launch, and is visible only to the Wave server. You can manually override this behavior by setting the `$WAVE_APP_ACCESS_KEY_ID` / `$WAVE_APP_ACCESS_KEY_SECRET` environment variables (for development/testing only - not recommended in production).
