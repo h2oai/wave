@@ -96,7 +96,7 @@ export interface Table {
   /** The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`). */
   values?: S[]
   /** Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'onHover'. */
-  checkbox_visibility?: 'always' | 'onHover' | 'hidden'
+  checkbox_visibility?: 'always' | 'on-hover' | 'hidden'
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
@@ -137,6 +137,11 @@ const
       }
     }
   }),
+  checkboxVisibilityMap = {
+    'always': Fluent.CheckboxVisibility.always,
+    'on-hover': Fluent.CheckboxVisibility.onHover,
+    'hidden': Fluent.CheckboxVisibility.hidden,
+  },
   groupByF = function <T extends Dict<any>>(arr: T[], key: S): Dict<any> {
     return arr.reduce((rv, x: T) => {
       (rv[x[key]] = rv[x[key]] || []).push(x)
@@ -483,7 +488,7 @@ export const
             onRenderItemColumn={onRenderItemColumn}
             onRenderDetailsHeader={onRenderDetailsHeader}
             onRenderDetailsFooter={onRenderDetailsFooter}
-            checkboxVisibility={Fluent.CheckboxVisibility[m.checkbox_visibility || 'onHover']}
+            checkboxVisibility={checkboxVisibilityMap[m.checkbox_visibility || 'on-hover']}
           />
           {colContextMenuListB() && <Fluent.ContextualMenu {...(colContextMenuListB() as Fluent.IContextualMenuProps)} />}
         </>

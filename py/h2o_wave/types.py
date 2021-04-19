@@ -3297,12 +3297,12 @@ class TableRow:
         )
 
 
-_TableCheckboxVisibility = ['always', 'onHover', 'hidden']
+_TableCheckboxVisibility = ['always', 'on-hover', 'hidden']
 
 
 class TableCheckboxVisibility:
     ALWAYS = 'always'
-    ONHOVER = 'onHover'
+    ON_HOVER = 'on-hover'
     HIDDEN = 'hidden'
 
 
@@ -3369,7 +3369,7 @@ class Table:
         self.values = values
         """The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`)."""
         self.checkbox_visibility = checkbox_visibility
-        """Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'onHover'. One of 'always', 'onHover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility."""
+        """Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'onHover'. One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
