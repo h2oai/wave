@@ -95,7 +95,7 @@ export interface Table {
   height?: S
   /** The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`). */
   values?: S[]
-  /** Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'onHover'. */
+  /** Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'. */
   checkbox_visibility?: 'always' | 'on-hover' | 'hidden'
   /** True if the component should be visible. Defaults to true. */
   visible?: B
