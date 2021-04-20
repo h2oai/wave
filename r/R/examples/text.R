@@ -7,7 +7,6 @@ library(h2owave)
 
 # Create a new page called "demo". 
 page <- Site("/demo")
-#page$drop()
 # Markdown content
 sample_markdown = "
 
