@@ -92,7 +92,7 @@ build-website: docs ## Build website
 	cd website && npm ci && npm run build
 
 publish-website: ## Publish website
-	rm -rf docs && mkdir docs && rsync -a website/build/ docs/
+	aws s3 sync website/build s3://wave.h2o.ai --delete
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

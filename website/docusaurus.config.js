@@ -1,8 +1,8 @@
 module.exports = {
   title: 'H2O Wave',
   tagline: 'Realtime Web Apps and Dashboards for Python',
-  url: 'https://h2oai.github.io/wave/',
-  baseUrl: '/wave/',
+  url: 'https://wave.h2o.ai',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'h2oai', // Usually your GitHub org/user name.
