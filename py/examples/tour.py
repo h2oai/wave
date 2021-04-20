@@ -161,57 +161,46 @@ app_title = 'H2O Wave Tour'
 
 
 async def setup_page(q: Q):
-    q.page['meta'] = ui.meta_card(
-        box='',
-        title=app_title
-    )
+    q.page['meta'] = ui.meta_card(box='', title=app_title, layouts=[
+        ui.layout(breakpoint='xs', zones=[
+            ui.zone('header'),
+            ui.zone('blurb'),
+            ui.zone('main', size='calc(100vh - 130px)', direction=ui.ZoneDirection.ROW, zones=[
+                ui.zone('code'),
+                ui.zone('preview')
+            ])
+        ])
+    ])
 
     q.page['header'] = ui.header_card(
-        box='1 1 2 1',
+        box='header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
-    )
-
-    q.page['examples'] = ui.nav_card(
-        box='1 2 2 9',
-        items=[
+        nav=[
             ui.nav_group(
                 label='Examples',
                 items=[ui.nav_item(name=f'#{e.name}', label=e.title) for e in catalog.values()]
-            ),
+            )
         ],
     )
 
-    q.page['blurb'] = ui.form_card(
-        box='3 1 5 3',
-        items=[],
-    )
+    q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
+    q.page['code'] = ui.frame_card(box='code', title='', content='')
+    q.page['preview'] = ui.frame_card(box='preview', title='Preview', path='/demo')
 
-    q.page['code'] = ui.frame_card(
-        box='3 4 5 7',
-        title='',
-        content='',
-    )
-    q.page['preview'] = ui.frame_card(
-        box='8 1 5 10',
-        title='Preview',
-        path='/demo',
-    )
     await q.page.save()
 
 
-def make_blurb(example: Example):
+def make_blurb(q: Q, example: Example):
+    blurb_card = q.page['blurb']
+    blurb_card.title = example.title
+    blurb_card.subtitle = example.description
     buttons = []
     if example.previous_example:
         buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
     if example.next_example:
         buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-
-    return [
-        ui.text(example.title, size='l'),
-        ui.text(example.description),
-        ui.buttons(buttons),
-    ]
+    blurb_card.items = buttons
 
 
 async def show_example(q: Q, example: Example):
@@ -230,7 +219,7 @@ async def show_example(q: Q, example: Example):
     await active_example.start()
 
     # Update example blurb
-    q.page['blurb'].items = make_blurb(active_example)
+    make_blurb(q, active_example)
 
     # Update code display
     code_card = q.page['code']
