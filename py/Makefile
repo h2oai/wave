@@ -1,3 +1,5 @@
+WAVE_ML_VERSION := v0.4.0
+
 all: build ## Build h2o_wave wheel
 
 .PHONY: build
@@ -13,15 +15,21 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
 
+h2o_wave_ml:
+	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
+	cd h2o_wave_ml && ../venv/bin/python -m pip install .
+
 .PHONY: docs
-docs: ## Build API docs
+docs: h2o_wave_ml ## Build API docs
 	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_wave
-	mkdir -p ../website/docs/api/
+	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_wave_ml/h2o_wave_ml
+	mkdir -p ../website/docs/api/h2o_wave_ml
 	mv build/docs/h2o_wave/* ../website/docs/api/
+	mv build/docs/h2o_wave_ml/* ../website/docs/api/h2o_wave_ml/
 	./venv/bin/python sync_examples.py
 
 purge: ## Purge previous build
-	rm -rf build dist h2o_wave.egg-info
+	rm -rf build dist h2o_wave.egg-info h2o_wave_ml
 
 .PHONY: examples
 examples:
