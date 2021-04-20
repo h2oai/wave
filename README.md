@@ -18,13 +18,13 @@ H2O Wave is a software stack for building beautiful, low-latency, realtime, brow
 
 H2O Wave excels at capturing information from multiple sources and broadcasting them live over the web, letting you build and deploy realtime analytics with dramatically less effort.
 
-- [Download](https://github.com/h2oai/wave/releases) / [How to install](https://h2oai.github.io/wave/docs/installation/)
-- [Documentation](https://h2oai.github.io/wave/): [Getting Started](https://h2oai.github.io/wave/docs/getting-started/) / [Gallery and Examples](https://h2oai.github.io/wave/docs/examples/) / [Python API](https://h2oai.github.io/wave/docs/api/index/)
+- [Download](https://github.com/h2oai/wave/releases) / [How to install](https://wave.h2o.ai/docs/installation/)
+- [Documentation](https://wave.h2o.ai/): [Getting Started](https://wave.h2o.ai/docs/getting-started/) / [Gallery and Examples](https://wave.h2o.ai/docs/examples/) / [Python API](https://wave.h2o.ai/docs/api/index/)
 - [Roadmap 2021](https://github.com/h2oai/wave/issues/693)
 - [Developing](https://github.com/h2oai/wave/blob/master/.github/CONTRIBUTING.md#development-setup)
 - [Discuss / Support / Q&A / Ideas](https://github.com/h2oai/wave/discussions)
 - [Report a problem](https://github.com/h2oai/wave/issues/new/choose)
-- [Blog](https://h2oai.github.io/wave/blog/) / [@h2o_wave](https://twitter.com/h2o_wave)
+- [Blog](https://wave.h2o.ai/blog/) / [@h2o_wave](https://twitter.com/h2o_wave)
 
 ---
 
@@ -62,7 +62,7 @@ Code: https://github.com/h2oai/wave/tree/master/py/demo
 
 ### 80+ components, 175+ examples
 
-More at https://h2oai.github.io/wave/docs/examples
+More at https://wave.h2o.ai/docs/examples
 
 ![Components](assets/visuals/components-1.png)
 

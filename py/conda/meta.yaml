@@ -13,7 +13,7 @@ about:
     {{ data.get('conda_description') | replace('\n', '\n    ') }}
 
   dev_url: https://github.com/h2oai/wave
-  doc_url: https://h2oai.github.io/wave/
+  doc_url: https://wave.h2o.ai/
 
 requirements:
   build:

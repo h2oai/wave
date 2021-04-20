@@ -55,7 +55,7 @@ Run ``hello.py``:
 Links
 -----
 
-* Website: https://h2oai.github.io/wave/
+* Website: https://wave.h2o.ai/
 * Releases: https://pypi.org/project/h2o-wave/
 * Code: https://github.com/h2oai/wave
 * Issue tracker: https://github.com/h2oai/wave/issues
