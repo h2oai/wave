@@ -3307,6 +3307,15 @@ class TableRow:
         )
 
 
+_TableCheckboxVisibility = ['always', 'on-hover', 'hidden']
+
+
+class TableCheckboxVisibility:
+    ALWAYS = 'always'
+    ON_HOVER = 'on-hover'
+    HIDDEN = 'hidden'
+
+
 class Table:
     """Create an interactive table.
 
@@ -3335,6 +3344,7 @@ class Table:
             resettable: Optional[bool] = None,
             height: Optional[str] = None,
             values: Optional[List[str]] = None,
+            checkbox_visibility: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -3347,6 +3357,7 @@ class Table:
         _guard_scalar('Table.resettable', resettable, (bool,), False, True, False)
         _guard_scalar('Table.height', height, (str,), False, True, False)
         _guard_vector('Table.values', values, (str,), False, True, False)
+        _guard_enum('Table.checkbox_visibility', checkbox_visibility, _TableCheckboxVisibility, True)
         _guard_scalar('Table.visible', visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -3367,6 +3378,8 @@ class Table:
         """The height of the table, e.g. '400px', '50%', etc."""
         self.values = values
         """The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`)."""
+        self.checkbox_visibility = checkbox_visibility
+        """Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'. One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -3383,6 +3396,7 @@ class Table:
         _guard_scalar('Table.resettable', self.resettable, (bool,), False, True, False)
         _guard_scalar('Table.height', self.height, (str,), False, True, False)
         _guard_vector('Table.values', self.values, (str,), False, True, False)
+        _guard_enum('Table.checkbox_visibility', self.checkbox_visibility, _TableCheckboxVisibility, True)
         _guard_scalar('Table.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Table.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -3395,6 +3409,7 @@ class Table:
             resettable=self.resettable,
             height=self.height,
             values=self.values,
+            checkbox_visibility=self.checkbox_visibility,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -3420,6 +3435,8 @@ class Table:
         _guard_scalar('Table.height', __d_height, (str,), False, True, False)
         __d_values: Any = __d.get('values')
         _guard_vector('Table.values', __d_values, (str,), False, True, False)
+        __d_checkbox_visibility: Any = __d.get('checkbox_visibility')
+        _guard_enum('Table.checkbox_visibility', __d_checkbox_visibility, _TableCheckboxVisibility, True)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Table.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -3433,6 +3450,7 @@ class Table:
         resettable: Optional[bool] = __d_resettable
         height: Optional[str] = __d_height
         values: Optional[List[str]] = __d_values
+        checkbox_visibility: Optional[str] = __d_checkbox_visibility
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Table(
@@ -3445,6 +3463,7 @@ class Table:
             resettable,
             height,
             values,
+            checkbox_visibility,
             visible,
             tooltip,
         )

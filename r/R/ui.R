@@ -1526,6 +1526,8 @@ ui_table_row <- function(
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
 #' @param height The height of the table, e.g. '400px', '50%', etc.
 #' @param values The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`).
+#' @param checkbox_visibility Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'.
+#'   One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Table instance.
@@ -1540,6 +1542,7 @@ ui_table <- function(
   resettable = NULL,
   height = NULL,
   values = NULL,
+  checkbox_visibility = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1551,6 +1554,7 @@ ui_table <- function(
   .guard_scalar("resettable", "logical", resettable)
   .guard_scalar("height", "character", height)
   .guard_vector("values", "character", values)
+  # TODO Validate checkbox_visibility
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(table=list(
@@ -1563,6 +1567,7 @@ ui_table <- function(
     resettable=resettable,
     height=height,
     values=values,
+    checkbox_visibility=checkbox_visibility,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
