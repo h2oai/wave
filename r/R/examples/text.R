@@ -3,12 +3,13 @@
 # Use #markdown in a #text component to display formatted content within a #form.
 # ui_form_box
 
-#library(h2owave)
+library(h2owave)
 
 # Check if a variable with the name "page_name" exists in an object page. This is a check to remove any previous page objects.
-if("page_name" %in% names(page)) page$drop()
+#if("page_name" %in% names(page)) page$drop()
 # Create a new page called "demo". 
 page <- Site("/demo")
+#page$drop()
 # Markdown content
 sample_markdown = "
 

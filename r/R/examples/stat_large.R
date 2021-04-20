@@ -3,7 +3,7 @@
 # Create a stat card displaying a primary value, an auxiliary value, and a caption.
 # ui_large_stat_card
 
-# library(h2owave)
+library(h2owave)
 
 # Combining 5 different crypto currency symbols into a vector.
 crypto_name <- c("ETH","BTC","ZCH","LTC")
@@ -16,8 +16,6 @@ sample_crypto_price_percent_change <- runif(1,0,1)
 # Create a dynamic caption that appends the sampled crypto currency symbol. 
 caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample_crypto_name,".")
 
-# Check if a variable with the name "page_name" exists in an object page. This is a check to remove any previous page objects.
-if("page_name" %in% names(page)) page$drop()
 # Create a new page called "demo". 
 page <- Site("/demo")
 # Add a new card called "crypto", which is a large stat card on the newly created page "demo".

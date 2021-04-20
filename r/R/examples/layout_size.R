@@ -2,10 +2,8 @@
 # Layout / Size
 # How to adjust the size of cards on a page
 
-#library(h2owave)
+library(h2owave)
 
-# Check if a variable with the name "page_name" exists in an object page. This is a check to remove any previous page objects.
-if("page_name" %in% names(page)) page$drop()
 # Create a new page called "demo". 
 page <- Site("/demo")
 

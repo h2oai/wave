@@ -1,27 +1,30 @@
 library(h2owave)
 
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_pc <- as.integer(runif(1,1,100))
+dark_theme_colors = c('$red', '$pink', '$blue', '$azure', '$cyan', '$teal', '$mint', '$green', '$lime', '$yellow', '$amber', '$orange' ,'$tangerine')
+crypto_name <- c("ETH","BTC","ZCH","LTC")
+sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+sample_crypto_price <- runif(1,1,500)
+sample_crypto_price_percent_change <- runif(1,0,1)
+card_color <- sample(dark_theme_colors,1)
 
-test_page <- page("/page_demo")
-test_page <- page.add(test_page,"/page_demo","test",ui_tall_gauge_stat_card(box="1 1 1 2"
-                                                                            ,title=card_title
-                                                                            ,value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                                                            ,aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                                                            ,plot_color='$red'
-                                                                            ,data=list(foo=card_value,bar=card_pc/100)
-                                                                            ,progress = card_pc/100
-))
-
-page.save(test_page,"/page_demo")
+page <- Site("/demo")
+page$add_card("crypto_tall_gauge",ui_tall_gauge_stat_card(box="1 1 1 2"
+                                                                            ,title=sample_crypto_name
+                                                                            ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                                                            ,aux_value='={{intl change style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                                                            ,plot_color=card_color
+                                                                            ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
+                                                                            ,progress = sample_crypto_price_percent_change
+                                                                            )
+)
+page$save()
 
 while(TRUE){
   Sys.sleep(3)
-  card_pc <- as.integer(runif(1,1,100))
-  card_value <- as.character(sample(mtcars[['mpg']],1))
-  test_page[[1]]$value$data$foo <- card_value
-  test_page[[1]]$value$data$bar <- card_pc/100
-  test_page[[1]]$value$progress <- card_pc/100
-  page.save(test_page,"/page_demo")
+  sample_crypto_price <- runif(1,1,500)
+  sample_crypto_price_percent_change <- runif(1,0,1)
+  page$set("crypto_tall_gauge","data","price",sample_crypto_price)
+  page$set("crypto_tall_gauge","data","change",sample_crypto_price_percent_change)
+  page$set("crypto_tall_gauge","progress",sample_crypto_price_percent_change)
+  page$save()
 }

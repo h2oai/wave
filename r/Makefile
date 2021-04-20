@@ -31,4 +31,6 @@ uninstall: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 clean:
 		-rm -f $(PKG_NAME)_*.tar.gz
 		-rm -r -f $(PKG_NAME).Rcheck
+		-rm -f NAMESPACE
+		-rm -rf man
 

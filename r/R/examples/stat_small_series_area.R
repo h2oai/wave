@@ -1,47 +1,47 @@
 library(h2owave)
 
-#box template column number (left to right), row number (top to bottom),the number of columns the cell occupies , the number of rows the cell occupies.
-
 dark_theme_colors = c('$red', '$pink', '$blue', '$azure', '$cyan', '$teal', '$mint', '$green', '$lime', '$yellow', '$amber', '$orange' ,'$tangerine')
 curves = c('linear','smooth','step','stepAfter','stepBefore')
+crypto_name <- c("ETH","BTC","ZCH","LTC")
 
-test_page <- page("/page_demo")
+page <- Site("/demo")
 cards = list()
 
 for( i in 1:length(curves))
 {
-  card_title <- sample(row.names(mtcars),1)
-  card_value <- as.character(sample(mtcars[['mpg']],1))
+  sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+  sample_crypto_price <- runif(1,1,500)
+  sample_crypto_price_percent_change <- runif(1,0,1)
   card_color <- sample(dark_theme_colors,1)
   card_curve <- sample(curves,1)
-  card_pc <- as.integer(runif(1,1,100))
   
   cards[[length(cards)+1]] <- paste0("c",i)
-  test_page <- page.add(test_page,"/page_demo",paste0("c",i),
+  page$add_card(paste0("c",i),
                         ui_small_series_stat_card(box=paste0("1 ",i," 1 1")
-                                                  ,title=card_title
-                                                  ,value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                                  ,data=list(qux=card_value,quux=card_pc/100)
-                                                  ,plot_data=data.dump(fields=list('qux','quux'),size=-15)
-                                                  ,plot_category='qux'
+                                                  ,title=sample_crypto_name
+                                                  ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                                  ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
+                                                  ,plot_data=data(fields='price change',size=-15)
+                                                  ,plot_category='price'
                                                   ,plot_type='area'
-                                                  ,plot_value='quux'
+                                                  ,plot_value='change'
                                                   ,plot_color=card_color
                                                   ,plot_zero_value = 0
                                                   ,plot_curve=card_curve
                         ))
 }
-  page.save(test_page,"/page_demo")
+page$save()
 
 while(TRUE){
   Sys.sleep(3)
   for(i in cards){
-          card_title <- sample(row.names(mtcars),1)
-          card_pc <- as.integer(runif(1,1,100))
-          card_value <- as.character(sample(mtcars[['mpg']],1))
-          test_page[[i]]$value$data$qux <- card_value
-          test_page[[i]]$value$data$quux <- card_pc/100
-          test_page[[i]]$value$"plot_data -1"<- glist(card_title,card_value)
+          sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+          sample_crypto_price <- runif(1,1,500)
+          sample_crypto_price_percent_change <- runif(1,0,1)
+
+          page$set(i,"data","price",sample_crypto_price)
+          page$set(i,"data","change",sample_crypto_price_percent_change)
+          page$set(i,"plot_data","-","1",list(sample_crypto_name,sample_crypto_price))
   }
-    page.save(test_page,"/page_demo")
+  page$save()
 }

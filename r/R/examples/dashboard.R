@@ -1,99 +1,97 @@
-#library(h2owave)
+library(h2owave)
 
-if("page.name" %in% names(page)) page$page.drop()
 page <- Site("/demo")
 
-#box template column number (left to right), row number (top to bottom),the number of columns the cell occupies , the number of rows the cell occupies.
-
 dark_theme_colors = c('$red', '$pink', '$blue', '$azure', '$cyan', '$teal', '$mint', '$green', '$lime', '$yellow', '$amber', '$orange' ,'$tangerine')
-curves = c('linear','smooth','step','stepAfter','stepBefore')
+curves = c('linear','smooth','step','step-after','step-before')
+crypto_name <- c("ETH","BTC","ZCH","LTC")
 
 simples <- list()
 for(i in 1:7)
 {
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
 
-simples[[length(simples)+1]] <- paste0("a",i)
-page$add.card(paste0("a",i),
-                      ui_small_stat_card(box=paste0(i," 1 1 1"),title=card_title,value=card_value))
+        simples[[length(simples)+1]] <- paste0("a",i)
+        page$add_card(paste0("a",i),
+                      ui_small_stat_card(box=paste0(i," 1 1 1")
+                      ,title=sample_crypto_name
+                      ,value= as.character(sample_crypto_price)))
 }
 
 
 simples_colored <- list()
-for(i in 1:7){
+for(i in 1:7)
+{
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        card_color <- sample(dark_theme_colors,1)
+        card_curve <- sample(curves,1)
 
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
-
-simples_colored[[length(simples_colored)+1]] <- paste0("aa",i)
-page$add.card(paste0("aa",i),
+        simples_colored[[length(simples_colored)+1]] <- paste0("aa",i)
+        page$add_card(paste0("aa",i),
                       ui_small_series_stat_card(box=paste0(i+6," 1 1 1")
-                                                ,title=card_title
-                                                ,value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                                ,data=list(qux=card_value,quux=card_pc/100)
+                                                ,title=sample_crypto_name
+                                                ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                                ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
                                                 ,plot_category='foo'
-                                                ,plot_value='qux'
+                                                ,plot_value='price'
                                                 ,plot_color=card_color
-                                                ,plot_data=data(fields='foo qux', size=-15)
+                                                ,plot_data=data(fields='foo price', size=-15)
                                                 ,plot_zero_value = 0
                                                 ,plot_curve=card_curve
-)
                       )
+        )
 }
 
 lines <- list()
-for(i in seq(1,13,2)){
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
+for(i in seq(1,13,2))
+{
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        card_color <- sample(dark_theme_colors,1)
+        card_curve <- sample(curves,1)
 
-lines[[length(lines)+1]] <- paste0("b",i)
-page$add.card(paste0("b",i),
+        lines[[length(lines)+1]] <- paste0("b",i)
+        page$add_card(paste0("b",i),
                       ui_wide_series_stat_card(box=paste0(i," 2 2 1")
-                                               ,title=card_title
-                                               ,value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}'
-                                               ,data=list(qux=card_value,quux=card_pc/100)
+                                               ,title=sample_crypto_name
+                                               ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                               ,aux_value='={{intl change style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}'
+                                               ,data=list(price=sample_crypto_price,sample_crypto_price_percent_change)
                                                ,plot_category='foo'
-                                               ,plot_value='qux'
+                                               ,plot_value='price'
                                                ,plot_color=card_color
-                                               ,plot_data=data(fields='foo qux',size=-15)
+                                               ,plot_data=data(fields='foo price',size=-15)
                                                ,plot_zero_value = 0
                                                ,plot_curve=card_curve
-
                                                ))
 }
 
 
 bars <- list()
-for(i in seq(1,13,2)){
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
+for(i in seq(1,13,2))
+{
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        card_color <- sample(dark_theme_colors,1)
+        card_curve <- sample(curves,1)
 
-bars[[length(bars)+1]] <- paste0("c",i)
-page$add.card(paste0("c",i),
+        bars[[length(bars)+1]] <- paste0("c",i)
+        page$add_card(paste0("c",i),
                       ui_wide_series_stat_card(box=paste0(i," 3 2 1")
-                                               ,title=card_title
-                                               ,value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}'
-                                               ,data=list(qux=card_value,quux=card_pc)
+                                               ,title=sample_crypto_name
+                                               ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                               ,aux_value='={{intl change style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}'
+                                               ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
                                                ,plot_type='interval'
                                                ,plot_category='foo'
-                                               ,plot_value='qux'
+                                               ,plot_value='price'
                                                ,plot_color=card_color
-                                               ,plot_data=data(fields='foo qux',size=-25)
+                                               ,plot_data=data(fields='foo price',size=-25)
                                                ,plot_zero_value = 0
 
                                                ))
@@ -101,46 +99,48 @@ page$add.card(paste0("c",i),
 
 
 large_pcs <- list()
-for(i in seq(1,13,1)){
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
+for(i in seq(1,13,1))
+{
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        card_color <- sample(dark_theme_colors,1)
+        card_curve <- sample(curves,1)
 
-large_pcs[[length(large_pcs)+1]] <- paste0("d",i)
-page$add.card(paste0("d",i),
+        large_pcs[[length(large_pcs)+1]] <- paste0("d",i)
+        page$add_card(paste0("d",i),
                       ui_tall_gauge_stat_card(box=paste0(i," 4 1 2")
-                                               ,title=card_title
-                                               ,value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,plot_color=card_color
-                                               ,progress=card_pc/100
-                                               ,data=list(foo=card_value,bar=card_pc/100)
-                                               ))
+                                              ,title=sample_crypto_name
+                                              ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                              ,aux_value='={{intl change style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                              ,plot_color=card_color
+                                              ,progress=sample_crypto_price_percent_change
+                                              ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
+                                              ))
 }
 
 
 large_lines <- list()
-for(i in seq(1,13,1)){
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
+for(i in seq(1,13,1))
+{
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        card_color <- sample(dark_theme_colors,1)
+        card_curve <- sample(curves,1)
 
-large_lines[[length(large_lines)+1]] <- paste0("e",i)
-page$add.card(paste0("e",i),
+        large_lines[[length(large_lines)+1]] <- paste0("e",i)
+        page$add_card(paste0("e",i),
                       ui_tall_series_stat_card(box=paste0(i," 6 1 2")
-                                               ,title=card_title
-                                               ,value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}'
-                                               ,data=list(foo=card_value,bar=card_pc)
+                                               ,title=sample_crypto_name
+                                               ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                               ,aux_value='={{intl change style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                               ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
                                                ,plot_type='area'
                                                ,plot_category='foo'
-                                               ,plot_value='qux'
+                                               ,plot_value='price'
                                                ,plot_color=card_color
-                                               ,plot_data=data(fields='foo qux',size=-15)
+                                               ,plot_data=data(fields='foo price',size=-15)
                                                ,plot_zero_value=0
                                                ,plot_curve=card_curve
                                                ))
@@ -148,172 +148,181 @@ page$add.card(paste0("e",i),
 
 
 small_pcs <- list()
-for(i in seq(1,7,2)){
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
+for(i in seq(1,7,2))
+{
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        card_color <- sample(dark_theme_colors,1)
+        card_curve <- sample(curves,1)
 
-small_pcs[[length(small_pcs)+1]] <- paste0("f",i)
-page$add.card(paste0("f",i),
+        small_pcs[[length(small_pcs)+1]] <- paste0("f",i)
+        page$add_card(paste0("f",i),
                       ui_wide_gauge_stat_card(box=paste0(i," 8 2 1")
-                                               ,title=card_title
-                                               ,value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,plot_color=card_color
-                                               ,progress=card_pc/100
-                                               ,data=list(foo=card_value,bar=card_pc/100)
-                                               ))
+                                              ,title=sample_crypto_name
+                                              ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                              ,aux_value='={{intl change style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                              ,plot_color=card_color
+                                              ,progress=sample_crypto_price_percent_change
+                                              ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
+                                              ))
 }
 
 
 small_pbs <- list()
-for(i in seq(7,13,2)){
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
+for(i in seq(7,13,2))
+{
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        card_color <- sample(dark_theme_colors,1)
+        card_curve <- sample(curves,1)
 
-small_pbs[[length(small_pbs)+1]] <- paste0("f",i)
-page$add.card(paste0("f",i),
+        small_pbs[[length(small_pbs)+1]] <- paste0("f",i)
+        page$add_card(paste0("f",i),
                       ui_wide_bar_stat_card(box=paste0(i," 8 2 1")
-                                               ,title=card_title
-                                               ,value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,plot_color=card_color
-                                               ,progress=card_pc
-                                               ,data=list(foo=card_value,bar=card_pc/100)
-                                               ))
+                                            ,title=sample_crypto_name
+                                            ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                            ,aux_value='={{intl change style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                            ,plot_color=card_color
+                                            ,progress=sample_crypto_price_percent_change
+                                            ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
+                                            ))
 }
 
 
 large_cards <- list()
-for(i in seq(1,7,2)){
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
+for(i in seq(1,7,2))
+{
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        card_color <- sample(dark_theme_colors,1)
+        card_curve <- sample(curves,1)
+        caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample_crypto_name,".")
 
-large_cards[[length(large_cards)+1]] <- paste0("g",i)
-page$add.card(paste0("g",i),
+        large_cards[[length(large_cards)+1]] <- paste0("g",i)
+        page$add_card(paste0("g",i),
                       ui_large_stat_card(box=paste0(i," 9 2 2")
-                                               ,title=card_title
-                                               ,value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,aux_value='={{intl quux style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,data=list(qux=card_value,quux=card_pc/100)
-                                               ,caption=" Hello Test"
-                                               ))
+                                         ,title=sample_crypto_name
+                                         ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                         ,aux_value='={{intl change style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                         ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
+                                         ,caption=caption
+                                         ))
 }
 
 
 large_pbs <- list()
-for(i in seq(7,13,2)){
-card_title <- sample(row.names(mtcars),1)
-card_value <- as.character(sample(mtcars[['mpg']],1))
-card_color <- sample(dark_theme_colors,1)
-card_curve <- sample(curves,1)
-card_pc <- as.integer(runif(1,1,100))
+for(i in seq(7,13,2))
+{
+        sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+        sample_crypto_price <- runif(1,1,500)
+        sample_crypto_price_percent_change <- runif(1,0,1)
+        card_color <- sample(dark_theme_colors,1)
+        card_curve <- sample(curves,1)
+        caption <- paste0("The card shows the price (in USD) and price percentage change of ",sample_crypto_name,".")
 
-large_pbs[[length(large_pbs)+1]] <- paste0("g",i)
-page$add.card(paste0("g",i),
+        large_pbs[[length(large_pbs)+1]] <- paste0("g",i)
+        page$add_card(paste0("g",i),
                       ui_large_bar_stat_card(box=paste0(i," 9 2 2")
-                                               ,title=card_title
-                                               ,value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,value_caption='This Month'
-                                               ,aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
-                                               ,aux_value_caption='Previous Month'
-                                               ,plot_color=card_color
-                                               ,progress=card_pc
-                                               ,data=list(foo=card_value,bar=card_pc/100)
-                                               ,caption=" Hello Test"
-                                               ))
+                                             ,title=sample_crypto_name
+                                             ,value='=${{intl price minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                             ,value_caption='This Month'
+                                             ,aux_value='={{intl change style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}'
+                                             ,aux_value_caption='Percentage Change'
+                                             ,plot_color=card_color
+                                             ,progress=sample_crypto_price_percent_change
+                                             ,data=list(price=sample_crypto_price,change=sample_crypto_price_percent_change)
+                                             ,caption=caption
+                                             ))
 }
 
-page$page.save()
-
+page$save()
+#
 while(TRUE){
+
+        crypto_name <- c("ETH","BTC","ZCH","LTC")
+
         Sys.sleep(1)
         for(i in simples){
-                card_value <- as.character(sample(mtcars[['mpg']],1))
-                page$page[[i]]$value$value <- card_value
+                sample_crypto_price <- runif(1,1,500)
+                page$set(i,"value",sample_crypto_price)
         }
 
         for(i in simples_colored){
-                card_title <- sample(row.names(mtcars),1)
-                card_pc <- as.integer(runif(1,1,100))
-                card_value <- as.character(sample(mtcars[['mpg']],1))
-                page$page[[i]]$value$data$qux <- card_value
-                page$page[[i]]$value$data$quux <- card_pc/100
-                page$page[[i]]$value$"plot_data -1"<- glist(card_title,card_value)
+                sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+                sample_crypto_price <- runif(1,1,500)
+                sample_crypto_price_percent_change <- runif(1,0,1)
+                page$set(i,"data","price",sample_crypto_price)
+                page$set(i,"data","change",sample_crypto_price_percent_change)
+                page$set(i,"plot_data","-","1",list(sample_crypto_name,sample_crypto_price))
         }
 
         for(i in lines){
-                card_title <- sample(row.names(mtcars),1)
-                card_pc <- as.integer(runif(1,1,100))
-                card_value <- as.character(sample(mtcars[['mpg']],1))
-                page$page[[i]]$value$data$qux <- card_value
-                page$page[[i]]$value$data$quux <- card_pc/100
-                page$page[[i]]$value$"plot_data -1"<- glist(card_title,card_value)
+                sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+                sample_crypto_price <- runif(1,1,500)
+                sample_crypto_price_percent_change <- runif(1,0,1)
+                page$set(i,"data","price",sample_crypto_price)
+                page$set(i,"data","change",sample_crypto_price_percent_change)
+                page$set(i,"plot_data","-","1",list(sample_crypto_name,sample_crypto_price))
         }
 
         for(i in bars){
-                card_title <- sample(row.names(mtcars),1)
-                card_pc <- as.integer(runif(1,1,100))
-                card_value <- as.character(sample(mtcars[['mpg']],1))
-                page$page[[i]]$value$data$qux <- card_value
-                page$page[[i]]$value$data$quux <- card_pc/100
-                page$page[[i]]$value$"plot_data -1"<- glist(card_title,card_value)
+                sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+                sample_crypto_price <- runif(1,1,500)
+                sample_crypto_price_percent_change <- runif(1,0,1)
+                page$set(i,"data","price",sample_crypto_price)
+                page$set(i,"data","change",sample_crypto_price_percent_change)
+                page$set(i,"plot_data","-","1",list(sample_crypto_name,sample_crypto_price))
         }
 
         for(i in large_lines){
-                card_title <- sample(row.names(mtcars),1)
-                card_pc <- as.integer(runif(1,1,100))
-                card_value <- as.character(sample(mtcars[['mpg']],1))
-                page$page[[i]]$value$data$qux <- card_value
-                page$page[[i]]$value$data$quux <- card_pc/100
-                page$page[[i]]$value$"plot_data -1"<- glist(card_title,card_value)
+                sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
+                sample_crypto_price <- runif(1,1,500)
+                sample_crypto_price_percent_change <- runif(1,0,1)
+                page$set(i,"data","price",sample_crypto_price)
+                page$set(i,"data","change",sample_crypto_price_percent_change)
+                page$set(i,"plot_data","-","1",list(sample_crypto_name,sample_crypto_price))
         }
 
         for(i in large_pcs){
-        card_value <- as.character(sample(mtcars[['mpg']],1))
-                card_pc <- as.integer(runif(1,1,100))
-                page$page[[i]]$value$data$foo <- card_value
-                page$page[[i]]$value$data$bar <- card_pc/100
-                page$page[[i]]$value$progress <- card_pc/100
+                sample_crypto_price <- runif(1,1,500)
+                sample_crypto_price_percent_change <- runif(1,0,1)
+                page$set(i,"data","price",sample_crypto_price)
+                page$set(i,"data","change",sample_crypto_price_percent_change)
+                page$set(i,"progress",sample_crypto_price_percent_change)
         }
 
         for(i in small_pcs){
-                card_value <- as.character(sample(mtcars[['mpg']],1))
-                card_pc <- as.integer(runif(1,1,100))
-                page$page[[i]]$value$data$foo <- card_value
-                page$page[[i]]$value$data$bar <- card_pc/100
-                page$page[[i]]$value$progress <- card_pc/100
+                sample_crypto_price <- runif(1,1,500)
+                sample_crypto_price_percent_change <- runif(1,0,1)
+                page$set(i,"data","price",sample_crypto_price)
+                page$set(i,"data","change",sample_crypto_price_percent_change)
+                page$set(i,"progress",sample_crypto_price_percent_change)
         }
 
         for(i in small_pbs){
-                card_value <- as.character(sample(mtcars[['mpg']],1))
-                card_pc <- as.integer(runif(1,1,100))
-                page$page[[i]]$value$data$foo <- card_value
-                page$page[[i]]$value$data$bar <- card_pc/100
-                page$page[[i]]$value$progress <- card_pc/100
+                sample_crypto_price <- runif(1,1,500)
+                sample_crypto_price_percent_change <- runif(1,0,1)
+                page$set(i,"data","price",sample_crypto_price)
+                page$set(i,"data","change",sample_crypto_price_percent_change)
+                page$set(i,"progress",sample_crypto_price_percent_change)
         }
 
         for(i in large_cards){
-                card_value <- as.character(sample(mtcars[['mpg']],1))
-                card_pc <- as.integer(runif(1,1,100))
-                page$page[[i]]$value$data$qux <- card_value
-                page$page[[i]]$value$data$quux <- card_pc/100
+                sample_crypto_price <- runif(1,1,500)
+                sample_crypto_price_percent_change <- runif(1,0,1)
+                page$set(i,"data","price",sample_crypto_price)
+                page$set(i,"data","change",sample_crypto_price_percent_change)
         }
 
         for(i in large_pbs){
-                card_value <- as.character(sample(mtcars[['mpg']],1))
-                card_pc <- as.integer(runif(1,1,100))
-                page$page[[i]]$value$data$foo <- card_value
-                page$page[[i]]$value$data$bar <- card_pc/100
-                page$page[[i]]$value$progress <- card_pc/100
+                sample_crypto_price <- runif(1,1,500)
+                sample_crypto_price_percent_change <- runif(1,0,1)
+                page$set(i,"data","price",sample_crypto_price)
+                page$set(i,"data","change",sample_crypto_price_percent_change)
+                page$set(i,"progress",sample_crypto_price_percent_change)
         }
-        page$page.save()
+        page$save()
 }

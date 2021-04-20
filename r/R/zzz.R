@@ -13,24 +13,19 @@
 # limitations under the License.
 
 
-#' Configure the environmental variables
-#' This is a (hidden) internal function
+#' @title Configure Environment Variables
 #' 
-#' The environmental variables configured here are:
-#' internal_address
-#' external_address
-#' hub_address
-#' hub_access_key_id
-#' hub_access_key_secret
-#' shutdown_timeout
-#' app_mode
-#' They are stored in a list \code{.config}
-#' @return
+#' @param .config - List of environment variables
+#' @param ... - Any additional argument added to \code{.config}
+#' 
+#' @description configure the list of environment variables. The list includes the 
+#' server address, the access key and secret, shutdown timeout, and app communication mode. 
+#' 
+#' @examples .onLoad()
+#' 
 #' @export
-#'
-#' @examples
-
-.onLoad <- function(...){
+#' 
+.onLoad <- function(libname,pkgname){
         .config <<- list()
         .config$internal_address <<- .get_env_var(c("INTERNAL_ADDRESS",.default_internal_address))
         .config$external_address <<- .get_env_var(c("EXTERNAL_ADDRESS",.config$internal_address))
@@ -41,5 +36,4 @@
         .config$app_mode <<- .get_env_var(c('APP_MODE',UNICAST))
 }
 
-#' @export 
 UNICAST <- 'unicast'

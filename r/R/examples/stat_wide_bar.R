@@ -3,7 +3,7 @@
 # Create a wide stat card displaying a primary value, an auxiliary value, and a progress bar.
 # ui_wide_bar_stat_card
 
-#library(h2owave)
+library(h2owave)
 
 # Combining 5 different crypto currency symbols into a vector.
 crypto_name <- c("ETH","BTC","ZCH","LTC")
@@ -13,8 +13,6 @@ sample_crypto_name <- crypto_name[sample(1:length(crypto_name),1)]
 sample_crypto_price <- runif(1,1,500)
 # Generate a random decimal value from an uniform distribution between 0 - 1.
 sample_crypto_price_percent_change <- runif(1,0,1)
-# Check if a variable with the name "page_name" exists in an object page. This is a check to remove any previous page objects.
-if("page_name" %in% names(page)) page$drop()
 # Create a new page called "demo". 
 page <- Site("/demo")
 # Add a new card called "crypto", which is a wide bar stat card on the newly created page "demo".
