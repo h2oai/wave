@@ -1,4 +1,4 @@
-#library(h2owave)
+library(h2owave)
 
 page <- Site("/demo")
 
