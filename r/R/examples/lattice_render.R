@@ -25,3 +25,4 @@ page$add_card("lattice",ui_image_card(box="1 1 6 10"
                     ,image=image
 ))
 page$save()
+

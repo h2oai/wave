@@ -31,3 +31,4 @@ page$add_card("plotly_render",
                         )
                     ))
 page$save()
+
