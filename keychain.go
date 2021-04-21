@@ -19,7 +19,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -132,7 +132,7 @@ func LoadKeychain(name string) (*Keychain, error) {
 	}
 	defer file.Close()
 
-	all, err := io.ReadAll(file)
+	all, err := ioutil.ReadAll(file)
 	if err != nil {
 		return nil, fmt.Errorf("failed reading %s: %v", name, err)
 	}
@@ -164,7 +164,7 @@ func (kc *Keychain) Save() error {
 		sb.Write(newline)
 	}
 
-	if err := os.WriteFile(kc.Name, sb.Bytes(), 0600); err != nil {
+	if err := ioutil.WriteFile(kc.Name, sb.Bytes(), 0600); err != nil {
 		return fmt.Errorf("failed writing %s: %v", kc.Name, err)
 	}
 
