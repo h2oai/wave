@@ -17,10 +17,11 @@ check: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 		R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 doc:
-		Rscript -e '.libPaths("~/R_LIBS",.libPaths());library(devtools);library(roxygen2);document()'
+		Rscript -e '.libPaths(c("~/R_LIBS",.libPaths()));library(devtools);library(roxygen2);document()'
 
-preinstall:
-		R -e 'install.packages(c("roxygen2","devtools"), repos="http://cran.us.r-project.org",libs="~/R_LIBS")'
+preinstall: 
+		mkdir ~/R_LIBS
+		R -e 'install.packages(c("roxygen2","devtools"), repos="http://cran.us.r-project.org",lib="~/R_LIBS")'
 
 install: 
 		R CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
