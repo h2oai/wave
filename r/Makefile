@@ -20,7 +20,7 @@ doc:
 		Rscript -e '.libPaths(c("~/R_LIBS",.libPaths()));library(devtools);library(roxygen2);document()'
 
 preinstall: 
-		mkdir ~/R_LIBS
+		mkdir -p ~/R_LIBS
 		R -e 'install.packages(c("roxygen2","devtools"), repos="http://cran.us.r-project.org",lib="~/R_LIBS")'
 
 install: 
