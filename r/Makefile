@@ -38,7 +38,7 @@ tag: # Bump version
 	sed -i -r -e "s/Version.+/Version: $(VERSION)/" DESCRIPTION
 
 uninstall: $(PKG_NAME)_$(PKG_VERSION).tar.gz
-		R CMD REMOVE $(PKG_NAME)_$(PKG_VERSION).tar.gz
+		R CMD REMOVE $(PKG_NAME)
 
 clean:
 	-rm -f $(PKG_NAME)_*.tar.gz
