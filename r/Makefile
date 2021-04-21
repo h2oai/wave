@@ -7,9 +7,9 @@ PKG_FILES := DESCRIPTION NAMESPACE $(R_FILES) $(SRC_FILES)
 
 .PHONY: doc preinstall package install check clean 
 
-all: clean doc package install
+all: clean preinstall doc package install
 
-package: doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
+package: preinstall doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
 	R CMD build .
 
@@ -17,10 +17,10 @@ check: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 		R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 doc:
-		Rscript -e "library(devtools);library(roxygen2);document()"
+		Rscript -e '.libPaths("~/R_LIBS",.libPaths());library(devtools);library(roxygen2);document()'
 
 preinstall:
-		Rscript R/requirements.R
+		R -e 'install.packages(c("roxygen2","devtools"), repos="http://cran.us.r-project.org",libs="~/R_LIBS")'
 
 install: 
 		R CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
