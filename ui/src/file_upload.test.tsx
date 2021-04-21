@@ -1,11 +1,26 @@
-import React from 'react';
-import { render, fireEvent, createEvent, wait } from '@testing-library/react';
-import { XFileUpload, FileUpload } from './file_upload';
-import * as T from './qd';
-import { initializeIcons } from '@fluentui/react';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import React from 'react'
+import { render, fireEvent, createEvent, wait } from '@testing-library/react'
+import { XFileUpload, FileUpload } from './file_upload'
+import * as T from './qd'
+import { initializeIcons } from '@fluentui/react'
 
 const name = 'fileUpload'
 const fileUploadProps: FileUpload = { name }
+interface FileObj { name: T.S; size?: T.F }
 
 describe('FileUpload.tsx', () => {
   beforeAll(() => initializeIcons())
@@ -14,7 +29,7 @@ describe('FileUpload.tsx', () => {
     T.qd.args[name] = null
   })
 
-  const createChangeEvent = (files: {}[]) => ({ target: { files } })
+  const createChangeEvent = (files: FileObj[]) => ({ target: { files } })
   const mockXhrRequest = (data: any, status = 200) => {
     const xhrMockObj = {
       open: jest.fn(),
@@ -23,12 +38,23 @@ describe('FileUpload.tsx', () => {
       status,
       upload: jest.fn(),
       responseText: JSON.stringify(data),
-    };
+    }
     // @ts-ignore
-    window.XMLHttpRequest = jest.fn().mockImplementation(() => xhrMockObj);
+    window.XMLHttpRequest = jest.fn().mockImplementation(() => xhrMockObj)
     // @ts-ignore
-    setTimeout(() => { xhrMockObj['onreadystatechange'](); }, 0);
+    setTimeout(() => { xhrMockObj['onreadystatechange']() }, 0)
   }
+
+  it('Renders data-test attr', () => {
+    const { queryByTestId } = render(<XFileUpload model={fileUploadProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
+  it('Does not display file upload when visible is false', () => {
+    const { queryByTestId } = render(<XFileUpload model={{ ...fileUploadProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
 
   it('Shows dragging screen on dragging', () => {
     const { getByTestId, queryByText } = render(<XFileUpload model={fileUploadProps} />)
@@ -51,7 +77,7 @@ describe('FileUpload.tsx', () => {
     const syncMock = jest.fn()
     T.qd.sync = syncMock
 
-    mockXhrRequest({ files: [{ name: 'file.txt' }] });
+    mockXhrRequest({ files: [{ name: 'file.txt' }] })
 
     const { getByTestId, getByText } = render(<XFileUpload model={{ ...fileUploadProps, label: 'upload' }} />)
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
@@ -62,7 +88,7 @@ describe('FileUpload.tsx', () => {
   })
 
   it('Shows success screen on success upload', async () => {
-    mockXhrRequest({ files: [{ name: 'file.txt' }] });
+    mockXhrRequest({ files: [{ name: 'file.txt' }] })
 
     const { getByTestId, getByText } = render(<XFileUpload model={{ ...fileUploadProps, label: 'upload' }} />)
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
@@ -72,7 +98,7 @@ describe('FileUpload.tsx', () => {
   })
 
   it('Shows error screen on error upload', async () => {
-    mockXhrRequest(null, 500);
+    mockXhrRequest(null, 500)
 
     const { getByTestId, getByText } = render(<XFileUpload model={{ ...fileUploadProps, label: 'upload' }} />)
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
@@ -131,7 +157,7 @@ describe('FileUpload.tsx', () => {
   // Used a nasty hack instead.
   describe('Drag & Drop', () => {
 
-    const createDropEvent = (targetElement: HTMLElement, files: {}[]) => {
+    const createDropEvent = (targetElement: HTMLElement, files: FileObj[]) => {
       const fileDropEvent = createEvent.drop(targetElement)
       Object.defineProperty(fileDropEvent, 'dataTransfer', { value: { files } })
       return fileDropEvent

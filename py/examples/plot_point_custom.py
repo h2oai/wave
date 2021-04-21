@@ -1,10 +1,11 @@
 # Plot / Point / Custom
 # Customize a plot's fill/stroke color, size and opacity.
+# #plot
 # ---
 import random
 
 from synth import FakeScatter
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

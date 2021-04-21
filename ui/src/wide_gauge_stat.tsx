@@ -1,59 +1,58 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { cards, Format, grid } from './layout';
-import { bond, Card, unpack, F, Rec, S } from './qd';
-import { getTheme } from './theme';
-import { ProgressArc } from './parts/progress_arc';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { cards, Format, grid } from './layout'
+import { ProgressArc } from './parts/progress_arc'
+import { bond, Card, F, Rec, S, unpack } from './qd'
+import { cssVar, pc, clas, padding, centerMixin } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
+      padding: padding(8, grid.gap),
     },
-    left: {
-      width: grid.unitInnerHeight,
-      height: grid.unitInnerHeight,
-      marginRight: grid.gap,
+    lhs: {
+      position: 'relative',
+      width: pc(50)
     },
-    percentContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'column',
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      width: grid.unitInnerHeight,
-      height: grid.unitInnerHeight,
-    },
-    percent: {
-      ...theme.font.s12,
-      opacity: 0.5,
-    },
-    right: {
-      flexGrow: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      // justifyContent: 'space-between',
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
-      overflow: 'visible'
+    rhs: {
+      width: pc(50),
+      marginLeft: grid.gap,
     },
     values: {
       display: 'flex',
       alignItems: 'baseline',
     },
+    percentContainer: {
+      position: 'absolute',
+      top: 0, right: 0, bottom: 0, left: 0,
+      ...centerMixin(),
+    },
+    percent: {
+      opacity: 0.5,
+    },
+    title: {
+      overflow: 'visible'
+    },
     value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
+      lineHeight: 28, // Override to fit inside 1 unit height in grid layout.
     },
     aux_value: {
-      ...theme.font.s13,
-      color: theme.colors.text7,
-      flexGrow: 1,
+      color: cssVar('$text7'),
       marginLeft: 5,
     }
   })
@@ -75,34 +74,27 @@ interface State {
 }
 
 export const
-  View = bond(({ state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        const data = unpack(s.data)
-
-        return (
-          <div className={css.card}>
-            <div className={css.left}>
-              <ProgressArc size={grid.unitInnerHeight} thickness={2} color={theme.color(s.plot_color)} value={s.progress} />
-              <div className={css.percentContainer}>
-                <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
-              </div>
+  View = bond(({ name, state: s, changed }: Card<State>) => {
+    const render = () => {
+      const data = unpack(s.data)
+      return (
+        <div data-test={name} className={css.card}>
+          <div className={css.lhs}>
+            <ProgressArc thickness={2} color={cssVar(s.plot_color)} value={s.progress} />
+            <div className={css.percentContainer}>
+              <div className={css.percent}>{`${Math.round(s.progress * 100)}%`}</div>
             </div>
-            <div className={css.right}>
-              <div className={css.title}>
-                <Format data={data} format={s.title} />
-              </div>
-              <div className={css.values}>
-                <div className={css.value}>
-                  <Format data={data} format={s.value} />
-                </div>
-                <div className={css.aux_value}>
-                  <Format data={data} format={s.aux_value} />
-                </div>
-              </div>
+          </div>
+          <div className={css.rhs}>
+            <Format data={data} format={s.title} className={clas(css.title, 'wave-s12 wave-w6')} />
+            <div className={css.values}>
+              <Format data={data} format={s.value} className='wave-s24 wave-w3' />
+              <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s13')} />
             </div>
-          </div>)
-      }
+          </div>
+        </div >
+      )
+    }
     return { render, changed }
   })
 

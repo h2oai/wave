@@ -1,9 +1,9 @@
 # Uploads / Frame
-# To display content > 2MB in frame cards, first upload the content and then use it in a frame card.
+# To display content > 2MB in #frame cards, first #upload the content and then use it in a frame card.
 # ---
 import os
 import uuid
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 html_content = '''
 <!DOCTYPE html>
@@ -23,7 +23,7 @@ html_content = '''
 html_filename = f'{str(uuid.uuid4())}.html'
 
 # Save HTML content to file
-with open(html_filename, 'w') as f:
+with open(html_filename, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
 # Upload HTML file

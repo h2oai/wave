@@ -1,10 +1,10 @@
 # Plot / Interval / Range / Transpose
-# Make a bar plot with each bar representing high/low (or start/end) values. Transposing this produces a gantt plot.
+# Make a bar #plot with each bar representing high/low (or start/end) values. Transposing this produces a gantt plot.
 # ---
 import random
 
 from synth import FakeCategoricalSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

@@ -1,0 +1,17 @@
+# git
+.git
+
+# IDEs
+**/.vscode
+
+# Python
+**/venv
+**/.pytest_cache
+**/__pycache__
+
+# Node.js
+**/node_modules
+node_modules
+
+# build artefacts
+qd

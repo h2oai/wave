@@ -1,12 +1,15 @@
-# Routing
-# Use the browser's [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash) for routing using URLs.
+# Routing / Hash
+# Use the browser's [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash)
+# for #routing using URLs.
 #
 # The location hash can be accessed using `q.args['#']`.
+# #location_hash
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     hash = q.args['#']
     if hash:
         blurb = q.page['blurb']
@@ -20,17 +23,13 @@ async def main(q: Q):
             blurb.content = 'Everything here is gluten-free!'
     else:
         q.page['nav'] = ui.markdown_card(
-            box='1 1 4 1',
+            box='1 1 4 2',
             title='Links!',
-            content='[Spam](#menu/spam) | [Ham](#menu/ham) | [Eggs](#menu/eggs) | [About](#about)',
+            content='[Spam](#menu/spam) / [Ham](#menu/ham) / [Eggs](#menu/eggs) / [About](#about)',
         )
         q.page['blurb'] = ui.markdown_card(
-            box='1 2 4 2',
+            box='1 3 4 2',
             title='Store',
             content='Welcome to our store!',
         )
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

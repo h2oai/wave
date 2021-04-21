@@ -1,7 +1,8 @@
 # Frame
-# Use a frame card to display HTML content.
+# Use a #frame card to display #HTML content.
+# #form
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 html = '''
 <!DOCTYPE html>

@@ -1,17 +1,19 @@
 # Plot / Matplotlib
-# Use matplotlib to create plots. Also demonstrates how to provide live control over plots.
+# Use #matplotlib to create plots. Also demonstrates how to provide live control over plots.
+# #plot
 # ---
 import uuid
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from h2o_q import ui, listen, Q
+from h2o_wave import ui, main, app, Q
 
 np.random.seed(19680801)
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if not q.client.initialized:  # First visit
         q.client.initialized = True
         q.client.points = 25
@@ -27,10 +29,10 @@ async def main(q: Q):
         )
         q.page['plot'] = ui.markdown_card(box='3 1 2 3', title='Your plot!', content='')
 
-    if q.args.points:
+    if q.args.points is not None:
         q.client.points = q.args.points
 
-    if q.args.alpha:
+    if q.args.alpha is not None:
         q.client.alpha = q.args.alpha
 
     n = q.client.points
@@ -57,6 +59,3 @@ async def main(q: Q):
 
     # Save page
     await q.page.save()
-
-
-listen('/demo', main)

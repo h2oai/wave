@@ -1,9 +1,23 @@
-import { default as React } from 'react';
-import { stylesheet } from 'typestyle';
-import { CardMenu } from './card_menu';
-import { format, isFormatExpr } from './intl';
-import { B, bond, box, Card, Dict, F, Page, parseI, Rec, S, U, unpack, xid } from './qd';
-import { getTheme, margin } from './theme';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import { default as React } from 'react'
+import { stylesheet } from 'typestyle'
+import { CardMenu } from './card_menu'
+import { format, isFormatExpr } from './intl'
+import { B, box, C, Card, Dict, F, parseI, Rec, S, U, unpack, xid } from './qd'
+import { clas, cssVar, margin } from './theme'
 
 type Slot = {
   left: U
@@ -14,7 +28,28 @@ type Slot = {
   bottom?: U
 }
 
+
+export enum CardEffect { Transparent, Normal, Raised, Flat }
+
+export type CardStyle = {
+  effect: CardEffect
+  overflow?: B
+}
+
+const
+  defaultCardStyle: CardStyle = { effect: CardEffect.Normal },
+  newCardRegistry = () => {
+    const
+      m: Dict<{ ctor: typeof React.Component, style: CardStyle }> = {},
+      register = (name: S, ctor: typeof React.Component, style: CardStyle = defaultCardStyle) => (
+        m[name] = { ctor, style }
+      ),
+      lookup = (name: S) => m[name] || m['']
+    return { register, lookup }
+  }
+
 export const
+  cards = newCardRegistry(),
   substitute = (formatString?: S, data?: Rec, defaultValue: any = null) => {
     return (formatString !== undefined && formatString !== null)
       ? isFormatExpr(formatString)
@@ -24,12 +59,14 @@ export const
         ? defaultValue
         : null
   },
-  Format = ({ data, defaultValue: v, format: f }: { data?: Rec, defaultValue?: any, format?: S }) => {
+  Format = ({ data, defaultValue: v, format: f, className }: { data?: Rec, defaultValue?: any, format?: S, className?: S }) => {
     const x = substitute(f, data, v)
-    return x === null ? x : <>{x}</>
+    if (x == null) return null
+    if (className) return <div className={className}>{x}</div>
+    return <>{x}</>
   },
   CardView = ({ card }: { card: Card<any> }) => {
-    let Tag = cards.lookup(card.state.view)
+    const Tag = cards.lookup(card.state.view).ctor
     return <Tag {...card} />
   },
   Repeat = ({ view, props, data }: { view: S | any, props: any, data: any }) => {
@@ -43,17 +80,6 @@ export const
     })
     return <>{items}</>
   }
-
-const
-  newCardRegistry = () => {
-    const
-      m: Dict<typeof React.Component> = {},
-      register = (name: S, ctor: typeof React.Component) => m[name] = ctor,
-      lookup = (name: S) => m[name] || m['']
-    return { register, lookup }
-  }
-
-export const cards = newCardRegistry()
 
 type Size = [U, U]
 
@@ -125,7 +151,6 @@ export const
   grid = newGrid(134, 76, 12, 10, 15) // approx 1800x930
 
 const
-  theme = getTheme(),
   css = stylesheet({
     grid: {
       position: 'relative',
@@ -134,45 +159,68 @@ const
       margin: margin(grid.gap),
     },
     slot: {
-      position: 'absolute',
-      backgroundColor: theme.colors.card,
       boxSizing: 'border-box',
-      borderRadius: 3,
-      boxShadow: `0px 3px 5px ${theme.colors.text0}`,
+      transition: 'box-shadow 0.3s cubic-bezier(.25,.8,.25,1)',
       overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
       $nest: {
         '>*:first-child': {
-          position: 'absolute',
-          left: grid.gap, top: grid.gap, right: grid.gap, bottom: grid.gap,
+          boxSizing: 'border-box',
+          flexGrow: 1, // Expand vertically
         }
       }
-    }
-  })
+    },
+    normal: {
+      backgroundColor: cssVar('$card'),
+      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
+      $nest: {
+        '&:hover': {
+          boxShadow: `0px 12px 20px ${cssVar('$text2')}`,
+        }
+      },
+    },
+    raised: {
+      color: cssVar('$card'),
+      backgroundColor: cssVar('$themePrimary'),
+      boxShadow: `0px 3px 7px ${cssVar('$text3')}`,
+    },
+    flat: {
+      backgroundColor: cssVar('$card'),
+      boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
+    },
+  }),
+  getCardEffectClass = (c: C) => {
+    const { effect } = getCardStyle(c)
+    return clas(css.slot, effect === CardEffect.Normal
+      ? css.normal
+      : effect === CardEffect.Raised
+        ? css.raised
+        : effect == CardEffect.Flat
+          ? css.flat : '')
+  }
 
 export const
-  GridLayout = bond(({ page }: { page: Page }) => {
+  getCardStyle = (c: C): CardStyle => cards.lookup(c.state.view).style,
+  GridLayout = ({ name, cards: cs }: { name: S, cards: C[] }) => {
     const
-      { changed } = page,
-      render = () => {
+      hasEditor = cs.find(c => c.state.view === 'editor') ? true : false,
+      children = cs.map(c => {
         const
-          children = page.list().map(c => {
-            const
-              placement = grid.place(c.state.box),
-              { left, top, right, bottom, width, height } = placement,
-              display = placement === badPlacement ? 'none' : 'block'
-            c.size = { width: width || 0, height: height || 0 } // TODO compute width from grid width; height cannot be relied upon
-            return (
-              <div key={c.id} className={css.slot} style={{ display, left, top, right, bottom, width, height }}>
-                <CardView card={c} />
-                <CardMenu card={c} />
-              </div>
-            )
-          })
+          placement = grid.place(c.state.box),
+          { left, top, right, bottom, width, height } = placement,
+          display = placement === badPlacement ? c.state.view === 'editor' ? undefined : 'none' : undefined,
+          zIndex = c.name === '__unhandled_error__' ? 1 : 'initial'
         return (
-          <div className={css.grid}>
-            {children}
+          <div key={c.id} className={getCardEffectClass(c)} style={{ display, position: 'absolute', left, top, right, bottom, width, height, zIndex }}>
+            <CardView card={c} />
+            <CardMenu name={c.name} commands={c.state.commands} changedB={c.changed} canEdit={hasEditor} />
           </div>
         )
-      }
-    return { render, changed }
-  })
+      })
+    return (
+      <div data-test={name} className={css.grid}>
+        {children}
+      </div>
+    )
+  }

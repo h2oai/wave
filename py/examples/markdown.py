@@ -1,7 +1,7 @@
 # Markdown
-# Use a markdown card to display formatted content using markdown.
+# Use a markdown card to display formatted content using #markdown.
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 
@@ -39,7 +39,7 @@ Table:
 '''
 
 page['example'] = ui.markdown_card(
-    box='1 1 3 -1',
+    box='1 1 3 10',
     title='I was made using markdown!',
     content=sample_markdown,
 )

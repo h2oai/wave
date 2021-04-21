@@ -1,10 +1,24 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import { XButtons, Buttons } from './button';
-import * as T from './qd';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-const name = 'test-btn';
-const hashName = `#${name}`;
+import React from 'react'
+import { render, fireEvent } from '@testing-library/react'
+import { XButtons, Buttons, XStandAloneButton } from './button'
+import * as T from './qd'
+
+const name = 'test-btn'
+const hashName = `#${name}`
 const btnProps: Buttons = { items: [{ button: { name, label: name } }] }
 const btnPropsNameHash: Buttons = { items: [{ button: { name: hashName, label: name } }] }
 describe('Button.tsx', () => {
@@ -12,6 +26,33 @@ describe('Button.tsx', () => {
     window.location.hash = ''
     T.qd.args[name] = null
     jest.clearAllMocks()
+  })
+
+  it('Renders data-test attr for Buttons', () => {
+    const { queryByTestId } = render(<XButtons model={{ items: [], name }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
+  it('Does not render data-test attr for Buttons', () => {
+    const { container } = render(<XButtons model={{ items: [] }} />)
+    expect(container.querySelectorAll('[data-test]')).toHaveLength(0)
+  })
+
+  it('Renders data-test attr for Button', () => {
+    const { queryByTestId } = render(<XButtons model={btnProps} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
+  it('Does not display buttons when visible set to false', () => {
+    const { queryByTestId } = render(<XButtons model={{ ...btnProps, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
+  })
+
+  it('Does not display standalone button when visible set to false', () => {
+    const { queryByTestId } = render(<XStandAloneButton model={{ ...btnProps.items[0].button!, visible: false }} />)
+    expect(queryByTestId(name)).toBeInTheDocument()
+    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Calls sync() after click', () => {
@@ -85,12 +126,12 @@ describe('Button.tsx', () => {
     const btnLinkProps: Buttons = { items: [{ button: { name, label: name, link: true } }] }
     const { getByTestId } = render(<XButtons model={btnLinkProps} />)
 
-    expect(getByTestId('link')).toBeTruthy()
+    expect(getByTestId(name)).toHaveClass('ms-Link')
   })
 
   it('Does not render a link when not specified', () => {
     const { queryByTestId } = render(<XButtons model={btnProps} />)
 
-    expect(queryByTestId('link')).toBeFalsy()
+    expect(queryByTestId(name)).not.toHaveClass('ms-Link')
   })
 })

@@ -1,9 +1,9 @@
 # Template / Data
-# Update a template card's data periodically.
+# Update a #template card's data periodically.
 # ---
 import time
 import random
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 page.drop()
@@ -17,7 +17,7 @@ menu = '''
 '''
 
 menu_card = page.add('template_example', ui.template_card(
-    box=f'1 1 2 2',
+    box='1 1 2 2',
     title='Surge-priced Menu',
     content=menu,
     data=dict(dishes=[
@@ -29,7 +29,8 @@ menu_card = page.add('template_example', ui.template_card(
 page.save()
 
 
-def rand_price(): return f'${random.randrange(0, 4)}.{random.randrange(10, 99)}'
+def rand_price():
+    return f'${random.randrange(0, 4)}.{random.randrange(10, 99)}'
 
 
 dishes = menu_card.data.dishes

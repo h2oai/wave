@@ -1,12 +1,12 @@
 # Uploads
-# Upload files to the Q server.
+# #Upload files to the Wave server.
 # ---
 import os
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 
 def write_csv(filename, rows):
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.write('\n'.join([','.join([str(x) for x in row]) for row in rows]))
 
 

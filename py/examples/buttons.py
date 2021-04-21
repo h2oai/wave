@@ -1,10 +1,12 @@
 # Form / Buttons
-# Use the `ui.buttons()` function to group related buttons.
+# Use the `ui.buttons()` function to group related #buttons.
+# #form
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if 'standard_button' in q.args:
         q.page['example'].items = [
             ui.text(f'primary_button={q.args.primary_button}'),
@@ -21,7 +23,3 @@ async def main(q: Q):
             ]),
         ])
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

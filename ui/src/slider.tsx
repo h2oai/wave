@@ -1,6 +1,21 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { B, bond, F, S, qd } from './qd';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { B, bond, F, Id, qd, S } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a slider.
@@ -20,7 +35,7 @@ import { B, bond, F, S, qd } from './qd';
 */
 export interface Slider {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** The minimum value of the slider. */
@@ -35,6 +50,8 @@ export interface Slider {
   disabled?: B
   /** True if the form should be submitted when the slider value changes. */
   trigger?: B
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
@@ -42,21 +59,16 @@ export interface Slider {
 export const
   XSlider = bond(({ model: m }: { model: Slider }) => {
     const
-      min = m.min || 0,
-      max = m.max || 100,
-      step = m.step || 1,
-      value = m.value || 0
-
-    const defaultValue = (value < min) ? min : ((value > max) ? max : value)
+      { min = 0, max = 100, step = 1, value = 0 } = m,
+      defaultValue = (value < min) ? min : ((value > max) ? max : value)
     qd.args[m.name] = defaultValue
     const
       onChange = (v: number) => qd.args[m.name] = v,
-      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => {
-        if (m.trigger) qd.sync()
-      },
+      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => { if (m.trigger) qd.sync() },
       render = () => (
         <Fluent.Slider
           data-test={m.name}
+          styles={{ root: displayMixin(m.visible) as Fluent.IStyle }}
           buttonProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
           min={min}

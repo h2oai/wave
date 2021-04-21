@@ -1,12 +1,13 @@
 # Stat / Small
 # Create a stat card displaying a single value.
+# #stat_card
 # ---
 import time
 
 from faker import Faker
 
 from synth import FakePercent
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 
@@ -14,7 +15,7 @@ fake = Faker()
 f = FakePercent()
 val, _ = f.next()
 c = page.add('example', ui.small_stat_card(
-    box=f'1 1 1 1',
+    box='1 1 1 1',
     title=fake.cryptocurrency_name(),
     value=f'${val:.2f}',
 ))

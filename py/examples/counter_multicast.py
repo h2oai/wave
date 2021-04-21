@@ -1,11 +1,12 @@
 # Mode / Multicast
-# Launch the server in multicast mode to synchronize browser state across a user's clients.
-# [Open this link](/demo) in multiple browsers and watch them synchronize in realtime.
+# Launch the server in #multicast #mode to synchronize browser state across a user's clients.
+# Open `/demo` in multiple browsers and watch them synchronize in realtime.
 # ---
-from h2o_q import Q, listen, ui, pack
+from h2o_wave import main, app, Q, ui, pack
 
 
-async def main(q: Q):
+@app('/demo', mode='multicast')
+async def serve(q: Q):
     count = q.user.count or 0
     if 'increment' in q.args:
         count += 1
@@ -20,7 +21,3 @@ async def main(q: Q):
         q.page['example'] = ui.form_card(box='1 1 12 10', items=items)
 
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main, mode='multicast')

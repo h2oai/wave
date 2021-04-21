@@ -1,11 +1,11 @@
 # Grid
-# Use a grid card to lay out multiple child cards in table form.
+# Use a #grid card to lay out multiple child cards in table form.
 # ---
 import random
 
 from faker import Faker
 
-from h2o_q import site, ui, pack, data
+from h2o_wave import site, ui, pack, data
 
 fake = Faker()
 

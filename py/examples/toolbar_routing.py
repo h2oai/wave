@@ -1,14 +1,15 @@
 # Routing / Toolbar
 # This example demonstrates how you can observe and handle changes to the browser's
-# [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash)
+# [location hash](https://developer.mozilla.org/en-US/docs/Web/API/Location/hash).
 #
 # The location hash can be accessed using `q.args['#']`.
-#
+# #routing #toolbar
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     hash = q.args['#']
     if hash:
         blurb = q.page['blurb']
@@ -36,7 +37,3 @@ async def main(q: Q):
             content='Welcome to our store!',
         )
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

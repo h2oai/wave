@@ -1,11 +1,11 @@
 # Repeat
-# Use a repeat card to render a card repeatedly.
+# Use a #repeat card to render a card repeatedly.
 # ---
 import random
 
 from faker import Faker
 
-from h2o_q import site, ui, pack, data
+from h2o_wave import site, ui, pack, data
 
 fake = Faker()
 

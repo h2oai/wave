@@ -1,12 +1,14 @@
 # Form / Combobox
 # Use comboboxes to allow users to either choose between available choices or indicate a choice by free-form editing.
+# #form #combobox
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 combobox_choices = ['Cyan', 'Magenta', 'Yellow', 'Black']
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'combobox={q.args.combobox}'),
@@ -25,7 +27,3 @@ async def main(q: Q):
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

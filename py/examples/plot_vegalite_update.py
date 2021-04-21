@@ -1,7 +1,7 @@
 # Plot / Vega-lite / Update
-# Periodically update a Vega-lite plot.
+# Periodically update a Vega-lite #plot. #vega
 # ---
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 import random
 import time
 
@@ -20,7 +20,8 @@ spec = '''
 
 
 # Generate random datum between 1 and 100
-def rnd(): return random.randint(1, 100)
+def rnd():
+    return random.randint(1, 100)
 
 
 # Get data rows for our plot.

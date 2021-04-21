@@ -1,10 +1,12 @@
 # Form / Date Picker
 # Use date pickers to allow users to pick dates.
+# #form #date_picker
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'date={q.args.date}'),
@@ -20,7 +22,3 @@ async def main(q: Q):
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

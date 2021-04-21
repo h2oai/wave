@@ -1,7 +1,7 @@
 # Graphics / Hilbert
-# Use turtle graphics recursively to draw Hilbert curves.
+# Use turtle #graphics recursively to draw Hilbert curves.
 # ---
-from h2o_q import ui, listen, Q, graphics as g
+from h2o_wave import ui, main, app, Q, graphics as g
 
 
 def hilbert(t: g.Turtle, width: float, depth: int, reverse=False):  # recursive
@@ -31,7 +31,8 @@ def make_hilbert_curve(width: float, depth: int):
     return t.d()
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     hilbert_curve = make_hilbert_curve(300, q.args.depth or 5)
 
     if not q.client.initialized:
@@ -51,6 +52,3 @@ async def main(q: Q):
         g.draw(q.page['curve'].scene.hilbert_curve, d=hilbert_curve)
 
     await q.page.save()
-
-
-listen('/demo', main)

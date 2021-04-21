@@ -1,8 +1,8 @@
 # Markdown / Data
-# Display dynamic formatted content using markdown.
+# Display dynamic formatted content using #markdown.
 # ---
 import time
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 
@@ -13,7 +13,7 @@ Take one down, pass it around, {{after}} bottles of beer on the wall...
 '''
 
 beer_card = page.add('example', ui.markdown_card(
-    box='1 1 4 -1',
+    box='1 1 4 2',
     title='99 Bottles of Beer',
     content='=' + beer_verse,  # Make the verse a template expression by prefixing a '='.
     data=dict(before='99', after='98'),

@@ -1,6 +1,21 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { B, S } from './qd';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { B, S } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a label.
@@ -18,22 +33,21 @@ export interface Label {
   required?: B
   /** True if the label should be disabled. */
   disabled?: B
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
-
-const
-  defaults: Partial<Label> = {
-    required: false,
-    disabled: false,
-  }
 
 export const
   XLabel = ({ model }: { model: Label }) => {
-    const { label, required, disabled } = { ...defaults, ...model }
+    const { label, required = false, disabled = false, visible, name } = model
     return (
       <Fluent.Label
-        data-test='label'
+        data-test={name}
+        style={displayMixin(visible)}
         required={required}
         disabled={disabled}
       >{label}</Fluent.Label>

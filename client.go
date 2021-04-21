@@ -1,7 +1,22 @@
-package qd
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package wave
 
 import (
-	"bytes"
+	"context"
+	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
@@ -34,16 +49,33 @@ var (
 // Client represent a websocket (UI) client.
 type Client struct {
 	id       string          // unique id
-	addr     string          // remote address
-	username string          // username, or blank
+	auth     *Auth           // auth provider, might be nil
+	addr     string          // remote IP:port, used for logging only
+	session  *Session        // end-user session
 	broker   *Broker         // broker
 	conn     *websocket.Conn // connection
-	urls     []string        // watched page urls
-	send     chan []byte     // send data
+	routes   []string        // watched routes
+	data     chan []byte     // send data
+	editable bool            // allow editing? // TODO move to user; tie to role
 }
 
-func newClient(addr, username string, broker *Broker, conn *websocket.Conn) *Client {
-	return &Client{uuid.New().String(), addr, username, broker, conn, nil, make(chan []byte, 256)}
+func newClient(addr string, auth *Auth, session *Session, broker *Broker, conn *websocket.Conn, editable bool) *Client {
+	return &Client{uuid.New().String(), auth, addr, session, broker, conn, nil, make(chan []byte, 256), editable}
+}
+
+func (c *Client) refreshToken() error {
+	if c.auth != nil && c.session.token != nil {
+		// TODO: use more meaningful context, e.g. context of current message
+		ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+		defer cancel()
+
+		token, err := c.auth.ensureValidOAuth2Token(ctx, c.session.token)
+		if err != nil {
+			return err
+		}
+		c.session.token = token
+	}
+	return nil
 }
 
 func (c *Client) listen() {
@@ -66,53 +98,71 @@ func (c *Client) listen() {
 			break
 		}
 
+		if err := c.refreshToken(); err != nil {
+			// token refresh failed, this is not fatal err, try next time
+			// TODO kick user out?
+			echo(Log{"t": "refresh_oauth2_token", "client": c.addr, "err": err.Error()})
+		}
+
 		m := parseMsg(msg)
 		switch m.t {
 		case patchMsgT:
-			c.broker.patch(m.addr, m.data)
-		case relayMsgT:
-			relay := c.broker.at(m.addr)
-			if relay == nil {
-				echo(Log{"t": "relay", "client": c.addr, "route": m.addr, "error": "service unavailable"})
+			if c.editable { // allow only if editing is enabled
+				c.broker.patch(m.addr, m.data)
+			}
+		case queryMsgT:
+			app := c.broker.getApp(m.addr)
+			if app == nil {
+				echo(Log{"t": "query", "client": c.addr, "route": m.addr, "error": "service unavailable"})
 				continue
 			}
-			relay.relay(c.format(m.data))
+			app.forward(c.id, c.session, m.data)
 		case watchMsgT:
-			if relay := c.broker.at(m.addr); relay != nil { // is service?
-				switch relay.mode {
+			c.subscribe(m.addr) // subscribe even if page is currently NA
+
+			if app := c.broker.getApp(m.addr); app != nil { // do we have an app handling this route?
+				switch app.mode {
 				case unicastMode:
-					c.subscribe(c.id) // client-level
+					c.subscribe("/" + c.id) // client-level
 				case multicastMode:
-					c.subscribe(c.username) // user-level
-				case broadcastMode:
-					c.subscribe(m.addr) // system-level
+					c.subscribe("/" + c.session.subject) // user-level
 				}
-				relay.relay(c.format(boot))
+
+				boot := emptyJSON
+				if len(m.data) > 0 { // location hash
+					if j, err := json.Marshal(Boot{Hash: string(m.data)}); err == nil {
+						boot = j
+					}
+				}
+
+				app.forward(c.id, c.session, boot)
 				continue
 			}
 
-			c.subscribe(m.addr) // subscribe even if page is currently NA
+			if headers, err := json.Marshal(OpsD{M: &Meta{Username: c.session.username, Editor: c.editable}}); err == nil {
+				c.send(headers)
+			}
 
 			if page := c.broker.site.at(m.addr); page != nil { // is page?
 				if data := page.marshal(); data != nil {
-					c.relay(data)
+					c.send(data)
 					continue
 				}
 			}
 
-			c.relay(notFound)
+			c.send(notFound)
 		}
 	}
 }
 
-func (c *Client) subscribe(url string) {
-	c.urls = append(c.urls, url) // TODO review
-	c.broker.subscribe <- Sub{url, c}
+func (c *Client) subscribe(route string) {
+	c.routes = append(c.routes, route)
+	c.broker.subscribe <- Sub{route, c}
 }
 
-func (c *Client) relay(data []byte) bool {
+func (c *Client) send(data []byte) bool {
 	select {
-	case c.send <- data:
+	case c.data <- data:
 		return true
 	default:
 		return false
@@ -127,7 +177,7 @@ func (c *Client) flush() {
 	}()
 	for {
 		select {
-		case message, ok := <-c.send:
+		case data, ok := <-c.data:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// broker closed the channel.
@@ -139,13 +189,13 @@ func (c *Client) flush() {
 			if err != nil {
 				return
 			}
-			w.Write(message)
+			w.Write(data)
 
 			// push queued messages, if any
-			n := len(c.send)
+			n := len(c.data)
 			for i := 0; i < n; i++ {
 				w.Write(newline)
-				w.Write(<-c.send)
+				w.Write(<-c.data)
 			}
 
 			if err := w.Close(); err != nil {
@@ -161,27 +211,5 @@ func (c *Client) flush() {
 }
 
 func (c *Client) quit() {
-	close(c.send)
-}
-
-var (
-	usernameHeader = []byte("u:")
-	clientIDHeader = []byte("c:")
-	relayBodySep   = []byte("\n\n")
-)
-
-func (c *Client) format(data []byte) []byte {
-	var buf bytes.Buffer
-
-	buf.Write(usernameHeader)
-	buf.WriteString(c.username)
-	buf.WriteByte('\n')
-
-	buf.Write(clientIDHeader)
-	buf.WriteString(c.id)
-	buf.Write(relayBodySep)
-
-	buf.Write(data)
-
-	return buf.Bytes()
+	close(c.data)
 }

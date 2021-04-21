@@ -1,10 +1,11 @@
 # Plot / Point / Sizes
 # Make a scatterplot with mark sizes mapped to a continuous variable (a "bubble plot").
+# #plot
 # ---
 import random
 
 from synth import FakeScatter
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

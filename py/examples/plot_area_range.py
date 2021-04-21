@@ -1,10 +1,10 @@
 # Plot / Area / Range
-# Make an area plot representing a range (band) of values.
+# Make an area #plot representing a range (band) of values.
 # ---
 import random
 
 from synth import FakeTimeSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

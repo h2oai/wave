@@ -1,7 +1,8 @@
 # Form / Choice Group
-# Use choice groups to let users select one option from two or more choices.
+# Use #choice groups to let users select one option from two or more choices.
+# #form #choice_group
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 choices = [
     ui.choice('A', 'Option A'),
@@ -11,7 +12,8 @@ choices = [
 ]
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'selected={q.args.choice_group}'),
@@ -23,7 +25,3 @@ async def main(q: Q):
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

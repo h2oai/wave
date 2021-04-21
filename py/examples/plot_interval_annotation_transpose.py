@@ -1,8 +1,8 @@
 # Plot / Interval / Annotation / Transpose
-# Add annotations to a bar plot.
+# Add annotations to a bar #plot. #annotation #interval
 # ---
 from synth import FakeCategoricalSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

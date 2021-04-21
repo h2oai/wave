@@ -1,19 +1,20 @@
 # Stat / Large
 # Create a stat card displaying a primary value, an auxiliary value and a caption.
+# #stat_card
 # ---
 import time
 
 from faker import Faker
 
 from synth import FakePercent
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 
 fake = Faker()
 f = FakePercent()
 val, pc = f.next()
-c = page.add(f'example', ui.large_stat_card(
+c = page.add('example', ui.large_stat_card(
     box='1 1 2 2',
     title=fake.cryptocurrency_name(),
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',

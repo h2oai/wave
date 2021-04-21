@@ -1,10 +1,32 @@
-package qd
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package wave
 
 // OpsD represents the set of changes to be applied to a Page. This is a discriminated union.
 type OpsD struct {
-	P *PageD                 `json:"p,omitempty"` // page
-	C map[string]interface{} `json:"c,omitempty"` // FIXME comment - is this required?
-	D []OpD                  `json:"d,omitempty"` // deltas
+	P *PageD `json:"p,omitempty"` // page
+	D []OpD  `json:"d,omitempty"` // deltas
+	R int    `json:"r,omitempty"` // reset
+	E string `json:"e,omitempty"` // error
+	M *Meta  `json:"m,omitempty"` // metadata
+}
+
+// Meta represents metadata unrelated to commands
+type Meta struct {
+	Username string `json:"u"` // active user's username
+	Editor   bool   `json:"e"` // can the user edit pages?
 }
 
 // OpD represents a delta operation (effector)
@@ -58,10 +80,22 @@ type CycBufD struct {
 	I int             `json:"i"` // index
 }
 
-// RelayRequest represents a request from a service for establishing a duplex relay.
-// XXX move to protocol
-type RelayRequest struct {
-	Mode string `json:"mode"`
-	URL  string `json:"url"`
-	Host string `json:"host"`
+// AppRequest represents a request from an app.
+type AppRequest struct {
+	RegisterApp   *RegisterApp   `json:"register_app,omitempty"`
+	UnregisterApp *UnregisterApp `json:"unregister_app,omitempty"`
+}
+
+// RegisterApp represents a request to register an app.
+type RegisterApp struct {
+	Mode      string `json:"mode"`
+	Route     string `json:"route"`
+	Address   string `json:"address"`
+	KeyID     string `json:"key_id"`
+	KeySecret string `json:"key_secret"`
+}
+
+// UnregisterApp represents a request to unregister an app.
+type UnregisterApp struct {
+	Route string `json:"route"`
 }

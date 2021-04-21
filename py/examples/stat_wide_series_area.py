@@ -1,12 +1,13 @@
 # Stat / Series / Wide / Area
-# Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
+# Create a wide stat card displaying a primary value, an auxiliary value and a #series plot.
+# #stat_card
 # ---
 import time
 
 from faker import Faker
 
 from synth import FakeCategoricalSeries
-from h2o_q import site, ui, data
+from h2o_wave import site, ui, data
 
 page = site['/demo']
 

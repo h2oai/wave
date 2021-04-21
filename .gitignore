@@ -14,11 +14,15 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-/.vscode
+.vscode/settings.json
+.idea
 /build
 /data
-/qd
-/teledb
+/waved
+/surf
+.wave-keychain
 /*.db
 *.log
 *.swp
+node_modules
+

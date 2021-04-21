@@ -1,10 +1,12 @@
 # Form / Slider
-# Use a slider to allow users to set a value within a specific range.
+# Use a #slider to allow users to set a value within a specific range.
+# #form
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'slider={q.args.slider}'),
@@ -21,7 +23,3 @@ async def main(q: Q):
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)
