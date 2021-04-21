@@ -1,8 +1,8 @@
 # Plot / Area / Smooth
-# Make an area plot with a smooth curve.
+# Make an area #plot with a smooth curve.
 # ---
 from synth import FakeTimeSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

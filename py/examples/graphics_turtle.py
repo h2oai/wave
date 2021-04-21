@@ -1,8 +1,8 @@
 # Graphics / Turtle
-# Use turtle graphics to draw paths.
+# Use turtle #graphics to draw paths.
 # Original example: https://docs.python.org/3/library/turtle.html
 # ---
-from h2o_q import site, ui, graphics as g
+from h2o_wave import site, ui, graphics as g
 
 t = g.turtle().f(100).r(90).pd()
 for _ in range(36):

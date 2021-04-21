@@ -1,26 +1,34 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { B, Card, unpack, Rec, S, Data, xid, box, bond } from './qd';
-import { cards, CardView, Format } from './layout';
-import { getTheme } from './theme';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { B, Card, unpack, Rec, S, Data, xid, box, bond } from './qd'
+import { cards, CardView, Format } from './layout'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
     },
     body: {
       flexGrow: 1,
       overflow: 'auto',
       $nest: {
         '>*': {
-          borderBottom: '1px solid ' + theme.colors.text1,
+          borderBottom: '1px solid var(--text1)',
           padding: '5px 0',
         },
       },
@@ -40,8 +48,8 @@ interface State {
   data: Data
 }
 
-const
-  View = bond(({ state: s, changed }: Card<State>) => {
+export const
+  View = bond(({ name, state: s, changed }: Card<State>) => {
     const
       render = () => {
         let cells = unpack<any[]>(s.cells)
@@ -68,8 +76,8 @@ const
           })
 
         return (
-          <div className={css.card}>
-            <div className={css.title}>{s.title || 'Untitled'}</div>
+          <div data-test={name} className={css.card}>
+            <div className='wave-s12 wave-w6'>{s.title || 'Untitled'}</div>
             <div className={css.body}>
               <table className={css.table}>
                 <thead>
@@ -87,4 +95,3 @@ const
   })
 
 cards.register('grid', View)
-

@@ -7,16 +7,20 @@ assignees: ''
 
 ---
 
-**Q SDK Version, OS**
+#### Wave SDK Version, OS
+
 (e.g. 4.2.0, Windows)
 
-**Actual behavior**
+#### Actual behavior
+
 (A clear and concise description of what happened.)
 
-**Expected behavior**
+#### Expected behavior
+
 (A clear and concise description of what you expected to happen.)
 
-**Steps To Reproduce**
+#### Steps To Reproduce
+
 1. Do this
 2. Do that
 3. Do something else

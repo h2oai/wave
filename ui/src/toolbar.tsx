@@ -1,7 +1,22 @@
-import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react';
-import React from 'react';
-import { cards } from './layout';
-import { bond, Card, qd, S } from './qd';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { CardEffect, cards } from './layout'
+import { bond, Card, Id, qd, S } from './qd'
 
 /**
  * Create a command.
@@ -10,7 +25,7 @@ import { bond, Card, qd, S } from './qd';
  */
 export interface Command {
   /** An identifying name for this component. If the name is prefixed with a '#', the command sets the location hash to the name when executed. */
-  name: S
+  name: Id
   /** The text displayed for this command. */
   label?: S
   /** The caption for this command (typically a tooltip). */
@@ -20,6 +35,8 @@ export interface Command {
   /** Sub-commands, if any */
   items?: Command[]
   /** Data associated with this command, if any. */
+  value?: S
+  /** DEPRECATED. Use `value` instead. Data associated with this command, if any. */
   data?: S
 }
 
@@ -36,28 +53,39 @@ interface State {
 
 const
   overflowProps: IButtonProps = { ariaLabel: 'More' },
-  toCommand = ({ name, label, caption, icon, items }: Command): ICommandBarItemProps => {
+  toCommands = (commands: Command[]) => commands.map(toCommand),
+  toCommand = ({ name, label, caption, icon, items, value }: Command): ICommandBarItemProps => {
     qd.args[name] = false
     const onClick = () => {
       if (name[0] === '#') {
         window.location.hash = name.substr(1)
         return
       }
-      qd.args[name] = true
+      qd.args[name] = value === undefined || value
       qd.sync()
     }
     return {
       key: name,
       text: label,
       ariaLabel: caption || label,
+      title: caption,
       iconOnly: !label,
       iconProps: icon ? { iconName: icon } : undefined,
       subMenuProps: items ? { items: toCommands(items) } : undefined,
       onClick,
     }
-  },
-  toCommands = (commands: Command[]) => commands.map(toCommand),
-  View = bond(({ state, changed }: Card<State>) => {
+  }
+const
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    }
+  })
+
+export const
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
         const
@@ -66,8 +94,9 @@ const
           overflowCommands = overflow_items ? toCommands(overflow_items) : undefined,
           farCommands = secondary_items ? toCommands(secondary_items) : undefined
         return (
-          <div>
+          <div className={css.card}>
             <CommandBar
+              data-test={name}
               items={commands}
               overflowItems={overflowCommands}
               overflowButtonProps={overflowProps}
@@ -80,6 +109,6 @@ const
     return { render, changed }
   })
 
-cards.register('toolbar', View)
+cards.register('toolbar', View, { effect: CardEffect.Transparent })
 
 

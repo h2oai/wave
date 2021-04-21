@@ -1,8 +1,21 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { cards } from './layout';
-import { bond, Card, unpack, Rec, S, qd, U } from './qd';
-import { getTheme } from './theme';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { cards, grid } from './layout'
+import { bond, Card, unpack, Rec, S, qd, U } from './qd'
 
 const
   pixelSize = 20,
@@ -10,15 +23,11 @@ const
   palette = '#ffffff #bfbfbf #808080 #404040 #000000 #6699ff #3366cc #003399 #99cc33 #00cc00 #669900 #ffcc00 #ff9900 #ff6600 #cc0000'.split(/\s+/g)
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      padding: grid.gap,
     },
     canvas: {
       display: 'flex', flexWrap: 'wrap',
@@ -59,12 +68,12 @@ interface Pixel {
   color: S
 }
 
-const
+export const
   View = bond(({ name, state: s, changed }: Card<State>) => {
     let brush = '#000'
     const
       paint = (i: U) => {
-        const page = qd.page()
+        const page = qd.edit()
         page.set(`${name} data ${i}`, brush === 'none' ? null : [brush])
         page.sync()
       },
@@ -91,8 +100,8 @@ const
             )
           })
         return (
-          <div className={css.card}>
-            <div className={css.title}>{s.title}</div>
+          <div data-test={name} className={css.card}>
+            <div className='wave-s12 wave-w6'>{s.title}</div>
             <div className={css.canvas}>{pixels}</div>
             <div className={css.swatches}>
               <div className={css.pixel}>
@@ -109,4 +118,3 @@ const
   })
 
 cards.register('pixel_art', View)
-

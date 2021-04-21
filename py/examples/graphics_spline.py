@@ -1,9 +1,9 @@
 # Graphics / Spline
-# Use the graphics module to render splines.
+# Use the #graphics module to render splines.
 # ---
 
 import random
-from h2o_q import site, ui, graphics as g
+from h2o_wave import site, ui, graphics as g
 
 x = [i * 20 for i in range(50)]
 y = [

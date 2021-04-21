@@ -1,8 +1,8 @@
 # Plot / Line / Step / Before
-# Make a line plot with a step-before curve.
+# Make a line #plot with a step-before curve.
 # ---
 from synth import FakeTimeSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

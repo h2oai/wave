@@ -1,33 +1,55 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { Button, Buttons, XButtons, XStandAloneButton } from './button';
-import { Checkbox, XCheckbox } from './checkbox';
-import { Checklist, XChecklist } from './checklist';
-import { ChoiceGroup, XChoiceGroup } from './choice_group';
-import { ColorPicker, XColorPicker } from './color_picker';
-import { Combobox, XCombobox } from './combobox';
-import { DatePicker, XDatePicker } from './date_picker';
-import { Dropdown, XDropdown } from './dropdown';
-import { Expander, XExpander } from './expander';
-import { FileUpload, XFileUpload } from './file_upload';
-import { Frame, XFrame } from './frame';
-import { Label, XLabel } from './label';
-import { cards } from './layout';
-import { Link, XLink } from './link';
-import { MessageBar, XMessageBar } from './message_bar';
-import { Progress, XProgress } from './progress';
-import { bond, Card, Packed, unpack, xid } from './qd';
-import { Separator, XSeparator } from './separator';
-import { Slider, XSlider } from './slider';
-import { Spinbox, XSpinbox } from './spinbox';
-import { Table, XTable } from './table';
-import { Tabs, XTabs } from './tabs';
-import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text';
-import { Textbox, XTextbox } from './textbox';
-import { getTheme } from './theme';
-import { Toggle, XToggle } from './toggle';
-import { XToolTip } from './tooltip';
-import { Picker, XPicker } from './picker';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { Button, Buttons, XButtons, XStandAloneButton } from './button'
+import { Checkbox, XCheckbox } from './checkbox'
+import { Checklist, XChecklist } from './checklist'
+import { ChoiceGroup, XChoiceGroup } from './choice_group'
+import { ColorPicker, XColorPicker } from './color_picker'
+import { Combobox, XCombobox } from './combobox'
+import { DatePicker, XDatePicker } from './date_picker'
+import { Dropdown, XDropdown } from './dropdown'
+import { Expander, XExpander } from './expander'
+import { FileUpload, XFileUpload } from './file_upload'
+import { Frame, XFrame } from './frame'
+import { Label, XLabel } from './label'
+import { cards } from './layout'
+import { Link, XLink } from './link'
+import { Markup, XMarkup } from './markup'
+import { MessageBar, XMessageBar } from './message_bar'
+import { Picker, XPicker } from './picker'
+import { Visualization, XVisualization } from './plot'
+import { Progress, XProgress } from './progress'
+import { B, bond, Card, Packed, S, unpack, xid } from './qd'
+import { RangeSlider, XRangeSlider } from './range_slider'
+import { Separator, XSeparator } from './separator'
+import { Slider, XSlider } from './slider'
+import { Spinbox, XSpinbox } from './spinbox'
+import { Stats, XStats } from './stats'
+import { Stepper, XStepper } from './stepper'
+import { Table, XTable } from './table'
+import { Tabs, XTabs } from './tabs'
+import { Template, XTemplate } from './template'
+import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
+import { Textbox, XTextbox } from './textbox'
+import { clas, margin, padding, cssVar } from './theme'
+import { Toggle, XToggle } from './toggle'
+import { XToolTip } from './tooltip'
+import { VegaVisualization, XVegaVisualization } from './vega'
 
 /** Create a component. */
 export interface Component {
@@ -80,48 +102,124 @@ export interface Component {
   /** File upload. */
   file_upload?: FileUpload
   /** Table. */
-  table?: Table
+  table?: Table;
   /** Link. */
   link?: Link
   /** Tabs. */
-  tabs?: Tabs
+  tabs?: Tabs;
   /** Expander. */
   expander?: Expander
-  /** Frame */
+  /** Frame. */
   frame?: Frame
-  /** Picker */
+  /** Markup */
+  markup?: Markup
+  /** Template */
+  template?: Template
+  /** Picker.*/
   picker?: Picker
+  /** Range Slider. */
+  range_slider?: RangeSlider
+  /** Stepper. */
+  stepper?: Stepper
+  /** Visualization. */
+  visualization?: Visualization
+  /** Vega-lite Visualization. */
+  vega_visualization?: VegaVisualization
+  /** Stats */
+  stats?: Stats
+  /** Inline components */
+  inline?: Inline
+}
+
+/** Create an inline (horizontal) list of components. */
+interface Inline {
+  /** The components laid out inline. */
+  items: Component[]
+  /** Specifies how to lay out the individual components. Defaults to 'start'. */
+  justify?: 'start' | 'end'
+  /** Whether to display the components inset from the parent form, with a contrasting background. */
+  inset?: B
 }
 
 /** Create a form. */
 interface State {
   /** The components in this form. */
   items: Packed<Component[]>
+  /** The title for this card. */
+  title?: S
 }
 
-
 const
-  theme = getTheme(),
-  defaults: Partial<State> = {
-    items: []
-  }
+  defaults: Partial<State> = { items: [] },
+  css = stylesheet({
+    card: {
+      padding: 15,
+    },
+    vertical: {
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
+      $nest: {
+        '>*:not(:first-child)': {
+          marginTop: 10
+        },
+      }
+    },
+    horizontal: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    inset: {
+      background: cssVar('$page'),
+      padding: padding(10, 15)
+    },
+    horizontalLeft: {
+      $nest: {
+        '> *': {
+          margin: margin(0, 25, 0, 0),
+        }
+      }
+    },
+    horizontalRight: {
+      justifyContent: 'flex-end',
+      $nest: {
+        '> *': {
+          margin: margin(0, 0, 0, 25),
+        }
+      }
+    },
+  })
 
+export enum XComponentAlignment { Top, Left, Right }
 
 export const
-  XComponents = ({ items }: { items: Component[] }) => {
-    const components = items.map(m => <XComponent key={xid()} model={m} />)
-    // TODO gap 10px between fields
-    return <>{components}</>
-  }
+  XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
+    const
+      components = items.map(m => <XComponent key={xid()} model={m} />),
+      className = alignment === XComponentAlignment.Left
+        ? clas(css.horizontal, css.horizontalLeft, inset ? css.inset : '')
+        : alignment === XComponentAlignment.Right
+          ? clas(css.horizontal, css.horizontalRight, inset ? css.inset : '')
+          : css.vertical
+    return <div className={className}>{components}</div>
+  },
+  XInline = ({ model: m }: { model: Inline }) => (
+    <XComponents
+      items={m.items}
+      alignment={m.justify === 'end' ? XComponentAlignment.Right : XComponentAlignment.Left}
+      inset={m.inset}
+    />
+  )
+
 
 const
   XComponent = ({ model: m }: { model: Component }) => {
-    if (m.text) return <XToolTip content={m.text.tooltip} expand={false}><XText content={m.text.content} size={m.text.size} /></XToolTip>
-    if (m.text_xl) return <XToolTip content={m.text_xl.tooltip} expand={false}><XText content={m.text_xl.content} size='xl' /></XToolTip>
-    if (m.text_l) return <XToolTip content={m.text_l.tooltip} expand={false}><XText content={m.text_l.content} size='l' /></XToolTip>
-    if (m.text_m) return <XToolTip content={m.text_m.tooltip} expand={false}><XText content={m.text_m.content} /></XToolTip>
-    if (m.text_s) return <XToolTip content={m.text_s.tooltip} expand={false}><XText content={m.text_s.content} size='s' /></XToolTip>
-    if (m.text_xs) return <XToolTip content={m.text_xs.tooltip} expand={false}><XText content={m.text_xs.content} size='xs' /></XToolTip>
+    if (m.text) return <XToolTip content={m.text.tooltip} expand={false}><XText name={m.text.name} content={m.text.content} size={m.text.size} visibility={m.text.visible} /></XToolTip>
+    if (m.text_xl) return <XToolTip content={m.text_xl.tooltip} expand={false}><XText name={m.text_xl.name} content={m.text_xl.content} size='xl' commands={m.text_xl.commands} visibility={m.text_xl.visible} /></XToolTip>
+    if (m.text_l) return <XToolTip content={m.text_l.tooltip} expand={false}><XText name={m.text_l.name} content={m.text_l.content} size='l' commands={m.text_l.commands} visibility={m.text_l.visible} /></XToolTip>
+    if (m.text_m) return <XToolTip content={m.text_m.tooltip} expand={false}><XText name={m.text_m.name} content={m.text_m.content} visibility={m.text_m.visible} /></XToolTip>
+    if (m.text_s) return <XToolTip content={m.text_s.tooltip} expand={false}><XText name={m.text_s.name} content={m.text_s.content} size='s' visibility={m.text_s.visible} /></XToolTip>
+    if (m.text_xs) return <XToolTip content={m.text_xs.tooltip} expand={false}><XText name={m.text_xs.name} content={m.text_xs.content} size='xs' visibility={m.text_xs.visible} /></XToolTip>
     if (m.label) return <XToolTip content={m.label.tooltip} expand={false}><XLabel model={m.label} /></XToolTip>
     if (m.link) return <XToolTip content={m.link.tooltip} expand={false}><XLink model={m.link} /></XToolTip>
     if (m.separator) return <XSeparator model={m.separator} />
@@ -145,20 +243,33 @@ const
     if (m.button) return <XToolTip content={m.button.tooltip} showIcon={false} expand={false}><XStandAloneButton model={m.button} /></XToolTip>
     if (m.expander) return <XExpander model={m.expander} />
     if (m.frame) return <XFrame model={m.frame} />
+    if (m.markup) return <XMarkup model={m.markup} />
+    if (m.template) return <XTemplate model={m.template} />
     if (m.picker) return <XToolTip content={m.picker.tooltip}><XPicker model={m.picker} /></XToolTip>
+    if (m.range_slider) return <XToolTip content={m.range_slider.tooltip}><XRangeSlider model={m.range_slider} /></XToolTip>
+    if (m.stepper) return <XToolTip content={m.stepper.tooltip}><XStepper model={m.stepper} /></XToolTip>
+    if (m.visualization) return <XVisualization model={m.visualization} />
+    if (m.vega_visualization) return <XVegaVisualization model={m.vega_visualization} />
+    if (m.stats) return <XStats model={m.stats} />
+    if (m.inline) return <XInline model={m.inline} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
-  },
-  View = bond(({ state, changed }: Card<State>) => {
+  }
+
+export const
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
       render = () => {
         const
-          s = theme.merge(defaults, state),
+          s = { ...defaults, ...state },
+          title = s.title,
           items = unpack<Component[]>(s.items) // XXX ugly
 
         return (
-          <div>
+          <div data-test={name} className={css.card}>
+            {title && <div className='wave-s12 wave-w6'>{title}</div>}
             <XComponents items={items} />
-          </div>)
+          </div>
+        )
       }
     return { render, changed }
   })

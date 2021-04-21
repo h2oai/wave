@@ -1,14 +1,14 @@
 # Dashboard
-# Make a dashboard using a multitude of cards and update them live.
+# Make a #dashboard using a multitude of cards and update them live.
 # ---
 from faker import Faker
 import time
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 from synth import FakePercent, FakeCategoricalSeries
 
 fake = Faker()
 
-light_theme_colors = '$red $pink $purple $violet $indigo $blue $azure $cyan $teal $mint $green $amber $orange $tangerine'.split()
+light_theme_colors = '$red $pink $purple $violet $indigo $blue $azure $cyan $teal $mint $green $amber $orange $tangerine'.split()  # noqa: E501
 dark_theme_colors = '$red $pink $blue $azure $cyan $teal $mint $green $lime $yellow $amber $orange $tangerine'.split()
 
 _color_index = -1
@@ -22,7 +22,7 @@ def next_color():
 
 
 _curve_index = -1
-curves = 'linear smooth step stepAfter stepBefore'.split()
+curves = 'linear smooth step step-after step-before'.split()
 
 
 def next_curve():
@@ -33,7 +33,6 @@ def next_curve():
 
 def create_dashboard(update_freq=0.0):
     page = site['/demo']
-
     simples = []
     for i in range(1, 7):
         f = FakePercent()

@@ -1,10 +1,12 @@
 # Toolbar
 # Use toolbars to provide commands that operate on the content of a page.
+# #toolbar #command
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     q.page['nav'] = ui.toolbar_card(
         box='1 1 4 1',
         items=[
@@ -29,7 +31,3 @@ async def main(q: Q):
         ],
     )
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

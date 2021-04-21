@@ -1,10 +1,11 @@
 # Uploads / UI
 # Accept files from the user.
+# #upload #form
 # ---
 
 
 import os
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 import os.path
 
 
@@ -13,7 +14,8 @@ def make_link_list(links):
     return '\n'.join([f'- [{os.path.basename(link)}]({link})' for link in links])
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if q.args.user_files:
         q.page['example'].items = [
             ui.text_xl('Files uploaded!'),
@@ -26,7 +28,3 @@ async def main(q: Q):
             ui.file_upload(name='user_files', label='Upload', multiple=True),
         ])
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

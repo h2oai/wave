@@ -1,27 +1,41 @@
-import { Chart, registerInteraction } from '@antv/g2';
-import { AdjustOption, AnnotationPosition, ArcOption, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption, ChartCfg } from '@antv/g2/lib/interface';
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { Fmt, parseFormat } from './intl';
-import { cards } from './layout';
-import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V } from './qd';
-import { getTheme } from './theme';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-const
-  theme = getTheme(),
-  hues = theme.colors,
+import { Chart, registerInteraction } from '@antv/g2'
+import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface'
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { Fmt, parseFormat } from './intl'
+import { cards, grid } from './layout'
+import { displayMixin, cssVarValue, } from './theme'
+import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V, qd } from './qd'
+
+let
   cat10 = [
-    hues.gray,
-    hues.blue,
-    hues.green,
-    hues.amber,
-    hues.tangerine,
-    hues.purple,
-    hues.cyan,
-    hues.mint,
-    hues.pink,
-    hues.brown,
+    '$gray',
+    '$blue',
+    '$green',
+    '$amber',
+    '$tangerine',
+    '$purple',
+    '$cyan',
+    '$mint',
+    '$pink',
+    '$brown',
   ]
+
+
 type AnnotationOption = ArcOption | LineOption | TextOption | RegionOption | DataMarkerOption | DataRegionOption
 
 enum SpaceT { CC, DD, TT, CD, DC, TC, CT, TD, DT }
@@ -32,182 +46,184 @@ enum SpaceT { CC, DD, TT, CD, DC, TC, CT, TD, DT }
 */
 interface Mark {
   /** Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. */
-  coord?: 'rect' | 'cartesian' | 'polar' | 'theta' | 'helix'
+  coord?: 'rect' | 'cartesian' | 'polar' | 'theta' | 'helix';
   /** Graphical geometry. */
-  type?: 'interval' | 'line' | 'path' | 'point' | 'area' | 'polygon' | 'schema' | 'edge' | 'heatmap'
+  type?: 'interval' | 'line' | 'path' | 'point' | 'area' | 'polygon' | 'schema' | 'edge' | 'heatmap';
   /** X field or value. */
-  x?: V
+  x?: V;
   /** X base field or value. */
-  x0?: V
+  x0?: V;
   /** X bin lower bound field or value. For histograms. */
-  x1?: V
+  x1?: V;
   /** X bin upper bound field or value. For histograms. */
-  x2?: V
+  x2?: V;
   /** X axis scale minimum. */
-  x_min?: F
+  x_min?: F;
   /** X axis scale maximum. */
-  x_max?: F
+  x_max?: F;
   /** Whether to nice X axis scale ticks. */
-  x_nice?: B
+  x_nice?: B;
   /** X axis scale type. */
-  x_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'time' | 'timeCat' | 'quantize' | 'quantile'
+  x_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'power' | 'time' | 'time-category' | 'quantize' | 'quantile';
   /** X axis title. */
-  x_title?: S
+  x_title?: S;
   /** Y field or value. */
-  y?: V
+  y?: V;
   /** Y base field or value. */
-  y0?: V
+  y0?: V;
   /** Y bin lower bound field or value. For histograms. */
-  y1?: V
+  y1?: V;
   /** Y bin upper bound field or value. For histograms. */
-  y2?: V
+  y2?: V;
   /** Y axis scale minimum. */
-  y_min?: F
+  y_min?: F;
   /** Y axis scale maximum. */
-  y_max?: F
+  y_max?: F;
   /** Whether to nice Y axis scale ticks. */
-  y_nice?: B
+  y_nice?: B;
   /** Y axis scale type. */
-  y_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'time' | 'timeCat' | 'quantize' | 'quantile'
+  y_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'power' | 'time' | 'time-category' | 'quantize' | 'quantile';
   /** Y axis title. */
-  y_title?: S
+  y_title?: S;
   /** Mark color field or value. */
-  color?: S
+  color?: S;
   /** Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'` */
-  color_range?: S
+  color_range?: S;
+  /** The unique values in the data (labels or categories or classes) to map colors to, e.g. `['high', 'medium', 'low']`. If this is not provided, the unique values are automatically inferred from the `color` attribute. */
+  color_domain?: S[];
   /** Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'. */
-  shape?: S
+  shape?: S;
   /** Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'` */
-  shape_range?: S
+  shape_range?: S;
   /** Mark size field or value. */
-  size?: V
+  size?: V;
   /** Mark size range. A string containing space-separated integers, e.g. `'4 30'` */
-  size_range?: S
+  size_range?: S;
   /** Field to stack marks by, or 'auto' to infer. */
-  stack?: S
+  stack?: S;
   /** Field to dodge marks by, or 'auto' to infer. */
-  dodge?: S
+  dodge?: S;
   /** Curve type for `line` and `area` mark types. */
-  curve?: 'none' | 'smooth' | 'step-before' | 'step' | 'step-after'
+  curve?: 'none' | 'smooth' | 'step-before' | 'step' | 'step-after';
   /** Mark fill color. */
-  fill_color?: S
+  fill_color?: S;
   /** Mark fill opacity. */
-  fill_opacity?: F
+  fill_opacity?: F;
   /** Mark stroke color. */
-  stroke_color?: S
+  stroke_color?: S;
   /** Mark stroke opacity. */
-  stroke_opacity?: F
+  stroke_opacity?: F;
   /** Mark stroke size. */
-  stroke_size?: F
+  stroke_size?: F;
   /** Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]. */
-  stroke_dash?: S
+  stroke_dash?: S;
   /** Label field or value. */
-  label?: S
+  label?: S;
   /** Distance between label and mark. */
-  label_offset?: F
+  label_offset?: F;
   /** Horizontal distance between label and mark. */
-  label_offset_x?: F
+  label_offset_x?: F;
   /** Vertical distance between label and mark. */
-  label_offset_y?: F
+  label_offset_y?: F;
   /** Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation. */
-  label_rotation?: S
+  label_rotation?: S;
   /** Label position relative to the mark. */
-  label_position?: 'top' | 'bottom' | 'middle' | 'left' | 'right'
+  label_position?: 'top' | 'bottom' | 'middle' | 'left' | 'right';
   /** Strategy to use if labels overlap. */
-  label_overlap?: 'hide' | 'overlap' | 'constrain'
+  label_overlap?: 'hide' | 'overlap' | 'constrain';
   /** Label fill color. */
-  label_fill_color?: S
+  label_fill_color?: S;
   /** Label fill opacity. */
-  label_fill_opacity?: F
+  label_fill_opacity?: F;
   /** Label stroke color. */
-  label_stroke_color?: S
+  label_stroke_color?: S;
   /** Label stroke opacity. */
-  label_stroke_opacity?: F
+  label_stroke_opacity?: F;
   /** Label stroke size (line width or pen thickness). */
-  label_stroke_size?: F
+  label_stroke_size?: F;
   /** Label font size. */
-  label_font_size?: F
+  label_font_size?: F;
   /** Label font weight. */
-  label_font_weight?: S
+  label_font_weight?: S;
   /** Label line height. */
-  label_line_height?: F
+  label_line_height?: F;
   /** Label text alignment. */
-  label_align?: 'left' | 'right' | 'center' | 'start' | 'end'
+  label_align?: 'left' | 'right' | 'center' | 'start' | 'end';
   /** Reference line stroke color. */
-  ref_stroke_color?: S
+  ref_stroke_color?: S;
   /** Reference line stroke opacity. */
-  ref_stroke_opacity?: F
+  ref_stroke_opacity?: F;
   /** Reference line stroke size (line width or pen thickness). */
-  ref_stroke_size?: F
+  ref_stroke_size?: F;
   /** Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]. */
-  ref_stroke_dash?: S
+  ref_stroke_dash?: S;
 }
 
 /** Extended mark attributes. Not exposed to API. */
 interface MarkExt extends Mark {
   /** Field. */
-  x_field?: S
+  x_field?: S;
   /** Format string. */
-  x_format?: Fmt
+  x_format?: Fmt;
   /** Field. */
-  x0_field?: S
+  x0_field?: S;
   /** Format string. */
-  x0_format?: Fmt
+  x0_format?: Fmt;
   /** Field. */
-  x1_field?: S
+  x1_field?: S;
   /** Format string. */
-  x1_format?: Fmt
+  x1_format?: Fmt;
   /** Field. */
-  x2_field?: S
+  x2_field?: S;
   /** Format string. */
-  x2_format?: Fmt
+  x2_format?: Fmt;
   /** Field. */
-  y_field?: S
+  y_field?: S;
   /** Format string. */
-  y_format?: Fmt
+  y_format?: Fmt;
   /** Field. */
-  y0_field?: S
+  y0_field?: S;
   /** Format string. */
-  y0_format?: Fmt
+  y0_format?: Fmt;
   /** Field. */
-  y1_field?: S
+  y1_field?: S;
   /** Format string. */
-  y1_format?: Fmt
+  y1_format?: Fmt;
   /** Field. */
-  y2_field?: S
+  y2_field?: S;
   /** Format string. */
-  y2_format?: Fmt
+  y2_format?: Fmt;
   /** Field. */
-  color_field?: S
+  color_field?: S;
   /** Format string. */
-  color_format?: Fmt
+  color_format?: Fmt;
   /** Field. */
-  shape_field?: S
+  shape_field?: S;
   /** Format string. */
-  shape_format?: Fmt
+  shape_format?: Fmt;
   /** Format string. */
-  size_format?: Fmt
+  size_format?: Fmt;
   /** Field. */
-  size_field?: S
+  size_field?: S;
   /** Field. */
-  dodge_field?: S
+  dodge_field?: S;
   /** Field. */
-  label_field?: S
+  label_field?: S;
   /** Format string. */
-  label_format?: Fmt
+  label_format?: Fmt;
 }
 
 /** Create a plot. A plot is composed of one or more graphical mark layers. */
 export interface Plot {
   /** The graphical mark layers contained in this plot. */
-  marks: Mark[]
+  marks: Mark[];
 }
 
 registerInteraction('drag-move', {
   start: [{ trigger: 'plot:mousedown', action: 'scale-translate:start' }],
   processing: [{ trigger: 'plot:mousemove', action: 'scale-translate:translate', throttle: { wait: 100, leading: true, trailing: false } }],
   end: [{ trigger: 'plot:mouseup', action: 'scale-translate:end' }],
-});
+})
 
 // TODO not in use
 export const
@@ -453,7 +469,7 @@ const
   },
   makeGeom = ({
     type, x_field, y_field,
-    color_field, color_range, color,
+    color_field, color_range, color_domain, color,
     shape_field, shape_range, shape,
     size_field, size_range, size,
     stack,
@@ -478,9 +494,17 @@ const
     if (adjust.length) o.adjust = adjust
     if (isS(x_field) && isS(y_field)) o.position = { fields: [x_field, y_field] }
     if (isS(color_field)) {
-      o.color = { fields: [color_field], values: isS(color_range) ? split(color_range) : cat10 }
+      const colors = isS(color_range) ? split(color_range).map(cssVarValue) : cat10
+      o.color = { fields: [color_field], values: colors }
+      if (color_domain && color_domain.length == colors.length) {
+        const domain_colors = color_domain.reduce((acc, value, i) => {
+          acc[value] = colors[i]
+          return acc
+        }, {} as Dict<S>)
+        o.color.callback = (x: S) => domain_colors[x]
+      }
     } else {
-      o.color = isS(color) ? color : theme.colors.gray
+      o.color = isS(color) ? cssVarValue(color) : getComputedStyle(document.documentElement).getPropertyValue('--gray').trim()
     }
     if (isS(shape_field)) {
       if (isS(shape_range)) {
@@ -553,9 +577,9 @@ const
   },
   makeShapeStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, stroke_dash?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = fill_color
+    if (isS(fill_color)) s.fill = cssVarValue(fill_color)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = stroke_color
+    if (isS(stroke_color)) s.stroke = cssVarValue(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isS(stroke_dash)) s.lineDash = parseInts(stroke_dash)
@@ -563,9 +587,9 @@ const
   },
   makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S, line_height?: F, align?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = fill_color
+    if (isS(fill_color)) s.fill = cssVarValue(fill_color)
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
-    if (isS(stroke_color)) s.stroke = stroke_color
+    if (isS(stroke_color)) s.stroke = cssVarValue(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
     if (isF(stroke_size)) s.lineWidth = stroke_size
     if (isF(font_size)) s.fontSize = font_size
@@ -577,34 +601,54 @@ const
     if (isS(align)) s.textAlign = align
     return Object.keys(s).length ? s : undefined
   },
-  makeScales = (marks: MarkExt[]): Record<S, ScaleOption> => {
-    const o: Record<S, ScaleOption> = {}
+  makeScales = (marks: MarkExt[]): [Record<S, ScaleOption>, Record<S, AxisOption>] => {
+    const
+      scales: Record<S, ScaleOption> = {},
+      axes: Record<S, AxisOption> = {}
 
     for (const m of marks) {
       if (m.x_field) {
-        o[m.x_field] = makeScale(m.x_scale, m.x_format, m.x_title, m.x_min, m.x_max, m.x_nice)
+        const [x_scale, x_axis] = makeScale(m.x_scale, m.x_format, m.x_title, m.x_min, m.x_max, m.x_nice)
+        scales[m.x_field] = x_scale
+        if (x_axis) axes[m.x_field] = x_axis
         break
       }
     }
 
     for (const m of marks) {
       if (m.y_field) {
-        o[m.y_field] = makeScale(m.y_scale, m.y_format, m.y_title, m.y_min, m.y_max, m.y_nice)
+        const [y_scale, y_axis] = makeScale(m.y_scale, m.y_format, m.y_title, m.y_min, m.y_max, m.y_nice)
+        scales[m.y_field] = y_scale
+        if (y_axis) axes[m.y_field] = y_axis
         break
       }
     }
 
-    return o
+    return [scales, axes]
   },
-  makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): ScaleOption => {
-    const o: ScaleOption = {}
-    if (isS(typ)) o.type = typ as any
-    if (format) o.formatter = (v: any) => format(undefined, v)
-    if (isS(title)) o.alias = title
-    if (isF(min)) o.min = min
-    if (isF(max)) o.max = max
-    o.nice = isB(nice) ? nice : true
-    return o
+  fixScaleType = (t: S): S => {
+    switch (t) {
+      case 'time-category': return 'timeCat'
+      case 'power': return 'pow'
+    }
+    return t
+  },
+  makeScale = (typ: S | undefined, format: Fmt | undefined, title: S | undefined, min: S | F | undefined, max: S | F | undefined, nice: B | undefined): [ScaleOption, AxisOption | null] => {
+    const
+      scale: ScaleOption = {},
+      axis: AxisOption = { label: { autoHide: false } } // Bug in G2? `autoHide` should be set to false by default (it is not).
+    if (isS(typ)) scale.type = fixScaleType(typ) as any
+    if (format) scale.formatter = (v: any) => format(undefined, v)
+    if (isS(title)) {
+      scale.alias = title
+      // HACK ALERT!
+      // The scale alias is not rendered by G2 unless the axis title is non-empty.
+      axis.title = {}
+    }
+    if (isF(min)) scale.min = min
+    if (isF(max)) scale.max = max
+    scale.nice = isB(nice) ? nice : true
+    return [scale, axis]
   },
   getCoordType = (marks: Mark[]): S | undefined => {
     for (const { coord } of marks) if (isS(coord)) return coord
@@ -650,7 +694,7 @@ const
     // WARNING: makeCoord() must be called before other functions.
     const
       coordinate = makeCoord(space, marks), // WARNING: this call may transpose x/y in-place.
-      scales = makeScales(marks),
+      [scales, axes] = makeScales(marks),
       [geometries, annotations] = makeMarks(marks)
 
     return {
@@ -660,10 +704,10 @@ const
         animate: false,
         coordinate,
         scales,
+        axes,
         geometries,
         annotations,
         interactions: [
-          { type: 'view-zoom' },
           { type: 'drag-move' }, // custom
         ],
         tooltip: {
@@ -678,15 +722,120 @@ const
 const
   css = stylesheet({
     card: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: grid.gap,
     },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+    body: {
+      flexGrow: 1,
+      display: 'flex',
     },
     plot: {
-      position: 'absolute',
-      left: 0, top: 30, right: 0, bottom: 0,
-    },
+      $nest: {
+        'canvas': {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        }
+      }
+    }
+  })
+
+/** Create a visualization for display inside a form. */
+export interface Visualization {
+  /** The plot to be rendered in this visualization. */
+  plot: Plot
+  /** Data for this visualization. */
+  data: Rec
+  /** The width of the visualization. Defaults to 100%. */
+  width?: S
+  /** The hight of the visualization. Defaults to 300px. */
+  height?: S
+  /** An identifying name for this component. */
+  name?: S
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
+  /** The events to capture on this visualization. */
+  events?: S[]
+}
+
+export const
+  XVisualization = bond(({ model }: { model: Visualization }) => {
+    let
+      currentChart: Chart | null = null,
+      currentPlot: Plot | null = null
+    const
+      container = React.createRef<HTMLDivElement>(),
+      checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
+        const el = container.current
+        if (!el) return
+        if (el.clientHeight !== h || el.clientWidth !== w) {
+          currentChart?.destroy()
+          init()
+        }
+      },
+      init = () => {
+        // Map CSS var colors to their hex values.
+        cat10 = cat10.map(cssVarValue)
+        const el = container.current
+        if (!el) return
+        // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
+        if (el.clientHeight < 30) el.style.height = '300px'
+        const
+          raw_data = unpack<any[]>(model.data),
+          raw_plot = unpack<Plot>(model.plot),
+          marks = raw_plot.marks.map(refactorMark),
+          plot: Plot = { marks: marks },
+          space = spaceTypeOf(raw_data, marks),
+          data = refactorData(raw_data, plot.marks),
+          chart = plot.marks ? new Chart(makeChart(el, space, plot.marks)) : null
+        currentPlot = plot
+        if (chart) {
+          currentChart = chart
+          chart.data(data)
+          if (model.events) {
+            for (const event of model.events) {
+              switch (event) {
+                case 'select_marks': {
+                  chart.interaction('element-single-selected')
+                  chart.on('element:statechange', (ev: any) => {
+                    const e = ev.gEvent.originalEvent
+                    if (e.stateStatus && e.state === 'selected') {
+                      if (model.name) {
+                        qd.events[model.name] = { select_marks: [e.element?.data] }
+                        qd.sync()
+                      }
+                    }
+                  })
+                }
+              }
+            }
+          }
+          chart.render()
+          // React fires mount lifecycle hook before Safari finishes Layout phase so we need recheck if original card dimensions are the
+          // same as after Layout phase. If not, rerender the plot again.
+          setTimeout(() => checkDimensionsPostInit(el.clientWidth, el.clientHeight), 300)
+        }
+      },
+      update = () => {
+        const el = container.current
+        if (!el || !currentChart || !currentPlot) return
+        const
+          raw_data = unpack(model.data) as any[],
+          data = refactorData(raw_data, currentPlot.marks)
+        currentChart.changeData(data)
+      },
+      render = () => {
+        const
+          { width = 'auto', height = 'auto', visible, name } = model,
+          style: React.CSSProperties = (width === 'auto' && height === 'auto')
+            ? { flexGrow: 1 }
+            : { width, height }
+        return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} className={css.plot} ref={container} />
+      }
+    return { init, update, render }
   })
 
 /** Create a card displaying a plot. */
@@ -697,53 +846,25 @@ interface State {
   data: Rec
   /** The plot to be displayed in this card. */
   plot: Plot
+  /** The events to capture on this card. */
+  events?: S[]
 }
 
-const
-  View = bond(({ state, changed }: Card<State>) => {
-    let
-      currentChart: Chart | null = null,
-      currentPlot: Plot | null = null
+export const
+  View = bond(({ name, state, changed }: Card<State>) => {
     const
-      container = React.createRef<HTMLDivElement>(),
-      init = () => {
-        const el = container.current
-        if (!el) return
-        const
-          s = state,
-          raw_data = unpack<any[]>(s.data),
-          raw_plot = unpack<Plot>(s.plot),
-          marks = raw_plot.marks.map(refactorMark),
-          plot: Plot = { marks: marks },
-          space = spaceTypeOf(raw_data, marks),
-          data = refactorData(raw_data, plot.marks),
-          chart = plot.marks ? new Chart(makeChart(el, space, plot.marks)) : null
-        currentPlot = plot
-        if (chart) {
-          currentChart = chart
-          chart.data(data)
-          chart.render()
-        }
-      },
-      update = () => {
-        const el = container.current
-        if (!el || !currentChart || !currentPlot) return
-        const
-          s = state,
-          raw_data = unpack(s.data) as any[],
-          data = refactorData(raw_data, currentPlot.marks)
-        currentChart.changeData(data)
-      },
       render = () => {
+        const { title = 'Untitled', plot, data, events } = state
         return (
           <div className={css.card}>
-            <div className={css.title}>{state.title || 'Untitled'}</div>
-            <div className={css.plot} ref={container} />
+            <div className='wave-s12 wave-w6'>{title}</div>
+            <div className={css.body}>
+              <XVisualization model={{ name, plot, data, events }} />
+            </div>
           </div>
         )
       }
-    return { init, update, render, changed }
+    return { render, changed }
   })
 
 cards.register('plot', View)
-

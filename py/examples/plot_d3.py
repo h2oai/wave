@@ -1,9 +1,9 @@
 # Plot / D3.js
-# Create custom plots using D3.js.
+# Create custom plots using D3.js. #plot
 # ---
 import json
 import os.path
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 # The example D3 Javascript file is located in the same directory as this example; get its path
 d3_js_script_filename = os.path.join(os.path.dirname(__file__), 'plot_d3.js')

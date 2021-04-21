@@ -1,4 +1,21 @@
-import * as React from 'react';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/* eslint-disable @typescript-eslint/ban-types */
+import * as React from 'react'
+import { Dialog } from './dialog'
+import { track } from './tracking'
 
 //
 // Dataflow
@@ -76,7 +93,7 @@ export function to<A, B, C>(a: Box<A>, b: Box<B>, c: Box<C>, f: Eff3<A, B, C>): 
 export function to<A, B, C, D>(a: Box<A>, b: Box<B>, c: Box<C>, d: Box<D>, f: Eff4<A, B, C, D>): Disposable;
 export function to(...args: any[]): Disposable { return react(true, args.slice(0, args.length - 1), args[args.length - 1]) }
 
-// tslint:disable-next-line:ban-types
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function react(immediate: boolean, boxen: Box<any>[], f: Function): Disposable {
   const
     xs = boxen as Boxed<any>[],
@@ -96,16 +113,16 @@ export function by(...args: any[]): any {
   const
     m = args.length - 1,
     xs = args.slice(0, m) as Boxed<any>[],
-    // tslint:disable-next-line:ban-types
+    // eslint-disable-next-line @typescript-eslint/ban-types
     f = args[m] as Function,
-    y = box(f(...xs.map(x => x())))
+    yB = box(f(...xs.map(x => x())))
 
-  xs.forEach(x => x.on(_ => y(f(...xs.map(x => x())))))
-  return y
+  xs.forEach(x => x.on(_ => yB(f(...xs.map(x => x())))))
+  return yB
 }
 
 export function watch<T>(x: Box<T>, label?: string): Disposable {
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   return on(x, label ? ((x: T) => console.log(label, x)) : ((x: T) => console.log(x)))
 }
 
@@ -130,6 +147,7 @@ export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) =>
       super(props)
 
       const
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         self = this,
         model = ctor(props),
         arrows: Disposable[] = []
@@ -177,18 +195,25 @@ export interface Rect extends Size { left: U, top: U }
 
 export interface Dict<T> { [key: string]: T } // generic object
 
-export type Rec = Dict<Prim | Prim[]> // Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type.
+export type Id = S // Identifier or non-empty string (marker type)
+export type Rec = Dict<Prim | Prim[] | Rec | Rec[]> // Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type.
 export type Recs = Rec[]
 export type Packed<T> = T | S
 
 export interface Data {
   list(): (Rec | null)[]
+  dict(): Dict<Rec>
 }
 
 interface OpsD {
   p?: PageD // init
   d?: OpD[] // deltas
+  r?: U // reset
   e?: S // error
+  m?: { // metadata
+    u: S // active user's username
+    e: B // can the user edit pages?
+  }
 }
 interface OpD {
   k?: S
@@ -254,7 +279,6 @@ export interface Card<T> {
   name: S
   state: T
   changed: Box<B>
-  size?: Size
 }
 export interface C extends Card<Dict<any>> {
   id: S
@@ -275,8 +299,8 @@ interface FixBuf extends DataBuf {
   seti(i: U, v: any): void
   geti(i: U): Cur | null
 }
-interface CycBuf extends DataBuf { }
-interface MapBuf extends DataBuf { }
+type CycBuf = DataBuf
+type MapBuf = DataBuf
 
 let guid = 0
 export const
@@ -300,7 +324,14 @@ export const
       : (isData(data))
         ? data.list()
         : data,
-  iff = (x: S) => x && x.length ? x : undefined
+  iff = (x: S) => x && x.length ? x : undefined,
+  debounce = (timeout: U, f: (e: any) => void) => {
+    let t: number | null = null
+    return (e: any) => {
+      if (t) window.clearTimeout(t)
+      t = window.setTimeout(() => (f(e), t = null), timeout)
+    }
+  }
 
 const
   decodeType = (d: S): [S, S] => {
@@ -365,9 +396,7 @@ const
         break
     }
     return data
-  }
-
-const
+  },
   keysOf = <T extends {}>(d: Dict<T>): S[] => {
     const a: S[] = []
     for (const k in d) a.push(k)
@@ -472,8 +501,9 @@ const
         const xs: (Rec | null)[] = []
         for (const tup of tups) xs.push(tup ? t.make(tup) : null)
         return xs
-      }
-    return { __buf__: true, n, put, set, seti, get, geti, list }
+      },
+      dict = (): Dict<Rec> => ({})
+    return { __buf__: true, n, put, set, seti, get, geti, list, dict }
   },
   newCycBuf = (t: Typ, tups: (Tup | null)[], i: U): CycBuf => {
     const
@@ -499,8 +529,9 @@ const
           if (tup) xs.push(t.make(tup))
         }
         return xs
-      }
-    return { __buf__: true, put, set, get, list }
+      },
+      dict = (): Dict<Rec> => ({})
+    return { __buf__: true, put, set, get, list, dict }
   },
   newMapBuf = (t: Typ, tups: Dict<Tup>): MapBuf => {
     const
@@ -530,8 +561,13 @@ const
         const xs: Rec[] = []
         for (const k of keys) xs.push(t.make(tups[k]))
         return xs
+      },
+      dict = (): Dict<Rec> => {
+        const d: Dict<Rec> = {}
+        for (const k in tups) d[k] = t.make(tups[k])
+        return d
       }
-    return { __buf__: true, put, set, get, list }
+    return { __buf__: true, put, set, get, list, dict }
   },
   newTups = (n: U) => {
     const xs = new Array<Tup | null>(n)
@@ -561,7 +597,7 @@ const
   loadCard = (key: S, c: CardD): C => {
     const
       data: Dict<any> = {},
-      changed = box<B>(),
+      changedB = box<B>(),
       ctor = (c: CardD) => {
         const { d, b } = c
         for (let k in d) {
@@ -601,7 +637,7 @@ const
         }
       }
     ctor(c)
-    return { id: xid(), name: key, state: data, changed, set }
+    return { id: xid(), name: key, state: data, changed: changedB, set }
   },
   gset = (x: any, k: S, v: any) => {
     if (x == null) return
@@ -631,7 +667,7 @@ const
     const
       key = xid(),
       cards: Dict<C> = {},
-      changed = box<B>(),
+      changedB = box<B>(),
       add = (k: S, card: C) => {
         cards[k] = card
         dirty = true
@@ -646,15 +682,18 @@ const
           dirty = true
           return
         }
-        const c = cards[ks[0]]
+        const cn = ks[0], c = cards[cn]
         if (c) {
           c.set(ks.slice(1), v)
-          dirties[ks[0]] = true
+          dirties[cn] = true
+          // Special-case *_card.box and meta_card.layouts: changes require page invalidation
+          const p = ks[1]
+          if (p && (p === 'box' || (c.state.view === 'meta' && p === 'layouts'))) dirty = true
         }
       },
       sync = () => {
         if (dirty) {
-          changed(true)
+          changedB(true)
         } else {
           for (const k in dirties) {
             const c = cards[k]
@@ -665,7 +704,7 @@ const
         dirties = {} // reset
       }
 
-    return { key, changed, add, get, set, list, drop, sync }
+    return { key, changed: changedB, add, get, set, list, drop, sync }
   },
   load = ({ c }: PageD): Page => {
     const page = newPage()
@@ -700,6 +739,7 @@ const
 
 export interface PageRef {
   get(key: S): Ref
+  put(key: S, data: any): void
   set(key: S, value: any): void
   del(key: S): void
   drop(): void
@@ -714,19 +754,21 @@ export interface Ref {
 export interface Qd {
   readonly path: S
   readonly args: Rec
+  readonly events: Dict<any>
   readonly refreshRateB: Box<U>
+  readonly busyB: Box<B>
+  readonly dialogB: Box<Dialog | null>
   socket: WebSocket | null
-  page(): PageRef
+  page: Page | null
+  username: S | null
+  editable: B
+  edit(): PageRef
   sync(): void
+  jump(key: any, value: any): void
 }
 
 const
   keyseq = (...keys: S[]): S => keys.join(' '),
-  cloneRec = (a: Rec) => {
-    const b: Rec = {}
-    for (const k in a) b[k] = a[k]
-    return b
-  },
   clearRec = (a: Rec) => {
     for (const k in a) delete a[k]
   }
@@ -734,9 +776,15 @@ const
 export const qd: Qd = {
   path: window.location.pathname,
   args: {},
+  events: {},
   refreshRateB: box(-1),
+  busyB: box(false),
   socket: null,
-  page: (path?: S): PageRef => {
+  page: null,
+  username: null,
+  editable: false,
+  dialogB: box(null),
+  edit: (path?: S): PageRef => {
     path = path || qd.path
     const
       changes: OpD[] = [],
@@ -747,6 +795,7 @@ export const qd: Qd = {
         return { get, set }
       },
       get = (key: S) => ref(key),
+      put = (key: S, data: any) => changes.push({ k: key, d: data }),
       set = (key: S, value: any) => changes.push({ k: keyseq(key), v: value }),
       del = (key: S) => changes.push({ k: key }),
       drop = () => changes.push({}),
@@ -756,14 +805,32 @@ export const qd: Qd = {
         const opsd: OpsD = { d: changes }
         sock.send(`* ${path} ${JSON.stringify(opsd)}`)
       }
-    return { get, set, del, drop, sync }
+    return { get, put, set, del, drop, sync }
   },
   sync: () => {
     const sock = qd.socket
     if (!sock) return
-    const args = cloneRec(qd.args)
+    const args: Dict<any> = { ...qd.args }
     clearRec(qd.args)
+    if (Object.keys(qd.events).length) {
+      args[''] = { ...qd.events }
+      clearRec(qd.events)
+    }
     sock.send(`@ ${qd.path} ${JSON.stringify(args)}`)
+    track(args)
+    qd.busyB(true)
+  },
+  jump: (key: any, value: any) => {
+    if (value.startsWith('#')) {
+      window.location.hash = value.substr(1)
+      return
+    }
+    if (key) {
+      qd.args[key] = value
+    } else {
+      qd.args[value] = true
+    }
+    qd.sync()
   },
 }
 
@@ -775,14 +842,15 @@ on(qd.refreshRateB, r => {
   if (sock) sock.close()
 })
 
-export enum SockEventType { Message, Data }
-export type SockEvent = SockMessage | SockData
+export enum SockEventType { Message, Data, Reset }
+export type SockEvent = SockMessage | SockData | SockReload
 export interface SockData { t: SockEventType.Data, page: Page }
 export enum SockMessageType { Info, Warn, Err }
 export interface SockMessage { t: SockEventType.Message, type: SockMessageType, message: S }
+export interface SockReload { t: SockEventType.Reset }
 type SockHandler = (e: SockEvent) => void
 
-let backoff = 1, currentPage: Page | null = null
+let backoff = 1
 const
   toSocketAddress = (path: S): S => {
     const
@@ -792,12 +860,13 @@ const
   },
   reconnect = (address: S, handle: SockHandler) => {
     const retry = () => reconnect(address, handle)
-    let sock = new WebSocket(address)
+    const sock = new WebSocket(address)
     sock.onopen = function () {
       qd.socket = sock
       handle({ t: SockEventType.Message, type: SockMessageType.Info, message: 'Connected' })
       backoff = 1
-      sock.send(`+ ${qd.path} `) // protocol: t<sep>addr<sep>data
+      const hash = window.location.hash
+      sock.send(`+ ${qd.path} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
     }
     sock.onclose = function () {
       const refreshRate = qd.refreshRateB()
@@ -809,25 +878,32 @@ const
       backoff *= 2
       if (backoff > 16) backoff = 16
       handle({ t: SockEventType.Message, type: SockMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })
-      setTimeout(retry, backoff * 1000)
+      window.setTimeout(retry, backoff * 1000)
     }
     sock.onmessage = function (e) {
       if (!e.data) return
       if (!e.data.length) return
+      qd.busyB(false)
       for (const line of e.data.split('\n')) {
         try {
           const msg = JSON.parse(line) as OpsD
           if (msg.d) {
-            const page = exec(currentPage || newPage(), msg.d)
-            if (currentPage !== page) {
-              currentPage = page
+            const page = exec(qd.page || newPage(), msg.d)
+            if (qd.page !== page) {
+              qd.page = page
               if (page) handle({ t: SockEventType.Data, page: page })
             }
           } else if (msg.p) {
-            currentPage = load(msg.p)
-            handle({ t: SockEventType.Data, page: currentPage })
+            qd.page = load(msg.p)
+            handle({ t: SockEventType.Data, page: qd.page })
           } else if (msg.e) {
             handle({ t: SockEventType.Message, type: SockMessageType.Err, message: msg.e })
+          } else if (msg.r) {
+            handle({ t: SockEventType.Reset })
+          } else if (msg.m) {
+            const { u, e } = msg.m
+            qd.username = u
+            qd.editable = e
           }
         } catch (err) {
           console.error(err)
@@ -836,9 +912,9 @@ const
       }
     }
     sock.onerror = function (e: Event) {
+      qd.busyB(false)
       console.error('A websocket error was encountered.', e) // XXX
     }
   }
 
 export const connect = (path: S, handle: SockHandler) => reconnect(toSocketAddress(path), handle)
-

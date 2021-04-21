@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "sibiraj-s.vscode-scss-formatter",
+    "ms-python.python",
+    "golang.Go",
+    "DavidAnson.vscode-markdownlint"
+  ]
+}

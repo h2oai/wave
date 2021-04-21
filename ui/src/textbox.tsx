@@ -1,7 +1,21 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { B, bond, S, qd } from './qd';
-import { debounce } from 'vega';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { B, bond, debounce, Id, qd, S } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a text box.
@@ -12,7 +26,7 @@ import { debounce } from 'vega';
 */
 export interface Textbox {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** The text displayed above the field. */
   label?: S
   /** A string that provides a brief hint to the user as to what kind of information is expected in the field. It should be a word or short phrase that demonstrates the expected type of data, rather than an explanatory message. */
@@ -41,26 +55,30 @@ export interface Textbox {
   password?: B
   /** True if the form should be submitted when the text value changes. */
   trigger?: B
+  /** The height of the text box, e.g. '100px'. Applicable only if `multiline` is true. */
+  height?: S
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
+const DEBOUNCE_TIMEOUT = 500
 export const
   XTextbox = bond(({ model: m }: { model: Textbox }) => {
     qd.args[m.name] = m.value || ''
     const
-      icon: Fluent.IIconProps | undefined = m.icon && m.icon.length ? { iconName: m.icon } : undefined,
-      onChange = debounce(500, (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
-        v = v || (e.target as HTMLInputElement).value
+      onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
+        v = v || (target as HTMLInputElement).value
 
-        qd.args[m.name] = (v !== undefined && v !== null) ? v : (m.value || '')
+        qd.args[m.name] = v ?? (m.value || '')
         if (m.trigger) qd.sync()
-      }),
-      password = m.password ? 'password' : undefined,
+      },
       render = () => m.mask
         ? (
           <Fluent.MaskedTextField
             data-test={m.name}
+            style={displayMixin(m.visible)}
             label={m.label}
             defaultValue={m.value}
             mask={m.mask}
@@ -68,15 +86,17 @@ export const
             required={m.required}
             disabled={m.disabled}
             readOnly={m.readonly}
-            onChange={onChange}
+            onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
           />
         )
         : (
           <Fluent.TextField
             data-test={m.name}
+            style={displayMixin(m.visible)}
+            styles={m.multiline && m.height ? { fieldGroup: { height: m.height } } : undefined}
             label={m.label}
             placeholder={m.placeholder}
-            iconProps={icon}
+            iconProps={{ iconName: m.icon }}
             prefix={m.prefix}
             suffix={m.suffix}
             defaultValue={m.value}
@@ -85,8 +105,8 @@ export const
             disabled={m.disabled}
             readOnly={m.readonly}
             multiline={m.multiline}
-            type={password}
-            onChange={onChange}
+            type={m.password ? 'password' : undefined}
+            onChange={m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange}
           />
         )
 

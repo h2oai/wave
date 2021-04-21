@@ -1,8 +1,8 @@
 # Plot / Interval / Theta
-# Make a "racetrack" plot (a bar plot in polar coordinates, transposed).
+# Make a "racetrack" #plot (a bar plot in polar coordinates, transposed). #interval
 # ---
 from synth import FakeMultiCategoricalSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

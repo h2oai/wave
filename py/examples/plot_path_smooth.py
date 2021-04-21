@@ -1,8 +1,8 @@
 # Plot / Path / Smooth
-# Make a path plot with a smooth curve.
+# Make a path #plot with a smooth curve.
 # ---
 from synth import FakeScatter
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

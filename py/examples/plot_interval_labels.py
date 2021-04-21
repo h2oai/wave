@@ -1,8 +1,8 @@
 # Plot / Interval / Labels
-# Make a column plot with labels on each bar.
+# Make a column #plot with labels on each bar. #interval
 # ---
 from synth import FakeCategoricalSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

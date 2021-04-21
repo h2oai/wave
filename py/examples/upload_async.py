@@ -1,18 +1,20 @@
 # Uploads / Async
 # Upload files from an interactive app.
+# #upload
 # ---
 
 
 import os
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
 def write_csv(filename, rows):
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.write('\n'.join([','.join([str(x) for x in row]) for row in rows]))
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if q.args.generate_csv:
         # Generate
         write_csv('squares.csv', [[x, x * x] for x in range(1, 1 + q.args.row_count)])
@@ -35,7 +37,3 @@ async def main(q: Q):
             ui.button(name='generate_csv', label='Generate', primary=True),
         ])
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

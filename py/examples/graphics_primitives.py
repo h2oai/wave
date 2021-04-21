@@ -1,8 +1,8 @@
 # Graphics / Primitives
-# Use the graphics module to render and update shapes.
+# Use the #graphics module to render and update shapes.
 # ---
 
-from h2o_q import site, ui, graphics as g
+from h2o_wave import site, ui, graphics as g
 
 # Create some shapes
 arc = g.arc(r1=25, r2=50, a1=90, a2=180)

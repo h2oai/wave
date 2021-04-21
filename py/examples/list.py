@@ -1,11 +1,11 @@
 # Lists
-# Use list cards to lay out multiple child cards in the form of a list.
+# Use list cards to lay out multiple child cards in the form of a #list.
 # ---
 import random
 
 from faker import Faker
 
-from h2o_q import site, ui, pack, data
+from h2o_wave import site, ui, pack, data
 
 fake = Faker()
 

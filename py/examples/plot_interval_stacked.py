@@ -1,8 +1,8 @@
 # Plot / Interval / Stacked
-# Make a stacked column plot.
+# Make a #stacked column #plot. #interval
 # ---
 from synth import FakeMultiCategoricalSeries
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

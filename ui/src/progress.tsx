@@ -1,6 +1,21 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { F, S } from './qd';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { F, S, B } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a progress bar.
@@ -30,25 +45,25 @@ export interface Progress {
   caption?: S
   /** The progress, between 0.0 and 1.0, or -1 (default) if indeterminate. */
   value?: F
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** An identifying name for this component. */
+  name?: S
 }
-
-const
-  defaults: Partial<Progress> = {
-    caption: 'Please wait...',
-  }
 
 export const
   XProgress = ({ model }: { model: Progress }) => {
     const
-      { label, caption, value } = { ...defaults, ...model }
+      { label, caption = 'Please wait...', value, visible, name } = model
     return (
-      <Fluent.ProgressIndicator
-        data-test='progress' // TODO: Does not work.
-        label={label}
-        description={caption}
-        percentComplete={value}
-      />
+      <div data-test={name} style={displayMixin(visible)}>
+        <Fluent.ProgressIndicator
+          label={label}
+          description={caption}
+          percentComplete={value}
+        />
+      </div>
     )
   }

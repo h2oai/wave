@@ -1,7 +1,22 @@
-import * as d3 from 'd3';
-import React from 'react';
-import { cards } from './layout';
-import { bond, Card, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as d3 from 'd3'
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { cards, grid } from './layout'
+import { bond, Card, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd'
 
 
 /** Create a card for displaying vector graphics. */
@@ -36,7 +51,7 @@ const
       a: any = {}
     delete d['_t']
 
-    for (const k in d) a[k.replace(/_/g, '-')] = d[k] // xml_attr to xml-attr
+    for (const k in d) a[k.replace(/_./g, x => x.substr(1).toUpperCase())] = d[k] // xml_attr to xmlAttr
     return [t, a]
   },
   extract = (d: any, extra: S[]): any[] => {
@@ -82,8 +97,17 @@ const
   ret0 = () => 0,
   get0 = (d: any) => d[0],
   get1 = (d: any) => d[1],
-  get2 = (d: any) => d[2],
-  View = bond(({ state, changed }: Card<State>) => {
+  get2 = (d: any) => d[2]
+
+const
+  css = stylesheet({
+    card: {
+      position: 'absolute',
+      left: grid.gap, top: grid.gap, right: grid.gap, bottom: grid.gap,
+    },
+  })
+export const
+  View = bond(({ name, state, changed }: Card<State>) => {
     type El = { d: S, o: S }
 
     const
@@ -151,7 +175,7 @@ const
             ...(o ? JSON.parse(o) : {}),
           }, i)) : []
         return (
-          <div>
+          <div data-test={name} className={css.card}>
             <svg viewBox={view_box} width={width} height={height}>
               <g>{stageEls}</g>
               <g>{sceneEls}</g>

@@ -1,19 +1,23 @@
 import collections
 import os
 import os.path
+import re
 import subprocess
 import sys
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Tuple
 
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 
-from h2o_q import Q, configure, listen, ui
+from h2o_wave import main, app, Q, ui
 
 py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
 example_dir = os.path.dirname(os.path.realpath(__file__))
+
+_app_host = '127.0.0.1'
+_app_port = '10102'
 
 
 class Example:
@@ -27,36 +31,106 @@ class Example:
         self.previous_example: Optional[Example] = None
         self.next_example: Optional[Example] = None
         self.process: Optional[subprocess.Popen] = None
+        self.is_app = source.find('@app(') > 0
 
-    def start(self):
-        self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)])
+    async def start(self):
+        # The environment passed into Popen must include SYSTEMROOT, otherwise Popen will fail when called
+        # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
+        env = {'SYSTEMROOT': os.environ['SYSTEMROOT']} if sys.platform.lower().startswith('win') else {}
+        if self.is_app:
+            self.process = subprocess.Popen(
+                [sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main'],
+                env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
+        else:
+            self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
 
-    def stop(self):
-        if self.process:
+    async def stop(self):
+        if self.process and self.process.returncode is None:
             self.process.terminate()
+            self.process.wait()
 
 
 active_example: Optional[Example] = None
 
 
 def read_lines(p: str) -> List[str]:
-    with open(p) as f:
+    with open(p, encoding='utf-8') as f:
         return f.readlines()
 
 
 def read_file(p: str) -> str:
-    with open(p) as f:
+    with open(p, encoding='utf-8') as f:
         return f.read()
 
 
-def write_file(p: str, txt: str) -> str:
-    with open(p, 'w') as f:
-        f.write(txt)
-    return txt
-
-
 def strip_comment(line: str) -> str:
-    return line.strip(" #")
+    """Returns the content of a line without '#' and ' ' characters
+
+    remove leading '#', but preserve '#' that is part of a tag
+    example:
+    >>> '# #hello '.strip('#').strip()
+    '#hello'
+    """
+    return line.strip('#').strip()
+
+
+def parse_tags(description: str) -> Tuple[str, List[str]]:
+    """Creates tags from description.
+
+    Accepts a description containing tags and returns a (new_description, tags) tuple.
+
+    The convention for tags:
+    1. Any valid twitter hashtag
+
+    For example, accept a description in any of the following forms
+
+    1. Use a checklist to group a set of related checkboxes. #form #checkbox #checklist
+
+    2. Use a checklist to group a set of related checkboxes.
+       #form #checkbox #checklist
+
+    3. Use a #checklist to group a set of related checkboxes.
+       #form #checkbox
+
+    and return
+    ('Use a checklist to group a set of related checkboxes.', ['checkbox', 'checklist', 'form']). The list of tags will
+    be sorted and all tags will be converted to lowercase.
+
+    Args:
+        description: Complete description of an example.
+    Returns:
+        A tuple of new_description and a sorted list of tags. new_description is created by removing the '#' characters
+        from the description.
+    """
+    hashtag_regex_pattern = r"(\s+)#(\w*[a-zA-Z]+\w*)\b"
+    pattern = re.compile(hashtag_regex_pattern)
+    matches = pattern.findall(' ' + description)
+
+    # Retrieve tags from the matches
+    tags = sorted(list(set([x[-1].lower() for x in matches])))
+
+    # Remove the '#' before the tags in description
+    new_d = pattern.sub(r'\1\2', ' ' + description)
+
+    # Remove the last line in description if it has only tags
+    *lines, last_line = new_d.strip().splitlines()
+    last_line_has_tags_only = len(last_line.strip()) > 1 and all([x.strip().lower() in tags for x in last_line.split()])
+    if last_line_has_tags_only:
+        # Return all lines except the last line
+        return '\n'.join(lines), tags
+
+    # Remove the last sentence if it has only tags
+    *sentences, last_sentence = last_line.split('. ')
+    last_sentence_has_tags_only = len(last_sentence.strip()) > 1 and all(
+        [x.strip().lower() in tags for x in last_sentence.split()])
+    if last_sentence_has_tags_only:
+        # Return all lines and all sentences in the last line except the last sentence
+        lines.extend(sentences)
+        return '\n'.join(lines) + '.', tags
+
+    # Return the complete description
+    lines.append(last_line)
+    return '\n'.join(lines), tags
 
 
 def load_example(filename: str) -> Example:
@@ -64,7 +138,8 @@ def load_example(filename: str) -> Example:
     parts = contents.split('---', maxsplit=1)
     header, source = parts[0].strip().splitlines(), parts[1].strip()
     title, description = strip_comment(header[0]), [strip_comment(x) for x in header[1:]]
-    return Example(filename, title, '\n'.join(description), source)
+    new_description, _ = parse_tags('\n'.join(description))
+    return Example(filename, title, new_description, source)
 
 
 def load_examples(filenames: List[str]) -> Dict[str, Example]:
@@ -82,7 +157,7 @@ def load_examples(filenames: List[str]) -> Dict[str, Example]:
     return examples
 
 
-app_title = 'H2O Q SDK Tour'
+app_title = 'H2O Wave Tour'
 
 
 async def setup_page(q: Q):
@@ -98,7 +173,7 @@ async def setup_page(q: Q):
     )
 
     q.page['examples'] = ui.nav_card(
-        box='1 2 2 -1',
+        box='1 2 2 9',
         items=[
             ui.nav_group(
                 label='Examples',
@@ -113,12 +188,12 @@ async def setup_page(q: Q):
     )
 
     q.page['code'] = ui.frame_card(
-        box='3 4 5 -1',
+        box='3 4 5 7',
         title='',
         content='',
     )
     q.page['preview'] = ui.frame_card(
-        box='8 1 5 -1',
+        box='8 1 5 10',
         title='Preview',
         path='/demo',
     )
@@ -148,11 +223,11 @@ async def show_example(q: Q, example: Example):
     # Stop active example, if any.
     global active_example
     if active_example:
-        active_example.stop()
+        await active_example.stop()
 
     # Start new example
     active_example = example
-    active_example.start()
+    await active_example.start()
 
     # Update example blurb
     q.page['blurb'].items = make_blurb(active_example)
@@ -164,12 +239,6 @@ async def show_example(q: Q, example: Example):
 
     preview_card = q.page['preview']
 
-    # If the example is an app, wait for the app handshake to complete before pointing the iframe to the app.
-    if active_example.source.find('listen(') > 0:
-        preview_card.title = f'Loading, please wait...'
-        await q.page.save()
-        await q.sleep(1.5)
-
     # Update preview title
     preview_card.title = f'Preview of {active_example.filename}'
     # HACK
@@ -179,7 +248,8 @@ async def show_example(q: Q, example: Example):
     await q.page.save()
 
 
-async def main(q: Q):
+@app('/tour')
+async def serve(q: Q):
     if not q.client.initialized:
         q.client.initialized = True
         await setup_page(q)
@@ -191,14 +261,11 @@ async def main(q: Q):
     await show_example(q, catalog[route])
 
 
-if __name__ == '__main__':
-    example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
-                         not line.strip().startswith('#')]
-    catalog = load_examples(example_filenames)
-    configure(internal_address='ws://localhost:55554')
-    print('----------------------------------------')
-    print(' Welcome to the H2O Q Interactive Tour!')
-    print('')
-    print(' Go to http://localhost:55555/tour')
-    print('----------------------------------------')
-    listen('/tour', main)
+example_filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
+                     not line.strip().startswith('#')]
+catalog = load_examples(example_filenames)
+print('----------------------------------------')
+print(' Welcome to the H2O Wave Interactive Tour!')
+print('')
+print(' Go to http://localhost:10101/tour')
+print('----------------------------------------')

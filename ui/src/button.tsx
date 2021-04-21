@@ -1,10 +1,24 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { Component } from './form';
-import { B, bond, S, qd } from './qd';
-import { padding } from './theme';
-import { XToolTip } from './tooltip';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { Component } from './form'
+import { B, bond, Dict, Id, qd, S } from './qd'
+import { displayMixin } from './theme'
+import { XToolTip } from './tooltip'
 
 /**
  * Create a button.
@@ -26,7 +40,7 @@ import { XToolTip } from './tooltip';
  */
 export interface Button {
   /** An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked. */
-  name: S
+  name: Id
   /** The text displayed on the button. */
   label?: S
   /** The caption displayed below the label. Setting a caption renders a compound button. */
@@ -39,65 +53,84 @@ export interface Button {
   disabled?: B
   /** True if the button should be rendered as link text and not a standard button. */
   link?: B
+  /** An optional icon to display next to the button label (not applicable for links). */
+  icon?: S
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
-/** Create a set of buttons to be layed out horizontally. */
+/** Create a set of buttons laid out horizontally. */
 export interface Buttons {
   /** The button in this set. */
   items: Component[]
+  /** Specifies how to lay out buttons horizontally. */
+  justify?: 'start' | 'end' | 'center' | 'between' | 'around'
+  /** An identifying name for this component. */
+  name?: S
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
 }
+
 
 const
   css = stylesheet({
     buttons: {
       boxSizing: 'border-box',
-      padding: padding(20, 0)
     },
-  })
+  }),
+  justifications: Dict<Fluent.Alignment> = {
+    start: 'start',
+    end: 'end',
+    center: 'center',
+    between: 'space-between',
+    around: 'space-around',
+  }
 
 const
   XButton = bond(({ model: m }: { model: Button }) => {
     qd.args[m.name] = false
     const
       onClick = () => {
-        if (m.name[0] === '#') {
+        if (m.name.startsWith('#')) {
           window.location.hash = m.name.substr(1)
           return
         }
-        qd.args[m.name] = m.value !== undefined ? m.value : true
+        qd.args[m.name] = m.value === undefined || m.value
         qd.sync()
       },
       render = () => {
         if (m.link) {
-          return (<Fluent.Link data-test='link' disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>)
+          return <Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>
         }
+        const btnProps: Fluent.IButtonProps = { text: m.label, disabled: m.disabled, onClick, iconProps: { iconName: m.icon } }
         return m.caption?.length
           ? m.primary
-            ? <Fluent.CompoundButton data-test={m.name} primary text={m.label} secondaryText={m.caption} disabled={m.disabled} onClick={onClick} />
-            : <Fluent.CompoundButton data-test={m.name} text={m.label} secondaryText={m.caption} disabled={m.disabled} onClick={onClick} />
+            ? <Fluent.CompoundButton {...btnProps} data-test={m.name} primary secondaryText={m.caption} />
+            : <Fluent.CompoundButton {...btnProps} data-test={m.name} secondaryText={m.caption} />
           : m.primary
-            ? <Fluent.PrimaryButton data-test={m.name} text={m.label} disabled={m.disabled} onClick={onClick} />
-            : <Fluent.DefaultButton data-test={m.name} text={m.label} disabled={m.disabled} onClick={onClick} />
+            ? <Fluent.PrimaryButton {...btnProps} data-test={m.name} />
+            : <Fluent.DefaultButton {...btnProps} data-test={m.name} />
       }
     return { render }
   })
 export const
-  XButtons = bond(({ model: m }: { model: Buttons }) => {
+  XButtons = ({ model: m }: { model: Buttons }) => {
     const
-      render = () => {
-        const
-          buttons = m.items.map(c => c.button).filter(b => !!b) as Button[],
-          children = buttons.map(b => (
-            <XToolTip key={b.label} content={b.tooltip} showIcon={false} expand={false}>
-              <XButton model={b}>{b.label}</XButton>
-            </XToolTip>
-          ))
-        return <div className={css.buttons}><Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack></div>
-      }
-    return { render }
-  }),
+      children = (m.items.map(c => c.button).filter(Boolean) as Button[]).map(b => (
+        <XToolTip key={b.name} content={b.tooltip} showIcon={false} expand={false}>
+          <XButton model={b}>{b.label}</XButton>
+        </XToolTip>
+      ))
+    return (
+      <div data-test={m.name} className={css.buttons} style={displayMixin(m.visible)}>
+        <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
+      </div>
+    )
+  },
   XStandAloneButton = ({ model: m }: { model: Button }) => (
-    <div className={css.buttons}><XButton key={m.label} model={m}>{m.label}</XButton></div>
+    <div className={css.buttons} style={displayMixin(m.visible)}>
+      <XButton key={m.name} model={m}>{m.label}</XButton>
+    </div>
   )

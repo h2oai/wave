@@ -1,4 +1,4 @@
-module github.com/qd/qdb
+module github.com/wave/surf
 
 go 1.14
 

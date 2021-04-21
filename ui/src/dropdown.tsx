@@ -1,9 +1,22 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { Choice } from './choice_group';
-import { B, bond, S, qd, box } from './qd';
-import { stylesheet } from 'typestyle';
-import { rem } from './theme';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { Choice } from './choice_group'
+import { B, bond, box, Id, qd, S } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a dropdown.
@@ -20,7 +33,7 @@ import { rem } from './theme';
  */
 export interface Dropdown {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** A string that provides a brief hint to the user as to what kind of information is expected in the field. */
@@ -37,17 +50,11 @@ export interface Dropdown {
   disabled?: B
   /** True if the form should be submitted when the dropdown value changes. */
   trigger?: B
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
-
-
-const css = stylesheet({
-  links: {
-    paddingTop: 10,
-    fontSize: rem(0.8)
-  }
-})
 
 export const
   XDropdown = bond(({ model: m }: { model: Dropdown }) => {
@@ -69,7 +76,9 @@ export const
             } else {
               selection.delete(name)
             }
-            qd.args[m.name] = Array.from(selection)
+            const selectedOpts = Array.from(selection)
+            qd.args[m.name] = selectedOpts
+            selectedOptionsB(selectedOpts)
           } else {
             qd.args[m.name] = name
           }
@@ -98,13 +107,7 @@ export const
         onChange()
       },
       render = () =>
-        <>
-          {
-            isMultivalued &&
-            <div className={css.links}>
-              <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
-            </div>
-          }
+        <div style={displayMixin(m.visible)}>
           <Fluent.Dropdown
             data-test={m.name}
             label={m.label}
@@ -117,7 +120,15 @@ export const
             selectedKeys={isMultivalued ? selectedOptionsB() : undefined}
             onChange={onChange}
           />
-        </>
+          {
+            isMultivalued &&
+            <div>
+              <Fluent.Text variant='small'>
+                <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+              </Fluent.Text>
+            </div>
+          }
+        </div>
 
     return { render, selectedOptionsB }
   })

@@ -1,7 +1,7 @@
 # Meta / Title
-# Set the browser window title for a page
+# Set the browser window title for a page. #meta
 # ---
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 page = site['/demo']
 

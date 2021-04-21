@@ -1,0 +1,17 @@
+# Generated assets
+node_modules
+build
+
+# Config files
+config/
+scripts/
+jest.config.js
+.eslintrc.js
+src/setupProxy.js
+
+# Linter
+eslint/linter.js
+
+# React boilerplate
+src/react-app-env.d.ts
+src/serviceWorker.ts

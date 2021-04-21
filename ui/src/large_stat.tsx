@@ -1,35 +1,40 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { cards, Format } from './layout';
-import { bond, Card, Rec, S } from './qd';
-import { getTheme } from './theme';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { cards, Format } from './layout'
+import { bond, Card, Rec, S } from './qd'
+import { clas } from './theme'
 
 const
-  theme = getTheme(),
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
-    },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
+      padding: 15,
     },
     values: {
       display: 'flex',
       alignItems: 'baseline',
     },
-    value: {
-      ...theme.font.s40,
-      ...theme.font.w2,
-    },
     aux_value: {
       marginLeft: 5,
-      color: theme.colors.text6,
+      color: 'var(--text6)',
     },
     caption: {
-      ...theme.font.s13,
-      color: theme.colors.text5,
+      color: 'var(--text5)',
     }
   })
 
@@ -47,29 +52,19 @@ interface State {
   data?: Rec
 }
 
-const
-  View = bond(({ state: s, changed }: Card<State>) => {
-    const
-      render = () => {
-        return (
-          <div className={css.card}>
-            <div className={css.title}>
-              <Format data={s.data} format={s.title} />
-            </div>
-            <div className={css.values}>
-              <div className={css.value}>
-                <Format data={s.data} defaultValue={s.value} format={s.value} />
-              </div>
-              <div className={css.aux_value}>
-                <Format data={s.data} format={s.aux_value} />
-              </div>
-            </div>
-            <div className={css.caption}>
-              <Format data={s.data} format={s.caption} />
-            </div>
-          </div>
-        )
-      }
+export const
+  View = bond(({ name, state: s, changed }: Card<State>) => {
+    const render = () => (
+      <div data-test={name} className={css.card}>
+        <Format data={s.data} format={s.title} className='wave-s12 wave-w6' />
+        <div className={css.values}>
+          <Format data={s.data} defaultValue={s.value} format={s.value} className='wave-s40 wave-w2' />
+          <Format data={s.data} format={s.aux_value} className={css.aux_value} />
+        </div>
+        <Format data={s.data} format={s.caption} className={clas(css.caption, 'wave-s13')} />
+      </div>
+    )
+
     return { render, changed }
   })
 

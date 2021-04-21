@@ -1,7 +1,7 @@
 OS?=linux
-VERSION?=dev
+VERSION ?= $(shell cat VERSION)
 BUILD_DATE?=$(shell date '+%Y%m%d%H%M%S')
-REL=qd-$(VERSION)-$(OS)-amd64
+REL=wave-$(VERSION)-$(OS)-amd64
 LDFLAGS := -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)'
 
 all: clean setup build ## Setup and build everything
@@ -9,14 +9,14 @@ all: clean setup build ## Setup and build everything
 setup: ## Set up development dependencies
 	cd ui && $(MAKE) setup
 	cd py && $(MAKE) setup
-	cd tools/qgen && $(MAKE) setup build
+	cd tools/wavegen && $(MAKE) setup build
 
 clean: ## Clean
 	rm -rf build
 	cd ui && $(MAKE) clean
 	cd py && $(MAKE) clean
-	cd tools/qgen && $(MAKE) clean
-	rm -f qd
+	cd tools/wavegen && $(MAKE) clean
+	rm -f waved
 
 .PHONY: build
 build: build-ui build-server ## Build everything
@@ -24,48 +24,75 @@ build: build-ui build-server ## Build everything
 build-ui: ## Build UI
 	cd ui && $(MAKE) build
 
+build-ide: ## Build IDE
+	cd ide && npm run build
+	rm -rf ui/build/_ide
+	mv ide/dist ui/build/_ide
+
+generator: ## Build driver generator
+	cd tools/wavegen && $(MAKE) build
+
 run-ui: ## Run UI in development mode (hot reloading)
 	cd ui && $(MAKE) run
 
-test-ui-ci: ## Run UI unit tests in CI mode 
+test-ui-ci: ## Run UI unit tests in CI mode
 	cd ui && $(MAKE) test-ci
 
-build-server: ## Build server for current OS/Arch
-	go build $(LDFLAGS) -o qd cmd/qd/main.go
+test-ui-watch: ## Run UI unit tests
+	cd ui && $(MAKE) test
 
-build-py: ## Build wheel
+build-server: ## Build server for current OS/Arch
+	go build $(LDFLAGS) -o waved cmd/wave/main.go
+
+build-py: ## Build h2o_wave wheel
 	cd py && $(MAKE) release
 
-run: ## Run server
-	go run cmd/qd/main.go -web-dir ./ui/build -debug
+build-docker:
+	docker build \
+		--build-arg uid=$(shell id -u) \
+		--build-arg gid=$(shell id -g) \
+		-t wave-test:$(VERSION) \
+		.
 
-run-cypress-bridge: ## Run Cypress proxy
-	go run cmd/qd/main.go -cypress
+run: ## Run server
+	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable
 
 run-cypress: ## Run Cypress
 	cd test && ./node_modules/.bin/cypress open
 
 generate: ## Generate driver bindings
-	cd tools/qgen && $(MAKE) run
+	cd tools/wavegen && $(MAKE) run
 
-release: build-ui build-py ## Prepare release builds (use "VERSION=v1.2.3 make release)"
+.PHONY: docs
+docs: ## Generate API docs and copy to website
+	cd py && $(MAKE) docs
+
+release: build-ui build-py ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
-	$(MAKE) release-docs
+	$(MAKE) build-website
+	$(MAKE) publish-website
 
 release-os:
 	rm -rf build/$(REL)
 	mkdir -p build/$(REL)
 	rsync -a ui/build/ build/$(REL)/www
-	rsync -a py/build/docs/h2o_q build/$(REL)/ && mv build/$(REL)/h2o_q build/$(REL)/docs
 	rsync -a py/examples build/$(REL)/
-	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/qd$(EXE_EXT) cmd/qd/main.go
-	cp readme-$(OS).txt build/$(REL)/readme.txt
+	rsync -a py/demo build/$(REL)/
+	rm -rf test/cypress/integration/*.js
+	rm -rf test/cypress/screenshots/*.*
+	rm -rf test/cypress/videos/*.*
+	rsync --exclude node_modules -a test build/$(REL)/
+	GOOS=$(OS) GOARCH=amd64 go build $(LDFLAGS) -o build/$(REL)/waved$(EXE_EXT) cmd/wave/main.go
+	cp readme.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
-release-docs:
-	rm -rf docs && rsync -a py/build/docs/h2o_q . && mv h2o_q docs
+build-website: docs ## Build website
+	cd website && npm ci && npm run build
+
+publish-website: ## Publish website
+	aws s3 sync website/build s3://wave.h2o.ai --delete
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

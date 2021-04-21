@@ -1,0 +1,131 @@
+---
+title: Development
+---
+
+Wave scripts are plain Python programs. Wave apps are ASGI programs. You can develop, debug and test them from the command-line, from the Python REPL, or from your favorite text editor.
+
+Both [PyCharm Community Edition](https://www.jetbrains.com/pycharm/download) and [Visual Studio Code](https://code.visualstudio.com/) are excellent for Python programming.
+
+:::tip
+At the time of writing, PyCharm's type-checking and error-detection is superior to Visual Studio Code's Python plugin.
+:::
+
+## Getting started
+
+The simplest way to get started in either PyCharm or Visual Studio Code is the same: 
+1. Create a working directory.
+2. Set up a Python [virtual environment](https://docs.python.org/3/tutorial/venv.html).
+3. Install the `h2o-wave` package.
+4. Open the directory in your IDE.
+
+```shell 
+mkdir $HOME/wave-apps
+cd $HOME/wave-apps
+python3 -m venv venv
+./venv/bin/pip install h2o-wave
+```
+
+### Using PyCharm 
+
+1. Launch PyCharm
+2. Click "File" -> "Open...", then choose `$HOME/wave-apps`.
+3. Right-click on `wave-apps` in the "Project" tree, then click "New" -> "Python File".
+4. Enter a file name, say, `foo.py`.
+5. Write some code (see sample below).
+6. Right-click anywhere inside the file and choose "Run foo" or "Debug foo".
+
+### Using Visual Studio Code
+
+1. Launch Visual Studio Code
+2. Click "File" -> "Open...", then choose `$HOME/wave-apps`.
+3. Click "File" -> "New File"; save the file as, say, `foo.py`.
+4. You should now get a prompt asking if you want to install extensions for Python. Click "Install".
+5. Write some code (see sample below).
+6. Hit `Ctrl+F5` to run, or `F5` to debug.
+
+## Debugging Apps
+
+To debug Wave apps, set your IDE or editor's configuration to execute the command `python -m h2o_wave run --no-reload foo` instead of `python foo.py`.
+
+:::tip
+The command `wave run --no-reload foo` is equivalent to `python -m h2o_wave run --no-reload foo`.
+:::
+
+### Using PyCharm
+
+- Open the "Run/Debug Configurations" dialog for your script.
+- Under "Configuration", change the "Script path" dropdown to "Module name".
+- Set "Module name" to `h2o_wave`.
+- Set "Parameters" to `run foo` (assuming your app's source code is in `foo.py`)
+
+## Using OpenID Connect
+
+You can set up a local [Keycloak](https://www.keycloak.org/) instance for developing apps that use OpenID Connect, OAuth 2.0, or SAML 2.0 for authentication, single sign-on, and so on.
+
+### Run Keycloak
+
+First, create a local directory to persist all the realms, clients, and users you'll be adding to Keycloak:
+
+```
+mkdir ~/.keycloak
+```
+
+Run Keycloak using Docker:
+
+```
+$ docker run \
+  -p 8080:8080 \
+  -e KEYCLOAK_USER=admin \
+  -e KEYCLOAK_PASSWORD=admin \
+  --volume ~/.keycloak:/opt/jboss/keycloak/standalone/data \
+  quay.io/keycloak/keycloak:10.0.2
+```
+
+Keycloak should now be running at http://localhost:8080/.
+
+### Add a client
+
+Next, create a *client* in Keycloak to represent our app:
+
+- Go to Keycloak at http://localhost:8080/.
+- Click on "Administration Console".
+- Log in with username `admin`, password `admin`.
+- Under "Configure", click on "Clients"
+	- Click the "Create" button to create a new client.
+	- Set "Client ID" to `wave`.
+	- Click "Save".
+	- In the "Settings" tab, change "Access Type" to `confidential`.
+	- Set "Valid Redirect URIs" to `*`.
+	- Click "Save".
+	- Copy the "Secret" field (e.g. `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
+
+### Add test users
+
+Next, add one or more users to Keycloak:
+
+- Under "Manage", click on "Users".
+	- Click the "Add User" button to create a new user.
+	- Set the "Username" field.
+	- Click "Save".
+	- Go to the "Credentials" tab
+	- Set the password fields.
+	- Change "Temporary" to "OFF".
+	- Click "Set Password"
+
+### Point Wave to Keycloak
+
+We're ready to use Keycloak now. Make sure you log out of Keycloak, otherwise you'll be logged in as `admin` when you access your Wave app!
+
+Finally, start the Wave daemon with the following `-oidc-` command line arguments (use the client secret you copied above):
+
+```
+./waved \
+    -oidc-client-id wave \
+    -oidc-client-secret xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx \
+    -oidc-redirect-url http://localhost:10101/_auth/callback \
+    -oidc-provider-url http://localhost:8080/auth/realms/master \
+    -oidc-end-session-url http://localhost:8080/auth/realms/master/protocol/openid-connect/logout
+
+```
+
+Now, when you launch and access your Wave app, you should see a OpenID prompt which you can use to log in one of the users you created in Keycloak.

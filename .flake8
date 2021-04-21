@@ -1,0 +1,13 @@
+[flake8]
+# Ignore unused imports because wave apps need "main" imported eventhough it is not used (ASGI works that way).
+ignore = F401
+per-file-ignores =
+    py/demo/dashboard_*.py:F405,F403
+max-line-length = 120
+exclude =
+  py/h2o_wave/ui.py
+  py/h2o_wave/types.py
+
+import-order-style = smarkets
+inline-quotes = "
+application-import-names =

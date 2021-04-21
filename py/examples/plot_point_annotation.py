@@ -1,8 +1,9 @@
 # Plot / Point / Annotation
-# Add annotations (points, lines and regions) to a plot.
+# Add annotations (points, lines and regions) to a #plot.
+# #annotation
 # ---
 from synth import FakeScatter
-from h2o_q import site, data, ui
+from h2o_wave import site, data, ui
 
 page = site['/demo']
 

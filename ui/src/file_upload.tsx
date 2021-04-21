@@ -1,8 +1,22 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { B, bond, box, S, qd, U, xid, F } from './qd';
-import { getTheme, centerMixin, dashed, clas } from './theme';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { B, bond, box, F, Id, qd, S, U, xid } from './qd'
+import { centerMixin, clas, dashed, displayMixin, padding } from './theme'
 
 /**
  * Create a file upload component.
@@ -10,7 +24,7 @@ import { getTheme, centerMixin, dashed, clas } from './theme';
  */
 export interface FileUpload {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the component. */
   label?: S
   /** True if the component should allow multiple files to be uploaded. */
@@ -21,31 +35,35 @@ export interface FileUpload {
   max_file_size?: F
   /** Maximum allowed size (Mb) for all files combined. Defaults to no limit. */
   max_size?: F
+  /** The height of the file upload, e.g. '400px', '50%', etc. */
+  height?: S
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
 const
-  { colors } = getTheme(),
   css = stylesheet({
     uploadInput: {
       opacity: 0
     },
     upload: {
-      height: 300,
       ...centerMixin(),
       flexDirection: 'column',
       boxSizing: 'border-box',
-      margin: 5,
     },
     uploadDragging: {
-      border: dashed(2, colors.text),
+      border: dashed(2, 'var(--text)'),
     },
     uploadLabel: {
       ...centerMixin(),
-      padding: 15,
-      background: colors.text,
-      color: colors.page,
+      padding: padding(7, 10),
+      fontSize: 14,
+      fontWeight: 600,
+      borderRadius: 2,
+      background: 'var(--text)',
+      color: 'var(--page)',
       minWidth: 80,
       $nest: {
         '&:hover': {
@@ -62,7 +80,7 @@ const
       top: -15,
       right: 0,
       cursor: 'pointer'
-    }
+    },
   })
 const convertMegabytesToBytes = (bytes: F) => bytes * 1024 * 1024
 export const
@@ -137,9 +155,9 @@ export const
         }
       },
       onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
+        const files = e.target.files
         if (!files?.length) return
-        const fileArr = Array.from(files);
+        const fileArr = Array.from(files)
 
         const errMsg = validateFiles(fileArr)
         if (errMsg) {
@@ -160,7 +178,7 @@ export const
       },
       onDrop = (e: React.DragEvent<HTMLFormElement>) => {
         onIsNotDragging(e)
-        const files = e.dataTransfer.files;
+        const files = e.dataTransfer.files
         if (!files.length || errorB() || successMsgB()) return
         const fileArr = Array.from(files)
 
@@ -255,9 +273,7 @@ export const
               type='file'
               accept={fileExtensions?.join(',') || undefined}
               multiple={model.multiple} />
-            <label htmlFor="file" className={css.uploadLabel}>
-              <Fluent.Text variant={'large'}>Browse...</Fluent.Text>
-            </label>
+            <label htmlFor="file" className={css.uploadLabel}>Browse...</label>
             <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or drag and drop {model.multiple ? 'files' : 'a file'} here.</Fluent.Text>
           </>
         )
@@ -265,9 +281,10 @@ export const
       render = () => {
         const uploadClasses = isDraggingB() && !errorB() && !successMsgB() ? clas(css.upload, css.uploadDragging) : css.upload
         return (
-          <div>
+          <div style={displayMixin(model.visible)}>
             <form
               className={uploadClasses}
+              style={{ height: model.height || 300 }}
               onDragStart={onIsDragging}
               onDragEnter={onIsDragging}
               onDragEnd={onIsNotDragging}
@@ -278,7 +295,6 @@ export const
               {getUploadBodyComponent()}
             </form>
             <Fluent.PrimaryButton
-              styles={{ root: { float: 'right' } }}
               disabled={!!percentCompleteB() || !filesB().length}
               text={model.label}
               onClick={upload} />

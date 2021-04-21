@@ -1,10 +1,12 @@
 # Form / Checkbox
 # Use checkboxes to switch between two mutually exclusive options.
+# #form #checkbox
 # ---
-from h2o_q import Q, listen, ui
+from h2o_wave import main, app, Q, ui
 
 
-async def main(q: Q):
+@app('/demo')
+async def serve(q: Q):
     if q.args.show_inputs:
         q.page['example'].items = [
             ui.text(f'checkbox_unchecked={q.args.checkbox_unchecked}'),
@@ -27,7 +29,3 @@ async def main(q: Q):
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()
-
-
-if __name__ == '__main__':
-    listen('/demo', main)

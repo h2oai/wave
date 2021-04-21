@@ -1,15 +1,29 @@
-import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react';
-import * as React from 'react';
-import { stylesheet } from 'typestyle';
-import { Command } from './toolbar';
-import { bond, box, qd, Card } from './qd';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react'
+import * as React from 'react'
+import { stylesheet } from 'typestyle'
+import { Command } from './toolbar'
+import { bond, box, qd, Box, B, S } from './qd'
+import { deleteCard, editCard } from './editing'
 
 const
   css = stylesheet({
     menu: {
       position: 'absolute',
-      top: 5, // should be 0 logically, but adjusted here to suit the MoreVertical icon.
-      right: 0,
+      top: 0, right: 0,
       $nest: {
         '>div:first-child': {
           width: 32, height: 32,
@@ -33,10 +47,24 @@ const
   })
 
 const
+  editCommand = '__edit__',
+  deleteCommand = '__delete__',
   toContextMenuItem = (c: Command): IContextualMenuItem => {
     const
       onClick = () => {
-        qd.args[c.name] = c.data === undefined ? true : c.data
+        if (c.name === editCommand) {
+          if (c.value) editCard(c.value)
+          return
+        }
+        if (c.name === deleteCommand) {
+          if (c.value) deleteCard(c.value)
+          return
+        }
+        if (c.name.startsWith('#')) {
+          window.location.hash = c.name.substr(1)
+          return
+        }
+        qd.args[c.name] = c.value ?? c.data ?? true
         qd.sync()
       }
     return {
@@ -50,27 +78,31 @@ const
   }
 
 export const
-  CardMenu = bond(({ card }: { card: Card<any> }) => {
+  CardMenu = bond(({ commands, name, changedB, canEdit }: { commands: Command[] | null, name?: S, changedB?: Box<B>, canEdit?: B }) => {
     const
-      { state, changed } = card,
       target = React.createRef<HTMLDivElement>(),
       hiddenB = box(true),
       show = () => hiddenB(false),
       hide = () => hiddenB(true),
       render = () => {
-        const commands: Command[] | undefined = state.commands
-        if (!commands || !commands.length) return <></>
+        const cmds = commands ?? []
+        if (canEdit) {
+          cmds.push(
+            { name: editCommand, label: 'Edit this card', icon: 'Edit', value: name },
+            { name: deleteCommand, label: 'Delete this card', icon: 'Delete', value: name },
+          )
+        }
         const
           hidden = hiddenB(),
-          items = commands.map(toContextMenuItem)
-        return (
-          <div className={css.menu} data-test={card.name}>
+          items = cmds.map(toContextMenuItem)
+        return items.length ? (
+          <div className={css.menu} data-test={name}>
             <div className={css.target} ref={target} onClick={show}>
               <Icon className={css.icon} iconName='MoreVertical' />
             </div>
             <ContextualMenu target={target} items={items} hidden={hidden} onItemClick={hide} onDismiss={hide} />
           </div>
-        )
+        ) : <></>
       }
-    return { render, changed, hiddenB }
+    return { render, changedB, hiddenB }
   })

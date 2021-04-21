@@ -1,5 +1,5 @@
 # Plot / Bokeh
-# Use Bokeh to create plots.
+# Use #Bokeh to create plots. #plot
 # ---
 import numpy as np
 from bokeh.models import HoverTool
@@ -7,7 +7,7 @@ from bokeh.plotting import figure
 from bokeh.resources import CDN
 from bokeh.embed import file_html
 
-from h2o_q import site, ui
+from h2o_wave import site, ui
 
 n = 500
 x = 2 + 2 * np.random.standard_normal(n)
@@ -15,7 +15,8 @@ y = 2 + 2 * np.random.standard_normal(n)
 p = figure(
     match_aspect=True,
     tools="wheel_zoom,reset",
-    background_fill_color='#440154'
+    background_fill_color='#440154',
+    sizing_mode='stretch_both'
 )
 p.grid.visible = False
 r, bins = p.hexbin(x, y, size=0.5, hover_color="pink", hover_alpha=0.8)

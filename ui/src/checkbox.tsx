@@ -1,7 +1,21 @@
-import * as Fluent from '@fluentui/react';
-import React from 'react';
-import { B, bond, S, qd } from './qd';
-import { px } from './theme';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import * as Fluent from '@fluentui/react'
+import React from 'react'
+import { B, bond, Id, qd, S } from './qd'
+import { displayMixin } from './theme'
 
 /**
  * Create a checkbox.
@@ -21,7 +35,7 @@ import { px } from './theme';
  */
 export interface Checkbox {
   /** An identifying name for this component. */
-  name: S
+  name: Id
   /** Text to be displayed alongside the checkbox. */
   label?: S
   /** True if selected, False if unselected. */
@@ -32,16 +46,11 @@ export interface Checkbox {
   disabled?: B
   /** True if the form should be submitted when the checkbox value changes. */
   trigger?: B
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
-
-const
-  checkboxStyles: Partial<Fluent.ICheckboxStyles> = {
-    root: {
-      marginBottom: px(10),
-    }
-  }
 
 export const
   XCheckbox = bond(({ model: m }: { model: Checkbox }) => {
@@ -51,30 +60,18 @@ export const
         qd.args[m.name] = checked === null ? null : !!checked
         if (m.trigger) qd.sync()
       },
-      render = () =>
-        m.indeterminate
-          ? (
-            <Fluent.Checkbox
-              data-test={m.name}
-              inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
-              label={m.label}
-              defaultIndeterminate={true}
-              onChange={onChange}
-              disabled={m.disabled}
-              styles={checkboxStyles}
-            />
-          )
-          : (
-            <Fluent.Checkbox
-              data-test={m.name}
-              inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
-              label={m.label}
-              defaultChecked={m.value}
-              onChange={onChange}
-              disabled={m.disabled}
-              styles={checkboxStyles}
-            />
-          )
+      render = () => (
+        <Fluent.Checkbox
+          data-test={m.name}
+          style={displayMixin(m.visible)}
+          inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
+          label={m.label}
+          defaultIndeterminate={m.indeterminate}
+          defaultChecked={m.value}
+          onChange={onChange}
+          disabled={m.disabled}
+        />
+      )
 
     return { render }
   })

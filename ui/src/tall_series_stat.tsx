@@ -1,37 +1,37 @@
-import React from 'react';
-import { stylesheet } from 'typestyle';
-import { cards, Format, grid } from './layout';
-import { bond, Card, unpack, F, Rec, S, Data } from './qd';
-import { getTheme } from './theme';
-import { MicroBars } from './parts/microbars';
-import { MicroArea } from './parts/microline';
+// Copyright 2020 H2O.ai, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import React from 'react'
+import { stylesheet } from 'typestyle'
+import { cards, Format, grid } from './layout'
+import { MicroArea } from './parts/microarea'
+import { MicroBars } from './parts/microbars'
+import { bond, Card, Data, F, Rec, S, unpack } from './qd'
+import { clas, cssVar } from './theme'
 
 const
-  theme = getTheme(),
-  plotHeight = grid.unitHeight,
   css = stylesheet({
     card: {
       display: 'flex',
       flexDirection: 'column',
     },
-    title: {
-      ...theme.font.s12,
-      ...theme.font.w6,
-    },
-    value: {
-      ...theme.font.s24,
-      ...theme.font.w3,
+    text: {
+      padding: grid.gap,
     },
     aux_value: {
-      ...theme.font.s12,
-      color: theme.colors.text7,
+      color: 'var(--text7)',
     },
-    plot: {
-      position: 'absolute',
-      left: -grid.gap,
-      bottom: -grid.gap,
-      height: plotHeight,
-    }
   })
 
 /** Create a tall stat card displaying a primary value, an auxiliary value and a series plot. */
@@ -60,53 +60,42 @@ interface State {
   data?: Rec
 }
 
-const
-  View = bond(({ state: s, changed, size }: Card<State>) => {
-    const
-      render = () => {
-        const
-          plotWidth = size ? size.width : grid.unitWidth,
-          data = unpack(s.data),
-          plot = s.plot_type === 'interval'
-            ? (
-              <MicroBars
-                width={plotWidth}
-                height={plotHeight}
-                data={unpack(s.plot_data)}
-                category={s.plot_category}
-                value={s.plot_value}
-                color={theme.color(s.plot_color)}
-                zeroValue={s.plot_zero_value}
-              />
-            ) : (
-              <MicroArea
-                width={plotWidth}
-                height={plotHeight}
-                data={unpack(s.plot_data)}
-                value={s.plot_value}
-                color={theme.color(s.plot_color)}
-                zeroValue={s.plot_zero_value}
-                curve={s.plot_curve || 'linear'}
-              />
-            )
+export const
+  View = bond(({ name, state: s, changed }: Card<State>) => {
+    const render = () => {
+      const
+        data = unpack(s.data),
+        plot = s.plot_type === 'interval'
+          ? (
+            <MicroBars
+              data={unpack(s.plot_data)}
+              category={s.plot_category}
+              value={s.plot_value}
+              color={cssVar(s.plot_color)}
+              zeroValue={s.plot_zero_value}
+            />
+          ) : (
+            <MicroArea
+              data={unpack(s.plot_data)}
+              value={s.plot_value}
+              color={cssVar(s.plot_color)}
+              zeroValue={s.plot_zero_value}
+              curve={s.plot_curve || 'linear'}
+            />
+          )
 
-        return (
-          <div className={css.card}>
-            <div className={css.title}>
-              <Format data={data} format={s.title || 'Untitled'} />
-            </div>
-            <div className={css.value}>
-              <Format data={data} format={s.value} />
-            </div>
-            <div className={css.aux_value}>
-              <Format data={data} format={s.aux_value} />
-            </div>
-            <div className={css.plot}>{plot}</div>
-          </div>)
-      }
+      return (
+        <div data-test={name} className={css.card}>
+          <div className={css.text}>
+            <Format data={data} format={s.title || 'Untitled'} className='wave-s12 wave-w6' />
+            <Format data={data} format={s.value} className='wave-s24 wave-w3' />
+            <Format data={data} format={s.aux_value} className={clas(css.aux_value, 'wave-s12')} />
+          </div>
+          {plot}
+        </div>
+      )
+    }
     return { render, changed }
   })
 
 cards.register('tall_series_stat', View)
-
-

@@ -1,0 +1,6 @@
+# Generated assets
+node_modules
+build
+
+# Config files
+webpack.config.js
