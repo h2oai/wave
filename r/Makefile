@@ -27,7 +27,7 @@ install:
 		R CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 uninstall: $(PKG_NAME)_$(PKG_VERSION).tar.gz
-		R CMD REMOVE $(PKG_NAME)_$(PKG_VERSION).tar.gz
+		R CMD REMOVE $(PKG_NAME)
 
 clean:
 		-rm -f $(PKG_NAME)_*.tar.gz
