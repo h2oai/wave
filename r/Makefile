@@ -5,13 +5,13 @@ R_FILES := $(wildcard R/*.R)
 SRC_FILES := $(wildcard R/*.R)
 PKG_FILES := DESCRIPTION NAMESPACE $(R_FILES) $(SRC_FILES)
 
-.PHONY: doc preinstall tarball install check clean 
+.PHONY: doc preinstall package install check clean 
 
-tarball: doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
+all: clean doc package check install
+
+package: doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
 	R CMD build .
-
-all: clean doc tarball check install
 
 check: $(PKG_NAME)_$(PKG_VERSION).tar.gz 
 		R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
