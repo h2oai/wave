@@ -7,7 +7,7 @@ PKG_FILES := DESCRIPTION NAMESPACE $(R_FILES) $(SRC_FILES)
 
 .PHONY: doc preinstall package install check clean 
 
-all: clean doc package check install
+all: clean doc package install
 
 package: doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
@@ -22,7 +22,7 @@ doc:
 preinstall:
 		Rscript R/requirements.R
 
-install: preinstall $(PKG_NAME)_$(PKG_VERSION).tar.gz
+install: 
 		R CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 uninstall: $(PKG_NAME)_$(PKG_VERSION).tar.gz
