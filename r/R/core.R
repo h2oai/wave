@@ -108,21 +108,6 @@ data <- function(fields
         return(o)
 }
 
-##' @description Function to quickly reset library source to the latest version. 
-##' Used specifically while testing. 
-##' 
-#.reset_while_test <- function() {
-#        source("../core.R")
-#        source("../ui.R")
-#        source("../zzz.R")
-#        library(jsonlite)
-#        library(httr)
-#        library(stringr)
-#        library(R6)
-#        .onLoad()
-#}
-
-
 #' @title Create a \code{page} 
 #' 
 #' @import R6 stringr jsonlite httr     
@@ -180,7 +165,7 @@ data <- function(fields
 #' @return A \code{page} with the \code{card_name} added.
 #'
 #' @examples 
-#' .onLoad()
+#' 
 #' name <- "/newpage"
 #' page <- Site(name)
 #' page$add_card("hello",ui_markdown_card(box="1 1 2 2",
@@ -226,7 +211,7 @@ data <- function(fields
 #' @return A \code{page} with the cards dropped. 
 #'
 #' @examples 
-#' .onLoad()
+#' 
 #' name <- "/newpage"
 #' page <- Site(name)
 #' page$add_card("hello",ui_markdown_card(box="1 1 2 2",
@@ -249,7 +234,7 @@ data <- function(fields
 #' @return A \code{page} with updates values for specific card-variables. 
 #'
 #' @examples 
-#' .onLoad()
+#' 
 #' name <- "/newpage"
 #' page <- Site(name)
 #' page$add_card("crypto",ui_small_series_stat_card(box="1 1 1 1"
@@ -282,7 +267,7 @@ data <- function(fields
 #' wave server. 
 #' 
 #' @examples 
-#' .onLoad()
+#' 
 #' name <- "/newpage"
 #' page <- Site(name)
 #' page$add_card("hello",ui_markdown_card(box="1 1 2 2",
