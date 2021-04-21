@@ -21,3 +21,4 @@ page$add_card("ggplot2",ui_image_card(box="1 1 6 10"
                     ,image=image
 ))
 page$save()
+
