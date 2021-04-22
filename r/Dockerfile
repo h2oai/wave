@@ -18,7 +18,7 @@ RUN apt-get update -q && apt-get  -y install libcurl4-openssl-dev libxml2-dev
 # get wget curl git and gebi-core, gdebi-core in case we get *.deb packages and need to get dependencies
 RUN apt-get update -q && apt-get -y install wget curl git gdebi-core
 
-# setp 6! clone or library, note that this might be cached so run docker with --no-cache if you have done
+# step 6! clone our library, note that this might be cached so run docker with --no-cache if you have done
 # changes to repo
 RUN git clone --branch rdriver --single-branch https://github.com/h2oai/wave
 
