@@ -1,8 +1,9 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { Markdown } from './markdown'
 import { B, bond, box, S, U } from './qd'
-import { clas, cssVar } from './theme'
+import { clas, cssVar, padding } from './theme'
 
 const
   css = stylesheet({
@@ -13,6 +14,11 @@ const
     multilineContainer: {
       display: 'flex',
       justifyContent: 'space-between'
+    },
+    multilineText: {
+      border: `1px solid ${cssVar('$neutralSecondary')}`,
+      borderRadius: 2,
+      padding: padding(0, 8)
     },
     btn: {
       minWidth: 'initial'
@@ -26,15 +32,31 @@ const
       }
     }
   }),
-  CopyButton = bond(({ textRef }: { textRef: React.RefObject<Fluent.ITextField> }) => {
+  CopyButton = bond(({ textRef, markdownRef }: { textRef?: React.RefObject<Fluent.ITextField>, markdownRef?: React.RefObject<HTMLDivElement> }) => {
     let timeoutRef: U
     const
       copiedB = box(false),
       onClick = () => {
-        const el = textRef.current
-        if (!el) return
+        if (!textRef && !markdownRef) return
+        window.getSelection()?.removeAllRanges()
 
-        el.select()
+        if (textRef) {
+          const el = textRef.current
+          if (!el) return
+          el.select()
+        }
+
+        if (markdownRef) {
+          const
+            start = markdownRef.current?.firstChild?.firstChild,
+            end = markdownRef.current?.firstChild?.lastChild
+
+          if (!start || !end) return
+          const range = document.createRange()
+          range.setStart(start, 0)
+          range.setEnd(end, 0)
+          window.getSelection()?.addRange(range)
+        }
         document.execCommand('copy')
         window.getSelection()?.removeAllRanges()
         copiedB(true)
@@ -60,7 +82,7 @@ const
  * Use this component when you want to enable your users to quickly copy paste sections of text.
 */
 export interface CopyableText {
-  /** Text to be displayed inside the component. */
+  /** Text to be displayed inside the component. Markdown is supported only when 'multiline' is set. */
   value: S
   /** The text displayed above the textbox. */
   label: S
@@ -72,37 +94,38 @@ export interface CopyableText {
 
 export const XCopyableText = bond(({ model }: { model: CopyableText }) => {
   const
-    ref = React.createRef<Fluent.ITextField>(),
-    render = () => {
-      const textFieldProps: Fluent.ITextFieldProps = {
-        componentRef: ref,
-        defaultValue: model.value,
-        styles: { root: { flexGrow: 1 } },
-        readOnly: true
-      }
-      return (
-        <div data-test={model.name}>
-          {
-            model.multiline
-              ? (
-                <>
-                  <div className={css.multilineContainer}>
-                    <Fluent.Label>{model.label}</Fluent.Label>
-                    <CopyButton textRef={ref} />
-                  </div>
-                  <Fluent.TextField {...textFieldProps} multiline />
-                </>
-              )
-              : (
-                <div className={css.compactContainer}>
-                  <Fluent.TextField {...textFieldProps} label={model.label} />
-                  <CopyButton textRef={ref} />
+    ref = React.createRef<Fluent.ITextField | HTMLDivElement>(),
+    render = () => (
+      <div data-test={model.name}>
+        {
+          model.multiline
+            ? (
+              <>
+                <div className={css.multilineContainer}>
+                  <Fluent.Label>{model.label}</Fluent.Label>
+                  <CopyButton markdownRef={ref as React.RefObject<HTMLDivElement>} />
                 </div>
-              )
-          }
-        </div>
-      )
-    }
+                <div ref={ref as React.RefObject<HTMLDivElement>} className={css.multilineText}>
+                  <Markdown source={model.value} />
+                </div>
+              </>
+            )
+            : (
+              <div className={css.compactContainer}>
+                <Fluent.TextField
+                  componentRef={ref as React.RefObject<Fluent.ITextField>}
+                  defaultValue={model.value}
+                  label={model.label}
+                  styles={{ root: { flexGrow: 1 } }}
+                  readOnly
+                />
+                <CopyButton textRef={ref as React.RefObject<Fluent.ITextField>} />
+              </div>
+            )
+        }
+      </div>
+    )
+
 
   return { render }
 })
