@@ -2203,7 +2203,7 @@ def copyable_text(
     Use this component when you want to enable your users to quickly copy paste sections of text.
 
     Args:
-        value: Text to be displayed inside the component.
+        value: Text to be displayed inside the component. Markdown is supported only when 'multiline' is set.
         label: The text displayed above the textbox.
         name: An identifying name for this component.
         multiline: True if the component should allow multi-line text entry.
