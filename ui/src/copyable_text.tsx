@@ -21,7 +21,8 @@ const
       padding: padding(0, 8)
     },
     btn: {
-      minWidth: 'initial'
+      minWidth: 'initial',
+      margin: 0
     },
     copiedBtn: {
       background: cssVar('$green'),
