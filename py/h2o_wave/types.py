@@ -5864,8 +5864,8 @@ class Facepile:
         )
 
 
-class Clipboard:
-    """Create a copy to clipboard component.
+class CopyableText:
+    """Create a copyable text component.
     Use this component when you want to enable your users to quickly copy paste sections of text.
     """
     def __init__(
@@ -5875,25 +5875,25 @@ class Clipboard:
             name: Optional[str] = None,
             multiline: Optional[bool] = None,
     ):
-        _guard_scalar('Clipboard.value', value, (str,), False, False, False)
-        _guard_scalar('Clipboard.label', label, (str,), False, False, False)
-        _guard_scalar('Clipboard.name', name, (str,), False, True, False)
-        _guard_scalar('Clipboard.multiline', multiline, (bool,), False, True, False)
+        _guard_scalar('CopyableText.value', value, (str,), False, False, False)
+        _guard_scalar('CopyableText.label', label, (str,), False, False, False)
+        _guard_scalar('CopyableText.name', name, (str,), False, True, False)
+        _guard_scalar('CopyableText.multiline', multiline, (bool,), False, True, False)
         self.value = value
-        """Text to be displayed inside the clipboard."""
+        """Text to be displayed inside the component."""
         self.label = label
-        """The text displayed above the clipboard."""
+        """The text displayed above the textbox."""
         self.name = name
         """An identifying name for this component."""
         self.multiline = multiline
-        """True if the clipboard should allow multi-line text entry."""
+        """True if the component should allow multi-line text entry."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Clipboard.value', self.value, (str,), False, False, False)
-        _guard_scalar('Clipboard.label', self.label, (str,), False, False, False)
-        _guard_scalar('Clipboard.name', self.name, (str,), False, True, False)
-        _guard_scalar('Clipboard.multiline', self.multiline, (bool,), False, True, False)
+        _guard_scalar('CopyableText.value', self.value, (str,), False, False, False)
+        _guard_scalar('CopyableText.label', self.label, (str,), False, False, False)
+        _guard_scalar('CopyableText.name', self.name, (str,), False, True, False)
+        _guard_scalar('CopyableText.multiline', self.multiline, (bool,), False, True, False)
         return _dump(
             value=self.value,
             label=self.label,
@@ -5902,21 +5902,21 @@ class Clipboard:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Clipboard':
+    def load(__d: Dict) -> 'CopyableText':
         """Creates an instance of this class using the contents of a dict."""
         __d_value: Any = __d.get('value')
-        _guard_scalar('Clipboard.value', __d_value, (str,), False, False, False)
+        _guard_scalar('CopyableText.value', __d_value, (str,), False, False, False)
         __d_label: Any = __d.get('label')
-        _guard_scalar('Clipboard.label', __d_label, (str,), False, False, False)
+        _guard_scalar('CopyableText.label', __d_label, (str,), False, False, False)
         __d_name: Any = __d.get('name')
-        _guard_scalar('Clipboard.name', __d_name, (str,), False, True, False)
+        _guard_scalar('CopyableText.name', __d_name, (str,), False, True, False)
         __d_multiline: Any = __d.get('multiline')
-        _guard_scalar('Clipboard.multiline', __d_multiline, (bool,), False, True, False)
+        _guard_scalar('CopyableText.multiline', __d_multiline, (bool,), False, True, False)
         value: str = __d_value
         label: str = __d_label
         name: Optional[str] = __d_name
         multiline: Optional[bool] = __d_multiline
-        return Clipboard(
+        return CopyableText(
             value,
             label,
             name,
@@ -5973,7 +5973,7 @@ class Component:
             persona: Optional[Persona] = None,
             text_annotator: Optional[TextAnnotator] = None,
             facepile: Optional[Facepile] = None,
-            clipboard: Optional[Clipboard] = None,
+            copyable_text: Optional[CopyableText] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -6019,7 +6019,7 @@ class Component:
         _guard_scalar('Component.persona', persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', text_annotator, (TextAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', facepile, (Facepile,), False, True, False)
-        _guard_scalar('Component.clipboard', clipboard, (Clipboard,), False, True, False)
+        _guard_scalar('Component.copyable_text', copyable_text, (CopyableText,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -6108,7 +6108,7 @@ class Component:
         """Annotator."""
         self.facepile = facepile
         """Facepile."""
-        self.clipboard = clipboard
+        self.copyable_text = copyable_text
         """Clipboard."""
 
     def dump(self) -> Dict:
@@ -6157,7 +6157,7 @@ class Component:
         _guard_scalar('Component.persona', self.persona, (Persona,), False, True, False)
         _guard_scalar('Component.text_annotator', self.text_annotator, (TextAnnotator,), False, True, False)
         _guard_scalar('Component.facepile', self.facepile, (Facepile,), False, True, False)
-        _guard_scalar('Component.clipboard', self.clipboard, (Clipboard,), False, True, False)
+        _guard_scalar('Component.copyable_text', self.copyable_text, (CopyableText,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -6203,7 +6203,7 @@ class Component:
             persona=None if self.persona is None else self.persona.dump(),
             text_annotator=None if self.text_annotator is None else self.text_annotator.dump(),
             facepile=None if self.facepile is None else self.facepile.dump(),
-            clipboard=None if self.clipboard is None else self.clipboard.dump(),
+            copyable_text=None if self.copyable_text is None else self.copyable_text.dump(),
         )
 
     @staticmethod
@@ -6297,8 +6297,8 @@ class Component:
         _guard_scalar('Component.text_annotator', __d_text_annotator, (dict,), False, True, False)
         __d_facepile: Any = __d.get('facepile')
         _guard_scalar('Component.facepile', __d_facepile, (dict,), False, True, False)
-        __d_clipboard: Any = __d.get('clipboard')
-        _guard_scalar('Component.clipboard', __d_clipboard, (dict,), False, True, False)
+        __d_copyable_text: Any = __d.get('copyable_text')
+        _guard_scalar('Component.copyable_text', __d_copyable_text, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6343,7 +6343,7 @@ class Component:
         persona: Optional[Persona] = None if __d_persona is None else Persona.load(__d_persona)
         text_annotator: Optional[TextAnnotator] = None if __d_text_annotator is None else TextAnnotator.load(__d_text_annotator)
         facepile: Optional[Facepile] = None if __d_facepile is None else Facepile.load(__d_facepile)
-        clipboard: Optional[Clipboard] = None if __d_clipboard is None else Clipboard.load(__d_clipboard)
+        copyable_text: Optional[CopyableText] = None if __d_copyable_text is None else CopyableText.load(__d_copyable_text)
         return Component(
             text,
             text_xl,
@@ -6389,7 +6389,7 @@ class Component:
             persona,
             text_annotator,
             facepile,
-            clipboard,
+            copyable_text,
         )
 
 

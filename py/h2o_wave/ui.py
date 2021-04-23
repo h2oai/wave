@@ -2193,24 +2193,24 @@ def facepile(
     ))
 
 
-def clipboard(
+def copyable_text(
         value: str,
         label: str,
         name: Optional[str] = None,
         multiline: Optional[bool] = None,
 ) -> Component:
-    """Create a copy to clipboard component.
+    """Create a copyable text component.
     Use this component when you want to enable your users to quickly copy paste sections of text.
 
     Args:
-        value: Text to be displayed inside the clipboard.
-        label: The text displayed above the clipboard.
+        value: Text to be displayed inside the component.
+        label: The text displayed above the textbox.
         name: An identifying name for this component.
-        multiline: True if the clipboard should allow multi-line text entry.
+        multiline: True if the component should allow multi-line text entry.
     Returns:
-        A `h2o_wave.types.Clipboard` instance.
+        A `h2o_wave.types.CopyableText` instance.
     """
-    return Component(clipboard=Clipboard(
+    return Component(copyable_text=CopyableText(
         value,
         label,
         name,

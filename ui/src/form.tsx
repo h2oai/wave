@@ -20,7 +20,7 @@ import { Button, Buttons, MiniButton, MiniButtons, XButtons, XMiniButton, XMiniB
 import { Checkbox, XCheckbox } from './checkbox'
 import { Checklist, XChecklist } from './checklist'
 import { ChoiceGroup, XChoiceGroup } from './choice_group'
-import { Clipboard, XClipboard } from "./clipboard"
+import { CopyableText, XCopyableText } from "./copyable_text"
 import { ColorPicker, XColorPicker } from './color_picker'
 import { Combobox, XCombobox } from './combobox'
 import { DatePicker, XDatePicker } from './date_picker'
@@ -148,7 +148,7 @@ export interface Component {
   /** Facepile. */
   facepile?: Facepile
   /** Clipboard. */
-  clipboard?: Clipboard
+  copyable_text?: CopyableText
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -276,7 +276,7 @@ const
     if (m.mini_button) return <XMiniButton model={m.mini_button} />
     if (m.mini_buttons) return <XMiniButtons model={m.mini_buttons} />
     if (m.facepile) return <XFacepile model={m.facepile} />
-    if (m.clipboard) return <XClipboard model={m.clipboard} />
+    if (m.copyable_text) return <XCopyableText model={m.copyable_text} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

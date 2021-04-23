@@ -2558,16 +2558,16 @@ ui_facepile <- function(
   return(.o)
 }
 
-#' Create a copy to clipboard component.
+#' Create a copyable text component.
 #' Use this component when you want to enable your users to quickly copy paste sections of text.
 #'
-#' @param value Text to be displayed inside the clipboard.
-#' @param label The text displayed above the clipboard.
+#' @param value Text to be displayed inside the component.
+#' @param label The text displayed above the textbox.
 #' @param name An identifying name for this component.
-#' @param multiline True if the clipboard should allow multi-line text entry.
-#' @return A Clipboard instance.
+#' @param multiline True if the component should allow multi-line text entry.
+#' @return A CopyableText instance.
 #' @export
-ui_clipboard <- function(
+ui_copyable_text <- function(
   value,
   label,
   name = NULL,
@@ -2576,7 +2576,7 @@ ui_clipboard <- function(
   .guard_scalar("label", "character", label)
   .guard_scalar("name", "character", name)
   .guard_scalar("multiline", "logical", multiline)
-  .o <- list(clipboard=list(
+  .o <- list(copyable_text=list(
     value=value,
     label=label,
     name=name,
