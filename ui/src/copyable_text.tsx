@@ -1,24 +1,29 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Markdown } from './markdown'
 import { B, bond, box, S, U } from './qd'
-import { clas, cssVar, padding } from './theme'
+import { clas, cssVar } from './theme'
 
 const
   css = stylesheet({
+    multiContainer: {
+      position: 'relative',
+      $nest: {
+        '&:hover > button': {
+          opacity: 1
+        }
+      }
+    },
     compactContainer: {
       display: 'flex',
-      alignItems: 'flex-end'
+      alignItems: 'flex-end',
     },
-    multilineContainer: {
-      display: 'flex',
-      justifyContent: 'space-between'
-    },
-    multilineText: {
-      border: `1px solid ${cssVar('$neutralSecondary')}`,
-      borderRadius: 2,
-      padding: padding(0, 8)
+    btnMultiple: {
+      position: 'absolute',
+      top: 35,
+      right: 10,
+      opacity: 0,
+      transition: 'opacity .5s'
     },
     btn: {
       minWidth: 'initial',
@@ -32,50 +37,6 @@ const
         }
       }
     }
-  }),
-  CopyButton = bond(({ textRef, markdownRef }: { textRef?: React.RefObject<Fluent.ITextField>, markdownRef?: React.RefObject<HTMLDivElement> }) => {
-    let timeoutRef: U
-    const
-      copiedB = box(false),
-      onClick = () => {
-        if (!textRef && !markdownRef) return
-        window.getSelection()?.removeAllRanges()
-
-        if (textRef) {
-          const el = textRef.current
-          if (!el) return
-          el.select()
-        }
-
-        if (markdownRef) {
-          const
-            start = markdownRef.current?.firstChild?.firstChild,
-            end = markdownRef.current?.firstChild?.lastChild
-
-          if (!start || !end) return
-          const range = document.createRange()
-          range.setStart(start, 0)
-          range.setEnd(end, 0)
-          window.getSelection()?.addRange(range)
-        }
-        document.execCommand('copy')
-        window.getSelection()?.removeAllRanges()
-        copiedB(true)
-
-        timeoutRef = window.setTimeout(() => copiedB(false), 2000)
-      },
-      dispose = () => window.clearTimeout(timeoutRef),
-      render = () => (
-        <Fluent.TooltipHost content='Copy to clipboard'>
-          {
-            copiedB()
-              ? <Fluent.PrimaryButton iconProps={{ iconName: 'CheckMark' }} className={clas(css.btn, css.copiedBtn)} />
-              : <Fluent.PrimaryButton onClick={onClick} iconProps={{ iconName: 'Copy' }} className={css.btn} />
-          }
-        </Fluent.TooltipHost>
-      )
-
-    return { render, copiedB, dispose }
   })
 
 /**
@@ -94,39 +55,43 @@ export interface CopyableText {
 }
 
 export const XCopyableText = bond(({ model }: { model: CopyableText }) => {
+  let timeoutRef: U
   const
-    ref = React.createRef<Fluent.ITextField | HTMLDivElement>(),
+    ref = React.createRef<Fluent.ITextField>(),
+    copiedB = box(false),
+    onClick = () => {
+      const el = ref.current
+      if (!el) return
+      el.select()
+
+      document.execCommand('copy')
+      window.getSelection()?.removeAllRanges()
+      copiedB(true)
+
+      timeoutRef = window.setTimeout(() => copiedB(false), 2000)
+    },
+    dispose = () => window.clearTimeout(timeoutRef),
     render = () => (
       <div data-test={model.name}>
         {
           model.multiline
             ? (
-              <>
-                <div className={css.multilineContainer}>
-                  <Fluent.Label>{model.label}</Fluent.Label>
-                  <CopyButton markdownRef={ref as React.RefObject<HTMLDivElement>} />
-                </div>
-                <div ref={ref as React.RefObject<HTMLDivElement>} className={css.multilineText}>
-                  <Markdown source={model.value} />
-                </div>
-              </>
+              <div className={css.multiContainer}>
+                <Fluent.TextField componentRef={ref} defaultValue={model.value} label={model.label} multiline readOnly />
+                <Fluent.PrimaryButton onClick={onClick} text={copiedB() ? 'Copied!' : 'Copy'} className={clas(css.btn, css.btnMultiple)} />
+              </div>
             )
             : (
               <div className={css.compactContainer}>
-                <Fluent.TextField
-                  componentRef={ref as React.RefObject<Fluent.ITextField>}
-                  defaultValue={model.value}
-                  label={model.label}
-                  styles={{ root: { flexGrow: 1 } }}
-                  readOnly
-                />
-                <CopyButton textRef={ref as React.RefObject<Fluent.ITextField>} />
+                <Fluent.TextField componentRef={ref} defaultValue={model.value} label={model.label} styles={{ root: { flexGrow: 1 } }} readOnly />
+                <Fluent.TooltipHost content='Copy to clipboard'>
+                  <Fluent.PrimaryButton onClick={onClick} iconProps={{ iconName: copiedB() ? 'CheckMark' : 'Copy' }} className={clas(css.btn, copiedB() ? css.copiedBtn : '')} />
+                </Fluent.TooltipHost>
               </div>
             )
         }
       </div>
     )
 
-
-  return { render }
+  return { render, dispose, copiedB }
 })
