@@ -1,4 +1,4 @@
-WAVE_ML_VERSION := v0.4.0
+WAVE_ML_VERSION := v0.5.0
 
 all: build ## Build h2o_wave wheel
 
@@ -8,19 +8,21 @@ build: purge
 	sed -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/__init__.py
 	./venv/bin/python3 setup.py bdist_wheel
 
-setup: ## Install dependencies
+.PHONY: prepare_wave_ml
+prepare_wave_ml:
+	rm -rf h2o_wave_ml
+	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
+
+setup: prepare_wave_ml ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
+	./venv/bin/python -m pip install h2o_wave_ml/
 	./venv/bin/python -m pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
 
-h2o_wave_ml:
-	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
-	cd h2o_wave_ml && ../venv/bin/python -m pip install .
-
 .PHONY: docs
-docs: h2o_wave_ml ## Build API docs
+docs: ## Build API docs
 	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_wave
 	./venv/bin/pdoc --force  --template-dir docs/templates --output-dir build/docs h2o_wave_ml/h2o_wave_ml
 	mkdir -p ../website/docs/api/h2o_wave_ml
