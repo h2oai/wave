@@ -54,7 +54,12 @@ const
 
   }
 
-/** Create a card displaying a collaborative Pixel art tool, just for kicks. */
+/**
+ * WARNING: Experimental and subject to change.
+ * Do not use in production sites!
+ *
+ * Create a card displaying a collaborative Pixel art tool.
+ */
 interface State {
   /** The title for this card.*/
   title: S

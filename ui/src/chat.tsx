@@ -51,6 +51,7 @@ const
 
 /**
  * WARNING: Experimental and subject to change.
+ * Do not use in production sites!
  *
  * Create a card that displays a chat room.
  * :icon "OfficeChat"

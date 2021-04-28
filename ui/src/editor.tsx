@@ -25,6 +25,7 @@ import { border, cssVar } from './theme'
 
 /**
  * WARNING: Experimental and subject to change.
+ * Do not use in production sites!
  *
  * Create a card that enables WYSIWYG editing on a page.
  * Adding this card to a page makes the page editable by end-users.
