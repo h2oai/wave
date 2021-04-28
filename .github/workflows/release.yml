@@ -15,7 +15,7 @@ env:
 jobs:
   ci-test:
     name: CI Test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
 
@@ -29,7 +29,7 @@ jobs:
 
   release:
     name: Release Wave
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: ci-test
     steps:
       - uses: actions/checkout@v2
