@@ -13,23 +13,6 @@ env:
   TAG: "v${{ github.event.inputs.version }}"
 
 jobs:
-  ci-test:
-    name: CI Test
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Update npm
-        run: npm i -g npm@7.11.1
-
-      - name: Build
-        run: |
-          cd ui
-          make setup
-
-      - name: Unit Test
-        run: make test-ui-ci
-
   release:
     name: Release Wave
     runs-on: ubuntu-20.04
@@ -44,6 +27,9 @@ jobs:
 
       - name: Setup
         run: make setup
+
+      - name: Unit Test
+        run: make test-ui-ci
 
       - name: Build Release
         run: make release
