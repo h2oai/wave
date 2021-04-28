@@ -16,7 +16,6 @@ jobs:
   release:
     name: Release Wave
     runs-on: ubuntu-20.04
-    needs: ci-test
     steps:
       - uses: actions/checkout@v2
         with:
