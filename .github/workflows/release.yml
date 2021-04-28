@@ -42,13 +42,6 @@ jobs:
       - name: Build Release
         run: make release
 
-      - name: Commit & Tag
-        uses: EndBug/add-and-commit@v5
-        with:
-          add: '.'
-          message: "chore: Release ${{ env.TAG }}"
-          tag: ${{ env.TAG }}
-
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
