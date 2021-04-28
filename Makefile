@@ -93,5 +93,11 @@ build-website: docs ## Build website
 publish-website: ## Publish website
 	aws s3 sync website/build s3://wave.h2o.ai --delete
 
+.PHONY: tag
+tag: ## Bump version and tag
+	cd py && $(MAKE) tag
+	git tag v$(VERSION)
+	git push origin --tags
+
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
