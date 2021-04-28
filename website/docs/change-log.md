@@ -42,6 +42,7 @@ Apr 27, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.14.0)
   - Trigger plot events only if marks are selected.
   - Submit a toolbar command's value instead of `True`, if available.
   - Refresh OIDC access token during WS communication if expired.
+  - Use unique OIDC subject ID instead of preferred-username for sync'ing UIs.
 
 ## v0.13.0
 Mar 5, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.13.0)
@@ -63,7 +64,6 @@ Mar 5, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.13.0)
   - Make stats cards not overflow 1-unit high zones.
   - Prevent iframes from overlapping other elements in forms.
   - Remove hard-coded "main" default zone in flex layouts.
-  - Use unique OIDC subject ID instead of preferred-username for sync'ing UIs.
   
 
 ## v0.12.1
