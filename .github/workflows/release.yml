@@ -19,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Update npm
+        run: npm i -g npm@7.11.1
+
       - name: Build
         run: |
           cd ui
@@ -35,6 +38,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Update npm
+        run: npm i -g npm@7.11.1
 
       - name: Setup
         run: make setup
