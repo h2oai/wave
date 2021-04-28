@@ -26,12 +26,6 @@ H2O Wave excels at capturing information from multiple sources and broadcasting 
 - [Report a problem](https://github.com/h2oai/wave/issues/new/choose)
 - [Blog](https://wave.h2o.ai/blog/) / [@h2o_wave](https://twitter.com/h2o_wave)
 
----
-
-:warning: **H2O Wave is pre-alpha.** The software is not yet stable enough for production use and has known security issues.
-
----
-
 ### Responsive Layouts
 
 ![Dashboard](website/blog/assets/2021-01-17/dashboards.png)

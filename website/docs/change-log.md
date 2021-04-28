@@ -12,6 +12,37 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.14.0
+Apr 27, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.14.0)
+- Added
+  - *New:* The Wave server now provides command line utilities for managing access key/secret pairs (see Security docs).
+  - Python app servers only process requests originating from the Wave server.
+  - Add `-max-request-size` to control maximum allowed HTTP request size.
+  - Add `-max-cache-request-size` to control maximum allowed cache request size.
+  - Add `-max-proxy-request-size` to control maximum allowed proxy request size.
+  - Add `-max-proxy-response-size` to control maximum allowed proxy response size.
+  - Add tutorial on local development using OIDC / Keycloak.
+  - Allow skipping OIDC login if required when `-oidc-skip-login` is set.
+  - Add version/author dunders to Python module. 
+  - Set `id_token_hint` for OIDC using Okta during logout.
+- Changed
+  - Buttons are not special-cased / displayed in a dialog's footer anymore.
+  - Don't automatically zoom into plots on mouse scroll.
+  - The defauult (development-time) user name/subject are now `anonymous`/`anonymous`.
+  - Login/logout endpoints are now `_auth/login` and `_auth/logout` instead of `_login` and `_logout`.
+  - File uploads from UI are disabled if auth is not enabled.
+  - Proxy is enabled only if `-proxy` is set.
+  - IDE (experimental/in-progress) is enabled only if `-ide` is set.
+  - Browser-browser communication is enabled only if `-editable` (experimental) is set.
+  - All open browser tabs redirect to login when a user logs out of any tab.
+  - Wave docs are now hosted at https://wave.h2o.ai/
+- Fixed
+  - All known security issues fixed/closed.
+  - Display overflow menu in table footer only when space-constrained.
+  - Trigger plot events only if marks are selected.
+  - Submit a toolbar command's value instead of `True`, if available.
+  - Refresh OIDC access token during WS communication if expired.
+
 ## v0.13.0
 Mar 5, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.13.0)
 - Added
@@ -32,6 +63,8 @@ Mar 5, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.13.0)
   - Make stats cards not overflow 1-unit high zones.
   - Prevent iframes from overlapping other elements in forms.
   - Remove hard-coded "main" default zone in flex layouts.
+  - Use unique OIDC subject ID instead of preferred-username for sync'ing UIs.
+  
 
 ## v0.12.1
 Feb 12, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.12.1)
