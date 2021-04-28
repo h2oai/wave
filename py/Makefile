@@ -4,8 +4,6 @@ all: build ## Build h2o_wave wheel
 
 .PHONY: build
 build: purge
-	sed -i -r -e "s/version.+/version='$(VERSION)',/" setup.py
-	sed -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/__init__.py
 	./venv/bin/python3 setup.py bdist_wheel
 
 .PHONY: prepare_wave_ml
@@ -33,15 +31,14 @@ docs: ## Build API docs
 purge: ## Purge previous build
 	rm -rf build dist h2o_wave.egg-info h2o_wave_ml
 
-.PHONY: examples
-examples:
-	sed -i -r -e "s/h2o_wave.+/h2o_wave==$(VERSION)/" examples/requirements.txt
-
-.PHONY: release
-release: build examples ## Prepare release artifacts
-
 clean: purge ## Clean
 	rm -rf docs/build venv
+
+.PHONY: tag
+tag: # Bump version
+	sed -i -r -e "s/version.+/version='$(VERSION)',/" setup.py
+	sed -i -r -e "s/__version__.+/__version__ = '$(VERSION)'/" h2o_wave/__init__.py
+	sed -i -r -e "s/h2o_wave.+/h2o_wave==$(VERSION)/" examples/requirements.txt
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
