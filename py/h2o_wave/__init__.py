@@ -36,7 +36,7 @@ from .db import TeleDBError, TeleDB
 from .types import *
 from .test import cypress, Cypress
 
-__version__ = '0.13.0'
+__version__ = '0.14.0'
 __author__ = 'Prithvi Prabhu'
 
 __pdoc__ = {
