@@ -6,12 +6,8 @@ all: build ## Build h2o_wave wheel
 build: purge
 	./venv/bin/python3 setup.py bdist_wheel
 
-.PHONY: prepare_wave_ml
-prepare_wave_ml:
-	rm -rf h2o_wave_ml
+setup: ## Install dependencies
 	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
-
-setup: prepare_wave_ml ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
 	./venv/bin/python -m pip install h2o_wave_ml/
@@ -29,10 +25,10 @@ docs: ## Build API docs
 	./venv/bin/python sync_examples.py
 
 purge: ## Purge previous build
-	rm -rf build dist h2o_wave.egg-info h2o_wave_ml
+	rm -rf build dist h2o_wave.egg-info
 
 clean: purge ## Clean
-	rm -rf docs/build venv
+	rm -rf docs/build venv h2o_wave_ml
 
 .PHONY: tag
 tag: # Bump version

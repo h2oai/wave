@@ -45,7 +45,7 @@ build-server: ## Build server for current OS/Arch
 	go build $(LDFLAGS) -o waved cmd/wave/main.go
 
 build-py: ## Build h2o_wave wheel
-	cd py && $(MAKE) release
+	cd py && $(MAKE) build
 
 build-docker:
 	docker build \
@@ -72,7 +72,6 @@ release: build-ui build-py ## Prepare release builds (e.g. "VERSION=1.2.3 make r
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
 	$(MAKE) build-website
-	$(MAKE) publish-website
 
 release-os:
 	rm -rf build/$(REL)
