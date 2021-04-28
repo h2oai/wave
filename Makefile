@@ -90,6 +90,9 @@ release-os:
 build-website: docs ## Build website
 	cd website && npm ci && npm run build
 
+preview-website: ## Preview website
+	go run cmd/fs/main.go -web-dir website/build
+
 publish-website: ## Publish website
 	aws s3 sync website/build s3://wave.h2o.ai --delete
 
