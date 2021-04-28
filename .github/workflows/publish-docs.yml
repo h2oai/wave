@@ -28,8 +28,3 @@ jobs:
           make build-website
           make publish-website
 
-      - name: Commit & Tag
-        uses: EndBug/add-and-commit@v5
-        with:
-          add: '.'
-          message: "${{ github.event.inputs.commit }}"
