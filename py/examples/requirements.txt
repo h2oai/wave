@@ -7,4 +7,4 @@ matplotlib
 plotly
 altair
 vega-datasets
-h2o_wave==0.14.0
+h2o_wave
