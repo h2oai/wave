@@ -43,13 +43,6 @@ const
     },
     title: {
       paddingBottom: 17,
-      color: cssVar('$text9')
-    },
-    category: {
-      color: cssVar('$text5')
-    },
-    caption: {
-      color: cssVar('$text8')
     },
     img: {
       flexGrow: 1,
@@ -108,9 +101,9 @@ export const View = bond(({ name, state, changed }: Card<State>) => {
           }
         </div>
         <div style={{ color: color ? getContrast(color) : 'inherit' }}>
-          {category && <div className={clas('wave-s12 wave-w5', css.category)}>{category}</div>}
-          <div className={clas('wave-s20 wave-w5', css.title)}>{title}</div>
-          {caption && <div className={clas('wave-s14 wave-w4', css.caption)}>{caption}</div>}
+          {category && <div className='wave-s12 wave-w5 wave-t5'>{category}</div>}
+          <div className={clas('wave-s20 wave-w5 wave-t9', css.title)}>{title}</div>
+          {caption && <div className='wave-s14 wave-w4 wave-t8'>{caption}</div>}
         </div>
       </div>
     )
