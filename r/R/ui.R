@@ -145,6 +145,7 @@ ui_breadcrumbs_card <- function(
 }
 
 #' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
 #' 
 #' Create a card that displays a drawing canvas (whiteboard).
 #'
@@ -181,6 +182,7 @@ ui_canvas_card <- function(
 }
 
 #' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
 #' 
 #' Create a card that displays a chat room.
 #'
@@ -213,6 +215,7 @@ ui_chat_card <- function(
 }
 
 #' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
 #' 
 #' Create a card that enables WYSIWYG editing on a page.
 #' Adding this card to a page makes the page editable by end-users.
@@ -3053,7 +3056,10 @@ ui_nav_card <- function(
   return(.o)
 }
 
-#' Create a card displaying a collaborative Pixel art tool, just for kicks.
+#' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
+#' 
+#' Create a card displaying a collaborative Pixel art tool.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title for this card.
@@ -3761,7 +3767,7 @@ ui_wide_info_card <- function(
   .guard_scalar("category", "character", category)
   .guard_scalar("name", "character", name)
   .guard_scalar("color", "character", color)
-  .guard_vector("commands", "h2oq_Command", commands)
+  .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
@@ -3773,7 +3779,7 @@ ui_wide_info_card <- function(
     name=name,
     color=color,
     commands=commands)
-  class(.o) <- append(class(.o), c(.h2oq_obj, "h2oq_WideInfoCard"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideInfoCard"))
   return(.o)
 }
 
