@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { bond, Card, qd, S } from './qd'
-import { clas, cssVar, getContrast, pc } from './theme'
+import { clas, cssVar, pc } from './theme'
 
 const
   iconStyles: Fluent.IIconStyles = { root: { fontSize: 80 } },
@@ -100,7 +100,7 @@ export const View = bond(({ name, state, changed }: Card<State>) => {
                 : <Fluent.Icon iconName='MiniExpand' styles={iconStyles} />
           }
         </div>
-        <div style={{ color: color ? getContrast(color) : 'inherit' }}>
+        <div>
           {category && <div className='wave-s12 wave-w5 wave-t5'>{category}</div>}
           <div className={clas('wave-s20 wave-w5 wave-t9', css.title)}>{title}</div>
           {caption && <div className='wave-s14 wave-w4 wave-t8'>{caption}</div>}
