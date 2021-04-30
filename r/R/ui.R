@@ -1278,8 +1278,7 @@ ui_mini_buttons <- function(
   return(.o)
 }
 
-#' Create a file upload component.
-#' A file upload component allows a user to browse, select and upload one or more files.
+#' No documentation available.
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed in the bottom button. Defaults to "Upload".
@@ -1288,8 +1287,8 @@ ui_mini_buttons <- function(
 #' @param max_file_size Maximum allowed size (Mb) per file. Defaults to no limit.
 #' @param max_size Maximum allowed size (Mb) for all files combined. Defaults to no limit.
 #' @param height The height of the file upload, e.g. '400px', '50%', etc.
-#' @param width The width of the file upload, e.g. '100px'. Defaults to '100%'.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width No documentation available.
+#' @param visible No documentation available.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A FileUpload instance.
 #' @export
@@ -3704,7 +3703,7 @@ ui_plot_card <- function(
 #' @param image The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
 #'   or a path to an image hosted on the Wave daemon (starting with `/`).
 #'   .
-#' @param items Components in this card displayed below toolbar / image.
+#' @param items Components in this card displayed below the image.
 #' @param commands Contextual menu commands for this component.
 #' @return A ProfileCard instance.
 #' @export

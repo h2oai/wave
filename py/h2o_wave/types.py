@@ -2788,8 +2788,7 @@ class MiniButtons:
 
 
 class FileUpload:
-    """Create a file upload component.
-    A file upload component allows a user to browse, select and upload one or more files.
+    """No documentation available.
     """
     def __init__(
             self,
@@ -2829,9 +2828,9 @@ class FileUpload:
         self.height = height
         """The height of the file upload, e.g. '400px', '50%', etc."""
         self.width = width
-        """The width of the file upload, e.g. '100px'. Defaults to '100%'."""
+        """No documentation available."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """No documentation available."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -8942,7 +8941,7 @@ class ProfileCard:
         self.image = image
         """The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). ."""
         self.items = items
-        """Components in this card displayed below toolbar / image."""
+        """Components in this card displayed below the image."""
         self.commands = commands
         """Contextual menu commands for this component."""
 

@@ -1100,8 +1100,7 @@ def file_upload(
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
-    """Create a file upload component.
-    A file upload component allows a user to browse, select and upload one or more files.
+    """No documentation available.
 
     Args:
         name: An identifying name for this component.
@@ -1111,8 +1110,8 @@ def file_upload(
         max_file_size: Maximum allowed size (Mb) per file. Defaults to no limit.
         max_size: Maximum allowed size (Mb) for all files combined. Defaults to no limit.
         height: The height of the file upload, e.g. '400px', '50%', etc.
-        width: The width of the file upload, e.g. '100px'. Defaults to '100%'.
-        visible: True if the component should be visible. Defaults to true.
+        width: No documentation available.
+        visible: No documentation available.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.FileUpload` instance.
@@ -3197,7 +3196,7 @@ def profile_card(
         box: A string indicating how to place this component on the page.
         persona: The persona represented by this card.
         image: The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). .
-        items: Components in this card displayed below toolbar / image.
+        items: Components in this card displayed below the image.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ProfileCard` instance.
