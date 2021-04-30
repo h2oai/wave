@@ -1,6 +1,5 @@
-# Wide Info
-# Create a stat card displaying text information alongside an image.
-# #wide_info_card
+# Info / Wide
+# Create a wide information card displaying a title, caption, and either an icon or image.
 # ---
 from h2o_wave import site, ui
 
