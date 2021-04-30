@@ -12,8 +12,13 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.14.1
+Apr 29, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.14.1)
+- Fixed
+  - Allow file uploads if auth is disabled (assume development mode).
+
 ## v0.14.0
-Apr 27, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.14.0)
+Apr 28, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.14.0)
 - Added
   - *New:* The Wave server now provides command line utilities for managing access key/secret pairs (see Security docs).
   - Python app servers only process requests originating from the Wave server.
