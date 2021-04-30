@@ -50,6 +50,7 @@ import { clas, margin, padding, cssVar } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
+import { Annotator, XAnnotator } from './annotator'
 
 /** Create a component. */
 export interface Component {
@@ -129,6 +130,8 @@ export interface Component {
   stats?: Stats
   /** Inline components */
   inline?: Inline
+  /** Annotator. */
+  annotator?: Annotator
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -252,6 +255,7 @@ const
     if (m.vega_visualization) return <XVegaVisualization model={m.vega_visualization} />
     if (m.stats) return <XStats model={m.stats} />
     if (m.inline) return <XInline model={m.inline} />
+    if (m.annotator) return <XAnnotator model={m.annotator} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
