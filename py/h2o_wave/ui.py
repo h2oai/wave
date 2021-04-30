@@ -2016,6 +2016,30 @@ def inline(
     ))
 
 
+def image(
+        title: str,
+        type: Optional[str] = None,
+        image: Optional[str] = None,
+        path: Optional[str] = None,
+) -> Component:
+    """Create an image.
+
+    Args:
+        title: The image title, typically displayed as a tooltip.
+        type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
+        image: Image data, base64-encoded.
+        path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+    Returns:
+        A `h2o_wave.types.Image` instance.
+    """
+    return Component(image=Image(
+        title,
+        type,
+        image,
+        path,
+    ))
+
+
 def form_card(
         box: str,
         items: Union[List[Component], str],
@@ -2211,9 +2235,10 @@ def header_card(
 def image_card(
         box: str,
         title: str,
-        type: str,
-        image: str,
+        type: Optional[str] = None,
+        image: Optional[str] = None,
         data: Optional[PackedRecord] = None,
+        path: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ImageCard:
     """Create a card that displays a base64-encoded image.
@@ -2224,6 +2249,7 @@ def image_card(
         type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
         image: Image data, base64-encoded.
         data: Data for this card.
+        path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ImageCard` instance.
@@ -2234,6 +2260,7 @@ def image_card(
         type,
         image,
         data,
+        path,
         commands,
     )
 

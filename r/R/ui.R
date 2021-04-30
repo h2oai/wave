@@ -2342,6 +2342,32 @@ ui_inline <- function(
   return(.o)
 }
 
+#' Create an image.
+#'
+#' @param title The image title, typically displayed as a tooltip.
+#' @param type The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
+#' @param image Image data, base64-encoded.
+#' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+#' @return A Image instance.
+#' @export
+ui_image <- function(
+  title,
+  type = NULL,
+  image = NULL,
+  path = NULL) {
+  .guard_scalar("title", "character", title)
+  .guard_scalar("type", "character", type)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("path", "character", path)
+  .o <- list(image=list(
+    title=title,
+    type=type,
+    image=image,
+    path=path))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create a form.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -2567,21 +2593,24 @@ ui_header_card <- function(
 #' @param type The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
 #' @param image Image data, base64-encoded.
 #' @param data Data for this card.
+#' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param commands Contextual menu commands for this component.
 #' @return A ImageCard instance.
 #' @export
 ui_image_card <- function(
   box,
   title,
-  type,
-  image,
+  type = NULL,
+  image = NULL,
   data = NULL,
+  path = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
   # TODO Validate data: Rec
+  .guard_scalar("path", "character", path)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -2589,6 +2618,7 @@ ui_image_card <- function(
     type=type,
     image=image,
     data=data,
+    path=path,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageCard"))
   return(.o)

@@ -5343,6 +5343,65 @@ class Inline:
         )
 
 
+class Image:
+    """Create an image.
+    """
+    def __init__(
+            self,
+            title: str,
+            type: Optional[str] = None,
+            image: Optional[str] = None,
+            path: Optional[str] = None,
+    ):
+        _guard_scalar('Image.title', title, (str,), False, False, False)
+        _guard_scalar('Image.type', type, (str,), False, True, False)
+        _guard_scalar('Image.image', image, (str,), False, True, False)
+        _guard_scalar('Image.path', path, (str,), False, True, False)
+        self.title = title
+        """The image title, typically displayed as a tooltip."""
+        self.type = type
+        """The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set."""
+        self.image = image
+        """Image data, base64-encoded."""
+        self.path = path
+        """The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Image.title', self.title, (str,), False, False, False)
+        _guard_scalar('Image.type', self.type, (str,), False, True, False)
+        _guard_scalar('Image.image', self.image, (str,), False, True, False)
+        _guard_scalar('Image.path', self.path, (str,), False, True, False)
+        return _dump(
+            title=self.title,
+            type=self.type,
+            image=self.image,
+            path=self.path,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Image':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_title: Any = __d.get('title')
+        _guard_scalar('Image.title', __d_title, (str,), False, False, False)
+        __d_type: Any = __d.get('type')
+        _guard_scalar('Image.type', __d_type, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('Image.image', __d_image, (str,), False, True, False)
+        __d_path: Any = __d.get('path')
+        _guard_scalar('Image.path', __d_path, (str,), False, True, False)
+        title: str = __d_title
+        type: Optional[str] = __d_type
+        image: Optional[str] = __d_image
+        path: Optional[str] = __d_path
+        return Image(
+            title,
+            type,
+            image,
+            path,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -5386,6 +5445,7 @@ class Component:
             vega_visualization: Optional[VegaVisualization] = None,
             stats: Optional[Stats] = None,
             inline: Optional[Inline] = None,
+            image: Optional[Image] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -5425,6 +5485,7 @@ class Component:
         _guard_scalar('Component.vega_visualization', vega_visualization, (VegaVisualization,), False, True, False)
         _guard_scalar('Component.stats', stats, (Stats,), False, True, False)
         _guard_scalar('Component.inline', inline, (Inline,), False, True, False)
+        _guard_scalar('Component.image', image, (Image,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -5501,6 +5562,8 @@ class Component:
         """Stats"""
         self.inline = inline
         """Inline components"""
+        self.image = image
+        """Image"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5542,6 +5605,7 @@ class Component:
         _guard_scalar('Component.vega_visualization', self.vega_visualization, (VegaVisualization,), False, True, False)
         _guard_scalar('Component.stats', self.stats, (Stats,), False, True, False)
         _guard_scalar('Component.inline', self.inline, (Inline,), False, True, False)
+        _guard_scalar('Component.image', self.image, (Image,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -5581,6 +5645,7 @@ class Component:
             vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
             stats=None if self.stats is None else self.stats.dump(),
             inline=None if self.inline is None else self.inline.dump(),
+            image=None if self.image is None else self.image.dump(),
         )
 
     @staticmethod
@@ -5662,6 +5727,8 @@ class Component:
         _guard_scalar('Component.stats', __d_stats, (Stats,), False, True, False)
         __d_inline: Any = __d.get('inline')
         _guard_scalar('Component.inline', __d_inline, (Inline,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('Component.image', __d_image, (Image,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -5700,6 +5767,7 @@ class Component:
         vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
         stats: Optional[Stats] = None if __d_stats is None else Stats.load(__d_stats)
         inline: Optional[Inline] = None if __d_inline is None else Inline.load(__d_inline)
+        image: Optional[Image] = None if __d_image is None else Image.load(__d_image)
         return Component(
             text,
             text_xl,
@@ -5739,6 +5807,7 @@ class Component:
             vega_visualization,
             stats,
             inline,
+            image,
         )
 
 
@@ -6228,15 +6297,17 @@ class ImageCard:
             self,
             box: str,
             title: str,
-            type: str,
-            image: str,
+            type: Optional[str] = None,
+            image: Optional[str] = None,
             data: Optional[PackedRecord] = None,
+            path: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ImageCard.box', box, (str,), False, False, False)
         _guard_scalar('ImageCard.title', title, (str,), False, False, False)
-        _guard_scalar('ImageCard.type', type, (str,), False, False, False)
-        _guard_scalar('ImageCard.image', image, (str,), False, False, False)
+        _guard_scalar('ImageCard.type', type, (str,), False, True, False)
+        _guard_scalar('ImageCard.image', image, (str,), False, True, False)
+        _guard_scalar('ImageCard.path', path, (str,), False, True, False)
         _guard_vector('ImageCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6248,6 +6319,8 @@ class ImageCard:
         """Image data, base64-encoded."""
         self.data = data
         """Data for this card."""
+        self.path = path
+        """The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6255,8 +6328,9 @@ class ImageCard:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ImageCard.box', self.box, (str,), False, False, False)
         _guard_scalar('ImageCard.title', self.title, (str,), False, False, False)
-        _guard_scalar('ImageCard.type', self.type, (str,), False, False, False)
-        _guard_scalar('ImageCard.image', self.image, (str,), False, False, False)
+        _guard_scalar('ImageCard.type', self.type, (str,), False, True, False)
+        _guard_scalar('ImageCard.image', self.image, (str,), False, True, False)
+        _guard_scalar('ImageCard.path', self.path, (str,), False, True, False)
         _guard_vector('ImageCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='image',
@@ -6265,6 +6339,7 @@ class ImageCard:
             type=self.type,
             image=self.image,
             data=self.data,
+            path=self.path,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -6276,17 +6351,20 @@ class ImageCard:
         __d_title: Any = __d.get('title')
         _guard_scalar('ImageCard.title', __d_title, (str,), False, False, False)
         __d_type: Any = __d.get('type')
-        _guard_scalar('ImageCard.type', __d_type, (str,), False, False, False)
+        _guard_scalar('ImageCard.type', __d_type, (str,), False, True, False)
         __d_image: Any = __d.get('image')
-        _guard_scalar('ImageCard.image', __d_image, (str,), False, False, False)
+        _guard_scalar('ImageCard.image', __d_image, (str,), False, True, False)
         __d_data: Any = __d.get('data')
+        __d_path: Any = __d.get('path')
+        _guard_scalar('ImageCard.path', __d_path, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ImageCard.commands', __d_commands, (Command,), False, True, False)
         box: str = __d_box
         title: str = __d_title
-        type: str = __d_type
-        image: str = __d_image
+        type: Optional[str] = __d_type
+        image: Optional[str] = __d_image
         data: Optional[PackedRecord] = __d_data
+        path: Optional[str] = __d_path
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ImageCard(
             box,
@@ -6294,6 +6372,7 @@ class ImageCard:
             type,
             image,
             data,
+            path,
             commands,
         )
 

@@ -26,6 +26,7 @@ import { Dropdown, XDropdown } from './dropdown'
 import { Expander, XExpander } from './expander'
 import { FileUpload, XFileUpload } from './file_upload'
 import { Frame, XFrame } from './frame'
+import { Image, XImage } from './image'
 import { Label, XLabel } from './label'
 import { cards } from './layout'
 import { Link, XLink } from './link'
@@ -129,6 +130,8 @@ export interface Component {
   stats?: Stats
   /** Inline components */
   inline?: Inline
+  /** Image */
+  image?: Image
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -252,6 +255,7 @@ const
     if (m.vega_visualization) return <XVegaVisualization model={m.vega_visualization} />
     if (m.stats) return <XStats model={m.stats} />
     if (m.inline) return <XInline model={m.inline} />
+    if (m.image) return <XImage model={m.image} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
