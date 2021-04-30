@@ -3217,6 +3217,45 @@ def wide_gauge_stat_card(
     )
 
 
+def wide_info_card(
+        box: str,
+        title: str,
+        caption: str,
+        icon: Optional[str] = None,
+        image: Optional[str] = None,
+        category: Optional[str] = None,
+        name: Optional[str] = None,
+        color: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> WideInfoCard:
+    """Create a wide information card displaying a title, caption, and either an icon or image.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        caption: The card's caption, displayed below the title.
+        icon: The card's icon.
+        image: The card’s image.
+        category: The card's category, displayed above the title.
+        name: An identifying name for this card. Makes the card clickable, similar to a button.
+        color: The card's background color.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.WideInfoCard` instance.
+    """
+    return WideInfoCard(
+        box,
+        title,
+        caption,
+        icon,
+        image,
+        category,
+        name,
+        color,
+        commands,
+    )
+
+
 def wide_series_stat_card(
         box: str,
         title: str,

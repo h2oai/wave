@@ -3733,6 +3733,52 @@ ui_wide_gauge_stat_card <- function(
   return(.o)
 }
 
+#' Create a wide information card displaying a title, caption, and either an icon or image.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title.
+#' @param caption The card's caption, displayed below the title.
+#' @param icon The card's icon.
+#' @param image The card’s image.
+#' @param category The card's category, displayed above the title.
+#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
+#' @param color The card's background color.
+#' @param commands Contextual menu commands for this component.
+#' @return A WideInfoCard instance.
+#' @export
+ui_wide_info_card <- function(
+  box,
+  title,
+  caption,
+  icon = NULL,
+  image = NULL,
+  category = NULL,
+  name = NULL,
+  color = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("category", "character", category)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("color", "character", color)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    caption=caption,
+    icon=icon,
+    image=image,
+    category=category,
+    name=name,
+    color=color,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideInfoCard"))
+  return(.o)
+}
+
 #' Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
 #'
 #' @param box A string indicating how to place this component on the page.
