@@ -4,6 +4,7 @@ import os.path
 import re
 import subprocess
 import sys
+from urllib.parse import urlparse
 from typing import List, Optional, Dict, Tuple
 
 from pygments import highlight
@@ -16,8 +17,8 @@ py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
 example_dir = os.path.dirname(os.path.realpath(__file__))
 
-_app_host = '127.0.0.1'
-_app_port = '10102'
+_app_address = urlparse(os.environ.get(f'H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
+_app_host, _app_port = _app_address.hostname, '10102'
 
 
 class Example:
@@ -38,9 +39,12 @@ class Example:
         # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
         env = {'SYSTEMROOT': os.environ['SYSTEMROOT']} if sys.platform.lower().startswith('win') else {}
         if self.is_app:
-            self.process = subprocess.Popen(
-                [sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main'],
-                env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
+            self.process = subprocess.Popen([
+                sys.executable, '-m', 'uvicorn',
+                '--host', '0.0.0.0',
+                '--port', _app_port,
+                f'examples.{self.name}:main',
+            ], env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
         else:
             self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
 
