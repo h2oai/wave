@@ -29,6 +29,10 @@ install:
 uninstall: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 	R CMD REMOVE $(PKG_NAME)
 
+.PHONY: tag
+tag: # Bump version
+	sed -i -r -e "s/Version.+/Version: $(VERSION)/" DESCRIPTION
+
 clean:
 	-rm -f $(PKG_NAME)_*.tar.gz
 	-rm -r -f $(PKG_NAME).Rcheck
