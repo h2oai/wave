@@ -51,7 +51,7 @@ const
       backgroundPosition: 'center'
     }
   })
-/** Create a clickable card to provide more info content to your app. */
+/** Create a wide information card displaying a title, caption, and either an icon or image. */
 interface State {
   /** The card's title. */
   title: S
@@ -59,21 +59,19 @@ interface State {
   caption: S
   /** The card's icon. */
   icon?: S
-  /** The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). */
+  /** The card’s image. */
   image?: S
-  /** The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. This property has to be set when base64 encoded image is specified. */
-  image_type?: S
   /** The card's category, displayed above the title. */
   category?: S
-  /** An identifying name for this card. Makes the card clickable, similat to a button. */
+  /** An identifying name for this card. Makes the card clickable, similar to a button. */
   name?: S
-  /** The card's background color. Use HEX or $ prefixed wave colors. */
+  /** The card's background color. */
   color?: S
 }
 
 export const View = bond(({ name, state, changed }: Card<State>) => {
   const
-    { title, caption, icon, image, image_type, category, name: stateName, color } = state,
+    { title, caption, icon, image, category, name: stateName, color } = state,
     onClick = () => {
       if (!stateName) return
       if (stateName.startsWith('#')) {
@@ -82,8 +80,7 @@ export const View = bond(({ name, state, changed }: Card<State>) => {
       }
       qd.args[stateName] = stateName
       qd.sync()
-    },
-    getImageURL = () => image_type ? `data:image/${image_type};base64,${image}` : image,
+    },    
     render = () => (
       <div
         data-test={name}
@@ -96,7 +93,7 @@ export const View = bond(({ name, state, changed }: Card<State>) => {
             icon
               ? <Fluent.Icon iconName={icon} styles={iconStyles} />
               : image
-                ? <div className={css.img} style={{ backgroundImage: `url('${getImageURL()}')` }}></div>
+                ? <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
                 : <Fluent.Icon iconName='MiniExpand' styles={iconStyles} />
           }
         </div>

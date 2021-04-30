@@ -3733,17 +3733,16 @@ ui_wide_gauge_stat_card <- function(
   return(.o)
 }
 
-#' Create a clickable card to provide more info content to your app.
+#' Create a wide information card displaying a title, caption, and either an icon or image.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The card's title.
 #' @param caption The card's caption, displayed below the title.
 #' @param icon The card's icon.
-#' @param image The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`).
-#' @param image_type The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. This property has to be set when base64 encoded image is specified.
+#' @param image The card’s image.
 #' @param category The card's category, displayed above the title.
-#' @param name An identifying name for this card. Makes the card clickable, similat to a button.
-#' @param color The card's background color. Use HEX or $ prefixed wave colors.
+#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
+#' @param color The card's background color.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideInfoCard instance.
 #' @export
@@ -3753,7 +3752,6 @@ ui_wide_info_card <- function(
   caption,
   icon = NULL,
   image = NULL,
-  image_type = NULL,
   category = NULL,
   name = NULL,
   color = NULL,
@@ -3763,7 +3761,6 @@ ui_wide_info_card <- function(
   .guard_scalar("caption", "character", caption)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("image", "character", image)
-  .guard_scalar("image_type", "character", image_type)
   .guard_scalar("category", "character", category)
   .guard_scalar("name", "character", name)
   .guard_scalar("color", "character", color)
@@ -3774,7 +3771,6 @@ ui_wide_info_card <- function(
     caption=caption,
     icon=icon,
     image=image,
-    image_type=image_type,
     category=category,
     name=name,
     color=color,

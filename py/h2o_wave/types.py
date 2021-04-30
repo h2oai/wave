@@ -8946,7 +8946,7 @@ class WideGaugeStatCard:
 
 
 class WideInfoCard:
-    """Create a clickable card to provide more info content to your app.
+    """Create a wide information card displaying a title, caption, and either an icon or image.
     """
     def __init__(
             self,
@@ -8955,7 +8955,6 @@ class WideInfoCard:
             caption: str,
             icon: Optional[str] = None,
             image: Optional[str] = None,
-            image_type: Optional[str] = None,
             category: Optional[str] = None,
             name: Optional[str] = None,
             color: Optional[str] = None,
@@ -8966,7 +8965,6 @@ class WideInfoCard:
         _guard_scalar('WideInfoCard.caption', caption, (str,), False, False, False)
         _guard_scalar('WideInfoCard.icon', icon, (str,), False, True, False)
         _guard_scalar('WideInfoCard.image', image, (str,), False, True, False)
-        _guard_scalar('WideInfoCard.image_type', image_type, (str,), False, True, False)
         _guard_scalar('WideInfoCard.category', category, (str,), False, True, False)
         _guard_scalar('WideInfoCard.name', name, (str,), False, True, False)
         _guard_scalar('WideInfoCard.color', color, (str,), False, True, False)
@@ -8980,15 +8978,13 @@ class WideInfoCard:
         self.icon = icon
         """The card's icon."""
         self.image = image
-        """The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`)."""
-        self.image_type = image_type
-        """The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. This property has to be set when base64 encoded image is specified."""
+        """The card’s image."""
         self.category = category
         """The card's category, displayed above the title."""
         self.name = name
-        """An identifying name for this card. Makes the card clickable, similat to a button."""
+        """An identifying name for this card. Makes the card clickable, similar to a button."""
         self.color = color
-        """The card's background color. Use HEX or $ prefixed wave colors."""
+        """The card's background color."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8999,7 +8995,6 @@ class WideInfoCard:
         _guard_scalar('WideInfoCard.caption', self.caption, (str,), False, False, False)
         _guard_scalar('WideInfoCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('WideInfoCard.image', self.image, (str,), False, True, False)
-        _guard_scalar('WideInfoCard.image_type', self.image_type, (str,), False, True, False)
         _guard_scalar('WideInfoCard.category', self.category, (str,), False, True, False)
         _guard_scalar('WideInfoCard.name', self.name, (str,), False, True, False)
         _guard_scalar('WideInfoCard.color', self.color, (str,), False, True, False)
@@ -9011,7 +9006,6 @@ class WideInfoCard:
             caption=self.caption,
             icon=self.icon,
             image=self.image,
-            image_type=self.image_type,
             category=self.category,
             name=self.name,
             color=self.color,
@@ -9031,8 +9025,6 @@ class WideInfoCard:
         _guard_scalar('WideInfoCard.icon', __d_icon, (str,), False, True, False)
         __d_image: Any = __d.get('image')
         _guard_scalar('WideInfoCard.image', __d_image, (str,), False, True, False)
-        __d_image_type: Any = __d.get('image_type')
-        _guard_scalar('WideInfoCard.image_type', __d_image_type, (str,), False, True, False)
         __d_category: Any = __d.get('category')
         _guard_scalar('WideInfoCard.category', __d_category, (str,), False, True, False)
         __d_name: Any = __d.get('name')
@@ -9046,7 +9038,6 @@ class WideInfoCard:
         caption: str = __d_caption
         icon: Optional[str] = __d_icon
         image: Optional[str] = __d_image
-        image_type: Optional[str] = __d_image_type
         category: Optional[str] = __d_category
         name: Optional[str] = __d_name
         color: Optional[str] = __d_color
@@ -9057,7 +9048,6 @@ class WideInfoCard:
             caption,
             icon,
             image,
-            image_type,
             category,
             name,
             color,
