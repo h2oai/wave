@@ -39,7 +39,6 @@ export const
   displayMixin = (visible = true): React.CSSProperties => visible ? {} : { display: 'none' },
   // if color starts with $, treat  it like a css var, otherwise treat it like a regular color.
   // TODO this is ugly - why does the argument need a '$' prefix?
-  // Answer: this function is used for converting user specified colors as well. The logic was agreed to $color - pick from Wave custom colors otherwise use browser color ($red vs red).
   cssVar = (color = '$gray') => color.startsWith('$') ? `var(--${color.substr(1)}, var(--gray))` : color,
   cssVarValue = (prop: S) => {
     if (!prop.startsWith('$')) return prop
