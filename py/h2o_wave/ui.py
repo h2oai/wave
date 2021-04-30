@@ -112,6 +112,7 @@ def canvas_card(
         commands: Optional[List[Command]] = None,
 ) -> CanvasCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that displays a drawing canvas (whiteboard).
 
@@ -143,6 +144,7 @@ def chat_card(
         commands: Optional[List[Command]] = None,
 ) -> ChatCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that displays a chat room.
 
@@ -170,6 +172,7 @@ def editor_card(
         commands: Optional[List[Command]] = None,
 ) -> EditorCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that enables WYSIWYG editing on a page.
     Adding this card to a page makes the page editable by end-users.
@@ -2633,7 +2636,10 @@ def pixel_art_card(
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> PixelArtCard:
-    """Create a card displaying a collaborative Pixel art tool, just for kicks.
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card displaying a collaborative Pixel art tool.
 
     Args:
         box: A string indicating how to place this component on the page.

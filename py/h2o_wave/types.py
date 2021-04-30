@@ -245,6 +245,7 @@ class BreadcrumbsCard:
 
 class CanvasCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that displays a drawing canvas (whiteboard).
     """
@@ -324,6 +325,7 @@ class CanvasCard:
 
 class ChatCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that displays a chat room.
     """
@@ -401,6 +403,7 @@ class EditorCardMode:
 
 class EditorCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that enables WYSIWYG editing on a page.
     Adding this card to a page makes the page editable by end-users.
@@ -7364,7 +7367,10 @@ class NavCard:
 
 
 class PixelArtCard:
-    """Create a card displaying a collaborative Pixel art tool, just for kicks.
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card displaying a collaborative Pixel art tool.
     """
     def __init__(
             self,

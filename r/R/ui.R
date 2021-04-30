@@ -145,6 +145,7 @@ ui_breadcrumbs_card <- function(
 }
 
 #' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
 #' 
 #' Create a card that displays a drawing canvas (whiteboard).
 #'
@@ -181,6 +182,7 @@ ui_canvas_card <- function(
 }
 
 #' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
 #' 
 #' Create a card that displays a chat room.
 #'
@@ -213,6 +215,7 @@ ui_chat_card <- function(
 }
 
 #' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
 #' 
 #' Create a card that enables WYSIWYG editing on a page.
 #' Adding this card to a page makes the page editable by end-users.
@@ -3053,7 +3056,10 @@ ui_nav_card <- function(
   return(.o)
 }
 
-#' Create a card displaying a collaborative Pixel art tool, just for kicks.
+#' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
+#' 
+#' Create a card displaying a collaborative Pixel art tool.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title for this card.
