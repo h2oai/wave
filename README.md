@@ -13,6 +13,7 @@
 ### Realtime Web Apps and Dashboards for Python and R
 
 **New!** *[R Language API](https://wave.h2o.ai/blog/r-api-preview) Build and control Wave dashboards using R!*
+
 **New!** *Easily integrate AI/ML models into your apps using [Wave ML](https://github.com/h2oai/wave-ml) for automatic machine learning.*
 
 H2O Wave is a software stack for building beautiful, low-latency, realtime, browser-based applications and dashboards entirely in Python/R without using HTML, Javascript, or CSS.
@@ -47,13 +48,13 @@ Code: https://github.com/h2oai/wave/tree/master/py/demo
 
 ### Themes
 
-(Coming soon!)
-
 ![Light Theme](assets/visuals/theme-light.png)
 
-![Dark Theme](assets/visuals/theme-dark.png)
-
 ![Neon Theme](assets/visuals/theme-neon.png)
+
+(Coming soon!)
+
+![Dark Theme](assets/visuals/theme-dark.png)
 
 ### 80+ components, 175+ examples
 
