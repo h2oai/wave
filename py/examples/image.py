@@ -24,10 +24,20 @@ buf.seek(0)
 image = base64.b64encode(buf.read()).decode('utf-8')
 
 page = site['/demo']
-page['example'] = ui.image_card(
+page['example1'] = ui.image_card(
     box='1 1 3 5',
     title='An image',
     type='png',
     image=image,
 )
+
+# Another way to achieve the same result is to use a data URL for the path:
+# The example below constructs the data URL from the base64-encoded
+#   used in the previous example.
+page['example2'] = ui.image_card(
+    box='1 6 3 5',
+    title='An image',
+    path=f"data:image/png;base64,{image}",
+)
+
 page.save()
