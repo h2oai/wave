@@ -19,6 +19,7 @@ import { Button, Buttons, XButtons, XStandAloneButton } from './button'
 import { Checkbox, XCheckbox } from './checkbox'
 import { Checklist, XChecklist } from './checklist'
 import { ChoiceGroup, XChoiceGroup } from './choice_group'
+import { CopyableText, XCopyableText } from "./copyable_text"
 import { ColorPicker, XColorPicker } from './color_picker'
 import { Combobox, XCombobox } from './combobox'
 import { DatePicker, XDatePicker } from './date_picker'
@@ -46,7 +47,7 @@ import { Tabs, XTabs } from './tabs'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
-import { clas, margin, padding, cssVar } from './theme'
+import { clas, cssVar, margin, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
@@ -113,9 +114,9 @@ export interface Component {
   frame?: Frame
   /** Markup */
   markup?: Markup
-  /** Template */
+  /** Template. */
   template?: Template
-  /** Picker.*/
+  /** Picker. */
   picker?: Picker
   /** Range Slider. */
   range_slider?: RangeSlider
@@ -125,10 +126,12 @@ export interface Component {
   visualization?: Visualization
   /** Vega-lite Visualization. */
   vega_visualization?: VegaVisualization
-  /** Stats */
+  /** Stats. */
   stats?: Stats
-  /** Inline components */
+  /** Inline components. */
   inline?: Inline
+  /** Clipboard. */
+  copyable_text?: CopyableText
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -252,6 +255,7 @@ const
     if (m.vega_visualization) return <XVegaVisualization model={m.vega_visualization} />
     if (m.stats) return <XStats model={m.stats} />
     if (m.inline) return <XInline model={m.inline} />
+    if (m.copyable_text) return <XCopyableText model={m.copyable_text} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
