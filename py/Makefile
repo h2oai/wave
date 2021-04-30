@@ -10,8 +10,8 @@ setup: ## Install dependencies
 	git clone --depth 1 --branch $(WAVE_ML_VERSION) https://github.com/h2oai/wave-ml.git h2o_wave_ml
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
-	./venv/bin/python -m pip install h2o_wave_ml/
 	./venv/bin/python -m pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
+	./venv/bin/python -m pip install h2o_wave_ml/
 	# TODO examples pip install is wasteful for CI
 	./venv/bin/python -m pip install -r examples/requirements.txt
 	./venv/bin/python -m pip install --editable .
