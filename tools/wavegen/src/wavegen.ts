@@ -381,7 +381,7 @@ const
         return null
       },
       genComments = (comments: S[], padding: S): S => comments.map(c => (padding + c).trimRight()).join('\n').trim(),
-      mapValidationType = (t: S): S[] | null => {
+      mapValidationType = (t: S, forDeserialization: B): S[] | null => {
         switch (t) {
           case 'Id':
           case 'S':
@@ -399,18 +399,17 @@ const
           case 'Data':
             return null // TODO handle properly
         }
-        return [knownTypes[t].name]
+        return forDeserialization ? ['dict'] : [knownTypes[t].name]
       },
       toPyBool = (b: B) => b ? 'True' : 'False',
-      guardValue = (t: Type, m: Member, variable: S) => {
+      guardValue = (t: Type, m: Member, variable: S, forDeserialization: B) => {
         switch (m.t) {
           case MemberT.Singular:
           case MemberT.Repeated:
             {
-              const vts = mapValidationType(m.typeName)
+              const vts = mapValidationType(m.typeName, forDeserialization)
               if (vts) {
-                const vt = vts.map(t => `${t}`).join(', ')
-                p(`        _guard_${m.t === MemberT.Singular ? 'scalar' : 'vector'}('${t.name}.${m.name}', ${variable}, (${vt},), ${toPyBool(m.typeName === 'Id')}, ${toPyBool(m.isOptional)}, ${toPyBool(m.isPacked)})`)
+                p(`        _guard_${m.t === MemberT.Singular ? 'scalar' : 'vector'}('${t.name}.${m.name}', ${variable}, (${vts.join(', ')},), ${toPyBool(m.typeName === 'Id')}, ${toPyBool(m.isOptional)}, ${toPyBool(m.isPacked)})`)
               }
             }
             break
@@ -457,7 +456,7 @@ const
           p(`            ${getSigWithDefault(m)},`)
         }
         p(`    ):`)
-        for (const m of type.members) guardValue(type, m, m.name)
+        for (const m of type.members) guardValue(type, m, m.name, false)
 
         for (const m of type.members) {
           p(`        self.${m.name} = ${m.name}`)
@@ -467,7 +466,7 @@ const
         p(`    def dump(self) -> Dict:`)
         p(`        """Returns the contents of this object as a dict."""`)
 
-        for (const m of type.members) guardValue(type, m, `self.${m.name}`)
+        for (const m of type.members) guardValue(type, m, `self.${m.name}`, false)
 
         p(`        return _dump(`)
         if (type.isRoot) {
@@ -495,7 +494,7 @@ const
         for (const m of type.members) {
           const rval = `__d_${m.name}`
           p(`        ${rval}: Any = __d.get('${m.name}')`)
-          guardValue(type, m, rval)
+          guardValue(type, m, rval, true)
         }
         for (const m of type.members) {
           const rval = `__d_${m.name}`
