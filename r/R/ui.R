@@ -3004,11 +3004,11 @@ ui_tracker <- function(
 
 #' Create a reference to an external Javascript file to be included on a page.
 #'
-#' @param path No documentation available.
-#' @param asynchronous No documentation available.
-#' @param cross_origin No documentation available.
-#' @param referrer_policy No documentation available.
-#' @param integrity No documentation available.
+#' @param path The URI of an external script.
+#' @param asynchronous Whether to fetch and load this script in parallel to parsing and evaluated as soon as it is available.
+#' @param cross_origin The CORS setting for this script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
+#' @param referrer_policy Indicates which referrer to send when fetching the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+#' @param integrity The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
 #' @return A Script instance.
 #' @export
 ui_script <- function(

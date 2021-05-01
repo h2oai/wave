@@ -7269,15 +7269,15 @@ class Script:
         _guard_scalar('Script.referrer_policy', referrer_policy, (str,), False, True, False)
         _guard_scalar('Script.integrity', integrity, (str,), False, True, False)
         self.path = path
-        """No documentation available."""
+        """The URI of an external script."""
         self.asynchronous = asynchronous
-        """No documentation available."""
+        """Whether to fetch and load this script in parallel to parsing and evaluated as soon as it is available."""
         self.cross_origin = cross_origin
-        """No documentation available."""
+        """The CORS setting for this script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin"""
         self.referrer_policy = referrer_policy
-        """No documentation available."""
+        """Indicates which referrer to send when fetching the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script"""
         self.integrity = integrity
-        """No documentation available."""
+        """The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

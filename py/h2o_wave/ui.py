@@ -2595,11 +2595,11 @@ def script(
     """Create a reference to an external Javascript file to be included on a page.
 
     Args:
-        path: No documentation available.
-        asynchronous: No documentation available.
-        cross_origin: No documentation available.
-        referrer_policy: No documentation available.
-        integrity: No documentation available.
+        path: The URI of an external script.
+        asynchronous: Whether to fetch and load this script in parallel to parsing and evaluated as soon as it is available.
+        cross_origin: The CORS setting for this script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
+        referrer_policy: Indicates which referrer to send when fetching the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+        integrity: The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
     Returns:
         A `h2o_wave.types.Script` instance.
     """
