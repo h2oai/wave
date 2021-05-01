@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, F, Id, qd, S } from './qd'
+import { B, bond, debounce, F, Id, qd, S, box } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -28,24 +28,32 @@ export interface Spinbox {
   name: Id
   /** Text to be displayed alongside the component. */
   label?: S
-  /** The minimum value of the spinbox. */
+  /** The minimum value of the spinbox. Defaults to "0". */
   min?: F
-  /** The maximum value of the spinbox. */
+  /** The maximum value of the spinbox. Defaults to "100". */
   max?: F
-  /** The difference between two adjacent values of the spinbox. */
+  /** The difference between two adjacent values of the spinbox. Defaults to "1". */
   step?: F
-  /** The current value of the spinbox. */
+  /** The current value of the spinbox. Defaults to "0". */
   value?: F
   /** True if this field is disabled. */
   disabled?: B
   /** True if the component should be visible. Defaults to true. */
   visible?: B
+  /** True if the form should be submitted when the spinbox value changes. */
+  trigger?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
+const DEBOUNCE_TIMEOUT = 500
 export const
   XSpinbox = bond(({ model: m }: { model: Spinbox }) => {
+    let
+      onChangeRef: any = null,
+      inputRef: any = null,
+      prevTrigger: B | undefined
+
     const
       { min = 0, max = 100, step = 1, value = 0 } = m,
       defaultValue = (value < min) ? min : ((value > max) ? max : value)
@@ -53,29 +61,63 @@ export const
     qd.args[m.name] = defaultValue
 
     const
-      parseValue = (v: string) => {
+      ref = React.createRef<Fluent.ISpinButton>(),
+      valueB = box<S | undefined>(),
+      parseValue = (v: S) => {
         const x = parseFloat(v)
         return (!isNaN(x) && isFinite(x)) ? x : value
       },
-      onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        qd.args[m.name] = parseValue(e.target.value)
-      },
-      onIncrement = (v: string) => {
+      onIncrement = (v: S) => {
         const
           value = parseValue(v),
           newValue = (value + step > max) ? max : value + step
         qd.args[m.name] = newValue
+        if (m.trigger) qd.sync()
         return String(newValue)
       },
-      onDecrement = (v: string) => {
+      onDecrement = (v: S) => {
         const
           value = parseValue(v),
           newValue = (value - step < min) ? min : value - step
         qd.args[m.name] = newValue
+        if (m.trigger) qd.sync()
         return String(newValue)
+      },
+      onChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+        const
+          value = parseValue(target.value),
+          newValue = value > max
+            ? max
+            : value < min
+              ? min
+              : value
+        qd.args[m.name] = newValue
+        if (m.trigger) qd.sync()
+        valueB(String(newValue))
+      },
+      init = () => {
+        prevTrigger = m.trigger
+        // @ts-ignore
+        inputRef = ref.current._input.current
+        onChangeRef = m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange
+        // HACK: Fluent does not provide onChange event, see https://github.com/microsoft/fluentui/issues/5326.
+        inputRef.addEventListener('input', onChangeRef)
+      },
+      update = () => {
+        // If component updates and "trigger" is changed, we either want or don't want debounced onChange.
+        // Remove the old listener and attach correct new one.
+        if (prevTrigger !== m.trigger) {
+          prevTrigger = m.trigger
+
+          inputRef.removeEventListener('input', onChangeRef)
+          onChangeRef = m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange
+          // HACK: Fluent does not provide onChange event, see https://github.com/microsoft/fluentui/issues/5326.
+          inputRef.addEventListener('input', onChangeRef)
+        }
       },
       render = () => (
         <Fluent.SpinButton
+          componentRef={ref}
           styles={{ root: displayMixin(m.visible) as Fluent.IStyle }}
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
@@ -83,11 +125,12 @@ export const
           max={max}
           step={step}
           defaultValue={`${value}`}
-          onBlur={onBlur}
+          value={valueB()}
           onIncrement={onIncrement}
           onDecrement={onDecrement}
           disabled={m.disabled}
         />
-      )
-    return { render }
+      ),
+      dispose = () => inputRef.removeEventListener('input', onChangeRef)
+    return { init, update, render, dispose, valueB }
   })

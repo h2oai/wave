@@ -16,15 +16,22 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { XSpinbox, Spinbox } from './spinbox'
 import * as T from './qd'
-import { initializeIcons } from '@fluentui/react'
 
-const name = 'spinbox'
-const spinboxProps: Spinbox = { name }
+const
+  name = 'spinbox',
+  spinboxProps: Spinbox = { name },
+  syncMock = jest.fn()
 
 const mouseEvent = { clientX: 0, clientY: 0 }
 describe('Spinbox.tsx', () => {
-  beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeAll(() => {
+    jest.useFakeTimers()
+    T.qd.sync = syncMock
+  })
+  beforeEach(() => {
+    T.qd.args[name] = null
+    syncMock.mockReset()
+  })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XSpinbox model={spinboxProps} />)
@@ -52,13 +59,6 @@ describe('Spinbox.tsx', () => {
     expect(T.qd.args[name]).toBe(100)
   })
 
-  it('Sets args on input', () => {
-    const { getByRole } = render(<XSpinbox model={spinboxProps} />)
-    fireEvent.blur(getByRole('spinbutton'), { target: { value: 1 } })
-
-    expect(T.qd.args[name]).toBe(1)
-  })
-
   it('Sets args on increment', () => {
     const { container } = render(<XSpinbox model={spinboxProps} />)
     const incrementBtn = container.querySelector('.ms-UpButton')!
@@ -79,24 +79,71 @@ describe('Spinbox.tsx', () => {
     expect(T.qd.args[name]).toBe(1)
   })
 
-  it('Sets args on decrement', () => {
-    const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1 }} />)
-    const incrementBtn = container.querySelector('.ms-DownButton')!
+  it('Calls sync on increment if trigger specified', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
+    const incrementBtn = container.querySelector('.ms-UpButton')!
 
     fireEvent.mouseDown(incrementBtn, mouseEvent)
     fireEvent.mouseUp(incrementBtn, mouseEvent)
+
+    expect(syncMock).toHaveBeenCalled()
+  })
+
+  it('Sets args on decrement', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1 }} />)
+    const decrementBtn = container.querySelector('.ms-DownButton')!
+
+    fireEvent.mouseDown(decrementBtn, mouseEvent)
+    fireEvent.mouseUp(decrementBtn, mouseEvent)
 
     expect(T.qd.args[name]).toBe(0)
   })
 
   it('Sets args on decrement - not beyond min', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1, min: 1 }} />)
-    const incrementBtn = container.querySelector('.ms-DownButton')!
+    const decrementBtn = container.querySelector('.ms-DownButton')!
 
-    fireEvent.mouseDown(incrementBtn, mouseEvent)
-    fireEvent.mouseUp(incrementBtn, mouseEvent)
+    fireEvent.mouseDown(decrementBtn, mouseEvent)
+    fireEvent.mouseUp(decrementBtn, mouseEvent)
 
     expect(T.qd.args[name]).toBe(1)
   })
 
+  it('Calls sync on decrement if trigger specified', () => {
+    const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
+    const decrementBtn = container.querySelector('.ms-DownButton')!
+
+    fireEvent.mouseDown(decrementBtn, mouseEvent)
+    fireEvent.mouseUp(decrementBtn, mouseEvent)
+
+    expect(syncMock).toHaveBeenCalled()
+  })
+
+  it('Sets args on input', () => {
+    expect(T.qd.args[name]).toBeNull()
+    const { getByTestId } = render(<XSpinbox model={spinboxProps} />)
+    fireEvent.input(getByTestId(name), { target: { value: 50 } })
+    expect(T.qd.args[name]).toBe(50)
+  })
+
+  it('Sets args on input - not beyond min', () => {
+    expect(T.qd.args[name]).toBeNull()
+    const { getByTestId } = render(<XSpinbox model={{ ...spinboxProps, min: 1 }} />)
+    fireEvent.input(getByTestId(name), { target: { value: 0 } })
+    expect(T.qd.args[name]).toBe(1)
+  })
+
+  it('Sets args on input - not beyond max', () => {
+    expect(T.qd.args[name]).toBeNull()
+    const { getByTestId } = render(<XSpinbox model={{ ...spinboxProps, max: 1 }} />)
+    fireEvent.input(getByTestId(name), { target: { value: 2 } })
+    expect(T.qd.args[name]).toBe(1)
+  })
+
+  it('Calls sync on input if trigger specified', () => {
+    const { getByTestId } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
+    fireEvent.input(getByTestId(name), { target: { value: 50 } })
+    jest.runAllTimers()
+    expect(syncMock).toHaveBeenCalled()
+  })
 })

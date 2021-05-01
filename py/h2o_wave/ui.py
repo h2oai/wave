@@ -969,6 +969,7 @@ def spinbox(
         value: Optional[float] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
+        trigger: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
     """Create a spinbox.
@@ -979,12 +980,13 @@ def spinbox(
     Args:
         name: An identifying name for this component.
         label: Text to be displayed alongside the component.
-        min: The minimum value of the spinbox.
-        max: The maximum value of the spinbox.
-        step: The difference between two adjacent values of the spinbox.
-        value: The current value of the spinbox.
+        min: The minimum value of the spinbox. Defaults to "1".
+        max: The maximum value of the spinbox. Defaults to "100".
+        step: The difference between two adjacent values of the spinbox. Defaults to "1".
+        value: The current value of the spinbox. Defaults to "0".
         disabled: True if this field is disabled.
         visible: True if the component should be visible. Defaults to true.
+        trigger: True if the form should be submitted when the spinbox value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
         A `h2o_wave.types.Spinbox` instance.
@@ -998,6 +1000,7 @@ def spinbox(
         value,
         disabled,
         visible,
+        trigger,
         tooltip,
     ))
 
