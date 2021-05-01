@@ -2585,6 +2585,33 @@ def tracker(
     )
 
 
+def script(
+        path: str,
+        asynchronous: Optional[bool] = None,
+        cross_origin: Optional[str] = None,
+        referrer_policy: Optional[str] = None,
+        integrity: Optional[str] = None,
+) -> Script:
+    """Create a reference to an external Javascript file to be included on a page.
+
+    Args:
+        path: No documentation available.
+        asynchronous: No documentation available.
+        cross_origin: No documentation available.
+        referrer_policy: No documentation available.
+        integrity: No documentation available.
+    Returns:
+        A `h2o_wave.types.Script` instance.
+    """
+    return Script(
+        path,
+        asynchronous,
+        cross_origin,
+        referrer_policy,
+        integrity,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2596,6 +2623,7 @@ def meta_card(
         dialog: Optional[Dialog] = None,
         theme: Optional[str] = None,
         tracker: Optional[Tracker] = None,
+        scripts: Optional[List[Script]] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2614,6 +2642,7 @@ def meta_card(
         dialog: Display a dialog on the page.
         theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
         tracker: Configure a tracker for the page (for web analytics).
+        scripts: External Javascript files to load into the page.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2629,6 +2658,7 @@ def meta_card(
         dialog,
         theme,
         tracker,
+        scripts,
         commands,
     )
 

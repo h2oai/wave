@@ -3002,6 +3002,36 @@ ui_tracker <- function(
   return(.o)
 }
 
+#' Create a reference to an external Javascript file to be included on a page.
+#'
+#' @param path No documentation available.
+#' @param asynchronous No documentation available.
+#' @param cross_origin No documentation available.
+#' @param referrer_policy No documentation available.
+#' @param integrity No documentation available.
+#' @return A Script instance.
+#' @export
+ui_script <- function(
+  path,
+  asynchronous = NULL,
+  cross_origin = NULL,
+  referrer_policy = NULL,
+  integrity = NULL) {
+  .guard_scalar("path", "character", path)
+  .guard_scalar("asynchronous", "logical", asynchronous)
+  .guard_scalar("cross_origin", "character", cross_origin)
+  .guard_scalar("referrer_policy", "character", referrer_policy)
+  .guard_scalar("integrity", "character", integrity)
+  .o <- list(
+    path=path,
+    asynchronous=asynchronous,
+    cross_origin=cross_origin,
+    referrer_policy=referrer_policy,
+    integrity=integrity)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveScript"))
+  return(.o)
+}
+
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -3018,6 +3048,7 @@ ui_tracker <- function(
 #' @param dialog Display a dialog on the page.
 #' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
 #' @param tracker Configure a tracker for the page (for web analytics).
+#' @param scripts External Javascript files to load into the page.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -3032,6 +3063,7 @@ ui_meta_card <- function(
   dialog = NULL,
   theme = NULL,
   tracker = NULL,
+  scripts = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3043,6 +3075,7 @@ ui_meta_card <- function(
   .guard_scalar("dialog", "WaveDialog", dialog)
   .guard_scalar("theme", "character", theme)
   .guard_scalar("tracker", "WaveTracker", tracker)
+  .guard_vector("scripts", "WaveScript", scripts)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3055,6 +3088,7 @@ ui_meta_card <- function(
     dialog=dialog,
     theme=theme,
     tracker=tracker,
+    scripts=scripts,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMetaCard"))
   return(.o)

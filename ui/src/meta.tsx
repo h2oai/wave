@@ -18,6 +18,7 @@ import { showNotification } from './notification'
 import { bond, box, Card, Id, on, qd, S, U } from './qd'
 import { Dialog } from './dialog'
 import { setupTracker, Tracker } from './tracking'
+import { installScripts, Script } from './script'
 import { themeB } from './theme'
 
 
@@ -107,6 +108,8 @@ interface State {
   theme?: S
   /** Configure a tracker for the page (for web analytics). */
   tracker?: Tracker
+  /** External Javascript files to load into the page. */
+  scripts?: Script[]
 }
 
 const
@@ -126,7 +129,7 @@ on(windowIconB, icon => {
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Card<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker } = state
+    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts } = state
 
     if (redirect) {
       try {
@@ -150,6 +153,7 @@ export const
     if (notification) showNotification(notification)
     if (tracker) setupTracker(tracker)
     if (layouts) layoutsB(layouts)
+    if (scripts) installScripts(scripts)
   }
 
 export const View = bond(() => ({ render: () => <></> }))
