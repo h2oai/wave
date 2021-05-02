@@ -16,8 +16,9 @@ import { FontIcon } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { bond, Card, qd, S } from './qd'
+import { Card, qd, S } from './qd'
 import { clas, cssVar } from './theme'
+import { bond } from './ui'
 
 
 /**

@@ -16,7 +16,8 @@ import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { bond, Card, Id, qd, S } from './qd'
+import { Card, Id, qd, S } from './qd'
+import { bond } from './ui'
 
 /**
  * Create a command.

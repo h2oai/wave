@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XToggle, Toggle } from './toggle'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import React from 'react'
+import * as T from './qd'
+import { Toggle, XToggle } from './toggle'
 
 const name = 'toggle'
 const toggleProps: Toggle = { name }

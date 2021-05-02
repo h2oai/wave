@@ -15,7 +15,8 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Card, unpack, Rec, S, qd, U } from './qd'
+import { Card, qd, Rec, S, U, unpack } from './qd'
+import { bond } from './ui'
 
 const
   pixelSize = 20,

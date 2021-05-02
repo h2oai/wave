@@ -1,4 +1,4 @@
-import { px, pc, rem, clas, border, dashed, padding, margin, centerMixin, displayMixin, cssVar } from "./theme"
+import { border, centerMixin, clas, cssVar, dashed, displayMixin, margin, padding, pc, px, rem } from "./theme"
 
 describe('Theme util functions', () => {
 

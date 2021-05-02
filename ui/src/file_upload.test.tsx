@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent, createEvent, wait } from '@testing-library/react'
-import { XFileUpload, FileUpload } from './file_upload'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { createEvent, fireEvent, render, wait } from '@testing-library/react'
+import React from 'react'
+import { FileUpload, XFileUpload } from './file_upload'
+import * as T from './qd'
 
 const name = 'fileUpload'
 const fileUploadProps: FileUpload = { name }

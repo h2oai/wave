@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import React from 'react'
-import Login from './login'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import App from './app'
-import { Switch, Route, BrowserRouter } from 'react-router-dom'
+import Login from './login'
 
 const
   Router = () => {

@@ -17,8 +17,9 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
-import { bond, Card, Data, F, Rec, S, unpack } from './qd'
-import { cssVar, pc, clas } from './theme'
+import { Card, Data, F, Rec, S, unpack } from './qd'
+import { clas, cssVar, pc } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

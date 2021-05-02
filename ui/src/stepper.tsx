@@ -15,8 +15,9 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { B, bond, Id, S, U } from './qd'
+import { B, Id, S, U } from './qd'
 import { displayMixin, rem } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a step for a stepper.

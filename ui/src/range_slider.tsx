@@ -17,8 +17,9 @@ import React from 'react'
 import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import { stylesheet } from 'typestyle'
-import { B, bond, box, F, Id, qd, S, U } from './qd'
+import { B, box, F, Id, qd, S, U } from './qd'
 import { displayMixin, padding } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

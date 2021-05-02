@@ -17,8 +17,9 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { CardEffect, CardView, getCardStyle, GridLayout } from './layout'
 import { FlexBox, Layout, layoutsB, preload, Zone } from './meta'
-import { B, bond, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
+import { B, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
 import { clas, cssVar, margin } from './theme'
+import { bond } from './ui'
 
 
 type Breakpoint = {

@@ -15,8 +15,9 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
-import { bond, Card, unpack, Rec, S } from './qd'
+import { Card, Rec, S, unpack } from './qd'
 import { clas, cssVar } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

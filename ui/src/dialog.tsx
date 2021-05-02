@@ -15,7 +15,8 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { Component, XComponents } from './form'
-import { B, bond, Box, box, S } from './qd'
+import { B, Box, box, S } from './qd'
+import { bond } from './ui'
 
 export const dialogB: Box<Dialog | null> = box(null)
 

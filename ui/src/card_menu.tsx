@@ -15,9 +15,10 @@
 import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react'
 import * as React from 'react'
 import { stylesheet } from 'typestyle'
-import { Command } from './toolbar'
-import { bond, box, qd, Box, B, S } from './qd'
 import { deleteCard, editCard } from './editing'
+import { B, box, Box, qd, S } from './qd'
+import { Command } from './toolbar'
+import { bond } from './ui'
 
 const
   css = stylesheet({

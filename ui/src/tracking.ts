@@ -1,4 +1,4 @@
-import { Rec, S, qd, on } from './qd'
+import { on, qd, Rec, S } from './qd'
 
 /**
  * Configure user interaction tracking (analytics) for a page.

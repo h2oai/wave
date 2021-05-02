@@ -19,8 +19,9 @@ import Dialog from './dialog'
 import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
-import { bond, box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
+import { box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
 import { clas, cssVar, pc, themeB } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

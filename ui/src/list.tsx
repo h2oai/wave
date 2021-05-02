@@ -15,7 +15,8 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Repeat } from './layout'
-import { bond, Card, Rec, S, Data } from './qd'
+import { Card, Data, Rec, S } from './qd'
+import { bond } from './ui'
 
 const
   css = stylesheet({

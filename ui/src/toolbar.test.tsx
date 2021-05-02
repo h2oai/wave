@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
-import { View } from './toolbar'
+import React from 'react'
 import * as T from './qd'
+import { View } from './toolbar'
 
 const
   name = 'toolbar',

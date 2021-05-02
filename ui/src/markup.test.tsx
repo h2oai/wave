@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
-import { View, XMarkup, Markup } from './markup'
+import React from 'react'
+import { Markup, View, XMarkup } from './markup'
 import * as T from './qd'
 
 const name = 'markup'

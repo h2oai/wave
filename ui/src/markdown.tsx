@@ -16,8 +16,9 @@ import markdownit from 'markdown-it'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid, substitute } from './layout'
-import { bond, Card, Rec, S, unpack } from './qd'
-import { border, padding, pc, cssVar } from './theme'
+import { Card, Rec, S, unpack } from './qd'
+import { border, cssVar, padding, pc } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

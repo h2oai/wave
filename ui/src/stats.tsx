@@ -16,7 +16,7 @@ import { FontIcon } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { B, Dict, S } from './qd'
-import { clas, padding, cssVar } from './theme'
+import { clas, cssVar, padding } from './theme'
 
 /** Create a set of stats laid out horizontally. */
 export interface Stats {

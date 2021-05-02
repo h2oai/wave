@@ -16,8 +16,9 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
-import { B, bond, box, Id, qd, S } from './qd'
+import { B, box, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 /**
  * Creates a new expander.

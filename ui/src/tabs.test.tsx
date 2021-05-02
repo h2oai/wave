@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XTabs, Tabs } from './tabs'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import React from 'react'
+import * as T from './qd'
+import { Tabs, XTabs } from './tabs'
 
 const name = 'tabs'
 const tabsProps: Tabs = { name, items: [{ name }] }

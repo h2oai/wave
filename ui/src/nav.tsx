@@ -15,7 +15,8 @@
 import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
 import React from 'react'
 import { CardEffect, cards } from './layout'
-import { B, bond, Card, Id, qd, S } from './qd'
+import { B, Card, Id, qd, S } from './qd'
+import { bond } from './ui'
 
 /** Create a navigation item. */
 export interface NavItem {

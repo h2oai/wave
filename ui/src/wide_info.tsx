@@ -16,8 +16,9 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Card, qd, S } from './qd'
+import { Card, qd, S } from './qd'
 import { clas, cssVar, pc } from './theme'
+import { bond } from './ui'
 
 const
   iconStyles: Fluent.IIconStyles = { root: { fontSize: 80 } },
@@ -80,7 +81,7 @@ export const View = bond(({ name, state, changed }: Card<State>) => {
       }
       qd.args[stateName] = stateName
       qd.sync()
-    },    
+    },
     render = () => (
       <div
         data-test={name}

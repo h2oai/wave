@@ -13,13 +13,14 @@
 // limitations under the License.
 
 import React from 'react'
+import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
 import { showNotification } from './notification'
-import { bond, box, Card, Id, on, qd, S, U } from './qd'
-import { Dialog, dialogB } from './dialog'
-import { setupTracker, Tracker } from './tracking'
+import { box, Card, Id, on, qd, S, U } from './qd'
 import { installScripts, Script } from './script'
 import { themeB } from './theme'
+import { setupTracker, Tracker } from './tracking'
+import { bond } from './ui'
 
 
 export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>

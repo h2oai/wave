@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
-import { View, XVisualization, Visualization } from './plot'
+import React from 'react'
+import { View, Visualization, XVisualization } from './plot'
 import * as T from './qd'
 
 const name = 'plot'

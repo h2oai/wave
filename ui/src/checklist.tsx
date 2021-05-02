@@ -16,8 +16,9 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
-import { B, bond, box, Box, Id, on, qd, S } from './qd'
+import { B, box, Box, Id, on, qd, S } from './qd'
 import { displayMixin, margin } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a set of checkboxes.

@@ -16,8 +16,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
-import { bond, Card, F, Rec, S, unpack } from './qd'
-import { cssVar, pc, clas, padding, centerMixin } from './theme'
+import { Card, F, Rec, S, unpack } from './qd'
+import { centerMixin, clas, cssVar, padding, pc } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

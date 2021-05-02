@@ -15,8 +15,9 @@
 import { TextField } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { bond } from './ui'
 import { cards, grid } from './layout'
-import { bond, Box, box, Card, Dict, on, qd, Rec, S, U } from './qd'
+import { Box, box, Card, Dict, on, qd, Rec, S, U } from './qd'
 import { border, clas, cssVar, padding } from './theme'
 
 const

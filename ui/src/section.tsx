@@ -17,8 +17,9 @@ import { stylesheet } from 'typestyle'
 import { Component, XComponentAlignment, XComponents } from './form'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
-import { bond, Card, Packed, S, unpack } from './qd'
+import { Card, Packed, S, unpack } from './qd'
 import { clas } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

@@ -14,7 +14,8 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, Id, qd, S } from './qd'
+import { bond } from './ui'
+import { B, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 
 /**

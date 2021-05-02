@@ -16,9 +16,10 @@ import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { B, bond, box, Card, Dict, F, on, PageRef, qd, Rec, S, to, U } from './qd'
+import { B, box, Card, Dict, F, on, PageRef, qd, Rec, S, to, U } from './qd'
 import { P, simplify } from './simplify'
 import { px, spectrum } from './theme'
+import { bond } from './ui'
 
 declare global {
   interface CanvasRenderingContext2D {

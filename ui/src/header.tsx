@@ -17,8 +17,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { NavGroup, XNav } from './nav'
-import { bond, Box, box, Card, S, B } from './qd'
+import { B, Box, box, Card, S } from './qd'
 import { clas, cssVar, padding } from './theme'
+import { bond } from './ui'
 
 const
   iconSize = 24,

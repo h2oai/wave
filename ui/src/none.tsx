@@ -13,8 +13,9 @@
 // limitations under the License.
 
 import React from 'react'
-import { bond, Card, S } from './qd'
 import { cards } from './layout'
+import { Card, S } from './qd'
+import { bond } from './ui'
 
 export const
   View = bond(({ name, state, changed }: Card<Record<S, unknown>>) => {

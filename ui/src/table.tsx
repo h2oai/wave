@@ -17,8 +17,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
-import { B, bond, box, Dict, Id, qd, S, U } from './qd'
-import { displayMixin, rem, cssVar } from './theme'
+import { B, box, Dict, Id, qd, S, U } from './qd'
+import { cssVar, displayMixin, rem } from './theme'
+import { bond } from './ui'
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {

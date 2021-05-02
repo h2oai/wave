@@ -14,8 +14,9 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, Id, qd, S, U } from './qd'
+import { B, Id, qd, S, U } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a date picker.

@@ -17,11 +17,12 @@ import { DialogType, IDropdownOption } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
-import { editorActionB, EditorActionT, defaultLayoutDef, noAction, pickCard, layoutDefs, LayoutDef } from './editing'
+import { defaultLayoutDef, editorActionB, EditorActionT, LayoutDef, layoutDefs, noAction, pickCard } from './editing'
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
-import { B, bond, Box, box, C, Card, Dict, parseU, qd, S, U, xid } from './qd'
+import { B, Box, box, C, Card, Dict, parseU, qd, S, U, xid } from './qd'
 import { border, cssVar } from './theme'
+import { bond } from './ui'
 
 /**
  * WARNING: Experimental and subject to change.

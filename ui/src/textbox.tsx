@@ -14,8 +14,9 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, bond, debounce, Id, qd, S } from './qd'
+import { B, debounce, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a text box.

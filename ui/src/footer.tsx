@@ -16,7 +16,8 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
-import { bond, Card, S } from './qd'
+import { Card, S } from './qd'
+import { bond } from './ui'
 
 const
   css = stylesheet({

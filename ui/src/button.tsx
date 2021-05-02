@@ -16,9 +16,10 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { B, bond, Dict, Id, qd, S } from './qd'
+import { B, Dict, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 import { XToolTip } from './tooltip'
+import { bond } from './ui'
 
 /**
  * Create a button.

@@ -14,7 +14,8 @@
 
 import React from 'react'
 import { cards, Repeat } from './layout'
-import { bond, Card, Rec, S, Data } from './qd'
+import { Card, Data, Rec, S } from './qd'
+import { bond } from './ui'
 
 /**
  * EXPERIMENTAL. DO NOT USE.

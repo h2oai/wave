@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XDropdown, Dropdown } from './dropdown'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import React from 'react'
+import { Dropdown, XDropdown } from './dropdown'
+import * as T from './qd'
 
 const name = 'dropdown-test'
 const defaultProps: Dropdown = {

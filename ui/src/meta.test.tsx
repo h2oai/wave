@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { dialogB } from './dialog'
 import { preload } from "./meta"
 import * as N from './notification'
 import * as T from './qd'
-import { dialogB } from './dialog'
 
 const
   name = 'meta',

@@ -16,8 +16,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
-import { B, bond, Card, Rec, S, unpack, xid, debounce } from './qd'
+import { B, Card, debounce, Rec, S, unpack, xid } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

@@ -16,8 +16,9 @@ import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { B, bond, Card, qd, S } from './qd'
+import { B, Card, qd, S } from './qd'
 import { Tab } from './tabs'
+import { bond } from './ui'
 
 /** Create a card containing tabs for navigation. */
 interface State {

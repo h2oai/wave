@@ -16,8 +16,9 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressBar } from './parts/progress_bar'
-import { bond, Card, F, Rec, S, unpack } from './qd'
+import { Card, F, Rec, S, unpack } from './qd'
 import { clas, cssVar } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

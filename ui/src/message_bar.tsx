@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { S, B } from './qd'
+import { B, S } from './qd'
 import { displayMixin } from './theme'
 
 /**

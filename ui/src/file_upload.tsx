@@ -15,8 +15,9 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { B, bond, box, F, Id, qd, S, U, xid } from './qd'
+import { B, box, F, Id, qd, S, U, xid } from './qd'
 import { centerMixin, clas, dashed, displayMixin, padding } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a file upload component.

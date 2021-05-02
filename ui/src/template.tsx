@@ -16,7 +16,8 @@ import Handlebars from 'handlebars'
 import React from 'react'
 import { cards, substitute } from './layout'
 import { MarkupCard, XMarkup } from './markup'
-import { bond, Card, Rec, S, unpack, B } from './qd'
+import { B, Card, Rec, S, unpack } from './qd'
+import { bond } from './ui'
 
 /** Render dynamic content using an HTML template.*/
 export interface Template {

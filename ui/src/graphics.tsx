@@ -16,7 +16,8 @@ import * as d3 from 'd3'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Card, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd'
+import { Card, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd'
+import { bond } from './ui'
 
 
 /** Create a card for displaying vector graphics. */

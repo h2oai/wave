@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { render, fireEvent, wait } from '@testing-library/react'
+import { fireEvent, render, wait } from '@testing-library/react'
 import React from 'react'
-import Dialog from './dialog'
-import { dialogB } from './dialog'
+import Dialog, { dialogB } from './dialog'
 
 
 const

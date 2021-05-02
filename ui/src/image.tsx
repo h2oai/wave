@@ -15,7 +15,8 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { bond, Card, Rec, S } from './qd'
+import { Card, Rec, S } from './qd'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -63,10 +64,10 @@ export const
     const
       src = path
         ? path
-        : (image && type) 
+        : (image && type)
           ? `data:image/${type};base64,${image}`
           : ''
-      return <img className={css.img} alt={title} src={src} />
+    return <img className={css.img} alt={title} src={src} />
   },
   View = bond(({ name, state, changed }: Card<State>) => {
     const render = () => {

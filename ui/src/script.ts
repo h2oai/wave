@@ -1,4 +1,4 @@
-import { S, B, Dict } from './qd'
+import { B, Dict, S } from './qd'
 
 /**
  * Create a reference to an external Javascript file to be included on a page.

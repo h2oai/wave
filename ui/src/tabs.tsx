@@ -15,8 +15,9 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { B, bond, Id, qd, S } from './qd'
+import { B, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a tab.

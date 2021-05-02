@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XButtons, Buttons, XStandAloneButton } from './button'
+import { Buttons, XButtons, XStandAloneButton } from './button'
 import * as T from './qd'
 
 const name = 'test-btn'

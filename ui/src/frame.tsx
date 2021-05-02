@@ -15,8 +15,9 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Card, S, xid, B } from './qd'
+import { B, Card, S, xid } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

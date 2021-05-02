@@ -15,8 +15,9 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { Choice } from './choice_group'
-import { B, bond, box, Id, qd, S, U } from './qd'
+import { B, box, Id, qd, S, U } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a picker.

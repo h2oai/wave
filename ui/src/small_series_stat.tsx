@@ -15,10 +15,11 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { bond, Card, unpack, F, Rec, S, Data } from './qd'
-import { cssVar, padding } from './theme'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
+import { Card, Data, F, Rec, S, unpack } from './qd'
+import { cssVar, padding } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({
