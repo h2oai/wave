@@ -14,7 +14,6 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 import * as React from 'react'
-import { Dialog } from './dialog'
 import { track } from './tracking'
 
 //
@@ -757,7 +756,6 @@ export interface Qd {
   readonly events: Dict<any>
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
-  readonly dialogB: Box<Dialog | null>
   socket: WebSocket | null
   page: Page | null
   username: S | null
@@ -783,7 +781,6 @@ export const qd: Qd = {
   page: null,
   username: null,
   editable: false,
-  dialogB: box(null),
   edit: (path?: S): PageRef => {
     path = path || qd.path
     const

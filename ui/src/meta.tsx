@@ -16,7 +16,7 @@ import React from 'react'
 import { cards } from './layout'
 import { showNotification } from './notification'
 import { bond, box, Card, Id, on, qd, S, U } from './qd'
-import { Dialog } from './dialog'
+import { Dialog, dialogB } from './dialog'
 import { setupTracker, Tracker } from './tracking'
 import { installScripts, Script } from './script'
 import { themeB } from './theme'
@@ -144,7 +144,7 @@ export const
       }
     }
 
-    qd.dialogB(dialog ? { ...dialog } : null)
+    dialogB(dialog ? { ...dialog } : null)
 
     if (title) windowTitleB(title)
     if (icon) windowIconB(icon)

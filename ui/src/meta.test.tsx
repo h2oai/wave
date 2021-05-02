@@ -15,6 +15,7 @@
 import { preload } from "./meta"
 import * as N from './notification'
 import * as T from './qd'
+import { dialogB } from './dialog'
 
 const
   name = 'meta',
@@ -55,9 +56,9 @@ describe('Meta.tsx', () => {
       title: 'Dialog Title',
       items: [],
     }
-    expect(T.qd.dialogB()).toBe(null)
+    expect(dialogB()).toBe(null)
     preload({ ...metaProps, state: { dialog } })
-    expect(T.qd.dialogB()).toMatchObject(dialog)
+    expect(dialogB()).toMatchObject(dialog)
   })
 
 })
