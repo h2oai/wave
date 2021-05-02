@@ -14,7 +14,6 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 import * as React from 'react'
-import { track } from './tracking'
 
 //
 // Dataflow
@@ -756,6 +755,7 @@ export interface Qd {
   readonly events: Dict<any>
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
+  readonly argsB: Box<Rec>
   socket: WebSocket | null
   page: Page | null
   username: S | null
@@ -777,6 +777,7 @@ export const qd: Qd = {
   events: {},
   refreshRateB: box(-1),
   busyB: box(false),
+  argsB: box({}),
   socket: null,
   page: null,
   username: null,
@@ -814,7 +815,7 @@ export const qd: Qd = {
       clearRec(qd.events)
     }
     sock.send(`@ ${qd.path} ${JSON.stringify(args)}`)
-    track(args)
+    qd.argsB(args)
     qd.busyB(true)
   },
   jump: (key: any, value: any) => {

@@ -1,4 +1,4 @@
-import { Rec, S } from './qd'
+import { Rec, S, qd, on } from './qd'
 
 /**
  * Configure user interaction tracking (analytics) for a page.
@@ -62,6 +62,6 @@ export const
         }
         tracker = t
     }
-  },
-  track = (args: Rec) => window.setTimeout((() => sendEvent(args)), 0)
+  }
 
+on(qd.argsB, (args) => window.setTimeout((() => sendEvent(args)), 0))
