@@ -9433,6 +9433,126 @@ class TallGaugeStatCard:
         )
 
 
+class TallInfoCard:
+    """Create a tall information card displaying a title, caption, and either an icon or image.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            caption: str,
+            icon: Optional[str] = None,
+            image: Optional[str] = None,
+            image_height: Optional[str] = None,
+            category: Optional[str] = None,
+            name: Optional[str] = None,
+            color: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('TallInfoCard.box', box, (str,), False, False, False)
+        _guard_scalar('TallInfoCard.title', title, (str,), False, False, False)
+        _guard_scalar('TallInfoCard.caption', caption, (str,), False, False, False)
+        _guard_scalar('TallInfoCard.icon', icon, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.image', image, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.image_height', image_height, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.category', category, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.name', name, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.color', color, (str,), False, True, False)
+        _guard_vector('TallInfoCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The card's title."""
+        self.caption = caption
+        """The card's caption, displayed below the title."""
+        self.icon = icon
+        """The card's icon."""
+        self.image = image
+        """The card’s image."""
+        self.image_height = image_height
+        """The card’s image height in px. Defaults to 300px."""
+        self.category = category
+        """The card's category, displayed above the title."""
+        self.name = name
+        """An identifying name for this card. Makes the card clickable, similar to a button."""
+        self.color = color
+        """The card's background color."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TallInfoCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('TallInfoCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('TallInfoCard.caption', self.caption, (str,), False, False, False)
+        _guard_scalar('TallInfoCard.icon', self.icon, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.image', self.image, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.image_height', self.image_height, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.category', self.category, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.name', self.name, (str,), False, True, False)
+        _guard_scalar('TallInfoCard.color', self.color, (str,), False, True, False)
+        _guard_vector('TallInfoCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='tall_info',
+            box=self.box,
+            title=self.title,
+            caption=self.caption,
+            icon=self.icon,
+            image=self.image,
+            image_height=self.image_height,
+            category=self.category,
+            name=self.name,
+            color=self.color,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TallInfoCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('TallInfoCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('TallInfoCard.title', __d_title, (str,), False, False, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('TallInfoCard.caption', __d_caption, (str,), False, False, False)
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('TallInfoCard.icon', __d_icon, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('TallInfoCard.image', __d_image, (str,), False, True, False)
+        __d_image_height: Any = __d.get('image_height')
+        _guard_scalar('TallInfoCard.image_height', __d_image_height, (str,), False, True, False)
+        __d_category: Any = __d.get('category')
+        _guard_scalar('TallInfoCard.category', __d_category, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('TallInfoCard.name', __d_name, (str,), False, True, False)
+        __d_color: Any = __d.get('color')
+        _guard_scalar('TallInfoCard.color', __d_color, (str,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('TallInfoCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        caption: str = __d_caption
+        icon: Optional[str] = __d_icon
+        image: Optional[str] = __d_image
+        image_height: Optional[str] = __d_image_height
+        category: Optional[str] = __d_category
+        name: Optional[str] = __d_name
+        color: Optional[str] = __d_color
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return TallInfoCard(
+            box,
+            title,
+            caption,
+            icon,
+            image,
+            image_height,
+            category,
+            name,
+            color,
+            commands,
+        )
+
+
 _TallSeriesStatCardPlotType = ['area', 'interval']
 
 

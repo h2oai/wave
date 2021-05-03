@@ -3370,6 +3370,48 @@ def tall_gauge_stat_card(
     )
 
 
+def tall_info_card(
+        box: str,
+        title: str,
+        caption: str,
+        icon: Optional[str] = None,
+        image: Optional[str] = None,
+        image_height: Optional[str] = None,
+        category: Optional[str] = None,
+        name: Optional[str] = None,
+        color: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> TallInfoCard:
+    """Create a tall information card displaying a title, caption, and either an icon or image.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        caption: The card's caption, displayed below the title.
+        icon: The card's icon.
+        image: The card’s image.
+        image_height: The card’s image height in px. Defaults to 300px.
+        category: The card's category, displayed above the title.
+        name: An identifying name for this card. Makes the card clickable, similar to a button.
+        color: The card's background color.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.TallInfoCard` instance.
+    """
+    return TallInfoCard(
+        box,
+        title,
+        caption,
+        icon,
+        image,
+        image_height,
+        category,
+        name,
+        color,
+        commands,
+    )
+
+
 def tall_series_stat_card(
         box: str,
         title: str,
