@@ -20,7 +20,7 @@ import * as T from './qd'
 
 const
   name = 'header',
-  headerProps: T.Card<any> = {
+  headerProps: T.Model<any> = {
     name,
     state: {},
     changed: T.box(false)

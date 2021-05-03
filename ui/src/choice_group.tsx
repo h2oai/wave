@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, Id, qd, S } from './qd'
+import { B, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -63,12 +63,12 @@ export interface ChoiceGroup {
 
 export const
   XChoiceGroup = bond(({ model: m }: { model: ChoiceGroup }) => {
-    qd.args[m.name] = m.value || null
+    wave.args[m.name] = m.value || null
     const
       options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
-        if (option) qd.args[m.name] = option.key
-        if (m.trigger) qd.sync()
+        if (option) wave.args[m.name] = option.key
+        if (m.trigger) wave.sync()
       },
       render = () => (
         <Fluent.ChoiceGroup

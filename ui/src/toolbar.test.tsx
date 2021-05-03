@@ -22,12 +22,12 @@ const
   commandName = 'toolbar_command',
   commandNameWithHash = '#toolbar_command',
   commandValue = 'toolbar_command_value',
-  toolbarProps: T.Card<any> = {
+  toolbarProps: T.Model<any> = {
     name,
     state: { items: [{ name: commandName, label: commandName }] },
     changed: T.box(true)
   },
-  toolbarPropsWithHash: T.Card<any> = {
+  toolbarPropsWithHash: T.Model<any> = {
     name,
     state: { items: [{ name: commandNameWithHash, label: commandNameWithHash }] },
     changed: T.box(true)
@@ -35,7 +35,7 @@ const
 
 describe('Toolbar.tsx', () => {
   beforeEach(() => {
-    T.qd.args[commandName] = null
+    T.wave.args[commandName] = null
     jest.clearAllMocks()
   })
 
@@ -46,7 +46,7 @@ describe('Toolbar.tsx', () => {
 
   it('Sets args and calls sync on click - with value attr', () => {
     const syncMock = jest.fn()
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
 
     const {getByText} = render(<View {...toolbarProps} {...{
       state: {
@@ -61,28 +61,28 @@ describe('Toolbar.tsx', () => {
     fireEvent.click(getByText(commandName))
 
     expect(syncMock).toBeCalled()
-    expect(T.qd.args[commandName]).toBe(commandValue)
+    expect(T.wave.args[commandName]).toBe(commandValue)
   })
 
   it('Sets args and calls sync on click - without value attr', () => {
     const syncMock = jest.fn()
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
 
     const {getByText} = render(<View {...toolbarProps} />)
     fireEvent.click(getByText(commandName))
 
     expect(syncMock).toBeCalled()
-    expect(T.qd.args[commandName]).toBe(true)
+    expect(T.wave.args[commandName]).toBe(true)
   })
 
   it('Does not set args and calls sync on click when command name starts with hash', () => {
     const syncMock = jest.fn()
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
 
     const {getByText} = render(<View {...toolbarPropsWithHash} />)
 
     fireEvent.click(getByText(commandNameWithHash))
-    expect(T.qd.args[commandNameWithHash]).toBe(false)
+    expect(T.wave.args[commandNameWithHash]).toBe(false)
     expect(syncMock).toHaveBeenCalledTimes(0)
   })
 

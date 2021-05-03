@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { bond } from './ui'
-import { B, Id, qd, S } from './qd'
+import { B, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
 
 /**
@@ -47,16 +47,16 @@ const
 export const
   XColorPicker = bond(({ model: m }: { model: ColorPicker }) => {
     const value = m.value || null
-    qd.args[m.name] = value
+    wave.args[m.name] = value
     const
       onColorChanged = (_id?: string, color?: string) => {
-        qd.args[m.name] = color || value
+        wave.args[m.name] = color || value
 
-        if (m.trigger) qd.sync()
+        if (m.trigger) wave.sync()
       },
       onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
-        qd.args[m.name] = color?.str || value
-        if (m.trigger) qd.sync()
+        wave.args[m.name] = color?.str || value
+        if (m.trigger) wave.sync()
       },
       render = () => (
         <div data-test={m.name} style={displayMixin(m.visible)}>

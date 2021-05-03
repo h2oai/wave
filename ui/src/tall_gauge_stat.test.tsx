@@ -19,7 +19,7 @@ import { View } from './tall_gauge_stat'
 
 const
   title = 'tall_gauge_stat',
-  tallGaugeStatProps: T.Card<any> = {
+  tallGaugeStatProps: T.Model<any> = {
     name: title,
     state: {
       title,

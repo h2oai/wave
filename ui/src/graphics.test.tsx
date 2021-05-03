@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'graphics',
-  graphicsProps: T.Card<any> = {
+  graphicsProps: T.Model<any> = {
     name,
     state: {},
     changed: T.box(false)

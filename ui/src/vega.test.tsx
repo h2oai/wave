@@ -38,7 +38,7 @@ const
 describe('Vega.tsx', () => {
 
   describe('Card Vega', () => {
-    const cardVegaProps: T.Card<any> = {
+    const cardVegaProps: T.Model<any> = {
       name,
       state: { specification },
       changed: T.box(false)

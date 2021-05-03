@@ -25,7 +25,7 @@ const mouseEvent = { clientX: 50, clientY: 0 }
 
 describe('Slider.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(() => { T.wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XSlider model={sliderProps} />)
@@ -40,17 +40,17 @@ describe('Slider.tsx', () => {
 
   it('Sets args - init', () => {
     render(<XSlider model={sliderProps} />)
-    expect(T.qd.args[name]).toBe(0)
+    expect(T.wave.args[name]).toBe(0)
   })
 
   it('Sets args - init - min specified', () => {
     render(<XSlider model={{ ...sliderProps, min: 1 }} />)
-    expect(T.qd.args[name]).toBe(1)
+    expect(T.wave.args[name]).toBe(1)
   })
 
   it('Sets args - init - value specified', () => {
     render(<XSlider model={{ ...sliderProps, value: 101, max: 100 }} />)
-    expect(T.qd.args[name]).toBe(100)
+    expect(T.wave.args[name]).toBe(100)
   })
 
   it('Sets args on slide', () => {
@@ -58,11 +58,11 @@ describe('Slider.tsx', () => {
     container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
     fireEvent.mouseDown(container.querySelector('.ms-Slider-slideBox')!, mouseEvent)
 
-    expect(T.qd.args[name]).toBe(50)
+    expect(T.wave.args[name]).toBe(50)
   })
   it('Calls sync on slide', () => {
     const syncMock = jest.fn()
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
 
     const { container } = render(<XSlider model={{ ...sliderProps, trigger: true }} />)
     container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
@@ -76,7 +76,7 @@ describe('Slider.tsx', () => {
 
   it('Does not call sync on slide - trigger not specified', () => {
     const syncMock = jest.fn()
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     const { getByRole } = render(<XSlider model={sliderProps} />)
     fireEvent.mouseDown(getByRole('slider'), { clientX: 1, clientY: 1 })
 

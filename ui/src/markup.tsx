@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { B, Card, S } from './qd'
+import { B, Model, S } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -72,7 +72,7 @@ export const
       </div>
     </div>
   ),
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => <MarkupCard name={name} title={state.title} content={state.content} />
     return { render, changed }
   })

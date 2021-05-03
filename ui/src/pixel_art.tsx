@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { Card, qd, Rec, S, U, unpack } from './qd'
+import { Model, wave, Rec, S, U, unpack } from './qd'
 import { bond } from './ui'
 
 const
@@ -75,11 +75,11 @@ interface Pixel {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     let brush = '#000'
     const
       paint = (i: U) => {
-        const page = qd.edit()
+        const page = wave.change()
         page.set(`${name} data ${i}`, brush === 'none' ? null : [brush])
         page.sync()
       },

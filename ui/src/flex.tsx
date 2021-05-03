@@ -14,7 +14,7 @@
 
 import React from 'react'
 import { cards, Repeat } from './layout'
-import { Card, Data, Dict, Rec, S } from './qd'
+import { Model, Data, Dict, Rec, S } from './qd'
 import { bond } from './ui'
 
 /**
@@ -84,7 +84,7 @@ const
   }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         // FIXME theme.merge()

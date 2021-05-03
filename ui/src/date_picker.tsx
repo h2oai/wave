@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, Id, qd, S, U } from './qd'
+import { B, Id, wave, S, U } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -59,12 +59,12 @@ const
 export const
   XDatePicker = bond(({ model: m }: { model: DatePicker }) => {
     const value = m.value || null
-    qd.args[m.name] = value
+    wave.args[m.name] = value
     const
       onSelectDate = (d: Date | null | undefined) => {
-        qd.args[m.name] = (d === null || d === undefined) ? value : formatDate(d)
+        wave.args[m.name] = (d === null || d === undefined) ? value : formatDate(d)
 
-        if (m.trigger) qd.sync()
+        if (m.trigger) wave.sync()
       },
       render = () => (
         <Fluent.DatePicker

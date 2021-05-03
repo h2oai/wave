@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { B, Card, S, xid } from './qd'
+import { B, Model, S, xid } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -101,7 +101,7 @@ export const XFrame = ({ model: { name, path, content, width = '100%', height = 
 )
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => (
       <div data-test={name} className={css.card}>
         <div className='wave-s12 wave-w6'>{state.title}</div>

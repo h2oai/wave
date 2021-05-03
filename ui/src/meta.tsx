@@ -16,7 +16,7 @@ import React from 'react'
 import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
 import { showNotification } from './notification'
-import { box, Card, Id, on, qd, S, U } from './qd'
+import { box, Model, Id, on, wave, S, U } from './qd'
 import { installScripts, Script } from './script'
 import { themeB } from './theme'
 import { setupTracker, Tracker } from './tracking'
@@ -129,7 +129,7 @@ on(windowIconB, icon => {
 
 export const
   layoutsB = box<Layout[]>([]),
-  preload = ({ state }: Card<State>) => {
+  preload = ({ state }: Model<State>) => {
     const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts } = state
 
     if (redirect) {
@@ -149,7 +149,7 @@ export const
 
     if (title) windowTitleB(title)
     if (icon) windowIconB(icon)
-    if (typeof refresh === 'number') qd.refreshRateB(refresh)
+    if (typeof refresh === 'number') wave.refreshRateB(refresh)
     if (theme) themeB(theme)
     if (notification) showNotification(notification)
     if (tracker) setupTracker(tracker)

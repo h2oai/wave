@@ -24,7 +24,7 @@ const btnPropsNameHash: Buttons = { items: [{ button: { name: hashName, label: n
 describe('Button.tsx', () => {
   beforeEach(() => {
     window.location.hash = ''
-    T.qd.args[name] = null
+    T.wave.args[name] = null
     jest.clearAllMocks()
   })
 
@@ -61,16 +61,16 @@ describe('Button.tsx', () => {
       btnProps: Buttons = { items: [{ button: { name, label: 'btn-label' } }] },
       { getByText } = render(<XButtons model={btnProps} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByText('btn-label'))
-    T.qd.args[name] = null
+    T.wave.args[name] = null
   })
 
   it('Calls sync() after click', () => {
     const syncMock = jest.fn()
     const { getByText } = render(<XButtons model={btnProps} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByText(name))
 
     expect(syncMock).toHaveBeenCalled()
@@ -80,14 +80,14 @@ describe('Button.tsx', () => {
     const { getByText } = render(<XButtons model={btnProps} />)
     fireEvent.click(getByText(name))
 
-    expect(T.qd.args[name]).toBe(true)
+    expect(T.wave.args[name]).toBe(true)
   })
 
   it('Sets args after click - specified value', () => {
     const { getByText } = render(<XButtons model={{ items: [{ button: { name, label: name, value: 'val' } }] }} />)
     fireEvent.click(getByText(name))
 
-    expect(T.qd.args[name]).toBe('val')
+    expect(T.wave.args[name]).toBe('val')
   })
 
   it('Sets window.location hash when name starts with #', () => {
@@ -101,7 +101,7 @@ describe('Button.tsx', () => {
     const syncMock = jest.fn()
     const { getByText } = render(<XButtons model={btnPropsNameHash} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByText(name))
 
     expect(syncMock).toHaveBeenCalledTimes(0)
@@ -112,7 +112,7 @@ describe('Button.tsx', () => {
 
     fireEvent.click(getByText(name))
 
-    expect(T.qd.args[name]).toBe(null)
+    expect(T.wave.args[name]).toBe(null)
   })
 
   it('Does not set window.location hash when name does not start with #', () => {

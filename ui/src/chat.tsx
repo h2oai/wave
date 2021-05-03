@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { bond } from './ui'
 import { cards, grid } from './layout'
-import { Box, box, Card, Dict, on, qd, Rec, S, U } from './qd'
+import { Box, box, Model, Dict, on, wave, Rec, S, U } from './qd'
 import { border, clas, cssVar, padding } from './theme'
 
 const
@@ -126,7 +126,7 @@ const
   }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     let _keys: S[] = []
     const
       messagesRef = React.createRef<HTMLDivElement>(),
@@ -163,7 +163,7 @@ export const
 
     on(inputB, input => {
       const
-        page = qd.edit(),
+        page = wave.change(),
         cap = state.capacity ?? 50,
         n = _keys.length
 
@@ -172,7 +172,7 @@ export const
       if (n >= cap) {
         for (let i = 0; i < n - cap + 1; i++) page.set(`${name} data ${_keys[i]}`, null)
       }
-      const cm: ChatMessage = { u: qd.username ?? '?', m: input }
+      const cm: ChatMessage = { u: wave.username ?? '?', m: input }
       page.set(`${name} data ${(new Date()).toISOString()}`, JSON.stringify(cm))
       page.sync()
     })

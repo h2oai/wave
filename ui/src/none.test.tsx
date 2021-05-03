@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'none',
-  noneProps: T.Card<any> = {
+  noneProps: T.Model<any> = {
     name,
     state: {},
     changed: T.box(false)

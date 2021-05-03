@@ -16,7 +16,7 @@ import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react'
 import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { deleteCard, editCard } from './editing'
-import { B, box, Box, qd, S } from './qd'
+import { B, box, Box, wave, S } from './qd'
 import { Command } from './toolbar'
 import { bond } from './ui'
 
@@ -65,8 +65,8 @@ const
           window.location.hash = c.name.substr(1)
           return
         }
-        qd.args[c.name] = c.value ?? c.data ?? true
-        qd.sync()
+        wave.args[c.name] = c.value ?? c.data ?? true
+        wave.sync()
       }
     return {
       key: c.name,

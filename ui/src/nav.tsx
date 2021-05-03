@@ -15,7 +15,7 @@
 import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
 import React from 'react'
 import { CardEffect, cards } from './layout'
-import { B, Card, Id, qd, S } from './qd'
+import { B, Model, Id, wave, S } from './qd'
 import { bond } from './ui'
 
 /** Create a navigation item. */
@@ -64,14 +64,14 @@ export const
             window.location.hash = name.substr(1)
             return
           }
-          qd.args[name] = true
-          qd.sync()
+          wave.args[name] = true
+          wave.sync()
         }
       }))
     }))
     return <Nav groups={groups} selectedKey={value} />
   },
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => <div data-test={name}><XNav {...state} /></div>
     return { render, changed }
   })

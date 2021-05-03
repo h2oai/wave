@@ -20,10 +20,10 @@ import { View } from './wide_info'
 const
   name = 'wide_info',
   syncMock = jest.fn()
-let wideInfoProps: T.Card<any>
+let wideInfoProps: T.Model<any>
 
 describe('WideInfo.tsx', () => {
-  beforeAll(() => T.qd.sync = syncMock)
+  beforeAll(() => T.wave.sync = syncMock)
   beforeEach(() => {
     syncMock.mockReset()
     wideInfoProps = {
@@ -42,7 +42,7 @@ describe('WideInfo.tsx', () => {
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
     expect(syncMock).not.toHaveBeenCalled()
-    expect(T.qd.args[name]).toBeUndefined()
+    expect(T.wave.args[name]).toBeUndefined()
   })
 
   it('Does not submit data to server if name specified but starts with #', () => {
@@ -50,7 +50,7 @@ describe('WideInfo.tsx', () => {
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
     expect(syncMock).not.toHaveBeenCalled()
-    expect(T.qd.args[name]).toBeUndefined()
+    expect(T.wave.args[name]).toBeUndefined()
   })
 
   it('Submits data to server if name specified without #', () => {
@@ -58,6 +58,6 @@ describe('WideInfo.tsx', () => {
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
     expect(syncMock).toHaveBeenCalled()
-    expect(T.qd.args[name]).toBe(name)
+    expect(T.wave.args[name]).toBe(name)
   })
 })

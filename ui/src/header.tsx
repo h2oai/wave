@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { NavGroup, XNav } from './nav'
-import { B, Box, box, Card, S } from './qd'
+import { B, Box, box, Model, S } from './qd'
 import { clas, cssVar, padding } from './theme'
 import { bond } from './ui'
 
@@ -114,7 +114,7 @@ const
   })
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       navB = box(false),
       showNav = () => navB(true),

@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'form',
-  formProps: T.Card<any> = {
+  formProps: T.Model<any> = {
     name,
     state: {},
     changed: T.box(false)

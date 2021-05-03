@@ -16,7 +16,7 @@ import * as d3 from 'd3'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { Card, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd'
+import { Model, Data, Dict, F, Rec, Recs, S, U, unpack } from './qd'
 import { bond } from './ui'
 
 
@@ -108,7 +108,7 @@ const
     },
   })
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     type El = { d: S, o: S }
 
     const

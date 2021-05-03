@@ -25,7 +25,7 @@ describe('Checkbox.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
-    T.qd.args[name] = null
+    T.wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -43,7 +43,7 @@ describe('Checkbox.tsx', () => {
     const syncMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={checkboxProps} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByTestId(name))
 
     expect(syncMock).toHaveBeenCalledTimes(0)
@@ -53,7 +53,7 @@ describe('Checkbox.tsx', () => {
     const syncMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={{ ...checkboxProps, trigger: true }} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByTestId(name))
 
     expect(syncMock).toHaveBeenCalled()
@@ -63,7 +63,7 @@ describe('Checkbox.tsx', () => {
     const { getByTestId } = render(<XCheckbox model={checkboxProps} />)
     fireEvent.click(getByTestId(name))
 
-    expect(T.qd.args[name]).toBe(true)
+    expect(T.wave.args[name]).toBe(true)
   })
 
 })

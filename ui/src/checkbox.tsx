@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, Id, qd, S } from './qd'
+import { B, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -55,11 +55,11 @@ export interface Checkbox {
 
 export const
   XCheckbox = bond(({ model: m }: { model: Checkbox }) => {
-    qd.args[m.name] = !!m.value
+    wave.args[m.name] = !!m.value
     const
       onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-        qd.args[m.name] = checked === null ? null : !!checked
-        if (m.trigger) qd.sync()
+        wave.args[m.name] = checked === null ? null : !!checked
+        if (m.trigger) wave.sync()
       },
       render = () => (
         <Fluent.Checkbox

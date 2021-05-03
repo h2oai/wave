@@ -19,7 +19,7 @@ import Dialog from './dialog'
 import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
-import { box, connect, on, Page, qd, S, SockEvent, SockEventType, SockMessageType } from './qd'
+import { box, connect, on, Page, wave, S, WaveEvent, WaveEventType, WaveMessageType } from './qd'
 import { clas, cssVar, pc, themeB } from './theme'
 import { bond } from './ui'
 
@@ -63,7 +63,7 @@ const
       spinTimeout = 0
     const
       spinDelay = 500, // ms
-      busyB = qd.busyB,
+      busyB = wave.busyB,
       spinB = box(false),
       render = () => (
         <div className={busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
@@ -89,7 +89,7 @@ const
       render = () => (
         <div className={css.notFoundOverlay}>
           <Logo />
-          {qd.editable && (
+          {wave.editable && (
             <>
               <Fluent.DefaultButton onClick={onClick} >Edit this page...</Fluent.DefaultButton>
               <LayoutPicker visibleB={pickingLayoutB} />
@@ -103,15 +103,15 @@ const
   App = bond(() => {
     const
       contentB = box<{ page?: Page, error?: S }>({}),
-      onSocket = (e: SockEvent) => {
+      onSocket = (e: WaveEvent) => {
         switch (e.t) {
-          case SockEventType.Data:
+          case WaveEventType.Data:
             contentB({ page: e.page })
             break
-          case SockEventType.Message:
-            if (e.type === SockMessageType.Err) contentB({ error: e.message })
+          case WaveEventType.Message:
+            if (e.type === WaveMessageType.Err) contentB({ error: e.message })
             break
-          case SockEventType.Reset:
+          case WaveEventType.Reset:
             window.location.reload()
             break
         }
@@ -119,9 +119,9 @@ const
       onHashChanged = () => {
         const h = window.location.hash
         if (h?.length > 1) {
-          qd.args['#'] = h.substr(1)
+          wave.args['#'] = h.substr(1)
         }
-        qd.sync()
+        wave.sync()
       },
       init = () => {
         connect('/_s', onSocket)

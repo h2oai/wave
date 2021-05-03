@@ -25,7 +25,7 @@ describe('Toggle.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
-    T.qd.args[name] = null
+    T.wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -43,7 +43,7 @@ describe('Toggle.tsx', () => {
     const syncMock = jest.fn()
     const { getByTestId } = render(<XToggle model={{ ...toggleProps, trigger: true }} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByTestId(name))
 
     expect(syncMock).toHaveBeenCalled()
@@ -53,7 +53,7 @@ describe('Toggle.tsx', () => {
     const syncMock = jest.fn()
     const { getByTestId } = render(<XToggle model={toggleProps} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByTestId(name))
 
     expect(syncMock).toHaveBeenCalledTimes(0)
@@ -63,7 +63,7 @@ describe('Toggle.tsx', () => {
     const { getByTestId } = render(<XToggle model={toggleProps} />)
     fireEvent.click(getByTestId(name))
 
-    expect(T.qd.args[name]).toBe(true)
+    expect(T.wave.args[name]).toBe(true)
   })
 
 })

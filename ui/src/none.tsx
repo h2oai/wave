@@ -14,11 +14,11 @@
 
 import React from 'react'
 import { cards } from './layout'
-import { Card, S } from './qd'
+import { Model, S } from './qd'
 import { bond } from './ui'
 
 export const
-  View = bond(({ name, state, changed }: Card<Record<S, unknown>>) => {
+  View = bond(({ name, state, changed }: Model<Record<S, unknown>>) => {
     const
       render = () => (
         <div data-test={name}>

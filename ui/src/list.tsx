@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Repeat } from './layout'
-import { Card, Data, Rec, S } from './qd'
+import { Model, Data, Rec, S } from './qd'
 import { bond } from './ui'
 
 const
@@ -52,7 +52,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const
       render = () => {
         return (

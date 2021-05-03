@@ -22,7 +22,7 @@ const name = 'frame'
 describe('Frame.tsx', () => {
   beforeAll(() => window.URL.createObjectURL = jest.fn(() => ''))
   describe('Frame card', () => {
-    const cardFrameProps: T.Card<any> = {
+    const cardFrameProps: T.Model<any> = {
       name,
       state: {},
       changed: T.box(false)

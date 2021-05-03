@@ -22,7 +22,7 @@ const name = 'markup'
 describe('Markup.tsx', () => {
 
   describe('Markup card', () => {
-    const cardMarkupProps: T.Card<any> = {
+    const cardMarkupProps: T.Model<any> = {
       name,
       state: { content: '' },
       changed: T.box(false)

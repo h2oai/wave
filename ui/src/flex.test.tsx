@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'flex',
-  flexProps: T.Card<any> = {
+  flexProps: T.Model<any> = {
     name,
     state: {
       data: [],

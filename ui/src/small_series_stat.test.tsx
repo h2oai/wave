@@ -19,7 +19,7 @@ import { View } from './small_series_stat'
 
 const
   name = 'small_series_stat',
-  smallSeriesStatProps: T.Card<any> = {
+  smallSeriesStatProps: T.Model<any> = {
     name,
     state: {
       plot_data: jest.fn().mockImplementation(() => [])

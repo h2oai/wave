@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   title = 'large_bar_stat',
-  largeBarStatProps: T.Card<any> = {
+  largeBarStatProps: T.Model<any> = {
     name: title,
     state: {
       title,

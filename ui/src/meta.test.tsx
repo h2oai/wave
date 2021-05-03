@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'meta',
-  metaProps: T.Card<any> = {
+  metaProps: T.Model<any> = {
     name,
     state: {},
     changed: T.box(false)
@@ -35,9 +35,9 @@ describe('Meta.tsx', () => {
 
   it('Sets refreshRate - init', () => {
     const refresh = 1
-    expect(T.qd.refreshRateB()).toBe(-1)
+    expect(T.wave.refreshRateB()).toBe(-1)
     preload({ ...metaProps, state: { refresh } })
-    expect(T.qd.refreshRateB()).toBe(refresh)
+    expect(T.wave.refreshRateB()).toBe(refresh)
   })
 
   it('Shows notification - init', () => {

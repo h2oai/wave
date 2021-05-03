@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'image',
-  imageProps: T.Card<any> = {
+  imageProps: T.Model<any> = {
     name,
     state: {},
     changed: T.box(false)

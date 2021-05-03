@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, debounce, Id, qd, S } from './qd'
+import { B, debounce, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -67,13 +67,13 @@ export interface Textbox {
 const DEBOUNCE_TIMEOUT = 500
 export const
   XTextbox = bond(({ model: m }: { model: Textbox }) => {
-    qd.args[m.name] = m.value || ''
+    wave.args[m.name] = m.value || ''
     const
       onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: string) => {
         v = v || (target as HTMLInputElement).value
 
-        qd.args[m.name] = v ?? (m.value || '')
-        if (m.trigger) qd.sync()
+        wave.args[m.name] = v ?? (m.value || '')
+        if (m.trigger) wave.sync()
       },
       render = () => m.mask
         ? (

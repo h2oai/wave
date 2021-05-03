@@ -19,7 +19,7 @@ import { View } from './small_stat'
 
 const
   name = 'small_stat',
-  smallStatProps: T.Card<any> = {
+  smallStatProps: T.Model<any> = {
     name,
     state: {
       data: []

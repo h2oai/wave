@@ -16,7 +16,7 @@ import Handlebars from 'handlebars'
 import React from 'react'
 import { cards, substitute } from './layout'
 import { MarkupCard, XMarkup } from './markup'
-import { B, Card, Rec, S, unpack } from './qd'
+import { B, Model, Rec, S, unpack } from './qd'
 import { bond } from './ui'
 
 /** Render dynamic content using an HTML template.*/
@@ -51,7 +51,7 @@ export const
       }
     return { render }
   }),
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       template = Handlebars.compile(state.content || ''),
       render = () => {

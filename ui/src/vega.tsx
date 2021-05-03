@@ -16,7 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
-import { B, Card, debounce, Rec, S, unpack, xid } from './qd'
+import { B, Model, debounce, Rec, S, unpack, xid } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -128,7 +128,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         const { specification, data, title } = state

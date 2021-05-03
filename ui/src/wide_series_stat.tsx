@@ -17,7 +17,7 @@ import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
-import { Card, Data, F, Rec, S, unpack } from './qd'
+import { Model, Data, F, Rec, S, unpack } from './qd'
 import { clas, cssVar, pc } from './theme'
 import { bond } from './ui'
 
@@ -75,7 +75,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => {
       const
         data = unpack(s.data),

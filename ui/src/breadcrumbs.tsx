@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { Card, Id, qd, S } from './qd'
+import { Model, Id, wave, S } from './qd'
 import { bond } from './ui'
 
 /** Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`. */
@@ -50,7 +50,7 @@ const
   })
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       items = state.items.map(({ name, label }) => ({
         key: name,
@@ -60,8 +60,8 @@ export const
             window.location.hash = name.substr(1)
             return
           }
-          qd.args[name] = true
-          qd.sync()
+          wave.args[name] = true
+          wave.sync()
         }
       }
       )),

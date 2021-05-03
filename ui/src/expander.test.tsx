@@ -22,7 +22,7 @@ const name = 'expander'
 const expanderProps: Expander = { name }
 describe('Expander.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(() => { T.wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XExpander model={expanderProps} />)
@@ -37,13 +37,13 @@ describe('Expander.tsx', () => {
 
   it('Sets args - init - null', () => {
     render(<XExpander model={expanderProps} />)
-    expect(T.qd.args[name]).toBeNull()
+    expect(T.wave.args[name]).toBeNull()
   })
 
   it('Sets args on click', () => {
     const { getByRole } = render(<XExpander model={expanderProps} />)
     fireEvent.click(getByRole('button'))
 
-    expect(T.qd.args[name]).toBe(true)
+    expect(T.wave.args[name]).toBe(true)
   })
 })

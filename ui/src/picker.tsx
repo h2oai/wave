@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { Choice } from './choice_group'
-import { B, box, Id, qd, S, U } from './qd'
+import { B, box, Id, wave, S, U } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -62,11 +62,11 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
     },
     onChange = (items?: Fluent.ITag[]) => {
       selectedTagsB(items || [])
-      qd.args[m.name] = items ? items.map(({ key }) => key) : null
-      if (m.trigger) qd.sync()
+      wave.args[m.name] = items ? items.map(({ key }) => key) : null
+      if (m.trigger) wave.sync()
     },
     onEmptyResolveSuggestions = () => tags,
-    init = () => qd.args[m.name] = m.values || null,
+    init = () => wave.args[m.name] = m.values || null,
     render = () => (
       <div style={displayMixin(m.visible)}>
         {m.label && <Fluent.Text>{m.label}</Fluent.Text>}

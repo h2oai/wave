@@ -16,7 +16,7 @@ import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { format, isFormatExpr } from './intl'
-import { B, box, C, Card, Dict, F, parseI, Rec, S, U, unpack, xid } from './qd'
+import { B, box, Card, Model, Dict, F, parseI, Rec, S, U, unpack, xid } from './qd'
 import { clas, cssVar, margin } from './theme'
 
 type Slot = {
@@ -65,13 +65,13 @@ export const
     if (className) return <div className={className}>{x}</div>
     return <>{x}</>
   },
-  CardView = ({ card }: { card: Card<any> }) => {
+  CardView = ({ card }: { card: Model<any> }) => {
     const Tag = cards.lookup(card.state.view).ctor
     return <Tag {...card} />
   },
   Repeat = ({ view, props, data }: { view: S | any, props: any, data: any }) => {
     const items = unpack<Rec[]>(data).map((r, i) => {
-      const card: Card<any> = {
+      const card: Model<any> = {
         name: xid(),
         state: { ...unpack<Rec>(props), view, data: r },
         changed: box<B>(),
@@ -190,7 +190,7 @@ const
       boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
     },
   }),
-  getCardEffectClass = (c: C) => {
+  getCardEffectClass = (c: Card) => {
     const { effect } = getCardStyle(c)
     return clas(css.slot, effect === CardEffect.Normal
       ? css.normal
@@ -201,8 +201,8 @@ const
   }
 
 export const
-  getCardStyle = (c: C): CardStyle => cards.lookup(c.state.view).style,
-  GridLayout = ({ name, cards: cs }: { name: S, cards: C[] }) => {
+  getCardStyle = (c: Card): CardStyle => cards.lookup(c.state.view).style,
+  GridLayout = ({ name, cards: cs }: { name: S, cards: Card[] }) => {
     const
       hasEditor = cs.find(c => c.state.view === 'editor') ? true : false,
       children = cs.map(c => {

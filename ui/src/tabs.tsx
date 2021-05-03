@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { B, Id, qd, S } from './qd'
+import { B, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -68,13 +68,13 @@ export const
           return
         }
         if (m.name) {
-          if (name !== qd.args[m.name]) {
-            qd.args[m.name] = name
-            qd.sync()
+          if (name !== wave.args[m.name]) {
+            wave.args[m.name] = name
+            wave.sync()
           }
         } else {
-          qd.args[name] = true
-          qd.sync()
+          wave.args[name] = true
+          wave.sync()
         }
       },
       render = () => {

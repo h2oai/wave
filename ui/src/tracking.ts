@@ -1,4 +1,4 @@
-import { on, qd, Rec, S } from './qd'
+import { on, wave, Rec, S } from './qd'
 
 /**
  * Configure user interaction tracking (analytics) for a page.
@@ -64,4 +64,4 @@ export const
     }
   }
 
-on(qd.argsB, (args) => window.setTimeout((() => sendEvent(args)), 0))
+on(wave.argsB, (args) => window.setTimeout((() => sendEvent(args)), 0))

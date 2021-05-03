@@ -19,7 +19,7 @@ import { View } from './repeat'
 
 const
   name = 'repeat',
-  repeatProps: T.Card<any> = {
+  repeatProps: T.Model<any> = {
     name,
     state: {
       data: [],

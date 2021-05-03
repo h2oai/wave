@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { Card, Rec, S, unpack } from './qd'
+import { Model, Rec, S, unpack } from './qd'
 import { clas } from './theme'
 import { bond } from './ui'
 
@@ -42,7 +42,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => {
       const data = unpack(s.data)
       return (

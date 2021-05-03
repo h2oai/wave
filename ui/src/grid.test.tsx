@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'grid',
-  gridProps: T.Card<any> = {
+  gridProps: T.Model<any> = {
     name,
     state: { data: [] },
     changed: T.box(false)

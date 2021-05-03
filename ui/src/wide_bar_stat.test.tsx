@@ -19,7 +19,7 @@ import { View } from './wide_bar_stat'
 
 const
   title = 'wide_bar_stat',
-  wideBarStatProps: T.Card<any> = {
+  wideBarStatProps: T.Model<any> = {
     name: title,
     state: {
       title,

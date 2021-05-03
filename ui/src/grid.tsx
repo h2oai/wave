@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, CardView, Format } from './layout'
-import { B, box, Card, Data, Rec, S, unpack, xid } from './qd'
+import { B, box, Model, Data, Rec, S, unpack, xid } from './qd'
 import { bond } from './ui'
 
 const
@@ -50,7 +50,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const
       render = () => {
         let cells = unpack<any[]>(s.cells)
@@ -65,7 +65,7 @@ export const
               if (value != null) {
                 return <td><Format data={data} format={value} /></td>
               } else {
-                const card: Card<any> = {
+                const card: Model<any> = {
                   name: xid(),
                   state: { ...props, view, data },
                   changed: box<B>(),

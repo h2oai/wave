@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'markdown',
-  markdown_props: T.Card<any> = {
+  markdown_props: T.Model<any> = {
     name,
     state: { content: '' },
     changed: T.box(false)

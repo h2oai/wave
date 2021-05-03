@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import React from 'react'
-import { B, F, Id, qd, S } from './qd'
+import { B, F, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -62,10 +62,10 @@ export const
     const
       { min = 0, max = 100, step = 1, value = 0 } = m,
       defaultValue = (value < min) ? min : ((value > max) ? max : value)
-    qd.args[m.name] = defaultValue
+    wave.args[m.name] = defaultValue
     const
-      onChange = (v: number) => qd.args[m.name] = v,
-      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => { if (m.trigger) qd.sync() },
+      onChange = (v: number) => wave.args[m.name] = v,
+      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => { if (m.trigger) wave.sync() },
       render = () => (
         <Fluent.Slider
           data-test={m.name}

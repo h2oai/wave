@@ -22,7 +22,7 @@ const name = 'plot'
 describe('Plot.tsx', () => {
 
   describe('Card Plot', () => {
-    const cardPlotProps: T.Card<any> = {
+    const cardPlotProps: T.Model<any> = {
       name,
       state: { data: [], plot: { marks: [] } },
       changed: T.box(false)

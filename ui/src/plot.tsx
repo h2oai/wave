@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { B, Card, Dict, F, parseI, parseU, qd, Rec, S, unpack, V } from './qd'
+import { B, Model, Dict, F, parseI, parseU, wave, Rec, S, unpack, V } from './qd'
 import { cssVarValue, displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -805,8 +805,8 @@ export const
                     const e = ev.gEvent.originalEvent
                     if (e.stateStatus && e.state === 'selected') {
                       if (model.name) {
-                        qd.events[model.name] = { select_marks: [e.element?.data] }
-                        qd.sync()
+                        wave.events[model.name] = { select_marks: [e.element?.data] }
+                        wave.sync()
                       }
                     }
                   })
@@ -852,7 +852,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         const { title = 'Untitled', plot, data, events } = state

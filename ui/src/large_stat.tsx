@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
-import { Card, Rec, S } from './qd'
+import { Model, Rec, S } from './qd'
 import { clas } from './theme'
 import { bond } from './ui'
 
@@ -54,7 +54,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => (
       <div data-test={name} className={css.card}>
         <Format data={s.data} format={s.title} className='wave-s12 wave-w6' />

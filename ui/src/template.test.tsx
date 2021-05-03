@@ -19,7 +19,7 @@ import { Template, View, XTemplate } from './template'
 
 const
   name = 'template',
-  templateProps: T.Card<any> = {
+  templateProps: T.Model<any> = {
     name,
     state: { data: [] },
     changed: T.box(false)

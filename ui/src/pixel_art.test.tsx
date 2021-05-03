@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'pixel_art',
-  pixelArtProps: T.Card<any> = {
+  pixelArtProps: T.Model<any> = {
     name,
     state: { data: [] },
     changed: T.box(false)

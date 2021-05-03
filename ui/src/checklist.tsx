@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
-import { B, box, Box, Id, on, qd, S } from './qd'
+import { B, box, Box, Id, on, wave, S } from './qd'
 import { displayMixin, margin } from './theme'
 import { bond } from './ui'
 
@@ -75,7 +75,7 @@ const
 
 export const
   XChecklist = bond(({ model: m }: { model: Checklist }) => {
-    qd.args[m.name] = m.values || []
+    wave.args[m.name] = m.values || []
     let _pause = false
     const
       defaultSelection = new Set<S>(m.values),
@@ -87,8 +87,8 @@ export const
         if (_pause) return
         const vs: S[] = []
         for (const c of choices) if (c.selectedB()) vs.push(c.choice.name)
-        qd.args[m.name] = vs
-        if (m.trigger) qd.sync()
+        wave.args[m.name] = vs
+        if (m.trigger) wave.sync()
       },
       select = (value: B) => {
         _pause = true

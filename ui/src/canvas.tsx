@@ -16,7 +16,7 @@ import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { B, box, Card, Dict, F, on, PageRef, qd, Rec, S, to, U } from './qd'
+import { B, box, Model, Dict, F, on, ChangeSet, wave, Rec, S, to, U } from './qd'
 import { P, simplify } from './simplify'
 import { px, spectrum } from './theme'
 import { bond } from './ui'
@@ -235,7 +235,7 @@ export const
   })()
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       shapeKeysB = box<S[]>([]),
       shapesB = box<Shape[]>([]),
@@ -321,17 +321,17 @@ export const
         const
           hitmap = newHitmap(0, ht, htC.r),
           clear = (g: G) => g.clearRect(0, 0, width, height),
-          setAttr = (page: PageRef, k: S, v: any) => {
+          setAttr = (page: ChangeSet, k: S, v: any) => {
             // TODO actual username
             page.set(`${name} data ${k}`, v)
           },
           syncAttr = (k: S, v: any) => {
-            const page = qd.edit()
+            const page = wave.change()
             setAttr(page, k, v)
             page.sync()
           },
           clearAttrs = (ks: S[]) => {
-            const page = qd.edit()
+            const page = wave.change()
             for (const k of ks) setAttr(page, k, null)
             page.sync()
           },

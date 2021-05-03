@@ -16,7 +16,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
-import { Card, S } from './qd'
+import { Model, S } from './qd'
 import { bond } from './ui'
 
 const
@@ -43,7 +43,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         const

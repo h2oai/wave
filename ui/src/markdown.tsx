@@ -16,7 +16,7 @@ import markdownit from 'markdown-it'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid, substitute } from './layout'
-import { Card, Rec, S, unpack } from './qd'
+import { Model, Rec, S, unpack } from './qd'
 import { border, cssVar, padding, pc } from './theme'
 import { bond } from './ui'
 
@@ -98,7 +98,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         const

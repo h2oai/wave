@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { Card, qd, S } from './qd'
+import { Model, wave, S } from './qd'
 import { clas, cssVar, pc } from './theme'
 import { bond } from './ui'
 
@@ -70,7 +70,7 @@ interface State {
   color?: S
 }
 
-export const View = bond(({ name, state, changed }: Card<State>) => {
+export const View = bond(({ name, state, changed }: Model<State>) => {
   const
     { title, caption, icon, image, category, name: stateName, color } = state,
     onClick = () => {
@@ -79,8 +79,8 @@ export const View = bond(({ name, state, changed }: Card<State>) => {
         window.location.hash = stateName.substr(1)
         return
       }
-      qd.args[stateName] = stateName
-      qd.sync()
+      wave.args[stateName] = stateName
+      wave.sync()
     },
     render = () => (
       <div

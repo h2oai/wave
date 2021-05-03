@@ -15,7 +15,7 @@
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { Card, Rec, S } from './qd'
+import { Model, Rec, S } from './qd'
 import { bond } from './ui'
 
 const
@@ -69,7 +69,7 @@ export const
           : ''
     return <img className={css.img} alt={title} src={src} />
   },
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => {
       const { title, type, image, data, path } = state
       return (

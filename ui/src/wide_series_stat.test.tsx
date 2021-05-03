@@ -19,7 +19,7 @@ import { View } from './wide_series_stat'
 
 const
   title = 'wide_series_stat',
-  wideSeriesStatProps: T.Card<any> = {
+  wideSeriesStatProps: T.Model<any> = {
     name: title,
     state: {
       title,

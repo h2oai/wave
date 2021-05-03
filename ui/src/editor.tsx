@@ -20,7 +20,7 @@ import { cardDefs } from './defs'
 import { defaultLayoutDef, editorActionB, EditorActionT, LayoutDef, layoutDefs, noAction, pickCard } from './editing'
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
-import { B, Box, box, C, Card, Dict, parseU, qd, S, U, xid } from './qd'
+import { B, Box, box, Card, Model, Dict, parseU, wave, S, U, xid } from './qd'
 import { border, cssVar } from './theme'
 import { bond } from './ui'
 
@@ -178,7 +178,7 @@ const
       }
     return { render }
   }),
-  AttrPanelView = bond(({ view, card }: { view: S, card?: C }) => {
+  AttrPanelView = bond(({ view, card }: { view: S, card?: Card }) => {
     const
       { attrs } = cardDefLookup[view],
       isNew = card ? false : true,
@@ -203,7 +203,7 @@ const
     const
       onDismiss = () => { editorActionB(noAction) },
       save = () => {
-        const page = qd.edit()
+        const page = wave.change()
         if (isNew) {
           const card: Dict<any> = { ...{ view }, ...original, ...changes }
           page.put(cardName, card)
@@ -438,7 +438,7 @@ export const
         const
           { layoutDef, width } = pageSetupB(),
           layout: Layout = { ...layoutDef.layout },
-          page = qd.edit()
+          page = wave.change()
 
         if (width) layout.width = `${width}px`
 
@@ -469,7 +469,7 @@ export const
       }
     return { render, visibleB }
   }),
-  View = bond(({ name, changed }: Card<State>) => {
+  View = bond(({ name, changed }: Model<State>) => {
     const
       addCard = () => { editorActionB(pickCard) },
       onDismiss = () => { editorActionB(noAction) },
@@ -486,7 +486,7 @@ export const
             break
           case EditorActionT.Edit:
             {
-              const page = qd.page
+              const page = wave.page
               if (page) {
                 const
                   { name } = action,
@@ -500,7 +500,7 @@ export const
               const
                 { name } = action,
                 onAccept = () => {
-                  const page = qd.edit()
+                  const page = wave.change()
                   page.del(name)
                   page.sync()
                 }
@@ -535,7 +535,7 @@ export const
                 }),
                 save = () => {
                   const
-                    page = qd.edit(),
+                    page = wave.change(),
                     { layoutDef, width } = pageSetupB(),
                     layout = { ...layoutDef.layout }
                   if (width) layout.width = `${width}px`

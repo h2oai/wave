@@ -17,7 +17,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { CardEffect, CardView, getCardStyle, GridLayout } from './layout'
 import { FlexBox, Layout, layoutsB, preload, Zone } from './meta'
-import { B, box, C, Dict, Disposable, on, Page, parseU, S, U } from './qd'
+import { B, box, Card, Dict, Disposable, on, Page, parseU, S, U } from './qd'
 import { clas, cssVar, margin } from './theme'
 import { bond } from './ui'
 
@@ -39,7 +39,7 @@ type Slot = {
 }
 
 type CardSlot = {
-  card: C
+  card: Card
   slot: Slot
 }
 
@@ -155,7 +155,7 @@ const
       boxShadow: `0px 3px 5px ${cssVar('$text0')}`,
     },
   }),
-  getCardEffectClass = (c: C) => {
+  getCardEffectClass = (c: Card) => {
     const { effect } = getCardStyle(c)
     return clas(css.slot, effect === CardEffect.Normal
       ? css.normal
@@ -280,7 +280,7 @@ const
       </div>
     )
   },
-  FlexLayout = ({ name, cards }: { name: S, cards: C[] }) => {
+  FlexLayout = ({ name, cards }: { name: S, cards: Card[] }) => {
     const layoutIndex = layoutB()
     if (!layoutIndex) return <></>
     const
@@ -320,7 +320,7 @@ const
 export const
   PageLayout = bond(({ page }: { page: Page }) => {
     let
-      metaCard: C | null = null,
+      metaCard: Card | null = null,
       onMetaCardChanged: Disposable | null = null
 
     const

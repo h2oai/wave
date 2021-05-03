@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { Choice } from './choice_group'
-import { B, box, Id, qd, S } from './qd'
+import { B, box, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 
@@ -60,7 +60,7 @@ export interface Dropdown {
 export const
   XDropdown = bond(({ model: m }: { model: Dropdown }) => {
     const isMultivalued = !!m.values
-    qd.args[m.name] = isMultivalued
+    wave.args[m.name] = isMultivalued
       ? (m.values || [])
       : (m.value || null)
 
@@ -78,13 +78,13 @@ export const
               selection.delete(name)
             }
             const selectedOpts = Array.from(selection)
-            qd.args[m.name] = selectedOpts
+            wave.args[m.name] = selectedOpts
             selectedOptionsB(selectedOpts)
           } else {
-            qd.args[m.name] = name
+            wave.args[m.name] = name
           }
         }
-        if (m.trigger) qd.sync()
+        if (m.trigger) wave.sync()
       },
       selectAll = () => {
         if (!selection) return
@@ -94,7 +94,7 @@ export const
 
         const selectionArr = Array.from(selection)
         selectedOptionsB(selectionArr)
-        qd.args[m.name] = selectionArr
+        wave.args[m.name] = selectionArr
 
         onChange()
       },
@@ -103,7 +103,7 @@ export const
 
         selection.clear()
         selectedOptionsB([])
-        qd.args[m.name] = []
+        wave.args[m.name] = []
 
         onChange()
       },

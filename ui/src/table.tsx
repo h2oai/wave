@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
-import { B, box, Dict, Id, qd, S, U } from './qd'
+import { B, box, Dict, Id, wave, S, U } from './qd'
 import { cssVar, displayMixin, rem } from './theme'
 import { bond } from './ui'
 
@@ -180,7 +180,7 @@ const
 
 export const
   XTable = bond(({ model: m }: { model: Table }) => {
-    qd.args[m.name] = []
+    wave.args[m.name] = []
     const
       items = m.rows.map(r => {
         const item: Fluent.IObjectWithKey & Dict<any> = { key: r.name }
@@ -428,18 +428,18 @@ export const
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
       selection = new Fluent.Selection({
         onSelectionChanged: () => {
-          qd.args[m.name] = selection.getSelection().map(item => item.key as S)
+          wave.args[m.name] = selection.getSelection().map(item => item.key as S)
         }
       }),
       init = () => {
         if (isMultiple && m.values) {
           m.values.forEach(v => selection.setKeySelected(v, true, false))
-          qd.args[m.name] = m.values
+          wave.args[m.name] = m.values
         }
       },
       onItemInvoked = (item: Fluent.IObjectWithKey & Dict<any>) => {
-        qd.args[m.name] = [item.key as S]
-        qd.sync()
+        wave.args[m.name] = [item.key as S]
+        wave.sync()
       },
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: QColumn) => {
         if (!item || !col) return <span />
@@ -447,8 +447,8 @@ export const
         const v = item[col.fieldName as S]
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {
-            qd.args[m.name] = [item.key as S]
-            qd.sync()
+            wave.args[m.name] = [item.key as S]
+            wave.sync()
           }
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }

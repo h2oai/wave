@@ -19,7 +19,7 @@ import * as T from './qd'
 
 const
   name = 'list',
-  listProps: T.Card<any> = {
+  listProps: T.Model<any> = {
     name,
     state: { data: [] },
     changed: T.box(false),

@@ -14,7 +14,7 @@
 
 import React from 'react'
 import { cards, Repeat } from './layout'
-import { Card, Data, Rec, S } from './qd'
+import { Model, Data, Rec, S } from './qd'
 import { bond } from './ui'
 
 /**
@@ -31,7 +31,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const
       render = () => (
         <div data-test={name}>

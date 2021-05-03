@@ -16,7 +16,7 @@ import { CommandBar, IButtonProps, ICommandBarItemProps } from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { Card, Id, qd, S } from './qd'
+import { Model, Id, wave, S } from './qd'
 import { bond } from './ui'
 
 /**
@@ -56,14 +56,14 @@ const
   overflowProps: IButtonProps = { ariaLabel: 'More' },
   toCommands = (commands: Command[]) => commands.map(toCommand),
   toCommand = ({ name, label, caption, icon, items, value }: Command): ICommandBarItemProps => {
-    qd.args[name] = false
+    wave.args[name] = false
     const onClick = () => {
       if (name[0] === '#') {
         window.location.hash = name.substr(1)
         return
       }
-      qd.args[name] = value === undefined || value
-      qd.sync()
+      wave.args[name] = value === undefined || value
+      wave.sync()
     }
     return {
       key: name,
@@ -86,7 +86,7 @@ const
   })
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         const
