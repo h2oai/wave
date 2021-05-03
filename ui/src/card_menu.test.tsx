@@ -16,7 +16,7 @@ import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { CardMenu } from './card_menu'
-import { box } from './qd'
+import { box } from 'h2o-wave'
 
 const name = 'card'
 describe('CardMenu.tsx', () => {

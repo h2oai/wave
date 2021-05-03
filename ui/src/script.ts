@@ -1,4 +1,4 @@
-import { B, Dict, S } from './qd'
+import { B, Dict, S } from 'h2o-wave'
 
 /**
  * Create a reference to an external Javascript file to be included on a page.
@@ -21,7 +21,7 @@ const
 
 export const
   installScripts = (scripts: Script[]) => {
-    scripts.forEach(({ path, asynchronous, cross_origin, referrer_policy, integrity}) => {
+    scripts.forEach(({ path, asynchronous, cross_origin, referrer_policy, integrity }) => {
       if (installedScripts[path]) return // load exactly once
       const e = document.createElement('script')
       e.type = 'text/javascript'

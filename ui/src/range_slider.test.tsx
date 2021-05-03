@@ -14,8 +14,8 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
-import * as T from './qd'
 import { RangeSlider, XRangeSlider } from './range_slider'
 
 const name = 'rangeSlider'

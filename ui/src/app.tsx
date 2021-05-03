@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { box, connect, on, Page, S, wave, WaveEvent, WaveEventType, WaveMessageType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
 import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
-import { box, connect, on, Page, wave, S, WaveEvent, WaveEventType, WaveMessageType } from './qd'
 import { clas, cssVar, pc, themeB } from './theme'
 import { bond } from './ui'
 

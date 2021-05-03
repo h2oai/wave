@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, box, F, Id, S, U, wave } from 'h2o-wave'
 import React from 'react'
 import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import { stylesheet } from 'typestyle'
-import { B, box, F, Id, wave, S, U } from './qd'
 import { displayMixin, padding } from './theme'
 import { bond } from './ui'
 

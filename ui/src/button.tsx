@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, Dict, Id, S, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { B, Dict, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
 import { XToolTip } from './tooltip'
 import { bond } from './ui'

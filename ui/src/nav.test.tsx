@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { State, View } from './nav'
-import * as T from './qd'
 
 const
   name = 'nav',

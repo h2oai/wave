@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
-import * as T from './qd'
 import { View } from './toolbar'
 
 const
@@ -48,7 +48,7 @@ describe('Toolbar.tsx', () => {
     const syncMock = jest.fn()
     T.wave.sync = syncMock
 
-    const {getByText} = render(<View {...toolbarProps} {...{
+    const { getByText } = render(<View {...toolbarProps} {...{
       state: {
         items: [{
           name: commandName,
@@ -68,7 +68,7 @@ describe('Toolbar.tsx', () => {
     const syncMock = jest.fn()
     T.wave.sync = syncMock
 
-    const {getByText} = render(<View {...toolbarProps} />)
+    const { getByText } = render(<View {...toolbarProps} />)
     fireEvent.click(getByText(commandName))
 
     expect(syncMock).toBeCalled()
@@ -79,7 +79,7 @@ describe('Toolbar.tsx', () => {
     const syncMock = jest.fn()
     T.wave.sync = syncMock
 
-    const {getByText} = render(<View {...toolbarPropsWithHash} />)
+    const { getByText } = render(<View {...toolbarPropsWithHash} />)
 
     fireEvent.click(getByText(commandNameWithHash))
     expect(T.wave.args[commandNameWithHash]).toBe(false)
@@ -87,7 +87,7 @@ describe('Toolbar.tsx', () => {
   })
 
   it('Sets window location hash when command name starts with hash', () => {
-    const {getByText} = render(<View {...toolbarPropsWithHash} />)
+    const { getByText } = render(<View {...toolbarPropsWithHash} />)
     fireEvent.click(getByText(commandNameWithHash))
 
     expect(window.location.hash).toBe(commandNameWithHash)

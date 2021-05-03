@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { ColorPicker, XColorPicker } from './color_picker'
-import * as T from './qd'
 
 const name = 'colorPicker'
 const colorPickerProps: ColorPicker = { name }

@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, box, Box, Id, on, S, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
-import { B, box, Box, Id, on, wave, S } from './qd'
 import { displayMixin, margin } from './theme'
 import { bond } from './ui'
 

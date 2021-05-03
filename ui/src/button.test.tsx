@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { Buttons, XButtons, XStandAloneButton } from './button'
-import * as T from './qd'
 
 const name = 'test-btn'
 const hashName = `#${name}`

@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { DatePicker, XDatePicker } from './date_picker'
-import * as T from './qd'
 
 const name = 'datepicker'
 const datepickerProps: DatePicker = { name }

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import { FontIcon, Panel, PanelType } from '@fluentui/react'
+import { B, Box, box, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { NavGroup, XNav } from './nav'
-import { B, Box, box, Model, S } from './qd'
 import { clas, cssVar, padding } from './theme'
 import { bond } from './ui'
 

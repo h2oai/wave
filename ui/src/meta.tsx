@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { box, Id, Model, on, S, U, wave } from 'h2o-wave'
 import React from 'react'
 import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
 import { showNotification } from './notification'
-import { box, Model, Id, on, wave, S, U } from './qd'
 import { installScripts, Script } from './script'
 import { themeB } from './theme'
 import { setupTracker, Tracker } from './tracking'

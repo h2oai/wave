@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, Id, S, wave } from 'h2o-wave'
 import React from 'react'
-import { bond } from './ui'
-import { B, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a color picker.

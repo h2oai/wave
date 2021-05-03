@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XChoiceGroup, ChoiceGroup } from './choice_group'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { ChoiceGroup, XChoiceGroup } from './choice_group'
 
 const name = 'choiceGroup'
 const choiceGroupProps: ChoiceGroup = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }

@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { createEvent, fireEvent, render, wait } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { FileUpload, XFileUpload } from './file_upload'
-import * as T from './qd'
 
 const name = 'fileUpload'
 const fileUploadProps: FileUpload = { name }

@@ -1,4 +1,4 @@
-import { on, wave, Rec, S } from './qd'
+import { on, Rec, S, wave } from 'h2o-wave'
 
 /**
  * Configure user interaction tracking (analytics) for a page.

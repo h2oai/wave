@@ -14,11 +14,11 @@
 
 import { Chart, registerInteraction } from '@antv/g2'
 import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface'
+import { B, Dict, F, Model, parseI, parseU, Rec, S, unpack, V, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { B, Model, Dict, F, parseI, parseU, wave, Rec, S, unpack, V } from './qd'
 import { cssVarValue, displayMixin } from './theme'
 import { bond } from './ui'
 

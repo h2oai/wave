@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { B, Model, Rec, S, unpack } from 'h2o-wave'
 import Handlebars from 'handlebars'
 import React from 'react'
 import { cards, substitute } from './layout'
 import { MarkupCard, XMarkup } from './markup'
-import { B, Model, Rec, S, unpack } from './qd'
 import { bond } from './ui'
 
 /** Render dynamic content using an HTML template.*/

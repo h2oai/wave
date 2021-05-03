@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { boxed, Disposable, on } from 'h2o-wave'
 import * as React from 'react'
-import { boxed, Disposable, on } from './qd'
 
 //
 // React Component + Dataflow

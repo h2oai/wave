@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { S } from 'h2o-wave'
 import React from 'react'
-import { S } from './qd'
 
 /**
  * Create a cell type that renders a column's cells as icons instead of plain text.

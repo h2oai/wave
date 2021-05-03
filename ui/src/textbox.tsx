@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, debounce, Id, S, wave } from 'h2o-wave'
 import React from 'react'
-import { B, debounce, Id, wave, S } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 

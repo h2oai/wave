@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { FontIcon } from '@fluentui/react'
+import { B, Dict, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { B, Dict, S } from './qd'
 import { clas, cssVar, padding } from './theme'
 
 /** Create a set of stats laid out horizontally. */

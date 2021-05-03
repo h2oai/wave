@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './large_bar_stat'
-import * as T from './qd'
 
 const
   title = 'large_bar_stat',

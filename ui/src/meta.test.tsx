@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import * as T from 'h2o-wave'
 import { dialogB } from './dialog'
 import { preload } from "./meta"
 import * as N from './notification'
-import * as T from './qd'
 
 const
   name = 'meta',

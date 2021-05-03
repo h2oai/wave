@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { Model, S, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { Model, wave, S } from './qd'
 import { clas, cssVar, pc } from './theme'
 import { bond } from './ui'
 

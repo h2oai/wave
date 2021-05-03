@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './header'
-import * as T from './qd'
 
 const
   name = 'header',

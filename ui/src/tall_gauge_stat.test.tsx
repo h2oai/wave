@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
-import * as T from './qd'
 import { View } from './tall_gauge_stat'
 
 const

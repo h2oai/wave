@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { Checklist, XChecklist } from './checklist'
-import * as T from './qd'
 
 const name = 'checklist'
 const checklistProps: Checklist = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }

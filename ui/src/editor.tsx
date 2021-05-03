@@ -14,13 +14,13 @@
 
 import * as Fluent from '@fluentui/react'
 import { DialogType, IDropdownOption } from '@fluentui/react'
+import { B, Box, box, Card, Dict, Model, parseU, S, U, wave, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
 import { defaultLayoutDef, editorActionB, EditorActionT, LayoutDef, layoutDefs, noAction, pickCard } from './editing'
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
-import { B, Box, box, Card, Model, Dict, parseU, wave, S, U, xid } from './qd'
 import { border, cssVar } from './theme'
 import { bond } from './ui'
 

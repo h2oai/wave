@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Data, Model, Rec, S } from 'h2o-wave'
 import React from 'react'
 import { cards, Repeat } from './layout'
-import { Model, Data, Rec, S } from './qd'
 import { bond } from './ui'
 
 /**

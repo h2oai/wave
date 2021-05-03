@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { F, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { F, S, U } from '../qd'
 
 const css = stylesheet({
   body: {

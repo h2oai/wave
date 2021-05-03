@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { B, box, Card, Dict, Disposable, on, Page, parseU, S, U } from 'h2o-wave'
 import { default as React } from 'react'
 import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { CardEffect, CardView, getCardStyle, GridLayout } from './layout'
 import { FlexBox, Layout, layoutsB, preload, Zone } from './meta'
-import { B, box, Card, Dict, Disposable, on, Page, parseU, S, U } from './qd'
 import { clas, cssVar, margin } from './theme'
 import { bond } from './ui'
 

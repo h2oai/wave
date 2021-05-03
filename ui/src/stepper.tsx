@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { B, Id, S, U } from './qd'
 import { displayMixin, rem } from './theme'
 import { bond } from './ui'
 

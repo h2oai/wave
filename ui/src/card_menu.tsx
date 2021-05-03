@@ -16,7 +16,7 @@ import { ContextualMenu, Icon, IContextualMenuItem } from '@fluentui/react'
 import * as React from 'react'
 import { stylesheet } from 'typestyle'
 import { deleteCard, editCard } from './editing'
-import { B, box, Box, wave, S } from './qd'
+import { B, box, Box, wave, S } from 'h2o-wave'
 import { Command } from './toolbar'
 import { bond } from './ui'
 

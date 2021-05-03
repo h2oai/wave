@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Data, F, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
-import { Model, Data, F, Rec, S, unpack } from './qd'
 import { clas, cssVar, pc } from './theme'
 import { bond } from './ui'
 

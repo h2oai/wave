@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, Model, Packed, S, unpack, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Button, Buttons, XButtons, XStandAloneButton } from './button'
@@ -35,7 +36,6 @@ import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
-import { B, Model, Packed, S, unpack, xid } from './qd'
 import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'

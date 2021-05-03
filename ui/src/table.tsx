@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, box, Dict, Id, S, U, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
-import { B, box, Dict, Id, wave, S, U } from './qd'
 import { cssVar, displayMixin, rem } from './theme'
 import { bond } from './ui'
 

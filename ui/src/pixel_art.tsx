@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Model, Rec, S, U, unpack, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { Model, wave, Rec, S, U, unpack } from './qd'
 import { bond } from './ui'
 
 const

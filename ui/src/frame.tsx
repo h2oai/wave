@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { B, Model, S, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { B, Model, S, xid } from './qd'
 import { displayMixin } from './theme'
 import { bond } from './ui'
 

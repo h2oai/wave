@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import { TextField } from '@fluentui/react'
+import { Box, box, Dict, Model, on, Rec, S, U, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { bond } from './ui'
 import { cards, grid } from './layout'
-import { Box, box, Model, Dict, on, wave, Rec, S, U } from './qd'
 import { border, clas, cssVar, padding } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({

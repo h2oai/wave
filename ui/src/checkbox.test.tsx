@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { Checkbox, XCheckbox } from './checkbox'
-import * as T from './qd'
 
 const name = 'checkbox'
 const checkboxProps: Checkbox = { name }

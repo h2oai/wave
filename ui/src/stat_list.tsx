@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import { FontIcon } from '@fluentui/react'
+import { Model, S, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { Model, wave, S } from './qd'
 import { clas, cssVar } from './theme'
 import { bond } from './ui'
 

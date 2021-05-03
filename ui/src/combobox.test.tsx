@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
 import { Combobox, XCombobox } from './combobox'
-import * as T from './qd'
 
 const name = 'combobox'
 const comboboxProps: Combobox = { name }

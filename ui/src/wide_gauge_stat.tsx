@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { F, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressArc } from './parts/progress_arc'
-import { Model, F, Rec, S, unpack } from './qd'
 import { centerMixin, clas, cssVar, padding, pc } from './theme'
 import { bond } from './ui'
 

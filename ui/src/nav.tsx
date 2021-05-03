@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
+import { B, Id, Model, S, wave } from 'h2o-wave'
 import React from 'react'
 import { CardEffect, cards } from './layout'
-import { B, Model, Id, wave, S } from './qd'
 import { bond } from './ui'
 
 /** Create a navigation item. */
