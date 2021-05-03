@@ -15,7 +15,6 @@ page.add('example', ui.tall_info_card(
     maiores consequatur dolores illo inventore quae obcaecati culpa totam corporis! Repudiandae, nostrum repellendus.
     ''',
     category='Category',
-    # icon='Checkmark',
     image='https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260', # noqa
     image_height='200px'
 ))
