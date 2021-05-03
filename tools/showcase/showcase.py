@@ -5,14 +5,12 @@ import os
 import signal
 import re
 import json
-import sys
 from typing import Any, List
 from playwright.sync_api import sync_playwright
 
 example_file_path = os.path.join('..', '..', 'py', 'showcase.py')
 docs_path = os.path.join('..', '..', 'website')
-folder = sys.argv[1] if len(sys.argv) == 2 else ''
-files = [f.replace('.md', '') for f in glob.glob(os.path.join(folder, '*.md'))]
+files = [f.replace('.md', '') for f in glob.glob(os.path.join('showcase', '*.md'))]
 
 
 def get_template_code(code: str):
@@ -36,7 +34,7 @@ def make_snippet_screenshot(code: List[str], screenshot_name: str, browser: Any)
     with subprocess.Popen(['venv/bin/python', 'showcase.py'], cwd=os.path.join('..', '..', 'py')):
         page = browser.new_page()
         page.goto('http://localhost:10101')
-        path = os.path.join(docs_path, 'docs', folder, 'assets', screenshot_name)
+        path = os.path.join(docs_path, 'docs', 'showcase', 'assets', screenshot_name)
         page.query_selector(f'[data-test="{card_name}"]').screenshot(path=path)
         page.close()
 
@@ -47,7 +45,7 @@ def generate_screenshots(browser: Any):
             is_code = False
             code = []
             file_idx = 0
-            file = re.sub(r'(cards|components)/', '', file)
+            file = file.replace('showcase/', '')
             for line in f.readlines():
                 if is_code and not line.startswith('```'):
                     code.append(line)
@@ -66,7 +64,7 @@ def append_images():
         is_code = False
         with open(f'{file}.md', 'r') as f:
             idx = 0
-            file = re.sub(r'(cards|components)/', '', file)
+            file = file.replace('showcase/', '')
             for line in f.readlines():
                 if line.startswith('```'):
                     if not is_code:
@@ -75,21 +73,21 @@ def append_images():
                         idx = idx + 1
                     is_code = not is_code
                 img_lines.append(line)
-        with open(os.path.join(docs_path, 'docs', folder, f'{file}.md'), 'w') as f:
+        with open(os.path.join(docs_path, 'docs', 'showcase', f'{file}.md'), 'w') as f:
             f.writelines(img_lines)
 
 
 def generate_showcase_json():
-    with open(os.path.join(docs_path, f'{folder}.js'), 'w') as f:
+    with open(os.path.join(docs_path, 'showcase.js'), 'w') as f:
         f.write(f'module.exports={json.dumps(files)}')
 
 
 def main():
     try:
         # Remove old contents first.
-        for f in glob.glob(os.path.join(docs_path, 'docs', folder, '*.md')):
+        for f in glob.glob(os.path.join(docs_path, 'docs', 'showcase', '*.md')):
             os.remove(f)
-        for f in glob.glob(os.path.join(docs_path, 'docs', folder, 'assets', '*.png')):
+        for f in glob.glob(os.path.join(docs_path, 'docs', 'showcase', 'assets', '*.png')):
             os.remove(f)
         qd_server = subprocess.Popen(['make', 'run'], cwd=os.path.join('..', '..'), preexec_fn=os.setsid)
         time.sleep(1)  # Wait for server to boot up.
