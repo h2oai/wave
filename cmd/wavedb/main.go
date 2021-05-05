@@ -17,7 +17,7 @@ package main
 import (
 	"flag"
 
-	"github.com/h2oai/wave/db"
+	"github.com/h2oai/wave/pkg/db"
 )
 
 func main() {
