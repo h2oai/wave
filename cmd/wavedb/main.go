@@ -17,20 +17,31 @@ package main
 import (
 	"flag"
 	"fmt"
+	"runtime"
 
 	"github.com/h2oai/wave/pkg/db"
 	"github.com/h2oai/wave/pkg/keychain"
+)
+
+var (
+	// Version is the executable version.
+	Version = "(version)"
+
+	// BuildDate is the executable build date.
+	BuildDate = "(build)"
 )
 
 func main() {
 
 	var (
 		conf            db.DSConf
+		version         bool
 		accessKeyID     string
 		accessKeySecret string
 		accessKeyFile   string
 	)
 
+	flag.BoolVar(&version, "version", false, "print version and exit")
 	flag.StringVar(&conf.Listen, "listen", ":10100", "listen on this address")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
@@ -39,6 +50,11 @@ func main() {
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
 
 	flag.Parse()
+
+	if version {
+		fmt.Printf("WaveDB\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
+		return
+	}
 
 	kc, err := keychain.LoadKeychain(accessKeyFile)
 	if err != nil {
@@ -55,6 +71,9 @@ func main() {
 		}
 		kc.Add(accessKeyID, hash)
 	}
+
+	conf.Version = Version
+	conf.BuildDate = BuildDate
 
 	db.NewDS(kc).Run(conf)
 }

@@ -32,9 +32,9 @@ import (
 )
 
 const logo = `
-┌────────┐┌────┐ 
-│  ┐┌┐┐┌─┘│─┐  │
-│  └┘└┘└─┘└─┘  │
+┌────────┐┌────┐ H2O WaveDB
+│  ┐┌┐┐┌─┘│─┐  │ %s %s
+│  └┘└┘└─┘└─┘  │ © 2021 H2O.ai, Inc.
 └──────────────┘
 `
 
@@ -69,9 +69,11 @@ const logo = `
 
 // DSConf represents data store configuration options.
 type DSConf struct {
-	Listen   string
-	CertFile string
-	KeyFile  string
+	Version   string
+	BuildDate string
+	Listen    string
+	CertFile  string
+	KeyFile   string
 }
 
 // DS represents a data store
@@ -89,7 +91,7 @@ func NewDS(kc *keychain.Keychain) *DS {
 func (ds *DS) Run(conf DSConf) {
 	http.HandleFunc("/", ds.handle)
 
-	for _, line := range strings.Split(logo, "\n") {
+	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println(line)
 	}
 	log.Println("listening", conf.Listen)
