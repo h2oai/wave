@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package wave
+package keychain
 
 import (
 	"bytes"
@@ -30,6 +30,7 @@ var (
 	idChars              = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	secretChars          = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
 	colon                = []byte(":")
+	newline              = []byte{'\n'}
 	invalidKeychainEntry = errors.New("invalid entry found in keychain")
 )
 
@@ -171,13 +172,13 @@ func (kc *Keychain) Save() error {
 	return nil
 }
 
-func (kc *Keychain) allow(r *http.Request) bool {
+func (kc *Keychain) Allow(r *http.Request) bool {
 	id, secret, ok := r.BasicAuth()
 	return ok && kc.verify(id, secret)
 }
 
-func (kc *Keychain) guard(w http.ResponseWriter, r *http.Request) bool {
-	if !kc.allow(r) {
+func (kc *Keychain) Guard(w http.ResponseWriter, r *http.Request) bool {
+	if !kc.Allow(r) {
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return false
 	}

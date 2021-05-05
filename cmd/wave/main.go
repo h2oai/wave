@@ -27,6 +27,7 @@ import (
 	"strings"
 
 	"github.com/h2oai/wave"
+	"github.com/h2oai/wave/pkg/keychain"
 )
 
 var (
@@ -135,13 +136,13 @@ func main() {
 		return
 	}
 
-	keychain, err := wave.LoadKeychain(accessKeyFile)
+	kc, err := keychain.LoadKeychain(accessKeyFile)
 	if err != nil {
 		panic(fmt.Errorf("failed loading keychain: %v", err))
 	}
 
 	if listAccessKeys {
-		keys := keychain.IDs()
+		keys := kc.IDs()
 		sort.Strings(keys)
 		for _, key := range keys {
 			fmt.Println(key)
@@ -150,40 +151,40 @@ func main() {
 	}
 
 	if len(removeAccessKeyID) > 0 {
-		if ok := keychain.Remove(removeAccessKeyID); !ok {
-			fmt.Printf("error: access key ID %s not found in keychain %s\n", removeAccessKeyID, keychain.Name)
+		if ok := kc.Remove(removeAccessKeyID); !ok {
+			fmt.Printf("error: access key ID %s not found in keychain %s\n", removeAccessKeyID, kc.Name)
 			os.Exit(1)
 		}
 
-		if err := keychain.Save(); err != nil {
+		if err := kc.Save(); err != nil {
 			panic(fmt.Errorf("failed writing keychain: %v", err))
 		}
-		fmt.Printf("Success! Key %s removed from keychain %s\n", accessKeyID, keychain.Name)
+		fmt.Printf("Success! Key %s removed from keychain %s\n", accessKeyID, kc.Name)
 		return
 	}
 
 	if createAccessKey {
-		id, secret, hash, err := wave.CreateAccessKey()
+		id, secret, hash, err := keychain.CreateAccessKey()
 		if err != nil {
 			panic(fmt.Errorf("failed generating access key: %v", err))
 		}
-		keychain.Add(id, hash)
-		if err := keychain.Save(); err != nil {
+		kc.Add(id, hash)
+		if err := kc.Save(); err != nil {
 			panic(fmt.Errorf("failed writing keychain: %v", err))
 		}
-		fmt.Printf(createAccessKeyMessage, id, secret, keychain.Name)
+		fmt.Printf(createAccessKeyMessage, id, secret, kc.Name)
 		return
 	}
 
-	if keychain.Len() == 0 {
+	if kc.Len() == 0 {
 		if len(accessKeyID) == 0 || len(accessKeySecret) == 0 {
 			panic("default access key ID or secret cannot be empty")
 		}
-		hash, err := wave.HashSecret(accessKeySecret)
+		hash, err := keychain.HashSecret(accessKeySecret)
 		if err != nil {
 			panic(err)
 		}
-		keychain.Add(accessKeyID, hash)
+		kc.Add(accessKeyID, hash)
 	}
 
 	conf.MaxRequestSize, err = parseReadSize("max request size", maxRequestSize)
@@ -212,7 +213,7 @@ func main() {
 	conf.Version = Version
 	conf.BuildDate = BuildDate
 
-	conf.Keychain = keychain
+	conf.Keychain = kc
 
 	if auth.ClientID != "" && auth.ClientSecret != "" && auth.ProviderURL != "" && auth.RedirectURL != "" {
 		conf.Auth = &auth

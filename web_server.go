@@ -19,6 +19,8 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+
+	"github.com/h2oai/wave/pkg/keychain"
 )
 
 // WebServer represents a web server (d'oh).
@@ -26,7 +28,7 @@ type WebServer struct {
 	site           *Site
 	broker         *Broker
 	fs             http.Handler
-	keychain       *Keychain
+	keychain       *keychain.Keychain
 	maxRequestSize int64
 }
 
@@ -38,7 +40,7 @@ func newWebServer(
 	site *Site,
 	broker *Broker,
 	auth *Auth,
-	keychain *Keychain,
+	keychain *keychain.Keychain,
 	maxRequestSize int64,
 	www string,
 ) *WebServer {
@@ -52,14 +54,14 @@ func newWebServer(
 func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPatch: // writes
-		if !s.keychain.guard(w, r) {
+		if !s.keychain.Guard(w, r) {
 			return
 		}
 		s.patch(w, r)
 	case http.MethodGet: // reads
 		switch r.Header.Get("Content-Type") {
 		case contentTypeJSON: // data
-			if !s.keychain.guard(w, r) {
+			if !s.keychain.Guard(w, r) {
 				return
 			}
 			s.get(w, r)
@@ -67,7 +69,7 @@ func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			s.fs.ServeHTTP(w, r)
 		}
 	case http.MethodPost: // all other APIs
-		if !s.keychain.guard(w, r) {
+		if !s.keychain.Guard(w, r) {
 			return
 		}
 		s.post(w, r)

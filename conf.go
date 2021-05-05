@@ -14,6 +14,10 @@
 
 package wave
 
+import (
+	"github.com/h2oai/wave/pkg/keychain"
+)
+
 // ServerConf represents Server configuration options.
 type ServerConf struct {
 	Version              string
@@ -21,7 +25,7 @@ type ServerConf struct {
 	Listen               string
 	WebDir               string
 	DataDir              string
-	Keychain             *Keychain
+	Keychain             *keychain.Keychain
 	Init                 string
 	Compact              string
 	CertFile             string
