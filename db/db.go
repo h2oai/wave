@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package surf
+package db
 
 import (
 	"encoding/json"
@@ -27,21 +27,18 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/bvinc/go-sqlite-lite/sqlite3"
+	"github.com/lo5/sqlite3"
 )
 
-const dbLogo = `
-
-             ____
-  ____ _____/ / /_
- / __ ` + "`" + `/ __  / __ \
-/ /_/ / /_/ / /_/ /
-\__, /\__,_/_.___/
-  /_/
+const logo = `
+┌────────┐┌────┐ 
+│  ┐┌┐┐┌─┘│─┐  │
+│  └┘└┘└─┘└─┘  │
+└──────────────┘
 `
 
 //
-// TeleDB is an ACID-compliant database server atop SQLite3,
+// WaveDB is an ACID-compliant database server atop SQLite3,
 // using JSON over HTTP as a protocol.
 //
 // It is super simple, not geographically distributed, not multi-region,
@@ -55,13 +52,13 @@ const dbLogo = `
 // (theoretically 140TB), SQLite supports unlimited read concurrency, and is
 // almost always a better solution than a client/server SQL database engine.
 //
-// Concurrency can also improved by sharding, in which case TeleDB can be made
+// Concurrency can also improved by sharding, in which case WaveDB can be made
 // to use separate SQLite database files for each shard. Depending on the use case,
 // clients might choose to have a separate shard per subject, so that the
 // server can handle hundreds or thousands of simultaneous connections, but
 // each shard is only used by one connection.
 //
-// Sharding is automatic, and TeleDB will use the database name specified
+// Sharding is automatic, and WaveDB will use the database name specified
 // in each request to initialize new shards if missing.
 //
 // JSON1, RTREE, FTS5, GEOPOLY, STAT4, and SOUNDEX extensions are built in.
@@ -90,7 +87,7 @@ func NewDS() *DS {
 func (ds *DS) Run(conf DSConf) {
 	http.HandleFunc("/", ds.handle)
 
-	for _, line := range strings.Split(dbLogo, "\n") {
+	for _, line := range strings.Split(logo, "\n") {
 		log.Println(line)
 	}
 	log.Println("listening", conf.Listen)
@@ -169,7 +166,7 @@ func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return
 			}
-			w.Header().Set("Content-Type", contentTypeJSON)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(out)
 			return
 		}

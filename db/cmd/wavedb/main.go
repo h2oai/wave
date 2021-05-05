@@ -17,12 +17,12 @@ package main
 import (
 	"flag"
 
-	"github.com/h2oai/wave/surf"
+	"github.com/h2oai/wave/db"
 )
 
 func main() {
 
-	var conf surf.DSConf
+	var conf db.DSConf
 
 	flag.StringVar(&conf.Listen, "listen", ":10100", "listen on this address")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
@@ -30,5 +30,5 @@ func main() {
 
 	flag.Parse()
 
-	surf.NewDS().Run(conf)
+	db.NewDS().Run(conf)
 }

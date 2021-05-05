@@ -1,2 +1,2 @@
-github.com/bvinc/go-sqlite-lite v0.6.1 h1:JU8Rz5YAOZQiU3WEulKF084wfXpytRiqD2IaW2QjPz4=
-github.com/bvinc/go-sqlite-lite v0.6.1/go.mod h1:2GiE60NUdb0aNhDdY+LXgrqAVDpi2Ijc6dB6ZMp9x6s=
+github.com/lo5/sqlite3 v0.0.0-20210505185412-ed573fc038be h1:F7fJLX5dCKpJsHVADZ24EJBogAnwPOHLO/CGHe6aCQQ=
+github.com/lo5/sqlite3 v0.0.0-20210505185412-ed573fc038be/go.mod h1:bld1oUU4buWPOuyyJfmLL+t02pmJY9qMCTpYK8PrhOs=
