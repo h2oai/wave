@@ -27,6 +27,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/h2oai/wave/pkg/keychain"
 	"github.com/lo5/sqlite3"
 )
 
@@ -75,12 +76,13 @@ type DSConf struct {
 
 // DS represents a data store
 type DS struct {
-	catalog *Catalog
+	keychain *keychain.Keychain
+	catalog  *Catalog
 }
 
 // NewDS mints a new data store.
-func NewDS() *DS {
-	return &DS{newCatalog()}
+func NewDS(kc *keychain.Keychain) *DS {
+	return &DS{kc, newCatalog()}
 }
 
 // Run runs runs the server.
@@ -148,6 +150,9 @@ func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		switch r.Header.Get("Content-Type") {
 		case "application/json":
+			if !ds.keychain.Guard(w, r) {
+				return
+			}
 			var request DBRequest
 			in, err := ioutil.ReadAll(http.MaxBytesReader(w, r.Body, 5<<20)) // limit to 5MB per request
 			if err != nil {
