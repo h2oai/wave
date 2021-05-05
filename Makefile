@@ -44,6 +44,9 @@ test-ui-watch: ## Run UI unit tests
 build-server: ## Build server for current OS/Arch
 	go build $(LDFLAGS) -o waved cmd/wave/main.go
 
+build-db: ## Build database server for current OS/Arch
+	go build $(LDFLAGS) -o wavedb cmd/wavedb/main.go
+
 build-server-micro: ## Build smaller (~2M instead of ~10M) server executable
 	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o waved cmd/wave/main.go
 	upx --brute waved
@@ -60,6 +63,9 @@ build-docker:
 
 run: ## Run server
 	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable
+
+run-db: ## Run database server
+	go run cmd/wavedb/main.go
 
 run-micro: ## Run microwave
 	go run cmd/wave/main.go -web-dir ./u
