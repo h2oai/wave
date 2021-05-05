@@ -12,11 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple, List, Optional, Dict
+import os
+from typing import Tuple, List, Optional, Dict, Any
 
 import httpx
 
 from .core import marshal, unmarshal
+
+
+def _get_env(key: str, value: Any):
+    return os.environ.get(f'H2O_WAVEDB_{key}', value)
 
 
 def _new_stmt(query: str, params: List) -> Dict:
@@ -38,30 +43,28 @@ def _new_db_request(exec: Optional[Dict] = None) -> Dict:
     return dict(exec=exec)
 
 
-class TeleDBError(Exception):
+class WaveDBError(Exception):
     """
-    Represents a remote exception thrown by the TeleDB database server.
+    Represents a remote exception thrown by the WaveDB database server.
     """
     pass
 
 
-class TeleDB:
+class WaveDBConnection:
     """
-    Represents a TeleDB database client.
+    Represents a WaveDB database connection.
     """
 
-    def __init__(self, address: str, key_id: str, key_secret: str):
+    def __init__(self, address: str = None, key_id: str = None, key_secret: str = None):
         """
-        Create a new client instance.
-
-        Args:
-            address: database address
-            key_id: access key id
-            key_secret: access key secret
+        Create a new database connection.
         """
-        self._address = address
+        self._address = address or _get_env('ADDRESS', 'http://127.0.0.1:10100')
         self._http = httpx.AsyncClient(
-            auth=(key_id, key_secret),
+            auth=(
+                key_id or _get_env('ACCESS_KEY_ID', 'access_key_id'),
+                key_secret or _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
+            ),
             headers={'Content-type': 'application/json'},
             verify=False,
         )
@@ -75,21 +78,27 @@ class TeleDB:
         Returns:
             a connector instance
         """
-        return _DB(self, name)
+        return WaveDB(self, name)
 
     async def _call(self, req: dict) -> dict:
         res = await self._http.post(self._address, content=marshal(req))
         if res.status_code != 200:
-            raise TeleDBError(f'Request failed (code={res.status_code}): {res.text}')
+            raise WaveDBError(f'Request failed (code={res.status_code}): {res.text}')
         return unmarshal(res.text)
 
+    async def close(self):
+        """
+        Close the database connection.
+        """
+        await self._http.aclose()
 
-class _DB:
+
+class WaveDB:
     """
     Represents a database connector.
     """
 
-    def __init__(self, db: TeleDB, name: str):
+    def __init__(self, db: WaveDBConnection, name: str):
         self._db = db
         self._name = name
 
