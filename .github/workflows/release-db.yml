@@ -12,6 +12,25 @@ env:
   VERSION: "${{ github.event.inputs.version }}"
 
 jobs:
+  release-windows:
+    name: WaveDB Windows Release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+      - name: Build
+        run: build-db.bat
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "wavedb-${{ env.VERSION }}-windows-amd64.tar.gz"
+          tag_name: "${{ env.VERSION }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release-linux:
     name: WaveDB Linux Release
     runs-on: ubuntu-latest
@@ -27,7 +46,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "./build/wavedb-${{ env.VERSION }}-linux-amd64.tar.gz"
+          files: "wavedb-${{ env.VERSION }}-linux-amd64.tar.gz"
           tag_name: "${{ env.VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,7 +65,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "./build/wavedb-${{ env.VERSION }}-darwin-amd64.tar.gz"
+          files: "wavedb-${{ env.VERSION }}-darwin-amd64.tar.gz"
           tag_name: "${{ env.VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

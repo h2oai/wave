@@ -49,8 +49,8 @@ build-db: ## Build database server for current OS/Arch
 
 release-db: # Build release package for database server
 	mkdir -p build
-	GOOS=$(OS) GOARCH=amd64 go build -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb cmd/wavedb/main.go
-	tar -czf build/wavedb-$(VERSION)-$(OS)-amd64.tar.gz wavedb
+	go build -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb cmd/wavedb/main.go
+	tar -czf wavedb-$(VERSION)-$(OS)-amd64.tar.gz wavedb
 
 release-db-darwin: # Build OSX release package for database server
 	$(MAKE) OS=darwin release-db
