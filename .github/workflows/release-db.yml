@@ -27,7 +27,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "wavedb-${{ env.VERSION }}-linux-amd64.tar.gz"
+          files: "./build/wavedb-${{ env.VERSION }}-linux-amd64.tar.gz"
           tag_name: "${{ env.VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,7 +46,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "wavedb-${{ env.VERSION }}-darwin-amd64.tar.gz"
+          files: "./build/wavedb-${{ env.VERSION }}-darwin-amd64.tar.gz"
           tag_name: "${{ env.VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
