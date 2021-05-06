@@ -23,7 +23,7 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
       - name: Build
-        run: build-db.bat
+        run: make release-db-windows
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
