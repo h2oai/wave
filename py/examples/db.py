@@ -74,6 +74,9 @@ async def main():
     # Clean up.
     await db.exec("drop table employee")
 
+    # Drop the database entirely. Warning: A database is irrecoverable once dropped.
+    await db.drop()
+
     # Close connection.
     await connection.close()
 

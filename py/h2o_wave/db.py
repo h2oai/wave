@@ -36,11 +36,11 @@ def _new_stmt(query: str, params: List) -> Dict:
 def _new_exec_request(database: str, statements: List[Dict], atomic: bool) -> Dict:
     if not isinstance(database, str):
         raise ValueError(f'database must be str; got {type(database)}')
-    return dict(database=database, statements=statements, atomic=atomic)
+    return dict(exec=dict(database=database, statements=statements, atomic=atomic))
 
 
-def _new_db_request(exec: Optional[Dict] = None) -> Dict:
-    return dict(exec=exec)
+def _new_drop_request(database: str) -> Dict:
+    return dict(drop=dict(database=database))
 
 
 class WaveDBError(Exception):
@@ -173,6 +173,14 @@ class WaveDB:
         """
         return await self._exec(list(args), atomic=True)
 
+    async def drop(self) -> Optional[str]:
+        """
+        Drop the database.
+        """
+        req = _new_drop_request(self._name)
+        res = await self._db._call(req)
+        return res.get('error')
+
     async def _exec(self, args: list, atomic=False) -> Tuple[Optional[List[List[List]]], Optional[str]]:
         if len(args) == 0:
             raise ValueError('Want at least one SQL query, got none')
@@ -192,7 +200,7 @@ class WaveDB:
                 raise ValueError('Want statement, got empty tuple/list')
             statements.append(_new_stmt(arg[0], arg[1:]))
 
-        req = _new_db_request(exec=_new_exec_request(self._name, statements, atomic))
+        req = _new_exec_request(self._name, statements, atomic)
         res = await self._db._call(req)
         result, err = res.get('result'), res.get('error')
         if err:
