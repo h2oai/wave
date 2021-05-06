@@ -47,6 +47,17 @@ build-server: ## Build server for current OS/Arch
 build-db: ## Build database server for current OS/Arch
 	go build $(LDFLAGS) -o wavedb cmd/wavedb/main.go
 
+release-db: # Build release package for database server
+	mkdir -p build
+	GOOS=$(OS) GOARCH=amd64 go build -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb cmd/wavedb/main.go
+	tar -czf build/wavedb-$(VERSION)-$(OS)-amd64.tar.gz wavedb
+
+release-db-darwin: # Build OSX release package for database server
+	$(MAKE) OS=darwin release-db
+
+release-db-linux: # Build Linux release package for database server
+	$(MAKE) OS=linux release-db
+
 build-server-micro: ## Build smaller (~2M instead of ~10M) server executable
 	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o waved cmd/wave/main.go
 	upx --brute waved
