@@ -13,31 +13,39 @@
 // limitations under the License.
 
 /* eslint-disable @typescript-eslint/ban-types */
-import * as React from 'react'
-import { Dialog } from './dialog'
-import { track } from './tracking'
 
 //
 // Dataflow
 // Mostly a port of H2O Flow's dataflow.coffee
 //
 
+/** Action. */
 export type Act = () => void
+/** Action, 1 argument. */
 export type Eff<T> = (t: T) => void
+/** Action, 2 arguments. */
 export type Eff2<A, B> = (a: A, b: B) => void
+/** Action, 3 arguments. */
 export type Eff3<A, B, C> = (a: A, b: B, c: C) => void
+/** Action, 4 arguments. */
 export type Eff4<A, B, C, D> = (a: A, b: B, c: C, d: D) => void
+/** Function, 1 argument. */
 export type Func<A, B> = (a: A) => B
+/** Function, 2 arguments. */
 export type Func2<A, B, C> = (a: A, b: B) => C
+/** Function, 3 arguments. */
 export type Func3<A, B, C, D> = (a: A, b: B, c: C) => D
-
+/** Anything that needs disposing. */
 export interface Disposable { dispose(): void }
+
 interface Arrow<T> extends Disposable { f: Eff<T> }
 
+/** A container that holds some value, and can be observed. */
 export interface Box<T> extends Disposable {
   (): T
   (value: T): T
 }
+
 interface Boxed<T> extends Box<T> {
   __boxed__: boolean // marker
   on(f: Eff<T>, o?: any): Arrow<T>
@@ -46,7 +54,9 @@ interface Boxed<T> extends Box<T> {
 
 type Equal<T> = (a: T, b: T) => boolean
 function different<T>(_a: T, _b: T) { return false }
+/** Create a Box with a pre-defined value comparator. */
 export function box<T>(value?: T, equal?: Equal<T>): Box<T>;
+/** Create a Box. */
 export function box<T>(...args: any[]): Box<T> {
   let
     x: T = (args.length > 0 ? args[0] : undefined) as T
@@ -76,25 +86,35 @@ export function box<T>(...args: any[]): Box<T> {
 
   return f as Box<T>
 }
-
+/** Is this a Box? */
 export function boxed<T>(x: any): x is Box<T> { return x && x.__boxed__ === true }
+/** Get the value from a Box, if a Box, else return the argument as-is. */
 export function unbox<T>(x: T | Box<T>): T { return boxed(x) ? x() : x }
+/** Send a Box's value to f() and broadcast its value. */
 export function rebox<T>(b: Box<T>, f: Eff<T>) { const x = b(); f(x); (b as Boxed<T>).touch() }
-
+/** Subscribe to changes in a Box. */
 export function on<A>(a: Box<A>, f: Eff<A>): Disposable;
+/** Subscribe to changes in 2 Boxes. */
 export function on<A, B>(a: Box<A>, b: Box<B>, f: Eff2<A, B>): Disposable;
+/** Subscribe to changes in 3 Boxes. */
 export function on<A, B, C>(a: Box<A>, b: Box<B>, c: Box<C>, f: Eff3<A, B, C>): Disposable;
+/** Subscribe to changes in 4 Boxes. */
 export function on<A, B, C, D>(a: Box<A>, b: Box<B>, c: Box<C>, d: Box<D>, f: Eff4<A, B, C, D>): Disposable;
+/** Subscribe to changes in N Boxes. */
 export function on(...args: any[]): Disposable { return react(false, args.slice(0, args.length - 1), args[args.length - 1]) }
-
+/** Subscribe to changes in a box, and broadcast immediately. */
 export function to<A>(a: Box<A>, f: Eff<A>): Disposable;
+/** Subscribe to changes in 2 Boxes, and broadcast immediately. */
 export function to<A, B>(a: Box<A>, b: Box<B>, f: Eff2<A, B>): Disposable;
+/** Subscribe to changes in 3 Boxes, and broadcast immediately. */
 export function to<A, B, C>(a: Box<A>, b: Box<B>, c: Box<C>, f: Eff3<A, B, C>): Disposable;
+/** Subscribe to changes in 4 Boxes, and broadcast immediately. */
 export function to<A, B, C, D>(a: Box<A>, b: Box<B>, c: Box<C>, d: Box<D>, f: Eff4<A, B, C, D>): Disposable;
+/** Subscribe to changes in N Boxes, and broadcast immediately. */
 export function to(...args: any[]): Disposable { return react(true, args.slice(0, args.length - 1), args[args.length - 1]) }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function react(immediate: boolean, boxen: Box<any>[], f: Function): Disposable {
+function react(immediate: boolean, boxen: Box<any>[], f: Function): Disposable {
   const
     xs = boxen as Boxed<any>[],
     emit = () => f(...xs.map(x => x())),
@@ -105,9 +125,13 @@ export function react(immediate: boolean, boxen: Box<any>[], f: Function): Dispo
   return { dispose }
 }
 
+/** Create a Box computed from another Box. */
 export function by<A, B>(a: Box<A>, map: Func<A, B>): Box<B>
+/** Create a Box computed from 2 other Boxes. */
 export function by<A, B, C>(a: Box<A>, b: Box<B>, zip: Func2<A, B, C>): Box<B>
+/** Create a Box computed from 3 other Boxes. */
 export function by<A, B, C, D>(a: Box<A>, b: Box<B>, c: Box<C>, zip: Func3<A, B, C, D>): Box<B>
+/** Create a Box computed from N other Boxes. */
 export function by(...args: any[]): any {
   if (args.length < 2) throw new Error(`invalid number of args: want 2 or more, got ${args.length}`)
   const
@@ -120,7 +144,7 @@ export function by(...args: any[]): any {
   xs.forEach(x => x.on(_ => yB(f(...xs.map(x => x())))))
   return yB
 }
-
+/** Watch a Box for changes and print changes to the console. */
 export function watch<T>(x: Box<T>, label?: string): Disposable {
   // eslint-disable-next-line no-console
   return on(x, label ? ((x: T) => console.log(label, x)) : ((x: T) => console.log(x)))
@@ -128,78 +152,33 @@ export function watch<T>(x: Box<T>, label?: string): Disposable {
 
 function remove<T>(xs: T[], x: T): void { const i = xs.indexOf(x); if (i > -1) xs.splice(i, 1) }
 
-//
-// React Component + Dataflow
-//
-
-interface Renderable {
-  render(): JSX.Element
-  init?(): void
-  update?(): void
-  dispose?(): void
-}
-
-export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) => TState) {
-  return class extends React.Component<TProps> {
-    private readonly model: TState
-    private readonly arrows: Disposable[]
-    constructor(props: TProps) {
-      super(props)
-
-      const
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        self = this,
-        model = ctor(props),
-        arrows: Disposable[] = []
-
-      Object.keys(model).forEach(k => {
-        if (k === 'render' || k === 'dispose' || k === 'init' || k === 'update') return
-        const v = (model as any)[k]
-        if (boxed(v)) arrows.push(on(v, _ => self.setState({})))
-      })
-
-      this.model = model
-      this.arrows = arrows
-      this.state = {}
-    }
-    componentDidMount() {
-      if (this.model.init) this.model.init()
-    }
-    componentDidUpdate() {
-      if (this.model.update) this.model.update()
-    }
-    componentWillUnmount() {
-      if (this.model.dispose) this.model.dispose()
-      for (const a of this.arrows) a.dispose()
-    }
-    render() {
-      return this.model.render()
-    }
-  }
-}
-
-//
-// Sync
-//
-
+/** Synonym for boolean. */
 export type B = boolean
+/** Synonym for unsigned int. */
 export type U = number
+/** Synonym for int. */
 export type I = number
+/** Synonym for float. */
 export type F = number
+/** Synonym for string. */
 export type S = string
+/** Synonym for date. */
 export type D = Date
+/** Synonym for number, string or date. */
 export type V = F | S | D
-export type Prim = S | F | B | null // primitive
-export interface Size { width: U, height: U }
-export interface Rect extends Size { left: U, top: U }
-
-export interface Dict<T> { [key: string]: T } // generic object
-
-export type Id = S // Identifier or non-empty string (marker type)
-export type Rec = Dict<Prim | Prim[] | Rec | Rec[]> // Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type.
+/** A primitive. */
+export type Prim = S | F | B | null
+/** Dictionary or generic object. */
+export interface Dict<T> { [key: string]: T }
+/** Identifier (non-empty string). */
+export type Id = S
+/** Record; named "Rec" to distinguish from Typescript's Record<K,T> utility type. */
+export type Rec = Dict<Prim | Prim[] | Rec | Rec[]> // 
+/** Several records. */
 export type Recs = Rec[]
+/** An object, or a serialized string representation of the object. */
 export type Packed<T> = T | S
-
+/** A container for records. */
 export interface Data {
   list(): (Rec | null)[]
   dict(): Dict<Rec>
@@ -253,18 +232,6 @@ interface CycBufD {
   n: U
   i: U
 }
-
-export interface Page {
-  key: S
-  changed: Box<B>
-  add(k: S, c: C): void
-  get(k: S): C | undefined
-  set(k: S, v: any): void
-  list(): C[]
-  drop(k: S): void
-  sync(): void
-}
-
 interface Cur {
   __cur__: true
   get(f: S): any
@@ -275,22 +242,12 @@ interface Buf {
   set(k: S, v: any): void
   get(k: S): Cur | null
 }
-export interface Card<T> {
-  name: S
-  state: T
-  changed: Box<B>
-}
-export interface C extends Card<Dict<any>> {
-  id: S
-  set(ks: S[], v: any): void
-}
 interface Typ {
   readonly f: S[] // fields
   readonly m: Dict<U> // offsets
   match(x: any): Tup | null
   make(t: Tup): Rec
 }
-
 interface DataBuf extends Data, Buf {
   __buf__: true
 }
@@ -301,6 +258,29 @@ interface FixBuf extends DataBuf {
 }
 type CycBuf = DataBuf
 type MapBuf = DataBuf
+
+/** A page. */
+export interface Page {
+  key: S
+  changed: Box<B>
+  add(k: S, c: Card): void
+  get(k: S): Card | undefined
+  set(k: S, v: any): void
+  list(): Card[]
+  drop(k: S): void
+  sync(): void
+}
+/** A generic placeholder for content on a page. */
+export interface Model<T> {
+  name: S
+  state: T
+  changed: Box<B>
+}
+/** A card on a page. */
+export interface Card extends Model<Dict<any>> {
+  id: S
+  set(ks: S[], v: any): void
+}
 
 let guid = 0
 export const
@@ -594,7 +574,7 @@ const
     if (b.m) return loadMapBuf(b.m)
     return null
   },
-  loadCard = (key: S, c: CardD): C => {
+  loadCard = (key: S, c: CardD): Card => {
     const
       data: Dict<any> = {},
       changedB = box<B>(),
@@ -666,14 +646,14 @@ const
 
     const
       key = xid(),
-      cards: Dict<C> = {},
+      cards: Dict<Card> = {},
       changedB = box<B>(),
-      add = (k: S, card: C) => {
+      add = (k: S, card: Card) => {
         cards[k] = card
         dirty = true
       },
-      get = (k: S): C | undefined => cards[k],
-      list = (): C[] => valuesOf(cards),
+      get = (k: S): Card | undefined => cards[k],
+      list = (): Card[] => valuesOf(cards),
       drop = (k: S) => delete cards[k],
       set = (k: S, v: any) => {
         const ks = k.split(/\s+/g)
@@ -688,7 +668,7 @@ const
           dirties[cn] = true
           // Special-case *_card.box and meta_card.layouts: changes require page invalidation
           const p = ks[1]
-          if (p && (p === 'box' || (c.state.view === 'meta' && p === 'layouts'))) dirty = true
+          if (p && (p === 'box' || (c.state['view'] === 'meta' && p === 'layouts'))) dirty = true
         }
       },
       sync = () => {
@@ -737,7 +717,8 @@ const
 // In-browser API
 //
 
-export interface PageRef {
+/** A set of changes to be made to a remote Page. */
+export interface ChangeSet {
   get(key: S): Ref
   put(key: S, data: any): void
   set(key: S, value: any): void
@@ -746,23 +727,24 @@ export interface PageRef {
   sync(): void
 }
 
-export interface Ref {
+interface Ref {
   get(key: S): Ref
   set(key: S, value: any): void
 }
 
-export interface Qd {
+/** The Wave client. */
+export interface Wave {
   readonly path: S
   readonly args: Rec
   readonly events: Dict<any>
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
-  readonly dialogB: Box<Dialog | null>
+  readonly argsB: Box<Rec>
   socket: WebSocket | null
   page: Page | null
   username: S | null
   editable: B
-  edit(): PageRef
+  change(path?: S): ChangeSet
   sync(): void
   jump(key: any, value: any): void
 }
@@ -773,19 +755,19 @@ const
     for (const k in a) delete a[k]
   }
 
-export const qd: Qd = {
+export const wave: Wave = {
   path: window.location.pathname,
   args: {},
   events: {},
   refreshRateB: box(-1),
   busyB: box(false),
+  argsB: box({}),
   socket: null,
   page: null,
   username: null,
   editable: false,
-  dialogB: box(null),
-  edit: (path?: S): PageRef => {
-    path = path || qd.path
+  change: (path?: S): ChangeSet => {
+    path = path || wave.path
     const
       changes: OpD[] = [],
       ref = (k: S): Ref => {
@@ -800,7 +782,7 @@ export const qd: Qd = {
       del = (key: S) => changes.push({ k: key }),
       drop = () => changes.push({}),
       sync = () => {
-        const sock = qd.socket
+        const sock = wave.socket
         if (!sock) return
         const opsd: OpsD = { d: changes }
         sock.send(`* ${path} ${JSON.stringify(opsd)}`)
@@ -808,17 +790,17 @@ export const qd: Qd = {
     return { get, put, set, del, drop, sync }
   },
   sync: () => {
-    const sock = qd.socket
+    const sock = wave.socket
     if (!sock) return
-    const args: Dict<any> = { ...qd.args }
-    clearRec(qd.args)
-    if (Object.keys(qd.events).length) {
-      args[''] = { ...qd.events }
-      clearRec(qd.events)
+    const args: Dict<any> = { ...wave.args }
+    clearRec(wave.args)
+    if (Object.keys(wave.events).length) {
+      args[''] = { ...wave.events }
+      clearRec(wave.events)
     }
-    sock.send(`@ ${qd.path} ${JSON.stringify(args)}`)
-    track(args)
-    qd.busyB(true)
+    sock.send(`@ ${wave.path} ${JSON.stringify(args)}`)
+    wave.argsB(args)
+    wave.busyB(true)
   },
   jump: (key: any, value: any) => {
     if (value.startsWith('#')) {
@@ -826,29 +808,29 @@ export const qd: Qd = {
       return
     }
     if (key) {
-      qd.args[key] = value
+      wave.args[key] = value
     } else {
-      qd.args[value] = true
+      wave.args[value] = true
     }
-    qd.sync()
+    wave.sync()
   },
 }
 
-on(qd.refreshRateB, r => {
+on(wave.refreshRateB, r => {
   // If we receive a change in refresh rate once the page has been loaded, close the socket.
   // The socket onclose handler will reconnect using the refresh rate if necessary.
   if (r < 0) return
-  const sock = qd.socket
+  const sock = wave.socket
   if (sock) sock.close()
 })
 
-export enum SockEventType { Message, Data, Reset }
-export type SockEvent = SockMessage | SockData | SockReload
-export interface SockData { t: SockEventType.Data, page: Page }
-export enum SockMessageType { Info, Warn, Err }
-export interface SockMessage { t: SockEventType.Message, type: SockMessageType, message: S }
-export interface SockReload { t: SockEventType.Reset }
-type SockHandler = (e: SockEvent) => void
+export enum WaveEventType { Message, Data, Reset }
+export type WaveEvent = WaveMessageEvent | WaveDataEvent | WaveReloadEvent
+export interface WaveDataEvent { t: WaveEventType.Data, page: Page }
+export enum WaveMessageType { Info, Warn, Err }
+export interface WaveMessageEvent { t: WaveEventType.Message, type: WaveMessageType, message: S }
+export interface WaveReloadEvent { t: WaveEventType.Reset }
+type WaveEventHandler = (e: WaveEvent) => void
 
 let backoff = 1
 const
@@ -858,63 +840,63 @@ const
       p = l.protocol === 'https:' ? 'wss' : 'ws'
     return p + "://" + l.host + path
   },
-  reconnect = (address: S, handle: SockHandler) => {
+  reconnect = (address: S, handle: WaveEventHandler) => {
     const retry = () => reconnect(address, handle)
     const sock = new WebSocket(address)
     sock.onopen = function () {
-      qd.socket = sock
-      handle({ t: SockEventType.Message, type: SockMessageType.Info, message: 'Connected' })
+      wave.socket = sock
+      handle({ t: WaveEventType.Message, type: WaveMessageType.Info, message: 'Connected' })
       backoff = 1
       const hash = window.location.hash
-      sock.send(`+ ${qd.path} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
+      sock.send(`+ ${wave.path} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
     }
     sock.onclose = function () {
-      const refreshRate = qd.refreshRateB()
+      const refreshRate = wave.refreshRateB()
       if (refreshRate === 0) return
 
       // TODO handle refreshRate > 0 case
 
-      qd.socket = null
+      wave.socket = null
       backoff *= 2
       if (backoff > 16) backoff = 16
-      handle({ t: SockEventType.Message, type: SockMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })
+      handle({ t: WaveEventType.Message, type: WaveMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })
       window.setTimeout(retry, backoff * 1000)
     }
     sock.onmessage = function (e) {
       if (!e.data) return
       if (!e.data.length) return
-      qd.busyB(false)
+      wave.busyB(false)
       for (const line of e.data.split('\n')) {
         try {
           const msg = JSON.parse(line) as OpsD
           if (msg.d) {
-            const page = exec(qd.page || newPage(), msg.d)
-            if (qd.page !== page) {
-              qd.page = page
-              if (page) handle({ t: SockEventType.Data, page: page })
+            const page = exec(wave.page || newPage(), msg.d)
+            if (wave.page !== page) {
+              wave.page = page
+              if (page) handle({ t: WaveEventType.Data, page: page })
             }
           } else if (msg.p) {
-            qd.page = load(msg.p)
-            handle({ t: SockEventType.Data, page: qd.page })
+            wave.page = load(msg.p)
+            handle({ t: WaveEventType.Data, page: wave.page })
           } else if (msg.e) {
-            handle({ t: SockEventType.Message, type: SockMessageType.Err, message: msg.e })
+            handle({ t: WaveEventType.Message, type: WaveMessageType.Err, message: msg.e })
           } else if (msg.r) {
-            handle({ t: SockEventType.Reset })
+            handle({ t: WaveEventType.Reset })
           } else if (msg.m) {
             const { u, e } = msg.m
-            qd.username = u
-            qd.editable = e
+            wave.username = u
+            wave.editable = e
           }
         } catch (err) {
           console.error(err)
-          handle({ t: SockEventType.Message, type: SockMessageType.Err, message: `Error: ${err}` })
+          handle({ t: WaveEventType.Message, type: WaveMessageType.Err, message: `Error: ${err}` })
         }
       }
     }
     sock.onerror = function (e: Event) {
-      qd.busyB(false)
+      wave.busyB(false)
       console.error('A websocket error was encountered.', e) // XXX
     }
   }
 
-export const connect = (path: S, handle: SockHandler) => reconnect(toSocketAddress(path), handle)
+export const connect = (path: S, handle: WaveEventHandler) => reconnect(toSocketAddress(path), handle)

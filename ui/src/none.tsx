@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Model, S } from 'h2o-wave'
 import React from 'react'
-import { bond, Card, S } from './qd'
 import { cards } from './layout'
+import { bond } from './ui'
 
 export const
-  View = bond(({ name, state, changed }: Card<Record<S, unknown>>) => {
+  View = bond(({ name, state, changed }: Model<Record<S, unknown>>) => {
     const
       render = () => (
         <div data-test={name}>

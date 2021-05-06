@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Data, Dict, Model, Rec, S } from 'h2o-wave'
 import React from 'react'
 import { cards, Repeat } from './layout'
-import { bond, Card, Dict, Rec, S, Data } from './qd'
+import { bond } from './ui'
 
 /**
  * EXPERIMENTAL. DO NOT USE.
@@ -83,7 +84,7 @@ const
   }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         // FIXME theme.merge()

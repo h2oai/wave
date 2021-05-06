@@ -34,3 +34,4 @@ clean:
 	-rm -r -f $(PKG_NAME).Rcheck
 	-rm -f NAMESPACE
 	-rm -rf man
+

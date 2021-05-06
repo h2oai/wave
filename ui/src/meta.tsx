@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { box, Id, Model, on, S, U, wave } from 'h2o-wave'
 import React from 'react'
+import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
 import { showNotification } from './notification'
-import { bond, box, Card, Id, on, qd, S, U } from './qd'
-import { Dialog } from './dialog'
-import { setupTracker, Tracker } from './tracking'
+import { installScripts, Script } from './script'
 import { themeB } from './theme'
+import { setupTracker, Tracker } from './tracking'
+import { bond } from './ui'
 
 
 export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>
@@ -107,6 +109,8 @@ interface State {
   theme?: S
   /** Configure a tracker for the page (for web analytics). */
   tracker?: Tracker
+  /** External Javascript files to load into the page. */
+  scripts?: Script[]
 }
 
 const
@@ -125,8 +129,8 @@ on(windowIconB, icon => {
 
 export const
   layoutsB = box<Layout[]>([]),
-  preload = ({ state }: Card<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker } = state
+  preload = ({ state }: Model<State>) => {
+    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts } = state
 
     if (redirect) {
       try {
@@ -141,15 +145,16 @@ export const
       }
     }
 
-    qd.dialogB(dialog ? { ...dialog } : null)
+    dialogB(dialog ? { ...dialog } : null)
 
     if (title) windowTitleB(title)
     if (icon) windowIconB(icon)
-    if (typeof refresh === 'number') qd.refreshRateB(refresh)
+    if (typeof refresh === 'number') wave.refreshRateB(refresh)
     if (theme) themeB(theme)
     if (notification) showNotification(notification)
     if (tracker) setupTracker(tracker)
     if (layouts) layoutsB(layouts)
+    if (scripts) installScripts(scripts)
   }
 
 export const View = bond(() => ({ render: () => <></> }))

@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
 import { View } from './small_stat'
-import * as T from './qd'
 
 const
   name = 'small_stat',
-  smallStatProps: T.Card<any> = {
+  smallStatProps: T.Model<any> = {
     name,
     state: {
       data: []

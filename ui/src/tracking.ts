@@ -1,4 +1,4 @@
-import { Rec, S } from './qd'
+import { on, Rec, S, wave } from 'h2o-wave'
 
 /**
  * Configure user interaction tracking (analytics) for a page.
@@ -62,6 +62,6 @@ export const
         }
         tracker = t
     }
-  },
-  track = (args: Rec) => window.setTimeout((() => sendEvent(args)), 0)
+  }
 
+on(wave.argsB, (args) => window.setTimeout((() => sendEvent(args)), 0))

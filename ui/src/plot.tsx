@@ -14,12 +14,13 @@
 
 import { Chart, registerInteraction } from '@antv/g2'
 import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface'
+import { B, Dict, F, Model, parseI, parseU, Rec, S, unpack, V, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { displayMixin, cssVarValue, } from './theme'
-import { B, bond, Card, Dict, F, parseI, parseU, Rec, S, unpack, V, qd } from './qd'
+import { cssVarValue, displayMixin } from './theme'
+import { bond } from './ui'
 
 let
   cat10 = [
@@ -804,8 +805,8 @@ export const
                     const e = ev.gEvent.originalEvent
                     if (e.stateStatus && e.state === 'selected') {
                       if (model.name) {
-                        qd.events[model.name] = { select_marks: [e.element?.data] }
-                        qd.sync()
+                        wave.events[model.name] = { select_marks: [e.element?.data] }
+                        wave.sync()
                       }
                     }
                   })
@@ -851,7 +852,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         const { title = 'Untitled', plot, data, events } = state

@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
 import { View } from './markdown'
-import * as T from './qd'
 
 const
   name = 'markdown',
-  markdown_props: T.Card<any> = {
+  markdown_props: T.Model<any> = {
     name,
     state: { content: '' },
     changed: T.box(false)

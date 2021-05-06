@@ -21,17 +21,19 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/h2oai/wave/pkg/keychain"
 )
 
 // FileServer represents a file server.
 type FileServer struct {
 	dir      string
-	keychain *Keychain
+	keychain *keychain.Keychain
 	auth     *Auth
 	handler  http.Handler
 }
 
-func newFileServer(dir string, keychain *Keychain, auth *Auth) http.Handler {
+func newFileServer(dir string, keychain *keychain.Keychain, auth *Auth) http.Handler {
 	return &FileServer{
 		dir,
 		keychain,
@@ -50,7 +52,7 @@ func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// Disallow if:
 		// - unauthorized api call
 		// - auth enabled and unauthorized
-		if !fs.keychain.allow(r) && (fs.auth != nil && !fs.auth.allow(r)) { // API or UI
+		if !fs.keychain.Allow(r) && (fs.auth != nil && !fs.auth.allow(r)) { // API or UI
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
@@ -68,7 +70,7 @@ func (fs *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodDelete:
 		// TODO garbage collection
 
-		if !fs.keychain.guard(w, r) { // Allow APIs only
+		if !fs.keychain.Guard(w, r) { // Allow APIs only
 			return
 		}
 

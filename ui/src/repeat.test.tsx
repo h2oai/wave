@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
 import { View } from './repeat'
-import * as T from './qd'
 
 const
   name = 'repeat',
-  repeatProps: T.Card<any> = {
+  repeatProps: T.Model<any> = {
     name,
     state: {
       data: [],

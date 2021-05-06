@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Model, Rec, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format } from './layout'
-import { bond, Card, Rec, S } from './qd'
 import { clas } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -53,7 +54,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => (
       <div data-test={name} className={css.card}>
         <Format data={s.data} format={s.title} className='wave-s12 wave-w6' />

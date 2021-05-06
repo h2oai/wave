@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
 import { View } from './wide_series_stat'
-import * as T from './qd'
 
 const
   title = 'wide_series_stat',
-  wideSeriesStatProps: T.Card<any> = {
+  wideSeriesStatProps: T.Model<any> = {
     name: title,
     state: {
       title,

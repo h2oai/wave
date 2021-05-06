@@ -13,12 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, Dict, Id, S, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { B, bond, Dict, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
 import { XToolTip } from './tooltip'
+import { bond } from './ui'
 
 /**
  * Create a button.
@@ -90,15 +91,15 @@ const
 
 const
   XButton = bond(({ model: m }: { model: Button }) => {
-    qd.args[m.name] = false
+    wave.args[m.name] = false
     const
       onClick = () => {
         if (m.name.startsWith('#')) {
           window.location.hash = m.name.substr(1)
           return
         }
-        qd.args[m.name] = m.value === undefined || m.value
-        qd.sync()
+        wave.args[m.name] = m.value === undefined || m.value
+        wave.sync()
       },
       render = () => {
         if (m.link) {

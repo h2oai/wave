@@ -112,6 +112,7 @@ def canvas_card(
         commands: Optional[List[Command]] = None,
 ) -> CanvasCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that displays a drawing canvas (whiteboard).
 
@@ -143,6 +144,7 @@ def chat_card(
         commands: Optional[List[Command]] = None,
 ) -> ChatCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that displays a chat room.
 
@@ -170,6 +172,7 @@ def editor_card(
         commands: Optional[List[Command]] = None,
 ) -> EditorCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that enables WYSIWYG editing on a page.
     Adding this card to a page makes the page editable by end-users.
@@ -2013,6 +2016,30 @@ def inline(
     ))
 
 
+def image(
+        title: str,
+        type: Optional[str] = None,
+        image: Optional[str] = None,
+        path: Optional[str] = None,
+) -> Component:
+    """Create an image.
+
+    Args:
+        title: The image title, typically displayed as a tooltip.
+        type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
+        image: Image data, base64-encoded.
+        path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+    Returns:
+        A `h2o_wave.types.Image` instance.
+    """
+    return Component(image=Image(
+        title,
+        type,
+        image,
+        path,
+    ))
+
+
 def form_card(
         box: str,
         items: Union[List[Component], str],
@@ -2208,9 +2235,10 @@ def header_card(
 def image_card(
         box: str,
         title: str,
-        type: str,
-        image: str,
+        type: Optional[str] = None,
+        image: Optional[str] = None,
         data: Optional[PackedRecord] = None,
+        path: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ImageCard:
     """Create a card that displays a base64-encoded image.
@@ -2221,6 +2249,7 @@ def image_card(
         type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
         image: Image data, base64-encoded.
         data: Data for this card.
+        path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ImageCard` instance.
@@ -2231,6 +2260,7 @@ def image_card(
         type,
         image,
         data,
+        path,
         commands,
     )
 
@@ -2555,6 +2585,33 @@ def tracker(
     )
 
 
+def script(
+        path: str,
+        asynchronous: Optional[bool] = None,
+        cross_origin: Optional[str] = None,
+        referrer_policy: Optional[str] = None,
+        integrity: Optional[str] = None,
+) -> Script:
+    """Create a reference to an external Javascript file to be included on a page.
+
+    Args:
+        path: The URI of an external script.
+        asynchronous: Whether to fetch and load this script in parallel to parsing and evaluated as soon as it is available.
+        cross_origin: The CORS setting for this script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
+        referrer_policy: Indicates which referrer to send when fetching the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+        integrity: The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
+    Returns:
+        A `h2o_wave.types.Script` instance.
+    """
+    return Script(
+        path,
+        asynchronous,
+        cross_origin,
+        referrer_policy,
+        integrity,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2566,6 +2623,7 @@ def meta_card(
         dialog: Optional[Dialog] = None,
         theme: Optional[str] = None,
         tracker: Optional[Tracker] = None,
+        scripts: Optional[List[Script]] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2584,6 +2642,7 @@ def meta_card(
         dialog: Display a dialog on the page.
         theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
         tracker: Configure a tracker for the page (for web analytics).
+        scripts: External Javascript files to load into the page.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2599,6 +2658,7 @@ def meta_card(
         dialog,
         theme,
         tracker,
+        scripts,
         commands,
     )
 
@@ -2633,7 +2693,10 @@ def pixel_art_card(
         data: PackedRecord,
         commands: Optional[List[Command]] = None,
 ) -> PixelArtCard:
-    """Create a card displaying a collaborative Pixel art tool, just for kicks.
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card displaying a collaborative Pixel art tool.
 
     Args:
         box: A string indicating how to place this component on the page.
@@ -3207,6 +3270,45 @@ def wide_gauge_stat_card(
         progress,
         plot_color,
         data,
+        commands,
+    )
+
+
+def wide_info_card(
+        box: str,
+        title: str,
+        caption: str,
+        icon: Optional[str] = None,
+        image: Optional[str] = None,
+        category: Optional[str] = None,
+        name: Optional[str] = None,
+        color: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> WideInfoCard:
+    """Create a wide information card displaying a title, caption, and either an icon or image.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        caption: The card's caption, displayed below the title.
+        icon: The card's icon.
+        image: The card’s image.
+        category: The card's category, displayed above the title.
+        name: An identifying name for this card. Makes the card clickable, similar to a button.
+        color: The card's background color.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.WideInfoCard` instance.
+    """
+    return WideInfoCard(
+        box,
+        title,
+        caption,
+        icon,
+        image,
+        category,
+        name,
+        color,
         commands,
     )
 

@@ -4,6 +4,7 @@ import os.path
 import re
 import subprocess
 import sys
+from urllib.parse import urlparse
 from typing import List, Optional, Dict, Tuple
 
 from pygments import highlight
@@ -16,8 +17,8 @@ py_lexer = get_lexer_by_name('python')
 html_formatter = HtmlFormatter(full=True, style='xcode')
 example_dir = os.path.dirname(os.path.realpath(__file__))
 
-_app_host = '127.0.0.1'
-_app_port = '10102'
+_app_address = urlparse(os.environ.get(f'H2O_WAVE_APP_ADDRESS', 'http://127.0.0.1:8000'))
+_app_host, _app_port = _app_address.hostname, '10102'
 
 
 class Example:
@@ -38,9 +39,12 @@ class Example:
         # inside python during initialization if %PATH% is configured, but without %SYSTEMROOT%.
         env = {'SYSTEMROOT': os.environ['SYSTEMROOT']} if sys.platform.lower().startswith('win') else {}
         if self.is_app:
-            self.process = subprocess.Popen(
-                [sys.executable, '-m', 'uvicorn', '--port', _app_port, f'examples.{self.name}:main'],
-                env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
+            self.process = subprocess.Popen([
+                sys.executable, '-m', 'uvicorn',
+                '--host', '0.0.0.0',
+                '--port', _app_port,
+                f'examples.{self.name}:main',
+            ], env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
         else:
             self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
 
@@ -161,57 +165,46 @@ app_title = 'H2O Wave Tour'
 
 
 async def setup_page(q: Q):
-    q.page['meta'] = ui.meta_card(
-        box='',
-        title=app_title
-    )
+    q.page['meta'] = ui.meta_card(box='', title=app_title, layouts=[
+        ui.layout(breakpoint='xs', zones=[
+            ui.zone('header'),
+            ui.zone('blurb'),
+            ui.zone('main', size='calc(100vh - 130px)', direction=ui.ZoneDirection.ROW, zones=[
+                ui.zone('code'),
+                ui.zone('preview')
+            ])
+        ])
+    ])
 
     q.page['header'] = ui.header_card(
-        box='1 1 2 1',
+        box='header',
         title=app_title,
         subtitle=f'{len(catalog)} Interactive Examples',
-    )
-
-    q.page['examples'] = ui.nav_card(
-        box='1 2 2 9',
-        items=[
+        nav=[
             ui.nav_group(
                 label='Examples',
                 items=[ui.nav_item(name=f'#{e.name}', label=e.title) for e in catalog.values()]
-            ),
+            )
         ],
     )
 
-    q.page['blurb'] = ui.form_card(
-        box='3 1 5 3',
-        items=[],
-    )
+    q.page['blurb'] = ui.section_card(box='blurb', title='', subtitle='', items=[])
+    q.page['code'] = ui.frame_card(box='code', title='', content='')
+    q.page['preview'] = ui.frame_card(box='preview', title='Preview', path='/demo')
 
-    q.page['code'] = ui.frame_card(
-        box='3 4 5 7',
-        title='',
-        content='',
-    )
-    q.page['preview'] = ui.frame_card(
-        box='8 1 5 10',
-        title='Preview',
-        path='/demo',
-    )
     await q.page.save()
 
 
-def make_blurb(example: Example):
+def make_blurb(q: Q, example: Example):
+    blurb_card = q.page['blurb']
+    blurb_card.title = example.title
+    blurb_card.subtitle = example.description
     buttons = []
     if example.previous_example:
         buttons.append(ui.button(name=f'#{example.previous_example.name}', label='Previous'))
     if example.next_example:
         buttons.append(ui.button(name=f'#{example.next_example.name}', label='Next', primary=True))
-
-    return [
-        ui.text(example.title, size='l'),
-        ui.text(example.description),
-        ui.buttons(buttons),
-    ]
+    blurb_card.items = buttons
 
 
 async def show_example(q: Q, example: Example):
@@ -230,7 +223,7 @@ async def show_example(q: Q, example: Example):
     await active_example.start()
 
     # Update example blurb
-    q.page['blurb'].items = make_blurb(active_example)
+    make_blurb(q, active_example)
 
     # Update code display
     code_card = q.page['code']

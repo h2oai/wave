@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { B, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Card, S, B } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -71,7 +72,7 @@ export const
       </div>
     </div>
   ),
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => <MarkupCard name={name} title={state.title} content={state.content} />
     return { render, changed }
   })

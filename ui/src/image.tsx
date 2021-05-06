@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Model, Rec, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
-import { bond, Card, Rec, S } from './qd'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -36,21 +37,48 @@ interface State {
   /** The card's title. */
   title: S
   /** The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. */
-  type: S
+  type?: S
   /** Image data, base64-encoded. */
-  image: S
+  image?: S
   /** Data for this card. */
   data?: Rec
+  /** The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. */
+  path?: S
+}
+
+
+/** Create an image. */
+export interface Image {
+  /** The image title, typically displayed as a tooltip. */
+  title: S
+  /** The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set. */
+  type?: S
+  /** Image data, base64-encoded. */
+  image?: S
+  /** The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. */
+  path?: S
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
-    const render = () => (
-      <div data-test={name} className={css.card}>
-        <Format data={s.data} format={s.title} className='wave-s12 wave-w6' />
-        <img className={css.img} alt={s.title} src={`data:image/${s.type};base64,${s.image}`} />
-      </div >
-    )
+  XImage = ({ model: { title, type, image, path } }: { model: Image }) => {
+    const
+      src = path
+        ? path
+        : (image && type)
+          ? `data:image/${type};base64,${image}`
+          : ''
+    return <img className={css.img} alt={title} src={src} />
+  },
+  View = bond(({ name, state, changed }: Model<State>) => {
+    const render = () => {
+      const { title, type, image, data, path } = state
+      return (
+        <div data-test={name} className={css.card}>
+          <Format data={data} format={title} className='wave-s12 wave-w6' />
+          <XImage model={{ title, type, image, path }} />
+        </div >
+      )
+    }
     return { render, changed }
   })
 

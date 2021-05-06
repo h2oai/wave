@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
-import { View, XVegaVisualization, VegaVisualization } from './vega'
-import * as T from './qd'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { VegaVisualization, View, XVegaVisualization } from './vega'
 
 const
   name = 'vega',
@@ -38,7 +38,7 @@ const
 describe('Vega.tsx', () => {
 
   describe('Card Vega', () => {
-    const cardVegaProps: T.Card<any> = {
+    const cardVegaProps: T.Model<any> = {
       name,
       state: { specification },
       changed: T.box(false)

@@ -88,7 +88,7 @@ async def handle_on(q: Q) -> bool:
                     else:
                         await func(q)
                     return True
-        elif arg_value:
+        elif arg_value is not None:
             func = _arg_handlers.get(arg)
             if func:
                 await func(q)

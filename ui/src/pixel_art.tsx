@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Model, Rec, S, U, unpack, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Card, unpack, Rec, S, qd, U } from './qd'
+import { bond } from './ui'
 
 const
   pixelSize = 20,
@@ -54,7 +55,12 @@ const
 
   }
 
-/** Create a card displaying a collaborative Pixel art tool, just for kicks. */
+/**
+ * WARNING: Experimental and subject to change.
+ * Do not use in production sites!
+ *
+ * Create a card displaying a collaborative Pixel art tool.
+ */
 interface State {
   /** The title for this card.*/
   title: S
@@ -69,11 +75,11 @@ interface Pixel {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     let brush = '#000'
     const
       paint = (i: U) => {
-        const page = qd.edit()
+        const page = wave.change()
         page.set(`${name} data ${i}`, brush === 'none' ? null : [brush])
         page.sync()
       },

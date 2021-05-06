@@ -13,11 +13,12 @@
 // limitations under the License.
 
 import { TextField } from '@fluentui/react'
+import { Box, box, Dict, Model, on, Rec, S, U, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond, Box, box, Card, Dict, on, qd, Rec, S, U } from './qd'
 import { border, clas, cssVar, padding } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -51,6 +52,7 @@ const
 
 /**
  * WARNING: Experimental and subject to change.
+ * Do not use in production sites!
  *
  * Create a card that displays a chat room.
  * :icon "OfficeChat"
@@ -124,7 +126,7 @@ const
   }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     let _keys: S[] = []
     const
       messagesRef = React.createRef<HTMLDivElement>(),
@@ -161,7 +163,7 @@ export const
 
     on(inputB, input => {
       const
-        page = qd.edit(),
+        page = wave.change(),
         cap = state.capacity ?? 50,
         n = _keys.length
 
@@ -170,7 +172,7 @@ export const
       if (n >= cap) {
         for (let i = 0; i < n - cap + 1; i++) page.set(`${name} data ${_keys[i]}`, null)
       }
-      const cm: ChatMessage = { u: qd.username ?? '?', m: input }
+      const cm: ChatMessage = { u: wave.username ?? '?', m: input }
       page.set(`${name} data ${(new Date()).toISOString()}`, JSON.stringify(cm))
       page.sync()
     })

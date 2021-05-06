@@ -13,11 +13,12 @@
 // limitations under the License.
 
 import { FontIcon } from '@fluentui/react'
+import { Model, S, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { bond, Card, qd, S } from './qd'
 import { clas, cssVar } from './theme'
+import { bond } from './ui'
 
 /**
  * Render a card displaying a table of stats.
@@ -125,7 +126,7 @@ const
   })
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         const
@@ -135,7 +136,7 @@ export const
           )),
           rows = items.map(({ name: rowName, label, values, caption, icon, icon_color }, i) => {
             const
-              onClick = rowName ? () => qd.jump(tableName, rowName) : undefined,
+              onClick = rowName ? () => wave.jump(tableName, rowName) : undefined,
               cells = values.map((value, j) => (<td key={`${j}:${value}`}>{value}</td>))
 
             return (

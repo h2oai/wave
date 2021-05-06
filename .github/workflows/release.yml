@@ -13,41 +13,30 @@ env:
   TAG: "v${{ github.event.inputs.version }}"
 
 jobs:
-  ci-test:
-    name: CI Test
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Build
-        run: |
-          cd ui
-          make setup
-
-      - name: Unit Test
-        run: make test-ui-ci
-
   release:
     name: Release Wave
-    runs-on: ubuntu-18.04
-    needs: ci-test
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
 
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '15'
+
       - name: Setup
         run: make setup
 
+      - name: Unit Test
+        run: make test-ui-ci
+
       - name: Build Release
         run: make release
-
-      - name: Commit & Tag
-        uses: EndBug/add-and-commit@v5
-        with:
-          add: '.'
-          message: "chore: Release ${{ env.TAG }}"
-          tag: ${{ env.TAG }}
 
       - name: Create GitHub Release
         id: create_release
@@ -56,7 +45,6 @@ jobs:
           tag_name: ${{ env.TAG }}
           release_name: ${{ env.TAG }}
           draft: false
-          prerelease: true
 
       - name: Upload MacOS Release Asset
         uses: actions/upload-release-asset@v1

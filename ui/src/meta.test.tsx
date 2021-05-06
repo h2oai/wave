@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import * as T from 'h2o-wave'
+import { dialogB } from './dialog'
 import { preload } from "./meta"
 import * as N from './notification'
-import * as T from './qd'
 
 const
   name = 'meta',
-  metaProps: T.Card<any> = {
+  metaProps: T.Model<any> = {
     name,
     state: {},
     changed: T.box(false)
@@ -34,9 +35,9 @@ describe('Meta.tsx', () => {
 
   it('Sets refreshRate - init', () => {
     const refresh = 1
-    expect(T.qd.refreshRateB()).toBe(-1)
+    expect(T.wave.refreshRateB()).toBe(-1)
     preload({ ...metaProps, state: { refresh } })
-    expect(T.qd.refreshRateB()).toBe(refresh)
+    expect(T.wave.refreshRateB()).toBe(refresh)
   })
 
   it('Shows notification - init', () => {
@@ -55,9 +56,9 @@ describe('Meta.tsx', () => {
       title: 'Dialog Title',
       items: [],
     }
-    expect(T.qd.dialogB()).toBe(null)
+    expect(dialogB()).toBe(null)
     preload({ ...metaProps, state: { dialog } })
-    expect(T.qd.dialogB()).toMatchObject(dialog)
+    expect(dialogB()).toMatchObject(dialog)
   })
 
 })

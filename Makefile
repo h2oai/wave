@@ -44,8 +44,15 @@ test-ui-watch: ## Run UI unit tests
 build-server: ## Build server for current OS/Arch
 	go build $(LDFLAGS) -o waved cmd/wave/main.go
 
+build-db: ## Build database server for current OS/Arch
+	go build $(LDFLAGS) -o wavedb cmd/wavedb/main.go
+
+build-server-micro: ## Build smaller (~2M instead of ~10M) server executable
+	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o waved cmd/wave/main.go
+	upx --brute waved
+
 build-py: ## Build h2o_wave wheel
-	cd py && $(MAKE) release
+	cd py && $(MAKE) build
 
 build-docker:
 	docker build \
@@ -56,6 +63,12 @@ build-docker:
 
 run: ## Run server
 	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable
+
+run-db: ## Run database server
+	go run cmd/wavedb/main.go
+
+run-micro: ## Run microwave
+	go run cmd/wave/main.go -web-dir ./u
 
 run-cypress: ## Run Cypress
 	cd test && ./node_modules/.bin/cypress open
@@ -72,7 +85,6 @@ release: build-ui build-py ## Prepare release builds (e.g. "VERSION=1.2.3 make r
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
 	$(MAKE) build-website
-	$(MAKE) publish-website
 
 release-os:
 	rm -rf build/$(REL)
@@ -91,8 +103,20 @@ release-os:
 build-website: docs ## Build website
 	cd website && npm ci && npm run build
 
+preview-website: ## Preview website
+	go run cmd/fs/main.go -web-dir website/build
+
 publish-website: ## Publish website
 	aws s3 sync website/build s3://wave.h2o.ai --delete
+
+.PHONY: tag
+tag: ## Bump version and tag
+	cd py && $(MAKE) tag
+	cd r && $(MAKE) tag
+	git add .
+	git commit -m "chore: Release v$(VERSION)"
+	git tag v$(VERSION)
+	# git push origin --tags
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

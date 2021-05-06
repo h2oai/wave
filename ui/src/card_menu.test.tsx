@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { CardMenu } from './card_menu'
-import { box } from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import React from 'react'
+import { CardMenu } from './card_menu'
+import { box } from 'h2o-wave'
 
 const name = 'card'
 describe('CardMenu.tsx', () => {

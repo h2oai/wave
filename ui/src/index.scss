@@ -132,12 +132,25 @@ $fontTrackings: (
   }
 }
 
+// Generate text color classes.
+@for $text from 0 through 9 {
+  .wave-t#{$text} {
+    color: var(--text#{$text});
+  }
+}
+
 // Used by the Wave logo on empty pages.
 .wave-pulse {
   animation: pulsate 1s linear 0s infinite;
 }
 @keyframes pulsate {
-  0% { opacity: 0; }
-  20% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

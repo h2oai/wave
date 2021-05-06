@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package surf
+package db
 
 import (
 	"encoding/json"
@@ -22,26 +22,25 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 	"sync"
 
-	"github.com/bvinc/go-sqlite-lite/sqlite3"
+	"github.com/h2oai/wave/pkg/keychain"
+	"github.com/lo5/sqlite3"
 )
 
-const dbLogo = `
-
-             ____
-  ____ _____/ / /_
- / __ ` + "`" + `/ __  / __ \
-/ /_/ / /_/ / /_/ /
-\__, /\__,_/_.___/
-  /_/
+const logo = `
+┌────────┐┌────┐ H2O WaveDB
+│  ┐┌┐┐┌─┘│─┐  │ %s %s
+│  └┘└┘└─┘└─┘  │ © 2021 H2O.ai, Inc.
+└──────────────┘
 `
 
 //
-// TeleDB is an ACID-compliant database server atop SQLite3,
+// WaveDB is an ACID-compliant database server atop SQLite3,
 // using JSON over HTTP as a protocol.
 //
 // It is super simple, not geographically distributed, not multi-region,
@@ -55,13 +54,13 @@ const dbLogo = `
 // (theoretically 140TB), SQLite supports unlimited read concurrency, and is
 // almost always a better solution than a client/server SQL database engine.
 //
-// Concurrency can also improved by sharding, in which case TeleDB can be made
+// Concurrency can also improved by sharding, in which case WaveDB can be made
 // to use separate SQLite database files for each shard. Depending on the use case,
 // clients might choose to have a separate shard per subject, so that the
 // server can handle hundreds or thousands of simultaneous connections, but
 // each shard is only used by one connection.
 //
-// Sharding is automatic, and TeleDB will use the database name specified
+// Sharding is automatic, and WaveDB will use the database name specified
 // in each request to initialize new shards if missing.
 //
 // JSON1, RTREE, FTS5, GEOPOLY, STAT4, and SOUNDEX extensions are built in.
@@ -71,26 +70,32 @@ const dbLogo = `
 
 // DSConf represents data store configuration options.
 type DSConf struct {
-	Listen   string
-	CertFile string
-	KeyFile  string
+	Version   string
+	BuildDate string
+	Listen    string
+	CertFile  string
+	KeyFile   string
+	Keychain  *keychain.Keychain
+	Dir       string
 }
 
 // DS represents a data store
 type DS struct {
-	catalog *Catalog
+	keychain *keychain.Keychain
+	catalog  *Catalog
 }
 
-// NewDS mints a new data store.
-func NewDS() *DS {
-	return &DS{newCatalog()}
+func newDS(conf DSConf) *DS {
+	return &DS{conf.Keychain, newCatalog(conf.Dir)}
 }
 
 // Run runs runs the server.
-func (ds *DS) Run(conf DSConf) {
+func Run(conf DSConf) {
+	ds := newDS(conf)
+
 	http.HandleFunc("/", ds.handle)
 
-	for _, line := range strings.Split(dbLogo, "\n") {
+	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
 		log.Println(line)
 	}
 	log.Println("listening", conf.Listen)
@@ -151,6 +156,9 @@ func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		switch r.Header.Get("Content-Type") {
 		case "application/json":
+			if !ds.keychain.Guard(w, r) {
+				return
+			}
 			var request DBRequest
 			in, err := ioutil.ReadAll(http.MaxBytesReader(w, r.Body, 5<<20)) // limit to 5MB per request
 			if err != nil {
@@ -169,7 +177,7 @@ func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return
 			}
-			w.Header().Set("Content-Type", contentTypeJSON)
+			w.Header().Set("Content-Type", "application/json")
 			w.Write(out)
 			return
 		}
@@ -211,11 +219,12 @@ func (ds *DS) drop(req DropRequest) error {
 // Catalog represents a collection of databases.
 type Catalog struct {
 	sync.RWMutex
+	dir       string
 	databases map[string]*DB
 }
 
-func newCatalog() *Catalog {
-	return &Catalog{databases: make(map[string]*DB)}
+func newCatalog(dir string) *Catalog {
+	return &Catalog{dir: dir, databases: make(map[string]*DB)}
 }
 
 func (c *Catalog) get(name string) *DB {
@@ -227,6 +236,10 @@ func (c *Catalog) get(name string) *DB {
 	return nil
 }
 
+func (c *Catalog) locate(name string) string {
+	return filepath.Join(c.dir, name+".db")
+}
+
 func (c *Catalog) load(name string) (*DB, error) {
 	if db := c.get(name); db != nil {
 		return db, nil
@@ -236,7 +249,7 @@ func (c *Catalog) load(name string) (*DB, error) {
 		return nil, err
 	}
 
-	db, err := newDB(name + ".db")
+	db, err := newDB(c.locate(name))
 	if err != nil {
 		return nil, err
 	}
@@ -261,7 +274,7 @@ func (c *Catalog) drop(name string) error {
 	c.Lock()
 	defer c.Unlock()
 	delete(c.databases, name)
-	return os.Remove(name + ".db")
+	return os.Remove(c.locate(name))
 }
 
 func validateDatabaseName(name string) error {

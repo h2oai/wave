@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XRangeSlider, RangeSlider } from './range_slider'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { RangeSlider, XRangeSlider } from './range_slider'
 
 const name = 'rangeSlider'
 const rangeSliderProps: RangeSlider = { name, min: 0, max: 100 }
@@ -25,7 +25,7 @@ const mouseEvent = { clientX: 50, clientY: 0 }
 
 describe('rangeSlider.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(() => { T.wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XRangeSlider model={rangeSliderProps} />)
@@ -40,37 +40,37 @@ describe('rangeSlider.tsx', () => {
 
   it('Sets args - init', () => {
     render(<XRangeSlider model={rangeSliderProps} />)
-    expect(T.qd.args[name]).toMatchObject([0, 100])
+    expect(T.wave.args[name]).toMatchObject([0, 100])
   })
 
   it('Sets args - init - min max specified', () => {
     render(<XRangeSlider model={{ ...rangeSliderProps, min_value: 1, max_value: 2 }} />)
-    expect(T.qd.args[name]).toMatchObject([1, 2])
+    expect(T.wave.args[name]).toMatchObject([1, 2])
   })
 
   it('Sets args - init - max_val > max', () => {
     render(<XRangeSlider model={{ ...rangeSliderProps, max: 100, max_value: 101 }} />)
-    expect(T.qd.args[name]).toMatchObject([0, 100])
+    expect(T.wave.args[name]).toMatchObject([0, 100])
   })
 
   it('Sets args - init - min_val < min', () => {
     render(<XRangeSlider model={{ ...rangeSliderProps, min: 1, min_value: 0 }} />)
-    expect(T.qd.args[name]).toMatchObject([1, 100])
+    expect(T.wave.args[name]).toMatchObject([1, 100])
   })
 
   it('Sets args on slide', () => {
     const { container, getAllByRole } = render(<XRangeSlider model={rangeSliderProps} />)
-    expect(T.qd.args[name]).toMatchObject([0, 100])
+    expect(T.wave.args[name]).toMatchObject([0, 100])
 
     container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
     fireEvent.mouseDown(getAllByRole('slider')[1]!, mouseEvent)
 
-    expect(T.qd.args[name]).toMatchObject([0, 50])
+    expect(T.wave.args[name]).toMatchObject([0, 50])
   })
 
   it('Calls sync on slide', () => {
     const syncMock = jest.fn()
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
 
     const { container, getAllByRole } = render(<XRangeSlider model={{ ...rangeSliderProps, trigger: true }} />)
     container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
@@ -84,7 +84,7 @@ describe('rangeSlider.tsx', () => {
 
   it('Does not call sync on slide - trigger not specified', () => {
     const syncMock = jest.fn()
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
 
     const { container, getAllByRole } = render(<XRangeSlider model={rangeSliderProps} />)
     container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect

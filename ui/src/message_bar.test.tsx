@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render } from '@testing-library/react'
-import { XMessageBar, MessageBar } from './message_bar'
 import { initializeIcons } from '@fluentui/react'
+import { render } from '@testing-library/react'
+import React from 'react'
+import { MessageBar, XMessageBar } from './message_bar'
 
 const
   name = 'message_bar',

@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Data, Model, Rec, S } from 'h2o-wave'
 import React from 'react'
 import { cards, Repeat } from './layout'
-import { bond, Card, Rec, S, Data } from './qd'
+import { bond } from './ui'
 
 /**
  * EXPERIMENTAL. DO NOT USE.
@@ -30,7 +31,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const
       render = () => (
         <div data-test={name}>

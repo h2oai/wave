@@ -13,11 +13,12 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, box, Id, S, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
-import { B, bond, box, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 /**
  * Creates a new expander.
@@ -62,9 +63,9 @@ const
 export const
   XExpander = bond(({ model: m }: { model: Expander }) => {
     const
-      isOpenB = box(!!qd.args[m.name]),
+      isOpenB = box(!!wave.args[m.name]),
       onClick = () => {
-        qd.args[m.name] = m.expanded = !m.expanded
+        wave.args[m.name] = m.expanded = !m.expanded
         isOpenB(m.expanded)
       },
       render = () => {

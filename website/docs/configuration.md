@@ -12,15 +12,15 @@ Run `waved -help` to view all available command line options:
 $ ./waved -help
 Usage of ./waved:
   -access-key-id string
-        default app access key ID (default "access_key_id")
+        default API access key ID (default "access_key_id")
   -access-key-secret string
-        default app access key secret (default "access_key_secret")
+        default API access key secret (default "access_key_secret")
   -access-keychain string
-        path to file containing app access keys (default ".wave-keychain")
+        path to file containing API access keys (default ".wave-keychain")
   -compact string
         compact AOF log
   -create-access-key
-        generate and add a new app access key ID and secret pair to the keychain
+        generate and add a new API access key ID and secret pair to the keychain
   -data-dir string
         directory to store site data (default "./data")
   -debug
@@ -56,7 +56,7 @@ Usage of ./waved:
   -proxy
         enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)
   -remove-access-key string
-        remove the specified app access key ID from the keychain
+        remove the specified API access key ID from the keychain
   -tls-cert-file string
         path to certificate file (TLS only)
   -tls-key-file string
@@ -65,7 +65,6 @@ Usage of ./waved:
         print version and exit
   -web-dir string
         directory to serve web assets from (default "./www")
-
 ```
 
 ## Configuring your app

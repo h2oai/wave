@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package wave
+package db
 
 import (
 	"strings"
 	"testing"
+
+	"github.com/h2oai/wave/pkg/keychain"
 )
 
 // Source: https://www.thegeekstuff.com/2012/09/sqlite-command-examples/
@@ -70,7 +72,8 @@ var (
 )
 
 func TestQuerying(t *testing.T) {
-	ds := NewDS()
+	kc, _ := keychain.LoadKeychain("test-keychain")
+	ds := newDS(DSConf{Keychain: kc, Dir: "."})
 	ds.process(DBRequest{Drop: &DropRequest{testDatabaseName}})
 	batches := strings.Split(testQueries, "--")
 	for _, batch := range batches {

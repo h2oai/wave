@@ -12,4 +12,3 @@ page$add_card("hello",ui_markdown_card(box="1 1 2 2",
                     ))
 
 page$save()
-

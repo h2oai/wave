@@ -13,11 +13,12 @@
 // limitations under the License.
 
 import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react'
+import { B, Model, S, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { B, bond, Card, qd, S } from './qd'
 import { Tab } from './tabs'
+import { bond } from './ui'
 
 /** Create a card containing tabs for navigation. */
 interface State {
@@ -41,7 +42,7 @@ const
   })
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       onLinkClick = (item?: PivotItem) => {
         const name = item?.props.itemKey
@@ -51,11 +52,11 @@ export const
           return
         }
         if (state.name) {
-          qd.args[state.name] = name
+          wave.args[state.name] = name
         } else {
-          qd.args[name] = true
+          wave.args[name] = true
         }
-        qd.sync()
+        wave.sync()
       },
       render = () => {
         const

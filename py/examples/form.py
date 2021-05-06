@@ -46,6 +46,10 @@ async def serve(q: Q):
         ui.text_m(content='Body text, for paragraphs and other content.'),
         ui.text_s(content='Small text, for small print.'),
         ui.text_xs(content='Extra-small text, for really small print.'),
+        ui.image(
+            title='Monty Python',
+            path='https://upload.wikimedia.org/wikipedia/en/c/cb/Flyingcircus_2.jpg',
+        ),
         ui.separator(label='A separator sections forms'),
         ui.progress(label='A progress bar'),
         ui.progress(label='A progress bar'),

@@ -49,7 +49,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  mourner.github.io/simplify-js
 */
 
-import { B, F, U } from "./qd"
+import { B, F, U } from 'h2o-wave'
 
 export class P {
   constructor(readonly x: F, readonly y: F) { }

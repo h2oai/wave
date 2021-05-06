@@ -14,7 +14,7 @@ env:
 jobs:
   publish:
     name: Publish Docs
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -28,8 +28,3 @@ jobs:
           make build-website
           make publish-website
 
-      - name: Commit & Tag
-        uses: EndBug/add-and-commit@v5
-        with:
-          add: '.'
-          message: "${{ github.event.inputs.commit }}"

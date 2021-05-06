@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
-import { XText, Text } from './text'
+import React from 'react'
+import { Text, XText } from './text'
 
 const name = 'text'
 const textProps: Text = { name, content: name }

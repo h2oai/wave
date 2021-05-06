@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { F, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { ProgressBar } from './parts/progress_bar'
-import { bond, Card, F, Rec, S, unpack } from './qd'
 import { clas, cssVar } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -59,7 +60,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => {
       const data = unpack(s.data)
       return (

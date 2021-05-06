@@ -129,3 +129,5 @@ dmypy.json
 *.checkpoint
 *.gz
 
+# Wave ML
+/h2o_wave_ml

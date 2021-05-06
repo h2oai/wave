@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
 import { View } from './list_item1'
-import * as T from './qd'
 
 const
   name = 'list_item_1',
-  list_item_props: T.Card<any> = {
+  list_item_props: T.Model<any> = {
     name,
     state: { data: [] },
     changed: T.box(false)

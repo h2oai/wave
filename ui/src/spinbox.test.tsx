@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XSpinbox, Spinbox } from './spinbox'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { Spinbox, XSpinbox } from './spinbox'
 
 const name = 'spinbox'
 const spinboxProps: Spinbox = { name }
@@ -24,7 +24,7 @@ const spinboxProps: Spinbox = { name }
 const mouseEvent = { clientX: 0, clientY: 0 }
 describe('Spinbox.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(() => { T.wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XSpinbox model={spinboxProps} />)
@@ -39,24 +39,24 @@ describe('Spinbox.tsx', () => {
 
   it('Sets args - init', () => {
     render(<XSpinbox model={spinboxProps} />)
-    expect(T.qd.args[name]).toBe(0)
+    expect(T.wave.args[name]).toBe(0)
   })
 
   it('Sets args - init - min specified', () => {
     render(<XSpinbox model={{ ...spinboxProps, min: 1 }} />)
-    expect(T.qd.args[name]).toBe(1)
+    expect(T.wave.args[name]).toBe(1)
   })
 
   it('Sets args - init - value specified', () => {
     render(<XSpinbox model={{ ...spinboxProps, value: 101, max: 100 }} />)
-    expect(T.qd.args[name]).toBe(100)
+    expect(T.wave.args[name]).toBe(100)
   })
 
   it('Sets args on input', () => {
     const { getByRole } = render(<XSpinbox model={spinboxProps} />)
     fireEvent.blur(getByRole('spinbutton'), { target: { value: 1 } })
 
-    expect(T.qd.args[name]).toBe(1)
+    expect(T.wave.args[name]).toBe(1)
   })
 
   it('Sets args on increment', () => {
@@ -66,7 +66,7 @@ describe('Spinbox.tsx', () => {
     fireEvent.mouseDown(incrementBtn, mouseEvent)
     fireEvent.mouseUp(incrementBtn, mouseEvent)
 
-    expect(T.qd.args[name]).toBe(1)
+    expect(T.wave.args[name]).toBe(1)
   })
 
   it('Sets args on increment - not beyond max', () => {
@@ -76,7 +76,7 @@ describe('Spinbox.tsx', () => {
     fireEvent.mouseDown(incrementBtn, mouseEvent)
     fireEvent.mouseUp(incrementBtn, mouseEvent)
 
-    expect(T.qd.args[name]).toBe(1)
+    expect(T.wave.args[name]).toBe(1)
   })
 
   it('Sets args on decrement', () => {
@@ -86,7 +86,7 @@ describe('Spinbox.tsx', () => {
     fireEvent.mouseDown(incrementBtn, mouseEvent)
     fireEvent.mouseUp(incrementBtn, mouseEvent)
 
-    expect(T.qd.args[name]).toBe(0)
+    expect(T.wave.args[name]).toBe(0)
   })
 
   it('Sets args on decrement - not beyond min', () => {
@@ -96,7 +96,7 @@ describe('Spinbox.tsx', () => {
     fireEvent.mouseDown(incrementBtn, mouseEvent)
     fireEvent.mouseUp(incrementBtn, mouseEvent)
 
-    expect(T.qd.args[name]).toBe(1)
+    expect(T.wave.args[name]).toBe(1)
   })
 
 })

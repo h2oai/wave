@@ -145,6 +145,7 @@ ui_breadcrumbs_card <- function(
 }
 
 #' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
 #' 
 #' Create a card that displays a drawing canvas (whiteboard).
 #'
@@ -181,6 +182,7 @@ ui_canvas_card <- function(
 }
 
 #' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
 #' 
 #' Create a card that displays a chat room.
 #'
@@ -213,6 +215,7 @@ ui_chat_card <- function(
 }
 
 #' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
 #' 
 #' Create a card that enables WYSIWYG editing on a page.
 #' Adding this card to a page makes the page editable by end-users.
@@ -2339,6 +2342,32 @@ ui_inline <- function(
   return(.o)
 }
 
+#' Create an image.
+#'
+#' @param title The image title, typically displayed as a tooltip.
+#' @param type The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
+#' @param image Image data, base64-encoded.
+#' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+#' @return A Image instance.
+#' @export
+ui_image <- function(
+  title,
+  type = NULL,
+  image = NULL,
+  path = NULL) {
+  .guard_scalar("title", "character", title)
+  .guard_scalar("type", "character", type)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("path", "character", path)
+  .o <- list(image=list(
+    title=title,
+    type=type,
+    image=image,
+    path=path))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create a form.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -2564,21 +2593,24 @@ ui_header_card <- function(
 #' @param type The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`.
 #' @param image Image data, base64-encoded.
 #' @param data Data for this card.
+#' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
 #' @param commands Contextual menu commands for this component.
 #' @return A ImageCard instance.
 #' @export
 ui_image_card <- function(
   box,
   title,
-  type,
-  image,
+  type = NULL,
+  image = NULL,
   data = NULL,
+  path = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
   # TODO Validate data: Rec
+  .guard_scalar("path", "character", path)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -2586,6 +2618,7 @@ ui_image_card <- function(
     type=type,
     image=image,
     data=data,
+    path=path,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveImageCard"))
   return(.o)
@@ -2969,6 +3002,36 @@ ui_tracker <- function(
   return(.o)
 }
 
+#' Create a reference to an external Javascript file to be included on a page.
+#'
+#' @param path The URI of an external script.
+#' @param asynchronous Whether to fetch and load this script in parallel to parsing and evaluated as soon as it is available.
+#' @param cross_origin The CORS setting for this script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
+#' @param referrer_policy Indicates which referrer to send when fetching the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+#' @param integrity The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
+#' @return A Script instance.
+#' @export
+ui_script <- function(
+  path,
+  asynchronous = NULL,
+  cross_origin = NULL,
+  referrer_policy = NULL,
+  integrity = NULL) {
+  .guard_scalar("path", "character", path)
+  .guard_scalar("asynchronous", "logical", asynchronous)
+  .guard_scalar("cross_origin", "character", cross_origin)
+  .guard_scalar("referrer_policy", "character", referrer_policy)
+  .guard_scalar("integrity", "character", integrity)
+  .o <- list(
+    path=path,
+    asynchronous=asynchronous,
+    cross_origin=cross_origin,
+    referrer_policy=referrer_policy,
+    integrity=integrity)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveScript"))
+  return(.o)
+}
+
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -2985,6 +3048,7 @@ ui_tracker <- function(
 #' @param dialog Display a dialog on the page.
 #' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
 #' @param tracker Configure a tracker for the page (for web analytics).
+#' @param scripts External Javascript files to load into the page.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -2999,6 +3063,7 @@ ui_meta_card <- function(
   dialog = NULL,
   theme = NULL,
   tracker = NULL,
+  scripts = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3010,6 +3075,7 @@ ui_meta_card <- function(
   .guard_scalar("dialog", "WaveDialog", dialog)
   .guard_scalar("theme", "character", theme)
   .guard_scalar("tracker", "WaveTracker", tracker)
+  .guard_vector("scripts", "WaveScript", scripts)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3022,6 +3088,7 @@ ui_meta_card <- function(
     dialog=dialog,
     theme=theme,
     tracker=tracker,
+    scripts=scripts,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMetaCard"))
   return(.o)
@@ -3053,7 +3120,10 @@ ui_nav_card <- function(
   return(.o)
 }
 
-#' Create a card displaying a collaborative Pixel art tool, just for kicks.
+#' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
+#' 
+#' Create a card displaying a collaborative Pixel art tool.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The title for this card.
@@ -3724,6 +3794,52 @@ ui_wide_gauge_stat_card <- function(
     data=data,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideGaugeStatCard"))
+  return(.o)
+}
+
+#' Create a wide information card displaying a title, caption, and either an icon or image.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title.
+#' @param caption The card's caption, displayed below the title.
+#' @param icon The card's icon.
+#' @param image The card’s image.
+#' @param category The card's category, displayed above the title.
+#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
+#' @param color The card's background color.
+#' @param commands Contextual menu commands for this component.
+#' @return A WideInfoCard instance.
+#' @export
+ui_wide_info_card <- function(
+  box,
+  title,
+  caption,
+  icon = NULL,
+  image = NULL,
+  category = NULL,
+  name = NULL,
+  color = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("category", "character", category)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("color", "character", color)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    caption=caption,
+    icon=icon,
+    image=image,
+    category=category,
+    name=name,
+    color=color,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWideInfoCard"))
   return(.o)
 }
 
