@@ -43,6 +43,7 @@ func main() {
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
 	flag.StringVar(&conf.Listen, "listen", ":10100", "listen on this address")
+	flag.StringVar(&conf.Dir, "dir", ".", "path to directory containing database (.db) files")
 	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	flag.StringVar(&accessKeyID, "access-key-id", "access_key_id", "default API access key ID")
@@ -74,6 +75,7 @@ func main() {
 
 	conf.Version = Version
 	conf.BuildDate = BuildDate
+	conf.Keychain = kc
 
-	db.NewDS(kc).Run(conf)
+	db.Run(conf)
 }

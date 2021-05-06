@@ -22,6 +22,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -74,6 +75,8 @@ type DSConf struct {
 	Listen    string
 	CertFile  string
 	KeyFile   string
+	Keychain  *keychain.Keychain
+	Dir       string
 }
 
 // DS represents a data store
@@ -82,13 +85,14 @@ type DS struct {
 	catalog  *Catalog
 }
 
-// NewDS mints a new data store.
-func NewDS(kc *keychain.Keychain) *DS {
-	return &DS{kc, newCatalog()}
+func newDS(conf DSConf) *DS {
+	return &DS{conf.Keychain, newCatalog(conf.Dir)}
 }
 
 // Run runs runs the server.
-func (ds *DS) Run(conf DSConf) {
+func Run(conf DSConf) {
+	ds := newDS(conf)
+
 	http.HandleFunc("/", ds.handle)
 
 	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
@@ -215,11 +219,12 @@ func (ds *DS) drop(req DropRequest) error {
 // Catalog represents a collection of databases.
 type Catalog struct {
 	sync.RWMutex
+	dir       string
 	databases map[string]*DB
 }
 
-func newCatalog() *Catalog {
-	return &Catalog{databases: make(map[string]*DB)}
+func newCatalog(dir string) *Catalog {
+	return &Catalog{dir: dir, databases: make(map[string]*DB)}
 }
 
 func (c *Catalog) get(name string) *DB {
@@ -231,6 +236,10 @@ func (c *Catalog) get(name string) *DB {
 	return nil
 }
 
+func (c *Catalog) locate(name string) string {
+	return filepath.Join(c.dir, name+".db")
+}
+
 func (c *Catalog) load(name string) (*DB, error) {
 	if db := c.get(name); db != nil {
 		return db, nil
@@ -240,7 +249,7 @@ func (c *Catalog) load(name string) (*DB, error) {
 		return nil, err
 	}
 
-	db, err := newDB(name + ".db")
+	db, err := newDB(c.locate(name))
 	if err != nil {
 		return nil, err
 	}
@@ -265,7 +274,7 @@ func (c *Catalog) drop(name string) error {
 	c.Lock()
 	defer c.Unlock()
 	delete(c.databases, name)
-	return os.Remove(name + ".db")
+	return os.Remove(c.locate(name))
 }
 
 func validateDatabaseName(name string) error {

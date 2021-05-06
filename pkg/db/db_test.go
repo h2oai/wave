@@ -73,7 +73,7 @@ var (
 
 func TestQuerying(t *testing.T) {
 	kc, _ := keychain.LoadKeychain("test-keychain")
-	ds := NewDS(kc)
+	ds := newDS(DSConf{Keychain: kc, Dir: "."})
 	ds.process(DBRequest{Drop: &DropRequest{testDatabaseName}})
 	batches := strings.Split(testQueries, "--")
 	for _, batch := range batches {
