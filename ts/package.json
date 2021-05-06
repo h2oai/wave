@@ -6,12 +6,18 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "minify": "terser dist/index.js -c -m -o dist/index.min.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["realtime", "dashboard", "analytics"],
+  "keywords": [
+    "realtime",
+    "dashboard",
+    "analytics"
+  ],
   "author": "Prithvi Prabhu <prithvi.prabhu@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {
+    "terser": "^5.7.0",
     "typescript": "^4.2.4"
   }
 }
