@@ -26,7 +26,7 @@ import { bond } from './ui'
 export interface FileUpload {
   /** An identifying name for this component. */
   name: Id
-  /** Text to be displayed alongside the component. */
+  /** Text to be displayed in the bottom button. Defaults to "Upload". */
   label?: S
   /** True if the component should allow multiple files to be uploaded. */
   multiple?: B
@@ -297,7 +297,7 @@ export const
             </form>
             <Fluent.PrimaryButton
               disabled={!!percentCompleteB() || !filesB().length}
-              text={model.label}
+              text={model.label || 'Upload'}
               onClick={upload} />
           </div>
         )

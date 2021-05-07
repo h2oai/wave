@@ -1343,7 +1343,7 @@ ui_buttons <- function(
 #' A file upload component allows a user to browse, select and upload one or more files.
 #'
 #' @param name An identifying name for this component.
-#' @param label Text to be displayed alongside the component.
+#' @param label Text to be displayed in the bottom button. Defaults to "Upload".
 #' @param multiple True if the component should allow multiple files to be uploaded.
 #' @param file_extensions List of allowed file extensions, e.g. `pdf`, `docx`, etc.
 #' @param max_file_size Maximum allowed size (Mb) per file. Defaults to no limit.
