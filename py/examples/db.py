@@ -14,12 +14,12 @@
 # H2O_WAVEDB_ACCESS_KEY_SECRET - the API access key secret
 
 import asyncio
-from h2o_wave import WaveDBConnection
+from h2o_wave import connect
 
 
 async def main():
     # Create a database connection
-    connection = WaveDBConnection()
+    connection = connect()
 
     # Access the 'employees' database.
     # A new database is created automatically if it does not exist.

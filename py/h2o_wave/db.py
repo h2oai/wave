@@ -92,6 +92,20 @@ class WaveDBConnection:
         await self._http.aclose()
 
 
+def connect(address: str = None, key_id: str = None, key_secret: str = None) -> WaveDBConnection:
+    """
+    Returns a connection to a database server.
+
+    Args:
+        address: the address of the database server http(s)://ip:port. Defaults to http://127.0.0.1:10100
+        key_id: the API access key ID. Defaults to the environment variable H2O_WAVEDB_ACCESS_KEY_ID.
+        key_secret: the API access key secret. Defaults to the environment variable H2O_WAVEDB_ACCESS_KEY_SECRET.
+    Returns:
+        a connection instance
+    """
+    return WaveDBConnection(address, key_id, key_secret)
+
+
 class WaveDB:
     """
     Represents a database connector.
