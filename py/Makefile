@@ -1,4 +1,4 @@
-WAVE_ML_VERSION := v0.5.0
+WAVE_ML_VERSION := v0.6.0
 
 all: build ## Build h2o_wave wheel
 
