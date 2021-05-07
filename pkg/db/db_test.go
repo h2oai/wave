@@ -87,12 +87,17 @@ func TestQuerying(t *testing.T) {
 			}
 		}
 
-		reply := ds.process(DBRequest{Exec: &ExecRequest{testDatabaseName, stmts, true}})
+		result := ds.process(DBRequest{Exec: &ExecRequest{testDatabaseName, stmts, 1}})
 		t.Log("batch", stmts)
-		if len(reply.Error) > 0 {
-			t.Error(reply.Error)
+		if reply, ok := result.(ExecReply); ok {
+			if len(reply.Error) > 0 {
+				t.Error(reply.Error)
+			} else {
+				t.Log("result", reply.Results)
+			}
 		} else {
-			t.Log("result", reply.Result)
+			t.Error("unexpected result")
 		}
 	}
+	ds.process(DBRequest{Drop: &DropRequest{testDatabaseName}})
 }

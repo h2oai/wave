@@ -30,17 +30,17 @@ def _new_stmt(query: str, params: List) -> Dict:
     for param in params:
         if param is not None and not isinstance(param, (int, float, str)):
             raise ValueError(f'SQL parameter must be one of int, float, str or None; got {type(param)}')
-    return dict(query=query, params=None if len(params) == 0 else params)
+    return dict(q=query, p=None if len(params) == 0 else params)
 
 
 def _new_exec_request(database: str, statements: List[Dict], atomic: bool) -> Dict:
     if not isinstance(database, str):
         raise ValueError(f'database must be str; got {type(database)}')
-    return dict(exec=dict(database=database, statements=statements, atomic=atomic))
+    return dict(e=dict(d=database, s=statements, a=1 if atomic else 0))
 
 
 def _new_drop_request(database: str) -> Dict:
-    return dict(drop=dict(database=database))
+    return dict(d=dict(d=database))
 
 
 class WaveDBError(Exception):
@@ -179,7 +179,7 @@ class WaveDB:
         """
         req = _new_drop_request(self._name)
         res = await self._db._call(req)
-        return res.get('error')
+        return res.get('e')
 
     async def _exec(self, args: list, atomic=False) -> Tuple[Optional[List[List[List]]], Optional[str]]:
         if len(args) == 0:
@@ -202,7 +202,4 @@ class WaveDB:
 
         req = _new_exec_request(self._name, statements, atomic)
         res = await self._db._call(req)
-        result, err = res.get('result'), res.get('error')
-        if err:
-            return None, err
-        return result.get('results'), None
+        return res.get('r'), res.get('e')

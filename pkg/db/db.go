@@ -109,37 +109,40 @@ func Run(conf DSConf) {
 
 // DBRequest represents a database request.
 type DBRequest struct {
-	Exec *ExecRequest `json:"exec"`
-	Drop *DropRequest `json:"drop"`
+	Exec *ExecRequest `json:"e"`
+	Drop *DropRequest `json:"d"`
 }
 
-// DBReply represents a database reply.
-type DBReply struct {
-	Result interface{} `json:"result"`
-	Error  string      `json:"error"`
+type ErrorReply struct {
+	Error string `json:"e"`
 }
 
 // ExecRequest is used to execute statements.
 type ExecRequest struct {
-	Database   string `json:"database"`
-	Statements []Stmt `json:"statements"`
-	Atomic     bool   `json:"atomic"`
+	Database   string `json:"d"`
+	Statements []Stmt `json:"s"`
+	Atomicity  uint8  `json:"a"`
 }
 
 // ExecReply is the reply from Exec().
 type ExecReply struct {
-	Results [][][]interface{} `json:"results"`
+	Results [][][]interface{} `json:"r"`
+	Error   string            `json:"e"`
 }
 
 // Stmt represents a SQL statement.
 type Stmt struct {
-	Query  string        `json:"query"`
-	Params []interface{} `json:"params"`
+	Query  string        `json:"q"`
+	Params []interface{} `json:"p"`
 }
 
 // DropRequest is used to drop a database
 type DropRequest struct {
-	Database string `json:"database"`
+	Database string `json:"d"`
+}
+
+type DropReply struct {
+	Error string `json:"e"`
 }
 
 const (
@@ -185,31 +188,30 @@ func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 }
 
-func (ds *DS) process(req DBRequest) DBReply {
+func (ds *DS) process(req DBRequest) interface{} {
 	if req.Exec != nil {
 		reply, err := ds.exec(*req.Exec)
 		if err != nil {
-			return DBReply{nil, err.Error()}
+			return ExecReply{nil, err.Error()}
 		}
-		return DBReply{reply, ""}
+		return ExecReply{reply, ""}
 	}
 	if req.Drop != nil {
 		err := ds.drop(*req.Drop)
 		if err != nil {
-			return DBReply{nil, err.Error()}
+			return DropReply{err.Error()}
 		}
-		return DBReply{nil, ""}
+		return DropReply{""}
 	}
-	return DBReply{Error: errBadRequest.Error()}
+	return ErrorReply{errBadRequest.Error()}
 }
 
-func (ds *DS) exec(req ExecRequest) (ExecReply, error) {
+func (ds *DS) exec(req ExecRequest) ([][][]interface{}, error) {
 	db, err := ds.catalog.load(req.Database)
 	if err != nil {
-		return ExecReply{}, err
+		return nil, err
 	}
-	results, err := db.exec(req.Statements, req.Atomic)
-	return ExecReply{results}, err
+	return db.exec(req.Statements, req.Atomicity > 0)
 }
 
 func (ds *DS) drop(req DropRequest) error {
