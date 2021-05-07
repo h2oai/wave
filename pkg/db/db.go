@@ -158,7 +158,7 @@ var (
 
 func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	case http.MethodPost:
+	case http.MethodGet, http.MethodPost:
 		switch r.Header.Get("Content-Type") {
 		case "application/json":
 			if !ds.keychain.Guard(w, r) {
