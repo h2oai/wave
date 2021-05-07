@@ -119,7 +119,7 @@ export const
           wave.sync()
           successMsgB(`Successfully uploaded files: ${filesB().map(({ name }) => name).join(',')}.`)
         }
-        catch (e) { errorB('There was an error when uploading file.') }
+        catch ({ responseText }) { errorB(responseText || 'There was an error when uploading file.') }
         finally { filesB([]) }
       },
       isFileTypeAllowed = (fileName: string) => {
