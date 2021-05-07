@@ -52,11 +52,11 @@ async def main():
     )
 
     # Read records.
-    results, err = await db.exec("select * from employee")
+    rows, err = await db.exec("select * from employee")
     if err:
         raise ValueError(err)
 
-    print(results)
+    print(rows)
 
     # Prints:
     #  [
