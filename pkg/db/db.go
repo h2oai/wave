@@ -149,6 +149,7 @@ type DropReply struct {
 
 const (
 	sqlite3BusyTimeout = 5000
+	contentTypeJSON    = "application/json"
 )
 
 var (
@@ -158,34 +159,31 @@ var (
 
 func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	case http.MethodGet, http.MethodPost:
-		switch r.Header.Get("Content-Type") {
-		case "application/json":
-			if !ds.keychain.Guard(w, r) {
-				return
-			}
-			var request DBRequest
-			in, err := ioutil.ReadAll(http.MaxBytesReader(w, r.Body, 5<<20)) // limit to 5MB per request
-			if err != nil {
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-				return
-			}
-			if err := json.Unmarshal(in, &request); err != nil {
-				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-				return
-			}
-
-			reply := ds.process(request)
-
-			out, err := json.Marshal(reply)
-			if err != nil {
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-				return
-			}
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(out)
+	case http.MethodPost:
+		if !ds.keychain.Guard(w, r) {
 			return
 		}
+		var request DBRequest
+		in, err := ioutil.ReadAll(http.MaxBytesReader(w, r.Body, 5<<20)) // limit to 5MB per request
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		if err := json.Unmarshal(in, &request); err != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
+		reply := ds.process(request)
+
+		out, err := json.Marshal(reply)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", contentTypeJSON)
+		w.Write(out)
+		return
 	}
 	http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 }
