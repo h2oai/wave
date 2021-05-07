@@ -47,6 +47,10 @@ build-server: ## Build server for current OS/Arch
 build-db: ## Build database server for current OS/Arch
 	go build $(LDFLAGS) -o wavedb cmd/wavedb/main.go
 
+build-db-micro:
+	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb cmd/wavedb/main.go
+	upx --brute wavedb
+
 release-db: # Build release package for database server
 	mkdir -p build
 	go build -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb$(EXE_EXT) cmd/wavedb/main.go
