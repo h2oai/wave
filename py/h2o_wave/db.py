@@ -13,11 +13,10 @@
 # limitations under the License.
 
 import os
+import json
 from typing import Tuple, List, Optional, Dict, Any
 
 import httpx
-
-from .core import marshal, unmarshal
 
 
 def _get_env(key: str, value: Any):
@@ -81,10 +80,10 @@ class WaveDBConnection:
         return WaveDB(self, name)
 
     async def _call(self, req: dict) -> dict:
-        res = await self._http.post(self._address, content=marshal(req))
+        res = await self._http.post(self._address, content=json.dumps(req, allow_nan=False, separators=(',', ':')))
         if res.status_code != 200:
             raise WaveDBError(f'Request failed (code={res.status_code}): {res.text}')
-        return unmarshal(res.text)
+        return json.loads(res.text)
 
     async def close(self):
         """
