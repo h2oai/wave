@@ -13,12 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, box, F, Id, S, U, wave } from 'h2o-wave'
 import React from 'react'
 import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import { stylesheet } from 'typestyle'
-import { B, bond, box, F, Id, qd, S, U } from './qd'
 import { displayMixin, padding } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -139,14 +140,14 @@ export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
       max: (m.max_value && m.max_value > min && m.max_value <= max) ? m.max_value : max
     }
 
-  qd.args[m.name] = Object.values(value as Range)
+  wave.args[m.name] = Object.values(value as Range)
 
   const
     valueB = box<Range>(value),
     onChange = (val: Range | U) => {
       valueB(val as Range)
-      qd.args[m.name] = Object.values(val as Range)
-      if (m.trigger) qd.sync()
+      wave.args[m.name] = Object.values(val as Range)
+      if (m.trigger) wave.sync()
     },
     render = () => (
       <div data-test={m.name} style={displayMixin(m.visible)}>

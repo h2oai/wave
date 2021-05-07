@@ -14,7 +14,11 @@
 
 package wave
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/h2oai/wave/pkg/assert"
+)
 
 type parseBytesTestCase struct {
 	input  string
@@ -22,7 +26,7 @@ type parseBytesTestCase struct {
 }
 
 func TestParseBytes(t *testing.T) {
-	_, ok, no := Assert(t)
+	_, ok, no := assert.Assert(t)
 	units := []string{"e", "p", "t", "g", "m", "k"}
 	values := []int{EXABYTE, PETABYTE, TERABYTE, GIGABYTE, MEGABYTE, KILOBYTE}
 	for i, unit := range units {

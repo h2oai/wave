@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
 import { View } from './tall_gauge_stat'
-import * as T from './qd'
 
 const
   title = 'tall_gauge_stat',
-  tallGaugeStatProps: T.Card<any> = {
+  tallGaugeStatProps: T.Model<any> = {
     name: title,
     state: {
       title,

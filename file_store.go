@@ -25,16 +25,17 @@ import (
 	"path/filepath"
 
 	"github.com/google/uuid"
+	"github.com/h2oai/wave/pkg/keychain"
 )
 
 // FileStore represents a file store.
 type FileStore struct {
 	dir      string
-	keychain *Keychain
+	keychain *keychain.Keychain
 	auth     *Auth
 }
 
-func newFileStore(dir string, keychain *Keychain, auth *Auth) http.Handler {
+func newFileStore(dir string, keychain *keychain.Keychain, auth *Auth) http.Handler {
 	return &FileStore{dir, keychain, auth}
 }
 
@@ -48,8 +49,8 @@ func (fs *FileStore) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		// Disallow if:
 		// - unauthorized api call
-		// - auth not enabled or auth enabled and unauthorized
-		if !fs.keychain.allow(r) && (fs.auth == nil || (fs.auth != nil && !fs.auth.allow(r))) { // API or UI
+		// - auth enabled and unauthorized
+		if !fs.keychain.Allow(r) && (fs.auth != nil && !fs.auth.allow(r)) { // API or UI
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}

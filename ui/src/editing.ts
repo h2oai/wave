@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { B, box, S, U } from 'h2o-wave'
 import { Layout } from "./meta"
-import { B, box, S, U } from "./qd"
 
 export type CardAttr = {
   name: S

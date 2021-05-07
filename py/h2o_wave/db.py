@@ -12,11 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple, List, Optional, Dict
+import os
+from typing import Tuple, List, Optional, Dict, Any
 
 import httpx
 
 from .core import marshal, unmarshal
+
+
+def _get_env(key: str, value: Any):
+    return os.environ.get(f'H2O_WAVEDB_{key}', value)
 
 
 def _new_stmt(query: str, params: List) -> Dict:
@@ -31,37 +36,35 @@ def _new_stmt(query: str, params: List) -> Dict:
 def _new_exec_request(database: str, statements: List[Dict], atomic: bool) -> Dict:
     if not isinstance(database, str):
         raise ValueError(f'database must be str; got {type(database)}')
-    return dict(database=database, statements=statements, atomic=atomic)
+    return dict(exec=dict(database=database, statements=statements, atomic=atomic))
 
 
-def _new_db_request(exec: Optional[Dict] = None) -> Dict:
-    return dict(exec=exec)
+def _new_drop_request(database: str) -> Dict:
+    return dict(drop=dict(database=database))
 
 
-class TeleDBError(Exception):
+class WaveDBError(Exception):
     """
-    Represents a remote exception thrown by the TeleDB database server.
+    Represents a remote exception thrown by the WaveDB database server.
     """
     pass
 
 
-class TeleDB:
+class WaveDBConnection:
     """
-    Represents a TeleDB database client.
+    Represents a WaveDB database connection.
     """
 
-    def __init__(self, address: str, key_id: str, key_secret: str):
+    def __init__(self, address: str = None, key_id: str = None, key_secret: str = None):
         """
-        Create a new client instance.
-
-        Args:
-            address: database address
-            key_id: access key id
-            key_secret: access key secret
+        Create a new database connection.
         """
-        self._address = address
+        self._address = address or _get_env('ADDRESS', 'http://127.0.0.1:10100')
         self._http = httpx.AsyncClient(
-            auth=(key_id, key_secret),
+            auth=(
+                key_id or _get_env('ACCESS_KEY_ID', 'access_key_id'),
+                key_secret or _get_env('ACCESS_KEY_SECRET', 'access_key_secret')
+            ),
             headers={'Content-type': 'application/json'},
             verify=False,
         )
@@ -75,21 +78,27 @@ class TeleDB:
         Returns:
             a connector instance
         """
-        return _DB(self, name)
+        return WaveDB(self, name)
 
     async def _call(self, req: dict) -> dict:
         res = await self._http.post(self._address, content=marshal(req))
         if res.status_code != 200:
-            raise TeleDBError(f'Request failed (code={res.status_code}): {res.text}')
+            raise WaveDBError(f'Request failed (code={res.status_code}): {res.text}')
         return unmarshal(res.text)
 
+    async def close(self):
+        """
+        Close the database connection.
+        """
+        await self._http.aclose()
 
-class _DB:
+
+class WaveDB:
     """
     Represents a database connector.
     """
 
-    def __init__(self, db: TeleDB, name: str):
+    def __init__(self, db: WaveDBConnection, name: str):
         self._db = db
         self._name = name
 
@@ -164,6 +173,14 @@ class _DB:
         """
         return await self._exec(list(args), atomic=True)
 
+    async def drop(self) -> Optional[str]:
+        """
+        Drop the database.
+        """
+        req = _new_drop_request(self._name)
+        res = await self._db._call(req)
+        return res.get('error')
+
     async def _exec(self, args: list, atomic=False) -> Tuple[Optional[List[List[List]]], Optional[str]]:
         if len(args) == 0:
             raise ValueError('Want at least one SQL query, got none')
@@ -183,7 +200,7 @@ class _DB:
                 raise ValueError('Want statement, got empty tuple/list')
             statements.append(_new_stmt(arg[0], arg[1:]))
 
-        req = _new_db_request(exec=_new_exec_request(self._name, statements, atomic))
+        req = _new_exec_request(self._name, statements, atomic)
         res = await self._db._call(req)
         result, err = res.get('result'), res.get('error')
         if err:

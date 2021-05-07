@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
-import { View, XFrame, Frame } from './frame'
-import * as T from './qd'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { Frame, View, XFrame } from './frame'
 
 const name = 'frame'
 
 describe('Frame.tsx', () => {
   beforeAll(() => window.URL.createObjectURL = jest.fn(() => ''))
   describe('Frame card', () => {
-    const cardFrameProps: T.Card<any> = {
+    const cardFrameProps: T.Model<any> = {
       name,
       state: {},
       changed: T.box(false)

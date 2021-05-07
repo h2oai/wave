@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package wave
+package keychain
 
 import (
 	"bytes"
 	"testing"
+
+	"github.com/h2oai/wave/pkg/assert"
 )
 
 func TestGenerateRandString(t *testing.T) {
-	eq, _, no := Assert(t)
+	eq, _, no := assert.Assert(t)
 	s, err := generateRandString(idChars, 20)
 	no(err)
 	eq(len(s), 20)
 }
 
 func TestCreateAccessKey(t *testing.T) {
-	eq, ok, no := Assert(t)
+	eq, ok, no := assert.Assert(t)
 	id, secret, hash, err := CreateAccessKey()
 	no(err)
 	eq(len(id), 20)
@@ -36,7 +38,7 @@ func TestCreateAccessKey(t *testing.T) {
 }
 
 func TestKeychainSerialization(t *testing.T) {
-	eq, _, no := Assert(t)
+	eq, _, no := assert.Assert(t)
 	kc1, err := LoadKeychain(".wave-keychain")
 	no(err)
 	for i := 0; i < 5; i++ {
@@ -56,7 +58,7 @@ func TestKeychainSerialization(t *testing.T) {
 }
 
 func TestKeychainVerify(t *testing.T) {
-	_, ok, no := Assert(t)
+	_, ok, no := assert.Assert(t)
 	kc, err := LoadKeychain(".wave-keychain")
 	no(err)
 
@@ -68,7 +70,7 @@ func TestKeychainVerify(t *testing.T) {
 }
 
 func TestKeychainManagement(t *testing.T) {
-	eq, ok, no := Assert(t)
+	eq, ok, no := assert.Assert(t)
 
 	// drain
 	kc, err := LoadKeychain(".wave-keychain")

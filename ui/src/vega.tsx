@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { B, debounce, Model, Rec, S, unpack, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
-import { B, bond, Card, Rec, S, unpack, xid, debounce } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -127,7 +128,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         const { specification, data, title } = state

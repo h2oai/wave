@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { render, fireEvent, wait } from '@testing-library/react'
+import { fireEvent, render, wait } from '@testing-library/react'
 import React from 'react'
-import Dialog from './dialog'
-import * as T from './qd'
+import Dialog, { dialogB } from './dialog'
 
 
 const
@@ -27,7 +26,7 @@ const
   }
 describe('Dialog.tsx', () => {
 
-  beforeEach(() => T.qd.dialogB(dialogProps))
+  beforeEach(() => dialogB(dialogProps))
 
   it('should open dialog when global qd.dialogB is set', () => {
     const { queryByRole } = render(<Dialog />)
@@ -37,25 +36,25 @@ describe('Dialog.tsx', () => {
   it('should close dialog when global qd.dialogB is null', async () => {
     const { queryByRole } = render(<Dialog />)
     expect(queryByRole('dialog')).toBeInTheDocument()
-    T.qd.dialogB(null)
+    dialogB(null)
     await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('should render correct title when specified', () => {
     const title = 'New Title'
-    T.qd.dialogB({ ...dialogProps, title })
+    dialogB({ ...dialogProps, title })
     const { queryByText } = render(<Dialog />)
     expect(queryByText(title)).toBeInTheDocument()
   })
 
   it('should render X closing button when specified', () => {
-    T.qd.dialogB({ ...dialogProps, closable: true })
+    dialogB({ ...dialogProps, closable: true })
     const { queryByTitle } = render(<Dialog />)
     expect(queryByTitle('Close')).toBeInTheDocument()
   })
 
   it('should close dialog when clicking on X', async () => {
-    T.qd.dialogB({ ...dialogProps, closable: true })
+    dialogB({ ...dialogProps, closable: true })
     const { getByTitle, queryByRole } = render(<Dialog />)
     fireEvent.click(getByTitle('Close'))
     await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())

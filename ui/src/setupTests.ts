@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import '@testing-library/jest-dom/extend-expect'
-import { configure } from '@testing-library/dom'
-import 'jest-canvas-mock'
 import { initializeIcons } from '@fluentui/react'
+import { configure } from '@testing-library/dom'
+import '@testing-library/jest-dom/extend-expect'
+import 'jest-canvas-mock'
 
 configure({ testIdAttribute: 'data-test' })
 initializeIcons()

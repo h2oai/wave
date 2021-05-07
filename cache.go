@@ -19,6 +19,8 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+
+	"github.com/h2oai/wave/pkg/keychain"
 )
 
 // Shard represents a collection of key-value pairs.
@@ -31,12 +33,12 @@ type Shard struct {
 type Cache struct {
 	sync.RWMutex
 	prefix         string
-	keychain       *Keychain
+	keychain       *keychain.Keychain
 	shards         map[string]*Shard
 	maxRequestSize int64
 }
 
-func newCache(prefix string, keychain *Keychain, maxRequestSize int64) *Cache {
+func newCache(prefix string, keychain *keychain.Keychain, maxRequestSize int64) *Cache {
 	return &Cache{
 		prefix:         prefix,
 		keychain:       keychain,
@@ -46,7 +48,7 @@ func newCache(prefix string, keychain *Keychain, maxRequestSize int64) *Cache {
 }
 
 func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if !c.keychain.guard(w, r) {
+	if !c.keychain.Guard(w, r) {
 		return
 	}
 

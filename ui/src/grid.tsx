@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { B, box, Data, Model, Rec, S, unpack, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { B, Card, unpack, Rec, S, Data, xid, box, bond } from './qd'
 import { cards, CardView, Format } from './layout'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -49,7 +50,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const
       render = () => {
         let cells = unpack<any[]>(s.cells)
@@ -64,7 +65,7 @@ export const
               if (value != null) {
                 return <td><Format data={data} format={value} /></td>
               } else {
-                const card: Card<any> = {
+                const card: Model<any> = {
                   name: xid(),
                   state: { ...props, view, data },
                   changed: box<B>(),

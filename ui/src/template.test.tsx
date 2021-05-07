@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
-import { View, Template, XTemplate } from './template'
-import * as T from './qd'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { Template, View, XTemplate } from './template'
 
 const
   name = 'template',
-  templateProps: T.Card<any> = {
+  templateProps: T.Model<any> = {
     name,
     state: { data: [] },
     changed: T.box(false)

@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XChecklist, Checklist } from './checklist'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { Checklist, XChecklist } from './checklist'
 
 const name = 'checklist'
 const checklistProps: Checklist = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }
@@ -24,7 +24,7 @@ describe('Checklist.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
-    T.qd.args[name] = null
+    T.wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -42,7 +42,7 @@ describe('Checklist.tsx', () => {
     const { getByText } = render(<XChecklist model={checklistProps} />)
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(T.qd.args[name]).toMatchObject(['Choice1'])
+    expect(T.wave.args[name]).toMatchObject(['Choice1'])
   })
 
   it('Sets args - multi selection', () => {
@@ -51,14 +51,14 @@ describe('Checklist.tsx', () => {
     fireEvent.click(getByText('Choice2').parentElement!)
     fireEvent.click(getByText('Choice3').parentElement!)
 
-    expect(T.qd.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
+    expect(T.wave.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
   })
 
   it('Sets all choices as args after select all', () => {
     const { getByText } = render(<XChecklist model={checklistProps} />)
     fireEvent.click(getByText('Select All'))
 
-    expect(T.qd.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
+    expect(T.wave.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
   })
 
   it('Sets empty args after deselect all', () => {
@@ -68,14 +68,14 @@ describe('Checklist.tsx', () => {
     fireEvent.click(getByText('Choice3').parentElement!)
     fireEvent.click(getByText('Deselect All'))
 
-    expect(T.qd.args[name]).toMatchObject([])
+    expect(T.wave.args[name]).toMatchObject([])
   })
 
   it('Calls sync - trigger specified', () => {
     const syncMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
     expect(syncMock).toHaveBeenCalled()
@@ -85,7 +85,7 @@ describe('Checklist.tsx', () => {
     const syncMock = jest.fn()
     const { getByText } = render(<XChecklist model={checklistProps} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
     expect(syncMock).not.toHaveBeenCalled()
@@ -95,7 +95,7 @@ describe('Checklist.tsx', () => {
     const syncMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByText('Select All'))
 
     expect(syncMock).toHaveBeenCalled()
@@ -105,7 +105,7 @@ describe('Checklist.tsx', () => {
     const syncMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getByText('Deselect All'))
 
     expect(syncMock).toHaveBeenCalled()

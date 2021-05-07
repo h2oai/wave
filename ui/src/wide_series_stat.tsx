@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Data, F, Model, Rec, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
 import { MicroArea } from './parts/microarea'
 import { MicroBars } from './parts/microbars'
-import { bond, Card, Data, F, Rec, S, unpack } from './qd'
-import { cssVar, pc, clas } from './theme'
+import { clas, cssVar, pc } from './theme'
+import { bond } from './ui'
 
 const
   css = stylesheet({
@@ -74,7 +75,7 @@ interface State {
 }
 
 export const
-  View = bond(({ name, state: s, changed }: Card<State>) => {
+  View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => {
       const
         data = unpack(s.data),

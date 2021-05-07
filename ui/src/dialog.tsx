@@ -13,9 +13,12 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, Box, box, S } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
-import { B, bond, qd, S } from './qd'
+import { bond } from './ui'
+
+export const dialogB: Box<Dialog | null> = box(null)
 
 /**
  * A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
@@ -39,8 +42,7 @@ export interface Dialog {
 
 export default bond(() => {
   const
-    { dialogB } = qd,
-    onDismiss = () => qd.dialogB(null),
+    onDismiss = () => dialogB(null),
     render = () => {
       const
         { title, width = '600px', items = [], closable, primary, blocking } = dialogB() || {},

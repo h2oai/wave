@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { B, Model, Rec, S, unpack } from 'h2o-wave'
 import Handlebars from 'handlebars'
 import React from 'react'
 import { cards, substitute } from './layout'
 import { MarkupCard, XMarkup } from './markup'
-import { bond, Card, Rec, S, unpack, B } from './qd'
+import { bond } from './ui'
 
 /** Render dynamic content using an HTML template.*/
 export interface Template {
@@ -50,7 +51,7 @@ export const
       }
     return { render }
   }),
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       template = Handlebars.compile(state.content || ''),
       render = () => {

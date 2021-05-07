@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Markdown } from './markdown'
-import { B, S } from './qd'
 
 const
   css = stylesheet({

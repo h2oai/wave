@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, Id, S, wave } from 'h2o-wave'
 import React from 'react'
-import { B, bond, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a toggle.
@@ -46,11 +47,11 @@ export interface Toggle {
 
 export const
   XToggle = bond(({ model: m }: { model: Toggle }) => {
-    qd.args[m.name] = !!m.value
+    wave.args[m.name] = !!m.value
     const
       onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
-        qd.args[m.name] = !!checked
-        if (m.trigger) qd.sync()
+        wave.args[m.name] = !!checked
+        if (m.trigger) wave.sync()
       },
       render = () => (
         <Fluent.Toggle

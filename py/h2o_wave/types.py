@@ -164,7 +164,7 @@ class Command:
         __d_icon: Any = __d.get('icon')
         _guard_scalar('Command.icon', __d_icon, (str,), False, True, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('Command.items', __d_items, (Command,), False, True, False)
+        _guard_vector('Command.items', __d_items, (dict,), False, True, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('Command.value', __d_value, (str,), False, True, False)
         __d_data: Any = __d.get('data')
@@ -230,9 +230,9 @@ class BreadcrumbsCard:
         __d_box: Any = __d.get('box')
         _guard_scalar('BreadcrumbsCard.box', __d_box, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('BreadcrumbsCard.items', __d_items, (Breadcrumb,), False, False, False)
+        _guard_vector('BreadcrumbsCard.items', __d_items, (dict,), False, False, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('BreadcrumbsCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('BreadcrumbsCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: List[Breadcrumb] = [Breadcrumb.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
@@ -245,6 +245,7 @@ class BreadcrumbsCard:
 
 class CanvasCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that displays a drawing canvas (whiteboard).
     """
@@ -305,7 +306,7 @@ class CanvasCard:
         _guard_scalar('CanvasCard.height', __d_height, (int,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('CanvasCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('CanvasCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         width: int = __d_width
@@ -324,6 +325,7 @@ class CanvasCard:
 
 class ChatCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that displays a chat room.
     """
@@ -376,7 +378,7 @@ class ChatCard:
         __d_capacity: Any = __d.get('capacity')
         _guard_scalar('ChatCard.capacity', __d_capacity, (int,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('ChatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('ChatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
@@ -401,6 +403,7 @@ class EditorCardMode:
 
 class EditorCard:
     """WARNING: Experimental and subject to change.
+    Do not use in production sites!
 
     Create a card that enables WYSIWYG editing on a page.
     Adding this card to a page makes the page editable by end-users.
@@ -441,7 +444,7 @@ class EditorCard:
         __d_mode: Any = __d.get('mode')
         _guard_enum('EditorCard.mode', __d_mode, _EditorCardMode, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('EditorCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('EditorCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         mode: str = __d_mode
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
@@ -576,7 +579,7 @@ class FlexCard:
         __d_wrap: Any = __d.get('wrap')
         _guard_enum('FlexCard.wrap', __d_wrap, _FlexCardWrap, True)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('FlexCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('FlexCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
@@ -639,7 +642,7 @@ class FooterCard:
         __d_caption: Any = __d.get('caption')
         _guard_scalar('FooterCard.caption', __d_caption, (str,), False, False, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('FooterCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('FooterCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         caption: str = __d_caption
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
@@ -782,7 +785,7 @@ class TextXl:
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('TextXl.tooltip', __d_tooltip, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('TextXl.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('TextXl.commands', __d_commands, (dict,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('TextXl.name', __d_name, (str,), False, True, False)
         content: str = __d_content
@@ -851,7 +854,7 @@ class TextL:
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('TextL.tooltip', __d_tooltip, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('TextL.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('TextL.commands', __d_commands, (dict,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('TextL.name', __d_name, (str,), False, True, False)
         content: str = __d_content
@@ -1892,7 +1895,7 @@ class ChoiceGroup:
         __d_value: Any = __d.get('value')
         _guard_scalar('ChoiceGroup.value', __d_value, (str,), False, True, False)
         __d_choices: Any = __d.get('choices')
-        _guard_vector('ChoiceGroup.choices', __d_choices, (Choice,), False, True, False)
+        _guard_vector('ChoiceGroup.choices', __d_choices, (dict,), False, True, False)
         __d_required: Any = __d.get('required')
         _guard_scalar('ChoiceGroup.required', __d_required, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
@@ -1987,7 +1990,7 @@ class Checklist:
         __d_values: Any = __d.get('values')
         _guard_vector('Checklist.values', __d_values, (str,), False, True, False)
         __d_choices: Any = __d.get('choices')
-        _guard_vector('Checklist.choices', __d_choices, (Choice,), False, True, False)
+        _guard_vector('Checklist.choices', __d_choices, (dict,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('Checklist.trigger', __d_trigger, (bool,), False, True, False)
         __d_visible: Any = __d.get('visible')
@@ -2114,7 +2117,7 @@ class Dropdown:
         __d_values: Any = __d.get('values')
         _guard_vector('Dropdown.values', __d_values, (str,), False, True, False)
         __d_choices: Any = __d.get('choices')
-        _guard_vector('Dropdown.choices', __d_choices, (Choice,), False, True, False)
+        _guard_vector('Dropdown.choices', __d_choices, (dict,), False, True, False)
         __d_required: Any = __d.get('required')
         _guard_scalar('Dropdown.required', __d_required, (bool,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
@@ -2892,7 +2895,7 @@ class Buttons:
     def load(__d: Dict) -> 'Buttons':
         """Creates an instance of this class using the contents of a dict."""
         __d_items: Any = __d.get('items')
-        _guard_vector('Buttons.items', __d_items, (Component,), False, False, False)
+        _guard_vector('Buttons.items', __d_items, (dict,), False, False, False)
         __d_justify: Any = __d.get('justify')
         _guard_enum('Buttons.justify', __d_justify, _ButtonsJustify, True)
         __d_name: Any = __d.get('name')
@@ -3129,9 +3132,9 @@ class TableCellType:
     def load(__d: Dict) -> 'TableCellType':
         """Creates an instance of this class using the contents of a dict."""
         __d_progress: Any = __d.get('progress')
-        _guard_scalar('TableCellType.progress', __d_progress, (ProgressTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.progress', __d_progress, (dict,), False, True, False)
         __d_icon: Any = __d.get('icon')
-        _guard_scalar('TableCellType.icon', __d_icon, (IconTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.icon', __d_icon, (dict,), False, True, False)
         progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
         icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
         return TableCellType(
@@ -3243,7 +3246,7 @@ class TableColumn:
         __d_data_type: Any = __d.get('data_type')
         _guard_enum('TableColumn.data_type', __d_data_type, _TableColumnDataType, True)
         __d_cell_type: Any = __d.get('cell_type')
-        _guard_scalar('TableColumn.cell_type', __d_cell_type, (TableCellType,), False, True, False)
+        _guard_scalar('TableColumn.cell_type', __d_cell_type, (dict,), False, True, False)
         name: str = __d_name
         label: str = __d_label
         min_width: Optional[str] = __d_min_width
@@ -3420,9 +3423,9 @@ class Table:
         __d_name: Any = __d.get('name')
         _guard_scalar('Table.name', __d_name, (str,), True, False, False)
         __d_columns: Any = __d.get('columns')
-        _guard_vector('Table.columns', __d_columns, (TableColumn,), False, False, False)
+        _guard_vector('Table.columns', __d_columns, (dict,), False, False, False)
         __d_rows: Any = __d.get('rows')
-        _guard_vector('Table.rows', __d_rows, (TableRow,), False, False, False)
+        _guard_vector('Table.rows', __d_rows, (dict,), False, False, False)
         __d_multiple: Any = __d.get('multiple')
         _guard_scalar('Table.multiple', __d_multiple, (bool,), False, True, False)
         __d_groupable: Any = __d.get('groupable')
@@ -3681,7 +3684,7 @@ class Tabs:
         __d_value: Any = __d.get('value')
         _guard_scalar('Tabs.value', __d_value, (str,), False, True, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('Tabs.items', __d_items, (Tab,), False, True, False)
+        _guard_vector('Tabs.items', __d_items, (dict,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Tabs.visible', __d_visible, (bool,), False, True, False)
         __d_link: Any = __d.get('link')
@@ -3754,7 +3757,7 @@ class Expander:
         __d_expanded: Any = __d.get('expanded')
         _guard_scalar('Expander.expanded', __d_expanded, (bool,), False, True, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('Expander.items', __d_items, (Component,), False, True, False)
+        _guard_vector('Expander.items', __d_items, (dict,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Expander.visible', __d_visible, (bool,), False, True, False)
         name: str = __d_name
@@ -4029,7 +4032,7 @@ class Picker:
         __d_name: Any = __d.get('name')
         _guard_scalar('Picker.name', __d_name, (str,), True, False, False)
         __d_choices: Any = __d.get('choices')
-        _guard_vector('Picker.choices', __d_choices, (Choice,), False, False, False)
+        _guard_vector('Picker.choices', __d_choices, (dict,), False, False, False)
         __d_label: Any = __d.get('label')
         _guard_scalar('Picker.label', __d_label, (str,), False, True, False)
         __d_values: Any = __d.get('values')
@@ -4291,7 +4294,7 @@ class Stepper:
         __d_name: Any = __d.get('name')
         _guard_scalar('Stepper.name', __d_name, (str,), True, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('Stepper.items', __d_items, (Step,), False, False, False)
+        _guard_vector('Stepper.items', __d_items, (dict,), False, False, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Stepper.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -4985,7 +4988,7 @@ class Plot:
     def load(__d: Dict) -> 'Plot':
         """Creates an instance of this class using the contents of a dict."""
         __d_marks: Any = __d.get('marks')
-        _guard_vector('Plot.marks', __d_marks, (Mark,), False, False, False)
+        _guard_vector('Plot.marks', __d_marks, (dict,), False, False, False)
         marks: List[Mark] = [Mark.load(__e) for __e in __d_marks]
         return Plot(
             marks,
@@ -5048,7 +5051,7 @@ class Visualization:
     def load(__d: Dict) -> 'Visualization':
         """Creates an instance of this class using the contents of a dict."""
         __d_plot: Any = __d.get('plot')
-        _guard_scalar('Visualization.plot', __d_plot, (Plot,), False, False, False)
+        _guard_scalar('Visualization.plot', __d_plot, (dict,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_width: Any = __d.get('width')
         _guard_scalar('Visualization.width', __d_width, (str,), False, True, False)
@@ -5268,7 +5271,7 @@ class Stats:
     def load(__d: Dict) -> 'Stats':
         """Creates an instance of this class using the contents of a dict."""
         __d_items: Any = __d.get('items')
-        _guard_vector('Stats.items', __d_items, (Stat,), False, False, False)
+        _guard_vector('Stats.items', __d_items, (dict,), False, False, False)
         __d_justify: Any = __d.get('justify')
         _guard_enum('Stats.justify', __d_justify, _StatsJustify, True)
         __d_inset: Any = __d.get('inset')
@@ -5325,7 +5328,7 @@ class Inline:
     def load(__d: Dict) -> 'Inline':
         """Creates an instance of this class using the contents of a dict."""
         __d_items: Any = __d.get('items')
-        _guard_vector('Inline.items', __d_items, (Component,), False, False, False)
+        _guard_vector('Inline.items', __d_items, (dict,), False, False, False)
         __d_justify: Any = __d.get('justify')
         _guard_enum('Inline.justify', __d_justify, _InlineJustify, True)
         __d_inset: Any = __d.get('inset')
@@ -5337,6 +5340,65 @@ class Inline:
             items,
             justify,
             inset,
+        )
+
+
+class Image:
+    """Create an image.
+    """
+    def __init__(
+            self,
+            title: str,
+            type: Optional[str] = None,
+            image: Optional[str] = None,
+            path: Optional[str] = None,
+    ):
+        _guard_scalar('Image.title', title, (str,), False, False, False)
+        _guard_scalar('Image.type', type, (str,), False, True, False)
+        _guard_scalar('Image.image', image, (str,), False, True, False)
+        _guard_scalar('Image.path', path, (str,), False, True, False)
+        self.title = title
+        """The image title, typically displayed as a tooltip."""
+        self.type = type
+        """The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set."""
+        self.image = image
+        """Image data, base64-encoded."""
+        self.path = path
+        """The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Image.title', self.title, (str,), False, False, False)
+        _guard_scalar('Image.type', self.type, (str,), False, True, False)
+        _guard_scalar('Image.image', self.image, (str,), False, True, False)
+        _guard_scalar('Image.path', self.path, (str,), False, True, False)
+        return _dump(
+            title=self.title,
+            type=self.type,
+            image=self.image,
+            path=self.path,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Image':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_title: Any = __d.get('title')
+        _guard_scalar('Image.title', __d_title, (str,), False, False, False)
+        __d_type: Any = __d.get('type')
+        _guard_scalar('Image.type', __d_type, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('Image.image', __d_image, (str,), False, True, False)
+        __d_path: Any = __d.get('path')
+        _guard_scalar('Image.path', __d_path, (str,), False, True, False)
+        title: str = __d_title
+        type: Optional[str] = __d_type
+        image: Optional[str] = __d_image
+        path: Optional[str] = __d_path
+        return Image(
+            title,
+            type,
+            image,
+            path,
         )
 
 
@@ -5383,6 +5445,7 @@ class Component:
             vega_visualization: Optional[VegaVisualization] = None,
             stats: Optional[Stats] = None,
             inline: Optional[Inline] = None,
+            image: Optional[Image] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -5422,6 +5485,7 @@ class Component:
         _guard_scalar('Component.vega_visualization', vega_visualization, (VegaVisualization,), False, True, False)
         _guard_scalar('Component.stats', stats, (Stats,), False, True, False)
         _guard_scalar('Component.inline', inline, (Inline,), False, True, False)
+        _guard_scalar('Component.image', image, (Image,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -5498,6 +5562,8 @@ class Component:
         """Stats"""
         self.inline = inline
         """Inline components"""
+        self.image = image
+        """Image"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5539,6 +5605,7 @@ class Component:
         _guard_scalar('Component.vega_visualization', self.vega_visualization, (VegaVisualization,), False, True, False)
         _guard_scalar('Component.stats', self.stats, (Stats,), False, True, False)
         _guard_scalar('Component.inline', self.inline, (Inline,), False, True, False)
+        _guard_scalar('Component.image', self.image, (Image,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -5578,87 +5645,90 @@ class Component:
             vega_visualization=None if self.vega_visualization is None else self.vega_visualization.dump(),
             stats=None if self.stats is None else self.stats.dump(),
             inline=None if self.inline is None else self.inline.dump(),
+            image=None if self.image is None else self.image.dump(),
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Component':
         """Creates an instance of this class using the contents of a dict."""
         __d_text: Any = __d.get('text')
-        _guard_scalar('Component.text', __d_text, (Text,), False, True, False)
+        _guard_scalar('Component.text', __d_text, (dict,), False, True, False)
         __d_text_xl: Any = __d.get('text_xl')
-        _guard_scalar('Component.text_xl', __d_text_xl, (TextXl,), False, True, False)
+        _guard_scalar('Component.text_xl', __d_text_xl, (dict,), False, True, False)
         __d_text_l: Any = __d.get('text_l')
-        _guard_scalar('Component.text_l', __d_text_l, (TextL,), False, True, False)
+        _guard_scalar('Component.text_l', __d_text_l, (dict,), False, True, False)
         __d_text_m: Any = __d.get('text_m')
-        _guard_scalar('Component.text_m', __d_text_m, (TextM,), False, True, False)
+        _guard_scalar('Component.text_m', __d_text_m, (dict,), False, True, False)
         __d_text_s: Any = __d.get('text_s')
-        _guard_scalar('Component.text_s', __d_text_s, (TextS,), False, True, False)
+        _guard_scalar('Component.text_s', __d_text_s, (dict,), False, True, False)
         __d_text_xs: Any = __d.get('text_xs')
-        _guard_scalar('Component.text_xs', __d_text_xs, (TextXs,), False, True, False)
+        _guard_scalar('Component.text_xs', __d_text_xs, (dict,), False, True, False)
         __d_label: Any = __d.get('label')
-        _guard_scalar('Component.label', __d_label, (Label,), False, True, False)
+        _guard_scalar('Component.label', __d_label, (dict,), False, True, False)
         __d_separator: Any = __d.get('separator')
-        _guard_scalar('Component.separator', __d_separator, (Separator,), False, True, False)
+        _guard_scalar('Component.separator', __d_separator, (dict,), False, True, False)
         __d_progress: Any = __d.get('progress')
-        _guard_scalar('Component.progress', __d_progress, (Progress,), False, True, False)
+        _guard_scalar('Component.progress', __d_progress, (dict,), False, True, False)
         __d_message_bar: Any = __d.get('message_bar')
-        _guard_scalar('Component.message_bar', __d_message_bar, (MessageBar,), False, True, False)
+        _guard_scalar('Component.message_bar', __d_message_bar, (dict,), False, True, False)
         __d_textbox: Any = __d.get('textbox')
-        _guard_scalar('Component.textbox', __d_textbox, (Textbox,), False, True, False)
+        _guard_scalar('Component.textbox', __d_textbox, (dict,), False, True, False)
         __d_checkbox: Any = __d.get('checkbox')
-        _guard_scalar('Component.checkbox', __d_checkbox, (Checkbox,), False, True, False)
+        _guard_scalar('Component.checkbox', __d_checkbox, (dict,), False, True, False)
         __d_toggle: Any = __d.get('toggle')
-        _guard_scalar('Component.toggle', __d_toggle, (Toggle,), False, True, False)
+        _guard_scalar('Component.toggle', __d_toggle, (dict,), False, True, False)
         __d_choice_group: Any = __d.get('choice_group')
-        _guard_scalar('Component.choice_group', __d_choice_group, (ChoiceGroup,), False, True, False)
+        _guard_scalar('Component.choice_group', __d_choice_group, (dict,), False, True, False)
         __d_checklist: Any = __d.get('checklist')
-        _guard_scalar('Component.checklist', __d_checklist, (Checklist,), False, True, False)
+        _guard_scalar('Component.checklist', __d_checklist, (dict,), False, True, False)
         __d_dropdown: Any = __d.get('dropdown')
-        _guard_scalar('Component.dropdown', __d_dropdown, (Dropdown,), False, True, False)
+        _guard_scalar('Component.dropdown', __d_dropdown, (dict,), False, True, False)
         __d_combobox: Any = __d.get('combobox')
-        _guard_scalar('Component.combobox', __d_combobox, (Combobox,), False, True, False)
+        _guard_scalar('Component.combobox', __d_combobox, (dict,), False, True, False)
         __d_slider: Any = __d.get('slider')
-        _guard_scalar('Component.slider', __d_slider, (Slider,), False, True, False)
+        _guard_scalar('Component.slider', __d_slider, (dict,), False, True, False)
         __d_spinbox: Any = __d.get('spinbox')
-        _guard_scalar('Component.spinbox', __d_spinbox, (Spinbox,), False, True, False)
+        _guard_scalar('Component.spinbox', __d_spinbox, (dict,), False, True, False)
         __d_date_picker: Any = __d.get('date_picker')
-        _guard_scalar('Component.date_picker', __d_date_picker, (DatePicker,), False, True, False)
+        _guard_scalar('Component.date_picker', __d_date_picker, (dict,), False, True, False)
         __d_color_picker: Any = __d.get('color_picker')
-        _guard_scalar('Component.color_picker', __d_color_picker, (ColorPicker,), False, True, False)
+        _guard_scalar('Component.color_picker', __d_color_picker, (dict,), False, True, False)
         __d_button: Any = __d.get('button')
-        _guard_scalar('Component.button', __d_button, (Button,), False, True, False)
+        _guard_scalar('Component.button', __d_button, (dict,), False, True, False)
         __d_buttons: Any = __d.get('buttons')
-        _guard_scalar('Component.buttons', __d_buttons, (Buttons,), False, True, False)
+        _guard_scalar('Component.buttons', __d_buttons, (dict,), False, True, False)
         __d_file_upload: Any = __d.get('file_upload')
-        _guard_scalar('Component.file_upload', __d_file_upload, (FileUpload,), False, True, False)
+        _guard_scalar('Component.file_upload', __d_file_upload, (dict,), False, True, False)
         __d_table: Any = __d.get('table')
-        _guard_scalar('Component.table', __d_table, (Table,), False, True, False)
+        _guard_scalar('Component.table', __d_table, (dict,), False, True, False)
         __d_link: Any = __d.get('link')
-        _guard_scalar('Component.link', __d_link, (Link,), False, True, False)
+        _guard_scalar('Component.link', __d_link, (dict,), False, True, False)
         __d_tabs: Any = __d.get('tabs')
-        _guard_scalar('Component.tabs', __d_tabs, (Tabs,), False, True, False)
+        _guard_scalar('Component.tabs', __d_tabs, (dict,), False, True, False)
         __d_expander: Any = __d.get('expander')
-        _guard_scalar('Component.expander', __d_expander, (Expander,), False, True, False)
+        _guard_scalar('Component.expander', __d_expander, (dict,), False, True, False)
         __d_frame: Any = __d.get('frame')
-        _guard_scalar('Component.frame', __d_frame, (Frame,), False, True, False)
+        _guard_scalar('Component.frame', __d_frame, (dict,), False, True, False)
         __d_markup: Any = __d.get('markup')
-        _guard_scalar('Component.markup', __d_markup, (Markup,), False, True, False)
+        _guard_scalar('Component.markup', __d_markup, (dict,), False, True, False)
         __d_template: Any = __d.get('template')
-        _guard_scalar('Component.template', __d_template, (Template,), False, True, False)
+        _guard_scalar('Component.template', __d_template, (dict,), False, True, False)
         __d_picker: Any = __d.get('picker')
-        _guard_scalar('Component.picker', __d_picker, (Picker,), False, True, False)
+        _guard_scalar('Component.picker', __d_picker, (dict,), False, True, False)
         __d_range_slider: Any = __d.get('range_slider')
-        _guard_scalar('Component.range_slider', __d_range_slider, (RangeSlider,), False, True, False)
+        _guard_scalar('Component.range_slider', __d_range_slider, (dict,), False, True, False)
         __d_stepper: Any = __d.get('stepper')
-        _guard_scalar('Component.stepper', __d_stepper, (Stepper,), False, True, False)
+        _guard_scalar('Component.stepper', __d_stepper, (dict,), False, True, False)
         __d_visualization: Any = __d.get('visualization')
-        _guard_scalar('Component.visualization', __d_visualization, (Visualization,), False, True, False)
+        _guard_scalar('Component.visualization', __d_visualization, (dict,), False, True, False)
         __d_vega_visualization: Any = __d.get('vega_visualization')
-        _guard_scalar('Component.vega_visualization', __d_vega_visualization, (VegaVisualization,), False, True, False)
+        _guard_scalar('Component.vega_visualization', __d_vega_visualization, (dict,), False, True, False)
         __d_stats: Any = __d.get('stats')
-        _guard_scalar('Component.stats', __d_stats, (Stats,), False, True, False)
+        _guard_scalar('Component.stats', __d_stats, (dict,), False, True, False)
         __d_inline: Any = __d.get('inline')
-        _guard_scalar('Component.inline', __d_inline, (Inline,), False, True, False)
+        _guard_scalar('Component.inline', __d_inline, (dict,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('Component.image', __d_image, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -5697,6 +5767,7 @@ class Component:
         vega_visualization: Optional[VegaVisualization] = None if __d_vega_visualization is None else VegaVisualization.load(__d_vega_visualization)
         stats: Optional[Stats] = None if __d_stats is None else Stats.load(__d_stats)
         inline: Optional[Inline] = None if __d_inline is None else Inline.load(__d_inline)
+        image: Optional[Image] = None if __d_image is None else Image.load(__d_image)
         return Component(
             text,
             text_xl,
@@ -5736,6 +5807,7 @@ class Component:
             vega_visualization,
             stats,
             inline,
+            image,
         )
 
 
@@ -5782,11 +5854,11 @@ class FormCard:
         __d_box: Any = __d.get('box')
         _guard_scalar('FormCard.box', __d_box, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('FormCard.items', __d_items, (Component,), False, False, True)
+        _guard_vector('FormCard.items', __d_items, (dict,), False, False, True)
         __d_title: Any = __d.get('title')
         _guard_scalar('FormCard.title', __d_title, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('FormCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('FormCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: Union[List[Component], str] = __d_items if isinstance(__d_items, str) else [Component.load(__e) for __e in __d_items]
         title: Optional[str] = __d_title
@@ -5856,7 +5928,7 @@ class FrameCard:
         __d_content: Any = __d.get('content')
         _guard_scalar('FrameCard.content', __d_content, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('FrameCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('FrameCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         path: Optional[str] = __d_path
@@ -5936,7 +6008,7 @@ class GraphicsCard:
         __d_height: Any = __d.get('height')
         _guard_scalar('GraphicsCard.height', __d_height, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('GraphicsCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('GraphicsCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         view_box: str = __d_view_box
         stage: Optional[PackedRecords] = __d_stage
@@ -6004,7 +6076,7 @@ class GridCard:
         __d_cells: Any = __d.get('cells')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('GridCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('GridCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         cells: PackedData = __d_cells
@@ -6114,7 +6186,7 @@ class NavGroup:
         __d_label: Any = __d.get('label')
         _guard_scalar('NavGroup.label', __d_label, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('NavGroup.items', __d_items, (NavItem,), False, False, False)
+        _guard_vector('NavGroup.items', __d_items, (dict,), False, False, False)
         __d_collapsed: Any = __d.get('collapsed')
         _guard_scalar('NavGroup.collapsed', __d_collapsed, (bool,), False, True, False)
         label: str = __d_label
@@ -6197,9 +6269,9 @@ class HeaderCard:
         __d_icon_color: Any = __d.get('icon_color')
         _guard_scalar('HeaderCard.icon_color', __d_icon_color, (str,), False, True, False)
         __d_nav: Any = __d.get('nav')
-        _guard_vector('HeaderCard.nav', __d_nav, (NavGroup,), False, True, False)
+        _guard_vector('HeaderCard.nav', __d_nav, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('HeaderCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('HeaderCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         subtitle: str = __d_subtitle
@@ -6225,15 +6297,17 @@ class ImageCard:
             self,
             box: str,
             title: str,
-            type: str,
-            image: str,
+            type: Optional[str] = None,
+            image: Optional[str] = None,
             data: Optional[PackedRecord] = None,
+            path: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ImageCard.box', box, (str,), False, False, False)
         _guard_scalar('ImageCard.title', title, (str,), False, False, False)
-        _guard_scalar('ImageCard.type', type, (str,), False, False, False)
-        _guard_scalar('ImageCard.image', image, (str,), False, False, False)
+        _guard_scalar('ImageCard.type', type, (str,), False, True, False)
+        _guard_scalar('ImageCard.image', image, (str,), False, True, False)
+        _guard_scalar('ImageCard.path', path, (str,), False, True, False)
         _guard_vector('ImageCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6245,6 +6319,8 @@ class ImageCard:
         """Image data, base64-encoded."""
         self.data = data
         """Data for this card."""
+        self.path = path
+        """The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6252,8 +6328,9 @@ class ImageCard:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ImageCard.box', self.box, (str,), False, False, False)
         _guard_scalar('ImageCard.title', self.title, (str,), False, False, False)
-        _guard_scalar('ImageCard.type', self.type, (str,), False, False, False)
-        _guard_scalar('ImageCard.image', self.image, (str,), False, False, False)
+        _guard_scalar('ImageCard.type', self.type, (str,), False, True, False)
+        _guard_scalar('ImageCard.image', self.image, (str,), False, True, False)
+        _guard_scalar('ImageCard.path', self.path, (str,), False, True, False)
         _guard_vector('ImageCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='image',
@@ -6262,6 +6339,7 @@ class ImageCard:
             type=self.type,
             image=self.image,
             data=self.data,
+            path=self.path,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -6273,17 +6351,20 @@ class ImageCard:
         __d_title: Any = __d.get('title')
         _guard_scalar('ImageCard.title', __d_title, (str,), False, False, False)
         __d_type: Any = __d.get('type')
-        _guard_scalar('ImageCard.type', __d_type, (str,), False, False, False)
+        _guard_scalar('ImageCard.type', __d_type, (str,), False, True, False)
         __d_image: Any = __d.get('image')
-        _guard_scalar('ImageCard.image', __d_image, (str,), False, False, False)
+        _guard_scalar('ImageCard.image', __d_image, (str,), False, True, False)
         __d_data: Any = __d.get('data')
+        __d_path: Any = __d.get('path')
+        _guard_scalar('ImageCard.path', __d_path, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('ImageCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('ImageCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
-        type: str = __d_type
-        image: str = __d_image
+        type: Optional[str] = __d_type
+        image: Optional[str] = __d_image
         data: Optional[PackedRecord] = __d_data
+        path: Optional[str] = __d_path
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ImageCard(
             box,
@@ -6291,6 +6372,7 @@ class ImageCard:
             type,
             image,
             data,
+            path,
             commands,
         )
 
@@ -6395,7 +6477,7 @@ class LargeBarStatCard:
         _guard_scalar('LargeBarStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('LargeBarStatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('LargeBarStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
@@ -6490,7 +6572,7 @@ class LargeStatCard:
         _guard_scalar('LargeStatCard.caption', __d_caption, (str,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('LargeStatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('LargeStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -6567,7 +6649,7 @@ class ListCard:
         __d_item_props: Any = __d.get('item_props')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('ListCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('ListCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         item_view: str = __d_item_view
@@ -6652,7 +6734,7 @@ class ListItem1Card:
         _guard_scalar('ListItem1Card.aux_value', __d_aux_value, (str,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('ListItem1Card.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('ListItem1Card.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
@@ -6728,7 +6810,7 @@ class MarkdownCard:
         _guard_scalar('MarkdownCard.content', __d_content, (str,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('MarkdownCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('MarkdownCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
@@ -6790,7 +6872,7 @@ class MarkupCard:
         __d_content: Any = __d.get('content')
         _guard_scalar('MarkupCard.content', __d_content, (str,), False, False, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('MarkupCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('MarkupCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
@@ -6914,7 +6996,7 @@ class Zone:
         __d_wrap: Any = __d.get('wrap')
         _guard_enum('Zone.wrap', __d_wrap, _ZoneWrap, True)
         __d_zones: Any = __d.get('zones')
-        _guard_vector('Zone.zones', __d_zones, (Zone,), False, True, False)
+        _guard_vector('Zone.zones', __d_zones, (dict,), False, True, False)
         name: str = __d_name
         size: Optional[str] = __d_size
         direction: Optional[str] = __d_direction
@@ -7005,7 +7087,7 @@ class Layout:
         __d_breakpoint: Any = __d.get('breakpoint')
         _guard_scalar('Layout.breakpoint', __d_breakpoint, (str,), False, False, False)
         __d_zones: Any = __d.get('zones')
-        _guard_vector('Layout.zones', __d_zones, (Zone,), False, False, False)
+        _guard_vector('Layout.zones', __d_zones, (dict,), False, False, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('Layout.width', __d_width, (str,), False, True, False)
         __d_min_width: Any = __d.get('min_width')
@@ -7098,7 +7180,7 @@ class Dialog:
         __d_title: Any = __d.get('title')
         _guard_scalar('Dialog.title', __d_title, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('Dialog.items', __d_items, (Component,), False, False, False)
+        _guard_vector('Dialog.items', __d_items, (dict,), False, False, False)
         __d_width: Any = __d.get('width')
         _guard_scalar('Dialog.width', __d_width, (str,), False, True, False)
         __d_closable: Any = __d.get('closable')
@@ -7170,6 +7252,75 @@ class Tracker:
         )
 
 
+class Script:
+    """Create a reference to an external Javascript file to be included on a page.
+    """
+    def __init__(
+            self,
+            path: str,
+            asynchronous: Optional[bool] = None,
+            cross_origin: Optional[str] = None,
+            referrer_policy: Optional[str] = None,
+            integrity: Optional[str] = None,
+    ):
+        _guard_scalar('Script.path', path, (str,), False, False, False)
+        _guard_scalar('Script.asynchronous', asynchronous, (bool,), False, True, False)
+        _guard_scalar('Script.cross_origin', cross_origin, (str,), False, True, False)
+        _guard_scalar('Script.referrer_policy', referrer_policy, (str,), False, True, False)
+        _guard_scalar('Script.integrity', integrity, (str,), False, True, False)
+        self.path = path
+        """The URI of an external script."""
+        self.asynchronous = asynchronous
+        """Whether to fetch and load this script in parallel to parsing and evaluated as soon as it is available."""
+        self.cross_origin = cross_origin
+        """The CORS setting for this script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin"""
+        self.referrer_policy = referrer_policy
+        """Indicates which referrer to send when fetching the script. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script"""
+        self.integrity = integrity
+        """The cryptographic hash to verify the script's integrity. See https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity"""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Script.path', self.path, (str,), False, False, False)
+        _guard_scalar('Script.asynchronous', self.asynchronous, (bool,), False, True, False)
+        _guard_scalar('Script.cross_origin', self.cross_origin, (str,), False, True, False)
+        _guard_scalar('Script.referrer_policy', self.referrer_policy, (str,), False, True, False)
+        _guard_scalar('Script.integrity', self.integrity, (str,), False, True, False)
+        return _dump(
+            path=self.path,
+            asynchronous=self.asynchronous,
+            cross_origin=self.cross_origin,
+            referrer_policy=self.referrer_policy,
+            integrity=self.integrity,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Script':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_path: Any = __d.get('path')
+        _guard_scalar('Script.path', __d_path, (str,), False, False, False)
+        __d_asynchronous: Any = __d.get('asynchronous')
+        _guard_scalar('Script.asynchronous', __d_asynchronous, (bool,), False, True, False)
+        __d_cross_origin: Any = __d.get('cross_origin')
+        _guard_scalar('Script.cross_origin', __d_cross_origin, (str,), False, True, False)
+        __d_referrer_policy: Any = __d.get('referrer_policy')
+        _guard_scalar('Script.referrer_policy', __d_referrer_policy, (str,), False, True, False)
+        __d_integrity: Any = __d.get('integrity')
+        _guard_scalar('Script.integrity', __d_integrity, (str,), False, True, False)
+        path: str = __d_path
+        asynchronous: Optional[bool] = __d_asynchronous
+        cross_origin: Optional[str] = __d_cross_origin
+        referrer_policy: Optional[str] = __d_referrer_policy
+        integrity: Optional[str] = __d_integrity
+        return Script(
+            path,
+            asynchronous,
+            cross_origin,
+            referrer_policy,
+            integrity,
+        )
+
+
 class MetaCard:
     """Represents page-global state.
 
@@ -7188,6 +7339,7 @@ class MetaCard:
             dialog: Optional[Dialog] = None,
             theme: Optional[str] = None,
             tracker: Optional[Tracker] = None,
+            scripts: Optional[List[Script]] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MetaCard.box', box, (str,), False, False, False)
@@ -7200,6 +7352,7 @@ class MetaCard:
         _guard_scalar('MetaCard.dialog', dialog, (Dialog,), False, True, False)
         _guard_scalar('MetaCard.theme', theme, (str,), False, True, False)
         _guard_scalar('MetaCard.tracker', tracker, (Tracker,), False, True, False)
+        _guard_vector('MetaCard.scripts', scripts, (Script,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7221,6 +7374,8 @@ class MetaCard:
         """Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'."""
         self.tracker = tracker
         """Configure a tracker for the page (for web analytics)."""
+        self.scripts = scripts
+        """External Javascript files to load into the page."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -7236,6 +7391,7 @@ class MetaCard:
         _guard_scalar('MetaCard.dialog', self.dialog, (Dialog,), False, True, False)
         _guard_scalar('MetaCard.theme', self.theme, (str,), False, True, False)
         _guard_scalar('MetaCard.tracker', self.tracker, (Tracker,), False, True, False)
+        _guard_vector('MetaCard.scripts', self.scripts, (Script,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='meta',
@@ -7249,6 +7405,7 @@ class MetaCard:
             dialog=None if self.dialog is None else self.dialog.dump(),
             theme=self.theme,
             tracker=None if self.tracker is None else self.tracker.dump(),
+            scripts=None if self.scripts is None else [__e.dump() for __e in self.scripts],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -7268,15 +7425,17 @@ class MetaCard:
         __d_icon: Any = __d.get('icon')
         _guard_scalar('MetaCard.icon', __d_icon, (str,), False, True, False)
         __d_layouts: Any = __d.get('layouts')
-        _guard_vector('MetaCard.layouts', __d_layouts, (Layout,), False, True, False)
+        _guard_vector('MetaCard.layouts', __d_layouts, (dict,), False, True, False)
         __d_dialog: Any = __d.get('dialog')
-        _guard_scalar('MetaCard.dialog', __d_dialog, (Dialog,), False, True, False)
+        _guard_scalar('MetaCard.dialog', __d_dialog, (dict,), False, True, False)
         __d_theme: Any = __d.get('theme')
         _guard_scalar('MetaCard.theme', __d_theme, (str,), False, True, False)
         __d_tracker: Any = __d.get('tracker')
-        _guard_scalar('MetaCard.tracker', __d_tracker, (Tracker,), False, True, False)
+        _guard_scalar('MetaCard.tracker', __d_tracker, (dict,), False, True, False)
+        __d_scripts: Any = __d.get('scripts')
+        _guard_vector('MetaCard.scripts', __d_scripts, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('MetaCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('MetaCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: Optional[str] = __d_title
         refresh: Optional[int] = __d_refresh
@@ -7287,6 +7446,7 @@ class MetaCard:
         dialog: Optional[Dialog] = None if __d_dialog is None else Dialog.load(__d_dialog)
         theme: Optional[str] = __d_theme
         tracker: Optional[Tracker] = None if __d_tracker is None else Tracker.load(__d_tracker)
+        scripts: Optional[List[Script]] = None if __d_scripts is None else [Script.load(__e) for __e in __d_scripts]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -7299,6 +7459,7 @@ class MetaCard:
             dialog,
             theme,
             tracker,
+            scripts,
             commands,
         )
 
@@ -7346,11 +7507,11 @@ class NavCard:
         __d_box: Any = __d.get('box')
         _guard_scalar('NavCard.box', __d_box, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('NavCard.items', __d_items, (NavGroup,), False, False, False)
+        _guard_vector('NavCard.items', __d_items, (dict,), False, False, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('NavCard.value', __d_value, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('NavCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('NavCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: List[NavGroup] = [NavGroup.load(__e) for __e in __d_items]
         value: Optional[str] = __d_value
@@ -7364,7 +7525,10 @@ class NavCard:
 
 
 class PixelArtCard:
-    """Create a card displaying a collaborative Pixel art tool, just for kicks.
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card displaying a collaborative Pixel art tool.
     """
     def __init__(
             self,
@@ -7407,7 +7571,7 @@ class PixelArtCard:
         _guard_scalar('PixelArtCard.title', __d_title, (str,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('PixelArtCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('PixelArtCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
@@ -7476,11 +7640,11 @@ class PlotCard:
         _guard_scalar('PlotCard.title', __d_title, (str,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_plot: Any = __d.get('plot')
-        _guard_scalar('PlotCard.plot', __d_plot, (Plot,), False, False, False)
+        _guard_scalar('PlotCard.plot', __d_plot, (dict,), False, False, False)
         __d_events: Any = __d.get('events')
         _guard_vector('PlotCard.events', __d_events, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('PlotCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('PlotCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         data: PackedRecord = __d_data
@@ -7547,7 +7711,7 @@ class RepeatCard:
         __d_item_props: Any = __d.get('item_props')
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('RepeatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('RepeatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         item_view: str = __d_item_view
         item_props: PackedRecord = __d_item_props
@@ -7616,9 +7780,9 @@ class SectionCard:
         __d_subtitle: Any = __d.get('subtitle')
         _guard_scalar('SectionCard.subtitle', __d_subtitle, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('SectionCard.items', __d_items, (Component,), False, True, True)
+        _guard_vector('SectionCard.items', __d_items, (dict,), False, True, True)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('SectionCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('SectionCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         subtitle: str = __d_subtitle
@@ -7757,7 +7921,7 @@ class SmallSeriesStatCard:
         _guard_scalar('SmallSeriesStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('SmallSeriesStatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('SmallSeriesStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -7838,7 +8002,7 @@ class SmallStatCard:
         _guard_scalar('SmallStatCard.value', __d_value, (str,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('SmallStatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('SmallStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -8009,13 +8173,13 @@ class StatListCard:
         __d_title: Any = __d.get('title')
         _guard_scalar('StatListCard.title', __d_title, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('StatListCard.items', __d_items, (StatListItem,), False, False, False)
+        _guard_vector('StatListCard.items', __d_items, (dict,), False, False, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('StatListCard.name', __d_name, (str,), False, True, False)
         __d_subtitle: Any = __d.get('subtitle')
         _guard_scalar('StatListCard.subtitle', __d_subtitle, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('StatListCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('StatListCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         items: List[StatListItem] = [StatListItem.load(__e) for __e in __d_items]
@@ -8176,13 +8340,13 @@ class StatTableCard:
         __d_columns: Any = __d.get('columns')
         _guard_vector('StatTableCard.columns', __d_columns, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('StatTableCard.items', __d_items, (StatTableItem,), False, False, False)
+        _guard_vector('StatTableCard.items', __d_items, (dict,), False, False, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('StatTableCard.name', __d_name, (str,), False, True, False)
         __d_subtitle: Any = __d.get('subtitle')
         _guard_scalar('StatTableCard.subtitle', __d_subtitle, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('StatTableCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('StatTableCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         columns: List[str] = __d_columns
@@ -8256,7 +8420,7 @@ class TabCard:
         __d_box: Any = __d.get('box')
         _guard_scalar('TabCard.box', __d_box, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('TabCard.items', __d_items, (Tab,), False, False, False)
+        _guard_vector('TabCard.items', __d_items, (dict,), False, False, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('TabCard.value', __d_value, (str,), False, True, False)
         __d_link: Any = __d.get('link')
@@ -8264,7 +8428,7 @@ class TabCard:
         __d_name: Any = __d.get('name')
         _guard_scalar('TabCard.name', __d_name, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('TabCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('TabCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: List[Tab] = [Tab.load(__e) for __e in __d_items]
         value: Optional[str] = __d_value
@@ -8357,7 +8521,7 @@ class TallGaugeStatCard:
         _guard_scalar('TallGaugeStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('TallGaugeStatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('TallGaugeStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -8510,7 +8674,7 @@ class TallSeriesStatCard:
         _guard_scalar('TallSeriesStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('TallSeriesStatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('TallSeriesStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -8593,7 +8757,7 @@ class TemplateCard:
         _guard_scalar('TemplateCard.content', __d_content, (str,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('TemplateCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('TemplateCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         content: str = __d_content
@@ -8657,13 +8821,13 @@ class ToolbarCard:
         __d_box: Any = __d.get('box')
         _guard_scalar('ToolbarCard.box', __d_box, (str,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('ToolbarCard.items', __d_items, (Command,), False, False, False)
+        _guard_vector('ToolbarCard.items', __d_items, (dict,), False, False, False)
         __d_secondary_items: Any = __d.get('secondary_items')
-        _guard_vector('ToolbarCard.secondary_items', __d_secondary_items, (Command,), False, True, False)
+        _guard_vector('ToolbarCard.secondary_items', __d_secondary_items, (dict,), False, True, False)
         __d_overflow_items: Any = __d.get('overflow_items')
-        _guard_vector('ToolbarCard.overflow_items', __d_overflow_items, (Command,), False, True, False)
+        _guard_vector('ToolbarCard.overflow_items', __d_overflow_items, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
-        _guard_vector('ToolbarCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('ToolbarCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         items: List[Command] = [Command.load(__e) for __e in __d_items]
         secondary_items: Optional[List[Command]] = None if __d_secondary_items is None else [Command.load(__e) for __e in __d_secondary_items]
@@ -8730,7 +8894,7 @@ class VegaCard:
         _guard_scalar('VegaCard.specification', __d_specification, (str,), False, False, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('VegaCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('VegaCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         specification: str = __d_specification
@@ -8821,7 +8985,7 @@ class WideBarStatCard:
         _guard_scalar('WideBarStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('WideBarStatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('WideBarStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -8918,7 +9082,7 @@ class WideGaugeStatCard:
         _guard_scalar('WideGaugeStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('WideGaugeStatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('WideGaugeStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value
@@ -8935,6 +9099,116 @@ class WideGaugeStatCard:
             progress,
             plot_color,
             data,
+            commands,
+        )
+
+
+class WideInfoCard:
+    """Create a wide information card displaying a title, caption, and either an icon or image.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            caption: str,
+            icon: Optional[str] = None,
+            image: Optional[str] = None,
+            category: Optional[str] = None,
+            name: Optional[str] = None,
+            color: Optional[str] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('WideInfoCard.box', box, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.title', title, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.caption', caption, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.icon', icon, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.image', image, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.category', category, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.name', name, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.color', color, (str,), False, True, False)
+        _guard_vector('WideInfoCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The card's title."""
+        self.caption = caption
+        """The card's caption, displayed below the title."""
+        self.icon = icon
+        """The card's icon."""
+        self.image = image
+        """The card’s image."""
+        self.category = category
+        """The card's category, displayed above the title."""
+        self.name = name
+        """An identifying name for this card. Makes the card clickable, similar to a button."""
+        self.color = color
+        """The card's background color."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('WideInfoCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.caption', self.caption, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.icon', self.icon, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.image', self.image, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.category', self.category, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.name', self.name, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.color', self.color, (str,), False, True, False)
+        _guard_vector('WideInfoCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='wide_info',
+            box=self.box,
+            title=self.title,
+            caption=self.caption,
+            icon=self.icon,
+            image=self.image,
+            category=self.category,
+            name=self.name,
+            color=self.color,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'WideInfoCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('WideInfoCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('WideInfoCard.title', __d_title, (str,), False, False, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('WideInfoCard.caption', __d_caption, (str,), False, False, False)
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('WideInfoCard.icon', __d_icon, (str,), False, True, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('WideInfoCard.image', __d_image, (str,), False, True, False)
+        __d_category: Any = __d.get('category')
+        _guard_scalar('WideInfoCard.category', __d_category, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('WideInfoCard.name', __d_name, (str,), False, True, False)
+        __d_color: Any = __d.get('color')
+        _guard_scalar('WideInfoCard.color', __d_color, (str,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('WideInfoCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        caption: str = __d_caption
+        icon: Optional[str] = __d_icon
+        image: Optional[str] = __d_image
+        category: Optional[str] = __d_category
+        name: Optional[str] = __d_name
+        color: Optional[str] = __d_color
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return WideInfoCard(
+            box,
+            title,
+            caption,
+            icon,
+            image,
+            category,
+            name,
+            color,
             commands,
         )
 
@@ -9071,7 +9345,7 @@ class WideSeriesStatCard:
         _guard_scalar('WideSeriesStatCard.plot_color', __d_plot_color, (str,), False, True, False)
         __d_data: Any = __d.get('data')
         __d_commands: Any = __d.get('commands')
-        _guard_vector('WideSeriesStatCard.commands', __d_commands, (Command,), False, True, False)
+        _guard_vector('WideSeriesStatCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         value: str = __d_value

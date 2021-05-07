@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { F, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { ProgressArc } from './parts/progress_arc'
-import { F, S } from './qd'
 import { clas, cssVar } from './theme'
 
 const

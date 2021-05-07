@@ -13,11 +13,12 @@
 // limitations under the License.
 
 import { FontIcon } from '@fluentui/react'
+import { Model, S, wave } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { bond, Card, qd, S } from './qd'
 import { clas, cssVar } from './theme'
+import { bond } from './ui'
 
 
 /**
@@ -104,14 +105,14 @@ const
   })
 
 export const
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const
       render = () => {
         const
           { name: listName, title, subtitle, items } = state,
           list = items.map(({ name: itemName, label, caption, value, value_color, aux_value, icon, icon_color }, i) => {
             const
-              onClick = itemName ? () => qd.jump(listName, itemName) : undefined
+              onClick = itemName ? () => wave.jump(listName, itemName) : undefined
             return (
               <div key={itemName ?? `${i}:${label}`} className={onClick ? clas(css.item, css.clickable) : css.item} onClick={onClick}>
                 {icon && <div className={css.icon} style={icon_color ? { color: cssVar(icon_color) } : undefined}><FontIcon iconName={icon} /></div>}

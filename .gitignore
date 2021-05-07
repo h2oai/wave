@@ -19,7 +19,7 @@
 /build
 /data
 /waved
-/surf
+/wavedb
 .wave-keychain
 /*.db
 *.log

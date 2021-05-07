@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import { INavLink, INavLinkGroup, Nav } from '@fluentui/react'
+import { B, Id, Model, S, wave } from 'h2o-wave'
 import React from 'react'
 import { CardEffect, cards } from './layout'
-import { B, bond, Card, Id, qd, S } from './qd'
+import { bond } from './ui'
 
 /** Create a navigation item. */
 export interface NavItem {
@@ -63,14 +64,14 @@ export const
             window.location.hash = name.substr(1)
             return
           }
-          qd.args[name] = true
-          qd.sync()
+          wave.args[name] = true
+          wave.sync()
         }
       }))
     }))
     return <Nav groups={groups} selectedKey={value} />
   },
-  View = bond(({ name, state, changed }: Card<State>) => {
+  View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => <div data-test={name}><XNav {...state} /></div>
     return { render, changed }
   })

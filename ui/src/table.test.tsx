@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XTable, Table } from './table'
-import * as T from './qd'
+import { Table, XTable } from './table'
 
 const
   name = 'table',
@@ -40,7 +40,7 @@ describe('Table.tsx', () => {
       ]
     }
     jest.clearAllMocks()
-    T.qd.args[name] = null
+    T.wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -115,33 +115,33 @@ describe('Table.tsx', () => {
   describe('Q calls', () => {
     it('Sets args on init - values not specified', () => {
       render(<XTable model={tableProps} />)
-      expect(T.qd.args[name]).toMatchObject([])
+      expect(T.wave.args[name]).toMatchObject([])
     })
 
     it('Sets args on init - values specified', () => {
       render(<XTable model={{ ...tableProps, values: ['rowname1'], multiple: true }} />)
-      expect(T.qd.args[name]).toMatchObject(['rowname1'])
+      expect(T.wave.args[name]).toMatchObject(['rowname1'])
     })
 
     it('Sets args and calls sync on doubleclick', () => {
       const syncMock = jest.fn()
-      T.qd.sync = syncMock
+      T.wave.sync = syncMock
 
       const { getAllByRole } = render(<XTable model={tableProps} />)
       fireEvent.doubleClick(getAllByRole('row')[1])
 
-      expect(T.qd.args[name]).toMatchObject(['rowname1'])
+      expect(T.wave.args[name]).toMatchObject(['rowname1'])
       expect(syncMock).toHaveBeenCalled()
     })
 
     it('Sets args and calls sync on first col click', () => {
       const syncMock = jest.fn()
-      T.qd.sync = syncMock
+      T.wave.sync = syncMock
 
       const { getByText } = render(<XTable model={tableProps} />)
       fireEvent.click(getByText(cell21))
 
-      expect(T.qd.args[name]).toMatchObject(['rowname2'])
+      expect(T.wave.args[name]).toMatchObject(['rowname2'])
       expect(syncMock).toHaveBeenCalled()
     })
 
@@ -152,7 +152,7 @@ describe('Table.tsx', () => {
       fireEvent.click(checkboxes[1])
       fireEvent.click(checkboxes[2])
 
-      expect(T.qd.args[name]).toMatchObject(['rowname1', 'rowname2'])
+      expect(T.wave.args[name]).toMatchObject(['rowname1', 'rowname2'])
     })
 
     it('Clicks a column - link set on second col', () => {
@@ -164,14 +164,14 @@ describe('Table.tsx', () => {
         ]
       }
       const syncMock = jest.fn()
-      T.qd.sync = syncMock
+      T.wave.sync = syncMock
 
       const { getByText } = render(<XTable model={tableProps} />)
       fireEvent.click(getByText(cell21))
       expect(syncMock).not.toHaveBeenCalled()
 
       fireEvent.click(getByText('1'))
-      expect(T.qd.args[name]).toMatchObject(['rowname2'])
+      expect(T.wave.args[name]).toMatchObject(['rowname2'])
       expect(syncMock).toHaveBeenCalled()
     })
   })
@@ -185,13 +185,13 @@ describe('Table.tsx', () => {
       ]
     }
     const syncMock = jest.fn()
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
 
     const { getByText } = render(<XTable model={tableProps} />)
 
     fireEvent.click(getByText(cell21))
     expect(syncMock).not.toHaveBeenCalled()
-    expect(T.qd.args[name]).toMatchObject([])
+    expect(T.wave.args[name]).toMatchObject([])
   })
 
   describe('sort', () => {

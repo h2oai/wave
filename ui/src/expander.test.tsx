@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XExpander, Expander } from './expander'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { Expander, XExpander } from './expander'
 
 const name = 'expander'
 const expanderProps: Expander = { name }
 describe('Expander.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(() => { T.wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XExpander model={expanderProps} />)
@@ -37,13 +37,13 @@ describe('Expander.tsx', () => {
 
   it('Sets args - init - null', () => {
     render(<XExpander model={expanderProps} />)
-    expect(T.qd.args[name]).toBeNull()
+    expect(T.wave.args[name]).toBeNull()
   })
 
   it('Sets args on click', () => {
     const { getByRole } = render(<XExpander model={expanderProps} />)
     fireEvent.click(getByRole('button'))
 
-    expect(T.qd.args[name]).toBe(true)
+    expect(T.wave.args[name]).toBe(true)
   })
 })

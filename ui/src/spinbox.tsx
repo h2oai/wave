@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
+import { B, F, Id, S, wave } from 'h2o-wave'
 import React from 'react'
-import { B, bond, F, Id, qd, S } from './qd'
 import { displayMixin } from './theme'
+import { bond } from './ui'
 
 /**
  * Create a spinbox.
@@ -50,7 +51,7 @@ export const
       { min = 0, max = 100, step = 1, value = 0 } = m,
       defaultValue = (value < min) ? min : ((value > max) ? max : value)
 
-    qd.args[m.name] = defaultValue
+    wave.args[m.name] = defaultValue
 
     const
       parseValue = (v: string) => {
@@ -58,20 +59,20 @@ export const
         return (!isNaN(x) && isFinite(x)) ? x : value
       },
       onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        qd.args[m.name] = parseValue(e.target.value)
+        wave.args[m.name] = parseValue(e.target.value)
       },
       onIncrement = (v: string) => {
         const
           value = parseValue(v),
           newValue = (value + step > max) ? max : value + step
-        qd.args[m.name] = newValue
+        wave.args[m.name] = newValue
         return String(newValue)
       },
       onDecrement = (v: string) => {
         const
           value = parseValue(v),
           newValue = (value - step < min) ? min : value - step
-        qd.args[m.name] = newValue
+        wave.args[m.name] = newValue
         return String(newValue)
       },
       render = () => (

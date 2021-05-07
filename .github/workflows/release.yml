@@ -45,7 +45,6 @@ jobs:
           tag_name: ${{ env.TAG }}
           release_name: ${{ env.TAG }}
           draft: false
-          prerelease: true
 
       - name: Upload MacOS Release Asset
         uses: actions/upload-release-asset@v1

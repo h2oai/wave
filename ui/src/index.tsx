@@ -15,9 +15,9 @@
 import { initializeIcons, loadTheme } from '@fluentui/react'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Router from './router'
 import './cards'
 import './index.scss'
+import Router from './router'
 import * as serviceWorker from './serviceWorker'
 import { defaultTheme } from "./theme"
 

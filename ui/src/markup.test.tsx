@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
 import { render } from '@testing-library/react'
-import { View, XMarkup, Markup } from './markup'
-import * as T from './qd'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { Markup, View, XMarkup } from './markup'
 
 const name = 'markup'
 
 describe('Markup.tsx', () => {
 
   describe('Markup card', () => {
-    const cardMarkupProps: T.Card<any> = {
+    const cardMarkupProps: T.Model<any> = {
       name,
       state: { content: '' },
       changed: T.box(false)

@@ -132,4 +132,11 @@ module.exports = {
       },
     ],
   ],
+  scripts: [
+    {
+      src: '/fix-location.js',
+      async: false,
+      defer: false,
+    },
+  ],
 };

@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XDatePicker, DatePicker } from './date_picker'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { DatePicker, XDatePicker } from './date_picker'
 
 const name = 'datepicker'
 const datepickerProps: DatePicker = { name }
 describe('Datepicker.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(() => { T.wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XDatePicker model={datepickerProps} />)
@@ -37,28 +37,28 @@ describe('Datepicker.tsx', () => {
 
   it('Sets args - init - value not specified', () => {
     render(<XDatePicker model={datepickerProps} />)
-    expect(T.qd.args[name]).toBeFalsy()
+    expect(T.wave.args[name]).toBeFalsy()
   })
 
   it('Sets args - init - value specified', () => {
     render(<XDatePicker model={{ ...datepickerProps, value: 'Test' }} />)
-    expect(T.qd.args[name]).toBe('Test')
+    expect(T.wave.args[name]).toBe('Test')
   })
 
   it('Sets args - selection', () => {
-    expect(T.qd.args[name]).toBeFalsy()
+    expect(T.wave.args[name]).toBeFalsy()
     const { getAllByRole, getAllByText } = render(<XDatePicker model={datepickerProps} />)
     fireEvent.click(getAllByRole('combobox')[0])
     fireEvent.click(getAllByText('1')[0])
 
-    expect(T.qd.args[name]).toBeTruthy()
+    expect(T.wave.args[name]).toBeTruthy()
   })
 
   it('Calls sync when trigger specified', () => {
     const syncMock = jest.fn()
     const { getAllByRole, getAllByText } = render(<XDatePicker model={{ ...datepickerProps, trigger: true }} />)
 
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
     fireEvent.click(getAllByRole('combobox')[0])
     fireEvent.click(getAllByText('1')[0])
 

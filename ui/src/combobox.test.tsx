@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { XCombobox, Combobox } from './combobox'
-import * as T from './qd'
 import { initializeIcons } from '@fluentui/react'
+import { fireEvent, render } from '@testing-library/react'
+import * as T from 'h2o-wave'
+import React from 'react'
+import { Combobox, XCombobox } from './combobox'
 
 const name = 'combobox'
 const comboboxProps: Combobox = { name }
 describe('Combobox.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.qd.args[name] = null })
+  beforeEach(() => { T.wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XCombobox model={comboboxProps} />)
@@ -37,11 +37,11 @@ describe('Combobox.tsx', () => {
 
   it('Sets args - init - value not specified', () => {
     render(<XCombobox model={comboboxProps} />)
-    expect(T.qd.args[name]).toBeNull()
+    expect(T.wave.args[name]).toBeNull()
   })
   it('Sets args - init - value specified', () => {
     render(<XCombobox model={{ ...comboboxProps, value: 'Test' }} />)
-    expect(T.qd.args[name]).toBe('Test')
+    expect(T.wave.args[name]).toBe('Test')
   })
 
   it('Sets args - selection', () => {
@@ -49,6 +49,6 @@ describe('Combobox.tsx', () => {
     fireEvent.click(container.querySelector('button')!)
     fireEvent.click(getByText('Choice1'))
 
-    expect(T.qd.args[name]).toBe('Choice1')
+    expect(T.wave.args[name]).toBe('Choice1')
   })
 })

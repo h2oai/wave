@@ -44,6 +44,13 @@ test-ui-watch: ## Run UI unit tests
 build-server: ## Build server for current OS/Arch
 	go build $(LDFLAGS) -o waved cmd/wave/main.go
 
+build-db: ## Build database server for current OS/Arch
+	go build $(LDFLAGS) -o wavedb cmd/wavedb/main.go
+
+build-server-micro: ## Build smaller (~2M instead of ~10M) server executable
+	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o waved cmd/wave/main.go
+	upx --brute waved
+
 build-py: ## Build h2o_wave wheel
 	cd py && $(MAKE) build
 
@@ -56,6 +63,12 @@ build-docker:
 
 run: ## Run server
 	go run cmd/wave/main.go -web-dir ./ui/build -debug -editable
+
+run-db: ## Run database server
+	go run cmd/wavedb/main.go
+
+run-micro: ## Run microwave
+	go run cmd/wave/main.go -web-dir ./u
 
 run-cypress: ## Run Cypress
 	cd test && ./node_modules/.bin/cypress open
@@ -99,6 +112,7 @@ publish-website: ## Publish website
 .PHONY: tag
 tag: ## Bump version and tag
 	cd py && $(MAKE) tag
+	cd r && $(MAKE) tag
 	git add .
 	git commit -m "chore: Release v$(VERSION)"
 	git tag v$(VERSION)
