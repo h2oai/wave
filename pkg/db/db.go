@@ -77,16 +77,18 @@ type DSConf struct {
 	KeyFile   string
 	Keychain  *keychain.Keychain
 	Dir       string
+	Verbose   bool
 }
 
 // DS represents a data store
 type DS struct {
 	keychain *keychain.Keychain
 	catalog  *Catalog
+	conf     DSConf
 }
 
 func newDS(conf DSConf) *DS {
-	return &DS{conf.Keychain, newCatalog(conf.Dir)}
+	return &DS{conf.Keychain, newCatalog(conf.Dir, conf.Verbose), conf}
 }
 
 // Run runs runs the server.
@@ -192,6 +194,9 @@ func (ds *DS) process(req DBRequest) interface{} {
 	if req.Exec != nil {
 		reply, err := ds.exec(*req.Exec)
 		if err != nil {
+			if ds.conf.Verbose {
+				log.Printf("error: %s", err.Error())
+			}
 			return ExecReply{nil, err.Error()}
 		}
 		return ExecReply{reply, ""}
@@ -223,10 +228,15 @@ type Catalog struct {
 	sync.RWMutex
 	dir       string
 	databases map[string]*DB
+	verbose   bool
 }
 
-func newCatalog(dir string) *Catalog {
-	return &Catalog{dir: dir, databases: make(map[string]*DB)}
+func newCatalog(dir string, verbose bool) *Catalog {
+	return &Catalog{
+		dir:       dir,
+		databases: make(map[string]*DB),
+		verbose:   verbose,
+	}
 }
 
 func (c *Catalog) get(name string) *DB {
@@ -251,7 +261,7 @@ func (c *Catalog) load(name string) (*DB, error) {
 		return nil, err
 	}
 
-	db, err := newDB(c.locate(name))
+	db, err := newDB(c.locate(name), c.verbose)
 	if err != nil {
 		return nil, err
 	}
@@ -290,15 +300,17 @@ func validateDatabaseName(name string) error {
 type DB struct {
 	filename string
 	pragmas  []string // pragmas that need to be set on each new connection per sqlite3 docs.
+	verbose  bool
 }
 
-func newDB(filename string) (*DB, error) {
+func newDB(filename string, verbose bool) (*DB, error) {
 	db := &DB{
 		filename,
 		[]string{
 			"pragma busy_timeout=" + strconv.Itoa(sqlite3BusyTimeout),
 			"pragma foreign_keys=on",
 		},
+		verbose,
 	}
 
 	conn, err := db.open()
@@ -348,6 +360,19 @@ func scan(s *sqlite3.Stmt, i int) (v interface{}, ok bool, err error) {
 	return
 }
 
+func (db *DB) log(query string, params []interface{}) {
+	if len(params) == 0 {
+		log.Println(query)
+		return
+	}
+
+	xs := make([]string, len(params))
+	for i, x := range params {
+		xs[i] = fmt.Sprintf("%#v", x)
+	}
+	log.Printf("%s; [ %s ]", query, strings.Join(xs, ", "))
+}
+
 func (db *DB) exec(stmts []Stmt, atomic bool) ([][][]interface{}, error) {
 	k := len(stmts)
 	if k == 0 {
@@ -369,6 +394,9 @@ func (db *DB) exec(stmts []Stmt, atomic bool) ([][][]interface{}, error) {
 	results := make([][][]interface{}, k)
 
 	for i, stmt := range stmts {
+		if db.verbose {
+			db.log(stmt.Query, stmt.Params)
+		}
 		result, err := db.query(conn, stmt.Query, stmt.Params)
 		if err != nil {
 			if atomic {

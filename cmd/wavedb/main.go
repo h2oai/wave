@@ -49,6 +49,7 @@ func main() {
 	flag.StringVar(&accessKeyID, "access-key-id", "access_key_id", "default API access key ID")
 	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default API access key secret")
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
+	flag.BoolVar(&conf.Verbose, "verbose", false, "enable verbose logging")
 
 	flag.Parse()
 
