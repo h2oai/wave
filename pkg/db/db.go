@@ -128,8 +128,8 @@ type ExecRequest struct {
 
 // ExecReply is the reply from Exec().
 type ExecReply struct {
-	Results [][][]interface{} `json:"r"`
-	Error   string            `json:"e"`
+	Results [][][]interface{} `json:"r,omitempty"`
+	Error   string            `json:"e,omitempty"`
 }
 
 // Stmt represents a SQL statement.
@@ -144,7 +144,7 @@ type DropRequest struct {
 }
 
 type DropReply struct {
-	Error string `json:"e"`
+	Error string `json:"e,omitempty"`
 }
 
 const (
