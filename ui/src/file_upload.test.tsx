@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
-import { createEvent, fireEvent, render, wait } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
-import { FileUpload, XFileUpload } from './file_upload'
+import { render, fireEvent, createEvent, wait } from '@testing-library/react'
+import { XFileUpload, FileUpload } from './file_upload'
+import * as T from 'h2o-wave'
 
 const name = 'fileUpload'
 const fileUploadProps: FileUpload = { name }
 interface FileObj { name: T.S; size?: T.F }
 
 describe('FileUpload.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
     T.wave.args[name] = null
@@ -37,7 +35,7 @@ describe('FileUpload.tsx', () => {
       setRequestHeader: jest.fn(),
       status,
       upload: jest.fn(),
-      responseText: JSON.stringify(data),
+      responseText: data ? JSON.stringify(data) : null,
     }
     // @ts-ignore
     window.XMLHttpRequest = jest.fn().mockImplementation(() => xhrMockObj)
@@ -205,6 +203,39 @@ describe('FileUpload.tsx', () => {
       fireEvent(getByTestId(name), createDropEvent(getByTestId(name), [{ name: 'file.pdf', size: 2 * 1024 * 1024 }]))
 
       expect(queryByText('An error occured')).toBeInTheDocument()
+    })
+  })
+
+  describe('compact file upload', () => {
+    const props = { ...fileUploadProps, compact: true }
+
+    it('Renders data-test attr', () => {
+      const { queryByTestId } = render(<XFileUpload model={props} />)
+      expect(queryByTestId(name)).toBeInTheDocument()
+    })
+
+    it('shows uploaded files in textbox', async () => {
+      mockXhrRequest({ files: [{ name: 'file.txt' }] })
+      const { getByTestId } = render(<XFileUpload model={props} />)
+      fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
+
+      await wait(() => expect(getByTestId(`textfield-${name}`)).toHaveValue('file.txt'), { timeout: 1000 })
+    })
+
+    it('Shows an error when uploading larger file than maxSize', async () => {
+      const { getByTestId, queryByText } = render(<XFileUpload model={{ ...props, max_size: 1 }} />)
+      fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt', size: 2 * 1024 * 1024 }]))
+
+      expect(getByTestId(`textfield-${name}`)).toHaveValue('')
+      await wait(() => expect(queryByText('Total max file size exceeded. Allowed size: 1Mb.')).toBeInTheDocument(), { timeout: 1000 })
+    })
+
+    it('Shows an error when uploading larger file than maxFileSize', async () => {
+      const { getByTestId, queryByText } = render(<XFileUpload model={{ ...props, max_file_size: 1 }} />)
+      fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt', size: 2 * 1024 * 1024 }]))
+
+      expect(getByTestId(`textfield-${name}`)).toHaveValue('')
+      await wait(() => expect(queryByText(`Max file size exceeded for files: file.txt. Allowed size per file: 1Mb.`)).toBeInTheDocument(), { timeout: 1000 })
     })
   })
 })
