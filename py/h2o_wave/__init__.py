@@ -36,7 +36,7 @@ from .db import connect, WaveDBConnection, WaveDB, WaveDBError
 from .types import *
 from .test import cypress, Cypress
 
-__version__ = '0.14.1'
+__version__ = '0.15.0'
 __author__ = 'Prithvi Prabhu'
 
 __pdoc__ = {
