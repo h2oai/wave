@@ -81,7 +81,7 @@ $ ls -l
 $ ./wavedb -access-key-id uzer -acess-key-secret pa55word
 ```
 
-### Using h2o-wave
+### From h2o-wave
 
 The `h2o-wave` Python package provides non-blocking `async` functions to access WaveDB.
 
@@ -146,7 +146,7 @@ results, error = db.exec_many(
 In the above example, substituting `exec_many()` with `exec_atomic()` executes all the queries in the batch as part of a transaction, rolling back all queries on any failures.
 
 
-### Using curl
+### From curl
 
 Use `curl` to send a query:
 
