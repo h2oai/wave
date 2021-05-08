@@ -1,4 +1,5 @@
-const examples = require('./examples');
+const examples = require('./examples')
+const showcase = require('./showcase')
 
 module.exports = {
   someSidebar: {
@@ -49,6 +50,7 @@ module.exports = {
       'wavedb',
     ],
     'Examples': examples.map(e => `examples/${e.slug}`),
+    'Showcase': showcase,
     'API': [
       'api/index',
       'api/core',
