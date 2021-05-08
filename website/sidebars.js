@@ -46,7 +46,7 @@ module.exports = {
       'deployment',
       'backup',
       'wave-ml',
-      'wave-db',
+      'wavedb',
     ],
     'Examples': examples.map(e => `examples/${e.slug}`),
     'API': [
