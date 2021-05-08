@@ -97,7 +97,7 @@ describe('FileUpload.tsx', () => {
     await wait(() => expect(getByText('Successfully uploaded files: file.txt.')).toBeInTheDocument(), { timeout: 1000 })
   })
 
-  it('Shows error screen on error upload', async () => {
+  it.skip('Shows error screen on error upload', async () => {
     mockXhrRequest(null, 500)
 
     const { getByTestId, getByText } = render(<XFileUpload model={{ ...fileUploadProps, label: 'upload' }} />)
