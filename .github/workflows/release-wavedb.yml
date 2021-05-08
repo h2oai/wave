@@ -4,15 +4,16 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'WaveDB Release Version (v0.0.0)'
+        description: 'WaveDB Release Version (0.0.0)'
         required: true
       tag:
-        description: 'Wave Release Version (v0.0.0)'
+        description: 'Wave Release Version (0.0.0)'
         required: true
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   VERSION: ${{ github.event.inputs.version }}
+  TAG: "v${{ github.event.inputs.tag }}"
 
 jobs:
   release-windows:
@@ -30,8 +31,8 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "wavedb-${{ github.event.inputs.version }}-windows-amd64.tar.gz"
-          tag_name: ${{ github.event.inputs.tag }}
+          files: "wavedb-${{ env.VERSION }}-windows-amd64.tar.gz"
+          tag_name: ${{ env.TAG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release-linux:
@@ -49,8 +50,8 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "wavedb-${{ github.event.inputs.version }}-linux-amd64.tar.gz"
-          tag_name: ${{ github.event.inputs.tag }}
+          files: "wavedb-${{ env.VERSION }}-linux-amd64.tar.gz"
+          tag_name: ${{ env.TAG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release-darwin:
@@ -68,8 +69,8 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "wavedb-${{ github.event.inputs.version }}-darwin-amd64.tar.gz"
-          tag_name: ${{ github.event.inputs.tag }}
+          files: "wavedb-${{ env.VERSION }}-darwin-amd64.tar.gz"
+          tag_name: ${{ env.TAG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
