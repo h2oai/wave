@@ -39,6 +39,7 @@ func main() {
 		accessKeyID     string
 		accessKeySecret string
 		accessKeyFile   string
+		benchmark       bool
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
@@ -50,11 +51,17 @@ func main() {
 	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default API access key secret")
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
 	flag.BoolVar(&conf.Verbose, "verbose", false, "enable verbose logging")
+	flag.BoolVar(&benchmark, "benchmark", false, "run benchmarks")
 
 	flag.Parse()
 
 	if version {
 		fmt.Printf("WaveDB\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
+		return
+	}
+
+	if benchmark {
+		db.Benchmark()
 		return
 	}
 
