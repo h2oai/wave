@@ -54,10 +54,14 @@ $ cd $HOME/wave/test
 $ ./node_modules/.bin/cypress open
 ```
 
-#### Step 2: Start the Wave server as usual
+#### Step 2: Start the Wave server and your app as usual
 
 ```
 $ ./waved
+```
+
+```
+(venv) $ wave run --no-reload examples.wizard
 ```
 
 #### Step 3: Translate your Python tests to Javascript
