@@ -69,7 +69,9 @@ export const
       render = () => (
         <Fluent.Slider
           data-test={m.name}
-          styles={{ root: displayMixin(m.visible) as Fluent.IStyle }}
+          // No need to resolve the typing here as it will be removed by https://github.com/h2oai/wave/pull/507.
+          // @ts-ignore
+          styles={{ root: { ...displayMixin(m.visible), width: '100%' } }}
           buttonProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
           min={min}

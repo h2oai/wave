@@ -150,7 +150,7 @@ export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
       if (m.trigger) wave.sync()
     },
     render = () => (
-      <div data-test={m.name} style={displayMixin(m.visible)}>
+      <div data-test={m.name} style={{ ...displayMixin(m.visible), width: '100%' }}>
         {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
         <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
           <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={valueB()} onChange={onChange} />
