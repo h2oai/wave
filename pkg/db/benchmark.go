@@ -15,6 +15,8 @@ const (
 	maxBenchmarkSleepInterval = 100
 )
 
+type benchmark func(ds *DS, wg *sync.WaitGroup, errs chan error)
+
 func setupData(ds *DS) {
 	stmts := []Stmt{
 		{Query: "drop index if exists widget_idx"},
@@ -49,14 +51,13 @@ func teardownData(ds *DS) {
 	}
 }
 
-type benchmark func(ds *DS, wg *sync.WaitGroup, errs chan error)
-
 func Benchmark() {
 	benchmarks := []struct {
 		name      string
 		benchmark benchmark
 	}{
-		{"read", benchmarkReadOneRow},
+		{"read1", benchmarkRead1},
+		{"read100", benchmarkRead10},
 	}
 
 	kc, _ := keychain.LoadKeychain("test-keychain")
@@ -64,7 +65,7 @@ func Benchmark() {
 
 	setupData(ds)
 
-	k := 2 // iterations
+	k := 10 // iterations
 
 	results := make([]string, len(benchmarks))
 	for i, b := range benchmarks {
@@ -141,7 +142,7 @@ func runBenchmark(ds *DS, b benchmark, concurrency int) bool {
 	return true
 }
 
-func benchmarkReadOneRow(ds *DS, wg *sync.WaitGroup, errs chan error) {
+func benchmarkRead1(ds *DS, wg *sync.WaitGroup, errs chan error) {
 	defer wg.Done()
 
 	time.Sleep(time.Millisecond * time.Duration(rand.Intn(maxBenchmarkSleepInterval)))
@@ -160,202 +161,32 @@ func benchmarkReadOneRow(ds *DS, wg *sync.WaitGroup, errs chan error) {
 		errs <- errors.New(reply.Error)
 		return
 	}
-	if len(reply.Results[0][0]) != 1 {
+	if len(reply.Results[0]) != 1 {
 		panic("bad count")
 	}
 }
 
-// func TestReadConcurrency(t *testing.T) {
-// 	r := newTestRunt()
+func benchmarkRead10(ds *DS, wg *sync.WaitGroup, errs chan error) {
+	defer wg.Done()
 
-// 	ids := doSetupOneKind(r)
+	const k = 100
 
-// 	launch := func(r *Runt, concurrency int) {
-// 		var wg sync.WaitGroup
-// 		for i := 0; i < concurrency; i++ {
-// 			wg.Add(1)
-// 			go doReadOne(r, ids, &wg)
-// 		}
-// 		wg.Wait()
-// 	}
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(maxBenchmarkSleepInterval)))
 
-// 	maxConcurrency := 1024
-// 	for c := 1; c < maxConcurrency; c *= 2 {
-// 		fmt.Printf("Concurrency=%d\n", c)
-// 		launch(r, c)
-// 	}
-// }
-
-// func TestReadManyConcurrency(t *testing.T) {
-// 	r := newTestRunt()
-
-// 	doSetupManyKinds(r)
-
-// 	launch := func(r *Runt, concurrency int) {
-// 		var wg sync.WaitGroup
-// 		for i := 0; i < concurrency; i++ {
-// 			wg.Add(1)
-// 			go doReadMany(r, &wg)
-// 		}
-// 		wg.Wait()
-// 	}
-
-// 	maxConcurrency := 1024
-// 	for c := 1; c < maxConcurrency; c *= 2 {
-// 		fmt.Printf("Concurrency=%d\n", c)
-// 		launch(r, c)
-// 	}
-// }
-
-// func TestWriteConcurrency(t *testing.T) {
-// 	r := newTestRunt()
-
-// 	doSetupManyKinds(r)
-
-// 	launch := func(r *Runt, concurrency int) {
-// 		var wg sync.WaitGroup
-// 		for i := 0; i < concurrency; i++ {
-// 			wg.Add(1)
-// 			go doWrite(r, &wg)
-// 		}
-// 		wg.Wait()
-// 	}
-
-// 	maxConcurrency := 512
-// 	for c := 1; c < maxConcurrency; c *= 2 {
-// 		fmt.Printf("Concurrency=%d\n", c)
-// 		launch(r, c)
-// 	}
-// }
-
-// func TestReadWriteConcurrency(t *testing.T) {
-// 	r := newTestRunt()
-
-// 	doSetupManyKinds(r)
-
-// 	launch := func(r *Runt, concurrency int) {
-// 		var wg sync.WaitGroup
-// 		for i := 0; i < concurrency; i++ {
-// 			wg.Add(1)
-// 			go doReadMany(r, &wg)
-
-// 			wg.Add(1)
-// 			go doWrite(r, &wg)
-// 		}
-// 		wg.Wait()
-// 	}
-
-// 	maxConcurrency := 512
-// 	for c := 1; c < maxConcurrency; c *= 2 {
-// 		fmt.Printf("Concurrency=%d\n", c)
-// 		launch(r, c)
-// 	}
-// }
-
-// const (
-// 	maxKinds         = 10
-// 	maxRowsPerKind   = 100
-// 	maxSleepInterval = 100
-// )
-
-// func doSetupManyKinds(r *Runt) {
-// 	conn, err := r.Open()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer conn.Close()
-
-// 	for j := 0; j < maxKinds; j++ {
-// 		m := strconv.Itoa(j)
-// 		for i := 0; i < maxRowsPerKind; i++ {
-// 			n := strconv.Itoa(i)
-// 			_, err := conn.Insert("k"+m, "owner", "l"+n, "s"+n, "c"+n, true)
-// 			if err != nil {
-// 				panic(err)
-// 			}
-// 		}
-// 	}
-// }
-
-// func doSetupOneKind(r *Runt) []int64 {
-// 	conn, err := r.Open()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer conn.Close()
-
-// 	var ids []int64
-
-// 	n := maxKinds * maxRowsPerKind
-
-// 	for i := 0; i < n; i++ {
-// 		n := strconv.Itoa(i)
-// 		id, err := conn.Insert("k", "owner", "l"+n, "s"+n, "c"+n, true)
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 		ids = append(ids, id)
-// 	}
-
-// 	return ids
-// }
-
-// func doReadOne(r *Runt, ids []int64, wg *sync.WaitGroup) {
-// 	defer wg.Done()
-
-// 	time.Sleep(time.Millisecond * time.Duration(rand.Intn(maxSleepInterval)))
-
-// 	conn, err := r.Open()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer conn.Close()
-
-// 	id := ids[rand.Intn(len(ids))]
-// 	doc, err := conn.Read("k", id, "owner")
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	if doc.ID != id {
-// 		panic("wrong doc")
-// 	}
-// }
-
-// func doReadMany(r *Runt, wg *sync.WaitGroup) {
-// 	defer wg.Done()
-
-// 	time.Sleep(time.Millisecond * time.Duration(rand.Intn(maxSleepInterval)))
-
-// 	conn, err := r.Open()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer conn.Close()
-
-// 	m := strconv.Itoa(rand.Intn(maxKinds))
-// 	items, err := conn.List("k"+m, "owner", "name", true, 0, 10)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	if len(items) == 0 {
-// 		panic("no rows")
-// 	}
-
-// }
-
-// func doWrite(r *Runt, wg *sync.WaitGroup) {
-// 	defer wg.Done()
-
-// 	time.Sleep(time.Millisecond * time.Duration(rand.Intn(maxSleepInterval)))
-
-// 	conn, err := r.Open()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer conn.Close()
-
-// 	m := strconv.Itoa(rand.Intn(maxKinds))
-// 	if _, err = conn.Insert("k"+m, "owner", "name"+m, "summary"+m, "content"+m, true); err != nil {
-// 		panic(err)
-// 	}
-// }
+	stmt := Stmt{
+		Query:  "select name from widgets limit ?",
+		Params: []interface{}{k},
+	}
+	result := ds.process(DBRequest{Exec: &ExecRequest{"test", []Stmt{stmt}, 1}})
+	reply, ok := result.(ExecReply)
+	if !ok {
+		panic("bad result")
+	}
+	if len(reply.Error) != 0 {
+		errs <- errors.New(reply.Error)
+		return
+	}
+	if len(reply.Results[0]) != k {
+		panic("bad count")
+	}
+}
