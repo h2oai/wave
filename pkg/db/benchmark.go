@@ -57,6 +57,8 @@ func Benchmark(verbose bool) {
 	}{
 		{"read1", benchmarkRead1},
 		{"read100", benchmarkRead10},
+		{"write1", benchmarkWrite1},
+		{"write10", benchmarkWrite10},
 	}
 
 	kc, _ := keychain.LoadKeychain("test-keychain")
@@ -191,5 +193,51 @@ func benchmarkRead10(ds *DS, wg *sync.WaitGroup, errs chan error) {
 	}
 	if len(reply.Results[0]) != maxBenchmarkRows {
 		panic("bad count")
+	}
+}
+
+func benchmarkWrite1(ds *DS, wg *sync.WaitGroup, errs chan error) {
+	defer wg.Done()
+
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(maxBenchmarkSleepInterval)))
+
+	stmt := Stmt{
+		Query:  "update widgets set name=? where id=?",
+		Params: []interface{}{fmt.Sprintf("widget%d", rand.Intn(10000)), rand.Intn(maxBenchmarkRows)},
+	}
+	result := ds.process(DBRequest{Exec: &ExecRequest{"test", []Stmt{stmt}, 1}})
+	reply, ok := result.(ExecReply)
+	if !ok {
+		panic("bad result")
+	}
+	if len(reply.Error) != 0 {
+		errs <- errors.New(reply.Error)
+	}
+}
+
+func benchmarkWrite10(ds *DS, wg *sync.WaitGroup, errs chan error) {
+	defer wg.Done()
+
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(maxBenchmarkSleepInterval)))
+
+	const k = 10
+
+	// update k consecutive rows
+	stmts := make([]Stmt, k)
+	i0 := rand.Intn(maxBenchmarkRows - k)
+	for i := range stmts {
+		stmts[i] = Stmt{
+			Query:  "update widgets set name=? where id=?",
+			Params: []interface{}{fmt.Sprintf("widget%d", rand.Intn(10000)), i0 + i},
+		}
+	}
+
+	result := ds.process(DBRequest{Exec: &ExecRequest{"test", stmts, 1}})
+	reply, ok := result.(ExecReply)
+	if !ok {
+		panic("bad result")
+	}
+	if len(reply.Error) != 0 {
+		errs <- errors.New(reply.Error)
 	}
 }
