@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Box, box, S } from 'h2o-wave'
+import { B, Box, box, S, wave } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
 import { bond } from './ui'
@@ -42,7 +42,11 @@ export interface Dialog {
 
 export default bond(() => {
   const
-    onDismiss = () => dialogB(null),
+    onDismiss = () => {
+      const page = wave.change()
+      page.set('meta dialog', null)
+      page.sync()
+    },
     render = () => {
       const
         { title, width = '600px', items = [], closable, primary, blocking } = dialogB() || {},
