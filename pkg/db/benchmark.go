@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	benchmarkIterations       = 10
 	maxBenchmarkRows          = 100
 	maxBenchmarkSleepInterval = 100
 )
@@ -21,8 +22,7 @@ func setupData(ds *DS) {
 	stmts := []Stmt{
 		{Query: "drop index if exists widget_idx"},
 		{Query: "drop table if exists widgets"},
-		{Query: "create table widgets(id integer,name text)"},
-		{Query: "create unique index widget_idx on widgets(id)"},
+		{Query: "create table widgets(id integer unique,name text)"},
 	}
 
 	for i := 0; i < maxBenchmarkRows; i++ {
@@ -41,7 +41,6 @@ func setupData(ds *DS) {
 
 func teardownData(ds *DS) {
 	stmts := []Stmt{
-		{Query: "drop index widget_idx"},
 		{Query: "drop table widgets"},
 	}
 
@@ -51,7 +50,7 @@ func teardownData(ds *DS) {
 	}
 }
 
-func Benchmark() {
+func Benchmark(verbose bool) {
 	benchmarks := []struct {
 		name      string
 		benchmark benchmark
@@ -65,15 +64,14 @@ func Benchmark() {
 
 	setupData(ds)
 
-	k := 10 // iterations
-
 	results := make([]string, len(benchmarks))
 	for i, b := range benchmarks {
 		fmt.Printf("benchmark: %s\n", b.name)
-		ns := make([]int, k)
+		ns := make([]int, benchmarkIterations)
 		for i := range ns {
-			fmt.Printf("  %s: iteration %d/%d\n", b.name, i+1, k)
-			ns[i] = findConcurrency(ds, b.benchmark)
+			n, trials := findConcurrency(ds, b.benchmark, verbose)
+			fmt.Printf("  %s (iteration %d/%d, %d trials): %d concurrent\n", b.name, i+1, benchmarkIterations, trials, n)
+			ns[i] = n
 		}
 		min, max, avg := stats(ns)
 		results[i] = fmt.Sprintf("%s concurrency: min %d, max %d, avg %d", b.name, min, max, avg)
@@ -87,34 +85,41 @@ func Benchmark() {
 	}
 }
 
-func stats(values []int) (int, int, int) {
-	value, values := values[0], values[1:]
-	min := value
-	max := value
-	sum := 0
-	for _, v := range values {
-		sum += v
-		if v < min {
-			min = v
-		} else if v > max {
-			max = v
+func stats(xs []int) (int, int, int) {
+	x0, xs := xs[0], xs[1:]
+	min, max, sum := x0, x0, 0
+	if len(xs) == 0 {
+		return min, max, x0
+	}
+	for _, x := range xs {
+		sum += x
+		if x < min {
+			min = x
+		} else if x > max {
+			max = x
 		}
 	}
-	return min, max, sum / len(values)
+	return min, max, sum / len(xs)
 }
 
-func findConcurrency(ds *DS, b benchmark) int {
+func findConcurrency(ds *DS, b benchmark, verbose bool) (int, int) {
+	trials := 0
 	min, max, n := 0, 0, 1
 	for {
+		trials++
 		if runBenchmark(ds, b, n) {
-			fmt.Printf("    n=%d ok\n", n)
+			if verbose {
+				fmt.Printf("    n=%d ok\n", n)
+			}
 			min = n
 			if max == 0 {
 				n *= 2
 				continue
 			}
 		} else {
-			fmt.Printf("    n=%d fail\n", n)
+			if verbose {
+				fmt.Printf("    n=%d fail\n", n)
+			}
 			max = n
 		}
 		n = min + (max-min)/2
@@ -122,7 +127,7 @@ func findConcurrency(ds *DS, b benchmark) int {
 			break
 		}
 	}
-	return n
+	return n, trials
 }
 
 func runBenchmark(ds *DS, b benchmark, concurrency int) bool {
@@ -169,13 +174,11 @@ func benchmarkRead1(ds *DS, wg *sync.WaitGroup, errs chan error) {
 func benchmarkRead10(ds *DS, wg *sync.WaitGroup, errs chan error) {
 	defer wg.Done()
 
-	const k = 100
-
 	time.Sleep(time.Millisecond * time.Duration(rand.Intn(maxBenchmarkSleepInterval)))
 
 	stmt := Stmt{
 		Query:  "select name from widgets limit ?",
-		Params: []interface{}{k},
+		Params: []interface{}{maxBenchmarkRows},
 	}
 	result := ds.process(DBRequest{Exec: &ExecRequest{"test", []Stmt{stmt}, 1}})
 	reply, ok := result.(ExecReply)
@@ -186,7 +189,7 @@ func benchmarkRead10(ds *DS, wg *sync.WaitGroup, errs chan error) {
 		errs <- errors.New(reply.Error)
 		return
 	}
-	if len(reply.Results[0]) != k {
+	if len(reply.Results[0]) != maxBenchmarkRows {
 		panic("bad count")
 	}
 }

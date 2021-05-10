@@ -61,7 +61,7 @@ func main() {
 	}
 
 	if benchmark {
-		db.Benchmark()
+		db.Benchmark(conf.Verbose)
 		return
 	}
 
