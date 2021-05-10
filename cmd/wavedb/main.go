@@ -39,7 +39,7 @@ func main() {
 		accessKeyID     string
 		accessKeySecret string
 		accessKeyFile   string
-		benchmark       bool
+		iterations      int
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
@@ -51,7 +51,7 @@ func main() {
 	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default API access key secret")
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
 	flag.BoolVar(&conf.Verbose, "verbose", false, "enable verbose logging")
-	flag.BoolVar(&benchmark, "benchmark", false, "run benchmarks")
+	flag.IntVar(&iterations, "benchmark", 0, "run benchmarks for the given number of iterations")
 
 	flag.Parse()
 
@@ -60,8 +60,8 @@ func main() {
 		return
 	}
 
-	if benchmark {
-		db.Benchmark(conf.Verbose)
+	if iterations > 0 {
+		db.Benchmark(iterations, conf.Verbose)
 		return
 	}
 

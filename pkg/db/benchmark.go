@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	benchmarkIterations       = 10
 	maxBenchmarkRows          = 100
-	maxBenchmarkSleepInterval = 100
+	maxBenchmarkSleepInterval = 100 // ms
+	maxBenchmarkConcurrency   = 1 << 14
 )
 
 type benchmark func(ds *DS, wg *sync.WaitGroup, errs chan error)
@@ -50,7 +50,7 @@ func teardownData(ds *DS) {
 	}
 }
 
-func Benchmark(verbose bool) {
+func Benchmark(iterations int, verbose bool) {
 	benchmarks := []struct {
 		name      string
 		benchmark benchmark
@@ -69,10 +69,10 @@ func Benchmark(verbose bool) {
 	results := make([]string, len(benchmarks))
 	for i, b := range benchmarks {
 		fmt.Printf("benchmark: %s\n", b.name)
-		ns := make([]int, benchmarkIterations)
+		ns := make([]int, iterations)
 		for i := range ns {
 			n, trials := findConcurrency(ds, b.benchmark, verbose)
-			fmt.Printf("  %s (iteration %d/%d, %d trials): %d concurrent\n", b.name, i+1, benchmarkIterations, trials, n)
+			fmt.Printf("  %s (iteration %d/%d, %d trials): %d concurrent\n", b.name, i+1, iterations, trials, n)
 			ns[i] = n
 		}
 		min, max, avg := stats(ns)
@@ -114,18 +114,21 @@ func findConcurrency(ds *DS, b benchmark, verbose bool) (int, int) {
 				fmt.Printf("    n=%d ok\n", n)
 			}
 			min = n
-			if max == 0 {
-				n *= 2
-				continue
-			}
 		} else {
 			if verbose {
 				fmt.Printf("    n=%d fail\n", n)
 			}
 			max = n
 		}
-		n = min + (max-min)/2
-		if max-min <= 1 {
+		if max == 0 {
+			n *= 2
+		} else {
+			n = min + (max-min)/2
+			if max-min <= 1 {
+				break
+			}
+		}
+		if n > maxBenchmarkConcurrency {
 			break
 		}
 	}
