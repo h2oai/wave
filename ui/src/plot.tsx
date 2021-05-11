@@ -786,7 +786,7 @@ export const
         if (el.clientHeight < 30) el.style.height = '300px'
         const
           raw_data = unpack<any[]>(model.data),
-          raw_plot = unpack<Plot>(model.plot),
+          raw_plot = unpack<Plot>(JSON.parse(JSON.stringify(model.plot))), //HACK: Plot may be transposed so always work with own copy.
           marks = raw_plot.marks.map(refactorMark),
           plot: Plot = { marks: marks },
           space = spaceTypeOf(raw_data, marks),
