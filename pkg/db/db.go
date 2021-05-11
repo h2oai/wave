@@ -155,6 +155,7 @@ const (
 var (
 	rxDatabaseName = regexp.MustCompile(`^\w+$`)
 	errBadRequest  = errors.New("bad request")
+	emptyResult    = make([][]interface{}, 0)
 )
 
 func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
@@ -446,6 +447,9 @@ func (db *DB) query(conn *sqlite3.Conn, sql string, args []interface{}) ([][]int
 			}
 		}
 		rows = append(rows, row)
+	}
+	if rows == nil {
+		return emptyResult, nil
 	}
 	return rows, nil
 }
