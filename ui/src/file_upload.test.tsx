@@ -37,7 +37,7 @@ describe('FileUpload.tsx', () => {
       setRequestHeader: jest.fn(),
       status,
       upload: jest.fn(),
-      responseText: JSON.stringify(data),
+      responseText: data ? JSON.stringify(data) : null,
     }
     // @ts-ignore
     window.XMLHttpRequest = jest.fn().mockImplementation(() => xhrMockObj)
@@ -97,7 +97,7 @@ describe('FileUpload.tsx', () => {
     await wait(() => expect(getByText('Successfully uploaded files: file.txt.')).toBeInTheDocument(), { timeout: 1000 })
   })
 
-  it.skip('Shows error screen on error upload', async () => {
+  it('Shows error screen on error upload', async () => {
     mockXhrRequest(null, 500)
 
     const { getByTestId, getByText } = render(<XFileUpload model={{ ...fileUploadProps, label: 'upload' }} />)

@@ -43,6 +43,7 @@ export interface Dialog {
 export default bond(() => {
   const
     onDismiss = () => {
+      dialogB(null)
       const page = wave.change()
       page.set('meta dialog', null)
       page.sync()
