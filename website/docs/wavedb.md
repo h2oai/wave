@@ -59,7 +59,7 @@ $ ./wavedb -verbose
 Launch WaveDB with a custom API access key/secret pair:
 
 ```
-$ ./wavedb -access-key-id uzer -acess-key-secret pa55word
+$ ./wavedb -access-key-id uzer -access-key-secret pa55word
 ```
 
 Serve your existing SQLite database files using WaveDB (defaults to current directory):
@@ -78,7 +78,7 @@ $ unzip chinook.zip
 $ ls -l
 -rw-r--r-- 1 elp elp  884736 May  7 12:34 chinook.db
 -rwxr-xr-x 1 elp elp 9678432 May  7 13:20 wavedb
-$ ./wavedb -access-key-id uzer -acess-key-secret pa55word
+$ ./wavedb -access-key-id uzer -access-key-secret pa55word
 ```
 
 ### From h2o-wave
