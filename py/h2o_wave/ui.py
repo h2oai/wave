@@ -2203,6 +2203,71 @@ def persona(
     ))
 
 
+def annotator_tag(
+        name: str,
+        label: str,
+        color: str,
+) -> AnnotatorTag:
+    """Create a tag.
+
+    Args:
+        name: An identifying name for this component.
+        label: Text to be displayed for this tag.
+        color: HEX or RGB color string used as background for highlighted phrases.
+    Returns:
+        A `h2o_wave.types.AnnotatorTag` instance.
+    """
+    return AnnotatorTag(
+        name,
+        label,
+        color,
+    )
+
+
+def annotator_item(
+        text: str,
+        tag: Optional[str] = None,
+) -> AnnotatorItem:
+    """Create an annotator item with initial selected tags or no tag for plaintext.
+
+    Args:
+        text: Text to be highlighted.
+        tag: Tag connected to the highlighted text.
+    Returns:
+        A `h2o_wave.types.AnnotatorItem` instance.
+    """
+    return AnnotatorItem(
+        text,
+        tag,
+    )
+
+
+def annotator(
+        name: str,
+        tags: List[AnnotatorTag],
+        items: List[AnnotatorItem],
+        trigger: Optional[bool] = None,
+) -> Component:
+    """Create an annotator component.
+
+    The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
+
+    Args:
+        name: An identifying name for this component.
+        tags: List of tags the user can annotate with.
+        items: Pretagged parts of text content.
+        trigger: True if the form should be submitted when the annotator value changes.
+    Returns:
+        A `h2o_wave.types.Annotator` instance.
+    """
+    return Component(annotator=Annotator(
+        name,
+        tags,
+        items,
+        trigger,
+    ))
+
+
 def form_card(
         box: str,
         items: Union[List[Component], str],
