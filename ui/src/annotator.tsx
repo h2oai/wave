@@ -53,7 +53,12 @@ const css = stylesheet({
     textAlign: 'center',
     borderRadius: 2,
     cursor: 'pointer',
-    opacity: 0.5
+    opacity: 0.5,
+    $nest: {
+      '&:hover': {
+        opacity: 1
+      }
+    }
   },
   activeTag: {
     opacity: 1
@@ -103,7 +108,7 @@ export const
     wave.args[model.name] = model.items as unknown as Rec[]
     const
       startIdxB = box<U | null>(null),
-      activeTagB = box<S | undefined>(),
+      activeTagB = box<S | undefined>(model.tags[0]?.name),
       hoveredTagIdxB = box<U | null>(),
       tagColorMap = model.tags.reduce((map, t) => {
         map.set(t.name, t.color)
