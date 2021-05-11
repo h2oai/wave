@@ -27,7 +27,7 @@ async def main():
 
     # Execute some statements.
     await db.exec("drop table if exists employee")
-    await db.exec("create table employee(empid integer, name varchar(20), title varchar(10))")
+    await db.exec("create table employee(empid integer, name text, title text)")
 
     # Execute a statement and handle errors.
     results, err = await db.exec("insert into employee values(?, ?, ?)", 101, 'Jeffrey Lebowski', 'Slacker')
