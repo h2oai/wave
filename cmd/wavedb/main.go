@@ -33,6 +33,11 @@ var (
 
 func main() {
 
+	// Limit to 1 CPU:
+	// - Theoretically unlimited read concurrency in WAL mode (enabled by default).
+	// - Write concurrency is unaffected by num CPUs.
+	runtime.GOMAXPROCS(1)
+
 	var (
 		conf            db.DSConf
 		version         bool
