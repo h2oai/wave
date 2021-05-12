@@ -226,6 +226,8 @@ def main():
     filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
                  not line.strip().startswith('#')]
 
+    filenames += [f for f in os.listdir(example_dir) if f.startswith('db') or f.startswith('ml')]
+
     examples = [load_example(filename) for filename in filenames]
 
     example_md_dir = os.path.join(website_dir, 'docs', 'examples')
