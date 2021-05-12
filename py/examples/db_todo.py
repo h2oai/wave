@@ -64,7 +64,7 @@ async def show_todos(q: Q):
             raise RuntimeError(f'Failed updating todos: {err}')
 
     # Fetch latest todos for our user
-    rows, err = await db.exec('select id, label, done from todo where user=?', q.auth.subject or 'anon')
+    rows, err = await db.exec('select id, label, done from todo where user=?', q.auth.subject)
     if err:
         raise RuntimeError(f'Failed fetching todos: {err}')
     todos = [TodoItem(id, label, done) for id, label, done in rows]
@@ -88,8 +88,7 @@ async def show_todos(q: Q):
 async def add_todo(q: Q):
     # Insert a new item
     db: WaveDB = q.app.db
-    _, err = await db.exec('insert into todo (user, label) values (? , ?)', q.auth.subject or 'anon',
-                           q.args.label or 'Untitled')
+    _, err = await db.exec('insert into todo (user, label) values (? , ?)', q.auth.subject, q.args.label or 'Untitled')
     if err:
         raise RuntimeError(f'Failed inserting todo: {err}')
 
