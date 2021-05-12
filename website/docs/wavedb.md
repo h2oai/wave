@@ -67,6 +67,10 @@ Serve your existing SQLite database files using WaveDB (defaults to current dire
 ```
 $ ./wavedb -dir /path/to/my/db/files
 ```
+## Examples
+
+- [Using WaveDB from a Wave app - A To-do list](https://github.com/h2oai/wave/blob/master/py/examples/db_todo.py)
+- [Using WaveDB from a standalone script](https://github.com/h2oai/wave/blob/master/py/examples/db.py)
 
 ## Usage
 
@@ -104,9 +108,6 @@ if err:
 else:
     print(results)
 ```
-
-A larger, complete example can be found [here](https://github.com/h2oai/wave/blob/master/py/examples/db.py).
-
 
 The query API is simple:
 
@@ -272,8 +273,44 @@ Sample `reply`:
 
 ## Deployment
 
-For production deployments, launch `wavedb` with the `-access-keychain` option. [See documentation](security.md#production).
+For production deployments:
+- Use the `-access-keychain` option to control API keys. [See documentation](security.md#production).
+- Use the `-tls-cert-file` and `-tls-key-file` options to enable HTTPS.
 
+```
+$ ./wavedb \
+    -access-keychain /path/to/keychain \
+    -tls-cert-file /path/to/cert-file \
+    -tls-key-file /path/to/key-file
+```
+
+## Configuration
+
+```
+$ ./wavedb -help
+Usage of ./wavedb:
+  -access-key-id string
+    	default API access key ID (default "access_key_id")
+  -access-key-secret string
+    	default API access key secret (default "access_key_secret")
+  -access-keychain string
+    	path to file containing API access keys (default ".wave-keychain")
+  -benchmark int
+    	run benchmarks for the given number of iterations
+  -dir string
+    	path to directory containing database (.db) files (default ".")
+  -listen string
+    	listen on this address (default ":10100")
+  -tls-cert-file string
+    	path to certificate file (TLS only)
+  -tls-key-file string
+    	path to private key file (TLS only)
+  -verbose
+    	enable verbose logging
+  -version
+    	print version and exit
+
+```
 
 ## Acknowledgements
 
