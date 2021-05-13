@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Box, box, S, wave } from 'h2o-wave'
+import { B, Box, box, S, wave, Id } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
 import { bond } from './ui'
@@ -38,15 +38,19 @@ export interface Dialog {
   blocking?: B
   /** Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false. */
   primary?: B
+  /** An identifying name for this component. */
+  name?: Id
 }
 
 export default bond(() => {
   const
     onDismiss = () => {
+      const { closable, name } = dialogB() || {}
+      if (closable && name) {
+        wave.events[name] = { dismissed: true }
+        wave.sync()
+      }
       dialogB(null)
-      const page = wave.change()
-      page.set('meta dialog', null)
-      page.sync()
     },
     render = () => {
       const

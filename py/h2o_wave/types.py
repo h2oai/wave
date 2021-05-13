@@ -7137,6 +7137,7 @@ class Dialog:
             closable: Optional[bool] = None,
             blocking: Optional[bool] = None,
             primary: Optional[bool] = None,
+            name: Optional[str] = None,
     ):
         _guard_scalar('Dialog.title', title, (str,), False, False, False)
         _guard_vector('Dialog.items', items, (Component,), False, False, False)
@@ -7144,6 +7145,7 @@ class Dialog:
         _guard_scalar('Dialog.closable', closable, (bool,), False, True, False)
         _guard_scalar('Dialog.blocking', blocking, (bool,), False, True, False)
         _guard_scalar('Dialog.primary', primary, (bool,), False, True, False)
+        _guard_scalar('Dialog.name', name, (str,), True, True, False)
         self.title = title
         """The dialog's title."""
         self.items = items
@@ -7156,6 +7158,8 @@ class Dialog:
         """True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false."""
         self.primary = primary
         """Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false."""
+        self.name = name
+        """An identifying name for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7165,6 +7169,7 @@ class Dialog:
         _guard_scalar('Dialog.closable', self.closable, (bool,), False, True, False)
         _guard_scalar('Dialog.blocking', self.blocking, (bool,), False, True, False)
         _guard_scalar('Dialog.primary', self.primary, (bool,), False, True, False)
+        _guard_scalar('Dialog.name', self.name, (str,), True, True, False)
         return _dump(
             title=self.title,
             items=[__e.dump() for __e in self.items],
@@ -7172,6 +7177,7 @@ class Dialog:
             closable=self.closable,
             blocking=self.blocking,
             primary=self.primary,
+            name=self.name,
         )
 
     @staticmethod
@@ -7189,12 +7195,15 @@ class Dialog:
         _guard_scalar('Dialog.blocking', __d_blocking, (bool,), False, True, False)
         __d_primary: Any = __d.get('primary')
         _guard_scalar('Dialog.primary', __d_primary, (bool,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Dialog.name', __d_name, (str,), True, True, False)
         title: str = __d_title
         items: List[Component] = [Component.load(__e) for __e in __d_items]
         width: Optional[str] = __d_width
         closable: Optional[bool] = __d_closable
         blocking: Optional[bool] = __d_blocking
         primary: Optional[bool] = __d_primary
+        name: Optional[str] = __d_name
         return Dialog(
             title,
             items,
@@ -7202,6 +7211,7 @@ class Dialog:
             closable,
             blocking,
             primary,
+            name,
         )
 
 

@@ -2957,6 +2957,7 @@ ui_layout <- function(
 #' @param closable True if the dialog should have a closing 'X' button at the top right corner.
 #' @param blocking True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false.
 #' @param primary Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false.
+#' @param name An identifying name for this component.
 #' @return A Dialog instance.
 #' @export
 ui_dialog <- function(
@@ -2965,20 +2966,23 @@ ui_dialog <- function(
   width = NULL,
   closable = NULL,
   blocking = NULL,
-  primary = NULL) {
+  primary = NULL,
+  name = NULL) {
   .guard_scalar("title", "character", title)
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("width", "character", width)
   .guard_scalar("closable", "logical", closable)
   .guard_scalar("blocking", "logical", blocking)
   .guard_scalar("primary", "logical", primary)
+  .guard_scalar("name", "character", name)
   .o <- list(
     title=title,
     items=items,
     width=width,
     closable=closable,
     blocking=blocking,
-    primary=primary)
+    primary=primary,
+    name=name)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveDialog"))
   return(.o)
 }

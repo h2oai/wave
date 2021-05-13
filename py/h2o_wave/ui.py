@@ -2542,6 +2542,7 @@ def dialog(
         closable: Optional[bool] = None,
         blocking: Optional[bool] = None,
         primary: Optional[bool] = None,
+        name: Optional[str] = None,
 ) -> Dialog:
     """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
     and requires people to interact with it. It’s primarily used for confirming actions,
@@ -2554,6 +2555,7 @@ def dialog(
         closable: True if the dialog should have a closing 'X' button at the top right corner.
         blocking: True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false.
         primary: Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false.
+        name: An identifying name for this component.
     Returns:
         A `h2o_wave.types.Dialog` instance.
     """
@@ -2564,6 +2566,7 @@ def dialog(
         closable,
         blocking,
         primary,
+        name,
     )
 
 
