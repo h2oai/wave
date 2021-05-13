@@ -28,10 +28,15 @@ export interface InlineScript {
   targets?: S[]
 }
 
+let executableScriptElement: HTMLScriptElement | null = null
+
 const
   installedScripts: Dict<B> = {},
   installScript = (content: S) => {
-    const e = document.createElement('script')
+    if (executableScriptElement) {
+      executableScriptElement.remove()
+    }
+    const e = executableScriptElement = document.createElement('script')
     e.type = 'text/javascript'
     // HTML5 specifies that a <script> tag inserted with innerHTML should not execute.
     // See https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML#security_considerations
