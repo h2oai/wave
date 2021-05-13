@@ -32,7 +32,7 @@ export interface Link {
   path?: S
   /** True if the link should be disabled. */
   disabled?: B
-  /** True if the link should be used for file download. */
+  /** True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false. */
   download?: B
   /** True if the link should be rendered as a button. */
   button?: B
