@@ -3032,6 +3032,28 @@ ui_script <- function(
   return(.o)
 }
 
+#' Create a block of inline Javascript to be executed immediately on a page.
+#'
+#' @param content The Javascript source code to be executed.
+#' @param requires The names of modules required on the page's `window` global before running this script.
+#' @param targets The IDs of the HTML elements required to be present on the page before running this script.
+#' @return A InlineScript instance.
+#' @export
+ui_inline_script <- function(
+  content,
+  requires = NULL,
+  targets = NULL) {
+  .guard_scalar("content", "character", content)
+  .guard_vector("requires", "character", requires)
+  .guard_vector("targets", "character", targets)
+  .o <- list(
+    content=content,
+    requires=requires,
+    targets=targets)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveInlineScript"))
+  return(.o)
+}
+
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -3049,6 +3071,7 @@ ui_script <- function(
 #' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
 #' @param tracker Configure a tracker for the page (for web analytics).
 #' @param scripts External Javascript files to load into the page.
+#' @param script Javascript code to execute on this page.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -3064,6 +3087,7 @@ ui_meta_card <- function(
   theme = NULL,
   tracker = NULL,
   scripts = NULL,
+  script = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3076,6 +3100,7 @@ ui_meta_card <- function(
   .guard_scalar("theme", "character", theme)
   .guard_scalar("tracker", "WaveTracker", tracker)
   .guard_vector("scripts", "WaveScript", scripts)
+  .guard_scalar("script", "WaveInlineScript", script)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3089,6 +3114,7 @@ ui_meta_card <- function(
     theme=theme,
     tracker=tracker,
     scripts=scripts,
+    script=script,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMetaCard"))
   return(.o)

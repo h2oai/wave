@@ -17,7 +17,7 @@ import React from 'react'
 import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
 import { showNotification } from './notification'
-import { installScripts, Script } from './script'
+import { executeScript, InlineScript, installScripts, Script } from './script'
 import { themeB } from './theme'
 import { setupTracker, Tracker } from './tracking'
 import { bond } from './ui'
@@ -111,6 +111,8 @@ interface State {
   tracker?: Tracker
   /** External Javascript files to load into the page. */
   scripts?: Script[]
+  /** Javascript code to execute on this page. */
+  script?: InlineScript
 }
 
 const
@@ -130,7 +132,7 @@ on(windowIconB, icon => {
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Model<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts } = state
+    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts, script } = state
 
     if (redirect) {
       try {
@@ -155,6 +157,10 @@ export const
     if (tracker) setupTracker(tracker)
     if (layouts) layoutsB(layouts)
     if (scripts) installScripts(scripts)
+    if (script) {
+      delete state.script
+      executeScript(script)
+    }
   }
 
 export const View = bond(() => ({ render: () => <></> }))

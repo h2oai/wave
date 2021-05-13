@@ -2612,6 +2612,27 @@ def script(
     )
 
 
+def inline_script(
+        content: str,
+        requires: Optional[List[str]] = None,
+        targets: Optional[List[str]] = None,
+) -> InlineScript:
+    """Create a block of inline Javascript to be executed immediately on a page.
+
+    Args:
+        content: The Javascript source code to be executed.
+        requires: The names of modules required on the page's `window` global before running this script.
+        targets: The IDs of the HTML elements required to be present on the page before running this script.
+    Returns:
+        A `h2o_wave.types.InlineScript` instance.
+    """
+    return InlineScript(
+        content,
+        requires,
+        targets,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2624,6 +2645,7 @@ def meta_card(
         theme: Optional[str] = None,
         tracker: Optional[Tracker] = None,
         scripts: Optional[List[Script]] = None,
+        script: Optional[InlineScript] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2643,6 +2665,7 @@ def meta_card(
         theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
         tracker: Configure a tracker for the page (for web analytics).
         scripts: External Javascript files to load into the page.
+        script: Javascript code to execute on this page.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2659,6 +2682,7 @@ def meta_card(
         theme,
         tracker,
         scripts,
+        script,
         commands,
     )
 

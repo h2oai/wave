@@ -7321,6 +7321,55 @@ class Script:
         )
 
 
+class InlineScript:
+    """Create a block of inline Javascript to be executed immediately on a page.
+    """
+    def __init__(
+            self,
+            content: str,
+            requires: Optional[List[str]] = None,
+            targets: Optional[List[str]] = None,
+    ):
+        _guard_scalar('InlineScript.content', content, (str,), False, False, False)
+        _guard_vector('InlineScript.requires', requires, (str,), False, True, False)
+        _guard_vector('InlineScript.targets', targets, (str,), False, True, False)
+        self.content = content
+        """The Javascript source code to be executed."""
+        self.requires = requires
+        """The names of modules required on the page's `window` global before running this script."""
+        self.targets = targets
+        """The IDs of the HTML elements required to be present on the page before running this script."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('InlineScript.content', self.content, (str,), False, False, False)
+        _guard_vector('InlineScript.requires', self.requires, (str,), False, True, False)
+        _guard_vector('InlineScript.targets', self.targets, (str,), False, True, False)
+        return _dump(
+            content=self.content,
+            requires=self.requires,
+            targets=self.targets,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'InlineScript':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        _guard_scalar('InlineScript.content', __d_content, (str,), False, False, False)
+        __d_requires: Any = __d.get('requires')
+        _guard_vector('InlineScript.requires', __d_requires, (str,), False, True, False)
+        __d_targets: Any = __d.get('targets')
+        _guard_vector('InlineScript.targets', __d_targets, (str,), False, True, False)
+        content: str = __d_content
+        requires: Optional[List[str]] = __d_requires
+        targets: Optional[List[str]] = __d_targets
+        return InlineScript(
+            content,
+            requires,
+            targets,
+        )
+
+
 class MetaCard:
     """Represents page-global state.
 
@@ -7340,6 +7389,7 @@ class MetaCard:
             theme: Optional[str] = None,
             tracker: Optional[Tracker] = None,
             scripts: Optional[List[Script]] = None,
+            script: Optional[InlineScript] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MetaCard.box', box, (str,), False, False, False)
@@ -7353,6 +7403,7 @@ class MetaCard:
         _guard_scalar('MetaCard.theme', theme, (str,), False, True, False)
         _guard_scalar('MetaCard.tracker', tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', scripts, (Script,), False, True, False)
+        _guard_scalar('MetaCard.script', script, (InlineScript,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7376,6 +7427,8 @@ class MetaCard:
         """Configure a tracker for the page (for web analytics)."""
         self.scripts = scripts
         """External Javascript files to load into the page."""
+        self.script = script
+        """Javascript code to execute on this page."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -7392,6 +7445,7 @@ class MetaCard:
         _guard_scalar('MetaCard.theme', self.theme, (str,), False, True, False)
         _guard_scalar('MetaCard.tracker', self.tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', self.scripts, (Script,), False, True, False)
+        _guard_scalar('MetaCard.script', self.script, (InlineScript,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='meta',
@@ -7406,6 +7460,7 @@ class MetaCard:
             theme=self.theme,
             tracker=None if self.tracker is None else self.tracker.dump(),
             scripts=None if self.scripts is None else [__e.dump() for __e in self.scripts],
+            script=None if self.script is None else self.script.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -7434,6 +7489,8 @@ class MetaCard:
         _guard_scalar('MetaCard.tracker', __d_tracker, (dict,), False, True, False)
         __d_scripts: Any = __d.get('scripts')
         _guard_vector('MetaCard.scripts', __d_scripts, (dict,), False, True, False)
+        __d_script: Any = __d.get('script')
+        _guard_scalar('MetaCard.script', __d_script, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MetaCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -7447,6 +7504,7 @@ class MetaCard:
         theme: Optional[str] = __d_theme
         tracker: Optional[Tracker] = None if __d_tracker is None else Tracker.load(__d_tracker)
         scripts: Optional[List[Script]] = None if __d_scripts is None else [Script.load(__e) for __e in __d_scripts]
+        script: Optional[InlineScript] = None if __d_script is None else InlineScript.load(__d_script)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -7460,6 +7518,7 @@ class MetaCard:
             theme,
             tracker,
             scripts,
+            script,
             commands,
         )
 
