@@ -1,4 +1,4 @@
-# Database-backed To-do List App
+# WaveDB / To-do App
 # A multi-user To-do list application using WaveDB for data management.
 # This example is very similar to the todo.py example, except that this
 #   example uses WaveDB instead of an in-memory list.
