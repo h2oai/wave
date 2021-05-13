@@ -56,47 +56,90 @@ If you discover a security vulnerability within H2O Wave, please send an email t
 
 ## Code of Conduct
 
-This Code of Conduct provides community guidelines for a safe, respectful, productive, and collaborative place for any person who is willing to contribute to the H2O Wave community. It applies to all "collaborative space", which is defined as community communications channels (such as mailing lists, submitted patches, commit comments, etc.).
-
-- Participants will be tolerant of opposing views.
-- Participants must ensure that their language and actions are free of personal attacks and disparaging personal remarks.
-- When interpreting the words and actions of others, participants should always assume good intentions.
-- Behaviour which can be reasonably considered harassment will not be tolerated.
-
-(Based on the [Ruby Code of Conduct](https://www.ruby-lang.org/en/conduct/).)
+See https://github.com/h2oai/wave/blob/master/.github/CODE_OF_CONDUCT.md.
 
 ## Development Setup
 
-You will need [Node.js](http://nodejs.org) **version 10+**, [Go](https://golang.org/) **version 1.13.10+**, [Python](https://www.python.org/) **version 3.7**
-After cloning the repo, run:
+Prerequisites:
+- [Go](https://golang.org/) v1.16+
+- [Node.js](http://nodejs.org) v14 or v15
+- [Python](https://www.python.org/) 3.6+
+- A C/C++ compiler [XCode](https://developer.apple.com/xcode/) on OSX, `build-essential` on Debian, `base-devel` on Arch, etc.) to build Python/Node.js dependencies.
+
+:warning: This project is best developed on OSX or Linux. If you are on Windows, use [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).
+
+Setup:
 
 ``` bash
+git clone https://github.com/h2oai/wave.git
+cd wave
 make all
 ```
 
-:warning: This project is best developed on OSX or Linux at the moment. If you develop on Windows, we suggest using [WSL](https://docs.microsoft.com/en-us/windows/wsl/about).
-
-After successful setup, you need to run:
-
-- Wave server (Go server) with command
+Launch the Wave server at http://localhost:10101/
 
 ``` bash
 make run
 ```
 
-- Wave app (this will run `tour.py`, but can be any app)
-
-``` bash
-cd py && ./venv/bin/python examples/tour.py
-```
-
-- Hot reload webpack server (for easier UI development)
+If you intend to modify the UI (Typescript), also launch the UI development server at http://localhost:3000/ to watch and hot-reload your modifications. Open `./ui` in Visual Studio Code or your preferred IDE.
 
 ``` bash
 make run-ui
 ```
 
-After that you can go to `http://localhost:10101/tour` (`http://localhost:3000/tour` if you enabled hot reload server).
+If you modify the Typescript card/component definitions, run `make generate` to re-generate the corresponding Python and R definitions.
+
+To modify the `h2o-wave` Python package or examples, open `./py` in PyCharm or your preferred IDE. To test your modifications, first activate the `venv` in `./py`:
+
+``` bash
+cd py
+./venv/bin/activate
+```
+
+To view a list of additional make tasks:
+
+```bash
+$ make help
+all                            Setup and build everything
+build                          Build everything
+build-db                       Build database server for current OS/Arch
+build-ide                      Build IDE
+build-py                       Build h2o_wave wheel
+build-server                   Build server for current OS/Arch
+build-server-micro             Build smaller (~2M instead of ~10M) server executable
+build-ui                       Build UI
+build-website                  Build website
+clean                          Clean
+docs                           Generate API docs and copy to website
+generate                       Generate driver bindings
+generator                      Build driver generator
+help                           List all make tasks
+preview-website                Preview website
+publish-website                Publish website
+release                        Prepare release builds (e.g. "VERSION=1.2.3 make release)"
+run-cypress                    Run Cypress
+run-db                         Run database server
+run-micro                      Run microwave
+run                            Run server
+run-ui                         Run UI in development mode (hot reloading)
+setup                          Set up development dependencies
+tag                            Bump version and tag
+test-ui-ci                     Run UI unit tests in CI mode
+test-ui-watch                  Run UI unit tests
+```
+
+## Project Structure
+
+- `cmd`: Go executable.
+- `pkg`: Go shared package.
+- `ide`: Browser-based IDE.
+- `py`: Python package (`h2o-wave`) and examples.
+- `r`: R package and examples.
+- `tools`: additional tools, including Typescript-to-Python/R generator.
+- `ui`: UI (Typescript + React + Fluent UI):
+- `ts`: NPM package (`h2o-wave`).
+- `website`: Documentation website (Docusaurus 2).
 
 ### Committing Changes
 
@@ -110,40 +153,3 @@ If any of these checks fails, the commit is aborted and you have to fix the erro
 
 Make sure your commit message also ends with an issue number e.g. `fix: Typo #11`. (Tip: If you name your branch name in format `something-#GITHUB_ISSUE_NUM`, the issue number will get appended automatically to your commit message.)
 
-### Commonly used make targets
-
-``` bash
-# Compiles Typescript API to Python API.
-$ make generate
-
-# Starts Wave server.
-$ make run
-
-# Starts hot reload dev server for UI.
-$ make run-ui
-
-# Starts jest UI unit tests in watch mode.
-$ make test-ui-watch
-
-# Starts Cypress e2e server for python tests.
-$ make run-cypress-bridge
-```
-
-## Project Structure
-
-- **`data`**: contains data created by a Wave-app itself (e.g. file upload files)
-
-- **`docs`**: contains documentation page related files
-
-- **`website`**: documentation page source files
-
-- **`py`**: contains Python lib that is exported as a package
-
-- **`r`**: contains R lib that is exported as a package
-
-- **`tools`**: contains Typescript to Python generator
-
-- **`ui`**: contains UI components written in React + Typescript that are later translated to Python
-  - **`config`** contains webpack configuration
-  - **`eslint`** contains custom eslint rules for `ts` and `tsx` files
-  It is required to run `npm ci` after changing `linter.js` in order for changes to take effect.
