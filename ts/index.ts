@@ -292,18 +292,15 @@ export const
   parseU = (s: S): U => {
     const i = parseI(s)
     return isNaN(i) || i < 0 ? NaN : i
-  },
-  dict = <T extends {}>(kvs: [S, T][]): Dict<T> => {
-    const d: Dict<T> = {}
-    for (const [k, v] of kvs) d[k] = v
-    return d
-  },
-  unpack = <T extends {}>(data: any): T =>
-    (typeof data === 'string')
-      ? decodeString(data)
-      : (isData(data))
-        ? data.list()
-        : data
+  }
+
+export function unpack<T>(data: any): T {
+  return (typeof data === 'string')
+    ? decodeString(data)
+    : (isData(data))
+      ? data.list()
+      : data
+}
 
 const
   decodeType = (d: S): [S, S] => {
