@@ -736,7 +736,6 @@ export interface Wave {
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
   readonly argsB: Box<Rec>
-  socket: WebSocket | null
   username: S | null
   editable: B
   checkout(path?: S): ChangeSet
@@ -756,7 +755,6 @@ export const wave: Wave = {
   refreshRateB: box(-1),
   busyB: box(false),
   argsB: box({}),
-  socket: null,
   username: null,
   editable: false,
   checkout: (path?: S): ChangeSet => {
@@ -775,23 +773,21 @@ export const wave: Wave = {
       del = (key: S) => ops.push({ k: key }),
       drop = () => ops.push({}),
       push = () => {
-        const sock = wave.socket
-        if (!sock) return
+        if (!_socket) return
         const opsd: OpsD = { d: ops }
-        sock.send(`* ${path} ${JSON.stringify(opsd)}`)
+        _socket.send(`* ${path} ${JSON.stringify(opsd)}`)
       }
     return { get, put, set, del, drop, push }
   },
   push: () => {
-    const sock = wave.socket
-    if (!sock) return
+    if (!_socket) return
     const args: Dict<any> = { ...wave.args }
     clearRec(wave.args)
     if (Object.keys(wave.events).length) {
       args[''] = { ...wave.events }
       clearRec(wave.events)
     }
-    sock.send(`@ ${wave.path} ${JSON.stringify(args)}`)
+    _socket.send(`@ ${wave.path} ${JSON.stringify(args)}`)
     wave.argsB(args)
     wave.busyB(true)
   },
@@ -801,8 +797,7 @@ on(wave.refreshRateB, r => {
   // If we receive a change in refresh rate once the page has been loaded, close the socket.
   // The socket onclose handler will reconnect using the refresh rate if necessary.
   if (r < 0) return
-  const sock = wave.socket
-  if (sock) sock.close()
+  if (_socket) _socket.close()
 })
 
 export enum WaveEventType { Message, Data, Reset }
@@ -814,7 +809,8 @@ export interface WaveReloadEvent { t: WaveEventType.Reset }
 type WaveEventHandler = (e: WaveEvent) => void
 
 let
-  activePage: XPage | null = null,
+  _socket: WebSocket | null = null,
+  _page: XPage | null = null,
   backoff = 1
 const
   toSocketAddress = (path: S): S => {
@@ -825,27 +821,27 @@ const
   },
   reconnect = (address: S, handle: WaveEventHandler) => {
     const retry = () => reconnect(address, handle)
-    const sock = new WebSocket(address)
-    sock.onopen = function () {
-      wave.socket = sock
+    const socket = new WebSocket(address)
+    socket.onopen = function () {
+      _socket = socket
       handle({ t: WaveEventType.Message, type: WaveMessageType.Info, message: 'Connected' })
       backoff = 1
       const hash = window.location.hash
-      sock.send(`+ ${wave.path} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
+      socket.send(`+ ${wave.path} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
     }
-    sock.onclose = function () {
+    socket.onclose = function () {
       const refreshRate = wave.refreshRateB()
       if (refreshRate === 0) return
 
       // TODO handle refreshRate > 0 case
 
-      wave.socket = null
+      _socket = null
       backoff *= 2
       if (backoff > 16) backoff = 16
       handle({ t: WaveEventType.Message, type: WaveMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })
       window.setTimeout(retry, backoff * 1000)
     }
-    sock.onmessage = function (e) {
+    socket.onmessage = function (e) {
       if (!e.data) return
       if (!e.data.length) return
       wave.busyB(false)
@@ -853,13 +849,13 @@ const
         try {
           const msg = JSON.parse(line) as OpsD
           if (msg.d) {
-            const page = exec(activePage || newPage(), msg.d)
-            if (activePage !== page) {
-              activePage = page
+            const page = exec(_page || newPage(), msg.d)
+            if (_page !== page) {
+              _page = page
               if (page) handle({ t: WaveEventType.Data, page })
             }
           } else if (msg.p) {
-            const page = activePage = load(msg.p)
+            const page = _page = load(msg.p)
             handle({ t: WaveEventType.Data, page })
           } else if (msg.e) {
             handle({ t: WaveEventType.Message, type: WaveMessageType.Err, message: msg.e })
@@ -876,7 +872,7 @@ const
         }
       }
     }
-    sock.onerror = function (e: Event) {
+    socket.onerror = function (e: Event) {
       wave.busyB(false)
       console.error('A websocket error was encountered.', e) // XXX
     }
