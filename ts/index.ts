@@ -746,7 +746,6 @@ export interface Wave {
   editable: B
   change(path?: S): ChangeSet
   sync(): void
-  jump(key: any, value: any): void
 }
 
 const
@@ -801,18 +800,6 @@ export const wave: Wave = {
     sock.send(`@ ${wave.path} ${JSON.stringify(args)}`)
     wave.argsB(args)
     wave.busyB(true)
-  },
-  jump: (key: any, value: any) => {
-    if (value.startsWith('#')) {
-      window.location.hash = value.substr(1)
-      return
-    }
-    if (key) {
-      wave.args[key] = value
-    } else {
-      wave.args[value] = true
-    }
-    wave.sync()
   },
 }
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { boxed, Disposable, on } from 'h2o-wave'
+import { boxed, Disposable, on, wave } from 'h2o-wave'
 import * as React from 'react'
 
 //
@@ -65,4 +65,16 @@ export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) =>
   }
 }
 
-
+export
+  const jump = (key: any, value: any) => {
+    if (value.startsWith('#')) {
+      window.location.hash = value.substr(1)
+      return
+    }
+    if (key) {
+      wave.args[key] = value
+    } else {
+      wave.args[value] = true
+    }
+    wave.sync()
+  }
