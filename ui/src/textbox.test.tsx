@@ -81,24 +81,24 @@ describe('Textbox.tsx', () => {
   it('Calls sync on change - trigger specified', () => {
     const { getByTestId } = render(<XTextbox model={{ ...textboxProps, trigger: true }} />)
 
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
 
-    expect(syncMock).not.toBeCalled() // Not called immediately, but after specified timeout.
+    expect(pushMock).not.toBeCalled() // Not called immediately, but after specified timeout.
     jest.runOnlyPendingTimers()
-    expect(syncMock).toBeCalled()
+    expect(pushMock).toBeCalled()
   })
 
   it('Does not call sync on change - trigger not specified', () => {
     const { getByTestId } = render(<XTextbox model={textboxProps} />)
 
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
 
-    expect(syncMock).not.toBeCalled()
+    expect(pushMock).not.toBeCalled()
   })
 })

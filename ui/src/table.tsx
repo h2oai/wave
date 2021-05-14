@@ -439,7 +439,7 @@ export const
       },
       onItemInvoked = (item: Fluent.IObjectWithKey & Dict<any>) => {
         wave.args[m.name] = [item.key as S]
-        wave.sync()
+        wave.push()
       },
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: QColumn) => {
         if (!item || !col) return <span />
@@ -448,7 +448,7 @@ export const
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {
             wave.args[m.name] = [item.key as S]
-            wave.sync()
+            wave.push()
           }
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }

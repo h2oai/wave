@@ -53,21 +53,21 @@ describe('ChoiceGroup.tsx', () => {
 
   it('Does not call sync - trigger not specified', () => {
     const { getByText } = render(<XChoiceGroup model={choiceGroupProps} />)
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(syncMock).toBeCalledTimes(0)
+    expect(pushMock).toBeCalledTimes(0)
   })
 
   it('Calls sync - trigger specified', () => {
     const { getByText } = render(<XChoiceGroup model={{ ...choiceGroupProps, trigger: true }} />)
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 })

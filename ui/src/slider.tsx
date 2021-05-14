@@ -65,7 +65,7 @@ export const
     wave.args[m.name] = defaultValue
     const
       onChange = (v: number) => wave.args[m.name] = v,
-      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => { if (m.trigger) wave.sync() },
+      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => { if (m.trigger) wave.push() },
       render = () => (
         <Fluent.Slider
           data-test={m.name}

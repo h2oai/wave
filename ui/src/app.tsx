@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { box, connect, on, Page, S, wave, WaveEvent, WaveEventType, WaveMessageType } from 'h2o-wave'
+import { box, connect, on, wave, WaveEvent, WaveEventType, WaveMessageType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
@@ -21,7 +21,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
 import { clas, cssVar, pc, themeB } from './theme'
-import { bond } from './ui'
+import { bond, contentB } from './ui'
 
 const
   css = stylesheet({
@@ -102,7 +102,6 @@ const
   }),
   App = bond(() => {
     const
-      contentB = box<{ page?: Page, error?: S }>({}),
       onSocket = (e: WaveEvent) => {
         switch (e.t) {
           case WaveEventType.Data:
@@ -121,7 +120,7 @@ const
         if (h?.length > 1) {
           wave.args['#'] = h.substr(1)
         }
-        wave.sync()
+        wave.push()
       },
       init = () => {
         connect(onSocket)

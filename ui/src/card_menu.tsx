@@ -66,7 +66,7 @@ const
           return
         }
         wave.args[c.name] = c.value ?? c.data ?? true
-        wave.sync()
+        wave.push()
       }
     return {
       key: c.name,

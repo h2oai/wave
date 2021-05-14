@@ -51,25 +51,25 @@ describe('Breadcrumbs.tsx', () => {
   })
 
   it('Sets args and calls sync on click', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getByText } = render(<View {...breadcrumbsProps} />)
     fireEvent.click(getByText(label))
 
     expect(T.wave.args[name]).toBe(true)
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not set args and calls sync on click when name starts with hash', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getByText } = render(<View {...breadcrumbsPropsHash} />)
     fireEvent.click(getByText(label))
 
     expect(T.wave.args[name]).toBeNull()
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Sets window window location hash when name starts with hash', () => {

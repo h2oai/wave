@@ -57,23 +57,23 @@ describe('Button.tsx', () => {
 
   it('Calls sync() after click', () => {
     const
-      syncMock = jest.fn(),
+      pushMock = jest.fn(),
       btnProps: Buttons = { items: [{ button: { name, label: 'btn-label' } }] },
       { getByText } = render(<XButtons model={btnProps} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByText('btn-label'))
     T.wave.args[name] = null
   })
 
   it('Calls sync() after click', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XButtons model={btnProps} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByText(name))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Sets args after click - unspecified value', () => {
@@ -98,13 +98,13 @@ describe('Button.tsx', () => {
   })
 
   it('Does not call sync when name starts with #', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XButtons model={btnPropsNameHash} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByText(name))
 
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Does not set args when name starts with #', () => {

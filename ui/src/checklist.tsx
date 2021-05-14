@@ -88,7 +88,7 @@ export const
         const vs: S[] = []
         for (const c of choices) if (c.selectedB()) vs.push(c.choice.name)
         wave.args[m.name] = vs
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       select = (value: B) => {
         _pause = true

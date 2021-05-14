@@ -70,11 +70,11 @@ export const
         if (m.name) {
           if (name !== wave.args[m.name]) {
             wave.args[m.name] = name
-            wave.sync()
+            wave.push()
           }
         } else {
           wave.args[name] = true
-          wave.sync()
+          wave.push()
         }
       },
       render = () => {

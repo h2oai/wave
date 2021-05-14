@@ -147,7 +147,7 @@ describe('Picker.tsx', () => {
 
   it('Calls sync when trigger specified', () => {
     const synckMock = jest.fn()
-    T.wave.sync = synckMock
+    T.wave.push = synckMock
     const { getByRole } = render(<XPicker model={{ ...pickerProps, trigger: true }} />)
 
     typeToInput(getByRole('textbox') as HTMLInputElement, name)

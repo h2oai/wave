@@ -19,13 +19,13 @@ import { View } from './wide_info'
 
 const
   name = 'wide_info',
-  syncMock = jest.fn()
+  pushMock = jest.fn()
 let wideInfoProps: T.Model<any>
 
 describe('WideInfo.tsx', () => {
-  beforeAll(() => T.wave.sync = syncMock)
+  beforeAll(() => T.wave.push = pushMock)
   beforeEach(() => {
-    syncMock.mockReset()
+    pushMock.mockReset()
     wideInfoProps = {
       name,
       state: { title: name },
@@ -41,7 +41,7 @@ describe('WideInfo.tsx', () => {
   it('Does not submit data to server if name not specified', () => {
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
-    expect(syncMock).not.toHaveBeenCalled()
+    expect(pushMock).not.toHaveBeenCalled()
     expect(T.wave.args[name]).toBeUndefined()
   })
 
@@ -49,7 +49,7 @@ describe('WideInfo.tsx', () => {
     wideInfoProps.state.name = `#${name}`
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
-    expect(syncMock).not.toHaveBeenCalled()
+    expect(pushMock).not.toHaveBeenCalled()
     expect(T.wave.args[name]).toBeUndefined()
   })
 
@@ -57,7 +57,7 @@ describe('WideInfo.tsx', () => {
     wideInfoProps.state.name = name
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
     expect(T.wave.args[name]).toBe(name)
   })
 })

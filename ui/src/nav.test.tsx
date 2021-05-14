@@ -72,25 +72,25 @@ describe('Nav.tsx', () => {
   })
 
   it('Sets args and calls sync on click', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getByTitle } = render(<View {...navProps} />)
     fireEvent.click(getByTitle(label))
 
     expect(T.wave.args[name]).toBe(true)
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not set args and calls sync on click when name starts with hash', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getByTitle } = render(<View {...navPropsHash} />)
     fireEvent.click(getByTitle(label))
 
     expect(T.wave.args[name]).toBeNull()
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Does set window window location hash when name starts with hash', () => {

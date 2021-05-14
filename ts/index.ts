@@ -263,19 +263,26 @@ type MapBuf = DataBuf
 export interface Page {
   key: S
   changed: Box<B>
-  add(k: S, c: Card): void
+  /** Get a card by name. */
   get(k: S): Card | undefined
-  set(k: S, v: any): void
-  list(): Card[]
-  drop(k: S): void
-  sync(): void
+  /** Get all cards. */
+  items(): Card[]
 }
+
+interface XPage extends Page {
+  add(k: S, c: Card): void
+  set(k: S, v: any): void
+  drop(k: S): void
+  emit(): void
+}
+
 /** A generic placeholder for content on a page. */
 export interface Model<T> {
   name: S
   state: T
   changed: Box<B>
 }
+
 /** A card on a page. */
 export interface Card extends Model<Dict<any>> {
   id: S
@@ -630,7 +637,7 @@ const
     }
     return null
   },
-  newPage = (): Page => {
+  newPage = (): XPage => {
     let dirty = false, dirties: Dict<B> = {}
 
     const
@@ -642,7 +649,7 @@ const
         dirty = true
       },
       get = (k: S): Card | undefined => cards[k],
-      list = (): Card[] => valuesOf(cards),
+      items = (): Card[] => valuesOf(cards),
       drop = (k: S) => delete cards[k],
       set = (k: S, v: any) => {
         const ks = k.split(/\s+/g)
@@ -660,7 +667,7 @@ const
           if (p && (p === 'box' || (c.state['view'] === 'meta' && p === 'layouts'))) dirty = true
         }
       },
-      sync = () => {
+      emit = () => {
         if (dirty) {
           changedB(true)
         } else {
@@ -673,14 +680,14 @@ const
         dirties = {} // reset
       }
 
-    return { key, changed: changedB, add, get, set, list, drop, sync }
+    return { key, changed: changedB, add, get, set, items, drop, emit }
   },
-  load = ({ c }: PageD): Page => {
+  load = ({ c }: PageD): XPage => {
     const page = newPage()
     for (const k in c) page.add(k, loadCard(k, c[k]))
     return page
   },
-  exec = (page: Page, ops: OpD[]): Page | null => {
+  exec = (page: XPage, ops: OpD[]): XPage | null => {
     for (const op of ops) {
       if (op.k && op.k.length > 0) {
         if (op.c) {
@@ -698,7 +705,7 @@ const
         page = newPage()
       }
     }
-    if (page) page.sync()
+    if (page) page.emit()
     return page
   }
 
@@ -713,7 +720,7 @@ export interface ChangeSet {
   set(key: S, value: any): void
   del(key: S): void
   drop(): void
-  sync(): void
+  push(): void
 }
 
 interface Ref {
@@ -730,11 +737,10 @@ export interface Wave {
   readonly busyB: Box<B>
   readonly argsB: Box<Rec>
   socket: WebSocket | null
-  page: Page | null
   username: S | null
   editable: B
-  change(path?: S): ChangeSet
-  sync(): void
+  checkout(path?: S): ChangeSet
+  push(): void
 }
 
 const
@@ -751,33 +757,32 @@ export const wave: Wave = {
   busyB: box(false),
   argsB: box({}),
   socket: null,
-  page: null,
   username: null,
   editable: false,
-  change: (path?: S): ChangeSet => {
+  checkout: (path?: S): ChangeSet => {
     path = path || wave.path
     const
-      changes: OpD[] = [],
+      ops: OpD[] = [],
       ref = (k: S): Ref => {
         const
           get = (key: S): Ref => ref(`${k}.${key}`),
-          set = (key: S, value: any) => changes.push({ k: keyseq(k, key), v: value })
+          set = (key: S, value: any) => ops.push({ k: keyseq(k, key), v: value })
         return { get, set }
       },
       get = (key: S) => ref(key),
-      put = (key: S, data: any) => changes.push({ k: key, d: data }),
-      set = (key: S, value: any) => changes.push({ k: keyseq(key), v: value }),
-      del = (key: S) => changes.push({ k: key }),
-      drop = () => changes.push({}),
-      sync = () => {
+      put = (key: S, data: any) => ops.push({ k: key, d: data }),
+      set = (key: S, value: any) => ops.push({ k: keyseq(key), v: value }),
+      del = (key: S) => ops.push({ k: key }),
+      drop = () => ops.push({}),
+      push = () => {
         const sock = wave.socket
         if (!sock) return
-        const opsd: OpsD = { d: changes }
+        const opsd: OpsD = { d: ops }
         sock.send(`* ${path} ${JSON.stringify(opsd)}`)
       }
-    return { get, put, set, del, drop, sync }
+    return { get, put, set, del, drop, push }
   },
-  sync: () => {
+  push: () => {
     const sock = wave.socket
     if (!sock) return
     const args: Dict<any> = { ...wave.args }
@@ -808,7 +813,9 @@ export interface WaveMessageEvent { t: WaveEventType.Message, type: WaveMessageT
 export interface WaveReloadEvent { t: WaveEventType.Reset }
 type WaveEventHandler = (e: WaveEvent) => void
 
-let backoff = 1
+let
+  activePage: XPage | null = null,
+  backoff = 1
 const
   toSocketAddress = (path: S): S => {
     const
@@ -846,14 +853,14 @@ const
         try {
           const msg = JSON.parse(line) as OpsD
           if (msg.d) {
-            const page = exec(wave.page || newPage(), msg.d)
-            if (wave.page !== page) {
-              wave.page = page
-              if (page) handle({ t: WaveEventType.Data, page: page })
+            const page = exec(activePage || newPage(), msg.d)
+            if (activePage !== page) {
+              activePage = page
+              if (page) handle({ t: WaveEventType.Data, page })
             }
           } else if (msg.p) {
-            wave.page = load(msg.p)
-            handle({ t: WaveEventType.Data, page: wave.page })
+            const page = activePage = load(msg.p)
+            handle({ t: WaveEventType.Data, page })
           } else if (msg.e) {
             handle({ t: WaveEventType.Message, type: WaveMessageType.Err, message: msg.e })
           } else if (msg.r) {

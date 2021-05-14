@@ -73,7 +73,7 @@ export const
         v = v || (target as HTMLInputElement).value
 
         wave.args[m.name] = v ?? (m.value || '')
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       render = () => m.mask
         ? (

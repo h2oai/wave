@@ -44,9 +44,9 @@ export default bond(() => {
   const
     onDismiss = () => {
       dialogB(null)
-      const page = wave.change()
+      const page = wave.checkout()
       page.set('meta dialog', null)
-      page.sync()
+      page.push()
     },
     render = () => {
       const

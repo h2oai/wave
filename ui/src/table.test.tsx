@@ -124,25 +124,25 @@ describe('Table.tsx', () => {
     })
 
     it('Sets args and calls sync on doubleclick', () => {
-      const syncMock = jest.fn()
-      T.wave.sync = syncMock
+      const pushMock = jest.fn()
+      T.wave.push = pushMock
 
       const { getAllByRole } = render(<XTable model={tableProps} />)
       fireEvent.doubleClick(getAllByRole('row')[1])
 
       expect(T.wave.args[name]).toMatchObject(['rowname1'])
-      expect(syncMock).toHaveBeenCalled()
+      expect(pushMock).toHaveBeenCalled()
     })
 
     it('Sets args and calls sync on first col click', () => {
-      const syncMock = jest.fn()
-      T.wave.sync = syncMock
+      const pushMock = jest.fn()
+      T.wave.push = pushMock
 
       const { getByText } = render(<XTable model={tableProps} />)
       fireEvent.click(getByText(cell21))
 
       expect(T.wave.args[name]).toMatchObject(['rowname2'])
-      expect(syncMock).toHaveBeenCalled()
+      expect(pushMock).toHaveBeenCalled()
     })
 
     it('Sets args - multiple selection', () => {
@@ -163,16 +163,16 @@ describe('Table.tsx', () => {
           { name: 'colname2', label: 'Col2', link: true },
         ]
       }
-      const syncMock = jest.fn()
-      T.wave.sync = syncMock
+      const pushMock = jest.fn()
+      T.wave.push = pushMock
 
       const { getByText } = render(<XTable model={tableProps} />)
       fireEvent.click(getByText(cell21))
-      expect(syncMock).not.toHaveBeenCalled()
+      expect(pushMock).not.toHaveBeenCalled()
 
       fireEvent.click(getByText('1'))
       expect(T.wave.args[name]).toMatchObject(['rowname2'])
-      expect(syncMock).toHaveBeenCalled()
+      expect(pushMock).toHaveBeenCalled()
     })
   })
 
@@ -184,13 +184,13 @@ describe('Table.tsx', () => {
         { name: 'colname2', label: 'Col2' },
       ]
     }
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getByText } = render(<XTable model={tableProps} />)
 
     fireEvent.click(getByText(cell21))
-    expect(syncMock).not.toHaveBeenCalled()
+    expect(pushMock).not.toHaveBeenCalled()
     expect(T.wave.args[name]).toMatchObject([])
   })
 

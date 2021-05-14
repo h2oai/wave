@@ -17,7 +17,7 @@ const
       },
       handlePage = (page: Page) => {
         _pause = true
-        page.list().forEach(card => {
+        page.items().forEach(card => {
           handleCard(card)
           on(card.changed, () => handleCard(card))
         })

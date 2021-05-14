@@ -116,7 +116,7 @@ export const
           const { responseText } = await makeRequest
           const { files } = JSON.parse(responseText)
           wave.args[model.name] = files
-          wave.sync()
+          wave.push()
           successMsgB(`Successfully uploaded files: ${filesB().map(({ name }) => name).join(',')}.`)
         }
         catch ({ responseText }) { errorB(responseText || 'There was an error when uploading file.') }

@@ -84,7 +84,7 @@ export const
             wave.args[m.name] = name
           }
         }
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       selectAll = () => {
         if (!selection) return

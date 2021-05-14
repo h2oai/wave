@@ -68,7 +68,7 @@ export const
       options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
         if (option) wave.args[m.name] = option.key
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       render = () => (
         <Fluent.ChoiceGroup

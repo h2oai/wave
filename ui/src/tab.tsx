@@ -56,7 +56,7 @@ export const
         } else {
           wave.args[name] = true
         }
-        wave.sync()
+        wave.push()
       },
       render = () => {
         const

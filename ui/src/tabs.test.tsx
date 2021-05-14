@@ -37,24 +37,24 @@ describe('Tabs.tsx', () => {
   })
 
   it('Sets args and calls sync on click', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getByRole } = render(<XTabs model={tabsProps} />)
     fireEvent.click(getByRole('tab'))
 
     expect(T.wave.args[name]).toBe(name)
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
   it('Does not call sync on click - args not changed', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
     T.wave.args[name] = name
 
     const { getByRole } = render(<XTabs model={tabsProps} />)
     fireEvent.click(getByRole('tab'))
 
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
 })

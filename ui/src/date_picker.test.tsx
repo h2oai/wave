@@ -55,13 +55,13 @@ describe('Datepicker.tsx', () => {
   })
 
   it('Calls sync when trigger specified', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getAllByRole, getAllByText } = render(<XDatePicker model={{ ...datepickerProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getAllByRole('combobox')[0])
     fireEvent.click(getAllByText('1')[0])
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 })

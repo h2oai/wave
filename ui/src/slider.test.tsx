@@ -61,8 +61,8 @@ describe('Slider.tsx', () => {
     expect(T.wave.args[name]).toBe(50)
   })
   it('Calls sync on slide', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { container } = render(<XSlider model={{ ...sliderProps, trigger: true }} />)
     container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
@@ -71,16 +71,16 @@ describe('Slider.tsx', () => {
     fireEvent.mouseDown(slidebox, mouseEvent)
     fireEvent.mouseUp(slidebox, mouseEvent)
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not call sync on slide - trigger not specified', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
     const { getByRole } = render(<XSlider model={sliderProps} />)
     fireEvent.mouseDown(getByRole('slider'), { clientX: 1, clientY: 1 })
 
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
 })

@@ -64,7 +64,7 @@ export const
       onSelectDate = (d: Date | null | undefined) => {
         wave.args[m.name] = (d === null || d === undefined) ? value : formatDate(d)
 
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       render = () => (
         <Fluent.DatePicker

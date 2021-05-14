@@ -61,45 +61,45 @@ describe('ColorPicker.tsx', () => {
   })
 
   it('Calls sync when trigger is specified', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { container } = render(<XColorPicker model={{ ...colorPickerProps, trigger: true }} />)
     // Changing alpha in order to trigger component's onChange.
     fireEvent.input(container.querySelectorAll('input')[3]!, { target: { value: 100 } })
 
-    expect(syncMock).toBeCalled()
+    expect(pushMock).toBeCalled()
   })
 
   it('Does not call sync - trigger not specified', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { container } = render(<XColorPicker model={colorPickerProps} />)
     // Changing alpha in order to trigger component's onChange.
     fireEvent.input(container.querySelectorAll('input')[3]!, { target: { value: 100 } })
 
-    expect(syncMock).not.toBeCalled()
+    expect(pushMock).not.toBeCalled()
   })
 
   it('Calls sync when trigger is specified - Swatch picker', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getAllByRole } = render(<XColorPicker model={{ ...colorPickerProps, trigger: true, choices: ['#AAA', '#BBB', '#CCC', '#DDD'] }} />)
     fireEvent.click(getAllByRole('gridcell')[3])
 
-    expect(syncMock).toBeCalled()
+    expect(pushMock).toBeCalled()
   })
 
   it('Does not call sync - trigger not specified - Swatch picker', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getAllByRole } = render(<XColorPicker model={{ ...colorPickerProps, choices: ['#AAA', '#BBB', '#CCC', '#DDD'] }} />)
     fireEvent.click(getAllByRole('gridcell')[3])
 
-    expect(syncMock).not.toBeCalled()
+    expect(pushMock).not.toBeCalled()
   })
 
 })

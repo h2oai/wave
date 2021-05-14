@@ -80,7 +80,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
         return
       }
       wave.args[stateName] = stateName
-      wave.sync()
+      wave.push()
     },
     render = () => (
       <div

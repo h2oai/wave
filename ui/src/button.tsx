@@ -99,7 +99,7 @@ const
           return
         }
         wave.args[m.name] = m.value === undefined || m.value
-        wave.sync()
+        wave.push()
       },
       render = () => {
         if (m.link) {

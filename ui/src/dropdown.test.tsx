@@ -46,24 +46,24 @@ describe('Dropdown.tsx', () => {
 
   it('Calls qd.sync() when trigger is on', () => {
     const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, trigger: true }} />)
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A'))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not call qd.sync() when trigger is off', () => {
     const { getByTestId, getByText } = render(<XDropdown model={defaultProps} />)
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A'))
 
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Returns a single item when selected', () => {
@@ -144,12 +144,12 @@ describe('Dropdown.tsx', () => {
 
   it('Calls sync on Select all - trigger enabled', () => {
     const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     fireEvent.click(getByText('Select All'))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Deselects all options on Deselect all', () => {
@@ -162,11 +162,11 @@ describe('Dropdown.tsx', () => {
 
   it('Calls sync on Deselect all - trigger enabled', () => {
     const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     fireEvent.click(getByText('Deselect All'))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 })

@@ -63,7 +63,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
     onChange = (items?: Fluent.ITag[]) => {
       selectedTagsB(items || [])
       wave.args[m.name] = items ? items.map(({ key }) => key) : null
-      if (m.trigger) wave.sync()
+      if (m.trigger) wave.push()
     },
     onEmptyResolveSuggestions = () => tags,
     init = () => wave.args[m.name] = m.values || null,

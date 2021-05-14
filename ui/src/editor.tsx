@@ -22,7 +22,7 @@ import { defaultLayoutDef, editorActionB, EditorActionT, LayoutDef, layoutDefs, 
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
 import { border, cssVar } from './theme'
-import { bond } from './ui'
+import { bond, contentB } from './ui'
 
 /**
  * WARNING: Experimental and subject to change.
@@ -203,7 +203,7 @@ const
     const
       onDismiss = () => { editorActionB(noAction) },
       save = () => {
-        const page = wave.change()
+        const page = wave.checkout()
         if (isNew) {
           const card: Dict<any> = { ...{ view }, ...original, ...changes }
           page.put(cardName, card)
@@ -213,7 +213,7 @@ const
             if (v !== original[k]) page.set(`${cardName} ${k}`, v)
           }
         }
-        page.sync()
+        page.push()
         editorActionB(noAction)
       },
       goBack = () => { editorActionB(pickCard) },
@@ -438,13 +438,13 @@ export const
         const
           { layoutDef, width } = pageSetupB(),
           layout: Layout = { ...layoutDef.layout },
-          page = wave.change()
+          page = wave.checkout()
 
         if (width) layout.width = `${width}px`
 
         page.put('__editor__', { view: 'editor', box: '', mode: 'public' })
         page.put('__meta__', { view: 'meta', box: '', layouts: [layout] })
-        page.sync()
+        page.push()
       },
       cancel = () => { visibleB(false) },
       render = () => {
@@ -486,7 +486,7 @@ export const
             break
           case EditorActionT.Edit:
             {
-              const page = wave.page
+              const page = contentB().page
               if (page) {
                 const
                   { name } = action,
@@ -500,9 +500,9 @@ export const
               const
                 { name } = action,
                 onAccept = () => {
-                  const page = wave.change()
+                  const page = wave.checkout()
                   page.del(name)
-                  page.sync()
+                  page.push()
                 }
               content = <ConfirmDialog
                 key={xid()}
@@ -535,12 +535,12 @@ export const
                 }),
                 save = () => {
                   const
-                    page = wave.change(),
+                    page = wave.checkout(),
                     { layoutDef, width } = pageSetupB(),
                     layout = { ...layoutDef.layout }
                   if (width) layout.width = `${width}px`
                   page.set('__meta__ layouts', [layout])
-                  page.sync()
+                  page.push()
                 },
                 renderFooter = () => (
                   <Fluent.Stack horizontal tokens={{ childrenGap: 10 }}>

@@ -163,7 +163,7 @@ export const
 
     on(inputB, input => {
       const
-        page = wave.change(),
+        page = wave.checkout(),
         cap = state.capacity ?? 50,
         n = _keys.length
 
@@ -174,7 +174,7 @@ export const
       }
       const cm: ChatMessage = { u: wave.username ?? '?', m: input }
       page.set(`${name} data ${(new Date()).toISOString()}`, JSON.stringify(cm))
-      page.sync()
+      page.push()
     })
 
     return { render, init: scroll, update: scroll, changed }

@@ -147,7 +147,7 @@ export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
     onChange = (val: Range | U) => {
       valueB(val as Range)
       wave.args[m.name] = Object.values(val as Range)
-      if (m.trigger) wave.sync()
+      if (m.trigger) wave.push()
     },
     render = () => (
       <div data-test={m.name} style={displayMixin(m.visible)}>

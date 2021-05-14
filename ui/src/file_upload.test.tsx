@@ -74,8 +74,8 @@ describe('FileUpload.tsx', () => {
   })
 
   it('Calls sync and sets args after upload', async () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     mockXhrRequest({ files: [{ name: 'file.txt' }] })
 
@@ -84,7 +84,7 @@ describe('FileUpload.tsx', () => {
     fireEvent.click(getByText('upload'))
 
     await wait(() => expect(T.wave.args[name]).toMatchObject([{ name: 'file.txt' }]), { timeout: 1000 })
-    await wait(() => expect(syncMock).toHaveBeenCalled(), { timeout: 1000 })
+    await wait(() => expect(pushMock).toHaveBeenCalled(), { timeout: 1000 })
   })
 
   it('Shows success screen on success upload', async () => {

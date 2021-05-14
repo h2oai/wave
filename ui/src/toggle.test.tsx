@@ -40,23 +40,23 @@ describe('Toggle.tsx', () => {
   })
 
   it('Calls sync when trigger is on', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByTestId } = render(<XToggle model={{ ...toggleProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByTestId(name))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not call sync when trigger is off', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByTestId } = render(<XToggle model={toggleProps} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByTestId(name))
 
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Sets args on click', () => {

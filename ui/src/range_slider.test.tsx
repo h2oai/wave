@@ -69,8 +69,8 @@ describe('rangeSlider.tsx', () => {
   })
 
   it('Calls sync on slide', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { container, getAllByRole } = render(<XRangeSlider model={{ ...rangeSliderProps, trigger: true }} />)
     container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
@@ -79,12 +79,12 @@ describe('rangeSlider.tsx', () => {
     fireEvent.mouseDown(slidebox, mouseEvent)
     fireEvent.mouseUp(slidebox, mouseEvent)
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not call sync on slide - trigger not specified', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { container, getAllByRole } = render(<XRangeSlider model={rangeSliderProps} />)
     container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
@@ -93,7 +93,7 @@ describe('rangeSlider.tsx', () => {
     fireEvent.mouseDown(slidebox, mouseEvent)
     fireEvent.mouseUp(slidebox, mouseEvent)
 
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Shows label when specified', () => {

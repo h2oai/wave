@@ -63,7 +63,7 @@ export const
       render = () => {
         const
           s = { ...defaults, ...state },
-          data = unpack(s.data)
+          data = unpack<Rec>(s.data)
 
         return (
           <div data-test={name} className={css.item}>

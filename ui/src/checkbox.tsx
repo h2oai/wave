@@ -59,7 +59,7 @@ export const
     const
       onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
         wave.args[m.name] = checked === null ? null : !!checked
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       render = () => (
         <Fluent.Checkbox

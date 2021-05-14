@@ -79,9 +79,9 @@ export const
     let brush = '#000'
     const
       paint = (i: U) => {
-        const page = wave.change()
+        const page = wave.checkout()
         page.set(`${name} data ${i}`, brush === 'none' ? null : [brush])
-        page.sync()
+        page.push()
       },
       render = () => {
         const

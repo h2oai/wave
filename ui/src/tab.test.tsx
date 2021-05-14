@@ -42,25 +42,25 @@ describe('Meta.tsx', () => {
   })
 
   it('Sets args and calls sync on click', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getByRole } = render(<View {...tabProps} />)
     fireEvent.click(getByRole('tab'))
 
     expect(T.wave.args[name]).toBe(true)
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not set args and calls sync on click - hash name', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    T.wave.push = pushMock
 
     const { getByRole } = render(<View {...{ ...tabProps, state: { items: [{ name: hashName }] } }} />)
     fireEvent.click(getByRole('tab'))
 
     expect(T.wave.args[name]).toBeNull()
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Sets url hash - hash name', () => {

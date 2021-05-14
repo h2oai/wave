@@ -72,42 +72,42 @@ describe('Checklist.tsx', () => {
   })
 
   it('Calls sync - trigger specified', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not call sync - trigger not specified', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XChecklist model={checklistProps} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(syncMock).not.toHaveBeenCalled()
+    expect(pushMock).not.toHaveBeenCalled()
   })
 
   it('Calls sync - select all', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByText('Select All'))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Calls sync - deselect all', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByText('Deselect All'))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 })

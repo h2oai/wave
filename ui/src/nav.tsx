@@ -65,7 +65,7 @@ export const
             return
           }
           wave.args[name] = true
-          wave.sync()
+          wave.push()
         }
       }))
     }))

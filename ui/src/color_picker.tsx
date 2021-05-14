@@ -52,11 +52,11 @@ export const
       onColorChanged = (_id?: string, color?: string) => {
         wave.args[m.name] = color || value
 
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
         wave.args[m.name] = color?.str || value
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       render = () => (
         <div data-test={m.name} style={displayMixin(m.visible)}>

@@ -40,23 +40,23 @@ describe('Checkbox.tsx', () => {
   })
 
   it('Does not call sync when trigger is off', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={checkboxProps} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByTestId(name))
 
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Calls sync when trigger is on', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={{ ...checkboxProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    T.wave.push = pushMock
     fireEvent.click(getByTestId(name))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Sets args on click', () => {

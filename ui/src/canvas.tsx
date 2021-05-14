@@ -326,14 +326,14 @@ export const
             page.set(`${name} data ${k}`, v)
           },
           syncAttr = (k: S, v: any) => {
-            const page = wave.change()
+            const page = wave.checkout()
             setAttr(page, k, v)
-            page.sync()
+            page.push()
           },
           clearAttrs = (ks: S[]) => {
-            const page = wave.change()
+            const page = wave.checkout()
             for (const k of ks) setAttr(page, k, null)
-            page.sync()
+            page.push()
           },
           track2 = (p: P) => {
             if (pts.length > 1) {

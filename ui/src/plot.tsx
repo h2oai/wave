@@ -806,7 +806,7 @@ export const
                     if (e.stateStatus && e.state === 'selected') {
                       if (model.name) {
                         wave.events[model.name] = { select_marks: [e.element?.data] }
-                        wave.sync()
+                        wave.push()
                       }
                     }
                   })
@@ -824,7 +824,7 @@ export const
         const el = container.current
         if (!el || !currentChart || !currentPlot) return
         const
-          raw_data = unpack(model.data) as any[],
+          raw_data = unpack<any[]>(model.data),
           data = refactorData(raw_data, currentPlot.marks)
         currentChart.changeData(data)
       },

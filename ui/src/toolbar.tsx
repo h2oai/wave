@@ -63,7 +63,7 @@ const
         return
       }
       wave.args[name] = value === undefined || value
-      wave.sync()
+      wave.push()
     }
     return {
       key: name,
