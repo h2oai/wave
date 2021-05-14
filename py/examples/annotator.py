@@ -17,8 +17,8 @@ async def serve(q: Q):
             ui.annotator(
                 name='annotator',
                 tags=[
-                    ui.annotator_tag(name='p', label='Person', color='$red'),
-                    ui.annotator_tag(name='o', label='Org', color='$green'),
+                    ui.annotator_tag(name='p', label='Person', color='#D33A2C99'),
+                    ui.annotator_tag(name='o', label='Org', color='#4CAF5099'),
                 ],
                 items=[
                     ui.annotator_item(text='Killer Mike', tag='p'),

@@ -44,42 +44,34 @@ const css = stylesheet({
     display: 'flex',
     flexWrap: 'wrap',
     margin: margin(0, -4),
-    marginTop: 5
+    marginTop: 1
   },
   tag: {
-    padding: 7,
+    padding: padding(6, 7, 5, 7),
     margin: 4,
     minWidth: 60,
+    height: 21,
+    lineHeight: '21px',
     textAlign: 'center',
     borderRadius: 2,
     cursor: 'pointer',
-    opacity: 0.5,
-    $nest: {
-      '&:hover': {
-        opacity: 1
-      }
-    }
-  },
-  activeTag: {
-    opacity: 1
   },
   mark: {
     position: 'relative',
-    padding: padding(5, 0),
+    padding: padding(1, 0, 2, 0),
   },
   firstMark: {
-    paddingLeft: 5,
+    paddingLeft: 11,
     borderTopLeftRadius: 2,
     borderBottomLeftRadius: 2
   },
   lastMark: {
-    paddingRight: 5,
+    paddingRight: 10,
     borderTopRightRadius: 2,
     borderBottomRightRadius: 2
   },
   content: {
-    margin: margin(10, 0),
-    lineHeight: 2
+    margin: margin(12.5, 0),
   },
   removeIcon: {
     cursor: 'pointer',
@@ -188,7 +180,7 @@ export const
           <mark
             onMouseOver={onMarkHover(idx)}
             onMouseOut={onMarkMouseOut}
-            className={clas('wave-w5', css.mark, isFirst ? css.firstMark : isLast ? css.lastMark : '')}
+            className={clas('wave-w5', css.mark, isFirst ? css.firstMark : '', isLast ? css.lastMark : '')}
             style={{ backgroundColor: cssVar(color), color: getContrast(color) }}>
             {text}
             <Fluent.Icon iconName='CircleAdditionSolid' styles={{ root: removeIconStyle }} className={clas(css.removeIcon, 'wave-w6')} onMouseUp={removeAnnotation(idx)} />
@@ -198,26 +190,43 @@ export const
         )
       },
       render = () => {
-        const tags = model.tags.map(({ name, color, label }) => (
-          <div
-            key={name}
-            className={clas(css.tag, activeTagB() === name ? css.activeTag : '', 'wave-s16 wave-w5')}
-            onClick={activateTag(name)}
-            style={{ background: cssVar(color), color: getContrast(color) }}
-          >{label}</div>
-        ))
+        const tags = model.tags.map(({ name, color, label }) => {
+          const style = stylesheet({
+            tag: {
+              background: cssVar('$neutralLight'),
+              color: '#fff',
+              $nest: {
+                '&:hover': {
+                  background: cssVar(color),
+                  color: getContrast(color),
+                }
+              }
+            },
+            activeTag: {
+              background: cssVar(color),
+              color: getContrast(color),
+            }
+          })
+          return (
+            <div
+              key={name}
+              className={clas(style.tag, css.tag, activeTagB() === name ? clas(style.activeTag, 'wave-w6') : '', 'wave-s18 wave-w5')}
+              onClick={activateTag(name)}
+            >{label}</div>
+          )
+        })
         return (
           <div data-test={model.name}>
             <div className='wave-s20 wave-w5 wave-t9'>Select Tag to highlight text</div>
             <div className={css.tags}>{tags}</div>
-            <Fluent.Separator />
+            <Fluent.Separator styles={{ root: { marginTop: 12.5 } }} />
             <div className={clas(css.content, 'wave-s18 wave-t9 wave-w3')}>{
               tokensB().map(({ text, tag }, idx) => (
                 <span key={idx} onMouseDown={setStartIdx(idx)} onMouseUp={annotate(idx)}>{tag ? getMark(text, idx, tag) : text}</span>
               ))
             }
             </div>
-            <Fluent.Separator />
+            <Fluent.Separator styles={{ root: { marginBottom: 14.5 } }} />
           </div>
         )
       }
