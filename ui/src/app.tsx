@@ -124,7 +124,7 @@ const
         wave.sync()
       },
       init = () => {
-        connect('/_s', onSocket)
+        connect(onSocket)
         window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {

@@ -736,7 +736,7 @@ interface Ref {
 export interface Wave {
   readonly path: S
   readonly args: Rec
-  readonly events: Dict<any>
+  readonly events: Rec
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
   readonly argsB: Box<Rec>
@@ -899,4 +899,4 @@ const
     }
   }
 
-export const connect = (path: S, handle: WaveEventHandler) => reconnect(toSocketAddress(path), handle)
+export const connect = (handle: WaveEventHandler) => reconnect(toSocketAddress('/_s'), handle)

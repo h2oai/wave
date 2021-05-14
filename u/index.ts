@@ -32,7 +32,7 @@ const
         state[card.name] = card.state
         render()
       }
-    connect('/_s', (e) => {
+    connect(e => {
       switch (e.t) {
         case WaveEventType.Data:
           const { page } = e
