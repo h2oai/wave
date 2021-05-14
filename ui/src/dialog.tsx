@@ -40,15 +40,21 @@ export interface Dialog {
   primary?: B
   /** An identifying name for this component. */
   name?: Id
+  /** The events to capture on this dialog. */
+  events?: S[]
 }
 
 export default bond(() => {
   const
     onDismiss = () => {
-      const { closable, name } = dialogB() || {}
+      const { closable, name, events } = dialogB() || {}
       if (closable && name) {
-        wave.events[name] = { dismissed: true }
-        wave.sync()
+        events?.forEach(e => {
+          if (e === 'dismissed') {
+            wave.events[name] = { dismissed: true }
+            wave.sync()
+          }
+        })
       }
       dialogB(null)
     },

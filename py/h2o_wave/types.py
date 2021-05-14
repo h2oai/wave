@@ -7138,6 +7138,7 @@ class Dialog:
             blocking: Optional[bool] = None,
             primary: Optional[bool] = None,
             name: Optional[str] = None,
+            events: Optional[List[str]] = None,
     ):
         _guard_scalar('Dialog.title', title, (str,), False, False, False)
         _guard_vector('Dialog.items', items, (Component,), False, False, False)
@@ -7146,6 +7147,7 @@ class Dialog:
         _guard_scalar('Dialog.blocking', blocking, (bool,), False, True, False)
         _guard_scalar('Dialog.primary', primary, (bool,), False, True, False)
         _guard_scalar('Dialog.name', name, (str,), True, True, False)
+        _guard_vector('Dialog.events', events, (str,), False, True, False)
         self.title = title
         """The dialog's title."""
         self.items = items
@@ -7160,6 +7162,8 @@ class Dialog:
         """Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false."""
         self.name = name
         """An identifying name for this component."""
+        self.events = events
+        """The events to capture on this dialog."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7170,6 +7174,7 @@ class Dialog:
         _guard_scalar('Dialog.blocking', self.blocking, (bool,), False, True, False)
         _guard_scalar('Dialog.primary', self.primary, (bool,), False, True, False)
         _guard_scalar('Dialog.name', self.name, (str,), True, True, False)
+        _guard_vector('Dialog.events', self.events, (str,), False, True, False)
         return _dump(
             title=self.title,
             items=[__e.dump() for __e in self.items],
@@ -7178,6 +7183,7 @@ class Dialog:
             blocking=self.blocking,
             primary=self.primary,
             name=self.name,
+            events=self.events,
         )
 
     @staticmethod
@@ -7197,6 +7203,8 @@ class Dialog:
         _guard_scalar('Dialog.primary', __d_primary, (bool,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('Dialog.name', __d_name, (str,), True, True, False)
+        __d_events: Any = __d.get('events')
+        _guard_vector('Dialog.events', __d_events, (str,), False, True, False)
         title: str = __d_title
         items: List[Component] = [Component.load(__e) for __e in __d_items]
         width: Optional[str] = __d_width
@@ -7204,6 +7212,7 @@ class Dialog:
         blocking: Optional[bool] = __d_blocking
         primary: Optional[bool] = __d_primary
         name: Optional[str] = __d_name
+        events: Optional[List[str]] = __d_events
         return Dialog(
             title,
             items,
@@ -7212,6 +7221,7 @@ class Dialog:
             blocking,
             primary,
             name,
+            events,
         )
 
 

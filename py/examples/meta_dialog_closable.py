@@ -15,7 +15,7 @@ async def serve(q: Q):
     if q.args.show_dialog:
         q.page['meta'].dialog = ui.dialog(title='Order Donuts', name='dialog', closable=True, items=[
             ui.text('This dialog can be only closed via X icon.'),
-        ])
+        ], events=['dismissed'])
     if q.events.dialog and q.events.dialog.dismissed:
         q.page['meta'].dialog = None
 
