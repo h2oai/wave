@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, debounce, Id, S, wave } from 'h2o-wave'
+import { B, Id, S, wave } from 'h2o-wave'
 import React from 'react'
 import { displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, debounce } from './ui'
 
 /**
  * Create a text box.

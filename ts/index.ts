@@ -303,15 +303,7 @@ export const
       ? decodeString(data)
       : (isData(data))
         ? data.list()
-        : data,
-  iff = (x: S) => x && x.length ? x : undefined,
-  debounce = (timeout: U, f: (e: any) => void) => {
-    let t: number | null = null
-    return (e: any) => {
-      if (t) window.clearTimeout(t)
-      t = window.setTimeout(() => (f(e), t = null), timeout)
-    }
-  }
+        : data
 
 const
   decodeType = (d: S): [S, S] => {

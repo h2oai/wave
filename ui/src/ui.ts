@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { boxed, Disposable, on, wave } from 'h2o-wave'
+import { boxed, Disposable, on, U, wave } from 'h2o-wave'
 import * as React from 'react'
 
 //
@@ -77,4 +77,11 @@ export
       wave.args[value] = true
     }
     wave.sync()
+  },
+  debounce = (timeout: U, f: (e: any) => void) => {
+    let t: number | null = null
+    return (e: any) => {
+      if (t) window.clearTimeout(t)
+      t = window.setTimeout(() => (f(e), t = null), timeout)
+    }
   }
