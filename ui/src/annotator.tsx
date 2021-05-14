@@ -108,7 +108,14 @@ export const
       }, new Map<S, S>()),
       tokensB = box(model.items.reduce((arr, { text, tag }) => {
         // Split by any non-letter character.
-        text.split(/(?=[^A-Za-z])/g).forEach(textItem => arr.push({ text: textItem, tag }))
+        text.split(/(?=[^A-Za-z])/g).forEach(textItem => {
+          if (textItem.startsWith(' ')) {
+            arr.push({ text: ' ', tag })
+            arr.push({ text: textItem.substring(1), tag })
+          } else {
+            arr.push({ text: textItem, tag })
+          }
+        })
         return arr
       }, [] as AnnotatorItem[])),
       submitQdArgs = () => {

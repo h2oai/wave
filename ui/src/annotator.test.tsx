@@ -1,7 +1,7 @@
 import { render, fireEvent } from '@testing-library/react'
 import React from 'react'
 import { Annotator, XAnnotator } from './annotator'
-import * as T from './qd'
+import * as T from 'h2o-wave'
 
 const
   name = 'annotator',
@@ -13,11 +13,11 @@ const
 describe('Annotator.tsx', () => {
   beforeAll(() => {
     window.getSelection = getSelectionMock
-    T.qd.sync = syncMock
+    T.wave.sync = syncMock
   })
   beforeEach(() => {
     jest.clearAllMocks()
-    T.qd.args[name] = null
+    T.wave.args[name] = null
   })
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XAnnotator model={annotatorProps} />)
@@ -26,14 +26,14 @@ describe('Annotator.tsx', () => {
 
   it('Sets initial q.args', () => {
     render(<XAnnotator model={annotatorProps} />)
-    expect(T.qd.args[name]).toMatchObject(items)
+    expect(T.wave.args[name]).toMatchObject(items)
   })
 
   it('Sets correct args on remove', () => {
     const { container } = render(<XAnnotator model={annotatorProps} />)
 
     fireEvent.mouseUp(container.querySelector('i')!)
-    expect(T.qd.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
+    expect(T.wave.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
   })
 
   it('Sets correct args on annotate', () => {
@@ -43,7 +43,7 @@ describe('Annotator.tsx', () => {
     fireEvent.mouseDown(getByText('Hello'))
     fireEvent.mouseUp(getByText('there'))
 
-    expect(T.qd.args[name]).toMatchObject([
+    expect(T.wave.args[name]).toMatchObject([
       { text: 'Hello there', tag: 'tag1' },
       { text: '! ' },
       { text: 'Pretty good', tag: 'tag1' },
