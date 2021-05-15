@@ -1,4 +1,4 @@
-import { Card, connect, on, Page, WaveErrorCode, WaveEventType } from 'h2o-wave'
+import { wave, Card, on, Page, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import * as Handlebars from 'handlebars'
 
 const
@@ -35,7 +35,7 @@ const
       handleError = (message: string) => {
         if (root) root.innerText = message
       }
-    connect(e => {
+    wave.connect(e => {
       switch (e.t) {
         case WaveEventType.Data:
           const { page } = e

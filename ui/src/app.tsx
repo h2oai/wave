@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { box, connect, on, wave, WaveErrorCode, WaveEvent, WaveEventType } from 'h2o-wave'
+import { box, on, wave, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
@@ -104,22 +104,6 @@ const
   }),
   App = bond(() => {
     const
-      onSocket = (e: WaveEvent) => {
-        switch (e.t) {
-          case WaveEventType.Data:
-          case WaveEventType.Error:
-          case WaveEventType.Exception:
-          case WaveEventType.Disconnect:
-            contentB(e)
-            break
-          case WaveEventType.Reset:
-            window.location.reload()
-            break
-          case WaveEventType.Config:
-            editable = e.editable
-            break
-        }
-      },
       onHashChanged = () => {
         const h = window.location.hash
         if (h?.length > 1) {
@@ -128,7 +112,22 @@ const
         wave.push()
       },
       init = () => {
-        connect(onSocket)
+        wave.connect(e => {
+          switch (e.t) {
+            case WaveEventType.Data:
+            case WaveEventType.Error:
+            case WaveEventType.Exception:
+            case WaveEventType.Disconnect:
+              contentB(e)
+              break
+            case WaveEventType.Reset:
+              window.location.reload()
+              break
+            case WaveEventType.Config:
+              editable = e.editable
+              break
+          }
+        })
         window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {
