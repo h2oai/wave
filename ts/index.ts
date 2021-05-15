@@ -793,15 +793,23 @@ on(wave.refreshRateB, r => {
 })
 
 export enum WaveEventType { Data, Config, Reset, Error, Exception, Connect, Disconnect }
-export interface WaveDataEvent { t: WaveEventType.Data, page: Page }
-export interface WaveConfigEvent { t: WaveEventType.Config, username: S, editable: B }
-export interface WaveResetEvent { t: WaveEventType.Reset }
-export interface WaveErrorEvent { t: WaveEventType.Error, code: WaveErrorCode }
-export interface WaveExceptionEvent { t: WaveEventType.Exception, error: any }
-export interface WaveConnectEvent { t: WaveEventType.Connect }
-export interface WaveDisconnectEvent { t: WaveEventType.Disconnect, retry: U }
-export type WaveEvent = WaveDataEvent | WaveConfigEvent | WaveResetEvent | WaveErrorEvent | WaveExceptionEvent | WaveConnectEvent | WaveDisconnectEvent
 export enum WaveErrorCode { Unknown = 1, PageNotFound }
+export type WaveEvent = {
+  t: WaveEventType.Data, page: Page
+} | {
+  t: WaveEventType.Config, username: S, editable: B
+} | {
+  t: WaveEventType.Reset
+} | {
+  t: WaveEventType.Error, code: WaveErrorCode
+} | {
+  t: WaveEventType.Exception, error: any
+} | {
+  t: WaveEventType.Connect
+} | {
+  t: WaveEventType.Disconnect, retry: U
+}
+
 type WaveEventHandler = (e: WaveEvent) => void
 
 let
@@ -814,9 +822,9 @@ const
   },
   toSocketAddress = (path: S): S => {
     const
-      l = window.location,
-      p = l.protocol === 'https:' ? 'wss' : 'ws'
-    return p + "://" + l.host + path
+      { protocol, host } = window.location,
+      p = protocol === 'https:' ? 'wss' : 'ws'
+    return p + "://" + host + path
   },
   reconnect = (address: S, handle: WaveEventHandler) => {
     const retry = () => reconnect(address, handle)
