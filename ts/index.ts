@@ -709,10 +709,6 @@ const
     return page
   }
 
-//
-// In-browser API
-//
-
 /** A set of changes to be made to a remote Page. */
 export interface ChangeSet {
   get(key: S): Ref
@@ -736,8 +732,6 @@ export interface Wave {
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
   readonly argsB: Box<Rec>
-  username: S | null
-  editable: B
   checkout(path?: S): ChangeSet
   push(): void
 }
@@ -755,8 +749,6 @@ export const wave: Wave = {
   refreshRateB: box(-1),
   busyB: box(false),
   argsB: box({}),
-  username: null,
-  editable: false,
   checkout: (path?: S): ChangeSet => {
     path = path || wave.path
     const
