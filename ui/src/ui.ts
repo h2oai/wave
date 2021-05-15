@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { box, boxed, Disposable, on, Page, S, U, wave } from 'h2o-wave'
+import { box, boxed, Disposable, on, U, wave, WaveEvent } from 'h2o-wave'
 import * as React from 'react'
 
-export const contentB = box<{ page?: Page, error?: S }>({})
+export const contentB = box<WaveEvent | null>(null)
 
 //
 // React Component + Dataflow

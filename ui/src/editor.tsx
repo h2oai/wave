@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import { DialogType, IDropdownOption } from '@fluentui/react'
-import { B, Box, box, Card, Dict, Model, parseU, S, U, wave, xid } from 'h2o-wave'
+import { B, Box, box, Card, Dict, Model, Page, parseU, S, U, wave, WaveEventType, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
@@ -469,6 +469,11 @@ export const
       }
     return { render, visibleB }
   }),
+  getActivePage = (): Page | null => {
+    const e = contentB()
+    if (e && e.t === WaveEventType.Data) return e.page
+    return null
+  },
   View = bond(({ name, changed }: Model<State>) => {
     const
       addCard = () => { editorActionB(pickCard) },
@@ -486,7 +491,7 @@ export const
             break
           case EditorActionT.Edit:
             {
-              const page = contentB().page
+              const page = getActivePage()
               if (page) {
                 const
                   { name } = action,

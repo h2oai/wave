@@ -800,12 +800,16 @@ on(wave.refreshRateB, r => {
   if (_socket) _socket.close()
 })
 
-export enum WaveEventType { Message, Data, Reset }
-export type WaveEvent = WaveMessageEvent | WaveDataEvent | WaveReloadEvent
+export enum WaveEventType { Data, Config, Reset, Error, Exception, Connect, Disconnect }
 export interface WaveDataEvent { t: WaveEventType.Data, page: Page }
-export enum WaveMessageType { Info, Warn, Err }
-export interface WaveMessageEvent { t: WaveEventType.Message, type: WaveMessageType, message: S }
-export interface WaveReloadEvent { t: WaveEventType.Reset }
+export interface WaveConfigEvent { t: WaveEventType.Config, username: S, editable: B }
+export interface WaveResetEvent { t: WaveEventType.Reset }
+export interface WaveErrorEvent { t: WaveEventType.Error, code: WaveErrorCode }
+export interface WaveExceptionEvent { t: WaveEventType.Exception, error: any }
+export interface WaveConnectEvent { t: WaveEventType.Connect }
+export interface WaveDisconnectEvent { t: WaveEventType.Disconnect, retry: U }
+export type WaveEvent = WaveDataEvent | WaveConfigEvent | WaveResetEvent | WaveErrorEvent | WaveExceptionEvent | WaveConnectEvent | WaveDisconnectEvent
+export enum WaveErrorCode { Unknown = 1, PageNotFound }
 type WaveEventHandler = (e: WaveEvent) => void
 
 let
@@ -813,6 +817,9 @@ let
   _page: XPage | null = null,
   backoff = 1
 const
+  errorCodes: Dict<WaveErrorCode> = {
+    not_found: WaveErrorCode.PageNotFound,
+  },
   toSocketAddress = (path: S): S => {
     const
       l = window.location,
@@ -824,7 +831,7 @@ const
     const socket = new WebSocket(address)
     socket.onopen = function () {
       _socket = socket
-      handle({ t: WaveEventType.Message, type: WaveMessageType.Info, message: 'Connected' })
+      handle({ t: WaveEventType.Connect })
       backoff = 1
       const hash = window.location.hash
       socket.send(`+ ${wave.path} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
@@ -838,7 +845,7 @@ const
       _socket = null
       backoff *= 2
       if (backoff > 16) backoff = 16
-      handle({ t: WaveEventType.Message, type: WaveMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })
+      handle({ t: WaveEventType.Disconnect, retry: backoff })
       window.setTimeout(retry, backoff * 1000)
     }
     socket.onmessage = function (e) {
@@ -858,22 +865,22 @@ const
             const page = _page = load(msg.p)
             handle({ t: WaveEventType.Data, page })
           } else if (msg.e) {
-            handle({ t: WaveEventType.Message, type: WaveMessageType.Err, message: msg.e })
+            handle({ t: WaveEventType.Error, code: errorCodes[msg.e] || WaveErrorCode.Unknown })
           } else if (msg.r) {
             handle({ t: WaveEventType.Reset })
           } else if (msg.m) {
-            const { u, e } = msg.m
-            wave.username = u
-            wave.editable = e
+            const { u: username, e: editable } = msg.m
+            handle({ t: WaveEventType.Config, username, editable })
           }
-        } catch (err) {
-          console.error(err)
-          handle({ t: WaveEventType.Message, type: WaveMessageType.Err, message: `Error: ${err}` })
+        } catch (error) {
+          console.error(error)
+          handle({ t: WaveEventType.Exception, error })
         }
       }
     }
     socket.onerror = function (e: Event) {
       wave.busyB(false)
+      // TODO emit Exception?
       console.error('A websocket error was encountered.', e) // XXX
     }
   }

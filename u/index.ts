@@ -1,4 +1,4 @@
-import { Card, connect, on, Page, WaveEventType, WaveMessageType } from 'h2o-wave'
+import { Card, connect, on, Page, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import * as Handlebars from 'handlebars'
 
 const
@@ -31,6 +31,9 @@ const
         }
         state[card.name] = card.state
         render()
+      },
+      handleError = (message: string) => {
+        if (root) root.innerText = message
       }
     connect(e => {
       switch (e.t) {
@@ -39,10 +42,20 @@ const
           handlePage(page)
           on(page.changed, () => handlePage(page))
           break
-        case WaveEventType.Message:
-          if (e.type === WaveMessageType.Err) {
-            if (root) root.innerText = e.message === 'not_found' ? 'Page Not Found' : e.message
+        case WaveEventType.Error:
+          switch (e.code) {
+            case WaveErrorCode.PageNotFound:
+              handleError('Page not found')
+              break
+            default:
+              handleError('Unknown remote error')
           }
+          break
+        case WaveEventType.Exception:
+          handleError(`Unhandled exception: ${e.error}`)
+          break
+        case WaveEventType.Disconnect:
+          handleError(`Disconnected. Reconnecting in ${e.retry}s`)
           break
         case WaveEventType.Reset:
           window.location.reload()

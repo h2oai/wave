@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { box, connect, on, wave, WaveEvent, WaveEventType, WaveMessageType } from 'h2o-wave'
+import { box, connect, on, wave, WaveErrorCode, WaveEvent, WaveEventType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
@@ -57,6 +57,8 @@ const
     },
   })
 
+let editable = false
+
 const
   BusyOverlay = bond(() => {
     let
@@ -89,7 +91,7 @@ const
       render = () => (
         <div className={css.notFoundOverlay}>
           <Logo />
-          {wave.editable && (
+          {editable && (
             <>
               <Fluent.DefaultButton onClick={onClick} >Edit this page...</Fluent.DefaultButton>
               <LayoutPicker visibleB={pickingLayoutB} />
@@ -105,13 +107,16 @@ const
       onSocket = (e: WaveEvent) => {
         switch (e.t) {
           case WaveEventType.Data:
-            contentB({ page: e.page })
-            break
-          case WaveEventType.Message:
-            if (e.type === WaveMessageType.Err) contentB({ error: e.message })
+          case WaveEventType.Error:
+          case WaveEventType.Exception:
+          case WaveEventType.Disconnect:
+            contentB(e)
             break
           case WaveEventType.Reset:
             window.location.reload()
+            break
+          case WaveEventType.Config:
+            editable = e.editable
             break
         }
       },
@@ -127,25 +132,43 @@ const
         window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {
-        const { page, error } = contentB()
-        // TODO prettier error section
-        if (error) {
-          const errorMessage = error === 'not_found'
-            ? <NotFoundOverlay />
-            : error
-          return <div className={clas(css.centerFullHeight, css.app)}>{errorMessage}</div>
+        const e = contentB()
+        if (e) {
+          switch (e.t) {
+            case WaveEventType.Data:
+              {
+                const page = e.page
+                return (
+                  <Fluent.Fabric applyTheme>
+                    <div className={css.app}>
+                      <PageLayout key={page.key} page={page} />
+                      <BusyOverlay />
+                      <Dialog />
+                    </div>
+                  </Fluent.Fabric>
+                )
+              }
+            case WaveEventType.Error:
+              {
+                // TODO better sadface
+                const message = e.code === WaveErrorCode.PageNotFound ? <NotFoundOverlay /> : 'Unknown Remote Error'
+                return <div className={clas(css.centerFullHeight, css.app)}>{message}</div>
+              }
+            case WaveEventType.Exception:
+              {
+                // TODO better sadface
+                const message = `Unhandled exception: ${e.error}`
+                return <div className={clas(css.centerFullHeight, css.app)}>{message}</div>
+              }
+            case WaveEventType.Disconnect:
+              {
+                // TODO better sadface
+                const message = `Disconnected. Reconnecting in ${e.retry}s`
+                return <div className={clas(css.centerFullHeight, css.app)}>{message}</div>
+              }
+          }
         }
-        if (!page) return <Fluent.Spinner className={css.centerFullHeight} size={Fluent.SpinnerSize.large} label='Loading ...' />
-
-        return (
-          <Fluent.Fabric applyTheme>
-            <div className={css.app}>
-              <PageLayout key={page.key} page={page} />
-              <BusyOverlay />
-              <Dialog />
-            </div>
-          </Fluent.Fabric>
-        )
+        return <Fluent.Spinner className={css.centerFullHeight} size={Fluent.SpinnerSize.large} label='Loading ...' />
       },
       dispose = () => {
         window.removeEventListener('hashchange', onHashChanged)
