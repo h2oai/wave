@@ -726,7 +726,6 @@ interface Ref {
 
 /** The Wave client. */
 export interface Wave {
-  readonly path: S
   readonly args: Rec
   readonly events: Rec
   readonly refreshRateB: Box<U>
@@ -737,20 +736,20 @@ export interface Wave {
 }
 
 const
+  slug = window.location.pathname,
   keyseq = (...keys: S[]): S => keys.join(' '),
   clearRec = (a: Rec) => {
     for (const k in a) delete a[k]
   }
 
 export const wave: Wave = {
-  path: window.location.pathname,
   args: {},
   events: {},
   refreshRateB: box(-1),
   busyB: box(false),
   argsB: box({}),
   checkout: (path?: S): ChangeSet => {
-    path = path || wave.path
+    path = path || slug
     const
       ops: OpD[] = [],
       ref = (k: S): Ref => {
@@ -779,7 +778,7 @@ export const wave: Wave = {
       args[''] = { ...wave.events }
       clearRec(wave.events)
     }
-    _socket.send(`@ ${wave.path} ${JSON.stringify(args)}`)
+    _socket.send(`@ ${slug} ${JSON.stringify(args)}`)
     wave.argsB(args)
     wave.busyB(true)
   },
@@ -815,7 +814,7 @@ type WaveEventHandler = (e: WaveEvent) => void
 let
   _socket: WebSocket | null = null,
   _page: XPage | null = null,
-  backoff = 1
+  _backoff = 1
 const
   errorCodes: Dict<WaveErrorCode> = {
     not_found: WaveErrorCode.PageNotFound,
@@ -832,9 +831,9 @@ const
     socket.onopen = function () {
       _socket = socket
       handle({ t: WaveEventType.Connect })
-      backoff = 1
+      _backoff = 1
       const hash = window.location.hash
-      socket.send(`+ ${wave.path} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
+      socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
     }
     socket.onclose = function () {
       const refreshRate = wave.refreshRateB()
@@ -843,10 +842,10 @@ const
       // TODO handle refreshRate > 0 case
 
       _socket = null
-      backoff *= 2
-      if (backoff > 16) backoff = 16
-      handle({ t: WaveEventType.Disconnect, retry: backoff })
-      window.setTimeout(retry, backoff * 1000)
+      _backoff *= 2
+      if (_backoff > 16) _backoff = 16
+      handle({ t: WaveEventType.Disconnect, retry: _backoff })
+      window.setTimeout(retry, _backoff * 1000)
     }
     socket.onmessage = function (e) {
       if (!e.data) return
