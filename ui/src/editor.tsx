@@ -471,7 +471,7 @@ export const
   }),
   getActivePage = (): Page | null => {
     const e = contentB()
-    if (e && e.t === WaveEventType.Data) return e.page
+    if (e && e.t === WaveEventType.Receive) return e.page
     return null
   },
   View = bond(({ name, changed }: Model<State>) => {

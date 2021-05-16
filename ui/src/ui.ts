@@ -17,6 +17,7 @@ import * as React from 'react'
 
 export const
   contentB = box<WaveEvent | null>(null),
+  argsB = box<any>({}),
   config = {
     username: '',
     editable: false,

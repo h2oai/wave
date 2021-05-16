@@ -21,7 +21,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
 import { clas, cssVar, pc, themeB } from './theme'
-import { bond, config, contentB } from './ui'
+import { bond, config, contentB, argsB } from './ui'
 
 const
   css = stylesheet({
@@ -63,14 +63,13 @@ const
       spinTimeout = 0
     const
       spinDelay = 500, // ms
-      busyB = wave.busyB,
       spinB = box(false),
       render = () => (
-        <div className={busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
+        <div className={wave.busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
           <Fluent.Spinner className={css.centerFullHeight} style={{ opacity: spinB() ? 0.8 : 0 }} label='Loading...' size={Fluent.SpinnerSize.large} />
         </div>
       )
-    on(busyB, busy => {
+    on(wave.busyB, busy => {
       window.clearTimeout(spinTimeout)
       if (busy) {
         spinTimeout = window.setTimeout(() => spinB(true), spinDelay)
@@ -78,7 +77,7 @@ const
         spinB(false)
       }
     })
-    return { render, busyB, spinB }
+    return { render, busy: wave.busyB, spinB }
   }),
   NotFoundOverlay = bond(() => {
     const
@@ -112,7 +111,7 @@ const
       init = () => {
         wave.connect(e => {
           switch (e.t) {
-            case WaveEventType.Data:
+            case WaveEventType.Receive:
             case WaveEventType.Error:
             case WaveEventType.Exception:
             case WaveEventType.Disconnect:
@@ -125,6 +124,9 @@ const
               config.username = e.username
               config.editable = e.editable
               break
+            case WaveEventType.Send:
+              argsB(e.args)
+              break
           }
         })
         window.addEventListener('hashchange', onHashChanged)
@@ -133,7 +135,7 @@ const
         const e = contentB()
         if (e) {
           switch (e.t) {
-            case WaveEventType.Data:
+            case WaveEventType.Receive:
               {
                 const page = e.page
                 return (

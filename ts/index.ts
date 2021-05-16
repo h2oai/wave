@@ -290,9 +290,9 @@ export interface Card extends Model<Dict<any>> {
 }
 
 export enum WaveErrorCode { Unknown = 1, PageNotFound }
-export enum WaveEventType { Data, Config, Reset, Error, Exception, Connect, Disconnect }
+export enum WaveEventType { Connect, Disconnect, Config, Reset, Error, Exception, Receive, Send }
 export type WaveEvent = {
-  t: WaveEventType.Data, page: Page
+  t: WaveEventType.Receive, page: Page
 } | {
   t: WaveEventType.Config, username: S, editable: B
 } | {
@@ -305,9 +305,37 @@ export type WaveEvent = {
   t: WaveEventType.Connect
 } | {
   t: WaveEventType.Disconnect, retry: U
+} | {
+  t: WaveEventType.Send, args: any
 }
 
 type WaveEventHandler = (e: WaveEvent) => void
+
+/** A set of changes to be made to a remote Page. */
+export interface ChangeSet {
+  get(key: S): Ref
+  put(key: S, data: any): void
+  set(key: S, value: any): void
+  del(key: S): void
+  drop(): void
+  push(): void
+}
+
+interface Ref {
+  get(key: S): Ref
+  set(key: S, value: any): void
+}
+
+/** The Wave client. */
+export interface Wave {
+  readonly args: Rec
+  readonly events: Rec
+  readonly refreshRateB: Box<U>
+  readonly busyB: Box<B>
+  connect(handle: WaveEventHandler): void
+  checkout(path?: S): ChangeSet
+  push(): void
+}
 
 let guid = 0
 export const
@@ -780,11 +808,11 @@ const
             const page = exec(_page || newPage(), msg.d)
             if (_page !== page) {
               _page = page
-              if (page) handle({ t: WaveEventType.Data, page })
+              if (page) handle({ t: WaveEventType.Receive, page })
             }
           } else if (msg.p) {
             const page = _page = load(msg.p)
-            handle({ t: WaveEventType.Data, page })
+            handle({ t: WaveEventType.Receive, page })
           } else if (msg.e) {
             handle({ t: WaveEventType.Error, code: errorCodes[msg.e] || WaveErrorCode.Unknown })
           } else if (msg.r) {
@@ -804,80 +832,58 @@ const
       // TODO emit Exception?
       console.error('A websocket error was encountered.', e) // XXX
     }
-  }
-
-/** A set of changes to be made to a remote Page. */
-export interface ChangeSet {
-  get(key: S): Ref
-  put(key: S, data: any): void
-  set(key: S, value: any): void
-  del(key: S): void
-  drop(): void
-  push(): void
-}
-
-interface Ref {
-  get(key: S): Ref
-  set(key: S, value: any): void
-}
-
-/** The Wave client. */
-export interface Wave {
-  readonly args: Rec
-  readonly events: Rec
-  readonly refreshRateB: Box<U>
-  readonly busyB: Box<B>
-  connect(handle: WaveEventHandler): void
-  checkout(path?: S): ChangeSet
-  push(): void
-}
-
-export const wave: Wave = {
-  args: {},
-  events: {},
-  refreshRateB: box(-1),
-  busyB: box(false),
-  connect: (handle: WaveEventHandler) => reconnect(toSocketAddress('/_s'), handle),
-  checkout: (path?: S): ChangeSet => {
-    path = path || slug
+  },
+  ctor = (): Wave => {
     const
-      ops: OpD[] = [],
-      ref = (k: S): Ref => {
+      args = {},
+      events = {},
+      refreshRateB = box(-1),
+      busyB = box(false),
+      connect = (handle: WaveEventHandler) => reconnect(toSocketAddress('/_s'), handle),
+      checkout = (path?: S): ChangeSet => {
+        path = path || slug
         const
-          get = (key: S): Ref => ref(`${k}.${key}`),
-          set = (key: S, value: any) => ops.push({ k: keyseq(k, key), v: value })
-        return { get, set }
+          ops: OpD[] = [],
+          ref = (k: S): Ref => {
+            const
+              get = (key: S): Ref => ref(`${k}.${key}`),
+              set = (key: S, value: any) => ops.push({ k: keyseq(k, key), v: value })
+            return { get, set }
+          },
+          get = (key: S) => ref(key),
+          put = (key: S, data: any) => ops.push({ k: key, d: data }),
+          set = (key: S, value: any) => ops.push({ k: keyseq(key), v: value }),
+          del = (key: S) => ops.push({ k: key }),
+          drop = () => ops.push({}),
+          push = () => {
+            if (!_socket) return
+            const opsd: OpsD = { d: ops }
+            _socket.send(`* ${path} ${JSON.stringify(opsd)}`)
+          }
+        return { get, put, set, del, drop, push }
       },
-      get = (key: S) => ref(key),
-      put = (key: S, data: any) => ops.push({ k: key, d: data }),
-      set = (key: S, value: any) => ops.push({ k: keyseq(key), v: value }),
-      del = (key: S) => ops.push({ k: key }),
-      drop = () => ops.push({}),
       push = () => {
         if (!_socket) return
-        const opsd: OpsD = { d: ops }
-        _socket.send(`* ${path} ${JSON.stringify(opsd)}`)
+        const data: Dict<any> = { ...args }
+        clearRec(args)
+        if (Object.keys(events).length) {
+          data[''] = { ...events }
+          clearRec(events)
+        }
+        _socket.send(`@ ${slug} ${JSON.stringify(data)}`)
+        // TODO emit args for tracking
+        wave.busyB(true)
       }
-    return { get, put, set, del, drop, push }
-  },
-  push: () => {
-    if (!_socket) return
-    const args: Dict<any> = { ...wave.args }
-    clearRec(wave.args)
-    if (Object.keys(wave.events).length) {
-      args[''] = { ...wave.events }
-      clearRec(wave.events)
-    }
-    _socket.send(`@ ${slug} ${JSON.stringify(args)}`)
-    wave.busyB(true)
-  },
-}
 
-on(wave.refreshRateB, r => {
-  // If we receive a change in refresh rate once the page has been loaded, close the socket.
-  // The socket onclose handler will reconnect using the refresh rate if necessary.
-  if (r < 0) return
-  if (_socket) _socket.close()
-});
+    on(refreshRateB, r => {
+      // If we receive a change in refresh rate once the page has been loaded, close the socket.
+      // The socket onclose handler will reconnect using the refresh rate if necessary.
+      if (r < 0) return
+      if (_socket) _socket.close()
+    })
 
+    return { args, events, refreshRateB, busyB, connect, checkout, push }
+  }
+
+export const wave: Wave = ctor();
 (window as any).wave = wave
