@@ -15,7 +15,13 @@
 import { box, boxed, Disposable, on, U, wave, WaveEvent } from 'h2o-wave'
 import * as React from 'react'
 
-export const contentB = box<WaveEvent | null>(null)
+export const
+  contentB = box<WaveEvent | null>(null),
+  config = {
+    username: '',
+    editable: false,
+  }
+
 
 //
 // React Component + Dataflow

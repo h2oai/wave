@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { border, clas, cssVar, padding } from './theme'
-import { bond } from './ui'
+import { bond, config } from './ui'
 
 const
   css = stylesheet({
@@ -172,7 +172,7 @@ export const
       if (n >= cap) {
         for (let i = 0; i < n - cap + 1; i++) page.set(`${name} data ${_keys[i]}`, null)
       }
-      const cm: ChatMessage = { u: wave.username ?? '?', m: input }
+      const cm: ChatMessage = { u: config.username ?? '?', m: input }
       page.set(`${name} data ${(new Date()).toISOString()}`, JSON.stringify(cm))
       page.push()
     })

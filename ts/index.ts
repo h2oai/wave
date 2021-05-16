@@ -827,7 +827,6 @@ export interface Wave {
   readonly events: Rec
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
-  readonly argsB: Box<Rec>
   connect(handle: WaveEventHandler): void
   checkout(path?: S): ChangeSet
   push(): void
@@ -838,7 +837,6 @@ export const wave: Wave = {
   events: {},
   refreshRateB: box(-1),
   busyB: box(false),
-  argsB: box({}),
   connect: (handle: WaveEventHandler) => reconnect(toSocketAddress('/_s'), handle),
   checkout: (path?: S): ChangeSet => {
     path = path || slug
@@ -871,7 +869,6 @@ export const wave: Wave = {
       clearRec(wave.events)
     }
     _socket.send(`@ ${slug} ${JSON.stringify(args)}`)
-    wave.argsB(args)
     wave.busyB(true)
   },
 }

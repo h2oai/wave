@@ -21,7 +21,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
 import { clas, cssVar, pc, themeB } from './theme'
-import { bond, contentB } from './ui'
+import { bond, config, contentB } from './ui'
 
 const
   css = stylesheet({
@@ -57,8 +57,6 @@ const
     },
   })
 
-let editable = false
-
 const
   BusyOverlay = bond(() => {
     let
@@ -91,7 +89,7 @@ const
       render = () => (
         <div className={css.notFoundOverlay}>
           <Logo />
-          {editable && (
+          {config.editable && (
             <>
               <Fluent.DefaultButton onClick={onClick} >Edit this page...</Fluent.DefaultButton>
               <LayoutPicker visibleB={pickingLayoutB} />
@@ -124,7 +122,8 @@ const
               window.location.reload()
               break
             case WaveEventType.Config:
-              editable = e.editable
+              config.username = e.username
+              config.editable = e.editable
               break
           }
         })
