@@ -7,4 +7,5 @@ matplotlib
 plotly
 altair
 vega-datasets
-h2o_wave
+scikit-learn
+h2o_wave[ml]
