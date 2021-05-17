@@ -21,7 +21,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
 import { clas, cssVar, pc, themeB } from './theme'
-import { bond, config, contentB, wave, busyB } from './ui'
+import { bond, busyB, config, contentB, listen, wave } from './ui'
 
 const
   css = stylesheet({
@@ -109,6 +109,7 @@ const
         wave.push()
       },
       init = () => {
+        listen()
         window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {

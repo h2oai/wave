@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import { DialogType, IDropdownOption } from '@fluentui/react'
-import { B, Box, box, Card, checkout, Dict, Model, Page, parseU, S, U, WaveEventType, xid } from 'h2o-wave'
+import { B, Box, box, Card, Dict, Model, Page, parseU, S, U, WaveEventType, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
@@ -22,7 +22,7 @@ import { defaultLayoutDef, editorActionB, EditorActionT, LayoutDef, layoutDefs, 
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
 import { border, cssVar } from './theme'
-import { bond, contentB } from './ui'
+import { bond, contentB, wave } from './ui'
 
 /**
  * WARNING: Experimental and subject to change.
@@ -203,7 +203,7 @@ const
     const
       onDismiss = () => { editorActionB(noAction) },
       save = () => {
-        const page = checkout()
+        const page = wave.fork()
         if (isNew) {
           const card: Dict<any> = { ...{ view }, ...original, ...changes }
           page.put(cardName, card)
@@ -438,7 +438,7 @@ export const
         const
           { layoutDef, width } = pageSetupB(),
           layout: Layout = { ...layoutDef.layout },
-          page = checkout()
+          page = wave.fork()
 
         if (width) layout.width = `${width}px`
 
@@ -505,7 +505,7 @@ export const
               const
                 { name } = action,
                 onAccept = () => {
-                  const page = checkout()
+                  const page = wave.fork()
                   page.del(name)
                   page.push()
                 }
@@ -540,7 +540,7 @@ export const
                 }),
                 save = () => {
                   const
-                    page = checkout(),
+                    page = wave.fork(),
                     { layoutDef, width } = pageSetupB(),
                     layout = { ...layoutDef.layout }
                   if (width) layout.width = `${width}px`

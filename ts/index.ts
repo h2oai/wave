@@ -337,9 +337,8 @@ interface Ref {
 
 /** The Wave client. */
 export interface Wave {
-  readonly args: Rec
-  readonly events: Rec
-  push(): void
+  fork(path?: S): ChangeSet
+  push(path?: S, data?: any): void
 }
 
 let guid = 0
@@ -361,11 +360,6 @@ export function unpack<T>(data: any): T {
       ? data.list()
       : data
 }
-
-let
-  _socket: WebSocket | null = null,
-  _page: XPage | null = null,
-  _backoff = 1
 
 const
   slug = window.location.pathname,
@@ -771,9 +765,6 @@ const
     return page
   },
   keyseq = (...keys: S[]): S => keys.join(' '),
-  clearRec = (a: Rec) => {
-    for (const k in a) delete a[k]
-  },
   toSocketAddress = (path: S): S => {
     const
       { protocol, host } = window.location,
@@ -783,33 +774,14 @@ const
   refreshRateB = box(-1) // TODO ugly; refactor
 
 export const
-  checkout = (path?: S): ChangeSet => {
-    path = path || slug
-    const
-      ops: OpD[] = [],
-      ref = (k: S): Ref => {
-        const
-          get = (key: S): Ref => ref(`${k}.${key}`),
-          set = (key: S, value: any) => ops.push({ k: keyseq(k, key), v: value })
-        return { get, set }
-      },
-      get = (key: S) => ref(key),
-      put = (key: S, data: any) => ops.push({ k: key, d: data }),
-      set = (key: S, value: any) => ops.push({ k: keyseq(key), v: value }),
-      del = (key: S) => ops.push({ k: key }),
-      drop = () => ops.push({}),
-      push = () => {
-        if (!_socket) return
-        const opsd: OpsD = { d: ops }
-        _socket.send(`* ${path} ${JSON.stringify(opsd)}`)
-      }
-    return { get, put, set, del, drop, push }
-  },
   disconnect = () => refreshRateB(0),
   connect = (handle: WaveEventHandler): Wave => {
+    let
+      _socket: WebSocket | null = null,
+      _page: XPage | null = null,
+      _backoff = 1
+
     const
-      args = {},
-      events = {},
       reconnect = (address: S) => {
         const retry = () => reconnect(address)
         const socket = new WebSocket(address)
@@ -868,18 +840,35 @@ export const
           console.error('A websocket error was encountered.', e) // XXX
         }
       },
-      push = () => {
+      push = (path?: S, data?: any) => {
         if (!_socket) return
-        const data: Dict<any> = { ...args }
-        clearRec(args)
-        if (Object.keys(events).length) {
-          data[''] = { ...events }
-          clearRec(events)
-        }
-        _socket.send(`@ ${slug} ${JSON.stringify(data)}`)
-        // TODO emit args for tracking
+        path = path || slug
+        data = data || {}
+        _socket.send(`@ ${path} ${JSON.stringify(data)}`)
         handle({ t: WaveEventType.Send, data })
         handle(busyEvent)
+      },
+      fork = (path?: S): ChangeSet => {
+        path = path || slug
+        const
+          ops: OpD[] = [],
+          ref = (k: S): Ref => {
+            const
+              get = (key: S): Ref => ref(`${k}.${key}`),
+              set = (key: S, value: any) => ops.push({ k: keyseq(k, key), v: value })
+            return { get, set }
+          },
+          get = (key: S) => ref(key),
+          put = (key: S, data: any) => ops.push({ k: key, d: data }),
+          set = (key: S, value: any) => ops.push({ k: keyseq(key), v: value }),
+          del = (key: S) => ops.push({ k: key }),
+          drop = () => ops.push({}),
+          push = () => {
+            if (!_socket) return
+            const opsd: OpsD = { d: ops }
+            _socket.send(`* ${path} ${JSON.stringify(opsd)}`)
+          }
+        return { get, put, set, del, drop, push }
       }
 
     on(refreshRateB, r => {
@@ -891,7 +880,7 @@ export const
 
     reconnect(toSocketAddress('/_s'))
 
-    return { args, events, push }
+    return { fork, push }
   };
 
 (window as any).connect = connect

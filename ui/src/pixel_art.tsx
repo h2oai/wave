@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { checkout, Model, Rec, S, U, unpack } from 'h2o-wave'
+import { Model, Rec, S, U, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 const
   pixelSize = 20,
@@ -79,7 +79,7 @@ export const
     let brush = '#000'
     const
       paint = (i: U) => {
-        const page = checkout()
+        const page = wave.fork()
         page.set(`${name} data ${i}`, brush === 'none' ? null : [brush])
         page.push()
       },
