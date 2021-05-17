@@ -339,7 +339,6 @@ interface Ref {
 export interface Wave {
   readonly args: Rec
   readonly events: Rec
-  readonly refreshRateB: Box<U>
   push(): void
 }
 
@@ -780,7 +779,8 @@ const
       { protocol, host } = window.location,
       p = protocol === 'https:' ? 'wss' : 'ws'
     return p + "://" + host + path
-  }
+  },
+  refreshRateB = box(-1) // TODO ugly; refactor
 
 export const
   checkout = (path?: S): ChangeSet => {
@@ -805,11 +805,11 @@ export const
       }
     return { get, put, set, del, drop, push }
   },
+  disconnect = () => refreshRateB(0),
   connect = (handle: WaveEventHandler): Wave => {
     const
       args = {},
       events = {},
-      refreshRateB = box(-1),
       reconnect = (address: S) => {
         const retry = () => reconnect(address)
         const socket = new WebSocket(address)
@@ -891,7 +891,7 @@ export const
 
     reconnect(toSocketAddress('/_s'))
 
-    return { args, events, refreshRateB, push }
+    return { args, events, push }
   };
 
 (window as any).connect = connect
