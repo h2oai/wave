@@ -335,8 +335,8 @@ interface Ref {
 
 /** The Wave client. */
 export interface Wave {
-  fork(path?: S): ChangeSet
-  push(path?: S, data?: any): void
+  fork(): ChangeSet
+  push(data: any): void
 }
 
 let guid = 0
@@ -360,7 +360,6 @@ export function unpack<T>(data: any): T {
 }
 
 const
-  slug = window.location.pathname,
   errorCodes: Dict<WaveErrorCode> = {
     not_found: WaveErrorCode.PageNotFound,
   },
@@ -780,6 +779,7 @@ export const
       _backoff = 1
 
     const
+      slug = window.location.pathname,
       reconnect = (address: S) => {
         const retry = () => reconnect(address)
         const socket = new WebSocket(address)
@@ -838,15 +838,12 @@ export const
           console.error('A websocket error was encountered.', e) // XXX
         }
       },
-      push = (path?: S, data?: any) => {
+      push = (data: any) => {
         if (!_socket) return
-        path = path || slug
-        data = data || {}
-        _socket.send(`@ ${path} ${JSON.stringify(data)}`)
+        _socket.send(`@ ${slug} ${JSON.stringify(data || {})}`)
         handle(busyEvent)
       },
-      fork = (path?: S): ChangeSet => {
-        path = path || slug
+      fork = (): ChangeSet => {
         const
           ops: OpD[] = [],
           ref = (k: S): Ref => {
@@ -863,7 +860,7 @@ export const
           push = () => {
             if (!_socket) return
             const opsd: OpsD = { d: ops }
-            _socket.send(`* ${path} ${JSON.stringify(opsd)}`)
+            _socket.send(`* ${slug} ${JSON.stringify(opsd)}`)
           }
         return { get, put, set, del, drop, push }
       }

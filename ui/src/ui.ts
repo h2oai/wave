@@ -137,7 +137,7 @@ export const
         data[''] = { ...events }
         clearRec(events)
       }
-      _wave.push(undefined, data)
+      _wave.push(data)
       argsB(data)
     },
     fork: (): ChangeSet => {
