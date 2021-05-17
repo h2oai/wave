@@ -74,8 +74,15 @@ const
     for (const k in a) delete a[k]
   }
 
-export
-  const jump = (key: any, value: any) => {
+export const
+  contentB = box<WaveEvent | null>(null),
+  argsB = box<any>({}),
+  busyB = box<B>(false),
+  config = {
+    username: '',
+    editable: false,
+  },
+  jump = (key: any, value: any) => {
     if (value.startsWith('#')) {
       window.location.hash = value.substr(1)
       return
@@ -94,13 +101,6 @@ export
       t = window.setTimeout(() => (f(e), t = null), timeout)
     }
   },
-  contentB = box<WaveEvent | null>(null),
-  argsB = box<any>({}),
-  busyB = box<B>(false),
-  config = {
-    username: '',
-    editable: false,
-  },
   listen = () => {
     _wave = connect(e => {
       switch (e.t) {
@@ -116,9 +116,6 @@ export
         case WaveEventType.Config:
           config.username = e.username
           config.editable = e.editable
-          break
-        case WaveEventType.Send:
-          argsB(e.data)
           break
         case WaveEventType.Busy:
           busyB(true)
@@ -141,6 +138,7 @@ export
         clearRec(events)
       }
       _wave.push(undefined, data)
+      argsB(data)
     },
     fork: (): ChangeSet => {
       if (!_wave) throw new Error('not initialized')

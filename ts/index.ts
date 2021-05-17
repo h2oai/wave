@@ -290,7 +290,7 @@ export interface Card extends Model<Dict<any>> {
 }
 
 export enum WaveErrorCode { Unknown = 1, PageNotFound }
-export enum WaveEventType { Connect, Disconnect, Config, Reset, Error, Exception, Receive, Send, Busy, Free }
+export enum WaveEventType { Connect, Disconnect, Config, Reset, Error, Exception, Receive, Busy, Free }
 export type WaveEvent = {
   t: WaveEventType.Receive, page: Page
 } | {
@@ -305,8 +305,6 @@ export type WaveEvent = {
   t: WaveEventType.Connect
 } | {
   t: WaveEventType.Disconnect, retry: U
-} | {
-  t: WaveEventType.Send, data: any
 } | {
   t: WaveEventType.Busy
 } | {
@@ -845,7 +843,6 @@ export const
         path = path || slug
         data = data || {}
         _socket.send(`@ ${path} ${JSON.stringify(data)}`)
-        handle({ t: WaveEventType.Send, data })
         handle(busyEvent)
       },
       fork = (path?: S): ChangeSet => {
