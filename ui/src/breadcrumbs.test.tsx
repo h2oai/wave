@@ -17,6 +17,7 @@ import { fireEvent, render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './breadcrumbs'
+import { wave } from './ui'
 
 const
   name = 'breadcrumbs',
@@ -36,7 +37,7 @@ const
 describe('Breadcrumbs.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
-    T.wave.args[name] = null
+    wave.args[name] = null
     jest.clearAllMocks()
   })
 
@@ -47,28 +48,28 @@ describe('Breadcrumbs.tsx', () => {
 
   it('Sets args - init', () => {
     render(<View {...breadcrumbsProps} />)
-    expect(T.wave.args[name]).toBeNull()
+    expect(wave.args[name]).toBeNull()
   })
 
   it('Sets args and calls sync on click', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByText } = render(<View {...breadcrumbsProps} />)
     fireEvent.click(getByText(label))
 
-    expect(T.wave.args[name]).toBe(true)
+    expect(wave.args[name]).toBe(true)
     expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not set args and calls sync on click when name starts with hash', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByText } = render(<View {...breadcrumbsPropsHash} />)
     fireEvent.click(getByText(label))
 
-    expect(T.wave.args[name]).toBeNull()
+    expect(wave.args[name]).toBeNull()
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 

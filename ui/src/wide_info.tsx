@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { Model, S, wave } from 'h2o-wave'
+import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { clas, cssVar, pc } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 const
   iconStyles: Fluent.IIconStyles = { root: { fontSize: 80 } },

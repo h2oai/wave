@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Dict, Id, S, wave } from 'h2o-wave'
+import { B, Dict, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
 import { displayMixin } from './theme'
 import { XToolTip } from './tooltip'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a button.

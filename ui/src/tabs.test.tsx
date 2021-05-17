@@ -14,16 +14,16 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Tabs, XTabs } from './tabs'
+import { wave } from './ui'
 
 const name = 'tabs'
 const tabsProps: Tabs = { name, items: [{ name }] }
 
 describe('Tabs.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.wave.args[name] = null })
+  beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XTabs model={tabsProps} />)
@@ -38,18 +38,18 @@ describe('Tabs.tsx', () => {
 
   it('Sets args and calls sync on click', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByRole } = render(<XTabs model={tabsProps} />)
     fireEvent.click(getByRole('tab'))
 
-    expect(T.wave.args[name]).toBe(name)
+    expect(wave.args[name]).toBe(name)
     expect(pushMock).toHaveBeenCalled()
   })
   it('Does not call sync on click - args not changed', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
-    T.wave.args[name] = name
+    wave.push = pushMock
+    wave.args[name] = name
 
     const { getByRole } = render(<XTabs model={tabsProps} />)
     fireEvent.click(getByRole('tab'))

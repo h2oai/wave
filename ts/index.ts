@@ -332,7 +332,6 @@ export interface Wave {
   readonly events: Rec
   readonly refreshRateB: Box<U>
   readonly busyB: Box<B>
-  connect(handle: WaveEventHandler): void
   checkout(path?: S): ChangeSet
   push(): void
 }
@@ -774,72 +773,73 @@ const
       { protocol, host } = window.location,
       p = protocol === 'https:' ? 'wss' : 'ws'
     return p + "://" + host + path
-  },
-  reconnect = (address: S, handle: WaveEventHandler) => {
-    const retry = () => reconnect(address, handle)
-    const socket = new WebSocket(address)
-    socket.onopen = function () {
-      _socket = socket
-      handle({ t: WaveEventType.Connect })
-      _backoff = 1
-      const hash = window.location.hash
-      socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
-    }
-    socket.onclose = function () {
-      const refreshRate = wave.refreshRateB()
-      if (refreshRate === 0) return
+  }
 
-      // TODO handle refreshRate > 0 case
-
-      _socket = null
-      _backoff *= 2
-      if (_backoff > 16) _backoff = 16
-      handle({ t: WaveEventType.Disconnect, retry: _backoff })
-      window.setTimeout(retry, _backoff * 1000)
-    }
-    socket.onmessage = function (e) {
-      if (!e.data) return
-      if (!e.data.length) return
-      wave.busyB(false)
-      for (const line of e.data.split('\n')) {
-        try {
-          const msg = JSON.parse(line) as OpsD
-          if (msg.d) {
-            const page = exec(_page || newPage(), msg.d)
-            if (_page !== page) {
-              _page = page
-              if (page) handle({ t: WaveEventType.Receive, page })
-            }
-          } else if (msg.p) {
-            const page = _page = load(msg.p)
-            handle({ t: WaveEventType.Receive, page })
-          } else if (msg.e) {
-            handle({ t: WaveEventType.Error, code: errorCodes[msg.e] || WaveErrorCode.Unknown })
-          } else if (msg.r) {
-            handle({ t: WaveEventType.Reset })
-          } else if (msg.m) {
-            const { u: username, e: editable } = msg.m
-            handle({ t: WaveEventType.Config, username, editable })
-          }
-        } catch (error) {
-          console.error(error)
-          handle({ t: WaveEventType.Exception, error })
-        }
-      }
-    }
-    socket.onerror = function (e: Event) {
-      wave.busyB(false)
-      // TODO emit Exception?
-      console.error('A websocket error was encountered.', e) // XXX
-    }
-  },
-  ctor = (): Wave => {
+export const
+  connect = (handle: WaveEventHandler): Wave => {
     const
       args = {},
       events = {},
       refreshRateB = box(-1),
       busyB = box(false),
-      connect = (handle: WaveEventHandler) => reconnect(toSocketAddress('/_s'), handle),
+      reconnect = (address: S) => {
+        const retry = () => reconnect(address)
+        const socket = new WebSocket(address)
+        socket.onopen = function () {
+          _socket = socket
+          handle({ t: WaveEventType.Connect })
+          _backoff = 1
+          const hash = window.location.hash
+          socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
+        }
+        socket.onclose = function () {
+          const refreshRate = refreshRateB()
+          if (refreshRate === 0) return
+
+          // TODO handle refreshRate > 0 case
+
+          _socket = null
+          _backoff *= 2
+          if (_backoff > 16) _backoff = 16
+          handle({ t: WaveEventType.Disconnect, retry: _backoff })
+          window.setTimeout(retry, _backoff * 1000)
+        }
+        socket.onmessage = function (e) {
+          if (!e.data) return
+          if (!e.data.length) return
+          busyB(false)
+          for (const line of e.data.split('\n')) {
+            try {
+              const msg = JSON.parse(line) as OpsD
+              if (msg.d) {
+                const page = exec(_page || newPage(), msg.d)
+                if (_page !== page) {
+                  _page = page
+                  if (page) handle({ t: WaveEventType.Receive, page })
+                }
+              } else if (msg.p) {
+                const page = _page = load(msg.p)
+                handle({ t: WaveEventType.Receive, page })
+              } else if (msg.e) {
+                handle({ t: WaveEventType.Error, code: errorCodes[msg.e] || WaveErrorCode.Unknown })
+              } else if (msg.r) {
+                handle({ t: WaveEventType.Reset })
+              } else if (msg.m) {
+                const { u: username, e: editable } = msg.m
+                handle({ t: WaveEventType.Config, username, editable })
+              }
+            } catch (error) {
+              console.error(error)
+              handle({ t: WaveEventType.Exception, error })
+            }
+          }
+        }
+        socket.onerror = function (e: Event) {
+          busyB(false)
+          // TODO emit Exception?
+          console.error('A websocket error was encountered.', e) // XXX
+        }
+      },
       checkout = (path?: S): ChangeSet => {
         path = path || slug
         const
@@ -872,7 +872,7 @@ const
         }
         _socket.send(`@ ${slug} ${JSON.stringify(data)}`)
         // TODO emit args for tracking
-        wave.busyB(true)
+        busyB(true)
       }
 
     on(refreshRateB, r => {
@@ -882,8 +882,9 @@ const
       if (_socket) _socket.close()
     })
 
-    return { args, events, refreshRateB, busyB, connect, checkout, push }
-  }
+    reconnect(toSocketAddress('/_s'))
 
-export const wave: Wave = ctor();
-(window as any).wave = wave
+    return { args, events, refreshRateB, busyB, checkout, push }
+  };
+
+(window as any).connect = connect

@@ -16,6 +16,7 @@ import { fireEvent, render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './toolbar'
+import { wave } from './ui'
 
 const
   name = 'toolbar',
@@ -35,7 +36,7 @@ const
 
 describe('Toolbar.tsx', () => {
   beforeEach(() => {
-    T.wave.args[commandName] = null
+    wave.args[commandName] = null
     jest.clearAllMocks()
   })
 
@@ -46,7 +47,7 @@ describe('Toolbar.tsx', () => {
 
   it('Sets args and calls sync on click - with value attr', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByText } = render(<View {...toolbarProps} {...{
       state: {
@@ -61,28 +62,28 @@ describe('Toolbar.tsx', () => {
     fireEvent.click(getByText(commandName))
 
     expect(pushMock).toBeCalled()
-    expect(T.wave.args[commandName]).toBe(commandValue)
+    expect(wave.args[commandName]).toBe(commandValue)
   })
 
   it('Sets args and calls sync on click - without value attr', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByText } = render(<View {...toolbarProps} />)
     fireEvent.click(getByText(commandName))
 
     expect(pushMock).toBeCalled()
-    expect(T.wave.args[commandName]).toBe(true)
+    expect(wave.args[commandName]).toBe(true)
   })
 
   it('Does not set args and calls sync on click when command name starts with hash', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByText } = render(<View {...toolbarPropsWithHash} />)
 
     fireEvent.click(getByText(commandNameWithHash))
-    expect(T.wave.args[commandNameWithHash]).toBe(false)
+    expect(wave.args[commandNameWithHash]).toBe(false)
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 

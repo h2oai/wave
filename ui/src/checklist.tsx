@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Box, Id, on, S, wave } from 'h2o-wave'
+import { B, box, Box, Id, on, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
 import { displayMixin, margin } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a set of checkboxes.

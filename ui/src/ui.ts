@@ -12,17 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { box, boxed, Disposable, on, U, wave, WaveEvent } from 'h2o-wave'
+import { box, boxed, connect, Disposable, on, U, WaveEvent, WaveEventType } from 'h2o-wave'
 import * as React from 'react'
-
-export const
-  contentB = box<WaveEvent | null>(null),
-  argsB = box<any>({}),
-  config = {
-    username: '',
-    editable: false,
-  }
-
 
 //
 // React Component + Dataflow
@@ -93,4 +84,30 @@ export
       if (t) window.clearTimeout(t)
       t = window.setTimeout(() => (f(e), t = null), timeout)
     }
-  }
+  },
+  contentB = box<WaveEvent | null>(null),
+  argsB = box<any>({}),
+  config = {
+    username: '',
+    editable: false,
+  },
+  wave = connect(e => {
+    switch (e.t) {
+      case WaveEventType.Receive:
+      case WaveEventType.Error:
+      case WaveEventType.Exception:
+      case WaveEventType.Disconnect:
+        contentB(e)
+        break
+      case WaveEventType.Reset:
+        window.location.reload()
+        break
+      case WaveEventType.Config:
+        config.username = e.username
+        config.editable = e.editable
+        break
+      case WaveEventType.Send:
+        argsB(e.args)
+        break
+    }
+  })

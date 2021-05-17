@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { box, on, wave, WaveErrorCode, WaveEventType } from 'h2o-wave'
+import { box, on, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
@@ -21,7 +21,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
 import { clas, cssVar, pc, themeB } from './theme'
-import { bond, config, contentB, argsB } from './ui'
+import { bond, config, contentB, wave } from './ui'
 
 const
   css = stylesheet({
@@ -109,26 +109,6 @@ const
         wave.push()
       },
       init = () => {
-        wave.connect(e => {
-          switch (e.t) {
-            case WaveEventType.Receive:
-            case WaveEventType.Error:
-            case WaveEventType.Exception:
-            case WaveEventType.Disconnect:
-              contentB(e)
-              break
-            case WaveEventType.Reset:
-              window.location.reload()
-              break
-            case WaveEventType.Config:
-              config.username = e.username
-              config.editable = e.editable
-              break
-            case WaveEventType.Send:
-              argsB(e.args)
-              break
-          }
-        })
         window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {
@@ -174,7 +154,7 @@ const
         window.removeEventListener('hashchange', onHashChanged)
       }
 
-    return { init, render, dispose, contentB, theme: themeB }
+    return { init, render, dispose, contentB, themeB }
   })
 
 export default App

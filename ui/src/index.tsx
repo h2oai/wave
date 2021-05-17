@@ -19,7 +19,7 @@ import './cards'
 import './index.scss'
 import Router from './router'
 import * as serviceWorker from './serviceWorker'
-import { defaultTheme } from "./theme"
+import { defaultTheme } from './theme'
 
 loadTheme({
   defaultFontStyle: { fontFamily: 'Inter' },

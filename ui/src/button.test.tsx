@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Buttons, XButtons, XStandAloneButton } from './button'
+import { wave } from './ui'
 
 const name = 'test-btn'
 const hashName = `#${name}`
@@ -24,7 +24,7 @@ const btnPropsNameHash: Buttons = { items: [{ button: { name: hashName, label: n
 describe('Button.tsx', () => {
   beforeEach(() => {
     window.location.hash = ''
-    T.wave.args[name] = null
+    wave.args[name] = null
     jest.clearAllMocks()
   })
 
@@ -61,16 +61,16 @@ describe('Button.tsx', () => {
       btnProps: Buttons = { items: [{ button: { name, label: 'btn-label' } }] },
       { getByText } = render(<XButtons model={btnProps} />)
 
-    T.wave.push = pushMock
+    wave.push = pushMock
     fireEvent.click(getByText('btn-label'))
-    T.wave.args[name] = null
+    wave.args[name] = null
   })
 
   it('Calls sync() after click', () => {
     const pushMock = jest.fn()
     const { getByText } = render(<XButtons model={btnProps} />)
 
-    T.wave.push = pushMock
+    wave.push = pushMock
     fireEvent.click(getByText(name))
 
     expect(pushMock).toHaveBeenCalled()
@@ -80,14 +80,14 @@ describe('Button.tsx', () => {
     const { getByText } = render(<XButtons model={btnProps} />)
     fireEvent.click(getByText(name))
 
-    expect(T.wave.args[name]).toBe(true)
+    expect(wave.args[name]).toBe(true)
   })
 
   it('Sets args after click - specified value', () => {
     const { getByText } = render(<XButtons model={{ items: [{ button: { name, label: name, value: 'val' } }] }} />)
     fireEvent.click(getByText(name))
 
-    expect(T.wave.args[name]).toBe('val')
+    expect(wave.args[name]).toBe('val')
   })
 
   it('Sets window.location hash when name starts with #', () => {
@@ -101,7 +101,7 @@ describe('Button.tsx', () => {
     const pushMock = jest.fn()
     const { getByText } = render(<XButtons model={btnPropsNameHash} />)
 
-    T.wave.push = pushMock
+    wave.push = pushMock
     fireEvent.click(getByText(name))
 
     expect(pushMock).toHaveBeenCalledTimes(0)
@@ -112,7 +112,7 @@ describe('Button.tsx', () => {
 
     fireEvent.click(getByText(name))
 
-    expect(T.wave.args[name]).toBe(null)
+    expect(wave.args[name]).toBe(null)
   })
 
   it('Does not set window.location hash when name does not start with #', () => {

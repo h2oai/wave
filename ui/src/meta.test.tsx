@@ -16,6 +16,7 @@ import * as T from 'h2o-wave'
 import { dialogB } from './dialog'
 import { preload } from "./meta"
 import * as N from './notification'
+import { wave } from './ui'
 
 const
   name = 'meta',
@@ -35,9 +36,9 @@ describe('Meta.tsx', () => {
 
   it('Sets refreshRate - init', () => {
     const refresh = 1
-    expect(T.wave.refreshRateB()).toBe(-1)
+    expect(wave.refreshRateB()).toBe(-1)
     preload({ ...metaProps, state: { refresh } })
-    expect(T.wave.refreshRateB()).toBe(refresh)
+    expect(wave.refreshRateB()).toBe(refresh)
   })
 
   it('Shows notification - init', () => {

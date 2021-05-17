@@ -16,6 +16,7 @@ import { fireEvent, render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { State, View } from './nav'
+import { wave } from './ui'
 
 const
   name = 'nav',
@@ -40,7 +41,7 @@ const
     changed: T.box(false)
   }
 describe('Nav.tsx', () => {
-  beforeEach(() => { T.wave.args[name] = null })
+  beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...navProps} />)
@@ -49,7 +50,7 @@ describe('Nav.tsx', () => {
 
   it('Sets args - init', () => {
     render(<View {...navProps} />)
-    expect(T.wave.args[name]).toBeNull()
+    expect(wave.args[name]).toBeNull()
   })
 
   it('Makes link active when value specified', () => {
@@ -73,23 +74,23 @@ describe('Nav.tsx', () => {
 
   it('Sets args and calls sync on click', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByTitle } = render(<View {...navProps} />)
     fireEvent.click(getByTitle(label))
 
-    expect(T.wave.args[name]).toBe(true)
+    expect(wave.args[name]).toBe(true)
     expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not set args and calls sync on click when name starts with hash', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByTitle } = render(<View {...navPropsHash} />)
     fireEvent.click(getByTitle(label))
 
-    expect(T.wave.args[name]).toBeNull()
+    expect(wave.args[name]).toBeNull()
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 

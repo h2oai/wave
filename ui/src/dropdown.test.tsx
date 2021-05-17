@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Dropdown, XDropdown } from './dropdown'
+import { wave } from './ui'
 
 const name = 'dropdown-test'
 const defaultProps: Dropdown = {
@@ -47,7 +47,7 @@ describe('Dropdown.tsx', () => {
   it('Calls qd.sync() when trigger is on', () => {
     const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, trigger: true }} />)
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A'))
@@ -58,7 +58,7 @@ describe('Dropdown.tsx', () => {
   it('Does not call qd.sync() when trigger is off', () => {
     const { getByTestId, getByText } = render(<XDropdown model={defaultProps} />)
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A'))
@@ -72,12 +72,12 @@ describe('Dropdown.tsx', () => {
     fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice A'))
 
-    expect(T.wave.args[name]).toBe('A')
+    expect(wave.args[name]).toBe('A')
   })
 
   it('Returns a single item on init', () => {
     render(<XDropdown model={{ ...defaultProps, value: 'A' }} />)
-    expect(T.wave.args[name]).toBe('A')
+    expect(wave.args[name]).toBe('A')
   })
 
   it('Returns the last item when selected more than once', () => {
@@ -88,17 +88,17 @@ describe('Dropdown.tsx', () => {
     fireEvent.click(getByTestId(name))
     fireEvent.click(getByText('Choice B'))
 
-    expect(T.wave.args[name]).toBe('B')
+    expect(wave.args[name]).toBe('B')
   })
 
   it('Returns multiple items on init', () => {
     render(<XDropdown model={{ ...defaultProps, values: ['A', 'B'] }} />)
-    expect(T.wave.args[name]).toMatchObject(['A', 'B'])
+    expect(wave.args[name]).toMatchObject(['A', 'B'])
   })
 
   it('Returns null when value not specified - init', () => {
     render(<XDropdown model={defaultProps} />)
-    expect(T.wave.args[name]).toBeNull()
+    expect(wave.args[name]).toBeNull()
   })
 
   it('Returns multiple items on select', () => {
@@ -108,7 +108,7 @@ describe('Dropdown.tsx', () => {
     fireEvent.click(getByText('Choice A').parentElement!)
     fireEvent.click(getByText('Choice B').parentElement!)
 
-    expect(T.wave.args[name]).toMatchObject(['A', 'B'])
+    expect(wave.args[name]).toMatchObject(['A', 'B'])
   })
 
   it('Shows correct selection in UI on select', () => {
@@ -125,7 +125,7 @@ describe('Dropdown.tsx', () => {
 
     fireEvent.click(getByText('Select All'))
 
-    expect(T.wave.args[name]).toMatchObject(['A', 'B', 'C', 'D'])
+    expect(wave.args[name]).toMatchObject(['A', 'B', 'C', 'D'])
   })
 
   it('Selects all options on Select all - except disabled', () => {
@@ -139,13 +139,13 @@ describe('Dropdown.tsx', () => {
 
     fireEvent.click(getByText('Select All'))
 
-    expect(T.wave.args[name]).toMatchObject(['A', 'B', 'D'])
+    expect(wave.args[name]).toMatchObject(['A', 'B', 'D'])
   })
 
   it('Calls sync on Select all - trigger enabled', () => {
     const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     fireEvent.click(getByText('Select All'))
 
@@ -157,13 +157,13 @@ describe('Dropdown.tsx', () => {
 
     fireEvent.click(getByText('Deselect All'))
 
-    expect(T.wave.args[name]).toMatchObject([])
+    expect(wave.args[name]).toMatchObject([])
   })
 
   it('Calls sync on Deselect all - trigger enabled', () => {
     const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     fireEvent.click(getByText('Deselect All'))
 

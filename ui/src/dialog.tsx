@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Box, box, S, wave } from 'h2o-wave'
+import { B, Box, box, S } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 export const dialogB: Box<Dialog | null> = box(null)
 

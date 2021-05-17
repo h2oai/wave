@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import { Pivot, PivotItem, PivotLinkFormat } from '@fluentui/react'
-import { B, Model, S, wave } from 'h2o-wave'
+import { B, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { Tab } from './tabs'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /** Create a card containing tabs for navigation. */
 interface State {

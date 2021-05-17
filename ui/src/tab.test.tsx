@@ -17,6 +17,7 @@ import { fireEvent, render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './tab'
+import { wave } from './ui'
 
 const
   name = 'tab',
@@ -32,7 +33,7 @@ const
 describe('Meta.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
-    T.wave.args[name] = null
+    wave.args[name] = null
     jest.clearAllMocks()
   })
 
@@ -43,23 +44,23 @@ describe('Meta.tsx', () => {
 
   it('Sets args and calls sync on click', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByRole } = render(<View {...tabProps} />)
     fireEvent.click(getByRole('tab'))
 
-    expect(T.wave.args[name]).toBe(true)
+    expect(wave.args[name]).toBe(true)
     expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not set args and calls sync on click - hash name', () => {
     const pushMock = jest.fn()
-    T.wave.push = pushMock
+    wave.push = pushMock
 
     const { getByRole } = render(<View {...{ ...tabProps, state: { items: [{ name: hashName }] } }} />)
     fireEvent.click(getByRole('tab'))
 
-    expect(T.wave.args[name]).toBeNull()
+    expect(wave.args[name]).toBeNull()
     expect(pushMock).toHaveBeenCalledTimes(0)
   })
 

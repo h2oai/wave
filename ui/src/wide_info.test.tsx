@@ -15,6 +15,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
+import { wave } from './ui'
 import { View } from './wide_info'
 
 const
@@ -23,7 +24,7 @@ const
 let wideInfoProps: T.Model<any>
 
 describe('WideInfo.tsx', () => {
-  beforeAll(() => T.wave.push = pushMock)
+  beforeAll(() => wave.push = pushMock)
   beforeEach(() => {
     pushMock.mockReset()
     wideInfoProps = {
@@ -42,7 +43,7 @@ describe('WideInfo.tsx', () => {
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
     expect(pushMock).not.toHaveBeenCalled()
-    expect(T.wave.args[name]).toBeUndefined()
+    expect(wave.args[name]).toBeUndefined()
   })
 
   it('Does not submit data to server if name specified but starts with #', () => {
@@ -50,7 +51,7 @@ describe('WideInfo.tsx', () => {
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
     expect(pushMock).not.toHaveBeenCalled()
-    expect(T.wave.args[name]).toBeUndefined()
+    expect(wave.args[name]).toBeUndefined()
   })
 
   it('Submits data to server if name specified without #', () => {
@@ -58,6 +59,6 @@ describe('WideInfo.tsx', () => {
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
     expect(pushMock).toHaveBeenCalled()
-    expect(T.wave.args[name]).toBe(name)
+    expect(wave.args[name]).toBe(name)
   })
 })

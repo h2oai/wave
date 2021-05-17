@@ -14,15 +14,15 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Expander, XExpander } from './expander'
+import { wave } from './ui'
 
 const name = 'expander'
 const expanderProps: Expander = { name }
 describe('Expander.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.wave.args[name] = null })
+  beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XExpander model={expanderProps} />)
@@ -37,13 +37,13 @@ describe('Expander.tsx', () => {
 
   it('Sets args - init - null', () => {
     render(<XExpander model={expanderProps} />)
-    expect(T.wave.args[name]).toBeNull()
+    expect(wave.args[name]).toBeNull()
   })
 
   it('Sets args on click', () => {
     const { getByRole } = render(<XExpander model={expanderProps} />)
     fireEvent.click(getByRole('button'))
 
-    expect(T.wave.args[name]).toBe(true)
+    expect(wave.args[name]).toBe(true)
   })
 })

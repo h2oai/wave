@@ -14,7 +14,7 @@
 
 import * as Fluent from '@fluentui/react'
 import { DialogType, IDropdownOption } from '@fluentui/react'
-import { B, Box, box, Card, Dict, Model, Page, parseU, S, U, wave, WaveEventType, xid } from 'h2o-wave'
+import { B, Box, box, Card, Dict, Model, Page, parseU, S, U, WaveEventType, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cardDefs } from './defs'
@@ -22,7 +22,7 @@ import { defaultLayoutDef, editorActionB, EditorActionT, LayoutDef, layoutDefs, 
 import { cards } from './layout'
 import { FlexBox, Layout, layoutsB, Zone } from './meta'
 import { border, cssVar } from './theme'
-import { bond, contentB } from './ui'
+import { bond, contentB, wave } from './ui'
 
 /**
  * WARNING: Experimental and subject to change.

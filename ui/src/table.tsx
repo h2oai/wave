@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Dict, Id, S, U, wave } from 'h2o-wave'
+import { B, box, Dict, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { cssVar, displayMixin, rem } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {

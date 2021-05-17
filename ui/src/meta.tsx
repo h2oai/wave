@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { box, Id, Model, on, S, U, wave } from 'h2o-wave'
+import { box, Id, Model, on, S, U } from 'h2o-wave'
 import React from 'react'
 import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
@@ -20,7 +20,7 @@ import { showNotification } from './notification'
 import { executeScript, InlineScript, installScripts, Script } from './script'
 import { themeB } from './theme'
 import { setupTracker, Tracker } from './tracking'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 
 export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>

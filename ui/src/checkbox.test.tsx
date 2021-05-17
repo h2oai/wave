@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Checkbox, XCheckbox } from './checkbox'
+import { wave } from './ui'
 
 const name = 'checkbox'
 const checkboxProps: Checkbox = { name }
@@ -25,7 +25,7 @@ describe('Checkbox.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
-    T.wave.args[name] = null
+    wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -43,7 +43,7 @@ describe('Checkbox.tsx', () => {
     const pushMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={checkboxProps} />)
 
-    T.wave.push = pushMock
+    wave.push = pushMock
     fireEvent.click(getByTestId(name))
 
     expect(pushMock).toHaveBeenCalledTimes(0)
@@ -53,7 +53,7 @@ describe('Checkbox.tsx', () => {
     const pushMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={{ ...checkboxProps, trigger: true }} />)
 
-    T.wave.push = pushMock
+    wave.push = pushMock
     fireEvent.click(getByTestId(name))
 
     expect(pushMock).toHaveBeenCalled()
@@ -63,7 +63,7 @@ describe('Checkbox.tsx', () => {
     const { getByTestId } = render(<XCheckbox model={checkboxProps} />)
     fireEvent.click(getByTestId(name))
 
-    expect(T.wave.args[name]).toBe(true)
+    expect(wave.args[name]).toBe(true)
   })
 
 })

@@ -14,15 +14,15 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { DatePicker, XDatePicker } from './date_picker'
+import { wave } from './ui'
 
 const name = 'datepicker'
 const datepickerProps: DatePicker = { name }
 describe('Datepicker.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.wave.args[name] = null })
+  beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XDatePicker model={datepickerProps} />)
@@ -37,28 +37,28 @@ describe('Datepicker.tsx', () => {
 
   it('Sets args - init - value not specified', () => {
     render(<XDatePicker model={datepickerProps} />)
-    expect(T.wave.args[name]).toBeFalsy()
+    expect(wave.args[name]).toBeFalsy()
   })
 
   it('Sets args - init - value specified', () => {
     render(<XDatePicker model={{ ...datepickerProps, value: 'Test' }} />)
-    expect(T.wave.args[name]).toBe('Test')
+    expect(wave.args[name]).toBe('Test')
   })
 
   it('Sets args - selection', () => {
-    expect(T.wave.args[name]).toBeFalsy()
+    expect(wave.args[name]).toBeFalsy()
     const { getAllByRole, getAllByText } = render(<XDatePicker model={datepickerProps} />)
     fireEvent.click(getAllByRole('combobox')[0])
     fireEvent.click(getAllByText('1')[0])
 
-    expect(T.wave.args[name]).toBeTruthy()
+    expect(wave.args[name]).toBeTruthy()
   })
 
   it('Calls sync when trigger specified', () => {
     const pushMock = jest.fn()
     const { getAllByRole, getAllByText } = render(<XDatePicker model={{ ...datepickerProps, trigger: true }} />)
 
-    T.wave.push = pushMock
+    wave.push = pushMock
     fireEvent.click(getAllByRole('combobox')[0])
     fireEvent.click(getAllByText('1')[0])
 
