@@ -69,7 +69,6 @@ let _wave: Wave | null = null
 
 const
   args: Rec = {},
-  events: Rec = {},
   clearRec = (a: Rec) => {
     for (const k in a) delete a[k]
   }
@@ -126,28 +125,30 @@ export const
       }
     })
   },
-  wave = {
+  wave = { // Public API
     args,
-    push: () => {
+    push: (data?: any) => {
       if (!_wave) return
-      const data: Dict<any> = { ...args }
-      clearRec(args)
-      if (Object.keys(events).length) {
-        data[''] = { ...events }
-        clearRec(events)
+      if (data) {
+        _wave.push(data)
+        return
       }
-      _wave.push(data)
-      argsB(data)
+      const d: Dict<any> = { ...args } // shallow clone
+      clearRec(args) // clear
+      _wave.push(d) // push clone
+      argsB(d)
     },
     fork: (): ChangeSet => {
       if (!_wave) throw new Error('not initialized')
       return _wave.fork()
     },
     emit: (name: S, event: S, data: any) => {
-      const arg: Dict<any> = {}
-      arg[event] = data
-      events[name] = arg
-      wave.push()
+      const
+        args: Dict<any> = {},
+        events: Dict<any> = {}
+      args[event] = data
+      events[name] = args
+      _wave?.push({ '': events })
     }
   };
 
