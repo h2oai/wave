@@ -875,6 +875,4 @@ export const
     reconnect(toSocketAddress('/_s'))
 
     return { fork, push }
-  };
-
-(window as any).connect = connect
+  }

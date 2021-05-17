@@ -804,10 +804,7 @@ export const
                   chart.on('element:statechange', (ev: any) => {
                     const e = ev.gEvent.originalEvent
                     if (e.stateStatus && e.state === 'selected') {
-                      if (model.name) {
-                        wave.events[model.name] = { select_marks: [e.element?.data] }
-                        wave.push()
-                      }
+                      if (model.name) wave.emit(model.name, event, [e.element?.data])
                     }
                   })
                 }
