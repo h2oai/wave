@@ -93,11 +93,20 @@ export const
     }
     wave.push()
   },
-  debounce = (timeout: U, f: (e: any) => void) => {
+  debounce = (timeout: U, f: (...args: any[]) => void) => {
     let t: number | null = null
-    return (e: any) => {
+    return (...args: any[]) => {
       if (t) window.clearTimeout(t)
-      t = window.setTimeout(() => (f(e), t = null), timeout)
+      t = window.setTimeout(() => { f(...args); t = null }, timeout)
+    }
+  },
+  throttle = (timeout: U, f: (...args: any[]) => void) => {
+    let wait = false
+    return (...args: any[]) => {
+      if (wait) return
+      f(...args)
+      wait = true
+      window.setTimeout(() => { wait = false }, timeout)
     }
   },
   listen = () => {
@@ -127,6 +136,8 @@ export const
   },
   wave = { // Public API
     args,
+    debounce,
+    throttle,
     push: (data?: any) => {
       if (!_wave) return
       if (data) {
