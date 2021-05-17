@@ -340,7 +340,6 @@ export interface Wave {
   readonly args: Rec
   readonly events: Rec
   readonly refreshRateB: Box<U>
-  checkout(path?: S): ChangeSet
   push(): void
 }
 
@@ -784,6 +783,28 @@ const
   }
 
 export const
+  checkout = (path?: S): ChangeSet => {
+    path = path || slug
+    const
+      ops: OpD[] = [],
+      ref = (k: S): Ref => {
+        const
+          get = (key: S): Ref => ref(`${k}.${key}`),
+          set = (key: S, value: any) => ops.push({ k: keyseq(k, key), v: value })
+        return { get, set }
+      },
+      get = (key: S) => ref(key),
+      put = (key: S, data: any) => ops.push({ k: key, d: data }),
+      set = (key: S, value: any) => ops.push({ k: keyseq(key), v: value }),
+      del = (key: S) => ops.push({ k: key }),
+      drop = () => ops.push({}),
+      push = () => {
+        if (!_socket) return
+        const opsd: OpsD = { d: ops }
+        _socket.send(`* ${path} ${JSON.stringify(opsd)}`)
+      }
+    return { get, put, set, del, drop, push }
+  },
   connect = (handle: WaveEventHandler): Wave => {
     const
       args = {},
@@ -847,28 +868,6 @@ export const
           console.error('A websocket error was encountered.', e) // XXX
         }
       },
-      checkout = (path?: S): ChangeSet => {
-        path = path || slug
-        const
-          ops: OpD[] = [],
-          ref = (k: S): Ref => {
-            const
-              get = (key: S): Ref => ref(`${k}.${key}`),
-              set = (key: S, value: any) => ops.push({ k: keyseq(k, key), v: value })
-            return { get, set }
-          },
-          get = (key: S) => ref(key),
-          put = (key: S, data: any) => ops.push({ k: key, d: data }),
-          set = (key: S, value: any) => ops.push({ k: keyseq(key), v: value }),
-          del = (key: S) => ops.push({ k: key }),
-          drop = () => ops.push({}),
-          push = () => {
-            if (!_socket) return
-            const opsd: OpsD = { d: ops }
-            _socket.send(`* ${path} ${JSON.stringify(opsd)}`)
-          }
-        return { get, put, set, del, drop, push }
-      },
       push = () => {
         if (!_socket) return
         const data: Dict<any> = { ...args }
@@ -892,7 +891,7 @@ export const
 
     reconnect(toSocketAddress('/_s'))
 
-    return { args, events, refreshRateB, checkout, push }
+    return { args, events, refreshRateB, push }
   };
 
 (window as any).connect = connect

@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react'
-import { B, box, ChangeSet, Dict, F, Model, on, Rec, S, to, U } from 'h2o-wave'
+import { B, box, ChangeSet, checkout, Dict, F, Model, on, Rec, S, to, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { P, simplify } from './simplify'
 import { px, spectrum } from './theme'
-import { bond, wave } from './ui'
+import { bond } from './ui'
 
 declare global {
   interface CanvasRenderingContext2D {
@@ -326,12 +326,12 @@ export const
             page.set(`${name} data ${k}`, v)
           },
           syncAttr = (k: S, v: any) => {
-            const page = wave.checkout()
+            const page = checkout()
             setAttr(page, k, v)
             page.push()
           },
           clearAttrs = (ks: S[]) => {
-            const page = wave.checkout()
+            const page = checkout()
             for (const k of ks) setAttr(page, k, null)
             page.push()
           },

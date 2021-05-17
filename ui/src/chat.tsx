@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import { TextField } from '@fluentui/react'
-import { Box, box, Dict, Model, on, Rec, S, U } from 'h2o-wave'
+import { Box, box, checkout, Dict, Model, on, Rec, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
 import { border, clas, cssVar, padding } from './theme'
-import { bond, config, wave } from './ui'
+import { bond, config } from './ui'
 
 const
   css = stylesheet({
@@ -163,7 +163,7 @@ export const
 
     on(inputB, input => {
       const
-        page = wave.checkout(),
+        page = checkout(),
         cap = state.capacity ?? 50,
         n = _keys.length
 
