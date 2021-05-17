@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { box, boxed, connect, Disposable, on, U, WaveEvent, WaveEventType } from 'h2o-wave'
+import { B, box, boxed, connect, Disposable, on, U, WaveEvent, WaveEventType } from 'h2o-wave'
 import * as React from 'react'
 
 //
@@ -87,6 +87,7 @@ export
   },
   contentB = box<WaveEvent | null>(null),
   argsB = box<any>({}),
+  busyB = box<B>(false),
   config = {
     username: '',
     editable: false,
@@ -107,7 +108,13 @@ export
         config.editable = e.editable
         break
       case WaveEventType.Send:
-        argsB(e.args)
+        argsB(e.data)
+        break
+      case WaveEventType.Busy:
+        busyB(true)
+        break
+      case WaveEventType.Free:
+        busyB(false)
         break
     }
   })

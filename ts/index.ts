@@ -290,7 +290,7 @@ export interface Card extends Model<Dict<any>> {
 }
 
 export enum WaveErrorCode { Unknown = 1, PageNotFound }
-export enum WaveEventType { Connect, Disconnect, Config, Reset, Error, Exception, Receive, Send }
+export enum WaveEventType { Connect, Disconnect, Config, Reset, Error, Exception, Receive, Send, Busy, Free }
 export type WaveEvent = {
   t: WaveEventType.Receive, page: Page
 } | {
@@ -306,8 +306,17 @@ export type WaveEvent = {
 } | {
   t: WaveEventType.Disconnect, retry: U
 } | {
-  t: WaveEventType.Send, args: any
+  t: WaveEventType.Send, data: any
+} | {
+  t: WaveEventType.Busy
+} | {
+  t: WaveEventType.Free
 }
+const
+  connectEvent: WaveEvent = { t: WaveEventType.Connect },
+  resetEvent: WaveEvent = { t: WaveEventType.Reset },
+  busyEvent: WaveEvent = { t: WaveEventType.Busy },
+  freeEvent: WaveEvent = { t: WaveEventType.Free }
 
 type WaveEventHandler = (e: WaveEvent) => void
 
@@ -331,7 +340,6 @@ export interface Wave {
   readonly args: Rec
   readonly events: Rec
   readonly refreshRateB: Box<U>
-  readonly busyB: Box<B>
   checkout(path?: S): ChangeSet
   push(): void
 }
@@ -781,13 +789,12 @@ export const
       args = {},
       events = {},
       refreshRateB = box(-1),
-      busyB = box(false),
       reconnect = (address: S) => {
         const retry = () => reconnect(address)
         const socket = new WebSocket(address)
         socket.onopen = function () {
           _socket = socket
-          handle({ t: WaveEventType.Connect })
+          handle(connectEvent)
           _backoff = 1
           const hash = window.location.hash
           socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
@@ -807,7 +814,7 @@ export const
         socket.onmessage = function (e) {
           if (!e.data) return
           if (!e.data.length) return
-          busyB(false)
+          handle(freeEvent)
           for (const line of e.data.split('\n')) {
             try {
               const msg = JSON.parse(line) as OpsD
@@ -823,7 +830,7 @@ export const
               } else if (msg.e) {
                 handle({ t: WaveEventType.Error, code: errorCodes[msg.e] || WaveErrorCode.Unknown })
               } else if (msg.r) {
-                handle({ t: WaveEventType.Reset })
+                handle(resetEvent)
               } else if (msg.m) {
                 const { u: username, e: editable } = msg.m
                 handle({ t: WaveEventType.Config, username, editable })
@@ -835,7 +842,7 @@ export const
           }
         }
         socket.onerror = function (e: Event) {
-          busyB(false)
+          handle(freeEvent)
           // TODO emit Exception?
           console.error('A websocket error was encountered.', e) // XXX
         }
@@ -872,7 +879,8 @@ export const
         }
         _socket.send(`@ ${slug} ${JSON.stringify(data)}`)
         // TODO emit args for tracking
-        busyB(true)
+        handle({ t: WaveEventType.Send, data })
+        handle(busyEvent)
       }
 
     on(refreshRateB, r => {
@@ -884,7 +892,7 @@ export const
 
     reconnect(toSocketAddress('/_s'))
 
-    return { args, events, refreshRateB, busyB, checkout, push }
+    return { args, events, refreshRateB, checkout, push }
   };
 
 (window as any).connect = connect

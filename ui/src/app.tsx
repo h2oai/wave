@@ -21,7 +21,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
 import { clas, cssVar, pc, themeB } from './theme'
-import { bond, config, contentB, wave } from './ui'
+import { bond, config, contentB, wave, busyB } from './ui'
 
 const
   css = stylesheet({
@@ -65,11 +65,11 @@ const
       spinDelay = 500, // ms
       spinB = box(false),
       render = () => (
-        <div className={wave.busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
+        <div className={busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
           <Fluent.Spinner className={css.centerFullHeight} style={{ opacity: spinB() ? 0.8 : 0 }} label='Loading...' size={Fluent.SpinnerSize.large} />
         </div>
       )
-    on(wave.busyB, busy => {
+    on(busyB, busy => {
       window.clearTimeout(spinTimeout)
       if (busy) {
         spinTimeout = window.setTimeout(() => spinB(true), spinDelay)
@@ -77,7 +77,7 @@ const
         spinB(false)
       }
     })
-    return { render, busy: wave.busyB, spinB }
+    return { render, busyB, spinB }
   }),
   NotFoundOverlay = bond(() => {
     const
