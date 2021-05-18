@@ -290,7 +290,7 @@ export interface Card extends Model<Dict<any>> {
 }
 
 export enum WaveErrorCode { Unknown = 1, PageNotFound }
-export enum WaveEventType { Connect, Disconnect, Config, Reset, Error, Exception, Receive, Busy, Free }
+export enum WaveEventType { Connect, Disconnect, Config, Reset, Error, Exception, Receive, Data }
 export type WaveEvent = {
   t: WaveEventType.Receive, page: Page
 } | {
@@ -306,15 +306,12 @@ export type WaveEvent = {
 } | {
   t: WaveEventType.Disconnect, retry: U
 } | {
-  t: WaveEventType.Busy
-} | {
-  t: WaveEventType.Free
+  t: WaveEventType.Data
 }
 const
   connectEvent: WaveEvent = { t: WaveEventType.Connect },
   resetEvent: WaveEvent = { t: WaveEventType.Reset },
-  busyEvent: WaveEvent = { t: WaveEventType.Busy },
-  freeEvent: WaveEvent = { t: WaveEventType.Free }
+  dataEvent: WaveEvent = { t: WaveEventType.Data }
 
 type WaveEventHandler = (e: WaveEvent) => void
 
@@ -783,14 +780,14 @@ export const
       reconnect = (address: S) => {
         const retry = () => reconnect(address)
         const socket = new WebSocket(address)
-        socket.onopen = function () {
+        socket.onopen = () => {
           _socket = socket
           handle(connectEvent)
           _backoff = 1
           const hash = window.location.hash
           socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
         }
-        socket.onclose = function () {
+        socket.onclose = () => {
           const refreshRate = refreshRateB()
           if (refreshRate === 0) return
 
@@ -802,10 +799,10 @@ export const
           handle({ t: WaveEventType.Disconnect, retry: _backoff })
           window.setTimeout(retry, _backoff * 1000)
         }
-        socket.onmessage = function (e) {
+        socket.onmessage = (e) => {
           if (!e.data) return
           if (!e.data.length) return
-          handle(freeEvent)
+          handle(dataEvent)
           for (const line of e.data.split('\n')) {
             try {
               const msg = JSON.parse(line) as OpsD
@@ -832,16 +829,13 @@ export const
             }
           }
         }
-        socket.onerror = function (e: Event) {
-          handle(freeEvent)
-          // TODO emit Exception?
-          console.error('A websocket error was encountered.', e) // XXX
+        socket.onerror = () => {
+          handle(dataEvent)
         }
       },
       push = (data: any) => {
         if (!_socket) return
         _socket.send(`@ ${slug} ${JSON.stringify(data || {})}`)
-        handle(busyEvent)
       },
       fork = (): ChangeSet => {
         const

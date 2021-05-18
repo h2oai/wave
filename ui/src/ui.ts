@@ -125,10 +125,7 @@ export const
           config.username = e.username
           config.editable = e.editable
           break
-        case WaveEventType.Busy:
-          busyB(true)
-          break
-        case WaveEventType.Free:
+        case WaveEventType.Data:
           busyB(false)
           break
       }
@@ -142,11 +139,13 @@ export const
       if (!_wave) return
       if (data) {
         _wave.push(data)
+        busyB(true)
         return
       }
       const d: Dict<any> = { ...args } // shallow clone
       clearRec(args) // clear
       _wave.push(d) // push clone
+      busyB(true)
       argsB(d)
     },
     fork: (): ChangeSet => {
