@@ -50,10 +50,7 @@ export default bond(() => {
       const { closable, name, events } = dialogB() || {}
       if (closable && name) {
         events?.forEach(e => {
-          if (e === 'dismissed') {
-            wave.events[name] = { dismissed: true }
-            wave.sync()
-          }
+          if (e === 'dismissed') wave.emit(name, e, true)
         })
       }
       dialogB(null)
