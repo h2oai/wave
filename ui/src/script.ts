@@ -44,7 +44,15 @@ const
     e.appendChild(document.createTextNode(content))
     document.body.appendChild(e)
   },
-  hasModules = (symbols: S[]) => !symbols.some(s => !((window as Dict<any>)[s])),
+  hasModule = (p: S) => {
+    let d = window as any
+    for (const k of p.split('.')) {
+      d = d[k]
+      if (!d) return false
+    }
+    return true
+  },
+  hasModules = (paths: S[]) => !paths.some(p => !hasModule(p)),
   hasElements = (ids: S[]) => !ids.some(id => !document.getElementById(id))
 
 export const

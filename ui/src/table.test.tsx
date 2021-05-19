@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Table, XTable } from './table'
+import { wave } from './ui'
 
 const
   name = 'table',
@@ -40,7 +40,7 @@ describe('Table.tsx', () => {
       ]
     }
     jest.clearAllMocks()
-    T.wave.args[name] = null
+    wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -115,34 +115,34 @@ describe('Table.tsx', () => {
   describe('Q calls', () => {
     it('Sets args on init - values not specified', () => {
       render(<XTable model={tableProps} />)
-      expect(T.wave.args[name]).toMatchObject([])
+      expect(wave.args[name]).toMatchObject([])
     })
 
     it('Sets args on init - values specified', () => {
       render(<XTable model={{ ...tableProps, values: ['rowname1'], multiple: true }} />)
-      expect(T.wave.args[name]).toMatchObject(['rowname1'])
+      expect(wave.args[name]).toMatchObject(['rowname1'])
     })
 
     it('Sets args and calls sync on doubleclick', () => {
-      const syncMock = jest.fn()
-      T.wave.sync = syncMock
+      const pushMock = jest.fn()
+      wave.push = pushMock
 
       const { getAllByRole } = render(<XTable model={tableProps} />)
       fireEvent.doubleClick(getAllByRole('row')[1])
 
-      expect(T.wave.args[name]).toMatchObject(['rowname1'])
-      expect(syncMock).toHaveBeenCalled()
+      expect(wave.args[name]).toMatchObject(['rowname1'])
+      expect(pushMock).toHaveBeenCalled()
     })
 
     it('Sets args and calls sync on first col click', () => {
-      const syncMock = jest.fn()
-      T.wave.sync = syncMock
+      const pushMock = jest.fn()
+      wave.push = pushMock
 
       const { getByText } = render(<XTable model={tableProps} />)
       fireEvent.click(getByText(cell21))
 
-      expect(T.wave.args[name]).toMatchObject(['rowname2'])
-      expect(syncMock).toHaveBeenCalled()
+      expect(wave.args[name]).toMatchObject(['rowname2'])
+      expect(pushMock).toHaveBeenCalled()
     })
 
     it('Sets args - multiple selection', () => {
@@ -152,7 +152,7 @@ describe('Table.tsx', () => {
       fireEvent.click(checkboxes[1])
       fireEvent.click(checkboxes[2])
 
-      expect(T.wave.args[name]).toMatchObject(['rowname1', 'rowname2'])
+      expect(wave.args[name]).toMatchObject(['rowname1', 'rowname2'])
     })
 
     it('Clicks a column - link set on second col', () => {
@@ -163,16 +163,16 @@ describe('Table.tsx', () => {
           { name: 'colname2', label: 'Col2', link: true },
         ]
       }
-      const syncMock = jest.fn()
-      T.wave.sync = syncMock
+      const pushMock = jest.fn()
+      wave.push = pushMock
 
       const { getByText } = render(<XTable model={tableProps} />)
       fireEvent.click(getByText(cell21))
-      expect(syncMock).not.toHaveBeenCalled()
+      expect(pushMock).not.toHaveBeenCalled()
 
       fireEvent.click(getByText('1'))
-      expect(T.wave.args[name]).toMatchObject(['rowname2'])
-      expect(syncMock).toHaveBeenCalled()
+      expect(wave.args[name]).toMatchObject(['rowname2'])
+      expect(pushMock).toHaveBeenCalled()
     })
   })
 
@@ -184,14 +184,14 @@ describe('Table.tsx', () => {
         { name: 'colname2', label: 'Col2' },
       ]
     }
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    wave.push = pushMock
 
     const { getByText } = render(<XTable model={tableProps} />)
 
     fireEvent.click(getByText(cell21))
-    expect(syncMock).not.toHaveBeenCalled()
-    expect(T.wave.args[name]).toMatchObject([])
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).toMatchObject([])
   })
 
   describe('sort', () => {

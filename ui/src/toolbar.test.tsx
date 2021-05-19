@@ -16,6 +16,7 @@ import { fireEvent, render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './toolbar'
+import { wave } from './ui'
 
 const
   name = 'toolbar',
@@ -35,7 +36,7 @@ const
 
 describe('Toolbar.tsx', () => {
   beforeEach(() => {
-    T.wave.args[commandName] = null
+    wave.args[commandName] = null
     jest.clearAllMocks()
   })
 
@@ -45,8 +46,8 @@ describe('Toolbar.tsx', () => {
   })
 
   it('Sets args and calls sync on click - with value attr', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    wave.push = pushMock
 
     const { getByText } = render(<View {...toolbarProps} {...{
       state: {
@@ -60,30 +61,30 @@ describe('Toolbar.tsx', () => {
 
     fireEvent.click(getByText(commandName))
 
-    expect(syncMock).toBeCalled()
-    expect(T.wave.args[commandName]).toBe(commandValue)
+    expect(pushMock).toBeCalled()
+    expect(wave.args[commandName]).toBe(commandValue)
   })
 
   it('Sets args and calls sync on click - without value attr', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    wave.push = pushMock
 
     const { getByText } = render(<View {...toolbarProps} />)
     fireEvent.click(getByText(commandName))
 
-    expect(syncMock).toBeCalled()
-    expect(T.wave.args[commandName]).toBe(true)
+    expect(pushMock).toBeCalled()
+    expect(wave.args[commandName]).toBe(true)
   })
 
   it('Does not set args and calls sync on click when command name starts with hash', () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    wave.push = pushMock
 
     const { getByText } = render(<View {...toolbarPropsWithHash} />)
 
     fireEvent.click(getByText(commandNameWithHash))
-    expect(T.wave.args[commandNameWithHash]).toBe(false)
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(wave.args[commandNameWithHash]).toBe(false)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Sets window location hash when command name starts with hash', () => {

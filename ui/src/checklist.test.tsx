@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Checklist, XChecklist } from './checklist'
+import { wave } from './ui'
 
 const name = 'checklist'
 const checklistProps: Checklist = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }
@@ -24,7 +24,7 @@ describe('Checklist.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
-    T.wave.args[name] = null
+    wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -42,7 +42,7 @@ describe('Checklist.tsx', () => {
     const { getByText } = render(<XChecklist model={checklistProps} />)
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(T.wave.args[name]).toMatchObject(['Choice1'])
+    expect(wave.args[name]).toMatchObject(['Choice1'])
   })
 
   it('Sets args - multi selection', () => {
@@ -51,14 +51,14 @@ describe('Checklist.tsx', () => {
     fireEvent.click(getByText('Choice2').parentElement!)
     fireEvent.click(getByText('Choice3').parentElement!)
 
-    expect(T.wave.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
+    expect(wave.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
   })
 
   it('Sets all choices as args after select all', () => {
     const { getByText } = render(<XChecklist model={checklistProps} />)
     fireEvent.click(getByText('Select All'))
 
-    expect(T.wave.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
+    expect(wave.args[name]).toMatchObject(['Choice1', 'Choice2', 'Choice3'])
   })
 
   it('Sets empty args after deselect all', () => {
@@ -68,46 +68,46 @@ describe('Checklist.tsx', () => {
     fireEvent.click(getByText('Choice3').parentElement!)
     fireEvent.click(getByText('Deselect All'))
 
-    expect(T.wave.args[name]).toMatchObject([])
+    expect(wave.args[name]).toMatchObject([])
   })
 
   it('Calls sync - trigger specified', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    wave.push = pushMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Does not call sync - trigger not specified', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XChecklist model={checklistProps} />)
 
-    T.wave.sync = syncMock
+    wave.push = pushMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(syncMock).not.toHaveBeenCalled()
+    expect(pushMock).not.toHaveBeenCalled()
   })
 
   it('Calls sync - select all', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    wave.push = pushMock
     fireEvent.click(getByText('Select All'))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Calls sync - deselect all', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByText } = render(<XChecklist model={{ ...checklistProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    wave.push = pushMock
     fireEvent.click(getByText('Deselect All'))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 })

@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Picker, XPicker } from './picker'
+import { wave } from './ui'
 
 const name = 'picker'
 let pickerProps: Picker
@@ -32,7 +32,7 @@ describe('Picker.tsx', () => {
       name,
       choices: [{ name }, { name: 'something else' }]
     }
-    T.wave.args[name] = null
+    wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -48,12 +48,12 @@ describe('Picker.tsx', () => {
 
   it('Sets correct args - init', () => {
     render(<XPicker model={pickerProps} />)
-    expect(T.wave.args[name]).toBeNull()
+    expect(wave.args[name]).toBeNull()
   })
 
   it('Sets correct args - init - values specified', () => {
     render(<XPicker model={{ ...pickerProps, values: [name] }} />)
-    expect(T.wave.args[name]).toMatchObject([name])
+    expect(wave.args[name]).toMatchObject([name])
   })
 
   it('Renders label if specified', () => {
@@ -141,13 +141,13 @@ describe('Picker.tsx', () => {
     typeToInput(getByRole('textbox') as HTMLInputElement, name)
     fireEvent.click(getByRole('option').querySelector('button')!)
 
-    expect(T.wave.args[name]).toMatchObject([name])
+    expect(wave.args[name]).toMatchObject([name])
   })
 
 
   it('Calls sync when trigger specified', () => {
     const synckMock = jest.fn()
-    T.wave.sync = synckMock
+    wave.push = synckMock
     const { getByRole } = render(<XPicker model={{ ...pickerProps, trigger: true }} />)
 
     typeToInput(getByRole('textbox') as HTMLInputElement, name)
@@ -166,7 +166,7 @@ describe('Picker.tsx', () => {
     typeToInput(input, 'i')
     fireEvent.click(getByRole('option').querySelector('button')!)
 
-    expect(T.wave.args[name]).toMatchObject([name, 'something else'])
+    expect(wave.args[name]).toMatchObject([name, 'something else'])
   })
 
   it('should open suggestion list on click', () => {

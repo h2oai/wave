@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Dict, Id, S, U, wave } from 'h2o-wave'
+import { B, box, Dict, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { cssVar, displayMixin, rem } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {
@@ -439,7 +439,7 @@ export const
       },
       onItemInvoked = (item: Fluent.IObjectWithKey & Dict<any>) => {
         wave.args[m.name] = [item.key as S]
-        wave.sync()
+        wave.push()
       },
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: QColumn) => {
         if (!item || !col) return <span />
@@ -448,7 +448,7 @@ export const
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {
             wave.args[m.name] = [item.key as S]
-            wave.sync()
+            wave.push()
           }
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }

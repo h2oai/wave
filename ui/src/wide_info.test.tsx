@@ -15,17 +15,18 @@
 import { fireEvent, render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
+import { wave } from './ui'
 import { View } from './wide_info'
 
 const
   name = 'wide_info',
-  syncMock = jest.fn()
+  pushMock = jest.fn()
 let wideInfoProps: T.Model<any>
 
 describe('WideInfo.tsx', () => {
-  beforeAll(() => T.wave.sync = syncMock)
+  beforeAll(() => wave.push = pushMock)
   beforeEach(() => {
-    syncMock.mockReset()
+    pushMock.mockReset()
     wideInfoProps = {
       name,
       state: { title: name },
@@ -41,23 +42,23 @@ describe('WideInfo.tsx', () => {
   it('Does not submit data to server if name not specified', () => {
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
-    expect(syncMock).not.toHaveBeenCalled()
-    expect(T.wave.args[name]).toBeUndefined()
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).toBeUndefined()
   })
 
   it('Does not submit data to server if name specified but starts with #', () => {
     wideInfoProps.state.name = `#${name}`
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
-    expect(syncMock).not.toHaveBeenCalled()
-    expect(T.wave.args[name]).toBeUndefined()
+    expect(pushMock).not.toHaveBeenCalled()
+    expect(wave.args[name]).toBeUndefined()
   })
 
   it('Submits data to server if name specified without #', () => {
     wideInfoProps.state.name = name
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
-    expect(syncMock).toHaveBeenCalled()
-    expect(T.wave.args[name]).toBe(name)
+    expect(pushMock).toHaveBeenCalled()
+    expect(wave.args[name]).toBe(name)
   })
 })

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Id, S, U, wave } from 'h2o-wave'
+import { B, box, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { Choice } from './choice_group'
 import { displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a picker.
@@ -63,7 +63,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
     onChange = (items?: Fluent.ITag[]) => {
       selectedTagsB(items || [])
       wave.args[m.name] = items ? items.map(({ key }) => key) : null
-      if (m.trigger) wave.sync()
+      if (m.trigger) wave.push()
     },
     onEmptyResolveSuggestions = () => tags,
     init = () => wave.args[m.name] = m.values || null,

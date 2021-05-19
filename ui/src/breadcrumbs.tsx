@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { Id, Model, S, wave } from 'h2o-wave'
+import { Id, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /** Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`. */
 interface Breadcrumb {
@@ -61,7 +61,7 @@ export const
             return
           }
           wave.args[name] = true
-          wave.sync()
+          wave.push()
         }
       }
       )),

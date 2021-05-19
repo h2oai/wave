@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, debounce, Id, S, wave } from 'h2o-wave'
+import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, debounce, wave } from './ui'
 
 /**
  * Create a text box.
@@ -73,7 +73,7 @@ export const
         v = v || (target as HTMLInputElement).value
 
         wave.args[m.name] = v ?? (m.value || '')
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       render = () => m.mask
         ? (

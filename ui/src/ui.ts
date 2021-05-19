@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { boxed, Disposable, on, wave } from 'h2o-wave'
+import { B, box, boxed, ChangeSet, connect, Dict, Disposable, on, Rec, S, U, Wave, WaveEvent, WaveEventType } from 'h2o-wave'
 import * as React from 'react'
 
 //
@@ -65,8 +65,23 @@ export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) =>
   }
 }
 
-export
-  const jump = (key: any, value: any) => {
+let _wave: Wave | null = null
+
+const
+  args: Rec = {},
+  clearRec = (a: Rec) => {
+    for (const k in a) delete a[k]
+  }
+
+export const
+  contentB = box<WaveEvent | null>(null),
+  argsB = box<any>({}),
+  busyB = box<B>(false),
+  config = {
+    username: '',
+    editable: false,
+  },
+  jump = (key: any, value: any) => {
     if (value.startsWith('#')) {
       window.location.hash = value.substr(1)
       return
@@ -76,5 +91,75 @@ export
     } else {
       wave.args[value] = true
     }
-    wave.sync()
-  }
+    wave.push()
+  },
+  debounce = (timeout: U, f: (...args: any[]) => void) => {
+    let t: number | null = null
+    return (...args: any[]) => {
+      if (t) window.clearTimeout(t)
+      t = window.setTimeout(() => { f(...args); t = null }, timeout)
+    }
+  },
+  throttle = (timeout: U, f: (...args: any[]) => void) => {
+    let wait = false
+    return (...args: any[]) => {
+      if (wait) return
+      f(...args)
+      wait = true
+      window.setTimeout(() => { wait = false }, timeout)
+    }
+  },
+  listen = () => {
+    _wave = connect(e => {
+      switch (e.t) {
+        case WaveEventType.Receive:
+        case WaveEventType.Error:
+        case WaveEventType.Exception:
+        case WaveEventType.Disconnect:
+          contentB(e)
+          break
+        case WaveEventType.Reset:
+          window.location.reload()
+          break
+        case WaveEventType.Config:
+          config.username = e.username
+          config.editable = e.editable
+          break
+        case WaveEventType.Data:
+          busyB(false)
+          break
+      }
+    })
+  },
+  wave = { // Public API
+    args,
+    debounce,
+    throttle,
+    push: (data?: any) => {
+      if (!_wave) return
+      if (data) {
+        _wave.push(data)
+        busyB(true)
+        return
+      }
+      const d: Dict<any> = { ...args } // shallow clone
+      clearRec(args) // clear
+      _wave.push(d) // push clone
+      busyB(true)
+      argsB(d)
+    },
+    fork: (): ChangeSet => {
+      if (!_wave) throw new Error('not initialized')
+      return _wave.fork()
+    },
+    emit: (name: S, event: S, data: any) => {
+      const
+        args: Dict<any> = {},
+        events: Dict<any> = {}
+      args[event] = data
+      events[name] = args
+      _wave?.push({ '': events })
+    }
+  };
+
+(window as any).wave = wave

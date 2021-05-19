@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, F, Id, S, U, wave, xid } from 'h2o-wave'
+import { B, box, F, Id, S, U, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { centerMixin, clas, dashed, displayMixin, padding } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a file upload component.
@@ -116,7 +116,7 @@ export const
           const { responseText } = await makeRequest
           const { files } = JSON.parse(responseText)
           wave.args[model.name] = files
-          wave.sync()
+          wave.push()
           successMsgB(`Successfully uploaded files: ${filesB().map(({ name }) => name).join(',')}.`)
         }
         catch ({ responseText }) { errorB(responseText || 'There was an error when uploading file.') }

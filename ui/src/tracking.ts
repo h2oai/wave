@@ -1,4 +1,5 @@
-import { on, Rec, S, wave } from 'h2o-wave'
+import { on, Rec, S } from 'h2o-wave'
+import { argsB } from './ui'
 
 /**
  * Configure user interaction tracking (analytics) for a page.
@@ -64,4 +65,4 @@ export const
     }
   }
 
-on(wave.argsB, (args) => window.setTimeout((() => sendEvent(args)), 0))
+on(argsB, (args) => window.setTimeout((() => sendEvent(args)), 0))

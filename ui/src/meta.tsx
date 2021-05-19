@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { box, Id, Model, on, S, U, wave } from 'h2o-wave'
+import { box, disconnect, Id, Model, on, S, U } from 'h2o-wave'
 import React from 'react'
 import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
@@ -151,7 +151,7 @@ export const
 
     if (title) windowTitleB(title)
     if (icon) windowIconB(icon)
-    if (typeof refresh === 'number') wave.refreshRateB(refresh)
+    if (typeof refresh === 'number' && refresh === 0) disconnect()
     if (theme) themeB(theme)
     if (notification) showNotification(notification)
     if (tracker) setupTracker(tracker)

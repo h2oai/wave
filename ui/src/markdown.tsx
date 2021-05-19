@@ -102,7 +102,7 @@ export const
     const
       render = () => {
         const
-          data = unpack(state.data),
+          data = unpack<Rec>(state.data),
           title = substitute(state.title, data)
         return (
           <div data-test={name} className={css.card}>

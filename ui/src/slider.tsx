@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, F, Id, S, wave } from 'h2o-wave'
+import { B, F, Id, S } from 'h2o-wave'
 import React from 'react'
 import { displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a slider.
@@ -65,7 +65,7 @@ export const
     wave.args[m.name] = defaultValue
     const
       onChange = (v: number) => wave.args[m.name] = v,
-      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => { if (m.trigger) wave.sync() },
+      onChanged = (_event: MouseEvent | KeyboardEvent | TouchEvent, _value: number) => { if (m.trigger) wave.push() },
       render = () => (
         <Fluent.Slider
           data-test={m.name}

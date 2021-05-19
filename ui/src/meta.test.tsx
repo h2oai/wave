@@ -33,13 +33,6 @@ describe('Meta.tsx', () => {
     expect(window.document.title).toBe(name)
   })
 
-  it('Sets refreshRate - init', () => {
-    const refresh = 1
-    expect(T.wave.refreshRateB()).toBe(-1)
-    preload({ ...metaProps, state: { refresh } })
-    expect(T.wave.refreshRateB()).toBe(refresh)
-  })
-
   it('Shows notification - init', () => {
     const showNotificationMock = jest.fn()
     // @ts-ignore

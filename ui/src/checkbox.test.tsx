@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Checkbox, XCheckbox } from './checkbox'
+import { wave } from './ui'
 
 const name = 'checkbox'
 const checkboxProps: Checkbox = { name }
@@ -25,7 +25,7 @@ describe('Checkbox.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
-    T.wave.args[name] = null
+    wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -40,30 +40,30 @@ describe('Checkbox.tsx', () => {
   })
 
   it('Does not call sync when trigger is off', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={checkboxProps} />)
 
-    T.wave.sync = syncMock
+    wave.push = pushMock
     fireEvent.click(getByTestId(name))
 
-    expect(syncMock).toHaveBeenCalledTimes(0)
+    expect(pushMock).toHaveBeenCalledTimes(0)
   })
 
   it('Calls sync when trigger is on', () => {
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
     const { getByTestId } = render(<XCheckbox model={{ ...checkboxProps, trigger: true }} />)
 
-    T.wave.sync = syncMock
+    wave.push = pushMock
     fireEvent.click(getByTestId(name))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Sets args on click', () => {
     const { getByTestId } = render(<XCheckbox model={checkboxProps} />)
     fireEvent.click(getByTestId(name))
 
-    expect(T.wave.args[name]).toBe(true)
+    expect(wave.args[name]).toBe(true)
   })
 
 })

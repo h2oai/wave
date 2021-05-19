@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, S, wave } from 'h2o-wave'
+import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a color picker.
@@ -52,11 +52,11 @@ export const
       onColorChanged = (_id?: string, color?: string) => {
         wave.args[m.name] = color || value
 
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
         wave.args[m.name] = color?.str || value
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       render = () => (
         <div data-test={m.name} style={displayMixin(m.visible)}>

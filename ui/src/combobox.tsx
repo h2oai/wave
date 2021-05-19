@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Id, S, wave } from 'h2o-wave'
+import { B, box, Id, S } from 'h2o-wave'
 import React from 'react'
 import { displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a combobox.
