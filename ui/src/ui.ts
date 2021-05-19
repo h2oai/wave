@@ -112,7 +112,7 @@ export const
   listen = () => {
     _wave = connect(e => {
       switch (e.t) {
-        case WaveEventType.Receive:
+        case WaveEventType.Page:
         case WaveEventType.Error:
         case WaveEventType.Exception:
         case WaveEventType.Disconnect:

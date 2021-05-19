@@ -116,7 +116,7 @@ const
         const e = contentB()
         if (e) {
           switch (e.t) {
-            case WaveEventType.Receive:
+            case WaveEventType.Page:
               {
                 const page = e.page
                 return (

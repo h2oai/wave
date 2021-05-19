@@ -38,7 +38,7 @@ const
 
     connect(e => {
       switch (e.t) {
-        case WaveEventType.Receive:
+        case WaveEventType.Page:
           const { page } = e
           handlePage(page)
           on(page.changed, () => handlePage(page))

@@ -289,10 +289,37 @@ export interface Card extends Model<Dict<any>> {
   set(ks: S[], v: any): void
 }
 
-export enum WaveErrorCode { Unknown = 1, PageNotFound }
-export enum WaveEventType { Connect, Disconnect, Config, Reset, Error, Exception, Receive, Data }
+/** Error codes returned by the Wave daemon. */
+export enum WaveErrorCode {
+  /** Unknown error. Should never occur. */
+  Unknown = 1,
+  /** The requested page was not found. */
+  PageNotFound,
+}
+
+/** The type of an event raised by the Wave socket client. */
+export enum WaveEventType {
+  /** Connected to daemon. */
+  Connect,
+  /** Disconnected from daemon. */
+  Disconnect,
+  /** Daemon asked to re-sync entire state. */
+  Reset,
+  /** Daemon raised an error. */
+  Error,
+  /** A local, unhandled exception occured in user code. */
+  Exception,
+  /** Daemon sent configuration information. */
+  Config,
+  /** Daemon sent a Page. */
+  Page,
+  /** Daemon sent some data. */
+  Data,
+}
+
+/** */
 export type WaveEvent = {
-  t: WaveEventType.Receive, page: Page
+  t: WaveEventType.Page, page: Page
 } | {
   t: WaveEventType.Config, username: S, editable: B
 } | {
@@ -317,22 +344,33 @@ type WaveEventHandler = (e: WaveEvent) => void
 
 /** A set of changes to be made to a remote Page. */
 export interface ChangeSet {
+  /** Get a reference to a card. */
   get(key: S): Ref
+  /** Assign data buffer to card. */
   put(key: S, data: any): void
+  /** Assign value to card's key. */
   set(key: S, value: any): void
+  /** Delete card. */
   del(key: S): void
+  /** Delete page. */
   drop(): void
+  /** Push changes to remote. */
   push(): void
 }
 
+/** A reference to a remote object. */
 interface Ref {
+  /** Get a reference to a sub-object. */
   get(key: S): Ref
+  /** Assign value to key. */
   set(key: S, value: any): void
 }
 
 /** The Wave client. */
 export interface Wave {
+  /** Get a reference to a copy the remote Page. */
   fork(): ChangeSet
+  /** Push data to remote. */
   push(data: any): void
 }
 
@@ -810,11 +848,11 @@ export const
                 const page = exec(_page || newPage(), msg.d)
                 if (_page !== page) {
                   _page = page
-                  if (page) handle({ t: WaveEventType.Receive, page })
+                  if (page) handle({ t: WaveEventType.Page, page })
                 }
               } else if (msg.p) {
                 const page = _page = load(msg.p)
-                handle({ t: WaveEventType.Receive, page })
+                handle({ t: WaveEventType.Page, page })
               } else if (msg.e) {
                 handle({ t: WaveEventType.Error, code: errorCodes[msg.e] || WaveErrorCode.Unknown })
               } else if (msg.r) {
@@ -842,7 +880,7 @@ export const
           ops: OpD[] = [],
           ref = (k: S): Ref => {
             const
-              get = (key: S): Ref => ref(`${k}.${key}`),
+              get = (key: S): Ref => ref(keyseq(k, key)),
               set = (key: S, value: any) => ops.push({ k: keyseq(k, key), v: value })
             return { get, set }
           },
