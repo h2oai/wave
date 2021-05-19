@@ -10,7 +10,7 @@ const Notice = () => {
       setIsNoticeHidden(true)
     }
   return (
-    <section className='notice' style={{ opacity: isNoticeHidden ? 0 : 1 }}>
+    <section className='notice' style={{ display: isNoticeHidden ? 'none' : '' }}>
       <div>
         <p>By using this website you agree to our use of cookies. </p>
         <a href='https://www.h2o.ai/privacy/' target='_blank'>Read H2O.ai’s privacy policy.</a>
