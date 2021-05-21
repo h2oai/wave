@@ -61,6 +61,7 @@ module.exports = {
       'api/h2o_wave_ml/index',
       'api/h2o_wave_ml/ml',
       'api/h2o_wave_ml/types',
+      'api/h2o_wave_ml/utils',
     ],
   },
 };
