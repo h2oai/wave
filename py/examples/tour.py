@@ -44,7 +44,7 @@ class Example:
                 '--host', '0.0.0.0',
                 '--port', _app_port,
                 f'examples.{self.name}:main',
-            ], env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', **env))
+            ], env=dict(H2O_WAVE_EXTERNAL_ADDRESS=f'http://{_app_host}:{_app_port}', PATH=os.environ['PATH'], **env))
         else:
             self.process = subprocess.Popen([sys.executable, os.path.join(example_dir, self.filename)], env=env)
 
