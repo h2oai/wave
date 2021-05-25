@@ -28,7 +28,7 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
-    "h2o-wave": "^0.1.0",
+    "h2o-wave": "^0.2.0",
     "handlebars": "^4.7.7"
   }
 }
