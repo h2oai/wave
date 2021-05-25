@@ -12,6 +12,20 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.16.0
+May 24, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.16.0)
+- Added
+  - *New* Ability to load and execute third party Javascript libraries at runtime.
+  - WaveDB: Add `-benchmark` command line flag for running benchmarks.
+  - WaveDB: Add example for database-backed to-do list app.
+  - WaveML: Add several examples demonstrating configuring, building, saving models, including hyperparameter tuning and SHAP.
+- Changed
+  - Upgrade Cypress (test framework) to 7.2.0.
+  - Make (anon) subject ID and username available in development mode.
+  - Closable dialogs now emit a `dismissed` event when closed.
+- Fixed
+  - WaveDB: Return empty array instead of `None` if resultset is empty.
+
 ## v0.15.0
 May 7, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.15.0)
 - Added
