@@ -222,11 +222,13 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 ''' + '\n' + '\n\n'.join([make_tag_group(t, e) for t, e in tags])
 
 
-def main():
-    filenames = [line.strip() for line in read_lines(os.path.join(example_dir, 'tour.conf')) if
-                 not line.strip().startswith('#')]
+def read_filenames(src: str):
+    return [line.strip() for line in read_lines(os.path.join(example_dir, src)) if
+            not line.strip().startswith('#')]
 
-    filenames += [f for f in os.listdir(example_dir) if f.startswith('db') or f.startswith('ml')]
+
+def main():
+    filenames = read_filenames('tour.conf') + read_filenames('web_only.conf')
 
     examples = [load_example(filename) for filename in filenames]
 
