@@ -74,9 +74,9 @@ On Windows, run `waved.exe` to start the server.
 
 ### Step 5: Verify
 
-Finally, point your web browser to [http://localhost:10101/](http://localhost:10101/). You should see an empty page with a spinner that looks like this:
+Finally, point your web browser to [http://localhost:10101/](http://localhost:10101/). You should see an empty page with a blinker that looks like this:
 
-![spinner](assets/installation__waiting.png)
+![blinker](assets/installation__waiting.gif)
 
 Congratulations! Wave is now running, but doesn't have any content yet (hence the spinner).
 
