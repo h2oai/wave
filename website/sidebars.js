@@ -36,6 +36,7 @@ module.exports = {
       'expressions',
       'files',
       'plotting',
+      'javascript',
       'graphics',
       'security',
       'logging',
