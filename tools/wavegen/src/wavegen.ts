@@ -1011,7 +1011,7 @@ const
         return acc
       }, { singularMembers: [], repeatedMembers: [] } as { singularMembers: Member[], repeatedMembers: Member[] }),
       shortTemplates = protocol.types
-        .filter(t => !t.areAllMembersOptional)
+        .filter(t => !t.areAllMembersOptional && !t.file.includes('.test'))
         .map(t => {
           const
             name = snakeCase(t.name),
@@ -1030,27 +1030,29 @@ const
             _content: [...variables, baseTemplateContent]
           }
         }),
-      longTemplates = protocol.types.map(t => {
-        const
-          name = snakeCase(t.name),
-          { singularMembers, repeatedMembers } = splitRepeatedAndSingular(t.members),
-          variables = [...singularMembers.map(mapVariables), ...repeatedMembers.map(mapVariables)]
+      longTemplates = protocol.types
+        .filter(t => !t.file.includes('.test'))
+        .map(t => {
+          const
+            name = snakeCase(t.name),
+            { singularMembers, repeatedMembers } = splitRepeatedAndSingular(t.members),
+            variables = [...singularMembers.map(mapVariables), ...repeatedMembers.map(mapVariables)]
 
-        return {
-          _name: 'template',
-          _attrs: {
-            name: `w_full_${name}`,
-            value: `ui.${name}(${getSnippetParams(singularMembers, repeatedMembers)})${trailingComma(t)}$END$`.replace(',)', ')'),
-            description: `Create Wave ${t.name} with full attributes.`,
-            toReformat: 'true',
-            toShortenFQNames: 'true'
-          },
-          _content: [...variables, baseTemplateContent]
-        }
-      })
+          return {
+            _name: 'template',
+            _attrs: {
+              name: `w_full_${name}`,
+              value: `ui.${name}(${getSnippetParams(singularMembers, repeatedMembers)})${trailingComma(t)}$END$`.replace(',)', ')'),
+              description: `Create Wave ${t.name} with full attributes.`,
+              toReformat: 'true',
+              toShortenFQNames: 'true'
+            },
+            _content: [...variables, baseTemplateContent]
+          }
+        })
     snippetJSON._content = [...shortTemplates, ...longTemplates] as any
 
-    fs.writeFileSync('wave-components.xml', toXML(snippetJSON, { indent: '  ' }))
+    fs.writeFileSync('wave.xml', toXML(snippetJSON, { indent: '  ' }))
   },
   main = (typescriptSrcDir: S, pyOutDir: S, rOutDir: S) => {
     const files: File[] = []

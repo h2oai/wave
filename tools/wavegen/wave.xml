@@ -35,18 +35,10 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_chat_room_card" value="ui.chat_room_card(box='$box$',title='$title$',data=$data$)$END$" description="Create a minimal Wave ChatRoomCard." toReformat="true" toShortenFQNames="true">
+  <template name="w_chat_card" value="ui.chat_card(box='$box$',title='$title$',data=$data$)$END$" description="Create a minimal Wave ChatCard." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
-    <context>
-      <option name="Python" value="true"/>
-    </context>
-  </template>
-  <template name="w_chat_message" value="ui.chat_message(time='$time$',user='$user$',message='$message$'),$END$" description="Create a minimal Wave ChatMessage." toReformat="true" toShortenFQNames="true">
-    <variable name="time" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="user" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="message" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -106,13 +98,14 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_expander" value="ui.expander(name='$name$'),$END$" description="Create a minimal Wave Expander." toReformat="true" toShortenFQNames="true">
-    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+  <template name="w_editor_card" value="ui.editor_card(box='$box$',mode='$mode$')$END$" description="Create a minimal Wave EditorCard." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="mode" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_file_obj" value="ui.file_obj(name=$name$),$END$" description="Create a minimal Wave FileObj." toReformat="true" toShortenFQNames="true">
+  <template name="w_expander" value="ui.expander(name='$name$'),$END$" description="Create a minimal Wave Expander." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -184,11 +177,15 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_image_card" value="ui.image_card(box='$box$',title='$title$',type='$type$',image='$image$')$END$" description="Create a minimal Wave ImageCard." toReformat="true" toShortenFQNames="true">
+  <template name="w_image_card" value="ui.image_card(box='$box$',title='$title$')$END$" description="Create a minimal Wave ImageCard." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="type" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_image" value="ui.image(title='$title$'),$END$" description="Create a minimal Wave Image." toReformat="true" toShortenFQNames="true">
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -365,6 +362,12 @@
     <variable name="item_view" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="item_props" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_script" value="ui.script(path='$path$'),$END$" description="Create a minimal Wave Script." toReformat="true" toShortenFQNames="true">
+    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -640,6 +643,14 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_wide_info_card" value="ui.wide_info_card(box='$box$',title='$title$',caption='$caption$')$END$" description="Create a minimal Wave WideInfoCard." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_wide_series_stat_card" value="ui.wide_series_stat_card(box='$box$',title='$title$',value='$value$',aux_value='$aux_value$',plot_data=$plot_data$,plot_value='$plot_value$')$END$" description="Create a minimal Wave WideSeriesStatCard." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -666,7 +677,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_button" value="ui.button(name='$name$',label='$label$',caption='$caption$',value='$value$',primary=$primary$,disabled=$disabled$,link=$link$,visible=$visible$,tooltip='$tooltip$'),$END$" description="Create Wave Button with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_button" value="ui.button(name='$name$',label='$label$',caption='$caption$',value='$value$',primary=$primary$,disabled=$disabled$,link=$link$,icon='$icon$',visible=$visible$,tooltip='$tooltip$'),$END$" description="Create Wave Button with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -674,6 +685,7 @@
     <variable name="primary" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="disabled" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="link" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
@@ -700,19 +712,12 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_chat_room_card" value="ui.chat_room_card(box='$box$',title='$title$',data=$data$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ChatRoomCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_chat_card" value="ui.chat_card(box='$box$',title='$title$',data=$data$,capacity=$capacity$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ChatCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="capacity" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
-    <context>
-      <option name="Python" value="true"/>
-    </context>
-  </template>
-  <template name="w_full_chat_message" value="ui.chat_message(time='$time$',user='$user$',message='$message$'),$END$" description="Create Wave ChatMessage with full attributes." toReformat="true" toShortenFQNames="true">
-    <variable name="time" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="user" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="message" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -829,19 +834,20 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_full_editor_card" value="ui.editor_card(box='$box$',mode='$mode$',commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave EditorCard with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="mode" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_full_expander" value="ui.expander(name='$name$',label='$label$',expanded=$expanded$,visible=$visible$,items=[&#10;	$items$	&#10;]),$END$" description="Create Wave Expander with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="label" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="expanded" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="items" expression="" defaultValue="" alwaysStopAt="true"/>
-    <context>
-      <option name="Python" value="true"/>
-    </context>
-  </template>
-  <template name="w_full_file_obj" value="ui.file_obj(name=$name$,size=$size$),$END$" description="Create Wave FileObj with full attributes." toReformat="true" toShortenFQNames="true">
-    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
-    <variable name="size" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -882,7 +888,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_component" value="ui.component(text=$text$,text_xl=$text_xl$,text_l=$text_l$,text_m=$text_m$,text_s=$text_s$,text_xs=$text_xs$,label=$label$,separator=$separator$,progress=$progress$,message_bar=$message_bar$,textbox=$textbox$,checkbox=$checkbox$,toggle=$toggle$,choice_group=$choice_group$,checklist=$checklist$,dropdown=$dropdown$,combobox=$combobox$,slider=$slider$,spinbox=$spinbox$,date_picker=$date_picker$,color_picker=$color_picker$,button=$button$,buttons=$buttons$,file_upload=$file_upload$,table=$table$,link=$link$,tabs=$tabs$,expander=$expander$,frame=$frame$,markup=$markup$,template=$template$,picker=$picker$,range_slider=$range_slider$,stepper=$stepper$,visualization=$visualization$,vega_visualization=$vega_visualization$,stats=$stats$,inline=$inline$),$END$" description="Create Wave Component with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_component" value="ui.component(text=$text$,text_xl=$text_xl$,text_l=$text_l$,text_m=$text_m$,text_s=$text_s$,text_xs=$text_xs$,label=$label$,separator=$separator$,progress=$progress$,message_bar=$message_bar$,textbox=$textbox$,checkbox=$checkbox$,toggle=$toggle$,choice_group=$choice_group$,checklist=$checklist$,dropdown=$dropdown$,combobox=$combobox$,slider=$slider$,spinbox=$spinbox$,date_picker=$date_picker$,color_picker=$color_picker$,button=$button$,buttons=$buttons$,file_upload=$file_upload$,table=$table$,link=$link$,tabs=$tabs$,expander=$expander$,frame=$frame$,markup=$markup$,template=$template$,picker=$picker$,range_slider=$range_slider$,stepper=$stepper$,visualization=$visualization$,vega_visualization=$vega_visualization$,stats=$stats$,inline=$inline$,image=$image$),$END$" description="Create Wave Component with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="text" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="text_xl" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="text_l" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -921,6 +927,7 @@
     <variable name="vega_visualization" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="stats" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="inline" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -1004,13 +1011,23 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_image_card" value="ui.image_card(box='$box$',title='$title$',type='$type$',image='$image$',data=$data$,commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ImageCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_image_card" value="ui.image_card(box='$box$',title='$title$',type='$type$',image='$image$',data=$data$,path='$path$',commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave ImageCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="type" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_image" value="ui.image(title='$title$',type='$type$',image='$image$',path='$path$'),$END$" description="Create Wave Image with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="type" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
     </context>
@@ -1127,7 +1144,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_layout" value="ui.layout(breakpoint='$breakpoint$',width='$width$',min_width='$min_width$',max_width='$max_width$',height='$height$',min_height='$min_height$',max_height='$max_height$',zones=[&#10;	$zones$	&#10;]),$END$" description="Create Wave Layout with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_layout" value="ui.layout(breakpoint='$breakpoint$',width='$width$',min_width='$min_width$',max_width='$max_width$',height='$height$',min_height='$min_height$',max_height='$max_height$',name='$name$',zones=[&#10;	$zones$	&#10;]),$END$" description="Create Wave Layout with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="breakpoint" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="width" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="min_width" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1135,6 +1152,7 @@
     <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="min_height" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="max_height" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="zones" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -1152,7 +1170,7 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_meta_card" value="ui.meta_card(box='$box$',title='$title$',refresh=$refresh$,notification='$notification$',redirect='$redirect$',icon='$icon$',dialog=$dialog$,theme='$theme$',tracker=$tracker$,layouts=[&#10;	$layouts$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave MetaCard with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_meta_card" value="ui.meta_card(box='$box$',title='$title$',refresh=$refresh$,notification='$notification$',redirect='$redirect$',icon='$icon$',dialog=$dialog$,theme='$theme$',tracker=$tracker$,layouts=[&#10;	$layouts$	&#10;],scripts=[&#10;	$scripts$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave MetaCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="refresh" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1163,6 +1181,7 @@
     <variable name="theme" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="tracker" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="layouts" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="scripts" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
@@ -1387,6 +1406,16 @@
       <option name="Python" value="true"/>
     </context>
   </template>
+  <template name="w_full_script" value="ui.script(path='$path$',asynchronous=$asynchronous$,cross_origin='$cross_origin$',referrer_policy='$referrer_policy$',integrity='$integrity$'),$END$" description="Create Wave Script with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="path" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="asynchronous" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="cross_origin" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="referrer_policy" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="integrity" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
   <template name="w_full_section_card" value="ui.section_card(box='$box$',title='$title$',subtitle='$subtitle$',items=[&#10;	$items$	&#10;],commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave SectionCard with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1583,13 +1612,14 @@
       <option name="Python" value="true"/>
     </context>
   </template>
-  <template name="w_full_table" value="ui.table(name='$name$',multiple=$multiple$,groupable=$groupable$,downloadable=$downloadable$,resettable=$resettable$,height='$height$',visible=$visible$,tooltip='$tooltip$',columns=[&#10;	$columns$	&#10;],rows=[&#10;	$rows$	&#10;],values=[&#10;	$values$	&#10;]),$END$" description="Create Wave Table with full attributes." toReformat="true" toShortenFQNames="true">
+  <template name="w_full_table" value="ui.table(name='$name$',multiple=$multiple$,groupable=$groupable$,downloadable=$downloadable$,resettable=$resettable$,height='$height$',checkbox_visibility='$checkbox_visibility$',visible=$visible$,tooltip='$tooltip$',columns=[&#10;	$columns$	&#10;],rows=[&#10;	$rows$	&#10;],values=[&#10;	$values$	&#10;]),$END$" description="Create Wave Table with full attributes." toReformat="true" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="multiple" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="groupable" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="downloadable" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="resettable" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="height" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="checkbox_visibility" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="visible" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="tooltip" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="columns" expression="" defaultValue="" alwaysStopAt="true"/>
@@ -1830,6 +1860,20 @@
     <variable name="progress" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="plot_color" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="data" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Python" value="true"/>
+    </context>
+  </template>
+  <template name="w_full_wide_info_card" value="ui.wide_info_card(box='$box$',title='$title$',caption='$caption$',icon='$icon$',image='$image$',category='$category$',name='$name$',color='$color$',commands=[&#10;	$commands$	&#10;])$END$" description="Create Wave WideInfoCard with full attributes." toReformat="true" toShortenFQNames="true">
+    <variable name="box" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="caption" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="icon" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="image" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="category" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="color" expression="" defaultValue="" alwaysStopAt="true"/>
     <variable name="commands" expression="" defaultValue="" alwaysStopAt="true"/>
     <context>
       <option name="Python" value="true"/>
