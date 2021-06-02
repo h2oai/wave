@@ -73,7 +73,7 @@ q.page['example'] = ui.markup_card(
 
 In the above example, we create an empty `div` HTML element on the page, load an animation library (anime.js), add a bit of Javascript to animate the `div` element. To tie things together correctly, we pass two additional arguments to `ui.inline_script()`:
 - The `requires` argument ensures that the library we intend to use (in this case, `anime.js`) is downloaded, imported, and ready to use.
-- The `targets` argument ensures that the HTML element the scripts operates on (in this case, the `div` element named `animation`), is available on the page.
+- The `targets` argument ensures that the HTML element the scripts operates on (in this case, the `div` element named `animation`), is available on the page. [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) can also be used to identify target elements.
 
 ## Handling Events
 
