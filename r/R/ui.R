@@ -3044,7 +3044,7 @@ ui_script <- function(
 #'
 #' @param content The Javascript source code to be executed.
 #' @param requires The names of modules required on the page's `window` global before running this script.
-#' @param targets The IDs of the HTML elements required to be present on the page before running this script.
+#' @param targets The HTML elements required to be present on the page before running this script. Each 'target' can either be the ID of the element (`foo`) or a CSS selector (`#foo`, `.foo`, `table > td.foo`, etc.).
 #' @return A InlineScript instance.
 #' @export
 ui_inline_script <- function(

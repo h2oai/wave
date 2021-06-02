@@ -2628,7 +2628,7 @@ def inline_script(
     Args:
         content: The Javascript source code to be executed.
         requires: The names of modules required on the page's `window` global before running this script.
-        targets: The IDs of the HTML elements required to be present on the page before running this script.
+        targets: The HTML elements required to be present on the page before running this script. Each 'target' can either be the ID of the element (`foo`) or a CSS selector (`#foo`, `.foo`, `table > td.foo`, etc.).
     Returns:
         A `h2o_wave.types.InlineScript` instance.
     """

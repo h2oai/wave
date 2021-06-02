@@ -7358,7 +7358,7 @@ class InlineScript:
         self.requires = requires
         """The names of modules required on the page's `window` global before running this script."""
         self.targets = targets
-        """The IDs of the HTML elements required to be present on the page before running this script."""
+        """The HTML elements required to be present on the page before running this script. Each 'target' can either be the ID of the element (`foo`) or a CSS selector (`#foo`, `.foo`, `table > td.foo`, etc.)."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

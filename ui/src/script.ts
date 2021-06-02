@@ -24,7 +24,7 @@ export interface InlineScript {
   content: S
   /** The names of modules required on the page's `window` global before running this script. */
   requires?: S[]
-  /** The IDs of the HTML elements required to be present on the page before running this script. */
+  /** The HTML elements required to be present on the page before running this script. Each 'target' can either be the ID of the element (`foo`) or a CSS selector (`#foo`, `.foo`, `table > td.foo`, etc.). */
   targets?: S[]
 }
 
@@ -53,7 +53,8 @@ const
     return true
   },
   hasModules = (paths: S[]) => !paths.some(p => !hasModule(p)),
-  hasElements = (ids: S[]) => !ids.some(id => !document.getElementById(id))
+  hasTarget = (selector: S) => document.getElementById(selector) || document.querySelector(selector),
+  hasTargets = (selectors: S[]) => !selectors.some(id => !hasTarget(id))
 
 export const
   installScripts = (scripts: Script[]) => {
@@ -79,7 +80,7 @@ export const
           if (!hasModules(requires)) return false
         }
         if (targets && targets.length) {
-          if (!hasElements(targets)) return false
+          if (!hasTargets(targets)) return false
         }
         return true
       }
