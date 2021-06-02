@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@antv/g2": "^4.0.4",
+    "@antv/g2": "^4.1.17",
     "@babel/core": "7.8.4",
     "@fluentui/react": "^7.175.2",
     "@popperjs/core": "^2.1.1",
