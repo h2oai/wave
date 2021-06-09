@@ -16,7 +16,7 @@ MLOPS_URL = os.environ.get('MLOPS_URL')
 
 @app('/demo')
 async def serve(q: Q):
-    if 'H2_CLOUD_ENVIRONMENT' not in os.environ:
+    if 'H2O_CLOUD_ENVIRONMENT' not in os.environ:
         q.page['example'] = ui.form_card(
             box='1 1 -1 -1',
             items=[
