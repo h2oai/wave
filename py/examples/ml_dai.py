@@ -30,8 +30,11 @@ async def serve(q: Q):
     elif q.args.train:
         # get DAI instance name
         for dai_instance in q.client.dai_instances:
-            if dai_instance['id'] == int(q.client.dai_instance_id):
+            if dai_instance['id'] == int(q.args.dai_instance_id):
                 dai_instance_name = dai_instance['name']
+
+        model_details = f'''**Driverless AI Experiment:**
+            <a href="{STEAM_URL}/oidc-login-start?forward=/proxy/driverless/{q.args.dai_instance_id}/openid/callback" target="_blank">{dai_instance_name}</a>'''
 
         # show training progress and details
         q.page['example'].items[1].dropdown.value = q.args.dai_instance_id
@@ -39,8 +42,7 @@ async def serve(q: Q):
         q.page['example'].items[4].message_bar.type = 'info'
         q.page['example'].items[4].message_bar.text = 'Training in progress...'
         q.page['example'].items[5].progress.visible = True
-        q.page['example'].items[6].text.content = f'''Driverless AI Experiment:
-            <a href="{STEAM_URL}/oidc-login-start?forward=/proxy/driverless/{q.args.dai_instance_id}/openid/callback" target="_blank">{dai_instance_name}</a>'''
+        q.page['example'].items[6].text.content = model_details
         q.page['example'].items[7].text.content = ''
         await q.page.save()
 
@@ -57,11 +59,17 @@ async def serve(q: Q):
             _dai_interpretability=10
         )
 
+        project_id = q.client.wave_model.project_id
+        model_details += f'''<br />**MLOps Deployment:**
+            <a href="{MLOPS_URL}/projects/{project_id}" target="_blank">{project_id}'''
+
         # show prediction option
+        q.page['example'].items[3].buttons.visible = True
         q.page['example'].items[3].buttons.items[1].button.disabled = False
         q.page['example'].items[4].message_bar.type = 'success'
         q.page['example'].items[4].message_bar.text = 'Training successfully completed!'
         q.page['example'].items[5].progress.visible = False
+        q.page['example'].items[6].text.content = model_details
     elif q.args.predict:
         # predict on test data
         preds = q.client.wave_model.predict(test_df=q.client.test_df)
@@ -99,10 +107,17 @@ async def serve(q: Q):
             items=[
                 ui.text(content='''The sample dataset used is the
                     <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_wine.html" target="_blank">wine dataset</a>.'''),
-                ui.dropdown(name='dai_instance_id', choices=choices_dai_instances, value=dai_instance_id,
-                            required=True),
-                ui.text(content=f'''Manage your <a href="{STEAM_URL}" target="_blank">AI Engines</a>''',
-                        visible=disable_training),
+                ui.dropdown(
+                    name='dai_instance_id',
+                    label='Select Driverless AI instance',
+                    choices=choices_dai_instances,
+                    value=dai_instance_id,
+                    required=True),
+                ui.text(
+                    content=f'''No Driverless AI instances available. You may create one in 
+                        <a href="{STEAM_URL}/#/driverless/instances" target="_blank">AI Engines</a> and 
+                        refresh the page.''',
+                    visible=disable_training),
                 ui.buttons(items=[
                     ui.button(name='train', label='Train', primary=True, disabled=disable_training),
                     ui.button(name='predict', label='Predict', primary=True, disabled=True),
