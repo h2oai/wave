@@ -52,7 +52,7 @@ export interface Slider {
   trigger?: B
   /** The width of the slider, e.g. '100px'. Defaults to '100%'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S

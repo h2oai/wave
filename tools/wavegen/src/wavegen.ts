@@ -985,15 +985,28 @@ const
       },
       trailingComma = ({ isRoot }: Type) => isRoot ? '' : ',',
       getSnippetParams = (sm: Member[], rm: Member[]) => sm.map(mapSnippets).join('') + rm.map(mapSnippets).join(''),
-      mapVariables = (m: Member) => ({
-        _name: 'variable',
-        _attrs: {
-          name: m.name,
-          expression: '',
-          defaultValue: '',
-          alwaysStopAt: 'true'
+      mapVariables = (m: Member) => {
+        let defaultValue = m.t === MemberT.Singular && m.typeName === 'B'
+          ? 'False'
+          : m.t === MemberT.Singular && (m.typeName === 'F' || m.typeName === 'U')
+            ? 'None'
+            : ''
+
+        defaultValue = m.comments.reduce((defaultVal, cur) => {
+          const match = /(.+Defaults to )(.+)(\.)/.exec(cur)
+          return match?.length && match.length >= 3 ? `${match[2].replace(/(^['"`])|(['"`]$)/, '')}` : defaultVal
+        }, defaultValue)
+
+        return {
+          _name: 'variable',
+          _attrs: {
+            name: m.name,
+            expression: '',
+            defaultValue: defaultValue ? `&quot;${defaultValue}&quot;` : '',
+            alwaysStopAt: 'true'
+          }
         }
-      }),
+      },
       mapSnippets = (m: Member) => {
         let leftSurrounding = '', rightSurrounding = ''
         if (m.t === MemberT.Enum || m.t === MemberT.Singular && (m.typeName === 'S' || m.typeName === 'Id')) {
@@ -1052,7 +1065,7 @@ const
         })
     snippetJSON._content = [...shortTemplates, ...longTemplates] as any
 
-    fs.writeFileSync('wave.xml', toXML(snippetJSON, { indent: '  ' }))
+    fs.writeFileSync('wave-components.xml', toXML(snippetJSON, { indent: '  ' }))
   },
   main = (typescriptSrcDir: S, pyOutDir: S, rOutDir: S) => {
     const files: File[] = []

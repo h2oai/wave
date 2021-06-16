@@ -36,11 +36,11 @@ export interface Checklist {
   choices?: Choice[]
   /** True if the form should be submitted when the checklist value changes. */
   trigger?: B
-  /** True if checklist should be rendered horizontally. */
+  /** True if checklist should be rendered horizontally. Defaults to False. */
   inline?: B
   /** The width of the checklist, e.g. '100px'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S

@@ -52,7 +52,7 @@ interface TableColumn {
   link?: B
   /** Defines the data type of this column. Defaults to `string`. */
   data_type?: 'string' | 'number' | 'time'
-  /** Defines how to render each cell in this column. Defaults to plain text. */
+  /** Defines how to render each cell in this column. Renders as plain text by default. */
   cell_type?: TableCellType
 }
 
@@ -105,7 +105,7 @@ export interface Table {
   values?: S[]
   /** Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'. */
   checkbox_visibility?: 'always' | 'on-hover' | 'hidden'
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S

@@ -42,7 +42,7 @@ export interface Tabs {
   items?: Tab[]
   /** The width of the tabs, e.g. '100px'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** True if tabs should be rendered as links instead of buttons. */
   link?: B

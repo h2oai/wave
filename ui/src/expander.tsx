@@ -35,7 +35,7 @@ export interface Expander {
   items?: Component[]
   /** The width of the expander, e.g. '100px'. Defaults to '100%'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
 }
 

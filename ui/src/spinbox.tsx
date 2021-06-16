@@ -39,7 +39,7 @@ export interface Spinbox {
   disabled?: B
   /** The width of the spinbox, e.g. '100px'. Defaults to '100%'. */
   width?: S
-  /** True if the component should be visible. Defaults to true. */
+  /** True if the component should be visible. Defaults to True. */
   visible?: B
   /** True if the form should be submitted when the spinbox value changes. */
   trigger?: B
