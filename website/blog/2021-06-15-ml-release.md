@@ -18,7 +18,7 @@ Several versions of H2O Wave ML have been released since the last announcement. 
 
 You can run both the `H2O-3` and `DAI` engines on *Cloud*.
 
-For `H2O-3` it's working the same as if *Wave ML* was run locally - the `H2O-3` server is initialized and used. No additional steps are necessary (the future work will extend this further to use *Cloud* resources).
+For `H2O-3` it works the same as running *Wave ML* locally - the `H2O-3` server is initialized and used. No additional steps are necessary (the future work will extend this further to use *Cloud* resources).
 
 For `DAI` it's essential to enable OpenID Connect (OIDC) and set up the correct ENV variables. This is done in your [app.toml](https://h2oai.github.io/h2o-ai-cloud/docs/userguide/developer-guide#apptoml) file.
 
@@ -38,7 +38,7 @@ Set up your `app.toml` accordingly:
 
 ```toml
 [Runtime]
-EnableOIDC = false
+EnableOIDC = true
 
 [[Env]]
 Name = "H2O_WAVE_ML_STEAM_ADDRESS"
@@ -51,8 +51,8 @@ Secret = "h2oai-mlops"
 SecretKey = "gateway"
 ```
 
-Now you can use your *Steam* *DAI* instance in *Wave ML* in two ways:
-1. either you specify the instance name in the ENV variable. This option is suitable for a multinode setup:
+You can use your *Steam* DAI instance with *Wave ML* in either of two ways:
+1. Specify the instance name in the ENV variable. This option is suitable for a multinode setup:
    
 ```toml
 [[Env]]
@@ -60,7 +60,7 @@ Name = "H2O_WAVE_ML_STEAM_CLUSTER_NAME"
 Value = "my-cool-multinode-project-name"
 ```
 
-2. or you can specify the instance name directly in [API](https://wave.h2o.ai/docs/api/h2o_wave_ml/ml#build_model):
+2. Specify the instance name directly in [API](https://wave.h2o.ai/docs/api/h2o_wave_ml/ml#build_model):
 
 ```py
 model = build_model(_steam_dai_instance_name='my-dai')
@@ -75,7 +75,7 @@ A new module was introduced to `Wave ML` available as `h2o_wave_ml.utils`. It co
 
 - `list_dai_instances()`: Gets a list of all available Driverless instances.
 - `list_dai_multinodes()`: Gets a list of all available Driverless multinode instances.
-- `save_autodoc()`: Saves an autodoc document.
+- `save_autodoc()`: Saves the AutoDoc of DAI model.
 
 Use [`list_dai_instances()`](https://wave.h2o.ai/docs/api/h2o_wave_ml/utils#list_dai_instances) to obtain a list of your DAI instances. You can use it later to feed `build_model()` with particular instance name:
 
@@ -87,7 +87,7 @@ async def serve(q: Q):
     dai_instances = list_dai_instances(access_token=q.auth.access_token)
 ```
 
-An autodoc is available to download if the model was built using DAI backend. Use `save_autodoc()` to save a `.docx` file to drive:
+An AutoDoc is available to download if the model was built using DAI backend. Use `save_autodoc()` to save a `.docx` file to drive:
 
 ```py {7}
 from h2o_wave_ml import build_model
@@ -132,9 +132,9 @@ async def serve(q: Q):
 
 ## Notable Features
 
-- A [`build_model()`](https://wave.h2o.ai/docs/api/h2o_wave_ml/ml#build_model) was updated of several `H2O-3` and `DAI` parameters. See an [example](https://wave.h2o.ai/docs/examples/ml-h2o-parameters) for `H2O-3` parameters.
+- [`build_model()`](https://wave.h2o.ai/docs/api/h2o_wave_ml/ml#build_model) was updated with several `H2O-3` and `DAI` parameters. See an [example](https://wave.h2o.ai/docs/examples/ml-h2o-parameters) for `H2O-3` parameters.
 
-- *Pandas* object can be used for training, testing and validating:
+- *Pandas* dataframe can be used for training, testing and validating:
 ```py {9}
 from h2o_wave_ml import build_model
 
@@ -149,9 +149,9 @@ model = build_model(train_df=train_df, target_column='target')
 
 - A validation dataset can be passed to [`build_model()`](https://wave.h2o.ai/docs/api/h2o_wave_ml/ml#build_model) function. Choose from `validation_file_path` in case of a file or `validation_df` in case of a *Pandas* dataframe.
 
-- A list of categorical columns can be specified using a `categorical_columns` argument of a [`build_model()`](https://wave.h2o.ai/docs/api/h2o_wave_ml/ml#build_model) function.
+- A list of categorical columns can be specified using the `categorical_columns` argument of a [`build_model()`](https://wave.h2o.ai/docs/api/h2o_wave_ml/ml#build_model) function.
 
-- Columns can be dropped or included using a `drop_columns` and `feature_columns` of a [`build_model()`](https://wave.h2o.ai/docs/api/h2o_wave_ml/ml#build_model) function.
+- Columns can be dropped or included using `drop_columns` or `feature_columns` of a [`build_model()`](https://wave.h2o.ai/docs/api/h2o_wave_ml/ml#build_model) function.
 
 See the [API](https://wave.h2o.ai/docs/api/h2o_wave_ml/index) for *Wave ML* and [examples](https://wave.h2o.ai/docs/examples/ml-h2o) on official Wave page.
 
