@@ -1,47 +1,63 @@
 import { Card, connect, on, Page, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import * as Handlebars from 'handlebars'
 
+type Template = {
+  hash: string,
+  render: HandlebarsTemplateDelegate<any>,
+}
+
 const
-  dump = Handlebars.compile(`<pre>{{{state}}}</pre>`),
   init = () => {
-    let
-      _render = dump,
-      _pause = false
     const
-      root = document.getElementById('root'),
-      state: { [name: string]: any } = {},
-      stringify = (x: any) => ({ state: JSON.stringify(x, null, 2) }),
-      render = () => {
-        if (_pause) return
-        if (root) root.innerHTML = _render(_render === dump ? stringify(state) : state)
-      },
-      handlePage = (page: Page) => {
-        _pause = true
-        page.items().forEach(card => {
-          handleCard(card)
-          on(card.changed, () => handleCard(card))
+      root = document.getElementById('root') || document.getElementsByTagName('body')[0],
+      templates: { [name: string]: Template } = {},
+      isMeta = (card: Card) => card.name === '__meta__',
+      renderPage = (page: Page) => {
+        const
+          all = page.items(),
+          meta = all.find(card => isMeta(card)),
+          cards = all.filter(card => !isMeta(card))
+
+        if (!meta) return
+
+        renderCard(meta)
+        on(meta.changed, () => {
+          renderCard(meta)
+          cards.forEach(renderCard)
         })
-        _pause = false
-        render()
+        cards.forEach(card => {
+          renderCard(card)
+          on(card.changed, () => renderCard(card))
+        })
       },
-      handleCard = (card: Card) => {
-        if (card.name === '__meta__') {
-          const template = card.state.template as string
-          if (template) _render = Handlebars.compile(template)
+      renderCard = (card: Card) => {
+        let t = templates[card.name]
+        const template = card.state.__template__ as string
+        if (!t || (t && t.hash !== template)) { // TODO optimize
+          t = templates[card.name] = {
+            hash: template,
+            render: Handlebars.compile(template),
+          }
         }
-        state[card.name] = card.state
-        render()
+        if (t) {
+          const content = t.render(card.state)
+          if (isMeta(card)) {
+            root!.innerHTML = content
+          } else {
+            root!.querySelector(`#${card.name}`)!.innerHTML = content
+          }
+        }
       },
       handleError = (message: string) => {
-        if (root) root.innerText = message
+        root!.innerText = message
       }
 
     connect(e => {
       switch (e.t) {
         case WaveEventType.Page:
           const { page } = e
-          handlePage(page)
-          on(page.changed, () => handlePage(page))
+          renderPage(page)
+          on(page.changed, () => renderPage(page))
           break
         case WaveEventType.Error:
           switch (e.code) {

@@ -91,8 +91,8 @@ run: ## Run server
 run-db: ## Run database server
 	go run cmd/wavedb/main.go
 
-run-micro: ## Run microwave
-	go run cmd/wave/main.go -web-dir ./u
+run-hb: ## Run handlebars frontend
+	go run cmd/wave/main.go -web-dir ./x/handlebars
 
 run-cypress: ## Run Cypress
 	cd test && ./node_modules/.bin/cypress open
