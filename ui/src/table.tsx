@@ -43,7 +43,7 @@ interface TableColumn {
   searchable?: B
   /** Indicates whether the contents of this column are displayed as filters in a dropdown. */
   filterable?: B
-  /** Indicates whether each cell in this column should be displayed as a clickable link. */
+  /** Indicates whether each cell in this column should be displayed as a clickable link. Note that link can be applied to a single textual col only. */
   link?: B
   /** Defines the data type of this column. Defaults to `string`. */
   data_type?: 'string' | 'number' | 'time'
@@ -444,7 +444,10 @@ export const
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: QColumn) => {
         if (!item || !col) return <span />
 
-        const v = item[col.fieldName as S]
+        let v = item[col.fieldName as S]
+        if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
+        if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
+        if (col.dataType === 'time') v = new Date(v).toLocaleString()
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {
             wave.args[m.name] = [item.key as S]
@@ -453,11 +456,7 @@ export const
           return <Fluent.Link onClick={onClick}>{v}</Fluent.Link>
         }
 
-        if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
-        if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
-        if (col.dataType === 'time') return <span>{new Date(v).toLocaleString()}</span>
-
-        return <span>{v}</span>
+        return v
       },
       computeHeight = () => {
         if (m.height) return m.height
