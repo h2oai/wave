@@ -1,81 +1,34 @@
-##Python Reference
+#library(h2owave)
 
-#@app('/demo')
-#async def serve(q: Q):
-#    count = q.client.count or 0
-#
-#    if not q.client.initialized:
-#        q.page['example'] = ui.form_card(box='1 1 12 10', items=[
-#            ui.button(name='increment', label=f'Count={count}')
-#        ])
-#        q.client.initialized = True
-#
-#    if q.args.increment:
-#        q.client.count = count = count + 1
-#        q.page['example'].items[0].button.label = f'Count={count}'
-#
-#    await q.page.save()
-
-library(h2owave)
-## set route
-route <- "/demo"
-## serve page
-serve <- function(route){
-page <- Site(route)
-count = 0
+app("/demo")
+serve <- function(route)
+{
+    print(paste0("route ",route))
+    print(paste0("from beancounter ",q$client))
+#    q$client$test <- runif(1)
+#    ifelse(q$client$test <- q$client$test + 1
+    print(paste0("from client test ", is.null(q$client$test)))
+    q$client$test <- ifelse(is.null(q$client$test),0, q$client$test)
+#    print(q)
+#    print(paste0("private-client ",q$.__enclos_env__$private$.client))
+    ifelse(q$args$increment == TRUE,q$client$test <- q$client$test + 1,q$client$test <- 0)
+    print("within serve")
+    print(environment())
+    print(parent.env(environment()))
+    print(paste0("envlist ",ls()))
+#    q$test <- q$test + 1
+    print(paste0("q-value: ",q$test))
+    page <- Site(route)
+    count = 0
     page$add_card("example",ui_form_card(
-         box='2 2 12 10'
-         ,items = list(
-         ui_button(
-            name='increment'
-            ,label=paste0('Count=',count)
-        )
-    )
-))
-page$save()
+                                         box='2 2 12 10'
+                                         ,items = list(
+                                                       ui_button(
+                                                                 name='increment'
+                                                                 ,label=paste0('Count=',q$client$test)
+                                                       )
+                                         )
+                                         ))
+    page$save()
+    print("we exited")
 }
-
-library(httpuv)
-library(jsonlite)
-
-## setup server
-s <- startServer(host = "0.0.0.0", port = 15555,
-  app = list(
-    call = function(req) {
-            ## get the wave-client-id
-        route <- paste0("/",as.list(req)$HTTP_WAVE_CLIENT_ID)
-    ## create a page with route
-        serve(route)
-#        print(as.list(req))
-      body <- paste0("Time: ", Sys.time(), "<br>Path requested: ", req$PATH_INFO)
-      list(
-        status = 200L,
-        headers = list('Content-Type' = 'text/html'),
-        body = body
-      )
-    }
-  )
-)
-
-##register the app server with wave
-register_body <- list(
-    register_app=list(
-        address = "http://localhost:15555"
-        ,mode = 'unicast'
-        ,route = '/demo'
-    )
-)
-
-## push register
-httr::POST(
-    .config$hub_address
-    ,body=jsonlite::toJSON(register_body,auto_unbox=T)
-    ,httr::authenticate(
-        user=.config$hub_access_key_id
-        ,password=.config$hub_access_key_secret
-        )
-    ,content_type_json()
-    )
-
-
-

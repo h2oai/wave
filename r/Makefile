@@ -13,6 +13,10 @@ package: preinstall doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
 	R CMD build .
 
+package0: doc $(PKG_NAME)_$(PKG_VERSION).tar.gz
+$(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
+	R CMD build .
+
 check: $(PKG_NAME)_$(PKG_VERSION).tar.gz 
 	R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
