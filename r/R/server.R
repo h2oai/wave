@@ -1,41 +1,118 @@
-#library(httpuv)
-#print("library")
-#print(environment())
-Q <- R6::R6Class("Q"
-,private = list(
-    .client = NULL
-    ,.user = NULL
+# Copyright 2020 H2O.ai, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+#' @title Create an \code{Auth} object 
+#' 
+#' @import R6 stringr jsonlite httr httpuv     
+#' 
+#' @description The \code{Auth} object stores credentials. 
+#' 
+#' @details The \code{Auth} object stores session, and user credentials. 
+#' This information can be used to create custom behaviour for users. 
+#' 
+#' @return A \code{Auth} object. 
+#' 
+.Auth <- R6::R6Class(".Auth",
+                    ,public = list(
+#' @field username - The username of the user
+                                   username = NULL
+#' @field subject - Unique identifier for the user
+                                   ,subject = NULL
+#' @field access_token - The access token of the user                                   
+                                   ,access_token = NULL
+#' @field refresh_token - The refresh token of the user                                   
+                                   ,refresh_token = NULL
+                                   ))
+
+
+#' @title Create a \code{Query} object 
+#' 
+#' @import R6 stringr jsonlite httr httpuv     
+#' 
+#' @description The \code{Query} object stores query information. 
+#' 
+#' @details The \code{Query} object stores information about the query. 
+#' It also stores the \code{args} information, along with \code{client}
+#' and \code{user}. It also provides \code{auth} information via an \code{auth} object. 
+#' 
+#' @return A \code{Query} object. 
+#' 
+.Query <- R6::R6Class(".Query"
+                 ,private = list(
+#' @field .client - A list that holds client specific information
+                                 .client = NULL
+#' @field .user - A list that holds user specific information
+                                 ,.user = NULL
+                 )
+
+                 ,public = list(
+#' @field route - The request \code{route} currented being served
+                                route = NULL
+#' @field auth - The R6 \code{Auth} object 
+                                ,auth = NULL
+#' @field args - The argument holds query arguments
+                                ,args = NULL
+#' @field app - The app parameter holds app specific query arguments
+                                ,app = NULL
+
+
+#' @description Initialize a \code{Query} Object
+#' 
+#' @details The intialize function setup the private and public variables in the \code{Query} object. 
+#' These objects are the \code{route}, \code{args}, \code{app}, \code{auth}, \code{.client}, and 
+#' \code{.user}.                                 
+#' 
+#' @return An initialized \code{Query} object.
+#'
+                                ,initialize = function() {
+                                    self$route <- NULL
+                                    self$args <- list()
+                                    self$app <- list()
+                                    self$auth <- .Auth$new()
+                                    private$.client <- list()
+                                    private$.user <- list()
+                                }
+
+
+#' @description Check and Append \code{client} and \code{user} arguments
+#' 
+#' @param route - The route that is being served. 
+#'                                 
+#' @details The \code{check_n_append} function creates a unique argument list for each user or client depending on 
+#' mode of the application. It first checks if the list for the specific \code{client} and \code{user} exists. 
+#' If it does it passes the same list. If it does not then it appends a unique list. 
+#' 
+#' @return A \code{user} or \code{client} argument list.
+#'
+                                ,check_n_append = function(route) if(route %in% names(private$.client)) {} else {
+                                    private$.client[[route]] <- list()
+                                    private$.user[[route]] <- list()}
+                                ),
+                 ,active = list(
+                                client = function(value) {if(missing(value)) {
+                                    return(private$.client[[self$route]]) }
+                                else {private$.client[[self$route]] <- value}}
+                                ,user = function(value) {if(missing(value)) {
+                                    return(private$.user[[self$route]]) }
+                                else {private$.user[[self$route]] <- value}}
+                                ,ctest = function(value) {if(missing(value)) return(private$.client[[1]]) else private$.client[[1]] <- value}
+                 )
 )
-,public = list(
-    route = NULL
-    ,test = 0
-    ,args = NULL
-    ,app = NULL
-    ,initialize = function() {
-        self$route <- NULL
-        self$args <- list()
-        self$app <- list(x=1)
-        private$.client <- list(test=list(a=1,b=2,c=3))
-        private$.user <- list()
-    }
-    ,check_n_append = function(route) if(route %in% names(private$.client)) {} else {
-        private$.client[[route]] <- list(a=1,b=2)
-        private$.user[[route]] <- list(a=1,b=2)}
-),
-,active = list(
-    client = function(value) {if(missing(value)) {
-        return(private$.client[[self$route]]) }
-        else {private$.client[[self$route]] <- value}}
-    ,user = function(value) {if(missing(value)) {
-        return(private$.user[[self$route]]) }
-        else {private$.user[[self$route]] <- value}}
-    ,ctest = function(value) {if(missing(value)) return(private$.client[[1]]) else private$.client[[1]] <- value}
-    )
-)
-q <- Q$new()
-qtest <- q$test
-#print(q)
-#print(paste0("global-list: ",ls()))
+
+q <- .Query$new()
+
 ## set route
 #' @export 
 route <- "/demo"
@@ -43,33 +120,42 @@ route <- "/demo"
 #' @export
 ## serve page
 serve <- function(route){
-#    print("serve")
-#    print(environment())
-#    print(parent.env(environment()))
 }
 
 #' @export 
 ## Initial the App
 app <- function(route
-                ,mode='unicast')
+                ,mode=.config$app_mode
+                ,server_address = 'http://localhost'
+                ,server_port = 15555)
 {
     print("app")
     print(environment())
     print(parent.env(environment()))
     ## setup server
-    s <- startServer(host = "0.0.0.0", port = 15555,
+    s <- startServer(host = "0.0.0.0", port = server_port,
                      app = list(
                                 call = function(req) {
                                     ## get the wave-client-id
-                                    route <- paste0("/",as.list(req)$HTTP_WAVE_CLIENT_ID)
+                                    #                                    print(as.list(req))
+                                    if(tolower(mode) == 'unicast'){
+                                        route <- paste0("/",as.list(req)$HTTP_WAVE_CLIENT_ID)
+                                    }
+                                    else if(tolower(mode) == 'multicast'){
+                                        route <- paste0("/",as.list(req)$HTTP_WAVE_SUBJECT_ID)
+                                    }
+                                    else {
+                                        route <- route
+                                    }
+                                    #                                    route <- paste0("/",as.list(req)$HTTP_WAVE_CLIENT_ID)
                                     q$route <- route
                                     q$check_n_append(route)
                                     print(paste0("route-now :",route))
-#                                    print(paste0("private-user ",names(q$.__enclos_env__$private$.user)))
-#                                    print(paste0("private-client ",q$.__enclos_env__$private$.client))
+                                    #                                    print(paste0("private-user ",names(q$.__enclos_env__$private$.user)))
+                                    #                                    print(paste0("private-client ",q$.__enclos_env__$private$.client))
                                     q$args <- fromJSON(rawToChar(as.list(req)$rook.input$read(-1)))
                                     print(paste0("qargs ",q$args))
-#                                    print(resp)
+                                    #                                    print(req)
                                     print("call")
                                     print(environment())
                                     print(parent.env(environment()))
@@ -82,14 +168,14 @@ app <- function(route
                                     } else {
                                         serve(route)
                                     }
-#                                    print(as.list(req)))
+                                    #                                    print(as.list(req)))
                                     body <- paste0("Time: ", Sys.time(), "<br>Path requested: ", req$PATH_INFO)
                                     list(
                                          status = 200L,
                                          headers = list('Content-Type' = 'text/html'),
                                          body = body
                                     )
-#                                    q$route <- NULL
+                                    #                                    q$route <- NULL
                                 }
                      )
     )
@@ -97,7 +183,7 @@ app <- function(route
     #register the app server with wave
     register_body <- list(
                           register_app=list(
-                                            address = 'http://localhost:15555'
+                                            address = paste0(server_address,":",as.character(server_port))
                                             ,mode = mode
                                             ,route = route
                           )
