@@ -137,11 +137,17 @@ export const
     throttle,
     push: (data?: any) => {
       if (!_wave) return
+
       if (data) {
         _wave.push(data)
         busyB(true)
         return
       }
+
+      // Unconditionally set location hash so that the app doesn't have to track changes.
+      const h = window.location.hash
+      if (h?.length > 1) args['#'] = h.substr(1)
+
       const d: Dict<any> = { ...args } // shallow clone
       clearRec(args) // clear
       _wave.push(d) // push clone

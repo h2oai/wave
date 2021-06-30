@@ -102,10 +102,6 @@ const
   App = bond(() => {
     const
       onHashChanged = () => {
-        const h = window.location.hash
-        if (h?.length > 1) {
-          wave.args['#'] = h.substr(1)
-        }
         wave.push()
       },
       init = () => {
