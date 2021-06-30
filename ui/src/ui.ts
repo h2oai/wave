@@ -135,14 +135,8 @@ export const
     args,
     debounce,
     throttle,
-    push: (data?: any) => {
+    push: () => {
       if (!_wave) return
-
-      if (data) {
-        _wave.push(data)
-        busyB(true)
-        return
-      }
 
       // Unconditionally set location hash so that the app doesn't have to track changes.
       const h = window.location.hash
