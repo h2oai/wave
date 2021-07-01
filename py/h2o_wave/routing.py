@@ -86,7 +86,7 @@ def on(arg: str = None, predicate: Optional[Callable] = None):
         if isinstance(arg, str) and len(arg):
             if arg.startswith('#'):  # location hash
                 rx, _, conv = compile_path(arg[1:])
-                _path_handlers.append((rx, conv, func))
+                _path_handlers.append((rx, conv, func, _get_arity(func)))
             elif '.' in arg:  # event
                 source, event = arg.split('.', 1)
                 if not len(source):
@@ -151,16 +151,19 @@ async def handle_on(q: Q) -> bool:
     for arg in args:
         arg_value = q.args[arg]
         if arg == '#':
-            for rx, conv, func in _path_handlers:
+            for rx, conv, func, arity in _path_handlers:
                 match = rx.match(arg_value)
                 if match:
                     params = match.groupdict()
                     for key, value in params.items():
                         params[key] = conv[key].convert(value)
                     if len(params):
-                        await func(q, **params)
+                        if arity <= 1:
+                            await _invoke_handler(func, arity, q, None)
+                        else:
+                            await func(q, **params)
                     else:
-                        await func(q)
+                        await _invoke_handler(func, arity, q, None)
                     return True
         else:
             entries = _arg_handlers.get(arg)
