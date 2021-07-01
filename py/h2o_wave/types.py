@@ -259,9 +259,9 @@ class TextXl:
         self.content = content
         """The text content."""
         self.width = width
-        """No documentation available."""
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -338,9 +338,9 @@ class TextL:
         self.content = content
         """The text content."""
         self.width = width
-        """No documentation available."""
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.commands = commands
@@ -415,9 +415,9 @@ class TextM:
         self.content = content
         """The text content."""
         self.width = width
-        """No documentation available."""
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -484,9 +484,9 @@ class TextS:
         self.content = content
         """The text content."""
         self.width = width
-        """No documentation available."""
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name
@@ -553,9 +553,9 @@ class TextXs:
         self.content = content
         """The text content."""
         self.width = width
-        """No documentation available."""
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to True."""
         self.tooltip = tooltip
         """Tooltip message."""
         self.name = name

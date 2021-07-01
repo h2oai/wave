@@ -66,9 +66,9 @@
         "../../r/R"
       ],
       "preLaunchTask": "tsc: build - tools/wavegen/tsconfig.json",
-      "program": "build/wavegen.js",
+      "program": "${workspaceFolder}/tools/wavegen/src/wavegen.ts",
       "outFiles": [
-        "build/**/*.js"
+        "${workspaceFolder}/tools/wavegen/build/**/*.js"
       ]
     },
     {

@@ -136,8 +136,8 @@ ui_command <- function(
 #' Create extra-large sized text content.
 #'
 #' @param content The text content.
-#' @param width No documentation available.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
@@ -170,8 +170,8 @@ ui_text_xl <- function(
 #' Create large sized text content.
 #'
 #' @param content The text content.
-#' @param width No documentation available.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
 #' @param name An identifying name for this component.
@@ -204,8 +204,8 @@ ui_text_l <- function(
 #' Create medium sized text content.
 #'
 #' @param content The text content.
-#' @param width No documentation available.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextM instance.
@@ -234,8 +234,8 @@ ui_text_m <- function(
 #' Create small sized text content.
 #'
 #' @param content The text content.
-#' @param width No documentation available.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextS instance.
@@ -264,8 +264,8 @@ ui_text_s <- function(
 #' Create extra-small sized text content.
 #'
 #' @param content The text content.
-#' @param width No documentation available.
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to True.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
 #' @return A TextXs instance.

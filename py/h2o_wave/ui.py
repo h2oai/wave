@@ -100,8 +100,8 @@ def text_xl(
 
     Args:
         content: The text content.
-        width: No documentation available.
-        visible: True if the component should be visible. Defaults to true.
+        width: The width of the text , e.g. '100px'.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
         name: An identifying name for this component.
@@ -130,8 +130,8 @@ def text_l(
 
     Args:
         content: The text content.
-        width: No documentation available.
-        visible: True if the component should be visible. Defaults to true.
+        width: The width of the text , e.g. '100px'.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         commands: Contextual menu commands for this component.
         name: An identifying name for this component.
@@ -159,8 +159,8 @@ def text_m(
 
     Args:
         content: The text content.
-        width: No documentation available.
-        visible: True if the component should be visible. Defaults to true.
+        width: The width of the text , e.g. '100px'.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -186,8 +186,8 @@ def text_s(
 
     Args:
         content: The text content.
-        width: No documentation available.
-        visible: True if the component should be visible. Defaults to true.
+        width: The width of the text , e.g. '100px'.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
@@ -213,8 +213,8 @@ def text_xs(
 
     Args:
         content: The text content.
-        width: No documentation available.
-        visible: True if the component should be visible. Defaults to true.
+        width: The width of the text , e.g. '100px'.
+        visible: True if the component should be visible. Defaults to True.
         tooltip: Tooltip message.
         name: An identifying name for this component.
     Returns:
