@@ -12,6 +12,14 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.17.0
+June 30, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.17.0)
+- Added
+  - The location hash (`q.args['#']`) is now always available, regardless of whether it has changed.
+  - `@on()` annotations now support handling events.
+  - `@on()` handlers can now have 0-n formal parameters, and are supplied arguments accordingly.
+  - `ui.inline_script()` can use CSS selectors (e.g. `#foo`, `.foo`, `table > td.foo`) as targets.
+
 ## v0.16.0
 May 24, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.16.0)
 - Added
