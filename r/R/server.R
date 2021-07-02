@@ -58,20 +58,21 @@
                  )
 
                  ,public = list(
-#' @field route - The request \code{route} currented being served
+#' @param route - The \code{route} (page) that is currently being served
                                 route = NULL
 #' @field auth - The R6 \code{Auth} object 
                                 ,auth = NULL
 #' @field args - The argument holds query arguments
                                 ,args = NULL
-#' @field app - The app parameter holds app specific query arguments
+#' @field app - The app holds app specific query arguments
                                 ,app = NULL
-
+#' @field events - The events holds events specific query arguments
+                                ,events = NULL
 
 #' @description Initialize a \code{Query} Object
 #' 
 #' @details The intialize function setup the private and public variables in the \code{Query} object. 
-#' These objects are the \code{route}, \code{args}, \code{app}, \code{auth}, \code{.client}, and 
+#' These objects are the \code{route}, \code{args}, \code{app}, \code{auth}, \code{events}, \code{.client}, and 
 #' \code{.user}.                                 
 #' 
 #' @return An initialized \code{Query} object.
@@ -80,6 +81,7 @@
                                     self$route <- NULL
                                     self$args <- list()
                                     self$app <- list()
+                                    self$events <- list()
                                     self$auth <- .Auth$new()
                                     private$.client <- list()
                                     private$.user <- list()
@@ -88,28 +90,56 @@
 
 #' @description Check and Append \code{client} and \code{user} arguments
 #' 
-#' @param route - The route that is being served. 
+#' @param route - The \code{route} (page) that is currently being served
 #'                                 
 #' @details The \code{check_n_append} function creates a unique argument list for each user or client depending on 
 #' mode of the application. It first checks if the list for the specific \code{client} and \code{user} exists. 
-#' If it does it passes the same list. If it does not then it appends a unique list. 
+#' If the list exists then it does nothing, if it does not then it appends a unique list. 
 #' 
-#' @return A \code{user} or \code{client} argument list.
-#'
-                                ,check_n_append = function(route) if(route %in% names(private$.client)) {} else {
+                                ,check_n_append = function(route) {
+                                    if(route %in% names(private$.client)) {} else {
                                     private$.client[[route]] <- list()
                                     private$.user[[route]] <- list()}
-                                ),
+                                }
+
+
+#' @description Make Events Variable
+#' 
+#' @details The \code{make_events} checks for the existence of a \code{''} key in \code{args}.
+#' The existence of \code{''} indicates that events are available for the consumption of the
+#' user. If it is present it then creates a new variable \code{events} and appends the value
+#' of the \code{''} key to the \code{events} variable. 
+#'
+                                ,make_events = function() {
+                                    if(length(which(names(self$args) =="")) == 1){
+                                        self$events <- self$args[[which(names(self$args) == "")]]
+                                    }
+                                    else self$events <- NULL
+                                }
+
+
+#' @description Clear Route
+#' 
+#' @details The \code{clear_route} clears the route variable once the route has been served. 
+#'
+                                ,clear_route = function() {
+                                    self$route <- NULL
+                                }
+                                )
+
+
                  ,active = list(
+#' @field - client variable gets or sets the arguments in the \code{client} list                                
                                 client = function(value) {if(missing(value)) {
                                     return(private$.client[[self$route]]) }
                                 else {private$.client[[self$route]] <- value}}
+#' @field - user variable gets or sets the arguments in the \code{user} list                                
                                 ,user = function(value) {if(missing(value)) {
                                     return(private$.user[[self$route]]) }
                                 else {private$.user[[self$route]] <- value}}
-                                ,ctest = function(value) {if(missing(value)) return(private$.client[[1]]) else private$.client[[1]] <- value}
                  )
 )
+
 
 q <- .Query$new()
 
@@ -117,27 +147,69 @@ q <- .Query$new()
 #' @export 
 route <- "/demo"
 
+#' @title Serve Page
+#' 
+#' @param route - The route (page) that is being served
+#' 
+#' @description The function is a place holder for the application written by the developer in \code{serve}.
+#' 
 #' @export
-## serve page
+#'
+#Vassign_events <- function(){
+#    cal_length <- length(which(names()))
+#}
+
+#' @title Serve Page
+#' 
+#' @param route - The route (page) that is being served
+#' 
+#' @description The function is a place holder for the application written by the developer in \code{serve}.
+#' 
+#' @export
+#'
 serve <- function(route){
 }
 
-#' @export 
-## Initial the App
+
+#' @title Run Application
+#' 
+#' @param route - The route (page) that is being served
+#' @param mode - Is the app set to 'broadcast', 'multicast', or 'unicast'
+#' @param server_address - The domain address or the IP address of the application
+#' @param server_port - The port of the application
+#' 
+#' @description The function collects the parameters to run an application webserver.
+#' The \code{route}, \code{mode}, \code{server_address}, and \code{server_port} are 
+#' passed to the app function. \code{app} function then uses the provided parameters
+#' to initialize and control the logic flow of the application. It also uses these parameters
+#' to set and get \code{Query} objects. 
+#' 
+#' @export
+#'
 app <- function(route
                 ,mode=.config$app_mode
-                ,server_address = 'http://localhost'
+                ,server_address = 'http://127.0.0.1'
                 ,server_port = 15555)
 {
-    print("app")
-    print(environment())
-    print(parent.env(environment()))
-    ## setup server
-    s <- startServer(host = "0.0.0.0", port = server_port,
+
+#' @title Run Application
+#' 
+#' @param route - The route (page) that is being served
+#' @param mode - Is the app set to 'broadcast', 'multicast', or 'unicast'
+#' @param server_address - The domain address or the IP address of the application
+#' @param server_port - The port of the application
+#' 
+#' @description The function collects the parameters to run an application webserver.
+#' The \code{route}, \code{mode}, \code{server_address}, and \code{server_port} are 
+#' passed to the app function. \code{app} function then uses the provided parameters
+#' to initialize and control the logic flow of the application. It also uses these parameters
+#' to set and get \code{Query} objects. 
+#' 
+#' @export
+#'
+    httpuv::startServer(host = "127.0.0.1", port = server_port,
                      app = list(
                                 call = function(req) {
-                                    ## get the wave-client-id
-                                    #                                    print(as.list(req))
                                     if(tolower(mode) == 'unicast'){
                                         route <- paste0("/",as.list(req)$HTTP_WAVE_CLIENT_ID)
                                     }
@@ -147,40 +219,28 @@ app <- function(route
                                     else {
                                         route <- route
                                     }
-                                    #                                    route <- paste0("/",as.list(req)$HTTP_WAVE_CLIENT_ID)
                                     q$route <- route
                                     q$check_n_append(route)
-                                    print(paste0("route-now :",route))
-                                    #                                    print(paste0("private-user ",names(q$.__enclos_env__$private$.user)))
-                                    #                                    print(paste0("private-client ",q$.__enclos_env__$private$.client))
                                     q$args <- fromJSON(rawToChar(as.list(req)$rook.input$read(-1)))
-                                    print(paste0("qargs ",q$args))
-                                    #                                    print(req)
-                                    print("call")
-                                    print(environment())
-                                    print(parent.env(environment()))
-                                    print(paste0("envlist ",ls()))
-                                    print(paste0("qclient ",q$client))
-                                    ## create a page with route
+                                    q$make_events()
                                     if ("serve" %in% ls(envir = .GlobalEnv)) {
                                         get("serve", envir = .GlobalEnv)
                                         serve(route)
                                     } else {
                                         serve(route)
                                     }
-                                    #                                    print(as.list(req)))
+                                    q$clear_route() 
                                     body <- paste0("Time: ", Sys.time(), "<br>Path requested: ", req$PATH_INFO)
                                     list(
                                          status = 200L,
                                          headers = list('Content-Type' = 'text/html'),
                                          body = body
                                     )
-                                    #                                    q$route <- NULL
                                 }
                      )
     )
 
-    #register the app server with wave
+    ## Generate the App registration
     register_body <- list(
                           register_app=list(
                                             address = paste0(server_address,":",as.character(server_port))
@@ -188,7 +248,8 @@ app <- function(route
                                             ,route = route
                           )
     )
-    # push register
+
+    ## POST the App registration to the Wave server
     httr::POST(
                .config$hub_address
                ,body=jsonlite::toJSON(register_body,auto_unbox=T)
@@ -200,63 +261,3 @@ app <- function(route
     )
 
 }
-#.app_register()
-##' @title Basic Auth HTTP POST
-##' 
-##' @param body - The body of the HTTP POST message. 
-##' 
-##' @description The function posts a message to the Wave server
-##' 
-#.app_register <- function(body=NULL
-#                          ,headers=NULL
-#                          ,username=.config$hub_access_key_id
-#                          ,password=.config$hub_access_key_secret
-#                          ,address=address
-#                          ,mode=mode
-#                          ,route=route)
-#{
-#    register_body <- list(register_app=list(
-#                                            address=address
-#                                            ,mode=mode
-#                                            ,route=route
-#                                            ))
-#
-#    .BAclient_post(
-#                   body=jsonlite::toJSON(register_body,auto_unbox=T)
-#                   ,username = .config$hub_access_key_id
-#                   ,password = .config$hub_access_key_secret
-#    )
-#}
-#
-#' @title Basic Auth HTTP POST
-#' 
-#' @param body - The body of the HTTP POST message. 
-#' 
-#' @description The function posts a message to the Wave server
-#' 
-#.BAclient_post <- function(
-#                           body=NULL
-#                           , username = NULL
-#                           , password = NULL
-#                           ) {
-#    resp <- httr::POST(.config$hub_address
-#                       ,body = body
-#                       ,httr::authenticate(
-#                                           user = username
-#                                           ,password = password
-#                       )
-#                       ,content_type_json()
-#    )
-#    if (resp$status_code != 200) {
-#        stop(
-#             sprintf(
-#                     "POST failed with error code %s and message %s",
-#                     resp$status_code,
-#                     ifelse(rawToChar(resp$content), rawToChar(resp$content), NULL)
-#             )
-#        )
-#    }
-#    else{
-#        return(jsonlite::fromJSON(rawToChar(resp$content)))
-#    }
-#}
