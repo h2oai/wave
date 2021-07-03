@@ -210,6 +210,10 @@
 .app <- .App$new()
 options(error=function() traceback(3))
 
+#q <- .Query$new()
+print("in base")
+print(environment())
+print(parent.env(environment()))
 #' @title Run Application
 #' 
 #' @param route The route (page) that is being served
