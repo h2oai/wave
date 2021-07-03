@@ -25,15 +25,15 @@
 #' @return A \code{Auth} object. 
 #' 
 .Auth <- R6::R6Class(".Auth",
-                    ,public = list(
+                    public = list(
 #' @field username - The username of the user
-                                   username = NULL
+                                   username = NULL,
 #' @field subject - Unique identifier for the user
-                                   ,subject = NULL
+                                   subject = NULL,
 #' @field access_token - The access token of the user                                   
-                                   ,access_token = NULL
+                                   access_token = NULL,
 #' @field refresh_token - The refresh token of the user                                   
-                                   ,refresh_token = NULL
+                                   refresh_token = NULL
                                    ))
 
 
@@ -49,25 +49,24 @@
 #' 
 #' @return A \code{Query} object. 
 #' 
-.Query <- R6::R6Class(".Query"
-                 ,private = list(
+.Query <- R6::R6Class(".Query",
+                 private = list(
 #' @field .client - A list that holds client specific information
-                                 .client = NULL
+                                 .client = NULL,
 #' @field .user - A list that holds user specific information
-                                 ,.user = NULL
-                 )
-
+                                 .user = NULL
+                 ),
                  ,public = list(
 #' @param route - The \code{route} (page) that is currently being served
-                                route = NULL
+                                route = NULL,
 #' @field auth - The R6 \code{Auth} object 
-                                ,auth = NULL
+                                auth = NULL,
 #' @field args - The argument holds query arguments
-                                ,args = NULL
+                                args = NULL,
 #' @field app - The app holds app specific query arguments
-                                ,app = NULL
+                                app = NULL,
 #' @field events - The events holds events specific query arguments
-                                ,events = NULL
+                                events = NULL,
 
 #' @description Initialize a \code{Query} Object
 #' 
@@ -77,7 +76,7 @@
 #' 
 #' @return An initialized \code{Query} object.
 #'
-                                ,initialize = function() {
+                                initialize = function() {
                                     self$route <- NULL
                                     self$args <- list()
                                     self$app <- list()
@@ -85,7 +84,7 @@
                                     self$auth <- .Auth$new()
                                     private$.client <- list()
                                     private$.user <- list()
-                                }
+                                },
 
 
 #' @description Check and Append \code{client} and \code{user} arguments
@@ -96,11 +95,11 @@
 #' mode of the application. It first checks if the list for the specific \code{client} and \code{user} exists. 
 #' If the list exists then it does nothing, if it does not then it appends a unique list. 
 #' 
-                                ,check_n_append = function(route) {
+                                check_n_append = function(route) {
                                     if(route %in% names(private$.client)) {} else {
                                     private$.client[[route]] <- list()
                                     private$.user[[route]] <- list()}
-                                }
+                                },
 
 
 #' @description Make Events Variable
@@ -110,43 +109,37 @@
 #' user. If it is present it then creates a new variable \code{events} and appends the value
 #' of the \code{''} key to the \code{events} variable. 
 #'
-                                ,make_events = function() {
+                                make_events = function() {
                                     if(length(which(names(self$args) =="")) == 1){
                                         self$events <- self$args[[which(names(self$args) == "")]]
                                     }
                                     else self$events <- NULL
-                                }
+                                },
 
 
 #' @description Clear Route
 #' 
 #' @details The \code{clear_route} clears the route variable once the route has been served. 
 #'
-                                ,clear_route = function() {
+                                clear_route = function() {
                                     self$route <- NULL
                                 }
-                                )
+                                ),
 
 
-                 ,active = list(
+                 active = list(
 #' @field - client variable gets or sets the arguments in the \code{client} list                                
                                 client = function(value) {if(missing(value)) {
                                     return(private$.client[[self$route]]) }
-                                else {private$.client[[self$route]] <- value}}
+                                else {private$.client[[self$route]] <- value}},
 #' @field - user variable gets or sets the arguments in the \code{user} list                                
-                                ,user = function(value) {if(missing(value)) {
+                                user = function(value) {if(missing(value)) {
                                     return(private$.user[[self$route]]) }
                                 else {private$.user[[self$route]] <- value}}
                  )
 )
 
 
-q <- .Query$new()
-
-## set route
-#' @export 
-route <- "/demo"
-
 #' @title Serve Page
 #' 
 #' @param route - The route (page) that is being served
@@ -155,22 +148,14 @@ route <- "/demo"
 #' 
 #' @export
 #'
-#Vassign_events <- function(){
-#    cal_length <- length(which(names()))
-#}
-
-#' @title Serve Page
-#' 
-#' @param route - The route (page) that is being served
-#' 
-#' @description The function is a place holder for the application written by the developer in \code{serve}.
-#' 
-#' @export
-#'
-serve <- function(route){
+serve <- function(route="/demo"){
 }
 
 
+#q <- .Query$new()
+print("in base")
+print(environment())
+print(parent.env(environment()))
 #' @title Run Application
 #' 
 #' @param route - The route (page) that is being served
@@ -186,27 +171,15 @@ serve <- function(route){
 #' 
 #' @export
 #'
-app <- function(route
+app <- function(route="/demo"
                 ,mode=.config$app_mode
                 ,server_address = 'http://127.0.0.1'
                 ,server_port = 15555)
 {
-
-#' @title Run Application
-#' 
-#' @param route - The route (page) that is being served
-#' @param mode - Is the app set to 'broadcast', 'multicast', or 'unicast'
-#' @param server_address - The domain address or the IP address of the application
-#' @param server_port - The port of the application
-#' 
-#' @description The function collects the parameters to run an application webserver.
-#' The \code{route}, \code{mode}, \code{server_address}, and \code{server_port} are 
-#' passed to the app function. \code{app} function then uses the provided parameters
-#' to initialize and control the logic flow of the application. It also uses these parameters
-#' to set and get \code{Query} objects. 
-#' 
-#' @export
-#'
+assign("q",.Query$new(),envir=globalenv())
+print("in app")
+print(environment())
+print(parent.env(environment()))
     httpuv::startServer(host = "127.0.0.1", port = server_port,
                      app = list(
                                 call = function(req) {
