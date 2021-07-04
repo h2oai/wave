@@ -45,12 +45,12 @@
 
 #' @title Create Data Buffer
 #' 
-#' @param fields  - One long string, or a list of fields that need to store data
+#' @param fields  One long string, or a list of fields that need to store data
 #' in buffers. 
-#' @param size - The size of the buffer.
-#' @param rows - Data in the form of rows that needs to be stored in buffers.  
-#' @param columns - Data specified as columns first. 
-#' @param pack - Packed the buffer to a fixed size. 
+#' @param size The size of the buffer.
+#' @param rows Data in the form of rows that needs to be stored in buffers.  
+#' @param columns Data specified as columns first. 
+#' @param pack Packed the buffer to a fixed size. 
 #' 
 #' @description Creates the Data Buffers are in-memory data structures.
 #' They hold card's tabular data. There are three types of data buffers:
@@ -126,15 +126,15 @@ data <- function(fields
 .Site <- R6::R6Class(
                  ".Site",
                  public = list(
-#' @field page_name - The name of the page as a string
+#' @field page_name The name of the page as a string
                                page_name = NULL,
-#' @field cards - The list of cards. Use \code{page$add_card} to add cards
+#' @field cards The list of cards. Use \code{page$add_card} to add cards
                                cards = NULL,
                                
 
 #' @description Register a page with a \code{name}.
 #' 
-#' @param name - The name of the page as a string. 
+#' @param name The name of the page as a string. 
 #' 
 #' @details A page is created with \code{page <- .Site$new()} method. After a 
 #' new page is created \code{page$register(name)} method registers a page with a given name.
@@ -159,8 +159,8 @@ data <- function(fields
 #' @description The method adds a card to the page. The \code{FUN} will add the elements
 #' specific to the card being added. 
 #' 
-#' @param card_name - The name of the card as a string. 
-#' @param FUN - The function specific to the card being added. 
+#' @param card_name The name of the card as a string. 
+#' @param FUN The function specific to the card being added. 
 #' 
 #' @return A \code{page} with the \code{card_name} added.
 #'
@@ -228,8 +228,8 @@ data <- function(fields
                                },
 #' @description The method updates the values of variables on a card. 
 #' 
-#' @param card - The name of the card as a string. 
-#' @param ... - variable names, and associated values.
+#' @param card The name of the card as a string. 
+#' @param ... variable names, and associated values.
 #' 
 #' @return A \code{page} with updates values for specific card-variables. 
 #'
@@ -308,8 +308,7 @@ data <- function(fields
 
 #' @title Create Page
 #' 
-#' @param name - The name of the page as a string. 
-#' @param address - The address of Wave server. 
+#' @param name The name of the page as a string. 
 #' 
 #' @description The function is used to create and register a page with the
 #' given \code{name}. If the address of the Wave server can also be passed to this
@@ -321,9 +320,7 @@ data <- function(fields
 #' 
 #' @export
 #' 
-Site <- function(name
-                ,address = NULL) {
-        if (!is.null(address)) .config$hub_address <<- address
+Site <- function(name){
         if(nchar(name) == 0) stop(
                 sprintf(" Page name cannot be empty
                       page <- Site(\"page_name\")"
@@ -338,7 +335,7 @@ Site <- function(name
 
 #' @title Recursive NULL Extractor
 #' 
-#' @param x - A list or an element of a list.
+#' @param x A list or an element of a list.
 #' 
 #' @description The function recurses through a list and checks for NULL elements. 
 #' And if there are NULL elements it will remove them from the list. 
@@ -363,7 +360,7 @@ Site <- function(name
 
 #' @title Card Variable Name Modification. 
 #' 
-#' @param x - The variable which needs to be modified.
+#' @param x The variable which needs to be modified.
 #' 
 #' @description The function modifies the name of the variable on a card. It removes the 
 #' period, and replaces it with space. It also replaces all underscores with a dash. 
@@ -377,7 +374,7 @@ Site <- function(name
 
 #' @title Load A Page
 #' 
-#' @param page_name - The name of the page to be loaded. 
+#' @param page_name The name of the page to be loaded. 
 #' 
 #' @description The function loads the page with the name \code{page_name}. 
 #' It also loads the data on that page. 
@@ -391,8 +388,8 @@ page_load <- function(page_name) {
 
 #' @title Save Page to a Site
 #' 
-#' @param page_name - The name of the page to be uploaded.
-#' @param data - The JSON data uploaded on to the page. 
+#' @param page_name The name of the page to be uploaded.
+#' @param data The JSON data uploaded on to the page. 
 #' 
 #' @description The function uploads the page and the JSON data on that page. 
 #'
@@ -403,7 +400,7 @@ page_load <- function(page_name) {
 
 #' @title Load Page From a Site
 #' 
-#' @param page_name - The name of the page to be loaded.
+#' @param page_name The name of the page to be loaded.
 #' 
 #' @description The function loads the page and the JSON data on that page. 
 #' 
@@ -416,7 +413,7 @@ site_load <- function(page_name) {
 
 #' @title Upload Files to Server
 #' 
-#' @param files_list - List of files that needed to be uploaded to the server.
+#' @param files_list List of files that needed to be uploaded to the server.
 #' 
 #' @description The function uploads file to the Wave server. 
 #' 
@@ -427,8 +424,8 @@ site_upload <- function(files_list) {
 
 #' @title Download File from Server
 #' 
-#' @param file_name - Name of the file to be downloaded from the server. 
-#' @param path - Path where the \code{file} is saved. 
+#' @param file_name Name of the file to be downloaded from the server. 
+#' @param path Path where the \code{file} is saved. 
 #' 
 #' @description The function downloads file from the Wave server and saves
 #' it at a specified location. 
@@ -440,7 +437,7 @@ site_download <- function(file_name, path) {
 
 #' @title Page Unload
 #' 
-#' @param page_name - Name of the page that needs to be unloaded.
+#' @param page_name Name of the page that needs to be unloaded.
 #' 
 #' @description The function removes the specified page from the site. 
 #' 
@@ -451,19 +448,19 @@ site_unload <- function(page_name) {
 
 #' @title Basic Auth HTTP PATCH
 #' 
-#' @param page_name - The name of the page to be uploaded.
-#' @param data - The JSON data uploaded on to the page. 
+#' @param page_name The name of the page to be uploaded.
+#' @param data The JSON data uploaded on to the page. 
 #' 
 #' @description The function uploads the page and the JSON data on that page. 
 #'
 .BAclient_patch <- function(page_name, data) {
         resp <- httr::PATCH(
-                            paste0(.config$hub_address, page_name)
+                            paste0(getOption("h2owave")$hub_address, page_name)
                             ,httr::content_type_json()
                             ,body = data
                             ,httr::authenticate(
-                                                user = .config$hub_access_key_id,
-                                                password = .config$hub_access_key_secret
+                                                user = getOption("h2owave")$hub_access_key_id,
+                                                password = getOption("h2owave")$hub_access_key_secret
                             )       
         )
 
@@ -478,7 +475,7 @@ site_unload <- function(page_name) {
 
 #' @title Basic Auth HTTP GET
 #' 
-#' @param page_name - The name of the page to get.
+#' @param page_name The name of the page to get.
 #' 
 #' @description The function gets the specified page and the associated
 #' JSON data. 
@@ -487,11 +484,11 @@ site_unload <- function(page_name) {
 #' 
 .BAclient_get <- function(page_name) {
         resp <- httr::GET(
-                          paste0(.config$hub_address, page_name)
+                          paste0(getOption("h2owave")$hub_address, page_name)
                           ,httr::content_type_json()
                           ,httr::authenticate(
-                                              user = .config$hub_access_key_id,
-                                              password = .config$hub_access_key_secret
+                                              user = getOption("h2owave")$hub_access_key_id,
+                                              password = getOption("h2owave")$hub_access_key_secret
                           )
         )
 
@@ -507,7 +504,7 @@ site_unload <- function(page_name) {
 
 #' @title Basic Auth HTTP POST
 #' 
-#' @param files_list - List of files that needed to be uploaded to the server.
+#' @param files_list List of files that needed to be uploaded to the server.
 #' 
 #' @description The function uploads file to the Wave server. 
 #' 
@@ -517,11 +514,11 @@ site_unload <- function(page_name) {
         })
         names(fs) <- rep("files", length(fs))
         resp <- httr::POST(
-                           paste0(.config$hub_address, "/_f")
+                           paste0(getOption("h2owave")$hub_address, "/_f")
                            ,body = fs
                            ,httr::authenticate(
-                                               user = .config$hub_access_key_id,
-                                               password = .config$hub_access_key_secret
+                                               user = getOption("h2owave")$hub_access_key_id,
+                                               password = getOption("h2owave")$hub_access_key_secret
                            )
         )
         if (resp$status_code != 200) {
@@ -541,14 +538,14 @@ site_unload <- function(page_name) {
 
 #' @title Basic Auth HTTP GET (file)
 #' 
-#' @param file_name - Name of the file to be downloaded from the server. 
-#' @param path - Path where the \code{file} is saved. 
+#' @param file_name Name of the file to be downloaded from the server. 
+#' @param path Path where the \code{file} is saved. 
 #' 
 #' @description The function downloads file from the Wave server and saves
 #' it at a specified location. 
 #' 
 .BAclient_download <- function(file_name, path) {
-        resp <- httr::GET(paste0(.config$hub_address, page_name), write_disk(path))
+        resp <- httr::GET(paste0(getOption("h2owave")$hub_address, page_name), write_disk(path))
         if (resp$status_code != 200) {
                 stop(
                      sprintf(
@@ -566,12 +563,12 @@ site_unload <- function(page_name) {
 
 #' @title Basic Auth HTTP DELETE
 #' 
-#' @param page_name - Name of the page that needs to be unloaded.
+#' @param page_name Name of the page that needs to be unloaded.
 #' 
 #' @description The function removes the specified page from the site. 
 #' 
 .BAclient_unload <- function(page_name) {
-        resp <- httr::DELETE(paste0(.config$hub_address, page_name))
+        resp <- httr::DELETE(paste0(getOption("h2owave")$hub_address, page_name))
         if (resp$status_code != 200) {
                 stop(
                      sprintf(

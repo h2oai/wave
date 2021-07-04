@@ -26,13 +26,13 @@
 #' 
 .Auth <- R6::R6Class(".Auth",
                     public = list(
-#' @field username - The username of the user
+#' @field username The username of the user
                                    username = NULL,
-#' @field subject - Unique identifier for the user
+#' @field subject Unique identifier for the user
                                    subject = NULL,
-#' @field access_token - The access token of the user                                   
+#' @field access_token The access token of the user                                   
                                    access_token = NULL,
-#' @field refresh_token - The refresh token of the user                                   
+#' @field refresh_token The refresh token of the user                                   
                                    refresh_token = NULL
                                    ))
 
@@ -51,21 +51,21 @@
 #' 
 .Query <- R6::R6Class(".Query",
                  private = list(
-#' @field .client - A list that holds client specific information
+#' @field .client A list that holds client specific information
                                  .client = NULL,
-#' @field .user - A list that holds user specific information
+#' @field .user A list that holds user specific information
                                  .user = NULL
                  ),
                  ,public = list(
-#' @param route - The \code{route} (page) that is currently being served
+#' @field route The \code{route} (page) that is currently being served
                                 route = NULL,
-#' @field auth - The R6 \code{Auth} object 
+#' @field auth The R6 \code{Auth} object 
                                 auth = NULL,
-#' @field args - The argument holds query arguments
+#' @field args The argument holds query arguments
                                 args = NULL,
-#' @field app - The app holds app specific query arguments
+#' @field app The app holds app specific query arguments
                                 app = NULL,
-#' @field events - The events holds events specific query arguments
+#' @field events The events holds events specific query arguments
                                 events = NULL,
 
 #' @description Initialize a \code{Query} Object
@@ -89,7 +89,7 @@
 
 #' @description Check and Append \code{client} and \code{user} arguments
 #' 
-#' @param route - The \code{route} (page) that is currently being served
+#' @param route The \code{route} (page) that is currently being served
 #'                                 
 #' @details The \code{check_n_append} function creates a unique argument list for each user or client depending on 
 #' mode of the application. It first checks if the list for the specific \code{client} and \code{user} exists. 
@@ -128,11 +128,11 @@
 
 
                  active = list(
-#' @field - client variable gets or sets the arguments in the \code{client} list                                
+#' @field client variable gets or sets the arguments in the \code{client} list                                
                                 client = function(value) {if(missing(value)) {
                                     return(private$.client[[self$route]]) }
                                 else {private$.client[[self$route]] <- value}},
-#' @field - user variable gets or sets the arguments in the \code{user} list                                
+#' @field user variable gets or sets the arguments in the \code{user} list                                
                                 user = function(value) {if(missing(value)) {
                                     return(private$.user[[self$route]]) }
                                 else {private$.user[[self$route]] <- value}}
@@ -140,28 +140,12 @@
 )
 
 
-#' @title Serve Page
-#' 
-#' @param route - The route (page) that is being served
-#' 
-#' @description The function is a place holder for the application written by the developer in \code{serve}.
-#' 
-#' @export
-#'
-serve <- function(route="/demo"){
-}
-
-
-#q <- .Query$new()
-print("in base")
-print(environment())
-print(parent.env(environment()))
 #' @title Run Application
 #' 
-#' @param route - The route (page) that is being served
-#' @param mode - Is the app set to 'broadcast', 'multicast', or 'unicast'
-#' @param server_address - The domain address or the IP address of the application
-#' @param server_port - The port of the application
+#' @param route The route (page) that is being served
+#' @param mode Is the app set to 'broadcast', 'multicast', or 'unicast'
+#' @param server_address The domain address or the IP address of the application
+#' @param server_port The port of the application
 #' 
 #' @description The function collects the parameters to run an application webserver.
 #' The \code{route}, \code{mode}, \code{server_address}, and \code{server_port} are 
@@ -172,14 +156,11 @@ print(parent.env(environment()))
 #' @export
 #'
 app <- function(route="/demo"
-                ,mode=.config$app_mode
+                ,mode=getOption("h2owave")$app_mode
                 ,server_address = 'http://127.0.0.1'
                 ,server_port = 15555)
 {
-assign("q",.Query$new(),envir=globalenv())
-print("in app")
-print(environment())
-print(parent.env(environment()))
+    q <- .Query$new()
     httpuv::startServer(host = "127.0.0.1", port = server_port,
                      app = list(
                                 call = function(req) {
@@ -198,9 +179,9 @@ print(parent.env(environment()))
                                     q$make_events()
                                     if ("serve" %in% ls(envir = .GlobalEnv)) {
                                         get("serve", envir = .GlobalEnv)
-                                        serve(route)
+                                        serve(q,route)
                                     } else {
-                                        serve(route)
+                                        serve(q,route)
                                     }
                                     q$clear_route() 
                                     body <- paste0("Time: ", Sys.time(), "<br>Path requested: ", req$PATH_INFO)
@@ -224,11 +205,11 @@ print(parent.env(environment()))
 
     ## POST the App registration to the Wave server
     httr::POST(
-               .config$hub_address
+               getOption("h2owave")$hub_address
                ,body=jsonlite::toJSON(register_body,auto_unbox=T)
                ,httr::authenticate(
-                                   user=.config$hub_access_key_id
-                                   ,password=.config$hub_access_key_secret
+                                   user=getOption("h2owave")$hub_access_key_id
+                                   ,password=getOption("h2owave")$hub_access_key_secret
                )
                ,content_type_json()
     )
