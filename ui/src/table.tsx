@@ -43,7 +43,7 @@ interface TableColumn {
   searchable?: B
   /** Indicates whether the contents of this column are displayed as filters in a dropdown. */
   filterable?: B
-  /** Indicates whether each cell in this column should be displayed as a clickable link. Note that link can be applied to a single textual col only. */
+  /** Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table. */
   link?: B
   /** Defines the data type of this column. Defaults to `string`. */
   data_type?: 'string' | 'number' | 'time'
