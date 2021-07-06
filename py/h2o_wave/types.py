@@ -3193,7 +3193,7 @@ class TableColumn:
         self.filterable = filterable
         """Indicates whether the contents of this column are displayed as filters in a dropdown."""
         self.link = link
-        """Indicates whether each cell in this column should be displayed as a clickable link."""
+        """Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table."""
         self.data_type = data_type
         """Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType."""
         self.cell_type = cell_type
