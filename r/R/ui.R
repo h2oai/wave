@@ -1433,7 +1433,7 @@ ui_icon_table_cell_type <- function(
 #' @param sortable Indicates whether the column is sortable.
 #' @param searchable Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
 #' @param filterable Indicates whether the contents of this column are displayed as filters in a dropdown.
-#' @param link Indicates whether each cell in this column should be displayed as a clickable link.
+#' @param link Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table.
 #' @param data_type Defines the data type of this column. Defaults to `string`.
 #'   One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
 #' @param cell_type Defines how to render each cell in this column. Defaults to plain text.

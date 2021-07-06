@@ -54,6 +54,16 @@ describe('Table.tsx', () => {
     expect(queryByTestId(name)).not.toBeVisible()
   })
 
+  it('Renders time column correctly', () => {
+    tableProps = {
+      ...tableProps,
+      rows: [{ name: 'rowname1', cells: ['1971-07-08T23:09:33'] }],
+      columns: [{ name: 'colname1', label: 'Col1', sortable: true, searchable: true, data_type: 'time' }]
+    }
+    const { getAllByRole } = render(<XTable model={tableProps} />)
+    expect(getAllByRole('gridcell')[0].textContent).toBe('7/8/1971, 11:09:33 PM')
+  })
+
   describe('Height compute', () => {
 
     it('Computes properly for simple table - header, rows', () => {
@@ -214,18 +224,15 @@ describe('Table.tsx', () => {
           { name: 'rowname2', cells: [date2] },
           { name: 'rowname3', cells: [date1] }
         ],
-        columns: [
-          { name: 'colname1', label: 'Col1', sortable: true, searchable: true, data_type: 'time' },
-          { name: 'colname2', label: 'Col2', sortable: true, filterable: true, data_type: 'time' },
-        ],
+        columns: [{ name: 'colname1', label: 'Col1', sortable: true, searchable: true, data_type: 'time' }]
       }
       const { container, getAllByRole } = render(<XTable model={tableProps} />)
 
-      expect(getAllByRole('gridcell')[0].textContent).toBe(date3)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('3/28/2001, 3:09:31 AM')
       fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
-      expect(getAllByRole('gridcell')[0].textContent).toBe(date1)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('7/8/1971, 11:09:33 PM')
       fireEvent.click(container.querySelector('i[class*=sortingIcon]')!)
-      expect(getAllByRole('gridcell')[0].textContent).toBe(date3)
+      expect(getAllByRole('gridcell')[0].textContent).toBe('3/28/2001, 3:09:31 AM')
     })
 
     it('Sorts by column and rerenders icon col', () => {
