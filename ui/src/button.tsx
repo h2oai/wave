@@ -17,7 +17,6 @@ import { B, Dict, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { displayMixin } from './theme'
 import { XToolTip } from './tooltip'
 import { bond, wave } from './ui'
 
@@ -102,10 +101,12 @@ const
         wave.push()
       },
       render = () => {
+        // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
+        const styles: Fluent.IButtonStyles = { root: (m as any).visible ?? true ? {} : { display: 'none' } }
         if (m.link) {
-          return <Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick}>{m.label}</Fluent.Link>
+          return <Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick} styles={styles}>{m.label}</Fluent.Link>
         }
-        const btnProps: Fluent.IButtonProps = { text: m.label, disabled: m.disabled, onClick, iconProps: { iconName: m.icon } }
+        const btnProps: Fluent.IButtonProps = { text: m.label, disabled: m.disabled, onClick, styles, iconProps: { iconName: m.icon } }
         return m.caption?.length
           ? m.primary
             ? <Fluent.CompoundButton {...btnProps} data-test={m.name} primary secondaryText={m.caption} />
@@ -125,13 +126,13 @@ export const
         </XToolTip>
       ))
     return (
-      <div data-test={m.name} className={css.buttons} style={displayMixin(m.visible)}>
+      <div data-test={m.name} className={css.buttons}>
         <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
       </div>
     )
   },
   XStandAloneButton = ({ model: m }: { model: Button }) => (
-    <div className={css.buttons} style={displayMixin(m.visible)}>
+    <div className={css.buttons}>
       <XButton key={m.name} model={m}>{m.label}</XButton>
     </div>
   )

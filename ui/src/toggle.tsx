@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -56,7 +55,6 @@ export const
       render = () => (
         <Fluent.Toggle
           data-test={m.name}
-          style={displayMixin(m.visible)}
           label={m.label}
           defaultChecked={m.value}
           onChange={onChange}

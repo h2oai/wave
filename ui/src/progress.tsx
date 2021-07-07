@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 
 /**
  * Create a progress bar.
@@ -56,14 +55,10 @@ export interface Progress {
 export const
   XProgress = ({ model }: { model: Progress }) => {
     const
-      { label, caption = 'Please wait...', value, visible, name } = model
+      { label, caption = 'Please wait...', value, name } = model
     return (
-      <div data-test={name} style={displayMixin(visible)}>
-        <Fluent.ProgressIndicator
-          label={label}
-          description={caption}
-          percentComplete={value}
-        />
+      <div data-test={name}>
+        <Fluent.ProgressIndicator label={label} description={caption} percentComplete={value} />
       </div>
     )
   }

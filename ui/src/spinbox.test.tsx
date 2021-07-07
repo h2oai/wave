@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Spinbox, XSpinbox } from './spinbox'
@@ -23,18 +22,11 @@ const spinboxProps: Spinbox = { name }
 
 const mouseEvent = { clientX: 0, clientY: 0 }
 describe('Spinbox.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XSpinbox model={spinboxProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display spinbox when visible is false', () => {
-    const { queryByTestId } = render(<XSpinbox model={{ ...spinboxProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init', () => {

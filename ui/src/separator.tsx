@@ -16,7 +16,6 @@ import * as Fluent from '@fluentui/react'
 import { B, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { displayMixin } from './theme'
 
 const
   css = stylesheet({
@@ -41,7 +40,7 @@ export interface Separator {
 
 export const
   XSeparator = ({ model: m }: { model: Separator }) => (
-    <div data-test={m.name} className={css.separator} style={displayMixin(m.visible)}>
+    <div data-test={m.name} className={css.separator}>
       <Fluent.Separator>{m.label}</Fluent.Separator>
     </div>
   )

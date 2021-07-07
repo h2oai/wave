@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, box, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -67,7 +66,6 @@ export const
       render = () => (
         <Fluent.ComboBox
           data-test={m.name}
-          style={displayMixin(m.visible)}
           label={m.label}
           placeholder={m.placeholder}
           options={options}

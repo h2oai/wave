@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 import { bond } from './ui'
 
 /**
@@ -53,20 +52,16 @@ export const
       target = m.target === '' ? '_blank' : m.target,
       onClick = () => target ? window.open(m.path, target) : window.open(m.path),
       render = () => (
-        <div style={displayMixin(m.visible)}>
-          {
-            m.button
-              ? <Fluent.DefaultButton data-test={m.name} text={label} disabled={m.disabled} onClick={onClick} />
-              : <Fluent.Link
-                data-test={m.name}
-                href={m.path}
-                download={m.download}
-                disabled={m.disabled}
-                target={target}>
-                {label}
-              </Fluent.Link>
-          }
-        </div>
+        m.button
+          ? <Fluent.DefaultButton data-test={m.name} text={label} disabled={m.disabled} onClick={onClick} />
+          : <Fluent.Link
+            data-test={m.name}
+            href={m.path}
+            download={m.download}
+            disabled={m.disabled}
+            target={target}>
+            {label}
+          </Fluent.Link>
       )
     return { render }
   })

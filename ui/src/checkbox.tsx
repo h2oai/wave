@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -64,7 +63,6 @@ export const
       render = () => (
         <Fluent.Checkbox
           data-test={m.name}
-          style={displayMixin(m.visible)}
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
           defaultIndeterminate={m.indeterminate}

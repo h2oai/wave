@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Toggle, XToggle } from './toggle'
@@ -22,7 +21,6 @@ const name = 'toggle'
 const toggleProps: Toggle = { name }
 
 describe('Toggle.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
     wave.args[name] = null
@@ -31,12 +29,6 @@ describe('Toggle.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XToggle model={toggleProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display toggle when visible is false', () => {
-    const { queryByTestId } = render(<XToggle model={{ ...toggleProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Calls sync when trigger is on', () => {

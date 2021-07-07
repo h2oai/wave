@@ -16,7 +16,6 @@ import { B, Model, S, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { displayMixin } from './theme'
 import { bond } from './ui'
 
 const
@@ -94,11 +93,12 @@ const
   )
 
 // HACK: Applying width/height styles directly on iframe don't work in Chrome/FF; so wrap in div instead.
-export const XFrame = ({ model: { name, path, content, width = '100%', height = '150px', visible } }: { model: Frame }) => (
-  <div data-test={name} style={{ width, height, ...displayMixin(visible) }}>
+export const XFrame = ({ model: { name, path, content, width = '100%', height = '150px' } }: { model: Frame }) => (
+  <div data-test={name} style={{ width, height }}>
     <InlineFrame path={path} content={content} />
   </div>
 )
+
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {

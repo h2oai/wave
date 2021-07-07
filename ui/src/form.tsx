@@ -47,7 +47,7 @@ import { Tabs, XTabs } from './tabs'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
-import { clas, cssVar, margin, padding } from './theme'
+import { clas, cssVar, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { bond } from './ui'
@@ -164,7 +164,7 @@ const
       flexDirection: 'column',
       flexGrow: 1,
       $nest: {
-        '>*:not(:first-child)': {
+        '> [data-visible="true"] ~ div': {
           marginTop: 10
         },
       }
@@ -172,25 +172,18 @@ const
     horizontal: {
       display: 'flex',
       alignItems: 'center',
+      $nest: {
+        '> [data-visible="true"] ~ div': {
+          marginLeft: 25
+        }
+      }
     },
     inset: {
       background: cssVar('$page'),
       padding: padding(10, 15)
     },
-    horizontalLeft: {
-      $nest: {
-        '> *': {
-          margin: margin(0, 25, 0, 0),
-        }
-      }
-    },
     horizontalRight: {
       justifyContent: 'flex-end',
-      $nest: {
-        '> *': {
-          margin: margin(0, 0, 0, 25),
-        }
-      }
     },
   })
 
@@ -199,9 +192,20 @@ export enum XComponentAlignment { Top, Left, Right }
 export const
   XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
     const
-      components = items.map(m => <XComponent key={xid()} model={m} />),
+      components = items.map((m: any) => {
+        const
+          // All form items are wrapped by their component name (first and only prop of "m").
+          visible = m[Object.keys(m)[0]].visible ?? true,
+          visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' }
+
+        return (
+          <div key={xid()} data-visible={visible} style={visibleStyles}>
+            <XComponent model={m} />
+          </div>
+        )
+      }),
       className = alignment === XComponentAlignment.Left
-        ? clas(css.horizontal, css.horizontalLeft, inset ? css.inset : '')
+        ? clas(css.horizontal, inset ? css.inset : '')
         : alignment === XComponentAlignment.Right
           ? clas(css.horizontal, css.horizontalRight, inset ? css.inset : '')
           : css.vertical
@@ -218,12 +222,12 @@ export const
 
 const
   XComponent = ({ model: m }: { model: Component }) => {
-    if (m.text) return <XToolTip content={m.text.tooltip} expand={false}><XText name={m.text.name} content={m.text.content} size={m.text.size} visibility={m.text.visible} /></XToolTip>
-    if (m.text_xl) return <XToolTip content={m.text_xl.tooltip} expand={false}><XText name={m.text_xl.name} content={m.text_xl.content} size='xl' commands={m.text_xl.commands} visibility={m.text_xl.visible} /></XToolTip>
-    if (m.text_l) return <XToolTip content={m.text_l.tooltip} expand={false}><XText name={m.text_l.name} content={m.text_l.content} size='l' commands={m.text_l.commands} visibility={m.text_l.visible} /></XToolTip>
-    if (m.text_m) return <XToolTip content={m.text_m.tooltip} expand={false}><XText name={m.text_m.name} content={m.text_m.content} visibility={m.text_m.visible} /></XToolTip>
-    if (m.text_s) return <XToolTip content={m.text_s.tooltip} expand={false}><XText name={m.text_s.name} content={m.text_s.content} size='s' visibility={m.text_s.visible} /></XToolTip>
-    if (m.text_xs) return <XToolTip content={m.text_xs.tooltip} expand={false}><XText name={m.text_xs.name} content={m.text_xs.content} size='xs' visibility={m.text_xs.visible} /></XToolTip>
+    if (m.text) return <XToolTip content={m.text.tooltip} expand={false}><XText name={m.text.name} content={m.text.content} size={m.text.size} /></XToolTip>
+    if (m.text_xl) return <XToolTip content={m.text_xl.tooltip} expand={false}><XText name={m.text_xl.name} content={m.text_xl.content} size='xl' commands={m.text_xl.commands} /></XToolTip>
+    if (m.text_l) return <XToolTip content={m.text_l.tooltip} expand={false}><XText name={m.text_l.name} content={m.text_l.content} size='l' commands={m.text_l.commands} /></XToolTip>
+    if (m.text_m) return <XToolTip content={m.text_m.tooltip} expand={false}><XText name={m.text_m.name} content={m.text_m.content} /></XToolTip>
+    if (m.text_s) return <XToolTip content={m.text_s.tooltip} expand={false}><XText name={m.text_s.name} content={m.text_s.content} size='s' /></XToolTip>
+    if (m.text_xs) return <XToolTip content={m.text_xs.tooltip} expand={false}><XText name={m.text_xs.name} content={m.text_xs.content} size='xs' /></XToolTip>
     if (m.label) return <XToolTip content={m.label.tooltip} expand={false}><XLabel model={m.label} /></XToolTip>
     if (m.link) return <XToolTip content={m.link.tooltip} expand={false}><XLink model={m.link} /></XToolTip>
     if (m.separator) return <XSeparator model={m.separator} />
@@ -280,4 +284,3 @@ export const
   })
 
 cards.register('form', View)
-

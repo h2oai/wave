@@ -16,7 +16,6 @@ import * as Fluent from '@fluentui/react'
 import { B, box, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { Choice } from './choice_group'
-import { displayMixin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -68,7 +67,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
     onEmptyResolveSuggestions = () => tags,
     init = () => wave.args[m.name] = m.values || null,
     render = () => (
-      <div style={displayMixin(m.visible)}>
+      <>
         {m.label && <Fluent.Text>{m.label}</Fluent.Text>}
         <Fluent.TagPicker
           inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
@@ -81,7 +80,7 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
           disabled={m.disabled}
           onEmptyResolveSuggestions={onEmptyResolveSuggestions}
         />
-      </div>
+      </>
     )
 
   return { init, render, selectedTagsB }

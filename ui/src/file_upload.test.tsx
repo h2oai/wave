@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { createEvent, fireEvent, render, wait } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
@@ -24,7 +23,6 @@ const fileUploadProps: FileUpload = { name }
 interface FileObj { name: T.S; size?: T.F }
 
 describe('FileUpload.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
     wave.args[name] = null
@@ -49,12 +47,6 @@ describe('FileUpload.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XFileUpload model={fileUploadProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display file upload when visible is false', () => {
-    const { queryByTestId } = render(<XFileUpload model={{ ...fileUploadProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Shows dragging screen on dragging', () => {

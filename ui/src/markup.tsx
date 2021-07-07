@@ -16,7 +16,6 @@ import { B, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { displayMixin } from './theme'
 import { bond } from './ui'
 
 const
@@ -61,8 +60,8 @@ interface State {
 }
 
 export const
-  XMarkup = ({ model: { content, visible, name } }: { model: Markup }) => (
-    <div data-test={name} dangerouslySetInnerHTML={{ __html: content }} style={displayMixin(visible)} />
+  XMarkup = ({ model: { content, name } }: { model: Markup }) => (
+    <div data-test={name} dangerouslySetInnerHTML={{ __html: content }} />
   ),
   MarkupCard = ({ name, title, content }: { name: S, title: S, content: S }) => (
     <div data-test={name} className={css.card}>

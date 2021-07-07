@@ -17,7 +17,6 @@ import { B, box, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
-import { displayMixin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -76,7 +75,7 @@ export const
           className = isOpenB() ? css.expanderOpen : css.expanderClosed
 
         return (
-          <div data-test={m.name} className={className} style={displayMixin(m.visible)}>
+          <div data-test={m.name} className={className}>
             <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
               <Fluent.ActionButton
                 title={actionTitle}

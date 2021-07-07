@@ -16,7 +16,6 @@ import { fireEvent, render, wait } from '@testing-library/react'
 import React from 'react'
 import Dialog, { dialogB } from './dialog'
 
-
 const
   name = 'dialog',
   dialogProps = {

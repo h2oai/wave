@@ -47,7 +47,7 @@ export const
       template = Handlebars.compile(m.content || ''),
       render = () => {
         const data = unpack<Rec>(m.data)
-        return <div data-test={m.name}><XMarkup model={{ content: template(data || {}), visible: m.visible }} /></div>
+        return <div data-test={m.name}><XMarkup model={{ content: template(data || {}) }} /></div>
       }
     return { render }
   }),
