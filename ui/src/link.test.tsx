@@ -45,7 +45,7 @@ describe('Link.tsx', () => {
 
     fireEvent.click(getByText(name))
     expect(windowOpenMock).toHaveBeenCalled()
-    expect(windowOpenMock).toHaveBeenCalledWith(name)
+    expect(windowOpenMock).toHaveBeenCalledWith(name, undefined)
   })
   it('Opens button link in same tab', () => {
     const windowOpenMock = jest.fn()
@@ -55,11 +55,6 @@ describe('Link.tsx', () => {
     fireEvent.click(getByText(name))
     expect(windowOpenMock).toHaveBeenCalled()
     expect(windowOpenMock).toHaveBeenCalledWith(name, '_blank')
-  })
-
-  it('Renders download attribute', () => {
-    const { getByTestId } = render(<XLink model={{ ...linkProps, download: true }} />)
-    expect(getByTestId(name).getAttribute('download')).toEqual('')
   })
 
   it('Renders link target attribute when new tab specified', () => {

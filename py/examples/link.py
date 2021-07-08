@@ -17,6 +17,7 @@ page['example'] = ui.form_card(
         ui.link(label='External link, new tab', path='https://h2o.ai', target=''),
         ui.link(label='External link, new tab', path='https://h2o.ai', target='_blank'),  # same as target=''
         ui.link(label='External link, disabled', path='https://h2o.ai', disabled=True),
+        ui.link(label='Download link', path='https://file-examples-com.github.io/uploads/2017/02/file-sample_100kB.doc', download=True),
     ]
 )
 page.save()
