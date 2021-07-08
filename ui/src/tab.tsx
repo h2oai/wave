@@ -38,6 +38,7 @@ const
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
+      minHeight: 46
     },
   })
 
