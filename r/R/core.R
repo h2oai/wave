@@ -299,7 +299,6 @@ Site <- function(name){
                         ))
         intermediate_site_object <- .Site$new()
         intermediate_site_object$register(name)
-        intermediate_site_object$drop()
         return(intermediate_site_object)
 }
 
