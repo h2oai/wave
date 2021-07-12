@@ -44,7 +44,7 @@ func newWebServer(
 	maxRequestSize int64,
 	www string,
 ) *WebServer {
-	fs := fallback("/", http.FileServer(http.Dir(www)))
+	fs := handleStatic("/", http.FileServer(http.Dir(www)))
 	if auth != nil {
 		fs = auth.wrap(fs)
 	}
@@ -135,7 +135,7 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func fallback(prefix string, h http.Handler) http.Handler {
+func handleStatic(prefix string, h http.Handler) http.Handler {
 	// copy of http.StripPrefix
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// if the url has an extension, serve the file
@@ -143,12 +143,19 @@ func fallback(prefix string, h http.Handler) http.Handler {
 			h.ServeHTTP(w, r)
 			return
 		}
-		// rewrite
+
+		// url has no extension; assume index.html
+		// rewrite /foo/bar to / so that /index.html is served
 		r2 := new(http.Request)
 		*r2 = *r
 		r2.URL = new(url.URL)
 		*r2.URL = *r.URL
 		r2.URL.Path = prefix
+
+		header := w.Header()
+		header.Add("Cache-Control", "no-cache, must-revalidate")
+		header.Add("Pragma", "no-cache")
+
 		h.ServeHTTP(w, r2)
 	})
 }

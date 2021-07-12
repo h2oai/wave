@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Box, box, S } from 'h2o-wave'
+import { B, Box, box, Id, S } from 'h2o-wave'
 import React from 'react'
 import { Component, XComponents } from './form'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 export const dialogB: Box<Dialog | null> = box(null)
 
@@ -38,11 +38,23 @@ export interface Dialog {
   blocking?: B
   /** Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false. */
   primary?: B
+  /** An identifying name for this component. */
+  name?: Id
+  /** The events to capture on this dialog. */
+  events?: S[]
 }
 
 export default bond(() => {
   const
-    onDismiss = () => dialogB(null),
+    onDismiss = () => {
+      const { closable, name, events } = dialogB() || {}
+      if (closable && name) {
+        events?.forEach(e => {
+          if (e === 'dismissed') wave.emit(name, e, true)
+        })
+      }
+      dialogB(null)
+    },
     render = () => {
       const
         { title, width = '600px', items = [], closable, primary, blocking } = dialogB() || {},

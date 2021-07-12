@@ -16,8 +16,45 @@ export interface Script {
   integrity?: S
 }
 
+/**
+ * Create a block of inline Javascript to be executed immediately on a page.
+ */
+export interface InlineScript {
+  /** The Javascript source code to be executed. */
+  content: S
+  /** The names of modules required on the page's `window` global before running this script. */
+  requires?: S[]
+  /** The HTML elements required to be present on the page before running this script. Each 'target' can either be the ID of the element (`foo`) or a CSS selector (`#foo`, `.foo`, `table > td.foo`, etc.). */
+  targets?: S[]
+}
+
+let executableScriptElement: HTMLScriptElement | null = null
+
 const
-  installedScripts: Dict<B> = {}
+  installedScripts: Dict<B> = {},
+  installScript = (content: S) => {
+    if (executableScriptElement) {
+      executableScriptElement.remove()
+    }
+    const e = executableScriptElement = document.createElement('script')
+    e.type = 'text/javascript'
+    // HTML5 specifies that a <script> tag inserted with innerHTML should not execute.
+    // See https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML#security_considerations
+    // See https://www.w3.org/TR/2008/WD-html5-20080610/dom.html#innerhtml0
+    e.appendChild(document.createTextNode(content))
+    document.body.appendChild(e)
+  },
+  hasModule = (p: S) => {
+    let d = window as any
+    for (const k of p.split('.')) {
+      d = d[k]
+      if (!d) return false
+    }
+    return true
+  },
+  hasModules = (paths: S[]) => !paths.some(p => !hasModule(p)),
+  hasTarget = (selector: S) => document.getElementById(selector) || document.querySelector(selector),
+  hasTargets = (selectors: S[]) => !selectors.some(id => !hasTarget(id))
 
 export const
   installScripts = (scripts: Script[]) => {
@@ -35,4 +72,36 @@ export const
         installedScripts[path] = true
       })
     })
+  },
+  executeScript = ({ content, requires, targets }: InlineScript) => {
+    const
+      resolved = () => {
+        if (requires && requires.length) {
+          if (!hasModules(requires)) return false
+        }
+        if (targets && targets.length) {
+          if (!hasTargets(targets)) return false
+        }
+        return true
+      }
+
+    if (resolved()) {
+      installScript(content)
+      return
+    }
+
+    let tries = 0
+    const
+      t = setInterval(() => {
+        if (resolved()) {
+          clearInterval(t)
+          installScript(content)
+        } else {
+          tries++
+          if (tries > 100) {
+            clearInterval(t)
+            console.error('Failed to execute inline script: one or more of the requirements were not found.')
+          }
+        }
+      }, 10)
   }

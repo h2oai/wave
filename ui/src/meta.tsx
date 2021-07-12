@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { box, Id, Model, on, S, U, wave } from 'h2o-wave'
+import { box, disconnect, Id, Model, on, S, U } from 'h2o-wave'
 import React from 'react'
 import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
 import { showNotification } from './notification'
-import { installScripts, Script } from './script'
+import { executeScript, InlineScript, installScripts, Script } from './script'
 import { themeB } from './theme'
 import { setupTracker, Tracker } from './tracking'
 import { bond } from './ui'
@@ -111,6 +111,8 @@ interface State {
   tracker?: Tracker
   /** External Javascript files to load into the page. */
   scripts?: Script[]
+  /** Javascript code to execute on this page. */
+  script?: InlineScript
 }
 
 const
@@ -130,7 +132,7 @@ on(windowIconB, icon => {
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Model<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts } = state
+    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts, script } = state
 
     if (redirect) {
       try {
@@ -149,12 +151,16 @@ export const
 
     if (title) windowTitleB(title)
     if (icon) windowIconB(icon)
-    if (typeof refresh === 'number') wave.refreshRateB(refresh)
+    if (typeof refresh === 'number' && refresh === 0) disconnect()
     if (theme) themeB(theme)
     if (notification) showNotification(notification)
     if (tracker) setupTracker(tracker)
     if (layouts) layoutsB(layouts)
     if (scripts) installScripts(scripts)
+    if (script) {
+      delete state.script
+      executeScript(script)
+    }
   }
 
 export const View = bond(() => ({ render: () => <></> }))

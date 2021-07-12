@@ -327,7 +327,7 @@ export const
       { changed } = page,
       render = () => {
         const
-          all = page.list(),
+          all = page.items(),
           [metas, cards] = segregate(all, c => c.state.view === 'meta')
 
         if (metas.length) {

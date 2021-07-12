@@ -14,13 +14,13 @@
 
 import { Chart, registerInteraction } from '@antv/g2'
 import { AdjustOption, AnnotationPosition, ArcOption, AxisOption, ChartCfg, CoordinateActions, CoordinateOption, DataMarkerOption, DataRegionOption, GeometryOption, LineOption, RegionOption, ScaleOption, TextOption } from '@antv/g2/lib/interface'
-import { B, Dict, F, Model, parseI, parseU, Rec, S, unpack, V, wave } from 'h2o-wave'
+import { B, Dict, F, Model, parseI, parseU, Rec, S, unpack, V } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
 import { cssVarValue, displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 let
   cat10 = [
@@ -804,10 +804,7 @@ export const
                   chart.on('element:statechange', (ev: any) => {
                     const e = ev.gEvent.originalEvent
                     if (e.stateStatus && e.state === 'selected') {
-                      if (model.name) {
-                        wave.events[model.name] = { select_marks: [e.element?.data] }
-                        wave.sync()
-                      }
+                      if (model.name) wave.emit(model.name, event, [e.element?.data])
                     }
                   })
                 }
@@ -824,7 +821,7 @@ export const
         const el = container.current
         if (!el || !currentChart || !currentPlot) return
         const
-          raw_data = unpack(model.data) as any[],
+          raw_data = unpack<any[]>(model.data),
           data = refactorData(raw_data, currentPlot.marks)
         currentChart.changeData(data)
       },

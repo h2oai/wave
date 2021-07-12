@@ -77,7 +77,7 @@ interface State {
 export const
   View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => {
-      const data = unpack(s.data)
+      const data = unpack<Rec>(s.data)
       return (
         <div data-test={name} className={css.card}>
           <div className={css.lhs}>

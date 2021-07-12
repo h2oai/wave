@@ -17,6 +17,7 @@ import { createEvent, fireEvent, render, wait } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { FileUpload, XFileUpload } from './file_upload'
+import { wave } from './ui'
 
 const name = 'fileUpload'
 const fileUploadProps: FileUpload = { name }
@@ -26,7 +27,7 @@ describe('FileUpload.tsx', () => {
   beforeAll(() => initializeIcons())
   beforeEach(() => {
     jest.clearAllMocks()
-    T.wave.args[name] = null
+    wave.args[name] = null
   })
 
   const createChangeEvent = (files: FileObj[]) => ({ target: { files } })
@@ -37,7 +38,7 @@ describe('FileUpload.tsx', () => {
       setRequestHeader: jest.fn(),
       status,
       upload: jest.fn(),
-      responseText: JSON.stringify(data),
+      responseText: data ? JSON.stringify(data) : null,
     }
     // @ts-ignore
     window.XMLHttpRequest = jest.fn().mockImplementation(() => xhrMockObj)
@@ -74,8 +75,8 @@ describe('FileUpload.tsx', () => {
   })
 
   it('Calls sync and sets args after upload', async () => {
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    wave.push = pushMock
 
     mockXhrRequest({ files: [{ name: 'file.txt' }] })
 
@@ -83,8 +84,8 @@ describe('FileUpload.tsx', () => {
     fireEvent.change(getByTestId(name), createChangeEvent([{ name: 'file.txt' }]))
     fireEvent.click(getByText('upload'))
 
-    await wait(() => expect(T.wave.args[name]).toMatchObject([{ name: 'file.txt' }]), { timeout: 1000 })
-    await wait(() => expect(syncMock).toHaveBeenCalled(), { timeout: 1000 })
+    await wait(() => expect(wave.args[name]).toMatchObject([{ name: 'file.txt' }]), { timeout: 1000 })
+    await wait(() => expect(pushMock).toHaveBeenCalled(), { timeout: 1000 })
   })
 
   it('Shows success screen on success upload', async () => {

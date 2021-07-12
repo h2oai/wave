@@ -9,6 +9,6 @@
   "author": "Prithvi Prabhu <prithvi@h2o.ai>",
   "license": "ISC",
   "dependencies": {
-    "cypress": "^5.0.0"
+    "cypress": "7.2.0"
   }
 }

@@ -70,7 +70,7 @@ interface State {
 export const
   View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => {
-      const data = unpack(s.data)
+      const data = unpack<Rec>(s.data)
       return (
         <div data-test={name} className={css.card}>
           <Format data={data} format={s.title} className='wave-s12 wave-w6' />

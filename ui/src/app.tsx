@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { box, connect, on, Page, S, wave, WaveEvent, WaveEventType, WaveMessageType } from 'h2o-wave'
+import { box, on, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
@@ -21,7 +21,7 @@ import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
 import { clas, cssVar, pc, themeB } from './theme'
-import { bond } from './ui'
+import { bond, busyB, config, contentB, listen, wave } from './ui'
 
 const
   css = stylesheet({
@@ -63,7 +63,6 @@ const
       spinTimeout = 0
     const
       spinDelay = 500, // ms
-      busyB = wave.busyB,
       spinB = box(false),
       render = () => (
         <div className={busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
@@ -89,7 +88,7 @@ const
       render = () => (
         <div className={css.notFoundOverlay}>
           <Logo />
-          {wave.editable && (
+          {config.editable && (
             <>
               <Fluent.DefaultButton onClick={onClick} >Edit this page...</Fluent.DefaultButton>
               <LayoutPicker visibleB={pickingLayoutB} />
@@ -102,57 +101,57 @@ const
   }),
   App = bond(() => {
     const
-      contentB = box<{ page?: Page, error?: S }>({}),
-      onSocket = (e: WaveEvent) => {
-        switch (e.t) {
-          case WaveEventType.Data:
-            contentB({ page: e.page })
-            break
-          case WaveEventType.Message:
-            if (e.type === WaveMessageType.Err) contentB({ error: e.message })
-            break
-          case WaveEventType.Reset:
-            window.location.reload()
-            break
-        }
-      },
       onHashChanged = () => {
-        const h = window.location.hash
-        if (h?.length > 1) {
-          wave.args['#'] = h.substr(1)
-        }
-        wave.sync()
+        wave.push()
       },
       init = () => {
-        connect('/_s', onSocket)
+        listen()
         window.addEventListener('hashchange', onHashChanged)
       },
       render = () => {
-        const { page, error } = contentB()
-        // TODO prettier error section
-        if (error) {
-          const errorMessage = error === 'not_found'
-            ? <NotFoundOverlay />
-            : error
-          return <div className={clas(css.centerFullHeight, css.app)}>{errorMessage}</div>
+        const e = contentB()
+        if (e) {
+          switch (e.t) {
+            case WaveEventType.Page:
+              {
+                const page = e.page
+                return (
+                  <Fluent.Fabric applyTheme>
+                    <div className={css.app}>
+                      <PageLayout key={page.key} page={page} />
+                      <BusyOverlay />
+                      <Dialog />
+                    </div>
+                  </Fluent.Fabric>
+                )
+              }
+            case WaveEventType.Error:
+              {
+                // TODO better sadface
+                const message = e.code === WaveErrorCode.PageNotFound ? <NotFoundOverlay /> : 'Unknown Remote Error'
+                return <div className={clas(css.centerFullHeight, css.app)}>{message}</div>
+              }
+            case WaveEventType.Exception:
+              {
+                // TODO better sadface
+                const message = `Unhandled exception: ${e.error}`
+                return <div className={clas(css.centerFullHeight, css.app)}>{message}</div>
+              }
+            case WaveEventType.Disconnect:
+              {
+                // TODO better sadface
+                const message = `Disconnected. Reconnecting in ${e.retry}s`
+                return <div className={clas(css.centerFullHeight, css.app)}>{message}</div>
+              }
+          }
         }
-        if (!page) return <Fluent.Spinner className={css.centerFullHeight} size={Fluent.SpinnerSize.large} label='Loading ...' />
-
-        return (
-          <Fluent.Fabric applyTheme>
-            <div className={css.app}>
-              <PageLayout key={page.key} page={page} />
-              <BusyOverlay />
-              <Dialog />
-            </div>
-          </Fluent.Fabric>
-        )
+        return <Fluent.Spinner className={css.centerFullHeight} size={Fluent.SpinnerSize.large} label='Loading ...' />
       },
       dispose = () => {
         window.removeEventListener('hashchange', onHashChanged)
       }
 
-    return { init, render, dispose, contentB, theme: themeB }
+    return { init, render, dispose, contentB, themeB }
   })
 
 export default App

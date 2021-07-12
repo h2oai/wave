@@ -46,7 +46,7 @@ export const
     const
       template = Handlebars.compile(m.content || ''),
       render = () => {
-        const data = unpack(m.data)
+        const data = unpack<Rec>(m.data)
         return <div data-test={m.name}><XMarkup model={{ content: template(data || {}), visible: m.visible }} /></div>
       }
     return { render }
@@ -55,7 +55,7 @@ export const
     const
       template = Handlebars.compile(state.content || ''),
       render = () => {
-        const data = unpack(state.data)
+        const data = unpack<Rec>(state.data)
         return <MarkupCard name={name} title={substitute(state.title, data)} content={template(data || {})} />
       }
     return { render, changed }

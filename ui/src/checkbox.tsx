@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, S, wave } from 'h2o-wave'
+import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a checkbox.
@@ -59,7 +59,7 @@ export const
     const
       onChange = (_e?: React.FormEvent<HTMLElement>, checked?: boolean) => {
         wave.args[m.name] = checked === null ? null : !!checked
-        if (m.trigger) wave.sync()
+        if (m.trigger) wave.push()
       },
       render = () => (
         <Fluent.Checkbox

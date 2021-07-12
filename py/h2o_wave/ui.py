@@ -1173,7 +1173,7 @@ def file_upload(
 
     Args:
         name: An identifying name for this component.
-        label: Text to be displayed alongside the component.
+        label: Text to be displayed in the bottom button. Defaults to "Upload".
         multiple: True if the component should allow multiple files to be uploaded.
         file_extensions: List of allowed file extensions, e.g. `pdf`, `docx`, etc.
         max_file_size: Maximum allowed size (Mb) per file. Defaults to no limit.
@@ -1257,7 +1257,7 @@ def table_column(
         sortable: Indicates whether the column is sortable.
         searchable: Indicates whether the contents of this column can be searched through. Enables a search box for the table if true.
         filterable: Indicates whether the contents of this column are displayed as filters in a dropdown.
-        link: Indicates whether each cell in this column should be displayed as a clickable link.
+        link: Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table.
         data_type: Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType.
         cell_type: Defines how to render each cell in this column. Defaults to plain text.
     Returns:
@@ -1378,7 +1378,7 @@ def link(
         label: The text to be displayed. If blank, the `path` is used as the label.
         path: The path or URL to link to.
         disabled: True if the link should be disabled.
-        download: True if the link should be used for file download.
+        download: True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false.
         button: True if the link should be rendered as a button.
         visible: True if the component should be visible. Defaults to true.
         target: Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window.
@@ -2542,6 +2542,8 @@ def dialog(
         closable: Optional[bool] = None,
         blocking: Optional[bool] = None,
         primary: Optional[bool] = None,
+        name: Optional[str] = None,
+        events: Optional[List[str]] = None,
 ) -> Dialog:
     """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
     and requires people to interact with it. It’s primarily used for confirming actions,
@@ -2554,6 +2556,8 @@ def dialog(
         closable: True if the dialog should have a closing 'X' button at the top right corner.
         blocking: True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false.
         primary: Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false.
+        name: An identifying name for this component.
+        events: The events to capture on this dialog.
     Returns:
         A `h2o_wave.types.Dialog` instance.
     """
@@ -2564,6 +2568,8 @@ def dialog(
         closable,
         blocking,
         primary,
+        name,
+        events,
     )
 
 
@@ -2612,6 +2618,27 @@ def script(
     )
 
 
+def inline_script(
+        content: str,
+        requires: Optional[List[str]] = None,
+        targets: Optional[List[str]] = None,
+) -> InlineScript:
+    """Create a block of inline Javascript to be executed immediately on a page.
+
+    Args:
+        content: The Javascript source code to be executed.
+        requires: The names of modules required on the page's `window` global before running this script.
+        targets: The HTML elements required to be present on the page before running this script. Each 'target' can either be the ID of the element (`foo`) or a CSS selector (`#foo`, `.foo`, `table > td.foo`, etc.).
+    Returns:
+        A `h2o_wave.types.InlineScript` instance.
+    """
+    return InlineScript(
+        content,
+        requires,
+        targets,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2624,6 +2651,7 @@ def meta_card(
         theme: Optional[str] = None,
         tracker: Optional[Tracker] = None,
         scripts: Optional[List[Script]] = None,
+        script: Optional[InlineScript] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2643,6 +2671,7 @@ def meta_card(
         theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
         tracker: Configure a tracker for the page (for web analytics).
         scripts: External Javascript files to load into the page.
+        script: Javascript code to execute on this page.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2659,6 +2688,7 @@ def meta_card(
         theme,
         tracker,
         scripts,
+        script,
         commands,
     )
 

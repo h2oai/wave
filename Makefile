@@ -18,6 +18,12 @@ clean: ## Clean
 	cd tools/wavegen && $(MAKE) clean
 	rm -f waved
 
+setup-ts: ## Set up NPM package and symlinks
+	cd ts && npm ci && npm run build
+	cd ts && npm link
+	cd ui && npm link h2o-wave
+	cd u && npm link h2o-wave
+
 .PHONY: build
 build: build-ui build-server ## Build everything
 
@@ -47,6 +53,24 @@ build-server: ## Build server for current OS/Arch
 build-db: ## Build database server for current OS/Arch
 	go build $(LDFLAGS) -o wavedb cmd/wavedb/main.go
 
+build-db-micro:
+	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb cmd/wavedb/main.go
+	upx --brute wavedb
+
+release-db: # Build release package for database server
+	mkdir -p build
+	go build -ldflags '-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o wavedb$(EXE_EXT) cmd/wavedb/main.go
+	tar -czf wavedb-$(VERSION)-$(OS)-amd64.tar.gz wavedb$(EXE_EXT)
+
+release-db-windows: # Build OSX release package for database server
+	$(MAKE) OS=windows EXE_EXT=".exe" release-db
+
+release-db-darwin: # Build OSX release package for database server
+	$(MAKE) OS=darwin release-db
+
+release-db-linux: # Build Linux release package for database server
+	$(MAKE) OS=linux release-db
+
 build-server-micro: ## Build smaller (~2M instead of ~10M) server executable
 	go build -ldflags '-s -w -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)' -o waved cmd/wave/main.go
 	upx --brute waved
@@ -67,8 +91,8 @@ run: ## Run server
 run-db: ## Run database server
 	go run cmd/wavedb/main.go
 
-run-micro: ## Run microwave
-	go run cmd/wave/main.go -web-dir ./u
+run-hb: ## Run handlebars frontend
+	go run cmd/wave/main.go -web-dir ./x/handlebars
 
 run-cypress: ## Run Cypress
 	cd test && ./node_modules/.bin/cypress open
@@ -116,7 +140,7 @@ tag: ## Bump version and tag
 	git add .
 	git commit -m "chore: Release v$(VERSION)"
 	git tag v$(VERSION)
-	# git push origin --tags
+	git push origin && git push origin --tags
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

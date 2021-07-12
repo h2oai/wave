@@ -63,7 +63,7 @@ while True:
 
 ```shell
 cd $HOME/wave-apps
-./venv/bin/python system_stats.py
+./venv/bin/python system_monitor.py
 ```
 
 Point your browser to [http://localhost:10101/monitor](http://localhost:10101/monitor).

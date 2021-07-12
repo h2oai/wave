@@ -36,6 +36,7 @@ module.exports = {
       'expressions',
       'files',
       'plotting',
+      'javascript',
       'graphics',
       'security',
       'logging',
@@ -46,6 +47,7 @@ module.exports = {
       'deployment',
       'backup',
       'wave-ml',
+      'wavedb',
     ],
     'Examples': examples.map(e => `examples/${e.slug}`),
     'API': [
@@ -59,6 +61,8 @@ module.exports = {
       'api/test',
       'api/h2o_wave_ml/index',
       'api/h2o_wave_ml/ml',
+      'api/h2o_wave_ml/types',
+      'api/h2o_wave_ml/utils',
     ],
   },
 };

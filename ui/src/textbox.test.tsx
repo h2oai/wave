@@ -14,9 +14,9 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { Textbox, XTextbox } from './textbox'
+import { wave } from './ui'
 
 const name = 'textbox'
 const textboxProps: Textbox = { name }
@@ -26,7 +26,7 @@ describe('Textbox.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.useFakeTimers()
-    T.wave.args[name] = null
+    wave.args[name] = null
   })
 
   it('Renders data-test attr', () => {
@@ -47,12 +47,12 @@ describe('Textbox.tsx', () => {
 
   it('Sets args - init - no value specified', () => {
     render(<XTextbox model={textboxProps} />)
-    expect(T.wave.args[name]).toBe('')
+    expect(wave.args[name]).toBe('')
   })
 
   it('Sets args - init - value specified', () => {
     render(<XTextbox model={{ ...textboxProps, value: 'text' }} />)
-    expect(T.wave.args[name]).toBe('text')
+    expect(wave.args[name]).toBe('text')
   })
 
 
@@ -61,44 +61,44 @@ describe('Textbox.tsx', () => {
     fireEvent.change(getByTestId(name), { target: { value: 'text' } })
     jest.runOnlyPendingTimers()
 
-    expect(T.wave.args[name]).toBe('text')
+    expect(wave.args[name]).toBe('text')
   })
 
   it('Sets args on input - undefined value, no default value specified', () => {
     const { getByTestId } = render(<XTextbox model={textboxProps} />)
     fireEvent.change(getByTestId(name), { target: { value: undefined } })
 
-    expect(T.wave.args[name]).toBe('')
+    expect(wave.args[name]).toBe('')
   })
 
   it('Sets args on input - undefined value, default value specified', () => {
     const { getByTestId } = render(<XTextbox model={{ ...textboxProps, value: 'default' }} />)
     fireEvent.change(getByTestId(name), { target: { value: undefined } })
 
-    expect(T.wave.args[name]).toBe('default')
+    expect(wave.args[name]).toBe('default')
   })
 
   it('Calls sync on change - trigger specified', () => {
     const { getByTestId } = render(<XTextbox model={{ ...textboxProps, trigger: true }} />)
 
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    wave.push = pushMock
 
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
 
-    expect(syncMock).not.toBeCalled() // Not called immediately, but after specified timeout.
+    expect(pushMock).not.toBeCalled() // Not called immediately, but after specified timeout.
     jest.runOnlyPendingTimers()
-    expect(syncMock).toBeCalled()
+    expect(pushMock).toBeCalled()
   })
 
   it('Does not call sync on change - trigger not specified', () => {
     const { getByTestId } = render(<XTextbox model={textboxProps} />)
 
-    const syncMock = jest.fn()
-    T.wave.sync = syncMock
+    const pushMock = jest.fn()
+    wave.push = pushMock
 
     fireEvent.change(getByTestId(name), { target: { value: 'aaa' } })
 
-    expect(syncMock).not.toBeCalled()
+    expect(pushMock).not.toBeCalled()
   })
 })

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Id, S, wave } from 'h2o-wave'
+import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 
 /**
  * Create a tab.
@@ -70,11 +70,11 @@ export const
         if (m.name) {
           if (name !== wave.args[m.name]) {
             wave.args[m.name] = name
-            wave.sync()
+            wave.push()
           }
         } else {
           wave.args[name] = true
-          wave.sync()
+          wave.push()
         }
       },
       render = () => {

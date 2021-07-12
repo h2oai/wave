@@ -78,7 +78,7 @@ function Home() {
   const { siteConfig = {} } = context;
   return (
     <Layout
-      title={siteConfig.title}
+      title="Make AI Apps"
       description="Realtime Web Apps and Dashboards for Python">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">

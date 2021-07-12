@@ -12,6 +12,45 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.17.0
+June 30, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.17.0)
+- Added
+  - The location hash (`q.args['#']`) is now always available, regardless of whether it has changed.
+  - `@on()` annotations now support handling events.
+  - `@on()` handlers can now have 0-n formal parameters, and are supplied arguments accordingly.
+  - `ui.inline_script()` can use CSS selectors (e.g. `#foo`, `.foo`, `table > td.foo`) as targets.
+
+## v0.16.0
+May 24, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.16.0)
+- Added
+  - *New* Ability to load and execute third party Javascript libraries at runtime.
+  - WaveDB: Add `-benchmark` command line flag for running benchmarks.
+  - WaveDB: Add example for database-backed to-do list app.
+  - WaveML: Add several examples demonstrating configuring, building, saving models, including hyperparameter tuning and SHAP.
+- Changed
+  - Upgrade Cypress (test framework) to 7.2.0.
+  - Make (anon) subject ID and username available in development mode.
+  - Closable dialogs now emit a `dismissed` event when closed.
+- Fixed
+  - WaveDB: Return empty array instead of `None` if resultset is empty.
+
+## v0.15.0
+May 7, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.15.0)
+- Added
+  - *New:* WaveDB: a companion database to Wave apps, based on SQLite 3.
+  - More routing power: Match multiple routing conditions using `@on` predicates.
+  - New card: `ui.wide_info_card()`.
+  - New component: `ui.image()`, similar in behavior to the image card.
+- Changed
+  - The Wave Tour now uses a responsive layout.
+  - Display underlying error in the file upload component on failures.
+  - Set a default label for the upload button in the file upload component.
+- Fixed
+  - Submit toolbar command value when clicked, if available.
+  - Make Wave Tour work when server and tour are launched on separate machines / docker containers.
+  - Fix Card/component deserialization (`Card.load()`).
+  - Use latest static assets in front-end when the server is upgraded. 
+
 ## v0.14.1
 Apr 29, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.14.1)
 - Fixed

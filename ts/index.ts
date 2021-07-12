@@ -263,23 +263,115 @@ type MapBuf = DataBuf
 export interface Page {
   key: S
   changed: Box<B>
-  add(k: S, c: Card): void
+  /** Get a card by name. */
   get(k: S): Card | undefined
-  set(k: S, v: any): void
-  list(): Card[]
-  drop(k: S): void
-  sync(): void
+  /** Get all cards. */
+  items(): Card[]
 }
+
+interface XPage extends Page {
+  add(k: S, c: Card): void
+  set(k: S, v: any): void
+  drop(k: S): void
+  emit(): void
+}
+
 /** A generic placeholder for content on a page. */
 export interface Model<T> {
   name: S
   state: T
   changed: Box<B>
 }
+
 /** A card on a page. */
 export interface Card extends Model<Dict<any>> {
   id: S
   set(ks: S[], v: any): void
+}
+
+/** Error codes returned by the Wave daemon. */
+export enum WaveErrorCode {
+  /** Unknown error. Should never occur. */
+  Unknown = 1,
+  /** The requested page was not found. */
+  PageNotFound,
+}
+
+/** The type of an event raised by the Wave socket client. */
+export enum WaveEventType {
+  /** Connected to daemon. */
+  Connect,
+  /** Disconnected from daemon. */
+  Disconnect,
+  /** Daemon asked to re-sync entire state. */
+  Reset,
+  /** Daemon raised an error. */
+  Error,
+  /** A local, unhandled exception occured in user code. */
+  Exception,
+  /** Daemon sent configuration information. */
+  Config,
+  /** Daemon sent a Page. */
+  Page,
+  /** Daemon sent some data. */
+  Data,
+}
+
+/** */
+export type WaveEvent = {
+  t: WaveEventType.Page, page: Page
+} | {
+  t: WaveEventType.Config, username: S, editable: B
+} | {
+  t: WaveEventType.Reset
+} | {
+  t: WaveEventType.Error, code: WaveErrorCode
+} | {
+  t: WaveEventType.Exception, error: any
+} | {
+  t: WaveEventType.Connect
+} | {
+  t: WaveEventType.Disconnect, retry: U
+} | {
+  t: WaveEventType.Data
+}
+const
+  connectEvent: WaveEvent = { t: WaveEventType.Connect },
+  resetEvent: WaveEvent = { t: WaveEventType.Reset },
+  dataEvent: WaveEvent = { t: WaveEventType.Data }
+
+type WaveEventHandler = (e: WaveEvent) => void
+
+/** A set of changes to be made to a remote Page. */
+export interface ChangeSet {
+  /** Get a reference to a card. */
+  get(key: S): Ref
+  /** Assign data buffer to card. */
+  put(key: S, data: any): void
+  /** Assign value to card's key. */
+  set(key: S, value: any): void
+  /** Delete card. */
+  del(key: S): void
+  /** Delete page. */
+  drop(): void
+  /** Push changes to remote. */
+  push(): void
+}
+
+/** A reference to a remote object. */
+interface Ref {
+  /** Get a reference to a sub-object. */
+  get(key: S): Ref
+  /** Assign value to key. */
+  set(key: S, value: any): void
+}
+
+/** The Wave client. */
+export interface Wave {
+  /** Get a reference to a copy the remote Page. */
+  fork(): ChangeSet
+  /** Push data to remote. */
+  push(data: any): void
 }
 
 let guid = 0
@@ -292,28 +384,20 @@ export const
   parseU = (s: S): U => {
     const i = parseI(s)
     return isNaN(i) || i < 0 ? NaN : i
-  },
-  dict = <T extends {}>(kvs: [S, T][]): Dict<T> => {
-    const d: Dict<T> = {}
-    for (const [k, v] of kvs) d[k] = v
-    return d
-  },
-  unpack = <T extends {}>(data: any): T =>
-    (typeof data === 'string')
-      ? decodeString(data)
-      : (isData(data))
-        ? data.list()
-        : data,
-  iff = (x: S) => x && x.length ? x : undefined,
-  debounce = (timeout: U, f: (e: any) => void) => {
-    let t: number | null = null
-    return (e: any) => {
-      if (t) window.clearTimeout(t)
-      t = window.setTimeout(() => (f(e), t = null), timeout)
-    }
   }
 
+export function unpack<T>(data: any): T {
+  return (typeof data === 'string')
+    ? decodeString(data)
+    : (isData(data))
+      ? data.list()
+      : data
+}
+
 const
+  errorCodes: Dict<WaveErrorCode> = {
+    not_found: WaveErrorCode.PageNotFound,
+  },
   decodeType = (d: S): [S, S] => {
     const i = d.indexOf(':')
     return (i > 0) ? [d.substring(0, i), d.substring(i + 1)] : ['', d]
@@ -641,7 +725,7 @@ const
     }
     return null
   },
-  newPage = (): Page => {
+  newPage = (): XPage => {
     let dirty = false, dirties: Dict<B> = {}
 
     const
@@ -653,7 +737,7 @@ const
         dirty = true
       },
       get = (k: S): Card | undefined => cards[k],
-      list = (): Card[] => valuesOf(cards),
+      items = (): Card[] => valuesOf(cards),
       drop = (k: S) => delete cards[k],
       set = (k: S, v: any) => {
         const ks = k.split(/\s+/g)
@@ -671,7 +755,7 @@ const
           if (p && (p === 'box' || (c.state['view'] === 'meta' && p === 'layouts'))) dirty = true
         }
       },
-      sync = () => {
+      emit = () => {
         if (dirty) {
           changedB(true)
         } else {
@@ -684,14 +768,14 @@ const
         dirties = {} // reset
       }
 
-    return { key, changed: changedB, add, get, set, list, drop, sync }
+    return { key, changed: changedB, add, get, set, items, drop, emit }
   },
-  load = ({ c }: PageD): Page => {
+  load = ({ c }: PageD): XPage => {
     const page = newPage()
     for (const k in c) page.add(k, loadCard(k, c[k]))
     return page
   },
-  exec = (page: Page, ops: OpD[]): Page | null => {
+  exec = (page: XPage, ops: OpD[]): XPage | null => {
     for (const op of ops) {
       if (op.k && op.k.length > 0) {
         if (op.c) {
@@ -709,194 +793,118 @@ const
         page = newPage()
       }
     }
-    if (page) page.sync()
+    if (page) page.emit()
     return page
-  }
-
-//
-// In-browser API
-//
-
-/** A set of changes to be made to a remote Page. */
-export interface ChangeSet {
-  get(key: S): Ref
-  put(key: S, data: any): void
-  set(key: S, value: any): void
-  del(key: S): void
-  drop(): void
-  sync(): void
-}
-
-interface Ref {
-  get(key: S): Ref
-  set(key: S, value: any): void
-}
-
-/** The Wave client. */
-export interface Wave {
-  readonly path: S
-  readonly args: Rec
-  readonly events: Dict<any>
-  readonly refreshRateB: Box<U>
-  readonly busyB: Box<B>
-  readonly argsB: Box<Rec>
-  socket: WebSocket | null
-  page: Page | null
-  username: S | null
-  editable: B
-  change(path?: S): ChangeSet
-  sync(): void
-  jump(key: any, value: any): void
-}
-
-const
+  },
   keyseq = (...keys: S[]): S => keys.join(' '),
-  clearRec = (a: Rec) => {
-    for (const k in a) delete a[k]
-  }
-
-export const wave: Wave = {
-  path: window.location.pathname,
-  args: {},
-  events: {},
-  refreshRateB: box(-1),
-  busyB: box(false),
-  argsB: box({}),
-  socket: null,
-  page: null,
-  username: null,
-  editable: false,
-  change: (path?: S): ChangeSet => {
-    path = path || wave.path
-    const
-      changes: OpD[] = [],
-      ref = (k: S): Ref => {
-        const
-          get = (key: S): Ref => ref(`${k}.${key}`),
-          set = (key: S, value: any) => changes.push({ k: keyseq(k, key), v: value })
-        return { get, set }
-      },
-      get = (key: S) => ref(key),
-      put = (key: S, data: any) => changes.push({ k: key, d: data }),
-      set = (key: S, value: any) => changes.push({ k: keyseq(key), v: value }),
-      del = (key: S) => changes.push({ k: key }),
-      drop = () => changes.push({}),
-      sync = () => {
-        const sock = wave.socket
-        if (!sock) return
-        const opsd: OpsD = { d: changes }
-        sock.send(`* ${path} ${JSON.stringify(opsd)}`)
-      }
-    return { get, put, set, del, drop, sync }
-  },
-  sync: () => {
-    const sock = wave.socket
-    if (!sock) return
-    const args: Dict<any> = { ...wave.args }
-    clearRec(wave.args)
-    if (Object.keys(wave.events).length) {
-      args[''] = { ...wave.events }
-      clearRec(wave.events)
-    }
-    sock.send(`@ ${wave.path} ${JSON.stringify(args)}`)
-    wave.argsB(args)
-    wave.busyB(true)
-  },
-  jump: (key: any, value: any) => {
-    if (value.startsWith('#')) {
-      window.location.hash = value.substr(1)
-      return
-    }
-    if (key) {
-      wave.args[key] = value
-    } else {
-      wave.args[value] = true
-    }
-    wave.sync()
-  },
-}
-
-on(wave.refreshRateB, r => {
-  // If we receive a change in refresh rate once the page has been loaded, close the socket.
-  // The socket onclose handler will reconnect using the refresh rate if necessary.
-  if (r < 0) return
-  const sock = wave.socket
-  if (sock) sock.close()
-})
-
-export enum WaveEventType { Message, Data, Reset }
-export type WaveEvent = WaveMessageEvent | WaveDataEvent | WaveReloadEvent
-export interface WaveDataEvent { t: WaveEventType.Data, page: Page }
-export enum WaveMessageType { Info, Warn, Err }
-export interface WaveMessageEvent { t: WaveEventType.Message, type: WaveMessageType, message: S }
-export interface WaveReloadEvent { t: WaveEventType.Reset }
-type WaveEventHandler = (e: WaveEvent) => void
-
-let backoff = 1
-const
   toSocketAddress = (path: S): S => {
     const
-      l = window.location,
-      p = l.protocol === 'https:' ? 'wss' : 'ws'
-    return p + "://" + l.host + path
+      { protocol, host } = window.location,
+      p = protocol === 'https:' ? 'wss' : 'ws'
+    return p + "://" + host + path
   },
-  reconnect = (address: S, handle: WaveEventHandler) => {
-    const retry = () => reconnect(address, handle)
-    const sock = new WebSocket(address)
-    sock.onopen = function () {
-      wave.socket = sock
-      handle({ t: WaveEventType.Message, type: WaveMessageType.Info, message: 'Connected' })
-      backoff = 1
-      const hash = window.location.hash
-      sock.send(`+ ${wave.path} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
-    }
-    sock.onclose = function () {
-      const refreshRate = wave.refreshRateB()
-      if (refreshRate === 0) return
+  refreshRateB = box(-1) // TODO ugly; refactor
 
-      // TODO handle refreshRate > 0 case
+export const
+  disconnect = () => refreshRateB(0),
+  connect = (handle: WaveEventHandler): Wave => {
+    let
+      _socket: WebSocket | null = null,
+      _page: XPage | null = null,
+      _backoff = 1
 
-      wave.socket = null
-      backoff *= 2
-      if (backoff > 16) backoff = 16
-      handle({ t: WaveEventType.Message, type: WaveMessageType.Warn, message: `Disconneced. Reconnecting in ${backoff} seconds...` })
-      window.setTimeout(retry, backoff * 1000)
-    }
-    sock.onmessage = function (e) {
-      if (!e.data) return
-      if (!e.data.length) return
-      wave.busyB(false)
-      for (const line of e.data.split('\n')) {
-        try {
-          const msg = JSON.parse(line) as OpsD
-          if (msg.d) {
-            const page = exec(wave.page || newPage(), msg.d)
-            if (wave.page !== page) {
-              wave.page = page
-              if (page) handle({ t: WaveEventType.Data, page: page })
-            }
-          } else if (msg.p) {
-            wave.page = load(msg.p)
-            handle({ t: WaveEventType.Data, page: wave.page })
-          } else if (msg.e) {
-            handle({ t: WaveEventType.Message, type: WaveMessageType.Err, message: msg.e })
-          } else if (msg.r) {
-            handle({ t: WaveEventType.Reset })
-          } else if (msg.m) {
-            const { u, e } = msg.m
-            wave.username = u
-            wave.editable = e
-          }
-        } catch (err) {
-          console.error(err)
-          handle({ t: WaveEventType.Message, type: WaveMessageType.Err, message: `Error: ${err}` })
+    const
+      slug = window.location.pathname,
+      reconnect = (address: S) => {
+        const retry = () => reconnect(address)
+        const socket = new WebSocket(address)
+        socket.onopen = () => {
+          _socket = socket
+          handle(connectEvent)
+          _backoff = 1
+          const hash = window.location.hash
+          socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
         }
-      }
-    }
-    sock.onerror = function (e: Event) {
-      wave.busyB(false)
-      console.error('A websocket error was encountered.', e) // XXX
-    }
-  }
+        socket.onclose = () => {
+          const refreshRate = refreshRateB()
+          if (refreshRate === 0) return
 
-export const connect = (path: S, handle: WaveEventHandler) => reconnect(toSocketAddress(path), handle)
+          // TODO handle refreshRate > 0 case
+
+          _socket = null
+          _backoff *= 2
+          if (_backoff > 16) _backoff = 16
+          handle({ t: WaveEventType.Disconnect, retry: _backoff })
+          window.setTimeout(retry, _backoff * 1000)
+        }
+        socket.onmessage = (e) => {
+          if (!e.data) return
+          if (!e.data.length) return
+          handle(dataEvent)
+          for (const line of e.data.split('\n')) {
+            try {
+              const msg = JSON.parse(line) as OpsD
+              if (msg.d) {
+                const page = exec(_page || newPage(), msg.d)
+                if (_page !== page) {
+                  _page = page
+                  if (page) handle({ t: WaveEventType.Page, page })
+                }
+              } else if (msg.p) {
+                const page = _page = load(msg.p)
+                handle({ t: WaveEventType.Page, page })
+              } else if (msg.e) {
+                handle({ t: WaveEventType.Error, code: errorCodes[msg.e] || WaveErrorCode.Unknown })
+              } else if (msg.r) {
+                handle(resetEvent)
+              } else if (msg.m) {
+                const { u: username, e: editable } = msg.m
+                handle({ t: WaveEventType.Config, username, editable })
+              }
+            } catch (error) {
+              console.error(error)
+              handle({ t: WaveEventType.Exception, error })
+            }
+          }
+        }
+        socket.onerror = () => {
+          handle(dataEvent)
+        }
+      },
+      push = (data: any) => {
+        if (!_socket) return
+        _socket.send(`@ ${slug} ${JSON.stringify(data || {})}`)
+      },
+      fork = (): ChangeSet => {
+        const
+          ops: OpD[] = [],
+          ref = (k: S): Ref => {
+            const
+              get = (key: S): Ref => ref(keyseq(k, key)),
+              set = (key: S, value: any) => ops.push({ k: keyseq(k, key), v: value })
+            return { get, set }
+          },
+          get = (key: S) => ref(key),
+          put = (key: S, data: any) => ops.push({ k: key, d: data }),
+          set = (key: S, value: any) => ops.push({ k: keyseq(key), v: value }),
+          del = (key: S) => ops.push({ k: key }),
+          drop = () => ops.push({}),
+          push = () => {
+            if (!_socket) return
+            const opsd: OpsD = { d: ops }
+            _socket.send(`* ${slug} ${JSON.stringify(opsd)}`)
+          }
+        return { get, put, set, del, drop, push }
+      }
+
+    on(refreshRateB, r => {
+      // If we receive a change in refresh rate once the page has been loaded, close the socket.
+      // The socket onclose handler will reconnect using the refresh rate if necessary.
+      if (r < 0) return
+      if (_socket) _socket.close()
+    })
+
+    reconnect(toSocketAddress('/_s'))
+
+    return { fork, push }
+  }

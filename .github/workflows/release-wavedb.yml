@@ -1,0 +1,76 @@
+name: Release WaveDB
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'WaveDB Release Version (0.0.0)'
+        required: true
+      tag:
+        description: 'Wave Release Version (0.0.0)'
+        required: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VERSION: ${{ github.event.inputs.version }}
+  TAG: "v${{ github.event.inputs.tag }}"
+
+jobs:
+  release-windows:
+    name: WaveDB Windows Release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+      - name: Build
+        run: make release-db-windows
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "wavedb-${{ env.VERSION }}-windows-amd64.tar.gz"
+          tag_name: ${{ env.TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release-linux:
+    name: WaveDB Linux Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+      - name: Build
+        run: make release-db-linux
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "wavedb-${{ env.VERSION }}-linux-amd64.tar.gz"
+          tag_name: ${{ env.TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release-darwin:
+    name: WaveDB Darwin Release
+    runs-on: macos-10.15
+    steps:
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+      - name: Build
+        run: make release-db-darwin
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "wavedb-${{ env.VERSION }}-darwin-amd64.tar.gz"
+          tag_name: ${{ env.TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

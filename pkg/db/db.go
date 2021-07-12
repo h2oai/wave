@@ -77,16 +77,18 @@ type DSConf struct {
 	KeyFile   string
 	Keychain  *keychain.Keychain
 	Dir       string
+	Verbose   bool
 }
 
 // DS represents a data store
 type DS struct {
 	keychain *keychain.Keychain
 	catalog  *Catalog
+	conf     DSConf
 }
 
 func newDS(conf DSConf) *DS {
-	return &DS{conf.Keychain, newCatalog(conf.Dir)}
+	return &DS{conf.Keychain, newCatalog(conf.Dir, conf.Verbose), conf}
 }
 
 // Run runs runs the server.
@@ -109,107 +111,111 @@ func Run(conf DSConf) {
 
 // DBRequest represents a database request.
 type DBRequest struct {
-	Exec *ExecRequest `json:"exec"`
-	Drop *DropRequest `json:"drop"`
+	Exec *ExecRequest `json:"e"`
+	Drop *DropRequest `json:"d"`
 }
 
-// DBReply represents a database reply.
-type DBReply struct {
-	Result interface{} `json:"result"`
-	Error  string      `json:"error"`
+type ErrorReply struct {
+	Error string `json:"e"`
 }
 
 // ExecRequest is used to execute statements.
 type ExecRequest struct {
-	Database   string `json:"database"`
-	Statements []Stmt `json:"statements"`
-	Atomic     bool   `json:"atomic"`
+	Database   string `json:"d"`
+	Statements []Stmt `json:"s"`
+	Atomicity  uint8  `json:"a"`
 }
 
 // ExecReply is the reply from Exec().
 type ExecReply struct {
-	Results [][][]interface{} `json:"results"`
+	Results [][][]interface{} `json:"r,omitempty"`
+	Error   string            `json:"e,omitempty"`
 }
 
 // Stmt represents a SQL statement.
 type Stmt struct {
-	Query  string        `json:"query"`
-	Params []interface{} `json:"params"`
+	Query  string        `json:"q"`
+	Params []interface{} `json:"p"`
 }
 
 // DropRequest is used to drop a database
 type DropRequest struct {
-	Database string `json:"database"`
+	Database string `json:"d"`
+}
+
+type DropReply struct {
+	Error string `json:"e,omitempty"`
 }
 
 const (
 	sqlite3BusyTimeout = 5000
+	contentTypeJSON    = "application/json"
 )
 
 var (
 	rxDatabaseName = regexp.MustCompile(`^\w+$`)
 	errBadRequest  = errors.New("bad request")
+	emptyResult    = make([][]interface{}, 0)
 )
 
 func (ds *DS) handle(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		switch r.Header.Get("Content-Type") {
-		case "application/json":
-			if !ds.keychain.Guard(w, r) {
-				return
-			}
-			var request DBRequest
-			in, err := ioutil.ReadAll(http.MaxBytesReader(w, r.Body, 5<<20)) // limit to 5MB per request
-			if err != nil {
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-				return
-			}
-			if err := json.Unmarshal(in, &request); err != nil {
-				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-				return
-			}
-
-			reply := ds.process(request)
-
-			out, err := json.Marshal(reply)
-			if err != nil {
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-				return
-			}
-			w.Header().Set("Content-Type", "application/json")
-			w.Write(out)
+		if !ds.keychain.Guard(w, r) {
 			return
 		}
+		var request DBRequest
+		in, err := ioutil.ReadAll(http.MaxBytesReader(w, r.Body, 5<<20)) // limit to 5MB per request
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		if err := json.Unmarshal(in, &request); err != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
+		reply := ds.process(request)
+
+		out, err := json.Marshal(reply)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", contentTypeJSON)
+		w.Write(out)
+		return
 	}
 	http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 }
 
-func (ds *DS) process(req DBRequest) DBReply {
+func (ds *DS) process(req DBRequest) interface{} {
 	if req.Exec != nil {
 		reply, err := ds.exec(*req.Exec)
 		if err != nil {
-			return DBReply{nil, err.Error()}
+			if ds.conf.Verbose {
+				log.Printf("error: %s", err.Error())
+			}
+			return ExecReply{nil, err.Error()}
 		}
-		return DBReply{reply, ""}
+		return ExecReply{reply, ""}
 	}
 	if req.Drop != nil {
 		err := ds.drop(*req.Drop)
 		if err != nil {
-			return DBReply{nil, err.Error()}
+			return DropReply{err.Error()}
 		}
-		return DBReply{nil, ""}
+		return DropReply{""}
 	}
-	return DBReply{Error: errBadRequest.Error()}
+	return ErrorReply{errBadRequest.Error()}
 }
 
-func (ds *DS) exec(req ExecRequest) (ExecReply, error) {
+func (ds *DS) exec(req ExecRequest) ([][][]interface{}, error) {
 	db, err := ds.catalog.load(req.Database)
 	if err != nil {
-		return ExecReply{}, err
+		return nil, err
 	}
-	results, err := db.exec(req.Statements, req.Atomic)
-	return ExecReply{results}, err
+	return db.exec(req.Statements, req.Atomicity > 0)
 }
 
 func (ds *DS) drop(req DropRequest) error {
@@ -221,10 +227,15 @@ type Catalog struct {
 	sync.RWMutex
 	dir       string
 	databases map[string]*DB
+	verbose   bool
 }
 
-func newCatalog(dir string) *Catalog {
-	return &Catalog{dir: dir, databases: make(map[string]*DB)}
+func newCatalog(dir string, verbose bool) *Catalog {
+	return &Catalog{
+		dir:       dir,
+		databases: make(map[string]*DB),
+		verbose:   verbose,
+	}
 }
 
 func (c *Catalog) get(name string) *DB {
@@ -249,7 +260,7 @@ func (c *Catalog) load(name string) (*DB, error) {
 		return nil, err
 	}
 
-	db, err := newDB(c.locate(name))
+	db, err := newDB(c.locate(name), c.verbose)
 	if err != nil {
 		return nil, err
 	}
@@ -288,15 +299,17 @@ func validateDatabaseName(name string) error {
 type DB struct {
 	filename string
 	pragmas  []string // pragmas that need to be set on each new connection per sqlite3 docs.
+	verbose  bool
 }
 
-func newDB(filename string) (*DB, error) {
+func newDB(filename string, verbose bool) (*DB, error) {
 	db := &DB{
 		filename,
 		[]string{
 			"pragma busy_timeout=" + strconv.Itoa(sqlite3BusyTimeout),
 			"pragma foreign_keys=on",
 		},
+		verbose,
 	}
 
 	conn, err := db.open()
@@ -346,6 +359,19 @@ func scan(s *sqlite3.Stmt, i int) (v interface{}, ok bool, err error) {
 	return
 }
 
+func (db *DB) log(query string, params []interface{}) {
+	if len(params) == 0 {
+		log.Println(query)
+		return
+	}
+
+	xs := make([]string, len(params))
+	for i, x := range params {
+		xs[i] = fmt.Sprintf("%#v", x)
+	}
+	log.Printf("%s; [ %s ]", query, strings.Join(xs, ", "))
+}
+
 func (db *DB) exec(stmts []Stmt, atomic bool) ([][][]interface{}, error) {
 	k := len(stmts)
 	if k == 0 {
@@ -367,6 +393,9 @@ func (db *DB) exec(stmts []Stmt, atomic bool) ([][][]interface{}, error) {
 	results := make([][][]interface{}, k)
 
 	for i, stmt := range stmts {
+		if db.verbose {
+			db.log(stmt.Query, stmt.Params)
+		}
 		result, err := db.query(conn, stmt.Query, stmt.Params)
 		if err != nil {
 			if atomic {
@@ -418,6 +447,9 @@ func (db *DB) query(conn *sqlite3.Conn, sql string, args []interface{}) ([][]int
 			}
 		}
 		rows = append(rows, row)
+	}
+	if rows == nil {
+		return emptyResult, nil
 	}
 	return rows, nil
 }

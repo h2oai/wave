@@ -33,12 +33,18 @@ var (
 
 func main() {
 
+	// Limit to 1 CPU:
+	// - Theoretically unlimited read concurrency in WAL mode (enabled by default).
+	// - Write concurrency is unaffected by num CPUs.
+	runtime.GOMAXPROCS(1)
+
 	var (
 		conf            db.DSConf
 		version         bool
 		accessKeyID     string
 		accessKeySecret string
 		accessKeyFile   string
+		iterations      int
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
@@ -49,11 +55,18 @@ func main() {
 	flag.StringVar(&accessKeyID, "access-key-id", "access_key_id", "default API access key ID")
 	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default API access key secret")
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
+	flag.BoolVar(&conf.Verbose, "verbose", false, "enable verbose logging")
+	flag.IntVar(&iterations, "benchmark", 0, "run benchmarks for the given number of iterations")
 
 	flag.Parse()
 
 	if version {
 		fmt.Printf("WaveDB\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
+		return
+	}
+
+	if iterations > 0 {
+		db.Benchmark(iterations, conf.Verbose)
 		return
 	}
 

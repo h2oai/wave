@@ -2942,7 +2942,7 @@ class FileUpload:
         self.name = name
         """An identifying name for this component."""
         self.label = label
-        """Text to be displayed alongside the component."""
+        """Text to be displayed in the bottom button. Defaults to "Upload"."""
         self.multiple = multiple
         """True if the component should allow multiple files to be uploaded."""
         self.file_extensions = file_extensions
@@ -3193,7 +3193,7 @@ class TableColumn:
         self.filterable = filterable
         """Indicates whether the contents of this column are displayed as filters in a dropdown."""
         self.link = link
-        """Indicates whether each cell in this column should be displayed as a clickable link."""
+        """Indicates whether each cell in this column should be displayed as a clickable link. Applies to exactly one text column in the table."""
         self.data_type = data_type
         """Defines the data type of this column. Defaults to `string`. One of 'string', 'number', 'time'. See enum h2o_wave.ui.TableColumnDataType."""
         self.cell_type = cell_type
@@ -3507,7 +3507,7 @@ class Link:
         self.disabled = disabled
         """True if the link should be disabled."""
         self.download = download
-        """True if the link should be used for file download."""
+        """True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false."""
         self.button = button
         """True if the link should be rendered as a button."""
         self.visible = visible
@@ -7137,6 +7137,8 @@ class Dialog:
             closable: Optional[bool] = None,
             blocking: Optional[bool] = None,
             primary: Optional[bool] = None,
+            name: Optional[str] = None,
+            events: Optional[List[str]] = None,
     ):
         _guard_scalar('Dialog.title', title, (str,), False, False, False)
         _guard_vector('Dialog.items', items, (Component,), False, False, False)
@@ -7144,6 +7146,8 @@ class Dialog:
         _guard_scalar('Dialog.closable', closable, (bool,), False, True, False)
         _guard_scalar('Dialog.blocking', blocking, (bool,), False, True, False)
         _guard_scalar('Dialog.primary', primary, (bool,), False, True, False)
+        _guard_scalar('Dialog.name', name, (str,), True, True, False)
+        _guard_vector('Dialog.events', events, (str,), False, True, False)
         self.title = title
         """The dialog's title."""
         self.items = items
@@ -7156,6 +7160,10 @@ class Dialog:
         """True to disable all actions and commands behind the dialog. Blocking dialogs should be used very sparingly, only when it is critical that the user makes a choice or provides information before they can proceed. Blocking dialogs are generally used for irreversible or potentially destructive tasks. Defaults to false."""
         self.primary = primary
         """Dialog with large header banner, mutually exclusive with `closable` prop. Defaults to false."""
+        self.name = name
+        """An identifying name for this component."""
+        self.events = events
+        """The events to capture on this dialog."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7165,6 +7173,8 @@ class Dialog:
         _guard_scalar('Dialog.closable', self.closable, (bool,), False, True, False)
         _guard_scalar('Dialog.blocking', self.blocking, (bool,), False, True, False)
         _guard_scalar('Dialog.primary', self.primary, (bool,), False, True, False)
+        _guard_scalar('Dialog.name', self.name, (str,), True, True, False)
+        _guard_vector('Dialog.events', self.events, (str,), False, True, False)
         return _dump(
             title=self.title,
             items=[__e.dump() for __e in self.items],
@@ -7172,6 +7182,8 @@ class Dialog:
             closable=self.closable,
             blocking=self.blocking,
             primary=self.primary,
+            name=self.name,
+            events=self.events,
         )
 
     @staticmethod
@@ -7189,12 +7201,18 @@ class Dialog:
         _guard_scalar('Dialog.blocking', __d_blocking, (bool,), False, True, False)
         __d_primary: Any = __d.get('primary')
         _guard_scalar('Dialog.primary', __d_primary, (bool,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Dialog.name', __d_name, (str,), True, True, False)
+        __d_events: Any = __d.get('events')
+        _guard_vector('Dialog.events', __d_events, (str,), False, True, False)
         title: str = __d_title
         items: List[Component] = [Component.load(__e) for __e in __d_items]
         width: Optional[str] = __d_width
         closable: Optional[bool] = __d_closable
         blocking: Optional[bool] = __d_blocking
         primary: Optional[bool] = __d_primary
+        name: Optional[str] = __d_name
+        events: Optional[List[str]] = __d_events
         return Dialog(
             title,
             items,
@@ -7202,6 +7220,8 @@ class Dialog:
             closable,
             blocking,
             primary,
+            name,
+            events,
         )
 
 
@@ -7321,6 +7341,55 @@ class Script:
         )
 
 
+class InlineScript:
+    """Create a block of inline Javascript to be executed immediately on a page.
+    """
+    def __init__(
+            self,
+            content: str,
+            requires: Optional[List[str]] = None,
+            targets: Optional[List[str]] = None,
+    ):
+        _guard_scalar('InlineScript.content', content, (str,), False, False, False)
+        _guard_vector('InlineScript.requires', requires, (str,), False, True, False)
+        _guard_vector('InlineScript.targets', targets, (str,), False, True, False)
+        self.content = content
+        """The Javascript source code to be executed."""
+        self.requires = requires
+        """The names of modules required on the page's `window` global before running this script."""
+        self.targets = targets
+        """The HTML elements required to be present on the page before running this script. Each 'target' can either be the ID of the element (`foo`) or a CSS selector (`#foo`, `.foo`, `table > td.foo`, etc.)."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('InlineScript.content', self.content, (str,), False, False, False)
+        _guard_vector('InlineScript.requires', self.requires, (str,), False, True, False)
+        _guard_vector('InlineScript.targets', self.targets, (str,), False, True, False)
+        return _dump(
+            content=self.content,
+            requires=self.requires,
+            targets=self.targets,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'InlineScript':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        _guard_scalar('InlineScript.content', __d_content, (str,), False, False, False)
+        __d_requires: Any = __d.get('requires')
+        _guard_vector('InlineScript.requires', __d_requires, (str,), False, True, False)
+        __d_targets: Any = __d.get('targets')
+        _guard_vector('InlineScript.targets', __d_targets, (str,), False, True, False)
+        content: str = __d_content
+        requires: Optional[List[str]] = __d_requires
+        targets: Optional[List[str]] = __d_targets
+        return InlineScript(
+            content,
+            requires,
+            targets,
+        )
+
+
 class MetaCard:
     """Represents page-global state.
 
@@ -7340,6 +7409,7 @@ class MetaCard:
             theme: Optional[str] = None,
             tracker: Optional[Tracker] = None,
             scripts: Optional[List[Script]] = None,
+            script: Optional[InlineScript] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MetaCard.box', box, (str,), False, False, False)
@@ -7353,6 +7423,7 @@ class MetaCard:
         _guard_scalar('MetaCard.theme', theme, (str,), False, True, False)
         _guard_scalar('MetaCard.tracker', tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', scripts, (Script,), False, True, False)
+        _guard_scalar('MetaCard.script', script, (InlineScript,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7376,6 +7447,8 @@ class MetaCard:
         """Configure a tracker for the page (for web analytics)."""
         self.scripts = scripts
         """External Javascript files to load into the page."""
+        self.script = script
+        """Javascript code to execute on this page."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -7392,6 +7465,7 @@ class MetaCard:
         _guard_scalar('MetaCard.theme', self.theme, (str,), False, True, False)
         _guard_scalar('MetaCard.tracker', self.tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', self.scripts, (Script,), False, True, False)
+        _guard_scalar('MetaCard.script', self.script, (InlineScript,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='meta',
@@ -7406,6 +7480,7 @@ class MetaCard:
             theme=self.theme,
             tracker=None if self.tracker is None else self.tracker.dump(),
             scripts=None if self.scripts is None else [__e.dump() for __e in self.scripts],
+            script=None if self.script is None else self.script.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -7434,6 +7509,8 @@ class MetaCard:
         _guard_scalar('MetaCard.tracker', __d_tracker, (dict,), False, True, False)
         __d_scripts: Any = __d.get('scripts')
         _guard_vector('MetaCard.scripts', __d_scripts, (dict,), False, True, False)
+        __d_script: Any = __d.get('script')
+        _guard_scalar('MetaCard.script', __d_script, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MetaCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -7447,6 +7524,7 @@ class MetaCard:
         theme: Optional[str] = __d_theme
         tracker: Optional[Tracker] = None if __d_tracker is None else Tracker.load(__d_tracker)
         scripts: Optional[List[Script]] = None if __d_scripts is None else [Script.load(__e) for __e in __d_scripts]
+        script: Optional[InlineScript] = None if __d_script is None else InlineScript.load(__d_script)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -7460,6 +7538,7 @@ class MetaCard:
             theme,
             tracker,
             scripts,
+            script,
             commands,
         )
 

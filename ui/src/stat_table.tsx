@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import { FontIcon } from '@fluentui/react'
-import { Model, S, wave } from 'h2o-wave'
+import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
 import { clas, cssVar } from './theme'
-import { bond } from './ui'
+import { bond, jump } from './ui'
 
 /**
  * Render a card displaying a table of stats.
@@ -136,7 +136,7 @@ export const
           )),
           rows = items.map(({ name: rowName, label, values, caption, icon, icon_color }, i) => {
             const
-              onClick = rowName ? () => wave.jump(tableName, rowName) : undefined,
+              onClick = rowName ? () => jump(tableName, rowName) : undefined,
               cells = values.map((value, j) => (<td key={`${j}:${value}`}>{value}</td>))
 
             return (

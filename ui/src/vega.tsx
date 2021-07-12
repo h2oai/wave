@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, debounce, Model, Rec, S, unpack, xid } from 'h2o-wave'
+import { B, Model, Rec, S, unpack, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
 import { displayMixin } from './theme'
-import { bond } from './ui'
+import { bond, debounce } from './ui'
 
 const
   css = stylesheet({

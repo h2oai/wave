@@ -236,3 +236,83 @@ This function is called when `q.args['#']` matches, say, 'menu/donuts/below/2.99
 async def show_donuts_below(q: Q, donut_price: float):
     pass
 ```
+
+### Handling query arguments
+
+The `@on()` annotation can test the contents of `q.args` and invoke the corresponding handler.
+
+This function is called when `q.args.buy_now` is found and the value is truthy:
+
+```py
+@on('buy_now')
+async def buy_donuts(q: Q):
+    print(q.args.buy_now)
+```
+
+The handler can accept the value of the argument as well. Compare:
+
+```py
+@on('buy_now')
+async def buy_donuts(q: Q, buy_now: bool):
+    print(buy_now)
+```
+
+This function is called when `q.args.jam_filled` is False:
+
+```py
+@on('jam_filled', lambda x: x is False)
+async def buy_plain_donuts(q: Q):
+    pass
+```
+
+This function is called when `q.args.jam_filled` is True or False:
+
+```py
+@on('jam_filled', lambda x: isinstance(x, bool)
+async def buy_donuts(q: Q, jam_filled: bool):
+    pass
+```
+
+This function is called when `q.args.quantity` between 42 and 420:
+
+```py
+@on('quantity', lambda x: 42 <= x <= 420)
+async def buy_donuts(q: Q, quantity: bool):
+    pass
+```
+
+### Handling events
+
+The `@on()` annotation can also test the contents of `q.events` and invoke the corresponding handler.
+
+This function is called when `q.events.donut_plot.select_marks` is found and the value is truthy:
+
+```py
+@on('donut_plot.select_marks')
+async def on_marks_selected(q: Q):
+    pass
+```
+
+This function is called when `q.events.donut_plot.select_marks` is 0:
+
+```py
+@on('donut_plot.select_marks', lambda x: x == 0)
+async def on_marks_selected(q: Q):
+    pass
+```
+
+This function is called when `q.events.donut_plot.select_marks` is an integer:
+
+```py
+@on('donut_plot.select_marks', lambda x: isinstance(x, int))
+async def on_marks_selected(q: Q, count: int):
+    pass
+```
+
+This function is called when `q.events.donut_plot.select_marks` between 42 and 420:
+
+```py
+@on('donut_plot.select_marks', lambda x: 42 <= x <= 420)
+async def on_marks_selected(q: Q, count: int):
+    pass
+```

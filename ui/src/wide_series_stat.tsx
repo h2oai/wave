@@ -78,11 +78,11 @@ export const
   View = bond(({ name, state: s, changed }: Model<State>) => {
     const render = () => {
       const
-        data = unpack(s.data),
+        data = unpack<Rec>(s.data),
         plot = s.plot_type === 'interval'
           ? (
             <MicroBars
-              data={unpack(s.plot_data)}
+              data={unpack<any[]>(s.plot_data)}
               category={s.plot_category}
               value={s.plot_value}
               color={cssVar(s.plot_color)}
@@ -90,7 +90,7 @@ export const
             />
           ) : (
             <MicroArea
-              data={unpack(s.plot_data)}
+              data={unpack<any[]>(s.plot_data)}
               value={s.plot_value}
               color={cssVar(s.plot_color)}
               zeroValue={s.plot_zero_value}

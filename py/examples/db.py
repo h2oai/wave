@@ -14,12 +14,12 @@
 # H2O_WAVEDB_ACCESS_KEY_SECRET - the API access key secret
 
 import asyncio
-from h2o_wave import WaveDBConnection
+from h2o_wave import connect
 
 
 async def main():
     # Create a database connection
-    connection = WaveDBConnection()
+    connection = connect()
 
     # Access the 'employees' database.
     # A new database is created automatically if it does not exist.
@@ -27,7 +27,7 @@ async def main():
 
     # Execute some statements.
     await db.exec("drop table if exists employee")
-    await db.exec("create table employee(empid integer, name varchar(20), title varchar(10))")
+    await db.exec("create table employee(empid integer, name text, title text)")
 
     # Execute a statement and handle errors.
     results, err = await db.exec("insert into employee values(?, ?, ?)", 101, 'Jeffrey Lebowski', 'Slacker')
@@ -52,11 +52,11 @@ async def main():
     )
 
     # Read records.
-    results, err = await db.exec("select * from employee")
+    rows, err = await db.exec("select * from employee")
     if err:
         raise ValueError(err)
 
-    print(results)
+    print(rows)
 
     # Prints:
     #  [

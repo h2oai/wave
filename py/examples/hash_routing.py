@@ -10,18 +10,8 @@ from h2o_wave import main, app, Q, ui
 
 @app('/demo')
 async def serve(q: Q):
-    hash = q.args['#']
-    if hash:
-        blurb = q.page['blurb']
-        if hash == 'menu/spam':
-            blurb.content = "Sorry, we're out of spam!"
-        elif hash == 'menu/ham':
-            blurb.content = "Sorry, we're out of ham!"
-        elif hash == 'menu/eggs':
-            blurb.content = "Sorry, we're out of eggs!"
-        elif hash == 'about':
-            blurb.content = 'Everything here is gluten-free!'
-    else:
+    if not q.client.initialized:
+        q.client.initialized = True
         q.page['nav'] = ui.markdown_card(
             box='1 1 4 2',
             title='Links!',
@@ -32,4 +22,18 @@ async def serve(q: Q):
             title='Store',
             content='Welcome to our store!',
         )
+
+    hash = q.args['#']
+    blurb = q.page['blurb']
+    if hash == 'menu/spam':
+        blurb.content = "Sorry, we're out of spam!"
+    elif hash == 'menu/ham':
+        blurb.content = "Sorry, we're out of ham!"
+    elif hash == 'menu/eggs':
+        blurb.content = "Sorry, we're out of eggs!"
+    elif hash == 'about':
+        blurb.content = 'Everything here is gluten-free!'
+    else:
+        blurb.content = 'Welcome to our store!'
+
     await q.page.save()

@@ -14,15 +14,15 @@
 
 import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
-import * as T from 'h2o-wave'
 import React from 'react'
 import { ChoiceGroup, XChoiceGroup } from './choice_group'
+import { wave } from './ui'
 
 const name = 'choiceGroup'
 const choiceGroupProps: ChoiceGroup = { name, choices: [{ name: 'Choice1' }, { name: 'Choice2' }, { name: 'Choice3' },] }
 describe('ChoiceGroup.tsx', () => {
   beforeAll(() => initializeIcons())
-  beforeEach(() => { T.wave.args[name] = null })
+  beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XChoiceGroup model={choiceGroupProps} />)
@@ -39,7 +39,7 @@ describe('ChoiceGroup.tsx', () => {
     const { getByText } = render(<XChoiceGroup model={choiceGroupProps} />)
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(T.wave.args[name]).toBe('Choice1')
+    expect(wave.args[name]).toBe('Choice1')
   })
 
   it('Sets args - multi selection', () => {
@@ -48,26 +48,26 @@ describe('ChoiceGroup.tsx', () => {
     fireEvent.click(getByText('Choice2').parentElement!)
     fireEvent.click(getByText('Choice3').parentElement!)
 
-    expect(T.wave.args[name]).toBe('Choice3')
+    expect(wave.args[name]).toBe('Choice3')
   })
 
   it('Does not call sync - trigger not specified', () => {
     const { getByText } = render(<XChoiceGroup model={choiceGroupProps} />)
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
 
-    T.wave.sync = syncMock
+    wave.push = pushMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(syncMock).toBeCalledTimes(0)
+    expect(pushMock).toBeCalledTimes(0)
   })
 
   it('Calls sync - trigger specified', () => {
     const { getByText } = render(<XChoiceGroup model={{ ...choiceGroupProps, trigger: true }} />)
-    const syncMock = jest.fn()
+    const pushMock = jest.fn()
 
-    T.wave.sync = syncMock
+    wave.push = pushMock
     fireEvent.click(getByText('Choice1').parentElement!)
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 })
