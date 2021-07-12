@@ -25,15 +25,96 @@
 #' @return A \code{Auth} object. 
 #' 
 .Auth <- R6::R6Class(".Auth",
-                    public = list(
-#' @field username The username of the user
+                     public = list(
+                                   #' @field username The username of the user
                                    username = NULL,
-#' @field subject Unique identifier for the user
+                                   #' @field subject Unique identifier for the user
                                    subject = NULL,
-#' @field access_token The access token of the user                                   
+                                   #' @field access_token The access token of the user                                   
                                    access_token = NULL,
-#' @field refresh_token The refresh token of the user                                   
+                                   #' @field refresh_token The refresh token of the user                                   
                                    refresh_token = NULL
+                                   ))
+
+
+#' @title Create an \code{App} object 
+#' 
+#' @import R6 stringr jsonlite httr httpuv     
+#' 
+#' @description The \code{App} object stores App level variables
+#' 
+#' @details The \code{App} object stores App level variables. 
+#' These variables are available to all users connected to the App.
+#' 
+#' @return A \code{App} object. 
+#' 
+.App <- R6::R6Class(".App",
+                     public = list(
+                                   #' @field .lapp The list that stores App level variables
+                                   .lapp = NULL,
+
+
+#' @description Initialize an \code{App} Object
+#' 
+#' @details The initialize function sets up the public variable  \code{.lapp}.
+#' 
+#' @return An initialized \code{App} object.
+#'
+                                   initialize = function() .lapp <- list()
+                                   ))
+
+
+#' @title Create an \code{User} object 
+#' 
+#' @import R6 stringr jsonlite httr httpuv     
+#' 
+#' @description The \code{User} object stores User level variables
+#' 
+#' @details The \code{User} object stores User level variables. 
+#' User specific set of variables are available to a user. 
+#' 
+#' @return A \code{User} object. 
+#' 
+.User <- R6::R6Class(".User",
+                     public = list(
+                                   #' @field .luser The list that stores User level variables
+                                   .luser = NULL,
+
+
+#' @description Initialize an \code{User} Object
+#' 
+#' @details The initialize function sets up the public variable  \code{.luser}.
+#' 
+#' @return An initialized \code{User} object.
+#'
+                                   initialize = function() .luser <- list()
+                                   ))
+                                   
+
+#' @title Create an \code{Client} object 
+#' 
+#' @import R6 stringr jsonlite httr httpuv     
+#' 
+#' @description The \code{Client} object stores Client level variables
+#' 
+#' @details The \code{Client} object stores Client level variables. 
+#' Client specific set of variables are available to a specific session.
+#' 
+#' @return A \code{Client} object. 
+#' 
+.Client <- R6::R6Class(".Client",
+                     public = list(
+                                   #' @field .lclient The list that stores Client level variables
+                                   .lclient = NULL,
+                                   
+
+#' @description Initialize a \code{Client} Object
+#' 
+#' @details The initialize function sets up the public variable  \code{.lclient}.
+#' 
+#' @return An initialized \code{Client} object.
+#'
+                                   initialize = function() .lclient <- list()
                                    ))
 
 
@@ -50,41 +131,31 @@
 #' @return A \code{Query} object. 
 #' 
 .Query <- R6::R6Class(".Query",
-                 private = list(
-#' @field .client A list that holds client specific information
-                                 .client = NULL,
-#' @field .user A list that holds user specific information
-                                 .user = NULL
-                 ),
-                 ,public = list(
-#' @field route The \code{route} (page) that is currently being served
-                                route = NULL,
-#' @field auth The R6 \code{Auth} object 
-                                auth = NULL,
-#' @field args The argument holds query arguments
-                                args = NULL,
-#' @field app The app holds app specific query arguments
-                                app = NULL,
-#' @field events The events holds events specific query arguments
-                                events = NULL,
+                      public = list(
+                                     #' @field auth The R6 \code{Auth} object 
+                                     auth = NULL,
+                                     #' @field args The argument holds query arguments
+                                     args = NULL,
+                                     #' @field events The events holds events specific query arguments
+                                     events = NULL,
+                                     #' @field page The page that is being served
+                                     page = NULL,
 
 #' @description Initialize a \code{Query} Object
 #' 
-#' @details The intialize function setup the private and public variables in the \code{Query} object. 
-#' These objects are the \code{route}, \code{args}, \code{app}, \code{auth}, \code{events}, \code{.client}, and 
-#' \code{.user}.                                 
+#' @param route The \code{route} (page) that is currently being served
+#' 
+#' @details The initialize function sets up public variables in the \code{Query} object. 
+#' These objects are the \code{route}, \code{args}, \code{app}, \code{auth}, and \code{events}.
 #' 
 #' @return An initialized \code{Query} object.
 #'
-                                initialize = function() {
-                                    self$route <- NULL
-                                    self$args <- list()
-                                    self$app <- list()
-                                    self$events <- list()
-                                    self$auth <- .Auth$new()
-                                    private$.client <- list()
-                                    private$.user <- list()
-                                },
+                                     initialize = function(route) {
+                                         self$args <- list()
+                                         self$events <- list()
+                                         self$page <- Site(route)
+                                         self$auth <- .Auth$new()
+                                     },
 
 
 #' @description Check and Append \code{client} and \code{user} arguments
@@ -95,11 +166,11 @@
 #' mode of the application. It first checks if the list for the specific \code{client} and \code{user} exists. 
 #' If the list exists then it does nothing, if it does not then it appends a unique list. 
 #' 
-                                check_n_append = function(route) {
-                                    if(route %in% names(private$.client)) {} else {
-                                    private$.client[[route]] <- list()
-                                    private$.user[[route]] <- list()}
-                                },
+                                     check_n_append = function(route) {
+                                         if(route %in% names(.client$.lclient)) {} else {
+                                             .user$.luser[[route]] <- list()
+                                             .client$.lclient[[route]] <- list()}
+                                     },
 
 
 #' @description Make Events Variable
@@ -109,36 +180,34 @@
 #' user. If it is present it then creates a new variable \code{events} and appends the value
 #' of the \code{''} key to the \code{events} variable. 
 #'
-                                make_events = function() {
-                                    if(length(which(names(self$args) =="")) == 1){
-                                        self$events <- self$args[[which(names(self$args) == "")]]
-                                    }
-                                    else self$events <- NULL
-                                },
+                                     make_events = function() {
+                                         if(length(which(names(self$args) =="")) == 1){
+                                             self$events <- self$args[[which(names(self$args) == "")]]
+                                         }
+                                         else self$events <- NULL
+                                     }
+                      ),
 
 
-#' @description Clear Route
-#' 
-#' @details The \code{clear_route} clears the route variable once the route has been served. 
-#'
-                                clear_route = function() {
-                                    self$route <- NULL
-                                }
-                                ),
-
-
-                 active = list(
-#' @field client variable gets or sets the arguments in the \code{client} list                                
-                                client = function(value) {if(missing(value)) {
-                                    return(private$.client[[self$route]]) }
-                                else {private$.client[[self$route]] <- value}},
+                      active = list(
 #' @field user variable gets or sets the arguments in the \code{user} list                                
-                                user = function(value) {if(missing(value)) {
-                                    return(private$.user[[self$route]]) }
-                                else {private$.user[[self$route]] <- value}}
-                 )
+                                 user = function(value) {if(missing(value)) {
+                                     return(.user$.luser[[self$page$page_name]]) }
+                             else {.user$.luser[[self$page$page_name]] <- value}},
+#' @field client variable gets or sets the arguments in the \code{client} list                                
+                                    client = function(value) {if(missing(value)) {
+                                        return(.client$.lclient[[self$page$page_name]]) }
+                                 else {.client$.lclient[[self$page$page_name]] <- value}},
+#' @field app variable gets or sets the arguments in the \code{app} list                                
+                                 app = function(value) {if(missing(value)) {
+                                     return(.app$.lapp[[self$page$page_name]]) }
+                             else {.app$.lapp[[self$page$page_name]] <- value}}
+                      )
 )
 
+.user <- .User$new()
+.client <- .Client$new()
+.app <- .App$new()
 
 #' @title Run Application
 #' 
@@ -160,38 +229,30 @@ app <- function(route="/demo"
                 ,server_address = 'http://127.0.0.1'
                 ,server_port = 15555)
 {
-    q <- .Query$new()
     httpuv::startServer(host = "127.0.0.1", port = server_port,
-                     app = list(
-                                call = function(req) {
-                                    if(tolower(mode) == 'unicast'){
-                                        route <- paste0("/",as.list(req)$HTTP_WAVE_CLIENT_ID)
-                                    }
-                                    else if(tolower(mode) == 'multicast'){
-                                        route <- paste0("/",as.list(req)$HTTP_WAVE_SUBJECT_ID)
-                                    }
-                                    else {
-                                        route <- route
-                                    }
-                                    q$route <- route
-                                    q$check_n_append(route)
-                                    q$args <- fromJSON(rawToChar(as.list(req)$rook.input$read(-1)))
-                                    q$make_events()
-                                    if ("serve" %in% ls(envir = .GlobalEnv)) {
-                                        get("serve", envir = .GlobalEnv)
-                                        serve(q,route)
-                                    } else {
-                                        serve(q,route)
-                                    }
-                                    q$clear_route() 
-                                    body <- paste0("Time: ", Sys.time(), "<br>Path requested: ", req$PATH_INFO)
-                                    list(
-                                         status = 200L,
-                                         headers = list('Content-Type' = 'text/html'),
-                                         body = body
-                                    )
-                                }
-                     )
+                        app = list(
+                                   call = function(req) {
+                                       if(tolower(mode) == 'unicast'){
+                                           route <- paste0("/",as.list(req)$HTTP_WAVE_CLIENT_ID)
+                                       }
+                                       else if(tolower(mode) == 'multicast'){
+                                           route <- paste0("/",as.list(req)$HTTP_WAVE_SUBJECT_ID)
+                                       }
+                                       else {
+                                          route <- route 
+                                       }
+                                       qObject <- .Query$new(route)
+                                       qObject$check_n_append(route)
+                                       qObject$args <- fromJSON(rawToChar(as.list(req)$rook.input$read(-1)))
+                                       serve(qObject)
+                                       body <- paste0("Time: ", Sys.time(), "<br>Path requested: ", req$PATH_INFO)
+                                       list(
+                                            status = 200L,
+                                            headers = list('Content-Type' = 'text/html'),
+                                            body = body
+                                       )
+                                   }
+                        )
     )
 
     ## Generate the App registration

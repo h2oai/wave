@@ -259,9 +259,12 @@ data <- function(fields
                                                if(non_eval_string[[i]] == "-") non_eval_string[[i]] = "_"
                                                base_string <- paste0(base_string,'.%s')
                                        }
-                                       base_string <- paste0(base_string,' = %s')
+                                       non_eval_string[[length(non_eval_string)]] =  
+                                       eval(parse(text=non_eval_string[[length(non_eval_string)]]),parent.frame())
+                                       base_string <- paste0(base_string,' = \"%s\"')
                                        parsed_out_string <- parse(text = do.call(sprintf, c(fmt = base_string, non_eval_string)))
                                        eval(parsed_out_string)
+                                       class(self$cards) <- c("h2o_wave_delta_data", class(self$cards))
                                },
 #' @description The method pushes the page and its content (cards) to the 
 #' wave server. 
@@ -297,10 +300,9 @@ data <- function(fields
                                                                                                 }
                                                                                         })), auto_unbox =
                                                TRUE)
-                                               self$cards <- list()
-                                               class(self$cards) <- c("h2o_wave_delta_data", class(self$cards))
                                        }
                                        .site_save(self$page_name, data)
+                                       self$cards <- list()
                                }
                  )
 )
@@ -327,7 +329,6 @@ Site <- function(name){
                         ))
         intermediate_site_object <- .Site$new()
         intermediate_site_object$register(name)
-        intermediate_site_object$drop()
         return(intermediate_site_object)
 }
 
