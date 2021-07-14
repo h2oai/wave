@@ -244,7 +244,8 @@ app <- function(route="/demo"
                                        qObject <- .Query$new(route)
                                        qObject$check_n_append(route)
                                        qObject$args <- fromJSON(rawToChar(as.list(req)$rook.input$read(-1)))
-                                       serve(qObject)
+                                       if(!exists("serve")) print('No serve() function exists. Please Add serve()')
+                                       else serve(qObject)
                                        body <- paste0("Time: ", Sys.time(), "<br>Path requested: ", req$PATH_INFO)
                                        list(
                                             status = 200L,
