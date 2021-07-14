@@ -1,10 +1,10 @@
-# WaveML / DAI
-# Build Wave Models for training and prediction of classification or regression using Driverless AI.
+# WaveML / DAI / Save
+# Save and load Wave Models built using Driverless AI.
 # ---
 import os
 
 from h2o_wave import main, app, Q, copy_expando, ui
-from h2o_wave_ml import build_model, ModelType
+from h2o_wave_ml import build_model, get_model, ModelType
 from h2o_wave_ml.utils import list_dai_instances
 
 from sklearn.datasets import load_wine
@@ -126,7 +126,7 @@ async def serve(q: Q):
         await q.page.save()
 
         # train WaveML Model using Driverless AI
-        q.client.wave_model = await q.run(
+        wave_model = await q.run(
             func=build_model,
             train_df=q.client.train_df,
             target_column='target',
@@ -138,15 +138,19 @@ async def serve(q: Q):
             _dai_interpretability=10
         )
 
-        # update DAI model details
-        q.client.project_id = q.client.wave_model.project_id
+        # update and save DAI model details
+        q.client.project_id = wave_model.project_id
+        q.client.endpoint_url = wave_model.endpoint_url
         q.client.model_details += f'<br />{mlops_deployment_url(q.client.project_id)}'
 
         # show prediction option
         q.page['example'].items = form_training_completed(q)
     elif q.args.predict:
+        # load model from it's endpoint URL
+        wave_model = get_model(endpoint_url=q.client.endpoint_url, refresh_token=q.auth.refresh_token)
+
         # predict on test data
-        q.client.preds = q.client.wave_model.predict(test_df=q.client.test_df)
+        q.client.preds = wave_model.predict(test_df=q.client.test_df)
 
         # show predictions
         q.page['example'].items = form_prediction_completed(q)

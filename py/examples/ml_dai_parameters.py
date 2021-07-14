@@ -1,5 +1,5 @@
-# WaveML / DAI
-# Build Wave Models for training and prediction of classification or regression using Driverless AI.
+# WaveML / DAI / Parameters
+# Configure hyperparameters for Wave Models built using Driverless AI.
 # ---
 import os
 
@@ -48,6 +48,8 @@ def form_default(q: Q):
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
         ui.text(content=STEAM_TEXT, visible=q.client.disable_training),
+        ui.slider(name='dai_interpretability', label='Interpretability', min=1, max=10, step=1, value=7),
+        ui.toggle(name='dai_reproducible', label='Reproducible', value=False),
         ui.buttons(items=[
             ui.button(name='train', label='Train', primary=True, disabled=q.client.disable_training),
             ui.button(name='predict', label='Predict', primary=True, disabled=True),
@@ -61,6 +63,9 @@ def form_training_progress(q: Q):
         ui.text(content=DATASET_TEXT),
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
+        ui.slider(name='dai_interpretability', label='Interpretability', min=1, max=10, step=1,
+                  value=q.client.dai_interpretability),
+        ui.toggle(name='dai_reproducible', label='Reproducible', value=q.client.dai_reproducible),
         ui.buttons(items=[
             ui.button(name='train', label='Train', primary=True, disabled=True),
             ui.button(name='predict', label='Predict', primary=True, disabled=True)
@@ -76,6 +81,9 @@ def form_training_completed(q: Q):
         ui.text(content=DATASET_TEXT),
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
+        ui.slider(name='dai_interpretability', label='Interpretability', min=1, max=10, step=1,
+                  value=q.client.dai_interpretability),
+        ui.toggle(name='dai_reproducible', label='Reproducible', value=q.client.dai_reproducible),
         ui.buttons(items=[
             ui.button(name='train', label='Train', primary=True),
             ui.button(name='predict', label='Predict', primary=True)
@@ -91,6 +99,9 @@ def form_prediction_completed(q: Q):
         ui.text(content=DATASET_TEXT),
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
+        ui.slider(name='dai_interpretability', label='Interpretability', min=1, max=10, step=1,
+                  value=q.client.dai_interpretability),
+        ui.toggle(name='dai_reproducible', label='Reproducible', value=q.client.dai_reproducible),
         ui.buttons(items=[
             ui.button(name='train', label='Train', primary=True),
             ui.button(name='predict', label='Predict', primary=True)
@@ -135,7 +146,8 @@ async def serve(q: Q):
             _steam_dai_instance_name=q.client.dai_instance_name,
             _dai_accuracy=1,
             _dai_time=1,
-            _dai_interpretability=10
+            _dai_interpretability=q.client.dai_interpretability,
+            _dai_reproducible=q.client.dai_reproducible
         )
 
         # update DAI model details

@@ -1,11 +1,11 @@
-# WaveML / DAI
-# Build Wave Models for training and prediction of classification or regression using Driverless AI.
+# WaveML / DAI / AutoDoc
+# Download AutoDoc for Wave Models built using Driverless AI.
 # ---
 import os
 
 from h2o_wave import main, app, Q, copy_expando, ui
 from h2o_wave_ml import build_model, ModelType
-from h2o_wave_ml.utils import list_dai_instances
+from h2o_wave_ml.utils import list_dai_instances, save_autodoc
 
 from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split
@@ -48,10 +48,7 @@ def form_default(q: Q):
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
         ui.text(content=STEAM_TEXT, visible=q.client.disable_training),
-        ui.buttons(items=[
-            ui.button(name='train', label='Train', primary=True, disabled=q.client.disable_training),
-            ui.button(name='predict', label='Predict', primary=True, disabled=True),
-        ])
+        ui.button(name='train', label='Train', primary=True, disabled=q.client.disable_training)
     ]
 
 
@@ -61,10 +58,7 @@ def form_training_progress(q: Q):
         ui.text(content=DATASET_TEXT),
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
-        ui.buttons(items=[
-            ui.button(name='train', label='Train', primary=True, disabled=True),
-            ui.button(name='predict', label='Predict', primary=True, disabled=True)
-        ]),
+        ui.button(name='train', label='Train', primary=True, disabled=q.client.disable_training),
         ui.progress(label='Training in progress...', caption='This can take a few minutes...'),
         ui.text(content=q.client.model_details)
     ]
@@ -76,29 +70,10 @@ def form_training_completed(q: Q):
         ui.text(content=DATASET_TEXT),
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
-        ui.buttons(items=[
-            ui.button(name='train', label='Train', primary=True),
-            ui.button(name='predict', label='Predict', primary=True)
-        ]),
+        ui.button(name='train', label='Train', primary=True, disabled=q.client.disable_training),
         ui.message_bar(type='success', text='Training successfully completed!'),
-        ui.text(content=q.client.model_details)
-    ]
-
-
-def form_prediction_completed(q: Q):
-    # display when model prediction is completed
-    return [
-        ui.text(content=DATASET_TEXT),
-        ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
-                    choices=q.client.choices_dai_instances, required=True),
-        ui.buttons(items=[
-            ui.button(name='train', label='Train', primary=True),
-            ui.button(name='predict', label='Predict', primary=True)
-        ]),
-        ui.message_bar(type='success', text='Prediction successfully completed!'),
         ui.text(content=q.client.model_details),
-        ui.text(content=f'''**Example predictions:** <br />
-            {q.client.preds[0]} <br /> {q.client.preds[1]} <br /> {q.client.preds[2]}''')
+        ui.text(content=f'**Download:** <a href="{q.client.path_autodoc}">AutoDoc</a>')
     ]
 
 
@@ -142,14 +117,17 @@ async def serve(q: Q):
         q.client.project_id = q.client.wave_model.project_id
         q.client.model_details += f'<br />{mlops_deployment_url(q.client.project_id)}'
 
-        # show prediction option
-        q.page['example'].items = form_training_completed(q)
-    elif q.args.predict:
-        # predict on test data
-        q.client.preds = q.client.wave_model.predict(test_df=q.client.test_df)
+        # download AutoDoc
+        path_autodoc = save_autodoc(
+            project_id=q.client.project_id,
+            output_dir_path='.',
+            refresh_token=q.auth.refresh_token
+        )
 
-        # show predictions
-        q.page['example'].items = form_prediction_completed(q)
+        q.client.path_autodoc, *_ = await q.site.upload([path_autodoc])
+
+        # show model outputs
+        q.page['example'].items = form_training_completed(q)
     else:
         # prepare sample train and test dataframes
         data = load_wine(as_frame=True)['frame']

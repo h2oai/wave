@@ -1,5 +1,5 @@
-# WaveML / DAI
-# Build Wave Models for training and prediction of classification or regression using Driverless AI.
+# WaveML / DAI / Categorical
+# Configure categorical columns for Wave Models built using Driverless AI.
 # ---
 import os
 
@@ -48,6 +48,8 @@ def form_default(q: Q):
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
         ui.text(content=STEAM_TEXT, visible=q.client.disable_training),
+        ui.dropdown(name='categorical_columns', label='Select categorical columns',
+                    choices=q.client.column_choices, values=[]),
         ui.buttons(items=[
             ui.button(name='train', label='Train', primary=True, disabled=q.client.disable_training),
             ui.button(name='predict', label='Predict', primary=True, disabled=True),
@@ -61,6 +63,8 @@ def form_training_progress(q: Q):
         ui.text(content=DATASET_TEXT),
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
+        ui.dropdown(name='categorical_columns', label='Select categorical columns',
+                    choices=q.client.column_choices, values=q.client.categorical_columns),
         ui.buttons(items=[
             ui.button(name='train', label='Train', primary=True, disabled=True),
             ui.button(name='predict', label='Predict', primary=True, disabled=True)
@@ -76,6 +80,8 @@ def form_training_completed(q: Q):
         ui.text(content=DATASET_TEXT),
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
+        ui.dropdown(name='categorical_columns', label='Select categorical columns',
+                    choices=q.client.column_choices, values=q.client.categorical_columns),
         ui.buttons(items=[
             ui.button(name='train', label='Train', primary=True),
             ui.button(name='predict', label='Predict', primary=True)
@@ -91,6 +97,8 @@ def form_prediction_completed(q: Q):
         ui.text(content=DATASET_TEXT),
         ui.dropdown(name='dai_instance_id', label='Select Driverless AI instance', value=q.client.dai_instance_id,
                     choices=q.client.choices_dai_instances, required=True),
+        ui.dropdown(name='categorical_columns', label='Select categorical columns',
+                    choices=q.client.column_choices, values=q.client.categorical_columns),
         ui.buttons(items=[
             ui.button(name='train', label='Train', primary=True),
             ui.button(name='predict', label='Predict', primary=True)
@@ -131,6 +139,7 @@ async def serve(q: Q):
             train_df=q.client.train_df,
             target_column='target',
             model_type=ModelType.DAI,
+            categorical_columns=q.client.categorical_columns,
             refresh_token=q.auth.refresh_token,
             _steam_dai_instance_name=q.client.dai_instance_name,
             _dai_accuracy=1,
@@ -154,6 +163,9 @@ async def serve(q: Q):
         # prepare sample train and test dataframes
         data = load_wine(as_frame=True)['frame']
         q.client.train_df, q.client.test_df = train_test_split(data, train_size=0.8)
+
+        # columns
+        q.client.column_choices = [ui.choice(x, x) for x in q.client.train_df.columns]
 
         # DAI instances
         q.client.dai_instances = list_dai_instances(refresh_token=q.auth.refresh_token)
