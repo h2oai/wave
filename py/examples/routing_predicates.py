@@ -4,7 +4,7 @@
 from h2o_wave import main, app, Q, ui, on, handle_on
 
 
-# This function is called when q.args['temperature'] < 10.
+# This function is called when q.args['temperature'] < 15.
 @on('temperature', lambda x: x < 15)
 async def when_cold(q: Q):
     await show_slider(q, "It's too cold for a party!")
