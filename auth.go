@@ -342,7 +342,6 @@ func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	session.username = claims.PreferredUsername
 
 	echo(Log{"t": "login", "subject": session.subject, "username": session.username})
-	echo(Log{"t": "tokens", "a": session.token.AccessToken, "r": session.token.RefreshToken})
 
 	h.auth.set(session)
 
