@@ -47,5 +47,6 @@ type AuthConf struct {
 	ProviderURL   string
 	RedirectURL   string
 	EndSessionURL string
+	Scopes        []string
 	SkipLogin     bool
 }

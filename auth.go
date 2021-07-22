@@ -31,6 +31,8 @@ import (
 
 const authCookieName = "oidcsession"
 
+var authDefaultScopes = []string{oidc.ScopeOpenID, "profile"}
+
 func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -38,14 +40,16 @@ func connectToProvider(conf *AuthConf) (*oauth2.Config, error) {
 	if err != nil {
 		return nil, err
 	}
+	scopes := authDefaultScopes
+	if len(conf.Scopes) > 0 && conf.Scopes[0] != "" {
+		scopes = conf.Scopes
+	}
 	return &oauth2.Config{
 		ClientID:     conf.ClientID,
 		ClientSecret: conf.ClientSecret,
 		Endpoint:     provider.Endpoint(),
 		RedirectURL:  conf.RedirectURL,
-		//TODO: make configurable
-		//TODO review: does this return preferred_username if Profile is not included in scope?
-		Scopes: []string{oidc.ScopeOpenID},
+		Scopes:       scopes,
 	}, nil
 }
 
@@ -338,6 +342,7 @@ func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	session.username = claims.PreferredUsername
 
 	echo(Log{"t": "login", "subject": session.subject, "username": session.username})
+	echo(Log{"t": "tokens", "a": session.token.AccessToken, "r": session.token.RefreshToken})
 
 	h.auth.set(session)
 

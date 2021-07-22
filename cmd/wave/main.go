@@ -71,6 +71,7 @@ func main() {
 		createAccessKey      bool
 		listAccessKeys       bool
 		removeAccessKeyID    string
+		scopes               string
 	)
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
@@ -103,6 +104,7 @@ func main() {
 		oidcProviderURL   = "oidc-provider-url"
 		oidcRedirectURL   = "oidc-redirect-url"
 		oidcEndSessionURL = "oidc-end-session-url"
+		oidcScopes        = "oidc-scopes"
 		oidcSkipLogin     = "oidc-skip-login"
 	)
 
@@ -121,10 +123,15 @@ func main() {
 	auth.EndSessionURL = os.Getenv(toEnvVar(oidcEndSessionURL))
 	flag.StringVar(&auth.EndSessionURL, oidcEndSessionURL, auth.EndSessionURL, "OIDC end session URL")
 
+	scopes = os.Getenv(toEnvVar(oidcScopes))
+	flag.StringVar(&scopes, oidcScopes, scopes, "OIDC scopes separated by comma (default \"openid,profile\")")
+
 	auth.SkipLogin = getEnvBool(toEnvVar(oidcSkipLogin))
 	flag.BoolVar(&auth.SkipLogin, oidcSkipLogin, auth.SkipLogin, "don't show the login form during OIDC authorization")
 
 	flag.Parse()
+
+	auth.Scopes = strings.Split(scopes, ",")
 
 	if version {
 		fmt.Printf("Wave Daemon\nVersion %s Build %s (%s/%s)\nCopyright (c) H2O.ai, Inc.\n", Version, BuildDate, runtime.GOOS, runtime.GOARCH)
