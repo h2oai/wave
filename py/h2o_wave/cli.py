@@ -18,6 +18,7 @@ from contextlib import closing
 import uvicorn
 import click
 import os
+from urllib.parse import urlparse
 
 _localhost = '127.0.0.1'
 
@@ -57,8 +58,11 @@ def run(app: str, no_reload: bool):
     $ wave run --no-reload path/to/app.py
     """
 
-    port = _scan_free_port()
-    addr = f'http://{_localhost}:{port}'
+    app_address = urlparse(os.environ.get('H2O_WAVE_APP_ADDRESS', f'http://{_localhost}:{_scan_free_port()}'))
+    host = app_address.hostname
+    port = app_address.port
+
+    addr = f'http://{host}:{port}'
     os.environ['H2O_WAVE_INTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_EXTERNAL_ADDRESS'] = addr  # TODO deprecated
     os.environ['H2O_WAVE_APP_ADDRESS'] = addr
