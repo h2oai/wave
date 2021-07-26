@@ -44,6 +44,7 @@ class Example:
 title: {self.title}
 keywords:
 {tags_meta}
+custom_edit_url: null
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -57,6 +58,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
         else:
             header = f"""---
 title: {self.title}
+custom_edit_url: null
 ---
         """
             footer = ""
@@ -173,6 +175,7 @@ def make_toc(examples: List[Example]):
     return '''---
 title: All Examples
 slug: /examples/all
+custom_edit_url: null
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -188,6 +191,7 @@ def make_gallery(examples: List[Example]):
     return '''---
 title: Gallery
 slug: /examples
+custom_edit_url: null
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -216,6 +220,7 @@ def make_examples_by_tag(examples: List[Example]):
     return '''---
 title: Examples by Tag
 slug: /examples/tags
+custom_edit_url: null
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
