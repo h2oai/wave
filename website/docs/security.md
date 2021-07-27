@@ -6,7 +6,7 @@ title: Security
 
 Wave apps and scripts access the Wave server using access keys via [HTTP Basic Authentication](https://tools.ietf.org/html/rfc7617).
 
-An application access key is a pair of strings: ID and Secret. 
+An application access key is a pair of strings: ID and Secret.
 
 ### Development
 
@@ -111,6 +111,7 @@ To enable OpenID Connect, pass the following flags when starting the Wave server
 - `-oidc-end-session-url`: URL to log out (refer to your identity provider's documentation). This flag is optional and might not be supported by your identity provider.
 - `-oidc-client-id`: Client ID (refer to your identity provider's documentation).
 - `-oidc-client-secret`:  Client secret (refer to your identity provider's documentation).
+- `-oidc-scopes`: Comma-separated scopes that will override defaults (`openid,profile`).
 
 Once authenticated, you can access user's authentication and authorization information from your app using `q.auth` (see the [Auth](api/server#auth) class for details):
 
