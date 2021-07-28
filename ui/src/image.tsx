@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, Rec, S } from 'h2o-wave'
+import { B, Model, Rec, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
@@ -57,6 +57,8 @@ export interface Image {
   image?: S
   /** The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. */
   path?: S
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
 }
 
 export const

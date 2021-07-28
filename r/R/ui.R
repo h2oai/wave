@@ -2302,19 +2302,23 @@ ui_stat <- function(
 #' @param justify Specifies how to lay out the individual stats. Defaults to 'start'.
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
 #' @param inset Whether to display the stats with a contrasting background.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Stats instance.
 #' @export
 ui_stats <- function(
   items,
   justify = NULL,
-  inset = NULL) {
+  inset = NULL,
+  visible = NULL) {
   .guard_vector("items", "WaveStat", items)
   # TODO Validate justify
   .guard_scalar("inset", "logical", inset)
+  .guard_scalar("visible", "logical", visible)
   .o <- list(stats=list(
     items=items,
     justify=justify,
-    inset=inset))
+    inset=inset,
+    visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
@@ -2348,22 +2352,26 @@ ui_inline <- function(
 #' @param type The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
 #' @param image Image data, base64-encoded.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+#' @param visible True if the component should be visible. Defaults to true.
 #' @return A Image instance.
 #' @export
 ui_image <- function(
   title,
   type = NULL,
   image = NULL,
-  path = NULL) {
+  path = NULL,
+  visible = NULL) {
   .guard_scalar("title", "character", title)
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
   .guard_scalar("path", "character", path)
+  .guard_scalar("visible", "logical", visible)
   .o <- list(image=list(
     title=title,
     type=type,
     image=image,
-    path=path))
+    path=path,
+    visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }

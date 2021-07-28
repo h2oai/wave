@@ -5245,26 +5245,32 @@ class Stats:
             items: List[Stat],
             justify: Optional[str] = None,
             inset: Optional[bool] = None,
+            visible: Optional[bool] = None,
     ):
         _guard_vector('Stats.items', items, (Stat,), False, False, False)
         _guard_enum('Stats.justify', justify, _StatsJustify, True)
         _guard_scalar('Stats.inset', inset, (bool,), False, True, False)
+        _guard_scalar('Stats.visible', visible, (bool,), False, True, False)
         self.items = items
         """The individual stats to be displayed."""
         self.justify = justify
         """Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify."""
         self.inset = inset
         """Whether to display the stats with a contrasting background."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_vector('Stats.items', self.items, (Stat,), False, False, False)
         _guard_enum('Stats.justify', self.justify, _StatsJustify, True)
         _guard_scalar('Stats.inset', self.inset, (bool,), False, True, False)
+        _guard_scalar('Stats.visible', self.visible, (bool,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             inset=self.inset,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -5276,13 +5282,17 @@ class Stats:
         _guard_enum('Stats.justify', __d_justify, _StatsJustify, True)
         __d_inset: Any = __d.get('inset')
         _guard_scalar('Stats.inset', __d_inset, (bool,), False, True, False)
+        __d_visible: Any = __d.get('visible')
+        _guard_scalar('Stats.visible', __d_visible, (bool,), False, True, False)
         items: List[Stat] = [Stat.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         inset: Optional[bool] = __d_inset
+        visible: Optional[bool] = __d_visible
         return Stats(
             items,
             justify,
             inset,
+            visible,
         )
 
 
@@ -5352,11 +5362,13 @@ class Image:
             type: Optional[str] = None,
             image: Optional[str] = None,
             path: Optional[str] = None,
+            visible: Optional[bool] = None,
     ):
         _guard_scalar('Image.title', title, (str,), False, False, False)
         _guard_scalar('Image.type', type, (str,), False, True, False)
         _guard_scalar('Image.image', image, (str,), False, True, False)
         _guard_scalar('Image.path', path, (str,), False, True, False)
+        _guard_scalar('Image.visible', visible, (bool,), False, True, False)
         self.title = title
         """The image title, typically displayed as a tooltip."""
         self.type = type
@@ -5365,6 +5377,8 @@ class Image:
         """Image data, base64-encoded."""
         self.path = path
         """The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
+        self.visible = visible
+        """True if the component should be visible. Defaults to true."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -5372,11 +5386,13 @@ class Image:
         _guard_scalar('Image.type', self.type, (str,), False, True, False)
         _guard_scalar('Image.image', self.image, (str,), False, True, False)
         _guard_scalar('Image.path', self.path, (str,), False, True, False)
+        _guard_scalar('Image.visible', self.visible, (bool,), False, True, False)
         return _dump(
             title=self.title,
             type=self.type,
             image=self.image,
             path=self.path,
+            visible=self.visible,
         )
 
     @staticmethod
@@ -5390,15 +5406,19 @@ class Image:
         _guard_scalar('Image.image', __d_image, (str,), False, True, False)
         __d_path: Any = __d.get('path')
         _guard_scalar('Image.path', __d_path, (str,), False, True, False)
+        __d_visible: Any = __d.get('visible')
+        _guard_scalar('Image.visible', __d_visible, (bool,), False, True, False)
         title: str = __d_title
         type: Optional[str] = __d_type
         image: Optional[str] = __d_image
         path: Optional[str] = __d_path
+        visible: Optional[bool] = __d_visible
         return Image(
             title,
             type,
             image,
             path,
+            visible,
         )
 
 
