@@ -89,31 +89,31 @@ const
   }
 
 const
-  XButton = bond(({ model: m }: { model: Button }) => {
-    wave.args[m.name] = false
+  XButton = bond(({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary } }: { model: Button }) => {
+    wave.args[name] = false
     const
       onClick = () => {
-        if (m.name.startsWith('#')) {
-          window.location.hash = m.name.substr(1)
+        if (name.startsWith('#')) {
+          window.location.hash = name.substr(1)
           return
         }
-        wave.args[m.name] = m.value === undefined || m.value
+        wave.args[name] = value === undefined || value
         wave.push()
       },
       render = () => {
         // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
-        const styles: Fluent.IButtonStyles = { root: (m as any).visible ?? true ? {} : { display: 'none' } }
-        if (m.link) {
-          return <Fluent.Link data-test={m.name} disabled={m.disabled} onClick={onClick} styles={styles}>{m.label}</Fluent.Link>
+        const styles: Fluent.IButtonStyles = { root: visible ? {} : { display: 'none' } }
+        if (link) {
+          return <Fluent.Link data-test={name} disabled={disabled} onClick={onClick} styles={styles}>{label}</Fluent.Link>
         }
-        const btnProps: Fluent.IButtonProps = { text: m.label, disabled: m.disabled, onClick, styles, iconProps: { iconName: m.icon } }
-        return m.caption?.length
-          ? m.primary
-            ? <Fluent.CompoundButton {...btnProps} data-test={m.name} primary secondaryText={m.caption} />
-            : <Fluent.CompoundButton {...btnProps} data-test={m.name} secondaryText={m.caption} />
-          : m.primary
-            ? <Fluent.PrimaryButton {...btnProps} data-test={m.name} />
-            : <Fluent.DefaultButton {...btnProps} data-test={m.name} />
+        const btnProps: Fluent.IButtonProps = { text: label, disabled, onClick, styles, iconProps: { iconName: icon } }
+        return caption?.length
+          ? primary
+            ? <Fluent.CompoundButton {...btnProps} data-test={name} primary secondaryText={caption} />
+            : <Fluent.CompoundButton {...btnProps} data-test={name} secondaryText={caption} />
+          : primary
+            ? <Fluent.PrimaryButton {...btnProps} data-test={name} />
+            : <Fluent.DefaultButton {...btnProps} data-test={name} />
       }
     return { render }
   })
