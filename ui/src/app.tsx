@@ -104,7 +104,7 @@ const
       onHashChanged = () => {
         wave.push()
       },
-      onMdLinkClick = ({ detail }: any) => qd.args[detail] = true,
+      onMdLinkClick = ({ detail }: any) => wave.args[detail] = true,
       init = () => {
         listen()
         window.addEventListener('hashchange', onHashChanged)
