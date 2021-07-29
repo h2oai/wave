@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { render } from '@testing-library/react'
 import React from 'react'
 import { MessageBar, XMessageBar } from './message_bar'
@@ -22,7 +21,6 @@ const
   messagebarProps: MessageBar = { name, text: name }
 
 describe('MessageBar.tsx', () => {
-  beforeAll(() => initializeIcons())
 
   it('Does not render data-test attr', () => {
     const { container } = render(<XMessageBar model={{}} />)
@@ -34,9 +32,4 @@ describe('MessageBar.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Does not display message bar when visible is false', () => {
-    const { queryByTestId } = render(<XMessageBar model={{ ...messagebarProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
-  })
 })

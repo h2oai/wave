@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Combobox, XCombobox } from './combobox'
@@ -21,18 +20,11 @@ import { wave } from './ui'
 const name = 'combobox'
 const comboboxProps: Combobox = { name }
 describe('Combobox.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XCombobox model={comboboxProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display combobox when visible is false', () => {
-    const { queryByTestId } = render(<XCombobox model={{ ...comboboxProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init - value not specified', () => {

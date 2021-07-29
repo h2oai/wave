@@ -19,7 +19,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { cssVarValue, displayMixin } from './theme'
+import { cssVarValue } from './theme'
 import { bond, wave } from './ui'
 
 let
@@ -827,11 +827,11 @@ export const
       },
       render = () => {
         const
-          { width = 'auto', height = 'auto', visible, name } = model,
+          { width = 'auto', height = 'auto', name } = model,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { flexGrow: 1 }
             : { width, height }
-        return <div data-test={name} style={{ ...style, ...displayMixin(visible) }} className={css.plot} ref={container} />
+        return <div data-test={name} style={style} className={css.plot} ref={container} />
       }
     return { init, update, render }
   })

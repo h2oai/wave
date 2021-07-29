@@ -17,7 +17,7 @@ import { B, box, Box, Id, on, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
-import { displayMixin, margin } from './theme'
+import { margin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -104,7 +104,7 @@ export const
             <XChecklistItem name={`checkbox-${i + 1}`} key={i} label={choice.label || choice.name} disabled={!!choice.disabled} selectedB={selectedB} />
           ))
         return (
-          <div data-test={m.name} style={displayMixin(m.visible)}>
+          <div data-test={m.name}>
             <Fluent.Label>{m.label}</Fluent.Label>
             <div className={css.toolbar}>
               <Fluent.Text variant='small'>

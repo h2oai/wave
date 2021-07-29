@@ -17,7 +17,6 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
-import { displayMixin } from './theme'
 import { bond, debounce } from './ui'
 
 const
@@ -106,11 +105,11 @@ export const
       dispose = () => window.removeEventListener('resize', onResize),
       render = () => {
         const
-          { name, width = 'auto', height = 'auto', visible } = state,
+          { name, width = 'auto', height = 'auto' } = state,
           style: React.CSSProperties = (width === 'auto' && height === 'auto')
             ? { flexGrow: 1 }
             : { width, height }
-        return <div data-test={name} className={css.plot} style={{ ...style, position: 'relative', ...displayMixin(visible) }} ref={ref} />
+        return <div data-test={name} className={css.plot} style={{ ...style, position: 'relative' }} ref={ref} />
       }
     window.addEventListener('resize', onResize)
 

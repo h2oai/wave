@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -69,7 +68,6 @@ export const
       render = () => (
         <Fluent.DatePicker
           data-test={m.name}
-          style={displayMixin(m.visible)}
           label={m.label}
           value={parseDate(value)}
           placeholder={m.placeholder}

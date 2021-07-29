@@ -15,6 +15,7 @@
 import { render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
+import { Button, Buttons } from './button'
 import { View } from './form'
 
 const
@@ -30,5 +31,29 @@ describe('Form.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<View {...formProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
+  })
+
+  it('Hides a button component', () => {
+    const
+      button: Button = { name: 'btn', visible: false },
+      _formProps = { ...formProps, state: { items: [{ button }] } },
+      { queryByTestId } = render(<View {..._formProps} />)
+    expect(queryByTestId('btn')).not.toBeVisible()
+  })
+
+  it('Hides a button component within buttons', () => {
+    const
+      buttons: Buttons = { items: [{ button: { name: 'btn', visible: false } }] },
+      _formProps = { ...formProps, state: { items: [{ buttons }] } },
+      { queryByTestId } = render(<View {..._formProps} />)
+    expect(queryByTestId('btn')).not.toBeVisible()
+  })
+
+  it('Hides a button component within inline', () => {
+    const
+      inline = { items: [{ button: { name: 'btn', visible: false } }] },
+      _formProps = { ...formProps, state: { items: [{ inline }] } },
+      { queryByTestId } = render(<View {..._formProps} />)
+    expect(queryByTestId('btn')).not.toBeVisible()
   })
 })

@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { displayMixin, rem } from './theme'
+import { rem } from './theme'
 import { bond } from './ui'
 
 /**
@@ -94,7 +94,6 @@ export const
       ),
       render = () => (
         <Fluent.Stack
-          style={displayMixin(m.visible)}
           data-test={m.name}
           horizontal
           horizontalAlign='space-between'

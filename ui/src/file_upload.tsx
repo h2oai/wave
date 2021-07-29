@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, box, F, Id, S, U, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { centerMixin, clas, dashed, displayMixin, padding } from './theme'
+import { centerMixin, clas, dashed, padding } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -282,7 +282,7 @@ export const
       render = () => {
         const uploadClasses = isDraggingB() && !errorB() && !successMsgB() ? clas(css.upload, css.uploadDragging) : css.upload
         return (
-          <div style={displayMixin(model.visible)}>
+          <>
             <form
               className={uploadClasses}
               style={{ height: model.height || 300 }}
@@ -299,7 +299,7 @@ export const
               disabled={!!percentCompleteB() || !filesB().length}
               text={model.label || 'Upload'}
               onClick={upload} />
-          </div>
+          </>
         )
       }
 

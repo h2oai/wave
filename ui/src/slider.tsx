@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, F, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -69,7 +68,6 @@ export const
       render = () => (
         <Fluent.Slider
           data-test={m.name}
-          styles={{ root: displayMixin(m.visible) as Fluent.IStyle }}
           buttonProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
           label={m.label}
           min={min}

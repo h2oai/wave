@@ -16,7 +16,6 @@ import * as Fluent from '@fluentui/react'
 import { B, box, Id, S } from 'h2o-wave'
 import React from 'react'
 import { Choice } from './choice_group'
-import { displayMixin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -108,7 +107,7 @@ export const
         onChange()
       },
       render = () =>
-        <div style={displayMixin(m.visible)}>
+        <>
           <Fluent.Dropdown
             data-test={m.name}
             label={m.label}
@@ -129,7 +128,7 @@ export const
               </Fluent.Text>
             </div>
           }
-        </div>
+        </>
 
     return { render, selectedOptionsB }
   })

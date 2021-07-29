@@ -1978,6 +1978,7 @@ def stats(
         items: List[Stat],
         justify: Optional[str] = None,
         inset: Optional[bool] = None,
+        visible: Optional[bool] = None,
 ) -> Component:
     """Create a set of stats laid out horizontally.
 
@@ -1985,6 +1986,7 @@ def stats(
         items: The individual stats to be displayed.
         justify: Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
         inset: Whether to display the stats with a contrasting background.
+        visible: True if the component should be visible. Defaults to true.
     Returns:
         A `h2o_wave.types.Stats` instance.
     """
@@ -1992,6 +1994,7 @@ def stats(
         items,
         justify,
         inset,
+        visible,
     ))
 
 
@@ -2021,6 +2024,7 @@ def image(
         type: Optional[str] = None,
         image: Optional[str] = None,
         path: Optional[str] = None,
+        visible: Optional[bool] = None,
 ) -> Component:
     """Create an image.
 
@@ -2029,6 +2033,7 @@ def image(
         type: The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
         image: Image data, base64-encoded.
         path: The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+        visible: True if the component should be visible. Defaults to true.
     Returns:
         A `h2o_wave.types.Image` instance.
     """
@@ -2037,6 +2042,7 @@ def image(
         type,
         image,
         path,
+        visible,
     ))
 
 

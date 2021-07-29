@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 import { bond, wave } from './ui'
 
 /**
@@ -59,7 +58,7 @@ export const
         if (m.trigger) wave.push()
       },
       render = () => (
-        <div data-test={m.name} style={displayMixin(m.visible)}>
+        <div data-test={m.name}>
           <Fluent.Label>{m.label}</Fluent.Label>
           {
             m.choices?.length

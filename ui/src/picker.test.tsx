@@ -40,12 +40,6 @@ describe('Picker.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Does not display picker when visible is false', () => {
-    const { queryByTestId } = render(<XPicker model={{ ...pickerProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
-  })
-
   it('Sets correct args - init', () => {
     render(<XPicker model={pickerProps} />)
     expect(wave.args[name]).toBeNull()

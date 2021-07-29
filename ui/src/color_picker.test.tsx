@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { ColorPicker, XColorPicker } from './color_picker'
@@ -21,18 +20,11 @@ import { wave } from './ui'
 const name = 'colorPicker'
 const colorPickerProps: ColorPicker = { name }
 describe('ColorPicker.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { wave.args[name] = null })
 
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XColorPicker model={colorPickerProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display color picker when visible is false', () => {
-    const { queryByTestId } = render(<XColorPicker model={{ ...colorPickerProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets args - init - value not specified', () => {

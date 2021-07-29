@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { initializeIcons } from '@fluentui/react'
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Link, XLink } from './link'
@@ -22,7 +21,6 @@ const
   linkProps: Link = { name, path: name }
 
 describe('Link.tsx', () => {
-  beforeAll(() => initializeIcons())
   beforeEach(() => { jest.clearAllMocks() })
 
   it('Does not render data-test attr', () => {
@@ -33,12 +31,6 @@ describe('Link.tsx', () => {
   it('Renders data-test attr', () => {
     const { queryByTestId } = render(<XLink model={linkProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
-  })
-
-  it('Does not display link when visible is false', () => {
-    const { queryByTestId } = render(<XLink model={{ ...linkProps, visible: false }} />)
-    expect(queryByTestId(name)).toBeInTheDocument()
-    expect(queryByTestId(name)).not.toBeVisible()
   })
 
   it('Sets default label when not specified', () => {

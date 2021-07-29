@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { displayMixin } from './theme'
 import { bond, debounce, wave } from './ui'
 
 /**
@@ -79,7 +78,6 @@ export const
         ? (
           <Fluent.MaskedTextField
             data-test={m.name}
-            style={displayMixin(m.visible)}
             label={m.label}
             defaultValue={m.value}
             mask={m.mask}
@@ -93,7 +91,6 @@ export const
         : (
           <Fluent.TextField
             data-test={m.name}
-            style={displayMixin(m.visible)}
             styles={m.multiline && m.height ? { fieldGroup: { height: m.height } } : undefined}
             label={m.label}
             placeholder={m.placeholder}
