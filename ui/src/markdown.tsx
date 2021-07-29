@@ -66,9 +66,7 @@ const
 
 export const
   markdown = MarkdownIt({ html: true, linkify: true, typographer: true, }),
-  markdownSafe = MarkdownIt({ typographer: true, linkify: true }),
-  Markdown = ({ source }: { source: S }) => <div className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />,
-  MarkdownSafe = ({ source }: { source: S }) => <div className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdownSafe.render(source) }} />
+  Markdown = ({ source }: { source: S }) => <div className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />
 
 markdown.renderer.rules.text = (tokens: Token[], idx: U, options: MarkdownIt.Options, env: any, self: Renderer) => {
   const
