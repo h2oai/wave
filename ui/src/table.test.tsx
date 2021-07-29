@@ -488,6 +488,58 @@ describe('Table.tsx', () => {
       expect(container.querySelectorAll('.ms-GroupedList-group')).toHaveLength(tableProps.rows.length)
     })
 
+    it('Renders alphabetically sorted group by list - strings', () => {
+      const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      const groupHeaders = container.querySelectorAll('.ms-GroupHeader-title')
+      expect(groupHeaders[0]).toHaveTextContent(`${cell21}(1)`)
+      expect(groupHeaders[1]).toHaveTextContent(`${cell11}(1)`)
+      expect(groupHeaders[2]).toHaveTextContent(`${cell31}(1)`)
+    })
+
+    it('Renders alphabetically sorted group by list - numbers', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: 'rowname1', cells: ['2', 'Group1'] },
+          { name: 'rowname2', cells: ['3', 'Group1'] },
+          { name: 'rowname3', cells: ['1', 'Group2'] }
+        ]
+      }
+      const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      const groupHeaders = container.querySelectorAll('.ms-GroupHeader-title')
+      expect(groupHeaders[0]).toHaveTextContent('1(1)')
+      expect(groupHeaders[1]).toHaveTextContent('2(1)')
+      expect(groupHeaders[2]).toHaveTextContent('3(1)')
+    })
+
+    it('Renders alphabetically sorted group by list - dates', () => {
+      tableProps = {
+        ...tableProps,
+        rows: [
+          { name: 'rowname1', cells: ['1994-04-19T23:56:40', 'Group1'] },
+          { name: 'rowname2', cells: ['2012-09-14T18:26:01', 'Group1'] },
+          { name: 'rowname3', cells: ['1970-04-30T18:02:01', 'Group2'] }
+        ]
+      }
+      const { container, getAllByText, getByTestId } = render(<XTable model={tableProps} />)
+
+      fireEvent.click(getByTestId('groupby'))
+      fireEvent.click(getAllByText('Col1')[1]!)
+
+      const groupHeaders = container.querySelectorAll('.ms-GroupHeader-title')
+      expect(groupHeaders[0]).toHaveTextContent(`${new Date('1970-04-30T18:02:01').toLocaleString()}(1)`)
+      expect(groupHeaders[1]).toHaveTextContent(`${new Date('1994-04-19T23:56:40').toLocaleString()}(1)`)
+      expect(groupHeaders[2]).toHaveTextContent(`${new Date('2012-09-14T18:26:01').toLocaleString()}(1)`)
+    })
+
     it('Sorts grouped list', () => {
       const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
 
