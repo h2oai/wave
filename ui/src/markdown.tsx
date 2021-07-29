@@ -68,6 +68,7 @@ export const
   markdown = MarkdownIt({ html: true, linkify: true, typographer: true, }),
   Markdown = ({ source }: { source: S }) => <div className={clas(css.markdown, 'wave-markdown')} dangerouslySetInnerHTML={{ __html: markdown.render(source) }} />
 
+const defaultRenderer = markdown.renderer.rules.text
 markdown.renderer.rules.text = (tokens: Token[], idx: U, options: MarkdownIt.Options, env: any, self: Renderer) => {
   const
     linkOpenToken = tokens[idx + 1],
@@ -75,7 +76,7 @@ markdown.renderer.rules.text = (tokens: Token[], idx: U, options: MarkdownIt.Opt
 
   // Onclick has to be inlined otherwise a global function would be needed. Custom event is handled at App.tsx. Return false prevents navigation behavior.
   if (hrefAttr?.startsWith('?')) linkOpenToken.attrPush(['onclick', `window.dispatchEvent(new CustomEvent("md-link-click", {detail:"${hrefAttr.substring(1)}" }));return false`])
-  return markdown.renderer.rules.text!(tokens, idx, options, env, self)
+  return defaultRenderer!(tokens, idx, options, env, self)
 }
 
 /**
