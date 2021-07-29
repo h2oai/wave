@@ -38,6 +38,7 @@ const
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
+      minHeight: 46 // HACK: Prevent overflow - https://github.com/h2oai/wave/issues/904.
     },
   })
 
