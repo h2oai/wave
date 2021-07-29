@@ -15,6 +15,8 @@ page['example'] = ui.form_card(
         ui.message_bar(type='info', text='This is an information message.'),
         ui.message_bar(type='success', text='This is an success message.'),
         ui.message_bar(type='danger', text='This is a danger message.'),
+        ui.message_bar(type='success', text='This is a **MARKDOWN** _message_.'),
+        ui.message_bar(type='success', text='This is an <b>HTML</b> <i>message</i>.'),
     ]
 )
 page.save()
