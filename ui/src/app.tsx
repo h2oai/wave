@@ -101,10 +101,11 @@ const
   }),
   App = bond(() => {
     const
-      onHashChanged = () => {
+      onHashChanged = () => wave.push(),
+      onMdLinkClick = ({ detail }: any) => {
+        wave.args[detail] = true
         wave.push()
       },
-      onMdLinkClick = ({ detail }: any) => wave.args[detail] = true,
       init = () => {
         listen()
         window.addEventListener('hashchange', onHashChanged)
