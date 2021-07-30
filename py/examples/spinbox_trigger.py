@@ -1,5 +1,5 @@
 # Form / Spinbox / Trigger
-# To handle live changes to a spinbox, enable the `trigger` attribute.
+# Enable the `trigger` attribute in order to handle live changes to a spinbox.
 # #form #spinbox #trigger
 # ---
 from h2o_wave import main, app, Q, ui

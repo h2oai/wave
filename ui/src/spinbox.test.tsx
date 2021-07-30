@@ -117,8 +117,7 @@ describe('Spinbox.tsx', () => {
   it('Sets args on input', () => {
     expect(wave.args[name]).toBeNull()
     const { getByTestId } = render(<XSpinbox model={spinboxProps} />)
-    const el = getByTestId(name)
-    fireEvent.input(el, { target: { value: 50 } })
+    fireEvent.input(getByTestId(name), { target: { value: 50 } })
     expect(wave.args[name]).toBe(50)
   })
 

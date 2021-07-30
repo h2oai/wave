@@ -85,10 +85,10 @@ export const
         if (trigger) wave.push()
         valueB(String(newValue))
       },
-      debouncedOnchange = debounce(DEBOUNCE_TIMEOUT, handleOnChange),
+      debouncedHandleOnchange = debounce(DEBOUNCE_TIMEOUT, handleOnChange),
       onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
-        trigger ? debouncedOnchange(e) : handleOnChange(e)
+        trigger ? debouncedHandleOnchange(e) : handleOnChange(e)
       },
       render = () => (
         <Fluent.SpinButton
