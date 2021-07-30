@@ -46,22 +46,22 @@ export interface Link {
 }
 
 export const
-  XLink = bond(({ model: m }: { model: Link }) => {
+  XLink = bond(({ model: { name, label, disabled, path, download, target, button } }: { model: Link }) => {
     const
-      label = m.label || m.path,
-      target = m.target === '' ? '_blank' : m.target,
-      onClick = () => target ? window.open(m.path, target) : window.open(m.path),
+      _label = label || path,
+      _target = target === '' ? '_blank' : target,
+      onBtnClick = () => window.open(path, _target),
+      onLinkClick = (ev: React.MouseEvent<HTMLAnchorElement>) => {
+        // HACK: Perform download in a new tab because FF drops WS connection - https://bugzilla.mozilla.org/show_bug.cgi?id=858538.
+        if (download && path) {
+          ev.preventDefault()
+          window.open(path, '_blank')
+        }
+      },
       render = () => (
-        m.button
-          ? <Fluent.DefaultButton data-test={m.name} text={label} disabled={m.disabled} onClick={onClick} />
-          : <Fluent.Link
-            data-test={m.name}
-            href={m.path}
-            download={m.download}
-            disabled={m.disabled}
-            target={target}>
-            {label}
-          </Fluent.Link>
+        button
+          ? <Fluent.DefaultButton data-test={name} text={_label} disabled={disabled} onClick={onBtnClick} />
+          : <Fluent.Link onClick={onLinkClick} data-test={name} href={path} disabled={disabled} target={_target}>{_label}</Fluent.Link>
       )
     return { render }
   })
