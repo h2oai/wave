@@ -1120,7 +1120,7 @@ ui_slider <- function(
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
-#' @param min The minimum value of the spinbox. Defaults to "1".
+#' @param min The minimum value of the spinbox. Defaults to "0".
 #' @param max The maximum value of the spinbox. Defaults to "100".
 #' @param step The difference between two adjacent values of the spinbox. Defaults to "1".
 #' @param value The current value of the spinbox. Defaults to "0".

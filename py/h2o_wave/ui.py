@@ -980,7 +980,7 @@ def spinbox(
     Args:
         name: An identifying name for this component.
         label: Text to be displayed alongside the component.
-        min: The minimum value of the spinbox. Defaults to "1".
+        min: The minimum value of the spinbox. Defaults to "0".
         max: The maximum value of the spinbox. Defaults to "100".
         step: The difference between two adjacent values of the spinbox. Defaults to "1".
         value: The current value of the spinbox. Defaults to "0".

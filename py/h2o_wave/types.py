@@ -2439,7 +2439,7 @@ class Spinbox:
         self.label = label
         """Text to be displayed alongside the component."""
         self.min = min
-        """The minimum value of the spinbox. Defaults to "1"."""
+        """The minimum value of the spinbox. Defaults to "0"."""
         self.max = max
         """The maximum value of the spinbox. Defaults to "100"."""
         self.step = step
