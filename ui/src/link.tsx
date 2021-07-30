@@ -61,7 +61,7 @@ export const
       render = () => (
         button
           ? <Fluent.DefaultButton data-test={name} text={_label} disabled={disabled} onClick={onBtnClick} />
-          : <Fluent.Link onClick={onLinkClick} data-test={name} href={path} disabled={disabled} target={target}>{_label}</Fluent.Link>
+          : <Fluent.Link onClick={onLinkClick} data-test={name} href={path} disabled={disabled} target={_target}>{_label}</Fluent.Link>
       )
     return { render }
   })
