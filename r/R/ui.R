@@ -1120,12 +1120,13 @@ ui_slider <- function(
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
-#' @param min The minimum value of the spinbox.
-#' @param max The maximum value of the spinbox.
-#' @param step The difference between two adjacent values of the spinbox.
-#' @param value The current value of the spinbox.
+#' @param min The minimum value of the spinbox. Defaults to "0".
+#' @param max The maximum value of the spinbox. Defaults to "100".
+#' @param step The difference between two adjacent values of the spinbox. Defaults to "1".
+#' @param value The current value of the spinbox. Defaults to "0".
 #' @param disabled True if this field is disabled.
 #' @param visible True if the component should be visible. Defaults to true.
+#' @param trigger True if the form should be submitted when the spinbox value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Spinbox instance.
 #' @export
@@ -1138,6 +1139,7 @@ ui_spinbox <- function(
   value = NULL,
   disabled = NULL,
   visible = NULL,
+  trigger = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
@@ -1147,6 +1149,7 @@ ui_spinbox <- function(
   .guard_scalar("value", "numeric", value)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("visible", "logical", visible)
+  .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(spinbox=list(
     name=name,
@@ -1157,6 +1160,7 @@ ui_spinbox <- function(
     value=value,
     disabled=disabled,
     visible=visible,
+    trigger=trigger,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)

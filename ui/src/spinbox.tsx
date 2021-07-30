@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, F, Id, S } from 'h2o-wave'
+import { B, box, F, Id, S } from 'h2o-wave'
 import React from 'react'
-import { bond, wave } from './ui'
+import { bond, debounce, wave } from './ui'
 
 /**
  * Create a spinbox.
@@ -28,65 +28,81 @@ export interface Spinbox {
   name: Id
   /** Text to be displayed alongside the component. */
   label?: S
-  /** The minimum value of the spinbox. */
+  /** The minimum value of the spinbox. Defaults to "0". */
   min?: F
-  /** The maximum value of the spinbox. */
+  /** The maximum value of the spinbox. Defaults to "100". */
   max?: F
-  /** The difference between two adjacent values of the spinbox. */
+  /** The difference between two adjacent values of the spinbox. Defaults to "1". */
   step?: F
-  /** The current value of the spinbox. */
+  /** The current value of the spinbox. Defaults to "0". */
   value?: F
   /** True if this field is disabled. */
   disabled?: B
   /** True if the component should be visible. Defaults to true. */
   visible?: B
+  /** True if the form should be submitted when the spinbox value changes. */
+  trigger?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
 
+const DEBOUNCE_TIMEOUT = 500
 export const
-  XSpinbox = bond(({ model: m }: { model: Spinbox }) => {
-    const
-      { min = 0, max = 100, step = 1, value = 0 } = m,
-      defaultValue = (value < min) ? min : ((value > max) ? max : value)
-
-    wave.args[m.name] = defaultValue
+  XSpinbox = bond(({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
+    wave.args[name] = (value < min) ? min : ((value > max) ? max : value)
 
     const
-      parseValue = (v: string) => {
+      valueB = box<S | undefined>(),
+      parseValue = (v: S) => {
         const x = parseFloat(v)
         return (!isNaN(x) && isFinite(x)) ? x : value
       },
-      onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        wave.args[m.name] = parseValue(e.target.value)
-      },
-      onIncrement = (v: string) => {
+      onIncrement = (v: S) => {
         const
           value = parseValue(v),
           newValue = (value + step > max) ? max : value + step
-        wave.args[m.name] = newValue
+        wave.args[name] = newValue
+        if (trigger) wave.push()
         return String(newValue)
       },
-      onDecrement = (v: string) => {
+      onDecrement = (v: S) => {
         const
           value = parseValue(v),
           newValue = (value - step < min) ? min : value - step
-        wave.args[m.name] = newValue
+        wave.args[name] = newValue
+        if (trigger) wave.push()
         return String(newValue)
+      },
+      handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const
+          value = parseValue(e.target.value),
+          newValue = value > max
+            ? max
+            : value < min
+              ? min
+              : value
+        wave.args[name] = newValue
+        if (trigger) wave.push()
+        valueB(String(newValue))
+      },
+      debouncedHandleOnchange = debounce(DEBOUNCE_TIMEOUT, handleOnChange),
+      onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.persist()
+        trigger ? debouncedHandleOnchange(e) : handleOnChange(e)
       },
       render = () => (
         <Fluent.SpinButton
-          inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
-          label={m.label}
+          inputProps={{ 'data-test': name, onChange } as React.InputHTMLAttributes<HTMLInputElement>}
+          label={label}
           min={min}
           max={max}
           step={step}
-          defaultValue={`${value}`}
-          onBlur={onBlur}
+          defaultValue={String(value)}
+          value={valueB()}
           onIncrement={onIncrement}
           onDecrement={onDecrement}
-          disabled={m.disabled}
+          disabled={disabled}
         />
       )
-    return { render }
+    return { render, valueB }
   })

@@ -2421,6 +2421,7 @@ class Spinbox:
             value: Optional[float] = None,
             disabled: Optional[bool] = None,
             visible: Optional[bool] = None,
+            trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         _guard_scalar('Spinbox.name', name, (str,), True, False, False)
@@ -2431,23 +2432,26 @@ class Spinbox:
         _guard_scalar('Spinbox.value', value, (float, int,), False, True, False)
         _guard_scalar('Spinbox.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('Spinbox.visible', visible, (bool,), False, True, False)
+        _guard_scalar('Spinbox.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('Spinbox.tooltip', tooltip, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
         """Text to be displayed alongside the component."""
         self.min = min
-        """The minimum value of the spinbox."""
+        """The minimum value of the spinbox. Defaults to "0"."""
         self.max = max
-        """The maximum value of the spinbox."""
+        """The maximum value of the spinbox. Defaults to "100"."""
         self.step = step
-        """The difference between two adjacent values of the spinbox."""
+        """The difference between two adjacent values of the spinbox. Defaults to "1"."""
         self.value = value
-        """The current value of the spinbox."""
+        """The current value of the spinbox. Defaults to "0"."""
         self.disabled = disabled
         """True if this field is disabled."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
+        self.trigger = trigger
+        """True if the form should be submitted when the spinbox value changes."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
 
@@ -2461,6 +2465,7 @@ class Spinbox:
         _guard_scalar('Spinbox.value', self.value, (float, int,), False, True, False)
         _guard_scalar('Spinbox.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('Spinbox.visible', self.visible, (bool,), False, True, False)
+        _guard_scalar('Spinbox.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('Spinbox.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
             name=self.name,
@@ -2471,6 +2476,7 @@ class Spinbox:
             value=self.value,
             disabled=self.disabled,
             visible=self.visible,
+            trigger=self.trigger,
             tooltip=self.tooltip,
         )
 
@@ -2493,6 +2499,8 @@ class Spinbox:
         _guard_scalar('Spinbox.disabled', __d_disabled, (bool,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Spinbox.visible', __d_visible, (bool,), False, True, False)
+        __d_trigger: Any = __d.get('trigger')
+        _guard_scalar('Spinbox.trigger', __d_trigger, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('Spinbox.tooltip', __d_tooltip, (str,), False, True, False)
         name: str = __d_name
@@ -2503,6 +2511,7 @@ class Spinbox:
         value: Optional[float] = __d_value
         disabled: Optional[bool] = __d_disabled
         visible: Optional[bool] = __d_visible
+        trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
         return Spinbox(
             name,
@@ -2513,6 +2522,7 @@ class Spinbox:
             value,
             disabled,
             visible,
+            trigger,
             tooltip,
         )
 
