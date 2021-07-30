@@ -101,12 +101,15 @@ const
   }),
   App = bond(() => {
     const
-      onHashChanged = () => {
+      onHashChanged = () => wave.push(),
+      onMdLinkClick = ({ detail }: any) => {
+        wave.args[detail] = true
         wave.push()
       },
       init = () => {
         listen()
         window.addEventListener('hashchange', onHashChanged)
+        window.addEventListener('md-link-click', onMdLinkClick)
       },
       render = () => {
         const e = contentB()
@@ -149,6 +152,7 @@ const
       },
       dispose = () => {
         window.removeEventListener('hashchange', onHashChanged)
+        window.removeEventListener('md-link-click', onMdLinkClick)
       }
 
     return { init, render, dispose, contentB, themeB }
