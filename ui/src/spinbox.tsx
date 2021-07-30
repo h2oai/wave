@@ -48,20 +48,10 @@ export interface Spinbox {
 
 const DEBOUNCE_TIMEOUT = 500
 export const
-  XSpinbox = bond(({ model: m }: { model: Spinbox }) => {
-    let
-      onChangeRef: any = null,
-      inputRef: any = null,
-      prevTrigger: B | undefined
+  XSpinbox = bond(({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
+    wave.args[name] = (value < min) ? min : ((value > max) ? max : value)
 
     const
-      { min = 0, max = 100, step = 1, value = 0 } = m,
-      defaultValue = (value < min) ? min : ((value > max) ? max : value)
-
-    wave.args[m.name] = defaultValue
-
-    const
-      ref = React.createRef<Fluent.ISpinButton>(),
       valueB = box<S | undefined>(),
       parseValue = (v: S) => {
         const x = parseFloat(v)
@@ -71,64 +61,48 @@ export const
         const
           value = parseValue(v),
           newValue = (value + step > max) ? max : value + step
-        wave.args[m.name] = newValue
-        if (m.trigger) wave.push()
+        wave.args[name] = newValue
+        if (trigger) wave.push()
         return String(newValue)
       },
       onDecrement = (v: S) => {
         const
           value = parseValue(v),
           newValue = (value - step < min) ? min : value - step
-        wave.args[m.name] = newValue
-        if (m.trigger) wave.push()
+        wave.args[name] = newValue
+        if (trigger) wave.push()
         return String(newValue)
       },
-      onChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+      handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const
-          value = parseValue(target.value),
+          value = parseValue(e.target.value),
           newValue = value > max
             ? max
             : value < min
               ? min
               : value
-        wave.args[m.name] = newValue
-        if (m.trigger) wave.push()
+        wave.args[name] = newValue
+        if (trigger) wave.push()
         valueB(String(newValue))
       },
-      init = () => {
-        prevTrigger = m.trigger
-        // @ts-ignore
-        inputRef = ref.current._input.current
-        onChangeRef = m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange
-        // HACK: Fluent does not provide onChange event, see https://github.com/microsoft/fluentui/issues/5326.
-        inputRef.addEventListener('input', onChangeRef)
-      },
-      update = () => {
-        // If component updates and "trigger" is changed, we either want or don't want debounced onChange.
-        // Remove the old listener and attach correct new one.
-        if (prevTrigger !== m.trigger) {
-          prevTrigger = m.trigger
-
-          inputRef.removeEventListener('input', onChangeRef)
-          onChangeRef = m.trigger ? debounce(DEBOUNCE_TIMEOUT, onChange) : onChange
-          // HACK: Fluent does not provide onChange event, see https://github.com/microsoft/fluentui/issues/5326.
-          inputRef.addEventListener('input', onChangeRef)
-        }
+      debouncedOnchange = debounce(DEBOUNCE_TIMEOUT, handleOnChange),
+      onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.persist()
+        trigger ? debouncedOnchange(e) : handleOnChange(e)
       },
       render = () => (
         <Fluent.SpinButton
-          componentRef={ref}
-          label={m.label}
+          inputProps={{ 'data-test': name, onChange } as React.InputHTMLAttributes<HTMLInputElement>}
+          label={label}
           min={min}
           max={max}
           step={step}
-          defaultValue={`${value}`}
+          defaultValue={String(value)}
           value={valueB()}
           onIncrement={onIncrement}
           onDecrement={onDecrement}
-          disabled={m.disabled}
+          disabled={disabled}
         />
-      ),
-      dispose = () => inputRef.removeEventListener('input', onChangeRef)
-    return { init, update, render, dispose, valueB }
+      )
+    return { render, valueB }
   })

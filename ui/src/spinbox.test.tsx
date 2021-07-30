@@ -53,13 +53,6 @@ describe('Spinbox.tsx', () => {
     expect(wave.args[name]).toBe(100)
   })
 
-  it('Sets args on input', () => {
-    const { getByRole } = render(<XSpinbox model={spinboxProps} />)
-    fireEvent.blur(getByRole('spinbutton'), { target: { value: 1 } })
-
-    expect(wave.args[name]).toBe(1)
-  })
-
   it('Sets args on increment', () => {
     const { container } = render(<XSpinbox model={spinboxProps} />)
     const incrementBtn = container.querySelector('.ms-UpButton')!
@@ -80,15 +73,15 @@ describe('Spinbox.tsx', () => {
     expect(wave.args[name]).toBe(1)
   })
 
-  it('Calls sync on increment if trigger specified', () => {
+  it('Calls push on increment if trigger specified', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
     const incrementBtn = container.querySelector('.ms-UpButton')!
 
     fireEvent.mouseDown(incrementBtn, mouseEvent)
     fireEvent.mouseUp(incrementBtn, mouseEvent)
 
-    expect(wave.args[name]).toBe(0)
-    expect(pushMock).toHaveBeenCalled()
+    expect(wave.args[name]).toBe(1)
+    expect(pushMock).toHaveBeenCalledTimes(1)
   })
 
   it('Sets args on decrement', () => {
@@ -111,20 +104,21 @@ describe('Spinbox.tsx', () => {
     expect(wave.args[name]).toBe(1)
   })
 
-  it('Calls sync on decrement if trigger specified', () => {
+  it('Calls push on decrement if trigger specified', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
     const decrementBtn = container.querySelector('.ms-DownButton')!
 
     fireEvent.mouseDown(decrementBtn, mouseEvent)
     fireEvent.mouseUp(decrementBtn, mouseEvent)
 
-    expect(pushMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalledTimes(1)
   })
 
   it('Sets args on input', () => {
     expect(wave.args[name]).toBeNull()
     const { getByTestId } = render(<XSpinbox model={spinboxProps} />)
-    fireEvent.input(getByTestId(name), { target: { value: 50 } })
+    const el = getByTestId(name)
+    fireEvent.input(el, { target: { value: 50 } })
     expect(wave.args[name]).toBe(50)
   })
 
@@ -142,10 +136,12 @@ describe('Spinbox.tsx', () => {
     expect(wave.args[name]).toBe(1)
   })
 
-  it('Calls sync on input if trigger specified', () => {
+  it('Calls push on input if trigger specified', () => {
     const { getByTestId } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
-    fireEvent.input(getByTestId(name), { target: { value: 50 } })
-    jest.runAllTimers()
+    fireEvent.change(getByTestId(name), { target: { value: 50 } })
+
+    expect(pushMock).not.toBeCalled() // Not called immediately, but after specified timeout.
+    jest.runOnlyPendingTimers()
     expect(pushMock).toHaveBeenCalled()
   })
 })
