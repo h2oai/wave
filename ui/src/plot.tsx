@@ -763,17 +763,16 @@ export interface Visualization {
 }
 
 export const
-  XVisualization = bond(({ model }: { model: Visualization }) => {
-    let
-      currentChart: Chart | null = null,
-      currentPlot: Plot | null = null
+  XVisualization = ({ model }: { model: Visualization }) => {
     const
-      container = React.createRef<HTMLDivElement>(),
+      container = React.useRef<HTMLDivElement>(null),
+      currentChart = React.useRef<Chart | null>(null),
+      currentPlot = React.useRef<Plot | null>(null),
       checkDimensionsPostInit = (w: F, h: F) => { // Safari fix
         const el = container.current
         if (!el) return
         if (el.clientHeight !== h || el.clientWidth !== w) {
-          currentChart?.destroy()
+          currentChart.current?.destroy()
           init()
         }
       },
@@ -788,13 +787,13 @@ export const
           raw_data = unpack<any[]>(model.data),
           raw_plot = unpack<Plot>(model.plot),
           marks = raw_plot.marks.map(refactorMark),
-          plot: Plot = { marks: marks },
+          plot: Plot = { marks },
           space = spaceTypeOf(raw_data, marks),
           data = refactorData(raw_data, plot.marks),
           chart = plot.marks ? new Chart(makeChart(el, space, plot.marks)) : null
-        currentPlot = plot
+        currentPlot.current = plot
         if (chart) {
-          currentChart = chart
+          currentChart.current = chart
           chart.data(data)
           if (model.events) {
             for (const event of model.events) {
@@ -816,25 +815,27 @@ export const
           // same as after Layout phase. If not, rerender the plot again.
           setTimeout(() => checkDimensionsPostInit(el.clientWidth, el.clientHeight), 300)
         }
-      },
-      update = () => {
-        const el = container.current
-        if (!el || !currentChart || !currentPlot) return
-        const
-          raw_data = unpack<any[]>(model.data),
-          data = refactorData(raw_data, currentPlot.marks)
-        currentChart.changeData(data)
-      },
-      render = () => {
-        const
-          { width = 'auto', height = 'auto', name } = model,
-          style: React.CSSProperties = (width === 'auto' && height === 'auto')
-            ? { flexGrow: 1 }
-            : { width, height }
-        return <div data-test={name} style={style} className={css.plot} ref={container} />
       }
-    return { init, update, render }
-  })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(init, [])
+    React.useEffect(() => {
+      const el = container.current
+      if (!el || !currentChart.current || !currentPlot.current) return
+      const
+        raw_data = unpack<any[]>(model.data),
+        data = refactorData(raw_data, currentPlot.current.marks)
+      currentChart.current.changeData(data)
+
+    }, [currentChart, currentPlot, model])
+
+    const
+      { width = 'auto', height = 'auto', name } = model,
+      style: React.CSSProperties = (width === 'auto' && height === 'auto')
+        ? { flexGrow: 1 }
+        : { width, height }
+    return <div data-test={name} style={style} className={css.plot} ref={container} />
+  }
 
 /** Create a card displaying a plot. */
 interface State {

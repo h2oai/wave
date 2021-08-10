@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Id, S } from 'h2o-wave'
+import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { Choice } from './choice_group'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a dropdown.
@@ -57,15 +57,11 @@ export interface Dropdown {
 }
 
 export const
-  XDropdown = bond(({ model: m }: { model: Dropdown }) => {
-    const isMultivalued = !!m.values
-    wave.args[m.name] = isMultivalued
-      ? (m.values || [])
-      : (m.value || null)
-
+  XDropdown = ({ model: m }: { model: Dropdown }) => {
     const
-      selection = isMultivalued ? new Set<S>(m.values) : null,
-      selectedOptionsB = box(Array.from(selection || [])),
+      isMultivalued = !!m.values,
+      selection = React.useMemo(() => isMultivalued ? new Set<S>(m.values) : null, [isMultivalued, m.values]),
+      [selectedOptions, setSelectedOptions] = React.useState(Array.from(selection || [])),
       options = (m.choices || []).map(({ name, label, disabled }): Fluent.IDropdownOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IDropdownOption) => {
         if (option) {
@@ -78,7 +74,7 @@ export const
             }
             const selectedOpts = Array.from(selection)
             wave.args[m.name] = selectedOpts
-            selectedOptionsB(selectedOpts)
+            setSelectedOptions(selectedOpts)
           } else {
             wave.args[m.name] = name
           }
@@ -92,7 +88,7 @@ export const
         options.forEach(o => { if (!o.disabled) selection.add(o.key as S) })
 
         const selectionArr = Array.from(selection)
-        selectedOptionsB(selectionArr)
+        setSelectedOptions(selectionArr)
         wave.args[m.name] = selectionArr
 
         onChange()
@@ -101,34 +97,41 @@ export const
         if (!selection) return
 
         selection.clear()
-        selectedOptionsB([])
+        setSelectedOptions([])
         wave.args[m.name] = []
 
         onChange()
-      },
-      render = () =>
-        <>
-          <Fluent.Dropdown
-            data-test={m.name}
-            label={m.label}
-            placeholder={m.placeholder}
-            options={options}
-            required={m.required}
-            disabled={m.disabled}
-            multiSelect={isMultivalued || undefined}
-            defaultSelectedKey={!isMultivalued ? m.value : undefined}
-            selectedKeys={isMultivalued ? selectedOptionsB() : undefined}
-            onChange={onChange}
-          />
-          {
-            isMultivalued &&
-            <div>
-              <Fluent.Text variant='small'>
-                <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
-              </Fluent.Text>
-            </div>
-          }
-        </>
+      }
 
-    return { render, selectedOptionsB }
-  })
+    React.useEffect(() => {
+      wave.args[m.name] = isMultivalued
+        ? (m.values || [])
+        : (m.value || null)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return (
+      <>
+        <Fluent.Dropdown
+          data-test={m.name}
+          label={m.label}
+          placeholder={m.placeholder}
+          options={options}
+          required={m.required}
+          disabled={m.disabled}
+          multiSelect={isMultivalued || undefined}
+          defaultSelectedKey={!isMultivalued ? m.value : undefined}
+          selectedKeys={isMultivalued ? selectedOptions : undefined}
+          onChange={onChange}
+        />
+        {
+          isMultivalued &&
+          <div>
+            <Fluent.Text variant='small'>
+              <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
+            </Fluent.Text>
+          </div>
+        }
+      </>
+    )
+  }

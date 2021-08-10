@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, S } from 'h2o-wave'
 import React from 'react'
-import { bond } from './ui'
 
 /**
  * Create a hyperlink.
@@ -46,22 +45,20 @@ export interface Link {
 }
 
 export const
-  XLink = bond(({ model: { name, label, disabled, path, download, target, button } }: { model: Link }) => {
+  XLink = ({ model: { name, label, disabled, path, download, target, button } }: { model: Link }) => {
     const
       _label = label || path,
       _target = target === '' ? '_blank' : target,
-      onBtnClick = () => window.open(path, _target),
-      onLinkClick = (ev: React.MouseEvent<HTMLAnchorElement>) => {
+      onBtnClick = React.useCallback(() => window.open(path, _target), [_target, path]),
+      onLinkClick = React.useCallback((ev: React.MouseEvent<HTMLAnchorElement>) => {
         // HACK: Perform download in a new tab because FF drops WS connection - https://bugzilla.mozilla.org/show_bug.cgi?id=858538.
         if (download && path) {
           ev.preventDefault()
           window.open(path, '_blank')
         }
-      },
-      render = () => (
-        button
-          ? <Fluent.DefaultButton data-test={name} text={_label} disabled={disabled} onClick={onBtnClick} />
-          : <Fluent.Link onClick={onLinkClick} data-test={name} href={path} disabled={disabled} target={_target}>{_label}</Fluent.Link>
-      )
-    return { render }
-  })
+      }, [download, path])
+
+    return button
+      ? <Fluent.DefaultButton data-test={name} text={_label} disabled={disabled} onClick={onBtnClick} />
+      : <Fluent.Link onClick={onLinkClick} data-test={name} href={path} disabled={disabled} target={_target}>{_label}</Fluent.Link>
+  }

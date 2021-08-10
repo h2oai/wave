@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  *  Create a choice for a checklist, choice group or dropdown.
@@ -61,24 +61,26 @@ export interface ChoiceGroup {
 }
 
 export const
-  XChoiceGroup = bond(({ model: m }: { model: ChoiceGroup }) => {
-    wave.args[m.name] = m.value || null
+  XChoiceGroup = ({ model: m }: { model: ChoiceGroup }) => {
     const
       options = (m.choices || []).map(({ name, label, disabled }): Fluent.IChoiceGroupOption => ({ key: name, text: label || name, disabled })),
       onChange = (_e?: React.FormEvent<HTMLElement>, option?: Fluent.IChoiceGroupOption) => {
         if (option) wave.args[m.name] = option.key
         if (m.trigger) wave.push()
-      },
-      render = () => (
-        <Fluent.ChoiceGroup
-          data-test={m.name}
-          label={m.label}
-          required={m.required}
-          defaultSelectedKey={m.value}
-          options={options}
-          onChange={onChange}
-        />
-      )
+      }
 
-    return { render }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[m.name] = m.value || null }, [])
+
+    return (
+      <Fluent.ChoiceGroup
+        data-test={m.name}
+        label={m.label}
+        required={m.required}
+        defaultSelectedKey={m.value}
+        options={options}
+        onChange={onChange}
+      />
+    )
+
+  }

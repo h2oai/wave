@@ -38,6 +38,7 @@
     "eslint-plugin-import": "2.20.0",
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-wave": "file:eslint",
     "file-loader": "4.3.0",
     "fs-extra": "^8.1.0",

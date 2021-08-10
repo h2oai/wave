@@ -38,7 +38,7 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
   const
     ref = React.useRef<HTMLDivElement>(null),
     [content, setContent] = React.useState<JSX.Element | null>(null),
-    renderViz = () => {
+    renderViz = React.useCallback(() => {
       if (!ref.current) return
 
       const { width, height } = ref.current.getBoundingClientRect()
@@ -73,14 +73,15 @@ export const ProgressArc = ({ thickness, color, value }: Props) => {
           </g>
         </svg>
       )
-    },
+    }, [color, thickness, value]),
     onResize = debounce(1000, renderViz)
 
   React.useEffect(() => {
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  React.useLayoutEffect(renderViz, [thickness, color, value])
+  React.useLayoutEffect(renderViz, [value, color, thickness, renderViz])
 
   return <div ref={ref} className={css.container}>{content}</div>
 }

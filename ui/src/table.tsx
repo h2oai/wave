@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Dict, Id, S, U } from 'h2o-wave'
+import { B, Dict, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
 import { cssVar, rem } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {
@@ -110,6 +110,20 @@ type QColumn = Fluent.IColumn & {
   isSortable?: B
 }
 
+type DataTable = {
+  model: Table
+  onFilterChange: (filterKey: S, filterVal: S) => (e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => void
+  sort: (col: QColumn) => void,
+  reset: () => void
+  filteredItems: any[]
+  selectedFilters: Dict<S[]> | null
+  items: any[]
+  selection: Fluent.Selection
+  isMultiple: B
+  isSearchable: B
+  groups?: Fluent.IGroup[]
+}
+
 const
   css = stylesheet({
     // HACK: Put sorting icon on right (same as filter).
@@ -175,243 +189,21 @@ const
   toCSV = (data: unknown[][]): S => data.map(row => {
     const line = JSON.stringify(row)
     return line.substr(1, line.length - 2)
-  }).join('\n')
-
-
-export const
-  XTable = bond(({ model: m }: { model: Table }) => {
-    wave.args[m.name] = []
+  }).join('\n'),
+  DataTable = ({ model: m, onFilterChange, items, filteredItems, selection, selectedFilters, isMultiple, isSearchable, groups, sort, reset }: DataTable) => {
     const
-      items = m.rows.map(r => {
-        const item: Fluent.IObjectWithKey & Dict<any> = { key: r.name }
-        for (let i = 0, n = r.cells.length; i < n; i++) {
-          const col = m.columns[i]
-          item[col.name] = r.cells[i]
-        }
-        return item
-      }),
-      isMultiple = m.values?.length || m.multiple,
-      filteredItemsB = box(items),
-      searchableKeys = m.columns.filter(({ searchable }) => searchable).map(({ name }) => name),
-      searchStrB = box(''),
-      selectedFiltersB = box<Dict<S[]> | null>(null),
-      colContextMenuListB = box<Fluent.IContextualMenuProps | null>(null),
-      groupsB = box<Fluent.IGroup[] | undefined>(undefined),
-      groupByKeyB = box('*'),
-      groupByOptions: Fluent.IDropdownOption[] = m.groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [],
-      onSearchChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr?: S) => {
-        searchStrB(searchStr || '')
-
-        if (!searchStr && !selectedFiltersB()) {
-          filteredItemsB(items)
-          if (groupsB()) initGroups()
-          return
-        }
-
-        filter()
-        search()
-        if (groupsB()) initGroups()
-      },
-      search = () => {
-        const searchStr = searchStrB().toLowerCase()
-        if (!searchStr || !searchableKeys.length) return
-
-        filteredItemsB(filteredItemsB().filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(searchStr))))
-      },
-      onFilterChange = (filterKey: S, filterVal: S) => (_e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => {
-        const filters = selectedFiltersB() || {}
-
-        if (checked) {
-          if (filters[filterKey]) filters[filterKey].push(filterVal)
-          else filters[filterKey] = [filterVal]
-        }
-        else filters[filterKey] = filters[filterKey].filter(f => f !== filterVal)
-        selectedFiltersB(Object.values(filters).every(v => !v.length) ? null : { ...filters })
-
-        filter()
-        search()
-        if (groupsB()) initGroups()
-      },
-      // TODO: Make filter options in dropdowns dynamic.
-      filter = () => {
-        const selectedFilters = selectedFiltersB()
-
-        // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
-        const filteredItems = selectedFilters
-          ? items.filter(i => Object.keys(selectedFilters)
-            .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey]
-              .some(filterVal => i[filterKey] === filterVal)
-            )
-          )
-          : items
-
-        filteredItemsB(filteredItems)
-      },
-      reset = () => {
-        selectedFiltersB(null)
-        searchStrB('')
-
-        groupsB(undefined)
-        groupByKeyB('*')
-
-        filter()
-        search()
-      },
-      sort = (column: QColumn) => {
-        const sortAsc = column.iconName === 'SortDown'
-        column.iconName = sortAsc ? 'SortUp' : 'SortDown'
-
-        if (groupsB()) {
-          filteredItemsB(groupsB()?.reduce((acc, group) =>
-            [...acc, ...filteredItemsB().slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
-            [] as any[]) || [])
-        }
-        else filteredItemsB([...filteredItemsB()].sort(sortingF(column, sortAsc)))
-
-        columnsB(columnsB().map((col) => column.key === col.key ? column : col))
-      },
-      download = () => {
-        // TODO: Prompt a dialog for name, encoding, etc.
-        const
-          data = toCSV([m.columns.map(({ label, name }) => label || name), ...m.rows.map(({ cells }) => cells)]),
-          a = document.createElement('a'),
-          blob = new Blob([data], { type: "octet/stream" }),
-          url = window.URL.createObjectURL(blob)
-
-        a.href = url
-        a.download = 'exported_data.csv'
-        a.click()
-
-        window.URL.revokeObjectURL(url)
-      },
-      onRenderMenuList = (props?: Fluent.IContextualMenuListProps) => {
-        if (!props) return null
-
-        return (
-          <div style={{ padding: 10 }}>
-            <Fluent.Text variant='mediumPlus' styles={{ root: { paddingTop: 10, paddingBottom: 10, fontWeight: 'bold' } }} block>Show only</Fluent.Text>
-            {
-              props.items.map(({ key, name, data }) => {
-                const selectedFilters = selectedFiltersB()
-                const checked = !!name && !!selectedFilters && selectedFilters[data] && selectedFilters[data].includes(name)
-                return (
-                  <Fluent.Checkbox
-                    key={key}
-                    label={name}
-                    defaultChecked={checked}
-                    onChange={onFilterChange(data || '', name || '')}
-                    styles={{ root: { marginBottom: 5 } }}
-                  />
-                )
-              })
-            }
-          </div>
-        )
-      },
-      onDismissContextMenu = () => colContextMenuListB(null),
-      onColumnContextMenu = (col: Fluent.IColumn, e: React.MouseEvent<HTMLElement>) => {
-        colContextMenuListB({
-          items: Array.from(new Set(items.map(i => i[col.fieldName || col.key])))
-            .map(option => ({ key: option, name: option, data: col.fieldName || col.key })),
-          target: e.target as HTMLElement,
-          directionalHint: Fluent.DirectionalHint.bottomLeftEdge,
-          gapSpace: 10,
-          isBeakVisible: true,
-          onRenderMenuList,
-          onDismiss: onDismissContextMenu,
-        })
-      },
-      makeGroups = () => {
-        let prevSum = 0
-        const
-          groupedBy = groupByF(filteredItemsB(), groupByKeyB()),
-          groupedByKeys = Object.keys(groupedBy),
-          groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => {
-            if (i !== 0) {
-              const prevKey = groupedByKeys[i - 1]
-              prevSum += groupedBy[prevKey].length
-            }
-
-            let name = key
-            if (isNaN(Number(key)) && !isNaN(Date.parse(key))) name = new Date(key).toLocaleString()
-
-            return { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: true }
-          })
-
-        groups.sort(({ name: name1 }, { name: name2 }) => {
-          const numName1 = Number(name1), numName2 = Number(name2)
-          if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
-
-          const dateName1 = Date.parse(name1), dateName2 = Date.parse(name2)
-          if (!isNaN(dateName1) && !isNaN(dateName2)) return dateName1 - dateName2
-
-          return name2 < name1 ? 1 : -1
-        })
-
-        return { groupedBy, groups }
-      },
-      initGroups = () => {
-        const { groupedBy, groups } = makeGroups()
-        filteredItemsB(Object.values(groupedBy).flatMap(arr => arr))
-        groupsB(groups)
-      },
-      onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
-        if (!option) return
-        if (option.key === '*') {
-          reset()
-          return
-        }
-
-        reset()
-        groupByKeyB(option.key as S)
-        initGroups()
-      },
-      onRenderDetailsHeader = (props?: Fluent.IDetailsHeaderProps) => {
-        if (!props) return <span />
-
-        return (
-          <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
-            <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groupsB() ? css.hideCellGroupCollapse : ''} />
-          </Fluent.Sticky>
-        )
-      },
-      onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
-        const searchOrFilter = searchableKeys.length || m.columns.some(c => c.filterable)
-        if (!props || (!m.downloadable && !m.resettable && !searchOrFilter)) return null
-
-        const
-          footerItems: Fluent.ICommandBarItemProps[] = [],
-          buttonStyles = { root: { background: cssVar('$card') } }
-        if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
-        if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
-
-        return (
-          <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Footer} isScrollSynced>
-            <Fluent.Stack horizontal horizontalAlign={searchOrFilter ? 'space-between' : 'end'} verticalAlign='center'>
-              {
-                searchOrFilter && (
-                  <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
-                    <b style={{ paddingLeft: 5 }}>{formatNum(filteredItemsB().length)} of {formatNum(items.length)}</b>
-                  </Fluent.Text>
-                )
-              }
-              <div style={{ width: '80%' }}>
-                <Fluent.CommandBar items={footerItems} styles={{ root: { background: cssVar('$card') }, primarySet: { justifyContent: 'flex-end' } }} />
-              </div>
-            </Fluent.Stack>
-          </Fluent.Sticky>
-        )
-      },
-      onRenderRow = (props?: Fluent.IDetailsRowProps) => props
-        ? <Fluent.DetailsRow {...props} styles={{ cell: { alignSelf: 'center' }, checkCell: { display: 'flex', alignItems: 'center' }, root: { width: '100%' } }} />
-        : null,
+      [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
+      selectedFiltersRef = React.useRef(selectedFilters),
       onColumnClick = (e: React.MouseEvent<HTMLElement>, column: QColumn) => {
         const isMenuClicked = (e.target as HTMLElement).getAttribute('data-icon-name') === 'ChevronDown'
 
         if (isMenuClicked) onColumnContextMenu(column, e)
-        else if (column.isSortable) sort(column)
+        else if (column.isSortable) {
+          sort(column)
+          setColumns(columns.map(col => column.key === col.key ? column : col))
+        }
       },
-      columnsB = box(m.columns.map((c): QColumn => {
+      [columns, setColumns] = React.useState(m.columns.map((c): QColumn => {
         const
           minWidth = c.min_width
             ? c.min_width.endsWith('px')
@@ -441,20 +233,94 @@ export const
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
-      selection = new Fluent.Selection({
-        onSelectionChanged: () => {
-          wave.args[m.name] = selection.getSelection().map(item => item.key as S)
-        }
-      }),
-      init = () => {
-        if (isMultiple && m.values) {
-          m.values.forEach(v => selection.setKeySelected(v, true, false))
-          wave.args[m.name] = m.values
-        }
+      onRenderMenuList = React.useCallback((listProps?: Fluent.IContextualMenuListProps) => {
+        if (!listProps) return null
+
+        return (
+          <div style={{ padding: 10 }}>
+            <Fluent.Text variant='mediumPlus' styles={{ root: { paddingTop: 10, paddingBottom: 10, fontWeight: 'bold' } }} block>Show only</Fluent.Text>
+            {
+              listProps.items.map(({ key, name, data }) => (
+                <Fluent.Checkbox
+                  key={key}
+                  label={name}
+                  defaultChecked={!!name && !!selectedFiltersRef.current && selectedFiltersRef.current[data]?.includes(name)}
+                  onChange={onFilterChange(data || '', name || '')}
+                  styles={{ root: { marginBottom: 5 } }}
+                />
+              )
+              )
+            }
+          </div>
+        )
+      }, [onFilterChange]),
+      onColumnContextMenu = React.useCallback((col: Fluent.IColumn, e: React.MouseEvent<HTMLElement>) => {
+        setColContextMenuList({
+          items: Array.from(new Set(items.map(i => i[col.fieldName || col.key]))).map(option => ({ key: option, name: option, data: col.fieldName || col.key })),
+          target: e.target as HTMLElement,
+          directionalHint: Fluent.DirectionalHint.bottomLeftEdge,
+          gapSpace: 10,
+          isBeakVisible: true,
+          onRenderMenuList,
+          onDismiss: () => setColContextMenuList(null),
+        })
+      }, [items, onRenderMenuList]),
+      onRenderDetailsHeader = React.useCallback((props?: Fluent.IDetailsHeaderProps) => {
+        if (!props) return <span />
+
+        return (
+          <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
+            <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groups ? css.hideCellGroupCollapse : ''} />
+          </Fluent.Sticky>
+        )
+      }, [groups, onColumnContextMenu]),
+      onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
+        const isFilterable = m.columns.some(c => c.filterable)
+        if (!props || (!m.downloadable && !m.resettable && !isSearchable && !isFilterable)) return null
+
+        const
+          footerItems: Fluent.ICommandBarItemProps[] = [],
+          buttonStyles = { root: { background: cssVar('$card') } }
+        if (m.downloadable) footerItems.push({ key: 'download', text: 'Download data', iconProps: { iconName: 'Download' }, onClick: download, buttonStyles })
+        if (m.resettable) footerItems.push({ key: 'reset', text: 'Reset table', iconProps: { iconName: 'Refresh' }, onClick: reset, buttonStyles })
+
+        return (
+          <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Footer} isScrollSynced>
+            <Fluent.Stack horizontal horizontalAlign={isFilterable ? 'space-between' : 'end'} verticalAlign='center'>
+              {
+                isFilterable && (
+                  <Fluent.Text variant='smallPlus' block styles={{ root: { whiteSpace: 'nowrap' } }}>Rows:
+                    <b style={{ paddingLeft: 5 }}>{formatNum(filteredItems.length)} of {formatNum(items.length)}</b>
+                  </Fluent.Text>
+                )
+              }
+              <div style={{ width: '80%' }}>
+                <Fluent.CommandBar items={footerItems} styles={{ root: { background: cssVar('$card') }, primarySet: { justifyContent: 'flex-end' } }} />
+              </div>
+            </Fluent.Stack>
+          </Fluent.Sticky>
+        )
       },
+      onRenderRow = (props?: Fluent.IDetailsRowProps) => props
+        ? <Fluent.DetailsRow {...props} styles={{ cell: { alignSelf: 'center' }, checkCell: { display: 'flex', alignItems: 'center' }, root: { width: '100%' } }} />
+        : null,
       onItemInvoked = (item: Fluent.IObjectWithKey & Dict<any>) => {
         wave.args[m.name] = [item.key as S]
         wave.push()
+      },
+      download = () => {
+        // TODO: Prompt a dialog for name, encoding, etc.
+        const
+          data = toCSV([m.columns.map(({ label, name }) => label || name), ...m.rows.map(({ cells }) => cells)]),
+          a = document.createElement('a'),
+          blob = new Blob([data], { type: "octet/stream" }),
+          url = window.URL.createObjectURL(blob)
+
+        a.href = url
+        a.download = 'exported_data.csv'
+        a.click()
+
+        window.URL.revokeObjectURL(url)
       },
       onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: QColumn) => {
         if (!item || !col) return <span />
@@ -472,7 +338,177 @@ export const
         }
 
         return v
+      }
+
+    // HACK: React stale closures - https://reactjs.org/docs/hooks-faq.html#why-am-i-seeing-stale-props-or-state-inside-my-function
+    // TODO: Find a reasonable way of doing this.
+    React.useEffect(() => { { selectedFiltersRef.current = selectedFilters } }, [selectedFilters])
+
+    return (
+      <>
+        <Fluent.DetailsList
+          items={filteredItems}
+          columns={columns}
+          constrainMode={Fluent.ConstrainMode.unconstrained}
+          layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
+          groups={groups}
+          selection={selection}
+          selectionMode={isMultiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
+          selectionPreservedOnEmptyClick
+          onItemInvoked={isMultiple ? undefined : onItemInvoked}
+          onRenderRow={onRenderRow}
+          onRenderItemColumn={onRenderItemColumn}
+          onRenderDetailsHeader={onRenderDetailsHeader}
+          onRenderDetailsFooter={onRenderDetailsFooter}
+          checkboxVisibility={checkboxVisibilityMap[m.checkbox_visibility || 'on-hover']}
+        />
+        {colContextMenuList && <Fluent.ContextualMenu {...colContextMenuList} />}
+      </>
+    )
+  }
+
+
+export const
+  XTable = ({ model: m }: { model: Table }) => {
+    const
+      items = React.useMemo(() => m.rows.map(r => {
+        const item: Fluent.IObjectWithKey & Dict<any> = { key: r.name }
+        for (let i = 0, n = r.cells.length; i < n; i++) {
+          const col = m.columns[i]
+          item[col.name] = r.cells[i]
+        }
+        return item
+      }), [m.rows, m.columns]),
+      isMultiple = Boolean(m.values?.length || m.multiple),
+      [filteredItems, setFilteredItems] = React.useState(items),
+      searchableKeys = React.useMemo(() => m.columns.filter(({ searchable }) => searchable).map(({ name }) => name), [m.columns]),
+      [searchStr, setSearchStr] = React.useState(''),
+      [selectedFilters, setSelectedFilters] = React.useState<Dict<S[]> | null>(null),
+      [groups, setGroups] = React.useState<Fluent.IGroup[] | undefined>(),
+      [groupByKey, setGroupByKey] = React.useState('*'),
+      groupByOptions: Fluent.IDropdownOption[] = React.useMemo(() =>
+        m.groupable ? [{ key: '*', text: '(No Grouping)' }, ...m.columns.map(col => ({ key: col.name, text: col.label }))] : [], [m.columns, m.groupable]
+      ),
+      filter = React.useCallback((selectedFilters: Dict<S[]> | null) => {
+        // If we have filters, check if any of the data-item's props (filter's keys) equals to any of its filter values.
+        setFilteredItems(
+          selectedFilters
+            ? items.filter(i => Object.keys(selectedFilters)
+              .every(filterKey => !selectedFilters[filterKey].length || selectedFilters[filterKey]
+                .some(filterVal => i[filterKey] === filterVal)
+              )
+            )
+            : items
+        )
+      }, [items]),
+      makeGroups = React.useCallback((groupByKey: S, filteredItems: (Fluent.IObjectWithKey & Dict<any>)[]) => {
+        let prevSum = 0
+        const
+          groupedBy = groupByF(filteredItems, groupByKey),
+          groupedByKeys = Object.keys(groupedBy),
+          groups: Fluent.IGroup[] = groupedByKeys.map((key, i) => {
+            if (i !== 0) {
+              const prevKey = groupedByKeys[i - 1]
+              prevSum += groupedBy[prevKey].length
+            }
+
+            let name = key
+            if (isNaN(Number(key)) && !isNaN(Date.parse(key))) name = new Date(key).toLocaleString()
+
+            return { key, name, startIndex: prevSum, count: groupedBy[key].length, isCollapsed: true }
+          })
+
+        groups.sort(({ name: name1 }, { name: name2 }) => {
+          const numName1 = Number(name1), numName2 = Number(name2)
+          if (!isNaN(numName1) && !isNaN(numName2)) return numName1 - numName2
+
+          const dateName1 = Date.parse(name1), dateName2 = Date.parse(name2)
+          if (!isNaN(dateName1) && !isNaN(dateName2)) return dateName1 - dateName2
+
+          return name2 < name1 ? 1 : -1
+        })
+
+        return { groupedBy, groups }
+      }, []),
+      initGroups = React.useCallback(() => {
+        setGroupByKey(groupByKey => {
+          setFilteredItems(filteredItems => {
+            const { groupedBy, groups } = makeGroups(groupByKey, filteredItems)
+            setGroups(groups)
+            return Object.values(groupedBy).flatMap(arr => arr)
+          })
+          return groupByKey
+        })
+      }, [makeGroups]),
+      search = React.useCallback(() => {
+        setSearchStr(searchString => {
+          const _searchStr = searchString.toLowerCase()
+          if (!_searchStr || !searchableKeys.length) return searchString || ''
+
+          setFilteredItems(filteredItems => filteredItems.filter(i => searchableKeys.some(key => (i[key] as S).toLowerCase().includes(_searchStr))))
+          return searchString || ''
+        })
+      }, [searchableKeys]),
+      onSearchChange = React.useCallback((_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr = '') => {
+        setSearchStr(searchStr)
+
+        if (!searchStr && !selectedFilters) {
+          setFilteredItems(items)
+          setGroups(groups => {
+            if (groups) initGroups()
+            return groups
+          })
+          return
+        }
+
+        filter(selectedFilters)
+        search()
+        setGroups(groups => {
+          if (groups) initGroups()
+          return groups
+        })
+      }, [selectedFilters, filter, search, initGroups, items]),
+      onGroupByChange = (_e: React.FormEvent<HTMLDivElement>, option?: Fluent.IDropdownOption) => {
+        if (!option) return
+        reset()
+        if (option.key === '*') return
+
+        setGroupByKey(option.key as S)
+        initGroups()
       },
+      onFilterChange = React.useCallback((filterKey: S, filterVal: S) => (_e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => {
+        setSelectedFilters(selectedFilters => {
+          const filters = selectedFilters || {}
+
+          if (checked) {
+            if (filters[filterKey]) filters[filterKey].push(filterVal)
+            else filters[filterKey] = [filterVal]
+          }
+          else filters[filterKey] = filters[filterKey].filter(f => f !== filterVal)
+          const newFilters = Object.values(filters).every(v => !v.length) ? null : { ...filters }
+
+          filter(newFilters)
+          search()
+          setGroups(groups => {
+            if (groups) initGroups()
+            return groups
+          })
+          return newFilters
+        })
+
+      }, [filter, initGroups, search]),
+      // TODO: Make filter options in dropdowns dynamic.
+      reset = React.useCallback(() => {
+        setSelectedFilters(null)
+        setSearchStr('')
+
+        setGroups(undefined)
+        setGroupByKey('*')
+
+        filter(null)
+        search()
+      }, [filter, search]),
+      selection = React.useMemo(() => new Fluent.Selection({ onSelectionChanged: () => { wave.args[m.name] = selection.getSelection().map(item => item.key as S) } }), [m.name]),
       computeHeight = () => {
         if (m.height) return m.height
         if (items.length > 10) return 500
@@ -487,41 +523,58 @@ export const
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight
       },
-      DataTable = () => (
-        <>
-          <Fluent.DetailsList
-            items={filteredItemsB()}
-            columns={columnsB()}
-            constrainMode={Fluent.ConstrainMode.unconstrained}
-            layoutMode={Fluent.DetailsListLayoutMode.fixedColumns}
-            groups={groupsB()}
-            selection={selection}
-            selectionMode={isMultiple ? Fluent.SelectionMode.multiple : Fluent.SelectionMode.none}
-            selectionPreservedOnEmptyClick
-            onItemInvoked={isMultiple ? undefined : onItemInvoked}
-            onRenderRow={onRenderRow}
-            onRenderItemColumn={onRenderItemColumn}
-            onRenderDetailsHeader={onRenderDetailsHeader}
-            onRenderDetailsFooter={onRenderDetailsFooter}
-            checkboxVisibility={checkboxVisibilityMap[m.checkbox_visibility || 'on-hover']}
-          />
-          {colContextMenuListB() && <Fluent.ContextualMenu {...(colContextMenuListB() as Fluent.IContextualMenuProps)} />}
-        </>
-      ),
-      render = () => (
-        <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
-          <Fluent.Stack horizontal horizontalAlign='space-between' >
-            {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKeyB()} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
-            {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStrB()} styles={{ root: { width: '50%' } }} />}
-          </Fluent.Stack>
-          <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: m.groupable || searchableKeys.length ? 80 : 0 } }}>
-            {
-              isMultiple
-                ? <Fluent.MarqueeSelection selection={selection}><DataTable /></Fluent.MarqueeSelection>
-                : <DataTable />
-            }
-          </Fluent.ScrollablePane>
-        </div>
-      )
-    return { init, render, columnsB, filteredItemsB, selectedFiltersB, searchStrB, colContextMenuListB, groupsB, groupByKeyB }
-  })
+      sort = React.useCallback((column: QColumn) => {
+        const sortAsc = column.iconName === 'SortDown'
+        column.iconName = sortAsc ? 'SortUp' : 'SortDown'
+
+        setGroups(groups => {
+          if (groups) {
+            setFilteredItems(filteredItems => groups?.reduce((acc, group) =>
+              [...acc, ...filteredItems.slice(group.startIndex, acc.length + group.count).sort(sortingF(column, sortAsc))],
+              [] as any[]) || [])
+          }
+          else setFilteredItems(filteredItems => [...filteredItems].sort(sortingF(column, sortAsc)))
+          return groups
+        })
+      }, [])
+
+    React.useEffect(() => {
+      wave.args[m.name] = []
+      if (isMultiple && m.values) {
+        m.values.forEach(v => selection.setKeySelected(v, true, false))
+        wave.args[m.name] = m.values
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+    React.useEffect(() => setFilteredItems(items), [items])
+
+    const dataTableProps: DataTable = React.useMemo(() => ({
+      model: m,
+      onFilterChange,
+      items,
+      filteredItems,
+      selectedFilters,
+      groups,
+      selection,
+      sort,
+      isMultiple,
+      reset,
+      isSearchable: !!searchableKeys.length
+    }), [filteredItems, groups, isMultiple, items, m, onFilterChange, reset, searchableKeys.length, selectedFilters, selection, sort])
+
+    return (
+      <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
+        <Fluent.Stack horizontal horizontalAlign='space-between' >
+          {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
+          {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%' } }} />}
+        </Fluent.Stack>
+        <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: m.groupable || searchableKeys.length ? 80 : 0 } }}>
+          {
+            isMultiple
+              ? <Fluent.MarqueeSelection selection={selection}><DataTable {...dataTableProps} /></Fluent.MarqueeSelection>
+              : <DataTable {...dataTableProps} />
+          }
+        </Fluent.ScrollablePane>
+      </div>
+    )
+  }

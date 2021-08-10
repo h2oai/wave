@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Id, S, U } from 'h2o-wave'
+import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { Choice } from './choice_group'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a picker.
@@ -49,10 +49,10 @@ const pickerSuggestionsProps: Fluent.IBasePickerSuggestionsProps = {
   noResultsFoundText: 'No results found',
 }
 
-export const XPicker = bond(({ model: m }: { model: Picker }) => {
+export const XPicker = ({ model: m }: { model: Picker }) => {
   const
-    tags: Fluent.ITag[] = m.choices.map(({ name, label }) => ({ key: name, name: label || name })),
-    selectedTagsB = box<Fluent.ITag[]>(tags.filter(({ key }) => m.values?.includes(key as S))),
+    tags: Fluent.ITag[] = React.useMemo(() => m.choices.map(({ name, label }) => ({ key: name, name: label || name })), [m.choices]),
+    [selectedTags, setSelectedTags] = React.useState<Fluent.ITag[]>(tags.filter(({ key }) => m.values?.includes(key as S))),
     filterSuggestedTags = (filterText: S, selectedTags?: Fluent.ITag[]) => {
       if (!filterText) return []
       const isAlreadySelected = (t: Fluent.ITag) => selectedTags && selectedTags.includes(t)
@@ -60,28 +60,29 @@ export const XPicker = bond(({ model: m }: { model: Picker }) => {
       return tags.filter(t => isStringMatch(t.name) && !isAlreadySelected(t))
     },
     onChange = (items?: Fluent.ITag[]) => {
-      selectedTagsB(items || [])
+      setSelectedTags(items || [])
       wave.args[m.name] = items ? items.map(({ key }) => key) : null
       if (m.trigger) wave.push()
     },
-    onEmptyResolveSuggestions = () => tags,
-    init = () => wave.args[m.name] = m.values || null,
-    render = () => (
-      <>
-        {m.label && <Fluent.Text>{m.label}</Fluent.Text>}
-        <Fluent.TagPicker
-          inputProps={{ 'data-test': m.name } as any} // HACK: data-test does not work on root as of this version
-          removeButtonAriaLabel="Remove"
-          onResolveSuggestions={filterSuggestedTags}
-          onChange={onChange}
-          pickerSuggestionsProps={pickerSuggestionsProps}
-          itemLimit={m.max_choices}
-          selectedItems={selectedTagsB()}
-          disabled={m.disabled}
-          onEmptyResolveSuggestions={onEmptyResolveSuggestions}
-        />
-      </>
-    )
+    onEmptyResolveSuggestions = () => tags
 
-  return { init, render, selectedTagsB }
-})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => { wave.args[m.name] = m.values || null }, [])
+
+  return (
+    <>
+      {m.label && <Fluent.Text>{m.label}</Fluent.Text>}
+      <Fluent.TagPicker
+        inputProps={{ 'data-test': m.name } as Fluent.IInputProps}
+        removeButtonAriaLabel="Remove"
+        onResolveSuggestions={filterSuggestedTags}
+        onChange={onChange}
+        pickerSuggestionsProps={pickerSuggestionsProps}
+        itemLimit={m.max_choices}
+        selectedItems={selectedTags}
+        disabled={m.disabled}
+        onEmptyResolveSuggestions={onEmptyResolveSuggestions}
+      />
+    </>
+  )
+}

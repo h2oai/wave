@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, F, Id, S } from 'h2o-wave'
+import { B, F, Id, S } from 'h2o-wave'
 import React from 'react'
-import { bond, debounce, wave } from './ui'
+import { debounce, wave } from './ui'
 
 /**
  * Create a spinbox.
@@ -48,11 +48,9 @@ export interface Spinbox {
 
 const DEBOUNCE_TIMEOUT = 500
 export const
-  XSpinbox = bond(({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
-    wave.args[name] = (value < min) ? min : ((value > max) ? max : value)
-
+  XSpinbox = ({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
     const
-      valueB = box<S | undefined>(),
+      [val, setVal] = React.useState<S | undefined>(),
       parseValue = (v: S) => {
         const x = parseFloat(v)
         return (!isNaN(x) && isFinite(x)) ? x : value
@@ -83,26 +81,28 @@ export const
               : value
         wave.args[name] = newValue
         if (trigger) wave.push()
-        valueB(String(newValue))
+        setVal(String(newValue))
       },
       debouncedHandleOnchange = debounce(DEBOUNCE_TIMEOUT, handleOnChange),
       onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
         trigger ? debouncedHandleOnchange(e) : handleOnChange(e)
-      },
-      render = () => (
-        <Fluent.SpinButton
-          inputProps={{ 'data-test': name, onChange } as React.InputHTMLAttributes<HTMLInputElement>}
-          label={label}
-          min={min}
-          max={max}
-          step={step}
-          defaultValue={String(value)}
-          value={valueB()}
-          onIncrement={onIncrement}
-          onDecrement={onDecrement}
-          disabled={disabled}
-        />
-      )
-    return { render, valueB }
-  })
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[name] = (value < min) ? min : ((value > max) ? max : value) }, [])
+
+    return (
+      <Fluent.SpinButton
+        inputProps={{ 'data-test': name, onChange } as React.InputHTMLAttributes<HTMLInputElement>}
+        label={label}
+        min={min}
+        max={max}
+        step={step}
+        defaultValue={String(value)}
+        value={val}
+        onIncrement={onIncrement}
+        onDecrement={onDecrement}
+        disabled={disabled}
+      />
+    )
+  }

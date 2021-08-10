@@ -15,7 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a color picker.
@@ -44,37 +44,38 @@ const
   toColorCells = (cs: S[]) => cs.map((c): Fluent.IColorCellProps => ({ id: c, label: c, color: c }))
 
 export const
-  XColorPicker = bond(({ model: m }: { model: ColorPicker }) => {
-    const value = m.value || null
-    wave.args[m.name] = value
+  XColorPicker = ({ model: m }: { model: ColorPicker }) => {
     const
-      onColorChanged = (_id?: string, color?: string) => {
-        wave.args[m.name] = color || value
+      value = m.value || null,
+      onColorChanged = (_id?: string, color = value) => {
+        wave.args[m.name] = color
 
         if (m.trigger) wave.push()
       },
-      onChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
-        wave.args[m.name] = color?.str || value
+      onChange = (_e: React.SyntheticEvent<HTMLElement>, { str }: Fluent.IColor) => {
+        wave.args[m.name] = str || value
         if (m.trigger) wave.push()
-      },
-      render = () => (
-        <div data-test={m.name}>
-          <Fluent.Label>{m.label}</Fluent.Label>
-          {
-            m.choices?.length
-              ? <Fluent.SwatchColorPicker
-                columnCount={10}
-                selectedId={value || m.choices[0]}
-                colorCells={toColorCells(m.choices)}
-                onColorChanged={onColorChanged}
-              />
-              : <Fluent.ColorPicker
-                color={value || '#000'}
-                onChange={onChange}
-              />
-          }
-        </div>
-      )
+      }
 
-    return { render }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[m.name] = value }, [])
+
+    return (
+      <div data-test={m.name}>
+        <Fluent.Label>{m.label}</Fluent.Label>
+        {
+          m.choices?.length
+            ? <Fluent.SwatchColorPicker
+              columnCount={10}
+              selectedId={value || m.choices[0]}
+              colorCells={toColorCells(m.choices)}
+              onColorChanged={onColorChanged}
+            />
+            : <Fluent.ColorPicker
+              color={value || '#000'}
+              onChange={onChange}
+            />
+        }
+      </div>
+    )
+  }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Spinbox, XSpinbox } from './spinbox'
 import { wave } from './ui'
@@ -140,7 +140,7 @@ describe('Spinbox.tsx', () => {
     fireEvent.change(getByTestId(name), { target: { value: 50 } })
 
     expect(pushMock).not.toBeCalled() // Not called immediately, but after specified timeout.
-    jest.runOnlyPendingTimers()
+    act(() => { jest.runOnlyPendingTimers() })
     expect(pushMock).toHaveBeenCalled()
   })
 })
