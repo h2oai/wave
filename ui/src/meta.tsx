@@ -136,14 +136,16 @@ export const
 
     if (redirect) {
       try {
-        const url = new URL(redirect)
+        const
+          { location } = window,
+          url = new URL(`${location.origin}${location.pathname}${redirect}`)
         if (redirect === url.hash) {
-          window.location.hash = redirect
+          location.hash = redirect
         } else {
-          window.location.replace(redirect)
+          location.replace(redirect)
         }
       } catch (e) {
-        console.error(`Could not redirect: ${redirect} is an invalid URL`)
+        console.error(`Could not redirect: ${redirect} is an invalid URL`, e)
       }
     }
 
