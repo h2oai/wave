@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
 import { XToolTip } from './tooltip'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a button.
@@ -89,8 +89,7 @@ const
   }
 
 const
-  XButton = bond(({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary } }: { model: Button }) => {
-    wave.args[name] = false
+  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary } }: { model: Button }) => {
     const
       onClick = () => {
         if (name.startsWith('#')) {
@@ -100,29 +99,30 @@ const
         wave.args[name] = value === undefined || value
         wave.push()
       },
-      render = () => {
-        // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
-        const styles: Fluent.IButtonStyles = { root: visible ? {} : { display: 'none' } }
-        if (link) {
-          return <Fluent.Link data-test={name} disabled={disabled} onClick={onClick} styles={styles}>{label}</Fluent.Link>
-        }
-        const btnProps: Fluent.IButtonProps = { text: label, disabled, onClick, styles, iconProps: { iconName: icon } }
-        return caption?.length
-          ? primary
-            ? <Fluent.CompoundButton {...btnProps} data-test={name} primary secondaryText={caption} />
-            : <Fluent.CompoundButton {...btnProps} data-test={name} secondaryText={caption} />
-          : primary
-            ? <Fluent.PrimaryButton {...btnProps} data-test={name} />
-            : <Fluent.DefaultButton {...btnProps} data-test={name} />
-      }
-    return { render }
-  })
+      // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
+      styles: Fluent.IButtonStyles = { root: visible ? {} : { display: 'none' } }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => { wave.args[name] = false }, [])
+
+    if (link) {
+      return <Fluent.Link data-test={name} disabled={disabled} onClick={onClick} styles={styles}>{label}</Fluent.Link>
+    }
+    const btnProps: Fluent.IButtonProps = { text: label, disabled, onClick, styles, iconProps: { iconName: icon } }
+    return caption?.length
+      ? primary
+        ? <Fluent.CompoundButton {...btnProps} data-test={name} primary secondaryText={caption} />
+        : <Fluent.CompoundButton {...btnProps} data-test={name} secondaryText={caption} />
+      : primary
+        ? <Fluent.PrimaryButton {...btnProps} data-test={name} />
+        : <Fluent.DefaultButton {...btnProps} data-test={name} />
+  }
 export const
   XButtons = ({ model: m }: { model: Buttons }) => {
     const
       children = (m.items.map(c => c.button).filter(Boolean) as Button[]).map(b => (
         <XToolTip key={b.name} content={b.tooltip} showIcon={false} expand={false}>
-          <XButton model={b}>{b.label}</XButton>
+          <XButton model={b} />
         </XToolTip>
       ))
     return (
@@ -133,6 +133,6 @@ export const
   },
   XStandAloneButton = ({ model: m }: { model: Button }) => (
     <div className={css.buttons}>
-      <XButton key={m.name} model={m}>{m.label}</XButton>
+      <XButton key={m.name} model={m} />
     </div>
   )

@@ -35,8 +35,8 @@ def search_df(df: pd.DataFrame, term: str):
 @app('/demo')
 async def serve(q: Q):
     if not q.client.initialized:
-        q.page['form'] = ui.form_card(box='1 1 -1 11', items=[
-            ui.textbox(name='search', label='Search', placeholder='Enter a keyword...', trigger=True),
+        q.page['form'] = ui.form_card(box='1 1 -1 9', items=[
+            ui.textbox(name='search', label='Search address', placeholder='Enter a keyword...', trigger=True),
             ui.table(
                 name='issues',
                 columns=[ui.table_column(name=name, label=name) for name in column_names],
@@ -46,11 +46,9 @@ async def serve(q: Q):
         q.client.initialized = True
     else:
         items = q.page['form'].items
-        search_box = items[0].textbox
         table = items[1].table
         term: str = q.args.search
         term = term.strip() if term else ''
-        search_box.value = term
         table.rows = df_to_rows(search_df(addresses, term) if len(term) else addresses)
 
     await q.page.save()

@@ -56,9 +56,9 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
         maxY = Math.max(zeroValue, maxY)
       }
       return [minY, maxY]
-    }, [data, zeroValue]),
+    }, [data, value, zeroValue]),
     [content, setContent] = React.useState<JSX.Element | null>(null),
-    renderViz = () => {
+    renderViz = React.useCallback(() => {
       if (!ref.current) return
 
       const { width, height } = ref.current.getBoundingClientRect()
@@ -92,14 +92,15 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
           <path d={ln(data) as S} fill='none' stroke={color} strokeWidth='1.5' strokeLinejoin='round' strokeLinecap='round'></path>
         </svg>
       )
-    },
+    }, [color, curve, data, maxY, minY, value, zeroValue]),
     onResize = debounce(1000, renderViz)
 
   React.useEffect(() => {
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  React.useLayoutEffect(renderViz, [value, color, data, zeroValue, curve])
+  React.useLayoutEffect(renderViz, [value, color, data, zeroValue, curve, minY, maxY, renderViz])
 
   return <div ref={ref} className={css.container}>{content}</div>
 }

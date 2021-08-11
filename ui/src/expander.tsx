@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, Id, S } from 'h2o-wave'
+import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Creates a new expander.
@@ -60,32 +60,27 @@ const
   })
 
 export const
-  XExpander = bond(({ model: m }: { model: Expander }) => {
+  XExpander = ({ model: m }: { model: Expander }) => {
     const
-      isOpenB = box(!!wave.args[m.name]),
-      onClick = () => {
+      [isOpen, setIsOpen] = React.useState(!!wave.args[m.name]),
+      onClick = React.useCallback(() => {
         wave.args[m.name] = m.expanded = !m.expanded
-        isOpenB(m.expanded)
-      },
-      render = () => {
-        const
-          isOpen = isOpenB(),
-          actionTitle = isOpen ? 'Shrink' : 'Expand',
-          expanderIcon = { iconName: isOpen ? 'ChevronDownMed' : 'ChevronRightMed' },
-          className = isOpenB() ? css.expanderOpen : css.expanderClosed
+        setIsOpen(m.expanded)
+      }, [m]),
+      actionTitle = isOpen ? 'Shrink' : 'Expand',
+      expanderIcon = { iconName: isOpen ? 'ChevronDownMed' : 'ChevronRightMed' },
+      className = isOpen ? css.expanderOpen : css.expanderClosed
 
-        return (
-          <div data-test={m.name} className={className}>
-            <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
-              <Fluent.ActionButton
-                title={actionTitle}
-                iconProps={expanderIcon}
-                onClick={onClick}
-                styles={{ root: { paddingLeft: 0 }, icon: { marginLeft: 0 } }}>{m.label}</Fluent.ActionButton>
-            </Fluent.Separator>
-            <XComponents items={m.items || []} />
-          </div>
-        )
-      }
-    return { isOpenB, render }
-  })
+    return (
+      <div data-test={m.name} className={className}>
+        <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
+          <Fluent.ActionButton
+            title={actionTitle}
+            iconProps={expanderIcon}
+            onClick={onClick}
+            styles={{ root: { paddingLeft: 0 }, icon: { marginLeft: 0 } }}>{m.label}</Fluent.ActionButton>
+        </Fluent.Separator>
+        <XComponents items={m.items || []} />
+      </div>
+    )
+  }

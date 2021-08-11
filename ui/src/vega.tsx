@@ -60,21 +60,18 @@ export interface VegaVisualization {
 }
 
 export const
-  XVegaVisualization = bond(({ model: state }: { model: VegaVisualization }) => {
+  XVegaVisualization = ({ model: state }: { model: VegaVisualization }) => {
     const
-      ref = React.createRef<HTMLDivElement>(),
-      init = () => {
+      ref = React.useRef<HTMLDivElement>(null),
+      init = React.useCallback(() => {
         const el = ref.current
         if (!el) return
 
         const spec = JSON.parse(state.specification)
-        if (!isNaN(spec.height)) {
-          el.style.height = `${spec.height + 10}px`// HACK: Vega calculates dimensions with extra 10px for some reason, increase container for 10px as well.
-        }
+        // HACK: Vega calculates dimensions with extra 10px for some reason, increase container for 10px as well.
+        if (!isNaN(spec.height)) el.style.height = `${spec.height + 10}px`
         // If card does not have specified height, it uses content. Since the wrapper is empty, it takes very little space - set to 300px by default.
-        else if (el.clientHeight < 30) {
-          el.style.height = '300px'
-        }
+        else if (el.clientHeight < 30) el.style.height = '300px'
 
         const
           data = unpack<any[]>(state.data),
@@ -100,21 +97,23 @@ export const
             }
           }
         }).catch(console.error)
-      },
+      }, [state.data, state.specification]),
       onResize = debounce(1000, init),
-      dispose = () => window.removeEventListener('resize', onResize),
-      render = () => {
-        const
-          { name, width = 'auto', height = 'auto' } = state,
-          style: React.CSSProperties = (width === 'auto' && height === 'auto')
-            ? { flexGrow: 1 }
-            : { width, height }
-        return <div data-test={name} className={css.plot} style={{ ...style, position: 'relative' }} ref={ref} />
-      }
-    window.addEventListener('resize', onResize)
+      { name, width = 'auto', height = 'auto' } = state,
+      style: React.CSSProperties = (width === 'auto' && height === 'auto')
+        ? { flexGrow: 1 }
+        : { width, height }
 
-    return { init, render, dispose }
-  })
+    React.useEffect(init, [init, state])
+    React.useEffect(() => {
+      init()
+      window.addEventListener('resize', onResize)
+      return () => window.removeEventListener('resize', onResize)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return <div data-test={name} className={css.plot} style={{ ...style, position: 'relative' }} ref={ref} />
+  }
 
 /** Create a card containing a Vega-lite plot. */
 interface State {

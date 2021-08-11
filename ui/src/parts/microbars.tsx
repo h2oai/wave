@@ -49,8 +49,8 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
         maxY = Math.max(zeroValue, maxY)
       }
       return [minY, maxY]
-    }, [data, zeroValue]),
-    renderViz = () => {
+    }, [data, value, zeroValue]),
+    renderViz = React.useCallback(() => {
       if (!ref.current) return
 
       const { width, height } = ref.current.getBoundingClientRect()
@@ -68,14 +68,15 @@ export const MicroBars = ({ value, category = 'x', color, data, zeroValue }: Pro
           return <rect key={i} fill={color} x={x} y={y} width={2} height={height - y} />
         })
       setContent(<svg viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>{rects}</svg>)
-    },
+    }, [category, color, data, maxY, minY, value]),
     onResize = debounce(1000, renderViz)
 
   React.useEffect(() => {
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  React.useLayoutEffect(renderViz, [value, category, color, data, zeroValue])
+  React.useLayoutEffect(renderViz, [value, category, color, data, zeroValue, minY, maxY, renderViz])
 
   return <div ref={ref} className={css.container}>{content}</div>
 }

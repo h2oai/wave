@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, F, Id, S, U, xid } from 'h2o-wave'
+import { B, F, Id, S, U, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { centerMixin, clas, dashed, padding } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a file upload component.
@@ -85,13 +85,13 @@ const
   })
 const convertMegabytesToBytes = (bytes: F) => bytes * 1024 * 1024
 export const
-  XFileUpload = bond(({ model }: { model: FileUpload }) => {
+  XFileUpload = ({ model }: { model: FileUpload }) => {
     const
-      isDraggingB = box(false),
-      filesB = box<File[]>([]),
-      percentCompleteB = box(0.0),
-      errorB = box(''),
-      successMsgB = box(''),
+      [isDragging, setIsDragging] = React.useState(false),
+      [files, setFiles] = React.useState<File[]>([]),
+      [percentComplete, setPercentComplete] = React.useState(0.0),
+      [error, setError] = React.useState(''),
+      [successMsg, setSuccessMsg] = React.useState(''),
       maxFileSizeBytes = model.max_file_size ? convertMegabytesToBytes(model.max_file_size) : 0,
       maxSizeBytes = model.max_size ? convertMegabytesToBytes(model.max_size) : 0,
       fileExtensions = model.file_extensions
@@ -99,13 +99,13 @@ export const
         : null,
       upload = async () => {
         const formData = new FormData()
-        filesB().forEach(f => formData.append('files', f))
+        files.forEach((f: File) => formData.append('files', f))
 
         try {
           const makeRequest = new Promise<XMLHttpRequest>((resolve, reject) => {
             const xhr = new XMLHttpRequest()
             xhr.open("POST", "/_f")
-            xhr.upload.onprogress = e => percentCompleteB(e.loaded / e.total)
+            xhr.upload.onprogress = e => setPercentComplete(e.loaded / e.total)
             xhr.send(formData)
             xhr.onreadystatechange = () => {
               if (xhr.readyState !== XMLHttpRequest.DONE) return
@@ -117,10 +117,10 @@ export const
           const { files } = JSON.parse(responseText)
           wave.args[model.name] = files
           wave.push()
-          successMsgB(`Successfully uploaded files: ${filesB().map(({ name }) => name).join(',')}.`)
+          setSuccessMsg(`Successfully uploaded files: ${files.map(({ name }: File) => name).join(',')}.`)
         }
-        catch ({ responseText }) { errorB(responseText || 'There was an error when uploading file.') }
-        finally { filesB([]) }
+        catch ({ responseText }) { setError(responseText || 'There was an error when uploading file.') }
+        finally { setFiles([]) }
       },
       isFileTypeAllowed = (fileName: string) => {
         if (!fileExtensions) return true
@@ -162,34 +162,34 @@ export const
 
         const errMsg = validateFiles(fileArr)
         if (errMsg) {
-          errorB(errMsg)
+          setError(errMsg)
           return
         }
-        filesB(fileArr)
+        setFiles(fileArr)
       },
       onIsDragging = (e: React.DragEvent<HTMLFormElement>) => {
         e.preventDefault()
         e.stopPropagation()
-        isDraggingB(true)
+        setIsDragging(true)
       },
       onIsNotDragging = (e: React.DragEvent<HTMLFormElement>) => {
         e.preventDefault()
         e.stopPropagation()
-        isDraggingB(false)
+        setIsDragging(false)
       },
       onDrop = (e: React.DragEvent<HTMLFormElement>) => {
         onIsNotDragging(e)
         const files = e.dataTransfer.files
-        if (!files.length || errorB() || successMsgB()) return
+        if (!files.length || error || successMsg) return
         const fileArr = Array.from(files)
 
         const errMsg = validateFiles(fileArr)
         if (errMsg) {
-          errorB(errMsg)
+          setError(errMsg)
           return
         }
 
-        filesB(fileArr)
+        setFiles(fileArr)
       },
       // Workaround - This event prevents onDrop from firing.
       // https://stackoverflow.com/questions/50230048/react-ondrop-is-not-firing/50230145.
@@ -197,66 +197,66 @@ export const
         e.preventDefault()
         e.stopPropagation()
       },
-      onDismissError = () => errorB(''),
+      onDismissError = () => setError(''),
       onDismissSuccess = () => {
-        successMsgB('')
-        percentCompleteB(0)
+        setSuccessMsg('')
+        setPercentComplete(0)
       },
       removeFile = (index: U) => () => {
-        filesB().splice(index, 1)
-        filesB([...filesB()])
+        files.splice(index, 1)
+        setFiles([...files])
       },
       getUploadBodyComponent = () => {
-        if (errorB()) return (
+        if (error) return (
           <>
             <Fluent.Text variant='xLarge'>An error occured</Fluent.Text>
             <Fluent.MessageBar
               className={css.uploadMessageBar}
               messageBarType={Fluent.MessageBarType.error}
-              isMultiline={true}
+              isMultiline
               onDismiss={onDismissError}>
-              {errorB()}
+              {error}
             </Fluent.MessageBar>
           </>
         )
-        else if (successMsgB()) return (
+        else if (successMsg) return (
           <>
             <Fluent.Text variant='xLarge'>Upload successful</Fluent.Text>
             <Fluent.MessageBar
               className={css.uploadMessageBar}
               messageBarType={Fluent.MessageBarType.success}
-              isMultiline={true}
+              isMultiline
               onDismiss={onDismissSuccess}>
-              {successMsgB()}
+              {successMsg}
             </Fluent.MessageBar>
           </>
         )
-        else if (isDraggingB()) return (
+        else if (isDragging) return (
           <Fluent.Text styles={{ root: { pointerEvents: 'none' } }}>Drop files anywhere within the box.</Fluent.Text>
         )
-        else if (percentCompleteB()) return (
+        else if (percentComplete) return (
           <Fluent.ProgressIndicator
             styles={{ root: { width: '80%' } }}
             data-test='progress' // TODO: Does not work.
-            description={`Uploading: ${(percentCompleteB() * 100).toFixed(2)}%`}
-            percentComplete={percentCompleteB()}
+            description={`Uploading: ${(percentComplete * 100).toFixed(2)}%`}
+            percentComplete={percentComplete}
           />
         )
-        else if (filesB().length) return (
+        else if (files.length) return (
           <>
             <Fluent.Text variant='xLarge'>{model.multiple ? 'Chosen Files' : 'Chosen File'}</Fluent.Text>
             <Fluent.Stack
-              horizontal={true}
+              horizontal
               verticalAlign='center'
               styles={{ root: { maxWidth: '100%', overflowX: 'auto', padding: '30px 0' } }}
               tokens={{ childrenGap: 15 }}>
               {
-                filesB().map(({ name }, i) => (
+                files.map(({ name }, i) => (
                   <Fluent.StackItem key={xid()} styles={{ root: { textAlign: 'center', position: 'relative' } }}>
                     <Fluent.Icon className={css.uploadRemove} iconName='RemoveFilter' onClick={removeFile(i)} />
                     <Fluent.Icon iconName='OpenFile' styles={{ root: { fontSize: 35 } }} />
                     <br />
-                    <Fluent.Text nowrap={true} styles={{ root: { display: 'block', margin: '15px 0' } }}>{name}</Fluent.Text>
+                    <Fluent.Text nowrap styles={{ root: { display: 'block', margin: '15px 0' } }}>{name}</Fluent.Text>
                   </Fluent.StackItem>
                 ))
               }
@@ -278,30 +278,27 @@ export const
             <Fluent.Text styles={{ root: { marginTop: 15 } }}>Or drag and drop {model.multiple ? 'files' : 'a file'} here.</Fluent.Text>
           </>
         )
-      },
-      render = () => {
-        const uploadClasses = isDraggingB() && !errorB() && !successMsgB() ? clas(css.upload, css.uploadDragging) : css.upload
-        return (
-          <>
-            <form
-              className={uploadClasses}
-              style={{ height: model.height || 300 }}
-              onDragStart={onIsDragging}
-              onDragEnter={onIsDragging}
-              onDragEnd={onIsNotDragging}
-              onDragLeave={onIsNotDragging}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-            >
-              {getUploadBodyComponent()}
-            </form>
-            <Fluent.PrimaryButton
-              disabled={!!percentCompleteB() || !filesB().length}
-              text={model.label || 'Upload'}
-              onClick={upload} />
-          </>
-        )
       }
 
-    return { render, percentCompleteB, isDraggingB, filesB, errorB, successMsgB }
-  })
+    const uploadClasses = isDragging && !error && !successMsg ? clas(css.upload, css.uploadDragging) : css.upload
+    return (
+      <>
+        <form
+          className={uploadClasses}
+          style={{ height: model.height || 300 }}
+          onDragStart={onIsDragging}
+          onDragEnter={onIsDragging}
+          onDragEnd={onIsNotDragging}
+          onDragLeave={onIsNotDragging}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+        >
+          {getUploadBodyComponent()}
+        </form>
+        <Fluent.PrimaryButton
+          disabled={!!percentComplete || !files.length}
+          text={model.label || 'Upload'}
+          onClick={upload} />
+      </>
+    )
+  }

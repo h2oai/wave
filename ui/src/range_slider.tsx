@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, box, F, Id, S, U } from 'h2o-wave'
+import { B, F, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import InputRange, { Range } from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import { stylesheet } from 'typestyle'
 import { padding } from './theme'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 const
   css = stylesheet({
@@ -132,30 +132,29 @@ export interface RangeSlider {
   tooltip?: S
 }
 
-export const XRangeSlider = bond(({ model: m }: { model: RangeSlider }) => {
+export const XRangeSlider = ({ model: m }: { model: RangeSlider }) => {
   const
     { min = 0, max = 100, step = 1 } = m,
-    value = {
+    [value, setValue] = React.useState<Range>({
       min: (m.min_value && m.min_value > min && m.min_value <= max) ? m.min_value : min,
       max: (m.max_value && m.max_value > min && m.max_value <= max) ? m.max_value : max
     }
-
-  wave.args[m.name] = Object.values(value as Range)
-
-  const
-    valueB = box<Range>(value),
-    onChange = (val: Range | U) => {
-      valueB(val as Range)
+    ),
+    onChange = React.useCallback((val: Range | U) => {
+      setValue(val as Range)
       wave.args[m.name] = Object.values(val as Range)
       if (m.trigger) wave.push()
-    },
-    render = () => (
-      <div data-test={m.name}>
-        {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
-        <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
-          <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={valueB()} onChange={onChange} />
-        </div>
+    }, [m.name, m.trigger])
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => { wave.args[m.name] = Object.values(value as Range) }, [])
+
+  return (
+    <div data-test={m.name}>
+      {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
+      <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
+        <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={value} onChange={onChange} />
       </div>
-    )
-  return { render, valueB }
-})
+    </div>
+  )
+}

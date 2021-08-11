@@ -42,15 +42,12 @@ interface State {
 }
 
 export const
-  XTemplate = bond(({ model: m }: { model: Template }) => {
+  XTemplate = ({ model: m }: { model: Template }) => {
     const
       template = Handlebars.compile(m.content || ''),
-      render = () => {
-        const data = unpack<Rec>(m.data)
-        return <div data-test={m.name}><XMarkup model={{ content: template(data || {}) }} /></div>
-      }
-    return { render }
-  }),
+      data = unpack<Rec>(m.data)
+    return <div data-test={m.name}><XMarkup model={{ content: template(data || {}) }} /></div>
+  },
   View = bond(({ name, state, changed }: Model<State>) => {
     const
       template = Handlebars.compile(state.content || ''),

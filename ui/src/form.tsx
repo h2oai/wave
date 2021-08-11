@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { B, Model, Packed, S, unpack, xid } from 'h2o-wave'
+import { B, Model, Packed, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Button, Buttons, XButtons, XStandAloneButton } from './button'
@@ -36,6 +36,7 @@ import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
+import { bond } from './ui'
 import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'
@@ -50,7 +51,6 @@ import { Textbox, XTextbox } from './textbox'
 import { clas, cssVar, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
-import { bond } from './ui'
 import { VegaVisualization, XVegaVisualization } from './vega'
 
 /** Create a component. */
@@ -192,14 +192,16 @@ export enum XComponentAlignment { Top, Left, Right }
 export const
   XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
     const
-      components = items.map((m: any) => {
+      components = items.map((m: any, i) => {
         const
           // All form items are wrapped by their component name (first and only prop of "m").
-          visible = m[Object.keys(m)[0]].visible ?? true,
+          [componentKey] = Object.keys(m),
+          { name, visible = true } = m[componentKey],
           visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' }
 
         return (
-          <div key={xid()} data-visible={visible} style={visibleStyles}>
+          // Recreate only if name or position within form items changed, update otherwise.
+          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={visibleStyles}>
             <XComponent model={m} />
           </div>
         )

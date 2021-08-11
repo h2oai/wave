@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { bond, wave } from './ui'
+import { wave } from './ui'
 
 /**
  * Create a tab.
@@ -57,7 +57,7 @@ const
   })
 
 export const
-  XTabs = bond(({ model: m }: { model: Tabs }) => {
+  XTabs = ({ model: m }: { model: Tabs }) => {
     const
       onLinkClick = (item?: Fluent.PivotItem) => {
         const name = item?.props.itemKey
@@ -76,23 +76,14 @@ export const
           wave.push()
         }
       },
-      render = () => {
-        const tabs = m.items?.map(t => (
-          <Fluent.PivotItem
-            key={t.name}
-            itemIcon={t.icon}
-            itemKey={t.name}
-            headerText={t.label} />
-        ))
-        return (
-          <div className={css.pivot}>
-            <Fluent.Pivot
-              data-test={m.name}
-              selectedKey={m.value ?? null}
-              linkFormat={m.link ? Fluent.PivotLinkFormat.links : Fluent.PivotLinkFormat.tabs}
-              onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
-          </div>
-        )
-      }
-    return { render }
-  })
+      tabs = m.items?.map(t => <Fluent.PivotItem key={t.name} itemIcon={t.icon} itemKey={t.name} headerText={t.label} />)
+    return (
+      <div className={css.pivot}>
+        <Fluent.Pivot
+          data-test={m.name}
+          selectedKey={m.value ?? null}
+          linkFormat={m.link ? Fluent.PivotLinkFormat.links : Fluent.PivotLinkFormat.tabs}
+          onLinkClick={onLinkClick}>{tabs}</Fluent.Pivot>
+      </div>
+    )
+  }

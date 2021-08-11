@@ -17,7 +17,6 @@ import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { rem } from './theme'
-import { bond } from './ui'
 
 /**
  * Create a step for a stepper.
@@ -67,7 +66,7 @@ const
   iconStyles: Fluent.IIconStyles = { root: { fontSize: 24 } }
 
 export const
-  XStepper = bond(({ model: m }: { model: Stepper }) => {
+  XStepper = ({ model: m }: { model: Stepper }) => {
     const
       steps = m.items,
       disabledStyles = (stepIdx: U) => stepIdx > 0 && !steps[stepIdx - 1].done ? css.disabled : '',
@@ -91,17 +90,11 @@ export const
           </Fluent.Stack>
           {(steps.length - 1) !== i && <Fluent.Separator styles={{ root: { width: '100%' } }} />}
         </React.Fragment>
-      ),
-      render = () => (
-        <Fluent.Stack
-          data-test={m.name}
-          horizontal
-          horizontalAlign='space-between'
-          verticalAlign='center'
-        >
-          {steps.map(createStep)}
-        </Fluent.Stack>
       )
 
-    return { render }
-  })
+    return (
+      <Fluent.Stack data-test={m.name} horizontal horizontalAlign='space-between' verticalAlign='center'>
+        {steps.map(createStep)}
+      </Fluent.Stack>
+    )
+  }
