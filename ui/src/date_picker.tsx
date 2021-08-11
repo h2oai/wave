@@ -58,9 +58,7 @@ export const
     const
       defaultVal = m.value || null,
       parsedVal = defaultVal ? parseDate(defaultVal) : null,
-      [value, setValue] = React.useState<Date | undefined>(() => {
-        return parsedVal ? new Date(parsedVal) : undefined
-      }),
+      [value, setValue] = React.useState<Date | undefined>(parsedVal ? new Date(parsedVal) : undefined),
       onSelectDate = (d: Date | null | undefined) => {
         const val = (d === null || d === undefined) ? defaultVal : formatDate(d)
         wave.args[m.name] = val
