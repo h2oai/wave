@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { box, on, WaveErrorCode, WaveEventType } from 'h2o-wave'
+import { box, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
@@ -43,12 +43,17 @@ const
       color: cssVar('$text'),
     },
     freeOverlay: {
-      display: 'none',
       position: 'fixed',
       left: 0, top: 0, right: 0, bottom: 0,
+      opacity: 0,
+      zIndex: -1,
     },
     busyOverlay: {
-      display: 'block',
+      position: 'fixed',
+      left: 0, top: 0, right: 0, bottom: 0,
+      opacity: 0.8,
+      zIndex: 999,
+      transition: 'opacity 500ms 500ms',
     },
     notFoundOverlay: {
       display: 'flex',
@@ -59,25 +64,13 @@ const
 
 const
   BusyOverlay = bond(() => {
-    let
-      spinTimeout = 0
     const
-      spinDelay = 500, // ms
-      spinB = box(false),
       render = () => (
-        <div className={busyB() ? clas(css.freeOverlay, css.busyOverlay) : css.freeOverlay}>
-          <Fluent.Spinner className={css.centerFullHeight} style={{ opacity: spinB() ? 0.8 : 0 }} label='Loading...' size={Fluent.SpinnerSize.large} />
+        <div className={busyB() ? css.busyOverlay : css.freeOverlay}>
+          <Fluent.Spinner className={css.centerFullHeight} label='Loading...' size={Fluent.SpinnerSize.large} />
         </div>
       )
-    on(busyB, busy => {
-      window.clearTimeout(spinTimeout)
-      if (busy) {
-        spinTimeout = window.setTimeout(() => spinB(true), spinDelay)
-      } else {
-        spinB(false)
-      }
-    })
-    return { render, busyB, spinB }
+    return { render, busyB }
   }),
   NotFoundOverlay = bond(() => {
     const
