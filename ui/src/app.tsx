@@ -52,7 +52,7 @@ const
       position: 'fixed',
       left: 0, top: 0, right: 0, bottom: 0,
       opacity: 0.8,
-      zIndex: 1,
+      zIndex: 999,
       transition: 'opacity 500ms 500ms',
     },
     notFoundOverlay: {
