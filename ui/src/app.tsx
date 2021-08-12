@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { box, on, WaveErrorCode, WaveEventType } from 'h2o-wave'
+import { box, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
@@ -53,7 +53,7 @@ const
       left: 0, top: 0, right: 0, bottom: 0,
       opacity: 0.8,
       zIndex: 1,
-      transition: 'opacity 1s 500ms',
+      transition: 'opacity 500ms 500ms',
     },
     notFoundOverlay: {
       display: 'flex',
@@ -65,10 +65,9 @@ const
 const
   BusyOverlay = bond(() => {
     const
-      spinB = box(false),
       render = () => (
         <div className={busyB() ? css.busyOverlay : css.freeOverlay}>
-          <Fluent.Spinner className={css.centerFullHeight} style={{ opacity: spinB() ? 0.8 : 0 }} label='Loading...' size={Fluent.SpinnerSize.large} />
+          <Fluent.Spinner className={css.centerFullHeight} label='Loading...' size={Fluent.SpinnerSize.large} />
         </div>
       )
     return { render, busyB }
