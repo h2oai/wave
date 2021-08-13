@@ -197,11 +197,12 @@ export const
           // All form items are wrapped by their component name (first and only prop of "m").
           [componentKey] = Object.keys(m),
           { name, visible = true } = m[componentKey],
-          visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' }
+          visibleStyles: React.CSSProperties = visible ? {} : { display: 'none' },
+          width = componentKey === 'slider' || componentKey === 'range_slider' ? '100%' : 'auto'
 
         return (
           // Recreate only if name or position within form items changed, update otherwise.
-          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={visibleStyles}>
+          <div key={name || `${componentKey}-${i}`} data-visible={visible} style={{ ...visibleStyles, width }}>
             <XComponent model={m} />
           </div>
         )
