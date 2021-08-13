@@ -60,5 +60,4 @@ async def serve(q: Q):
             ],
         )
         await q.page.save()
-    else:
-        await handle_on(q)
+    await handle_on(q)
