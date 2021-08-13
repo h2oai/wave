@@ -150,7 +150,8 @@ export const XRangeSlider = ({ model: m }: { model: RangeSlider }) => {
   React.useEffect(() => { wave.args[m.name] = Object.values(value as Range) }, [])
 
   return (
-    <div data-test={m.name} style={{ width: '100%' }}>
+    // Max value label causes card overflow so add a bit of right padding.
+    <div data-test={m.name} style={{ paddingRight: 17 }}>
       {m.label && <Fluent.Label disabled={m.disabled}>{m.label}</Fluent.Label>}
       <div className={`${css.container} ${m.disabled ? css.disabled : ''}`}>
         <InputRange maxValue={max} minValue={min} step={step} disabled={m.disabled} allowSameValues value={value} onChange={onChange} />

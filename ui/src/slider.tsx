@@ -70,7 +70,6 @@ export const
     return (
       <Fluent.Slider
         data-test={m.name}
-        styles={{ root: { width: '100%' } }}
         buttonProps={{ 'data-test': m.name } as React.HTMLAttributes<HTMLButtonElement>}
         label={m.label}
         min={min}
