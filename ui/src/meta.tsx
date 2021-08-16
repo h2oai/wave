@@ -147,6 +147,7 @@ export const
       } catch (e) {
         console.error(`Could not redirect: ${redirect} is an invalid URL`, e)
       }
+      delete state.redirect
     }
 
     dialogB(dialog ? { ...dialog } : null)
