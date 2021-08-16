@@ -2693,6 +2693,32 @@ def dialog(
     )
 
 
+def side_panel(
+        items: List[Component],
+        width: Optional[str] = None,
+        name: Optional[str] = None,
+        events: Optional[List[str]] = None,
+) -> SidePanel:
+    """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
+    and requires people to interact with it. It’s primarily used for confirming actions,
+    such as deleting a file, or asking people to make a choice.
+
+    Args:
+        items: The components displayed in this side panel.
+        width: The width of the dialog, e.g. '400px', defaults to '600px'.
+        name: An identifying name for this component.
+        events: The events to capture on this side panel.
+    Returns:
+        A `h2o_wave.types.SidePanel` instance.
+    """
+    return SidePanel(
+        items,
+        width,
+        name,
+        events,
+    )
+
+
 def tracker(
         type: str,
         id: str,
@@ -2807,6 +2833,7 @@ def meta_card(
         icon: Optional[str] = None,
         layouts: Optional[List[Layout]] = None,
         dialog: Optional[Dialog] = None,
+        side_panel: Optional[SidePanel] = None,
         theme: Optional[str] = None,
         tracker: Optional[Tracker] = None,
         scripts: Optional[List[Script]] = None,
@@ -2829,6 +2856,7 @@ def meta_card(
         icon: Shortcut icon path. Preferably a `.png` file (`.ico` files may not work in mobile browsers). Not supported in Safari.
         layouts: The layouts supported by this page.
         dialog: Display a dialog on the page.
+        side_panel: Display a side panel on the page.
         theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
         tracker: Configure a tracker for the page (for web analytics).
         scripts: External Javascript files to load into the page.
@@ -2848,6 +2876,7 @@ def meta_card(
         icon,
         layouts,
         dialog,
+        side_panel,
         theme,
         tracker,
         scripts,

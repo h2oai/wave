@@ -14,58 +14,50 @@
 
 import { fireEvent, render, wait } from '@testing-library/react'
 import React from 'react'
-import Dialog, { dialogB } from './dialog'
+import SidePanel, { sidePanelB } from './side_panel'
 import { wave } from './ui'
 
 const
-  name = 'dialog',
-  dialogProps = {
-    name,
-    title: 'Dialog Title',
-    items: [],
-  }
-describe('Dialog.tsx', () => {
+  name = 'sidePanel',
+  sidePanelProps = { name, items: [] }
 
-  beforeEach(() => dialogB(dialogProps))
+describe('SidePanel.tsx', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    sidePanelB(sidePanelProps)
+  })
 
-  it('should open dialog when global qd.dialogB is set', () => {
-    const { queryByRole } = render(<Dialog />)
+  it('should open side panel when global sidePanel is set', () => {
+    const { queryByRole } = render(<SidePanel />)
     expect(queryByRole('dialog')).toBeInTheDocument()
   })
 
-  it('should close dialog when global qd.dialogB is null', async () => {
-    const { queryByRole } = render(<Dialog />)
+  it('should close side panel when global sidePanel is null', async () => {
+    const { queryByRole } = render(<SidePanel />)
     expect(queryByRole('dialog')).toBeInTheDocument()
-    dialogB(null)
+    sidePanelB(null)
     await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
-  it('should render correct title when specified', () => {
-    const title = 'New Title'
-    dialogB({ ...dialogProps, title })
-    const { queryByText } = render(<Dialog />)
-    expect(queryByText(title)).toBeInTheDocument()
-  })
-
   it('should render X closing button when specified', () => {
-    dialogB({ ...dialogProps, closable: true })
-    const { queryByTitle } = render(<Dialog />)
-    expect(queryByTitle('Close')).toBeInTheDocument()
+    sidePanelB(sidePanelProps)
+    const { container } = render(<SidePanel />)
+    expect(container.parentElement?.querySelector('.ms-Panel-closeButton')).toBeInTheDocument()
   })
 
-  it('should close dialog when clicking on X', async () => {
-    dialogB({ ...dialogProps, closable: true })
-    const { getByTitle, queryByRole } = render(<Dialog />)
-    fireEvent.click(getByTitle('Close'))
+  it('should close side panel when clicking on X', async () => {
+    sidePanelB(sidePanelProps)
+    const { container, queryByRole } = render(<SidePanel />)
+    fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as any)
     await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('should fire event if specified when clicking on X', () => {
-    dialogB({ ...dialogProps, closable: true, events: ['dismissed'] })
-    const { getByTitle } = render(<Dialog />)
+    sidePanelB({ ...sidePanelProps, events: ['dismissed'] })
+    const { container } = render(<SidePanel />)
     const emitMock = jest.fn()
     wave.emit = emitMock
-    fireEvent.click(getByTitle('Close'))
+    fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as any)
     expect(emitMock).toHaveBeenCalled()
   })
 })

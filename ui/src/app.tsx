@@ -17,6 +17,7 @@ import { box, WaveErrorCode, WaveEventType } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import Dialog from './dialog'
+import SidePanel from './side_panel'
 import { LayoutPicker } from './editor'
 import { Logo } from './logo'
 import { PageLayout } from './page'
@@ -117,6 +118,7 @@ const
                       <PageLayout key={page.key} page={page} />
                       <BusyOverlay />
                       <Dialog />
+                      <SidePanel />
                     </div>
                   </Fluent.Fabric>
                 )
