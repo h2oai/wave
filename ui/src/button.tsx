@@ -109,6 +109,8 @@ const
       return <Fluent.Link data-test={name} disabled={disabled} onClick={onClick} styles={styles}>{label}</Fluent.Link>
     }
     const btnProps: Fluent.IButtonProps = { text: label, disabled, onClick, styles, iconProps: { iconName: icon } }
+    if (!label && icon) return <Fluent.IconButton {...btnProps} data-test={name} title={caption} />
+
     return caption?.length
       ? primary
         ? <Fluent.CompoundButton {...btnProps} data-test={name} primary secondaryText={caption} />
