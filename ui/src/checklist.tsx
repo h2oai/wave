@@ -17,7 +17,7 @@ import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Choice } from './choice_group'
-import { margin } from './theme'
+import { clas, margin } from './theme'
 import { wave } from './ui'
 
 /**
@@ -36,6 +36,8 @@ export interface Checklist {
   choices?: Choice[]
   /** True if the form should be submitted when the checklist value changes. */
   trigger?: B
+  /** True if checklist should be rendered horizontally. */
+  inline?: B
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
@@ -54,6 +56,15 @@ const
         }
       },
     },
+    inline: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      $nest: {
+        '.checklist-item': {
+          marginRight: 15
+        }
+      }
+    }
   })
 
 export const
@@ -83,6 +94,7 @@ export const
         <Fluent.Checkbox
           key={i}
           data-test={`checkbox-${i + 1}`}
+          className='checklist-item'
           label={c.label || c.name}
           checked={selected}
           onChange={onChange(i)}
@@ -101,7 +113,7 @@ export const
             <Fluent.Link onClick={selectAll}>Select All</Fluent.Link> | <Fluent.Link onClick={deselectAll}>Deselect All</Fluent.Link>
           </Fluent.Text>
         </div>
-        <div className={css.items}>{items}</div>
+        <div className={clas(css.items, m.inline ? css.inline : '')}>{items}</div>
       </div>
     )
   }

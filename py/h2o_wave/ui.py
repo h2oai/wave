@@ -772,6 +772,7 @@ def checklist(
         values: Optional[List[str]] = None,
         choices: Optional[List[Choice]] = None,
         trigger: Optional[bool] = None,
+        inline: Optional[bool] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
 ) -> Component:
@@ -785,6 +786,7 @@ def checklist(
         values: The names of the selected choices.
         choices: The choices to be presented.
         trigger: True if the form should be submitted when the checklist value changes.
+        inline: True if checklist should be rendered horizontally.
         visible: True if the component should be visible. Defaults to true.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
@@ -796,6 +798,7 @@ def checklist(
         values,
         choices,
         trigger,
+        inline,
         visible,
         tooltip,
     ))

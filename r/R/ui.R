@@ -899,6 +899,7 @@ ui_choice_group <- function(
 #' @param values The names of the selected choices.
 #' @param choices The choices to be presented.
 #' @param trigger True if the form should be submitted when the checklist value changes.
+#' @param inline True if checklist should be rendered horizontally.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checklist instance.
@@ -909,6 +910,7 @@ ui_checklist <- function(
   values = NULL,
   choices = NULL,
   trigger = NULL,
+  inline = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -916,6 +918,7 @@ ui_checklist <- function(
   .guard_vector("values", "character", values)
   .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("inline", "logical", inline)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(checklist=list(
@@ -924,6 +927,7 @@ ui_checklist <- function(
     values=values,
     choices=choices,
     trigger=trigger,
+    inline=inline,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))

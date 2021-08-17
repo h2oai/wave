@@ -1936,6 +1936,7 @@ class Checklist:
             values: Optional[List[str]] = None,
             choices: Optional[List[Choice]] = None,
             trigger: Optional[bool] = None,
+            inline: Optional[bool] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -1944,6 +1945,7 @@ class Checklist:
         _guard_vector('Checklist.values', values, (str,), False, True, False)
         _guard_vector('Checklist.choices', choices, (Choice,), False, True, False)
         _guard_scalar('Checklist.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('Checklist.inline', inline, (bool,), False, True, False)
         _guard_scalar('Checklist.visible', visible, (bool,), False, True, False)
         _guard_scalar('Checklist.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -1956,6 +1958,8 @@ class Checklist:
         """The choices to be presented."""
         self.trigger = trigger
         """True if the form should be submitted when the checklist value changes."""
+        self.inline = inline
+        """True if checklist should be rendered horizontally."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -1968,6 +1972,7 @@ class Checklist:
         _guard_vector('Checklist.values', self.values, (str,), False, True, False)
         _guard_vector('Checklist.choices', self.choices, (Choice,), False, True, False)
         _guard_scalar('Checklist.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('Checklist.inline', self.inline, (bool,), False, True, False)
         _guard_scalar('Checklist.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Checklist.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -1976,6 +1981,7 @@ class Checklist:
             values=self.values,
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             trigger=self.trigger,
+            inline=self.inline,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -1993,6 +1999,8 @@ class Checklist:
         _guard_vector('Checklist.choices', __d_choices, (dict,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('Checklist.trigger', __d_trigger, (bool,), False, True, False)
+        __d_inline: Any = __d.get('inline')
+        _guard_scalar('Checklist.inline', __d_inline, (bool,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Checklist.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -2002,6 +2010,7 @@ class Checklist:
         values: Optional[List[str]] = __d_values
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
         trigger: Optional[bool] = __d_trigger
+        inline: Optional[bool] = __d_inline
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Checklist(
@@ -2010,6 +2019,7 @@ class Checklist:
             values,
             choices,
             trigger,
+            inline,
             visible,
             tooltip,
         )
