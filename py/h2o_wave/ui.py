@@ -2694,6 +2694,7 @@ def dialog(
 
 
 def side_panel(
+        title: str,
         items: List[Component],
         width: Optional[str] = None,
         name: Optional[str] = None,
@@ -2704,6 +2705,7 @@ def side_panel(
     such as deleting a file, or asking people to make a choice.
 
     Args:
+        title: The side panel's title.
         items: The components displayed in this side panel.
         width: The width of the dialog, e.g. '400px', defaults to '600px'.
         name: An identifying name for this component.
@@ -2712,6 +2714,7 @@ def side_panel(
         A `h2o_wave.types.SidePanel` instance.
     """
     return SidePanel(
+        title,
         items,
         width,
         name,

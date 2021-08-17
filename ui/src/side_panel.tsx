@@ -26,6 +26,8 @@ export const sidePanelB: Box<SidePanel | null> = box(null)
  * such as deleting a file, or asking people to make a choice.
  */
 export interface SidePanel {
+  /** The side panel's title. */
+  title: S
   /** The components displayed in this side panel. */
   items: Component[]
   /** The width of the dialog, e.g. '400px', defaults to '600px'. */
@@ -46,9 +48,9 @@ export default bond(() => {
       sidePanelB(null)
     },
     render = () => {
-      const { width = '600px', items = [] } = sidePanelB() || {}
+      const { title, width = '600px', items = [] } = sidePanelB() || {}
       return (
-        <Fluent.Panel isOpen={!!sidePanelB()} type={Fluent.PanelType.custom} customWidth={width} onDismiss={onDismiss}>
+        <Fluent.Panel isOpen={!!sidePanelB()} headerText={title} type={Fluent.PanelType.custom} customWidth={width} onDismiss={onDismiss}>
           <XComponents items={items} />
         </Fluent.Panel >
       )

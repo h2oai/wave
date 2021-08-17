@@ -14,7 +14,7 @@ async def serve(q: Q):
         q.client.initialized = True
     else:
         if q.args.show_side_panel:
-            q.page['meta'].side_panel = ui.side_panel(items=[
+            q.page['meta'].side_panel = ui.side_panel(title='Welcome to store', items=[
                 ui.text('Donuts cost $1.99. Proceed?'),
                 ui.buttons([ui.button(name='next_step', label='Next', primary=True)])
             ])

@@ -3155,6 +3155,7 @@ ui_dialog <- function(
 #' and requires people to interact with it. It’s primarily used for confirming actions,
 #' such as deleting a file, or asking people to make a choice.
 #'
+#' @param title The side panel's title.
 #' @param items The components displayed in this side panel.
 #' @param width The width of the dialog, e.g. '400px', defaults to '600px'.
 #' @param name An identifying name for this component.
@@ -3162,15 +3163,18 @@ ui_dialog <- function(
 #' @return A SidePanel instance.
 #' @export
 ui_side_panel <- function(
+  title,
   items,
   width = NULL,
   name = NULL,
   events = NULL) {
+  .guard_scalar("title", "character", title)
   .guard_vector("items", "WaveComponent", items)
   .guard_scalar("width", "character", width)
   .guard_scalar("name", "character", name)
   .guard_vector("events", "character", events)
   .o <- list(
+    title=title,
     items=items,
     width=width,
     name=name,

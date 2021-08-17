@@ -7632,15 +7632,19 @@ class SidePanel:
     """
     def __init__(
             self,
+            title: str,
             items: List[Component],
             width: Optional[str] = None,
             name: Optional[str] = None,
             events: Optional[List[str]] = None,
     ):
+        _guard_scalar('SidePanel.title', title, (str,), False, False, False)
         _guard_vector('SidePanel.items', items, (Component,), False, False, False)
         _guard_scalar('SidePanel.width', width, (str,), False, True, False)
         _guard_scalar('SidePanel.name', name, (str,), True, True, False)
         _guard_vector('SidePanel.events', events, (str,), False, True, False)
+        self.title = title
+        """The side panel's title."""
         self.items = items
         """The components displayed in this side panel."""
         self.width = width
@@ -7652,11 +7656,13 @@ class SidePanel:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
+        _guard_scalar('SidePanel.title', self.title, (str,), False, False, False)
         _guard_vector('SidePanel.items', self.items, (Component,), False, False, False)
         _guard_scalar('SidePanel.width', self.width, (str,), False, True, False)
         _guard_scalar('SidePanel.name', self.name, (str,), True, True, False)
         _guard_vector('SidePanel.events', self.events, (str,), False, True, False)
         return _dump(
+            title=self.title,
             items=[__e.dump() for __e in self.items],
             width=self.width,
             name=self.name,
@@ -7666,6 +7672,8 @@ class SidePanel:
     @staticmethod
     def load(__d: Dict) -> 'SidePanel':
         """Creates an instance of this class using the contents of a dict."""
+        __d_title: Any = __d.get('title')
+        _guard_scalar('SidePanel.title', __d_title, (str,), False, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('SidePanel.items', __d_items, (dict,), False, False, False)
         __d_width: Any = __d.get('width')
@@ -7674,11 +7682,13 @@ class SidePanel:
         _guard_scalar('SidePanel.name', __d_name, (str,), True, True, False)
         __d_events: Any = __d.get('events')
         _guard_vector('SidePanel.events', __d_events, (str,), False, True, False)
+        title: str = __d_title
         items: List[Component] = [Component.load(__e) for __e in __d_items]
         width: Optional[str] = __d_width
         name: Optional[str] = __d_name
         events: Optional[List[str]] = __d_events
         return SidePanel(
+            title,
             items,
             width,
             name,
