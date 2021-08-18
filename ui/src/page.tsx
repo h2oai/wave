@@ -18,7 +18,7 @@ import { stylesheet } from 'typestyle'
 import { CardMenu } from './card_menu'
 import { CardEffect, CardView, getCardStyle, GridLayout } from './layout'
 import { FlexBox, Layout, layoutsB, preload, Zone } from './meta'
-import { clas, cssVar, margin } from './theme'
+import { alignments, clas, cssVar, justifications, margin, wrappings } from './theme'
 import { bond } from './ui'
 
 
@@ -163,28 +163,6 @@ const
         ? css.raised
         : effect == CardEffect.Flat
           ? css.flat : '')
-  },
-  justifications: Dict<S> = {
-    start: 'flex-start',
-    end: 'flex-end',
-    center: 'center',
-    between: 'space-between',
-    around: 'space-around',
-  },
-  alignments: Dict<S> = {
-    start: 'flex-start',
-    end: 'flex-end',
-    center: 'center',
-    baseline: 'baseline',
-    stretch: 'stretch',
-  },
-  wrappings: Dict<S> = {
-    start: 'flex-start',
-    end: 'flex-end',
-    center: 'center',
-    between: 'space-between',
-    around: 'space-around',
-    stretch: 'stretch',
   },
   toSectionStyle = (zone: Zone, direction?: S): React.CSSProperties => {
     const

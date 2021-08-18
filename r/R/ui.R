@@ -2475,7 +2475,7 @@ ui_stats <- function(
 #'
 #' @param items The components laid out inline.
 #' @param justify Specifies how to lay out the individual components. Defaults to 'start'.
-#'   One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.InlineJustify.
 #' @param inset Whether to display the components inset from the parent form, with a contrasting background.
 #' @return A Inline instance.
 #' @export

@@ -5666,12 +5666,15 @@ class Stats:
         )
 
 
-_InlineJustify = ['start', 'end']
+_InlineJustify = ['start', 'end', 'center', 'between', 'around']
 
 
 class InlineJustify:
     START = 'start'
     END = 'end'
+    CENTER = 'center'
+    BETWEEN = 'between'
+    AROUND = 'around'
 
 
 class Inline:
@@ -5689,7 +5692,7 @@ class Inline:
         self.items = items
         """The components laid out inline."""
         self.justify = justify
-        """Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end'. See enum h2o_wave.ui.InlineJustify."""
+        """Specifies how to lay out the individual components. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.InlineJustify."""
         self.inset = inset
         """Whether to display the components inset from the parent form, with a contrasting background."""
 
