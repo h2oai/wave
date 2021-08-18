@@ -320,6 +320,7 @@ ui_footer_card <- function(
 #' @param content The text content.
 #' @param size The font size of the text content.
 #'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
+#' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
@@ -328,17 +329,20 @@ ui_footer_card <- function(
 ui_text <- function(
   content,
   size = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
   # TODO Validate size
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text=list(
     content=content,
     size=size,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -349,6 +353,7 @@ ui_text <- function(
 #' Create extra-large sized text content.
 #'
 #' @param content The text content.
+#' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
@@ -357,17 +362,20 @@ ui_text <- function(
 #' @export
 ui_text_xl <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   commands = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_vector("commands", "WaveCommand", commands)
   .guard_scalar("name", "character", name)
   .o <- list(text_xl=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     commands=commands,
@@ -379,6 +387,7 @@ ui_text_xl <- function(
 #' Create large sized text content.
 #'
 #' @param content The text content.
+#' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param commands Contextual menu commands for this component.
@@ -387,17 +396,20 @@ ui_text_xl <- function(
 #' @export
 ui_text_l <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   commands = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_vector("commands", "WaveCommand", commands)
   .guard_scalar("name", "character", name)
   .o <- list(text_l=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     commands=commands,
@@ -409,6 +421,7 @@ ui_text_l <- function(
 #' Create medium sized text content.
 #'
 #' @param content The text content.
+#' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
@@ -416,15 +429,18 @@ ui_text_l <- function(
 #' @export
 ui_text_m <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text_m=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -435,6 +451,7 @@ ui_text_m <- function(
 #' Create small sized text content.
 #'
 #' @param content The text content.
+#' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
@@ -442,15 +459,18 @@ ui_text_m <- function(
 #' @export
 ui_text_s <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text_s=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -461,6 +481,7 @@ ui_text_s <- function(
 #' Create extra-small sized text content.
 #'
 #' @param content The text content.
+#' @param width The width of the text , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip Tooltip message.
 #' @param name An identifying name for this component.
@@ -468,15 +489,18 @@ ui_text_s <- function(
 #' @export
 ui_text_xs <- function(
   content,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("content", "character", content)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
   .o <- list(text_xs=list(
     content=content,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -495,6 +519,7 @@ ui_text_xs <- function(
 #' @param label The text displayed on the label.
 #' @param required True if the field is required.
 #' @param disabled True if the label should be disabled.
+#' @param width The width of the label , e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
@@ -504,12 +529,14 @@ ui_label <- function(
   label,
   required = NULL,
   disabled = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("required", "logical", required)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
@@ -517,6 +544,7 @@ ui_label <- function(
     label=label,
     required=required,
     disabled=disabled,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -530,19 +558,23 @@ ui_label <- function(
 #'
 #' @param label The text displayed on the separator.
 #' @param name An identifying name for this component.
+#' @param width The width of the separator , e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A Separator instance.
 #' @export
 ui_separator <- function(
   label = NULL,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(separator=list(
     label=label,
     name=name,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -571,6 +603,7 @@ ui_separator <- function(
 #' @param label The text displayed above the bar.
 #' @param caption The text displayed below the bar.
 #' @param value The progress, between 0.0 and 1.0, or -1 (default) if indeterminate.
+#' @param width The width of the separator, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @param name An identifying name for this component.
@@ -580,12 +613,14 @@ ui_progress <- function(
   label,
   caption = NULL,
   value = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL,
   name = NULL) {
   .guard_scalar("label", "character", label)
   .guard_scalar("caption", "character", caption)
   .guard_scalar("value", "numeric", value)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
@@ -593,6 +628,7 @@ ui_progress <- function(
     label=label,
     caption=caption,
     value=value,
+    width=width,
     visible=visible,
     tooltip=tooltip,
     name=name))
@@ -610,6 +646,7 @@ ui_progress <- function(
 #'   One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType.
 #' @param text The text displayed on the message bar.
 #' @param name An identifying name for this component.
+#' @param width The width of the message bar, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A MessageBar instance.
 #' @export
@@ -617,15 +654,18 @@ ui_message_bar <- function(
   type = NULL,
   text = NULL,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   # TODO Validate type
   .guard_scalar("text", "character", text)
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(message_bar=list(
     type=type,
     text=text,
     name=name,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -653,6 +693,7 @@ ui_message_bar <- function(
 #' @param password True if the text box should hide text content.
 #' @param trigger True if the form should be submitted when the text value changes.
 #' @param height The height of the text box, e.g. '100px'. Applicable only if `multiline` is true.
+#' @param width The width of the text box, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Textbox instance.
@@ -674,6 +715,7 @@ ui_textbox <- function(
   password = NULL,
   trigger = NULL,
   height = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -692,6 +734,7 @@ ui_textbox <- function(
   .guard_scalar("password", "logical", password)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("height", "character", height)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(textbox=list(
@@ -711,6 +754,7 @@ ui_textbox <- function(
     password=password,
     trigger=trigger,
     height=height,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -738,6 +782,7 @@ ui_textbox <- function(
 #' @param indeterminate True if the selection is indeterminate (neither selected nor unselected).
 #' @param disabled True if the checkbox is disabled.
 #' @param trigger True if the form should be submitted when the checkbox value changes.
+#' @param width The width of the checkbox, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checkbox instance.
@@ -749,6 +794,7 @@ ui_checkbox <- function(
   indeterminate = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -757,6 +803,7 @@ ui_checkbox <- function(
   .guard_scalar("indeterminate", "logical", indeterminate)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(checkbox=list(
@@ -766,6 +813,7 @@ ui_checkbox <- function(
     indeterminate=indeterminate,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -786,6 +834,7 @@ ui_checkbox <- function(
 #' @param value True if selected, False if unselected.
 #' @param disabled True if the checkbox is disabled.
 #' @param trigger True if the form should be submitted when the toggle value changes.
+#' @param width The width of the toggle, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Toggle instance.
@@ -796,6 +845,7 @@ ui_toggle <- function(
   value = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -803,6 +853,7 @@ ui_toggle <- function(
   .guard_scalar("value", "logical", value)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(toggle=list(
@@ -811,6 +862,7 @@ ui_toggle <- function(
     value=value,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -856,6 +908,7 @@ ui_choice <- function(
 #' @param choices The choices to be presented.
 #' @param required True if this field is required.
 #' @param trigger True if the form should be submitted when the selection changes.
+#' @param width The width of the choice group, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ChoiceGroup instance.
@@ -867,6 +920,7 @@ ui_choice_group <- function(
   choices = NULL,
   required = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -875,6 +929,7 @@ ui_choice_group <- function(
   .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("required", "logical", required)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(choice_group=list(
@@ -884,6 +939,7 @@ ui_choice_group <- function(
     choices=choices,
     required=required,
     trigger=trigger,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -900,6 +956,7 @@ ui_choice_group <- function(
 #' @param choices The choices to be presented.
 #' @param trigger True if the form should be submitted when the checklist value changes.
 #' @param inline True if checklist should be rendered horizontally.
+#' @param width The width of the checklist, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Checklist instance.
@@ -911,6 +968,7 @@ ui_checklist <- function(
   choices = NULL,
   trigger = NULL,
   inline = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -919,6 +977,7 @@ ui_checklist <- function(
   .guard_vector("choices", "WaveChoice", choices)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("inline", "logical", inline)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(checklist=list(
@@ -928,6 +987,7 @@ ui_checklist <- function(
     choices=choices,
     trigger=trigger,
     inline=inline,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -955,6 +1015,7 @@ ui_checklist <- function(
 #' @param required True if this is a required field.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the dropdown value changes.
+#' @param width The width of the dropdown, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Dropdown instance.
@@ -969,6 +1030,7 @@ ui_dropdown <- function(
   required = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -980,6 +1042,7 @@ ui_dropdown <- function(
   .guard_scalar("required", "logical", required)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(dropdown=list(
@@ -992,6 +1055,7 @@ ui_dropdown <- function(
     required=required,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1017,6 +1081,7 @@ ui_dropdown <- function(
 #' @param choices The choices to be presented.
 #' @param error Text to be displayed as an error below the text box.
 #' @param disabled True if this field is disabled.
+#' @param width The width of the combobox, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Combobox instance.
@@ -1029,6 +1094,7 @@ ui_combobox <- function(
   choices = NULL,
   error = NULL,
   disabled = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1038,6 +1104,7 @@ ui_combobox <- function(
   .guard_vector("choices", "character", choices)
   .guard_scalar("error", "character", error)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(combobox=list(
@@ -1048,6 +1115,7 @@ ui_combobox <- function(
     choices=choices,
     error=error,
     disabled=disabled,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1077,6 +1145,7 @@ ui_combobox <- function(
 #' @param value The current value of the slider.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the slider value changes.
+#' @param width The width of the slider, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Slider instance.
@@ -1090,6 +1159,7 @@ ui_slider <- function(
   value = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1100,6 +1170,7 @@ ui_slider <- function(
   .guard_scalar("value", "numeric", value)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(slider=list(
@@ -1111,6 +1182,7 @@ ui_slider <- function(
     value=value,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1129,6 +1201,7 @@ ui_slider <- function(
 #' @param step The difference between two adjacent values of the spinbox. Defaults to "1".
 #' @param value The current value of the spinbox. Defaults to "0".
 #' @param disabled True if this field is disabled.
+#' @param width The width of the spinbox, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param trigger True if the form should be submitted when the spinbox value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -1142,6 +1215,7 @@ ui_spinbox <- function(
   step = NULL,
   value = NULL,
   disabled = NULL,
+  width = NULL,
   visible = NULL,
   trigger = NULL,
   tooltip = NULL) {
@@ -1152,6 +1226,7 @@ ui_spinbox <- function(
   .guard_scalar("step", "numeric", step)
   .guard_scalar("value", "numeric", value)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1163,6 +1238,7 @@ ui_spinbox <- function(
     step=step,
     value=value,
     disabled=disabled,
+    width=width,
     visible=visible,
     trigger=trigger,
     tooltip=tooltip))
@@ -1180,6 +1256,7 @@ ui_spinbox <- function(
 #' @param value The date value in YYYY-MM-DD format.
 #' @param disabled True if this field is disabled.
 #' @param trigger True if the form should be submitted when the datepicker value changes.
+#' @param width The width of the date picker, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A DatePicker instance.
@@ -1191,6 +1268,7 @@ ui_date_picker <- function(
   value = NULL,
   disabled = NULL,
   trigger = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1199,6 +1277,7 @@ ui_date_picker <- function(
   .guard_scalar("value", "character", value)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("trigger", "logical", trigger)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(date_picker=list(
@@ -1208,6 +1287,7 @@ ui_date_picker <- function(
     value=value,
     disabled=disabled,
     trigger=trigger,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1223,6 +1303,7 @@ ui_date_picker <- function(
 #' @param label Text to be displayed alongside the component.
 #' @param value The selected color (CSS-compatible string).
 #' @param choices A list of colors (CSS-compatible strings) to limit color choices to.
+#' @param width The width of the color picker, e.g. '100px'. Defaults to '300px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param trigger True if the form should be submitted when the color picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -1233,6 +1314,7 @@ ui_color_picker <- function(
   label = NULL,
   value = NULL,
   choices = NULL,
+  width = NULL,
   visible = NULL,
   trigger = NULL,
   tooltip = NULL) {
@@ -1240,6 +1322,7 @@ ui_color_picker <- function(
   .guard_scalar("label", "character", label)
   .guard_scalar("value", "character", value)
   .guard_vector("choices", "character", choices)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1248,6 +1331,7 @@ ui_color_picker <- function(
     label=label,
     value=value,
     choices=choices,
+    width=width,
     visible=visible,
     trigger=trigger,
     tooltip=tooltip))
@@ -1280,6 +1364,7 @@ ui_color_picker <- function(
 #' @param disabled True if the button should be disabled.
 #' @param link True if the button should be rendered as link text and not a standard button.
 #' @param icon An optional icon to display next to the button label (not applicable for links).
+#' @param width The width of the button, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Button instance.
@@ -1293,6 +1378,7 @@ ui_button <- function(
   disabled = NULL,
   link = NULL,
   icon = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1303,6 +1389,7 @@ ui_button <- function(
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("link", "logical", link)
   .guard_scalar("icon", "character", icon)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(button=list(
@@ -1314,6 +1401,7 @@ ui_button <- function(
     disabled=disabled,
     link=link,
     icon=icon,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1326,6 +1414,7 @@ ui_button <- function(
 #' @param justify Specifies how to lay out buttons horizontally.
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify.
 #' @param name An identifying name for this component.
+#' @param width The width of the buttons, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A Buttons instance.
 #' @export
@@ -1333,15 +1422,18 @@ ui_buttons <- function(
   items,
   justify = NULL,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_vector("items", "WaveComponent", items)
   # TODO Validate justify
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(buttons=list(
     items=items,
     justify=justify,
     name=name,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -1357,6 +1449,7 @@ ui_buttons <- function(
 #' @param max_file_size Maximum allowed size (Mb) per file. Defaults to no limit.
 #' @param max_size Maximum allowed size (Mb) for all files combined. Defaults to no limit.
 #' @param height The height of the file upload, e.g. '400px', '50%', etc.
+#' @param width The width of the file upload, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A FileUpload instance.
@@ -1369,6 +1462,7 @@ ui_file_upload <- function(
   max_file_size = NULL,
   max_size = NULL,
   height = NULL,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
@@ -1378,6 +1472,7 @@ ui_file_upload <- function(
   .guard_scalar("max_file_size", "numeric", max_file_size)
   .guard_scalar("max_size", "numeric", max_size)
   .guard_scalar("height", "character", height)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(file_upload=list(
@@ -1388,6 +1483,7 @@ ui_file_upload <- function(
     max_file_size=max_file_size,
     max_size=max_size,
     height=height,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1525,6 +1621,7 @@ ui_table_row <- function(
 #' @param downloadable Indicates whether the contents of this table can be downloaded and saved as a CSV file. Defaults to False.
 #' @param resettable Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False.
 #' @param height The height of the table, e.g. '400px', '50%', etc.
+#' @param width The width of the table, e.g. '100px'. Defaults to '100%'.
 #' @param values The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`).
 #' @param checkbox_visibility Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'.
 #'   One of 'always', 'on-hover', 'hidden'. See enum h2o_wave.ui.TableCheckboxVisibility.
@@ -1541,6 +1638,7 @@ ui_table <- function(
   downloadable = NULL,
   resettable = NULL,
   height = NULL,
+  width = NULL,
   values = NULL,
   checkbox_visibility = NULL,
   visible = NULL,
@@ -1553,6 +1651,7 @@ ui_table <- function(
   .guard_scalar("downloadable", "logical", downloadable)
   .guard_scalar("resettable", "logical", resettable)
   .guard_scalar("height", "character", height)
+  .guard_scalar("width", "character", width)
   .guard_vector("values", "character", values)
   # TODO Validate checkbox_visibility
   .guard_scalar("visible", "logical", visible)
@@ -1566,6 +1665,7 @@ ui_table <- function(
     downloadable=downloadable,
     resettable=resettable,
     height=height,
+    width=width,
     values=values,
     checkbox_visibility=checkbox_visibility,
     visible=visible,
@@ -1585,6 +1685,7 @@ ui_table <- function(
 #' @param disabled True if the link should be disabled.
 #' @param download True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false.
 #' @param button True if the link should be rendered as a button.
+#' @param width The width of the link, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param target Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -1597,6 +1698,7 @@ ui_link <- function(
   disabled = NULL,
   download = NULL,
   button = NULL,
+  width = NULL,
   visible = NULL,
   target = NULL,
   tooltip = NULL,
@@ -1606,6 +1708,7 @@ ui_link <- function(
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("download", "logical", download)
   .guard_scalar("button", "logical", button)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("target", "character", target)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1616,6 +1719,7 @@ ui_link <- function(
     disabled=disabled,
     download=download,
     button=button,
+    width=width,
     visible=visible,
     target=target,
     tooltip=tooltip,
@@ -1651,6 +1755,7 @@ ui_tab <- function(
 #' @param name An identifying name for this component.
 #' @param value The name of the tab to select.
 #' @param items The tabs in this tab bar.
+#' @param width The width of the tabs, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param link True if tabs should be rendered as links instead of buttons.
 #' @return A Tabs instance.
@@ -1659,17 +1764,20 @@ ui_tabs <- function(
   name,
   value = NULL,
   items = NULL,
+  width = NULL,
   visible = NULL,
   link = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("value", "character", value)
   .guard_vector("items", "WaveTab", items)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("link", "logical", link)
   .o <- list(tabs=list(
     name=name,
     value=value,
     items=items,
+    width=width,
     visible=visible,
     link=link))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -1684,6 +1792,7 @@ ui_tabs <- function(
 #' @param label The text displayed on the expander.
 #' @param expanded True if expanded, False if collapsed.
 #' @param items List of components to be hideable by the expander.
+#' @param width The width of the expander, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A Expander instance.
 #' @export
@@ -1692,17 +1801,20 @@ ui_expander <- function(
   label = NULL,
   expanded = NULL,
   items = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("expanded", "logical", expanded)
   .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(expander=list(
     name=name,
     label=label,
     expanded=expanded,
     items=items,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -1712,8 +1824,8 @@ ui_expander <- function(
 #'
 #' @param path The path or URL of the web page, e.g. `/foo.html` or `http://example.com/foo.html`
 #' @param content The HTML content of the page. A string containing `<html>...</html>`.
-#' @param width The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`.
-#' @param height The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`.
+#' @param width The width of the frame, e.g. `200px`, `50%`, etc. Defaults to '100%'.
+#' @param height The height of the frame, e.g. `200px`, `50%`, etc. Defaults to '150px'.
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A Frame instance.
@@ -1746,19 +1858,23 @@ ui_frame <- function(
 #'
 #' @param content The HTML content.
 #' @param name An identifying name for this component.
+#' @param width The width of the markup, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A Markup instance.
 #' @export
 ui_markup <- function(
   content,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_scalar("content", "character", content)
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(markup=list(
     content=content,
     name=name,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -1769,6 +1885,7 @@ ui_markup <- function(
 #' @param content The Handlebars template. https://handlebarsjs.com/guide/
 #' @param data Data for the Handlebars template
 #' @param name An identifying name for this component.
+#' @param width The width of the template, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A Template instance.
 #' @export
@@ -1776,15 +1893,18 @@ ui_template <- function(
   content,
   data = NULL,
   name = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_scalar("content", "character", content)
   # TODO Validate data: Rec
   .guard_scalar("name", "character", name)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(template=list(
     content=content,
     data=data,
     name=name,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -1800,6 +1920,7 @@ ui_template <- function(
 #' @param values The names of the selected choices.
 #' @param max_choices Maximum number of selectable choices. Defaults to no limit.
 #' @param disabled Controls whether the picker should be disabled or not.
+#' @param width The width of the picker, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param trigger True if the form should be submitted when the picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -1812,6 +1933,7 @@ ui_picker <- function(
   values = NULL,
   max_choices = NULL,
   disabled = NULL,
+  width = NULL,
   visible = NULL,
   trigger = NULL,
   tooltip = NULL) {
@@ -1821,6 +1943,7 @@ ui_picker <- function(
   .guard_vector("values", "character", values)
   .guard_scalar("max_choices", "numeric", max_choices)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1831,6 +1954,7 @@ ui_picker <- function(
     values=values,
     max_choices=max_choices,
     disabled=disabled,
+    width=width,
     visible=visible,
     trigger=trigger,
     tooltip=tooltip))
@@ -1852,6 +1976,7 @@ ui_picker <- function(
 #' @param min_value The lower bound of the selected range.
 #' @param max_value The upper bound of the selected range.
 #' @param disabled True if this field is disabled.
+#' @param width The width of the range slider, e.g. '100px'. Defaults to '100%'.
 #' @param trigger True if the form should be submitted when the slider value changes.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
@@ -1866,6 +1991,7 @@ ui_range_slider <- function(
   min_value = NULL,
   max_value = NULL,
   disabled = NULL,
+  width = NULL,
   trigger = NULL,
   visible = NULL,
   tooltip = NULL) {
@@ -1877,6 +2003,7 @@ ui_range_slider <- function(
   .guard_scalar("min_value", "numeric", min_value)
   .guard_scalar("max_value", "numeric", max_value)
   .guard_scalar("disabled", "logical", disabled)
+  .guard_scalar("width", "character", width)
   .guard_scalar("trigger", "logical", trigger)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
@@ -1889,6 +2016,7 @@ ui_range_slider <- function(
     min_value=min_value,
     max_value=max_value,
     disabled=disabled,
+    width=width,
     trigger=trigger,
     visible=visible,
     tooltip=tooltip))
@@ -1923,6 +2051,7 @@ ui_step <- function(
 #'
 #' @param name An identifying name for this component.
 #' @param items The sequence of steps to be displayed.
+#' @param width The width of the stepper, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A Stepper instance.
@@ -1930,15 +2059,18 @@ ui_step <- function(
 ui_stepper <- function(
   name,
   items,
+  width = NULL,
   visible = NULL,
   tooltip = NULL) {
   .guard_scalar("name", "character", name)
   .guard_vector("items", "WaveStep", items)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
   .o <- list(stepper=list(
     name=name,
     items=items,
+    width=width,
     visible=visible,
     tooltip=tooltip))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
@@ -2206,8 +2338,8 @@ ui_plot <- function(
 #'
 #' @param plot The plot to be rendered in this visualization.
 #' @param data Data for this visualization.
-#' @param width The width of the visualization. Defaults to 100%.
-#' @param height The hight of the visualization. Defaults to 300px.
+#' @param width The width of the visualization. Defaults to '100%'.
+#' @param height The hight of the visualization. Defaults to '300px'.
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param events The events to capture on this visualization.
@@ -2244,8 +2376,8 @@ ui_visualization <- function(
 #'
 #' @param specification The Vega-lite specification.
 #' @param data Data for the plot, if any.
-#' @param width The width of the visualization. Defaults to 100%.
-#' @param height The height of the visualization. Defaults to 300px.
+#' @param width The width of the visualization. Defaults to '100%'.
+#' @param height The height of the visualization. Defaults to '300px'.
 #' @param name An identifying name for this component.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A VegaVisualization instance.
@@ -2310,6 +2442,7 @@ ui_stat <- function(
 #' @param justify Specifies how to lay out the individual stats. Defaults to 'start'.
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify.
 #' @param inset Whether to display the stats with a contrasting background.
+#' @param width The width of the stats, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A Stats instance.
 #' @export
@@ -2317,15 +2450,18 @@ ui_stats <- function(
   items,
   justify = NULL,
   inset = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_vector("items", "WaveStat", items)
   # TODO Validate justify
   .guard_scalar("inset", "logical", inset)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(stats=list(
     items=items,
     justify=justify,
     inset=inset,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -2360,6 +2496,7 @@ ui_inline <- function(
 #' @param type The image MIME subtype. One of `apng`, `bmp`, `gif`, `x-icon`, `jpeg`, `png`, `webp`. Required only if `image` is set.
 #' @param image Image data, base64-encoded.
 #' @param path The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`.
+#' @param width The width of the image, e.g. '100px'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @return A Image instance.
 #' @export
@@ -2368,17 +2505,20 @@ ui_image <- function(
   type = NULL,
   image = NULL,
   path = NULL,
+  width = NULL,
   visible = NULL) {
   .guard_scalar("title", "character", title)
   .guard_scalar("type", "character", type)
   .guard_scalar("image", "character", image)
   .guard_scalar("path", "character", path)
+  .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .o <- list(image=list(
     title=title,
     type=type,
     image=image,
     path=path,
+    width=width,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)

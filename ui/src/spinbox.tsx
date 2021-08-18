@@ -38,6 +38,8 @@ export interface Spinbox {
   value?: F
   /** True if this field is disabled. */
   disabled?: B
+  /** The width of the spinbox, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** True if the form should be submitted when the spinbox value changes. */

@@ -32,6 +32,8 @@ export interface Label {
   required?: B
   /** True if the label should be disabled. */
   disabled?: B
+  /** The width of the label , e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */

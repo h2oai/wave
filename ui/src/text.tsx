@@ -27,6 +27,8 @@ export interface Text {
   content: S
   /** The font size of the text content. */
   size?: 'xl' | 'l' | 'm' | 's' | 'xs'
+  /** The width of the text , e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
@@ -39,6 +41,8 @@ export interface Text {
 export interface TextXl {
   /** The text content. */
   content: S
+  /** The width of the text , e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
@@ -53,6 +57,8 @@ export interface TextXl {
 export interface TextL {
   /** The text content. */
   content: S
+  /** The width of the text , e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
@@ -67,6 +73,8 @@ export interface TextL {
 export interface TextM {
   /** The text content. */
   content: S
+  /** The width of the text , e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
@@ -79,6 +87,8 @@ export interface TextM {
 export interface TextS {
   /** The text content. */
   content: S
+  /** The width of the text , e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */
@@ -91,6 +101,8 @@ export interface TextS {
 export interface TextXs {
   /** The text content. */
   content: S
+  /** The width of the text , e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Tooltip message. */

@@ -16,6 +16,7 @@ import { B, Model, Rec, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, Format, grid } from './layout'
+import { formItemWidth } from './theme'
 import { bond } from './ui'
 
 const
@@ -57,19 +58,21 @@ export interface Image {
   image?: S
   /** The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`. */
   path?: S
+  /** The width of the image, e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
 }
 
 export const
-  XImage = ({ model: { title, type, image, path } }: { model: Image }) => {
+  XImage = ({ model: { title, type, image, path, width } }: { model: Image }) => {
     const
       src = path
         ? path
         : (image && type)
           ? `data:image/${type};base64,${image}`
           : ''
-    return <img className={css.img} alt={title} src={src} />
+    return <img className={css.img} alt={title} src={src} width={formItemWidth(width)} />
   },
   View = bond(({ name, state, changed }: Model<State>) => {
     const render = () => {

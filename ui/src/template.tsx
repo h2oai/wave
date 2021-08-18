@@ -27,6 +27,8 @@ export interface Template {
   data?: Rec
   /** An identifying name for this component. */
   name?: S
+  /** The width of the template, e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
 }

@@ -17,6 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import vegaEmbed from 'vega-embed'
 import { cards, grid } from './layout'
+import { formItemWidth } from './theme'
 import { bond, debounce } from './ui'
 
 const
@@ -49,9 +50,9 @@ export interface VegaVisualization {
   specification: S
   /** Data for the plot, if any. */
   data?: Rec
-  /** The width of the visualization. Defaults to 100%. */
+  /** The width of the visualization. Defaults to '100%'. */
   width?: S
-  /** The height of the visualization. Defaults to 300px. */
+  /** The height of the visualization. Defaults to '300px'. */
   height?: S
   /** An identifying name for this component. */
   name?: S
@@ -102,7 +103,7 @@ export const
       { name, width = 'auto', height = 'auto' } = state,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
         ? { flexGrow: 1 }
-        : { width, height }
+        : { width: formItemWidth(width), height }
 
     React.useEffect(init, [init, state])
     React.useEffect(() => {

@@ -34,6 +34,8 @@ export interface Link {
   download?: B
   /** True if the link should be rendered as a button. */
   button?: B
+  /** The width of the link, e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or window. */

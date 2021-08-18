@@ -26,6 +26,8 @@ export interface Stats {
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** Whether to display the stats with a contrasting background. */
   inset?: B
+  /** The width of the stats, e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
 }
@@ -48,7 +50,8 @@ const
   css = stylesheet({
     stats: {
       display: 'flex',
-      alignItems: 'flex-start'
+      alignItems: 'flex-start',
+      overflowX: 'auto'
     },
     inset: {
       background: cssVar('$page'),

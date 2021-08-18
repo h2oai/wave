@@ -17,6 +17,7 @@ import { B, Dict, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
+import { formItemWidth } from './theme'
 import { XToolTip } from './tooltip'
 import { wave } from './ui'
 
@@ -55,6 +56,8 @@ export interface Button {
   link?: B
   /** An optional icon to display next to the button label (not applicable for links). */
   icon?: S
+  /** The width of the button, e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
@@ -69,6 +72,8 @@ export interface Buttons {
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** An identifying name for this component. */
   name?: S
+  /** The width of the buttons, e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
 }
@@ -78,6 +83,7 @@ const
   css = stylesheet({
     buttons: {
       boxSizing: 'border-box',
+      overflowX: 'auto'
     },
   }),
   justifications: Dict<Fluent.Alignment> = {
@@ -89,7 +95,7 @@ const
   }
 
 const
-  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary } }: { model: Button }) => {
+  XButton = ({ model: { name, visible = true, link, label, disabled, icon, caption, value, primary, width } }: { model: Button }) => {
     const
       onClick = () => {
         if (name.startsWith('#')) {
@@ -100,7 +106,13 @@ const
         wave.push()
       },
       // HACK: Our visibility logic in XComponents doesn't count with nested components, e.g. Butttons > Button.
-      styles: Fluent.IButtonStyles = { root: visible ? {} : { display: 'none' } }
+      styles: Fluent.IButtonStyles = {
+        root: {
+          display: visible ? 'inherit' : 'none',
+          width: formItemWidth(width),
+          minWidth: width ? 'initial' : undefined
+        }
+      }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     React.useEffect(() => { wave.args[name] = false }, [])
@@ -120,16 +132,17 @@ const
         : <Fluent.DefaultButton {...btnProps} data-test={name} />
   }
 export const
-  XButtons = ({ model: m }: { model: Buttons }) => {
+  XButtons = ({ model }: { model: Buttons }) => {
     const
-      children = (m.items.map(c => c.button).filter(Boolean) as Button[]).map(b => (
+      { name, items, justify, width } = model,
+      children = (items.map(c => c.button).filter(Boolean) as Button[]).map(b => (
         <XToolTip key={b.name} content={b.tooltip} showIcon={false} expand={false}>
           <XButton model={b} />
         </XToolTip>
       ))
     return (
-      <div data-test={m.name} className={css.buttons}>
-        <Fluent.Stack horizontal horizontalAlign={justifications[m.justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
+      <div data-test={name} className={css.buttons} style={{ width }}>
+        <Fluent.Stack horizontal horizontalAlign={justifications[justify || '']} tokens={{ childrenGap: 10 }}>{children}</Fluent.Stack>
       </div>
     )
   },

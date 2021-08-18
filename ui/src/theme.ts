@@ -44,6 +44,9 @@ export const
     prop = prop.substring(1)
     return getComputedStyle(document.documentElement).getPropertyValue(`--${prop}`).trim()
   },
+  // The width is applied to both form item container and component root which is a problem for percentages.
+  // E.g. 50% width on both form container and component results in 25% of total form width instead of 50% (component takes 50% of 50% of the form = 25% total).
+  formItemWidth = (width?: S) => width?.includes('%') ? '100%' : width,
   spectrum: Dict<S> = {
     amber: '#ffc107',
     azure: '#03a9f4',

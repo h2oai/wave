@@ -16,6 +16,7 @@ import { B, Model, S, xid } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
+import { formItemWidth } from './theme'
 import { bond } from './ui'
 
 const
@@ -47,9 +48,9 @@ export interface Frame {
   path?: S
   /** The HTML content of the page. A string containing `<html>...</html>`. */
   content?: S
-  /** The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`. */
+  /** The width of the frame, e.g. `200px`, `50%`, etc. Defaults to '100%'. */
   width?: S
-  /** The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`. */
+  /** The height of the frame, e.g. `200px`, `50%`, etc. Defaults to '150px'. */
   height?: S
   /** An identifying name for this component. */
   name?: S
@@ -94,7 +95,7 @@ const
 
 // HACK: Applying width/height styles directly on iframe don't work in Chrome/FF; so wrap in div instead.
 export const XFrame = ({ model: { name, path, content, width = '100%', height = '150px' } }: { model: Frame }) => (
-  <div data-test={name} style={{ width, height }}>
+  <div data-test={name} style={{ width: formItemWidth(width), height }}>
     <InlineFrame path={path} content={content} />
   </div>
 )

@@ -94,6 +94,8 @@ export interface Table {
   resettable?: B
   /** The height of the table, e.g. '400px', '50%', etc. */
   height?: S
+  /** The width of the table, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`). */
   values?: S[]
   /** Controls visibility of table rows when `multiple` is set to `True`. Defaults to 'on-hover'. */

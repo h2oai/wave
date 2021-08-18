@@ -36,6 +36,8 @@ export interface Markup {
   content: S
   /** An identifying name for this component. */
   name?: S
+  /** The width of the markup, e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
 }

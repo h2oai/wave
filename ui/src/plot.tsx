@@ -19,7 +19,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { cssVarValue } from './theme'
+import { cssVarValue, formItemWidth } from './theme'
 import { bond, wave } from './ui'
 
 let
@@ -750,9 +750,9 @@ export interface Visualization {
   plot: Plot
   /** Data for this visualization. */
   data: Rec
-  /** The width of the visualization. Defaults to 100%. */
+  /** The width of the visualization. Defaults to '100%'. */
   width?: S
-  /** The hight of the visualization. Defaults to 300px. */
+  /** The hight of the visualization. Defaults to '300px'. */
   height?: S
   /** An identifying name for this component. */
   name?: S
@@ -833,7 +833,7 @@ export const
       { width = 'auto', height = 'auto', name } = model,
       style: React.CSSProperties = (width === 'auto' && height === 'auto')
         ? { flexGrow: 1 }
-        : { width, height }
+        : { width: formItemWidth(width), height }
     return <div data-test={name} style={style} className={css.plot} ref={container} />
   }
 

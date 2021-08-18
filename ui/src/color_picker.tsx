@@ -15,6 +15,7 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
+import { formItemWidth } from './theme'
 import { wave } from './ui'
 
 /**
@@ -32,6 +33,8 @@ export interface ColorPicker {
   value?: S
   /** A list of colors (CSS-compatible strings) to limit color choices to. */
   choices?: S[]
+  /** The width of the color picker, e.g. '100px'. Defaults to '300px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** True if the form should be submitted when the color picker value changes. */
@@ -44,35 +47,39 @@ const
   toColorCells = (cs: S[]) => cs.map((c): Fluent.IColorCellProps => ({ id: c, label: c, color: c }))
 
 export const
-  XColorPicker = ({ model: m }: { model: ColorPicker }) => {
+  XColorPicker = ({ model }: { model: ColorPicker }) => {
     const
-      value = m.value || null,
-      onColorChanged = (_id?: string, color = value) => {
-        wave.args[m.name] = color
+      { width, value, name, trigger, label, choices } = model,
+      defaultValue = value || null,
+      onColorChanged = (_id?: S, color = defaultValue) => {
+        wave.args[name] = color
 
-        if (m.trigger) wave.push()
+        if (trigger) wave.push()
       },
       onChange = (_e: React.SyntheticEvent<HTMLElement>, { str }: Fluent.IColor) => {
-        wave.args[m.name] = str || value
-        if (m.trigger) wave.push()
-      }
+        wave.args[name] = str || defaultValue
+        if (trigger) wave.push()
+      },
+      normalizedWidth = formItemWidth(width),
+      minMaxWidth = !normalizedWidth?.includes('%') ? `calc(${normalizedWidth} - 35px)` : 'initial'
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    React.useEffect(() => { wave.args[m.name] = value }, [])
+    React.useEffect(() => { wave.args[name] = defaultValue }, [])
 
     return (
-      <div data-test={m.name}>
-        <Fluent.Label>{m.label}</Fluent.Label>
+      <div data-test={name}>
+        <Fluent.Label>{label}</Fluent.Label>
         {
-          m.choices?.length
+          choices?.length
             ? <Fluent.SwatchColorPicker
               columnCount={10}
-              selectedId={value || m.choices[0]}
-              colorCells={toColorCells(m.choices)}
+              selectedId={defaultValue || choices[0]}
+              colorCells={toColorCells(choices)}
               onColorChanged={onColorChanged}
             />
             : <Fluent.ColorPicker
-              color={value || '#000'}
+              styles={{ root: { width: normalizedWidth, maxWidth: normalizedWidth }, colorRectangle: { minWidth: minMaxWidth, maxWidth: minMaxWidth } }}
+              color={defaultValue || '#000'}
               onChange={onChange}
             />
         }

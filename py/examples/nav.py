@@ -14,7 +14,7 @@ async def serve(q: Q):
         ])
     else:
         q.page['nav'] = ui.nav_card(
-            box='1 1 2 5',
+            box='1 1 2 6',
             value='#menu/spam',
             items=[
                 ui.nav_group('Menu', items=[

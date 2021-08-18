@@ -33,6 +33,8 @@ export interface Expander {
   expanded?: B
   /** List of components to be hideable by the expander. */
   items?: Component[]
+  /** The width of the expander, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
 }

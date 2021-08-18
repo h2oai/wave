@@ -39,6 +39,8 @@ export interface Stepper {
   name: Id
   /** The sequence of steps to be displayed. */
   items: Step[]
+  /** The width of the stepper, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */

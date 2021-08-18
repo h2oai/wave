@@ -32,6 +32,8 @@ export interface MessageBar {
   text?: S
   /** An identifying name for this component. */
   name?: S
+  /** The width of the message bar, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
 }

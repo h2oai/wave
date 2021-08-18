@@ -40,6 +40,8 @@ export interface Tabs {
   value?: S
   /** The tabs in this tab bar. */
   items?: Tab[]
+  /** The width of the tabs, e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** True if tabs should be rendered as links instead of buttons. */
@@ -51,8 +53,10 @@ const
     pivot: {
       // Actual height of the Fluent pivot is 44.
       // When used standalone in a flex layout, scrollbars show up when attempting to fit to content height.
-      // So explicitly set a height to work around this issue.
+      // Explicitly set a height to work around.
       minHeight: 46,
+      overflowX: 'auto',
+      overflowY: 'hidden'
     }
   })
 

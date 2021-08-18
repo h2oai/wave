@@ -38,6 +38,8 @@ export interface Checklist {
   trigger?: B
   /** True if checklist should be rendered horizontally. */
   inline?: B
+  /** The width of the checklist, e.g. '100px'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */

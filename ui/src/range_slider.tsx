@@ -124,6 +124,8 @@ export interface RangeSlider {
   max_value?: F
   /** True if this field is disabled. */
   disabled?: B
+  /** The width of the range slider, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the form should be submitted when the slider value changes. */
   trigger?: B
   /** True if the component should be visible. Defaults to true. */

@@ -36,6 +36,8 @@ export interface Picker {
   max_choices?: U
   /** Controls whether the picker should be disabled or not. */
   disabled?: B
+  /** The width of the picker, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** True if the form should be submitted when the picker value changes. */

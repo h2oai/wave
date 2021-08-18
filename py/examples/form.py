@@ -52,13 +52,12 @@ async def serve(q: Q):
         ),
         ui.separator(label='A separator sections forms'),
         ui.progress(label='A progress bar'),
-        ui.progress(label='A progress bar'),
         ui.message_bar(type='success', text='Message bar'),
         ui.textbox(name='textbox', label='Textbox'),
         ui.label(label='Checkboxes'),
         ui.checkbox(name='checkbox1', label='A checkbox'),
-        ui.checkbox(name='checkbox1', label='Another checkbox'),
-        ui.checkbox(name='checkbox1', label='Yet another checkbox'),
+        ui.checkbox(name='checkbox2', label='Another checkbox'),
+        ui.checkbox(name='checkbox3', label='Yet another checkbox'),
         ui.toggle(name='toggle', label='Toggle'),
         ui.choice_group(name='choice_group', label='Choice group', choices=[
             ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
@@ -66,10 +65,10 @@ async def serve(q: Q):
         ui.checklist(name='checklist', label='Checklist', choices=[
             ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
         ]),
-        ui.dropdown(name='dropdown', label='Dropdown', choices=[
+        ui.dropdown(name='dropdown1', label='Dropdown', choices=[
             ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
         ]),
-        ui.dropdown(name='dropdown', label='Multi-valued Dropdown', values=[], choices=[
+        ui.dropdown(name='dropdown2', label='Multi-valued Dropdown', values=[], choices=[
             ui.choice(name=x, label=x) for x in ['Egg', 'Bacon', 'Spam']
         ]),
         ui.combobox(name='combobox', label='Combobox', choices=['Choice 1', 'Choice 2', 'Choice 3']),

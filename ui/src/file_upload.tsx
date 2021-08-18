@@ -38,6 +38,8 @@ export interface FileUpload {
   max_size?: F
   /** The height of the file upload, e.g. '400px', '50%', etc. */
   height?: S
+  /** The width of the file upload, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */

@@ -671,12 +671,14 @@ class Text:
             self,
             content: str,
             size: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('Text.content', content, (str,), False, False, False)
         _guard_enum('Text.size', size, _TextSize, True)
+        _guard_scalar('Text.width', width, (str,), False, True, False)
         _guard_scalar('Text.visible', visible, (bool,), False, True, False)
         _guard_scalar('Text.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Text.name', name, (str,), False, True, False)
@@ -684,6 +686,8 @@ class Text:
         """The text content."""
         self.size = size
         """The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize."""
+        self.width = width
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -695,12 +699,14 @@ class Text:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Text.content', self.content, (str,), False, False, False)
         _guard_enum('Text.size', self.size, _TextSize, True)
+        _guard_scalar('Text.width', self.width, (str,), False, True, False)
         _guard_scalar('Text.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Text.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Text.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
             size=self.size,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
@@ -713,6 +719,8 @@ class Text:
         _guard_scalar('Text.content', __d_content, (str,), False, False, False)
         __d_size: Any = __d.get('size')
         _guard_enum('Text.size', __d_size, _TextSize, True)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Text.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Text.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -721,12 +729,14 @@ class Text:
         _guard_scalar('Text.name', __d_name, (str,), False, True, False)
         content: str = __d_content
         size: Optional[str] = __d_size
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return Text(
             content,
             size,
+            width,
             visible,
             tooltip,
             name,
@@ -739,18 +749,22 @@ class TextXl:
     def __init__(
             self,
             content: str,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('TextXl.content', content, (str,), False, False, False)
+        _guard_scalar('TextXl.width', width, (str,), False, True, False)
         _guard_scalar('TextXl.visible', visible, (bool,), False, True, False)
         _guard_scalar('TextXl.tooltip', tooltip, (str,), False, True, False)
         _guard_vector('TextXl.commands', commands, (Command,), False, True, False)
         _guard_scalar('TextXl.name', name, (str,), False, True, False)
         self.content = content
         """The text content."""
+        self.width = width
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -763,12 +777,14 @@ class TextXl:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TextXl.content', self.content, (str,), False, False, False)
+        _guard_scalar('TextXl.width', self.width, (str,), False, True, False)
         _guard_scalar('TextXl.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('TextXl.tooltip', self.tooltip, (str,), False, True, False)
         _guard_vector('TextXl.commands', self.commands, (Command,), False, True, False)
         _guard_scalar('TextXl.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
@@ -780,6 +796,8 @@ class TextXl:
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
         _guard_scalar('TextXl.content', __d_content, (str,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('TextXl.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextXl.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -789,12 +807,14 @@ class TextXl:
         __d_name: Any = __d.get('name')
         _guard_scalar('TextXl.name', __d_name, (str,), False, True, False)
         content: str = __d_content
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         name: Optional[str] = __d_name
         return TextXl(
             content,
+            width,
             visible,
             tooltip,
             commands,
@@ -808,18 +828,22 @@ class TextL:
     def __init__(
             self,
             content: str,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             commands: Optional[List[Command]] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('TextL.content', content, (str,), False, False, False)
+        _guard_scalar('TextL.width', width, (str,), False, True, False)
         _guard_scalar('TextL.visible', visible, (bool,), False, True, False)
         _guard_scalar('TextL.tooltip', tooltip, (str,), False, True, False)
         _guard_vector('TextL.commands', commands, (Command,), False, True, False)
         _guard_scalar('TextL.name', name, (str,), False, True, False)
         self.content = content
         """The text content."""
+        self.width = width
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -832,12 +856,14 @@ class TextL:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TextL.content', self.content, (str,), False, False, False)
+        _guard_scalar('TextL.width', self.width, (str,), False, True, False)
         _guard_scalar('TextL.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('TextL.tooltip', self.tooltip, (str,), False, True, False)
         _guard_vector('TextL.commands', self.commands, (Command,), False, True, False)
         _guard_scalar('TextL.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
@@ -849,6 +875,8 @@ class TextL:
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
         _guard_scalar('TextL.content', __d_content, (str,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('TextL.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextL.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -858,12 +886,14 @@ class TextL:
         __d_name: Any = __d.get('name')
         _guard_scalar('TextL.name', __d_name, (str,), False, True, False)
         content: str = __d_content
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         name: Optional[str] = __d_name
         return TextL(
             content,
+            width,
             visible,
             tooltip,
             commands,
@@ -877,16 +907,20 @@ class TextM:
     def __init__(
             self,
             content: str,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('TextM.content', content, (str,), False, False, False)
+        _guard_scalar('TextM.width', width, (str,), False, True, False)
         _guard_scalar('TextM.visible', visible, (bool,), False, True, False)
         _guard_scalar('TextM.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('TextM.name', name, (str,), False, True, False)
         self.content = content
         """The text content."""
+        self.width = width
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -897,11 +931,13 @@ class TextM:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TextM.content', self.content, (str,), False, False, False)
+        _guard_scalar('TextM.width', self.width, (str,), False, True, False)
         _guard_scalar('TextM.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('TextM.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('TextM.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
@@ -912,6 +948,8 @@ class TextM:
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
         _guard_scalar('TextM.content', __d_content, (str,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('TextM.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextM.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -919,11 +957,13 @@ class TextM:
         __d_name: Any = __d.get('name')
         _guard_scalar('TextM.name', __d_name, (str,), False, True, False)
         content: str = __d_content
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return TextM(
             content,
+            width,
             visible,
             tooltip,
             name,
@@ -936,16 +976,20 @@ class TextS:
     def __init__(
             self,
             content: str,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('TextS.content', content, (str,), False, False, False)
+        _guard_scalar('TextS.width', width, (str,), False, True, False)
         _guard_scalar('TextS.visible', visible, (bool,), False, True, False)
         _guard_scalar('TextS.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('TextS.name', name, (str,), False, True, False)
         self.content = content
         """The text content."""
+        self.width = width
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -956,11 +1000,13 @@ class TextS:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TextS.content', self.content, (str,), False, False, False)
+        _guard_scalar('TextS.width', self.width, (str,), False, True, False)
         _guard_scalar('TextS.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('TextS.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('TextS.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
@@ -971,6 +1017,8 @@ class TextS:
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
         _guard_scalar('TextS.content', __d_content, (str,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('TextS.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextS.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -978,11 +1026,13 @@ class TextS:
         __d_name: Any = __d.get('name')
         _guard_scalar('TextS.name', __d_name, (str,), False, True, False)
         content: str = __d_content
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return TextS(
             content,
+            width,
             visible,
             tooltip,
             name,
@@ -995,16 +1045,20 @@ class TextXs:
     def __init__(
             self,
             content: str,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
     ):
         _guard_scalar('TextXs.content', content, (str,), False, False, False)
+        _guard_scalar('TextXs.width', width, (str,), False, True, False)
         _guard_scalar('TextXs.visible', visible, (bool,), False, True, False)
         _guard_scalar('TextXs.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('TextXs.name', name, (str,), False, True, False)
         self.content = content
         """The text content."""
+        self.width = width
+        """The width of the text , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -1015,11 +1069,13 @@ class TextXs:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TextXs.content', self.content, (str,), False, False, False)
+        _guard_scalar('TextXs.width', self.width, (str,), False, True, False)
         _guard_scalar('TextXs.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('TextXs.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('TextXs.name', self.name, (str,), False, True, False)
         return _dump(
             content=self.content,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
@@ -1030,6 +1086,8 @@ class TextXs:
         """Creates an instance of this class using the contents of a dict."""
         __d_content: Any = __d.get('content')
         _guard_scalar('TextXs.content', __d_content, (str,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('TextXs.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('TextXs.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -1037,11 +1095,13 @@ class TextXs:
         __d_name: Any = __d.get('name')
         _guard_scalar('TextXs.name', __d_name, (str,), False, True, False)
         content: str = __d_content
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
         return TextXs(
             content,
+            width,
             visible,
             tooltip,
             name,
@@ -1062,6 +1122,7 @@ class Label:
             label: str,
             required: Optional[bool] = None,
             disabled: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
@@ -1069,6 +1130,7 @@ class Label:
         _guard_scalar('Label.label', label, (str,), False, False, False)
         _guard_scalar('Label.required', required, (bool,), False, True, False)
         _guard_scalar('Label.disabled', disabled, (bool,), False, True, False)
+        _guard_scalar('Label.width', width, (str,), False, True, False)
         _guard_scalar('Label.visible', visible, (bool,), False, True, False)
         _guard_scalar('Label.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Label.name', name, (str,), False, True, False)
@@ -1078,6 +1140,8 @@ class Label:
         """True if the field is required."""
         self.disabled = disabled
         """True if the label should be disabled."""
+        self.width = width
+        """The width of the label , e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -1090,6 +1154,7 @@ class Label:
         _guard_scalar('Label.label', self.label, (str,), False, False, False)
         _guard_scalar('Label.required', self.required, (bool,), False, True, False)
         _guard_scalar('Label.disabled', self.disabled, (bool,), False, True, False)
+        _guard_scalar('Label.width', self.width, (str,), False, True, False)
         _guard_scalar('Label.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Label.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Label.name', self.name, (str,), False, True, False)
@@ -1097,6 +1162,7 @@ class Label:
             label=self.label,
             required=self.required,
             disabled=self.disabled,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
@@ -1111,6 +1177,8 @@ class Label:
         _guard_scalar('Label.required', __d_required, (bool,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
         _guard_scalar('Label.disabled', __d_disabled, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Label.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Label.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -1120,6 +1188,7 @@ class Label:
         label: str = __d_label
         required: Optional[bool] = __d_required
         disabled: Optional[bool] = __d_disabled
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
@@ -1127,6 +1196,7 @@ class Label:
             label,
             required,
             disabled,
+            width,
             visible,
             tooltip,
             name,
@@ -1142,15 +1212,19 @@ class Separator:
             self,
             label: Optional[str] = None,
             name: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         _guard_scalar('Separator.label', label, (str,), False, True, False)
         _guard_scalar('Separator.name', name, (str,), False, True, False)
+        _guard_scalar('Separator.width', width, (str,), False, True, False)
         _guard_scalar('Separator.visible', visible, (bool,), False, True, False)
         self.label = label
         """The text displayed on the separator."""
         self.name = name
         """An identifying name for this component."""
+        self.width = width
+        """The width of the separator , e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
 
@@ -1158,10 +1232,12 @@ class Separator:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Separator.label', self.label, (str,), False, True, False)
         _guard_scalar('Separator.name', self.name, (str,), False, True, False)
+        _guard_scalar('Separator.width', self.width, (str,), False, True, False)
         _guard_scalar('Separator.visible', self.visible, (bool,), False, True, False)
         return _dump(
             label=self.label,
             name=self.name,
+            width=self.width,
             visible=self.visible,
         )
 
@@ -1172,14 +1248,18 @@ class Separator:
         _guard_scalar('Separator.label', __d_label, (str,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('Separator.name', __d_name, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Separator.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Separator.visible', __d_visible, (bool,), False, True, False)
         label: Optional[str] = __d_label
         name: Optional[str] = __d_name
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         return Separator(
             label,
             name,
+            width,
             visible,
         )
 
@@ -1210,6 +1290,7 @@ class Progress:
             label: str,
             caption: Optional[str] = None,
             value: Optional[float] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
             name: Optional[str] = None,
@@ -1217,6 +1298,7 @@ class Progress:
         _guard_scalar('Progress.label', label, (str,), False, False, False)
         _guard_scalar('Progress.caption', caption, (str,), False, True, False)
         _guard_scalar('Progress.value', value, (float, int,), False, True, False)
+        _guard_scalar('Progress.width', width, (str,), False, True, False)
         _guard_scalar('Progress.visible', visible, (bool,), False, True, False)
         _guard_scalar('Progress.tooltip', tooltip, (str,), False, True, False)
         _guard_scalar('Progress.name', name, (str,), False, True, False)
@@ -1226,6 +1308,8 @@ class Progress:
         """The text displayed below the bar."""
         self.value = value
         """The progress, between 0.0 and 1.0, or -1 (default) if indeterminate."""
+        self.width = width
+        """The width of the separator, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -1238,6 +1322,7 @@ class Progress:
         _guard_scalar('Progress.label', self.label, (str,), False, False, False)
         _guard_scalar('Progress.caption', self.caption, (str,), False, True, False)
         _guard_scalar('Progress.value', self.value, (float, int,), False, True, False)
+        _guard_scalar('Progress.width', self.width, (str,), False, True, False)
         _guard_scalar('Progress.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Progress.tooltip', self.tooltip, (str,), False, True, False)
         _guard_scalar('Progress.name', self.name, (str,), False, True, False)
@@ -1245,6 +1330,7 @@ class Progress:
             label=self.label,
             caption=self.caption,
             value=self.value,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
             name=self.name,
@@ -1259,6 +1345,8 @@ class Progress:
         _guard_scalar('Progress.caption', __d_caption, (str,), False, True, False)
         __d_value: Any = __d.get('value')
         _guard_scalar('Progress.value', __d_value, (float, int,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Progress.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Progress.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -1268,6 +1356,7 @@ class Progress:
         label: str = __d_label
         caption: Optional[str] = __d_caption
         value: Optional[float] = __d_value
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         name: Optional[str] = __d_name
@@ -1275,6 +1364,7 @@ class Progress:
             label,
             caption,
             value,
+            width,
             visible,
             tooltip,
             name,
@@ -1305,11 +1395,13 @@ class MessageBar:
             type: Optional[str] = None,
             text: Optional[str] = None,
             name: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         _guard_enum('MessageBar.type', type, _MessageBarType, True)
         _guard_scalar('MessageBar.text', text, (str,), False, True, False)
         _guard_scalar('MessageBar.name', name, (str,), False, True, False)
+        _guard_scalar('MessageBar.width', width, (str,), False, True, False)
         _guard_scalar('MessageBar.visible', visible, (bool,), False, True, False)
         self.type = type
         """The icon and color of the message bar. One of 'info', 'error', 'warning', 'success', 'danger', 'blocked'. See enum h2o_wave.ui.MessageBarType."""
@@ -1317,6 +1409,8 @@ class MessageBar:
         """The text displayed on the message bar."""
         self.name = name
         """An identifying name for this component."""
+        self.width = width
+        """The width of the message bar, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
 
@@ -1325,11 +1419,13 @@ class MessageBar:
         _guard_enum('MessageBar.type', self.type, _MessageBarType, True)
         _guard_scalar('MessageBar.text', self.text, (str,), False, True, False)
         _guard_scalar('MessageBar.name', self.name, (str,), False, True, False)
+        _guard_scalar('MessageBar.width', self.width, (str,), False, True, False)
         _guard_scalar('MessageBar.visible', self.visible, (bool,), False, True, False)
         return _dump(
             type=self.type,
             text=self.text,
             name=self.name,
+            width=self.width,
             visible=self.visible,
         )
 
@@ -1342,16 +1438,20 @@ class MessageBar:
         _guard_scalar('MessageBar.text', __d_text, (str,), False, True, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('MessageBar.name', __d_name, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('MessageBar.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('MessageBar.visible', __d_visible, (bool,), False, True, False)
         type: Optional[str] = __d_type
         text: Optional[str] = __d_text
         name: Optional[str] = __d_name
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         return MessageBar(
             type,
             text,
             name,
+            width,
             visible,
         )
 
@@ -1381,6 +1481,7 @@ class Textbox:
             password: Optional[bool] = None,
             trigger: Optional[bool] = None,
             height: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -1400,6 +1501,7 @@ class Textbox:
         _guard_scalar('Textbox.password', password, (bool,), False, True, False)
         _guard_scalar('Textbox.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('Textbox.height', height, (str,), False, True, False)
+        _guard_scalar('Textbox.width', width, (str,), False, True, False)
         _guard_scalar('Textbox.visible', visible, (bool,), False, True, False)
         _guard_scalar('Textbox.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -1434,6 +1536,8 @@ class Textbox:
         """True if the form should be submitted when the text value changes."""
         self.height = height
         """The height of the text box, e.g. '100px'. Applicable only if `multiline` is true."""
+        self.width = width
+        """The width of the text box, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -1457,6 +1561,7 @@ class Textbox:
         _guard_scalar('Textbox.password', self.password, (bool,), False, True, False)
         _guard_scalar('Textbox.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('Textbox.height', self.height, (str,), False, True, False)
+        _guard_scalar('Textbox.width', self.width, (str,), False, True, False)
         _guard_scalar('Textbox.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Textbox.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -1476,6 +1581,7 @@ class Textbox:
             password=self.password,
             trigger=self.trigger,
             height=self.height,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -1515,6 +1621,8 @@ class Textbox:
         _guard_scalar('Textbox.trigger', __d_trigger, (bool,), False, True, False)
         __d_height: Any = __d.get('height')
         _guard_scalar('Textbox.height', __d_height, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Textbox.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Textbox.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -1535,6 +1643,7 @@ class Textbox:
         password: Optional[bool] = __d_password
         trigger: Optional[bool] = __d_trigger
         height: Optional[str] = __d_height
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Textbox(
@@ -1554,6 +1663,7 @@ class Textbox:
             password,
             trigger,
             height,
+            width,
             visible,
             tooltip,
         )
@@ -1583,6 +1693,7 @@ class Checkbox:
             indeterminate: Optional[bool] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -1592,6 +1703,7 @@ class Checkbox:
         _guard_scalar('Checkbox.indeterminate', indeterminate, (bool,), False, True, False)
         _guard_scalar('Checkbox.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('Checkbox.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('Checkbox.width', width, (str,), False, True, False)
         _guard_scalar('Checkbox.visible', visible, (bool,), False, True, False)
         _guard_scalar('Checkbox.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -1606,6 +1718,8 @@ class Checkbox:
         """True if the checkbox is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the checkbox value changes."""
+        self.width = width
+        """The width of the checkbox, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -1619,6 +1733,7 @@ class Checkbox:
         _guard_scalar('Checkbox.indeterminate', self.indeterminate, (bool,), False, True, False)
         _guard_scalar('Checkbox.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('Checkbox.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('Checkbox.width', self.width, (str,), False, True, False)
         _guard_scalar('Checkbox.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Checkbox.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -1628,6 +1743,7 @@ class Checkbox:
             indeterminate=self.indeterminate,
             disabled=self.disabled,
             trigger=self.trigger,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -1647,6 +1763,8 @@ class Checkbox:
         _guard_scalar('Checkbox.disabled', __d_disabled, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('Checkbox.trigger', __d_trigger, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Checkbox.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Checkbox.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -1657,6 +1775,7 @@ class Checkbox:
         indeterminate: Optional[bool] = __d_indeterminate
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Checkbox(
@@ -1666,6 +1785,7 @@ class Checkbox:
             indeterminate,
             disabled,
             trigger,
+            width,
             visible,
             tooltip,
         )
@@ -1688,6 +1808,7 @@ class Toggle:
             value: Optional[bool] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -1696,6 +1817,7 @@ class Toggle:
         _guard_scalar('Toggle.value', value, (bool,), False, True, False)
         _guard_scalar('Toggle.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('Toggle.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('Toggle.width', width, (str,), False, True, False)
         _guard_scalar('Toggle.visible', visible, (bool,), False, True, False)
         _guard_scalar('Toggle.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -1708,6 +1830,8 @@ class Toggle:
         """True if the checkbox is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the toggle value changes."""
+        self.width = width
+        """The width of the toggle, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -1720,6 +1844,7 @@ class Toggle:
         _guard_scalar('Toggle.value', self.value, (bool,), False, True, False)
         _guard_scalar('Toggle.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('Toggle.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('Toggle.width', self.width, (str,), False, True, False)
         _guard_scalar('Toggle.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Toggle.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -1728,6 +1853,7 @@ class Toggle:
             value=self.value,
             disabled=self.disabled,
             trigger=self.trigger,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -1745,6 +1871,8 @@ class Toggle:
         _guard_scalar('Toggle.disabled', __d_disabled, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('Toggle.trigger', __d_trigger, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Toggle.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Toggle.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -1754,6 +1882,7 @@ class Toggle:
         value: Optional[bool] = __d_value
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Toggle(
@@ -1762,6 +1891,7 @@ class Toggle:
             value,
             disabled,
             trigger,
+            width,
             visible,
             tooltip,
         )
@@ -1836,6 +1966,7 @@ class ChoiceGroup:
             choices: Optional[List[Choice]] = None,
             required: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -1845,6 +1976,7 @@ class ChoiceGroup:
         _guard_vector('ChoiceGroup.choices', choices, (Choice,), False, True, False)
         _guard_scalar('ChoiceGroup.required', required, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('ChoiceGroup.width', width, (str,), False, True, False)
         _guard_scalar('ChoiceGroup.visible', visible, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -1859,6 +1991,8 @@ class ChoiceGroup:
         """True if this field is required."""
         self.trigger = trigger
         """True if the form should be submitted when the selection changes."""
+        self.width = width
+        """The width of the choice group, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -1872,6 +2006,7 @@ class ChoiceGroup:
         _guard_vector('ChoiceGroup.choices', self.choices, (Choice,), False, True, False)
         _guard_scalar('ChoiceGroup.required', self.required, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('ChoiceGroup.width', self.width, (str,), False, True, False)
         _guard_scalar('ChoiceGroup.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('ChoiceGroup.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -1881,6 +2016,7 @@ class ChoiceGroup:
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             required=self.required,
             trigger=self.trigger,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -1900,6 +2036,8 @@ class ChoiceGroup:
         _guard_scalar('ChoiceGroup.required', __d_required, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('ChoiceGroup.trigger', __d_trigger, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('ChoiceGroup.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('ChoiceGroup.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -1910,6 +2048,7 @@ class ChoiceGroup:
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
         required: Optional[bool] = __d_required
         trigger: Optional[bool] = __d_trigger
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return ChoiceGroup(
@@ -1919,6 +2058,7 @@ class ChoiceGroup:
             choices,
             required,
             trigger,
+            width,
             visible,
             tooltip,
         )
@@ -1937,6 +2077,7 @@ class Checklist:
             choices: Optional[List[Choice]] = None,
             trigger: Optional[bool] = None,
             inline: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -1946,6 +2087,7 @@ class Checklist:
         _guard_vector('Checklist.choices', choices, (Choice,), False, True, False)
         _guard_scalar('Checklist.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('Checklist.inline', inline, (bool,), False, True, False)
+        _guard_scalar('Checklist.width', width, (str,), False, True, False)
         _guard_scalar('Checklist.visible', visible, (bool,), False, True, False)
         _guard_scalar('Checklist.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -1960,6 +2102,8 @@ class Checklist:
         """True if the form should be submitted when the checklist value changes."""
         self.inline = inline
         """True if checklist should be rendered horizontally."""
+        self.width = width
+        """The width of the checklist, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -1973,6 +2117,7 @@ class Checklist:
         _guard_vector('Checklist.choices', self.choices, (Choice,), False, True, False)
         _guard_scalar('Checklist.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('Checklist.inline', self.inline, (bool,), False, True, False)
+        _guard_scalar('Checklist.width', self.width, (str,), False, True, False)
         _guard_scalar('Checklist.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Checklist.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -1982,6 +2127,7 @@ class Checklist:
             choices=None if self.choices is None else [__e.dump() for __e in self.choices],
             trigger=self.trigger,
             inline=self.inline,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -2001,6 +2147,8 @@ class Checklist:
         _guard_scalar('Checklist.trigger', __d_trigger, (bool,), False, True, False)
         __d_inline: Any = __d.get('inline')
         _guard_scalar('Checklist.inline', __d_inline, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Checklist.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Checklist.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -2011,6 +2159,7 @@ class Checklist:
         choices: Optional[List[Choice]] = None if __d_choices is None else [Choice.load(__e) for __e in __d_choices]
         trigger: Optional[bool] = __d_trigger
         inline: Optional[bool] = __d_inline
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Checklist(
@@ -2020,6 +2169,7 @@ class Checklist:
             choices,
             trigger,
             inline,
+            width,
             visible,
             tooltip,
         )
@@ -2049,6 +2199,7 @@ class Dropdown:
             required: Optional[bool] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -2061,6 +2212,7 @@ class Dropdown:
         _guard_scalar('Dropdown.required', required, (bool,), False, True, False)
         _guard_scalar('Dropdown.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('Dropdown.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('Dropdown.width', width, (str,), False, True, False)
         _guard_scalar('Dropdown.visible', visible, (bool,), False, True, False)
         _guard_scalar('Dropdown.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -2081,6 +2233,8 @@ class Dropdown:
         """True if this field is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the dropdown value changes."""
+        self.width = width
+        """The width of the dropdown, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -2097,6 +2251,7 @@ class Dropdown:
         _guard_scalar('Dropdown.required', self.required, (bool,), False, True, False)
         _guard_scalar('Dropdown.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('Dropdown.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('Dropdown.width', self.width, (str,), False, True, False)
         _guard_scalar('Dropdown.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Dropdown.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -2109,6 +2264,7 @@ class Dropdown:
             required=self.required,
             disabled=self.disabled,
             trigger=self.trigger,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -2134,6 +2290,8 @@ class Dropdown:
         _guard_scalar('Dropdown.disabled', __d_disabled, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('Dropdown.trigger', __d_trigger, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Dropdown.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Dropdown.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -2147,6 +2305,7 @@ class Dropdown:
         required: Optional[bool] = __d_required
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Dropdown(
@@ -2159,6 +2318,7 @@ class Dropdown:
             required,
             disabled,
             trigger,
+            width,
             visible,
             tooltip,
         )
@@ -2186,6 +2346,7 @@ class Combobox:
             choices: Optional[List[str]] = None,
             error: Optional[str] = None,
             disabled: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -2196,6 +2357,7 @@ class Combobox:
         _guard_vector('Combobox.choices', choices, (str,), False, True, False)
         _guard_scalar('Combobox.error', error, (str,), False, True, False)
         _guard_scalar('Combobox.disabled', disabled, (bool,), False, True, False)
+        _guard_scalar('Combobox.width', width, (str,), False, True, False)
         _guard_scalar('Combobox.visible', visible, (bool,), False, True, False)
         _guard_scalar('Combobox.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -2212,6 +2374,8 @@ class Combobox:
         """Text to be displayed as an error below the text box."""
         self.disabled = disabled
         """True if this field is disabled."""
+        self.width = width
+        """The width of the combobox, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -2226,6 +2390,7 @@ class Combobox:
         _guard_vector('Combobox.choices', self.choices, (str,), False, True, False)
         _guard_scalar('Combobox.error', self.error, (str,), False, True, False)
         _guard_scalar('Combobox.disabled', self.disabled, (bool,), False, True, False)
+        _guard_scalar('Combobox.width', self.width, (str,), False, True, False)
         _guard_scalar('Combobox.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Combobox.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -2236,6 +2401,7 @@ class Combobox:
             choices=self.choices,
             error=self.error,
             disabled=self.disabled,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -2257,6 +2423,8 @@ class Combobox:
         _guard_scalar('Combobox.error', __d_error, (str,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
         _guard_scalar('Combobox.disabled', __d_disabled, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Combobox.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Combobox.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -2268,6 +2436,7 @@ class Combobox:
         choices: Optional[List[str]] = __d_choices
         error: Optional[str] = __d_error
         disabled: Optional[bool] = __d_disabled
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Combobox(
@@ -2278,6 +2447,7 @@ class Combobox:
             choices,
             error,
             disabled,
+            width,
             visible,
             tooltip,
         )
@@ -2309,6 +2479,7 @@ class Slider:
             value: Optional[float] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -2320,6 +2491,7 @@ class Slider:
         _guard_scalar('Slider.value', value, (float, int,), False, True, False)
         _guard_scalar('Slider.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('Slider.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('Slider.width', width, (str,), False, True, False)
         _guard_scalar('Slider.visible', visible, (bool,), False, True, False)
         _guard_scalar('Slider.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -2338,6 +2510,8 @@ class Slider:
         """True if this field is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the slider value changes."""
+        self.width = width
+        """The width of the slider, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -2353,6 +2527,7 @@ class Slider:
         _guard_scalar('Slider.value', self.value, (float, int,), False, True, False)
         _guard_scalar('Slider.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('Slider.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('Slider.width', self.width, (str,), False, True, False)
         _guard_scalar('Slider.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Slider.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -2364,6 +2539,7 @@ class Slider:
             value=self.value,
             disabled=self.disabled,
             trigger=self.trigger,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -2387,6 +2563,8 @@ class Slider:
         _guard_scalar('Slider.disabled', __d_disabled, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('Slider.trigger', __d_trigger, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Slider.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Slider.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -2399,6 +2577,7 @@ class Slider:
         value: Optional[float] = __d_value
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Slider(
@@ -2410,6 +2589,7 @@ class Slider:
             value,
             disabled,
             trigger,
+            width,
             visible,
             tooltip,
         )
@@ -2430,6 +2610,7 @@ class Spinbox:
             step: Optional[float] = None,
             value: Optional[float] = None,
             disabled: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
@@ -2441,6 +2622,7 @@ class Spinbox:
         _guard_scalar('Spinbox.step', step, (float, int,), False, True, False)
         _guard_scalar('Spinbox.value', value, (float, int,), False, True, False)
         _guard_scalar('Spinbox.disabled', disabled, (bool,), False, True, False)
+        _guard_scalar('Spinbox.width', width, (str,), False, True, False)
         _guard_scalar('Spinbox.visible', visible, (bool,), False, True, False)
         _guard_scalar('Spinbox.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('Spinbox.tooltip', tooltip, (str,), False, True, False)
@@ -2458,6 +2640,8 @@ class Spinbox:
         """The current value of the spinbox. Defaults to "0"."""
         self.disabled = disabled
         """True if this field is disabled."""
+        self.width = width
+        """The width of the spinbox, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.trigger = trigger
@@ -2474,6 +2658,7 @@ class Spinbox:
         _guard_scalar('Spinbox.step', self.step, (float, int,), False, True, False)
         _guard_scalar('Spinbox.value', self.value, (float, int,), False, True, False)
         _guard_scalar('Spinbox.disabled', self.disabled, (bool,), False, True, False)
+        _guard_scalar('Spinbox.width', self.width, (str,), False, True, False)
         _guard_scalar('Spinbox.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Spinbox.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('Spinbox.tooltip', self.tooltip, (str,), False, True, False)
@@ -2485,6 +2670,7 @@ class Spinbox:
             step=self.step,
             value=self.value,
             disabled=self.disabled,
+            width=self.width,
             visible=self.visible,
             trigger=self.trigger,
             tooltip=self.tooltip,
@@ -2507,6 +2693,8 @@ class Spinbox:
         _guard_scalar('Spinbox.value', __d_value, (float, int,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
         _guard_scalar('Spinbox.disabled', __d_disabled, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Spinbox.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Spinbox.visible', __d_visible, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
@@ -2520,6 +2708,7 @@ class Spinbox:
         step: Optional[float] = __d_step
         value: Optional[float] = __d_value
         disabled: Optional[bool] = __d_disabled
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
@@ -2531,6 +2720,7 @@ class Spinbox:
             step,
             value,
             disabled,
+            width,
             visible,
             trigger,
             tooltip,
@@ -2550,6 +2740,7 @@ class DatePicker:
             value: Optional[str] = None,
             disabled: Optional[bool] = None,
             trigger: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -2559,6 +2750,7 @@ class DatePicker:
         _guard_scalar('DatePicker.value', value, (str,), False, True, False)
         _guard_scalar('DatePicker.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('DatePicker.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('DatePicker.width', width, (str,), False, True, False)
         _guard_scalar('DatePicker.visible', visible, (bool,), False, True, False)
         _guard_scalar('DatePicker.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -2573,6 +2765,8 @@ class DatePicker:
         """True if this field is disabled."""
         self.trigger = trigger
         """True if the form should be submitted when the datepicker value changes."""
+        self.width = width
+        """The width of the date picker, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -2586,6 +2780,7 @@ class DatePicker:
         _guard_scalar('DatePicker.value', self.value, (str,), False, True, False)
         _guard_scalar('DatePicker.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('DatePicker.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('DatePicker.width', self.width, (str,), False, True, False)
         _guard_scalar('DatePicker.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('DatePicker.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -2595,6 +2790,7 @@ class DatePicker:
             value=self.value,
             disabled=self.disabled,
             trigger=self.trigger,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -2614,6 +2810,8 @@ class DatePicker:
         _guard_scalar('DatePicker.disabled', __d_disabled, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('DatePicker.trigger', __d_trigger, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('DatePicker.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('DatePicker.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -2624,6 +2822,7 @@ class DatePicker:
         value: Optional[str] = __d_value
         disabled: Optional[bool] = __d_disabled
         trigger: Optional[bool] = __d_trigger
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return DatePicker(
@@ -2633,6 +2832,7 @@ class DatePicker:
             value,
             disabled,
             trigger,
+            width,
             visible,
             tooltip,
         )
@@ -2650,6 +2850,7 @@ class ColorPicker:
             label: Optional[str] = None,
             value: Optional[str] = None,
             choices: Optional[List[str]] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
@@ -2658,6 +2859,7 @@ class ColorPicker:
         _guard_scalar('ColorPicker.label', label, (str,), False, True, False)
         _guard_scalar('ColorPicker.value', value, (str,), False, True, False)
         _guard_vector('ColorPicker.choices', choices, (str,), False, True, False)
+        _guard_scalar('ColorPicker.width', width, (str,), False, True, False)
         _guard_scalar('ColorPicker.visible', visible, (bool,), False, True, False)
         _guard_scalar('ColorPicker.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('ColorPicker.tooltip', tooltip, (str,), False, True, False)
@@ -2669,6 +2871,8 @@ class ColorPicker:
         """The selected color (CSS-compatible string)."""
         self.choices = choices
         """A list of colors (CSS-compatible strings) to limit color choices to."""
+        self.width = width
+        """The width of the color picker, e.g. '100px'. Defaults to '300px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.trigger = trigger
@@ -2682,6 +2886,7 @@ class ColorPicker:
         _guard_scalar('ColorPicker.label', self.label, (str,), False, True, False)
         _guard_scalar('ColorPicker.value', self.value, (str,), False, True, False)
         _guard_vector('ColorPicker.choices', self.choices, (str,), False, True, False)
+        _guard_scalar('ColorPicker.width', self.width, (str,), False, True, False)
         _guard_scalar('ColorPicker.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('ColorPicker.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('ColorPicker.tooltip', self.tooltip, (str,), False, True, False)
@@ -2690,6 +2895,7 @@ class ColorPicker:
             label=self.label,
             value=self.value,
             choices=self.choices,
+            width=self.width,
             visible=self.visible,
             trigger=self.trigger,
             tooltip=self.tooltip,
@@ -2706,6 +2912,8 @@ class ColorPicker:
         _guard_scalar('ColorPicker.value', __d_value, (str,), False, True, False)
         __d_choices: Any = __d.get('choices')
         _guard_vector('ColorPicker.choices', __d_choices, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('ColorPicker.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('ColorPicker.visible', __d_visible, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
@@ -2716,6 +2924,7 @@ class ColorPicker:
         label: Optional[str] = __d_label
         value: Optional[str] = __d_value
         choices: Optional[List[str]] = __d_choices
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
@@ -2724,6 +2933,7 @@ class ColorPicker:
             label,
             value,
             choices,
+            width,
             visible,
             trigger,
             tooltip,
@@ -2758,6 +2968,7 @@ class Button:
             disabled: Optional[bool] = None,
             link: Optional[bool] = None,
             icon: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -2769,6 +2980,7 @@ class Button:
         _guard_scalar('Button.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('Button.link', link, (bool,), False, True, False)
         _guard_scalar('Button.icon', icon, (str,), False, True, False)
+        _guard_scalar('Button.width', width, (str,), False, True, False)
         _guard_scalar('Button.visible', visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -2787,6 +2999,8 @@ class Button:
         """True if the button should be rendered as link text and not a standard button."""
         self.icon = icon
         """An optional icon to display next to the button label (not applicable for links)."""
+        self.width = width
+        """The width of the button, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -2802,6 +3016,7 @@ class Button:
         _guard_scalar('Button.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('Button.link', self.link, (bool,), False, True, False)
         _guard_scalar('Button.icon', self.icon, (str,), False, True, False)
+        _guard_scalar('Button.width', self.width, (str,), False, True, False)
         _guard_scalar('Button.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Button.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -2813,6 +3028,7 @@ class Button:
             disabled=self.disabled,
             link=self.link,
             icon=self.icon,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -2836,6 +3052,8 @@ class Button:
         _guard_scalar('Button.link', __d_link, (bool,), False, True, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('Button.icon', __d_icon, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Button.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Button.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -2848,6 +3066,7 @@ class Button:
         disabled: Optional[bool] = __d_disabled
         link: Optional[bool] = __d_link
         icon: Optional[str] = __d_icon
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Button(
@@ -2859,6 +3078,7 @@ class Button:
             disabled,
             link,
             icon,
+            width,
             visible,
             tooltip,
         )
@@ -2883,11 +3103,13 @@ class Buttons:
             items: List['Component'],
             justify: Optional[str] = None,
             name: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         _guard_vector('Buttons.items', items, (Component,), False, False, False)
         _guard_enum('Buttons.justify', justify, _ButtonsJustify, True)
         _guard_scalar('Buttons.name', name, (str,), False, True, False)
+        _guard_scalar('Buttons.width', width, (str,), False, True, False)
         _guard_scalar('Buttons.visible', visible, (bool,), False, True, False)
         self.items = items
         """The button in this set."""
@@ -2895,6 +3117,8 @@ class Buttons:
         """Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify."""
         self.name = name
         """An identifying name for this component."""
+        self.width = width
+        """The width of the buttons, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
 
@@ -2903,11 +3127,13 @@ class Buttons:
         _guard_vector('Buttons.items', self.items, (Component,), False, False, False)
         _guard_enum('Buttons.justify', self.justify, _ButtonsJustify, True)
         _guard_scalar('Buttons.name', self.name, (str,), False, True, False)
+        _guard_scalar('Buttons.width', self.width, (str,), False, True, False)
         _guard_scalar('Buttons.visible', self.visible, (bool,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             name=self.name,
+            width=self.width,
             visible=self.visible,
         )
 
@@ -2920,16 +3146,20 @@ class Buttons:
         _guard_enum('Buttons.justify', __d_justify, _ButtonsJustify, True)
         __d_name: Any = __d.get('name')
         _guard_scalar('Buttons.name', __d_name, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Buttons.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Buttons.visible', __d_visible, (bool,), False, True, False)
         items: List['Component'] = [Component.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         name: Optional[str] = __d_name
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         return Buttons(
             items,
             justify,
             name,
+            width,
             visible,
         )
 
@@ -2947,6 +3177,7 @@ class FileUpload:
             max_file_size: Optional[float] = None,
             max_size: Optional[float] = None,
             height: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
@@ -2957,6 +3188,7 @@ class FileUpload:
         _guard_scalar('FileUpload.max_file_size', max_file_size, (float, int,), False, True, False)
         _guard_scalar('FileUpload.max_size', max_size, (float, int,), False, True, False)
         _guard_scalar('FileUpload.height', height, (str,), False, True, False)
+        _guard_scalar('FileUpload.width', width, (str,), False, True, False)
         _guard_scalar('FileUpload.visible', visible, (bool,), False, True, False)
         _guard_scalar('FileUpload.tooltip', tooltip, (str,), False, True, False)
         self.name = name
@@ -2973,6 +3205,8 @@ class FileUpload:
         """Maximum allowed size (Mb) for all files combined. Defaults to no limit."""
         self.height = height
         """The height of the file upload, e.g. '400px', '50%', etc."""
+        self.width = width
+        """The width of the file upload, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -2987,6 +3221,7 @@ class FileUpload:
         _guard_scalar('FileUpload.max_file_size', self.max_file_size, (float, int,), False, True, False)
         _guard_scalar('FileUpload.max_size', self.max_size, (float, int,), False, True, False)
         _guard_scalar('FileUpload.height', self.height, (str,), False, True, False)
+        _guard_scalar('FileUpload.width', self.width, (str,), False, True, False)
         _guard_scalar('FileUpload.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('FileUpload.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
@@ -2997,6 +3232,7 @@ class FileUpload:
             max_file_size=self.max_file_size,
             max_size=self.max_size,
             height=self.height,
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -3018,6 +3254,8 @@ class FileUpload:
         _guard_scalar('FileUpload.max_size', __d_max_size, (float, int,), False, True, False)
         __d_height: Any = __d.get('height')
         _guard_scalar('FileUpload.height', __d_height, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('FileUpload.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('FileUpload.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
@@ -3029,6 +3267,7 @@ class FileUpload:
         max_file_size: Optional[float] = __d_max_file_size
         max_size: Optional[float] = __d_max_size
         height: Optional[str] = __d_height
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return FileUpload(
@@ -3039,6 +3278,7 @@ class FileUpload:
             max_file_size,
             max_size,
             height,
+            width,
             visible,
             tooltip,
         )
@@ -3366,6 +3606,7 @@ class Table:
             downloadable: Optional[bool] = None,
             resettable: Optional[bool] = None,
             height: Optional[str] = None,
+            width: Optional[str] = None,
             values: Optional[List[str]] = None,
             checkbox_visibility: Optional[str] = None,
             visible: Optional[bool] = None,
@@ -3379,6 +3620,7 @@ class Table:
         _guard_scalar('Table.downloadable', downloadable, (bool,), False, True, False)
         _guard_scalar('Table.resettable', resettable, (bool,), False, True, False)
         _guard_scalar('Table.height', height, (str,), False, True, False)
+        _guard_scalar('Table.width', width, (str,), False, True, False)
         _guard_vector('Table.values', values, (str,), False, True, False)
         _guard_enum('Table.checkbox_visibility', checkbox_visibility, _TableCheckboxVisibility, True)
         _guard_scalar('Table.visible', visible, (bool,), False, True, False)
@@ -3399,6 +3641,8 @@ class Table:
         """Indicates whether a Reset button should be displayed to reset search / filter / group-by values to their defaults. Defaults to False."""
         self.height = height
         """The height of the table, e.g. '400px', '50%', etc."""
+        self.width = width
+        """The width of the table, e.g. '100px'. Defaults to '100%'."""
         self.values = values
         """The names of the selected rows. If this parameter is set, multiple selections will be allowed (`multiple` is assumed to be `True`)."""
         self.checkbox_visibility = checkbox_visibility
@@ -3418,6 +3662,7 @@ class Table:
         _guard_scalar('Table.downloadable', self.downloadable, (bool,), False, True, False)
         _guard_scalar('Table.resettable', self.resettable, (bool,), False, True, False)
         _guard_scalar('Table.height', self.height, (str,), False, True, False)
+        _guard_scalar('Table.width', self.width, (str,), False, True, False)
         _guard_vector('Table.values', self.values, (str,), False, True, False)
         _guard_enum('Table.checkbox_visibility', self.checkbox_visibility, _TableCheckboxVisibility, True)
         _guard_scalar('Table.visible', self.visible, (bool,), False, True, False)
@@ -3431,6 +3676,7 @@ class Table:
             downloadable=self.downloadable,
             resettable=self.resettable,
             height=self.height,
+            width=self.width,
             values=self.values,
             checkbox_visibility=self.checkbox_visibility,
             visible=self.visible,
@@ -3456,6 +3702,8 @@ class Table:
         _guard_scalar('Table.resettable', __d_resettable, (bool,), False, True, False)
         __d_height: Any = __d.get('height')
         _guard_scalar('Table.height', __d_height, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Table.width', __d_width, (str,), False, True, False)
         __d_values: Any = __d.get('values')
         _guard_vector('Table.values', __d_values, (str,), False, True, False)
         __d_checkbox_visibility: Any = __d.get('checkbox_visibility')
@@ -3472,6 +3720,7 @@ class Table:
         downloadable: Optional[bool] = __d_downloadable
         resettable: Optional[bool] = __d_resettable
         height: Optional[str] = __d_height
+        width: Optional[str] = __d_width
         values: Optional[List[str]] = __d_values
         checkbox_visibility: Optional[str] = __d_checkbox_visibility
         visible: Optional[bool] = __d_visible
@@ -3485,6 +3734,7 @@ class Table:
             downloadable,
             resettable,
             height,
+            width,
             values,
             checkbox_visibility,
             visible,
@@ -3506,6 +3756,7 @@ class Link:
             disabled: Optional[bool] = None,
             download: Optional[bool] = None,
             button: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             target: Optional[str] = None,
             tooltip: Optional[str] = None,
@@ -3516,6 +3767,7 @@ class Link:
         _guard_scalar('Link.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('Link.download', download, (bool,), False, True, False)
         _guard_scalar('Link.button', button, (bool,), False, True, False)
+        _guard_scalar('Link.width', width, (str,), False, True, False)
         _guard_scalar('Link.visible', visible, (bool,), False, True, False)
         _guard_scalar('Link.target', target, (str,), False, True, False)
         _guard_scalar('Link.tooltip', tooltip, (str,), False, True, False)
@@ -3530,6 +3782,8 @@ class Link:
         """True if the link should prompt the user to save the linked URL instead of navigating to it. Works only if `button` is false."""
         self.button = button
         """True if the link should be rendered as a button."""
+        self.width = width
+        """The width of the link, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.target = target
@@ -3546,6 +3800,7 @@ class Link:
         _guard_scalar('Link.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('Link.download', self.download, (bool,), False, True, False)
         _guard_scalar('Link.button', self.button, (bool,), False, True, False)
+        _guard_scalar('Link.width', self.width, (str,), False, True, False)
         _guard_scalar('Link.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Link.target', self.target, (str,), False, True, False)
         _guard_scalar('Link.tooltip', self.tooltip, (str,), False, True, False)
@@ -3556,6 +3811,7 @@ class Link:
             disabled=self.disabled,
             download=self.download,
             button=self.button,
+            width=self.width,
             visible=self.visible,
             target=self.target,
             tooltip=self.tooltip,
@@ -3575,6 +3831,8 @@ class Link:
         _guard_scalar('Link.download', __d_download, (bool,), False, True, False)
         __d_button: Any = __d.get('button')
         _guard_scalar('Link.button', __d_button, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Link.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Link.visible', __d_visible, (bool,), False, True, False)
         __d_target: Any = __d.get('target')
@@ -3588,6 +3846,7 @@ class Link:
         disabled: Optional[bool] = __d_disabled
         download: Optional[bool] = __d_download
         button: Optional[bool] = __d_button
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         target: Optional[str] = __d_target
         tooltip: Optional[str] = __d_tooltip
@@ -3598,6 +3857,7 @@ class Link:
             disabled,
             download,
             button,
+            width,
             visible,
             target,
             tooltip,
@@ -3662,12 +3922,14 @@ class Tabs:
             name: str,
             value: Optional[str] = None,
             items: Optional[List[Tab]] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             link: Optional[bool] = None,
     ):
         _guard_scalar('Tabs.name', name, (str,), True, False, False)
         _guard_scalar('Tabs.value', value, (str,), False, True, False)
         _guard_vector('Tabs.items', items, (Tab,), False, True, False)
+        _guard_scalar('Tabs.width', width, (str,), False, True, False)
         _guard_scalar('Tabs.visible', visible, (bool,), False, True, False)
         _guard_scalar('Tabs.link', link, (bool,), False, True, False)
         self.name = name
@@ -3676,6 +3938,8 @@ class Tabs:
         """The name of the tab to select."""
         self.items = items
         """The tabs in this tab bar."""
+        self.width = width
+        """The width of the tabs, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.link = link
@@ -3686,12 +3950,14 @@ class Tabs:
         _guard_scalar('Tabs.name', self.name, (str,), True, False, False)
         _guard_scalar('Tabs.value', self.value, (str,), False, True, False)
         _guard_vector('Tabs.items', self.items, (Tab,), False, True, False)
+        _guard_scalar('Tabs.width', self.width, (str,), False, True, False)
         _guard_scalar('Tabs.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Tabs.link', self.link, (bool,), False, True, False)
         return _dump(
             name=self.name,
             value=self.value,
             items=None if self.items is None else [__e.dump() for __e in self.items],
+            width=self.width,
             visible=self.visible,
             link=self.link,
         )
@@ -3705,6 +3971,8 @@ class Tabs:
         _guard_scalar('Tabs.value', __d_value, (str,), False, True, False)
         __d_items: Any = __d.get('items')
         _guard_vector('Tabs.items', __d_items, (dict,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Tabs.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Tabs.visible', __d_visible, (bool,), False, True, False)
         __d_link: Any = __d.get('link')
@@ -3712,12 +3980,14 @@ class Tabs:
         name: str = __d_name
         value: Optional[str] = __d_value
         items: Optional[List[Tab]] = None if __d_items is None else [Tab.load(__e) for __e in __d_items]
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         link: Optional[bool] = __d_link
         return Tabs(
             name,
             value,
             items,
+            width,
             visible,
             link,
         )
@@ -3734,12 +4004,14 @@ class Expander:
             label: Optional[str] = None,
             expanded: Optional[bool] = None,
             items: Optional[List['Component']] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         _guard_scalar('Expander.name', name, (str,), True, False, False)
         _guard_scalar('Expander.label', label, (str,), False, True, False)
         _guard_scalar('Expander.expanded', expanded, (bool,), False, True, False)
         _guard_vector('Expander.items', items, (Component,), False, True, False)
+        _guard_scalar('Expander.width', width, (str,), False, True, False)
         _guard_scalar('Expander.visible', visible, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component."""
@@ -3749,6 +4021,8 @@ class Expander:
         """True if expanded, False if collapsed."""
         self.items = items
         """List of components to be hideable by the expander."""
+        self.width = width
+        """The width of the expander, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
 
@@ -3758,12 +4032,14 @@ class Expander:
         _guard_scalar('Expander.label', self.label, (str,), False, True, False)
         _guard_scalar('Expander.expanded', self.expanded, (bool,), False, True, False)
         _guard_vector('Expander.items', self.items, (Component,), False, True, False)
+        _guard_scalar('Expander.width', self.width, (str,), False, True, False)
         _guard_scalar('Expander.visible', self.visible, (bool,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
             expanded=self.expanded,
             items=None if self.items is None else [__e.dump() for __e in self.items],
+            width=self.width,
             visible=self.visible,
         )
 
@@ -3778,18 +4054,22 @@ class Expander:
         _guard_scalar('Expander.expanded', __d_expanded, (bool,), False, True, False)
         __d_items: Any = __d.get('items')
         _guard_vector('Expander.items', __d_items, (dict,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Expander.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Expander.visible', __d_visible, (bool,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         expanded: Optional[bool] = __d_expanded
         items: Optional[List['Component']] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         return Expander(
             name,
             label,
             expanded,
             items,
+            width,
             visible,
         )
 
@@ -3817,9 +4097,9 @@ class Frame:
         self.content = content
         """The HTML content of the page. A string containing `<html>...</html>`."""
         self.width = width
-        """The width of the frame, e.g. `200px`, `50%`, etc. Defaults to `100%`."""
+        """The width of the frame, e.g. `200px`, `50%`, etc. Defaults to '100%'."""
         self.height = height
-        """The height of the frame, e.g. `200px`, `50%`, etc. Defaults to `150px`."""
+        """The height of the frame, e.g. `200px`, `50%`, etc. Defaults to '150px'."""
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
@@ -3880,15 +4160,19 @@ class Markup:
             self,
             content: str,
             name: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         _guard_scalar('Markup.content', content, (str,), False, False, False)
         _guard_scalar('Markup.name', name, (str,), False, True, False)
+        _guard_scalar('Markup.width', width, (str,), False, True, False)
         _guard_scalar('Markup.visible', visible, (bool,), False, True, False)
         self.content = content
         """The HTML content."""
         self.name = name
         """An identifying name for this component."""
+        self.width = width
+        """The width of the markup, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
 
@@ -3896,10 +4180,12 @@ class Markup:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Markup.content', self.content, (str,), False, False, False)
         _guard_scalar('Markup.name', self.name, (str,), False, True, False)
+        _guard_scalar('Markup.width', self.width, (str,), False, True, False)
         _guard_scalar('Markup.visible', self.visible, (bool,), False, True, False)
         return _dump(
             content=self.content,
             name=self.name,
+            width=self.width,
             visible=self.visible,
         )
 
@@ -3910,14 +4196,18 @@ class Markup:
         _guard_scalar('Markup.content', __d_content, (str,), False, False, False)
         __d_name: Any = __d.get('name')
         _guard_scalar('Markup.name', __d_name, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Markup.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Markup.visible', __d_visible, (bool,), False, True, False)
         content: str = __d_content
         name: Optional[str] = __d_name
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         return Markup(
             content,
             name,
+            width,
             visible,
         )
 
@@ -3930,10 +4220,12 @@ class Template:
             content: str,
             data: Optional[PackedRecord] = None,
             name: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         _guard_scalar('Template.content', content, (str,), False, False, False)
         _guard_scalar('Template.name', name, (str,), False, True, False)
+        _guard_scalar('Template.width', width, (str,), False, True, False)
         _guard_scalar('Template.visible', visible, (bool,), False, True, False)
         self.content = content
         """The Handlebars template. https://handlebarsjs.com/guide/"""
@@ -3941,6 +4233,8 @@ class Template:
         """Data for the Handlebars template"""
         self.name = name
         """An identifying name for this component."""
+        self.width = width
+        """The width of the template, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
 
@@ -3948,11 +4242,13 @@ class Template:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Template.content', self.content, (str,), False, False, False)
         _guard_scalar('Template.name', self.name, (str,), False, True, False)
+        _guard_scalar('Template.width', self.width, (str,), False, True, False)
         _guard_scalar('Template.visible', self.visible, (bool,), False, True, False)
         return _dump(
             content=self.content,
             data=self.data,
             name=self.name,
+            width=self.width,
             visible=self.visible,
         )
 
@@ -3964,16 +4260,20 @@ class Template:
         __d_data: Any = __d.get('data')
         __d_name: Any = __d.get('name')
         _guard_scalar('Template.name', __d_name, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Template.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Template.visible', __d_visible, (bool,), False, True, False)
         content: str = __d_content
         data: Optional[PackedRecord] = __d_data
         name: Optional[str] = __d_name
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         return Template(
             content,
             data,
             name,
+            width,
             visible,
         )
 
@@ -3991,6 +4291,7 @@ class Picker:
             values: Optional[List[str]] = None,
             max_choices: Optional[int] = None,
             disabled: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             trigger: Optional[bool] = None,
             tooltip: Optional[str] = None,
@@ -4001,6 +4302,7 @@ class Picker:
         _guard_vector('Picker.values', values, (str,), False, True, False)
         _guard_scalar('Picker.max_choices', max_choices, (int,), False, True, False)
         _guard_scalar('Picker.disabled', disabled, (bool,), False, True, False)
+        _guard_scalar('Picker.width', width, (str,), False, True, False)
         _guard_scalar('Picker.visible', visible, (bool,), False, True, False)
         _guard_scalar('Picker.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('Picker.tooltip', tooltip, (str,), False, True, False)
@@ -4016,6 +4318,8 @@ class Picker:
         """Maximum number of selectable choices. Defaults to no limit."""
         self.disabled = disabled
         """Controls whether the picker should be disabled or not."""
+        self.width = width
+        """The width of the picker, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.trigger = trigger
@@ -4031,6 +4335,7 @@ class Picker:
         _guard_vector('Picker.values', self.values, (str,), False, True, False)
         _guard_scalar('Picker.max_choices', self.max_choices, (int,), False, True, False)
         _guard_scalar('Picker.disabled', self.disabled, (bool,), False, True, False)
+        _guard_scalar('Picker.width', self.width, (str,), False, True, False)
         _guard_scalar('Picker.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Picker.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('Picker.tooltip', self.tooltip, (str,), False, True, False)
@@ -4041,6 +4346,7 @@ class Picker:
             values=self.values,
             max_choices=self.max_choices,
             disabled=self.disabled,
+            width=self.width,
             visible=self.visible,
             trigger=self.trigger,
             tooltip=self.tooltip,
@@ -4061,6 +4367,8 @@ class Picker:
         _guard_scalar('Picker.max_choices', __d_max_choices, (int,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
         _guard_scalar('Picker.disabled', __d_disabled, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Picker.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Picker.visible', __d_visible, (bool,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
@@ -4073,6 +4381,7 @@ class Picker:
         values: Optional[List[str]] = __d_values
         max_choices: Optional[int] = __d_max_choices
         disabled: Optional[bool] = __d_disabled
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         trigger: Optional[bool] = __d_trigger
         tooltip: Optional[str] = __d_tooltip
@@ -4083,6 +4392,7 @@ class Picker:
             values,
             max_choices,
             disabled,
+            width,
             visible,
             trigger,
             tooltip,
@@ -4106,6 +4416,7 @@ class RangeSlider:
             min_value: Optional[float] = None,
             max_value: Optional[float] = None,
             disabled: Optional[bool] = None,
+            width: Optional[str] = None,
             trigger: Optional[bool] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
@@ -4118,6 +4429,7 @@ class RangeSlider:
         _guard_scalar('RangeSlider.min_value', min_value, (float, int,), False, True, False)
         _guard_scalar('RangeSlider.max_value', max_value, (float, int,), False, True, False)
         _guard_scalar('RangeSlider.disabled', disabled, (bool,), False, True, False)
+        _guard_scalar('RangeSlider.width', width, (str,), False, True, False)
         _guard_scalar('RangeSlider.trigger', trigger, (bool,), False, True, False)
         _guard_scalar('RangeSlider.visible', visible, (bool,), False, True, False)
         _guard_scalar('RangeSlider.tooltip', tooltip, (str,), False, True, False)
@@ -4137,6 +4449,8 @@ class RangeSlider:
         """The upper bound of the selected range."""
         self.disabled = disabled
         """True if this field is disabled."""
+        self.width = width
+        """The width of the range slider, e.g. '100px'. Defaults to '100%'."""
         self.trigger = trigger
         """True if the form should be submitted when the slider value changes."""
         self.visible = visible
@@ -4154,6 +4468,7 @@ class RangeSlider:
         _guard_scalar('RangeSlider.min_value', self.min_value, (float, int,), False, True, False)
         _guard_scalar('RangeSlider.max_value', self.max_value, (float, int,), False, True, False)
         _guard_scalar('RangeSlider.disabled', self.disabled, (bool,), False, True, False)
+        _guard_scalar('RangeSlider.width', self.width, (str,), False, True, False)
         _guard_scalar('RangeSlider.trigger', self.trigger, (bool,), False, True, False)
         _guard_scalar('RangeSlider.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('RangeSlider.tooltip', self.tooltip, (str,), False, True, False)
@@ -4166,6 +4481,7 @@ class RangeSlider:
             min_value=self.min_value,
             max_value=self.max_value,
             disabled=self.disabled,
+            width=self.width,
             trigger=self.trigger,
             visible=self.visible,
             tooltip=self.tooltip,
@@ -4190,6 +4506,8 @@ class RangeSlider:
         _guard_scalar('RangeSlider.max_value', __d_max_value, (float, int,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
         _guard_scalar('RangeSlider.disabled', __d_disabled, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('RangeSlider.width', __d_width, (str,), False, True, False)
         __d_trigger: Any = __d.get('trigger')
         _guard_scalar('RangeSlider.trigger', __d_trigger, (bool,), False, True, False)
         __d_visible: Any = __d.get('visible')
@@ -4204,6 +4522,7 @@ class RangeSlider:
         min_value: Optional[float] = __d_min_value
         max_value: Optional[float] = __d_max_value
         disabled: Optional[bool] = __d_disabled
+        width: Optional[str] = __d_width
         trigger: Optional[bool] = __d_trigger
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
@@ -4216,6 +4535,7 @@ class RangeSlider:
             min_value,
             max_value,
             disabled,
+            width,
             trigger,
             visible,
             tooltip,
@@ -4279,17 +4599,21 @@ class Stepper:
             self,
             name: str,
             items: List[Step],
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
     ):
         _guard_scalar('Stepper.name', name, (str,), True, False, False)
         _guard_vector('Stepper.items', items, (Step,), False, False, False)
+        _guard_scalar('Stepper.width', width, (str,), False, True, False)
         _guard_scalar('Stepper.visible', visible, (bool,), False, True, False)
         _guard_scalar('Stepper.tooltip', tooltip, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.items = items
         """The sequence of steps to be displayed."""
+        self.width = width
+        """The width of the stepper, e.g. '100px'. Defaults to '100%'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
@@ -4299,11 +4623,13 @@ class Stepper:
         """Returns the contents of this object as a dict."""
         _guard_scalar('Stepper.name', self.name, (str,), True, False, False)
         _guard_vector('Stepper.items', self.items, (Step,), False, False, False)
+        _guard_scalar('Stepper.width', self.width, (str,), False, True, False)
         _guard_scalar('Stepper.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('Stepper.tooltip', self.tooltip, (str,), False, True, False)
         return _dump(
             name=self.name,
             items=[__e.dump() for __e in self.items],
+            width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
         )
@@ -4315,17 +4641,21 @@ class Stepper:
         _guard_scalar('Stepper.name', __d_name, (str,), True, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('Stepper.items', __d_items, (dict,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Stepper.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Stepper.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('Stepper.tooltip', __d_tooltip, (str,), False, True, False)
         name: str = __d_name
         items: List[Step] = [Step.load(__e) for __e in __d_items]
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
         return Stepper(
             name,
             items,
+            width,
             visible,
             tooltip,
         )
@@ -5039,9 +5369,9 @@ class Visualization:
         self.data = data
         """Data for this visualization."""
         self.width = width
-        """The width of the visualization. Defaults to 100%."""
+        """The width of the visualization. Defaults to '100%'."""
         self.height = height
-        """The hight of the visualization. Defaults to 300px."""
+        """The hight of the visualization. Defaults to '300px'."""
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
@@ -5123,9 +5453,9 @@ class VegaVisualization:
         self.data = data
         """Data for the plot, if any."""
         self.width = width
-        """The width of the visualization. Defaults to 100%."""
+        """The width of the visualization. Defaults to '100%'."""
         self.height = height
-        """The height of the visualization. Defaults to 300px."""
+        """The height of the visualization. Defaults to '300px'."""
         self.name = name
         """An identifying name for this component."""
         self.visible = visible
@@ -5265,11 +5595,13 @@ class Stats:
             items: List[Stat],
             justify: Optional[str] = None,
             inset: Optional[bool] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         _guard_vector('Stats.items', items, (Stat,), False, False, False)
         _guard_enum('Stats.justify', justify, _StatsJustify, True)
         _guard_scalar('Stats.inset', inset, (bool,), False, True, False)
+        _guard_scalar('Stats.width', width, (str,), False, True, False)
         _guard_scalar('Stats.visible', visible, (bool,), False, True, False)
         self.items = items
         """The individual stats to be displayed."""
@@ -5277,6 +5609,8 @@ class Stats:
         """Specifies how to lay out the individual stats. Defaults to 'start'. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.StatsJustify."""
         self.inset = inset
         """Whether to display the stats with a contrasting background."""
+        self.width = width
+        """The width of the stats, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
 
@@ -5285,11 +5619,13 @@ class Stats:
         _guard_vector('Stats.items', self.items, (Stat,), False, False, False)
         _guard_enum('Stats.justify', self.justify, _StatsJustify, True)
         _guard_scalar('Stats.inset', self.inset, (bool,), False, True, False)
+        _guard_scalar('Stats.width', self.width, (str,), False, True, False)
         _guard_scalar('Stats.visible', self.visible, (bool,), False, True, False)
         return _dump(
             items=[__e.dump() for __e in self.items],
             justify=self.justify,
             inset=self.inset,
+            width=self.width,
             visible=self.visible,
         )
 
@@ -5302,16 +5638,20 @@ class Stats:
         _guard_enum('Stats.justify', __d_justify, _StatsJustify, True)
         __d_inset: Any = __d.get('inset')
         _guard_scalar('Stats.inset', __d_inset, (bool,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Stats.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Stats.visible', __d_visible, (bool,), False, True, False)
         items: List[Stat] = [Stat.load(__e) for __e in __d_items]
         justify: Optional[str] = __d_justify
         inset: Optional[bool] = __d_inset
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         return Stats(
             items,
             justify,
             inset,
+            width,
             visible,
         )
 
@@ -5382,12 +5722,14 @@ class Image:
             type: Optional[str] = None,
             image: Optional[str] = None,
             path: Optional[str] = None,
+            width: Optional[str] = None,
             visible: Optional[bool] = None,
     ):
         _guard_scalar('Image.title', title, (str,), False, False, False)
         _guard_scalar('Image.type', type, (str,), False, True, False)
         _guard_scalar('Image.image', image, (str,), False, True, False)
         _guard_scalar('Image.path', path, (str,), False, True, False)
+        _guard_scalar('Image.width', width, (str,), False, True, False)
         _guard_scalar('Image.visible', visible, (bool,), False, True, False)
         self.title = title
         """The image title, typically displayed as a tooltip."""
@@ -5397,6 +5739,8 @@ class Image:
         """Image data, base64-encoded."""
         self.path = path
         """The path or URL or data URL of the image, e.g. `/foo.png` or `http://example.com/foo.png` or `data:image/png;base64,???`."""
+        self.width = width
+        """The width of the image, e.g. '100px'."""
         self.visible = visible
         """True if the component should be visible. Defaults to true."""
 
@@ -5406,12 +5750,14 @@ class Image:
         _guard_scalar('Image.type', self.type, (str,), False, True, False)
         _guard_scalar('Image.image', self.image, (str,), False, True, False)
         _guard_scalar('Image.path', self.path, (str,), False, True, False)
+        _guard_scalar('Image.width', self.width, (str,), False, True, False)
         _guard_scalar('Image.visible', self.visible, (bool,), False, True, False)
         return _dump(
             title=self.title,
             type=self.type,
             image=self.image,
             path=self.path,
+            width=self.width,
             visible=self.visible,
         )
 
@@ -5426,18 +5772,22 @@ class Image:
         _guard_scalar('Image.image', __d_image, (str,), False, True, False)
         __d_path: Any = __d.get('path')
         _guard_scalar('Image.path', __d_path, (str,), False, True, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('Image.width', __d_width, (str,), False, True, False)
         __d_visible: Any = __d.get('visible')
         _guard_scalar('Image.visible', __d_visible, (bool,), False, True, False)
         title: str = __d_title
         type: Optional[str] = __d_type
         image: Optional[str] = __d_image
         path: Optional[str] = __d_path
+        width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         return Image(
             title,
             type,
             image,
             path,
+            width,
             visible,
         )
 

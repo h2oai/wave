@@ -45,6 +45,8 @@ export interface Combobox {
   error?: S
   /** True if this field is disabled. */
   disabled?: B
+  /** The width of the combobox, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */

@@ -50,6 +50,8 @@ export interface Slider {
   disabled?: B
   /** True if the form should be submitted when the slider value changes. */
   trigger?: B
+  /** The width of the slider, e.g. '100px'. Defaults to '100%'. */
+  width?: S
   /** True if the component should be visible. Defaults to true. */
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
