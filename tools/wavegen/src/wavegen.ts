@@ -933,6 +933,16 @@ const
     for (const t of protocol.types) {
       count += t.members.length
     }
+
+    console.log('-----------------------------------------------------')
+    console.log('API attribute enums:')
+    for (const t of protocol.types) {
+      for (const m of t.members) {
+        if (m.t === MemberT.Enum) {
+          console.log(`${t.name}.${m.name}: ${m.values.join(', ')}`)
+        }
+      }
+    }
     console.log('-----------------------------------------------------')
     console.log(`API surface: ${protocol.types.length} types, ${count} members.`)
   },
