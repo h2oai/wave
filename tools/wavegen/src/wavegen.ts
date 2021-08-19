@@ -919,12 +919,22 @@ const
 
     return { types, lookup }
   },
-  measureStats = (protocol: Protocol) => {
-    let n = 0
+  printStats = (protocol: Protocol) => {
+    console.log('-----------------------------------------------------')
+    console.log('API attribute frequencies:')
+    const d: Dict<number> = {}
     for (const t of protocol.types) {
-      n += t.members.length
+      for (const { name } of t.members) {
+        const f = d[name]
+        d[name] = f ? f + 1 : 1
+      }
     }
-    return [protocol.types.length, n]
+    let count = 0
+    for (const t of protocol.types) {
+      count += t.members.length
+    }
+    console.log('-----------------------------------------------------')
+    console.log(`API surface: ${protocol.types.length} types, ${count} members.`)
   },
   generatePy = (protocol: Protocol, outDir: S) => {
     const [classes, api] = tranlateToPy(protocol)
@@ -949,8 +959,7 @@ const
     generateR(protocol, rOutDir)
     generateTypescript(protocol, typescriptSrcDir)
 
-    const [typeCount, memberCount] = measureStats(protocol)
-    console.log(`API surface: ${typeCount} types, ${memberCount} members.`)
+    printStats(protocol)
   }
 
 
