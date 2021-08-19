@@ -25,7 +25,17 @@ import { bond } from './ui'
 
 export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>
 
-
+/**
+ * Create a reference to an external CSS file to be included on a page.
+ */
+interface Style {
+  /** The URI of an external stylesheet. */
+  path: S
+  /** A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media. */
+  media?: S
+  /** The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin */
+  cross_origin?: S
+}
 /**
  * Represents the layout structure for a page.
  */
@@ -113,6 +123,10 @@ interface State {
   scripts?: Script[]
   /** Javascript code to execute on this page. */
   script?: InlineScript
+  /** CSS to be inlined into this page. */
+  style?: S
+  /** External CSS files to load into the page. */
+  styles?: Style[]
 }
 
 const
@@ -132,7 +146,7 @@ on(windowIconB, icon => {
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Model<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts, script } = state
+    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts, script, style, styles } = state
 
     if (redirect) {
       try {
@@ -163,6 +177,24 @@ export const
     if (script) {
       delete state.script
       executeScript(script)
+    }
+    if (style) {
+      const styleEl = document.createElement('style')
+      styleEl.innerText = style
+      document.head.appendChild(styleEl)
+      delete state.style
+    }
+    if (styles) {
+      styles.forEach(({ path, media, cross_origin }) => {
+        const linkEl = document.createElement('link')
+        linkEl.rel = 'stylesheet'
+        linkEl.href = path
+        linkEl.as = 'style'
+        if (media) linkEl.media = media
+        if (cross_origin) linkEl.crossOrigin = cross_origin
+        document.head.appendChild(linkEl)
+      })
+      delete state.styles
     }
   }
 

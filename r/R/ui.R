@@ -3218,6 +3218,28 @@ ui_inline_script <- function(
   return(.o)
 }
 
+#' Create a reference to an external CSS file to be included on a page.
+#'
+#' @param path The URI of an external stylesheet.
+#' @param media A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media.
+#' @param cross_origin The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin
+#' @return A Style instance.
+#' @export
+ui_style <- function(
+  path,
+  media = NULL,
+  cross_origin = NULL) {
+  .guard_scalar("path", "character", path)
+  .guard_scalar("media", "character", media)
+  .guard_scalar("cross_origin", "character", cross_origin)
+  .o <- list(
+    path=path,
+    media=media,
+    cross_origin=cross_origin)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveStyle"))
+  return(.o)
+}
+
 #' Represents page-global state.
 #' 
 #' This card is invisible.
@@ -3236,6 +3258,8 @@ ui_inline_script <- function(
 #' @param tracker Configure a tracker for the page (for web analytics).
 #' @param scripts External Javascript files to load into the page.
 #' @param script Javascript code to execute on this page.
+#' @param style CSS to be inlined into this page.
+#' @param styles External CSS files to load into the page.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -3252,6 +3276,8 @@ ui_meta_card <- function(
   tracker = NULL,
   scripts = NULL,
   script = NULL,
+  style = NULL,
+  styles = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3265,6 +3291,8 @@ ui_meta_card <- function(
   .guard_scalar("tracker", "WaveTracker", tracker)
   .guard_vector("scripts", "WaveScript", scripts)
   .guard_scalar("script", "WaveInlineScript", script)
+  .guard_scalar("style", "character", style)
+  .guard_vector("styles", "WaveStyle", styles)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3279,6 +3307,8 @@ ui_meta_card <- function(
     tracker=tracker,
     scripts=scripts,
     script=script,
+    style=style,
+    styles=styles,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMetaCard"))
   return(.o)

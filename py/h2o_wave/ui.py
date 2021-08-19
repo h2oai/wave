@@ -2756,6 +2756,27 @@ def inline_script(
     )
 
 
+def style(
+        path: str,
+        media: Optional[str] = None,
+        cross_origin: Optional[str] = None,
+) -> Style:
+    """Create a reference to an external CSS file to be included on a page.
+
+    Args:
+        path: The URI of an external stylesheet.
+        media: A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media.
+        cross_origin: The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin
+    Returns:
+        A `h2o_wave.types.Style` instance.
+    """
+    return Style(
+        path,
+        media,
+        cross_origin,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2769,6 +2790,8 @@ def meta_card(
         tracker: Optional[Tracker] = None,
         scripts: Optional[List[Script]] = None,
         script: Optional[InlineScript] = None,
+        style: Optional[str] = None,
+        styles: Optional[List[Style]] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2789,6 +2812,8 @@ def meta_card(
         tracker: Configure a tracker for the page (for web analytics).
         scripts: External Javascript files to load into the page.
         script: Javascript code to execute on this page.
+        style: CSS to be inlined into this page.
+        styles: External CSS files to load into the page.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2806,6 +2831,8 @@ def meta_card(
         tracker,
         scripts,
         script,
+        style,
+        styles,
         commands,
     )
 
