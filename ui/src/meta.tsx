@@ -126,7 +126,7 @@ interface State {
   /** CSS stylesheet to be applied to this page. */
   style?: S
   /** External CSS files to load into the page. */
-  styles?: Style[]
+  stylesheets?: Stylesheet[]
 }
 
 const
