@@ -123,7 +123,7 @@ interface State {
   scripts?: Script[]
   /** Javascript code to execute on this page. */
   script?: InlineScript
-  /** CSS to be inlined into this page. */
+  /** CSS stylesheet to be applied to this page. */
   style?: S
   /** External CSS files to load into the page. */
   styles?: Style[]
