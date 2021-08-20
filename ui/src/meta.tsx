@@ -28,7 +28,7 @@ export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S 
 /**
  * Create a reference to an external CSS file to be included on a page.
  */
-interface Style {
+interface Stylesheet {
   /** The URI of an external stylesheet. */
   path: S
   /** A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media. */
