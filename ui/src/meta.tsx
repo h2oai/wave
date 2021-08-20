@@ -124,7 +124,7 @@ interface State {
   /** Javascript code to execute on this page. */
   script?: InlineScript
   /** CSS stylesheet to be applied to this page. */
-  style?: S
+  stylesheet?: InlineStylesheet
   /** External CSS files to load into the page. */
   stylesheets?: Stylesheet[]
 }
