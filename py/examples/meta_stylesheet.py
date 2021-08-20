@@ -1,4 +1,4 @@
-# Meta / Style
+# Meta / Stylesheet
 # Load external CSS resources if needed.
 # ---
 
@@ -16,7 +16,7 @@ page['example'] = ui.markup_card(
 page['meta'] = ui.meta_card(
     box='',
     # Load external stylesheet.
-    styles=[ui.style(path='https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css')]
+    stylesheets=[ui.stylesheet(path='https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css')]
 )
 
 page.save()

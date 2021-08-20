@@ -1,4 +1,4 @@
-# Meta / Inline Style
+# Meta / Inline Stylesheet
 # Use inline CSS to style a Wave app in case of quirks. Prefer using native Wave components if possible.
 # ---
 
@@ -20,6 +20,6 @@ page['example'] = ui.markdown_card(
 )
 
 # Add the style to the page.
-page['meta'] = ui.meta_card(box='', style=style)
+page['meta'] = ui.meta_card(box='', stylesheet=ui.inline_stylesheet(style))
 
 page.save()

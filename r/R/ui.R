@@ -3218,14 +3218,32 @@ ui_inline_script <- function(
   return(.o)
 }
 
+#' No documentation available.
+#'
+#' @param content The CSS to be applied to this page.
+#' @param media A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media.
+#' @return A InlineStylesheet instance.
+#' @export
+ui_inline_stylesheet <- function(
+  content,
+  media = NULL) {
+  .guard_scalar("content", "character", content)
+  .guard_scalar("media", "character", media)
+  .o <- list(
+    content=content,
+    media=media)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveInlineStylesheet"))
+  return(.o)
+}
+
 #' Create a reference to an external CSS file to be included on a page.
 #'
 #' @param path The URI of an external stylesheet.
 #' @param media A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media.
 #' @param cross_origin The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin
-#' @return A Style instance.
+#' @return A Stylesheet instance.
 #' @export
-ui_style <- function(
+ui_stylesheet <- function(
   path,
   media = NULL,
   cross_origin = NULL) {
@@ -3236,7 +3254,7 @@ ui_style <- function(
     path=path,
     media=media,
     cross_origin=cross_origin)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveStyle"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveStylesheet"))
   return(.o)
 }
 
@@ -3258,8 +3276,8 @@ ui_style <- function(
 #' @param tracker Configure a tracker for the page (for web analytics).
 #' @param scripts External Javascript files to load into the page.
 #' @param script Javascript code to execute on this page.
-#' @param style CSS to be inlined into this page.
-#' @param styles External CSS files to load into the page.
+#' @param stylesheet CSS stylesheet to be applied to this page.
+#' @param stylesheets External CSS files to load into the page.
 #' @param commands Contextual menu commands for this component.
 #' @return A MetaCard instance.
 #' @export
@@ -3276,8 +3294,8 @@ ui_meta_card <- function(
   tracker = NULL,
   scripts = NULL,
   script = NULL,
-  style = NULL,
-  styles = NULL,
+  stylesheet = NULL,
+  stylesheets = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3291,8 +3309,8 @@ ui_meta_card <- function(
   .guard_scalar("tracker", "WaveTracker", tracker)
   .guard_vector("scripts", "WaveScript", scripts)
   .guard_scalar("script", "WaveInlineScript", script)
-  .guard_scalar("style", "character", style)
-  .guard_vector("styles", "WaveStyle", styles)
+  .guard_scalar("stylesheet", "WaveInlineStylesheet", stylesheet)
+  .guard_vector("stylesheets", "WaveStylesheet", stylesheets)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3307,8 +3325,8 @@ ui_meta_card <- function(
     tracker=tracker,
     scripts=scripts,
     script=script,
-    style=style,
-    styles=styles,
+    stylesheet=stylesheet,
+    stylesheets=stylesheets,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveMetaCard"))
   return(.o)
