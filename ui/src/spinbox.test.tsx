@@ -20,9 +20,12 @@ import { wave } from './ui'
 const
   name = 'spinbox',
   spinboxProps: Spinbox = { name },
-  pushMock = jest.fn()
-
-const mouseEvent = { clientX: 0, clientY: 0 }
+  pushMock = jest.fn(),
+  mouseEvent = { clientX: 0, clientY: 0 },
+  simulateClick = (el: Element) => {
+    fireEvent.mouseDown(el, mouseEvent)
+    fireEvent.mouseUp(el, mouseEvent)
+  }
 describe('Spinbox.tsx', () => {
   beforeAll(() => {
     jest.useFakeTimers()
@@ -55,62 +58,38 @@ describe('Spinbox.tsx', () => {
 
   it('Sets args on increment', () => {
     const { container } = render(<XSpinbox model={spinboxProps} />)
-    const incrementBtn = container.querySelector('.ms-UpButton')!
-
-    fireEvent.mouseDown(incrementBtn, mouseEvent)
-    fireEvent.mouseUp(incrementBtn, mouseEvent)
-
+    simulateClick(container.querySelector('.ms-UpButton')!)
     expect(wave.args[name]).toBe(1)
   })
 
   it('Sets args on increment - not beyond max', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1, max: 1 }} />)
-    const incrementBtn = container.querySelector('.ms-UpButton')!
-
-    fireEvent.mouseDown(incrementBtn, mouseEvent)
-    fireEvent.mouseUp(incrementBtn, mouseEvent)
-
+    simulateClick(container.querySelector('.ms-UpButton')!)
     expect(wave.args[name]).toBe(1)
   })
 
   it('Calls push on increment if trigger specified', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
-    const incrementBtn = container.querySelector('.ms-UpButton')!
-
-    fireEvent.mouseDown(incrementBtn, mouseEvent)
-    fireEvent.mouseUp(incrementBtn, mouseEvent)
-
+    simulateClick(container.querySelector('.ms-UpButton')!)
     expect(wave.args[name]).toBe(1)
     expect(pushMock).toHaveBeenCalledTimes(1)
   })
 
   it('Sets args on decrement', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1 }} />)
-    const decrementBtn = container.querySelector('.ms-DownButton')!
-
-    fireEvent.mouseDown(decrementBtn, mouseEvent)
-    fireEvent.mouseUp(decrementBtn, mouseEvent)
-
+    simulateClick(container.querySelector('.ms-DownButton')!)
     expect(wave.args[name]).toBe(0)
   })
 
   it('Sets args on decrement - not beyond min', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, value: 1, min: 1 }} />)
-    const decrementBtn = container.querySelector('.ms-DownButton')!
-
-    fireEvent.mouseDown(decrementBtn, mouseEvent)
-    fireEvent.mouseUp(decrementBtn, mouseEvent)
-
+    simulateClick(container.querySelector('.ms-DownButton')!)
     expect(wave.args[name]).toBe(1)
   })
 
   it('Calls push on decrement if trigger specified', () => {
     const { container } = render(<XSpinbox model={{ ...spinboxProps, trigger: true }} />)
-    const decrementBtn = container.querySelector('.ms-DownButton')!
-
-    fireEvent.mouseDown(decrementBtn, mouseEvent)
-    fireEvent.mouseUp(decrementBtn, mouseEvent)
-
+    simulateClick(container.querySelector('.ms-DownButton')!)
     expect(pushMock).toHaveBeenCalledTimes(1)
   })
 
@@ -142,5 +121,45 @@ describe('Spinbox.tsx', () => {
     expect(pushMock).not.toBeCalled() // Not called immediately, but after specified timeout.
     act(() => { jest.runOnlyPendingTimers() })
     expect(pushMock).toHaveBeenCalled()
+  })
+
+  it('No floating point imprecision in increment', () => {
+    const
+      { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0, step: 0.0001 }} />),
+      incrementBtn = container.querySelector('.ms-UpButton')!,
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
+
+    expect(spinboxInput.value).toBe('0')
+    simulateClick(incrementBtn)
+    expect(spinboxInput.value).toBe('0.0001')
+    simulateClick(incrementBtn)
+    expect(spinboxInput.value).toBe('0.0002')
+    simulateClick(incrementBtn)
+    expect(spinboxInput.value).toBe('0.0003')
+    simulateClick(incrementBtn)
+    expect(spinboxInput.value).toBe('0.0004')
+    simulateClick(incrementBtn)
+    expect(spinboxInput.value).toBe('0.0005')
+    simulateClick(incrementBtn)
+  })
+
+  it('No floating point imprecision in decrement', () => {
+    const
+      { container } = render(<XSpinbox model={{ ...spinboxProps, value: 0.001, step: 0.0001 }} />),
+      decrementBtn = container.querySelector('.ms-DownButton')!,
+      spinboxInput = container.querySelector('.ms-spinButton-input') as HTMLInputElement
+
+    expect(spinboxInput.value).toBe('0.001')
+    simulateClick(decrementBtn)
+    expect(spinboxInput.value).toBe('0.0009')
+    simulateClick(decrementBtn)
+    expect(spinboxInput.value).toBe('0.0008')
+    simulateClick(decrementBtn)
+    expect(spinboxInput.value).toBe('0.0007')
+    simulateClick(decrementBtn)
+    expect(spinboxInput.value).toBe('0.0006')
+    simulateClick(decrementBtn)
+    expect(spinboxInput.value).toBe('0.0005')
+    simulateClick(decrementBtn)
   })
 })

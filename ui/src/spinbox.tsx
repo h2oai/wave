@@ -47,35 +47,48 @@ export interface Spinbox {
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
 }
-
-const DEBOUNCE_TIMEOUT = 500
+const
+  DEBOUNCE_TIMEOUT = 500,
+  precisionRound = (value: F, precision: F) => {
+    const exp = Math.pow(10, precision)
+    return Math.round(value * exp) / exp
+  },
+  // Source: https://github.com/microsoft/fluentui/blob/ecb0e9b12665a05353f64f1b69981584c3addbc0/packages/utilities/src/math.ts#L91.
+  calculatePrecision = (value: F) => {
+    /**
+     * Group 1:
+     * [1-9]([0]+$) matches trailing zeros
+     * Group 2:
+     * \.([0-9]*) matches all digits after a decimal point.
+     */
+    const groups = /[1-9]([0]+$)|\.([0-9]*)/.exec(String(value))
+    if (!groups) return 0
+    return -groups[1]?.length || groups[2]?.length || 0
+  }
 export const
   XSpinbox = ({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
     const
       [val, setVal] = React.useState<S | undefined>(),
-      parseValue = (v: S) => {
-        const x = parseFloat(v)
+      precision = calculatePrecision(step),
+      parseValue = (v: F) => {
+        const x = precisionRound(v, precision)
         return (!isNaN(x) && isFinite(x)) ? x : value
       },
       onIncrement = (v: S) => {
-        const
-          value = parseValue(v),
-          newValue = (value + step > max) ? max : value + step
+        const newValue = Math.min(parseValue(Number(v) + step), max)
         wave.args[name] = newValue
         if (trigger) wave.push()
         return String(newValue)
       },
       onDecrement = (v: S) => {
-        const
-          value = parseValue(v),
-          newValue = (value - step < min) ? min : value - step
+        const newValue = Math.max(parseValue(Number(v) - step), min)
         wave.args[name] = newValue
         if (trigger) wave.push()
         return String(newValue)
       },
       handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const
-          value = parseValue(e.target.value),
+          value = parseValue(Number(e.target.value)),
           newValue = value > max
             ? max
             : value < min
