@@ -18,7 +18,7 @@ import { Expander, XExpander } from './expander'
 import { wave } from './ui'
 
 const name = 'expander'
-const expanderProps: Expander = { name }
+const expanderProps: Expander = { name, items: [{ textbox: { name: 'textbox' } }] }
 describe('Expander.tsx', () => {
   beforeEach(() => { wave.args[name] = null })
 
@@ -37,5 +37,29 @@ describe('Expander.tsx', () => {
     fireEvent.click(getByRole('button'))
 
     expect(wave.args[name]).toBe(true)
+  })
+
+  it('Expands/collapses on click', () => {
+    const { getByTestId, getByRole } = render(<XExpander model={expanderProps} />)
+    expect(getByTestId('textbox')).not.toBeVisible()
+    fireEvent.click(getByRole('button'))
+    expect(getByTestId('textbox')).toBeVisible()
+  })
+
+  it('Collapsed by default', () => {
+    const { getByTestId } = render(<XExpander model={expanderProps} />)
+    expect(getByTestId('textbox')).not.toBeVisible()
+  })
+
+  it('Expands initially if expanded specified', () => {
+    const { getByTestId } = render(<XExpander model={{ ...expanderProps, expanded: true }} />)
+    expect(getByTestId('textbox')).toBeVisible()
+  })
+
+  it('Expands/collapses on server change', () => {
+    const { getByTestId, rerender } = render(<XExpander model={expanderProps} />)
+    expect(getByTestId('textbox')).not.toBeVisible()
+    rerender(<XExpander model={{ ...expanderProps, expanded: true }} />)
+    expect(getByTestId('textbox')).toBeVisible()
   })
 })

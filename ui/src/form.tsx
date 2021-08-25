@@ -251,7 +251,7 @@ const
     if (m.buttons) return <XButtons model={m.buttons} />
     if (m.tabs) return <XTabs model={m.tabs} />
     if (m.button) return <XToolTip content={m.button.tooltip} showIcon={false} expand={false}><XStandAloneButton model={m.button} /></XToolTip>
-    if (m.expander) return <XExpander model={m.expander} />
+    if (m.expander) return <XExpander model={{ ...m.expander }} /> //HACK: Force new props reference on every update.
     if (m.frame) return <XFrame model={m.frame} />
     if (m.markup) return <XMarkup model={m.markup} />
     if (m.template) return <XTemplate model={m.template} />

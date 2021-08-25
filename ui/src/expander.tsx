@@ -41,10 +41,6 @@ export interface Expander {
 
 const
   css = stylesheet({
-    card: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
     expanderOpen: {
       $nest: {
         '>div:last-child': {
@@ -61,28 +57,31 @@ const
     },
   })
 
-export const
-  XExpander = ({ model: m }: { model: Expander }) => {
-    const
-      [isOpen, setIsOpen] = React.useState(!!wave.args[m.name]),
-      onClick = React.useCallback(() => {
-        wave.args[m.name] = m.expanded = !m.expanded
-        setIsOpen(m.expanded)
-      }, [m]),
-      actionTitle = isOpen ? 'Shrink' : 'Expand',
-      expanderIcon = { iconName: isOpen ? 'ChevronDownMed' : 'ChevronRightMed' },
-      className = isOpen ? css.expanderOpen : css.expanderClosed
+export const XExpander = ({ model: m }: { model: Expander }) => {
+  const
+    [isOpen, setIsOpen] = React.useState(m.expanded),
+    onClick = React.useCallback(() => {
+      wave.args[m.name] = !isOpen
+      setIsOpen(!isOpen)
+    }, [isOpen, m.name])
 
-    return (
-      <div data-test={m.name} className={className}>
-        <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
-          <Fluent.ActionButton
-            title={actionTitle}
-            iconProps={expanderIcon}
-            onClick={onClick}
-            styles={{ root: { paddingLeft: 0 }, icon: { marginLeft: 0 } }}>{m.label}</Fluent.ActionButton>
-        </Fluent.Separator>
-        <XComponents items={m.items || []} />
-      </div>
-    )
-  }
+  React.useEffect(() => {
+    if (m.expanded !== undefined) {
+      wave.args[m.name] = !!m.expanded
+      setIsOpen(m.expanded)
+    }
+  }, [m])
+
+  return (
+    <div data-test={m.name} className={isOpen ? css.expanderOpen : css.expanderClosed}>
+      <Fluent.Separator alignContent="start" styles={{ content: { paddingLeft: 0 } }}>
+        <Fluent.ActionButton
+          title={isOpen ? 'Shrink' : 'Expand'}
+          iconProps={{ iconName: isOpen ? 'ChevronDownMed' : 'ChevronRightMed' }}
+          onClick={onClick}
+          styles={{ root: { paddingLeft: 0 }, icon: { marginLeft: 0 } }}>{m.label}</Fluent.ActionButton>
+      </Fluent.Separator>
+      <XComponents items={m.items || []} />
+    </div>
+  )
+}
