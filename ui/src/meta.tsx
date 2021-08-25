@@ -25,7 +25,24 @@ import { bond } from './ui'
 
 export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>
 
+interface InlineStylesheet {
+  /** The CSS to be applied to this page. */
+  content: S
+  /** A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media. */
+  media?: S
+}
 
+/**
+ * Create a reference to an external CSS file to be included on a page.
+ */
+interface Stylesheet {
+  /** The URI of an external stylesheet. */
+  path: S
+  /** A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media. */
+  media?: S
+  /** The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin */
+  cross_origin?: S
+}
 /**
  * Represents the layout structure for a page.
  */
@@ -113,6 +130,10 @@ interface State {
   scripts?: Script[]
   /** Javascript code to execute on this page. */
   script?: InlineScript
+  /** CSS stylesheet to be applied to this page. */
+  stylesheet?: InlineStylesheet
+  /** External CSS files to load into the page. */
+  stylesheets?: Stylesheet[]
 }
 
 const
@@ -132,7 +153,7 @@ on(windowIconB, icon => {
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Model<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts, script } = state
+    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts, script, stylesheet, stylesheets } = state
 
     if (redirect) {
       try {
@@ -163,6 +184,26 @@ export const
     if (script) {
       delete state.script
       executeScript(script)
+    }
+    if (stylesheet) {
+      const styleEl = document.createElement('style')
+      const { content, media } = stylesheet
+      styleEl.innerText = content
+      if (media) styleEl.media = media
+      document.head.appendChild(styleEl)
+      delete state.stylesheet
+    }
+    if (stylesheets) {
+      stylesheets.forEach(({ path, media, cross_origin }) => {
+        const linkEl = document.createElement('link')
+        linkEl.rel = 'stylesheet'
+        linkEl.href = path
+        linkEl.as = 'style'
+        if (media) linkEl.media = media
+        if (cross_origin) linkEl.crossOrigin = cross_origin
+        document.head.appendChild(linkEl)
+      })
+      delete state.stylesheets
     }
   }
 

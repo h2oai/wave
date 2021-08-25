@@ -2756,6 +2756,45 @@ def inline_script(
     )
 
 
+def inline_stylesheet(
+        content: str,
+        media: Optional[str] = None,
+) -> InlineStylesheet:
+    """No documentation available.
+
+    Args:
+        content: The CSS to be applied to this page.
+        media: A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media.
+    Returns:
+        A `h2o_wave.types.InlineStylesheet` instance.
+    """
+    return InlineStylesheet(
+        content,
+        media,
+    )
+
+
+def stylesheet(
+        path: str,
+        media: Optional[str] = None,
+        cross_origin: Optional[str] = None,
+) -> Stylesheet:
+    """Create a reference to an external CSS file to be included on a page.
+
+    Args:
+        path: The URI of an external stylesheet.
+        media: A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media.
+        cross_origin: The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin
+    Returns:
+        A `h2o_wave.types.Stylesheet` instance.
+    """
+    return Stylesheet(
+        path,
+        media,
+        cross_origin,
+    )
+
+
 def meta_card(
         box: str,
         title: Optional[str] = None,
@@ -2769,6 +2808,8 @@ def meta_card(
         tracker: Optional[Tracker] = None,
         scripts: Optional[List[Script]] = None,
         script: Optional[InlineScript] = None,
+        stylesheet: Optional[InlineStylesheet] = None,
+        stylesheets: Optional[List[Stylesheet]] = None,
         commands: Optional[List[Command]] = None,
 ) -> MetaCard:
     """Represents page-global state.
@@ -2789,6 +2830,8 @@ def meta_card(
         tracker: Configure a tracker for the page (for web analytics).
         scripts: External Javascript files to load into the page.
         script: Javascript code to execute on this page.
+        stylesheet: CSS stylesheet to be applied to this page.
+        stylesheets: External CSS files to load into the page.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.MetaCard` instance.
@@ -2806,6 +2849,8 @@ def meta_card(
         tracker,
         scripts,
         script,
+        stylesheet,
+        stylesheets,
         commands,
     )
 

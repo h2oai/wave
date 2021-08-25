@@ -7780,6 +7780,94 @@ class InlineScript:
         )
 
 
+class InlineStylesheet:
+    """No documentation available.
+    """
+    def __init__(
+            self,
+            content: str,
+            media: Optional[str] = None,
+    ):
+        _guard_scalar('InlineStylesheet.content', content, (str,), False, False, False)
+        _guard_scalar('InlineStylesheet.media', media, (str,), False, True, False)
+        self.content = content
+        """The CSS to be applied to this page."""
+        self.media = media
+        """A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('InlineStylesheet.content', self.content, (str,), False, False, False)
+        _guard_scalar('InlineStylesheet.media', self.media, (str,), False, True, False)
+        return _dump(
+            content=self.content,
+            media=self.media,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'InlineStylesheet':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_content: Any = __d.get('content')
+        _guard_scalar('InlineStylesheet.content', __d_content, (str,), False, False, False)
+        __d_media: Any = __d.get('media')
+        _guard_scalar('InlineStylesheet.media', __d_media, (str,), False, True, False)
+        content: str = __d_content
+        media: Optional[str] = __d_media
+        return InlineStylesheet(
+            content,
+            media,
+        )
+
+
+class Stylesheet:
+    """Create a reference to an external CSS file to be included on a page.
+    """
+    def __init__(
+            self,
+            path: str,
+            media: Optional[str] = None,
+            cross_origin: Optional[str] = None,
+    ):
+        _guard_scalar('Stylesheet.path', path, (str,), False, False, False)
+        _guard_scalar('Stylesheet.media', media, (str,), False, True, False)
+        _guard_scalar('Stylesheet.cross_origin', cross_origin, (str,), False, True, False)
+        self.path = path
+        """The URI of an external stylesheet."""
+        self.media = media
+        """A valid media query to set conditions for when the stylesheet should be loaded. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-media."""
+        self.cross_origin = cross_origin
+        """The CORS setting. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-crossorigin"""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Stylesheet.path', self.path, (str,), False, False, False)
+        _guard_scalar('Stylesheet.media', self.media, (str,), False, True, False)
+        _guard_scalar('Stylesheet.cross_origin', self.cross_origin, (str,), False, True, False)
+        return _dump(
+            path=self.path,
+            media=self.media,
+            cross_origin=self.cross_origin,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Stylesheet':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_path: Any = __d.get('path')
+        _guard_scalar('Stylesheet.path', __d_path, (str,), False, False, False)
+        __d_media: Any = __d.get('media')
+        _guard_scalar('Stylesheet.media', __d_media, (str,), False, True, False)
+        __d_cross_origin: Any = __d.get('cross_origin')
+        _guard_scalar('Stylesheet.cross_origin', __d_cross_origin, (str,), False, True, False)
+        path: str = __d_path
+        media: Optional[str] = __d_media
+        cross_origin: Optional[str] = __d_cross_origin
+        return Stylesheet(
+            path,
+            media,
+            cross_origin,
+        )
+
+
 class MetaCard:
     """Represents page-global state.
 
@@ -7800,6 +7888,8 @@ class MetaCard:
             tracker: Optional[Tracker] = None,
             scripts: Optional[List[Script]] = None,
             script: Optional[InlineScript] = None,
+            stylesheet: Optional[InlineStylesheet] = None,
+            stylesheets: Optional[List[Stylesheet]] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('MetaCard.box', box, (str,), False, False, False)
@@ -7814,6 +7904,8 @@ class MetaCard:
         _guard_scalar('MetaCard.tracker', tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', scripts, (Script,), False, True, False)
         _guard_scalar('MetaCard.script', script, (InlineScript,), False, True, False)
+        _guard_scalar('MetaCard.stylesheet', stylesheet, (InlineStylesheet,), False, True, False)
+        _guard_vector('MetaCard.stylesheets', stylesheets, (Stylesheet,), False, True, False)
         _guard_vector('MetaCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -7839,6 +7931,10 @@ class MetaCard:
         """External Javascript files to load into the page."""
         self.script = script
         """Javascript code to execute on this page."""
+        self.stylesheet = stylesheet
+        """CSS stylesheet to be applied to this page."""
+        self.stylesheets = stylesheets
+        """External CSS files to load into the page."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -7856,6 +7952,8 @@ class MetaCard:
         _guard_scalar('MetaCard.tracker', self.tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', self.scripts, (Script,), False, True, False)
         _guard_scalar('MetaCard.script', self.script, (InlineScript,), False, True, False)
+        _guard_scalar('MetaCard.stylesheet', self.stylesheet, (InlineStylesheet,), False, True, False)
+        _guard_vector('MetaCard.stylesheets', self.stylesheets, (Stylesheet,), False, True, False)
         _guard_vector('MetaCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='meta',
@@ -7871,6 +7969,8 @@ class MetaCard:
             tracker=None if self.tracker is None else self.tracker.dump(),
             scripts=None if self.scripts is None else [__e.dump() for __e in self.scripts],
             script=None if self.script is None else self.script.dump(),
+            stylesheet=None if self.stylesheet is None else self.stylesheet.dump(),
+            stylesheets=None if self.stylesheets is None else [__e.dump() for __e in self.stylesheets],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -7901,6 +8001,10 @@ class MetaCard:
         _guard_vector('MetaCard.scripts', __d_scripts, (dict,), False, True, False)
         __d_script: Any = __d.get('script')
         _guard_scalar('MetaCard.script', __d_script, (dict,), False, True, False)
+        __d_stylesheet: Any = __d.get('stylesheet')
+        _guard_scalar('MetaCard.stylesheet', __d_stylesheet, (dict,), False, True, False)
+        __d_stylesheets: Any = __d.get('stylesheets')
+        _guard_vector('MetaCard.stylesheets', __d_stylesheets, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('MetaCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -7915,6 +8019,8 @@ class MetaCard:
         tracker: Optional[Tracker] = None if __d_tracker is None else Tracker.load(__d_tracker)
         scripts: Optional[List[Script]] = None if __d_scripts is None else [Script.load(__e) for __e in __d_scripts]
         script: Optional[InlineScript] = None if __d_script is None else InlineScript.load(__d_script)
+        stylesheet: Optional[InlineStylesheet] = None if __d_stylesheet is None else InlineStylesheet.load(__d_stylesheet)
+        stylesheets: Optional[List[Stylesheet]] = None if __d_stylesheets is None else [Stylesheet.load(__e) for __e in __d_stylesheets]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return MetaCard(
             box,
@@ -7929,6 +8035,8 @@ class MetaCard:
             tracker,
             scripts,
             script,
+            stylesheet,
+            stylesheets,
             commands,
         )
 
