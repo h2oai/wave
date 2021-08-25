@@ -77,6 +77,10 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		req, err := readRequestWithLimit(w, r.Body, p.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read proxy request body", "error": err.Error()})
+			if isRequestTooLarge(err) {
+				http.Error(w, http.StatusText(http.StatusRequestEntityTooLarge), http.StatusRequestEntityTooLarge)
+				return
+			}
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}

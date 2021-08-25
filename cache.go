@@ -71,6 +71,10 @@ func (c *Cache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		v, err := readRequestWithLimit(w, r.Body, c.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read cache request body", "error": err.Error()})
+			if isRequestTooLarge(err) {
+				http.Error(w, http.StatusText(http.StatusRequestEntityTooLarge), http.StatusRequestEntityTooLarge)
+				return
+			}
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}

@@ -82,6 +82,10 @@ func (s *WebServer) patch(w http.ResponseWriter, r *http.Request) {
 	data, err := readRequestWithLimit(w, r.Body, s.maxRequestSize)
 	if err != nil {
 		echo(Log{"t": "read patch request body", "error": err.Error()})
+		if isRequestTooLarge(err) {
+			http.Error(w, http.StatusText(http.StatusRequestEntityTooLarge), http.StatusRequestEntityTooLarge)
+			return
+		}
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -115,6 +119,10 @@ func (s *WebServer) post(w http.ResponseWriter, r *http.Request) {
 		b, err := readRequestWithLimit(w, r.Body, s.maxRequestSize)
 		if err != nil {
 			echo(Log{"t": "read post request body", "error": err.Error()})
+			if isRequestTooLarge(err) {
+				http.Error(w, http.StatusText(http.StatusRequestEntityTooLarge), http.StatusRequestEntityTooLarge)
+				return
+			}
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}

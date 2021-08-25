@@ -114,6 +114,13 @@ func readRequestWithLimit(w http.ResponseWriter, r io.ReadCloser, n int64) ([]by
 	return ioutil.ReadAll(http.MaxBytesReader(w, r, n))
 }
 
+func isRequestTooLarge(err error) bool {
+	// HACK: net/http does not export the error
+	// https://github.com/golang/go/issues/30715
+	// https://github.com/golang/go/issues/41493
+	return err != nil && err.Error() == "http: request body too large"
+}
+
 func readWithLimit(r io.Reader, n int64) ([]byte, error) {
 	return ioutil.ReadAll(io.LimitReader(r, n))
 }
