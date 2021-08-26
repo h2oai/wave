@@ -1,5 +1,23 @@
-const examples = require('./examples')
-const showcase = require('./showcase')
+const
+  examples = require('./examples'),
+  capitalize = str => str.charAt(0).toUpperCase() + str.slice(1),
+  { groups, plainFiles } = require('./showcase')
+    .sort((a, b) => a.path.localeCompare(b.path))
+    .reduce((acc, { group, path }) => {
+      path = path.replace('.md', '')
+      if (group) {
+        if (acc.groups.has(group)) {
+          const items = acc.groups.get(group).items
+          path.includes('overview') ? items.unshift(path) : items.push(path)
+        }
+        else acc.groups.set(group, { type: 'category', label: capitalize(group), items: [path], })
+      }
+      else acc.plainFiles.push(path)
+
+      return acc
+    }, { groups: new Map(), plainFiles: [] })
+
+const sortedGroups = [...groups.values()].sort((a, b) => a.label.localeCompare(b.label))
 
 module.exports = {
   someSidebar: {
@@ -52,7 +70,7 @@ module.exports = {
       'wavedb',
     ],
     'Examples': examples.map(e => `examples/${e.slug}`),
-    'Showcase': showcase,
+    'Components': [...plainFiles.sort(), ...sortedGroups],
     'API': [
       'api/index',
       'api/core',

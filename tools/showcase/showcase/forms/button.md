@@ -3,9 +3,10 @@ title: Button
 keywords:
   - form
   - buttons
+custom_edit_url: null
 ---
 
-Use button to handle user interactions in forms that should result in app view changes, task completions or routing.
+Use buttons to handle user interactions in forms that should result in app view changes, task completions or routing.
 Also think about the correct button state, type and even cosmetic things like icons.
 
 ```py
@@ -28,7 +29,7 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 
 ## Disabled
 
-Use disabled button for cases when clicking should not allowed, based on current app state. A typical example might be a user didnt't fill all the form fields yet
+Use disabled button for cases when clicking should not be allowed, based on current app state. A typical example might be a user didnt't fill all the form fields yet
 so is not allowed to proceed. Disabled buttons have all interactions disabled (click, hover etc.).
 
 ```py
@@ -104,16 +105,5 @@ q.page['form'] = ui.form_card(box='1 1 3 1', items=[
         ui.button(name='button', label='Button 1'),
         ui.button(name='button', label='Button 2')
     ])
-])
-```
-
-## Size control
-
-If you happen to need a precise control over button dimensions, use `width` attr. It accepts both `px` and `%` values.
-
-```py
-q.page['form'] = ui.form_card(box='1 1 3 2', items=[
-    ui.button(name='button', label='Width in px', width='300px'),
-    ui.button(name='button', label='Width in %', width='50%')
 ])
 ```

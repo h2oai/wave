@@ -28,6 +28,15 @@
       ]
     },
     {
+      "name": "Debug Showcase",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/tools/showcase",
+      "program": "${workspaceFolder}/tools/showcase/showcase.py",
+      "python": "${workspaceFolder}/tools/showcase/venv/bin/python",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Debug Tests",
       "type": "node",
       "request": "launch",

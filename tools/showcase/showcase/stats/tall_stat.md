@@ -2,6 +2,7 @@
 title: Tall Stat
 keywords:
   - stats
+custom_edit_url: null
 ---
 
 Use stat to show off.
