@@ -208,6 +208,7 @@
 .user <- .User$new()
 .client <- .Client$new()
 .app <- .App$new()
+options(error=function() traceback(3))
 
 #' @title Run Application
 #' 
@@ -229,7 +230,9 @@ app <- function(route="/demo"
                 ,server_address = 'http://127.0.0.1'
                 ,server_port = 15555)
 {
-    httpuv::startServer(host = "127.0.0.1", port = server_port,
+    stopAllServers()
+    waver <- httpuv::startServer(host = "127.0.0.1", port = server_port,
+#                        interruptIntervalMs = 0,
                         app = list(
                                    call = function(req) {
                                        if(tolower(mode) == 'unicast'){
@@ -245,7 +248,7 @@ app <- function(route="/demo"
                                        qObject$check_n_append(route)
                                        qObject$args <- fromJSON(rawToChar(as.list(req)$rook.input$read(-1)))
                                        if(!exists("serve")) print('No serve() function exists. Please Add serve()')
-                                       else serve(qObject)
+                                       else tryCatch({serve(qObject)},error=function(e){print(e)})
                                        body <- paste0("Time: ", Sys.time(), "<br>Path requested: ", req$PATH_INFO)
                                        list(
                                             status = 200L,
@@ -275,5 +278,6 @@ app <- function(route="/demo"
                )
                ,content_type_json()
     )
-
+    on.exit(stopServer(waver))
+    service(0)
 }
