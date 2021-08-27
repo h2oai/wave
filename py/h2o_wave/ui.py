@@ -1654,6 +1654,7 @@ def picker(
         label: Optional[str] = None,
         values: Optional[List[str]] = None,
         max_choices: Optional[int] = None,
+        required: Optional[bool] = None,
         disabled: Optional[bool] = None,
         width: Optional[str] = None,
         visible: Optional[bool] = None,
@@ -1670,6 +1671,7 @@ def picker(
         label: Text to be displayed above the component.
         values: The names of the selected choices.
         max_choices: Maximum number of selectable choices. Defaults to no limit.
+        required: True if the picker is a required field.
         disabled: Controls whether the picker should be disabled or not.
         width: The width of the picker, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to true.
@@ -1684,6 +1686,7 @@ def picker(
         label,
         values,
         max_choices,
+        required,
         disabled,
         width,
         visible,

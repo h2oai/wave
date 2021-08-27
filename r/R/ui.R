@@ -1919,6 +1919,7 @@ ui_template <- function(
 #' @param label Text to be displayed above the component.
 #' @param values The names of the selected choices.
 #' @param max_choices Maximum number of selectable choices. Defaults to no limit.
+#' @param required True if the picker is a required field.
 #' @param disabled Controls whether the picker should be disabled or not.
 #' @param width The width of the picker, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
@@ -1932,6 +1933,7 @@ ui_picker <- function(
   label = NULL,
   values = NULL,
   max_choices = NULL,
+  required = NULL,
   disabled = NULL,
   width = NULL,
   visible = NULL,
@@ -1942,6 +1944,7 @@ ui_picker <- function(
   .guard_scalar("label", "character", label)
   .guard_vector("values", "character", values)
   .guard_scalar("max_choices", "numeric", max_choices)
+  .guard_scalar("required", "logical", required)
   .guard_scalar("disabled", "logical", disabled)
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
@@ -1953,6 +1956,7 @@ ui_picker <- function(
     label=label,
     values=values,
     max_choices=max_choices,
+    required=required,
     disabled=disabled,
     width=width,
     visible=visible,

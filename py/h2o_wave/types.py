@@ -4290,6 +4290,7 @@ class Picker:
             label: Optional[str] = None,
             values: Optional[List[str]] = None,
             max_choices: Optional[int] = None,
+            required: Optional[bool] = None,
             disabled: Optional[bool] = None,
             width: Optional[str] = None,
             visible: Optional[bool] = None,
@@ -4301,6 +4302,7 @@ class Picker:
         _guard_scalar('Picker.label', label, (str,), False, True, False)
         _guard_vector('Picker.values', values, (str,), False, True, False)
         _guard_scalar('Picker.max_choices', max_choices, (int,), False, True, False)
+        _guard_scalar('Picker.required', required, (bool,), False, True, False)
         _guard_scalar('Picker.disabled', disabled, (bool,), False, True, False)
         _guard_scalar('Picker.width', width, (str,), False, True, False)
         _guard_scalar('Picker.visible', visible, (bool,), False, True, False)
@@ -4316,6 +4318,8 @@ class Picker:
         """The names of the selected choices."""
         self.max_choices = max_choices
         """Maximum number of selectable choices. Defaults to no limit."""
+        self.required = required
+        """True if the picker is a required field."""
         self.disabled = disabled
         """Controls whether the picker should be disabled or not."""
         self.width = width
@@ -4334,6 +4338,7 @@ class Picker:
         _guard_scalar('Picker.label', self.label, (str,), False, True, False)
         _guard_vector('Picker.values', self.values, (str,), False, True, False)
         _guard_scalar('Picker.max_choices', self.max_choices, (int,), False, True, False)
+        _guard_scalar('Picker.required', self.required, (bool,), False, True, False)
         _guard_scalar('Picker.disabled', self.disabled, (bool,), False, True, False)
         _guard_scalar('Picker.width', self.width, (str,), False, True, False)
         _guard_scalar('Picker.visible', self.visible, (bool,), False, True, False)
@@ -4345,6 +4350,7 @@ class Picker:
             label=self.label,
             values=self.values,
             max_choices=self.max_choices,
+            required=self.required,
             disabled=self.disabled,
             width=self.width,
             visible=self.visible,
@@ -4365,6 +4371,8 @@ class Picker:
         _guard_vector('Picker.values', __d_values, (str,), False, True, False)
         __d_max_choices: Any = __d.get('max_choices')
         _guard_scalar('Picker.max_choices', __d_max_choices, (int,), False, True, False)
+        __d_required: Any = __d.get('required')
+        _guard_scalar('Picker.required', __d_required, (bool,), False, True, False)
         __d_disabled: Any = __d.get('disabled')
         _guard_scalar('Picker.disabled', __d_disabled, (bool,), False, True, False)
         __d_width: Any = __d.get('width')
@@ -4380,6 +4388,7 @@ class Picker:
         label: Optional[str] = __d_label
         values: Optional[List[str]] = __d_values
         max_choices: Optional[int] = __d_max_choices
+        required: Optional[bool] = __d_required
         disabled: Optional[bool] = __d_disabled
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
@@ -4391,6 +4400,7 @@ class Picker:
             label,
             values,
             max_choices,
+            required,
             disabled,
             width,
             visible,

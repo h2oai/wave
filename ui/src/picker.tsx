@@ -34,6 +34,8 @@ export interface Picker {
   values?: S[]
   /** Maximum number of selectable choices. Defaults to no limit. */
   max_choices?: U
+  /** True if the picker is a required field. */
+  required?: B
   /** Controls whether the picker should be disabled or not. */
   disabled?: B
   /** The width of the picker, e.g. '100px'. Defaults to '100%'. */
@@ -73,7 +75,7 @@ export const XPicker = ({ model: m }: { model: Picker }) => {
 
   return (
     <>
-      {m.label && <Fluent.Text>{m.label}</Fluent.Text>}
+      {m.label && <Fluent.Label required={m.required}>{m.label}</Fluent.Label>}
       <Fluent.TagPicker
         inputProps={{ 'data-test': m.name } as Fluent.IInputProps}
         removeButtonAriaLabel="Remove"
