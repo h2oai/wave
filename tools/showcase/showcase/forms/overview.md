@@ -7,6 +7,12 @@ custom_edit_url: null
 
 Forms provide a simple way for getting data from your users. This page describes attributes that are common for all the form components.
 
+## Data submission
+
+By default, the data is submitted to the server on a button click. However, when you want to rerender UI
+based on most recent user input, you may want to submit the data to server right away and that's exactly what `trigger` attribute
+is for.
+
 ## Visibility
 
 Need to control whether a component is shown or not? Use `visible` attribute. Note that space is not occupied after hiding the component.
