@@ -41,10 +41,11 @@ export interface SidePanel {
 export default bond(() => {
   const
     onDismiss = () => {
-      const { name, events } = sidePanelB() || {}
-      if (name) {
-        events?.forEach(e => { if (e === 'dismissed') wave.emit(name, e, true) })
-      }
+      const
+        { name, events } = sidePanelB() || {},
+        ev = events?.find(e => e === 'dismissed')
+
+      if (ev && name) wave.emit(name, ev, true)
       sidePanelB(null)
     },
     render = () => {
