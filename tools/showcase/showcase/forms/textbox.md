@@ -36,7 +36,7 @@ q.page['example'] = ui.form_card(
 )
 ```
 
-## Disabled textbox
+## Disabled
 
 Used for cases when the input should not be changable yet (e.g. waiting for filling some other form element first).
 
@@ -44,6 +44,18 @@ Used for cases when the input should not be changable yet (e.g. waiting for fill
 q.page['example'] = ui.form_card(
     box='1 1 2 2',
     items=[ui.textbox(name='textbox_disabled', label='Disabled', disabled=True)]
+)
+```
+
+## Required
+
+Renders a small asterisk next to the label. Used for cases when the input has to be provided,
+otherwise the form is considered invalid.
+
+```py
+q.page['example'] = ui.form_card(
+    box='1 1 2 2',
+    items=[ui.textbox(name='textbox_required', label='Required', required=True)]
 )
 ```
 

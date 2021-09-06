@@ -9,6 +9,7 @@ import json
 from typing import Any, List
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+import sys
 
 example_file_path = os.path.join('..', '..', 'py', 'showcase.py')
 docs_path = os.path.join('..', '..', 'website')
@@ -45,7 +46,10 @@ def make_snippet_screenshot(code: List[str], screenshot_name: str, browser: Any,
     card_name = match.group(3)
     with open(example_file_path, 'w') as f:
         f.write(get_template_code(code_str))
-    with subprocess.Popen(['venv/bin/python', 'showcase.py'], cwd=os.path.join('..', '..', 'py')):
+    with subprocess.Popen(['venv/bin/python', 'showcase.py'], cwd=os.path.join('..', '..', 'py'), stderr=subprocess.PIPE) as p:  # noqa
+        _, err = p.communicate()
+        if err:
+            raise ValueError(f'Could not generate {group} {screenshot_name}\n{err.decode()}')
         page = browser.new_page()
         page.goto('http://localhost:10101')
         path = os.path.join(docs_path, 'docs', 'showcase', group, 'assets', screenshot_name)
@@ -100,22 +104,32 @@ def generate_showcase_json(files: List[DocFile]):
         f.write(f'module.exports={json.dumps(files, cls=CustomEncoder)}')
 
 
+def map_to_doc_file(p: Path, files: List[DocFile]):
+    _, *groups, _ = p.parts
+    if len(groups) > 1:
+        raise ValueError(f'Nested folders not supported - {"/".join(groups)}')
+    files.append(DocFile(str(p), groups[0] if groups else '', p.stem))
+
+
 def main():
     qd_server = None
-    try:
+    arg_files = sys.argv[1:]
+    files = []
+    if not arg_files:
         # Remove old contents first.
         for f in glob.glob(os.path.join(docs_path, 'docs', 'showcase', '*.md')):
             os.remove(f)
         for f in glob.glob(os.path.join(docs_path, 'docs', 'showcase', 'assets', '*.png')):
             os.remove(f)
 
-        files = []
         for p in Path('showcase').rglob('*.md'):
-            _, *groups, _ = p.parts
-            if len(groups) > 1:
-                raise ValueError(f'Nested folders not supported - {"/".join(groups)}')
-            files.append(DocFile(str(p), groups[0] if groups else '', p.stem))
+            map_to_doc_file(p, files)
+    else:
+        for f in arg_files:
+            p = Path(f'showcase/{f}.md')
+            map_to_doc_file(p, files)
 
+    try:
         qd_server = subprocess.Popen(
             ['make', 'run'],
             cwd=os.path.join('..', '..'),

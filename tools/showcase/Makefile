@@ -6,7 +6,7 @@ setup:
 	./venv/bin/python -m playwright install
 
 generate:
-	./venv/bin/python showcase.py
+	./venv/bin/python showcase.py $(FILES)
 
 clean:
 	rm -rf venv

@@ -838,7 +838,6 @@ def spinbox(
     """Create a spinbox.
 
     A spinbox allows the user to incrementally adjust a value in small steps.
-    It is mainly used for numeric values, but other values are supported too.
 
     Args:
         name: An identifying name for this component.
@@ -931,7 +930,7 @@ def color_picker(
 ) -> Component:
     """Create a color picker.
 
-    A date picker allows a user to pick a color value.
+    A color picker allows a user to pick a color value.
     If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
 
     Args:

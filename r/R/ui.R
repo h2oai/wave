@@ -975,7 +975,6 @@ ui_slider <- function(
 #' Create a spinbox.
 #' 
 #' A spinbox allows the user to incrementally adjust a value in small steps.
-#' It is mainly used for numeric values, but other values are supported too.
 #'
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed alongside the component.
@@ -1087,7 +1086,7 @@ ui_date_picker <- function(
 
 #' Create a color picker.
 #' 
-#' A date picker allows a user to pick a color value.
+#' A color picker allows a user to pick a color value.
 #' If the 'choices' parameter is set, a swatch picker is displayed instead of the standard color picker.
 #'
 #' @param name An identifying name for this component.

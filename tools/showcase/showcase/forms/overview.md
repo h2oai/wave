@@ -13,6 +13,37 @@ By default, the data is submitted to the server on a button click. However, when
 based on most recent user input, you may want to submit the data to server right away and that's exactly what `trigger` attribute
 is for.
 
+## Default values
+
+Most of the components support `value` attribute
+which serves for prepopulating your form items in advance. This can be useful when you know that most
+of the users will pick a certain value or to fill in calculated values based on other filled form fields.
+It is considered a good practice and we encourage you to make your users lives as easy as possible.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+    ui.textbox(name='textbox', label='Textbox', value='Default value')
+])
+```
+
+Some components allow multiple selections. These support `values` attribute which takes values of
+`name` attribute chosen for each option.
+
+```py
+q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+    ui.checklist(name='checklist', label='Checklist', values=['A', 'B'], choices=[
+        ui.choice('A', 'Checked A'),
+        ui.choice('B', 'Checked B'),
+        ui.choice('C', 'Option C'),
+    ])
+])
+```
+
+:::tip
+If you stumble upon an element that has one of these props missing and you feel like it could be needed,
+don't hesitate and [start a discussion](https://github.com/h2oai/wave/discussions)!
+:::
+
 ## Visibility
 
 Need to control whether a component is shown or not? Use `visible` attribute. Note that space is not occupied after hiding the component.

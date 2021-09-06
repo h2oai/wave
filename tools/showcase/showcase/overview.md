@@ -19,4 +19,8 @@ For more info visit [forms overview](/docs/showcase/forms/overview).
 ## Custom components
 
 For cases like these you can use [ui.markup_card](/docs/api/ui#markup_card) where you can specify your HTML. Need to add some interactivity? Have a look at our [Javascript](/docs/javascript) section.
-Note that this is not advised and should be used only when absolutely necessary.
+
+:::warning
+One of the key advantages of Wave is zero HTML / CSS / JS knowledge. We strongly advise you to use
+native Wave components and use custom HTML only as a last resort solution.
+:::
