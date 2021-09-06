@@ -2160,6 +2160,43 @@ def image(
     ))
 
 
+def persona(
+        title: str,
+        subtitle: Optional[str] = None,
+        caption: Optional[str] = None,
+        size: Optional[str] = None,
+        image: Optional[str] = None,
+        initials: Optional[str] = None,
+        initials_color: Optional[str] = None,
+        name: Optional[str] = None,
+) -> Component:
+    """Create an individual's persona or avatar, a visual representation of a person across products.
+    Can be used to display an individual's avatar (or a composition of the person’s initials on a background color), their name or identification, and online status.
+
+    Args:
+        title: Primary text, displayed next to the persona coin.
+        subtitle: Secondary text, displayed under the title.
+        caption: Tertiary text, displayed under the subtitle. Only visible for sizes >= 'm'.
+        size: The size of the persona coin. Defaults to 'm'. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.PersonaSize.
+        image: Image, URL or base64-encoded (`data:image/png;base64,???`).
+        initials: Initials, if `image` is not specified.
+        initials_color: Initials background color (CSS-compatible string).
+        name: An identifying name for this component.
+    Returns:
+        A `h2o_wave.types.Persona` instance.
+    """
+    return Component(persona=Persona(
+        title,
+        subtitle,
+        caption,
+        size,
+        image,
+        initials,
+        initials_color,
+        name,
+    ))
+
+
 def form_card(
         box: str,
         items: Union[List[Component], str],
