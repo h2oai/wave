@@ -20,7 +20,7 @@ import { wave } from './ui'
 
 const name = 'fileUpload'
 const fileUploadProps: FileUpload = { name }
-interface FileObj { name: T.S; size?: T.F }
+type FileObj = { name: T.S; size?: T.F }
 
 describe('FileUpload.tsx', () => {
   beforeEach(() => {

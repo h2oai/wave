@@ -26,6 +26,10 @@ import { bond } from './ui'
 
 export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>
 
+
+/**
+ * Create an inline CSS to be injected into a page.
+ */
 interface InlineStylesheet {
   /** The CSS to be applied to this page. */
   content: S

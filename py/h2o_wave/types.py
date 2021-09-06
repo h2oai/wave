@@ -3375,9 +3375,9 @@ class TableCellType:
         _guard_scalar('TableCellType.progress', progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', icon, (IconTableCellType,), False, True, False)
         self.progress = progress
-        """No documentation available."""
+        """Renders a progress arc with a percentage value in the middle."""
         self.icon = icon
-        """No documentation available."""
+        """Renders an icon."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7648,7 +7648,7 @@ class SidePanel:
         self.items = items
         """The components displayed in this side panel."""
         self.width = width
-        """The width of the dialog, e.g. '400px', defaults to '600px'."""
+        """The width of the dialog, e.g. '400px'. Defaults to '600px'."""
         self.name = name
         """An identifying name for this component."""
         self.events = events
@@ -7862,7 +7862,7 @@ class InlineScript:
 
 
 class InlineStylesheet:
-    """No documentation available.
+    """Create an inline CSS to be injected into a page.
     """
     def __init__(
             self,

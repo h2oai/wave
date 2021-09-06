@@ -2707,7 +2707,7 @@ def side_panel(
     Args:
         title: The side panel's title.
         items: The components displayed in this side panel.
-        width: The width of the dialog, e.g. '400px', defaults to '600px'.
+        width: The width of the dialog, e.g. '400px'. Defaults to '600px'.
         name: An identifying name for this component.
         events: The events to capture on this side panel.
     Returns:
@@ -2792,7 +2792,7 @@ def inline_stylesheet(
         content: str,
         media: Optional[str] = None,
 ) -> InlineStylesheet:
-    """No documentation available.
+    """Create an inline CSS to be injected into a page.
 
     Args:
         content: The CSS to be applied to this page.

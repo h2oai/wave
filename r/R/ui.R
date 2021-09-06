@@ -3157,7 +3157,7 @@ ui_dialog <- function(
 #'
 #' @param title The side panel's title.
 #' @param items The components displayed in this side panel.
-#' @param width The width of the dialog, e.g. '400px', defaults to '600px'.
+#' @param width The width of the dialog, e.g. '400px'. Defaults to '600px'.
 #' @param name An identifying name for this component.
 #' @param events The events to capture on this side panel.
 #' @return A SidePanel instance.
@@ -3254,7 +3254,7 @@ ui_inline_script <- function(
   return(.o)
 }
 
-#' No documentation available.
+#' Create an inline CSS to be injected into a page.
 #'
 #' @param content The CSS to be applied to this page.
 #' @param media A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media.
