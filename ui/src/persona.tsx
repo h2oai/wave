@@ -5,9 +5,10 @@ import { cssVar } from './theme'
 import { wave } from './ui'
 
 
-/** Create an individual's persona or avatar, a visual representation of a person across products. 
+/** 
+  * Create an individual's persona or avatar, a visual representation of a person across products. 
   * Can be used to display an individual's avatar (or a composition of the person’s initials on a background color), their name or identification, and online status.
-  */
+*/
 export interface Persona {
   /** Primary text, displayed next to the persona coin. */
   title: S
