@@ -792,13 +792,13 @@ const
         printLicense()
         p('')
         p(`.recursive_null_extractor <- function(x){`)
-        p(`     attribute_holder <- attributes(x)$class`)  
+        p(`     attribute_holder <- attributes(x)$class`)
         p(`     x <- lapply(x,function(y){`)
-        p(`          if(is.list(y)){`)  
-        p(`             return(.recursive_null_extractor(y))`)        
+        p(`          if(is.list(y)){`)
+        p(`             return(.recursive_null_extractor(y))`)
         p(`          }`)
         p(`          else {`)
-        p(`             return(y)`)        
+        p(`             return(y)`)
         p(`          }`)
         p(`     })`)
         p(`     x[sapply(x,is.null)] <- NULL`)
@@ -929,6 +929,12 @@ const
         d[name] = f ? f + 1 : 1
       }
     }
+
+    console.log(Object.keys(d).sort().reduce((obj, key) => {
+      obj[key] = d[key]
+      return obj
+    }, {} as any))
+
     let count = 0
     for (const t of protocol.types) {
       count += t.members.length
