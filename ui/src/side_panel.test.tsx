@@ -19,7 +19,7 @@ import { wave } from './ui'
 
 const
   name = 'sidePanel',
-  sidePanelProps = { name, items: [] }
+  sidePanelProps = { name, items: [], title: 'Title' }
 
 describe('SidePanel.tsx', () => {
   beforeEach(() => {
@@ -40,13 +40,11 @@ describe('SidePanel.tsx', () => {
   })
 
   it('should render X closing button when specified', () => {
-    sidePanelB(sidePanelProps)
     const { container } = render(<SidePanel />)
     expect(container.parentElement?.querySelector('.ms-Panel-closeButton')).toBeInTheDocument()
   })
 
   it('should close side panel when clicking on X', async () => {
-    sidePanelB(sidePanelProps)
     const { container, queryByRole } = render(<SidePanel />)
     fireEvent.click(container.parentElement?.querySelector('.ms-Panel-closeButton') as any)
     await wait(() => expect(queryByRole('dialog')).not.toBeInTheDocument())
