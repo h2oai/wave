@@ -18,6 +18,7 @@ import { Dialog, dialogB } from './dialog'
 import { cards } from './layout'
 import { showNotification } from './notification'
 import { executeScript, InlineScript, installScripts, Script } from './script'
+import { SidePanel, sidePanelB } from './side_panel'
 import { themeB } from './theme'
 import { setupTracker, Tracker } from './tracking'
 import { bond } from './ui'
@@ -25,6 +26,10 @@ import { bond } from './ui'
 
 export type FlexBox = Partial<{ zone: S, order: U, size: S, width: S, height: S }>
 
+
+/**
+ * Create an inline CSS to be injected into a page.
+ */
 interface InlineStylesheet {
   /** The CSS to be applied to this page. */
   content: S
@@ -122,6 +127,8 @@ interface State {
   layouts?: Layout[]
   /** Display a dialog on the page. */
   dialog?: Dialog
+  /** Display a side panel on the page. */
+  side_panel?: SidePanel
   /** Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'. */
   theme?: S
   /** Configure a tracker for the page (for web analytics). */
@@ -153,7 +160,22 @@ on(windowIconB, icon => {
 export const
   layoutsB = box<Layout[]>([]),
   preload = ({ state }: Model<State>) => {
-    const { title, icon, refresh, notification, redirect, layouts, dialog, theme, tracker, scripts, script, stylesheet, stylesheets } = state
+    const {
+      title,
+      icon,
+      refresh,
+      notification,
+      redirect,
+      layouts,
+      dialog,
+      side_panel,
+      theme,
+      tracker,
+      scripts,
+      script,
+      stylesheet,
+      stylesheets
+    } = state
 
     if (redirect) {
       try {
@@ -172,6 +194,7 @@ export const
     }
 
     dialogB(dialog ? { ...dialog } : null)
+    sidePanelB(side_panel ? { ...side_panel } : null)
 
     if (title) windowTitleB(title)
     if (icon) windowIconB(icon)

@@ -3151,6 +3151,38 @@ ui_dialog <- function(
   return(.o)
 }
 
+#' A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
+#' and requires people to interact with it. It’s primarily used for confirming actions,
+#' such as deleting a file, or asking people to make a choice.
+#'
+#' @param title The side panel's title.
+#' @param items The components displayed in this side panel.
+#' @param width The width of the dialog, e.g. '400px'. Defaults to '600px'.
+#' @param name An identifying name for this component.
+#' @param events The events to capture on this side panel.
+#' @return A SidePanel instance.
+#' @export
+ui_side_panel <- function(
+  title,
+  items,
+  width = NULL,
+  name = NULL,
+  events = NULL) {
+  .guard_scalar("title", "character", title)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("width", "character", width)
+  .guard_scalar("name", "character", name)
+  .guard_vector("events", "character", events)
+  .o <- list(
+    title=title,
+    items=items,
+    width=width,
+    name=name,
+    events=events)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveSidePanel"))
+  return(.o)
+}
+
 #' Configure user interaction tracking (analytics) for a page.
 #'
 #' @param type The tracking provider. Supported providers are `ga` (Google Analytics) and `gtag` (Google Global Site Tags or gtag.js)
@@ -3222,7 +3254,7 @@ ui_inline_script <- function(
   return(.o)
 }
 
-#' No documentation available.
+#' Create an inline CSS to be injected into a page.
 #'
 #' @param content The CSS to be applied to this page.
 #' @param media A valid media query to set conditions for when the style should be applied. More info at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style#attr-media.
@@ -3276,6 +3308,7 @@ ui_stylesheet <- function(
 #'   Not supported in Safari.
 #' @param layouts The layouts supported by this page.
 #' @param dialog Display a dialog on the page.
+#' @param side_panel Display a side panel on the page.
 #' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
 #' @param tracker Configure a tracker for the page (for web analytics).
 #' @param scripts External Javascript files to load into the page.
@@ -3294,6 +3327,7 @@ ui_meta_card <- function(
   icon = NULL,
   layouts = NULL,
   dialog = NULL,
+  side_panel = NULL,
   theme = NULL,
   tracker = NULL,
   scripts = NULL,
@@ -3309,6 +3343,7 @@ ui_meta_card <- function(
   .guard_scalar("icon", "character", icon)
   .guard_vector("layouts", "WaveLayout", layouts)
   .guard_scalar("dialog", "WaveDialog", dialog)
+  .guard_scalar("side_panel", "WaveSidePanel", side_panel)
   .guard_scalar("theme", "character", theme)
   .guard_scalar("tracker", "WaveTracker", tracker)
   .guard_vector("scripts", "WaveScript", scripts)
@@ -3325,6 +3360,7 @@ ui_meta_card <- function(
     icon=icon,
     layouts=layouts,
     dialog=dialog,
+    side_panel=side_panel,
     theme=theme,
     tracker=tracker,
     scripts=scripts,

@@ -23,7 +23,9 @@ import { wave } from './ui'
 
 /** Defines cell content to be rendered instead of a simple text. */
 interface TableCellType {
+  /** Renders a progress arc with a percentage value in the middle. */
   progress?: ProgressTableCellType
+  /** Renders an icon. */
   icon?: IconTableCellType
 }
 

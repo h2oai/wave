@@ -3375,9 +3375,9 @@ class TableCellType:
         _guard_scalar('TableCellType.progress', progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', icon, (IconTableCellType,), False, True, False)
         self.progress = progress
-        """No documentation available."""
+        """Renders a progress arc with a percentage value in the middle."""
         self.icon = icon
-        """No documentation available."""
+        """Renders an icon."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -7625,6 +7625,77 @@ class Dialog:
         )
 
 
+class SidePanel:
+    """A dialog box (Dialog) is a temporary pop-up that takes focus from the page or app
+    and requires people to interact with it. It’s primarily used for confirming actions,
+    such as deleting a file, or asking people to make a choice.
+    """
+    def __init__(
+            self,
+            title: str,
+            items: List[Component],
+            width: Optional[str] = None,
+            name: Optional[str] = None,
+            events: Optional[List[str]] = None,
+    ):
+        _guard_scalar('SidePanel.title', title, (str,), False, False, False)
+        _guard_vector('SidePanel.items', items, (Component,), False, False, False)
+        _guard_scalar('SidePanel.width', width, (str,), False, True, False)
+        _guard_scalar('SidePanel.name', name, (str,), True, True, False)
+        _guard_vector('SidePanel.events', events, (str,), False, True, False)
+        self.title = title
+        """The side panel's title."""
+        self.items = items
+        """The components displayed in this side panel."""
+        self.width = width
+        """The width of the dialog, e.g. '400px'. Defaults to '600px'."""
+        self.name = name
+        """An identifying name for this component."""
+        self.events = events
+        """The events to capture on this side panel."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('SidePanel.title', self.title, (str,), False, False, False)
+        _guard_vector('SidePanel.items', self.items, (Component,), False, False, False)
+        _guard_scalar('SidePanel.width', self.width, (str,), False, True, False)
+        _guard_scalar('SidePanel.name', self.name, (str,), True, True, False)
+        _guard_vector('SidePanel.events', self.events, (str,), False, True, False)
+        return _dump(
+            title=self.title,
+            items=[__e.dump() for __e in self.items],
+            width=self.width,
+            name=self.name,
+            events=self.events,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'SidePanel':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_title: Any = __d.get('title')
+        _guard_scalar('SidePanel.title', __d_title, (str,), False, False, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('SidePanel.items', __d_items, (dict,), False, False, False)
+        __d_width: Any = __d.get('width')
+        _guard_scalar('SidePanel.width', __d_width, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('SidePanel.name', __d_name, (str,), True, True, False)
+        __d_events: Any = __d.get('events')
+        _guard_vector('SidePanel.events', __d_events, (str,), False, True, False)
+        title: str = __d_title
+        items: List[Component] = [Component.load(__e) for __e in __d_items]
+        width: Optional[str] = __d_width
+        name: Optional[str] = __d_name
+        events: Optional[List[str]] = __d_events
+        return SidePanel(
+            title,
+            items,
+            width,
+            name,
+            events,
+        )
+
+
 _TrackerType = ['ga', 'gtag']
 
 
@@ -7791,7 +7862,7 @@ class InlineScript:
 
 
 class InlineStylesheet:
-    """No documentation available.
+    """Create an inline CSS to be injected into a page.
     """
     def __init__(
             self,
@@ -7894,6 +7965,7 @@ class MetaCard:
             icon: Optional[str] = None,
             layouts: Optional[List[Layout]] = None,
             dialog: Optional[Dialog] = None,
+            side_panel: Optional[SidePanel] = None,
             theme: Optional[str] = None,
             tracker: Optional[Tracker] = None,
             scripts: Optional[List[Script]] = None,
@@ -7910,6 +7982,7 @@ class MetaCard:
         _guard_scalar('MetaCard.icon', icon, (str,), False, True, False)
         _guard_vector('MetaCard.layouts', layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', dialog, (Dialog,), False, True, False)
+        _guard_scalar('MetaCard.side_panel', side_panel, (SidePanel,), False, True, False)
         _guard_scalar('MetaCard.theme', theme, (str,), False, True, False)
         _guard_scalar('MetaCard.tracker', tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', scripts, (Script,), False, True, False)
@@ -7933,6 +8006,8 @@ class MetaCard:
         """The layouts supported by this page."""
         self.dialog = dialog
         """Display a dialog on the page."""
+        self.side_panel = side_panel
+        """Display a side panel on the page."""
         self.theme = theme
         """Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'."""
         self.tracker = tracker
@@ -7958,6 +8033,7 @@ class MetaCard:
         _guard_scalar('MetaCard.icon', self.icon, (str,), False, True, False)
         _guard_vector('MetaCard.layouts', self.layouts, (Layout,), False, True, False)
         _guard_scalar('MetaCard.dialog', self.dialog, (Dialog,), False, True, False)
+        _guard_scalar('MetaCard.side_panel', self.side_panel, (SidePanel,), False, True, False)
         _guard_scalar('MetaCard.theme', self.theme, (str,), False, True, False)
         _guard_scalar('MetaCard.tracker', self.tracker, (Tracker,), False, True, False)
         _guard_vector('MetaCard.scripts', self.scripts, (Script,), False, True, False)
@@ -7975,6 +8051,7 @@ class MetaCard:
             icon=self.icon,
             layouts=None if self.layouts is None else [__e.dump() for __e in self.layouts],
             dialog=None if self.dialog is None else self.dialog.dump(),
+            side_panel=None if self.side_panel is None else self.side_panel.dump(),
             theme=self.theme,
             tracker=None if self.tracker is None else self.tracker.dump(),
             scripts=None if self.scripts is None else [__e.dump() for __e in self.scripts],
@@ -8003,6 +8080,8 @@ class MetaCard:
         _guard_vector('MetaCard.layouts', __d_layouts, (dict,), False, True, False)
         __d_dialog: Any = __d.get('dialog')
         _guard_scalar('MetaCard.dialog', __d_dialog, (dict,), False, True, False)
+        __d_side_panel: Any = __d.get('side_panel')
+        _guard_scalar('MetaCard.side_panel', __d_side_panel, (dict,), False, True, False)
         __d_theme: Any = __d.get('theme')
         _guard_scalar('MetaCard.theme', __d_theme, (str,), False, True, False)
         __d_tracker: Any = __d.get('tracker')
@@ -8025,6 +8104,7 @@ class MetaCard:
         icon: Optional[str] = __d_icon
         layouts: Optional[List[Layout]] = None if __d_layouts is None else [Layout.load(__e) for __e in __d_layouts]
         dialog: Optional[Dialog] = None if __d_dialog is None else Dialog.load(__d_dialog)
+        side_panel: Optional[SidePanel] = None if __d_side_panel is None else SidePanel.load(__d_side_panel)
         theme: Optional[str] = __d_theme
         tracker: Optional[Tracker] = None if __d_tracker is None else Tracker.load(__d_tracker)
         scripts: Optional[List[Script]] = None if __d_scripts is None else [Script.load(__e) for __e in __d_scripts]
@@ -8041,6 +8121,7 @@ class MetaCard:
             icon,
             layouts,
             dialog,
+            side_panel,
             theme,
             tracker,
             scripts,
