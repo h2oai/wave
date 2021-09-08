@@ -1978,7 +1978,7 @@ ui_picker <- function(
 #' @param max The maximum value of the slider. Defaults to 100.
 #' @param step The difference between two adjacent values of the slider.
 #' @param min_value The lower bound of the selected range.
-#' @param max_value The upper bound of the selected range.
+#' @param max_value The upper bound of the selected range. Default value is `max`.
 #' @param disabled True if this field is disabled.
 #' @param width The width of the range slider, e.g. '100px'. Defaults to '100%'.
 #' @param trigger True if the form should be submitted when the slider value changes.

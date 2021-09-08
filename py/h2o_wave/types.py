@@ -4456,7 +4456,7 @@ class RangeSlider:
         self.min_value = min_value
         """The lower bound of the selected range."""
         self.max_value = max_value
-        """The upper bound of the selected range."""
+        """The upper bound of the selected range. Default value is `max`."""
         self.disabled = disabled
         """True if this field is disabled."""
         self.width = width

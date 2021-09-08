@@ -1722,7 +1722,7 @@ def range_slider(
         max: The maximum value of the slider. Defaults to 100.
         step: The difference between two adjacent values of the slider.
         min_value: The lower bound of the selected range.
-        max_value: The upper bound of the selected range.
+        max_value: The upper bound of the selected range. Default value is `max`.
         disabled: True if this field is disabled.
         width: The width of the range slider, e.g. '100px'. Defaults to '100%'.
         trigger: True if the form should be submitted when the slider value changes.
