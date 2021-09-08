@@ -547,27 +547,26 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
 
-      let gridcell1 = getAllByRole('gridcell')[0]
+      let gridcell1 = getAllByRole('gridcell')[3]
       expect(gridcell1.textContent).toBe(cell11)
 
       fireEvent.click(container.querySelector('.ms-DetailsHeader-cellTitle i[class*=sortingIcon]')!)
 
-      gridcell1 = getAllByRole('gridcell')[0]
+      gridcell1 = getAllByRole('gridcell')[3]
       expect(gridcell1.textContent).toBe(cell21)
     })
 
     it('Searches grouped list', () => {
-
       const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
 
       fireEvent.click(getByTestId('groupby'))
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
 
-      // Header row is row as well so expect + 1.
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      // Count header and group header rows so + 2.
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 2)
       fireEvent.change(getByTestId('search'), { target: { value: cell21 } })
-      expect(getAllByRole('row')).toHaveLength(1)
+      expect(getAllByRole('row')).toHaveLength(2)
     })
 
     it('Filters grouped list - single option', () => {
@@ -577,10 +576,11 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      // Count header and group header rows so + 2.
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 2)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('Group2')[1].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(1)
+      expect(getAllByRole('row')).toHaveLength(2)
     })
 
     it('Filters grouped list - multiple options', () => {
@@ -590,27 +590,12 @@ describe('Table.tsx', () => {
       fireEvent.click(getAllByText('Col2')[1]!)
       fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
 
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      // Count header and group header rows so + 2.
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 2)
       fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
       fireEvent.click(getAllByText('Group1')[1].parentElement!)
       fireEvent.click(getAllByText('Group2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
+      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length + 2)
     })
-
-    it('Filters grouped list - multiple options', () => {
-      const { container, getAllByText, getByTestId, getAllByRole } = render(<XTable model={tableProps} />)
-
-      fireEvent.click(getByTestId('groupby'))
-      fireEvent.click(getAllByText('Col2')[1]!)
-      fireEvent.click(container.querySelector('.ms-GroupHeader-expand')!)
-
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
-      fireEvent.click(container.querySelector('.ms-DetailsHeader-filterChevron')!)
-      fireEvent.click(getAllByText('Group1')[1].parentElement!)
-      fireEvent.click(getAllByText('Group2')[0].parentElement!)
-      expect(getAllByRole('row')).toHaveLength(tableProps.rows.length)
-    })
-
   })
-
 })

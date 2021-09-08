@@ -77,11 +77,11 @@ describe('Picker.tsx', () => {
 
   it('Shows correct values - value picked', () => {
     const { getByRole, queryAllByRole } = render(<XPicker model={pickerProps} />)
-    const input = (getByRole('textbox') as HTMLInputElement)
+    const input = (getByRole('combobox') as HTMLInputElement)
     expect(queryAllByRole('listitem')).toHaveLength(0)
 
     typeToInput(input, name)
-    fireEvent.click(getByRole('option').querySelector('button')!)
+    fireEvent.click(getByRole('option'))
     expect(queryAllByRole('listitem')).toHaveLength(1)
   })
 
@@ -99,7 +99,7 @@ describe('Picker.tsx', () => {
 
   it('Filters correctly', () => {
     const { getByRole, getAllByRole } = render(<XPicker model={pickerProps} />)
-    const input = getByRole('textbox') as HTMLInputElement
+    const input = getByRole('combobox') as HTMLInputElement
 
     typeToInput(input, name)
     expect(getAllByRole('option')).toHaveLength(1)
@@ -110,7 +110,7 @@ describe('Picker.tsx', () => {
 
   it('Filters correctly - different case', () => {
     const { getByRole, getAllByRole } = render(<XPicker model={pickerProps} />)
-    const input = getByRole('textbox') as HTMLInputElement
+    const input = getByRole('combobox') as HTMLInputElement
 
     typeToInput(input, 'PICKER')
     expect(getAllByRole('option')).toHaveLength(1)
@@ -120,10 +120,10 @@ describe('Picker.tsx', () => {
 
   it('Filters correctly - does not offer already selected', () => {
     const { getByRole, queryByRole } = render(<XPicker model={pickerProps} />)
-    const input = (getByRole('textbox') as HTMLInputElement)
+    const input = (getByRole('combobox') as HTMLInputElement)
 
     typeToInput(input, name)
-    fireEvent.click(getByRole('option').querySelector('button')!)
+    fireEvent.click(getByRole('option'))
     typeToInput(input, name)
 
     expect(queryByRole('option')).not.toBeInTheDocument()
@@ -132,8 +132,8 @@ describe('Picker.tsx', () => {
   it('Sets args - single selection', () => {
     const { getByRole } = render(<XPicker model={pickerProps} />)
 
-    typeToInput(getByRole('textbox') as HTMLInputElement, name)
-    fireEvent.click(getByRole('option').querySelector('button')!)
+    typeToInput(getByRole('combobox') as HTMLInputElement, name)
+    fireEvent.click(getByRole('option'))
 
     expect(wave.args[name]).toMatchObject([name])
   })
@@ -144,21 +144,21 @@ describe('Picker.tsx', () => {
     wave.push = synckMock
     const { getByRole } = render(<XPicker model={{ ...pickerProps, trigger: true }} />)
 
-    typeToInput(getByRole('textbox') as HTMLInputElement, name)
-    fireEvent.click(getByRole('option').querySelector('button')!)
+    typeToInput(getByRole('combobox') as HTMLInputElement, name)
+    fireEvent.click(getByRole('option'))
 
     expect(synckMock).toHaveBeenCalled()
   })
 
   it('Sets args - multiple selection', () => {
     const { getByRole } = render(<XPicker model={pickerProps} />)
-    const input = getByRole('textbox') as HTMLInputElement
+    const input = getByRole('combobox') as HTMLInputElement
 
     typeToInput(input, name)
-    fireEvent.click(getByRole('option').querySelector('button')!)
+    fireEvent.click(getByRole('option'))
 
     typeToInput(input, 'i')
-    fireEvent.click(getByRole('option').querySelector('button')!)
+    fireEvent.click(getByRole('option'))
 
     expect(wave.args[name]).toMatchObject([name, 'something else'])
   })

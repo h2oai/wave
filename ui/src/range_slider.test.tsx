@@ -54,10 +54,10 @@ describe('rangeSlider.tsx', () => {
     const { container, getAllByRole } = render(<XRangeSlider model={rangeSliderProps} />)
     expect(wave.args[name]).toMatchObject([0, 100])
 
-    container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
-    fireEvent.mouseDown(getAllByRole('slider')[1]!, mouseEvent)
+    container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
+    fireEvent.mouseDown(getAllByRole('slider')[0]!, mouseEvent)
 
-    expect(wave.args[name]).toMatchObject([0, 50])
+    expect(wave.args[name]).toMatchObject([50, 100])
   })
 
   it('Calls sync on slide', () => {
@@ -65,7 +65,7 @@ describe('rangeSlider.tsx', () => {
     wave.push = pushMock
 
     const { container, getAllByRole } = render(<XRangeSlider model={{ ...rangeSliderProps, trigger: true }} />)
-    container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
+    container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
 
     const slidebox = getAllByRole('slider')[0]!
     fireEvent.mouseDown(slidebox, mouseEvent)
@@ -79,7 +79,7 @@ describe('rangeSlider.tsx', () => {
     wave.push = pushMock
 
     const { container, getAllByRole } = render(<XRangeSlider model={rangeSliderProps} />)
-    container.querySelector('.input-range__track')!.getBoundingClientRect = () => defaultRect
+    container.querySelector('.ms-Slider-line')!.getBoundingClientRect = () => defaultRect
 
     const slidebox = getAllByRole('slider')[0]!
     fireEvent.mouseDown(slidebox, mouseEvent)

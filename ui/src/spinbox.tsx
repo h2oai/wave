@@ -68,8 +68,8 @@ const
 export const
   XSpinbox = ({ model: { name, trigger, label, disabled, min = 0, max = 100, step = 1, value = 0 } }: { model: Spinbox }) => {
     const
-      [val, setVal] = React.useState<S | undefined>(),
-      precision = calculatePrecision(step),
+      [val, setVal] = React.useState<{ val?: S }>(), // Use primitive wrapper to always force a React update.
+      precision = Math.max(calculatePrecision(step), 0),
       parseValue = (v: F) => {
         const x = precisionRound(v, precision)
         return (!isNaN(x) && isFinite(x)) ? x : value
@@ -96,7 +96,7 @@ export const
               : value
         wave.args[name] = newValue
         if (trigger) wave.push()
-        setVal(String(newValue))
+        setVal({ val: String(newValue) })
       },
       debouncedHandleOnchange = debounce(DEBOUNCE_TIMEOUT, handleOnChange),
       onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,13 +108,14 @@ export const
 
     return (
       <Fluent.SpinButton
-        inputProps={{ 'data-test': name, onChange } as React.InputHTMLAttributes<HTMLInputElement>}
+        inputProps={{ 'data-test': name } as React.InputHTMLAttributes<HTMLInputElement>}
         label={label}
+        onChange={onChange}
         min={min}
         max={max}
         step={step}
         defaultValue={String(value)}
-        value={val}
+        value={val?.val}
         onIncrement={onIncrement}
         onDecrement={onDecrement}
         disabled={disabled}
