@@ -8,8 +8,18 @@
       "type": "chrome",
       "request": "launch",
       "name": "Debug UI",
-      "url": "http://localhost:3000/tour",
+      "url": "http://localhost:3000/demo",
       "webRoot": "${workspaceFolder}/ui"
+    },
+    {
+      "name": "Debug Wavegen",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/tools/wavegen/src/wavegen.ts",
+      "preLaunchTask": "tsc: build - tools/wavegen/tsconfig.json",
+      "outFiles": [
+        "${workspaceRoot}/tools/wavegen/build/**/*.js"
+      ]
     },
     {
       "name": "Debug Tests",

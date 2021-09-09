@@ -15,6 +15,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
+    "sourceMap": true,
     "types": [
       "node"
     ]

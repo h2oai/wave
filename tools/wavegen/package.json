@@ -8,6 +8,7 @@
   },
   "author": "Prithvi Prabhu <prithvi@h2o.ai>",
   "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
     "@types/node": "^14.0.5",
     "typescript": "^3.9.3"
