@@ -17,6 +17,12 @@
       "request": "launch",
       "program": "${workspaceRoot}/tools/wavegen/src/wavegen.ts",
       "preLaunchTask": "tsc: build - tools/wavegen/tsconfig.json",
+      "cwd": "${workspaceFolder}/tools/wavegen",
+      "args": [
+        "../../ui/src",
+        "../../py/h2o_wave",
+        "../../r/R"
+      ],
       "outFiles": [
         "${workspaceRoot}/tools/wavegen/build/**/*.js"
       ]

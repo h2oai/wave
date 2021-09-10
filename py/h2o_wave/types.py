@@ -2997,6 +2997,97 @@ class IconTableCellType:
         )
 
 
+class Badge:
+    """Create a badge.
+    """
+    def __init__(
+            self,
+            label: str,
+            background_color: str,
+            color: Optional[str] = None,
+    ):
+        _guard_scalar('Badge.label', label, (str,), False, False, False)
+        _guard_scalar('Badge.background_color', background_color, (str,), False, False, False)
+        _guard_scalar('Badge.color', color, (str,), False, True, False)
+        self.label = label
+        """Text specified within the badge."""
+        self.background_color = background_color
+        """Badge's background color."""
+        self.color = color
+        """Badge's text color. If not specified, black or white will be picked based on correct contrast with background."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Badge.label', self.label, (str,), False, False, False)
+        _guard_scalar('Badge.background_color', self.background_color, (str,), False, False, False)
+        _guard_scalar('Badge.color', self.color, (str,), False, True, False)
+        return _dump(
+            label=self.label,
+            background_color=self.background_color,
+            color=self.color,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Badge':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        _guard_scalar('Badge.label', __d_label, (str,), False, False, False)
+        __d_background_color: Any = __d.get('background_color')
+        _guard_scalar('Badge.background_color', __d_background_color, (str,), False, False, False)
+        __d_color: Any = __d.get('color')
+        _guard_scalar('Badge.color', __d_color, (str,), False, True, False)
+        label: str = __d_label
+        background_color: str = __d_background_color
+        color: Optional[str] = __d_color
+        return Badge(
+            label,
+            background_color,
+            color,
+        )
+
+
+class BadgeTableCellType:
+    """Creates a collection of chips, usually used for rendering state values.
+    Note: In case of multiple tags per row, make sure the row values are
+    separated by "," within a single cell string.
+    E.g. ui.table_row(name='...', cells=['cell1', 'BADGE1,BADGE2']).
+    """
+    def __init__(
+            self,
+            name: str,
+            badges: Optional[List[Badge]] = None,
+    ):
+        _guard_scalar('BadgeTableCellType.name', name, (str,), False, False, False)
+        _guard_vector('BadgeTableCellType.badges', badges, (Badge,), False, True, False)
+        self.name = name
+        """An identifying name for this component."""
+        self.badges = badges
+        """Badges to be rendered."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('BadgeTableCellType.name', self.name, (str,), False, False, False)
+        _guard_vector('BadgeTableCellType.badges', self.badges, (Badge,), False, True, False)
+        return _dump(
+            name=self.name,
+            badges=None if self.badges is None else [__e.dump() for __e in self.badges],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'BadgeTableCellType':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('BadgeTableCellType.name', __d_name, (str,), False, False, False)
+        __d_badges: Any = __d.get('badges')
+        _guard_vector('BadgeTableCellType.badges', __d_badges, (dict,), False, True, False)
+        name: str = __d_name
+        badges: Optional[List[Badge]] = None if __d_badges is None else [Badge.load(__e) for __e in __d_badges]
+        return BadgeTableCellType(
+            name,
+            badges,
+        )
+
+
 class TableCellType:
     """Defines cell content to be rendered instead of a simple text.
     """
@@ -3004,21 +3095,27 @@ class TableCellType:
             self,
             progress: Optional[ProgressTableCellType] = None,
             icon: Optional[IconTableCellType] = None,
+            badge: Optional[BadgeTableCellType] = None,
     ):
         _guard_scalar('TableCellType.progress', progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', icon, (IconTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.badge', badge, (BadgeTableCellType,), False, True, False)
         self.progress = progress
         """Renders a progress arc with a percentage value in the middle."""
         self.icon = icon
         """Renders an icon."""
+        self.badge = badge
+        """Renders a one or more chips (badges)."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TableCellType.progress', self.progress, (ProgressTableCellType,), False, True, False)
         _guard_scalar('TableCellType.icon', self.icon, (IconTableCellType,), False, True, False)
+        _guard_scalar('TableCellType.badge', self.badge, (BadgeTableCellType,), False, True, False)
         return _dump(
             progress=None if self.progress is None else self.progress.dump(),
             icon=None if self.icon is None else self.icon.dump(),
+            badge=None if self.badge is None else self.badge.dump(),
         )
 
     @staticmethod
@@ -3028,11 +3125,15 @@ class TableCellType:
         _guard_scalar('TableCellType.progress', __d_progress, (dict,), False, True, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('TableCellType.icon', __d_icon, (dict,), False, True, False)
+        __d_badge: Any = __d.get('badge')
+        _guard_scalar('TableCellType.badge', __d_badge, (dict,), False, True, False)
         progress: Optional[ProgressTableCellType] = None if __d_progress is None else ProgressTableCellType.load(__d_progress)
         icon: Optional[IconTableCellType] = None if __d_icon is None else IconTableCellType.load(__d_icon)
+        badge: Optional[BadgeTableCellType] = None if __d_badge is None else BadgeTableCellType.load(__d_badge)
         return TableCellType(
             progress,
             icon,
+            badge,
         )
 
 

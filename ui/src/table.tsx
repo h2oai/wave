@@ -18,7 +18,8 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { IconTableCellType, XIconTableCellType } from "./icon_table_cell_type"
 import { ProgressTableCellType, XProgressTableCellType } from "./progress_table_cell_type"
-import { cssVar, rem } from './theme'
+import { BadgeTableCellType, XBadgeTableCellType } from "./badge_table_cell_type"
+import { border, cssVar, rem } from './theme'
 import { wave } from './ui'
 
 /** Defines cell content to be rendered instead of a simple text. */
@@ -27,6 +28,8 @@ interface TableCellType {
   progress?: ProgressTableCellType
   /** Renders an icon. */
   icon?: IconTableCellType
+  /** Renders a one or more chips (badges). */
+  badge?: BadgeTableCellType
 }
 
 /** Create a table column. */
@@ -146,16 +149,52 @@ const
       top: -2,
       right: -5
     },
-    // HACK: incorrect width recalculated after changing to "group by mode" - collapse icon in header
-    // causes horizontal overflow for whole table.
-    hideCellGroupCollapse: {
-      $nest: {
-        'div[class*="cellIsGroupExpander"]': {
-          display: 'none'
-        }
+  }),
+  styles: Partial<Fluent.IDetailsListStyles> = {
+    headerWrapper: {
+      '.ms-DetailsHeader': {
+        background: cssVar('$neutralLight'),
+        paddingTop: 0,
+        paddingBottom: 0,
+        height: 48,
+        borderBottom: 'none',
+        borderRadius: '4px 4px 0 0',
+      },
+      '.ms-DetailsHeader-cellName': {
+        color: cssVar('$neutralPrimary')
+      },
+      '.ms-DetailsHeader-cell': {
+        height: '100%'
+      },
+      '.ms-DetailsHeader-cellTitle': {
+        height: '100%',
+        alignItems: 'center'
+      }
+    },
+    contentWrapper: {
+      border: border(2, cssVar('$neutralLight')),
+      '.ms-DetailsRow': {
+        border: border(2, 'transparent'),
+        borderTop: border(2, cssVar('$neutralLight')),
+        boxSizing: 'border-box',
+        background: cssVar('$card'),
+        minHeight: 48
+      },
+      '.ms-List-page:first-child .ms-List-cell:first-child .ms-DetailsRow': {
+        borderTop: border(2, 'transparent'),
+      },
+      '.ms-DetailsRow-cell': {
+        fontSize: 14,
+        lineHeight: 20,
+        color: cssVar('$text9')
+      },
+      '.ms-DetailsRow:hover': {
+        background: cssVar('$neutralLight'),
+        border: `${border(2, cssVar('$themePrimary'))} !important`,
+        boxSizing: 'border-box'
       }
     }
-  }),
+  },
   checkboxVisibilityMap = {
     'always': Fluent.CheckboxVisibility.always,
     'on-hover': Fluent.CheckboxVisibility.onHover,
@@ -274,10 +313,10 @@ const
 
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
-            <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groups ? css.hideCellGroupCollapse : ''} />
+            <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} />
           </Fluent.Sticky>
         )
-      }, [groups, onColumnContextMenu]),
+      }, [onColumnContextMenu]),
       onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
         const isFilterable = m.columns.some(c => c.filterable)
         if (!props || (!m.downloadable && !m.resettable && !isSearchable && !isFilterable)) return null
@@ -332,6 +371,7 @@ const
         let v = item[col.fieldName as S]
         if (col.cellType?.progress) return <XProgressTableCellType model={col.cellType.progress} progress={item[col.key]} />
         if (col.cellType?.icon) return <XIconTableCellType model={col.cellType.icon} icon={item[col.key]} />
+        if (col.cellType?.badge) return <XBadgeTableCellType model={col.cellType.badge} serializedBadges={item[col.key]} />
         if (col.dataType === 'time') v = new Date(v).toLocaleString()
         if (col.key === primaryColumnKey && !isMultiple) {
           const onClick = () => {
@@ -351,6 +391,7 @@ const
     return (
       <>
         <Fluent.DetailsList
+          styles={styles}
           items={filteredItems}
           columns={columns}
           constrainMode={Fluent.ConstrainMode.unconstrained}
@@ -453,7 +494,7 @@ export const
           return searchString || ''
         })
       }, [searchableKeys]),
-      onSearchChange = React.useCallback((_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr = '') => {
+      onSearchChange = React.useCallback((_e?: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, searchStr = '') => {
         setSearchStr(searchStr)
 
         if (!searchStr && !selectedFilters) {
@@ -568,9 +609,9 @@ export const
 
     return (
       <div data-test={m.name} style={{ position: 'relative', height: computeHeight() }}>
-        <Fluent.Stack horizontal horizontalAlign='space-between' >
+        <Fluent.Stack horizontal horizontalAlign='space-between' verticalAlign='end'>
           {m.groupable && <Fluent.Dropdown data-test='groupby' label='Group by' selectedKey={groupByKey} onChange={onGroupByChange} options={groupByOptions} styles={{ root: { width: 300 } }} />}
-          {!!searchableKeys.length && <Fluent.TextField data-test='search' label='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%' } }} />}
+          {!!searchableKeys.length && <Fluent.SearchBox data-test='search' placeholder='Search' onChange={onSearchChange} value={searchStr} styles={{ root: { width: '50%', maxWidth: 500 } }} />}
         </Fluent.Stack>
         <Fluent.ScrollablePane scrollbarVisibility={Fluent.ScrollbarVisibility.auto} styles={{ root: { top: m.groupable || searchableKeys.length ? 80 : 0 } }}>
           {

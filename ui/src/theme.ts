@@ -119,14 +119,34 @@ const
         white: '#ffffff',
       },
     },
-    dark: {
+    h2o: {
       palette: {
         text: '#ffffff',
-        card: '#21252b',
-        page: '#282c34',
+        card: '#0d0e0f',
+        page: '#1b1d1f',
       },
       fluentPalette: {
-        // TODO: Generate dark fluent color palette.
+        neutralLighterAlt: '#121212',
+        neutralLighter: '#1C1C1C',
+        neutralLight: '#2C2C2C',
+        neutralQuaternaryAlt: '#353535',
+        neutralTertiaryAlt: '#5E5E5E',
+        white: '#080808',
+        neutralTertiary: '#C8C8C8',
+        neutralSecondary: '#D0D0D0',
+        neutralPrimaryAlt: '#DADADA',
+        neutralPrimary: '#FFFFFF',
+        neutralDark: '#F4F4F4',
+        black: '#F8F8F8',
+        themeLighterAlt: '#FFFDF6',
+        themeLighter: '#FFF6DC',
+        themeLight: '#FFEFBE',
+        themeTertiary: '#FFDE7D',
+        themeSecondary: '#FFCF40',
+        themePrimary: '#FEC925',
+        themeDarkAlt: '#E6B522',
+        themeDark: '#C2991D',
+        themeDarker: '#8F7015',
       },
     },
     neon: {

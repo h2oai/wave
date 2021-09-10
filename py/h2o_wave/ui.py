@@ -1172,6 +1172,48 @@ def icon_table_cell_type(
     ))
 
 
+def badge(
+        label: str,
+        background_color: str,
+        color: Optional[str] = None,
+) -> Badge:
+    """Create a badge.
+
+    Args:
+        label: Text specified within the badge.
+        background_color: Badge's background color.
+        color: Badge's text color. If not specified, black or white will be picked based on correct contrast with background.
+    Returns:
+        A `h2o_wave.types.Badge` instance.
+    """
+    return Badge(
+        label,
+        background_color,
+        color,
+    )
+
+
+def badge_table_cell_type(
+        name: str,
+        badges: Optional[List[Badge]] = None,
+) -> TableCellType:
+    """Creates a collection of chips, usually used for rendering state values.
+    Note: In case of multiple tags per row, make sure the row values are
+    separated by "," within a single cell string.
+    E.g. ui.table_row(name='...', cells=['cell1', 'BADGE1,BADGE2']).
+
+    Args:
+        name: An identifying name for this component.
+        badges: Badges to be rendered.
+    Returns:
+        A `h2o_wave.types.BadgeTableCellType` instance.
+    """
+    return TableCellType(badge=BadgeTableCellType(
+        name,
+        badges,
+    ))
+
+
 def table_column(
         name: str,
         label: str,

@@ -1371,6 +1371,49 @@ ui_icon_table_cell_type <- function(
   return(.o)
 }
 
+#' Create a badge.
+#'
+#' @param label Text specified within the badge.
+#' @param background_color Badge's background color.
+#' @param color Badge's text color. If not specified, black or white will be picked based on correct contrast with background.
+#' @return A Badge instance.
+#' @export
+ui_badge <- function(
+  label,
+  background_color,
+  color = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("background_color", "character", background_color)
+  .guard_scalar("color", "character", color)
+  .o <- list(
+    label=label,
+    background_color=background_color,
+    color=color)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveBadge"))
+  return(.o)
+}
+
+#' Creates a collection of chips, usually used for rendering state values.
+#' Note: In case of multiple tags per row, make sure the row values are
+#' separated by "," within a single cell string.
+#' E.g. ui.table_row(name='...', cells=['cell1', 'BADGE1,BADGE2']).
+#'
+#' @param name An identifying name for this component.
+#' @param badges Badges to be rendered.
+#' @return A BadgeTableCellType instance.
+#' @export
+ui_badge_table_cell_type <- function(
+  name,
+  badges = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_vector("badges", "WaveBadge", badges)
+  .o <- list(badge=list(
+    name=name,
+    badges=badges))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTableCellType"))
+  return(.o)
+}
+
 #' Create a table column.
 #'
 #' @param name An identifying name for this column.
