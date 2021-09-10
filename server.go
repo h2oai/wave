@@ -44,6 +44,10 @@ func echo(m Log) {
 
 // Run runs the HTTP server.
 func Run(conf ServerConf) {
+	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
+		log.Println("#", line)
+	}
+
 	site := newSite()
 	if len(conf.Init) > 0 {
 		initSite(site, conf.Init)
@@ -73,6 +77,16 @@ func Run(conf ServerConf) {
 	fileDir := filepath.Join(conf.DataDir, "f")
 	http.Handle("/_f", newFileStore(fileDir, conf.Keychain, auth))
 	http.Handle("/_f/", newFileServer(fileDir, conf.Keychain, auth))
+	for _, dir := range conf.PrivateDirs {
+		prefix, src := splitDirMapping(dir)
+		echo(Log{"t": "private_dir", "source": src, "address": prefix})
+		http.Handle(prefix, http.StripPrefix(prefix, newDirServer(src, conf.Keychain, auth)))
+	}
+	for _, dir := range conf.PublicDirs {
+		prefix, src := splitDirMapping(dir)
+		echo(Log{"t": "public_dir", "source": src, "address": prefix})
+		http.Handle(prefix, http.StripPrefix(prefix, http.FileServer(http.Dir(src))))
+	}
 
 	http.Handle("/_c/", newCache("/_c/", conf.Keychain, conf.MaxCacheRequestSize))
 
@@ -93,10 +107,6 @@ func Run(conf ServerConf) {
 
 	http.Handle("/", newWebServer(site, broker, auth, conf.Keychain, conf.MaxRequestSize, conf.WebDir))
 
-	for _, line := range strings.Split(fmt.Sprintf(logo, conf.Version, conf.BuildDate), "\n") {
-		log.Println("#", line)
-	}
-
 	echo(Log{"t": "listen", "address": conf.Listen, "webroot": conf.WebDir})
 
 	if conf.CertFile != "" && conf.KeyFile != "" {
@@ -108,6 +118,14 @@ func Run(conf ServerConf) {
 			echo(Log{"t": "listen_no_tls", "error": err.Error()})
 		}
 	}
+}
+
+func splitDirMapping(m string) (string, string) {
+	xs := strings.SplitN(m, ":", 2)
+	if len(xs) < 2 {
+		panic(fmt.Sprintf("invalid directory mapping: want \"remote:local\", got %s", m))
+	}
+	return xs[0], xs[1]
 }
 
 func readRequestWithLimit(w http.ResponseWriter, r io.ReadCloser, n int64) ([]byte, error) {

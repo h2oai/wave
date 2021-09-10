@@ -18,6 +18,16 @@ import (
 	"github.com/h2oai/wave/pkg/keychain"
 )
 
+type Strings []string
+
+func (s *Strings) String() string {
+	return ""
+}
+func (s *Strings) Set(v string) error {
+	*s = append(*s, v)
+	return nil
+}
+
 // ServerConf represents Server configuration options.
 type ServerConf struct {
 	Version              string
@@ -25,6 +35,8 @@ type ServerConf struct {
 	Listen               string
 	WebDir               string
 	DataDir              string
+	PublicDirs           Strings
+	PrivateDirs          Strings
 	Keychain             *keychain.Keychain
 	Init                 string
 	Compact              string

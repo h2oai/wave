@@ -99,8 +99,7 @@ func (b *Broker) addApp(mode, route, addr, keyID, keySecret string) {
 func (b *Broker) getApp(route string) *App {
 	b.appsMux.RLock()
 	defer b.appsMux.RUnlock()
-	app, _ := b.apps[route]
-	return app
+	return b.apps[route]
 }
 
 func (b *Broker) dropApp(route string) {

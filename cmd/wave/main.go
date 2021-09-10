@@ -15,7 +15,6 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"math"
@@ -76,8 +75,10 @@ func main() {
 
 	flag.BoolVar(&version, "version", false, "print version and exit")
 	flag.StringVar(&conf.Listen, "listen", ":10101", "listen on this address")
-	flag.StringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from")
+	flag.StringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from, hosted at /")
 	flag.StringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
+	flag.Var(&conf.PublicDirs, "public-dir", "additional directory to serve files from, in the format \"[url-path]:[filesystem-path]\", e.g. \"/public/files/:/some/local/path\" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed")
+	flag.Var(&conf.PrivateDirs, "private-dir", "additional directory to serve files from (authenticated users only), in the format \"[url-path]:[filesystem-path]\", e.g. \"/public/files/:/some/local/path\" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed")
 	flag.StringVar(&accessKeyID, "access-key-id", "access_key_id", "default API access key ID")
 	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default API access key secret")
 	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
@@ -248,10 +249,6 @@ func getEnvBool(name string) bool {
 	}
 	return v
 }
-
-var (
-	errMaxReadSizeTooLarge = errors.New("size too large (want <= max int64)")
-)
 
 func parseReadSize(label, value string) (int64, error) {
 	n, err := wave.ParseBytes(value)
