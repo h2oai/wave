@@ -36,7 +36,7 @@ export interface BadgeTableCellType {
  */
 export interface Badge {
   /** Text specified within the badge. */
-  label: S
+  name: S
   /** Badge's background color. */
   background_color: S
   /** Badge's text color. If not specified, black or white will be picked based on correct contrast with background. */
@@ -56,7 +56,7 @@ export const XBadgeTableCellType = ({ model, serializedBadges }: { model: BadgeT
   const
     mapBadges = ((v: S, i: U) => {
       const
-        badge = model.badges?.find(({ label }) => label === v),
+        badge = model.badges?.find(({ name: label }) => label === v),
         badgeColor = badge?.background_color || '$text',
         background = cssVar(badgeColor),
         color = cssVar(badge?.color || getContrast(badgeColor))

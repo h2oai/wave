@@ -45,9 +45,9 @@ columns = [
     ui.table_column(name='views', label='Views', sortable=True, data_type='number'),
     ui.table_column(name='progress', label='Progress', cell_type=ui.progress_table_cell_type()),
     ui.table_column(name='badge', label='State', cell_type=ui.badge_table_cell_type(name='badges', badges=[
-        ui.badge(label='RUNNING', background_color='#D2E3F8'),
-        ui.badge(label='DONE', background_color='$red'),
-        ui.badge(label='SUCCESS', background_color='$mint'),
+        ui.badge(name='RUNNING', background_color='#D2E3F8'),
+        ui.badge(name='DONE', background_color='$red'),
+        ui.badge(name='SUCCESS', background_color='$mint'),
     ])),
     ui.table_column(name='created', label='Created', sortable=True, data_type='time'),
 ]

@@ -1373,20 +1373,20 @@ ui_icon_table_cell_type <- function(
 
 #' Create a badge.
 #'
-#' @param label Text specified within the badge.
+#' @param name Text specified within the badge.
 #' @param background_color Badge's background color.
 #' @param color Badge's text color. If not specified, black or white will be picked based on correct contrast with background.
 #' @return A Badge instance.
 #' @export
 ui_badge <- function(
-  label,
+  name,
   background_color,
   color = NULL) {
-  .guard_scalar("label", "character", label)
+  .guard_scalar("name", "character", name)
   .guard_scalar("background_color", "character", background_color)
   .guard_scalar("color", "character", color)
   .o <- list(
-    label=label,
+    name=name,
     background_color=background_color,
     color=color)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveBadge"))

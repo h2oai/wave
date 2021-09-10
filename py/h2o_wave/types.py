@@ -3002,14 +3002,14 @@ class Badge:
     """
     def __init__(
             self,
-            label: str,
+            name: str,
             background_color: str,
             color: Optional[str] = None,
     ):
-        _guard_scalar('Badge.label', label, (str,), False, False, False)
+        _guard_scalar('Badge.name', name, (str,), False, False, False)
         _guard_scalar('Badge.background_color', background_color, (str,), False, False, False)
         _guard_scalar('Badge.color', color, (str,), False, True, False)
-        self.label = label
+        self.name = name
         """Text specified within the badge."""
         self.background_color = background_color
         """Badge's background color."""
@@ -3018,11 +3018,11 @@ class Badge:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Badge.label', self.label, (str,), False, False, False)
+        _guard_scalar('Badge.name', self.name, (str,), False, False, False)
         _guard_scalar('Badge.background_color', self.background_color, (str,), False, False, False)
         _guard_scalar('Badge.color', self.color, (str,), False, True, False)
         return _dump(
-            label=self.label,
+            name=self.name,
             background_color=self.background_color,
             color=self.color,
         )
@@ -3030,17 +3030,17 @@ class Badge:
     @staticmethod
     def load(__d: Dict) -> 'Badge':
         """Creates an instance of this class using the contents of a dict."""
-        __d_label: Any = __d.get('label')
-        _guard_scalar('Badge.label', __d_label, (str,), False, False, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Badge.name', __d_name, (str,), False, False, False)
         __d_background_color: Any = __d.get('background_color')
         _guard_scalar('Badge.background_color', __d_background_color, (str,), False, False, False)
         __d_color: Any = __d.get('color')
         _guard_scalar('Badge.color', __d_color, (str,), False, True, False)
-        label: str = __d_label
+        name: str = __d_name
         background_color: str = __d_background_color
         color: Optional[str] = __d_color
         return Badge(
-            label,
+            name,
             background_color,
             color,
         )

@@ -1173,21 +1173,21 @@ def icon_table_cell_type(
 
 
 def badge(
-        label: str,
+        name: str,
         background_color: str,
         color: Optional[str] = None,
 ) -> Badge:
     """Create a badge.
 
     Args:
-        label: Text specified within the badge.
+        name: Text specified within the badge.
         background_color: Badge's background color.
         color: Badge's text color. If not specified, black or white will be picked based on correct contrast with background.
     Returns:
         A `h2o_wave.types.Badge` instance.
     """
     return Badge(
-        label,
+        name,
         background_color,
         color,
     )
