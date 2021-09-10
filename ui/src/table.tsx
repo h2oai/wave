@@ -149,6 +149,15 @@ const
       top: -2,
       right: -5
     },
+    // HACK: incorrect width recalculated after changing to "group by mode" - collapse icon in header
+    // causes horizontal overflow for whole table.
+    hideCellGroupCollapse: {
+      $nest: {
+        'div[class*="cellIsGroupExpander"]': {
+          visibility: 'hidden'
+        }
+      }
+    }
   }),
   styles: Partial<Fluent.IDetailsListStyles> = {
     headerWrapper: {
@@ -313,10 +322,10 @@ const
 
         return (
           <Fluent.Sticky stickyPosition={Fluent.StickyPositionType.Header} isScrollSynced>
-            <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} />
+            <Fluent.DetailsHeader {...props} onColumnContextMenu={onColumnContextMenu} className={groups ? css.hideCellGroupCollapse : ''} />
           </Fluent.Sticky>
         )
-      }, [onColumnContextMenu]),
+      }, [groups, onColumnContextMenu]),
       onRenderDetailsFooter = (props?: Fluent.IDetailsFooterProps) => {
         const isFilterable = m.columns.some(c => c.filterable)
         if (!props || (!m.downloadable && !m.resettable && !isSearchable && !isFilterable)) return null
