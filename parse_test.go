@@ -20,11 +20,6 @@ import (
 	"github.com/h2oai/wave/pkg/assert"
 )
 
-type parseBytesTestCase struct {
-	input  string
-	output uint64
-}
-
 func TestParseBytes(t *testing.T) {
 	_, ok, no := assert.Assert(t)
 	units := []string{"e", "p", "t", "g", "m", "k"}
@@ -38,7 +33,7 @@ func TestParseBytes(t *testing.T) {
 
 		b, err = ParseBytes("0" + unit)
 		no(err)
-		ok(0 == b, "zero")
+		ok(b == 0, "zero")
 
 		b, err = ParseBytes("5" + unit + "b")
 		no(err)
