@@ -63,5 +63,5 @@ export const XBadgeTableCellType = ({ model, serializedBadges }: { model: BadgeT
 
       return <span key={i} style={{ background, color }} className={clas(css.badge, 'wave-s12 wave-w6')}>{v}</span>
     })
-  return <div>{serializedBadges.split(',').map(mapBadges)}</div>
+  return <div data-test={model.name}>{serializedBadges.split(',').map(mapBadges)}</div>
 }
