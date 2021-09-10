@@ -55,7 +55,6 @@ columns = [
 
 @app('/demo')
 async def serve(q: Q):
-    q.page['meta'] = ui.meta_card(box='', theme='neon')
     q.page['form'] = ui.form_card(box='1 1 -1 10', items=[
         ui.table(
             name='issues',
