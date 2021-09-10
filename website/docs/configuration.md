@@ -53,8 +53,12 @@ Usage of ./waved:
         OIDC redirect URL
   -oidc-skip-login
         don't show the login form during OIDC authorization
+  -private-dir value
+        additional directory to serve files from (authenticated users only), in the format "[url-path]:[filesystem-path]", e.g. "/public/files/:/some/local/path" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed
   -proxy
         enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)
+  -public-dir value
+        additional directory to serve files from, in the format "[url-path]:[filesystem-path]", e.g. "/public/files/:/some/local/path" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed
   -remove-access-key string
         remove the specified API access key ID from the keychain
   -tls-cert-file string
