@@ -1,4 +1,13 @@
-# Wave Workshop: Big Data Visualizer
+---
+slug: community-content-bdv
+title: Wave Workshop: Big Data Visualizer
+author: Michelle Tanco
+author_title: PM of the AI AppStore @ H2O.ai
+author_url: https://github.com/mtanco
+author_image_url: https://avatars3.githubusercontent.com/u/4793561
+tags: [community-content]
+---
+
 
 H2O Wave allows for easily building front ends to your projects. I was recently inspired by [this tutorial notebook](https://github.com/h2oai/h2o-tutorials/blob/master/best-practices/anomaly-detection/anomaly_detection.ipynb) which explains how to use open source H2O-3 for finding anomalies in a dataset. Part of this process is using the H2O-3 aggregator function to visualize relationships in large datasets. A data scientist is at home in a Jupyter Notebook, but we could make it easier for ourselves and analysts or other business users to run this code and benefit from the H2O-3 aggregator function by building a front-end using H2O Wave.
 
