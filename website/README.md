@@ -6,9 +6,10 @@ This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern 
 
 ```console
 git clone https://github.com/h2oai/wave.git
-cd wave
+cd wave/py
+make setup
 make docs
-cd website
+cd ../website
 npm install
 ```
 
