@@ -73,62 +73,38 @@ func main() {
 		scopes               string
 	)
 
-	flag.BoolVar(&version, "version", false, "print version and exit")
-	flag.StringVar(&conf.Listen, "listen", ":10101", "listen on this address")
-	flag.StringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from, hosted at /")
-	flag.StringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
+	boolVar(&version, "version", false, "print version and exit")
+	stringVar(&conf.Listen, "listen", ":10101", "listen on this address")
+	stringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from, hosted at /")
+	stringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
 	flag.Var(&conf.PublicDirs, "public-dir", "additional directory to serve files from, in the format \"[url-path]:[filesystem-path]\", e.g. \"/public/files/:/some/local/path\" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed")
 	flag.Var(&conf.PrivateDirs, "private-dir", "additional directory to serve files from (authenticated users only), in the format \"[url-path]:[filesystem-path]\", e.g. \"/public/files/:/some/local/path\" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed")
-	flag.StringVar(&accessKeyID, "access-key-id", "access_key_id", "default API access key ID")
-	flag.StringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default API access key secret")
-	flag.StringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
-	flag.BoolVar(&createAccessKey, "create-access-key", false, "generate and add a new API access key ID and secret pair to the keychain")
-	flag.BoolVar(&listAccessKeys, "list-access-keys", false, "list all the access key IDs in the keychain")
-	flag.StringVar(&removeAccessKeyID, "remove-access-key", "", "remove the specified API access key ID from the keychain")
-	flag.StringVar(&conf.Init, "init", "", "initialize site content from AOF log")
-	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
-	flag.StringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
-	flag.StringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
-	flag.BoolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
-	flag.StringVar(&maxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
-	flag.StringVar(&maxCacheRequestSize, "max-cache-request-size", "5M", "maximum allowed size of HTTP requests to the server cache (e.g. 5M or 5MB or 5MiB)")
-	flag.BoolVar(&conf.Proxy, "proxy", false, "enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)")
-	flag.StringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
-	flag.StringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
+	stringVar(&accessKeyID, "access-key-id", "access_key_id", "default API access key ID")
+	stringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default API access key secret")
+	stringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
+	boolVar(&createAccessKey, "create-access-key", false, "generate and add a new API access key ID and secret pair to the keychain")
+	boolVar(&listAccessKeys, "list-access-keys", false, "list all the access key IDs in the keychain")
+	stringVar(&removeAccessKeyID, "remove-access-key", "", "remove the specified API access key ID from the keychain")
+	stringVar(&conf.Init, "init", "", "initialize site content from AOF log")
+	stringVar(&conf.Compact, "compact", "", "compact AOF log")
+	stringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
+	stringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
+	boolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
+	stringVar(&maxRequestSize, "max-request-size", "5M", "maximum allowed size of HTTP requests to the server (e.g. 5M or 5MB or 5MiB)")
+	stringVar(&maxCacheRequestSize, "max-cache-request-size", "5M", "maximum allowed size of HTTP requests to the server cache (e.g. 5M or 5MB or 5MiB)")
+	boolVar(&conf.Proxy, "proxy", false, "enable HTTP proxy (for IDE / language server support only - not recommended for internet-facing websites)")
+	stringVar(&maxProxyRequestSize, "max-proxy-request-size", "5M", "maximum allowed size of proxied HTTP requests (e.g. 5M or 5MB or 5MiB)")
+	stringVar(&maxProxyResponseSize, "max-proxy-response-size", "5M", "maximum allowed size of proxied HTTP responses (e.g. 5M or 5MB or 5MiB)")
 	// TODO enable when IDE is released
-	// flag.BoolVar(&conf.IDE, "ide", false, "enable Wave IDE (experimental)")
-	flag.BoolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
-
-	const (
-		oidcClientID      = "oidc-client-id"
-		oidcClientSecret  = "oidc-client-secret"
-		oidcProviderURL   = "oidc-provider-url"
-		oidcRedirectURL   = "oidc-redirect-url"
-		oidcEndSessionURL = "oidc-end-session-url"
-		oidcScopes        = "oidc-scopes"
-		oidcSkipLogin     = "oidc-skip-login"
-	)
-
-	auth.ClientID = os.Getenv(toEnvVar(oidcClientID))
-	flag.StringVar(&auth.ClientID, oidcClientID, auth.ClientID, "OIDC client ID")
-
-	auth.ClientSecret = os.Getenv(toEnvVar(oidcClientSecret))
-	flag.StringVar(&auth.ClientSecret, oidcClientSecret, auth.ClientSecret, "OIDC client secret")
-
-	auth.ProviderURL = os.Getenv(toEnvVar(oidcProviderURL))
-	flag.StringVar(&auth.ProviderURL, oidcProviderURL, auth.ProviderURL, "OIDC provider URL")
-
-	auth.RedirectURL = os.Getenv(toEnvVar(oidcRedirectURL))
-	flag.StringVar(&auth.RedirectURL, oidcRedirectURL, auth.RedirectURL, "OIDC redirect URL")
-
-	auth.EndSessionURL = os.Getenv(toEnvVar(oidcEndSessionURL))
-	flag.StringVar(&auth.EndSessionURL, oidcEndSessionURL, auth.EndSessionURL, "OIDC end session URL")
-
-	scopes = os.Getenv(toEnvVar(oidcScopes))
-	flag.StringVar(&scopes, oidcScopes, scopes, "OIDC scopes separated by comma (default \"openid,profile\")")
-
-	auth.SkipLogin = getEnvBool(toEnvVar(oidcSkipLogin))
-	flag.BoolVar(&auth.SkipLogin, oidcSkipLogin, auth.SkipLogin, "don't show the login form during OIDC authorization")
+	// boolVar(&conf.IDE, "ide", false, "enable Wave IDE (experimental)")
+	boolVar(&conf.Debug, "debug", false, "enable debug mode (profiling, inspection, etc.)")
+	stringVar(&auth.ClientID, "oidc-client-id", "", "OIDC client ID")
+	stringVar(&auth.ClientSecret, "oidc-client-secret", "", "OIDC client secret")
+	stringVar(&auth.ProviderURL, "oidc-provider-url", "", "OIDC provider URL")
+	stringVar(&auth.RedirectURL, "oidc-redirect-url", "", "OIDC redirect URL")
+	stringVar(&auth.EndSessionURL, "oidc-end-session-url", "", "OIDC end session URL")
+	stringVar(&scopes, "oidc-scopes", "", "OIDC scopes separated by comma (default \"openid,profile\")")
+	boolVar(&auth.SkipLogin, "oidc-skip-login", false, "do not display the login form during OIDC authorization")
 
 	flag.Parse()
 
@@ -234,20 +210,27 @@ func main() {
 	wave.Run(conf)
 }
 
-func toEnvVar(name string) string {
-	return fmt.Sprintf("H2O_WAVE_%s", strings.ToUpper(strings.ReplaceAll(name, "-", "_")))
+func getEnv(key, value string) string {
+	if v, ok := os.LookupEnv("H2O_WAVE_" + strings.ToUpper(strings.ReplaceAll(key, "-", "_"))); ok {
+		return v
+	}
+	return value
 }
 
-func getEnvBool(name string) bool {
-	s, ok := os.LookupEnv(name)
-	if !ok {
-		return false
+func boolVar(p *bool, key string, value bool, usage string) {
+	b := "0"
+	if value {
+		b = "1"
 	}
-	v, err := strconv.ParseBool(strings.ToLower(s))
+	v, err := strconv.ParseBool(getEnv(key, b))
 	if err != nil {
-		panic(fmt.Errorf("invalid setting for environment variable %s: %v", name, err))
+		v = value
 	}
-	return v
+	flag.BoolVar(p, key, v, usage)
+}
+
+func stringVar(p *string, key, value, usage string) {
+	flag.StringVar(p, key, getEnv(key, value), usage)
 }
 
 func parseReadSize(label, value string) (int64, error) {
