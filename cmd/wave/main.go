@@ -54,8 +54,6 @@ Your key was also added to the keychain located at
 )
 
 func main() {
-	// TODO Use github.com/gosidekick/goconfig instead.
-
 	var (
 		conf                 wave.ServerConf
 		auth                 wave.AuthConf
@@ -73,7 +71,7 @@ func main() {
 		scopes               string
 	)
 
-	boolVar(&version, "version", false, "print version and exit")
+	flag.BoolVar(&version, "version", false, "print version and exit")
 	stringVar(&conf.Listen, "listen", ":10101", "listen on this address")
 	stringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from, hosted at /")
 	stringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
@@ -82,11 +80,11 @@ func main() {
 	stringVar(&accessKeyID, "access-key-id", "access_key_id", "default API access key ID")
 	stringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default API access key secret")
 	stringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
-	boolVar(&createAccessKey, "create-access-key", false, "generate and add a new API access key ID and secret pair to the keychain")
-	boolVar(&listAccessKeys, "list-access-keys", false, "list all the access key IDs in the keychain")
-	stringVar(&removeAccessKeyID, "remove-access-key", "", "remove the specified API access key ID from the keychain")
+	flag.BoolVar(&createAccessKey, "create-access-key", false, "generate and add a new API access key ID and secret pair to the keychain")
+	flag.BoolVar(&listAccessKeys, "list-access-keys", false, "list all the access key IDs in the keychain")
+	flag.StringVar(&removeAccessKeyID, "remove-access-key", "", "remove the specified API access key ID from the keychain")
 	stringVar(&conf.Init, "init", "", "initialize site content from AOF log")
-	stringVar(&conf.Compact, "compact", "", "compact AOF log")
+	flag.StringVar(&conf.Compact, "compact", "", "compact AOF log")
 	stringVar(&conf.CertFile, "tls-cert-file", "", "path to certificate file (TLS only)")
 	stringVar(&conf.KeyFile, "tls-key-file", "", "path to private key file (TLS only)")
 	boolVar(&conf.Editable, "editable", false, "allow users to edit web pages")
@@ -171,23 +169,19 @@ func main() {
 		kc.Add(accessKeyID, hash)
 	}
 
-	conf.MaxRequestSize, err = parseReadSize("max request size", maxRequestSize)
-	if err != nil {
+	if conf.MaxRequestSize, err = parseReadSize("max request size", maxRequestSize); err != nil {
 		panic(err)
 	}
 
-	conf.MaxCacheRequestSize, err = parseReadSize("max cache request size", maxCacheRequestSize)
-	if err != nil {
+	if conf.MaxCacheRequestSize, err = parseReadSize("max cache request size", maxCacheRequestSize); err != nil {
 		panic(err)
 	}
 
-	conf.MaxProxyRequestSize, err = parseReadSize("max proxy request size", maxProxyRequestSize)
-	if err != nil {
+	if conf.MaxProxyRequestSize, err = parseReadSize("max proxy request size", maxProxyRequestSize); err != nil {
 		panic(err)
 	}
 
-	conf.MaxProxyResponseSize, err = parseReadSize("max proxy response size", maxProxyResponseSize)
-	if err != nil {
+	if conf.MaxProxyResponseSize, err = parseReadSize("max proxy response size", maxProxyResponseSize); err != nil {
 		panic(err)
 	}
 
