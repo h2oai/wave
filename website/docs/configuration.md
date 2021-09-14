@@ -70,10 +70,39 @@ Usage of ./waved:
   -web-dir string
         directory to serve web assets from (default "./www")
 ```
+### Environment variables
+
+Almost all of the command line arguments listed above can be set using environment variables (with the exception of actions like `-version`, `-create-access-key`, `-list-access-key`, etc.).
+
+```
+H2O_WAVE_ACCESS_KEY_ID
+H2O_WAVE_ACCESS_KEY_SECRET
+H2O_WAVE_ACCESS_KEYCHAIN
+H2O_WAVE_DATA_DIR
+H2O_WAVE_DEBUG
+H2O_WAVE_EDITABLE
+H2O_WAVE_INIT
+H2O_WAVE_LISTEN
+H2O_WAVE_MAX_CACHE_REQUEST_SIZE
+H2O_WAVE_MAX_PROXY_REQUEST_SIZE
+H2O_WAVE_MAX_PROXY_RESPONSE_SIZE
+H2O_WAVE_MAX_REQUEST_SIZE
+H2O_WAVE_OIDC_CLIENT_ID
+H2O_WAVE_OIDC_CLIENT_SECRET
+H2O_WAVE_OIDC_END_SESSION_URL
+H2O_WAVE_OIDC_PROVIDER_URL
+H2O_WAVE_OIDC_REDIRECT_URL
+H2O_WAVE_OIDC_SCOPES
+H2O_WAVE_OIDC_SKIP_LOGIN
+H2O_WAVE_PROXY
+H2O_WAVE_TLS_CERT_FILE
+H2O_WAVE_TLS_KEY_FILE
+H2O_WAVE_WEB_DIR
+```
 
 ## Configuring your app
 
-Your Wave application is an ASGI server. When you run your app during development, the app server runs at http://127.0.0.1:8000/ by default (localhost, port 8000), and assumes that your Wave server is running at http://127.0.0.1:10101/ (localhost, port 10101). The `wave run` command automatically picks another available port if `8000` is not available. 
+Your Wave application is an ASGI server. When you run your app during development, the app server runs at http://127.0.0.1:8000/ by default (localhost, port 8000), and assumes that your Wave server is running at http://127.0.0.1:10101/ (localhost, port 10101). The `wave run` command automatically picks another available port if `8000` is not available.
 
 The Wave server and apps communicate with each other using RPC over persistent HTTP connections.
 
@@ -123,7 +152,7 @@ Specify `H2O_WAVE_APP_ADDRESS` instead.
 The public host/port of the app server. Defaults to `http://127.0.0.1:8000`. Set this variable if you are running your Wave server and your app on different machines or containers.
 
 ### H2O_WAVE_CHECKPOINT_DIR
-The directory to save/load application and session state. Enables checkpointing. If set, the app saves the contents of `q.app` and `q.user` before exiting. When restarted, the contents of `q.app` and `q.user` are restored. The directory is automatically created if it does not exist. 
+The directory to save/load application and session state. Enables checkpointing. If set, the app saves the contents of `q.app` and `q.user` before exiting. When restarted, the contents of `q.app` and `q.user` are restored. The directory is automatically created if it does not exist.
 
 You can use checkpointing as a simple way to save/load your app's data while prototyping.
 
