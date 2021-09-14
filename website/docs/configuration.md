@@ -79,8 +79,8 @@ H2O_WAVE_ACCESS_KEY_ID
 H2O_WAVE_ACCESS_KEY_SECRET
 H2O_WAVE_ACCESS_KEYCHAIN
 H2O_WAVE_DATA_DIR
-H2O_WAVE_DEBUG
-H2O_WAVE_EDITABLE
+H2O_WAVE_DEBUG [1]
+H2O_WAVE_EDITABLE [1]
 H2O_WAVE_INIT
 H2O_WAVE_LISTEN
 H2O_WAVE_MAX_CACHE_REQUEST_SIZE
@@ -93,12 +93,18 @@ H2O_WAVE_OIDC_END_SESSION_URL
 H2O_WAVE_OIDC_PROVIDER_URL
 H2O_WAVE_OIDC_REDIRECT_URL
 H2O_WAVE_OIDC_SCOPES
-H2O_WAVE_OIDC_SKIP_LOGIN
-H2O_WAVE_PROXY
+H2O_WAVE_OIDC_SKIP_LOGIN [1]
+H2O_WAVE_PROXY [1]
+H2O_WAVE_PUBLIC_DIR [2]
+H2O_WAVE_PRIVATE_DIR [2]
 H2O_WAVE_TLS_CERT_FILE
 H2O_WAVE_TLS_KEY_FILE
 H2O_WAVE_WEB_DIR
 ```
+
+Notes:
+- [1] `1`, `t`, `true` to enable; `0`, `f`, `false` to disable (case insensitive).
+- [2] Use OS-specific path list separator to specify multiple arguments - `:` for Linux/OSX and `;` for Windows. For example, `H2O_WAVE_PUBLIC_DIR=/images/@./files/images:/downloads/@./files/downloads`.
 
 ## Configuring your app
 

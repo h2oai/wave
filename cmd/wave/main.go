@@ -75,8 +75,8 @@ func main() {
 	stringVar(&conf.Listen, "listen", ":10101", "listen on this address")
 	stringVar(&conf.WebDir, "web-dir", "./www", "directory to serve web assets from, hosted at /")
 	stringVar(&conf.DataDir, "data-dir", "./data", "directory to store site data")
-	flag.Var(&conf.PublicDirs, "public-dir", "additional directory to serve files from, in the format \"[url-path]:[filesystem-path]\", e.g. \"/public/files/:/some/local/path\" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed")
-	flag.Var(&conf.PrivateDirs, "private-dir", "additional directory to serve files from (authenticated users only), in the format \"[url-path]:[filesystem-path]\", e.g. \"/public/files/:/some/local/path\" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed")
+	stringsVar(&conf.PublicDirs, "public-dir", "additional directory to serve files from, in the format \"[url-path]@[filesystem-path]\", e.g. \"/public/files/@/some/local/path\" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed")
+	stringsVar(&conf.PrivateDirs, "private-dir", "additional directory to serve files from (authenticated users only), in the format \"[url-path]@[filesystem-path]\", e.g. \"/public/files/@/some/local/path\" will host /some/local/path/foo.txt at /public/files/foo.txt; multiple directory mappings allowed")
 	stringVar(&accessKeyID, "access-key-id", "access_key_id", "default API access key ID")
 	stringVar(&accessKeySecret, "access-key-secret", "access_key_secret", "default API access key secret")
 	stringVar(&accessKeyFile, "access-keychain", ".wave-keychain", "path to file containing API access keys")
@@ -225,6 +225,16 @@ func boolVar(p *bool, key string, value bool, usage string) {
 
 func stringVar(p *string, key, value, usage string) {
 	flag.StringVar(p, key, getEnv(key, value), usage)
+}
+
+func stringsVar(p *wave.Strings, key, usage string) {
+	vs := getEnv(key, "")
+	if len(vs) > 0 {
+		for _, v := range strings.Split(vs, string(os.PathListSeparator)) {
+			p.Set(v)
+		}
+	}
+	flag.Var(p, key, usage)
 }
 
 func parseReadSize(label, value string) (int64, error) {

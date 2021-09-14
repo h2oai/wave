@@ -62,25 +62,25 @@ As an alternative to using the above `upload()` or `download()` mechanisms, you 
 Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/
 
 ```
-waved -public-dir /datasets/:/home/zaphod/data
+waved -public-dir /datasets/@/home/zaphod/data
 ```
 
 Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/, and `/home/zaphod/models` at http://localhost:10101/public/models
 
 ```
-waved -public-dir /datasets/:/home/zaphod/data -public-dir /public/models/:/home/zaphod/models
+waved -public-dir /datasets/@/home/zaphod/data -public-dir /public/models/@/home/zaphod/models
 ```
 
 Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/, but only to authenticated users.
 
 ```
-waved -private-dir /datasets/:/home/zaphod/data
+waved -private-dir /datasets/@/home/zaphod/data
 ```
 
 Serve the contents of directory `/home/zaphod/data` at http://localhost:10101/datasets/, and `/home/zaphod/models` at http://localhost:10101/public/models, but only to authenticated users.
 
 ```
-waved -private-dir /datasets/:/home/zaphod/data -private-dir /public/models/:/home/zaphod/models
+waved -private-dir /datasets/@/home/zaphod/data -private-dir /public/models/@/home/zaphod/models
 ```
 
 Note that any number of `-public-dir` and `-private-dir` arguments are allowed.

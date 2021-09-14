@@ -15,17 +15,21 @@
 package wave
 
 import (
+	"os"
+	"strings"
+
 	"github.com/h2oai/wave/pkg/keychain"
 )
 
 type Strings []string
 
-func (s *Strings) String() string {
-	return ""
-}
 func (s *Strings) Set(v string) error {
 	*s = append(*s, v)
 	return nil
+}
+
+func (s *Strings) String() string {
+	return strings.Join(*s, string(os.PathListSeparator))
 }
 
 // ServerConf represents Server configuration options.

@@ -121,9 +121,9 @@ func Run(conf ServerConf) {
 }
 
 func splitDirMapping(m string) (string, string) {
-	xs := strings.SplitN(m, ":", 2)
+	xs := strings.SplitN(m, "@", 2)
 	if len(xs) < 2 {
-		panic(fmt.Sprintf("invalid directory mapping: want \"remote:local\", got %s", m))
+		panic(fmt.Sprintf("invalid directory mapping: want \"remote@local\", got %s", m))
 	}
 	return xs[0], xs[1]
 }
