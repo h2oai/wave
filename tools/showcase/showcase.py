@@ -99,7 +99,10 @@ def append_images(files: List[DocFile]):
             f.writelines(img_lines)
 
 
-def generate_showcase_json(files: List[DocFile]):
+def generate_showcase_json():
+    files = []
+    for p in Path('showcase').rglob('*.md'):
+        map_to_doc_file(p, files)
     with open(os.path.join(docs_path, 'showcase.js'), 'w') as f:
         f.write(f'module.exports={json.dumps(files, cls=CustomEncoder)}')
 
@@ -141,7 +144,7 @@ def main():
             generate_screenshots(browser, files)
             browser.close()
         append_images(files)
-        generate_showcase_json(files)
+        generate_showcase_json()
     except Exception as e:
         print(f'Error: {e.args[0]}')
     finally:

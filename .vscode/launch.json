@@ -34,7 +34,7 @@
       "cwd": "${workspaceFolder}/tools/showcase",
       "program": "${workspaceFolder}/tools/showcase/showcase.py",
       "python": "${workspaceFolder}/tools/showcase/venv/bin/python",
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
     },
     {
       "name": "Debug Tests",

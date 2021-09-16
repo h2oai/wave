@@ -9,6 +9,8 @@ custom_edit_url: null
 Visualizations are charts / plots / graphs that help you better understand your data.
 Wave uses [Grammar of Graphics](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149) to describe its plots.
 
+For more thorough explanation of how Wave plots work, please see [Plots overview](/docs/showcase/plots/overview).
+
 ```py
 from h2o_wave import data
 
