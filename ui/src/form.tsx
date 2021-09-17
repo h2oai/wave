@@ -52,6 +52,7 @@ import { clas, cssVar, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
+import { Persona, XPersona } from "./persona"
 
 /** Create a component. */
 export interface Component {
@@ -133,6 +134,8 @@ export interface Component {
   inline?: Inline
   /** Image */
   image?: Image
+  /** Persona. */
+  persona?: Persona
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -263,6 +266,7 @@ const
     if (m.stats) return <XStats model={m.stats} />
     if (m.inline) return <XInline model={m.inline} />
     if (m.image) return <XImage model={m.image} />
+    if (m.persona) return <XPersona model={m.persona} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

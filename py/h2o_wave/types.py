@@ -5802,6 +5802,117 @@ class Image:
         )
 
 
+_PersonaSize = ['xl', 'l', 'm', 's', 'xs']
+
+
+class PersonaSize:
+    XL = 'xl'
+    L = 'l'
+    M = 'm'
+    S = 's'
+    XS = 'xs'
+
+
+class Persona:
+    """Create an individual's persona or avatar, a visual representation of a person across products.
+    Can be used to display an individual's avatar (or a composition of the person’s initials on a background color), their name or identification, and online status.
+    """
+    def __init__(
+            self,
+            title: str,
+            subtitle: Optional[str] = None,
+            caption: Optional[str] = None,
+            size: Optional[str] = None,
+            image: Optional[str] = None,
+            initials: Optional[str] = None,
+            initials_color: Optional[str] = None,
+            name: Optional[str] = None,
+    ):
+        _guard_scalar('Persona.title', title, (str,), False, False, False)
+        _guard_scalar('Persona.subtitle', subtitle, (str,), False, True, False)
+        _guard_scalar('Persona.caption', caption, (str,), False, True, False)
+        _guard_enum('Persona.size', size, _PersonaSize, True)
+        _guard_scalar('Persona.image', image, (str,), False, True, False)
+        _guard_scalar('Persona.initials', initials, (str,), False, True, False)
+        _guard_scalar('Persona.initials_color', initials_color, (str,), False, True, False)
+        _guard_scalar('Persona.name', name, (str,), True, True, False)
+        self.title = title
+        """Primary text, displayed next to the persona coin."""
+        self.subtitle = subtitle
+        """Secondary text, displayed under the title."""
+        self.caption = caption
+        """Tertiary text, displayed under the subtitle. Only visible for sizes >= 'm'."""
+        self.size = size
+        """The size of the persona coin. Defaults to 'm'. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.PersonaSize."""
+        self.image = image
+        """Image, URL or base64-encoded (`data:image/png;base64,???`)."""
+        self.initials = initials
+        """Initials, if `image` is not specified."""
+        self.initials_color = initials_color
+        """Initials background color (CSS-compatible string)."""
+        self.name = name
+        """An identifying name for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Persona.title', self.title, (str,), False, False, False)
+        _guard_scalar('Persona.subtitle', self.subtitle, (str,), False, True, False)
+        _guard_scalar('Persona.caption', self.caption, (str,), False, True, False)
+        _guard_enum('Persona.size', self.size, _PersonaSize, True)
+        _guard_scalar('Persona.image', self.image, (str,), False, True, False)
+        _guard_scalar('Persona.initials', self.initials, (str,), False, True, False)
+        _guard_scalar('Persona.initials_color', self.initials_color, (str,), False, True, False)
+        _guard_scalar('Persona.name', self.name, (str,), True, True, False)
+        return _dump(
+            title=self.title,
+            subtitle=self.subtitle,
+            caption=self.caption,
+            size=self.size,
+            image=self.image,
+            initials=self.initials,
+            initials_color=self.initials_color,
+            name=self.name,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Persona':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_title: Any = __d.get('title')
+        _guard_scalar('Persona.title', __d_title, (str,), False, False, False)
+        __d_subtitle: Any = __d.get('subtitle')
+        _guard_scalar('Persona.subtitle', __d_subtitle, (str,), False, True, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('Persona.caption', __d_caption, (str,), False, True, False)
+        __d_size: Any = __d.get('size')
+        _guard_enum('Persona.size', __d_size, _PersonaSize, True)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('Persona.image', __d_image, (str,), False, True, False)
+        __d_initials: Any = __d.get('initials')
+        _guard_scalar('Persona.initials', __d_initials, (str,), False, True, False)
+        __d_initials_color: Any = __d.get('initials_color')
+        _guard_scalar('Persona.initials_color', __d_initials_color, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('Persona.name', __d_name, (str,), True, True, False)
+        title: str = __d_title
+        subtitle: Optional[str] = __d_subtitle
+        caption: Optional[str] = __d_caption
+        size: Optional[str] = __d_size
+        image: Optional[str] = __d_image
+        initials: Optional[str] = __d_initials
+        initials_color: Optional[str] = __d_initials_color
+        name: Optional[str] = __d_name
+        return Persona(
+            title,
+            subtitle,
+            caption,
+            size,
+            image,
+            initials,
+            initials_color,
+            name,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -5846,6 +5957,7 @@ class Component:
             stats: Optional[Stats] = None,
             inline: Optional[Inline] = None,
             image: Optional[Image] = None,
+            persona: Optional[Persona] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -5886,6 +5998,7 @@ class Component:
         _guard_scalar('Component.stats', stats, (Stats,), False, True, False)
         _guard_scalar('Component.inline', inline, (Inline,), False, True, False)
         _guard_scalar('Component.image', image, (Image,), False, True, False)
+        _guard_scalar('Component.persona', persona, (Persona,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -5964,6 +6077,8 @@ class Component:
         """Inline components"""
         self.image = image
         """Image"""
+        self.persona = persona
+        """Persona"""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6006,6 +6121,7 @@ class Component:
         _guard_scalar('Component.stats', self.stats, (Stats,), False, True, False)
         _guard_scalar('Component.inline', self.inline, (Inline,), False, True, False)
         _guard_scalar('Component.image', self.image, (Image,), False, True, False)
+        _guard_scalar('Component.persona', self.persona, (Persona,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -6046,6 +6162,7 @@ class Component:
             stats=None if self.stats is None else self.stats.dump(),
             inline=None if self.inline is None else self.inline.dump(),
             image=None if self.image is None else self.image.dump(),
+            persona=None if self.persona is None else self.persona.dump(),
         )
 
     @staticmethod
@@ -6129,6 +6246,8 @@ class Component:
         _guard_scalar('Component.inline', __d_inline, (dict,), False, True, False)
         __d_image: Any = __d.get('image')
         _guard_scalar('Component.image', __d_image, (dict,), False, True, False)
+        __d_persona: Any = __d.get('persona')
+        _guard_scalar('Component.persona', __d_persona, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6168,6 +6287,7 @@ class Component:
         stats: Optional[Stats] = None if __d_stats is None else Stats.load(__d_stats)
         inline: Optional[Inline] = None if __d_inline is None else Inline.load(__d_inline)
         image: Optional[Image] = None if __d_image is None else Image.load(__d_image)
+        persona: Optional[Persona] = None if __d_persona is None else Persona.load(__d_persona)
         return Component(
             text,
             text_xl,
@@ -6208,6 +6328,7 @@ class Component:
             stats,
             inline,
             image,
+            persona,
         )
 
 

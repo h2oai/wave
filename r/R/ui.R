@@ -2528,6 +2528,50 @@ ui_image <- function(
   return(.o)
 }
 
+#' Create an individual's persona or avatar, a visual representation of a person across products.
+#' Can be used to display an individual's avatar (or a composition of the person’s initials on a background color), their name or identification, and online status.
+#'
+#' @param title Primary text, displayed next to the persona coin.
+#' @param subtitle Secondary text, displayed under the title.
+#' @param caption Tertiary text, displayed under the subtitle. Only visible for sizes >= 'm'.
+#' @param size The size of the persona coin. Defaults to 'm'.
+#'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.PersonaSize.
+#' @param image Image, URL or base64-encoded (`data:image/png;base64,???`).
+#' @param initials Initials, if `image` is not specified.
+#' @param initials_color Initials background color (CSS-compatible string).
+#' @param name An identifying name for this component.
+#' @return A Persona instance.
+#' @export
+ui_persona <- function(
+  title,
+  subtitle = NULL,
+  caption = NULL,
+  size = NULL,
+  image = NULL,
+  initials = NULL,
+  initials_color = NULL,
+  name = NULL) {
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("caption", "character", caption)
+  # TODO Validate size
+  .guard_scalar("image", "character", image)
+  .guard_scalar("initials", "character", initials)
+  .guard_scalar("initials_color", "character", initials_color)
+  .guard_scalar("name", "character", name)
+  .o <- list(persona=list(
+    title=title,
+    subtitle=subtitle,
+    caption=caption,
+    size=size,
+    image=image,
+    initials=initials,
+    initials_color=initials_color,
+    name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create a form.
 #'
 #' @param box A string indicating how to place this component on the page.
