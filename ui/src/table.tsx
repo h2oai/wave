@@ -111,7 +111,7 @@ export interface Table {
   tooltip?: S
 }
 
-type QColumn = Fluent.IColumn & {
+type WaveColumn = Fluent.IColumn & {
   dataType?: S
   cellType?: TableCellType
   isSortable?: B
@@ -120,7 +120,7 @@ type QColumn = Fluent.IColumn & {
 type DataTable = {
   model: Table
   onFilterChange: (filterKey: S, filterVal: S) => (e?: React.FormEvent<HTMLInputElement | HTMLElement>, checked?: B) => void
-  sort: (col: QColumn) => void,
+  sort: (col: WaveColumn) => void,
   reset: () => void
   filteredItems: any[]
   selectedFilters: Dict<S[]> | null
@@ -215,7 +215,7 @@ const
       return rv
     }, {} as Dict<any>)
   },
-  sortingF = (column: QColumn, sortAsc: B) => (rowA: any, rowB: any) => {
+  sortingF = (column: WaveColumn, sortAsc: B) => (rowA: any, rowB: any) => {
     let a = rowA[column.key], b = rowB[column.key]
 
     switch (column.dataType) {
@@ -246,7 +246,7 @@ const
     const
       [colContextMenuList, setColContextMenuList] = React.useState<Fluent.IContextualMenuProps | null>(null),
       selectedFiltersRef = React.useRef(selectedFilters),
-      onColumnClick = (e: React.MouseEvent<HTMLElement>, column: QColumn) => {
+      onColumnClick = (e: React.MouseEvent<HTMLElement>, column: WaveColumn) => {
         const isMenuClicked = (e.target as HTMLElement).getAttribute('data-icon-name') === 'ChevronDown'
 
         if (isMenuClicked) onColumnContextMenu(column, e)
@@ -255,7 +255,7 @@ const
           setColumns(columns.map(col => column.key === col.key ? column : col))
         }
       },
-      [columns, setColumns] = React.useState(m.columns.map((c): QColumn => {
+      [columns, setColumns] = React.useState(m.columns.map((c): WaveColumn => {
         const
           minWidth = c.min_width
             ? c.min_width.endsWith('px')
@@ -285,19 +285,25 @@ const
         }
       })),
       primaryColumnKey = m.columns.find(c => c.link)?.name || (m.columns[0].link === false ? undefined : m.columns[0].name),
-      onRenderMenuList = React.useCallback((listProps?: Fluent.IContextualMenuListProps) => {
+      onRenderMenuList = React.useCallback((col: WaveColumn) => (listProps?: Fluent.IContextualMenuListProps) => {
         if (!listProps) return null
 
+        const filters = col.cellType?.badge
+          ? listProps.items.reduce((_filters, { key, text, data }) => {
+            key.split(',').forEach(k => _filters.push({ key: k, text, data }))
+            return _filters
+          }, [] as Fluent.IContextualMenuItem[])
+          : listProps.items
         return (
           <div style={{ padding: 10 }}>
             <Fluent.Text variant='mediumPlus' styles={{ root: { paddingTop: 10, paddingBottom: 10, fontWeight: 'bold' } }} block>Show only</Fluent.Text>
             {
-              listProps.items.map(({ key, name, data }) => (
+              filters.map(({ key, text, data }) => (
                 <Fluent.Checkbox
                   key={key}
-                  label={name}
-                  defaultChecked={!!name && !!selectedFiltersRef.current && selectedFiltersRef.current[data]?.includes(name)}
-                  onChange={onFilterChange(data || '', name || '')}
+                  label={key}
+                  defaultChecked={!!text && !!selectedFiltersRef.current && selectedFiltersRef.current[data]?.includes(text)}
+                  onChange={onFilterChange(data || '', text || '')}
                   styles={{ root: { marginBottom: 5 } }}
                 />
               )
@@ -306,14 +312,14 @@ const
           </div>
         )
       }, [onFilterChange]),
-      onColumnContextMenu = React.useCallback((col: Fluent.IColumn, e: React.MouseEvent<HTMLElement>) => {
+      onColumnContextMenu = React.useCallback((col: WaveColumn, e: React.MouseEvent<HTMLElement>) => {
         setColContextMenuList({
-          items: Array.from(new Set(items.map(i => i[col.fieldName || col.key]))).map(option => ({ key: option, name: option, data: col.fieldName || col.key })),
+          items: Array.from(new Set(items.map(i => i[col.fieldName || col.key]))).map(option => ({ key: option, text: option, data: col.fieldName || col.key })),
           target: e.target as HTMLElement,
           directionalHint: Fluent.DirectionalHint.bottomLeftEdge,
           gapSpace: 10,
           isBeakVisible: true,
-          onRenderMenuList,
+          onRenderMenuList: onRenderMenuList(col),
           onDismiss: () => setColContextMenuList(null),
         })
       }, [items, onRenderMenuList]),
@@ -374,7 +380,7 @@ const
 
         window.URL.revokeObjectURL(url)
       },
-      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: QColumn) => {
+      onRenderItemColumn = (item?: Fluent.IObjectWithKey & Dict<any>, _index?: number, col?: WaveColumn) => {
         if (!item || !col) return <span />
 
         let v = item[col.fieldName as S]
@@ -577,7 +583,7 @@ export const
 
         return topToolbarHeight + headerHeight + (items.length * rowHeight) + footerHeight
       },
-      sort = React.useCallback((column: QColumn) => {
+      sort = React.useCallback((column: WaveColumn) => {
         const sortAsc = column.iconName === 'SortDown'
         column.iconName = sortAsc ? 'SortUp' : 'SortDown'
 
