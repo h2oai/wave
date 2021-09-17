@@ -40,10 +40,10 @@ page.save()
 
 def make_snippet_screenshot(code: List[str], screenshot_name: str, browser: Any, group: str):
     code_str = ''.join(code)
-    match = re.search('(q.page\\[)(\'|\")([\\w-]+)', code_str)
+    match = re.findall('(q.page\\[)(\'|\")([\\w-]+)', code_str)
     if not match:
         raise ValueError(f'Could not extract card name for {screenshot_name}.')
-    card_name = match.group(3)
+    card_name = match[0][2] if match[0][2] != 'meta' else match[1][2]
     with open(example_file_path, 'w') as f:
         f.write(get_template_code(code_str))
     with subprocess.Popen(['venv/bin/python', 'showcase.py'], cwd=os.path.join('..', '..', 'py'), stderr=subprocess.PIPE) as p:  # noqa

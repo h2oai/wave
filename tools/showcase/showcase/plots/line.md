@@ -1,5 +1,5 @@
 ---
-title: Line
+title: Native Line
 custom_edit_url: null
 ---
 

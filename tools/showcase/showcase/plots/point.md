@@ -1,5 +1,5 @@
 ---
-title: Point
+title: Native Point
 custom_edit_url: null
 ---
 
