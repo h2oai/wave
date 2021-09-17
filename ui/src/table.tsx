@@ -182,6 +182,7 @@ const
     },
     contentWrapper: {
       border: border(2, cssVar('$neutralLight')),
+      borderTop: 'none',
       '.ms-DetailsRow': {
         border: border(2, 'transparent'),
         borderTop: border(2, cssVar('$neutralLight')),
