@@ -7,14 +7,14 @@ custom_edit_url: null
 ---
 
 
- The choice group component, also known as radio buttons, let users select one option from two or more choices.
+ The choice group component, also known as radio buttons, lets users select one option from two or more choices.
  Each option is represented by one choice group button. A user can select only one choice group in a button group.
 
  Choice groups emphasize all options equally, and that may draw more attention to the options than necessary.
  Consider using other components, unless the options deserve extra attention from the user.
  For example, if the default option is recommended for most users in most situations, use a dropdown instead.
 
- If there are only two mutually exclusive options, combine them into a single Checkbox or Toggle switch.
+ If there are only two mutually exclusive options, combine them into a single [ui.checkbox](/docs/api/ui#checkbox) or [ui.toggle](/docs/api/ui#toggle) switch.
  For example, use a checkbox for "I agree" instead of choice group buttons for "I agree" and "I don't agree."
 
 ```py

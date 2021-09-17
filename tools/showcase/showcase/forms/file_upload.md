@@ -12,7 +12,7 @@ You can upload files either by drag&drop or by clicking the upload button and ch
 your local file system.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.file_upload(name='file_upload', label='File Upload')
 ])
 ```
@@ -29,7 +29,7 @@ It's common to want to allow your users to only upload files with very specific 
 Good news is Wave is flexible enough to support all these cases!
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.file_upload(
         name='file_upload',
         label='File Upload',
@@ -48,7 +48,7 @@ a way to control height via `height` attribute. It supports all the [CSS units](
 could expect so we advise to use static units like `px`, `rem` etc. instead.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.file_upload(name='file_upload', label='File Upload', width='200px', height='200px')
 ])
 ```

@@ -29,7 +29,7 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 
 ## Disabled
 
-Use disabled button for cases when clicking should not be allowed, based on current app state. A typical example might be a user didnt't fill all the form fields yet
+Use disabled button for cases when clicking should not be allowed, based on current app state. A typical example might be a user didn't fill all the form fields yet
 so is not allowed to proceed. Disabled buttons have all interactions disabled (click, hover etc.).
 
 ```py
@@ -51,7 +51,7 @@ q.page['form'] = ui.form_card(box='1 1 2 2', items=[
 
 ## Icons
 
-In order to reinforce the information button holds, an [icon](https://uifabricicons.azurewebsites.net/) can be used.
+In order to reinforce the information a button holds, an [icon](https://uifabricicons.azurewebsites.net/) can be used.
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 2 1', items=[
@@ -85,7 +85,7 @@ q.page['form'] = ui.form_card(box='1 1 1 2', items=[
 ])
 ```
 
-On the other hand, horizontal alignment requires wrapping the buttons in [ui.buttons](/docs/api/ui#buttons):
+On the other hand, horizontal alignment requires wrapping the buttons in [ui.buttons](/docs/api/ui#buttons) component:
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 3 1', items=[

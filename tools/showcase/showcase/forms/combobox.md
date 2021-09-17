@@ -6,7 +6,7 @@ keywords:
 custom_edit_url: null
 ---
 
- A combobox is a list in which the selected item is always visible, and the others are visible on
+ A combobox is a list in which the selected item is always visible, and others are visible on
  demand by clicking a drop-down button or by typing in the input. They are used to simplify the
  design and make a choice within the UI.
 

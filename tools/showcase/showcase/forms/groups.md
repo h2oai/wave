@@ -34,7 +34,7 @@ component. Optionally, you can also specify `justify` if you want to control the
 
 ```py
 q.page['form'] = ui.form_card(
-    box='1 1 2 4',
+    box='1 1 4 2',
     items=[ui.inline(items=[
         ui.textbox(name='textbox1', label='Textbox 1'),
         ui.textbox(name='textbox2', label='Textbox 2'),

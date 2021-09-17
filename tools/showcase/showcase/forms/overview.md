@@ -72,7 +72,7 @@ q.page['form'] = ui.form_card(box='1 1 3 2', items=[
 ## Tooltips
 
 Most of the form components include optional `tooltip` which is supposed to be used to add extra clarification to users when needed. The tooltips are
-displayed as a small icon next to a form component which, upon hover, shows the specified text. Note that using too much tooltips is antipattern and
+displayed as a small icon next to a form component which, upon hover, shows the specified text. Note that using too many tooltips is an antipattern and
 bad UX. The best thing you can do is to make your UI labels clear without further need to hover over icons to reveal more info. Having to make
 extra clicks / hovers will just annoy your users.
 

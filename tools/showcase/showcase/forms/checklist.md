@@ -6,7 +6,7 @@ keywords:
 custom_edit_url: null
 ---
 
-If you happen to have multiple related checkboxes, it might make sense to group them within a single . In addition
+If you happen to have multiple related checkboxes, it might make sense to group them within a single container. In addition
 to regular checkboxes, it has select / unselect all feature and submits data in a single list.
 
 ```py
