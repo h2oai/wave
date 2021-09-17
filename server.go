@@ -89,6 +89,7 @@ func Run(conf ServerConf) {
 	}
 
 	http.Handle("/_c/", newCache("/_c/", conf.Keychain, conf.MaxCacheRequestSize))
+	http.Handle("/_m/", newMultipartServer("/_m/", conf.Keychain, auth, conf.MaxRequestSize))
 
 	if conf.Proxy {
 		http.Handle("/_p", newProxy(auth, conf.MaxProxyRequestSize, conf.MaxProxyResponseSize))

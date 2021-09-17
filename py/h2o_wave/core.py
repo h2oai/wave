@@ -19,7 +19,7 @@ import logging
 import os
 import os.path
 import sys
-from typing import List, Dict, Union, Tuple, Any, Optional
+from typing import List, Dict, Union, Tuple, Any, Optional, IO
 
 import httpx
 
@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 Primitive = Union[bool, str, int, float, None]
 PrimitiveCollection = Union[Tuple[Primitive], List[Primitive]]
+FileContent = Union[IO[str], IO[bytes], str, bytes]
 
 UNICAST = 'unicast'
 MULTICAST = 'multicast'
@@ -693,6 +694,42 @@ class Site:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
 
+    def uplink(self, path: str, content_type: str, file: FileContent) -> str:
+        """
+        Create or update a stream of images.
+
+        The typical use of this function is to transmit a stream of images to a web page, providing the appearance of a
+         video. The path returned by this function can be passed to ui.image() or ui.image_card() (or even a custom HTML
+         img element). The stream is displayed in browsers using multipart/x-mixed-replace content. Callers must call
+         the unlink() function to signal end-of-stream.
+
+        Args:
+            path: a unique path or name for the stream (e.g. 'foo/bar/qux.png'). Must be a valid URL path.
+            content_type: The MIME type of the streamed content (e.g. 'image/jpeg', 'image/png', etc.).
+            file: A file or file-like object (on-disk file, standard I/O, in-memory buffers, sockets or pipes).
+
+        Returns:
+            The stream endpoint, typically used as an image path.
+        """
+        endpoint = f'/_m/{path}'
+        res = self._http.post(f'{_config.hub_address}{endpoint}', files={'f': ('f', file, content_type)})
+        if res.status_code == 200:
+            return endpoint
+        raise ServiceError(f'Uplink failed (code={res.status_code}): {res.text}')
+
+    def unlink(self, path: str):
+        """
+        Signal the end of a stream.
+
+        Args:
+            path: The path of the stream
+        """
+        endpoint = f'/_m/{path}'
+        res = self._http.delete(f'{_config.hub_address}{endpoint}')
+        if res.status_code == 200:
+            return endpoint
+        raise ServiceError(f'Unlink failed (code={res.status_code}): {res.text}')
+
 
 site = Site()
 
@@ -783,6 +820,42 @@ class AsyncSite:
         if res.status_code == 200:
             return
         raise ServiceError(f'Unload failed (code={res.status_code}): {res.text}')
+
+    async def uplink(self, path: str, content_type: str, file: FileContent) -> str:
+        """
+        Create or update a stream of images.
+
+        The typical use of this function is to transmit a stream of images to a web page, providing the appearance of a
+         video. The path returned by this function can be passed to ui.image() or ui.image_card() (or even a custom HTML
+         img element). The stream is displayed in browsers using multipart/x-mixed-replace content. Callers must call
+         the unlink() function to signal end-of-stream.
+
+        Args:
+            path: a unique path or name for the stream (e.g. 'foo/bar/qux.png'). Must be a valid URL path.
+            content_type: The MIME type of the streamed content (e.g. 'image/jpeg', 'image/png', etc.).
+            file: A file or file-like object (on-disk file, standard I/O, in-memory buffers, sockets or pipes).
+
+        Returns:
+            The stream endpoint, typically used as an image path.
+        """
+        endpoint = f'/_m/{path}'
+        res = await self._http.post(f'{_config.hub_address}{endpoint}', files={'f': ('f', file, content_type)})
+        if res.status_code == 200:
+            return endpoint
+        raise ServiceError(f'Uplink failed (code={res.status_code}): {res.text}')
+
+    async def unlink(self, path: str):
+        """
+        Signal the end of a stream.
+
+        Args:
+            path: The path of the stream
+        """
+        endpoint = f'/_m/{path}'
+        res = await self._http.delete(f'{_config.hub_address}{endpoint}')
+        if res.status_code == 200:
+            return endpoint
+        raise ServiceError(f'Unlink failed (code={res.status_code}): {res.text}')
 
 
 def _kv(key: str, index: str, value: Any):
