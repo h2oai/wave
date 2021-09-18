@@ -12,6 +12,43 @@ When referencing the [`h2o-wave` package](https://pypi.org/project/h2o-wave/) fr
 
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security fixes are provided for 1 year.
 
+## v0.18.0
+September 18, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.18.0)
+- Added
+  - Persona component.
+  - Add support for streaming/multipart endpoints.
+  - Read command line args from env if available.
+  - Allow public/private directories to be hosted by the Wave daemon.
+  - Side panel component.
+  - Custom inline / external CSS support.
+  - Allow controlling width of form items.
+  - Icon button component.
+  - Allow submitting text phrases within markdown.
+  - Allow using markdown / HTML within message bar.
+  - Add inline prop to checklist component.
+  - Add trigger attribute for spinbox component.
+  - OIDC: Update default scopes and add `-oidc-scopes` command line argument.
+- Changed
+  - Sort table group titles by default when grouped.
+  - Range slider replaced with native Fluent component.
+  - Report HTTP error 413 instead of 500 if request is too large.
+  - Disable async function validation (failed under Cython).
+- Fixed
+  - Submit range slider values on releasing mouse.
+  - Datepicker color contrast for date selection.
+  - Unify ui.picker label with th rest of the form components, add 'required' prop to picker.
+  - Expander ignoring expanded attr on initial render.
+  - Prevent floating-point precision display in spinbox.
+  - Redirect only once, not on every render.
+  - Stretch slider for available space within `ui.inline` and `ui.section`.
+  - Update form items client side if possible instead of recreate on data change.
+  - Meta redirect for Firefox.
+  - Set location hash when script events are triggered.
+  - Download files in new tab to prevent FF dropping WS connection.
+  - Increase tab card min height to prevent overflow.
+  - Safari title overflow in grey dashboard.
+  - Ensure that first column in tables functions properly when non-text.
+
 ## v0.17.0
 June 30, 2021 - [Download](https://github.com/h2oai/wave/releases/tag/v0.17.0)
 - Added
