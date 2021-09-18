@@ -108,7 +108,7 @@ release: build-ui build-py ## Prepare release builds (e.g. "VERSION=1.2.3 make r
 	$(MAKE) OS=linux release-os
 	$(MAKE) OS=darwin release-os
 	$(MAKE) OS=windows EXE_EXT=".exe" release-os
-	$(MAKE) build-website
+	$(MAKE) website
 
 release-os:
 	rm -rf build/$(REL)
