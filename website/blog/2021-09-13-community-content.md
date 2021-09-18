@@ -1,6 +1,6 @@
 ---
 slug: community-content-bdv
-title: Wave Workshop: Big Data Visualizer
+title: Wave Workshop - Big Data Visualizer
 author: Michelle Tanco
 author_title: PM of the AI AppStore @ H2O.ai
 author_url: https://github.com/mtanco
