@@ -1,4 +1,4 @@
-# Stream Images
+# Image / Stream
 # Display an image and continuously update it in real time.
 # ---
 import io
@@ -34,7 +34,7 @@ async def serve(q: Q):
     # Update image in a loop
     for i in range(frame_count):
         # Send image (use stream name as before).
-        await q.site.uplink(stream_name, 'image/png', create_random_image())
+        await q.site.uplink(stream_name, 'image/jpeg', create_random_image())
 
     await q.site.unlink(stream_name)
 
