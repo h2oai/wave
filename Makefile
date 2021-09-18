@@ -100,8 +100,8 @@ run-cypress: ## Run Cypress
 generate: ## Generate driver bindings
 	cd tools/wavegen && $(MAKE) run
 
-.PHONY: docs
-docs: ## Generate API docs and copy to website
+.PHONY: pydocs
+pydocs: ## Generate API docs and copy to website
 	cd py && $(MAKE) docs
 
 release: build-ui build-py ## Prepare release builds (e.g. "VERSION=1.2.3 make release)"
@@ -124,7 +124,8 @@ release-os:
 	cp readme.txt build/$(REL)/readme.txt
 	cd build && tar -czf $(REL).tar.gz  --exclude='*.state'  --exclude='__pycache__' $(REL)
 
-build-website: docs ## Build website
+.PHONY: website
+website: pydocs ## Build website
 	cd website && npm ci && npm run build
 
 preview-website: ## Preview website
