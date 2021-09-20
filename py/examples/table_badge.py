@@ -24,9 +24,9 @@ issues = [Issue(text=fake.sentence(), badge=('FAIL' if i % 2 == 0 else 'DONE,SUC
 columns = [
     ui.table_column(name='text', label='Issue', min_width='400px'),
     ui.table_column(name='badge', label='Badge', cell_type=ui.badge_table_cell_type(name='badges', badges=[
-        ui.badge(name='FAIL', background_color='$red'),
-        ui.badge(name='DONE', background_color='#D2E3F8', color='#053975'),
-        ui.badge(name='SUCCESS', background_color='$mint'),
+        ui.badge(label='FAIL', color='$red'),
+        ui.badge(label='DONE', color='#D2E3F8', label_color='#053975'),
+        ui.badge(label='SUCCESS', color='$mint'),
     ])),
 ]
 

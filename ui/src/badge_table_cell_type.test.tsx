@@ -20,8 +20,8 @@ const
   name = 'badge-cell',
   badgeCellProps: BadgeTableCellType = {
     name, badges: [
-      { name: 'DONE', background_color: '$red' },
-      { name: 'SUCCESS', background_color: '$green' },
+      { label: 'DONE', color: '$red' },
+      { label: 'SUCCESS', color: '$green' },
     ]
   }
 

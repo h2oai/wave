@@ -1373,30 +1373,35 @@ ui_icon_table_cell_type <- function(
 
 #' Create a badge.
 #'
-#' @param name Text specified within the badge.
-#' @param background_color Badge's background color.
-#' @param color Badge's text color. If not specified, black or white will be picked based on correct contrast with background.
+#' @param label The text displayed within the badge.
+#' @param color Badge's background color.
+#' @param label_color Badge's label color. If not specified, black or white will be picked based on correct contrast with background.
 #' @return A Badge instance.
 #' @export
 ui_badge <- function(
-  name,
-  background_color,
-  color = NULL) {
-  .guard_scalar("name", "character", name)
-  .guard_scalar("background_color", "character", background_color)
+  label,
+  color,
+  label_color = NULL) {
+  .guard_scalar("label", "character", label)
   .guard_scalar("color", "character", color)
+  .guard_scalar("label_color", "character", label_color)
   .o <- list(
-    name=name,
-    background_color=background_color,
-    color=color)
+    label=label,
+    color=color,
+    label_color=label_color)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveBadge"))
   return(.o)
 }
 
-#' Creates a collection of chips, usually used for rendering state values.
-#' Note: In case of multiple tags per row, make sure the row values are
+#' Creates a collection of badges, usually used for rendering state values.
+#' In case of multiple badges per row, make sure the row values are
 #' separated by "," within a single cell string.
-#' E.g. ui.table_row(name='...', cells=['cell1', 'BADGE1,BADGE2']).
+#' E.g. ui.table_row(name="...", cells=["cell1", "BADGE1,BADGE2"]).
+#' Each value should correspond to a `ui.badge.label` attr.
+#' For the example above: [
+#' ui.badge(label="BADGE1", color="red"),
+#' ui.badge(label="BADGE2", color="green"),
+#' ]
 #'
 #' @param name An identifying name for this component.
 #' @param badges Badges to be rendered.

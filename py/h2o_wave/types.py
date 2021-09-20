@@ -3002,55 +3002,60 @@ class Badge:
     """
     def __init__(
             self,
-            name: str,
-            background_color: str,
-            color: Optional[str] = None,
+            label: str,
+            color: str,
+            label_color: Optional[str] = None,
     ):
-        _guard_scalar('Badge.name', name, (str,), False, False, False)
-        _guard_scalar('Badge.background_color', background_color, (str,), False, False, False)
-        _guard_scalar('Badge.color', color, (str,), False, True, False)
-        self.name = name
-        """Text specified within the badge."""
-        self.background_color = background_color
-        """Badge's background color."""
+        _guard_scalar('Badge.label', label, (str,), False, False, False)
+        _guard_scalar('Badge.color', color, (str,), False, False, False)
+        _guard_scalar('Badge.label_color', label_color, (str,), False, True, False)
+        self.label = label
+        """The text displayed within the badge."""
         self.color = color
-        """Badge's text color. If not specified, black or white will be picked based on correct contrast with background."""
+        """Badge's background color."""
+        self.label_color = label_color
+        """Badge's label color. If not specified, black or white will be picked based on correct contrast with background."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Badge.name', self.name, (str,), False, False, False)
-        _guard_scalar('Badge.background_color', self.background_color, (str,), False, False, False)
-        _guard_scalar('Badge.color', self.color, (str,), False, True, False)
+        _guard_scalar('Badge.label', self.label, (str,), False, False, False)
+        _guard_scalar('Badge.color', self.color, (str,), False, False, False)
+        _guard_scalar('Badge.label_color', self.label_color, (str,), False, True, False)
         return _dump(
-            name=self.name,
-            background_color=self.background_color,
+            label=self.label,
             color=self.color,
+            label_color=self.label_color,
         )
 
     @staticmethod
     def load(__d: Dict) -> 'Badge':
         """Creates an instance of this class using the contents of a dict."""
-        __d_name: Any = __d.get('name')
-        _guard_scalar('Badge.name', __d_name, (str,), False, False, False)
-        __d_background_color: Any = __d.get('background_color')
-        _guard_scalar('Badge.background_color', __d_background_color, (str,), False, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('Badge.label', __d_label, (str,), False, False, False)
         __d_color: Any = __d.get('color')
-        _guard_scalar('Badge.color', __d_color, (str,), False, True, False)
-        name: str = __d_name
-        background_color: str = __d_background_color
-        color: Optional[str] = __d_color
+        _guard_scalar('Badge.color', __d_color, (str,), False, False, False)
+        __d_label_color: Any = __d.get('label_color')
+        _guard_scalar('Badge.label_color', __d_label_color, (str,), False, True, False)
+        label: str = __d_label
+        color: str = __d_color
+        label_color: Optional[str] = __d_label_color
         return Badge(
-            name,
-            background_color,
+            label,
             color,
+            label_color,
         )
 
 
 class BadgeTableCellType:
-    """Creates a collection of chips, usually used for rendering state values.
-    Note: In case of multiple tags per row, make sure the row values are
+    """Creates a collection of badges, usually used for rendering state values.
+    In case of multiple badges per row, make sure the row values are
     separated by "," within a single cell string.
-    E.g. ui.table_row(name='...', cells=['cell1', 'BADGE1,BADGE2']).
+    E.g. ui.table_row(name="...", cells=["cell1", "BADGE1,BADGE2"]).
+    Each value should correspond to a `ui.badge.label` attr.
+    For the example above: [
+    ui.badge(label="BADGE1", color="red"),
+    ui.badge(label="BADGE2", color="green"),
+    ]
     """
     def __init__(
             self,
