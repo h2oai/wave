@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import setuptools
+import os
 
 with open('README.rst', 'r') as readme:
     long_description = readme.read()
@@ -22,7 +23,7 @@ with open('README.md', 'r') as readme_markdown:
 
 setuptools.setup(
     name='h2o_wave',
-    version='0.18.0',
+    version=os.environ['VERSION'] or '0.18.0',
     author='Prithvi Prabhu',
     author_email='prithvi@h2o.ai',
     description='Python driver for H2O Wave Realtime Apps',

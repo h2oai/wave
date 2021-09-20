@@ -1,0 +1,79 @@
+name: Release Wave Nightly
+
+on:
+  schedule:
+    - cron: "0 22,7 * * *" # Schedule on 12am of CET and PST.
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VERSION: "nightly"
+  TAG: "nightly"
+
+jobs:
+  release:
+    name: Release Wave Nightly
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '15'
+
+      - name: Setup
+        run: make setup
+
+      - name: Unit Test
+        run: make test-ui-ci
+
+      - name: Build Release
+        run: make release
+
+      - name: Update tag
+        run: git tag nighly && git push --tags
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.TAG }}
+          release_name: ${{ env.TAG }}
+          draft: false
+
+      - name: Upload MacOS Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz"
+          asset_name: "wave-${{ env.VERSION }}-darwin-amd64.tar.gz"
+          asset_content_type: application/gzip
+
+      - name: Upload Linux Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./build/wave-${{ env.VERSION }}-linux-amd64.tar.gz"
+          asset_name: "wave-${{ env.VERSION }}-linux-amd64.tar.gz"
+          asset_content_type: application/gzip
+
+      - name: Upload Windows Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./build/wave-${{ env.VERSION }}-windows-amd64.tar.gz"
+          asset_name: "wave-${{ env.VERSION }}-windows-amd64.tar.gz"
+          asset_content_type: application/gzip
+
+      - name: Upload Python Wheel
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "./py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl"
+          asset_name: "h2o_wave-${{ env.VERSION }}-py3-none-any.whl"
+          asset_content_type: application/zip
