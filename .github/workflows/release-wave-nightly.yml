@@ -10,7 +10,6 @@ on:
     - cron: "0 22,7 * * *" # Schedule on 12am of CET and PST.
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   VERSION: nightly
   TAG: nightly
 
