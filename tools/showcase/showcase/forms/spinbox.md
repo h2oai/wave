@@ -15,19 +15,21 @@ which is out of boundaries (min / max), the appropriate boundary value will be u
 Note that if `trigger` is specified, the inputs are submitted after `500ms` of no typing activity. This
 treshold is currently not configurable.
 
-The defaults:
-| Attribute   | value   |
-|-------------|---------|
-| min         | 0       |
-| max         | 100     |
-| step        | 1       |
-| value       | 0       |
-
 ```py
 q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.spinbox(name='spinbox', label='Spinbox')
 ])
 ```
+
+## Default attribute values
+
+| Attribute | Value |
+|-----------|-------|
+| min       | 0     |
+| max       | 100   |
+| step      | 1     |
+| value     | 0     |
+
 
 ## Default value
 

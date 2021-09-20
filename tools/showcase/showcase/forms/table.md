@@ -26,16 +26,16 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ## Selection
 
 If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked,
-the form is submitted automatically, and `q.args.table_name` is set to `[row_name]`, where
-`table_name` is the `name` of the table, and `row_name` is the `name` of the row that was clicked on.
+the form is submitted automatically and `q.args.table_name` is set to `[row_name]`, where
+`table_name` is the `name` of the table, and `row_name` is the `name` of the row that was clicked.
 
-If `multiple` is set to True, each row in the table is selectable. A row can be selected by
+If `multiple` is set to `True`, each row in the table is selectable. A row can be selected by
 clicking on it.
 Multiple rows can be selected either by shift+clicking or using marquee selection. When the form
 is submitted, `q.args.table_name` is set to `[row1_name, row2_name, ...]` where `table_name` is the
 `name` of the table, and `row1_name`, `row2_name` are the `name` of the rows that were selected. Note
-that if `multiple` is set to True, the form is not submitted automatically and one or more buttons are
-required in the form to trigger submission.
+that if `multiple` is set to `True`, the form is not submitted automatically and one or more buttons in the form are
+required to trigger submission.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 3', items=[
@@ -105,8 +105,8 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 
 ## Filter
 
-Similar to searchm if you want to take advantage of a built-in filter, just specify a column as
-`filterable`. This will render a small chevron next to a column name which expands after clicking giving
+Similar to search if you want to take advantage of a built-in filter, just specify a column as
+`filterable`. This will render a small chevron next to a column name which expands after clicking, giving
 you the option to check any of the unique column values and filter the table. We advise to use filtering
 only on columns that consist of a limited set of values, e.g. statuses like `RUNNING`, `PENDING`. If
 you specified it on a column with any arbitrary text column, there would be too many filtering
@@ -163,9 +163,9 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 
 ## Reset
 
-If you take advantage of all these built-in features, it might be a good idea to provide your users with
+If you take advantage of all these built-in features, it might be a good idea to provide your users with an
 escape hatch when they search / filter / groupby too much and would like to get back to original view
-with easy. That's exactly what `resettable` is for.
+with ease. That's exactly what `resettable` is for.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 3', items=[
@@ -187,8 +187,8 @@ needed. For tables with > 10 rows, the initial height is `500px`.
 
 In some cases though, it might be desirable to control the dimensions yourself via `width` and `height`
 attributes. Both accept [CSS units](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units),
-however `%` values for height might not work as you think (especially in [flex layout]
-(/docs/layout#flex-layout)) so we discourage its use in favor of more static units like `px` or `rem`.
+however `%` values for height might not work as you think (especially in [flex layout](/docs/layout#flex-layout))
+so we discourage its use in favor of more static units like `px` or `rem`.
 
 ```py
 q.page['example'] = ui.form_card(box='1 1 3 3', items=[

@@ -11,7 +11,7 @@ to display contextually related values that might be of higher importance than t
 the textual contents. They are best used with [visualizations](/docs/showcase/visualization).
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+q.page['example'] = ui.form_card(box='1 1 4 2', items=[
     ui.stats([
         ui.stat(label='Category 1', value='$ 123.22', caption='Caption 1'),
         ui.stat(label='Category 2', value='$ 213.45', caption='Caption 2'),
@@ -26,7 +26,7 @@ Make your stats even nicer by using [icons](https://uifabricicons.azurewebsites.
 also provides control over `icon_color`.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+q.page['example'] = ui.form_card(box='1 1 4 2', items=[
     ui.stats([
         ui.stat(label='Category 1', value='$ 123.22', caption='Caption 1', icon='Home'),
         ui.stat(label='Category 2', value='$ 213.45', caption='Caption 2', icon='Cake'),
@@ -41,7 +41,7 @@ By default, stats are aligned to the `left`. However, this behavior can be contr
 attr.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+q.page['example'] = ui.form_card(box='1 1 5 2', items=[
     ui.stats(justify='between', items=[
         ui.stat(label='Category 1', value='$ 123.22', caption='Caption 1', icon='Home'),
         ui.stat(label='Category 2', value='$ 213.45', caption='Caption 2', icon='Cake'),
@@ -56,7 +56,7 @@ If you feel like your stats are too important and want to make sure your users w
 any chance, use `inset` attribute, which displays the stats with a contrasting background.
 
 ```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+q.page['example'] = ui.form_card(box='1 1 4 2', items=[
     ui.stats(inset=True, items=[
         ui.stat(label='Category 1', value='$ 123.22', caption='Caption 1', icon='Home'),
         ui.stat(label='Category 2', value='$ 213.45', caption='Caption 2', icon='Cake'),

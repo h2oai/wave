@@ -14,18 +14,20 @@ other to make the choice, indicating the current `max` and `min` value.
 The obvious difference between [ui.slider](/docs/api/ui#slider) is that range slider allows you to
 pick interval (range) of values between `min` and `max` instead of a single value.
 
-The defaults:
+```py
+q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+    ui.range_slider(name='range_slider', label='Range slider')
+])
+```
+
+## Default attribute values
+
 | Attribute   | value   |
 |-------------|---------|
 | min         | 0       |
 | max         | 100     |
 | step        | 1       |
 
-```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-    ui.range_slider(name='range_slider', label='Range slider')
-])
-```
 
 ## Default value
 

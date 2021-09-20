@@ -22,7 +22,14 @@ The default value of the slider will be zero or be constrained to the `min` and 
 The `min` will be returned if the value is set under the `min` and the `max` will be returned if set
 higher than the `max` value.
 
-The defaults:
+```py
+q.page['example'] = ui.form_card(box='1 1 2 2', items=[
+    ui.slider(name='slider', label='Slider')
+])
+```
+
+## Default attribute values
+
 | Attribute   | value   |
 |-------------|---------|
 | min         | 0       |
@@ -30,11 +37,6 @@ The defaults:
 | step        | 1       |
 | value       | 0       |
 
-```py
-q.page['example'] = ui.form_card(box='1 1 2 2', items=[
-    ui.slider(name='slider', label='Slider')
-])
-```
 
 ## Default value
 

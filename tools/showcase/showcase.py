@@ -146,7 +146,7 @@ def main():
         append_images(files)
         generate_showcase_json()
     except Exception as e:
-        print(f'Error: {e.args[0]}')
+        print(f'Error: {str(e)}')
     finally:
         # Cleanup.
         if os.path.exists(example_file_path):
