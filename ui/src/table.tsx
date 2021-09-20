@@ -28,7 +28,7 @@ interface TableCellType {
   progress?: ProgressTableCellType
   /** Renders an icon. */
   icon?: IconTableCellType
-  /** Renders a one or more chips (badges). */
+  /** Renders one or more badges. */
   badge?: BadgeTableCellType
 }
 
