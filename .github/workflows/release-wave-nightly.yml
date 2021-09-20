@@ -40,7 +40,7 @@ jobs:
         run: make release
 
       - name: Update tag
-        run: git tag ${{ env.TAG }} && git push --tags
+        run: git tag -f ${{ env.TAG }} && git push -f --tags
 
       - name: Release
         uses: softprops/action-gh-release@v1
