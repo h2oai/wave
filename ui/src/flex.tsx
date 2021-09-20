@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Data, Dict, Model, Rec, S } from 'h2o-wave'
+import { Data, Model, Rec, S } from 'h2o-wave'
 import React from 'react'
 import { cards, Repeat } from './layout'
+import { alignments, directions, justifications, wrappings } from './theme'
 import { bond } from './ui'
 
 /**
@@ -39,32 +40,6 @@ interface State {
 }
 
 const
-  directions: Dict<S> = {
-    horizontal: 'row',
-    vertical: 'column',
-  },
-  justifications: Dict<S> = {
-    start: 'flex-start',
-    end: 'flex-end',
-    center: 'center',
-    between: 'space-between',
-    around: 'space-around',
-  },
-  alignments: Dict<S> = {
-    start: 'flex-start',
-    end: 'flex-end',
-    center: 'center',
-    baseline: 'baseline',
-    stretch: 'stretch',
-  },
-  wrappings: Dict<S> = {
-    start: 'flex-start',
-    end: 'flex-end',
-    center: 'center',
-    between: 'space-between',
-    around: 'space-around',
-    stretch: 'stretch',
-  },
   toFlexStyle = (state: State): React.CSSProperties => {
     const
       css: React.CSSProperties = { display: 'flex' },

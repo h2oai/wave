@@ -15,7 +15,7 @@
 import { Model, Packed, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Component, XComponentAlignment, XComponents } from './form'
+import { Component, XComponents } from './form'
 import { CardEffect, cards } from './layout'
 import { Markdown } from './markdown'
 import { clas } from './theme'
@@ -61,7 +61,7 @@ export const
           components = unpack<Component[]>(items), // XXX ugly
           form = items && (
             <div className={css.rhs}>
-              <XComponents items={components} alignment={XComponentAlignment.Right} />
+              <XComponents items={components} alignment='end' />
             </div>
           )
 

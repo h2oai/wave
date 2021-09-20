@@ -167,7 +167,33 @@ const
 export const
   defaultThemeName = 'default',
   themeB = box(defaultThemeName),
-  defaultTheme = themes[defaultThemeName]
+  defaultTheme = themes[defaultThemeName],
+  directions: Dict<S> = {
+    horizontal: 'row',
+    vertical: 'column',
+  },
+  justifications: Dict<S> = {
+    start: 'flex-start',
+    end: 'flex-end',
+    center: 'center',
+    between: 'space-between',
+    around: 'space-around',
+  },
+  alignments: Dict<S> = {
+    start: 'flex-start',
+    end: 'flex-end',
+    center: 'center',
+    baseline: 'baseline',
+    stretch: 'stretch',
+  },
+  wrappings: Dict<S> = {
+    start: 'flex-start',
+    end: 'flex-end',
+    center: 'center',
+    between: 'space-between',
+    around: 'space-around',
+    stretch: 'stretch',
+  }
 
 
 on(themeB, themeName => {

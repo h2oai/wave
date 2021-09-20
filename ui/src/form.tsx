@@ -36,7 +36,6 @@ import { MessageBar, XMessageBar } from './message_bar'
 import { Picker, XPicker } from './picker'
 import { Visualization, XVisualization } from './plot'
 import { Progress, XProgress } from './progress'
-import { bond } from './ui'
 import { RangeSlider, XRangeSlider } from './range_slider'
 import { Separator, XSeparator } from './separator'
 import { Slider, XSlider } from './slider'
@@ -48,9 +47,10 @@ import { Tabs, XTabs } from './tabs'
 import { Template, XTemplate } from './template'
 import { Text, TextL, TextM, TextS, TextXl, TextXs, XText } from './text'
 import { Textbox, XTextbox } from './textbox'
-import { clas, cssVar, padding } from './theme'
+import { clas, cssVar, justifications, padding } from './theme'
 import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
+import { bond } from './ui'
 import { VegaVisualization, XVegaVisualization } from './vega'
 import { Persona, XPersona } from "./persona"
 
@@ -143,7 +143,7 @@ interface Inline {
   /** The components laid out inline. */
   items: Component[]
   /** Specifies how to lay out the individual components. Defaults to 'start'. */
-  justify?: 'start' | 'end'
+  justify?: 'start' | 'end' | 'center' | 'between' | 'around'
   /** Whether to display the components inset from the parent form, with a contrasting background. */
   inset?: B
 }
@@ -185,12 +185,9 @@ const
       background: cssVar('$page'),
       padding: padding(10, 15)
     },
-    horizontalRight: {
-      justifyContent: 'flex-end',
-    },
   })
 
-export enum XComponentAlignment { Top, Left, Right }
+type XComponentAlignment = 'start' | 'end' | 'center' | 'between' | 'around'
 
 export const
   XComponents = ({ items, alignment, inset }: { items: Component[], alignment?: XComponentAlignment, inset?: B }) => {
@@ -208,18 +205,13 @@ export const
             <XComponent model={m} />
           </div>
         )
-      }),
-      className = alignment === XComponentAlignment.Left
-        ? clas(css.horizontal, inset ? css.inset : '')
-        : alignment === XComponentAlignment.Right
-          ? clas(css.horizontal, css.horizontalRight, inset ? css.inset : '')
-          : css.vertical
-    return <div className={className}>{components}</div>
+      })
+    return <div className={clas(alignment ? css.horizontal : css.vertical, inset ? css.inset : '')} style={{ justifyContent: justifications[alignment || ''] }}>{components}</div>
   },
   XInline = ({ model: m }: { model: Inline }) => (
     <XComponents
       items={m.items}
-      alignment={m.justify === 'end' ? XComponentAlignment.Right : XComponentAlignment.Left}
+      alignment={m.justify || 'start'}
       inset={m.inset}
     />
   )
