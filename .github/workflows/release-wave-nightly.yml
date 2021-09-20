@@ -46,10 +46,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            "build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz"
-            "build/wave-${{ env.VERSION }}-linux-amd64.tar.gz"
-            "build/wave-${{ env.VERSION }}-windows-amd64.tar.gz"
-            "py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl"
+            build/wave-${{ env.VERSION }}-darwin-amd64.tar.gz
+            build/wave-${{ env.VERSION }}-linux-amd64.tar.gz
+            build/wave-${{ env.VERSION }}-windows-amd64.tar.gz
+            py/dist/h2o_wave-${{ env.VERSION }}-py3-none-any.whl
           tag_name: ${{ env.TAG }}
           prerelease: true
         env:
