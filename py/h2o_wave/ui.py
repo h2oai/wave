@@ -2897,7 +2897,7 @@ def meta_card(
         layouts: The layouts supported by this page.
         dialog: Display a dialog on the page.
         side_panel: Display a side panel on the page.
-        theme: Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
+        theme: Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'.
         tracker: Configure a tracker for the page (for web analytics).
         scripts: External Javascript files to load into the page.
         script: Javascript code to execute on this page.

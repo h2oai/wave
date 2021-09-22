@@ -79,10 +79,10 @@ export const
           callout: {
             selectors: {
               '.ms-DatePicker-day:hover': {
-                background: cssVar('$themeLighterAlt')
+                background: cssVar('$neutralTertiary')
               },
               '.ms-DatePicker-day--highlighted': {
-                background: `${cssVar('$themeLighterAlt')} !important`
+                background: `${cssVar('$neutralTertiary')} !important`
               }
             }
           }

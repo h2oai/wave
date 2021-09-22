@@ -129,7 +129,7 @@ interface State {
   dialog?: Dialog
   /** Display a side panel on the page. */
   side_panel?: SidePanel
-  /** Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'. */
+  /** Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'. */
   theme?: S
   /** Configure a tracker for the page (for web analytics). */
   tracker?: Tracker

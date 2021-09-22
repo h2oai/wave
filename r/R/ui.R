@@ -3353,7 +3353,7 @@ ui_stylesheet <- function(
 #' @param layouts The layouts supported by this page.
 #' @param dialog Display a dialog on the page.
 #' @param side_panel Display a side panel on the page.
-#' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'.
+#' @param theme Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'.
 #' @param tracker Configure a tracker for the page (for web analytics).
 #' @param scripts External Javascript files to load into the page.
 #' @param script Javascript code to execute on this page.

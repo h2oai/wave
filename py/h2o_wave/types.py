@@ -6081,7 +6081,7 @@ class Component:
         self.image = image
         """Image"""
         self.persona = persona
-        """Persona"""
+        """Persona."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -8133,7 +8133,7 @@ class MetaCard:
         self.side_panel = side_panel
         """Display a side panel on the page."""
         self.theme = theme
-        """Specify the name of the theme (color scheme) to use on this page. One of 'light' or 'neon'."""
+        """Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'."""
         self.tracker = tracker
         """Configure a tracker for the page (for web analytics)."""
         self.scripts = scripts
