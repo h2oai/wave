@@ -51,7 +51,7 @@ def make_snippet_screenshot(code: List[str], screenshot_name: str, browser: Any,
         if err:
             raise ValueError(f'Could not generate {group} {screenshot_name}\n{err.decode()}')
         page = browser.new_page()
-        page.goto('http://localhost:10101')
+        page.goto('http://localhost:10101', wait_until='networkidle')
         path = os.path.join(docs_path, 'docs', 'showcase', group, 'assets', screenshot_name)
         if group:
             os.makedirs(os.path.dirname(path), exist_ok=True)
