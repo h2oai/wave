@@ -16,13 +16,15 @@ import { fireEvent, render } from '@testing-library/react'
 import * as T from 'h2o-wave'
 import React from 'react'
 import { View } from './header'
+import { wave } from './ui'
 
 const
   name = 'header',
   label = 'label',
+  placeholder= "Search anything here...",
   headerProps: T.Model<any> = {
     name,
-    state: { nav: [{ label: 'group1', items: [{ name, label }] }] },
+    state: { nav: [{ label: 'group1', items: [{ name, label }] }], search_name: "searchbox_icon", items: [{icon_notification: {icon: 'Ringer', icon_color: '$themePrimary', notification_count: "12"}}] },
     changed: T.box(false)
   }
 
@@ -41,5 +43,28 @@ describe('Header.tsx', () => {
 
     fireEvent.click(menuItem!)
     expect(menuItem).not.toBeVisible()
+  })
+
+  it('Searchbar visible when specified in props', () => {
+    const { queryByPlaceholderText } = render(<View {...headerProps} />)
+
+    const searchbar = queryByPlaceholderText(placeholder)
+    expect(searchbar).toBeVisible()
+  })
+
+  it('Calls push on click', () => {
+    const { queryByPlaceholderText } = render(<View {...headerProps} />)
+    
+    window.location.hash = ''
+    wave.args[headerProps.state.search_name] = null
+    jest.clearAllMocks()
+
+    const pushMock = jest.fn()
+    wave.push = pushMock
+
+    fireEvent.change(queryByPlaceholderText('Search anything here...')!, { target: { value: 'text' } })
+
+    expect(wave.args[headerProps.state.search_name]).toBe('text')
+    expect(pushMock).toHaveBeenCalled()
   })
 })

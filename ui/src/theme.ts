@@ -127,6 +127,37 @@ const
         // TODO: Generate dark fluent color palette.
       },
     },
+    darkBlue: {
+      palette: {
+        text: '#ffffff',
+        card: '#1d2d49',
+        page: '#101f3b',
+      },
+      fluentPalette: {
+        themePrimary: '#ffffff',
+        themeLighterAlt: '#fdc888',
+        themeLighter: '#a6a6a6',
+        themeLight: '#c8c8c8',
+        themeTertiary: '#d0d0d0',
+        themeSecondary: '#dadada',
+        themeDarkAlt: '#eaeaea',
+        themeDark: '#f4f4f4',
+        themeDarker: '#f8f8f8',
+        neutralLighterAlt: '#fdc888',
+        neutralLighter: '#0f1d38',
+        neutralLight: '#0f1c36',
+        neutralQuaternaryAlt: '#0e1a32',
+        neutralQuaternary: '#0d1930',
+        neutralTertiaryAlt: '#0c182e',
+        neutralTertiary: '#c8c8c8',
+        neutralSecondary: '#a4aab5',
+        neutralPrimaryAlt: '#dadada',
+        neutralPrimary: '#ffffff',
+        neutralDark: '#4A576D',
+        black: '#f8f8f8',
+        white: '#101f3b',
+      },
+    },
     neon: {
       palette: {
         text: '#ffffff',

@@ -12,22 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { FontIcon, Panel, PanelType } from '@fluentui/react'
+import { FontIcon, Panel, PanelType, SearchBox } from '@fluentui/react'
 import { B, Box, box, Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { CardEffect, cards } from './layout'
 import { NavGroup, XNav } from './nav'
-import { bond } from './ui'
+import { bond, wave } from './ui'
 import { clas, cssVar, padding } from './theme'
+import { Component } from './form'
+import * as Fluent from '@fluentui/react'
+import { Persona, XPersona } from './persona'
+import { XIconNotification } from './icon_notification'
+import { XStandAloneButton } from './button'
+import { XFrame } from './frame'
 
 const
   iconSize = 24,
   css = stylesheet({
     card: {
       display: 'flex',
+      flex: 1,
       alignItems: 'center',
+      justifyContent: 'center',
       padding: padding(8, 15),
+      overflow: 'hidden',
     },
     lhs: {
       width: iconSize + 15,
@@ -43,6 +52,7 @@ const
           cursor: 'pointer',
         },
       },
+      marginRight: iconSize*2
     },
     icon: {
       fontSize: iconSize,
@@ -54,17 +64,59 @@ const
     },
     subtitle: {
       position: 'relative',
-      top: -5, // nudge up slightly to account for padding
+      top: -3, // nudge up slightly to account for padding
+      color: cssVar('$neutralSecondary')
+    },
+    persona: {
+      paddingBottom: 36
+    },
+    searchbox: {
+      width: '80%',
+      height: '42px',
+      background: 'transparent',
+      borderRadius: 6,
+      borderColor: cssVar('$neutralDark'),
+      $nest: {
+        '&:hover': {
+          borderColor: cssVar('$neutralSecondary'),
+        }
+      },
+    },
+    column: {
+      display: 'flex',
+      flexGrow: 1,
+      alignItems: 'center',
+    },
+    columnLeft: {
+      justifyContent: 'flex-start'
+    },
+    columnMiddle: {
+      justifyContent: 'center'
+    },
+    columnRight: {
+      justifyContent: 'flex-end'
+    },
+    breakpointHide: {
+      display: '',
+      "@media (max-width: 992px)": {
+        display: 'none',
+      }
+    },
+    breakpointShow: {
+      display: 'none',
+      "@media (max-width: 992px)": {
+          display: 'inline'
+      }
     },
   })
 
 
 /**
- * Render a page header displaying a title, subtitle and an optional navigation menu.
+ * Render a page header displaying a title, subtitle and an optional navigation menu, searchbar or custom items.
  * Header cards are typically used for top-level navigation.
  * :icon "Header"
  */
-interface State {
+ interface State {
   /**
    * The title.
    * :t "textbox"
@@ -93,10 +145,14 @@ interface State {
    * The navigation menu to display when the header's icon is clicked.
    **/
   nav?: NavGroup[]
+  /** An identifying name of the search. */
+  search_name?: S
+  /** List of components aligned to the right of the header. */
+  items?: Component[]
 }
 
 const
-  Navigation = bond(({ items, isOpenB }: { items: NavGroup[], isOpenB: Box<B> }) => {
+  Navigation = bond(({ items, isOpenB, persona }: { items: NavGroup[], isOpenB: Box<B>, persona?: Persona }) => {
     const
       hideNav = () => isOpenB(false),
       render = () => (
@@ -107,11 +163,14 @@ const
           onDismiss={hideNav}
           hasCloseButton={false}
         >
+          {persona && <div key={'header_persona'} className={clas(css.breakpointShow, css.persona)}><XComponent model={persona as Component} /></div>}
           <XNav items={items} hideNav={hideNav} />
         </Panel>
       )
     return { render, isOpenB }
   })
+
+
 
 export const
   View = bond(({ name, state, changed }: Model<State>) => {
@@ -120,32 +179,63 @@ export const
       showNav = () => navB(true),
       render = () => {
         const
-          { title, subtitle, icon, icon_color, nav } = state,
+          { title, subtitle, items, search_name, icon, icon_color, nav } = state,
           burger = nav
-            ? (
+            && (
               <div className={clas(css.lhs, css.burger)} onClick={showNav}>
                 <FontIcon className={css.icon} iconName='GlobalNavButton' />
               </div>
-            ) : (
+            ),
+          onChange = (_event?: React.ChangeEvent<HTMLInputElement> | undefined, v?: S) => {
+            if (search_name) {
+              wave.args[search_name] = v ?? ''
+              wave.push()
+            }
+          },
+          persona = items?.filter((item) => {return item.persona})?.[0] as Persona,
+          searchIconStyle: React.CSSProperties = {transform: 'scaleX(-1)', color: cssVar('$neutralSecondary')}
+
+        return (
+          <div id="card" data-test={name} className={css.card}>
+            <div className={clas(css.column, css.columnLeft)}>
+              {burger}
               <div className={css.lhs}>
                 <FontIcon className={css.icon} iconName={icon ?? 'WebComponents'} style={{ color: cssVar(icon_color) }} />
               </div>
-            )
-
-        return (
-          <div data-test={name} className={css.card}>
-            {burger}
-            <div className={css.rhs}>
-              <div className='wave-s24 wave-w3'>{title}</div>
-              <div className={clas(css.subtitle, 'wave-s12')}>{subtitle}</div>
+              <div className={css.rhs}>
+                <div className="wave-s24 wave-w6">{title}</div>
+                <div className={clas(css.subtitle, 'wave-s16')}>{subtitle}</div>
+              </div>
             </div>
-            {nav && <Navigation items={nav} isOpenB={navB} />}
+            <div className={clas(css.column, css.columnMiddle, css.breakpointHide)}>
+              {search_name && 
+              <SearchBox
+                className={css.searchbox}
+                placeholder="Search anything here..."
+                iconProps={{iconName: 'Search', style: searchIconStyle}}
+                onChange={onChange}
+              />
+              }
+            </div>
+            <div className={clas(css.column, css.columnRight, css.breakpointHide)}>
+              {items && items?.map((item, i) => {return <div key={i}><XComponent model={item} /></div>})}
+              {nav && <Navigation items={nav} isOpenB={navB} persona={persona} />}
+            </div>
           </div>
         )
       }
     return { render, changed }
   })
 
-cards.register('header', View, { effect: CardEffect.Raised })
+const
+  XComponent = ({ model: m }: { model: Component }) => {
+    if (m.persona) return <XPersona model={m.persona} />
+    if (m.icon_notification) return <XIconNotification model={m.icon_notification} />
+    if (m.button) return <XStandAloneButton model={m.button} />
+    if (m.frame) return <XFrame model={m.frame} />
+    return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
+  }
+
+cards.register('header', View, {effect: CardEffect.Flat})
 
 

@@ -53,6 +53,7 @@ import { Toggle, XToggle } from './toggle'
 import { XToolTip } from './tooltip'
 import { VegaVisualization, XVegaVisualization } from './vega'
 import { Persona, XPersona } from "./persona"
+import { IconNotification, XIconNotification } from './icon_notification'
 
 /** Create a component. */
 export interface Component {
@@ -136,6 +137,8 @@ export interface Component {
   image?: Image
   /** Persona. */
   persona?: Persona
+  /** Icon notification. */
+  icon_notification?: IconNotification
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -267,6 +270,7 @@ const
     if (m.inline) return <XInline model={m.inline} />
     if (m.image) return <XImage model={m.image} />
     if (m.persona) return <XPersona model={m.persona} />
+    if (m.icon_notification) return <XIconNotification model={m.icon_notification} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

@@ -2197,6 +2197,30 @@ def persona(
     ))
 
 
+def icon_notification(
+        icon: str,
+        notification_count: str,
+        icon_color: Optional[str] = None,
+        name: Optional[str] = None,
+) -> Component:
+    """Create an icon with a notification badge.
+
+    Args:
+        icon: Icon.
+        notification_count: Number of notifications
+        icon_color: The icon's color.
+        name: An identifying name for this component.
+    Returns:
+        A `h2o_wave.types.IconNotification` instance.
+    """
+    return Component(icon_notification=IconNotification(
+        icon,
+        notification_count,
+        icon_color,
+        name,
+    ))
+
+
 def form_card(
         box: str,
         items: Union[List[Component], str],
@@ -2362,9 +2386,11 @@ def header_card(
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         nav: Optional[List[NavGroup]] = None,
+        search_name: Optional[str] = None,
+        items: Optional[List[Component]] = None,
         commands: Optional[List[Command]] = None,
 ) -> HeaderCard:
-    """Render a page header displaying a title, subtitle and an optional navigation menu.
+    """Render a page header displaying a title, subtitle and an optional navigation menu, searchbar or custom items.
     Header cards are typically used for top-level navigation.
 
     Args:
@@ -2374,6 +2400,8 @@ def header_card(
         icon: The icon, displayed to the left.
         icon_color: The icon's color.
         nav: The navigation menu to display when the header's icon is clicked.
+        search_name: An identifying name of the search.
+        items: List of components aligned to the right of the header.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.HeaderCard` instance.
@@ -2385,6 +2413,8 @@ def header_card(
         icon,
         icon_color,
         nav,
+        search_name,
+        items,
         commands,
     )
 

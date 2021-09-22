@@ -2572,6 +2572,32 @@ ui_persona <- function(
   return(.o)
 }
 
+#' Create an icon with a notification badge.
+#'
+#' @param icon Icon.
+#' @param notification_count Number of notifications
+#' @param icon_color The icon's color.
+#' @param name An identifying name for this component.
+#' @return A IconNotification instance.
+#' @export
+ui_icon_notification <- function(
+  icon,
+  notification_count,
+  icon_color = NULL,
+  name = NULL) {
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("notification_count", "character", notification_count)
+  .guard_scalar("icon_color", "character", icon_color)
+  .guard_scalar("name", "character", name)
+  .o <- list(icon_notification=list(
+    icon=icon,
+    notification_count=notification_count,
+    icon_color=icon_color,
+    name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
 #' Create a form.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -2751,7 +2777,7 @@ ui_nav_group <- function(
   return(.o)
 }
 
-#' Render a page header displaying a title, subtitle and an optional navigation menu.
+#' Render a page header displaying a title, subtitle and an optional navigation menu, searchbar or custom items.
 #' Header cards are typically used for top-level navigation.
 #'
 #' @param box A string indicating how to place this component on the page.
@@ -2760,6 +2786,8 @@ ui_nav_group <- function(
 #' @param icon The icon, displayed to the left.
 #' @param icon_color The icon's color.
 #' @param nav The navigation menu to display when the header's icon is clicked.
+#' @param search_name An identifying name of the search.
+#' @param items List of components aligned to the right of the header.
 #' @param commands Contextual menu commands for this component.
 #' @return A HeaderCard instance.
 #' @export
@@ -2770,6 +2798,8 @@ ui_header_card <- function(
   icon = NULL,
   icon_color = NULL,
   nav = NULL,
+  search_name = NULL,
+  items = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -2777,6 +2807,8 @@ ui_header_card <- function(
   .guard_scalar("icon", "character", icon)
   .guard_scalar("icon_color", "character", icon_color)
   .guard_vector("nav", "WaveNavGroup", nav)
+  .guard_scalar("search_name", "character", search_name)
+  .guard_vector("items", "WaveComponent", items)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -2785,6 +2817,8 @@ ui_header_card <- function(
     icon=icon,
     icon_color=icon_color,
     nav=nav,
+    search_name=search_name,
+    items=items,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveHeaderCard"))
   return(.o)

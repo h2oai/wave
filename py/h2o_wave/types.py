@@ -5913,6 +5913,65 @@ class Persona:
         )
 
 
+class IconNotification:
+    """Create an icon with a notification badge.
+    """
+    def __init__(
+            self,
+            icon: str,
+            notification_count: str,
+            icon_color: Optional[str] = None,
+            name: Optional[str] = None,
+    ):
+        _guard_scalar('IconNotification.icon', icon, (str,), False, False, False)
+        _guard_scalar('IconNotification.notification_count', notification_count, (str,), False, False, False)
+        _guard_scalar('IconNotification.icon_color', icon_color, (str,), False, True, False)
+        _guard_scalar('IconNotification.name', name, (str,), False, True, False)
+        self.icon = icon
+        """Icon."""
+        self.notification_count = notification_count
+        """Number of notifications"""
+        self.icon_color = icon_color
+        """The icon's color."""
+        self.name = name
+        """An identifying name for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('IconNotification.icon', self.icon, (str,), False, False, False)
+        _guard_scalar('IconNotification.notification_count', self.notification_count, (str,), False, False, False)
+        _guard_scalar('IconNotification.icon_color', self.icon_color, (str,), False, True, False)
+        _guard_scalar('IconNotification.name', self.name, (str,), False, True, False)
+        return _dump(
+            icon=self.icon,
+            notification_count=self.notification_count,
+            icon_color=self.icon_color,
+            name=self.name,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'IconNotification':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('IconNotification.icon', __d_icon, (str,), False, False, False)
+        __d_notification_count: Any = __d.get('notification_count')
+        _guard_scalar('IconNotification.notification_count', __d_notification_count, (str,), False, False, False)
+        __d_icon_color: Any = __d.get('icon_color')
+        _guard_scalar('IconNotification.icon_color', __d_icon_color, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('IconNotification.name', __d_name, (str,), False, True, False)
+        icon: str = __d_icon
+        notification_count: str = __d_notification_count
+        icon_color: Optional[str] = __d_icon_color
+        name: Optional[str] = __d_name
+        return IconNotification(
+            icon,
+            notification_count,
+            icon_color,
+            name,
+        )
+
+
 class Component:
     """Create a component.
     """
@@ -5958,6 +6017,7 @@ class Component:
             inline: Optional[Inline] = None,
             image: Optional[Image] = None,
             persona: Optional[Persona] = None,
+            icon_notification: Optional[IconNotification] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -5999,6 +6059,7 @@ class Component:
         _guard_scalar('Component.inline', inline, (Inline,), False, True, False)
         _guard_scalar('Component.image', image, (Image,), False, True, False)
         _guard_scalar('Component.persona', persona, (Persona,), False, True, False)
+        _guard_scalar('Component.icon_notification', icon_notification, (IconNotification,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -6078,7 +6139,9 @@ class Component:
         self.image = image
         """Image"""
         self.persona = persona
-        """Persona"""
+        """Persona."""
+        self.icon_notification = icon_notification
+        """Icon notification."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -6122,6 +6185,7 @@ class Component:
         _guard_scalar('Component.inline', self.inline, (Inline,), False, True, False)
         _guard_scalar('Component.image', self.image, (Image,), False, True, False)
         _guard_scalar('Component.persona', self.persona, (Persona,), False, True, False)
+        _guard_scalar('Component.icon_notification', self.icon_notification, (IconNotification,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -6163,6 +6227,7 @@ class Component:
             inline=None if self.inline is None else self.inline.dump(),
             image=None if self.image is None else self.image.dump(),
             persona=None if self.persona is None else self.persona.dump(),
+            icon_notification=None if self.icon_notification is None else self.icon_notification.dump(),
         )
 
     @staticmethod
@@ -6248,6 +6313,8 @@ class Component:
         _guard_scalar('Component.image', __d_image, (dict,), False, True, False)
         __d_persona: Any = __d.get('persona')
         _guard_scalar('Component.persona', __d_persona, (dict,), False, True, False)
+        __d_icon_notification: Any = __d.get('icon_notification')
+        _guard_scalar('Component.icon_notification', __d_icon_notification, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6288,6 +6355,7 @@ class Component:
         inline: Optional[Inline] = None if __d_inline is None else Inline.load(__d_inline)
         image: Optional[Image] = None if __d_image is None else Image.load(__d_image)
         persona: Optional[Persona] = None if __d_persona is None else Persona.load(__d_persona)
+        icon_notification: Optional[IconNotification] = None if __d_icon_notification is None else IconNotification.load(__d_icon_notification)
         return Component(
             text,
             text_xl,
@@ -6329,6 +6397,7 @@ class Component:
             inline,
             image,
             persona,
+            icon_notification,
         )
 
 
@@ -6721,7 +6790,7 @@ class NavGroup:
 
 
 class HeaderCard:
-    """Render a page header displaying a title, subtitle and an optional navigation menu.
+    """Render a page header displaying a title, subtitle and an optional navigation menu, searchbar or custom items.
     Header cards are typically used for top-level navigation.
     """
     def __init__(
@@ -6732,6 +6801,8 @@ class HeaderCard:
             icon: Optional[str] = None,
             icon_color: Optional[str] = None,
             nav: Optional[List[NavGroup]] = None,
+            search_name: Optional[str] = None,
+            items: Optional[List[Component]] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('HeaderCard.box', box, (str,), False, False, False)
@@ -6740,6 +6811,8 @@ class HeaderCard:
         _guard_scalar('HeaderCard.icon', icon, (str,), False, True, False)
         _guard_scalar('HeaderCard.icon_color', icon_color, (str,), False, True, False)
         _guard_vector('HeaderCard.nav', nav, (NavGroup,), False, True, False)
+        _guard_scalar('HeaderCard.search_name', search_name, (str,), False, True, False)
+        _guard_vector('HeaderCard.items', items, (Component,), False, True, False)
         _guard_vector('HeaderCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -6753,6 +6826,10 @@ class HeaderCard:
         """The icon's color."""
         self.nav = nav
         """The navigation menu to display when the header's icon is clicked."""
+        self.search_name = search_name
+        """An identifying name of the search."""
+        self.items = items
+        """List of components aligned to the right of the header."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -6764,6 +6841,8 @@ class HeaderCard:
         _guard_scalar('HeaderCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('HeaderCard.icon_color', self.icon_color, (str,), False, True, False)
         _guard_vector('HeaderCard.nav', self.nav, (NavGroup,), False, True, False)
+        _guard_scalar('HeaderCard.search_name', self.search_name, (str,), False, True, False)
+        _guard_vector('HeaderCard.items', self.items, (Component,), False, True, False)
         _guard_vector('HeaderCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='header',
@@ -6773,6 +6852,8 @@ class HeaderCard:
             icon=self.icon,
             icon_color=self.icon_color,
             nav=None if self.nav is None else [__e.dump() for __e in self.nav],
+            search_name=self.search_name,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -6791,6 +6872,10 @@ class HeaderCard:
         _guard_scalar('HeaderCard.icon_color', __d_icon_color, (str,), False, True, False)
         __d_nav: Any = __d.get('nav')
         _guard_vector('HeaderCard.nav', __d_nav, (dict,), False, True, False)
+        __d_search_name: Any = __d.get('search_name')
+        _guard_scalar('HeaderCard.search_name', __d_search_name, (str,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('HeaderCard.items', __d_items, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('HeaderCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -6799,6 +6884,8 @@ class HeaderCard:
         icon: Optional[str] = __d_icon
         icon_color: Optional[str] = __d_icon_color
         nav: Optional[List[NavGroup]] = None if __d_nav is None else [NavGroup.load(__e) for __e in __d_nav]
+        search_name: Optional[str] = __d_search_name
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return HeaderCard(
             box,
@@ -6807,6 +6894,8 @@ class HeaderCard:
             icon,
             icon_color,
             nav,
+            search_name,
+            items,
             commands,
         )
 
