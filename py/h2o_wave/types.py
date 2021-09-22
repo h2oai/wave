@@ -10002,6 +10002,7 @@ class WideInfoCard:
             box: str,
             title: str,
             caption: str,
+            subtitle: Optional[str] = None,
             icon: Optional[str] = None,
             image: Optional[str] = None,
             category: Optional[str] = None,
@@ -10012,6 +10013,7 @@ class WideInfoCard:
         _guard_scalar('WideInfoCard.box', box, (str,), False, False, False)
         _guard_scalar('WideInfoCard.title', title, (str,), False, False, False)
         _guard_scalar('WideInfoCard.caption', caption, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.subtitle', subtitle, (str,), False, True, False)
         _guard_scalar('WideInfoCard.icon', icon, (str,), False, True, False)
         _guard_scalar('WideInfoCard.image', image, (str,), False, True, False)
         _guard_scalar('WideInfoCard.category', category, (str,), False, True, False)
@@ -10023,7 +10025,9 @@ class WideInfoCard:
         self.title = title
         """The card's title."""
         self.caption = caption
-        """The card's caption, displayed below the title."""
+        """The card's caption, displayed below the subtitle, supports markdown."""
+        self.subtitle = subtitle
+        """The card's subtitle, displayed below the title."""
         self.icon = icon
         """The card's icon."""
         self.image = image
@@ -10042,6 +10046,7 @@ class WideInfoCard:
         _guard_scalar('WideInfoCard.box', self.box, (str,), False, False, False)
         _guard_scalar('WideInfoCard.title', self.title, (str,), False, False, False)
         _guard_scalar('WideInfoCard.caption', self.caption, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.subtitle', self.subtitle, (str,), False, True, False)
         _guard_scalar('WideInfoCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('WideInfoCard.image', self.image, (str,), False, True, False)
         _guard_scalar('WideInfoCard.category', self.category, (str,), False, True, False)
@@ -10053,6 +10058,7 @@ class WideInfoCard:
             box=self.box,
             title=self.title,
             caption=self.caption,
+            subtitle=self.subtitle,
             icon=self.icon,
             image=self.image,
             category=self.category,
@@ -10070,6 +10076,8 @@ class WideInfoCard:
         _guard_scalar('WideInfoCard.title', __d_title, (str,), False, False, False)
         __d_caption: Any = __d.get('caption')
         _guard_scalar('WideInfoCard.caption', __d_caption, (str,), False, False, False)
+        __d_subtitle: Any = __d.get('subtitle')
+        _guard_scalar('WideInfoCard.subtitle', __d_subtitle, (str,), False, True, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('WideInfoCard.icon', __d_icon, (str,), False, True, False)
         __d_image: Any = __d.get('image')
@@ -10085,6 +10093,7 @@ class WideInfoCard:
         box: str = __d_box
         title: str = __d_title
         caption: str = __d_caption
+        subtitle: Optional[str] = __d_subtitle
         icon: Optional[str] = __d_icon
         image: Optional[str] = __d_image
         category: Optional[str] = __d_category
@@ -10095,6 +10104,7 @@ class WideInfoCard:
             box,
             title,
             caption,
+            subtitle,
             icon,
             image,
             category,

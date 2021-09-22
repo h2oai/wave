@@ -17,18 +17,19 @@ import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
+import { Markdown } from './markdown'
 import { clas, cssVar, pc } from './theme'
 import { bond, wave } from './ui'
 
 const
-  iconStyles: Fluent.IIconStyles = { root: { fontSize: 80 } },
+  iconStyles: Fluent.IIconStyles = { root: { fontSize: 24, color: cssVar('$neutralTertiary'), fontWeight: 600 } },
   css = stylesheet({
     card: {
       display: 'flex',
       padding: grid.gap
     },
     lhs: {
-      paddingRight: 20,
+      paddingRight: 16,
       textAlign: 'center',
       display: 'flex'
     },
@@ -43,7 +44,28 @@ const
       cursor: 'pointer'
     },
     title: {
-      paddingBottom: 17,
+      color: cssVar('$neutralPrimary')
+    },
+    category: {
+      color: cssVar('$themeDark'),
+    },
+    caption: {
+      $nest: {
+        'p:first-child': {
+          marginTop: 0 //TODO: Fix on global markdown level.
+        }
+      }
+    },
+    header: {
+      marginTop: -3, // HACK: Nudge up slightly.
+      marginBottom: 13,
+    },
+    iconWrapper: {
+      background: cssVar('$neutralLighter'),
+      height: 40,
+      width: 40,
+      padding: 8,
+      boxSizing: 'border-box'
     },
     img: {
       flexGrow: 1,
@@ -56,8 +78,10 @@ const
 interface State {
   /** The card's title. */
   title: S
-  /** The card's caption, displayed below the title. */
+  /** The card's caption, displayed below the subtitle, supports markdown. */
   caption: S
+  /** The card's subtitle, displayed below the title. */
+  subtitle?: S
   /** The card's icon. */
   icon?: S
   /** The card’s image. */
@@ -72,7 +96,7 @@ interface State {
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const
-    { title, caption, icon, image, category, name: stateName, color } = state,
+    { title, caption, icon, image, category, name: stateName, color, subtitle } = state,
     onClick = () => {
       if (!stateName) return
       if (stateName.startsWith('#')) {
@@ -91,17 +115,20 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       >
         <div className={css.lhs}>
           {
-            icon
-              ? <Fluent.Icon iconName={icon} styles={iconStyles} />
-              : image
-                ? <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
-                : <Fluent.Icon iconName='MiniExpand' styles={iconStyles} />
+            image
+              ? <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
+              : <Fluent.Icon iconName={icon || 'MiniExpand'} className={css.iconWrapper} styles={iconStyles} />
           }
         </div>
         <div>
-          {category && <div className='wave-s12 wave-w5 wave-t5'>{category}</div>}
-          <div className={clas('wave-s20 wave-w5 wave-t9', css.title)}>{title}</div>
-          {caption && <div className='wave-s14 wave-w4 wave-t8'>{caption}</div>}
+          <div className={css.header}>
+            {category && <div className={clas('wave-s14 wave-w5 wave-t7', css.category)}>{category}</div>}
+            <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
+            {subtitle && <div className='wave-s14 wave-w5 wave-t7'>{subtitle}</div>}
+          </div>
+          {caption && <div className={clas('wave-s14 wave-w4 wave-t7', css.caption)}>
+            <Markdown source={caption} />
+          </div>}
         </div>
       </div>
     )

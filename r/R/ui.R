@@ -4165,7 +4165,8 @@ ui_wide_gauge_stat_card <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The card's title.
-#' @param caption The card's caption, displayed below the title.
+#' @param caption The card's caption, displayed below the subtitle, supports markdown.
+#' @param subtitle The card's subtitle, displayed below the title.
 #' @param icon The card's icon.
 #' @param image The card’s image.
 #' @param category The card's category, displayed above the title.
@@ -4178,6 +4179,7 @@ ui_wide_info_card <- function(
   box,
   title,
   caption,
+  subtitle = NULL,
   icon = NULL,
   image = NULL,
   category = NULL,
@@ -4187,6 +4189,7 @@ ui_wide_info_card <- function(
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("caption", "character", caption)
+  .guard_scalar("subtitle", "character", subtitle)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("image", "character", image)
   .guard_scalar("category", "character", category)
@@ -4197,6 +4200,7 @@ ui_wide_info_card <- function(
     box=box,
     title=title,
     caption=caption,
+    subtitle=subtitle,
     icon=icon,
     image=image,
     category=category,
