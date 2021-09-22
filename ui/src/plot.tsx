@@ -701,7 +701,7 @@ const
     return {
       container: el,
       autoFit: true,
-      renderer: 'svg', // Use SVG to allow use of CSS vars which doesn't work with canvas.
+      renderer: 'svg', // Use SVG to allow use of CSS vars which don't work with canvas.
       theme: { // Referrence: https://theme-set.antv.vision/  https://g2.antv.vision/en/docs/api/advanced/register-theme
         defaultColor: cssVar('$themePrimary'),
         geometries: {

@@ -242,10 +242,10 @@ async def serve(q: Q):
             data=data('product price', n),
             plot=ui.plot([
                 ui.mark(type='interval', x='=product', y='=price', y_min=0, y_max=100),
-                ui.mark(x='C10', y=80, label='point'),
-                ui.mark(x='C13', label='vertical line'),
+                ui.mark(x='C20', y=80, label='point'),
+                ui.mark(x='C23', label='vertical line'),
                 ui.mark(y=40, label='horizontal line'),
-                ui.mark(x='C6', x0='C3', label='vertical region'),
+                ui.mark(x='C26', x0='C23', label='vertical region'),
                 ui.mark(y=70, y0=60, label='horizontal region')
             ])
         ))
@@ -285,7 +285,7 @@ async def serve(q: Q):
             data=data('product low high', 3),
             plot=ui.plot([ui.mark(type='interval', x='=product', y0='=low', y='=high')])
         ))
-        v.data = [(c, x - random.randint(3, 10), x + random.randint(3, 10)) for c, x, dx in [f.next() for _ in range(3)]]
+        v.data = [(c, x - random.randint(3, 10), x + random.randint(3, 10)) for c, x, _ in [f.next() for _ in range(3)]]
 
         v = q.page.add('interval-transpose', ui.plot_card(
             box=ui.boxes(
@@ -297,11 +297,6 @@ async def serve(q: Q):
             data=data('product price', 20),
             plot=ui.plot([
                 ui.mark(type='interval', y='=product', x='=price', x_min=0, x_max=100),
-                ui.mark(y='C10', x=80, label='point'),
-                ui.mark(y='C13', label='vertical line'),
-                ui.mark(x=40, label='horizontal line'),
-                ui.mark(y='C6', y0='C3', label='vertical region'),
-                ui.mark(x=70, x0=60, label='horizontal region')
             ])
         ))
         v.data = [(c, x) for c, x, dx in [f_cat.next() for _ in range(20)]]
@@ -315,7 +310,8 @@ async def serve(q: Q):
             title='Intervals, theta, stacked',
             data=data('country product price', n * k),
             plot=ui.plot([
-                ui.mark(coord='theta', type='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0)])
+                ui.mark(coord='theta', type='interval', x='=product', y='=price', color='=country', stack='auto', y_min=0)
+            ])
         ))
         v.data = [(g, t, x) for x in [f_cat_multi.next() for _ in range(n)] for g, t, x, dx in x]
 
