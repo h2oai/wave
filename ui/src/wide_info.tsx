@@ -65,13 +65,15 @@ const
       height: 40,
       width: 40,
       padding: 8,
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      borderRadius: 4
     },
     img: {
       flexGrow: 1,
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center'
+      backgroundPosition: 'center',
+      borderRadius: 4
     }
   })
 /** Create a wide information card displaying a title, caption, and either an icon or image. */
