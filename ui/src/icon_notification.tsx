@@ -22,7 +22,6 @@ const
   iconSize = 28,
   css = stylesheet({
     icon: {
-      display: 'inline-table',
       verticalAlign: 'middle',
       height: iconSize,
       width: iconSize,
@@ -30,6 +29,7 @@ const
     },
     notification: {
       position: 'relative',
+      display: 'inline-block',
       marginLeft: 12,
       marginRight: 12,
     },

@@ -1,4 +1,4 @@
-# Header
+# Header enhanced
 # Use a header card to display a page #header.
 # ---
 from h2o_wave import main, app, Q, ui
