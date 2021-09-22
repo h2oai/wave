@@ -75,15 +75,15 @@ export const MicroArea = ({ value, color, data, zeroValue, curve }: Props) => {
         ln = d3.line<any>()
           // .curve(d3.curveBasis) // XXX add support for this
           .defined(d => d && d[value] != null)
-          .x((_, i) => scaleX(i))
-          .y(d => scaleY(d[value]))
+          .x((_, i) => scaleX(i)!)
+          .y(d => scaleY(d[value])!)
           .curve(fcurve),
         ar = d3.area<any>()
           // .curve(d3.curveBasis) // XXX add support for this
           .defined(d => d && d[value] != null)
-          .x((_, i) => scaleX(i))
-          .y0(_ => scaleY(zeroValue == null ? minY : zeroValue))
-          .y1(d => scaleY(d[value]))
+          .x((_, i) => scaleX(i)!)
+          .y0(_ => scaleY(zeroValue == null ? minY : zeroValue)!)
+          .y1(d => scaleY(d[value])!)
           .curve(fcurve)
 
       setContent(

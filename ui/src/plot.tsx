@@ -19,7 +19,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Fmt, parseFormat } from './intl'
 import { cards, grid } from './layout'
-import { cssVarValue, formItemWidth } from './theme'
+import { cssVar, cssVarValue, formItemWidth } from './theme'
 import { bond, wave } from './ui'
 
 let
@@ -47,171 +47,171 @@ enum SpaceT { CC, DD, TT, CD, DC, TC, CT, TD, DT }
 */
 interface Mark {
   /** Coordinate system. `rect` is synonymous to `cartesian`. `theta` is transposed `polar`. */
-  coord?: 'rect' | 'cartesian' | 'polar' | 'theta' | 'helix';
+  coord?: 'rect' | 'cartesian' | 'polar' | 'theta' | 'helix'
   /** Graphical geometry. */
-  type?: 'interval' | 'line' | 'path' | 'point' | 'area' | 'polygon' | 'schema' | 'edge' | 'heatmap';
+  type?: 'interval' | 'line' | 'path' | 'point' | 'area' | 'polygon' | 'schema' | 'edge' | 'heatmap'
   /** X field or value. */
-  x?: V;
+  x?: V
   /** X base field or value. */
-  x0?: V;
+  x0?: V
   /** X bin lower bound field or value. For histograms. */
-  x1?: V;
+  x1?: V
   /** X bin upper bound field or value. For histograms. */
-  x2?: V;
+  x2?: V
   /** X axis scale minimum. */
-  x_min?: F;
+  x_min?: F
   /** X axis scale maximum. */
-  x_max?: F;
+  x_max?: F
   /** Whether to nice X axis scale ticks. */
-  x_nice?: B;
+  x_nice?: B
   /** X axis scale type. */
-  x_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'power' | 'time' | 'time-category' | 'quantize' | 'quantile';
+  x_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'power' | 'time' | 'time-category' | 'quantize' | 'quantile'
   /** X axis title. */
-  x_title?: S;
+  x_title?: S
   /** Y field or value. */
-  y?: V;
+  y?: V
   /** Y base field or value. */
-  y0?: V;
+  y0?: V
   /** Y bin lower bound field or value. For histograms. */
-  y1?: V;
+  y1?: V
   /** Y bin upper bound field or value. For histograms. */
-  y2?: V;
+  y2?: V
   /** Y axis scale minimum. */
-  y_min?: F;
+  y_min?: F
   /** Y axis scale maximum. */
-  y_max?: F;
+  y_max?: F
   /** Whether to nice Y axis scale ticks. */
-  y_nice?: B;
+  y_nice?: B
   /** Y axis scale type. */
-  y_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'power' | 'time' | 'time-category' | 'quantize' | 'quantile';
+  y_scale?: 'linear' | 'cat' | 'category' | 'identity' | 'log' | 'pow' | 'power' | 'time' | 'time-category' | 'quantize' | 'quantile'
   /** Y axis title. */
-  y_title?: S;
+  y_title?: S
   /** Mark color field or value. */
-  color?: S;
+  color?: S
   /** Mark color range for multi-series plots. A string containing space-separated colors, e.g. `'#fee8c8 #fdbb84 #e34a33'` */
-  color_range?: S;
+  color_range?: S
   /** The unique values in the data (labels or categories or classes) to map colors to, e.g. `['high', 'medium', 'low']`. If this is not provided, the unique values are automatically inferred from the `color` attribute. */
-  color_domain?: S[];
+  color_domain?: S[]
   /** Mark shape field or value for `point` mark types. Possible values are 'circle', 'square', 'bowtie', 'diamond', 'hexagon', 'triangle', 'triangle-down', 'cross', 'tick', 'plus', 'hyphen', 'line'. */
-  shape?: S;
+  shape?: S
   /** Mark shape range for multi-series plots using `point` mark types. A string containing space-separated shapes, e.g. `'circle square diamond'` */
-  shape_range?: S;
+  shape_range?: S
   /** Mark size field or value. */
-  size?: V;
+  size?: V
   /** Mark size range. A string containing space-separated integers, e.g. `'4 30'` */
-  size_range?: S;
+  size_range?: S
   /** Field to stack marks by, or 'auto' to infer. */
-  stack?: S;
+  stack?: S
   /** Field to dodge marks by, or 'auto' to infer. */
-  dodge?: S;
+  dodge?: S
   /** Curve type for `line` and `area` mark types. */
-  curve?: 'none' | 'smooth' | 'step-before' | 'step' | 'step-after';
+  curve?: 'none' | 'smooth' | 'step-before' | 'step' | 'step-after'
   /** Mark fill color. */
-  fill_color?: S;
+  fill_color?: S
   /** Mark fill opacity. */
-  fill_opacity?: F;
+  fill_opacity?: F
   /** Mark stroke color. */
-  stroke_color?: S;
+  stroke_color?: S
   /** Mark stroke opacity. */
-  stroke_opacity?: F;
+  stroke_opacity?: F
   /** Mark stroke size. */
-  stroke_size?: F;
+  stroke_size?: F
   /** Mark stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]. */
-  stroke_dash?: S;
+  stroke_dash?: S
   /** Label field or value. */
-  label?: S;
+  label?: S
   /** Distance between label and mark. */
-  label_offset?: F;
+  label_offset?: F
   /** Horizontal distance between label and mark. */
-  label_offset_x?: F;
+  label_offset_x?: F
   /** Vertical distance between label and mark. */
-  label_offset_y?: F;
+  label_offset_y?: F
   /** Label rotation angle, in degrees, or 'none' to disable automatic rotation. The default behavior is 'auto' for automatic rotation. */
-  label_rotation?: S;
+  label_rotation?: S
   /** Label position relative to the mark. */
-  label_position?: 'top' | 'bottom' | 'middle' | 'left' | 'right';
+  label_position?: 'top' | 'bottom' | 'middle' | 'left' | 'right'
   /** Strategy to use if labels overlap. */
-  label_overlap?: 'hide' | 'overlap' | 'constrain';
+  label_overlap?: 'hide' | 'overlap' | 'constrain'
   /** Label fill color. */
-  label_fill_color?: S;
+  label_fill_color?: S
   /** Label fill opacity. */
-  label_fill_opacity?: F;
+  label_fill_opacity?: F
   /** Label stroke color. */
-  label_stroke_color?: S;
+  label_stroke_color?: S
   /** Label stroke opacity. */
-  label_stroke_opacity?: F;
+  label_stroke_opacity?: F
   /** Label stroke size (line width or pen thickness). */
-  label_stroke_size?: F;
+  label_stroke_size?: F
   /** Label font size. */
-  label_font_size?: F;
+  label_font_size?: F
   /** Label font weight. */
-  label_font_weight?: S;
+  label_font_weight?: S
   /** Label line height. */
-  label_line_height?: F;
+  label_line_height?: F
   /** Label text alignment. */
-  label_align?: 'left' | 'right' | 'center' | 'start' | 'end';
+  label_align?: 'left' | 'right' | 'center' | 'start' | 'end'
   /** Reference line stroke color. */
-  ref_stroke_color?: S;
+  ref_stroke_color?: S
   /** Reference line stroke opacity. */
-  ref_stroke_opacity?: F;
+  ref_stroke_opacity?: F
   /** Reference line stroke size (line width or pen thickness). */
-  ref_stroke_size?: F;
+  ref_stroke_size?: F
   /** Reference line stroke dash style. A string containing space-separated integers that specify distances to alternately draw a line and a gap (in coordinate space units). If the number of elements in the array is odd, the elements of the array get copied and concatenated. For example, [5, 15, 25] will become [5, 15, 25, 5, 15, 25]. */
-  ref_stroke_dash?: S;
+  ref_stroke_dash?: S
 }
 
 /** Extended mark attributes. Not exposed to API. */
 interface MarkExt extends Mark {
   /** Field. */
-  x_field?: S;
+  x_field?: S
   /** Format string. */
-  x_format?: Fmt;
+  x_format?: Fmt
   /** Field. */
-  x0_field?: S;
+  x0_field?: S
   /** Format string. */
-  x0_format?: Fmt;
+  x0_format?: Fmt
   /** Field. */
-  x1_field?: S;
+  x1_field?: S
   /** Format string. */
-  x1_format?: Fmt;
+  x1_format?: Fmt
   /** Field. */
-  x2_field?: S;
+  x2_field?: S
   /** Format string. */
-  x2_format?: Fmt;
+  x2_format?: Fmt
   /** Field. */
-  y_field?: S;
+  y_field?: S
   /** Format string. */
-  y_format?: Fmt;
+  y_format?: Fmt
   /** Field. */
-  y0_field?: S;
+  y0_field?: S
   /** Format string. */
-  y0_format?: Fmt;
+  y0_format?: Fmt
   /** Field. */
-  y1_field?: S;
+  y1_field?: S
   /** Format string. */
-  y1_format?: Fmt;
+  y1_format?: Fmt
   /** Field. */
-  y2_field?: S;
+  y2_field?: S
   /** Format string. */
-  y2_format?: Fmt;
+  y2_format?: Fmt
   /** Field. */
-  color_field?: S;
+  color_field?: S
   /** Format string. */
-  color_format?: Fmt;
+  color_format?: Fmt
   /** Field. */
-  shape_field?: S;
+  shape_field?: S
   /** Format string. */
-  shape_format?: Fmt;
+  shape_format?: Fmt
   /** Format string. */
-  size_format?: Fmt;
+  size_format?: Fmt
   /** Field. */
-  size_field?: S;
+  size_field?: S
   /** Field. */
-  dodge_field?: S;
+  dodge_field?: S
   /** Field. */
-  label_field?: S;
+  label_field?: S
   /** Format string. */
-  label_format?: Fmt;
+  label_format?: Fmt
 }
 
 /** Create a plot. A plot is composed of one or more graphical mark layers. */
@@ -505,7 +505,7 @@ const
         o.color.callback = (x: S) => domain_colors[x]
       }
     } else {
-      o.color = isS(color) ? cssVarValue(color) : getComputedStyle(document.documentElement).getPropertyValue('--gray').trim()
+      o.color = cssVar(isS(color) ? color : '$themePrimary')
     }
     if (isS(shape_field)) {
       if (isS(shape_range)) {
@@ -588,7 +588,7 @@ const
   },
   makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S, line_height?: F, align?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    if (isS(fill_color)) s.fill = cssVarValue(fill_color)
+    s.fill = cssVar(isS(fill_color) ? fill_color : '$text')
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
     if (isS(stroke_color)) s.stroke = cssVarValue(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
@@ -701,6 +701,117 @@ const
     return {
       container: el,
       autoFit: true,
+      renderer: 'svg', // Use SVG to allow use of CSS vars which don't work with canvas.
+      theme: { // Referrence: https://theme-set.antv.vision/  https://g2.antv.vision/en/docs/api/advanced/register-theme
+        defaultColor: cssVar('$themePrimary'),
+        geometries: {
+          point: {
+            'hollow-circle': {
+              default: {
+                style: {
+                  fill: 'transparent'
+                }
+              }
+            }
+          }
+        },
+        components: {
+          annotation: {
+            dataMarker: {
+              point: {
+                style: {
+                  stroke: cssVar('$themePrimary'),
+                  fill: cssVar('$card'),
+                }
+              }
+            },
+            line: {
+              style: {
+                fill: cssVar('$text'),
+              }
+            },
+            region: {
+              style: {
+                fill: cssVar('$themePrimary'),
+                fillOpacity: 0.3
+              }
+            },
+            text: {
+              style: {
+                fill: cssVar('$text'),
+              }
+            },
+          },
+          legend: {
+            common: {
+              itemName: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              },
+              pageNavigator: {
+                marker: {
+                  style: {
+                    fill: cssVar('$themePrimary'),
+                    inactiveFill: cssVar('$themePrimary')
+                  }
+                },
+                text: {
+                  style: {
+                    fill: cssVar('$text6')
+                  }
+                }
+              }
+            },
+            continuous: {
+              label: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              },
+              handler: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              },
+            }
+          },
+          axis: {
+            common: {
+              grid: {
+                line: {
+                  style: {
+                    stroke: cssVar('$text'),
+                    strokeOpacity: 0.2
+                  }
+                }
+              },
+              line: {
+                style: {
+                  stroke: cssVar('$text'),
+                  strokeOpacity: 0.6
+                }
+              },
+              tickLine: {
+                style: {
+                  stroke: cssVar('$text'),
+                  strokeOpacity: 0.6
+                }
+              },
+              title: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              },
+              label: {
+                style: {
+                  fill: cssVar('$text'),
+                }
+              }
+            }
+          },
+        }
+      },
       options: {
         animate: false,
         coordinate,
@@ -733,7 +844,7 @@ const
     },
     plot: {
       $nest: {
-        'canvas': {
+        'svg': {
           position: 'absolute',
           top: 0,
           left: 0,
