@@ -14,6 +14,8 @@ q.page['example'] = ui.form_card(box='1 1 2 5', items=[
 ])
 ```
 
+You can see the API for [ui.color_picker](/docs/api/ui#color_picker) or check the interactive example in Tour app.
+
 ## Default value
 
 Use `value` attribute in order to control preselected state of the color picker.

@@ -25,3 +25,5 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.markup(name='markup', content=content)
 ])
 ```
+
+Check the API at [ui.markup](/docs/api/ui#markup).

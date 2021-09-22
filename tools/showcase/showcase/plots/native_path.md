@@ -27,6 +27,8 @@ q.page['example'] = ui.plot_card(
 )
 ```
 
+Check the API at [ui.plot_card](/docs/api/ui#plot_card).
+
 ## Curve
 
 Don't like default sharp edges? Play around with `curve` attribute!

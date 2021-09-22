@@ -28,6 +28,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 | max         | 100     |
 | step        | 1       |
 
+You can see the API for [ui.range_slider](/docs/api/ui#range_slider) or check the interactive example in Tour app.
 
 ## Default value
 

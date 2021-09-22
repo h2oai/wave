@@ -22,6 +22,8 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
+You can see the API for [ui.dropdown](/docs/api/ui#dropdown) or check the interactive example in Tour app.
+
 ## Default value
 
 Use either the `value` parameter or the `values` parameter. Setting the `values` parameter

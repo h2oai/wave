@@ -18,6 +18,8 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
+You can see the API for [ui.toggle](/docs/api/ui#toggle) or check the interactive example in Tour app.
+
 ## Default value
 
 As most of the components, toggle also uses `value` attribute to determine the initial

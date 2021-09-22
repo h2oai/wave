@@ -9,6 +9,8 @@ custom_edit_url: null
 It's common to perform tasks, that are not instant and can take some time. That's fine. What is not fine is giving your user no clue on what is going on. Use
 [ui.progress](/docs/api/ui#progress) to let your users know that your app didn't crash or is hanging, it is just working on something that can take a while.
 
+You can see the API for [ui.progress](/docs/api/ui#progress) or check the interactive example in Tour app.
+
 ## Standard progress
 
 Prefer displaying determinate progress if possible. That way user has an idea about how long he is going to wait.

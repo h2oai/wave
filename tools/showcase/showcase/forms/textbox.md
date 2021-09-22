@@ -14,6 +14,8 @@ the placeholder could be `John Doe`.
 Note that if `trigger` is specified, the inputs are submitted after `500ms` of no typing activity. This
 treshold is currently not configurable.
 
+You can see the API for [ui.textbox](/docs/api/ui#textbox) or check the interactive example in Tour app.
+
 ## Standard textbox
 
 Regular textbox. `name` indicates the name of the `q.args` to be filled.

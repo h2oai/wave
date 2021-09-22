@@ -14,6 +14,8 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
+Check the API at [ui.image](/docs/api/ui#image).
+
 ## Base64
 
 Wave also support images in [Base64](https://en.wikipedia.org/wiki/Base64) format. You need to

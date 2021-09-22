@@ -27,6 +27,8 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
+You can see the API for [ui.choice_group](/docs/api/ui#choice_group) or check the interactive example in Tour app.
+
 ## Default value
 
 If you want to preselect an option, use `value` attribute with the same value used for choice `name` attribute.

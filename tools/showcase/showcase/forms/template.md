@@ -32,3 +32,5 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ])))
 ])
 ```
+
+Check the API at [ui.template](/docs/api/ui#template).

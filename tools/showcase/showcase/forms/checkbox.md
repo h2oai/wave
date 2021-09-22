@@ -8,6 +8,8 @@ custom_edit_url: null
 
 Use checkboxes when you need to switch between 2 mutually exclusive options.
 
+You can see the API for [ui.checkbox](/docs/api/ui#checkbox) or check the interactive example in Tour app.
+
 ## Standard checkbox
 
 Regular checkbox `name` indicates the name of the `q.args` to be filled.

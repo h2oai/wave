@@ -26,6 +26,8 @@ q.page['example'] = ui.form_card(
 )
 ```
 
+Check the API at [ui.separator](/docs/api/ui#separator).
+
 ## Inline
 
 By default, all form items are laid out vertically (top to bottom). For more complex forms though, this might not be enough and
@@ -42,6 +44,8 @@ q.page['form'] = ui.form_card(
     ])],
 )
 ```
+
+Check the API at [ui.inline](/docs/api/ui#inline).
 
 ## Expander
 
@@ -62,6 +66,8 @@ q.page['form'] = ui.form_card(
 :::tip
 Use `expanded` attr to toggle between collapsed / expanded state.
 :::
+
+Check the API at [ui.expander](/docs/api/ui#expander).
 
 ```py
 q.page['form'] = ui.form_card(
@@ -97,3 +103,5 @@ q.page['form'] = ui.form_card(
 Also don't forget that your multi step form should have easy navigation back and forth between steps and should accomodate data validation prior to proceeding to the next step.
 That means `Next` button should be disabled until all the required fields are filled correctly.
 :::
+
+Check the API at [ui.stepper](/docs/api/ui#stepper).

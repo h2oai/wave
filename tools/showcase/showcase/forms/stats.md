@@ -20,6 +20,8 @@ q.page['example'] = ui.form_card(box='1 1 4 2', items=[
 ])
 ```
 
+Check the API at [ui.stats](/docs/api/ui#stats).
+
 ## Icons
 
 Make your stats even nicer by using [icons](https://uifabricicons.azurewebsites.net/). This component

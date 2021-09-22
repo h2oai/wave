@@ -19,6 +19,8 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
+You can see the API for [ui.checklist](/docs/api/ui#checklist) or check the interactive example in Tour app.
+
 ## Default values
 
 Checklist preselection is also possible thanks to `values` attribute. Simply specify the names of the options you wish

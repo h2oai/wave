@@ -23,6 +23,8 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
 ])
 ```
 
+You can see the API for [ui.table](/docs/api/ui#table) or check the interactive example in Tour app.
+
 ## Selection
 
 If `multiple` is set to False (default), each row in the table is clickable. When a row is clicked,

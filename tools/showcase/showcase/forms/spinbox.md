@@ -30,6 +30,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 | step      | 1     |
 | value     | 0     |
 
+You can see the API for [ui.spinbox](/docs/api/ui#spinbox) or check the interactive example in Tour app.
 
 ## Default value
 

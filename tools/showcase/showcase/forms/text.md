@@ -8,6 +8,8 @@ custom_edit_url: null
 
 Need to display textual content? No worries, we've got you covered.
 
+Check the API at [ui.text](/docs/api/ui#text).
+
 ## Sizes
 
 Wave supports a lot of text variations. This may come in handy when you want to distinguish certain parts of text from the other. For example title

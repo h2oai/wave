@@ -16,6 +16,8 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
+You can see the API for [ui.link](/docs/api/ui#link) or check the interactive example in Tour app.
+
 ## Target
 
 Where to display the link. Setting this to an empty string or `'_blank'` opens the link in a new tab or

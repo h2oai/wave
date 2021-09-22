@@ -31,6 +31,8 @@ q.page['embedded'] = ui.vega_card(
 )
 ```
 
+Check the API at [ui.vega_card](/docs/api/ui#vega_card).
+
 ## Separate spec from data
 
 Useful for cases when you expect plot to be updated later on and don't want to recreate it each time.

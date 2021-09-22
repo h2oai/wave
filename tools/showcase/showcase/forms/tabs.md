@@ -18,6 +18,8 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
+You can see the API for [ui.tabs](/docs/api/ui#tabs) or check the interactive example in Tour app.
+
 ## Default value
 
 Use `value` attribute in order to control preselected state of the tabs. If not specified,

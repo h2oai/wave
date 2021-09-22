@@ -33,6 +33,8 @@ q.page['example'] = ui.plot_card(
 )
 ```
 
+Check the API at [ui.plot_card](/docs/api/ui#plot_card).
+
 ## Bubble plot
 
 Make a scatterplot with mark sizes mapped to a continuous variable.

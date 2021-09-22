@@ -15,6 +15,8 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 ])
 ```
 
+You can see the API for [ui.button](/docs/api/ui#button) or check the interactive example in Tour app.
+
 ## Primary
 
 Use primary button to indicate what should the most critical action in a form be in order to let user continue the app flow you prepared.

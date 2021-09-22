@@ -28,6 +28,8 @@ q.page['example'] = ui.plot_card(
 )
 ```
 
+Check the API at [ui.plot_card](/docs/api/ui#plot_card).
+
 ## Transpose
 
 In order to transpose the plot, simply switch the `x` and `y` coordinate values.

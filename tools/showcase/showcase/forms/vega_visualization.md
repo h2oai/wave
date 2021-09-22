@@ -41,6 +41,8 @@ q.page['example'] = ui.form_card(box='1 1 2 4', items=[
 ])
 ```
 
+Check the API at [ui.vega_visualization](/docs/api/ui#vega_visualization).
+
 ## Dimensions
 
 In addition to `width` attribute that is present on every form component, vega visualization also provides

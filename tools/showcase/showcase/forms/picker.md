@@ -19,6 +19,8 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
+You can see the API for [ui.picker](/docs/api/ui#picker) or check the interactive example in Tour app.
+
 ## Preselection
 
 Use `values` attribute to preselect certain tags.

@@ -14,6 +14,8 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
+Check the API at [ui.frame](/docs/api/ui#frame).
+
 ## Custom HTML
 
 For cases when you want to build the embedded page yourself, you can use `content` attribute that

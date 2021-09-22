@@ -17,6 +17,8 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
 ])
 ```
 
+You can see the API for [ui.file_upload](/docs/api/ui#file_upload) or check the interactive example in Tour app.
+
 ## Constraints
 
 It's common to want to allow your users to only upload files with very specific parameters, for example:

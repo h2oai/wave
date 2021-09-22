@@ -20,11 +20,15 @@ Use this stat, if you want to display a single value only and nothing else.
 q.page['example'] = ui.small_stat_card(box='1 1 1 1', title='Stat title', value='99.99')
 ```
 
+Check the API at [ui.small_stat_card](/docs/api/ui#small_stat_card).
+
 ## Small series area stat
 
 If you need more than a textual content and want to display also how is your data trending, use series stat.
 
 Feel free to play around with `plot_curve` attribute in order to find the curve that suits you the most.
+
+Check the API at [ui.small_series_stat_card](/docs/api/ui#small_series_stat_card).
 
 ### Small series Linear curve
 
@@ -142,6 +146,8 @@ q.page['example'] = ui.small_series_stat_card(
 )
 ```
 
+Check the API at [ui.small_series_stat_card](/docs/api/ui#small_series_stat_card).
+
 ## Large stat
 
 Use this stat, if you want to display multiple values like primary, auxiliary and caption.
@@ -156,6 +162,8 @@ q.page['example'] = ui.large_stat_card(
     caption='There goes some longer text that would describe the values displayed above.',
 ) 
 ```
+
+Check the API at [ui.large_stat_card](/docs/api/ui#large_stat_card).
 
 ## Large bar stat
 
@@ -197,6 +205,8 @@ q.page['example'] = ui.tall_gauge_stat_card(
 
 Most suitable for cases when you need to fill a vertical space with numerical values together
 with data series.
+
+Check the API at [ui.tall_series_stat_card](/docs/api/ui#tall_series_stat_card).
 
 Feel free to play around with `plot_curve` attribute in order to find the curve that suits you the most.
 
@@ -321,6 +331,8 @@ q.page['example'] = ui.wide_bar_stat_card(
 )
 ```
 
+Check the API at [ui.wide_bar_stat_card](/docs/api/ui#wide_bar_stat_card).
+
 ## Wide gauge stat
 
 ```py
@@ -334,6 +346,8 @@ q.page['example'] = ui.wide_gauge_stat_card(
     data=dict(foo=86, bar=0.34),
 )
 ```
+
+Check the API at [ui.wide_gauge_stat_card](/docs/api/ui#wide_gauge_stat_card).
 
 ## Wide series area
 
@@ -358,6 +372,8 @@ q.page['example'] = ui.wide_series_stat_card(
 )
 ```
 
+Check the API at [ui.wide_series_stat_card](/docs/api/ui#wide_series_stat_card).
+
 ## Wide series interval
 
 Most suitable for cases when you need to fill a horizontal space with numerical values together
@@ -381,3 +397,5 @@ q.page['example'] = ui.wide_series_stat_card(
     plot_curve='linear',
 )
 ```
+
+Check the API at [ui.wide_series_stat_card](/docs/api/ui#wide_series_stat_card).
