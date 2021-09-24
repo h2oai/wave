@@ -16,7 +16,6 @@ import * as Fluent from '@fluentui/react'
 import { B, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { bond, box } from './qd'
 import { border, cssVar, formItemWidth, margin } from './theme'
 import { wave } from './ui'
 
@@ -69,43 +68,42 @@ const
     }
   }),
   toColorCells = (cs: S[]) => cs.map((c): Fluent.IColorCellProps => ({ id: c, label: c, color: c })),
-  InlineColorPicker = bond(({ model, onChange }: { model: ColorPicker, onChange: (...args: any) => void }) => {
+  InlineColorPicker = ({ model, onChange }: { model: ColorPicker, onChange: (...args: any) => void }) => {
     const
-      isCalloutVisibleB = box(false),
+      [isCalloutVisible, setIsCalloutVisible] = React.useState(false),
       val = model.value || '#000',
-      colorValueB = box(Fluent.getColorFromString(val)),
-      textValueB = box(val),
-      toggleCallout = () => isCalloutVisibleB(!isCalloutVisibleB()),
+      [color, setColor] = React.useState(Fluent.getColorFromString(val)),
+      [colorText, setColorText] = React.useState(val),
+      toggleCallout = () => setIsCalloutVisible(!isCalloutVisible),
       onTextChange = (_e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, val = '') => {
-        textValueB(val)
+        setColorText(val)
         if (!val?.match(/^#([0-9a-f]{3}){1,2}$/i)) return // Hex format validation.
 
         const fluentColor = Fluent.getColorFromString(val)!
-        colorValueB(fluentColor)
+        setColor(fluentColor)
         onChange(null, fluentColor)
       },
       onColorChange = (_e: React.SyntheticEvent<HTMLElement>, color: Fluent.IColor) => {
-        colorValueB(color)
-        textValueB(color.str)
+        setColor(color)
+        setColorText(color.str)
         onChange(null, color)
-      },
-      render = () => (
-        <div className={css.inlinePickerContainer}>
-          <Fluent.Label>{model.label}</Fluent.Label>
-          <div className={css.rhs}>
-            <div className={css.preview} style={{ background: colorValueB().str }} onClick={toggleCallout} />
-            {isCalloutVisibleB() && (
-              <Fluent.Callout directionalHint={Fluent.DirectionalHint.rightBottomEdge} target={`.${css.preview}`} onDismiss={toggleCallout} gapSpace={10}>
-                <Fluent.ColorPicker alphaType={model.alpha ? 'alpha' : 'none'} color={colorValueB()} onChange={onColorChange} />
-              </Fluent.Callout>
-            )}
-            <Fluent.TextField value={textValueB()} onChange={onTextChange} />
-          </div>
-        </div>
-      )
+      }
 
-    return { render, isCalloutVisibleB, colorValueB, textValueB }
-  })
+    return (
+      <div className={css.inlinePickerContainer}>
+        <Fluent.Label>{model.label}</Fluent.Label>
+        <div className={css.rhs}>
+          <div className={css.preview} style={{ background: color?.str }} onClick={toggleCallout} />
+          {isCalloutVisible && (
+            <Fluent.Callout directionalHint={Fluent.DirectionalHint.rightBottomEdge} target={`.${css.preview}`} onDismiss={toggleCallout} gapSpace={10}>
+              <Fluent.ColorPicker alphaType={model.alpha ? 'alpha' : 'none'} color={color!} onChange={onColorChange} />
+            </Fluent.Callout>
+          )}
+          <Fluent.TextField value={colorText} onChange={onTextChange} />
+        </div>
+      </div>
+    )
+  }
 
 export const
   XColorPicker = ({ model }: { model: ColorPicker }) => {
@@ -129,7 +127,6 @@ export const
 
     return (
       <div data-test={name}>
-        <Fluent.Label>{label}</Fluent.Label>
         {
           inline
             ? <InlineColorPicker model={model} onChange={onChange} />
