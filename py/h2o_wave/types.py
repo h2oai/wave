@@ -7840,20 +7840,24 @@ class SidePanel:
         )
 
 
-class Colors:
-    """Represents colors to be used in your app.
+class Theme:
+    """Theme (color scheme) to apply colors to the app.
     """
     def __init__(
             self,
+            name: str,
             text: str,
             card: str,
             page: str,
             primary: str,
     ):
-        _guard_scalar('Colors.text', text, (str,), False, False, False)
-        _guard_scalar('Colors.card', card, (str,), False, False, False)
-        _guard_scalar('Colors.page', page, (str,), False, False, False)
-        _guard_scalar('Colors.primary', primary, (str,), False, False, False)
+        _guard_scalar('Theme.name', name, (str,), True, False, False)
+        _guard_scalar('Theme.text', text, (str,), False, False, False)
+        _guard_scalar('Theme.card', card, (str,), False, False, False)
+        _guard_scalar('Theme.page', page, (str,), False, False, False)
+        _guard_scalar('Theme.primary', primary, (str,), False, False, False)
+        self.name = name
+        """An identifying name for this theme."""
         self.text = text
         """Base color of the textual components."""
         self.card = card
@@ -7865,11 +7869,13 @@ class Colors:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Colors.text', self.text, (str,), False, False, False)
-        _guard_scalar('Colors.card', self.card, (str,), False, False, False)
-        _guard_scalar('Colors.page', self.page, (str,), False, False, False)
-        _guard_scalar('Colors.primary', self.primary, (str,), False, False, False)
+        _guard_scalar('Theme.name', self.name, (str,), True, False, False)
+        _guard_scalar('Theme.text', self.text, (str,), False, False, False)
+        _guard_scalar('Theme.card', self.card, (str,), False, False, False)
+        _guard_scalar('Theme.page', self.page, (str,), False, False, False)
+        _guard_scalar('Theme.primary', self.primary, (str,), False, False, False)
         return _dump(
+            name=self.name,
             text=self.text,
             card=self.card,
             page=self.page,
@@ -7877,64 +7883,29 @@ class Colors:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Colors':
-        """Creates an instance of this class using the contents of a dict."""
-        __d_text: Any = __d.get('text')
-        _guard_scalar('Colors.text', __d_text, (str,), False, False, False)
-        __d_card: Any = __d.get('card')
-        _guard_scalar('Colors.card', __d_card, (str,), False, False, False)
-        __d_page: Any = __d.get('page')
-        _guard_scalar('Colors.page', __d_page, (str,), False, False, False)
-        __d_primary: Any = __d.get('primary')
-        _guard_scalar('Colors.primary', __d_primary, (str,), False, False, False)
-        text: str = __d_text
-        card: str = __d_card
-        page: str = __d_page
-        primary: str = __d_primary
-        return Colors(
-            text,
-            card,
-            page,
-            primary,
-        )
-
-
-class Theme:
-    """Theme (color scheme) to apply colors to the app.
-    """
-    def __init__(
-            self,
-            name: str,
-            colors: Colors,
-    ):
-        _guard_scalar('Theme.name', name, (str,), True, False, False)
-        _guard_scalar('Theme.colors', colors, (Colors,), False, False, False)
-        self.name = name
-        """An identifying name for this theme."""
-        self.colors = colors
-        """Specific colors to be used in the app."""
-
-    def dump(self) -> Dict:
-        """Returns the contents of this object as a dict."""
-        _guard_scalar('Theme.name', self.name, (str,), True, False, False)
-        _guard_scalar('Theme.colors', self.colors, (Colors,), False, False, False)
-        return _dump(
-            name=self.name,
-            colors=self.colors.dump(),
-        )
-
-    @staticmethod
     def load(__d: Dict) -> 'Theme':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
         _guard_scalar('Theme.name', __d_name, (str,), True, False, False)
-        __d_colors: Any = __d.get('colors')
-        _guard_scalar('Theme.colors', __d_colors, (dict,), False, False, False)
+        __d_text: Any = __d.get('text')
+        _guard_scalar('Theme.text', __d_text, (str,), False, False, False)
+        __d_card: Any = __d.get('card')
+        _guard_scalar('Theme.card', __d_card, (str,), False, False, False)
+        __d_page: Any = __d.get('page')
+        _guard_scalar('Theme.page', __d_page, (str,), False, False, False)
+        __d_primary: Any = __d.get('primary')
+        _guard_scalar('Theme.primary', __d_primary, (str,), False, False, False)
         name: str = __d_name
-        colors: Colors = Colors.load(__d_colors)
+        text: str = __d_text
+        card: str = __d_card
+        page: str = __d_page
+        primary: str = __d_primary
         return Theme(
             name,
-            colors,
+            text,
+            card,
+            page,
+            primary,
         )
 
 

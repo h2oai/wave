@@ -103,10 +103,12 @@ export interface Zone {
   zones?: Zone[]
 }
 
-/**
- * Represents colors to be used in your app.
- */
-interface Colors {
+/** 
+ * Theme (color scheme) to apply colors to the app.
+*/
+export interface Theme {
+  /** An identifying name for this theme. */
+  name: Id
   /** Base color of the textual components. */
   text: S
   /** Card background color. */
@@ -115,16 +117,6 @@ interface Colors {
   page: S
   /** Primary color used to accent components. */
   primary: S
-
-}
-/** 
- * Theme (color scheme) to apply colors to the app.
-*/
-export interface Theme {
-  /** An identifying name for this theme. */
-  name: Id
-  /** Specific colors to be used in the app. */
-  colors: Colors
 }
 
 /**

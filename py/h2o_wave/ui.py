@@ -2765,45 +2765,30 @@ def side_panel(
     )
 
 
-def colors(
+def theme(
+        name: str,
         text: str,
         card: str,
         page: str,
         primary: str,
-) -> Colors:
-    """Represents colors to be used in your app.
-
-    Args:
-        text: Base color of the textual components.
-        card: Card background color.
-        page: Page background color.
-        primary: Primary color used to accent components.
-    Returns:
-        A `h2o_wave.types.Colors` instance.
-    """
-    return Colors(
-        text,
-        card,
-        page,
-        primary,
-    )
-
-
-def theme(
-        name: str,
-        colors: Colors,
 ) -> Theme:
     """Theme (color scheme) to apply colors to the app.
 
     Args:
         name: An identifying name for this theme.
-        colors: Specific colors to be used in the app.
+        text: Base color of the textual components.
+        card: Card background color.
+        page: Page background color.
+        primary: Primary color used to accent components.
     Returns:
         A `h2o_wave.types.Theme` instance.
     """
     return Theme(
         name,
-        colors,
+        text,
+        card,
+        page,
+        primary,
     )
 
 

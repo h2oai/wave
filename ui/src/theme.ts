@@ -254,9 +254,10 @@ export const
 on(themesB, newThemes => {
   newThemes.forEach(t => {
     const
-      primaryColor = Fluent.getColorFromString(t.colors.primary)!,
-      textColor = Fluent.getColorFromString(t.colors.text)!,
-      cardColor = Fluent.getColorFromString(t.colors.card)!
+      { text, primary, card, page } = t,
+      primaryColor = Fluent.getColorFromString(primary)!,
+      textColor = Fluent.getColorFromString(text)!,
+      cardColor = Fluent.getColorFromString(card)!
 
     Fluent.ThemeGenerator.setSlot(themeRules[Fluent.BaseSlots[Fluent.BaseSlots.primaryColor]], primaryColor, Fluent.isDark(primaryColor), true, true)
     Fluent.ThemeGenerator.setSlot(themeRules[Fluent.BaseSlots[Fluent.BaseSlots.foregroundColor]], textColor, Fluent.isDark(textColor), true, true)
@@ -268,7 +269,7 @@ on(themesB, newThemes => {
       isInverted: Fluent.isDark(cardColor),
     })
 
-    themes[t.name] = { fluentPalette: palette, palette: t.colors }
+    themes[t.name] = { fluentPalette: palette, palette: { text, card, page } }
   })
   changeTheme(themeB())
 })

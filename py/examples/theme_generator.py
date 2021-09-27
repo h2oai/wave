@@ -52,12 +52,10 @@ def get_theme_code(q: Q):
     contents = f'''
 ui.theme(
     name='<theme-name>',
-    colors=ui.colors(
-        primary='{q.client.primary}',
-        text='{q.client.text}',
-        card='{q.client.card}',
-        page='{q.client.page}',
-    )
+    primary='{q.client.primary}',
+    text='{q.client.text}',
+    card='{q.client.card}',
+    page='{q.client.page}',
 )
 '''
 
@@ -180,25 +178,21 @@ async def serve(q: Q):
             ]),
         ])
         q.page['footer'] = ui.footer_card(box='footer', caption='(c) 2021 H2O.ai. All rights reserved.')
-        q.client.themes = [ui.theme(name='custom', colors=ui.colors(
-            text=q.client.text,
-            card=q.client.card,
-            page=q.client.page,
-            primary=q.client.primary
-        ))]
+        q.client.themes = [ui.theme(name='custom', text=q.client.text, card=q.client.card,
+                                    page=q.client.page, primary=q.client.primary)]
         q.client.initialized = True
 
     if q.args.primary:
-        q.client.themes[0].colors.primary = q.args.primary
+        q.client.themes[0].primary = q.args.primary
         q.client.primary = q.args.primary
     if q.args.text:
-        q.client.themes[0].colors.text = q.args.text
+        q.client.themes[0].text = q.args.text
         q.client.text = q.args.text
     if q.args.card:
-        q.client.themes[0].colors.card = q.args.card
+        q.client.themes[0].card = q.args.card
         q.client.card = q.args.card
     if q.args.page:
-        q.client.themes[0].colors.page = q.args.page
+        q.client.themes[0].page = q.args.page
         q.client.page = q.args.page
 
     q.page['meta'].themes = q.client.themes

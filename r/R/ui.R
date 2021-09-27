@@ -3235,46 +3235,32 @@ ui_side_panel <- function(
   return(.o)
 }
 
-#' Represents colors to be used in your app.
+#' Theme (color scheme) to apply colors to the app.
 #'
+#' @param name An identifying name for this theme.
 #' @param text Base color of the textual components.
 #' @param card Card background color.
 #' @param page Page background color.
 #' @param primary Primary color used to accent components.
-#' @return A Colors instance.
+#' @return A Theme instance.
 #' @export
-ui_colors <- function(
+ui_theme <- function(
+  name,
   text,
   card,
   page,
   primary) {
+  .guard_scalar("name", "character", name)
   .guard_scalar("text", "character", text)
   .guard_scalar("card", "character", card)
   .guard_scalar("page", "character", page)
   .guard_scalar("primary", "character", primary)
   .o <- list(
+    name=name,
     text=text,
     card=card,
     page=page,
     primary=primary)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveColors"))
-  return(.o)
-}
-
-#' Theme (color scheme) to apply colors to the app.
-#'
-#' @param name An identifying name for this theme.
-#' @param colors Specific colors to be used in the app.
-#' @return A Theme instance.
-#' @export
-ui_theme <- function(
-  name,
-  colors) {
-  .guard_scalar("name", "character", name)
-  .guard_scalar("colors", "WaveColors", colors)
-  .o <- list(
-    name=name,
-    colors=colors)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTheme"))
   return(.o)
 }
