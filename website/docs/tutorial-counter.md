@@ -48,7 +48,7 @@ At this point, your app will be up and running, but it doesn't do anything yet. 
 
 ## Step 2: Display a button
 
-Let's add a button to our app. Out goal is to increment and display the bean count each time the button is clicked.
+Let's add a button to our app. Our goal is to increment and display the bean count each time the button is clicked.
 
 To do this, we declare a variable called `bean_count`, and use `form_card()` to add a [form](https://en.wikipedia.org/wiki/Form_(document)) to our page. A form card is a special type of card that displays a vertical stack of [components](components.md) (also called *widgets*). In this case our form contains a solitary button named `increment`, with a caption showing the current `bean_count`. The button is marked as `primary`, which serves no other purpose than to make it look tall, dark, and handsome.
 
