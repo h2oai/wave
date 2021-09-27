@@ -1304,9 +1304,9 @@ ui_date_picker <- function(
 #' @param value The selected color (CSS-compatible string).
 #' @param choices A list of colors (CSS-compatible strings) to limit color choices to.
 #' @param width The width of the color picker, e.g. '100px'. Defaults to '300px'.
-#' @param alpha True if user should be allowed to pick color transparency. Defaults to "true".
-#' @param inline True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to "false".
-#' @param visible True if the component should be visible. Defaults to true.
+#' @param alpha True if user should be allowed to pick color transparency. Defaults to 'true'.
+#' @param inline True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to 'false'.
+#' @param visible True if the component should be visible. Defaults to 'true'.
 #' @param trigger True if the form should be submitted when the color picker value changes.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
 #' @return A ColorPicker instance.

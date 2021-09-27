@@ -2878,11 +2878,11 @@ class ColorPicker:
         self.width = width
         """The width of the color picker, e.g. '100px'. Defaults to '300px'."""
         self.alpha = alpha
-        """True if user should be allowed to pick color transparency. Defaults to "true"."""
+        """True if user should be allowed to pick color transparency. Defaults to 'true'."""
         self.inline = inline
-        """True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to "false"."""
+        """True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to 'false'."""
         self.visible = visible
-        """True if the component should be visible. Defaults to true."""
+        """True if the component should be visible. Defaults to 'true'."""
         self.trigger = trigger
         """True if the form should be submitted when the color picker value changes."""
         self.tooltip = tooltip

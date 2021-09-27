@@ -1129,9 +1129,9 @@ def color_picker(
         value: The selected color (CSS-compatible string).
         choices: A list of colors (CSS-compatible strings) to limit color choices to.
         width: The width of the color picker, e.g. '100px'. Defaults to '300px'.
-        alpha: True if user should be allowed to pick color transparency. Defaults to "true".
-        inline: True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to "false".
-        visible: True if the component should be visible. Defaults to true.
+        alpha: True if user should be allowed to pick color transparency. Defaults to 'true'.
+        inline: True if color picker should be displayed inline (takes less space). Doesn't work with choices specified. Defaults to 'false'.
+        visible: True if the component should be visible. Defaults to 'true'.
         trigger: True if the form should be submitted when the color picker value changes.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
     Returns:
