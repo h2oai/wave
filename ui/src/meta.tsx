@@ -19,7 +19,7 @@ import { cards } from './layout'
 import { showNotification } from './notification'
 import { executeScript, InlineScript, installScripts, Script } from './script'
 import { SidePanel, sidePanelB } from './side_panel'
-import { themeB } from './theme'
+import { themeB, themesB } from './theme'
 import { setupTracker, Tracker } from './tracking'
 import { bond } from './ui'
 
@@ -103,6 +103,22 @@ export interface Zone {
   zones?: Zone[]
 }
 
+/** 
+ * Theme (color scheme) to apply colors to the app.
+*/
+export interface Theme {
+  /** An identifying name for this theme. */
+  name: Id
+  /** Base color of the textual components. */
+  text: S
+  /** Card background color. */
+  card: S
+  /** Page background color. */
+  page: S
+  /** Primary color used to accent components. */
+  primary: S
+}
+
 /**
  * Represents page-global state.
  *
@@ -131,6 +147,8 @@ interface State {
   side_panel?: SidePanel
   /** Specify the name of the theme (color scheme) to use on this page. One of 'light', 'neon' or 'h2o-dark'. */
   theme?: S
+  /** * Themes (color schemes) that define color used in the app. */
+  themes?: Theme[]
   /** Configure a tracker for the page (for web analytics). */
   tracker?: Tracker
   /** External Javascript files to load into the page. */
@@ -170,6 +188,7 @@ export const
       dialog,
       side_panel,
       theme,
+      themes,
       tracker,
       scripts,
       script,
@@ -200,6 +219,7 @@ export const
     if (icon) windowIconB(icon)
     if (typeof refresh === 'number' && refresh === 0) disconnect()
     if (theme) themeB(theme)
+    if (themes) themesB(themes)
     if (notification) showNotification(notification)
     if (tracker) setupTracker(tracker)
     if (layouts) layoutsB(layouts)
