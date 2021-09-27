@@ -215,7 +215,7 @@ Each time a checkbox is checked or unchecked, our `serve()` function is called, 
 - If a checkbox is checked, `q.args` will contain a `True` for that checkbox.
 - If a checkbox is unchecked, `q.args` will contain a `False` for that checkbox.
 
-So, we iterate through all the to-do items set their `done` attribute based on the value of their corresponding checkbox.
+So, we iterate through all the to-do items and set their `done` attribute based on the value of their corresponding checkbox.
 
 ```py {30-33} title="$HOME/wave-apps/todo.py"
 from typing import List
