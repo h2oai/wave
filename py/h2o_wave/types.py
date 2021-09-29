@@ -9434,7 +9434,7 @@ class TallGaugeStatCard:
 
 
 class TallInfoCard:
-    """Create a tall information card displaying a title, caption, and either an icon or image.
+    """Create a tall information card displaying a title, caption and either an icon or image.
     """
     def __init__(
             self,
@@ -9470,7 +9470,7 @@ class TallInfoCard:
         self.image = image
         """The card’s image."""
         self.image_height = image_height
-        """The card’s image height in px. Defaults to 300px."""
+        """The card’s image height in px. Defaults to '150px'."""
         self.category = category
         """The card's category, displayed above the title."""
         self.name = name

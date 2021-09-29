@@ -6,7 +6,7 @@ from h2o_wave import site, ui
 page = site['/demo']
 
 page.add('example', ui.tall_info_card(
-    box='1 1 2 3',
+    box='1 1 2 4',
     title='Info Card',
     caption='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia aliquam maxime quos facere.',
     category='Category',

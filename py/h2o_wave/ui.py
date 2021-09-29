@@ -3382,7 +3382,7 @@ def tall_info_card(
         color: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> TallInfoCard:
-    """Create a tall information card displaying a title, caption, and either an icon or image.
+    """Create a tall information card displaying a title, caption and either an icon or image.
 
     Args:
         box: A string indicating how to place this component on the page.
@@ -3390,7 +3390,7 @@ def tall_info_card(
         caption: The card's caption, displayed below the title.
         icon: The card's icon.
         image: The card’s image.
-        image_height: The card’s image height in px. Defaults to 300px.
+        image_height: The card’s image height in px. Defaults to '150px'.
         category: The card's category, displayed above the title.
         name: An identifying name for this card. Makes the card clickable, similar to a button.
         color: The card's background color.

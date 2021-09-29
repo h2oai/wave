@@ -13,21 +13,21 @@
 // limitations under the License.
 
 import * as Fluent from '@fluentui/react'
-import { Model, S, wave } from 'h2o-wave'
+import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards, grid } from './layout'
-import { clas, cssVar, centerMixin, margin } from './theme'
-import { bond } from './ui'
+import { centerMixin, clas, cssVar } from './theme'
+import { bond, wave } from './ui'
 
 const
-  iconStyles: Fluent.IIconStyles = { root: { fontSize: 80 } },
+  iconStyles: Fluent.IIconStyles = { root: { fontSize: 32 } },
   css = stylesheet({
     card: {
       padding: grid.gap
     },
     imgContainer: {
-      ...centerMixin()
+      ...centerMixin(),
     },
     textContainer: {
       textAlign: 'center'
@@ -36,7 +36,20 @@ const
       cursor: 'pointer'
     },
     header: {
-      margin: margin(17, 0),
+      marginTop: 16,
+      marginBottom: 8
+    },
+    title: {
+      color: cssVar('$neutralPrimary'),
+    },
+    iconWrapper: {
+      background: cssVar('$neutralLighter'),
+      height: 64,
+      width: 64,
+      boxSizing: 'border-box',
+      borderRadius: 4,
+      color: cssVar('$neutralTertiary'),
+      ...centerMixin()
     },
     img: {
       flexGrow: 1,
@@ -45,7 +58,7 @@ const
       backgroundPosition: 'center'
     }
   })
-/** Create a tall information card displaying a title, caption, and either an icon or image. */
+/** Create a tall information card displaying a title, caption and either an icon or image. */
 interface State {
   /** The card's title. */
   title: S
@@ -55,7 +68,7 @@ interface State {
   icon?: S
   /** The card’s image. */
   image?: S
-  /** The card’s image height in px. Defaults to 300px. */
+  /** The card’s image height in px. Defaults to '150px'. */
   image_height?: S
   /** The card's category, displayed above the title. */
   category?: S
@@ -67,7 +80,7 @@ interface State {
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const
-    { title, caption, icon, image, category, name: stateName, color, image_height = '300px' } = state,
+    { title, caption, icon, image, category, name: stateName, color, image_height = '150px' } = state,
     onClick = () => {
       if (!stateName) return
       if (stateName.startsWith('#')) {
@@ -75,7 +88,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
         return
       }
       wave.args[stateName] = stateName
-      wave.sync()
+      wave.push()
     },
     render = () => (
       <div
@@ -86,19 +99,17 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       >
         <div className={css.imgContainer}>
           {
-            icon
-              ? <Fluent.Icon iconName={icon} styles={iconStyles} />
-              : image
-                ? <div className={css.img} style={{ backgroundImage: `url('${image}')`, height: image_height }}></div>
-                : <Fluent.Icon iconName='MiniExpand' styles={iconStyles} />
+            image
+              ? <div className={css.img} style={{ backgroundImage: `url('${image}')`, height: image_height }}></div>
+              : <div className={css.iconWrapper}><Fluent.Icon iconName={icon || 'MiniExpand'} styles={iconStyles} /></div>
           }
         </div>
         <div className={css.textContainer}>
           <div className={css.header}>
-            <div className='wave-s20 wave-w5 wave-t9'>{title}</div>
+            <div className={clas('wave-s20 wave-w6 wave-t9', css.title)}>{title}</div>
             {category && <div className='wave-s12 wave-w5 wave-t5'>{category}</div>}
           </div>
-          {caption && <div className='wave-s14 wave-w4 wave-t8'>{caption}</div>}
+          {caption && <div className='wave-s14 wave-w4 wave-t7'>{caption}</div>}
         </div>
       </div >
     )
