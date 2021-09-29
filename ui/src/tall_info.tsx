@@ -44,6 +44,7 @@ const
       color: cssVar('$neutralPrimary'),
     },
     category: {
+      marginTop: -2,
       color: cssVar('$themeDark'),
     },
     iconWrapper: {
