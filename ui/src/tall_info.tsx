@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, grid } from './layout'
+import { cards } from './layout'
 import { centerMixin, clas, cssVar } from './theme'
 import { bond, wave } from './ui'
 
@@ -24,7 +24,7 @@ const
   iconStyles: Fluent.IIconStyles = { root: { fontSize: 32 } },
   css = stylesheet({
     card: {
-      padding: grid.gap
+      padding: 24
     },
     imgContainer: {
       ...centerMixin(),
