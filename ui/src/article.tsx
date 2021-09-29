@@ -28,10 +28,10 @@ const
       padding: 24,
       $nest: {
         '.wave-markdown': {
-          marginTop: 16,
+          marginTop: 12,
           $nest: {
             h1: {
-              margin: margin(24, 0),
+              margin: margin(18, 0),
               fontSize: 20,
               fontWeight: 600,
               letterSpacing: '-0.017em',
@@ -89,7 +89,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
             <div className='wave-s14 wave-t6'>{subtitle}</div>
             <div className={clas('wave-s14', css.caption)}>{caption}</div>
           </div>
-          {commands && <Fluent.CommandBar items={toCommands(commands)} styles={{ root: { padding: 0 }, primarySet: commandBarPrimarySetStyles }} />}
+          {commands && <Fluent.CommandBar items={toCommands(commands)} styles={{ root: { padding: 0, height: 24, marginTop: 5 }, primarySet: commandBarPrimarySetStyles }} />}
         </header>
         {content && <Markdown source={content} />}
       </section>
