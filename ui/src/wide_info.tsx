@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, grid } from './layout'
+import { cards } from './layout'
 import { Markdown } from './markdown'
 import { clas, cssVar, pc } from './theme'
 import { bond, wave } from './ui'
@@ -26,7 +26,7 @@ const
   css = stylesheet({
     card: {
       display: 'flex',
-      padding: grid.gap
+      padding: 24
     },
     lhs: {
       paddingRight: 16,
