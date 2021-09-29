@@ -58,24 +58,6 @@ dump_object <- function(x) {
 }
 
 
-#' Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
-#'
-#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-#' @param label The label to display.
-#' @return A Breadcrumb instance.
-#' @export
-ui_breadcrumb <- function(
-  name,
-  label) {
-  .guard_scalar("name", "character", name)
-  .guard_scalar("label", "character", label)
-  .o <- list(
-    name=name,
-    label=label)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumb"))
-  return(.o)
-}
-
 #' Create a command.
 #' 
 #' Commands are typically displayed as context menu items or toolbar button.
@@ -113,6 +95,58 @@ ui_command <- function(
     value=value,
     data=data)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveCommand"))
+  return(.o)
+}
+
+#' Create a wide information card displaying a title, caption, and either an icon or image.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card’s title, displayed at the top.
+#' @param subtitle The card's subtitle, displayed under the title.
+#' @param caption The card's caption, displayed under the subtitle.
+#' @param content Markdown text.
+#' @param commands Contextual menu commands for this component.
+#' @return A ArticleCard instance.
+#' @export
+ui_article_card <- function(
+  box,
+  title,
+  subtitle = NULL,
+  caption = NULL,
+  content = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("content", "character", content)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    subtitle=subtitle,
+    caption=caption,
+    content=content,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveArticleCard"))
+  return(.o)
+}
+
+#' Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
+#'
+#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+#' @param label The label to display.
+#' @return A Breadcrumb instance.
+#' @export
+ui_breadcrumb <- function(
+  name,
+  label) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .o <- list(
+    name=name,
+    label=label)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumb"))
   return(.o)
 }
 

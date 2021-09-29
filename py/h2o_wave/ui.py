@@ -21,24 +21,6 @@ from .types import *
 from .ui_ext import *
 
 
-def breadcrumb(
-        name: str,
-        label: str,
-) -> Breadcrumb:
-    """Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
-
-    Args:
-        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-        label: The label to display.
-    Returns:
-        A `h2o_wave.types.Breadcrumb` instance.
-    """
-    return Breadcrumb(
-        name,
-        label,
-    )
-
-
 def command(
         name: str,
         label: Optional[str] = None,
@@ -73,6 +55,54 @@ def command(
         items,
         value,
         data,
+    )
+
+
+def article_card(
+        box: str,
+        title: str,
+        subtitle: Optional[str] = None,
+        caption: Optional[str] = None,
+        content: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> ArticleCard:
+    """Create a wide information card displaying a title, caption, and either an icon or image.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card’s title, displayed at the top.
+        subtitle: The card's subtitle, displayed under the title.
+        caption: The card's caption, displayed under the subtitle.
+        content: Markdown text.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.ArticleCard` instance.
+    """
+    return ArticleCard(
+        box,
+        title,
+        subtitle,
+        caption,
+        content,
+        commands,
+    )
+
+
+def breadcrumb(
+        name: str,
+        label: str,
+) -> Breadcrumb:
+    """Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
+
+    Args:
+        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+        label: The label to display.
+    Returns:
+        A `h2o_wave.types.Breadcrumb` instance.
+    """
+    return Breadcrumb(
+        name,
+        label,
     )
 
 
