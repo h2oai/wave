@@ -3391,7 +3391,7 @@ def tall_info_card(
         icon: The card's icon.
         image: The card’s image.
         image_height: The card’s image height in px. Defaults to '150px'.
-        category: The card's category, displayed above the title.
+        category: The card's category, displayed below the title.
         name: An identifying name for this card. Makes the card clickable, similar to a button.
         color: The card's background color.
         commands: Contextual menu commands for this component.

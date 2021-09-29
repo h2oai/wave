@@ -3931,7 +3931,7 @@ ui_tall_gauge_stat_card <- function(
 #' @param icon The card's icon.
 #' @param image The card’s image.
 #' @param image_height The card’s image height in px. Defaults to '150px'.
-#' @param category The card's category, displayed above the title.
+#' @param category The card's category, displayed below the title.
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param color The card's background color.
 #' @param commands Contextual menu commands for this component.

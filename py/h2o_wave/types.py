@@ -9472,7 +9472,7 @@ class TallInfoCard:
         self.image_height = image_height
         """The card’s image height in px. Defaults to '150px'."""
         self.category = category
-        """The card's category, displayed above the title."""
+        """The card's category, displayed below the title."""
         self.name = name
         """An identifying name for this card. Makes the card clickable, similar to a button."""
         self.color = color

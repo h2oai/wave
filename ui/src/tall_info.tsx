@@ -28,6 +28,7 @@ const
     },
     imgContainer: {
       ...centerMixin(),
+      marginBottom: 16
     },
     textContainer: {
       textAlign: 'center'
@@ -41,6 +42,9 @@ const
     },
     title: {
       color: cssVar('$neutralPrimary'),
+    },
+    category: {
+      color: cssVar('$themeDark'),
     },
     iconWrapper: {
       background: cssVar('$neutralLighter'),
@@ -58,6 +62,7 @@ const
       backgroundPosition: 'center'
     }
   })
+
 /** Create a tall information card displaying a title, caption and either an icon or image. */
 interface State {
   /** The card's title. */
@@ -70,7 +75,7 @@ interface State {
   image?: S
   /** The card’s image height in px. Defaults to '150px'. */
   image_height?: S
-  /** The card's category, displayed above the title. */
+  /** The card's category, displayed below the title. */
   category?: S
   /** An identifying name for this card. Makes the card clickable, similar to a button. */
   name?: S
@@ -107,7 +112,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
         <div className={css.textContainer}>
           <div className={css.header}>
             <div className={clas('wave-s20 wave-w6 wave-t9', css.title)}>{title}</div>
-            {category && <div className='wave-s12 wave-w5 wave-t5'>{category}</div>}
+            {category && <div className={clas('wave-s14 wave-w4 wave-t5', css.category)}>{category}</div>}
           </div>
           {caption && <div className='wave-s14 wave-w4 wave-t7'>{caption}</div>}
         </div>
