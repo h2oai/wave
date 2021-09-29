@@ -66,7 +66,7 @@ def article_card(
         content: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> ArticleCard:
-    """Create a wide information card displaying a title, caption, and either an icon or image.
+    """Create an article card for longer texts.
 
     Args:
         box: A string indicating how to place this component on the page.

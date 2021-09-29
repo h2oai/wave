@@ -98,7 +98,7 @@ ui_command <- function(
   return(.o)
 }
 
-#' Create a wide information card displaying a title, caption, and either an icon or image.
+#' Create an article card for longer texts.
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The card’s title, displayed at the top.

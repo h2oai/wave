@@ -149,7 +149,7 @@ class Command:
 
 
 class ArticleCard:
-    """Create a wide information card displaying a title, caption, and either an icon or image.
+    """Create an article card for longer texts.
     """
     def __init__(
             self,

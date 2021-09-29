@@ -66,7 +66,7 @@ const
     '.ms-Button:not(:hover)': { background: `${cssVar('$card')} !important` },
   }
 
-/** Create a wide information card displaying a title, caption, and either an icon or image. */
+/** Create an article card for longer texts. */
 interface State {
   /** The card’s title, displayed at the top. */
   title: S
