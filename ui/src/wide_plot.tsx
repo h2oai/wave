@@ -17,7 +17,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
 import { Plot, XVisualization } from './plot'
-import { clas, cssVar } from './theme'
+import { clas, cssVar, pc } from './theme'
 import { bond } from './ui'
 
 const css = stylesheet({
@@ -27,11 +27,11 @@ const css = stylesheet({
   },
   lhs: {
     marginTop: -5,
-    marginRight: 8,
-    maxWidth: 200
+    marginRight: 16,
+    width: pc(35)
   },
   rhs: {
-    flexGrow: 1
+    width: pc(65)
   },
   title: {
     color: cssVar('$neutralPrimary'),
