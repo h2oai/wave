@@ -17,7 +17,6 @@ import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { Markdown } from './markdown'
 import { clas, cssVar, pc } from './theme'
 import { bond, wave } from './ui'
 
@@ -46,18 +45,15 @@ const
     title: {
       color: cssVar('$neutralPrimary')
     },
+    subtitle: {
+      marginTop: 1
+    },
     category: {
       color: cssVar('$themeDark'),
-    },
-    caption: {
-      $nest: {
-        'p:first-child': {
-          marginTop: 0 //TODO: Fix on global markdown level.
-        }
-      }
+      marginBottom: -1,
     },
     header: {
-      marginTop: -3, // HACK: Nudge up slightly.
+      marginTop: -5, // HACK: Nudge up slightly.
       marginBottom: 13,
     },
     iconWrapper: {
@@ -126,11 +122,9 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
           <div className={css.header}>
             {category && <div className={clas('wave-s14 wave-w5 wave-t7', css.category)}>{category}</div>}
             <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
-            {subtitle && <div className='wave-s14 wave-w5 wave-t7'>{subtitle}</div>}
+            {subtitle && <div className={clas('wave-s14 wave-w5 wave-t7', css.subtitle)}>{subtitle}</div>}
           </div>
-          {caption && <div className={clas('wave-s14 wave-w4 wave-t7', css.caption)}>
-            <Markdown source={caption} />
-          </div>}
+          {caption && <div className='wave-s14 wave-w4 wave-t7'>{caption}</div>}
         </div>
       </div>
     )
