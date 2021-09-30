@@ -4207,6 +4207,40 @@ ui_wide_info_card <- function(
   return(.o)
 }
 
+#' Create a wide plot card displaying a title, caption and a plot.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title.
+#' @param caption The card's caption, displayed below the title.
+#' @param plot The card's plot.
+#' @param data The card's plot data.
+#' @param commands Contextual menu commands for this component.
+#' @return A WidePlotCard instance.
+#' @export
+ui_wide_plot_card <- function(
+  box,
+  title,
+  caption,
+  plot,
+  data,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("plot", "WavePlot", plot)
+  # TODO Validate data: Rec
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    caption=caption,
+    plot=plot,
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWidePlotCard"))
+  return(.o)
+}
+
 #' Create a wide stat card displaying a primary value, an auxiliary value and a series plot.
 #'
 #' @param box A string indicating how to place this component on the page.

@@ -3613,6 +3613,36 @@ def wide_info_card(
     )
 
 
+def wide_plot_card(
+        box: str,
+        title: str,
+        caption: str,
+        plot: Plot,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> WidePlotCard:
+    """Create a wide plot card displaying a title, caption and a plot.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        caption: The card's caption, displayed below the title.
+        plot: The card's plot.
+        data: The card's plot data.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.WidePlotCard` instance.
+    """
+    return WidePlotCard(
+        box,
+        title,
+        caption,
+        plot,
+        data,
+        commands,
+    )
+
+
 def wide_series_stat_card(
         box: str,
         title: str,

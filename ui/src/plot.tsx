@@ -588,7 +588,7 @@ const
   },
   makeTextStyle = (fill_color?: S, fill_opacity?: F, stroke_color?: S, stroke_opacity?: F, stroke_size?: F, font_size?: F, font_weight?: S, line_height?: F, align?: S): Dict<any> | undefined => {
     const s: Dict<any> = {}
-    s.fill = cssVar(isS(fill_color) ? fill_color : '$text')
+    s.fill = cssVar(isS(fill_color) ? fill_color : '$neutralPrimaryAlt')
     if (isF(fill_opacity)) s.fillOpacity = fill_opacity
     if (isS(stroke_color)) s.stroke = cssVarValue(stroke_color)
     if (isF(stroke_opacity)) s.strokeOpacity = stroke_opacity
@@ -727,7 +727,7 @@ const
             },
             line: {
               style: {
-                fill: cssVar('$text'),
+                fill: cssVar('$neutralPrimaryAlt'),
               }
             },
             region: {
@@ -738,7 +738,7 @@ const
             },
             text: {
               style: {
-                fill: cssVar('$text'),
+                fill: cssVar('$neutralPrimaryAlt'),
               }
             },
           },
@@ -746,7 +746,7 @@ const
             common: {
               itemName: {
                 style: {
-                  fill: cssVar('$text'),
+                  fill: cssVar('$neutralPrimaryAlt'),
                 }
               },
               pageNavigator: {
@@ -758,7 +758,7 @@ const
                 },
                 text: {
                   style: {
-                    fill: cssVar('$text6')
+                    fill: cssVar('$neutralPrimaryAlt6')
                   }
                 }
               }
@@ -766,12 +766,12 @@ const
             continuous: {
               label: {
                 style: {
-                  fill: cssVar('$text'),
+                  fill: cssVar('$neutralPrimaryAlt'),
                 }
               },
               handler: {
                 style: {
-                  fill: cssVar('$text'),
+                  fill: cssVar('$neutralPrimaryAlt'),
                 }
               },
             }
@@ -781,31 +781,31 @@ const
               grid: {
                 line: {
                   style: {
-                    stroke: cssVar('$text'),
+                    stroke: cssVar('$neutralPrimaryAlt'),
                     strokeOpacity: 0.2
                   }
                 }
               },
               line: {
                 style: {
-                  stroke: cssVar('$text'),
+                  stroke: cssVar('$neutralPrimaryAlt'),
                   strokeOpacity: 0.6
                 }
               },
               tickLine: {
                 style: {
-                  stroke: cssVar('$text'),
+                  stroke: cssVar('$neutralPrimaryAlt'),
                   strokeOpacity: 0.6
                 }
               },
               title: {
                 style: {
-                  fill: cssVar('$text'),
+                  fill: cssVar('$neutralPrimaryAlt'),
                 }
               },
               label: {
                 style: {
-                  fill: cssVar('$text'),
+                  fill: cssVar('$neutralPrimaryAlt'),
                 }
               }
             }
