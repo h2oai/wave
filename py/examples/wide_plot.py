@@ -1,5 +1,5 @@
 # Plot / Wide
-# Create a wide information card displaying a plot with title and caption.
+# Create a wide plot card displaying a plot with title and caption.
 # ---
 from h2o_wave import site, ui, data
 from synth import FakeCategoricalSeries
