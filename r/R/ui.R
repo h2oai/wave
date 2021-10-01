@@ -3697,6 +3697,48 @@ ui_plot_card <- function(
   return(.o)
 }
 
+#' Create a profile card to display information about a user.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title, displayed under the main image.
+#' @param subtitle The card's subtitle, displayed under the title.
+#' @param image The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
+#'   or a path to an image hosted on the Wave daemon (starting with `/`).
+#'   .
+#' @param profile_image The avatar’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
+#'   or a path to an image hosted on the Wave daemon (starting with `/`).
+#'   .
+#' @param initials Initials, if `profile_image` is not specified.
+#' @param commands Contextual menu commands for this component.
+#' @return A ProfileCard instance.
+#' @export
+ui_profile_card <- function(
+  box,
+  title,
+  subtitle = NULL,
+  image = NULL,
+  profile_image = NULL,
+  initials = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("profile_image", "character", profile_image)
+  .guard_scalar("initials", "character", initials)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    subtitle=subtitle,
+    image=image,
+    profile_image=profile_image,
+    initials=initials,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveProfileCard"))
+  return(.o)
+}
+
 #' EXPERIMENTAL. DO NOT USE.
 #' Create a card containing other cards.
 #'

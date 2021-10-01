@@ -3184,6 +3184,39 @@ def plot_card(
     )
 
 
+def profile_card(
+        box: str,
+        title: str,
+        subtitle: Optional[str] = None,
+        image: Optional[str] = None,
+        profile_image: Optional[str] = None,
+        initials: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> ProfileCard:
+    """Create a profile card to display information about a user.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title, displayed under the main image.
+        subtitle: The card's subtitle, displayed under the title.
+        image: The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). .
+        profile_image: The avatar’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). .
+        initials: Initials, if `profile_image` is not specified.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.ProfileCard` instance.
+    """
+    return ProfileCard(
+        box,
+        title,
+        subtitle,
+        image,
+        profile_image,
+        initials,
+        commands,
+    )
+
+
 def repeat_card(
         box: str,
         item_view: str,
