@@ -47,7 +47,8 @@ const
       margin: '0 auto',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center'
+      alignItems: 'center',
+      marginBottom: 16
     },
     items: {
       marginTop: 16
@@ -97,7 +98,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
               size={Fluent.PersonaSize.size100}
               styles={{
                 root: {
-                  flexDirection: 'column', height: 'auto', marginTop: image ? -74 : 0, marginBottom: 16,
+                  flexDirection: 'column', height: 'auto', marginTop: image ? -74 : 0,
                   '.ms-Persona-image': { border: border(2, cssVar('$neutralTertiary')) }
                 },
                 details: { alignItems: 'center', padding: 0 },
@@ -105,7 +106,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
               }}
             />
           </div>
-          {commands && <Fluent.CommandBar items={toCommands(commands)} styles={{ root: { padding: 0 }, primarySet: commandBarPrimarySetStyles }} />}
+          {commands && <Fluent.CommandBar items={toCommands(commands)} styles={{ root: { padding: 0, height: 24 }, primarySet: commandBarPrimarySetStyles }} />}
           {items && <div className={css.items}><XComponents items={items} /></div>}
         </div>
       </div>
