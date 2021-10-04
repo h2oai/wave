@@ -8930,6 +8930,7 @@ class ProfileCard:
             image: Optional[str] = None,
             profile_image: Optional[str] = None,
             initials: Optional[str] = None,
+            items: Optional[List[Component]] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ProfileCard.box', box, (str,), False, False, False)
@@ -8938,6 +8939,7 @@ class ProfileCard:
         _guard_scalar('ProfileCard.image', image, (str,), False, True, False)
         _guard_scalar('ProfileCard.profile_image', profile_image, (str,), False, True, False)
         _guard_scalar('ProfileCard.initials', initials, (str,), False, True, False)
+        _guard_vector('ProfileCard.items', items, (Component,), False, True, False)
         _guard_vector('ProfileCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -8951,6 +8953,8 @@ class ProfileCard:
         """The avatar’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). ."""
         self.initials = initials
         """Initials, if `profile_image` is not specified."""
+        self.items = items
+        """Components in this card displayed below toolbar / image."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -8962,6 +8966,7 @@ class ProfileCard:
         _guard_scalar('ProfileCard.image', self.image, (str,), False, True, False)
         _guard_scalar('ProfileCard.profile_image', self.profile_image, (str,), False, True, False)
         _guard_scalar('ProfileCard.initials', self.initials, (str,), False, True, False)
+        _guard_vector('ProfileCard.items', self.items, (Component,), False, True, False)
         _guard_vector('ProfileCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='profile',
@@ -8971,6 +8976,7 @@ class ProfileCard:
             image=self.image,
             profile_image=self.profile_image,
             initials=self.initials,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -8989,6 +8995,8 @@ class ProfileCard:
         _guard_scalar('ProfileCard.profile_image', __d_profile_image, (str,), False, True, False)
         __d_initials: Any = __d.get('initials')
         _guard_scalar('ProfileCard.initials', __d_initials, (str,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('ProfileCard.items', __d_items, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ProfileCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -8997,6 +9005,7 @@ class ProfileCard:
         image: Optional[str] = __d_image
         profile_image: Optional[str] = __d_profile_image
         initials: Optional[str] = __d_initials
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ProfileCard(
             box,
@@ -9005,6 +9014,7 @@ class ProfileCard:
             image,
             profile_image,
             initials,
+            items,
             commands,
         )
 

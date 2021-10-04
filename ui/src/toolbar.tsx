@@ -41,6 +41,7 @@ export interface Command {
   data?: S
 }
 
+export const toCommands = (commands: Command[]) => commands.map(toCommand)
 
 /** Create a card containing a toolbar. */
 interface State {

@@ -12,28 +12,51 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import * as Fluent from '@fluentui/react'
 import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
+import { Component, XComponents } from './form'
 import { cards } from './layout'
-import { XPersona } from './persona'
+import { cssVar } from './theme'
+import { Command, toCommands } from './toolbar'
 import { bond } from './ui'
 
-const css = stylesheet({
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  img: {
-    flexGrow: 1,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center'
-  },
-  persona: {
-    padding: 16
+const
+  css = stylesheet({
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      $nest: {
+        '+div': {
+          display: 'none' // HACK: Hide page-wide command menu.
+        }
+      }
+    },
+    content: {
+      padding: 24
+    },
+    img: {
+      flexGrow: 1,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center'
+    },
+    persona: {
+      margin: '0 auto',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
+    },
+    items: {
+      marginTop: 16
+    }
+  }),
+  commandBarPrimarySetStyles: Fluent.IStyle = {
+    justifyContent: 'center',
+    background: `${cssVar('$card')}`,
+    '.ms-Button:not(:hover)': { background: `${cssVar('$card')} !important` }
   }
-})
 
 /** Create a profile card to display information about a user. */
 interface State {
@@ -53,16 +76,33 @@ interface State {
   profile_image?: S
   /** Initials, if `profile_image` is not specified. */
   initials?: S
+  /** Components in this card displayed below toolbar / image. */
+  items?: Component[]
 }
 
-export const View = bond(({ name, state, changed }: Model<State>) => {
+export const View = bond(({ name, state, changed }: Model<State & { commands: Command[] }>) => {
   const render = () => {
-    const { title, subtitle, image, profile_image, initials } = state
+    const { title, subtitle, image, profile_image, initials, commands, items } = state
     return (
       <div data-test={name} className={css.card}>
         <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
-        <div className={css.persona}>
-          <XPersona model={{ title, subtitle, image: profile_image, initials, size: 'xs' }} />
+        <div className={css.content}>
+          <div className={css.persona}>
+            <Fluent.Persona
+              text={title}
+              secondaryText={subtitle}
+              imageUrl={profile_image}
+              imageInitials={initials}
+              size={Fluent.PersonaSize.size100}
+              styles={{
+                root: { flexDirection: 'column', height: 'auto', marginTop: -74, marginBottom: 16 },
+                details: { alignItems: 'center' },
+                primaryText: { fontWeight: 500, color: cssVar('$neutralPrimary') }
+              }}
+            />
+          </div>
+          {commands && <Fluent.CommandBar items={toCommands(commands)} styles={{ root: { padding: 0 }, primarySet: commandBarPrimarySetStyles }} />}
+          {items && <div className={css.items}><XComponents items={items} /></div>}
         </div>
       </div>
     )

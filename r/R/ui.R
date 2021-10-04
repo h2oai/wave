@@ -3709,6 +3709,7 @@ ui_plot_card <- function(
 #'   or a path to an image hosted on the Wave daemon (starting with `/`).
 #'   .
 #' @param initials Initials, if `profile_image` is not specified.
+#' @param items Components in this card displayed below toolbar / image.
 #' @param commands Contextual menu commands for this component.
 #' @return A ProfileCard instance.
 #' @export
@@ -3719,6 +3720,7 @@ ui_profile_card <- function(
   image = NULL,
   profile_image = NULL,
   initials = NULL,
+  items = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
@@ -3726,6 +3728,7 @@ ui_profile_card <- function(
   .guard_scalar("image", "character", image)
   .guard_scalar("profile_image", "character", profile_image)
   .guard_scalar("initials", "character", initials)
+  .guard_vector("items", "WaveComponent", items)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3734,6 +3737,7 @@ ui_profile_card <- function(
     image=image,
     profile_image=profile_image,
     initials=initials,
+    items=items,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveProfileCard"))
   return(.o)

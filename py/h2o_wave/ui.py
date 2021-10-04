@@ -3191,6 +3191,7 @@ def profile_card(
         image: Optional[str] = None,
         profile_image: Optional[str] = None,
         initials: Optional[str] = None,
+        items: Optional[List[Component]] = None,
         commands: Optional[List[Command]] = None,
 ) -> ProfileCard:
     """Create a profile card to display information about a user.
@@ -3202,6 +3203,7 @@ def profile_card(
         image: The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). .
         profile_image: The avatar’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). .
         initials: Initials, if `profile_image` is not specified.
+        items: Components in this card displayed below toolbar / image.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ProfileCard` instance.
@@ -3213,6 +3215,7 @@ def profile_card(
         image,
         profile_image,
         initials,
+        items,
         commands,
     )
 
