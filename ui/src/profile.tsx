@@ -18,7 +18,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
 import { cards } from './layout'
-import { cssVar } from './theme'
+import { border, cssVar } from './theme'
 import { Command, toCommands } from './toolbar'
 import { bond } from './ui'
 
@@ -38,6 +38,7 @@ const
     },
     img: {
       flexGrow: 1,
+      minHeight: 150,
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'center'
@@ -85,7 +86,7 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
     const { title, subtitle, image, profile_image, initials, commands, items } = state
     return (
       <div data-test={name} className={css.card}>
-        <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
+        {image && <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>}
         <div className={css.content}>
           <div className={css.persona}>
             <Fluent.Persona
@@ -95,9 +96,12 @@ export const View = bond(({ name, state, changed }: Model<State & { commands: Co
               imageInitials={initials}
               size={Fluent.PersonaSize.size100}
               styles={{
-                root: { flexDirection: 'column', height: 'auto', marginTop: -74, marginBottom: 16 },
-                details: { alignItems: 'center' },
-                primaryText: { fontWeight: 500, color: cssVar('$neutralPrimary') }
+                root: {
+                  flexDirection: 'column', height: 'auto', marginTop: image ? -74 : 0, marginBottom: 16,
+                  '.ms-Persona-image': { border: border(2, cssVar('$neutralTertiary')) }
+                },
+                details: { alignItems: 'center', padding: 0 },
+                primaryText: { fontWeight: 500, marginTop: 12, color: cssVar('$neutralPrimary') },
               }}
             />
           </div>

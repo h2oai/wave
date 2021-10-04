@@ -5,9 +5,8 @@ from h2o_wave import site, ui
 
 page = site['/demo']
 
-page.add('meta', ui.meta_card(box='', theme='h2o-dark'))
 page.add('example', ui.profile_card(
-    box='1 1 3 4',
+    box='1 1 3 5',
     title='John Doe',
     subtitle='Developer',
     image='https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260', # noqa
