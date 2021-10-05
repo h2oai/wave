@@ -10104,6 +10104,83 @@ class WideInfoCard:
         )
 
 
+class WidePlotCard:
+    """Create a wide plot card displaying a title, caption and a plot.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            caption: str,
+            plot: Plot,
+            data: PackedRecord,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('WidePlotCard.box', box, (str,), False, False, False)
+        _guard_scalar('WidePlotCard.title', title, (str,), False, False, False)
+        _guard_scalar('WidePlotCard.caption', caption, (str,), False, False, False)
+        _guard_scalar('WidePlotCard.plot', plot, (Plot,), False, False, False)
+        _guard_vector('WidePlotCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The card's title."""
+        self.caption = caption
+        """The card's caption, displayed below the title."""
+        self.plot = plot
+        """The card's plot."""
+        self.data = data
+        """The card's plot data."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('WidePlotCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('WidePlotCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('WidePlotCard.caption', self.caption, (str,), False, False, False)
+        _guard_scalar('WidePlotCard.plot', self.plot, (Plot,), False, False, False)
+        _guard_vector('WidePlotCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='wide_plot',
+            box=self.box,
+            title=self.title,
+            caption=self.caption,
+            plot=self.plot.dump(),
+            data=self.data,
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'WidePlotCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('WidePlotCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('WidePlotCard.title', __d_title, (str,), False, False, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('WidePlotCard.caption', __d_caption, (str,), False, False, False)
+        __d_plot: Any = __d.get('plot')
+        _guard_scalar('WidePlotCard.plot', __d_plot, (dict,), False, False, False)
+        __d_data: Any = __d.get('data')
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('WidePlotCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        caption: str = __d_caption
+        plot: Plot = Plot.load(__d_plot)
+        data: PackedRecord = __d_data
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return WidePlotCard(
+            box,
+            title,
+            caption,
+            plot,
+            data,
+            commands,
+        )
+
+
 _WideSeriesStatCardPlotType = ['area', 'interval']
 
 
