@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@master
         with:
           token: ${{ secrets.GIT_TOKEN }}
+          fetch-depth: 0
       - name: Verify Changed files
         uses: tj-actions/verify-changed-files@v8
         id: verify-changed-files
