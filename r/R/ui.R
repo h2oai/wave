@@ -3929,6 +3929,7 @@ ui_tall_gauge_stat_card <- function(
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param title The card's title.
 #' @param caption The card's caption, displayed below the title.
+#' @param label Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.
 #' @param icon The card's icon.
 #' @param image The card’s image.
 #' @param image_height The card’s image height in px. Defaults to '150px'.
@@ -3942,6 +3943,7 @@ ui_tall_info_card <- function(
   name,
   title,
   caption,
+  label,
   icon = NULL,
   image = NULL,
   image_height = NULL,
@@ -3952,6 +3954,7 @@ ui_tall_info_card <- function(
   .guard_scalar("name", "character", name)
   .guard_scalar("title", "character", title)
   .guard_scalar("caption", "character", caption)
+  .guard_scalar("label", "character", label)
   .guard_scalar("icon", "character", icon)
   .guard_scalar("image", "character", image)
   .guard_scalar("image_height", "character", image_height)
@@ -3963,6 +3966,7 @@ ui_tall_info_card <- function(
     name=name,
     title=title,
     caption=caption,
+    label=label,
     icon=icon,
     image=image,
     image_height=image_height,

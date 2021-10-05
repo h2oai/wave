@@ -3375,6 +3375,7 @@ def tall_info_card(
         name: str,
         title: str,
         caption: str,
+        label: str,
         icon: Optional[str] = None,
         image: Optional[str] = None,
         image_height: Optional[str] = None,
@@ -3389,6 +3390,7 @@ def tall_info_card(
         name: An identifying name for this card. Makes the card clickable, similar to a button.
         title: The card's title.
         caption: The card's caption, displayed below the title.
+        label: Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.
         icon: The card's icon.
         image: The card’s image.
         image_height: The card’s image height in px. Defaults to '150px'.
@@ -3403,6 +3405,7 @@ def tall_info_card(
         name,
         title,
         caption,
+        label,
         icon,
         image,
         image_height,

@@ -28,7 +28,6 @@ const
     },
     imgContainer: {
       ...centerMixin(),
-      marginBottom: 16
     },
     textContainer: {
       textAlign: 'center'
@@ -37,8 +36,8 @@ const
       cursor: 'pointer'
     },
     header: {
-      marginTop: 16,
-      marginBottom: 8
+      marginTop: 24,
+      marginBottom: 16
     },
     title: {
       color: cssVar('$neutralPrimary'),
@@ -72,6 +71,8 @@ interface State {
   title: S
   /** The card's caption, displayed below the title. */
   caption: S
+  /** Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore. */
+  label: S
   /** The card's icon. */
   icon?: S
   /** The card’s image. */
@@ -86,7 +87,7 @@ interface State {
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const
-    { title, caption, icon, image, category, name: stateName, color, image_height = '150px' } = state,
+    { title, caption, icon, image, category, name: stateName, color, image_height = '150px', label } = state,
     onClick = () => {
       if (stateName.startsWith('#')) {
         window.location.hash = stateName.substr(1)
@@ -100,7 +101,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
         data-test={name}
         onClick={onClick}
         style={{ background: color ? cssVar(color) : 'inherit' }}
-        className={clas(css.card, stateName ? css.clickable : '')}
+        className={clas(css.card, label ? '' : css.clickable)}
       >
         <div className={css.imgContainer}>
           {
@@ -115,6 +116,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
             {category && <div className={clas('wave-s14 wave-w4 wave-t5', css.category)}>{category}</div>}
           </div>
           {caption && <div className='wave-s14 wave-w4 wave-t7'>{caption}</div>}
+          {label && <Fluent.DefaultButton text={label} styles={{ root: { marginTop: 16 } }} onClick={onClick} />}
         </div>
       </div >
     )

@@ -12,11 +12,12 @@ async def serve(q: Q):
         ])
     else:
         q.page['example'] = ui.tall_info_card(
-            box='1 1 2 4',
+            box='1 1 2 5',
             name='info_card',
             title='Info Card',
-            caption='Clicking this card should take you to a new card.',
+            caption='Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             category='Category',
+            label='Click me',
             image='https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
         )
 
