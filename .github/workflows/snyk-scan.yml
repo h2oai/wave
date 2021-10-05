@@ -15,8 +15,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
+      - name: Check changed Deps files
+        uses: tj-actions/changed-files@v10
+        id: verify-changed-files
+        with:
+          files: |
+            go.mod
+            ui/package-lock.json
+            website/package-lock.json
+            py/examples/requirements.txt
+            py/Makefile
 
       - name: Snyk scan for Go dependancies
+        if: steps.verify-changed-files.outputs.any_changed == 'true'
         uses: snyk/actions/golang@master
         continue-on-error: true
         env:
@@ -25,6 +39,7 @@ jobs:
           args: --file=go.mod -d --fail-on=all
 
       - name: Snyk scan for Node dependancies
+        if: steps.verify-changed-files.outputs.any_changed == 'true'
         uses: snyk/actions/node@master
         continue-on-error: true
         env:
@@ -33,6 +48,7 @@ jobs:
           args: --file=ui/package-lock.json -d --fail-on=all
 
       - name: Snyk scan for Node dependancies
+        if: steps.verify-changed-files.outputs.any_changed == 'true'
         uses: snyk/actions/node@master
         continue-on-error: true
         env:
@@ -45,6 +61,7 @@ jobs:
         with:
           python-version: "3.8"
       - name: pip install
+        if: steps.verify-changed-files.outputs.any_changed == 'true'
         run: |
           pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
           pip install -r py/examples/requirements.txt
@@ -52,8 +69,8 @@ jobs:
           cat py/requirements.txt
 
       - name: Snyk scan for Python dependancies
+        if: steps.verify-changed-files.outputs.any_changed == 'true'
         run: snyk test --org=h2oai --remote-repo-url=WAVE --file=py/requirements.txt --project-name=WAVE/${{ steps.extract_ref.outputs.ref }}/py/requirements.txt -d --fail-on=all
-
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -108,6 +125,5 @@ jobs:
 
       - name: Snyk scan for Python dependancies
         run: snyk monitor --org=h2oai --remote-repo-url=WAVE --file=py/requirements.txt --project-name=WAVE/${{ steps.extract_ref.outputs.ref }}/py/requirements.txt -d --fail-on=all
-
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
