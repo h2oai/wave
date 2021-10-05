@@ -66,6 +66,8 @@ const
 
 /** Create a tall information card displaying a title, caption and either an icon or image. */
 interface State {
+  /** An identifying name for this card. Makes the card clickable, similar to a button. */
+  name: S
   /** The card's title. */
   title: S
   /** The card's caption, displayed below the title. */
@@ -78,8 +80,6 @@ interface State {
   image_height?: S
   /** The card's category, displayed below the title. */
   category?: S
-  /** An identifying name for this card. Makes the card clickable, similar to a button. */
-  name?: S
   /** The card's background color. */
   color?: S
 }
@@ -88,7 +88,6 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
   const
     { title, caption, icon, image, category, name: stateName, color, image_height = '150px' } = state,
     onClick = () => {
-      if (!stateName) return
       if (stateName.startsWith('#')) {
         window.location.hash = stateName.substr(1)
         return
