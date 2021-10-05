@@ -29,7 +29,7 @@ jobs:
             py/examples/requirements.txt
             py/Makefile
 
-      - name: Run step only when files change.
+      - name: Run step only when files change
         if: steps.verify-changed-files.outputs.any_changed == 'true'
         run: |
           echo "Changed files: ${{ steps.verify_changed_files.outputs.all_changed_and_modified_files }}"
@@ -40,8 +40,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
+      - name: Check changed Deps files
+        uses: tj-actions/changed-files@v10
+        id: verify-changed-files
+        with:
+          files: |
+            go.mod
+            ui/package-lock.json
+            website/package-lock.json
+            py/examples/requirements.txt
+            py/Makefile
 
       - name: Snyk scan for Go dependancies
+        if: steps.verify-changed-files.outputs.any_changed == 'true'
         uses: snyk/actions/golang@master
         continue-on-error: true
         env:
