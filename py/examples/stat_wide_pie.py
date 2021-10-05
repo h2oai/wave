@@ -5,7 +5,6 @@ from h2o_wave import site, ui
 
 page = site['/demo']
 
-page.add('meta', ui.meta_card(box='', theme='default'))
 page.add('example', ui.wide_pie_stat_card(
     box='1 1 3 3',
     title='Wide Pie Stat',

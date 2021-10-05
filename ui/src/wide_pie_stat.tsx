@@ -32,7 +32,8 @@ const css = stylesheet({
   },
   title: {
     color: cssVar('$neutralPrimary'),
-    marginBottom: 24
+    marginBottom: 24,
+    marginTop: -7
   },
   value: {
     color: cssVar('$neutralPrimary'),
@@ -51,7 +52,7 @@ const css = stylesheet({
     position: 'absolute',
     top: 24,
     right: 24,
-    bottom: 24
+    bottom: 24,
   },
   pieText: {
     textAnchor: 'middle',
@@ -124,8 +125,6 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
                       d={d3.arc()({ innerRadius, outerRadius, startAngle, endAngle }) as S}
                       fill={cssVar(colorDomain(data.label))}
                       transform={`translate(${outerRadius}, ${outerRadius})`}
-                    // stroke='white'
-                    // strokeWidth='0.5px'
                     />
                     <text className={css.pieText} transform={`translate(${translateX + outerRadius}, ${translateY + outerRadius})`}>{data.value}</text>
                   </React.Fragment>
