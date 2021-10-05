@@ -57,9 +57,13 @@ jobs:
           args: --file=website/package-lock.json -d --fail-on=all
 
       - uses: snyk/actions/setup@master
+        if: steps.verify-changed-files.outputs.any_changed == 'true'
+
       - uses: actions/setup-python@v1
+        if: steps.verify-changed-files.outputs.any_changed == 'true'
         with:
           python-version: "3.8"
+
       - name: pip install
         if: steps.verify-changed-files.outputs.any_changed == 'true'
         run: |
