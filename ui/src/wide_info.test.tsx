@@ -27,6 +27,7 @@ describe('WideInfo.tsx', () => {
   beforeAll(() => wave.push = pushMock)
   beforeEach(() => {
     pushMock.mockReset()
+    wave.args = [] as any
     wideInfoProps = {
       name,
       state: { title: name },
@@ -39,11 +40,22 @@ describe('WideInfo.tsx', () => {
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
-  it('Does not submit data to server if name not specified', () => {
+  it('Does not submit data to server if label specified and name starts with #', () => {
+    wideInfoProps.state.name = `#${name}`
+    wideInfoProps.state.label = 'label'
     const { getByTestId } = render(<View {...wideInfoProps} />)
     fireEvent.click(getByTestId(name))
     expect(pushMock).not.toHaveBeenCalled()
     expect(wave.args[name]).toBeUndefined()
+  })
+
+  it('Submits data to server if label specified and name without #', () => {
+    wideInfoProps.state.name = name
+    wideInfoProps.state.label = 'label'
+    const { getByTestId } = render(<View {...wideInfoProps} />)
+    fireEvent.click(getByTestId(name))
+    expect(pushMock).toHaveBeenCalled()
+    expect(wave.args[name]).toBe(name)
   })
 
   it('Does not submit data to server if name specified but starts with #', () => {
