@@ -8,8 +8,29 @@ on:
       - 'v.[0-9]+.[0-100]+.[0-100]+'
     branches:
       - 'master'
+      - 'devops/snyk-test'
 
 jobs:
+  check_deps_file_hashes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v8
+        id: verify-changed-files
+        with:
+          files: |
+            go.mod
+            ui/package-lock.json
+            website/package-lock.json
+            py/examples/requirements.txt
+            py/Makefile
+
+      - name: Run step only when files change.
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          echo "Changed files: ${{ steps.verify_changed_files.outputs.changed_files }}"
+
   snyk_scan_test:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
@@ -111,3 +132,6 @@ jobs:
 
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+
+
