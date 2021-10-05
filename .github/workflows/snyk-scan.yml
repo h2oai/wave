@@ -15,9 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-        with:
-          token: ${{ secrets.GIT_TOKEN }}
-          fetch-depth: 0
+
       - name: Verify Changed files
         uses: tj-actions/changed-files@v10
         id: verify-changed-files
@@ -30,9 +28,9 @@ jobs:
             py/Makefile
 
       - name: Run step only when files change.
-        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        if: steps.verify-changed-files.outputs.any_changed == 'true'
         run: |
-          echo "Changed files: ${{ steps.verify_changed_files.outputs.changed_files }}"
+          echo "Changed files: ${{ steps.verify_changed_files.outputs.all_changed_and_modified_files }}"
 
   snyk_scan_test:
     if: ${{ github.event_name == 'pull_request' }}
