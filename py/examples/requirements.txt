@@ -5,7 +5,3 @@ pandas
 bokeh
 matplotlib
 plotly
-altair
-vega-datasets
-scikit-learn
-opencv-python
