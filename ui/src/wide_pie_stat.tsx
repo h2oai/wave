@@ -97,7 +97,8 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       { title, pies } = state,
       colorDomain = d3.scaleOrdinal<S>().domain(pies.map(({ label }) => label)).range(pies.map(({ color }) => color)),
       innerRadius = 0,
-      outerRadius = 50
+      outerRadius = 50,
+      arc = d3.arc()
     return (
       <div data-test={name} className={css.card}>
         <div className={css.lhs}>
@@ -118,11 +119,11 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
           <svg viewBox='0 0 100 100' width='100%' height='100%'>
             {
               d3.pie<Pie>().value(d => d.fraction)(pies).map(({ startAngle, endAngle, data }, idx) => {
-                const [translateX, translateY] = d3.arc().centroid({ innerRadius, outerRadius, startAngle, endAngle })
+                const [translateX, translateY] = arc.centroid({ innerRadius, outerRadius, startAngle, endAngle })
                 return (
                   <React.Fragment key={idx}>
                     <path
-                      d={d3.arc()({ innerRadius, outerRadius, startAngle, endAngle }) as S}
+                      d={arc({ innerRadius, outerRadius, startAngle, endAngle }) as S}
                       fill={cssVar(colorDomain(data.label))}
                       transform={`translate(${outerRadius}, ${outerRadius})`}
                     />
