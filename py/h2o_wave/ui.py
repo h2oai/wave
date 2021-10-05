@@ -3375,7 +3375,7 @@ def tall_info_card(
         name: str,
         title: str,
         caption: str,
-        label: str,
+        label: Optional[str] = None,
         icon: Optional[str] = None,
         image: Optional[str] = None,
         image_height: Optional[str] = None,

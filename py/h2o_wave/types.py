@@ -9442,7 +9442,7 @@ class TallInfoCard:
             name: str,
             title: str,
             caption: str,
-            label: str,
+            label: Optional[str] = None,
             icon: Optional[str] = None,
             image: Optional[str] = None,
             image_height: Optional[str] = None,
@@ -9454,7 +9454,7 @@ class TallInfoCard:
         _guard_scalar('TallInfoCard.name', name, (str,), False, False, False)
         _guard_scalar('TallInfoCard.title', title, (str,), False, False, False)
         _guard_scalar('TallInfoCard.caption', caption, (str,), False, False, False)
-        _guard_scalar('TallInfoCard.label', label, (str,), False, False, False)
+        _guard_scalar('TallInfoCard.label', label, (str,), False, True, False)
         _guard_scalar('TallInfoCard.icon', icon, (str,), False, True, False)
         _guard_scalar('TallInfoCard.image', image, (str,), False, True, False)
         _guard_scalar('TallInfoCard.image_height', image_height, (str,), False, True, False)
@@ -9490,7 +9490,7 @@ class TallInfoCard:
         _guard_scalar('TallInfoCard.name', self.name, (str,), False, False, False)
         _guard_scalar('TallInfoCard.title', self.title, (str,), False, False, False)
         _guard_scalar('TallInfoCard.caption', self.caption, (str,), False, False, False)
-        _guard_scalar('TallInfoCard.label', self.label, (str,), False, False, False)
+        _guard_scalar('TallInfoCard.label', self.label, (str,), False, True, False)
         _guard_scalar('TallInfoCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('TallInfoCard.image', self.image, (str,), False, True, False)
         _guard_scalar('TallInfoCard.image_height', self.image_height, (str,), False, True, False)
@@ -9524,7 +9524,7 @@ class TallInfoCard:
         __d_caption: Any = __d.get('caption')
         _guard_scalar('TallInfoCard.caption', __d_caption, (str,), False, False, False)
         __d_label: Any = __d.get('label')
-        _guard_scalar('TallInfoCard.label', __d_label, (str,), False, False, False)
+        _guard_scalar('TallInfoCard.label', __d_label, (str,), False, True, False)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('TallInfoCard.icon', __d_icon, (str,), False, True, False)
         __d_image: Any = __d.get('image')
@@ -9541,7 +9541,7 @@ class TallInfoCard:
         name: str = __d_name
         title: str = __d_title
         caption: str = __d_caption
-        label: str = __d_label
+        label: Optional[str] = __d_label
         icon: Optional[str] = __d_icon
         image: Optional[str] = __d_image
         image_height: Optional[str] = __d_image_height

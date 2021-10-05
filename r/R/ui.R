@@ -3943,7 +3943,7 @@ ui_tall_info_card <- function(
   name,
   title,
   caption,
-  label,
+  label = NULL,
   icon = NULL,
   image = NULL,
   image_height = NULL,

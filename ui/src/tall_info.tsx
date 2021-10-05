@@ -72,7 +72,7 @@ interface State {
   /** The card's caption, displayed below the title. */
   caption: S
   /** Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore. */
-  label: S
+  label?: S
   /** The card's icon. */
   icon?: S
   /** The card’s image. */
@@ -99,7 +99,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
     render = () => (
       <div
         data-test={name}
-        onClick={onClick}
+        onClick={label ? undefined : onClick}
         style={{ background: color ? cssVar(color) : 'inherit' }}
         className={clas(css.card, label ? '' : css.clickable)}
       >
