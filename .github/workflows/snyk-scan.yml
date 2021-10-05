@@ -34,6 +34,7 @@ jobs:
         run: |
           echo "Changed files: ${{ steps.verify_changed_files.outputs.all_changed_and_modified_files }}"
 
+
   snyk_scan_test:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
