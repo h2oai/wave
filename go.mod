@@ -2,6 +2,7 @@ module github.com/h2oai/wave
 
 go 1.15
 
+
 require (
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/google/uuid v1.1.2
