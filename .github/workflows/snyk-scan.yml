@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
       - name: Verify Changed files
         uses: tj-actions/verify-changed-files@v8
         id: verify-changed-files
