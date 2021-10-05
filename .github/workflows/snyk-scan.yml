@@ -20,7 +20,7 @@ jobs:
 
       - name: Check changed Deps files
         uses: tj-actions/changed-files@v10
-        id: verify-changed-files
+        id: changed-files
         with:
           files: |
             go.mod
@@ -30,7 +30,7 @@ jobs:
             py/Makefile
 
       - name: Snyk scan for Go dependancies
-        if: steps.verify-changed-files.outputs.any_changed == 'true'
+        if: contains(steps.changed-files.outputs.any_changed, 'go.mod')
         uses: snyk/actions/golang@master
         continue-on-error: true
         env:
@@ -39,7 +39,7 @@ jobs:
           args: --file=go.mod -d --fail-on=all
 
       - name: Snyk scan for Node dependancies
-        if: steps.verify-changed-files.outputs.any_changed == 'true'
+        if: contains(steps.changed-files.outputs.any_changed, 'ui/package-lock.json')
         uses: snyk/actions/node@master
         continue-on-error: true
         env:
@@ -48,7 +48,7 @@ jobs:
           args: --file=ui/package-lock.json -d --fail-on=all
 
       - name: Snyk scan for Node dependancies
-        if: steps.verify-changed-files.outputs.any_changed == 'true'
+        if: contains(steps.changed-files.outputs.any_changed, 'website/package-lock.json')
         uses: snyk/actions/node@master
         continue-on-error: true
         env:
@@ -57,15 +57,15 @@ jobs:
           args: --file=website/package-lock.json -d --fail-on=all
 
       - uses: snyk/actions/setup@master
-        if: steps.verify-changed-files.outputs.any_changed == 'true'
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile', 'py/examples/requirements.txt')
 
       - uses: actions/setup-python@v1
-        if: steps.verify-changed-files.outputs.any_changed == 'true'
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile','py/examples/requirements.txt')
         with:
           python-version: "3.8"
 
       - name: pip install
-        if: steps.verify-changed-files.outputs.any_changed == 'true'
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile','py/examples/requirements.txt')
         run: |
           pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
           pip install -r py/examples/requirements.txt
@@ -73,7 +73,7 @@ jobs:
           cat py/requirements.txt
 
       - name: Snyk scan for Python dependancies
-        if: steps.verify-changed-files.outputs.any_changed == 'true'
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile','py/examples/requirements.txt')
         run: snyk test --org=h2oai --remote-repo-url=WAVE --file=py/requirements.txt --project-name=WAVE/${{ steps.extract_ref.outputs.ref }}/py/requirements.txt -d --fail-on=all
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
