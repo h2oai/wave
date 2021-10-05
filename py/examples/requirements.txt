@@ -1,6 +1,6 @@
 pygments
 Faker
 numpy
-pandas
+
 bokeh
 matplotlib
