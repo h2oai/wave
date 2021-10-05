@@ -55,7 +55,7 @@ jobs:
             py/Makefile
 
       - name: Snyk scan for Go dependancies
-        if: steps.verify-changed-files.outputs.any_changed == 'true'
+        if: steps.verify-changed-files.outputs.any_changed == 'false'
         uses: snyk/actions/golang@master
         continue-on-error: true
         env:
