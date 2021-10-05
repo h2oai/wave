@@ -1,5 +1,6 @@
 WAVE_ML_VERSION := v0.8.0
 
+
 all: build ## Build h2o_wave wheel
 
 .PHONY: build
