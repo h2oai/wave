@@ -17,7 +17,7 @@ async def serve(q: Q):
             title='Info Card',
             caption='Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             category='Category',
-            # label='Click me',
+            label='Click me',
             image='https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
         )
 

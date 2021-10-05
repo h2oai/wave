@@ -98,7 +98,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
     },
     render = () => (
       <div
-        data-test={name}
+        data-test={label ? undefined : name}
         onClick={label ? undefined : onClick}
         style={{ background: color ? cssVar(color) : 'inherit' }}
         className={clas(css.card, label ? '' : css.clickable)}
@@ -116,7 +116,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
             {category && <div className={clas('wave-s14 wave-w4 wave-t5', css.category)}>{category}</div>}
           </div>
           {caption && <div className='wave-s14 wave-w4 wave-t7'>{caption}</div>}
-          {label && <Fluent.DefaultButton text={label} styles={{ root: { marginTop: 16 } }} onClick={onClick} />}
+          {label && <Fluent.DefaultButton data-test={name} text={label} styles={{ root: { marginTop: 16 } }} onClick={onClick} />}
         </div>
       </div >
     )
