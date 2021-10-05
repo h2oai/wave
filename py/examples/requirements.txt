@@ -4,4 +4,3 @@ numpy
 pandas
 bokeh
 matplotlib
-plotly

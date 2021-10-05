@@ -19,7 +19,7 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
           fetch-depth: 0
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v8
+        uses: tj-actions/changed-files@v10
         id: verify-changed-files
         with:
           files: |
