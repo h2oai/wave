@@ -61,6 +61,7 @@ jobs:
         if: |
           contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile') ||
           contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/examples/requirements.txt')
+        run: echo "Python deps have changed"
         outputs:
           any_changed: 'true'
 
