@@ -17,11 +17,11 @@ import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { cards } from './layout'
-import { centerMixin, clas, cssVar } from './theme'
+import { centerMixin, clas, cssVar, pc } from './theme'
 import { bond, wave } from './ui'
 
 const
-  iconStyles: Fluent.IIconStyles = { root: { fontSize: 32 } },
+  iconStyles: Fluent.IIconStyles = { root: { fontSize: 48, color: cssVar('$neutralPrimary') } },
   css = stylesheet({
     card: {
       padding: 24
@@ -36,8 +36,8 @@ const
       cursor: 'pointer'
     },
     header: {
-      marginTop: 24,
-      marginBottom: 16
+      marginTop: 16,
+      marginBottom: 8
     },
     title: {
       color: cssVar('$neutralPrimary'),
@@ -47,12 +47,11 @@ const
       color: cssVar('$themeDark'),
     },
     iconWrapper: {
-      background: cssVar('$neutralLighter'),
-      height: 64,
-      width: 64,
+      background: cssVar('$neutralTertiaryAlt'),
+      height: 80,
+      width: 80,
       boxSizing: 'border-box',
-      borderRadius: 4,
-      color: cssVar('$neutralTertiary'),
+      borderRadius: pc(50),
       ...centerMixin()
     },
     img: {
