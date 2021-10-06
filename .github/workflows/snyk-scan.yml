@@ -30,7 +30,7 @@ jobs:
             py/Makefile
 
       - name: Snyk scan for Go dependancies
-        if: contains(steps.changed-files.outputs.any_changed, 'go.mod')
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'go.mod')
         uses: snyk/actions/golang@master
         continue-on-error: true
         env:
@@ -39,7 +39,7 @@ jobs:
           args: --file=go.mod -d --fail-on=all
 
       - name: Snyk scan for Node dependancies
-        if: contains(steps.changed-files.outputs.any_changed, 'ui/package-lock.json')
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'ui/package-lock.json')
         uses: snyk/actions/node@master
         continue-on-error: true
         env:
@@ -48,7 +48,7 @@ jobs:
           args: --file=ui/package-lock.json -d --fail-on=all
 
       - name: Snyk scan for Node dependancies
-        if: contains(steps.changed-files.outputs.any_changed, 'website/package-lock.json')
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'website/package-lock.json')
         uses: snyk/actions/node@master
         continue-on-error: true
         env:
