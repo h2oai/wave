@@ -56,16 +56,24 @@ jobs:
         with:
           args: --file=website/package-lock.json -d --fail-on=all
 
+      - name: Check python deps files
+        id: changed-py-deps
+        if: |
+          contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile') ||
+          contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/examples/requirements.txt')
+        outputs:
+          any_changed: 'true'
+
       - uses: snyk/actions/setup@master
-        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile', 'py/examples/requirements.txt')
+        if: steps.changed-py-deps.outputs.any_changed == 'true'
 
       - uses: actions/setup-python@v1
-        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile','py/examples/requirements.txt')
+        if: steps.changed-py-deps.outputs.any_changed == 'true'
         with:
           python-version: "3.8"
 
       - name: pip install
-        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile','py/examples/requirements.txt')
+        if: steps.changed-py-deps.outputs.any_changed == 'true'
         run: |
           pip install setuptools wheel httpx uvicorn starlette pdoc3 pytest flake8
           pip install -r py/examples/requirements.txt
@@ -73,7 +81,7 @@ jobs:
           cat py/requirements.txt
 
       - name: Snyk scan for Python dependancies
-        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'py/Makefile','py/examples/requirements.txt')
+        if: steps.changed-py-deps.outputs.any_changed == 'true'
         run: snyk test --org=h2oai --remote-repo-url=WAVE --file=py/requirements.txt --project-name=WAVE/${{ steps.extract_ref.outputs.ref }}/py/requirements.txt -d --fail-on=all
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
