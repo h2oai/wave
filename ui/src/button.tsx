@@ -17,7 +17,7 @@ import { B, Dict, Id, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component } from './form'
-import { formItemWidth } from './theme'
+import { cssVar, formItemWidth, padding } from './theme'
 import { XToolTip } from './tooltip'
 import { wave } from './ui'
 
@@ -66,7 +66,7 @@ export interface Button {
 
 /** Create a set of buttons laid out horizontally. */
 export interface Buttons {
-  /** The button in this set. */
+  /** The buttons in this set. */
   items: Component[]
   /** Specifies how to lay out buttons horizontally. */
   justify?: 'start' | 'end' | 'center' | 'between' | 'around'
@@ -78,6 +78,21 @@ export interface Buttons {
   visible?: B
 }
 
+/** Create a set of mini buttons laid out horizontally. */
+export interface MiniButtons {
+  /** The buttons in this set. */
+  items: MiniButton[]
+}
+
+/** Create a mini button - same as regular button, but smaller in size. */
+export interface MiniButton {
+  /** An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked. */
+  name: Id
+  /** The text displayed on the button. */
+  label: S
+  /** An optional icon to display next to the button label. */
+  icon?: S
+}
 
 const
   css = stylesheet({
@@ -150,4 +165,34 @@ export const
     <div className={css.buttons}>
       <XButton key={m.name} model={m} />
     </div>
-  )
+  ),
+  MiniButtons = ({ items }: MiniButtons) => (
+    <Fluent.Stack horizontal verticalAlign='center' styles={{ root: { height: 24 } }}>
+      {items.map(miniBtn => <MiniButton key={miniBtn.name} {...miniBtn} />)}
+    </Fluent.Stack>
+  ),
+  MiniButton = ({ name, label, icon }: MiniButton) => {
+    const onClick = () => {
+      if (name.startsWith('#')) {
+        window.location.hash = name.substr(1)
+        return
+      }
+      wave.args[name] = true
+      wave.push()
+    }
+
+    return (
+      <Fluent.ActionButton
+        data-test={name}
+        styles={{
+          label: { color: cssVar('$neutralTertiary') },
+          labelHovered: { color: 'inherit' },
+          icon: { color: cssVar('$neutralTertiary') },
+          root: { padding: padding(0, 1) }
+        }}
+        text={label}
+        iconProps={{ iconName: icon }}
+        onClick={onClick}
+      />
+    )
+  }

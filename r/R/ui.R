@@ -58,6 +58,42 @@ dump_object <- function(x) {
 }
 
 
+#' Create a mini button - same as regular button, but smaller in size.
+#'
+#' @param name An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
+#' @param label The text displayed on the button.
+#' @param icon An optional icon to display next to the button label.
+#' @return A MiniButton instance.
+#' @export
+ui_mini_button <- function(
+  name,
+  label,
+  icon = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("icon", "character", icon)
+  .o <- list(
+    name=name,
+    label=label,
+    icon=icon)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveMiniButton"))
+  return(.o)
+}
+
+#' Create a set of mini buttons laid out horizontally.
+#'
+#' @param items The buttons in this set.
+#' @return A MiniButtons instance.
+#' @export
+ui_mini_buttons <- function(
+  items) {
+  .guard_vector("items", "WaveMiniButton", items)
+  .o <- list(
+    items=items)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveMiniButtons"))
+  return(.o)
+}
+
 #' Create a command.
 #' 
 #' Commands are typically displayed as context menu items or toolbar button.
@@ -102,31 +138,27 @@ ui_command <- function(
 #'
 #' @param box A string indicating how to place this component on the page.
 #' @param title The card’s title, displayed at the top.
-#' @param subtitle The card's subtitle, displayed under the title.
-#' @param caption The card's caption, displayed under the subtitle.
 #' @param content Markdown text.
+#' @param mini_buttons Collection of small buttons rendered on the other side of card's title.
 #' @param commands Contextual menu commands for this component.
 #' @return A ArticleCard instance.
 #' @export
 ui_article_card <- function(
   box,
   title,
-  subtitle = NULL,
-  caption = NULL,
   content = NULL,
+  mini_buttons = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
-  .guard_scalar("subtitle", "character", subtitle)
-  .guard_scalar("caption", "character", caption)
   .guard_scalar("content", "character", content)
+  .guard_scalar("mini_buttons", "WaveMiniButtons", mini_buttons)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
-    subtitle=subtitle,
-    caption=caption,
     content=content,
+    mini_buttons=mini_buttons,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveArticleCard"))
   return(.o)
@@ -1460,7 +1492,7 @@ ui_button <- function(
 
 #' Create a set of buttons laid out horizontally.
 #'
-#' @param items The button in this set.
+#' @param items The buttons in this set.
 #' @param justify Specifies how to lay out buttons horizontally.
 #'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify.
 #' @param name An identifying name for this component.

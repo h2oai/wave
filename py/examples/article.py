@@ -8,19 +8,11 @@ page = site['/demo']
 page.add('example', ui.article_card(
     box='1 1 4 6',
     title='Title',
-    subtitle='Subtitle',
-    caption='Caption',
-    commands=[
-        ui.command(
-            name='new', label='New', icon='Add', items=[
-                ui.command(name='email', label='Email Message', icon='Mail'),
-                ui.command(name='calendar', label='Calendar Event', icon='Calendar'),
-            ]
-        ),
-        ui.command(name='upload', label='Upload', icon='Upload'),
-        ui.command(name='share', label='Share', icon='Share'),
-        ui.command(name='download', label='Download', icon='Download'),
-    ],
+    mini_buttons=ui.mini_buttons([
+        ui.mini_button(name='like', label='4', icon='Heart'),
+        ui.mini_button(name='comment', label='2', icon='Blog'),
+        ui.mini_button(name='share', label='1', icon='Relationship'),
+    ]),
     content='''
 Duis porttitor tincidunt justo ac semper. Vestibulum et molestie lectus. Proin vel eros a ex condimentum aliquam.
 Sed accumsan tellus sit amet nulla ullamcorper. Suspendisse bibendum tristique sem, quis lacinia ex pulvinar quis.

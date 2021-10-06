@@ -57,6 +57,84 @@ def _guard_enum(name: str, value: str, values: List[str], optional: bool):
         raise ValueError(f'{name}: want one of {values}, got {value}')
 
 
+class MiniButton:
+    """Create a mini button - same as regular button, but smaller in size.
+    """
+    def __init__(
+            self,
+            name: str,
+            label: str,
+            icon: Optional[str] = None,
+    ):
+        _guard_scalar('MiniButton.name', name, (str,), True, False, False)
+        _guard_scalar('MiniButton.label', label, (str,), False, False, False)
+        _guard_scalar('MiniButton.icon', icon, (str,), False, True, False)
+        self.name = name
+        """An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked."""
+        self.label = label
+        """The text displayed on the button."""
+        self.icon = icon
+        """An optional icon to display next to the button label."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('MiniButton.name', self.name, (str,), True, False, False)
+        _guard_scalar('MiniButton.label', self.label, (str,), False, False, False)
+        _guard_scalar('MiniButton.icon', self.icon, (str,), False, True, False)
+        return _dump(
+            name=self.name,
+            label=self.label,
+            icon=self.icon,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'MiniButton':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_name: Any = __d.get('name')
+        _guard_scalar('MiniButton.name', __d_name, (str,), True, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('MiniButton.label', __d_label, (str,), False, False, False)
+        __d_icon: Any = __d.get('icon')
+        _guard_scalar('MiniButton.icon', __d_icon, (str,), False, True, False)
+        name: str = __d_name
+        label: str = __d_label
+        icon: Optional[str] = __d_icon
+        return MiniButton(
+            name,
+            label,
+            icon,
+        )
+
+
+class MiniButtons:
+    """Create a set of mini buttons laid out horizontally.
+    """
+    def __init__(
+            self,
+            items: List[MiniButton],
+    ):
+        _guard_vector('MiniButtons.items', items, (MiniButton,), False, False, False)
+        self.items = items
+        """The buttons in this set."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_vector('MiniButtons.items', self.items, (MiniButton,), False, False, False)
+        return _dump(
+            items=[__e.dump() for __e in self.items],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'MiniButtons':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_items: Any = __d.get('items')
+        _guard_vector('MiniButtons.items', __d_items, (dict,), False, False, False)
+        items: List[MiniButton] = [MiniButton.load(__e) for __e in __d_items]
+        return MiniButtons(
+            items,
+        )
+
+
 class Command:
     """Create a command.
 
@@ -155,27 +233,23 @@ class ArticleCard:
             self,
             box: str,
             title: str,
-            subtitle: Optional[str] = None,
-            caption: Optional[str] = None,
             content: Optional[str] = None,
+            mini_buttons: Optional[MiniButtons] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ArticleCard.box', box, (str,), False, False, False)
         _guard_scalar('ArticleCard.title', title, (str,), False, False, False)
-        _guard_scalar('ArticleCard.subtitle', subtitle, (str,), False, True, False)
-        _guard_scalar('ArticleCard.caption', caption, (str,), False, True, False)
         _guard_scalar('ArticleCard.content', content, (str,), False, True, False)
+        _guard_scalar('ArticleCard.mini_buttons', mini_buttons, (MiniButtons,), False, True, False)
         _guard_vector('ArticleCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
         self.title = title
         """The card’s title, displayed at the top."""
-        self.subtitle = subtitle
-        """The card's subtitle, displayed under the title."""
-        self.caption = caption
-        """The card's caption, displayed under the subtitle."""
         self.content = content
         """Markdown text."""
+        self.mini_buttons = mini_buttons
+        """Collection of small buttons rendered on the other side of card's title."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -183,17 +257,15 @@ class ArticleCard:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ArticleCard.box', self.box, (str,), False, False, False)
         _guard_scalar('ArticleCard.title', self.title, (str,), False, False, False)
-        _guard_scalar('ArticleCard.subtitle', self.subtitle, (str,), False, True, False)
-        _guard_scalar('ArticleCard.caption', self.caption, (str,), False, True, False)
         _guard_scalar('ArticleCard.content', self.content, (str,), False, True, False)
+        _guard_scalar('ArticleCard.mini_buttons', self.mini_buttons, (MiniButtons,), False, True, False)
         _guard_vector('ArticleCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='article',
             box=self.box,
             title=self.title,
-            subtitle=self.subtitle,
-            caption=self.caption,
             content=self.content,
+            mini_buttons=None if self.mini_buttons is None else self.mini_buttons.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -204,26 +276,22 @@ class ArticleCard:
         _guard_scalar('ArticleCard.box', __d_box, (str,), False, False, False)
         __d_title: Any = __d.get('title')
         _guard_scalar('ArticleCard.title', __d_title, (str,), False, False, False)
-        __d_subtitle: Any = __d.get('subtitle')
-        _guard_scalar('ArticleCard.subtitle', __d_subtitle, (str,), False, True, False)
-        __d_caption: Any = __d.get('caption')
-        _guard_scalar('ArticleCard.caption', __d_caption, (str,), False, True, False)
         __d_content: Any = __d.get('content')
         _guard_scalar('ArticleCard.content', __d_content, (str,), False, True, False)
+        __d_mini_buttons: Any = __d.get('mini_buttons')
+        _guard_scalar('ArticleCard.mini_buttons', __d_mini_buttons, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ArticleCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
-        subtitle: Optional[str] = __d_subtitle
-        caption: Optional[str] = __d_caption
         content: Optional[str] = __d_content
+        mini_buttons: Optional[MiniButtons] = None if __d_mini_buttons is None else MiniButtons.load(__d_mini_buttons)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ArticleCard(
             box,
             title,
-            subtitle,
-            caption,
             content,
+            mini_buttons,
             commands,
         )
 
@@ -3232,7 +3300,7 @@ class Buttons:
         _guard_scalar('Buttons.width', width, (str,), False, True, False)
         _guard_scalar('Buttons.visible', visible, (bool,), False, True, False)
         self.items = items
-        """The button in this set."""
+        """The buttons in this set."""
         self.justify = justify
         """Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify."""
         self.name = name

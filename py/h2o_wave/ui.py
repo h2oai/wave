@@ -21,6 +21,42 @@ from .types import *
 from .ui_ext import *
 
 
+def mini_button(
+        name: str,
+        label: str,
+        icon: Optional[str] = None,
+) -> MiniButton:
+    """Create a mini button - same as regular button, but smaller in size.
+
+    Args:
+        name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
+        label: The text displayed on the button.
+        icon: An optional icon to display next to the button label.
+    Returns:
+        A `h2o_wave.types.MiniButton` instance.
+    """
+    return MiniButton(
+        name,
+        label,
+        icon,
+    )
+
+
+def mini_buttons(
+        items: List[MiniButton],
+) -> MiniButtons:
+    """Create a set of mini buttons laid out horizontally.
+
+    Args:
+        items: The buttons in this set.
+    Returns:
+        A `h2o_wave.types.MiniButtons` instance.
+    """
+    return MiniButtons(
+        items,
+    )
+
+
 def command(
         name: str,
         label: Optional[str] = None,
@@ -61,9 +97,8 @@ def command(
 def article_card(
         box: str,
         title: str,
-        subtitle: Optional[str] = None,
-        caption: Optional[str] = None,
         content: Optional[str] = None,
+        mini_buttons: Optional[MiniButtons] = None,
         commands: Optional[List[Command]] = None,
 ) -> ArticleCard:
     """Create an article card for longer texts.
@@ -71,9 +106,8 @@ def article_card(
     Args:
         box: A string indicating how to place this component on the page.
         title: The card’s title, displayed at the top.
-        subtitle: The card's subtitle, displayed under the title.
-        caption: The card's caption, displayed under the subtitle.
         content: Markdown text.
+        mini_buttons: Collection of small buttons rendered on the other side of card's title.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ArticleCard` instance.
@@ -81,9 +115,8 @@ def article_card(
     return ArticleCard(
         box,
         title,
-        subtitle,
-        caption,
         content,
+        mini_buttons,
         commands,
     )
 
@@ -1257,7 +1290,7 @@ def buttons(
     """Create a set of buttons laid out horizontally.
 
     Args:
-        items: The button in this set.
+        items: The buttons in this set.
         justify: Specifies how to lay out buttons horizontally. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.ButtonsJustify.
         name: An identifying name for this component.
         width: The width of the buttons, e.g. '100px'.
