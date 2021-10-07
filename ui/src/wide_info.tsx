@@ -73,7 +73,7 @@ const
     },
     iconWrapper: {
       ...centerMixin(),
-      background: cssVar('$neutralTertiaryAlt'),
+      background: cssVar('$text1'),
       height: 80,
       width: 80,
       padding: 8,
