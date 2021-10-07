@@ -4,7 +4,7 @@ title: Graphics
 
 Wave provides a versatile API for rendering vector graphics (SVG) backed by [data buffers](buffers.md).
 
-Use the graphics card [ui.graphics_card()](http://localhost:3000/docs/api/ui#graphics_card) to render graphics.
+Use the graphics card [ui.graphics_card()](http://wave.h2o.ai/docs/api/ui#graphics_card) to render graphics.
 
 ## Stages and scenes
 
