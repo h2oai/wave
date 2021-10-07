@@ -27,20 +27,8 @@ const
       display: 'flex',
       padding: 24
     },
-    left: {
-      $nest: {
-        '> div:first-child': {
-          paddingRight: 16,
-        }
-      }
-    },
     right: {
       flexDirection: 'row-reverse',
-      $nest: {
-        '> div:first-child': {
-          paddingLeft: 16,
-        }
-      }
     },
     rhs: {
       display: 'flex',
@@ -48,7 +36,8 @@ const
     },
     lhs: {
       textAlign: 'center',
-      display: 'flex'
+      display: 'flex',
+      marginRight: 16
     },
     imgSpecified: {
       width: pc(50),
@@ -88,6 +77,7 @@ const
       borderRadius: 4
     }
   })
+
 /** Create a wide information card displaying a title, caption, and either an icon or image. */
 interface State {
   /** An identifying name for this card. Makes the card clickable, similar to a button. */
@@ -128,7 +118,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
         data-test={label ? undefined : name}
         onClick={label ? undefined : onClick}
         style={{ background: color ? cssVar(color) : 'inherit' }}
-        className={clas(css.card, label ? '' : css.clickable, align === 'left' ? css.left : css.right)}
+        className={clas(css.card, label ? '' : css.clickable, align === 'right' ? css.right : '')}
       >
         <div className={clas(css.lhs, !icon && image ? css.imgSpecified : '')}>
           {
