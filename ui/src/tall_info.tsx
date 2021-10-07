@@ -47,7 +47,7 @@ const
       color: cssVar('$themeDark'),
     },
     iconWrapper: {
-      background: cssVar('$neutralTertiaryAlt'),
+      background: cssVar('$text1'),
       height: 80,
       width: 80,
       boxSizing: 'border-box',
