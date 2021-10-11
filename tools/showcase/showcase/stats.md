@@ -75,7 +75,7 @@ from h2o_wave import data
 
 q.page['step'] = ui.small_series_stat_card(
     box='1 1 2 2',
-    title='Smooth curve',
+    title='Step curve',
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     data=dict(qux='80'),
     plot_type='area',
@@ -134,7 +134,7 @@ from h2o_wave import data
 
 q.page['example'] = ui.small_series_stat_card(
     box='1 1 2 2',
-    title='Stat Title',
+    title='Interval',
     value='=${{intl qux minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     data=dict(qux=788.42, quux=0.65),
     plot_category='foo',
@@ -172,7 +172,7 @@ Use this stat, if you want to display multiple values like primary, auxiliary an
 ```py
 q.page['example'] = ui.large_bar_stat_card(
     box='1 1 2 2',
-    title='Large stat',
+    title='Large bar',
     value='=${{intl foo minimum_fraction_digits=2 maximum_fraction_digits=2}}',
     value_caption='Start',
     aux_value='={{intl bar style="percent" minimum_fraction_digits=2 maximum_fraction_digits=2}}',
@@ -351,10 +351,12 @@ Check the API at [ui.wide_gauge_stat_card](/docs/api/ui#wide_gauge_stat_card).
 
 ## Wide series stat
 
-### Wide series area linear curve
-
 Most suitable for cases when you need to fill a horizontal space with numerical values together
 with data series.
+
+Check the API at [ui.wide_series_stat_card](/docs/api/ui#wide_series_stat_card).
+
+### Wide series area linear curve
 
 ```py
 from h2o_wave import data
@@ -374,12 +376,7 @@ q.page['example'] = ui.wide_series_stat_card(
 )
 ```
 
-Check the API at [ui.wide_series_stat_card](/docs/api/ui#wide_series_stat_card).
-
 ### Wide series area interval
-
-Most suitable for cases when you need to fill a horizontal space with numerical values together
-with data series.
 
 ```py
 from h2o_wave import data
@@ -399,5 +396,3 @@ q.page['example'] = ui.wide_series_stat_card(
     plot_curve='linear',
 )
 ```
-
-Check the API at [ui.wide_series_stat_card](/docs/api/ui#wide_series_stat_card).
