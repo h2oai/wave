@@ -147,10 +147,12 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
             {subtitle && <div className={clas('wave-s14 wave-w4 wave-t8', css.title)}>{subtitle}</div>}
           </div>
         </div>
-        <div className={css.body}>
-          {content && <div className={css.content}><Markdown source={content} /></div>}
-          {items && <XComponents items={items} />}
-        </div>
+        {
+          (content || items) && <div className={css.body}>
+            {content && <div className={css.content}><Markdown source={content} /></div>}
+            {items && <XComponents items={items} />}
+          </div>
+        }
       </div>
     )
 
