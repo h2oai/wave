@@ -41,8 +41,6 @@ You can see the API for [ui.slider](/docs/api/ui#slider) or check the interactiv
 | step        | 1       |
 | value       | 0       |
 
-
-
 ## Default value
 
 Use `value` attribute in order to control preselected state of the slider.

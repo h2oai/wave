@@ -34,8 +34,6 @@ You can see the API for [ui.spinbox](/docs/api/ui#spinbox) or check the interact
 | step      | 1     |
 | value     | 0     |
 
-
-
 ## Default value
 
 Use `value` attribute in order to control preselected state of the spinbox.
