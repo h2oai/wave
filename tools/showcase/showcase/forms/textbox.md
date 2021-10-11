@@ -14,18 +14,16 @@ the placeholder could be `John Doe`.
 Note that if `trigger` is specified, the inputs are submitted after `500ms` of no typing activity. This
 treshold is currently not configurable.
 
-You can see the API for [ui.textbox](/docs/api/ui#textbox) or check the interactive example in Tour app.
-
-## Standard textbox
-
-Regular textbox. `name` indicates the name of the `q.args` to be filled.
-
 ```py
 q.page['example'] = ui.form_card(
     box='1 1 2 2',
     items=[ui.textbox(name='textbox', label='Standard')]
 )
 ```
+
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.textbox](/docs/api/ui#textbox) or check the interactive example in Tour app.
 
 ## Default value
 

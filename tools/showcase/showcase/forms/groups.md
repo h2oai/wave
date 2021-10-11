@@ -104,4 +104,6 @@ Also don't forget that your multi step form should have easy navigation back and
 That means `Next` button should be disabled until all the required fields are filled correctly.
 :::
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
+
 Check the API at [ui.stepper](/docs/api/ui#stepper).

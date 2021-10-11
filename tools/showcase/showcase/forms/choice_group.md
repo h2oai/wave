@@ -27,6 +27,8 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
+
 You can see the API for [ui.choice_group](/docs/api/ui#choice_group) or check the interactive example in Tour app.
 
 ## Default value

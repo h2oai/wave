@@ -1,5 +1,5 @@
 ---
-title: Table 
+title: Table
 keywords:
   - form
   - table
@@ -22,6 +22,8 @@ q.page['example'] = ui.form_card(box='1 1 3 3', items=[
     ])
 ])
 ```
+
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
 
 You can see the API for [ui.table](/docs/api/ui#table) or check the interactive example in Tour app.
 

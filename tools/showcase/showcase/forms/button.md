@@ -15,13 +15,15 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 ])
 ```
 
-You can see the API for [ui.button](/docs/api/ui#button) or check the interactive example in Tour app.
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
+
+You can see the API for [ui.button](/docs/api/ui#button) or check the interactive example in the Tour app.
 
 ## Primary
 
-Use primary button to indicate what should the most critical action in a form be in order to let user continue the app flow you prepared.
+Use a primary button to indicate the most critical action in a form in order to let user continue the app flow you prepared.
 Also note that there should always be at most one primary button shown on a page as it indicates higher priority for a click. If there is
-a need for multiple buttons with the same priority, better make none of them primary and go with regular ones.
+a need for multiple buttons with the same priority, it's better to make none of them primary and go with regular buttons.
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 1 1', items=[
@@ -31,7 +33,7 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 
 ## Disabled
 
-Use disabled button for cases when clicking should not be allowed, based on current app state. A typical example might be a user didn't fill all the form fields yet
+Use a disabled button for cases when clicking should not be allowed, based on the current app state. A typical example might be a user didn't fill all the form fields yet
 so is not allowed to proceed. Disabled buttons have all interactions disabled (click, hover etc.).
 
 ```py
@@ -43,7 +45,7 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 ## Text
 
 The best thing to do when picking a button text is to keep it concise and clear on what the button is going to do. Preferably a single word.
-However, there might be cases, where an extra description can be of help. Using `caption` attr adds secondary text to a button.
+However, there might be cases, where an extra description can be of help. Using the `caption` attribute adds secondary text to a button.
 
 ```py
 q.page['form'] = ui.form_card(box='1 1 2 2', items=[
@@ -73,11 +75,11 @@ q.page['form'] = ui.form_card(box='1 1 1 1', items=[
 ## Data binding
 
 By default, clicking a button results in submitting `q.args.<button-name-attr>` with a value of `True`. This, however, might not suit all the cases.
-Use `value` attr if bool is not sufficient.
+Use the `value` attribute to submit a specific value for `q.args.<button-name-attr>`.
 
 ## Positioning
 
-Buttons on its own can only be placed in a [form_card](/docs/api/ui#form_card), either vertically or horizontally.
+Buttons on their own can only be placed in a [form_card](/docs/api/ui#form_card), either vertically or horizontally.
 The default alignment is vertical and requires nothing special:
 
 ```py

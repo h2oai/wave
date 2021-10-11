@@ -1,5 +1,5 @@
 ---
-title: File Upload 
+title: File Upload
 keywords:
   - form
   - file-upload
@@ -16,6 +16,8 @@ q.page['example'] = ui.form_card(box='1 1 4 4', items=[
     ui.file_upload(name='file_upload', label='File Upload')
 ])
 ```
+
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
 
 You can see the API for [ui.file_upload](/docs/api/ui#file_upload) or check the interactive example in Tour app.
 

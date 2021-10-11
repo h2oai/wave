@@ -8,18 +8,16 @@ custom_edit_url: null
 
 Use checkboxes when you need to switch between 2 mutually exclusive options.
 
-You can see the API for [ui.checkbox](/docs/api/ui#checkbox) or check the interactive example in Tour app.
-
-## Standard checkbox
-
-Regular checkbox `name` indicates the name of the `q.args` to be filled.
-
 ```py
 q.page['example'] = ui.form_card(
     box='1 1 2 2',
     items=[ui.checkbox(name='checkbox', label='Standard')]
 )
 ```
+
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
+
+You can see the API for [ui.checkbox](/docs/api/ui#checkbox) or check the interactive example in Tour app.
 
 ## Default value
 

@@ -1,5 +1,5 @@
 ---
-title: Combobox 
+title: Combobox
 keywords:
   - form
   - combobox
@@ -20,6 +20,8 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
     ui.combobox(name='combobox', label='Combobox', choices=['Cyan', 'Magenta', 'Yellow', 'Black']),
 ])
 ```
+
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`. 
 
 You can see the API for [ui.combobox](/docs/api/ui#combobox) or check the interactive example in Tour app.
 

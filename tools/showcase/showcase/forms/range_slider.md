@@ -1,5 +1,5 @@
 ---
-title: Range slider 
+title: Range slider
 keywords:
   - form
   - range-slider
@@ -20,6 +20,10 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 ])
 ```
 
+The `name` attribute indicates how to reference this component in the query arguments: `q.args.<name-attr>`.
+
+You can see the API for [ui.range_slider](/docs/api/ui#range_slider) or check the interactive example in Tour app.
+
 ## Default attribute values
 
 | Attribute   | value   |
@@ -28,7 +32,7 @@ q.page['example'] = ui.form_card(box='1 1 2 2', items=[
 | max         | 100     |
 | step        | 1       |
 
-You can see the API for [ui.range_slider](/docs/api/ui#range_slider) or check the interactive example in Tour app.
+
 
 ## Default value
 
