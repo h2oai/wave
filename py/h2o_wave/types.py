@@ -9703,6 +9703,106 @@ class TabCard:
         )
 
 
+class TallArticlePreviewCard:
+    """Create a tall article preview card.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            image: str,
+            subtitle: Optional[str] = None,
+            content: Optional[str] = None,
+            name: Optional[str] = None,
+            items: Optional[List[Component]] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('TallArticlePreviewCard.box', box, (str,), False, False, False)
+        _guard_scalar('TallArticlePreviewCard.title', title, (str,), False, False, False)
+        _guard_scalar('TallArticlePreviewCard.image', image, (str,), False, False, False)
+        _guard_scalar('TallArticlePreviewCard.subtitle', subtitle, (str,), False, True, False)
+        _guard_scalar('TallArticlePreviewCard.content', content, (str,), False, True, False)
+        _guard_scalar('TallArticlePreviewCard.name', name, (str,), False, True, False)
+        _guard_vector('TallArticlePreviewCard.items', items, (Component,), False, True, False)
+        _guard_vector('TallArticlePreviewCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The card's title."""
+        self.image = image
+        """The card’s background image URL, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`)"""
+        self.subtitle = subtitle
+        """The card's subtitle, displayed below the title."""
+        self.content = content
+        """Markdown text."""
+        self.name = name
+        """An identifying name for this card. Makes the card clickable, similar to a button."""
+        self.items = items
+        """Components displayed in the body of the card."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('TallArticlePreviewCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('TallArticlePreviewCard.title', self.title, (str,), False, False, False)
+        _guard_scalar('TallArticlePreviewCard.image', self.image, (str,), False, False, False)
+        _guard_scalar('TallArticlePreviewCard.subtitle', self.subtitle, (str,), False, True, False)
+        _guard_scalar('TallArticlePreviewCard.content', self.content, (str,), False, True, False)
+        _guard_scalar('TallArticlePreviewCard.name', self.name, (str,), False, True, False)
+        _guard_vector('TallArticlePreviewCard.items', self.items, (Component,), False, True, False)
+        _guard_vector('TallArticlePreviewCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='tall_article_preview',
+            box=self.box,
+            title=self.title,
+            image=self.image,
+            subtitle=self.subtitle,
+            content=self.content,
+            name=self.name,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'TallArticlePreviewCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('TallArticlePreviewCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('TallArticlePreviewCard.title', __d_title, (str,), False, False, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('TallArticlePreviewCard.image', __d_image, (str,), False, False, False)
+        __d_subtitle: Any = __d.get('subtitle')
+        _guard_scalar('TallArticlePreviewCard.subtitle', __d_subtitle, (str,), False, True, False)
+        __d_content: Any = __d.get('content')
+        _guard_scalar('TallArticlePreviewCard.content', __d_content, (str,), False, True, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('TallArticlePreviewCard.name', __d_name, (str,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('TallArticlePreviewCard.items', __d_items, (dict,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('TallArticlePreviewCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        image: str = __d_image
+        subtitle: Optional[str] = __d_subtitle
+        content: Optional[str] = __d_content
+        name: Optional[str] = __d_name
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return TallArticlePreviewCard(
+            box,
+            title,
+            image,
+            subtitle,
+            content,
+            name,
+            items,
+            commands,
+        )
+
+
 class TallGaugeStatCard:
     """Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
     """

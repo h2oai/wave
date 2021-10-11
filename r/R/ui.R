@@ -4031,6 +4031,50 @@ ui_tab_card <- function(
   return(.o)
 }
 
+#' Create a tall article preview card.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title.
+#' @param image The card’s background image URL, either a base64-encoded image, a path to an image hosted
+#'   externally (starting with `https://` or `http://`) or a path to an
+#'   image hosted on the Wave daemon (starting with `/`)
+#' @param subtitle The card's subtitle, displayed below the title.
+#' @param content Markdown text.
+#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
+#' @param items Components displayed in the body of the card.
+#' @param commands Contextual menu commands for this component.
+#' @return A TallArticlePreviewCard instance.
+#' @export
+ui_tall_article_preview_card <- function(
+  box,
+  title,
+  image,
+  subtitle = NULL,
+  content = NULL,
+  name = NULL,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("content", "character", content)
+  .guard_scalar("name", "character", name)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    image=image,
+    subtitle=subtitle,
+    content=content,
+    name=name,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTallArticlePreviewCard"))
+  return(.o)
+}
+
 #' Create a tall stat card displaying a primary value, an auxiliary value and a progress gauge.
 #'
 #' @param box A string indicating how to place this component on the page.
