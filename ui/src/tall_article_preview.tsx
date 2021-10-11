@@ -77,7 +77,6 @@ const css = stylesheet({
         color: cssVar('$text7'),
         marginBlock: 0,
       },
-
     }
   },
   body: {
