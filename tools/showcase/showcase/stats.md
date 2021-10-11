@@ -7,9 +7,9 @@ custom_edit_url: null
 
 Stats are visual components that display textual content along with numerical values. They
 are best used when resulting values need further description. The values are usually percents,
-portional ratios or just a set of values indicating a certain trend (e.g. bars, lines).
+proportional ratios or just a set of values indicating a certain trend (e.g. bars, lines).
 
-Both textual and value attributes support
+Both textual and numeric value attributes support
 [data binding syntax](/docs/expressions/#functions).
 
 ## Small stat
@@ -22,15 +22,15 @@ q.page['example'] = ui.small_stat_card(box='1 1 1 1', title='Stat title', value=
 
 Check the API at [ui.small_stat_card](/docs/api/ui#small_stat_card).
 
-## Small series area stat
+## Small series stat
 
 If you need more than a textual content and want to display also how is your data trending, use series stat.
 
-Feel free to play around with `plot_curve` attribute in order to find the curve that suits you the most.
+Series stats can be either an area with different `plot_curve`s or an interval depending on how you want to visualize the data.
 
 Check the API at [ui.small_series_stat_card](/docs/api/ui#small_series_stat_card).
 
-### Small series Linear curve
+### Small series area linear curve
 
 ```py
 from h2o_wave import data
@@ -49,7 +49,7 @@ q.page['linear'] = ui.small_series_stat_card(
 )
 ```
 
-### Small series smooth curve
+### Small series area smooth curve
 
 ```py
 from h2o_wave import data
@@ -68,7 +68,7 @@ q.page['smooth'] = ui.small_series_stat_card(
 )
 ```
 
-### Small series step curve
+### Small series area step curve
 
 ```py
 from h2o_wave import data
@@ -87,7 +87,7 @@ q.page['step'] = ui.small_series_stat_card(
 )
 ```
 
-### Small series step-after curve
+### Small series area step-after curve
 
 ```py
 from h2o_wave import data
@@ -106,7 +106,7 @@ q.page['step-after'] = ui.small_series_stat_card(
 )
 ```
 
-### Small series step-before curve
+### Small series area step-before curve
 
 ```py
 from h2o_wave import data
@@ -125,7 +125,7 @@ q.page['step-before'] = ui.small_series_stat_card(
 )
 ```
 
-## Small series area interval
+### Small series area interval
 
 If you need more than a textual content and want to display also how is your data trending.
 
@@ -160,7 +160,7 @@ q.page['example'] = ui.large_stat_card(
     aux_value='={{intl quux style="percent" minimum_fraction_digits=1 maximum_fraction_digits=1}}',
     data=dict(qux=845, quux=0.8),
     caption='There goes some longer text that would describe the values displayed above.',
-) 
+)
 ```
 
 Check the API at [ui.large_stat_card](/docs/api/ui#large_stat_card).
@@ -210,7 +210,7 @@ Check the API at [ui.tall_series_stat_card](/docs/api/ui#tall_series_stat_card).
 
 Feel free to play around with `plot_curve` attribute in order to find the curve that suits you the most.
 
-### Tall series linear curve
+### Tall series area linear curve
 
 ```py
 from h2o_wave import data
@@ -231,7 +231,7 @@ q.page['example'] = ui.tall_series_stat_card(
 )
 ```
 
-### Tall series smooth curve
+### Tall series area smooth curve
 
 ```py
 from h2o_wave import data
@@ -252,7 +252,7 @@ q.page['example'] = ui.tall_series_stat_card(
 )
 ```
 
-### Tall series step curve
+### Tall series area step curve
 
 ```py
 from h2o_wave import data
@@ -273,7 +273,7 @@ q.page['example'] = ui.tall_series_stat_card(
 )
 ```
 
-### Tall series step-after curve
+### Tall series area step-after curve
 
 ```py
 from h2o_wave import data
@@ -294,7 +294,7 @@ q.page['example'] = ui.tall_series_stat_card(
 )
 ```
 
-### Tall series step-before curve
+### Tall series area step-before curve
 
 ```py
 from h2o_wave import data
@@ -349,7 +349,9 @@ q.page['example'] = ui.wide_gauge_stat_card(
 
 Check the API at [ui.wide_gauge_stat_card](/docs/api/ui#wide_gauge_stat_card).
 
-## Wide series area
+## Wide series stat
+
+### Wide series area linear curve
 
 Most suitable for cases when you need to fill a horizontal space with numerical values together
 with data series.
@@ -374,7 +376,7 @@ q.page['example'] = ui.wide_series_stat_card(
 
 Check the API at [ui.wide_series_stat_card](/docs/api/ui#wide_series_stat_card).
 
-## Wide series interval
+### Wide series area interval
 
 Most suitable for cases when you need to fill a horizontal space with numerical values together
 with data series.
