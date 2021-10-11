@@ -119,7 +119,8 @@ const
       cursor: 'pointer',
       $nest: {
         '&:hover': {
-          backgroundColor: '#fafafa',
+          backgroundColor: cssVar('$themeLighter'),
+          color: cssVar('$themeDarker')
         }
       },
     },
@@ -164,13 +165,9 @@ export const
             <div className={css.items}>
               <table className={clas(css.table, 'wave-s13')}>
                 <thead className={clas(css.thead, 'wave-w6')}>
-                  <tr>
-                    {header}
-                  </tr>
+                  <tr>{header}</tr>
                 </thead>
-                <tbody>
-                  {rows}
-                </tbody>
+                <tbody>{rows}</tbody>
               </table>
             </div>
           </div>
