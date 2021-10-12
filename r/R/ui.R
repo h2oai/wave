@@ -3923,6 +3923,56 @@ ui_tall_gauge_stat_card <- function(
   return(.o)
 }
 
+#' Create a tall information card displaying a title, caption and either an icon or image.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param name An identifying name for this card. Makes the card clickable, similar to a button.
+#' @param title The card's title.
+#' @param caption The card's caption, displayed below the title.
+#' @param label Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.
+#' @param icon The card's icon.
+#' @param image The card’s image.
+#' @param image_height The card’s image height in px. Defaults to '150px'.
+#' @param category The card's category, displayed below the title.
+#' @param commands Contextual menu commands for this component.
+#' @return A TallInfoCard instance.
+#' @export
+ui_tall_info_card <- function(
+  box,
+  name,
+  title,
+  caption,
+  label = NULL,
+  icon = NULL,
+  image = NULL,
+  image_height = NULL,
+  category = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("name", "character", name)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("caption", "character", caption)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("icon", "character", icon)
+  .guard_scalar("image", "character", image)
+  .guard_scalar("image_height", "character", image_height)
+  .guard_scalar("category", "character", category)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    name=name,
+    title=title,
+    caption=caption,
+    label=label,
+    icon=icon,
+    image=image,
+    image_height=image_height,
+    category=category,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTallInfoCard"))
+  return(.o)
+}
+
 #' Create a tall stat card displaying a primary value, an auxiliary value and a series plot.
 #'
 #' @param box A string indicating how to place this component on the page.
