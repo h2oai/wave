@@ -24,7 +24,7 @@ describe('WidePieStat.tsx', () => {
   beforeEach(() => {
     widePieStatProps = {
       name,
-      state: { title: name },
+      state: { title: name, pies: [] },
       changed: T.box(false)
     }
   })
