@@ -3934,7 +3934,6 @@ ui_tall_gauge_stat_card <- function(
 #' @param image The card’s image.
 #' @param image_height The card’s image height in px. Defaults to '150px'.
 #' @param category The card's category, displayed below the title.
-#' @param color The card's background color.
 #' @param commands Contextual menu commands for this component.
 #' @return A TallInfoCard instance.
 #' @export
@@ -3948,7 +3947,6 @@ ui_tall_info_card <- function(
   image = NULL,
   image_height = NULL,
   category = NULL,
-  color = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("name", "character", name)
@@ -3959,7 +3957,6 @@ ui_tall_info_card <- function(
   .guard_scalar("image", "character", image)
   .guard_scalar("image_height", "character", image_height)
   .guard_scalar("category", "character", category)
-  .guard_scalar("color", "character", color)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -3971,7 +3968,6 @@ ui_tall_info_card <- function(
     image=image,
     image_height=image_height,
     category=category,
-    color=color,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveTallInfoCard"))
   return(.o)

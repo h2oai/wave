@@ -9447,7 +9447,6 @@ class TallInfoCard:
             image: Optional[str] = None,
             image_height: Optional[str] = None,
             category: Optional[str] = None,
-            color: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('TallInfoCard.box', box, (str,), False, False, False)
@@ -9459,7 +9458,6 @@ class TallInfoCard:
         _guard_scalar('TallInfoCard.image', image, (str,), False, True, False)
         _guard_scalar('TallInfoCard.image_height', image_height, (str,), False, True, False)
         _guard_scalar('TallInfoCard.category', category, (str,), False, True, False)
-        _guard_scalar('TallInfoCard.color', color, (str,), False, True, False)
         _guard_vector('TallInfoCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -9479,8 +9477,6 @@ class TallInfoCard:
         """The card’s image height in px. Defaults to '150px'."""
         self.category = category
         """The card's category, displayed below the title."""
-        self.color = color
-        """The card's background color."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -9495,7 +9491,6 @@ class TallInfoCard:
         _guard_scalar('TallInfoCard.image', self.image, (str,), False, True, False)
         _guard_scalar('TallInfoCard.image_height', self.image_height, (str,), False, True, False)
         _guard_scalar('TallInfoCard.category', self.category, (str,), False, True, False)
-        _guard_scalar('TallInfoCard.color', self.color, (str,), False, True, False)
         _guard_vector('TallInfoCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='tall_info',
@@ -9508,7 +9503,6 @@ class TallInfoCard:
             image=self.image,
             image_height=self.image_height,
             category=self.category,
-            color=self.color,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -9533,8 +9527,6 @@ class TallInfoCard:
         _guard_scalar('TallInfoCard.image_height', __d_image_height, (str,), False, True, False)
         __d_category: Any = __d.get('category')
         _guard_scalar('TallInfoCard.category', __d_category, (str,), False, True, False)
-        __d_color: Any = __d.get('color')
-        _guard_scalar('TallInfoCard.color', __d_color, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('TallInfoCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -9546,7 +9538,6 @@ class TallInfoCard:
         image: Optional[str] = __d_image
         image_height: Optional[str] = __d_image_height
         category: Optional[str] = __d_category
-        color: Optional[str] = __d_color
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return TallInfoCard(
             box,
@@ -9558,7 +9549,6 @@ class TallInfoCard:
             image,
             image_height,
             category,
-            color,
             commands,
         )
 

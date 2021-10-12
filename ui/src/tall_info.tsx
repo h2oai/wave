@@ -80,13 +80,11 @@ interface State {
   image_height?: S
   /** The card's category, displayed below the title. */
   category?: S
-  /** The card's background color. */
-  color?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const
-    { title, caption, icon, image, category, name: stateName, color, image_height = '150px', label } = state,
+    { title, caption, icon, image, category, name: stateName, image_height = '150px', label } = state,
     onClick = () => {
       if (stateName.startsWith('#')) {
         window.location.hash = stateName.substr(1)
@@ -99,7 +97,6 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       <div
         data-test={label ? undefined : name}
         onClick={label ? undefined : onClick}
-        style={{ background: color ? cssVar(color) : 'inherit' }}
         className={clas(css.card, label ? '' : css.clickable)}
       >
         <div className={css.imgContainer}>
