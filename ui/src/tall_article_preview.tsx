@@ -13,12 +13,13 @@
 // limitations under the License.
 
 import { Model, S } from 'h2o-wave'
+import * as Fluent from '@fluentui/react'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
 import { cards } from './layout'
 import { Markdown } from './markdown'
-import { clas, cssVar, margin, padding, px } from './theme'
+import { clas, cssVar, cssVarValue, margin, px } from './theme'
 import { bond, wave } from './ui'
 
 const css = stylesheet({
@@ -33,8 +34,10 @@ const css = stylesheet({
     position: 'absolute',
     left: 0,
     bottom: 0,
-    padding: padding(16, 24),
-    color: cssVar('$neutralPrimary')
+    right: 0,
+    padding: 24,
+    paddingBottom: 16,
+    color: cssVar('$neutralPrimary'),
   },
   content: {
     marginBottom: 16,
@@ -85,14 +88,6 @@ const css = stylesheet({
   title: {
     color: cssVar('$neutralPrimary')
   },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'transparent linear-gradient(180deg, #080808D8 0%, #080808B1 16%, #08080800 46%, #080808DB 100%) 0% 0% no-repeat padding-box'
-  },
   img: {
     position: 'relative',
     flexGrow: 1,
@@ -134,6 +129,11 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       wave.args[stateName] = stateName
       wave.push()
     },
+    // HACK: Unify Safari gradients with real browsers.
+    getGradient = () => {
+      const { r, g, b } = Fluent.getColorFromString(cssVarValue('$card'))!
+      return `linear-gradient(rgba(${r}, ${g}, ${b}, 0) 0%, rgba(${r}, ${g}, ${b}, 0.5) 50%, ${cssVar('$card')} 100%)`
+    },
     render = () => (
       <div
         data-test={name}
@@ -141,8 +141,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
         className={clas(css.card, stateName ? css.clickable : '')}
       >
         <div className={css.img} style={{ backgroundImage: `url('${image}')` }}>
-          <div className={css.overlay}></div>
-          <div className={css.header}>
+          <div className={css.header} style={{ background: getGradient() }}>
             <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
             {subtitle && <div className={clas('wave-s14 wave-w4 wave-t8', css.title)}>{subtitle}</div>}
           </div>
