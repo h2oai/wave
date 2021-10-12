@@ -736,19 +736,9 @@ const
                 fillOpacity: 0.3
               }
             },
-            text: {
-              style: {
-                fill: cssVar('$neutralPrimaryAlt'),
-              }
-            },
           },
           legend: {
             common: {
-              itemName: {
-                style: {
-                  fill: cssVar('$neutralPrimaryAlt'),
-                }
-              },
               pageNavigator: {
                 marker: {
                   style: {
@@ -756,19 +746,9 @@ const
                     inactiveFill: cssVar('$themePrimary')
                   }
                 },
-                text: {
-                  style: {
-                    fill: cssVar('$neutralPrimaryAlt6')
-                  }
-                }
               }
             },
             continuous: {
-              label: {
-                style: {
-                  fill: cssVar('$neutralPrimaryAlt'),
-                }
-              },
               handler: {
                 style: {
                   fill: cssVar('$neutralPrimaryAlt'),
@@ -798,16 +778,6 @@ const
                   strokeOpacity: 0.6
                 }
               },
-              title: {
-                style: {
-                  fill: cssVar('$neutralPrimaryAlt'),
-                }
-              },
-              label: {
-                style: {
-                  fill: cssVar('$neutralPrimaryAlt'),
-                }
-              }
             }
           },
         }
@@ -850,6 +820,9 @@ const
           left: 0,
           right: 0,
           bottom: 0
+        },
+        'text': {
+          fill: `${cssVar('$text')} !important`
         }
       }
     }
