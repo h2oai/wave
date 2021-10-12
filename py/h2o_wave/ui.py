@@ -3585,7 +3585,6 @@ def wide_info_card(
         icon: Optional[str] = None,
         image: Optional[str] = None,
         category: Optional[str] = None,
-        color: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> WideInfoCard:
     """Create a wide information card displaying a title, caption, and either an icon or image.
@@ -3601,7 +3600,6 @@ def wide_info_card(
         icon: The card's icon.
         image: The card’s image.
         category: The card's category, displayed above the title.
-        color: The card's background color.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WideInfoCard` instance.
@@ -3617,7 +3615,6 @@ def wide_info_card(
         icon,
         image,
         category,
-        color,
         commands,
     )
 

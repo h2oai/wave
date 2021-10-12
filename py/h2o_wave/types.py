@@ -10017,7 +10017,6 @@ class WideInfoCard:
             icon: Optional[str] = None,
             image: Optional[str] = None,
             category: Optional[str] = None,
-            color: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('WideInfoCard.box', box, (str,), False, False, False)
@@ -10030,7 +10029,6 @@ class WideInfoCard:
         _guard_scalar('WideInfoCard.icon', icon, (str,), False, True, False)
         _guard_scalar('WideInfoCard.image', image, (str,), False, True, False)
         _guard_scalar('WideInfoCard.category', category, (str,), False, True, False)
-        _guard_scalar('WideInfoCard.color', color, (str,), False, True, False)
         _guard_vector('WideInfoCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -10052,8 +10050,6 @@ class WideInfoCard:
         """The card’s image."""
         self.category = category
         """The card's category, displayed above the title."""
-        self.color = color
-        """The card's background color."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
@@ -10069,7 +10065,6 @@ class WideInfoCard:
         _guard_scalar('WideInfoCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('WideInfoCard.image', self.image, (str,), False, True, False)
         _guard_scalar('WideInfoCard.category', self.category, (str,), False, True, False)
-        _guard_scalar('WideInfoCard.color', self.color, (str,), False, True, False)
         _guard_vector('WideInfoCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='wide_info',
@@ -10083,7 +10078,6 @@ class WideInfoCard:
             icon=self.icon,
             image=self.image,
             category=self.category,
-            color=self.color,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -10110,8 +10104,6 @@ class WideInfoCard:
         _guard_scalar('WideInfoCard.image', __d_image, (str,), False, True, False)
         __d_category: Any = __d.get('category')
         _guard_scalar('WideInfoCard.category', __d_category, (str,), False, True, False)
-        __d_color: Any = __d.get('color')
-        _guard_scalar('WideInfoCard.color', __d_color, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('WideInfoCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
@@ -10124,7 +10116,6 @@ class WideInfoCard:
         icon: Optional[str] = __d_icon
         image: Optional[str] = __d_image
         category: Optional[str] = __d_category
-        color: Optional[str] = __d_color
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WideInfoCard(
             box,
@@ -10137,7 +10128,6 @@ class WideInfoCard:
             icon,
             image,
             category,
-            color,
             commands,
         )
 

@@ -98,13 +98,11 @@ interface State {
   image?: S
   /** The card's category, displayed above the title. */
   category?: S
-  /** The card's background color. */
-  color?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const
-    { title, caption, icon, image, category, name: stateName, color, subtitle, label, align = 'left' } = state,
+    { title, caption, icon, image, category, name: stateName, subtitle, label, align = 'left' } = state,
     onClick = () => {
       if (stateName.startsWith('#')) {
         window.location.hash = stateName.substr(1)
@@ -117,7 +115,6 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       <div
         data-test={label ? undefined : name}
         onClick={label ? undefined : onClick}
-        style={{ background: color ? cssVar(color) : 'inherit' }}
         className={clas(css.card, label ? '' : css.clickable, align === 'right' ? css.right : '')}
       >
         <div className={clas(css.lhs, !icon && image ? css.imgSpecified : '')}>

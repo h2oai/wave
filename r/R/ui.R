@@ -4174,7 +4174,6 @@ ui_wide_gauge_stat_card <- function(
 #' @param icon The card's icon.
 #' @param image The card’s image.
 #' @param category The card's category, displayed above the title.
-#' @param color The card's background color.
 #' @param commands Contextual menu commands for this component.
 #' @return A WideInfoCard instance.
 #' @export
@@ -4189,7 +4188,6 @@ ui_wide_info_card <- function(
   icon = NULL,
   image = NULL,
   category = NULL,
-  color = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("name", "character", name)
@@ -4201,7 +4199,6 @@ ui_wide_info_card <- function(
   .guard_scalar("icon", "character", icon)
   .guard_scalar("image", "character", image)
   .guard_scalar("category", "character", category)
-  .guard_scalar("color", "character", color)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
@@ -4214,7 +4211,6 @@ ui_wide_info_card <- function(
     icon=icon,
     image=image,
     category=category,
-    color=color,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveWideInfoCard"))
   return(.o)
