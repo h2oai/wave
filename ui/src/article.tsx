@@ -28,6 +28,13 @@ const css = stylesheet({
       '.wave-markdown': {
         marginTop: 12,
         $nest: {
+          '&:first-child': {
+            marginTop: 0
+          },
+          'h1, h2, h3, h4, h5, h6': {
+            marginBlock: 0,
+            color: cssVar('$neutralPrimary')
+          },
           h1: {
             margin: margin(18, 0),
             fontSize: 20,
@@ -35,29 +42,37 @@ const css = stylesheet({
             letterSpacing: '-0.017em',
             lineHeight: px(28),
           },
+          h2: {
+            margin: margin(12, 0),
+            fontSize: 18,
+            fontWeight: 500,
+            letterSpacing: '-0.014em',
+            lineHeight: px(25.2),
+          },
+          h3: {
+            margin: margin(8, 0),
+            fontSize: 16,
+            fontWeight: 400,
+            letterSpacing: '-0.011em',
+            lineHeight: px(22.4),
+          },
           p: {
             fontSize: 14,
             letterSpacing: '-0.006em',
             lineHeight: px(20),
-            color: cssVar('$text7')
+            color: cssVar('$text7'),
+            marginBlock: 0,
           },
         }
       },
     }
   },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    $nest: {
-      '>div:nth-child(2)': {
-        marginTop: 4
-      }
-    }
-  },
   title: {
-    marginBottom: 2,
     color: cssVar('$neutralPrimary')
   },
+  miniBtns: {
+    marginLeft: -4 //HACK: Align icons with title.
+  }
 })
 
 /** Create an article card for longer texts. */
@@ -67,18 +82,16 @@ interface State {
   /** Markdown text. */
   content?: S
   /** Collection of small buttons rendered on the other side of card's title. */
-  mini_buttons?: MiniButtons
+  items?: MiniButtons
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const render = () => {
-    const { title, content, mini_buttons } = state
+    const { title, content, items } = state
     return (
       <section data-test={name} className={css.card}>
-        <header className={css.header}>
-          <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
-          {mini_buttons && <MiniButtons {...mini_buttons} />}
-        </header>
+        <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
+        {items && <div className={css.miniBtns}><MiniButtons {...items} /></div>}
         {content && <Markdown source={content} />}
       </section>
     )

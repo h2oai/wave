@@ -98,7 +98,7 @@ def article_card(
         box: str,
         title: str,
         content: Optional[str] = None,
-        mini_buttons: Optional[MiniButtons] = None,
+        items: Optional[MiniButtons] = None,
         commands: Optional[List[Command]] = None,
 ) -> ArticleCard:
     """Create an article card for longer texts.
@@ -107,7 +107,7 @@ def article_card(
         box: A string indicating how to place this component on the page.
         title: The card’s title, displayed at the top.
         content: Markdown text.
-        mini_buttons: Collection of small buttons rendered on the other side of card's title.
+        items: Collection of small buttons rendered on the other side of card's title.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.ArticleCard` instance.
@@ -116,7 +116,7 @@ def article_card(
         box,
         title,
         content,
-        mini_buttons,
+        items,
         commands,
     )
 

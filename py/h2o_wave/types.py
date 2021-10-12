@@ -234,13 +234,13 @@ class ArticleCard:
             box: str,
             title: str,
             content: Optional[str] = None,
-            mini_buttons: Optional[MiniButtons] = None,
+            items: Optional[MiniButtons] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ArticleCard.box', box, (str,), False, False, False)
         _guard_scalar('ArticleCard.title', title, (str,), False, False, False)
         _guard_scalar('ArticleCard.content', content, (str,), False, True, False)
-        _guard_scalar('ArticleCard.mini_buttons', mini_buttons, (MiniButtons,), False, True, False)
+        _guard_scalar('ArticleCard.items', items, (MiniButtons,), False, True, False)
         _guard_vector('ArticleCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
@@ -248,7 +248,7 @@ class ArticleCard:
         """The card’s title, displayed at the top."""
         self.content = content
         """Markdown text."""
-        self.mini_buttons = mini_buttons
+        self.items = items
         """Collection of small buttons rendered on the other side of card's title."""
         self.commands = commands
         """Contextual menu commands for this component."""
@@ -258,14 +258,14 @@ class ArticleCard:
         _guard_scalar('ArticleCard.box', self.box, (str,), False, False, False)
         _guard_scalar('ArticleCard.title', self.title, (str,), False, False, False)
         _guard_scalar('ArticleCard.content', self.content, (str,), False, True, False)
-        _guard_scalar('ArticleCard.mini_buttons', self.mini_buttons, (MiniButtons,), False, True, False)
+        _guard_scalar('ArticleCard.items', self.items, (MiniButtons,), False, True, False)
         _guard_vector('ArticleCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='article',
             box=self.box,
             title=self.title,
             content=self.content,
-            mini_buttons=None if self.mini_buttons is None else self.mini_buttons.dump(),
+            items=None if self.items is None else self.items.dump(),
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -278,20 +278,20 @@ class ArticleCard:
         _guard_scalar('ArticleCard.title', __d_title, (str,), False, False, False)
         __d_content: Any = __d.get('content')
         _guard_scalar('ArticleCard.content', __d_content, (str,), False, True, False)
-        __d_mini_buttons: Any = __d.get('mini_buttons')
-        _guard_scalar('ArticleCard.mini_buttons', __d_mini_buttons, (dict,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_scalar('ArticleCard.items', __d_items, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ArticleCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
         title: str = __d_title
         content: Optional[str] = __d_content
-        mini_buttons: Optional[MiniButtons] = None if __d_mini_buttons is None else MiniButtons.load(__d_mini_buttons)
+        items: Optional[MiniButtons] = None if __d_items is None else MiniButtons.load(__d_items)
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ArticleCard(
             box,
             title,
             content,
-            mini_buttons,
+            items,
             commands,
         )
 

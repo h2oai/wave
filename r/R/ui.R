@@ -139,7 +139,7 @@ ui_command <- function(
 #' @param box A string indicating how to place this component on the page.
 #' @param title The card’s title, displayed at the top.
 #' @param content Markdown text.
-#' @param mini_buttons Collection of small buttons rendered on the other side of card's title.
+#' @param items Collection of small buttons rendered on the other side of card's title.
 #' @param commands Contextual menu commands for this component.
 #' @return A ArticleCard instance.
 #' @export
@@ -147,18 +147,18 @@ ui_article_card <- function(
   box,
   title,
   content = NULL,
-  mini_buttons = NULL,
+  items = NULL,
   commands = NULL) {
   .guard_scalar("box", "character", box)
   .guard_scalar("title", "character", title)
   .guard_scalar("content", "character", content)
-  .guard_scalar("mini_buttons", "WaveMiniButtons", mini_buttons)
+  .guard_scalar("items", "WaveMiniButtons", items)
   .guard_vector("commands", "WaveCommand", commands)
   .o <- list(
     box=box,
     title=title,
     content=content,
-    mini_buttons=mini_buttons,
+    items=items,
     commands=commands)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveArticleCard"))
   return(.o)
