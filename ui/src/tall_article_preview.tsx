@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Model, S } from 'h2o-wave'
 import * as Fluent from '@fluentui/react'
+import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
