@@ -25,10 +25,11 @@ const css = stylesheet({
     padding: 24,
     display: 'flex',
     justifyContent: 'space-between',
-    position: 'relative'
+    maxHeight: pc(100)
   },
   lhs: {
-    maxWidth: pc(35)
+    maxWidth: pc(50),
+    flexGrow: 1
   },
   title: {
     color: cssVar('$neutralPrimary'),
@@ -49,10 +50,8 @@ const css = stylesheet({
   },
   pie: {
     maxWidth: pc(65),
-    position: 'absolute',
-    top: 24,
-    right: 24,
-    bottom: 24,
+    flexGrow: 1,
+    display: 'flex',
   },
   pieText: {
     textAnchor: 'middle',
