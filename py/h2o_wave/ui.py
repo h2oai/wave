@@ -3576,39 +3576,45 @@ def wide_gauge_stat_card(
 
 def wide_info_card(
         box: str,
+        name: str,
         title: str,
         caption: str,
+        label: Optional[str] = None,
+        subtitle: Optional[str] = None,
+        align: Optional[str] = None,
         icon: Optional[str] = None,
         image: Optional[str] = None,
         category: Optional[str] = None,
-        name: Optional[str] = None,
-        color: Optional[str] = None,
         commands: Optional[List[Command]] = None,
 ) -> WideInfoCard:
     """Create a wide information card displaying a title, caption, and either an icon or image.
 
     Args:
         box: A string indicating how to place this component on the page.
+        name: An identifying name for this card. Makes the card clickable, similar to a button.
         title: The card's title.
-        caption: The card's caption, displayed below the title.
+        caption: The card's caption, displayed below the subtitle, supports markdown.
+        label: Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore..
+        subtitle: The card's subtitle, displayed below the title.
+        align: The card's alignment, determines the position of an image / icon. Defaults to 'left'. One of 'left', 'right'. See enum h2o_wave.ui.WideInfoCardAlign.
         icon: The card's icon.
         image: The card’s image.
         category: The card's category, displayed above the title.
-        name: An identifying name for this card. Makes the card clickable, similar to a button.
-        color: The card's background color.
         commands: Contextual menu commands for this component.
     Returns:
         A `h2o_wave.types.WideInfoCard` instance.
     """
     return WideInfoCard(
         box,
+        name,
         title,
         caption,
+        label,
+        subtitle,
+        align,
         icon,
         image,
         category,
-        name,
-        color,
         commands,
     )
 

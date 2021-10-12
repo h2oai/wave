@@ -16,65 +16,94 @@ import * as Fluent from '@fluentui/react'
 import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { cards, grid } from './layout'
-import { clas, cssVar, pc } from './theme'
+import { cards } from './layout'
+import { centerMixin, clas, cssVar, pc } from './theme'
 import { bond, wave } from './ui'
 
 const
-  iconStyles: Fluent.IIconStyles = { root: { fontSize: 80 } },
+  iconStyles: Fluent.IIconStyles = { root: { fontSize: 48, color: cssVar('$neutralPrimary'), fontWeight: 600 } },
   css = stylesheet({
     card: {
       display: 'flex',
-      padding: grid.gap
+      padding: 24
+    },
+    right: {
+      flexDirection: 'row-reverse',
+    },
+    rhs: {
+      display: 'flex',
+      flexDirection: 'column'
     },
     lhs: {
-      paddingRight: 20,
       textAlign: 'center',
-      display: 'flex'
+      display: 'flex',
+      marginRight: 16
     },
     imgSpecified: {
-      $nest: {
-        '& > div': {
-          width: pc(50)
-        }
-      }
+      width: pc(50),
+      minWidth: pc(50),
     },
     clickable: {
       cursor: 'pointer'
     },
     title: {
-      paddingBottom: 17,
+      color: cssVar('$neutralPrimary')
+    },
+    subtitle: {
+      marginTop: 1
+    },
+    category: {
+      color: cssVar('$themeDark'),
+      marginBottom: -1,
+    },
+    header: {
+      marginTop: -5, // HACK: Nudge up slightly.
+      marginBottom: 13,
+    },
+    iconWrapper: {
+      ...centerMixin(),
+      background: cssVar('$text1'),
+      height: 80,
+      width: 80,
+      padding: 8,
+      boxSizing: 'border-box',
+      borderRadius: pc(50)
     },
     img: {
       flexGrow: 1,
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center'
+      backgroundPosition: 'center',
+      borderRadius: 4
     }
   })
+
 /** Create a wide information card displaying a title, caption, and either an icon or image. */
 interface State {
+  /** An identifying name for this card. Makes the card clickable, similar to a button. */
+  name: S
   /** The card's title. */
   title: S
-  /** The card's caption, displayed below the title. */
+  /** The card's caption, displayed below the subtitle, supports markdown. */
   caption: S
+  /** Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.. */
+  label?: S
+  /** The card's subtitle, displayed below the title. */
+  subtitle?: S
+  /** The card's alignment, determines the position of an image / icon. Defaults to 'left'. */
+  align?: 'left' | 'right'
   /** The card's icon. */
   icon?: S
   /** The card’s image. */
   image?: S
   /** The card's category, displayed above the title. */
   category?: S
-  /** An identifying name for this card. Makes the card clickable, similar to a button. */
-  name?: S
-  /** The card's background color. */
-  color?: S
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const
-    { title, caption, icon, image, category, name: stateName, color } = state,
+    { title, caption, icon, image, category, name: stateName, subtitle, label, align = 'left' } = state,
     onClick = () => {
-      if (!stateName) return
       if (stateName.startsWith('#')) {
         window.location.hash = stateName.substr(1)
         return
@@ -84,24 +113,25 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
     },
     render = () => (
       <div
-        data-test={name}
-        onClick={onClick}
-        style={{ background: color ? cssVar(color) : 'inherit' }}
-        className={clas(css.card, stateName ? css.clickable : '', !icon && image ? css.imgSpecified : '')}
+        data-test={label ? undefined : name}
+        onClick={label ? undefined : onClick}
+        className={clas(css.card, label ? '' : css.clickable, align === 'right' ? css.right : '')}
       >
-        <div className={css.lhs}>
+        <div className={clas(css.lhs, !icon && image ? css.imgSpecified : '')}>
           {
-            icon
-              ? <Fluent.Icon iconName={icon} styles={iconStyles} />
-              : image
-                ? <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
-                : <Fluent.Icon iconName='MiniExpand' styles={iconStyles} />
+            image
+              ? <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
+              : <Fluent.Icon iconName={icon || 'MiniExpand'} className={css.iconWrapper} styles={iconStyles} />
           }
         </div>
-        <div>
-          {category && <div className='wave-s12 wave-w5 wave-t5'>{category}</div>}
-          <div className={clas('wave-s20 wave-w5 wave-t9', css.title)}>{title}</div>
-          {caption && <div className='wave-s14 wave-w4 wave-t8'>{caption}</div>}
+        <div className={css.rhs}>
+          <div className={css.header}>
+            {category && <div className={clas('wave-s14 wave-w5 wave-t7', css.category)}>{category}</div>}
+            <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
+            {subtitle && <div className={clas('wave-s14 wave-w5 wave-t7', css.subtitle)}>{subtitle}</div>}
+          </div>
+          {caption && <div className='wave-s14 wave-w4 wave-t7' style={{ marginBottom: label ? 16 : undefined }}>{caption}</div>}
+          {label && <Fluent.PrimaryButton data-test={name} onClick={onClick} text={label} styles={{ root: { marginTop: 'auto', alignSelf: 'flex-start' } }} />}
         </div>
       </div>
     )

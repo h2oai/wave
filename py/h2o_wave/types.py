@@ -9994,70 +9994,90 @@ class WideGaugeStatCard:
         )
 
 
+_WideInfoCardAlign = ['left', 'right']
+
+
+class WideInfoCardAlign:
+    LEFT = 'left'
+    RIGHT = 'right'
+
+
 class WideInfoCard:
     """Create a wide information card displaying a title, caption, and either an icon or image.
     """
     def __init__(
             self,
             box: str,
+            name: str,
             title: str,
             caption: str,
+            label: Optional[str] = None,
+            subtitle: Optional[str] = None,
+            align: Optional[str] = None,
             icon: Optional[str] = None,
             image: Optional[str] = None,
             category: Optional[str] = None,
-            name: Optional[str] = None,
-            color: Optional[str] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('WideInfoCard.box', box, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.name', name, (str,), False, False, False)
         _guard_scalar('WideInfoCard.title', title, (str,), False, False, False)
         _guard_scalar('WideInfoCard.caption', caption, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.label', label, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.subtitle', subtitle, (str,), False, True, False)
+        _guard_enum('WideInfoCard.align', align, _WideInfoCardAlign, True)
         _guard_scalar('WideInfoCard.icon', icon, (str,), False, True, False)
         _guard_scalar('WideInfoCard.image', image, (str,), False, True, False)
         _guard_scalar('WideInfoCard.category', category, (str,), False, True, False)
-        _guard_scalar('WideInfoCard.name', name, (str,), False, True, False)
-        _guard_scalar('WideInfoCard.color', color, (str,), False, True, False)
         _guard_vector('WideInfoCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
+        self.name = name
+        """An identifying name for this card. Makes the card clickable, similar to a button."""
         self.title = title
         """The card's title."""
         self.caption = caption
-        """The card's caption, displayed below the title."""
+        """The card's caption, displayed below the subtitle, supports markdown."""
+        self.label = label
+        """Label of a button rendered at the bottom of the card. If specified, whole card is not clickable anymore.."""
+        self.subtitle = subtitle
+        """The card's subtitle, displayed below the title."""
+        self.align = align
+        """The card's alignment, determines the position of an image / icon. Defaults to 'left'. One of 'left', 'right'. See enum h2o_wave.ui.WideInfoCardAlign."""
         self.icon = icon
         """The card's icon."""
         self.image = image
         """The card’s image."""
         self.category = category
         """The card's category, displayed above the title."""
-        self.name = name
-        """An identifying name for this card. Makes the card clickable, similar to a button."""
-        self.color = color
-        """The card's background color."""
         self.commands = commands
         """Contextual menu commands for this component."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('WideInfoCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.name', self.name, (str,), False, False, False)
         _guard_scalar('WideInfoCard.title', self.title, (str,), False, False, False)
         _guard_scalar('WideInfoCard.caption', self.caption, (str,), False, False, False)
+        _guard_scalar('WideInfoCard.label', self.label, (str,), False, True, False)
+        _guard_scalar('WideInfoCard.subtitle', self.subtitle, (str,), False, True, False)
+        _guard_enum('WideInfoCard.align', self.align, _WideInfoCardAlign, True)
         _guard_scalar('WideInfoCard.icon', self.icon, (str,), False, True, False)
         _guard_scalar('WideInfoCard.image', self.image, (str,), False, True, False)
         _guard_scalar('WideInfoCard.category', self.category, (str,), False, True, False)
-        _guard_scalar('WideInfoCard.name', self.name, (str,), False, True, False)
-        _guard_scalar('WideInfoCard.color', self.color, (str,), False, True, False)
         _guard_vector('WideInfoCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='wide_info',
             box=self.box,
+            name=self.name,
             title=self.title,
             caption=self.caption,
+            label=self.label,
+            subtitle=self.subtitle,
+            align=self.align,
             icon=self.icon,
             image=self.image,
             category=self.category,
-            name=self.name,
-            color=self.color,
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
 
@@ -10066,40 +10086,48 @@ class WideInfoCard:
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         _guard_scalar('WideInfoCard.box', __d_box, (str,), False, False, False)
+        __d_name: Any = __d.get('name')
+        _guard_scalar('WideInfoCard.name', __d_name, (str,), False, False, False)
         __d_title: Any = __d.get('title')
         _guard_scalar('WideInfoCard.title', __d_title, (str,), False, False, False)
         __d_caption: Any = __d.get('caption')
         _guard_scalar('WideInfoCard.caption', __d_caption, (str,), False, False, False)
+        __d_label: Any = __d.get('label')
+        _guard_scalar('WideInfoCard.label', __d_label, (str,), False, True, False)
+        __d_subtitle: Any = __d.get('subtitle')
+        _guard_scalar('WideInfoCard.subtitle', __d_subtitle, (str,), False, True, False)
+        __d_align: Any = __d.get('align')
+        _guard_enum('WideInfoCard.align', __d_align, _WideInfoCardAlign, True)
         __d_icon: Any = __d.get('icon')
         _guard_scalar('WideInfoCard.icon', __d_icon, (str,), False, True, False)
         __d_image: Any = __d.get('image')
         _guard_scalar('WideInfoCard.image', __d_image, (str,), False, True, False)
         __d_category: Any = __d.get('category')
         _guard_scalar('WideInfoCard.category', __d_category, (str,), False, True, False)
-        __d_name: Any = __d.get('name')
-        _guard_scalar('WideInfoCard.name', __d_name, (str,), False, True, False)
-        __d_color: Any = __d.get('color')
-        _guard_scalar('WideInfoCard.color', __d_color, (str,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('WideInfoCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
+        name: str = __d_name
         title: str = __d_title
         caption: str = __d_caption
+        label: Optional[str] = __d_label
+        subtitle: Optional[str] = __d_subtitle
+        align: Optional[str] = __d_align
         icon: Optional[str] = __d_icon
         image: Optional[str] = __d_image
         category: Optional[str] = __d_category
-        name: Optional[str] = __d_name
-        color: Optional[str] = __d_color
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return WideInfoCard(
             box,
+            name,
             title,
             caption,
+            label,
+            subtitle,
+            align,
             icon,
             image,
             category,
-            name,
-            color,
             commands,
         )
 
