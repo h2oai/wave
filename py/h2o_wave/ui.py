@@ -3613,6 +3613,57 @@ def wide_info_card(
     )
 
 
+def pie(
+        label: str,
+        value: str,
+        fraction: float,
+        color: str,
+        aux_value: Optional[str] = None,
+) -> Pie:
+    """Card's pie chart data to be displayed.
+
+    Args:
+        label: The description for the pie, displayed in the legend.
+        value: The formatted value displayed on the pie.
+        fraction: A value between 0 and 1 indicating the size of the pie.
+        color: The color of the pie.
+        aux_value: The auxiliary value, displayed below the label.
+    Returns:
+        A `h2o_wave.types.Pie` instance.
+    """
+    return Pie(
+        label,
+        value,
+        fraction,
+        color,
+        aux_value,
+    )
+
+
+def wide_pie_stat_card(
+        box: str,
+        title: str,
+        pies: List[Pie],
+        commands: Optional[List[Command]] = None,
+) -> WidePieStatCard:
+    """Create a wide pie stat card displaying a title and pie chart with legend.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card's title.
+        pies: The pies to be included in the pie chart.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.WidePieStatCard` instance.
+    """
+    return WidePieStatCard(
+        box,
+        title,
+        pies,
+        commands,
+    )
+
+
 def wide_plot_card(
         box: str,
         title: str,

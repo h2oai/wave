@@ -4207,6 +4207,62 @@ ui_wide_info_card <- function(
   return(.o)
 }
 
+#' Card's pie chart data to be displayed.
+#'
+#' @param label The description for the pie, displayed in the legend.
+#' @param value The formatted value displayed on the pie.
+#' @param fraction A value between 0 and 1 indicating the size of the pie.
+#' @param color The color of the pie.
+#' @param aux_value The auxiliary value, displayed below the label.
+#' @return A Pie instance.
+#' @export
+ui_pie <- function(
+  label,
+  value,
+  fraction,
+  color,
+  aux_value = NULL) {
+  .guard_scalar("label", "character", label)
+  .guard_scalar("value", "character", value)
+  .guard_scalar("fraction", "numeric", fraction)
+  .guard_scalar("color", "character", color)
+  .guard_scalar("aux_value", "character", aux_value)
+  .o <- list(
+    label=label,
+    value=value,
+    fraction=fraction,
+    color=color,
+    aux_value=aux_value)
+  class(.o) <- append(class(.o), c(.wave_obj, "WavePie"))
+  return(.o)
+}
+
+#' Create a wide pie stat card displaying a title and pie chart with legend.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card's title.
+#' @param pies The pies to be included in the pie chart.
+#' @param commands Contextual menu commands for this component.
+#' @return A WidePieStatCard instance.
+#' @export
+ui_wide_pie_stat_card <- function(
+  box,
+  title,
+  pies,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_vector("pies", "WavePie", pies)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    pies=pies,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveWidePieStatCard"))
+  return(.o)
+}
+
 #' Create a wide plot card displaying a title, caption and a plot.
 #'
 #' @param box A string indicating how to place this component on the page.

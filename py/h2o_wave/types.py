@@ -10104,6 +10104,135 @@ class WideInfoCard:
         )
 
 
+class Pie:
+    """Card's pie chart data to be displayed.
+    """
+    def __init__(
+            self,
+            label: str,
+            value: str,
+            fraction: float,
+            color: str,
+            aux_value: Optional[str] = None,
+    ):
+        _guard_scalar('Pie.label', label, (str,), False, False, False)
+        _guard_scalar('Pie.value', value, (str,), False, False, False)
+        _guard_scalar('Pie.fraction', fraction, (float, int,), False, False, False)
+        _guard_scalar('Pie.color', color, (str,), False, False, False)
+        _guard_scalar('Pie.aux_value', aux_value, (str,), False, True, False)
+        self.label = label
+        """The description for the pie, displayed in the legend."""
+        self.value = value
+        """The formatted value displayed on the pie."""
+        self.fraction = fraction
+        """A value between 0 and 1 indicating the size of the pie."""
+        self.color = color
+        """The color of the pie."""
+        self.aux_value = aux_value
+        """The auxiliary value, displayed below the label."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('Pie.label', self.label, (str,), False, False, False)
+        _guard_scalar('Pie.value', self.value, (str,), False, False, False)
+        _guard_scalar('Pie.fraction', self.fraction, (float, int,), False, False, False)
+        _guard_scalar('Pie.color', self.color, (str,), False, False, False)
+        _guard_scalar('Pie.aux_value', self.aux_value, (str,), False, True, False)
+        return _dump(
+            label=self.label,
+            value=self.value,
+            fraction=self.fraction,
+            color=self.color,
+            aux_value=self.aux_value,
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'Pie':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_label: Any = __d.get('label')
+        _guard_scalar('Pie.label', __d_label, (str,), False, False, False)
+        __d_value: Any = __d.get('value')
+        _guard_scalar('Pie.value', __d_value, (str,), False, False, False)
+        __d_fraction: Any = __d.get('fraction')
+        _guard_scalar('Pie.fraction', __d_fraction, (float, int,), False, False, False)
+        __d_color: Any = __d.get('color')
+        _guard_scalar('Pie.color', __d_color, (str,), False, False, False)
+        __d_aux_value: Any = __d.get('aux_value')
+        _guard_scalar('Pie.aux_value', __d_aux_value, (str,), False, True, False)
+        label: str = __d_label
+        value: str = __d_value
+        fraction: float = __d_fraction
+        color: str = __d_color
+        aux_value: Optional[str] = __d_aux_value
+        return Pie(
+            label,
+            value,
+            fraction,
+            color,
+            aux_value,
+        )
+
+
+class WidePieStatCard:
+    """Create a wide pie stat card displaying a title and pie chart with legend.
+    """
+    def __init__(
+            self,
+            box: str,
+            title: str,
+            pies: List[Pie],
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('WidePieStatCard.box', box, (str,), False, False, False)
+        _guard_scalar('WidePieStatCard.title', title, (str,), False, False, False)
+        _guard_vector('WidePieStatCard.pies', pies, (Pie,), False, False, False)
+        _guard_vector('WidePieStatCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.title = title
+        """The card's title."""
+        self.pies = pies
+        """The pies to be included in the pie chart."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('WidePieStatCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('WidePieStatCard.title', self.title, (str,), False, False, False)
+        _guard_vector('WidePieStatCard.pies', self.pies, (Pie,), False, False, False)
+        _guard_vector('WidePieStatCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='wide_pie_stat',
+            box=self.box,
+            title=self.title,
+            pies=[__e.dump() for __e in self.pies],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'WidePieStatCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('WidePieStatCard.box', __d_box, (str,), False, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('WidePieStatCard.title', __d_title, (str,), False, False, False)
+        __d_pies: Any = __d.get('pies')
+        _guard_vector('WidePieStatCard.pies', __d_pies, (dict,), False, False, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('WidePieStatCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        title: str = __d_title
+        pies: List[Pie] = [Pie.load(__e) for __e in __d_pies]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return WidePieStatCard(
+            box,
+            title,
+            pies,
+            commands,
+        )
+
+
 class WidePlotCard:
     """Create a wide plot card displaying a title, caption and a plot.
     """
