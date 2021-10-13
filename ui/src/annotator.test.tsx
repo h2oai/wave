@@ -1,49 +1,49 @@
 import { render, fireEvent } from '@testing-library/react'
 import React from 'react'
-import { Annotator, XAnnotator } from './annotator'
-import * as T from 'h2o-wave'
+import { TextAnnotator, XTextAnnotator } from './annotator'
+import { wave } from './ui'
 
 const
   name = 'annotator',
   items = [{ text: 'Hello there! ' }, { text: 'Pretty good', tag: 'tag1' }, { text: ' day' }],
-  annotatorProps: Annotator = { name, tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }], items },
+  annotatorProps: TextAnnotator = { name, title: name, tags: [{ name: 'tag1', label: 'Tag 1', color: '$red' }], items },
   getSelectionMock = jest.fn(),
-  syncMock = jest.fn()
+  pushMock = jest.fn()
 
 describe('Annotator.tsx', () => {
   beforeAll(() => {
     window.getSelection = getSelectionMock
-    T.wave.sync = syncMock
+    wave.push = pushMock
   })
   beforeEach(() => {
     jest.clearAllMocks()
-    T.wave.args[name] = null
+    wave.args[name] = null
   })
   it('Renders data-test attr', () => {
-    const { queryByTestId } = render(<XAnnotator model={annotatorProps} />)
+    const { queryByTestId } = render(<XTextAnnotator model={annotatorProps} />)
     expect(queryByTestId(name)).toBeInTheDocument()
   })
 
   it('Sets initial q.args', () => {
-    render(<XAnnotator model={annotatorProps} />)
-    expect(T.wave.args[name]).toMatchObject(items)
+    render(<XTextAnnotator model={annotatorProps} />)
+    expect(wave.args[name]).toMatchObject(items)
   })
 
   it('Sets correct args on remove', () => {
-    const { container } = render(<XAnnotator model={annotatorProps} />)
+    const { container } = render(<XTextAnnotator model={annotatorProps} />)
 
     fireEvent.mouseUp(container.querySelector('i')!)
-    expect(T.wave.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
+    expect(wave.args[name]).toMatchObject([{ text: 'Hello there! Pretty good day' }])
   })
 
   it('Sets correct args on annotate', () => {
-    const { getByText } = render(<XAnnotator model={annotatorProps} />)
+    const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
     fireEvent.click(getByText('Tag 1'))
     fireEvent.mouseDown(getByText('Hello'))
     fireEvent.mouseUp(getByText('there'))
 
-    expect(T.wave.args[name]).toMatchObject([
+    expect(wave.args[name]).toMatchObject([
       { text: 'Hello there', tag: 'tag1' },
       { text: '! ' },
       { text: 'Pretty good', tag: 'tag1' },
@@ -52,7 +52,7 @@ describe('Annotator.tsx', () => {
   })
 
   it('Removes browser text selection highlight after annotate', () => {
-    const { getByText } = render(<XAnnotator model={annotatorProps} />)
+    const { getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
     fireEvent.click(getByText('Tag 1'))
     fireEvent.mouseDown(getByText('Hello'))
@@ -62,24 +62,24 @@ describe('Annotator.tsx', () => {
   })
 
   it('Calls sync on remove if trigger specified', () => {
-    const { container } = render(<XAnnotator model={{ ...annotatorProps, trigger: true }} />)
+    const { container } = render(<XTextAnnotator model={{ ...annotatorProps, trigger: true }} />)
 
     fireEvent.mouseUp(container.querySelector('i')!)
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Calls sync on annotate if trigger specified', () => {
-    const { getByText } = render(<XAnnotator model={{ ...annotatorProps, trigger: true }} />)
+    const { getByText } = render(<XTextAnnotator model={{ ...annotatorProps, trigger: true }} />)
 
     fireEvent.click(getByText('Tag 1'))
     fireEvent.mouseDown(getByText('Hello'))
     fireEvent.mouseUp(getByText('there'))
 
-    expect(syncMock).toHaveBeenCalled()
+    expect(pushMock).toHaveBeenCalled()
   })
 
   it('Shows remove icon on hover', () => {
-    const { container, getByText } = render(<XAnnotator model={annotatorProps} />)
+    const { container, getByText } = render(<XTextAnnotator model={annotatorProps} />)
 
     const removeIcon = container.querySelector('i')
     expect(removeIcon).not.toBeVisible()

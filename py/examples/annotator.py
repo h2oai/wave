@@ -14,11 +14,12 @@ async def serve(q: Q):
         ]
     else:
         q.page['example'] = ui.form_card(box='1 1 4 10', items=[
-            ui.annotator(
+            ui.text_annotator(
                 name='annotator',
+                title='Select text to annotate',
                 tags=[
-                    ui.annotator_tag(name='p', label='Person', color='#D33A2C99'),
-                    ui.annotator_tag(name='o', label='Org', color='#4CAF5099'),
+                    ui.annotator_tag(name='p', label='Person', color='#F1CBCB'),
+                    ui.annotator_tag(name='o', label='Org', color='#CAEACA'),
                 ],
                 items=[
                     ui.annotator_item(text='Killer Mike', tag='p'),

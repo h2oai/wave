@@ -2242,8 +2242,9 @@ def annotator_item(
     )
 
 
-def annotator(
+def text_annotator(
         name: str,
+        title: str,
         tags: List[AnnotatorTag],
         items: List[AnnotatorItem],
         trigger: Optional[bool] = None,
@@ -2254,14 +2255,16 @@ def annotator(
 
     Args:
         name: An identifying name for this component.
+        title: The text annotator's title.
         tags: List of tags the user can annotate with.
         items: Pretagged parts of text content.
         trigger: True if the form should be submitted when the annotator value changes.
     Returns:
-        A `h2o_wave.types.Annotator` instance.
+        A `h2o_wave.types.TextAnnotator` instance.
     """
-    return Component(annotator=Annotator(
+    return Component(text_annotator=TextAnnotator(
         name,
+        title,
         tags,
         items,
         trigger,

@@ -16,7 +16,7 @@ import * as Fluent from '@fluentui/react'
 import { B, Model, Packed, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { Annotator, XAnnotator } from './annotator'
+import { TextAnnotator, XTextAnnotator } from './annotator'
 import { Button, Buttons, XButtons, XStandAloneButton } from './button'
 import { Checkbox, XCheckbox } from './checkbox'
 import { Checklist, XChecklist } from './checklist'
@@ -138,7 +138,7 @@ export interface Component {
   /** Persona. */
   persona?: Persona
   /** Annotator. */
-  annotator?: Annotator
+  text_annotator?: TextAnnotator
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -262,7 +262,7 @@ const
     if (m.inline) return <XInline model={m.inline} />
     if (m.image) return <XImage model={m.image} />
     if (m.persona) return <XPersona model={m.persona} />
-    if (m.annotator) return <XAnnotator model={m.annotator} />
+    if (m.text_annotator) return <XTextAnnotator model={m.text_annotator} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

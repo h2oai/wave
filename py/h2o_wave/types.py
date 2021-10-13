@@ -6024,7 +6024,7 @@ class AnnotatorItem:
         )
 
 
-class Annotator:
+class TextAnnotator:
     """Create an annotator component.
 
     The annotator component enables user to manually annotate parts of text. Useful for NLP data prep.
@@ -6032,16 +6032,20 @@ class Annotator:
     def __init__(
             self,
             name: str,
+            title: str,
             tags: List[AnnotatorTag],
             items: List[AnnotatorItem],
             trigger: Optional[bool] = None,
     ):
-        _guard_scalar('Annotator.name', name, (str,), True, False, False)
-        _guard_vector('Annotator.tags', tags, (AnnotatorTag,), False, False, False)
-        _guard_vector('Annotator.items', items, (AnnotatorItem,), False, False, False)
-        _guard_scalar('Annotator.trigger', trigger, (bool,), False, True, False)
+        _guard_scalar('TextAnnotator.name', name, (str,), True, False, False)
+        _guard_scalar('TextAnnotator.title', title, (str,), False, False, False)
+        _guard_vector('TextAnnotator.tags', tags, (AnnotatorTag,), False, False, False)
+        _guard_vector('TextAnnotator.items', items, (AnnotatorItem,), False, False, False)
+        _guard_scalar('TextAnnotator.trigger', trigger, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component."""
+        self.title = title
+        """The text annotator's title."""
         self.tags = tags
         """List of tags the user can annotate with."""
         self.items = items
@@ -6051,34 +6055,40 @@ class Annotator:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('Annotator.name', self.name, (str,), True, False, False)
-        _guard_vector('Annotator.tags', self.tags, (AnnotatorTag,), False, False, False)
-        _guard_vector('Annotator.items', self.items, (AnnotatorItem,), False, False, False)
-        _guard_scalar('Annotator.trigger', self.trigger, (bool,), False, True, False)
+        _guard_scalar('TextAnnotator.name', self.name, (str,), True, False, False)
+        _guard_scalar('TextAnnotator.title', self.title, (str,), False, False, False)
+        _guard_vector('TextAnnotator.tags', self.tags, (AnnotatorTag,), False, False, False)
+        _guard_vector('TextAnnotator.items', self.items, (AnnotatorItem,), False, False, False)
+        _guard_scalar('TextAnnotator.trigger', self.trigger, (bool,), False, True, False)
         return _dump(
             name=self.name,
+            title=self.title,
             tags=[__e.dump() for __e in self.tags],
             items=[__e.dump() for __e in self.items],
             trigger=self.trigger,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'Annotator':
+    def load(__d: Dict) -> 'TextAnnotator':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('Annotator.name', __d_name, (str,), True, False, False)
+        _guard_scalar('TextAnnotator.name', __d_name, (str,), True, False, False)
+        __d_title: Any = __d.get('title')
+        _guard_scalar('TextAnnotator.title', __d_title, (str,), False, False, False)
         __d_tags: Any = __d.get('tags')
-        _guard_vector('Annotator.tags', __d_tags, (dict,), False, False, False)
+        _guard_vector('TextAnnotator.tags', __d_tags, (dict,), False, False, False)
         __d_items: Any = __d.get('items')
-        _guard_vector('Annotator.items', __d_items, (dict,), False, False, False)
+        _guard_vector('TextAnnotator.items', __d_items, (dict,), False, False, False)
         __d_trigger: Any = __d.get('trigger')
-        _guard_scalar('Annotator.trigger', __d_trigger, (bool,), False, True, False)
+        _guard_scalar('TextAnnotator.trigger', __d_trigger, (bool,), False, True, False)
         name: str = __d_name
+        title: str = __d_title
         tags: List[AnnotatorTag] = [AnnotatorTag.load(__e) for __e in __d_tags]
         items: List[AnnotatorItem] = [AnnotatorItem.load(__e) for __e in __d_items]
         trigger: Optional[bool] = __d_trigger
-        return Annotator(
+        return TextAnnotator(
             name,
+            title,
             tags,
             items,
             trigger,
@@ -6130,7 +6140,7 @@ class Component:
             inline: Optional[Inline] = None,
             image: Optional[Image] = None,
             persona: Optional[Persona] = None,
-            annotator: Optional[Annotator] = None,
+            text_annotator: Optional[TextAnnotator] = None,
     ):
         _guard_scalar('Component.text', text, (Text,), False, True, False)
         _guard_scalar('Component.text_xl', text_xl, (TextXl,), False, True, False)
@@ -6172,7 +6182,7 @@ class Component:
         _guard_scalar('Component.inline', inline, (Inline,), False, True, False)
         _guard_scalar('Component.image', image, (Image,), False, True, False)
         _guard_scalar('Component.persona', persona, (Persona,), False, True, False)
-        _guard_scalar('Component.annotator', annotator, (Annotator,), False, True, False)
+        _guard_scalar('Component.text_annotator', text_annotator, (TextAnnotator,), False, True, False)
         self.text = text
         """Text block."""
         self.text_xl = text_xl
@@ -6253,7 +6263,7 @@ class Component:
         """Image"""
         self.persona = persona
         """Persona."""
-        self.annotator = annotator
+        self.text_annotator = text_annotator
         """Annotator."""
 
     def dump(self) -> Dict:
@@ -6298,7 +6308,7 @@ class Component:
         _guard_scalar('Component.inline', self.inline, (Inline,), False, True, False)
         _guard_scalar('Component.image', self.image, (Image,), False, True, False)
         _guard_scalar('Component.persona', self.persona, (Persona,), False, True, False)
-        _guard_scalar('Component.annotator', self.annotator, (Annotator,), False, True, False)
+        _guard_scalar('Component.text_annotator', self.text_annotator, (TextAnnotator,), False, True, False)
         return _dump(
             text=None if self.text is None else self.text.dump(),
             text_xl=None if self.text_xl is None else self.text_xl.dump(),
@@ -6340,7 +6350,7 @@ class Component:
             inline=None if self.inline is None else self.inline.dump(),
             image=None if self.image is None else self.image.dump(),
             persona=None if self.persona is None else self.persona.dump(),
-            annotator=None if self.annotator is None else self.annotator.dump(),
+            text_annotator=None if self.text_annotator is None else self.text_annotator.dump(),
         )
 
     @staticmethod
@@ -6426,8 +6436,8 @@ class Component:
         _guard_scalar('Component.image', __d_image, (dict,), False, True, False)
         __d_persona: Any = __d.get('persona')
         _guard_scalar('Component.persona', __d_persona, (dict,), False, True, False)
-        __d_annotator: Any = __d.get('annotator')
-        _guard_scalar('Component.annotator', __d_annotator, (dict,), False, True, False)
+        __d_text_annotator: Any = __d.get('text_annotator')
+        _guard_scalar('Component.text_annotator', __d_text_annotator, (dict,), False, True, False)
         text: Optional[Text] = None if __d_text is None else Text.load(__d_text)
         text_xl: Optional[TextXl] = None if __d_text_xl is None else TextXl.load(__d_text_xl)
         text_l: Optional[TextL] = None if __d_text_l is None else TextL.load(__d_text_l)
@@ -6468,7 +6478,7 @@ class Component:
         inline: Optional[Inline] = None if __d_inline is None else Inline.load(__d_inline)
         image: Optional[Image] = None if __d_image is None else Image.load(__d_image)
         persona: Optional[Persona] = None if __d_persona is None else Persona.load(__d_persona)
-        annotator: Optional[Annotator] = None if __d_annotator is None else Annotator.load(__d_annotator)
+        text_annotator: Optional[TextAnnotator] = None if __d_text_annotator is None else TextAnnotator.load(__d_text_annotator)
         return Component(
             text,
             text_xl,
@@ -6510,7 +6520,7 @@ class Component:
             inline,
             image,
             persona,
-            annotator,
+            text_annotator,
         )
 
 
