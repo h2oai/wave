@@ -9283,6 +9283,96 @@ class PlotCard:
         )
 
 
+class PostcardCard:
+    """Create a postcard displaying a persona, image, caption and optional buttons.
+    """
+    def __init__(
+            self,
+            box: str,
+            persona: Component,
+            image: str,
+            aux_value: Optional[str] = None,
+            caption: Optional[str] = None,
+            items: Optional[List[Component]] = None,
+            commands: Optional[List[Command]] = None,
+    ):
+        _guard_scalar('PostcardCard.box', box, (str,), False, False, False)
+        _guard_scalar('PostcardCard.persona', persona, (Component,), False, False, False)
+        _guard_scalar('PostcardCard.image', image, (str,), False, False, False)
+        _guard_scalar('PostcardCard.aux_value', aux_value, (str,), False, True, False)
+        _guard_scalar('PostcardCard.caption', caption, (str,), False, True, False)
+        _guard_vector('PostcardCard.items', items, (Component,), False, True, False)
+        _guard_vector('PostcardCard.commands', commands, (Command,), False, True, False)
+        self.box = box
+        """A string indicating how to place this component on the page."""
+        self.persona = persona
+        """The card's user avatar, 'size' prop is restricted to 'xs'."""
+        self.image = image
+        """The card’s image."""
+        self.aux_value = aux_value
+        """The card's aux_value, displayed on the right hand side of the image."""
+        self.caption = caption
+        """The card's caption, displayed below the image."""
+        self.items = items
+        """The card's buttons, displayed at the bottom."""
+        self.commands = commands
+        """Contextual menu commands for this component."""
+
+    def dump(self) -> Dict:
+        """Returns the contents of this object as a dict."""
+        _guard_scalar('PostcardCard.box', self.box, (str,), False, False, False)
+        _guard_scalar('PostcardCard.persona', self.persona, (Component,), False, False, False)
+        _guard_scalar('PostcardCard.image', self.image, (str,), False, False, False)
+        _guard_scalar('PostcardCard.aux_value', self.aux_value, (str,), False, True, False)
+        _guard_scalar('PostcardCard.caption', self.caption, (str,), False, True, False)
+        _guard_vector('PostcardCard.items', self.items, (Component,), False, True, False)
+        _guard_vector('PostcardCard.commands', self.commands, (Command,), False, True, False)
+        return _dump(
+            view='postcard',
+            box=self.box,
+            persona=self.persona.dump(),
+            image=self.image,
+            aux_value=self.aux_value,
+            caption=self.caption,
+            items=None if self.items is None else [__e.dump() for __e in self.items],
+            commands=None if self.commands is None else [__e.dump() for __e in self.commands],
+        )
+
+    @staticmethod
+    def load(__d: Dict) -> 'PostcardCard':
+        """Creates an instance of this class using the contents of a dict."""
+        __d_box: Any = __d.get('box')
+        _guard_scalar('PostcardCard.box', __d_box, (str,), False, False, False)
+        __d_persona: Any = __d.get('persona')
+        _guard_scalar('PostcardCard.persona', __d_persona, (dict,), False, False, False)
+        __d_image: Any = __d.get('image')
+        _guard_scalar('PostcardCard.image', __d_image, (str,), False, False, False)
+        __d_aux_value: Any = __d.get('aux_value')
+        _guard_scalar('PostcardCard.aux_value', __d_aux_value, (str,), False, True, False)
+        __d_caption: Any = __d.get('caption')
+        _guard_scalar('PostcardCard.caption', __d_caption, (str,), False, True, False)
+        __d_items: Any = __d.get('items')
+        _guard_vector('PostcardCard.items', __d_items, (dict,), False, True, False)
+        __d_commands: Any = __d.get('commands')
+        _guard_vector('PostcardCard.commands', __d_commands, (dict,), False, True, False)
+        box: str = __d_box
+        persona: Component = Component.load(__d_persona)
+        image: str = __d_image
+        aux_value: Optional[str] = __d_aux_value
+        caption: Optional[str] = __d_caption
+        items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
+        commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
+        return PostcardCard(
+            box,
+            persona,
+            image,
+            aux_value,
+            caption,
+            items,
+            commands,
+        )
+
+
 class ProfileCard:
     """Create a profile card to display information about a user.
     """

@@ -3317,6 +3317,39 @@ def plot_card(
     )
 
 
+def postcard_card(
+        box: str,
+        persona: Component,
+        image: str,
+        aux_value: Optional[str] = None,
+        caption: Optional[str] = None,
+        items: Optional[List[Component]] = None,
+        commands: Optional[List[Command]] = None,
+) -> PostcardCard:
+    """Create a postcard displaying a persona, image, caption and optional buttons.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        persona: The card's user avatar, 'size' prop is restricted to 'xs'.
+        image: The card’s image.
+        aux_value: The card's aux_value, displayed on the right hand side of the image.
+        caption: The card's caption, displayed below the image.
+        items: The card's buttons, displayed at the bottom.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.PostcardCard` instance.
+    """
+    return PostcardCard(
+        box,
+        persona,
+        image,
+        aux_value,
+        caption,
+        items,
+        commands,
+    )
+
+
 def profile_card(
         box: str,
         persona: Component,
