@@ -17,7 +17,7 @@ import { B, Model, Packed, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { TextAnnotator, XTextAnnotator } from './annotator'
-import { Button, Buttons, XButtons, XStandAloneButton } from './button'
+import { Button, Buttons, XMiniButton, XMiniButtons, XButtons, XStandAloneButton, MiniButton, MiniButtons } from './button'
 import { Checkbox, XCheckbox } from './checkbox'
 import { Checklist, XChecklist } from './checklist'
 import { ChoiceGroup, XChoiceGroup } from './choice_group'
@@ -103,6 +103,10 @@ export interface Component {
   button?: Button
   /** Button set. */
   buttons?: Buttons
+  /** Button. */
+  mini_button?: MiniButton
+  /** Button set. */
+  mini_buttons?: MiniButtons
   /** File upload. */
   file_upload?: FileUpload
   /** Table. */
@@ -263,6 +267,8 @@ const
     if (m.image) return <XImage model={m.image} />
     if (m.persona) return <XPersona model={m.persona} />
     if (m.text_annotator) return <XTextAnnotator model={m.text_annotator} />
+    if (m.mini_button) return <XMiniButton model={m.mini_button} />
+    if (m.mini_buttons) return <XMiniButtons model={m.mini_buttons} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 

@@ -14,7 +14,8 @@
 
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { Buttons, MiniButton, MiniButtons, XButtons } from './button'
+import { Buttons, MiniButtons, XButtons, XMiniButtons } from './button'
+import { Component } from './form'
 import { wave } from './ui'
 
 const
@@ -85,16 +86,16 @@ describe('Button.tsx', () => {
 
   describe('Mini button', () => {
     const
-      miniBtns: MiniButton[] = [{ name, label: name }],
-      miniBtnsNameHash: MiniButton[] = [{ name: `#${name}`, label: name }]
+      miniBtns: MiniButtons = { items: [{ mini_button: { name, label: name } }] },
+      miniBtnsNameHash: MiniButtons = { items: [{ mini_button: { name: `#${name}`, label: name } }] }
 
     it('Renders data-test attr for MiniButton', () => {
-      const { queryByTestId } = render(<MiniButtons items={miniBtns} />)
+      const { queryByTestId } = render(<XMiniButtons model={miniBtns} />)
       expect(queryByTestId(name)).toBeInTheDocument()
     })
 
     it('Calls sync() after click', () => {
-      const { getByText } = render(<MiniButtons items={miniBtns} />)
+      const { getByText } = render(<XMiniButtons model={miniBtns} />)
 
       fireEvent.click(getByText(name))
 
@@ -104,7 +105,7 @@ describe('Button.tsx', () => {
     })
 
     it('Sets window.location hash when name starts with #', () => {
-      const { getByText } = render(<MiniButtons items={miniBtnsNameHash} />)
+      const { getByText } = render(<XMiniButtons model={miniBtnsNameHash} />)
       fireEvent.click(getByText(name))
 
       expect(window.location.hash).toBe(hashName)

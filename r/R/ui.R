@@ -58,39 +58,38 @@ dump_object <- function(x) {
 }
 
 
-#' Create a mini button - same as regular button, but smaller in size.
+#' Create text content.
 #'
-#' @param name An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
-#' @param label The text displayed on the button.
-#' @param icon An optional icon to display next to the button label.
-#' @return A MiniButton instance.
+#' @param content The text content.
+#' @param size The font size of the text content.
+#'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
+#' @param width The width of the text , e.g. '100px'.
+#' @param visible True if the component should be visible. Defaults to true.
+#' @param tooltip Tooltip message.
+#' @param name An identifying name for this component.
+#' @return A Text instance.
 #' @export
-ui_mini_button <- function(
-  name,
-  label,
-  icon = NULL) {
+ui_text <- function(
+  content,
+  size = NULL,
+  width = NULL,
+  visible = NULL,
+  tooltip = NULL,
+  name = NULL) {
+  .guard_scalar("content", "character", content)
+  # TODO Validate size
+  .guard_scalar("width", "character", width)
+  .guard_scalar("visible", "logical", visible)
+  .guard_scalar("tooltip", "character", tooltip)
   .guard_scalar("name", "character", name)
-  .guard_scalar("label", "character", label)
-  .guard_scalar("icon", "character", icon)
-  .o <- list(
-    name=name,
-    label=label,
-    icon=icon)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveMiniButton"))
-  return(.o)
-}
-
-#' Create a set of mini buttons laid out horizontally.
-#'
-#' @param items The buttons in this set.
-#' @return A MiniButtons instance.
-#' @export
-ui_mini_buttons <- function(
-  items) {
-  .guard_vector("items", "WaveMiniButton", items)
-  .o <- list(
-    items=items)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveMiniButtons"))
+  .o <- list(text=list(
+    content=content,
+    size=size,
+    width=width,
+    visible=visible,
+    tooltip=tooltip,
+    name=name))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -131,288 +130,6 @@ ui_command <- function(
     value=value,
     data=data)
   class(.o) <- append(class(.o), c(.wave_obj, "WaveCommand"))
-  return(.o)
-}
-
-#' Create an article card for longer texts.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param title The card’s title, displayed at the top.
-#' @param content Markdown text.
-#' @param items Collection of small buttons rendered on the other side of card's title.
-#' @param commands Contextual menu commands for this component.
-#' @return A ArticleCard instance.
-#' @export
-ui_article_card <- function(
-  box,
-  title,
-  content = NULL,
-  items = NULL,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_scalar("title", "character", title)
-  .guard_scalar("content", "character", content)
-  .guard_scalar("items", "WaveMiniButtons", items)
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    title=title,
-    content=content,
-    items=items,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveArticleCard"))
-  return(.o)
-}
-
-#' Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
-#'
-#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-#' @param label The label to display.
-#' @return A Breadcrumb instance.
-#' @export
-ui_breadcrumb <- function(
-  name,
-  label) {
-  .guard_scalar("name", "character", name)
-  .guard_scalar("label", "character", label)
-  .o <- list(
-    name=name,
-    label=label)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumb"))
-  return(.o)
-}
-
-#' Create a card containing breadcrumbs.
-#' Breadcrumbs should be used as a navigational aid in your app or site.
-#' They indicate the current page’s location within a hierarchy and help
-#' the user understand where they are in relation to the rest of that hierarchy.
-#' They also afford one-click access to higher levels of that hierarchy.
-#' Breadcrumbs are typically placed, in horizontal form, under the masthead
-#' or navigation of an experience, above the primary content area.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param items A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
-#' @param commands Contextual menu commands for this component.
-#' @return A BreadcrumbsCard instance.
-#' @export
-ui_breadcrumbs_card <- function(
-  box,
-  items,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_vector("items", "WaveBreadcrumb", items)
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    items=items,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumbsCard"))
-  return(.o)
-}
-
-#' WARNING: Experimental and subject to change.
-#' Do not use in production sites!
-#' 
-#' Create a card that displays a drawing canvas (whiteboard).
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param title The title for this card.
-#' @param width Canvas width, in pixels.
-#' @param height Canvas height, in pixels.
-#' @param data The data for this card.
-#' @param commands Contextual menu commands for this component.
-#' @return A CanvasCard instance.
-#' @export
-ui_canvas_card <- function(
-  box,
-  title,
-  width,
-  height,
-  data,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_scalar("title", "character", title)
-  .guard_scalar("width", "numeric", width)
-  .guard_scalar("height", "numeric", height)
-  # TODO Validate data: Rec
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    title=title,
-    width=width,
-    height=height,
-    data=data,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveCanvasCard"))
-  return(.o)
-}
-
-#' WARNING: Experimental and subject to change.
-#' Do not use in production sites!
-#' 
-#' Create a card that displays a chat room.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param title The title for this card.
-#' @param data The data for this card.
-#' @param capacity The maximum number of messages contained in this card. Defaults to 50 messages.
-#' @param commands Contextual menu commands for this component.
-#' @return A ChatCard instance.
-#' @export
-ui_chat_card <- function(
-  box,
-  title,
-  data,
-  capacity = NULL,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_scalar("title", "character", title)
-  # TODO Validate data: Rec
-  .guard_scalar("capacity", "numeric", capacity)
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    title=title,
-    data=data,
-    capacity=capacity,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveChatCard"))
-  return(.o)
-}
-
-#' WARNING: Experimental and subject to change.
-#' Do not use in production sites!
-#' 
-#' Create a card that enables WYSIWYG editing on a page.
-#' Adding this card to a page makes the page editable by end-users.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param mode The editing mode. Defaults to `public`.
-#'   One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode.
-#' @param commands Contextual menu commands for this component.
-#' @return A EditorCard instance.
-#' @export
-ui_editor_card <- function(
-  box,
-  mode,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  # TODO Validate mode
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    mode=mode,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveEditorCard"))
-  return(.o)
-}
-
-#' EXPERIMENTAL. DO NOT USE.
-#' Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param item_view The child card type.
-#' @param item_props The child card properties.
-#' @param data Data for this card.
-#' @param direction Layout direction.
-#'   One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection.
-#' @param justify Layout strategy for main axis.
-#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify.
-#' @param align Layout strategy for cross axis.
-#'   One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign.
-#' @param wrap Wrapping strategy.
-#'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap.
-#' @param commands Contextual menu commands for this component.
-#' @return A FlexCard instance.
-#' @export
-ui_flex_card <- function(
-  box,
-  item_view,
-  item_props,
-  data,
-  direction = NULL,
-  justify = NULL,
-  align = NULL,
-  wrap = NULL,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_scalar("item_view", "character", item_view)
-  # TODO Validate item_props: Rec
-  # TODO Validate data: Data
-  # TODO Validate direction
-  # TODO Validate justify
-  # TODO Validate align
-  # TODO Validate wrap
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    item_view=item_view,
-    item_props=item_props,
-    data=data,
-    direction=direction,
-    justify=justify,
-    align=align,
-    wrap=wrap,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveFlexCard"))
-  return(.o)
-}
-
-#' Render a page footer displaying a caption.
-#' Footer cards are typically displayed at the bottom of a page.
-#'
-#' @param box A string indicating how to place this component on the page.
-#' @param caption The caption. Supports markdown.
-#' @param commands Contextual menu commands for this component.
-#' @return A FooterCard instance.
-#' @export
-ui_footer_card <- function(
-  box,
-  caption,
-  commands = NULL) {
-  .guard_scalar("box", "character", box)
-  .guard_scalar("caption", "character", caption)
-  .guard_vector("commands", "WaveCommand", commands)
-  .o <- list(
-    box=box,
-    caption=caption,
-    commands=commands)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveFooterCard"))
-  return(.o)
-}
-
-#' Create text content.
-#'
-#' @param content The text content.
-#' @param size The font size of the text content.
-#'   One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
-#' @param width The width of the text , e.g. '100px'.
-#' @param visible True if the component should be visible. Defaults to true.
-#' @param tooltip Tooltip message.
-#' @param name An identifying name for this component.
-#' @return A Text instance.
-#' @export
-ui_text <- function(
-  content,
-  size = NULL,
-  width = NULL,
-  visible = NULL,
-  tooltip = NULL,
-  name = NULL) {
-  .guard_scalar("content", "character", content)
-  # TODO Validate size
-  .guard_scalar("width", "character", width)
-  .guard_scalar("visible", "logical", visible)
-  .guard_scalar("tooltip", "character", tooltip)
-  .guard_scalar("name", "character", name)
-  .o <- list(text=list(
-    content=content,
-    size=size,
-    width=width,
-    visible=visible,
-    tooltip=tooltip,
-    name=name))
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
 
@@ -1516,6 +1233,46 @@ ui_buttons <- function(
     justify=justify,
     name=name,
     width=width,
+    visible=visible))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a mini button - same as regular button, but smaller in size.
+#'
+#' @param name An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
+#' @param label The text displayed on the button.
+#' @param icon An optional icon to display next to the button label.
+#' @return A MiniButton instance.
+#' @export
+ui_mini_button <- function(
+  name,
+  label,
+  icon = NULL) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .guard_scalar("icon", "character", icon)
+  .o <- list(mini_button=list(
+    name=name,
+    label=label,
+    icon=icon))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create a set of mini buttons laid out horizontally.
+#'
+#' @param items The buttons in this set.
+#' @param visible True if the component should be visible. Defaults to true.
+#' @return A MiniButtons instance.
+#' @export
+ui_mini_buttons <- function(
+  items,
+  visible = NULL) {
+  .guard_vector("items", "WaveComponent", items)
+  .guard_scalar("visible", "logical", visible)
+  .o <- list(mini_buttons=list(
+    items=items,
     visible=visible))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
@@ -2723,6 +2480,253 @@ ui_text_annotator <- function(
     items=items,
     trigger=trigger))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
+  return(.o)
+}
+
+#' Create an article card for longer texts.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The card’s title, displayed at the top.
+#' @param content Markdown text.
+#' @param items Collection of small buttons rendered under the title.
+#' @param commands Contextual menu commands for this component.
+#' @return A ArticleCard instance.
+#' @export
+ui_article_card <- function(
+  box,
+  title,
+  content = NULL,
+  items = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("content", "character", content)
+  .guard_vector("items", "WaveComponent", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    content=content,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveArticleCard"))
+  return(.o)
+}
+
+#' Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
+#'
+#' @param name The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+#' @param label The label to display.
+#' @return A Breadcrumb instance.
+#' @export
+ui_breadcrumb <- function(
+  name,
+  label) {
+  .guard_scalar("name", "character", name)
+  .guard_scalar("label", "character", label)
+  .o <- list(
+    name=name,
+    label=label)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumb"))
+  return(.o)
+}
+
+#' Create a card containing breadcrumbs.
+#' Breadcrumbs should be used as a navigational aid in your app or site.
+#' They indicate the current page’s location within a hierarchy and help
+#' the user understand where they are in relation to the rest of that hierarchy.
+#' They also afford one-click access to higher levels of that hierarchy.
+#' Breadcrumbs are typically placed, in horizontal form, under the masthead
+#' or navigation of an experience, above the primary content area.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param items A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
+#' @param commands Contextual menu commands for this component.
+#' @return A BreadcrumbsCard instance.
+#' @export
+ui_breadcrumbs_card <- function(
+  box,
+  items,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_vector("items", "WaveBreadcrumb", items)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    items=items,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveBreadcrumbsCard"))
+  return(.o)
+}
+
+#' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
+#' 
+#' Create a card that displays a drawing canvas (whiteboard).
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title for this card.
+#' @param width Canvas width, in pixels.
+#' @param height Canvas height, in pixels.
+#' @param data The data for this card.
+#' @param commands Contextual menu commands for this component.
+#' @return A CanvasCard instance.
+#' @export
+ui_canvas_card <- function(
+  box,
+  title,
+  width,
+  height,
+  data,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  .guard_scalar("width", "numeric", width)
+  .guard_scalar("height", "numeric", height)
+  # TODO Validate data: Rec
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    width=width,
+    height=height,
+    data=data,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveCanvasCard"))
+  return(.o)
+}
+
+#' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
+#' 
+#' Create a card that displays a chat room.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param title The title for this card.
+#' @param data The data for this card.
+#' @param capacity The maximum number of messages contained in this card. Defaults to 50 messages.
+#' @param commands Contextual menu commands for this component.
+#' @return A ChatCard instance.
+#' @export
+ui_chat_card <- function(
+  box,
+  title,
+  data,
+  capacity = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("title", "character", title)
+  # TODO Validate data: Rec
+  .guard_scalar("capacity", "numeric", capacity)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    title=title,
+    data=data,
+    capacity=capacity,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveChatCard"))
+  return(.o)
+}
+
+#' WARNING: Experimental and subject to change.
+#' Do not use in production sites!
+#' 
+#' Create a card that enables WYSIWYG editing on a page.
+#' Adding this card to a page makes the page editable by end-users.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param mode The editing mode. Defaults to `public`.
+#'   One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode.
+#' @param commands Contextual menu commands for this component.
+#' @return A EditorCard instance.
+#' @export
+ui_editor_card <- function(
+  box,
+  mode,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  # TODO Validate mode
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    mode=mode,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveEditorCard"))
+  return(.o)
+}
+
+#' EXPERIMENTAL. DO NOT USE.
+#' Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param item_view The child card type.
+#' @param item_props The child card properties.
+#' @param data Data for this card.
+#' @param direction Layout direction.
+#'   One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection.
+#' @param justify Layout strategy for main axis.
+#'   One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify.
+#' @param align Layout strategy for cross axis.
+#'   One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign.
+#' @param wrap Wrapping strategy.
+#'   One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap.
+#' @param commands Contextual menu commands for this component.
+#' @return A FlexCard instance.
+#' @export
+ui_flex_card <- function(
+  box,
+  item_view,
+  item_props,
+  data,
+  direction = NULL,
+  justify = NULL,
+  align = NULL,
+  wrap = NULL,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("item_view", "character", item_view)
+  # TODO Validate item_props: Rec
+  # TODO Validate data: Data
+  # TODO Validate direction
+  # TODO Validate justify
+  # TODO Validate align
+  # TODO Validate wrap
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    item_view=item_view,
+    item_props=item_props,
+    data=data,
+    direction=direction,
+    justify=justify,
+    align=align,
+    wrap=wrap,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveFlexCard"))
+  return(.o)
+}
+
+#' Render a page footer displaying a caption.
+#' Footer cards are typically displayed at the bottom of a page.
+#'
+#' @param box A string indicating how to place this component on the page.
+#' @param caption The caption. Supports markdown.
+#' @param commands Contextual menu commands for this component.
+#' @return A FooterCard instance.
+#' @export
+ui_footer_card <- function(
+  box,
+  caption,
+  commands = NULL) {
+  .guard_scalar("box", "character", box)
+  .guard_scalar("caption", "character", caption)
+  .guard_vector("commands", "WaveCommand", commands)
+  .o <- list(
+    box=box,
+    caption=caption,
+    commands=commands)
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveFooterCard"))
   return(.o)
 }
 

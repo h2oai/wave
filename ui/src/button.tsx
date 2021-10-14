@@ -81,7 +81,9 @@ export interface Buttons {
 /** Create a set of mini buttons laid out horizontally. */
 export interface MiniButtons {
   /** The buttons in this set. */
-  items: MiniButton[]
+  items: Component[]
+  /** True if the component should be visible. Defaults to true. */
+  visible?: B
 }
 
 /** Create a mini button - same as regular button, but smaller in size. */
@@ -166,20 +168,22 @@ export const
       <XButton key={m.name} model={m} />
     </div>
   ),
-  MiniButtons = ({ items }: MiniButtons) => (
+  XMiniButtons = ({ model }: { model: MiniButtons }) => (
     <Fluent.Stack horizontal verticalAlign='center' styles={{ root: { height: 24 } }}>
-      {items.map(miniBtn => <MiniButton key={miniBtn.name} {...miniBtn} />)}
+      {model.items.map(i => i.mini_button).map(miniBtn => miniBtn ? <XMiniButton key={miniBtn.name} model={miniBtn} /> : null)}
     </Fluent.Stack>
   ),
-  MiniButton = ({ name, label, icon }: MiniButton) => {
-    const onClick = () => {
-      if (name.startsWith('#')) {
-        window.location.hash = name.substr(1)
-        return
+  XMiniButton = ({ model }: { model: MiniButton }) => {
+    const
+      { name, label, icon } = model,
+      onClick = () => {
+        if (name.startsWith('#')) {
+          window.location.hash = name.substr(1)
+          return
+        }
+        wave.args[name] = true
+        wave.push()
       }
-      wave.args[name] = true
-      wave.push()
-    }
 
     return (
       <Fluent.ActionButton

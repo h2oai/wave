@@ -21,40 +21,34 @@ from .types import *
 from .ui_ext import *
 
 
-def mini_button(
-        name: str,
-        label: str,
-        icon: Optional[str] = None,
-) -> MiniButton:
-    """Create a mini button - same as regular button, but smaller in size.
+def text(
+        content: str,
+        size: Optional[str] = None,
+        width: Optional[str] = None,
+        visible: Optional[bool] = None,
+        tooltip: Optional[str] = None,
+        name: Optional[str] = None,
+) -> Component:
+    """Create text content.
 
     Args:
-        name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
-        label: The text displayed on the button.
-        icon: An optional icon to display next to the button label.
+        content: The text content.
+        size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
+        width: The width of the text , e.g. '100px'.
+        visible: True if the component should be visible. Defaults to true.
+        tooltip: Tooltip message.
+        name: An identifying name for this component.
     Returns:
-        A `h2o_wave.types.MiniButton` instance.
+        A `h2o_wave.types.Text` instance.
     """
-    return MiniButton(
+    return Component(text=Text(
+        content,
+        size,
+        width,
+        visible,
+        tooltip,
         name,
-        label,
-        icon,
-    )
-
-
-def mini_buttons(
-        items: List[MiniButton],
-) -> MiniButtons:
-    """Create a set of mini buttons laid out horizontally.
-
-    Args:
-        items: The buttons in this set.
-    Returns:
-        A `h2o_wave.types.MiniButtons` instance.
-    """
-    return MiniButtons(
-        items,
-    )
+    ))
 
 
 def command(
@@ -92,258 +86,6 @@ def command(
         value,
         data,
     )
-
-
-def article_card(
-        box: str,
-        title: str,
-        content: Optional[str] = None,
-        items: Optional[MiniButtons] = None,
-        commands: Optional[List[Command]] = None,
-) -> ArticleCard:
-    """Create an article card for longer texts.
-
-    Args:
-        box: A string indicating how to place this component on the page.
-        title: The card’s title, displayed at the top.
-        content: Markdown text.
-        items: Collection of small buttons rendered on the other side of card's title.
-        commands: Contextual menu commands for this component.
-    Returns:
-        A `h2o_wave.types.ArticleCard` instance.
-    """
-    return ArticleCard(
-        box,
-        title,
-        content,
-        items,
-        commands,
-    )
-
-
-def breadcrumb(
-        name: str,
-        label: str,
-) -> Breadcrumb:
-    """Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
-
-    Args:
-        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
-        label: The label to display.
-    Returns:
-        A `h2o_wave.types.Breadcrumb` instance.
-    """
-    return Breadcrumb(
-        name,
-        label,
-    )
-
-
-def breadcrumbs_card(
-        box: str,
-        items: List[Breadcrumb],
-        commands: Optional[List[Command]] = None,
-) -> BreadcrumbsCard:
-    """Create a card containing breadcrumbs.
-    Breadcrumbs should be used as a navigational aid in your app or site.
-    They indicate the current page’s location within a hierarchy and help
-    the user understand where they are in relation to the rest of that hierarchy.
-    They also afford one-click access to higher levels of that hierarchy.
-    Breadcrumbs are typically placed, in horizontal form, under the masthead
-    or navigation of an experience, above the primary content area.
-
-    Args:
-        box: A string indicating how to place this component on the page.
-        items: A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
-        commands: Contextual menu commands for this component.
-    Returns:
-        A `h2o_wave.types.BreadcrumbsCard` instance.
-    """
-    return BreadcrumbsCard(
-        box,
-        items,
-        commands,
-    )
-
-
-def canvas_card(
-        box: str,
-        title: str,
-        width: int,
-        height: int,
-        data: PackedRecord,
-        commands: Optional[List[Command]] = None,
-) -> CanvasCard:
-    """WARNING: Experimental and subject to change.
-    Do not use in production sites!
-
-    Create a card that displays a drawing canvas (whiteboard).
-
-    Args:
-        box: A string indicating how to place this component on the page.
-        title: The title for this card.
-        width: Canvas width, in pixels.
-        height: Canvas height, in pixels.
-        data: The data for this card.
-        commands: Contextual menu commands for this component.
-    Returns:
-        A `h2o_wave.types.CanvasCard` instance.
-    """
-    return CanvasCard(
-        box,
-        title,
-        width,
-        height,
-        data,
-        commands,
-    )
-
-
-def chat_card(
-        box: str,
-        title: str,
-        data: PackedRecord,
-        capacity: Optional[int] = None,
-        commands: Optional[List[Command]] = None,
-) -> ChatCard:
-    """WARNING: Experimental and subject to change.
-    Do not use in production sites!
-
-    Create a card that displays a chat room.
-
-    Args:
-        box: A string indicating how to place this component on the page.
-        title: The title for this card.
-        data: The data for this card.
-        capacity: The maximum number of messages contained in this card. Defaults to 50 messages.
-        commands: Contextual menu commands for this component.
-    Returns:
-        A `h2o_wave.types.ChatCard` instance.
-    """
-    return ChatCard(
-        box,
-        title,
-        data,
-        capacity,
-        commands,
-    )
-
-
-def editor_card(
-        box: str,
-        mode: str,
-        commands: Optional[List[Command]] = None,
-) -> EditorCard:
-    """WARNING: Experimental and subject to change.
-    Do not use in production sites!
-
-    Create a card that enables WYSIWYG editing on a page.
-    Adding this card to a page makes the page editable by end-users.
-
-    Args:
-        box: A string indicating how to place this component on the page.
-        mode: The editing mode. Defaults to `public`. One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode.
-        commands: Contextual menu commands for this component.
-    Returns:
-        A `h2o_wave.types.EditorCard` instance.
-    """
-    return EditorCard(
-        box,
-        mode,
-        commands,
-    )
-
-
-def flex_card(
-        box: str,
-        item_view: str,
-        item_props: PackedRecord,
-        data: PackedData,
-        direction: Optional[str] = None,
-        justify: Optional[str] = None,
-        align: Optional[str] = None,
-        wrap: Optional[str] = None,
-        commands: Optional[List[Command]] = None,
-) -> FlexCard:
-    """EXPERIMENTAL. DO NOT USE.
-    Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
-
-    Args:
-        box: A string indicating how to place this component on the page.
-        item_view: The child card type.
-        item_props: The child card properties.
-        data: Data for this card.
-        direction: Layout direction. One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection.
-        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify.
-        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign.
-        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap.
-        commands: Contextual menu commands for this component.
-    Returns:
-        A `h2o_wave.types.FlexCard` instance.
-    """
-    return FlexCard(
-        box,
-        item_view,
-        item_props,
-        data,
-        direction,
-        justify,
-        align,
-        wrap,
-        commands,
-    )
-
-
-def footer_card(
-        box: str,
-        caption: str,
-        commands: Optional[List[Command]] = None,
-) -> FooterCard:
-    """Render a page footer displaying a caption.
-    Footer cards are typically displayed at the bottom of a page.
-
-    Args:
-        box: A string indicating how to place this component on the page.
-        caption: The caption. Supports markdown.
-        commands: Contextual menu commands for this component.
-    Returns:
-        A `h2o_wave.types.FooterCard` instance.
-    """
-    return FooterCard(
-        box,
-        caption,
-        commands,
-    )
-
-
-def text(
-        content: str,
-        size: Optional[str] = None,
-        width: Optional[str] = None,
-        visible: Optional[bool] = None,
-        tooltip: Optional[str] = None,
-        name: Optional[str] = None,
-) -> Component:
-    """Create text content.
-
-    Args:
-        content: The text content.
-        size: The font size of the text content. One of 'xl', 'l', 'm', 's', 'xs'. See enum h2o_wave.ui.TextSize.
-        width: The width of the text , e.g. '100px'.
-        visible: True if the component should be visible. Defaults to true.
-        tooltip: Tooltip message.
-        name: An identifying name for this component.
-    Returns:
-        A `h2o_wave.types.Text` instance.
-    """
-    return Component(text=Text(
-        content,
-        size,
-        width,
-        visible,
-        tooltip,
-        name,
-    ))
 
 
 def text_xl(
@@ -1303,6 +1045,45 @@ def buttons(
         justify,
         name,
         width,
+        visible,
+    ))
+
+
+def mini_button(
+        name: str,
+        label: str,
+        icon: Optional[str] = None,
+) -> Component:
+    """Create a mini button - same as regular button, but smaller in size.
+
+    Args:
+        name: An identifying name for this component. If the name is prefixed with a '#', the button sets the location hash to the name when clicked.
+        label: The text displayed on the button.
+        icon: An optional icon to display next to the button label.
+    Returns:
+        A `h2o_wave.types.MiniButton` instance.
+    """
+    return Component(mini_button=MiniButton(
+        name,
+        label,
+        icon,
+    ))
+
+
+def mini_buttons(
+        items: List[Component],
+        visible: Optional[bool] = None,
+) -> Component:
+    """Create a set of mini buttons laid out horizontally.
+
+    Args:
+        items: The buttons in this set.
+        visible: True if the component should be visible. Defaults to true.
+    Returns:
+        A `h2o_wave.types.MiniButtons` instance.
+    """
+    return Component(mini_buttons=MiniButtons(
+        items,
         visible,
     ))
 
@@ -2338,6 +2119,228 @@ def text_annotator(
         items,
         trigger,
     ))
+
+
+def article_card(
+        box: str,
+        title: str,
+        content: Optional[str] = None,
+        items: Optional[List[Component]] = None,
+        commands: Optional[List[Command]] = None,
+) -> ArticleCard:
+    """Create an article card for longer texts.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The card’s title, displayed at the top.
+        content: Markdown text.
+        items: Collection of small buttons rendered under the title.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.ArticleCard` instance.
+    """
+    return ArticleCard(
+        box,
+        title,
+        content,
+        items,
+        commands,
+    )
+
+
+def breadcrumb(
+        name: str,
+        label: str,
+) -> Breadcrumb:
+    """Create a breadcrumb for a `h2o_wave.types.BreadcrumbsCard()`.
+
+    Args:
+        name: The name of this item. Prefix the name with a '#' to trigger hash-change navigation.
+        label: The label to display.
+    Returns:
+        A `h2o_wave.types.Breadcrumb` instance.
+    """
+    return Breadcrumb(
+        name,
+        label,
+    )
+
+
+def breadcrumbs_card(
+        box: str,
+        items: List[Breadcrumb],
+        commands: Optional[List[Command]] = None,
+) -> BreadcrumbsCard:
+    """Create a card containing breadcrumbs.
+    Breadcrumbs should be used as a navigational aid in your app or site.
+    They indicate the current page’s location within a hierarchy and help
+    the user understand where they are in relation to the rest of that hierarchy.
+    They also afford one-click access to higher levels of that hierarchy.
+    Breadcrumbs are typically placed, in horizontal form, under the masthead
+    or navigation of an experience, above the primary content area.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        items: A list of `h2o_wave.types.Breadcrumb` instances to display. See `h2o_wave.ui.breadcrumb()`
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.BreadcrumbsCard` instance.
+    """
+    return BreadcrumbsCard(
+        box,
+        items,
+        commands,
+    )
+
+
+def canvas_card(
+        box: str,
+        title: str,
+        width: int,
+        height: int,
+        data: PackedRecord,
+        commands: Optional[List[Command]] = None,
+) -> CanvasCard:
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card that displays a drawing canvas (whiteboard).
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        width: Canvas width, in pixels.
+        height: Canvas height, in pixels.
+        data: The data for this card.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.CanvasCard` instance.
+    """
+    return CanvasCard(
+        box,
+        title,
+        width,
+        height,
+        data,
+        commands,
+    )
+
+
+def chat_card(
+        box: str,
+        title: str,
+        data: PackedRecord,
+        capacity: Optional[int] = None,
+        commands: Optional[List[Command]] = None,
+) -> ChatCard:
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card that displays a chat room.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        title: The title for this card.
+        data: The data for this card.
+        capacity: The maximum number of messages contained in this card. Defaults to 50 messages.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.ChatCard` instance.
+    """
+    return ChatCard(
+        box,
+        title,
+        data,
+        capacity,
+        commands,
+    )
+
+
+def editor_card(
+        box: str,
+        mode: str,
+        commands: Optional[List[Command]] = None,
+) -> EditorCard:
+    """WARNING: Experimental and subject to change.
+    Do not use in production sites!
+
+    Create a card that enables WYSIWYG editing on a page.
+    Adding this card to a page makes the page editable by end-users.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        mode: The editing mode. Defaults to `public`. One of 'public', 'private'. See enum h2o_wave.ui.EditorCardMode.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.EditorCard` instance.
+    """
+    return EditorCard(
+        box,
+        mode,
+        commands,
+    )
+
+
+def flex_card(
+        box: str,
+        item_view: str,
+        item_props: PackedRecord,
+        data: PackedData,
+        direction: Optional[str] = None,
+        justify: Optional[str] = None,
+        align: Optional[str] = None,
+        wrap: Optional[str] = None,
+        commands: Optional[List[Command]] = None,
+) -> FlexCard:
+    """EXPERIMENTAL. DO NOT USE.
+    Create a card containing other cards laid out using a one-dimensional model with flexible alignemnt and wrapping capabilities.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        item_view: The child card type.
+        item_props: The child card properties.
+        data: Data for this card.
+        direction: Layout direction. One of 'horizontal', 'vertical'. See enum h2o_wave.ui.FlexCardDirection.
+        justify: Layout strategy for main axis. One of 'start', 'end', 'center', 'between', 'around'. See enum h2o_wave.ui.FlexCardJustify.
+        align: Layout strategy for cross axis. One of 'start', 'end', 'center', 'baseline', 'stretch'. See enum h2o_wave.ui.FlexCardAlign.
+        wrap: Wrapping strategy. One of 'start', 'end', 'center', 'between', 'around', 'stretch'. See enum h2o_wave.ui.FlexCardWrap.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.FlexCard` instance.
+    """
+    return FlexCard(
+        box,
+        item_view,
+        item_props,
+        data,
+        direction,
+        justify,
+        align,
+        wrap,
+        commands,
+    )
+
+
+def footer_card(
+        box: str,
+        caption: str,
+        commands: Optional[List[Command]] = None,
+) -> FooterCard:
+    """Render a page footer displaying a caption.
+    Footer cards are typically displayed at the bottom of a page.
+
+    Args:
+        box: A string indicating how to place this component on the page.
+        caption: The caption. Supports markdown.
+        commands: Contextual menu commands for this component.
+    Returns:
+        A `h2o_wave.types.FooterCard` instance.
+    """
+    return FooterCard(
+        box,
+        caption,
+        commands,
+    )
 
 
 def form_card(

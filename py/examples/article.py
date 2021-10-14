@@ -9,11 +9,13 @@ page.add('meta', ui.meta_card(box='', theme='default'))
 page.add('example', ui.article_card(
     box='1 1 4 6',
     title='Title',
-    items=ui.mini_buttons([
-        ui.mini_button(name='like', label='4', icon='Heart'),
-        ui.mini_button(name='comment', label='2', icon='Blog'),
-        ui.mini_button(name='share', label='1', icon='Relationship'),
-    ]),
+    items=[
+        ui.mini_buttons([
+            ui.mini_button(name='like', label='4', icon='Heart'),
+            ui.mini_button(name='comment', label='2', icon='Blog'),
+            ui.mini_button(name='share', label='1', icon='Relationship'),
+        ])
+    ],
     content='''
 Duis porttitor tincidunt justo ac semper. Vestibulum et molestie lectus. Proin vel eros a ex condimentum aliquam.
 Sed accumsan tellus sit amet nulla ullamcorper. Suspendisse bibendum tristique sem, quis lacinia ex pulvinar quis.

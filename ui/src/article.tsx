@@ -15,7 +15,7 @@
 import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
-import { MiniButtons } from './button'
+import { Component, XComponents } from './form'
 import { cards } from './layout'
 import { Markdown } from './markdown'
 import { clas, cssVar, margin, px } from './theme'
@@ -81,8 +81,8 @@ interface State {
   title: S
   /** Markdown text. */
   content?: S
-  /** Collection of small buttons rendered on the other side of card's title. */
-  items?: MiniButtons
+  /** Collection of small buttons rendered under the title. */
+  items?: Component[]
 }
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
@@ -91,7 +91,7 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
     return (
       <section data-test={name} className={css.card}>
         <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
-        {items && <div className={css.miniBtns}><MiniButtons {...items} /></div>}
+        {items && <div className={css.miniBtns}><XComponents items={items} /></div>}
         {content && <Markdown source={content} />}
       </section>
     )
