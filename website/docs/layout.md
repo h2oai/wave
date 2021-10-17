@@ -4,7 +4,7 @@ title: Layout
 
 This section illustrates how to lay out cards on a page.
 
-Wave support two layout systems out of the box: a grid layout and a flex (flexible) layout.
+Wave supports two layout systems out of the box: a grid layout and a flex (flexible) layout.
 
 By default, pages use the grid-based system. The grid-based system is simpler to use, and ensures that your page layout looks exactly the same on every display, without surprises.
 
