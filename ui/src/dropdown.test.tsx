@@ -41,13 +41,7 @@ describe('Dropdown.tsx', () => {
       expect(queryByTestId(name)).toBeInTheDocument()
     })
 
-    it('Does not display dropdown when visible is false', () => {
-      const { queryByTestId } = render(<XDropdown model={{ ...defaultProps, visible: false }} />)
-      expect(queryByTestId(name)).toBeInTheDocument()
-      expect(queryByTestId(name)).not.toBeVisible()
-    })
-
-    it('Calls qd.sync() when trigger is on', () => {
+    it('Calls sync when trigger is on', () => {
       const { getByTestId, getByText } = render(<XDropdown model={{ ...defaultProps, trigger: true }} />)
 
       fireEvent.click(getByTestId(name))
@@ -56,7 +50,7 @@ describe('Dropdown.tsx', () => {
       expect(pushMock).toHaveBeenCalled()
     })
 
-    it('Does not call qd.sync() when trigger is off', () => {
+    it('Does not call sync when trigger is off', () => {
       const { getByTestId, getByText } = render(<XDropdown model={defaultProps} />)
 
       fireEvent.click(getByTestId(name))
@@ -95,7 +89,7 @@ describe('Dropdown.tsx', () => {
       fireEvent.click(getByText('Choice A').parentElement!)
       fireEvent.click(getByText('Choice B').parentElement!)
 
-      expect(wave.args[name]).toBe('B')
+      expect(wave.args[name]).toMatchObject(['A', 'B'])
     })
 
     it('Returns multiple items on init', () => {
@@ -150,15 +144,6 @@ describe('Dropdown.tsx', () => {
     })
 
     it('Deselects all options on Deselect all', () => {
-      const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A', 'B', 'C', 'D'] }} />)
-
-      fireEvent.click(getByText('Deselect All'))
-
-      expect(pushMock).toHaveBeenCalled()
-      expect(wave.args[name]).toMatchObject([])
-    })
-
-    it('Calls sync on Deselect all - trigger enabled', () => {
       const { getByText } = render(<XDropdown model={{ ...defaultProps, values: ['A'], trigger: true }} />)
 
       fireEvent.click(getByText('Deselect All'))
@@ -178,12 +163,6 @@ describe('Dropdown.tsx', () => {
     it('Renders data-test attr', () => {
       const { queryByTestId } = render(<XDropdown model={dialogProps} />)
       expect(queryByTestId(name)).toBeInTheDocument()
-    })
-
-    it('Does not display dropdown when visible is false', () => {
-      const { queryByTestId } = render(<XDropdown model={{ ...dialogProps, visible: false }} />)
-      expect(queryByTestId(name)).toBeInTheDocument()
-      expect(queryByTestId(name)).not.toBeVisible()
     })
 
     it('Calls sync on Deselect all - trigger enabled', () => {
@@ -306,6 +285,29 @@ describe('Dropdown.tsx', () => {
       fireEvent.change(getByTestId(`${name}-search`), { target: { value: '' } })
       expect(getAllByRole('row')).toHaveLength(10) // Fluent Detaillist uses virtualization, so only first 10 rows are rendered.
     })
-  })
 
+    it('Resets filter after cancel', () => {
+      const { getByTestId, getAllByRole, getByText } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
+
+      fireEvent.click(getByTestId(name))
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: '22' } })
+      expect(getAllByRole('row')).toHaveLength(1)
+
+      fireEvent.click(getByText('Cancel'))
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('row')).toHaveLength(10) // Fluent Detaillist uses virtualization, so only first 10 rows are rendered.
+    })
+
+    it('Resets filter after submit', () => {
+      const { getByTestId, getAllByRole, getByText } = render(<XDropdown model={{ ...dialogProps, values: [] }} />)
+
+      fireEvent.click(getByTestId(name))
+      fireEvent.change(getByTestId(`${name}-search`), { target: { value: '22' } })
+      expect(getAllByRole('row')).toHaveLength(1)
+
+      fireEvent.click(getByText('Select'))
+      fireEvent.click(getByTestId(name))
+      expect(getAllByRole('row')).toHaveLength(10) // Fluent Detaillist uses virtualization, so only first 10 rows are rendered.
+    })
+  })
 })
