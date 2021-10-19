@@ -15,7 +15,6 @@
 import * as Fluent from '@fluentui/react'
 import { B, Id, S, U } from 'h2o-wave'
 import React from 'react'
-import { cssVar } from './theme'
 import { wave } from './ui'
 
 /**
@@ -75,18 +74,6 @@ export const
     return (
       <Fluent.DatePicker
         data-test={m.name}
-        styles={{
-          callout: {
-            selectors: {
-              '.ms-DatePicker-day:hover': {
-                background: cssVar('$neutralTertiary')
-              },
-              '.ms-DatePicker-day--highlighted': {
-                background: `${cssVar('$neutralTertiary')} !important`
-              }
-            }
-          }
-        }}
         label={m.label}
         value={value}
         placeholder={m.placeholder}
