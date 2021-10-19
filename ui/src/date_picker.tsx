@@ -41,6 +41,10 @@ export interface DatePicker {
   visible?: B
   /** An optional tooltip message displayed when a user clicks the help icon to the right of the component. */
   tooltip?: S
+  /** The minimum allowed date value in YYYY-MM-DD format. */
+  min?: S
+  /** The maximum allowed date value in YYYY-MM-DD format. */
+  max?: S
 }
 
 const
@@ -79,6 +83,8 @@ export const
         placeholder={m.placeholder}
         disabled={m.disabled}
         onSelectDate={onSelectDate}
+        minDate={parseDate(m.min || null)}
+        maxDate={parseDate(m.max || null)}
       />
     )
   }

@@ -1259,6 +1259,8 @@ ui_spinbox <- function(
 #' @param width The width of the date picker, e.g. '100px'. Defaults to '100%'.
 #' @param visible True if the component should be visible. Defaults to true.
 #' @param tooltip An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+#' @param min The minimum allowed date value in YYYY-MM-DD format.
+#' @param max The maximum allowed date value in YYYY-MM-DD format.
 #' @return A DatePicker instance.
 #' @export
 ui_date_picker <- function(
@@ -1270,7 +1272,9 @@ ui_date_picker <- function(
   trigger = NULL,
   width = NULL,
   visible = NULL,
-  tooltip = NULL) {
+  tooltip = NULL,
+  min = NULL,
+  max = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("label", "character", label)
   .guard_scalar("placeholder", "character", placeholder)
@@ -1280,6 +1284,8 @@ ui_date_picker <- function(
   .guard_scalar("width", "character", width)
   .guard_scalar("visible", "logical", visible)
   .guard_scalar("tooltip", "character", tooltip)
+  .guard_scalar("min", "character", min)
+  .guard_scalar("max", "character", max)
   .o <- list(date_picker=list(
     name=name,
     label=label,
@@ -1289,7 +1295,9 @@ ui_date_picker <- function(
     trigger=trigger,
     width=width,
     visible=visible,
-    tooltip=tooltip))
+    tooltip=tooltip,
+    min=min,
+    max=max))
   class(.o) <- append(class(.o), c(.wave_obj, "WaveComponent"))
   return(.o)
 }
