@@ -173,7 +173,7 @@ async def serve(q: Q):
             ui.buttons([
                 ui.button(name='primary_button', label='Primary', primary=True),
                 ui.button(name='standard_button', label='Standard'),
-                ui.button(name='standard_disabled_button', label='Standard', disabled=True),
+                ui.button(name='standard_disabled_button', label='Disabled', disabled=True),
                 ui.button(name='icon_button', icon='Heart', caption='Tooltip text'),
             ]),
         ])
