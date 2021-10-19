@@ -5709,7 +5709,7 @@ class TextAnnotator:
 
 
 class Component:
-    """Create a component.
+    """No documentation available.
     """
     def __init__(
             self,
@@ -5885,7 +5885,7 @@ class Component:
         self.persona = persona
         """Persona."""
         self.text_annotator = text_annotator
-        """Annotator."""
+        """No documentation available."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""

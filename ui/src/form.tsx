@@ -17,7 +17,7 @@ import { B, Model, Packed, S, unpack } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { TextAnnotator, XTextAnnotator } from './annotator'
-import { Button, Buttons, XMiniButton, XMiniButtons, XButtons, XStandAloneButton, MiniButton, MiniButtons } from './button'
+import { Button, Buttons, MiniButton, MiniButtons, XButtons, XMiniButton, XMiniButtons, XStandAloneButton } from './button'
 import { Checkbox, XCheckbox } from './checkbox'
 import { Checklist, XChecklist } from './checklist'
 import { ChoiceGroup, XChoiceGroup } from './choice_group'
@@ -26,6 +26,7 @@ import { Combobox, XCombobox } from './combobox'
 import { DatePicker, XDatePicker } from './date_picker'
 import { Dropdown, XDropdown } from './dropdown'
 import { Expander, XExpander } from './expander'
+import { Facepile, XFacepile } from "./facepile"
 import { FileUpload, XFileUpload } from './file_upload'
 import { Frame, XFrame } from './frame'
 import { Image, XImage } from './image'
@@ -143,6 +144,8 @@ export interface Component {
   persona?: Persona
   /** Annotator. */
   text_annotator?: TextAnnotator
+  /** Facepile. */
+  facepile?: Facepile
 }
 
 /** Create an inline (horizontal) list of components. */
@@ -269,6 +272,7 @@ const
     if (m.text_annotator) return <XTextAnnotator model={m.text_annotator} />
     if (m.mini_button) return <XMiniButton model={m.mini_button} />
     if (m.mini_buttons) return <XMiniButtons model={m.mini_buttons} />
+    if (m.facepile) return <XFacepile model={m.facepile} />
     return <Fluent.MessageBar messageBarType={Fluent.MessageBarType.severeWarning}>This component could not be rendered.</Fluent.MessageBar>
   }
 
