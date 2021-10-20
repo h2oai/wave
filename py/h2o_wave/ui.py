@@ -1075,6 +1075,8 @@ def date_picker(
         width: Optional[str] = None,
         visible: Optional[bool] = None,
         tooltip: Optional[str] = None,
+        min: Optional[str] = None,
+        max: Optional[str] = None,
 ) -> Component:
     """Create a date picker.
 
@@ -1090,6 +1092,8 @@ def date_picker(
         width: The width of the date picker, e.g. '100px'. Defaults to '100%'.
         visible: True if the component should be visible. Defaults to true.
         tooltip: An optional tooltip message displayed when a user clicks the help icon to the right of the component.
+        min: The minimum allowed date value in YYYY-MM-DD format.
+        max: The maximum allowed date value in YYYY-MM-DD format.
     Returns:
         A `h2o_wave.types.DatePicker` instance.
     """
@@ -1103,6 +1107,8 @@ def date_picker(
         width,
         visible,
         tooltip,
+        min,
+        max,
     ))
 
 

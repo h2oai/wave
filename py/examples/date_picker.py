@@ -12,6 +12,7 @@ async def serve(q: Q):
             ui.text(f'date={q.args.date}'),
             ui.text(f'date_placeholder={q.args.date_placeholder}'),
             ui.text(f'date_disabled={q.args.date_disabled}'),
+            ui.text(f'date_boundaries={q.args.date_boundaries}'),
             ui.button(name='show_form', label='Back', primary=True),
         ]
     else:
@@ -19,6 +20,7 @@ async def serve(q: Q):
             ui.date_picker(name='date', label='Standard date picker', value='2017-10-19'),
             ui.date_picker(name='date_placeholder', label='Date picker with placeholder', placeholder='Pick a date'),
             ui.date_picker(name='date_disabled', label='Disabled date picker', value='2017-10-19', disabled=True),
+            ui.date_picker(name='date_boundaries', label='Date with boundaries', value='2017-10-19', min="2017-10-19", max="2017-10-25"),
             ui.button(name='show_inputs', label='Submit', primary=True),
         ])
     await q.page.save()

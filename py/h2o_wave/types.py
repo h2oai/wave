@@ -2743,6 +2743,8 @@ class DatePicker:
             width: Optional[str] = None,
             visible: Optional[bool] = None,
             tooltip: Optional[str] = None,
+            min: Optional[str] = None,
+            max: Optional[str] = None,
     ):
         _guard_scalar('DatePicker.name', name, (str,), True, False, False)
         _guard_scalar('DatePicker.label', label, (str,), False, True, False)
@@ -2753,6 +2755,8 @@ class DatePicker:
         _guard_scalar('DatePicker.width', width, (str,), False, True, False)
         _guard_scalar('DatePicker.visible', visible, (bool,), False, True, False)
         _guard_scalar('DatePicker.tooltip', tooltip, (str,), False, True, False)
+        _guard_scalar('DatePicker.min', min, (str,), False, True, False)
+        _guard_scalar('DatePicker.max', max, (str,), False, True, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -2771,6 +2775,10 @@ class DatePicker:
         """True if the component should be visible. Defaults to true."""
         self.tooltip = tooltip
         """An optional tooltip message displayed when a user clicks the help icon to the right of the component."""
+        self.min = min
+        """The minimum allowed date value in YYYY-MM-DD format."""
+        self.max = max
+        """The maximum allowed date value in YYYY-MM-DD format."""
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
@@ -2783,6 +2791,8 @@ class DatePicker:
         _guard_scalar('DatePicker.width', self.width, (str,), False, True, False)
         _guard_scalar('DatePicker.visible', self.visible, (bool,), False, True, False)
         _guard_scalar('DatePicker.tooltip', self.tooltip, (str,), False, True, False)
+        _guard_scalar('DatePicker.min', self.min, (str,), False, True, False)
+        _guard_scalar('DatePicker.max', self.max, (str,), False, True, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -2793,6 +2803,8 @@ class DatePicker:
             width=self.width,
             visible=self.visible,
             tooltip=self.tooltip,
+            min=self.min,
+            max=self.max,
         )
 
     @staticmethod
@@ -2816,6 +2828,10 @@ class DatePicker:
         _guard_scalar('DatePicker.visible', __d_visible, (bool,), False, True, False)
         __d_tooltip: Any = __d.get('tooltip')
         _guard_scalar('DatePicker.tooltip', __d_tooltip, (str,), False, True, False)
+        __d_min: Any = __d.get('min')
+        _guard_scalar('DatePicker.min', __d_min, (str,), False, True, False)
+        __d_max: Any = __d.get('max')
+        _guard_scalar('DatePicker.max', __d_max, (str,), False, True, False)
         name: str = __d_name
         label: Optional[str] = __d_label
         placeholder: Optional[str] = __d_placeholder
@@ -2825,6 +2841,8 @@ class DatePicker:
         width: Optional[str] = __d_width
         visible: Optional[bool] = __d_visible
         tooltip: Optional[str] = __d_tooltip
+        min: Optional[str] = __d_min
+        max: Optional[str] = __d_max
         return DatePicker(
             name,
             label,
@@ -2835,6 +2853,8 @@ class DatePicker:
             width,
             visible,
             tooltip,
+            min,
+            max,
         )
 
 
