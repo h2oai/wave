@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as Fluent from '@fluentui/react'
 import { Model, S } from 'h2o-wave'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import { Component, XComponents } from './form'
 import { cards } from './layout'
+import { XPersona } from './persona'
 import { border, cssVar } from './theme'
-import { Command } from './toolbar'
 import { bond } from './ui'
 
 const css = stylesheet({
@@ -38,11 +37,27 @@ const css = stylesheet({
     backgroundPosition: 'center'
   },
   persona: {
-    margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginBottom: 16
+    marginBottom: 16,
+    $nest: {
+      '.ms-Persona': {
+        flexDirection: 'column',
+        height: 'auto',
+        marginTop: -74,
+      },
+      '.ms-Persona-image': {
+        border: border(2, cssVar('$neutralTertiary'))
+      },
+      '.ms-Persona-details': {
+        alignItems: 'center',
+        padding: 0
+      },
+      '.ms-Persona-primaryText': {
+        fontWeight: 500,
+        marginTop: 12,
+        color: cssVar('$neutralPrimary')
+      }
+    },
+
   },
   items: {
     marginTop: 16
@@ -51,50 +66,25 @@ const css = stylesheet({
 
 /** Create a profile card to display information about a user. */
 interface State {
-  /** The card's title, displayed under the main image. */
-  title: S
-  /** The card's subtitle, displayed under the title. */
-  subtitle?: S
+  /** The persona represented by this card. */
+  persona: Component
   /** 
    * The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
    * or a path to an image hosted on the Wave daemon (starting with `/`).
 . */
-  image?: S
-  /** 
-   * The avatar’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`)
-   * or a path to an image hosted on the Wave daemon (starting with `/`).
-. */
-  profile_image?: S
-  /** Initials, if `profile_image` is not specified. */
-  initials?: S
-  /** Components in this card displayed below toolbar / image. */
+  image: S
+  /** Components in this card displayed below the image. */
   items?: Component[]
 }
 
-export const View = bond(({ name, state, changed }: Model<State & { commands: Command[] }>) => {
+export const View = bond(({ name, state, changed }: Model<State>) => {
   const render = () => {
-    const { title, subtitle, image, profile_image, initials, items } = state
+    const { image, persona, items } = state
     return (
       <div data-test={name} className={css.card}>
-        {image && <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>}
+        <div className={css.img} style={{ backgroundImage: `url('${image}')` }}></div>
         <div className={css.content}>
-          <div className={css.persona}>
-            <Fluent.Persona
-              text={title}
-              secondaryText={subtitle}
-              imageUrl={profile_image}
-              imageInitials={initials}
-              size={Fluent.PersonaSize.size100}
-              styles={{
-                root: {
-                  flexDirection: 'column', height: 'auto', marginTop: image ? -74 : 0,
-                  '.ms-Persona-image': { border: border(2, cssVar('$neutralTertiary')) }
-                },
-                details: { alignItems: 'center', padding: 0 },
-                primaryText: { fontWeight: 500, marginTop: 12, color: cssVar('$neutralPrimary') },
-              }}
-            />
-          </div>
+          {persona.persona && <div className={css.persona}><XPersona model={persona.persona} /></div>}
           {items && <div className={css.items}><XComponents items={items} /></div>}
         </div>
       </div>

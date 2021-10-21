@@ -8925,34 +8925,22 @@ class ProfileCard:
     def __init__(
             self,
             box: str,
-            title: str,
-            subtitle: Optional[str] = None,
-            image: Optional[str] = None,
-            profile_image: Optional[str] = None,
-            initials: Optional[str] = None,
+            persona: Component,
+            image: str,
             items: Optional[List[Component]] = None,
             commands: Optional[List[Command]] = None,
     ):
         _guard_scalar('ProfileCard.box', box, (str,), False, False, False)
-        _guard_scalar('ProfileCard.title', title, (str,), False, False, False)
-        _guard_scalar('ProfileCard.subtitle', subtitle, (str,), False, True, False)
-        _guard_scalar('ProfileCard.image', image, (str,), False, True, False)
-        _guard_scalar('ProfileCard.profile_image', profile_image, (str,), False, True, False)
-        _guard_scalar('ProfileCard.initials', initials, (str,), False, True, False)
+        _guard_scalar('ProfileCard.persona', persona, (Component,), False, False, False)
+        _guard_scalar('ProfileCard.image', image, (str,), False, False, False)
         _guard_vector('ProfileCard.items', items, (Component,), False, True, False)
         _guard_vector('ProfileCard.commands', commands, (Command,), False, True, False)
         self.box = box
         """A string indicating how to place this component on the page."""
-        self.title = title
-        """The card's title, displayed under the main image."""
-        self.subtitle = subtitle
-        """The card's subtitle, displayed under the title."""
+        self.persona = persona
+        """The persona represented by this card."""
         self.image = image
         """The card’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). ."""
-        self.profile_image = profile_image
-        """The avatar’s image, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`). ."""
-        self.initials = initials
-        """Initials, if `profile_image` is not specified."""
         self.items = items
         """Components in this card displayed below toolbar / image."""
         self.commands = commands
@@ -8961,21 +8949,15 @@ class ProfileCard:
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
         _guard_scalar('ProfileCard.box', self.box, (str,), False, False, False)
-        _guard_scalar('ProfileCard.title', self.title, (str,), False, False, False)
-        _guard_scalar('ProfileCard.subtitle', self.subtitle, (str,), False, True, False)
-        _guard_scalar('ProfileCard.image', self.image, (str,), False, True, False)
-        _guard_scalar('ProfileCard.profile_image', self.profile_image, (str,), False, True, False)
-        _guard_scalar('ProfileCard.initials', self.initials, (str,), False, True, False)
+        _guard_scalar('ProfileCard.persona', self.persona, (Component,), False, False, False)
+        _guard_scalar('ProfileCard.image', self.image, (str,), False, False, False)
         _guard_vector('ProfileCard.items', self.items, (Component,), False, True, False)
         _guard_vector('ProfileCard.commands', self.commands, (Command,), False, True, False)
         return _dump(
             view='profile',
             box=self.box,
-            title=self.title,
-            subtitle=self.subtitle,
+            persona=self.persona.dump(),
             image=self.image,
-            profile_image=self.profile_image,
-            initials=self.initials,
             items=None if self.items is None else [__e.dump() for __e in self.items],
             commands=None if self.commands is None else [__e.dump() for __e in self.commands],
         )
@@ -8985,35 +8967,23 @@ class ProfileCard:
         """Creates an instance of this class using the contents of a dict."""
         __d_box: Any = __d.get('box')
         _guard_scalar('ProfileCard.box', __d_box, (str,), False, False, False)
-        __d_title: Any = __d.get('title')
-        _guard_scalar('ProfileCard.title', __d_title, (str,), False, False, False)
-        __d_subtitle: Any = __d.get('subtitle')
-        _guard_scalar('ProfileCard.subtitle', __d_subtitle, (str,), False, True, False)
+        __d_persona: Any = __d.get('persona')
+        _guard_scalar('ProfileCard.persona', __d_persona, (dict,), False, False, False)
         __d_image: Any = __d.get('image')
-        _guard_scalar('ProfileCard.image', __d_image, (str,), False, True, False)
-        __d_profile_image: Any = __d.get('profile_image')
-        _guard_scalar('ProfileCard.profile_image', __d_profile_image, (str,), False, True, False)
-        __d_initials: Any = __d.get('initials')
-        _guard_scalar('ProfileCard.initials', __d_initials, (str,), False, True, False)
+        _guard_scalar('ProfileCard.image', __d_image, (str,), False, False, False)
         __d_items: Any = __d.get('items')
         _guard_vector('ProfileCard.items', __d_items, (dict,), False, True, False)
         __d_commands: Any = __d.get('commands')
         _guard_vector('ProfileCard.commands', __d_commands, (dict,), False, True, False)
         box: str = __d_box
-        title: str = __d_title
-        subtitle: Optional[str] = __d_subtitle
-        image: Optional[str] = __d_image
-        profile_image: Optional[str] = __d_profile_image
-        initials: Optional[str] = __d_initials
+        persona: Component = Component.load(__d_persona)
+        image: str = __d_image
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
         commands: Optional[List[Command]] = None if __d_commands is None else [Command.load(__e) for __e in __d_commands]
         return ProfileCard(
             box,
-            title,
-            subtitle,
+            persona,
             image,
-            profile_image,
-            initials,
             items,
             commands,
         )
