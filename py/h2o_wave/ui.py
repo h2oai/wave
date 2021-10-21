@@ -3479,6 +3479,7 @@ def tall_article_preview_card(
         title: str,
         image: str,
         subtitle: Optional[str] = None,
+        value: Optional[str] = None,
         content: Optional[str] = None,
         name: Optional[str] = None,
         items: Optional[List[Component]] = None,
@@ -3491,6 +3492,7 @@ def tall_article_preview_card(
         title: The card's title.
         image: The card’s background image URL, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`)
         subtitle: The card's subtitle, displayed below the title.
+        value: The value displayed to the right of the title/subtitle.
         content: Markdown text.
         name: An identifying name for this card. Makes the card clickable, similar to a button.
         items: Components displayed in the body of the card.
@@ -3503,6 +3505,7 @@ def tall_article_preview_card(
         title,
         image,
         subtitle,
+        value,
         content,
         name,
         items,

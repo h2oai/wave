@@ -9712,6 +9712,7 @@ class TallArticlePreviewCard:
             title: str,
             image: str,
             subtitle: Optional[str] = None,
+            value: Optional[str] = None,
             content: Optional[str] = None,
             name: Optional[str] = None,
             items: Optional[List[Component]] = None,
@@ -9721,6 +9722,7 @@ class TallArticlePreviewCard:
         _guard_scalar('TallArticlePreviewCard.title', title, (str,), False, False, False)
         _guard_scalar('TallArticlePreviewCard.image', image, (str,), False, False, False)
         _guard_scalar('TallArticlePreviewCard.subtitle', subtitle, (str,), False, True, False)
+        _guard_scalar('TallArticlePreviewCard.value', value, (str,), False, True, False)
         _guard_scalar('TallArticlePreviewCard.content', content, (str,), False, True, False)
         _guard_scalar('TallArticlePreviewCard.name', name, (str,), False, True, False)
         _guard_vector('TallArticlePreviewCard.items', items, (Component,), False, True, False)
@@ -9733,6 +9735,8 @@ class TallArticlePreviewCard:
         """The card’s background image URL, either a base64-encoded image, a path to an image hosted externally (starting with `https://` or `http://`) or a path to an image hosted on the Wave daemon (starting with `/`)"""
         self.subtitle = subtitle
         """The card's subtitle, displayed below the title."""
+        self.value = value
+        """The value displayed to the right of the title/subtitle."""
         self.content = content
         """Markdown text."""
         self.name = name
@@ -9748,6 +9752,7 @@ class TallArticlePreviewCard:
         _guard_scalar('TallArticlePreviewCard.title', self.title, (str,), False, False, False)
         _guard_scalar('TallArticlePreviewCard.image', self.image, (str,), False, False, False)
         _guard_scalar('TallArticlePreviewCard.subtitle', self.subtitle, (str,), False, True, False)
+        _guard_scalar('TallArticlePreviewCard.value', self.value, (str,), False, True, False)
         _guard_scalar('TallArticlePreviewCard.content', self.content, (str,), False, True, False)
         _guard_scalar('TallArticlePreviewCard.name', self.name, (str,), False, True, False)
         _guard_vector('TallArticlePreviewCard.items', self.items, (Component,), False, True, False)
@@ -9758,6 +9763,7 @@ class TallArticlePreviewCard:
             title=self.title,
             image=self.image,
             subtitle=self.subtitle,
+            value=self.value,
             content=self.content,
             name=self.name,
             items=None if self.items is None else [__e.dump() for __e in self.items],
@@ -9775,6 +9781,8 @@ class TallArticlePreviewCard:
         _guard_scalar('TallArticlePreviewCard.image', __d_image, (str,), False, False, False)
         __d_subtitle: Any = __d.get('subtitle')
         _guard_scalar('TallArticlePreviewCard.subtitle', __d_subtitle, (str,), False, True, False)
+        __d_value: Any = __d.get('value')
+        _guard_scalar('TallArticlePreviewCard.value', __d_value, (str,), False, True, False)
         __d_content: Any = __d.get('content')
         _guard_scalar('TallArticlePreviewCard.content', __d_content, (str,), False, True, False)
         __d_name: Any = __d.get('name')
@@ -9787,6 +9795,7 @@ class TallArticlePreviewCard:
         title: str = __d_title
         image: str = __d_image
         subtitle: Optional[str] = __d_subtitle
+        value: Optional[str] = __d_value
         content: Optional[str] = __d_content
         name: Optional[str] = __d_name
         items: Optional[List[Component]] = None if __d_items is None else [Component.load(__e) for __e in __d_items]
@@ -9796,6 +9805,7 @@ class TallArticlePreviewCard:
             title,
             image,
             subtitle,
+            value,
             content,
             name,
             items,

@@ -38,6 +38,9 @@ const css = stylesheet({
     padding: 24,
     paddingBottom: 16,
     color: cssVar('$neutralPrimary'),
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   content: {
     marginBottom: 16,
@@ -85,9 +88,6 @@ const css = stylesheet({
   body: {
     margin: margin(16, 24, 24, 24),
   },
-  title: {
-    color: cssVar('$neutralPrimary')
-  },
   img: {
     position: 'relative',
     flexGrow: 1,
@@ -109,6 +109,8 @@ interface State {
   image: S
   /** The card's subtitle, displayed below the title. */
   subtitle?: S
+  /** The value displayed to the right of the title/subtitle. */
+  value?: S
   /** Markdown text. */
   content?: S
   /** An identifying name for this card. Makes the card clickable, similar to a button. */
@@ -119,7 +121,7 @@ interface State {
 
 export const View = bond(({ name, state, changed }: Model<State>) => {
   const
-    { title, subtitle, image, name: stateName, items, content } = state,
+    { title, subtitle, image, name: stateName, items, content, value } = state,
     onClick = () => {
       if (!stateName) return
       if (stateName.startsWith('#')) {
@@ -142,8 +144,11 @@ export const View = bond(({ name, state, changed }: Model<State>) => {
       >
         <div className={css.img} style={{ backgroundImage: `url('${image}')` }}>
           <div className={css.header} style={{ background: getGradient() }}>
-            <div className={clas('wave-s20 wave-w6', css.title)}>{title}</div>
-            {subtitle && <div className={clas('wave-s14 wave-w4 wave-t8', css.title)}>{subtitle}</div>}
+            <div>
+              <div className='wave-s20 wave-w6'>{title}</div>
+              {subtitle && <div className='wave-s14 wave-w4 wave-t8'>{subtitle}</div>}
+            </div>
+            {value && <div className='wave-s16'>{value}</div>}
           </div>
         </div>
         {

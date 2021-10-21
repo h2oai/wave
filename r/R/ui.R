@@ -4039,6 +4039,7 @@ ui_tab_card <- function(
 #'   externally (starting with `https://` or `http://`) or a path to an
 #'   image hosted on the Wave daemon (starting with `/`)
 #' @param subtitle The card's subtitle, displayed below the title.
+#' @param value The value displayed to the right of the title/subtitle.
 #' @param content Markdown text.
 #' @param name An identifying name for this card. Makes the card clickable, similar to a button.
 #' @param items Components displayed in the body of the card.
@@ -4050,6 +4051,7 @@ ui_tall_article_preview_card <- function(
   title,
   image,
   subtitle = NULL,
+  value = NULL,
   content = NULL,
   name = NULL,
   items = NULL,
@@ -4058,6 +4060,7 @@ ui_tall_article_preview_card <- function(
   .guard_scalar("title", "character", title)
   .guard_scalar("image", "character", image)
   .guard_scalar("subtitle", "character", subtitle)
+  .guard_scalar("value", "character", value)
   .guard_scalar("content", "character", content)
   .guard_scalar("name", "character", name)
   .guard_vector("items", "WaveComponent", items)
@@ -4067,6 +4070,7 @@ ui_tall_article_preview_card <- function(
     title=title,
     image=image,
     subtitle=subtitle,
+    value=value,
     content=content,
     name=name,
     items=items,

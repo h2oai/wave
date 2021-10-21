@@ -23,6 +23,7 @@ async def serve(q: Q):
             box='1 1 4 6',
             title='Tall article preview',
             subtitle='Click the card',
+            value='$19',
             name='tall_article',
             image='https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260', # noqa
             content=content,
