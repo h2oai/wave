@@ -59,14 +59,14 @@ const css = stylesheet({
 
 export const XBadgeTableCellType = ({ model, serializedBadges }: { model: BadgeTableCellType, serializedBadges: S }) => {
   const
-    mapBadges = ((v: S, i: U) => {
+    mapBadges = ((badgeLabel: S, i: U) => {
       const
-        badge = model.badges?.find(({ label: label }) => label === v),
+        badge = model.badges?.find(({ label }) => label === badgeLabel),
         badgeColor = badge?.color || '$text',
         background = cssVar(badgeColor),
         color = cssVar(badge?.label_color || getContrast(badgeColor))
 
-      return <span key={i} style={{ background, color }} className={clas(css.badge, 'wave-s12 wave-w6')}>{v}</span>
+      return <span key={i} style={{ background, color }} className={clas(css.badge, 'wave-s12 wave-w6')}>{badgeLabel}</span>
     })
   return <div data-test={model.name}>{serializedBadges.split(',').map(mapBadges)}</div>
 }
