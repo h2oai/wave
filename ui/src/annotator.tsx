@@ -6,7 +6,7 @@ import { border, clas, cssVar, getContrast, margin, padding } from './theme'
 import { wave } from './ui'
 
 /** Create a tag. */
-interface AnnotatorTag {
+interface TextAnnotatorTag {
   /** An identifying name for this component. */
   name: Id
   /** Text to be displayed for this tag. */
@@ -16,7 +16,7 @@ interface AnnotatorTag {
 }
 
 /** Create an annotator item with initial selected tags or no tag for plaintext. */
-interface AnnotatorItem {
+interface TextAnnotatorItem {
   /** Text to be highlighted. */
   text: S
   /** Tag connected to the highlighted text. */
@@ -34,9 +34,9 @@ export interface TextAnnotator {
   /** The text annotator's title. */
   title: S
   /** List of tags the user can annotate with. */
-  tags: AnnotatorTag[]
+  tags: TextAnnotatorTag[]
   /** Pretagged parts of text content. */
-  items: AnnotatorItem[]
+  items: TextAnnotatorItem[]
   /** True if the form should be submitted when the annotator value changes. */
   trigger?: B
 }
@@ -123,7 +123,7 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
         }
       })
       return arr
-    }, [] as AnnotatorItem[])),
+    }, [] as TextAnnotatorItem[])),
     submitWaveArgs = () => {
       let currentText = ''
       let currentTag: S | undefined
@@ -145,7 +145,7 @@ export const XTextAnnotator = ({ model }: { model: TextAnnotator }) => {
         }
         currentTag = tag
         return arr
-      }, [] as AnnotatorItem[]) as unknown as Rec[]
+      }, [] as TextAnnotatorItem[]) as unknown as Rec[]
       if (model.trigger) wave.push()
     },
     activateTag = (tagName: S) => () => setActiveTag(tagName),

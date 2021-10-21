@@ -2585,9 +2585,9 @@ ui_persona <- function(
 #' @param name An identifying name for this component.
 #' @param label Text to be displayed for this tag.
 #' @param color HEX or RGB color string used as background for highlighted phrases.
-#' @return A AnnotatorTag instance.
+#' @return A TextAnnotatorTag instance.
 #' @export
-ui_annotator_tag <- function(
+ui_text_annotator_tag <- function(
   name,
   label,
   color) {
@@ -2598,7 +2598,7 @@ ui_annotator_tag <- function(
     name=name,
     label=label,
     color=color)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveAnnotatorTag"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTextAnnotatorTag"))
   return(.o)
 }
 
@@ -2606,9 +2606,9 @@ ui_annotator_tag <- function(
 #'
 #' @param text Text to be highlighted.
 #' @param tag Tag connected to the highlighted text.
-#' @return A AnnotatorItem instance.
+#' @return A TextAnnotatorItem instance.
 #' @export
-ui_annotator_item <- function(
+ui_text_annotator_item <- function(
   text,
   tag = NULL) {
   .guard_scalar("text", "character", text)
@@ -2616,7 +2616,7 @@ ui_annotator_item <- function(
   .o <- list(
     text=text,
     tag=tag)
-  class(.o) <- append(class(.o), c(.wave_obj, "WaveAnnotatorItem"))
+  class(.o) <- append(class(.o), c(.wave_obj, "WaveTextAnnotatorItem"))
   return(.o)
 }
 
@@ -2639,8 +2639,8 @@ ui_text_annotator <- function(
   trigger = NULL) {
   .guard_scalar("name", "character", name)
   .guard_scalar("title", "character", title)
-  .guard_vector("tags", "WaveAnnotatorTag", tags)
-  .guard_vector("items", "WaveAnnotatorItem", items)
+  .guard_vector("tags", "WaveTextAnnotatorTag", tags)
+  .guard_vector("items", "WaveTextAnnotatorItem", items)
   .guard_scalar("trigger", "logical", trigger)
   .o <- list(text_annotator=list(
     name=name,

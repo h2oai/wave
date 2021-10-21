@@ -5936,7 +5936,7 @@ class Persona:
         )
 
 
-class AnnotatorTag:
+class TextAnnotatorTag:
     """Create a tag.
     """
     def __init__(
@@ -5945,9 +5945,9 @@ class AnnotatorTag:
             label: str,
             color: str,
     ):
-        _guard_scalar('AnnotatorTag.name', name, (str,), True, False, False)
-        _guard_scalar('AnnotatorTag.label', label, (str,), False, False, False)
-        _guard_scalar('AnnotatorTag.color', color, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorTag.name', name, (str,), True, False, False)
+        _guard_scalar('TextAnnotatorTag.label', label, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorTag.color', color, (str,), False, False, False)
         self.name = name
         """An identifying name for this component."""
         self.label = label
@@ -5957,9 +5957,9 @@ class AnnotatorTag:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('AnnotatorTag.name', self.name, (str,), True, False, False)
-        _guard_scalar('AnnotatorTag.label', self.label, (str,), False, False, False)
-        _guard_scalar('AnnotatorTag.color', self.color, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorTag.name', self.name, (str,), True, False, False)
+        _guard_scalar('TextAnnotatorTag.label', self.label, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorTag.color', self.color, (str,), False, False, False)
         return _dump(
             name=self.name,
             label=self.label,
@@ -5967,25 +5967,25 @@ class AnnotatorTag:
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'AnnotatorTag':
+    def load(__d: Dict) -> 'TextAnnotatorTag':
         """Creates an instance of this class using the contents of a dict."""
         __d_name: Any = __d.get('name')
-        _guard_scalar('AnnotatorTag.name', __d_name, (str,), True, False, False)
+        _guard_scalar('TextAnnotatorTag.name', __d_name, (str,), True, False, False)
         __d_label: Any = __d.get('label')
-        _guard_scalar('AnnotatorTag.label', __d_label, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorTag.label', __d_label, (str,), False, False, False)
         __d_color: Any = __d.get('color')
-        _guard_scalar('AnnotatorTag.color', __d_color, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorTag.color', __d_color, (str,), False, False, False)
         name: str = __d_name
         label: str = __d_label
         color: str = __d_color
-        return AnnotatorTag(
+        return TextAnnotatorTag(
             name,
             label,
             color,
         )
 
 
-class AnnotatorItem:
+class TextAnnotatorItem:
     """Create an annotator item with initial selected tags or no tag for plaintext.
     """
     def __init__(
@@ -5993,8 +5993,8 @@ class AnnotatorItem:
             text: str,
             tag: Optional[str] = None,
     ):
-        _guard_scalar('AnnotatorItem.text', text, (str,), False, False, False)
-        _guard_scalar('AnnotatorItem.tag', tag, (str,), False, True, False)
+        _guard_scalar('TextAnnotatorItem.text', text, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorItem.tag', tag, (str,), False, True, False)
         self.text = text
         """Text to be highlighted."""
         self.tag = tag
@@ -6002,23 +6002,23 @@ class AnnotatorItem:
 
     def dump(self) -> Dict:
         """Returns the contents of this object as a dict."""
-        _guard_scalar('AnnotatorItem.text', self.text, (str,), False, False, False)
-        _guard_scalar('AnnotatorItem.tag', self.tag, (str,), False, True, False)
+        _guard_scalar('TextAnnotatorItem.text', self.text, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorItem.tag', self.tag, (str,), False, True, False)
         return _dump(
             text=self.text,
             tag=self.tag,
         )
 
     @staticmethod
-    def load(__d: Dict) -> 'AnnotatorItem':
+    def load(__d: Dict) -> 'TextAnnotatorItem':
         """Creates an instance of this class using the contents of a dict."""
         __d_text: Any = __d.get('text')
-        _guard_scalar('AnnotatorItem.text', __d_text, (str,), False, False, False)
+        _guard_scalar('TextAnnotatorItem.text', __d_text, (str,), False, False, False)
         __d_tag: Any = __d.get('tag')
-        _guard_scalar('AnnotatorItem.tag', __d_tag, (str,), False, True, False)
+        _guard_scalar('TextAnnotatorItem.tag', __d_tag, (str,), False, True, False)
         text: str = __d_text
         tag: Optional[str] = __d_tag
-        return AnnotatorItem(
+        return TextAnnotatorItem(
             text,
             tag,
         )
@@ -6033,14 +6033,14 @@ class TextAnnotator:
             self,
             name: str,
             title: str,
-            tags: List[AnnotatorTag],
-            items: List[AnnotatorItem],
+            tags: List[TextAnnotatorTag],
+            items: List[TextAnnotatorItem],
             trigger: Optional[bool] = None,
     ):
         _guard_scalar('TextAnnotator.name', name, (str,), True, False, False)
         _guard_scalar('TextAnnotator.title', title, (str,), False, False, False)
-        _guard_vector('TextAnnotator.tags', tags, (AnnotatorTag,), False, False, False)
-        _guard_vector('TextAnnotator.items', items, (AnnotatorItem,), False, False, False)
+        _guard_vector('TextAnnotator.tags', tags, (TextAnnotatorTag,), False, False, False)
+        _guard_vector('TextAnnotator.items', items, (TextAnnotatorItem,), False, False, False)
         _guard_scalar('TextAnnotator.trigger', trigger, (bool,), False, True, False)
         self.name = name
         """An identifying name for this component."""
@@ -6057,8 +6057,8 @@ class TextAnnotator:
         """Returns the contents of this object as a dict."""
         _guard_scalar('TextAnnotator.name', self.name, (str,), True, False, False)
         _guard_scalar('TextAnnotator.title', self.title, (str,), False, False, False)
-        _guard_vector('TextAnnotator.tags', self.tags, (AnnotatorTag,), False, False, False)
-        _guard_vector('TextAnnotator.items', self.items, (AnnotatorItem,), False, False, False)
+        _guard_vector('TextAnnotator.tags', self.tags, (TextAnnotatorTag,), False, False, False)
+        _guard_vector('TextAnnotator.items', self.items, (TextAnnotatorItem,), False, False, False)
         _guard_scalar('TextAnnotator.trigger', self.trigger, (bool,), False, True, False)
         return _dump(
             name=self.name,
@@ -6083,8 +6083,8 @@ class TextAnnotator:
         _guard_scalar('TextAnnotator.trigger', __d_trigger, (bool,), False, True, False)
         name: str = __d_name
         title: str = __d_title
-        tags: List[AnnotatorTag] = [AnnotatorTag.load(__e) for __e in __d_tags]
-        items: List[AnnotatorItem] = [AnnotatorItem.load(__e) for __e in __d_items]
+        tags: List[TextAnnotatorTag] = [TextAnnotatorTag.load(__e) for __e in __d_tags]
+        items: List[TextAnnotatorItem] = [TextAnnotatorItem.load(__e) for __e in __d_items]
         trigger: Optional[bool] = __d_trigger
         return TextAnnotator(
             name,

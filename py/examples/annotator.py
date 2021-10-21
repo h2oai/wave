@@ -18,13 +18,13 @@ async def serve(q: Q):
                 name='annotator',
                 title='Select text to annotate',
                 tags=[
-                    ui.annotator_tag(name='p', label='Person', color='#F1CBCB'),
-                    ui.annotator_tag(name='o', label='Org', color='#CAEACA'),
+                    ui.text_annotator_tag(name='p', label='Person', color='#F1CBCB'),
+                    ui.text_annotator_tag(name='o', label='Org', color='#CAEACA'),
                 ],
                 items=[
-                    ui.annotator_item(text='Killer Mike', tag='p'),
-                    ui.annotator_item(text=' is a member, of the hip hop supergroup '),  # no tag
-                    ui.annotator_item(text='Run the Jewels', tag='o'),
+                    ui.text_annotator_item(text='Killer Mike', tag='p'),
+                    ui.text_annotator_item(text=' is a member, of the hip hop supergroup '),  # no tag
+                    ui.text_annotator_item(text='Run the Jewels', tag='o'),
                 ],
             ),
             ui.button(name='submit', label='Submit', primary=True)

@@ -2203,11 +2203,11 @@ def persona(
     ))
 
 
-def annotator_tag(
+def text_annotator_tag(
         name: str,
         label: str,
         color: str,
-) -> AnnotatorTag:
+) -> TextAnnotatorTag:
     """Create a tag.
 
     Args:
@@ -2215,28 +2215,28 @@ def annotator_tag(
         label: Text to be displayed for this tag.
         color: HEX or RGB color string used as background for highlighted phrases.
     Returns:
-        A `h2o_wave.types.AnnotatorTag` instance.
+        A `h2o_wave.types.TextAnnotatorTag` instance.
     """
-    return AnnotatorTag(
+    return TextAnnotatorTag(
         name,
         label,
         color,
     )
 
 
-def annotator_item(
+def text_annotator_item(
         text: str,
         tag: Optional[str] = None,
-) -> AnnotatorItem:
+) -> TextAnnotatorItem:
     """Create an annotator item with initial selected tags or no tag for plaintext.
 
     Args:
         text: Text to be highlighted.
         tag: Tag connected to the highlighted text.
     Returns:
-        A `h2o_wave.types.AnnotatorItem` instance.
+        A `h2o_wave.types.TextAnnotatorItem` instance.
     """
-    return AnnotatorItem(
+    return TextAnnotatorItem(
         text,
         tag,
     )
@@ -2245,8 +2245,8 @@ def annotator_item(
 def text_annotator(
         name: str,
         title: str,
-        tags: List[AnnotatorTag],
-        items: List[AnnotatorItem],
+        tags: List[TextAnnotatorTag],
+        items: List[TextAnnotatorItem],
         trigger: Optional[bool] = None,
 ) -> Component:
     """Create an annotator component.
